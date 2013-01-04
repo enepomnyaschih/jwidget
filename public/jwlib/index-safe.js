@@ -1,5 +1,5 @@
 ﻿/*!
-	jWidget Lib 0.3.3 without standard prototypes extension (package-safe build)
+	jWidget Lib 0.4 without standard prototypes extension (package-safe build)
 	
 	https://github.com/enepomnyaschih/jwlib
 	

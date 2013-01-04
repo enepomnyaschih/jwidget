@@ -18,6 +18,8 @@
 */
 
 JW.ClassUtil = {
+	fnTest: /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/,
+	
 	/**
 	 * Base class. Constructor is "init" method.
 	 */
@@ -116,7 +118,8 @@ JW.ClassUtil = {
 	{
 		if (typeof sup !== "function" ||
 			typeof sub !== "function" ||
-			sub.superclass)
+			sub.superclass ||
+			!JW.ClassUtil.fnTest.test(sub))
 			return sub;
 		
 		return function()
