@@ -1,0 +1,25 @@
+﻿{
+	"requires" : [
+		"thirdparty/reset.css",
+		"jwui"
+	],
+	
+	"resources" : [
+		"jwunit/unit.js",
+		"jwunit/asyncRunner.js",
+		"jwunit/broadcaster.js",
+		
+		"jwunit/testUnit.js",
+		"jwunit/testGroup.js",
+		
+		"jwunit/test.js",
+		"jwunit/testCase.js",
+		"jwunit/testSuit.js",
+		"jwunit/testPlan.js",
+		
+		"jwunit/ui/unit.css",
+		"jwunit/ui/broadcaster.js",
+		"jwunit/ui/testUnit.js",
+		"jwunit/ui/view.js"
+	]
+}

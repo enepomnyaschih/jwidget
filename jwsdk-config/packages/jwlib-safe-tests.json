@@ -1,0 +1,30 @@
+﻿{
+	"requires" : [
+		"jwlib-safe",
+		"jwunit"
+	],
+	
+	"resources" : [
+		"jwlib/tests-safe/core/apply.js",
+		"jwlib/tests-safe/core/core.js",
+		"jwlib/tests-safe/core/class.js",
+		"jwlib/tests-safe/core/equal.js",
+		"jwlib/tests-safe/core/mvc.js",
+		"jwlib/tests-safe/core/observable.js",
+		
+		"jwlib/tests-safe/alg/simple.js",
+		"jwlib/tests-safe/alg/build.js",
+		
+		"jwlib/tests-safe/override/array.js",
+		"jwlib/tests-safe/override/function.js",
+		"jwlib/tests-safe/override/string.js",
+		
+		"jwlib/tests-safe/extras.js",
+		
+		"jwlib/tests-safe/util/collection.js",
+		"jwlib/tests-safe/util/syncher.js",
+		"jwlib/tests-safe/util/timer.js",
+		
+		"jwlib/tests-safe/boot.js"
+	]
+}

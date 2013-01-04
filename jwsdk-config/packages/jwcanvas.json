@@ -1,0 +1,24 @@
+﻿{
+	"requires" : [
+		"jwui"
+	],
+	
+	"resources" : [
+		"jwcanvas/index.js",
+		
+		"jwcanvas/component.js",
+		
+		"jwcanvas/body.js",
+		"jwcanvas/event.js",
+		"jwcanvas/event/mouse.js",
+		"jwcanvas/event/mouse/processor.js",
+		"jwcanvas/graphics.js",
+		"jwcanvas/graphics/item.js",
+		"jwcanvas/graphics/item/method.js",
+		"jwcanvas/graphics/item/method/path.js",
+		"jwcanvas/graphics/item/property.js",
+		"jwcanvas/plugin.js",
+		"jwcanvas/stage.js",
+		"jwcanvas/transform.js"
+	]
+}

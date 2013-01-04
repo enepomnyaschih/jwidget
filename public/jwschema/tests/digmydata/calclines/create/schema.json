@@ -1,0 +1,11 @@
+﻿{
+	"classes"   : {
+		"Root"      : {
+			"provider"  : "Object",
+			"fields"    : {
+				"id"        : "PositiveInt",
+				"valid"     : "Boolean"
+			}
+		}
+	}
+}

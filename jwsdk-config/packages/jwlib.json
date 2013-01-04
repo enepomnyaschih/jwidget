@@ -1,0 +1,27 @@
+﻿{
+	"resources" : [
+		"jwlib/index.js",
+		
+		"jwlib/core/core.js",
+		"jwlib/core/class.js",
+		"jwlib/core/observable.js",
+		"jwlib/core/config.js",
+		"jwlib/core/observableConfig.js",
+		
+		"jwlib/alg/simple.js",
+		"jwlib/alg/build.js",
+		
+		"jwlib/override/array.js",
+		"jwlib/override/function.js",
+		"jwlib/override/string.js",
+		
+		"jwlib/util/collection.js",
+		"jwlib/util/factory.js",
+		"jwlib/util/map.js",
+		"jwlib/util/setInterval.js",
+		"jwlib/util/syncher.js",
+		"jwlib/util/timer.js",
+		
+		"jwlib/util/prototype.js"
+	]
+}

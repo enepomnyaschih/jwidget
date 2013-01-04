@@ -1,0 +1,10 @@
+﻿{
+	"classes": {
+		"Root": {
+			"provider": "Object",
+			"fields": {
+				"hasLogo": "Boolean"
+			}
+		}
+	}
+}

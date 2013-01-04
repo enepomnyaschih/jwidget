@@ -1,0 +1,25 @@
+﻿{
+	"classes"       : {
+		"Root"          : {
+			"provider"      : "Object",
+			"fields"        : {
+				"calclines"     : {
+					"provider"      : "Array",
+					"item"          : {
+						"provider"      : "Object",
+						"fields"        : {
+							"id"            : "PositiveInt",
+							"title"         : "String",
+							"format"        : {
+								"provider"      : "Enum",
+								"values"        : [ "number", "currency", "percent" ]
+							},
+							"definition"    : "String",
+							"valid"         : "Boolean"
+						}
+					}
+				}
+			}
+		}
+	}
+}

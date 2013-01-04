@@ -1,0 +1,171 @@
+﻿{
+	"classes" : {
+		"Schema": {
+			"provider"  : "Object",
+			"fields"    : {
+				"classes"   : "ClassDefinitionsDictionary"
+			}
+		},
+		
+		"ClassDefinition": {
+			"provider"  : "Or",
+			"items"     : [
+				"String",
+				"ClassObject"
+			]
+		},
+		
+		"ClassDefinitionsArray": {
+			"provider"  : "Array",
+			"item"      : "ClassDefinition"
+		},
+		
+		"ClassDefinitionsDictionary": {
+			"provider"  : "Dictionary",
+			"item"      : "ClassDefinition"
+		},
+		
+		"ClassObject": {
+			"provider"  : "TypedObject",
+			"key"       : "provider",
+			"options"   : {
+				"Any"           : "AnyClass",
+				"Value"         : "ValueClass",
+				"String"        : "StringClass",
+				"Number"        : "NumberClass",
+				"Array"         : "ArrayClass",
+				"Dictionary"    : "DictionaryClass",
+				"Enum"          : "EnumClass",
+				"FixedArray"    : "FixedArrayClass",
+				"Object"        : "ObjectClass",
+				"TypedObject"   : "TypedObjectClass",
+				"And"           : "AndClass",
+				"Or"            : "OrClass"
+			}
+		},
+		
+		"BaseClass": {
+			"provider"  : "Object",
+			"fields"    : {
+				"provider"  : "String"
+			}
+		},
+		
+		"BaseClassDefinition": {
+			"provider"  : "Or",
+			"items"     : [
+				"ClassDefinition",
+				"ClassDefinitionsArray"
+			]
+		},
+		
+		"AnyClass": {
+			"provider"  : "Object",
+			"base"      : [ "BaseClass", "ChildConfig" ]
+		},
+		
+		"ValueClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"value"     : "Simple"
+			}
+		},
+		
+		"StringClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass"
+		},
+		
+		"NumberClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"integer"   : "Boolean,optional",
+				"min"       : "Number,optional",
+				"max"       : "Number,optional"
+			}
+		},
+		
+		"ArrayClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"item"      : "ClassDefinition,optional"
+			}
+		},
+		
+		"DictionaryClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"item"      : "ClassDefinition,optional"
+			}
+		},
+		
+		"EnumClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"values"    : "SimpleValuesArray"
+			}
+		},
+		
+		"FixedArrayClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"items"     : "ClassDefinitionsArray"
+			}
+		},
+		
+		"ObjectClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"fields"    : "ClassDefinitionsDictionary,optional",
+				"base"      : "BaseClassDefinition,optional",
+				"garbage"   : "Boolean,optional"
+			}
+		},
+		
+		"TypedObjectClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"key"       : "Simple,optional",
+				"options"   : "ClassDefinitionsDictionary"
+			}
+		},
+		
+		"AndClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"items"     : "ClassDefinitionsArray"
+			}
+		},
+		
+		"OrClass": {
+			"provider"  : "Object",
+			"base"      : "AnyClass",
+			"fields"    : {
+				"items"     : "ClassDefinitionsArray"
+			}
+		},
+		
+		"ChildConfig": {
+			"provider"  : "Object",
+			"fields"    : {
+				"optional"          : "Boolean,optional",
+				"allowNull"         : "Boolean,optional",
+				"allowUndefined"    : "Boolean,optional"
+			}
+		},
+		
+		"SimpleValuesArray": {
+			"provider"  : "Array",
+			"item"      : "Simple"
+		}
+	}
+}

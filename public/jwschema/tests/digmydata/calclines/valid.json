@@ -1,0 +1,17 @@
+﻿{
+	"calclines": [
+		{
+			"id"            : 5,
+			"title"         : "false",
+			"format"        : "percent",
+			"definition"    : "null",
+			"valid"         : false
+		}, {
+			"id"            : 1,
+			"title"         : "true",
+			"format"        : "currency",
+			"definition"    : "[]",
+			"valid"         : true
+		}
+	]
+}

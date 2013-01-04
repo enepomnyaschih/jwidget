@@ -1,0 +1,18 @@
+﻿{
+	"requires" : [
+		"thirdparty/jquery/jquery.js|auto"
+		// Also requires one of "jwlib" and "jwlib-safe" : select it manually before "jwui"
+	],
+	
+	"resources" : [
+		"jwui/core.js",
+		"jwui/jquery.patch.js",
+		"jwui/browsers.js",
+		"jwui/component.js",
+		"jwui/component/addConfig.js",
+		"jwui/params.js",
+		"jwui/plugin.js",
+		"jwui/preloadImage.js",
+		"jwui/syncher.js"
+	]
+}

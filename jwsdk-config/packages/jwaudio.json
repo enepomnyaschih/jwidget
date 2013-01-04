@@ -1,0 +1,13 @@
+﻿{
+	"requires" : [
+		"jwlib"
+	],
+	
+	"resources" : [
+		"jwaudio/index.js",
+		
+		"jwaudio/playback.js",
+		"jwaudio/playlist.js",
+		"jwaudio/track.js"
+	]
+}

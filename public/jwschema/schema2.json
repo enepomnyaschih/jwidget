@@ -1,0 +1,143 @@
+﻿{
+	"classes": {
+		"Schema": {
+			"provider"  : "Object",
+			"fields"    : {
+				"classes"   : "ClassDefinitionsDictionary"
+			}
+		},
+		
+		"ClassDefinition": {
+			"provider"  : "Or",
+			"items"     : [
+				"String",
+				{
+					"provider"  : "TypedObject",
+					"key"       : "provider",
+					"options"   : {
+						"Any"           : "AnyClass",
+						"Value"         : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"value"         : "Simple"
+							}
+						},
+						"String"        : {
+							"provider"      : "Object",
+							"base"          : "AnyClass"
+						},
+						"Number"        : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"integer"       : "Boolean,optional",
+								"min"           : "Number,optional",
+								"max"           : "Number,optional"
+							}
+						},
+						"Array"         : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"item"          : "ClassDefinition,optional"
+							}
+						},
+						"Dictionary"    : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"item"          : "ClassDefinition,optional"
+							}
+						},
+						"Enum"          : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"values"        : {
+									"provider"      : "Array",
+									"item"          : "Simple"
+								}
+							}
+						},
+						"FixedArray"    : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"items"         : "ClassDefinitionsArray"
+							}
+						},
+						"Object"        : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"fields"        : "ClassDefinitionsDictionary,optional",
+								"base"          : {
+									"provider"      : "Or",
+									"optional"      : true,
+									"items"         : [
+										"ClassDefinition",
+										"ClassDefinitionsArray"
+									]
+								},
+								"garbage"       : "Boolean,optional"
+							}
+						},
+						"TypedObject"   : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"key"           : "Simple,optional",
+								"options"       : "ClassDefinitionsDictionary"
+							}
+						},
+						"And"           : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"items"         : "ClassDefinitionsArray"
+							}
+						},
+						"Or"            : {
+							"provider"      : "Object",
+							"base"          : "AnyClass",
+							"fields"        : {
+								"items"         : "ClassDefinitionsArray"
+							}
+						}
+					}
+				}
+			]
+		},
+		
+		"ClassDefinitionsArray": {
+			"provider"  : "Array",
+			"item"      : "ClassDefinition"
+		},
+		
+		"ClassDefinitionsDictionary": {
+			"provider"  : "Dictionary",
+			"item"      : "ClassDefinition"
+		},
+		
+		"AnyClass": {
+			"provider"  : "Object",
+			"base"      : [
+				{
+					"provider"  : "Object",
+					"fields"    : {
+						"provider"  : "String"
+					}
+				},
+				{
+					"provider"  : "Object",
+					"fields"    : {
+						"optional"          : "Boolean,optional",
+						"allowNull"         : "Boolean,optional",
+						"allowUndefined"    : "Boolean,optional"
+					}
+				}
+			]
+		}
+	}
+}

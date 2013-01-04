@@ -1,0 +1,35 @@
+﻿{
+	"metrics": {
+		"aweber": {
+			"1": {
+				"data": [
+					{
+						"start"         : 1287853200000,
+						"end"           : 1288457999999,
+						"value"         : 56,
+						"forecast"      : 78,
+						"itemsCount"    : 2,
+						"items"         : [
+							{
+								"id"            : 78,
+								"title"         : "DigMyData rulez!!!!",
+								"sent"          : 254,
+								"opens"         : 0,
+								"clicks"        : 101
+							}
+						]
+					}
+				]
+			},
+			
+			"2": {
+				"data": [
+					{
+						"start"         : 1287853200000,
+						"end"           : 1288457999999
+					}
+				]
+			}
+		}
+	}
+}

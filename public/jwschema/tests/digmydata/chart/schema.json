@@ -1,0 +1,34 @@
+﻿{
+	"classes": {
+		"Root": {
+			"provider": "Object",
+			"fields": {
+				"metrics": {
+					"provider": "Dictionary",
+					"item": {
+						"provider": "Dictionary",
+						"item": {
+							"provider": "Object",
+							"fields": {
+								"data": {
+									"provider": "Array",
+									"item": {
+										"provider": "Object",
+										"fields": {
+											"start": "Int",
+											"end": "Int",
+											"value": "Number, optional",
+											"forecast": "Number, optional",
+											"itemsCount": "UnsignedInt, optional",
+											"items": "Array, optional"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
