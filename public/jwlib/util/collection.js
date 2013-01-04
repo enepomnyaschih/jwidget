@@ -23,153 +23,171 @@
 	reasonable changes).
 */
 
-JW.Collection = JW.Observable.extend({
-	// Events:
-	// add(event:JW.Event, index:Integer, item:*)
-	// remove(event:JW.Event, index:Integer, item:*)
-	// replace(event:JW.Event, index:Integer, oldItem:*, newItem:*)
-	// move(event:JW.Event, fromIndex:Integer, toIndex:Integer, item:*)
-	// clear(event:JW.Event)
-	// reorder(event:JW.Event)
-	// filter(event:JW.Event)
-	// reset(event:JW.Event)
+// TODO: tests for bulk changes, "change" event and "lengthchange" event
+
+JW.Collection/*<T>*/ = JW.Observable.extend({
+	/*
+	Events
+	add(JW.Event event, Integer index, T item);
+	remove(JW.Event event, Integer index, T item);
+	replace(JW.Event event, Integer index, T oldItem, T newItem);
+	move(JW.Event event, Integer fromIndex, Integer toIndex, T item);
+	clear(JW.Event event);
+	reorder(JW.Event event);
+	filter(JW.Event event);
+	reset(JW.Event event);
+	change(JW.Event event);
+	lengthchange(JW.Event event, Integer length);
 	
-	base: null, // [readonly] Array
+	Fields
+	Array<T> base;
+	Integer bulkCount;
+	Boolean bulkDirty;
+	Integer bulkLength;
+	*/
 	
-	init: function(
-		base)   // [optional] Array
-	{
+	bulkCount : 0,
+	
+	init: function(base) {
 		this._super();
-		this.base = JW.map(JW.makeArray(base), this._createItem, this);
+		this.base = JW.makeArray(base).concat();
 	},
 	
-	destroy: function()
-	{
-		this.each(this._destroyItem, this);
+	destroy: function() {
+		this.clear();
 		this._super();
 	},
 	
-	getLength: function()
-	{
+	getLength: function() {
 		return this.base.length;
 	},
 	
-	isEmpty: function()
-	{
+	isEmpty: function() {
 		return this.base.length === 0;
 	},
 	
-	getItemAt: function(index)
-	{
+	getItemAt: function(index) {
 		return this.base[index];
 	},
 	
-	addItem: function( // *
-		item)   // [required] *
-	{
-		return this.addItemAt(item, this.getLength());
+	addItem: function(item) {
+		this.addItemAt(item, this.getLength());
 	},
 	
-	addItemAt: function( // *
-		item,   // [required] *
-		index)  // [required] Integer
-	{
-		item = this._createItem(item);
+	addItemAt: function(item, index) {
 		this.base.splice(index, 0, item);
 		this.trigger("add", index, item);
-		return item;
+		this._triggerLengthChange();
 	},
 	
-	removeItem: function( // *
-		item)   // [required] *
-	{
+	removeItem: function(item) {
 		var index = JW.Array.indexOf(this.base, item);
-		if (index != -1)
-			return this.removeItemAt(index);
-		
-		return null;
+		if (index === -1) {
+			throw new Error("Can not find item in collection");
+		}
+		this.removeItemAt(index);
 	},
 	
-	removeItemAt: function( // *
-		index)  // [required] Integer
-	{
+	removeItemAt: function(index) {
 		var item = this.base[index];
 		this.base.splice(index, 1);
 		this.trigger("remove", index, item);
-		this._destroyItem(item);
+		this._triggerLengthChange();
 		return item;
 	},
 	
-	setItem: function( // *
-		index,  // [required] Integer
-		item)   // [required] *
-	{
+	setItem: function(index, item) {
 		var oldItem = this.base[index];
-		item = this._createItem(item);
 		this.base[index] = item;
 		this.trigger("replace", index, oldItem, item);
-		this._destroyItem(oldItem);
+		this._triggerChange();
 		return item;
 	},
 	
-	moveItem: function( // *
-		fromIndex,  // [required] Integer
-		toIndex)    // [required] Integer
-	{
+	moveItem: function(fromIndex, toIndex) {
 		var item = this.base[fromIndex];
 		this.base.splice(fromIndex, 1);
 		this.base.splice(toIndex, 0, item);
 		this.trigger("move", fromIndex, toIndex, item);
+		this._triggerChange();
 		return item;
 	},
 	
-	clear: function()
-	{
-		this.each(this._destroyItem, this);
+	clear: function() {
+		if (this.isEmpty()) {
+			return;
+		}
 		this.base.splice(0, this.base.length);
 		this.trigger("clear");
+		this._triggerLengthChange();
 	},
 	
-	triggerReorder: function()
-	{
+	triggerReorder: function() {
 		this.trigger("reorder");
+		this._triggerChange();
 	},
 	
-	triggerFilter: function()
-	{
+	triggerFilter: function() {
 		this.trigger("filter");
+		this._triggerLengthChange();
 	},
 	
-	triggerReset: function()
-	{
+	triggerReset: function() {
 		this.trigger("reset");
+		this._triggerLengthChange();
 	},
 	
-	every: function(
-		callback,   // [required] Function(item, index, array)
-		scope)      // [optional] Object
-	{
+	startBulkChange: function() {
+		++this.bulkCount;
+		if (this.bulkCount !== 1) {
+			return;
+		}
+		this.bulkDirty = false;
+		this.bulkLength = this.getLength();
+	},
+	
+	stopBulkChange: function() {
+		if (this.bulkCount === 0) {
+			return;
+		}
+		--this.bulkCount;
+		if (this.bulkCount !== 0) {
+			return;
+		}
+		if (this.bulkDirty) {
+			this.trigger("change");
+		}
+		if (this.bulkLength !== this.getLength()) {
+			this.trigger("lengthchange");
+		}
+	},
+	
+	every: function(callback, scope) {
 		return JW.every(this.base, callback, scope);
 	},
 	
-	createEmpty: function()
-	{
+	createEmpty: function() {
 		return new JW.Collection();
 	},
 	
-	pushItem: function(value, index)
-	{
+	pushItem: function(value, index) {
 		this.base.push(value);
 		return this;
 	},
 	
-	_createItem: function(data)
-	{
-		return data;
+	_triggerChange: function() {
+		if (this.bulkCount !== 0) {
+			this.bulkDirty = true;
+		} else {
+			this.trigger("change");
+		}
 	},
 	
-	_destroyItem: function(item)
-	{
+	_triggerLengthChange: function() {
+		this._triggerChange();
+		if (this.bulkCount === 0) {
+			this.trigger("lengthchange");
+		}
 	}
 });
 
