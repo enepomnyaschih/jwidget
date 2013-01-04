@@ -4,7 +4,7 @@
 	],
 	
 	"resources" : [
-		"jwschema/schema.js",",
+		"jwschema/schema.js",
 		"jwschema/class.js",
 		"jwschema/error.js",
 		"jwschema/validation.js",

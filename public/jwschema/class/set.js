@@ -1,7 +1,7 @@
 ﻿/*
 	JW Schema "set" validation class.
 	
-	Copyright (C) 2011 Egor Nepomnyaschih
+	Copyright (C) 2013 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by

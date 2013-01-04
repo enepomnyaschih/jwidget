@@ -1,0 +1,58 @@
+/* Web application CSS reset */
+
+/* Reset all application HTML elements */ 
+html, body, div, span, object, iframe, a, img, form, label,
+table, tbody, tfoot, thead, tr, th, td, canvas, embed, audio, video, button
+{ border:0; box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box;
+font:inherit; font-size:100%; margin:0; padding:0; vertical-align:baseline; }
+
+table { border-collapse:collapse; border-spacing:0; }
+input, textarea, select { box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
+
+/* Links */
+a { text-decoration:none; outline:none; }
+a img { border:none; }
+:focus { outline:none; }
+
+/* Buttons */
+button { background:none; box-align:stretch; -moz-box-align:stretch; -webkit-box-align:stretch;
+color:inherit; cursor:pointer; display:block; text-align:inherit; }
+
+/*
+Next elements should be used in plain text blocks only (not resetted):
+b, i, strike, u, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, ins, kbd, q,
+samp, small, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, legend, caption, article, aside, details,
+figure, figcaption, footer, header, hgroup, nav, output, ruby, section, summary, time, mark, acronym, applet,
+basefont, big, center, dir, font, isindex, menu, s
+*/
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display:block; }
+blockquote, q { quotes:"\201C" "\201D"; }
+blockquote:before, blockquote:after, q:before, q:after { content:''; content:none; }
+
+/* Utilities */
+.alignleft { float:left; }
+.alignright { float:right; }
+.aligncenter { margin-left:auto; margin-right:auto; }
+.clear { clear:both; }
+.clearleft { clear:left; }
+.clearright { clear:right; }
+.noborder { border:none; }
+.italic { font-style:italic; }
+.bold { font-weight:bold; }
+.hidden, .hide { display:none; }
+.textleft { text-align:left; }
+.textright { text-align:right; }
+.textcenter { text-align:center; }
+.allcaps { text-transform:uppercase; }
+.capitalize { text-transform:capitalize; }
+.serif { font-family:Georgia, "Times New Roman", serif; }
+.nomargin { margin:0; }
+.margin-top  { margin-top:18px; }
+.noborder { border:0; }
+.nobullet li { list-style:none; margin:0; }
+.wrap { width:960px; margin:0 auto; }
+img.alignleft { margin:0 20px 10px 0; float:left; }
+img.alignright { margin:0 0px 10px 20px; float:right; }
+img.aligncenter { text-align:center; display:block; }
