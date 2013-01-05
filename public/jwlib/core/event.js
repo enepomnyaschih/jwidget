@@ -1,5 +1,5 @@
 ﻿/*
-	JW observable config object.
+	jWidget Lib source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,10 +17,31 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableConfig = JW.Observable.extend({
-	init: function(config)
-	{
-		this._super();
-		JW.apply(this, config);
+JW.Event/*<P extends JW.EventParams>*/ = JW.Class.extend({
+	/*
+	Fields
+	Map<JW.EventAttachment<P>> attachments;
+	*/
+	
+	bind: function(callback, scope) {
+		var attachment = new JW.EventAttachment(this, callback, scope);
+		this.attachments[attachment._iid] = attachment;
+		return attachment;
+	},
+	
+	unbind: function(attachment) {
+		delete this.attachments[attachment._iid];
+	},
+	
+	purge: function() {
+		this.attachments = {};
+	},
+	
+	trigger: function(params) {
+		JW.getValuesArray(this.attachments).eachByMethod("_trigger", [ params ]);
+	},
+	
+	destroy: function() {
+		this.purge();
 	}
 });

@@ -17,18 +17,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Class = Class.extend({
+JW.Collection.LengthChangeEventParams/*<T extends JW.Class>*/ = JW.Collection.EventParams.extend({
 	/*
 	Fields
-	Integer _iid;
+	Integer oldLength;
+	Integer newLength;
 	*/
 	
-	init: function() {
-		this._iid = ++JW.Class._iid;
-	},
-	
-	destroy: function() {
+	init: function(sender, oldLength, newLength) {
+		this._super(sender);
+		this.oldLength = oldLength;
+		this.newLength = newLength;
 	}
 });
-
-JW.Class._iid = 0;

@@ -17,18 +17,27 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Class = Class.extend({
+JW.Collection.InstanceMapper/*<S, T>*/ = JW.Collection.Mapper.extend({
 	/*
-	Fields
-	Integer _iid;
+	Required
+	Subclass<T> provider;
+	
+	Optional
+	String dataField;
+	Object extraCfg;
 	*/
 	
-	init: function() {
-		this._iid = ++JW.Class._iid;
+	dataField : "data",
+	
+	// override
+	createItem: function(data) {
+		var config = JW.apply({}, this.extraCfg);
+		config[this.dataField] = data;
+		return new this.provider(config);
 	},
 	
-	destroy: function() {
+	// override
+	destroyItem: function(item) {
+		item.destroy();
 	}
 });
-
-JW.Class._iid = 0;

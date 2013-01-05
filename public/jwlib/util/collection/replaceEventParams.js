@@ -17,18 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Class = Class.extend({
+JW.Collection.ReplaceEventParams/*<T extends JW.Class>*/ = JW.Collection.EventParams.extend({
 	/*
 	Fields
-	Integer _iid;
+	Integer index;
+	T oldItem;
+	T newItem;
 	*/
 	
-	init: function() {
-		this._iid = ++JW.Class._iid;
-	},
-	
-	destroy: function() {
+	init: function(sender, index, oldItem, newItem) {
+		this._super(sender);
+		this.index = index;
+		this.oldItem = oldItem;
+		this.newItem = newItem;
 	}
 });
-
-JW.Class._iid = 0;

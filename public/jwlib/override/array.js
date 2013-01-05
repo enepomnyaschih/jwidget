@@ -258,6 +258,20 @@ JW.Array._prototype = {
 	isEmpty: function()
 	{
 		return this.length === 0;
+	},
+	
+	/**
+	 * Insert range of items into specific position.
+	 */
+	addAll: function(items, index) {
+		this.splice.apply(this, [ JW.def(index, this.length), 0 ].concat(items));
+	},
+	
+	/**
+	 * Clear array.
+	 */
+	clear: function() {
+		return this.splice(0, this.length);
 	}
 };
 

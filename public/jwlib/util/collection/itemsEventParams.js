@@ -17,18 +17,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Class = Class.extend({
+JW.Collection.ItemsEventParams/*<T extends JW.Class>*/ = JW.Collection.EventParams.extend({
 	/*
 	Fields
-	Integer _iid;
+	Array<T> items;
 	*/
 	
-	init: function() {
-		this._iid = ++JW.Class._iid;
-	},
-	
-	destroy: function() {
+	init: function(sender, items) {
+		this._super(sender);
+		this.items = items;
 	}
 });
-
-JW.Class._iid = 0;

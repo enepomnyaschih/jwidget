@@ -17,18 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Class = Class.extend({
+JW.EventAttachment/*<P extends JW.Event.Params>*/ = JW.Class.extend({
 	/*
 	Fields
-	Integer _iid;
+	JW.Event<P> event;
+	Function callback;
+	Object scope;
 	*/
 	
-	init: function() {
-		this._iid = ++JW.Class._iid;
+	init: function(event, callback, scope) {
+		this.event = event;
+		this.callback = callback;
+		this.scope = scope;
 	},
 	
 	destroy: function() {
+		this.event.unbind(this);
+	},
+	
+	_trigger: function(params) {
+		this.callback.call(this.scope || this, params);
 	}
 });
-
-JW.Class._iid = 0;

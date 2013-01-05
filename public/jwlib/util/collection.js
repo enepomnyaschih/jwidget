@@ -25,36 +25,55 @@
 
 // TODO: tests for bulk changes, "change" event and "lengthchange" event
 
-JW.Collection/*<T>*/ = JW.Observable.extend({
+JW.Collection/*<T extends JW.Class>*/ = JW.Class.extend({
 	/*
-	Events
-	add(JW.Event event, Integer index, T item);
-	remove(JW.Event event, Integer index, T item);
-	replace(JW.Event event, Integer index, T oldItem, T newItem);
-	move(JW.Event event, Integer fromIndex, Integer toIndex, T item);
-	clear(JW.Event event);
-	reorder(JW.Event event);
-	filter(JW.Event event);
-	reset(JW.Event event);
-	change(JW.Event event);
-	lengthchange(JW.Event event, Integer length);
-	
 	Fields
 	Array<T> base;
+	JW.Event<JW.Collection.ItemRangeEventParams<T>> addEvent;
+	JW.Event<JW.Collection.ItemRangeEventParams<T>> removeEvent;
+	JW.Event<JW.Collection.ReplaceEventParams<T>> replaceEvent;
+	JW.Event<JW.Collection.MoveEventParams<T>> moveEvent;
+	JW.Event<JW.Collection.ItemsEventParams<T>> clearEvent;
+	JW.Event<JW.Collection.EventParams<T>> reorderEvent;
+	JW.Event<JW.Collection.EventParams<T>> filterEvent;
+	JW.Event<JW.Collection.EventParams<T>> resetEvent;
+	JW.Event<JW.Collection.EventParams<T>> changeEvent;
+	JW.Event<JW.Collection.LengthChangeEventParams<T>> lengthChangeEvent;
 	Integer bulkCount;
 	Boolean bulkDirty;
 	Integer bulkLength;
 	*/
 	
-	bulkCount : 0,
+	bulkCount  : 0,
+	bulkLength : 0,
 	
-	init: function(base) {
+	init: function() {
 		this._super();
-		this.base = JW.makeArray(base).concat();
+		this.base = [];
+		this.addEvent = new JW.Event();
+		this.removeEvent = new JW.Event();
+		this.replaceEvent = new JW.Event();
+		this.moveEvent = new JW.Event();
+		this.clearEvent = new JW.Event();
+		this.reorderEvent = new JW.Event();
+		this.filterEvent = new JW.Event();
+		this.resetEvent = new JW.Event();
+		this.changeEvent = new JW.Event();
+		this.lengthChangeEvent = new JW.Event();
 	},
 	
 	destroy: function() {
 		this.clear();
+		this.addEvent.destroy();
+		this.removeEvent.destroy();
+		this.replaceEvent.destroy();
+		this.moveEvent.destroy();
+		this.clearEvent.destroy();
+		this.reorderEvent.destroy();
+		this.filterEvent.destroy();
+		this.resetEvent.destroy();
+		this.changeEvent.destroy();
+		this.lengthChangeEvent.destroy();
 		this._super();
 	},
 	
@@ -66,74 +85,77 @@ JW.Collection/*<T>*/ = JW.Observable.extend({
 		return this.base.length === 0;
 	},
 	
-	getItemAt: function(index) {
+	get: function(index) {
 		return this.base[index];
 	},
 	
-	addItem: function(item) {
-		this.addItemAt(item, this.getLength());
-	},
-	
-	addItemAt: function(item, index) {
-		this.base.splice(index, 0, item);
-		this.trigger("add", index, item);
-		this._triggerLengthChange();
-	},
-	
-	removeItem: function(item) {
-		var index = JW.Array.indexOf(this.base, item);
-		if (index === -1) {
-			throw new Error("Can not find item in collection");
+	add: function(item, index) {
+		if (index === undefined) {
+			index = this.getLength();
 		}
-		this.removeItemAt(index);
-	},
-	
-	removeItemAt: function(index) {
-		var item = this.base[index];
-		this.base.splice(index, 1);
-		this.trigger("remove", index, item);
+		this.base.splice(index, 0, item);
+		this.addEvent.trigger(new JW.Collection.ItemRangeEventParams(this, [ item ], index));
 		this._triggerLengthChange();
-		return item;
 	},
 	
-	setItem: function(index, item) {
+	addAll: function(items, index) {
+		if (items.length === 0) {
+			return;
+		}
+		if (index === undefined) {
+			index = this.getLength();
+		}
+		JW.Array.addAll(this.base, items, index);
+		this.addEvent.trigger(new JW.Collection.ItemRangeEventParams(this, items, index));
+		this._triggerLengthChange();
+	},
+	
+	remove: function(index, count) {
+		var items = this.base.splice(index, JW.def(count, 1));
+		this.removeEvent.trigger(new JW.Collection.ItemRangeEventParams(this, items, index));
+		this._triggerLengthChange();
+		return (count === undefined) ? items[0] : items;
+	},
+	
+	set: function(index, item) {
 		var oldItem = this.base[index];
 		this.base[index] = item;
-		this.trigger("replace", index, oldItem, item);
+		this.replaceEvent.trigger(new JW.Collection.ReplaceEventParams(this, index, oldItem, item));
 		this._triggerChange();
-		return item;
+		return oldItem;
 	},
 	
-	moveItem: function(fromIndex, toIndex) {
+	move: function(fromIndex, toIndex) {
 		var item = this.base[fromIndex];
 		this.base.splice(fromIndex, 1);
 		this.base.splice(toIndex, 0, item);
-		this.trigger("move", fromIndex, toIndex, item);
+		this.moveEvent.trigger(new JW.Collection.MoveEventParams(this, fromIndex, toIndex, item));
 		this._triggerChange();
 		return item;
 	},
 	
 	clear: function() {
 		if (this.isEmpty()) {
-			return;
+			return [];
 		}
-		this.base.splice(0, this.base.length);
-		this.trigger("clear");
+		var items = JW.Array.clear(this.base);
+		this.clearEvent.trigger(new JW.Collection.ItemsEventParams(this, items));
 		this._triggerLengthChange();
+		return items;
 	},
 	
 	triggerReorder: function() {
-		this.trigger("reorder");
+		this.reorderEvent.trigger(new JW.Collection.EventParams(this));
 		this._triggerChange();
 	},
 	
 	triggerFilter: function() {
-		this.trigger("filter");
+		this.filterEvent.trigger(new JW.Collection.EventParams(this));
 		this._triggerLengthChange();
 	},
 	
 	triggerReset: function() {
-		this.trigger("reset");
+		this.resetEvent.trigger(new JW.Collection.EventParams(this));
 		this._triggerLengthChange();
 	},
 	
@@ -143,7 +165,6 @@ JW.Collection/*<T>*/ = JW.Observable.extend({
 			return;
 		}
 		this.bulkDirty = false;
-		this.bulkLength = this.getLength();
 	},
 	
 	stopBulkChange: function() {
@@ -151,45 +172,21 @@ JW.Collection/*<T>*/ = JW.Observable.extend({
 			return;
 		}
 		--this.bulkCount;
-		if (this.bulkCount !== 0) {
-			return;
-		}
 		if (this.bulkDirty) {
-			this.trigger("change");
+			this._triggerChange();
 		}
-		if (this.bulkLength !== this.getLength()) {
-			this.trigger("lengthchange");
-		}
-	},
-	
-	every: function(callback, scope) {
-		return JW.every(this.base, callback, scope);
-	},
-	
-	createEmpty: function() {
-		return new JW.Collection();
-	},
-	
-	pushItem: function(value, index) {
-		this.base.push(value);
-		return this;
 	},
 	
 	_triggerChange: function() {
 		if (this.bulkCount !== 0) {
 			this.bulkDirty = true;
-		} else {
-			this.trigger("change");
+			return;
 		}
-	},
-	
-	_triggerLengthChange: function() {
-		this._triggerChange();
-		if (this.bulkCount === 0) {
-			this.trigger("lengthchange");
+		this.changeEvent.trigger(new JW.Collection.EventParams(this));
+		var length = this.getLength();
+		if (this.bulkLength !== length) {
+			this.lengthChangeEvent.trigger(new JW.Collection.LengthChangeEventParams(this, this.bulkLength, length));
+			this.bulkLength = length;
 		}
 	}
 });
-
-JW.applyIf(JW.Collection.prototype, JW.Alg.SimpleMethods);
-JW.applyIf(JW.Collection.prototype, JW.Alg.BuildMethods);

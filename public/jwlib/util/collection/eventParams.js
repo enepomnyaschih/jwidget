@@ -1,5 +1,5 @@
 ﻿/*
-	JW config object.
+	jWidget Lib source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,10 +17,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Config = JW.Class.extend({
-	init: function(config)
-	{
-		this._super();
-		JW.apply(this, config);
-	}
+JW.Collection.EventParams/*<T extends JW.Class>*/ = JW.EventParams.extend({
+	/*
+	Fields
+	JW.Collection<T> sender;
+	*/
 });
