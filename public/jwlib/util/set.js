@@ -23,15 +23,15 @@
 	reasonable changes).
 */
 
-JW.Map/*<T extends JW.Class>*/ = JW.Class.extend({
+JW.Set/*<T extends JW.Class>*/ = JW.Class.extend({
 	/*
 	Fields
 	Map<T> base;
 	Integer size;
-	JW.Event<JW.Map.ItemEventParams<T>> addEvent;
-	JW.Event<JW.Map.ItemEventParams<T>> removeEvent;
-	JW.Event<JW.Map.EventParams<T>> changeEvent;
-	JW.Event<JW.Map.SizeChangeEventParams<T>> sizeChangeEvent;
+	JW.Event<JW.Set.ItemEventParams<T>> addEvent;
+	JW.Event<JW.Set.ItemEventParams<T>> removeEvent;
+	JW.Event<JW.Set.EventParams<T>> changeEvent;
+	JW.Event<JW.Set.SizeChangeEventParams<T>> sizeChangeEvent;
 	Integer bulkCount;
 	Boolean bulkDirty;
 	Integer bulkSize;
@@ -67,39 +67,34 @@ JW.Map/*<T extends JW.Class>*/ = JW.Class.extend({
 		return this.size === 0;
 	},
 	
-	get: function(key) {
-		return this.base[key];
+	contains: function(item) {
+		return this.base.hasOwnProperty(item._iid);
 	},
 	
-	set: function(item, key) {
-		var oldItem = this.base[key];
-		if (oldItem === item) {
+	add: function(item) {
+		if (this.base[item._iid]) {
 			return;
 		}
-		if (oldItem) {
-			this.remove(key);
-		}
-		this.base[key] = item;
+		this.base[item._iid] = item;
 		++this.size;
-		this.addEvent.trigger(new JW.Map.ItemEventParams(this, item, key));
+		this.addEvent.trigger(new JW.Set.ItemEventParams(this, item));
 		this._triggerChange();
 	},
 	
-	remove: function(key) {
-		var item = this.base[key];
-		if (!item) {
+	remove: function(item) {
+		if (!this.base[item._iid]) {
 			return;
 		}
-		delete this.base[key];
+		delete this.base[item._iid];
 		--this.size;
-		this.removeEvent.trigger(new JW.Map.ItemEventParams(this, item, key));
+		this.removeEvent.trigger(new JW.Map.ItemEventParams(this, item));
 		this._triggerChange();
 	},
 	
 	clear: function() {
 		var base = JW.apply({}, this.base);
 		for (var key in base) {
-			this.remove(key);
+			this.remove(base[key]);
 		}
 	},
 	
@@ -126,11 +121,11 @@ JW.Map/*<T extends JW.Class>*/ = JW.Class.extend({
 	},
 	
 	createEmpty: function() {
-		return new JW.Map();
+		return new JW.Set();
 	},
 	
 	pushItem: function(params) {
-		this.set(params[0], params[1]);
+		this.add(params[0]);
 	},
 	
 	_triggerChange: function() {
@@ -138,12 +133,12 @@ JW.Map/*<T extends JW.Class>*/ = JW.Class.extend({
 			this.bulkDirty = true;
 			return;
 		}
-		this.changeEvent.trigger(new JW.Map.EventParams(this));
+		this.changeEvent.trigger(new JW.Set.EventParams(this));
 		if (this.bulkSize !== size) {
-			this.sizeChangeEvent.trigger(new JW.Map.SizeChangeEventParams(this, this.bulkSize, size));
+			this.sizeChangeEvent.trigger(new JW.Set.SizeChangeEventParams(this, this.bulkSize, size));
 			this.bulkSize = size;
 		}
 	}
 });
 
-JW.applyIf(JW.Map.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);
+JW.applyIf(JW.Set.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);

@@ -7,12 +7,15 @@
 	"resources" : [
 		"jwui/core.js",
 		"jwui/jquery.patch.js",
+        
 		"jwui/browsers.js",
 		"jwui/component.js",
-		"jwui/component/addConfig.js",
+		"jwui/component/child.js",
+		"jwui/component/eventParams.js",
+		"jwui/component/list.js",
+		"jwui/component/list/item.js",
+		"jwui/inserter.js",
 		"jwui/params.js",
-		"jwui/plugin.js",
-		"jwui/preloadImage.js",
-		"jwui/syncher.js"
+		"jwui/preloadImage.js"
 	]
 }

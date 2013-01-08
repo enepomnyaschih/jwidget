@@ -17,22 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Collection.InstanceMapper/*<S extends JW.Class, T extends JW.Config>*/ = JW.Config.extend({
+JW.Collection.FieldMapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Config.extend({
 	/*
 	Required
 	JW.Collection<S> source;
-	Subclass<T> provider;
+	String field;
 	
 	Optional
 	JW.Collection<T> target;
-	String dataField;
-	Object extraCfg;
 	
 	Fields
 	JW.Collection.Mapper<S, T> mapper;
 	*/
-	
-	dataField : "data",
 	
 	init: function(config) {
 		this._super(config);
@@ -49,12 +45,8 @@ JW.Collection.InstanceMapper/*<S extends JW.Class, T extends JW.Config>*/ = JW.C
 	},
 	
 	_createItem: function(data) {
-		var config = JW.apply({}, this.extraCfg);
-		config[this.dataField] = data;
-		return new this.provider(config);
+		return JW.get(data, this.field);
 	},
 	
-	_destroyItem: function(item) {
-		item.destroy();
-	}
+	_destroyItem: function() {}
 });

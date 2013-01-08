@@ -19,10 +19,10 @@
 
 // TODO: Filter from end to begin
 
-JW.Collection.Atomizer/*<T extends JW.Class>*/ = JW.Class.extend({
+JW.Collection.Inserter/*<T extends JW.Class>*/ = JW.Config.extend({
 	/*
 	Required
-	JW.Collection<T> collection;
+	JW.Collection<T> source;
 	
 	Optional
 	Object scope; // defaults to this
@@ -33,47 +33,46 @@ JW.Collection.Atomizer/*<T extends JW.Class>*/ = JW.Class.extend({
 	void clearItems(); // optional
 	
 	Fields
-	EventAttachment addEventAttachment;
-	EventAttachment removeEventAttachment;
-	EventAttachment replaceEventAttachment;
-	EventAttachment moveEventAttachment;
-	EventAttachment clearEventAttachment;
-	EventAttachment reorderEventAttachment;
-	EventAttachment filterEventAttachment;
-	EventAttachment resetEventAttachment;
-	Array<T> snapshot;
+	EventAttachment _addEventAttachment;
+	EventAttachment _removeEventAttachment;
+	EventAttachment _replaceEventAttachment;
+	EventAttachment _moveEventAttachment;
+	EventAttachment _clearEventAttachment;
+	EventAttachment _reorderEventAttachment;
+	EventAttachment _filterEventAttachment;
+	EventAttachment _resetEventAttachment;
+	Array<T> _snapshot;
 	*/
 	
 	init: function(config) {
-		this._super();
-		JW.apply(this, config);
-		this.addEventAttachment = this.collection.addEvent.bind(this._onAdd, this);
-		this.removeEventAttachment = this.collection.removeEvent.bind(this._onRemove, this);
-		this.replaceEventAttachment = this.collection.replaceEvent.bind(this._onReplace, this);
-		this.moveEventAttachment = this.collection.moveEvent.bind(this._onMove, this);
-		this.clearEventAttachment = this.collection.clearEvent.bind(this._onClear, this);
-		this.reorderEventAttachment = this.collection.reorderEvent.bind(this._onReorder, this);
-		this.filterEventAttachment = this.collection.filterEvent.bind(this._onFilter, this);
-		this.resetEventAttachment = this.collection.resetEvent.bind(this._onReset, this);
-		this.snapshot = [];
+		this._super(config);
+		this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
+		this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
+		this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
+		this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
+		this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+		this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
+		this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
+		this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
+		this._snapshot = [];
 		this._fill();
 	},
 	
 	destroy: function() {
-		this.addEventAttachment.destroy();
-		this.removeEventAttachment.destroy();
-		this.replaceEventAttachment.destroy();
-		this.moveEventAttachment.destroy();
-		this.clearEventAttachment.destroy();
-		this.reorderEventAttachment.destroy();
-		this.filterEventAttachment.destroy();
-		this.resetEventAttachment.destroy();
 		this._clear();
+		this._addEventAttachment.destroy();
+		this._removeEventAttachment.destroy();
+		this._replaceEventAttachment.destroy();
+		this._moveEventAttachment.destroy();
+		this._clearEventAttachment.destroy();
+		this._reorderEventAttachment.destroy();
+		this._filterEventAttachment.destroy();
+		this._resetEventAttachment.destroy();
 		this._super();
 	},
 	
 	_addItem: function(item, index) {
-		this.snapshot.splice(index, 0, item);
+		this._snapshot.splice(index, 0, item);
 		this.addItem.call(this.scope || this, item, index);
 	},
 	
@@ -84,7 +83,7 @@ JW.Collection.Atomizer/*<T extends JW.Class>*/ = JW.Class.extend({
 	},
 	
 	_removeItem: function(index) {
-		var item = this.snapshot.splice(index, 1)[0];
+		var item = this._snapshot.splice(index, 1)[0];
 		this.removeItem.call(this.scope || this, index, item);
 	},
 	
@@ -95,15 +94,15 @@ JW.Collection.Atomizer/*<T extends JW.Class>*/ = JW.Class.extend({
 	},
 	
 	_fill: function() {
-		this._addItems(this.collection.base.concat(), 0);
+		this._addItems(this.source.base.concat(), 0);
 	},
 	
 	_clear: function() {
 		if (this.clearItems) {
-			JW.Array.clear(this.snapshot);
+			JW.Array.clear(this._snapshot);
 			this.clearItems.call(this.scope || this);
 		} else {
-			this._removeItems(0, this.snapshot.length);
+			this._removeItems(0, this._snapshot.length);
 		}
 	},
 	
@@ -136,7 +135,7 @@ JW.Collection.Atomizer/*<T extends JW.Class>*/ = JW.Class.extend({
 	
 	_onFilter: function() {
 		// if there is an effective clearing function, just reset the controller
-		if (this.clearItems && (3 * this.collection.base.length < this.snapshot.length)) {
+		if (this.clearItems && (3 * this.source.base.length < this._snapshot.length)) {
 			this._clear();
 			this._fill();
 			return;
@@ -144,8 +143,8 @@ JW.Collection.Atomizer/*<T extends JW.Class>*/ = JW.Class.extend({
 		
 		// else, remove specific elements
 		var index = 0;
-		while (index < this.snapshot.length) {
-			if (this.snapshot[index] === this.collection.base[index]) {
+		while (index < this._snapshot.length) {
+			if (this._snapshot[index] === this.source.base[index]) {
 				++index;
 			} else {
 				this._removeItem(index);

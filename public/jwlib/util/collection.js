@@ -64,16 +64,16 @@ JW.Collection/*<T extends JW.Class>*/ = JW.Class.extend({
 	
 	destroy: function() {
 		this.clear();
-		this.addEvent.destroy();
-		this.removeEvent.destroy();
-		this.replaceEvent.destroy();
-		this.moveEvent.destroy();
-		this.clearEvent.destroy();
-		this.reorderEvent.destroy();
-		this.filterEvent.destroy();
-		this.resetEvent.destroy();
-		this.changeEvent.destroy();
 		this.lengthChangeEvent.destroy();
+		this.changeEvent.destroy();
+		this.resetEvent.destroy();
+		this.filterEvent.destroy();
+		this.reorderEvent.destroy();
+		this.clearEvent.destroy();
+		this.moveEvent.destroy();
+		this.replaceEvent.destroy();
+		this.removeEvent.destroy();
+		this.addEvent.destroy();
 		this._super();
 	},
 	
@@ -95,7 +95,7 @@ JW.Collection/*<T extends JW.Class>*/ = JW.Class.extend({
 		}
 		this.base.splice(index, 0, item);
 		this.addEvent.trigger(new JW.Collection.ItemRangeEventParams(this, [ item ], index));
-		this._triggerLengthChange();
+		this._triggerChange();
 	},
 	
 	addAll: function(items, index) {
@@ -107,13 +107,13 @@ JW.Collection/*<T extends JW.Class>*/ = JW.Class.extend({
 		}
 		JW.Array.addAll(this.base, items, index);
 		this.addEvent.trigger(new JW.Collection.ItemRangeEventParams(this, items, index));
-		this._triggerLengthChange();
+		this._triggerChange();
 	},
 	
 	remove: function(index, count) {
 		var items = this.base.splice(index, JW.def(count, 1));
 		this.removeEvent.trigger(new JW.Collection.ItemRangeEventParams(this, items, index));
-		this._triggerLengthChange();
+		this._triggerChange();
 		return (count === undefined) ? items[0] : items;
 	},
 	
@@ -140,7 +140,7 @@ JW.Collection/*<T extends JW.Class>*/ = JW.Class.extend({
 		}
 		var items = JW.Array.clear(this.base);
 		this.clearEvent.trigger(new JW.Collection.ItemsEventParams(this, items));
-		this._triggerLengthChange();
+		this._triggerChange();
 		return items;
 	},
 	
@@ -151,12 +151,12 @@ JW.Collection/*<T extends JW.Class>*/ = JW.Class.extend({
 	
 	triggerFilter: function() {
 		this.filterEvent.trigger(new JW.Collection.EventParams(this));
-		this._triggerLengthChange();
+		this._triggerChange();
 	},
 	
 	triggerReset: function() {
 		this.resetEvent.trigger(new JW.Collection.EventParams(this));
-		this._triggerLengthChange();
+		this._triggerChange();
 	},
 	
 	startBulkChange: function() {
@@ -177,6 +177,18 @@ JW.Collection/*<T extends JW.Class>*/ = JW.Class.extend({
 		}
 	},
 	
+	every: function(callback, scope) {
+		return JW.every(this.base, callback, scope);
+	},
+	
+	createEmpty: function() {
+		return new JW.Collection();
+	},
+	
+	pushItem: function(params) {
+		this.add(params[0]);
+	},
+	
 	_triggerChange: function() {
 		if (this.bulkCount !== 0) {
 			this.bulkDirty = true;
@@ -190,3 +202,5 @@ JW.Collection/*<T extends JW.Class>*/ = JW.Class.extend({
 		}
 	}
 });
+
+JW.applyIf(JW.Collection.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);

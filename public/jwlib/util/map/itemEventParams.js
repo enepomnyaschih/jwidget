@@ -1,5 +1,5 @@
 ﻿/*
-	JW base plugin to UI components.
+	jWidget Lib source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,43 +17,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Plugin = JW.Observable.extend({
-	xtype   : null, // [readonly] String
-	target  : null, // [readonly] JW.UI.Component to attach plugin to
+JW.Map.ItemEventParams/*<T extends JW.Class>*/ = JW.Map.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	T item;
+	String key;
+	*/
 	
-	init: function(config)
-	{
-		JW.apply(this, config);
-	},
-	
-	attach: function(target)
-	{
-		this.target = target;
-		this.initPlugin();
-	},
-	
-	// virtual
-	initPlugin: function()
-	{
-	},
-	
-	// virtual
-	render: function()
-	{
-	},
-	
-	// virtual
-	afterAppend: function()
-	{
-	},
-	
-	// virtual
-	doLayout: function()
-	{
-	},
-	
-	// virtual
-	destroy: function()
-	{
+	init: function(sender, item, key) {
+		this._super(sender);
+		this.item = item;
+		this.key = key;
 	}
 });

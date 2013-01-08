@@ -17,434 +17,163 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Component = JW.ObservableConfig.extend({
-	plugins         : null,     // [optional] Array of JW.UI.Plugin
-	cls             : null,     // [optional] String or Array of String
-	visible         : true,     // [optional] Boolean
-	childBox        : null,     // [optional] String
-	html            : null,     // [optional] String
+JW.UI.Component = JW.Config.extend({
+	/*
+	Optional
+	String elName;
+	String rootClass;
+	String template;
+	JW.Map<JW.UI.Component> children; // named children
 	
-	// The next options correspond to addChild method specification
-	renderParent    : null,     // [optional] JW.UI.Component
-	renderPosition  : null,     // [optional] JW.UI.Component.AddConfig
+	Fields
+	Boolean childrenCreated;
+	JW.UI.Component parent;
+	Element el;
+	Boolean appended;
+	JW.Set<JW.UI.Component> allChildren; // children + (lists' contents)
+	JW.Map.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
+	Array<JW.UI.Component.List> _lists;
+	JW.Event<JW.UI.Component.EventParams> _invokeRemoveEvent;
+	*/
 	
-	// The next options should be used for root components only
-	renderTo        : null,     // [optional] jQuery element
-	renderAs        : null,     // [optional] jQuery element
+	appended : false,
 	
-	el              : null,     // [readonly] jQuery element
-	appended        : false,    // [readonly] Boolean
-	
-	plainChildren   : null,     // [readonly] Array of JW.UI.Component
-	namedChildren   : null,     // [readonly] Map from string to JW.UI.Component
-	freeChildren    : null,     // [readonly] Array of JW.UI.Component
-	
-	init: function(config)
-	{
+	init: function(config) {
 		this._super(config);
+		this.initComponent();
+		this.childrenCreated = !this.children;
+		if (this.childrenCreated) {
+			this.children = new JW.Map();
+		}
+		this.allChildren = new JW.Set();
 		
-		this._initComponent();
-		this._render();
+		this._childMapper = new JW.Map.InstanceMapper({
+			source    : this.children,
+			provider  : JW.UI.Component.Child,
+			dataField : "component",
+			keyField  : "name",
+			extraCfg  : {
+				parent : this
+			}
+		});
+		
+		this._lists = [];
+		this._invokeRemoveEvent = new JW.Event();
+		this._applyTemplate();
+		this.render();
 	},
 	
-	destroy: function()
-	{
-		if (!this.el)
+	destroy: function() {
+		if (!this.el) {
 			return;
-		
+		}
 		this.remove();
-		
-		var plugins       = this.plugins;
-		var plainChildren = this.plainChildren;
-		var namedChildren = this.namedChildren;
-		var freeChildren  = this.freeChildren;
-		
-		this.plugins = [];
-		this.removeChildren();
-		
-		JW.eachByMethod(plugins,       "destroy");
-		JW.eachByMethod(plainChildren, "destroy");
-		JW.eachByMethod(namedChildren, "destroy");
-		JW.eachByMethod(freeChildren,  "destroy");
-		
 		this.destroyComponent();
-		
-		if (this.el)
-			this.el.remove();
-		
-		delete this.plugins;
-		delete this.renderParent;
-		delete this.renderTo;
-		delete this.renderAs;
+		this._invokeRemoveEvent.destroy();
+		JW.eachByMethod(this._lists, "destroy");
+		this._childMapper.destroy();
+		this.allChildren.destroy();
+		if (this.childrenCreated) {
+			this.children.destroy();
+		}
+		this.el.remove();
+		delete this.children;
+		delete this.parent;
 		delete this.el;
-		delete this.plainChildren;
-		delete this.namedChildren;
-		delete this.freeChildren;
-		
 		this._super();
 	},
 	
-	/**
-	 * Component initialization.
-	 * Override this to specify initial values for component properties.
-	 * You can build plugins array here, these plugins will prepend ones from config object.
-	 * Append superclass method call.
-	 */
-	initComponent: function()
-	{
+	initComponent: function() {},
+	
+	render: function() {},
+	
+	afterAppend: function() {},
+	
+	destroyComponent: function() {},
+	
+	renderTo: function(el) {
+		this.remove();
+		jQuery(el).insert(this.el);
+		this._afterAppend();
 	},
 	
-	/**
-	 * Component rendering.
-	 * Override this to render component's HTML.
-	 * Template is applied here and all elements are defined.
-	 * You can customize elements' properties in this method and finish rendering.
-	 * Prepend superclass method call.
-	 */
-	render: function()
-	{
+	renderAs: function(el) {
+		this.remove();
+		jQuery(el).replaceBy(this.el);
+		this._afterAppend();
 	},
 	
-	/**
-	 * After append to DOM.
-	 * Override this to specify any initialization actions that require element
-	 * to be inserted into DOM.
-	 * Use renderParent or addChild EVERYWHERE to get this work.
-	 * Prepend superclass method call.
-	 */
-	afterAppend: function()
-	{
-	},
-	
-	/**
-	 * Layout the component.
-	 * Use renderParent or addChild EVERYWHERE to get this work.
-	 * Prepend superclass method call.
-	 */
-	doLayout: function()
-	{
-	},
-	
-	/**
-	 * Layout component totally.
-	 */
-	doLayoutAll: function()
-	{
-		if (!this.el || !this.el.parents("body").length)
-			return;
-		
-		this.doLayout();
-		JW.eachByMethod(this.plugins,       "doLayout");
-		JW.eachByMethod(this.plainChildren, "doLayoutAll");
-		JW.eachByMethod(this.namedChildren, "doLayoutAll");
-		JW.eachByMethod(this.freeChildren,  "doLayoutAll");
-	},
-	
-	/**
-	 * Component destructor.
-	 */
-	destroyComponent: function()
-	{
-	},
-	
-	/**
-	 * Get plugin instance by its xtype.
-	 */
-	getPlugin: function(xtype)
-	{
-		return JW.searchBy(this.plugins, "xtype", xtype);
-	},
-	
-	/**
-	 * Focus first element with "auto-focus" class.
-	 */
-	focus: function()
-	{
-		jQuery(this.el.find(".auto-focus")[0]).focus();
-	},
-	
-	/**
-	 * Returns jQuery element where children should be inserted by default.
-	 */
-	getChildBox: function()
-	{
-		if (!JW.isSet(this.childBox))
-			return this.el;
-		
-		return this.getChildEl(this.childBox);
-	},
-	
-	/**
-	 * Add child. Opposite to appendTo.
-	 */
-	addChild: function(
-		cmp,    // [required] JW.UI.Component
-		config) // [optional] JW.UI.Component.AddConfig or Number or String or jQuery element
-	{
-		if (!JW.isSet(config))
-			config = {};
-		else if (typeof config === "number")
-			config = { index : config };
-		else if (typeof config === "string")
-			config = { id : config };
-		else if (JW.UI.isElement(config))
-			config = { el : config };
-		
-		cmp.remove();
-		
-		if (config.id)
-			this.restoreElement(config.id);
-		
-		var el = config.el || this.getChildEl(config.id);
-		
-		if (!config.index && !config.insert && el)
-		{
-			el.replaceBy(cmp.el);
-			if (config.id)
-				delete this[this.getChildElName(config.id)];
-			
-			if (config.id)
-				this.namedChildren[config.id] = cmp;
-			else
-				this.freeChildren.push(cmp);
-		}
-		else
-		{
-			if (el)
-			{
-				if (JW.isSet(config.index))
-					el.insert(cmp.el, config.index);
-				else
-					el.append(cmp.el);
-				
-				this.freeChildren.push(cmp);
-			}
-			else
-			{
-				var index = JW.defn(config.index, this.plainChildren.length);
-				this.getChildBox().insert(cmp.el, index);
-				this.plainChildren.splice(config.index, 0, cmp);
-			}
-		}
-		
-		cmp.parent = this;
-		cmp._afterAppend();
-	},
-	
-	/**
-	 * Remove component from the parent and DOM.
-	 */
-	remove: function()
-	{
-		if (this.parent)
-		{
-			this.parent._removeChild(this);
-			delete this.parent;
-		}
-		
+	remove: function() {
+		this._invokeRemoveEvent.trigger(new JW.UI.Component.EventParams(this));
 		this.el.detach();
 	},
 	
-	/**
-	 * Remove all children.
-	 */
-	removeChildren: function()
-	{
-		var children = this.getChildren();
-		JW.each(children, function(cmp) {
-			delete cmp.parent;
-			cmp.remove();
-		}, this);
-		
-		this.plainChildren = [];
-		this.namedChildren = {};
-		this.freeChildren  = [];
-		
-		return children;
+	getElement: function(id) {
+		return JW.isSet(id) ? this[this.getElementName(id)] : null;
 	},
 	
-	/**
-	 * Replaces named child with empty element and returns one.
-	 */
-	restoreElement: function(id)
-	{
-		var elName = this.getChildElName(id);
-		if (this[elName])
-			return this[elName];
-		
-		var existingCmp = this.namedChildren[id];
-		this[elName] = jQuery('<div class="' + this.getChildElClass(id) + '" />');
-		existingCmp.el.after(this[elName]);
-		existingCmp.remove();
-		
-		return this[elName];
+	getElementName: function(id) {
+		return JW.isSet(id) ? (JW.String.camel(id) + "El") : "el";
 	},
 	
-	/**
-	 * Removes child at specified position and returns one.
-	 */
-	removeChild: function(index)
-	{
-		var cmp = this.plainChildren[index];
-		this.plainChildren[index].remove();
-		return cmp;
+	getElementClass: function(id) {
+		return JW.map(JW.filter([ this.rootClass, id ], JW.isSet), JW.String.hyphen).join("-");
 	},
 	
-	/**
-	 * Removes element by id.
-	 */
-	removeEl: function(id)
-	{
-		var elName = this.getChildElName(id);
-		if (!this[elName])
+	removeElement: function(id) {
+		var elName = this.getElementName(id);
+		if (!this[elName]) {
 			return;
-		
+		}
 		this[elName].remove();
 		delete this[elName];
 	},
 	
-	/**
-	 * Get all children.
-	 */
-	getChildren: function()
-	{
-		return this.plainChildren.concat(JW.getValuesArray(this.namedChildren), this.freeChildren);
+	addList: function(collection, el) {
+		this._lists.push(new JW.UI.Component.List({
+			parent     : this,
+			collection : collection,
+			el         : el
+		}));
 	},
 	
-	/**
-	 * Get named child.
-	 */
-	getChildEl: function(id)
-	{
-		if (!JW.isSet(id))
-			return null;
+	_applyTemplate: function() {
+		this.el = jQuery(this.template || this.templates.main);
 		
-		return this[this.getChildElName(id)];
-	},
-	
-	/**
-	 * Get named child name.
-	 */
-	getChildElName: function(id)
-	{
-		if (!JW.isSet(id))
-			return "el";
-		
-		return JW.String.camel(id) + "El";
-	},
-	
-	/**
-	 * Get named child CSS class.
-	 */
-	getChildElClass: function(id)
-	{
-		return JW.map(JW.filter([ this.jwClass, id ], JW.isSet), JW.String.hyphen).join("-");
-	},
-	
-	_initComponent: function()
-	{
-		var cls = JW.makeArray(this.cls);
-		this.cls = [];
-		
-		var plugins = this.plugins || [];
-		this.plugins = [];
-		
-		this.plainChildren = [];
-		this.namedChildren = {};
-		this.freeChildren  = [];
-		
-		this.initComponent();
-		
-		this.cls = JW.makeArray(this.cls).concat(cls);
-		
-		this.plugins = this.plugins.concat(plugins);
-		for (var i = 0; i < this.plugins.length; ++i)
-			this.plugins[i].attach(this);
-	},
-	
-	_render: function()
-	{
-		this._applyTemplate();
-		
-		this.render();
-		for (var i = 0; i < this.plugins.length; ++i)
-			this.plugins[i].render();
-		
-		this._applyRenderTo();
-	},
-	
-	_applyTemplate: function()
-	{
-		this.el = jQuery(this.html || this.templates.main);
-		this.el.addClass(this.cls.join(" "));
-		
-		if (!this.visible)
-			this.el.hide();
-		
-		this.jwClass = this.el.attr("jwclass");
-		if (this.jwClass)
-		{
+		this.rootClass = this.rootClass || this.el.attr("jwclass");
+		if (this.rootClass) {
 			this.el.removeAttr("jwclass");
-			this.el.addClass(this.jwClass);
+			this.el.addClass(this.rootClass);
 		}
 		
 		var anchorEls = this.el.find("[jwid]");
-		for (var i = 0; i < anchorEls.length; ++i)
-		{
+		for (var i = 0; i < anchorEls.length; ++i) {
 			var anchorEl = jQuery(anchorEls[i]);
 			var jwId = anchorEl.attr("jwid");
-			this[JW.String.camel(jwId) + "El"] = anchorEl;
+			var jwIdCamel = JW.String.camel(jwId);
+			this[jwIdCamel + "El"] = anchorEl;
 			anchorEl.removeAttr("jwid");
-			anchorEl.addClass(this.getChildElClass(jwId));
+			anchorEl.addClass(this.getElementClass(jwId));
+			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
+			if (typeof this[renderMethodName] === "function") {
+				this.children.set(this[renderMethodName](), jwId);
+			}
 		}
 	},
 	
-	_applyRenderTo: function()
-	{
-		if (this.renderParent)
-			this.renderParent.addChild(this, this.renderPosition);
-		
-		if (this.renderTo)
-			jQuery(this.renderTo).insert(this.el);
-		
-		if (this.renderAs)
-			jQuery(this.renderAs).replaceBy(this.el);
-		
-		this._afterAppend();
-	},
-	
-	_afterAppend: function()
-	{
-		if (this.appended || !this.el)
+	_afterAppend: function() {
+		if (this.appended || !this.el) {
 			return;
-		
-		if (this.parent && !this.parent.appended)
+		}
+		if (this.parent && !this.parent.appended) {
 			return;
-		
-		if (!this.parent && !this.el.parents("body").length)
+		}
+		if (!this.parent && !this.el.parents("body").length) {
 			return;
-		
+		}
 		this.appended = true;
 		this.afterAppend();
-		JW.eachByMethod(this.plainChildren, "_afterAppend");
-		JW.eachByMethod(this.namedChildren, "_afterAppend");
-		JW.eachByMethod(this.freeChildren,  "_afterAppend");
-		JW.eachByMethod(this.plugins,        "afterAppend");
-		
-		this.doLayoutAll();
-	},
-	
-	_removeChild: function(cmp)
-	{
-		JW.Array.removeItem(this.plainChildren, cmp);
-		JW.Array.removeItem(this.freeChildren,  cmp);
-		
-		var namedChildren = JW.apply({}, this.namedChildren);
-		for (var i in namedChildren)
-		{
-			if (namedChildren[i] == cmp)
-				delete this.namedChildren[i];
-		}
+		this.allChildren.eachByMethod("_afterAppend");
 	}
 });
 

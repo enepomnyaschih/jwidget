@@ -17,27 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/ = JW.Class.extend({
+JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/ = JW.Config.extend({
 	/*
 	Required
-	JW.Collection<T> collection;
+	JW.Collection<T> source;
 	JW.Collection<R> rows;
 	Integer capacity;
 	
 	Fields
-	Integer length;
-	JW.Collection.Atomizer<T> atomizer;
+	Integer _length;
+	JW.Collection.Inserter<T> _inserter;
 	*/
 	
 	capacity : 1,
-	length   : 0,
+	_length  : 0,
 	
 	init: function(config) {
-		this._super();
-		JW.apply(this, config);
+		this._super(config);
 		
-		this.atomizer = new JW.Collection.Atomizer({
-			collection : this.collection,
+		this._inserter = new JW.Collection.Inserter({
+			source     : this.source,
 			addItem    : this._addItem,
 			removeItem : this._removeItem,
 			clearItems : this._clearItems,
@@ -46,7 +45,7 @@ JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/ = JW.
 	},
 	
 	destroy: function() {
-		this.atomizer.destroy();
+		this._inserter.destroy();
 		this._super();
 	},
 	
@@ -59,7 +58,7 @@ JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/ = JW.
 	},
 	
 	_addItem: function(item, index) {
-		if (this.length % this.capacity === 0) {
+		if (this._length % this.capacity === 0) {
 			this.rows.addItem(this.createRow.call(this.scope || this));
 		}
 		var firstRow = Math.floor(index / this.capacity);
@@ -68,7 +67,7 @@ JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/ = JW.
 			this.rows.get(i).add(broughtItem, 0);
 		}
 		this.rows.get(firstRow).add(item, index % this.capacity);
-		++this.length;
+		++this._length;
 	},
 	
 	_removeItem: function(index) {
@@ -78,15 +77,15 @@ JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/ = JW.
 			var broughtItem = this.rows.get(i).remove(0);
 			this.rows.get(i - 1).add(broughtItem, this.capacity - 1);
 		}
-		--this.length;
-		if (this.length % this.capacity === 0) {
+		--this._length;
+		if (this._length % this.capacity === 0) {
 			this.destroyRow.call(this.scope || this, this.rows.remove(this.rows.getLength() - 1));
 		}
 	},
 	
 	_clearItems: function() {
 		var rows = this.rows.clear();
-		this.length = 0;
+		this._length = 0;
 		JW.each(rows, this.destroyRow, this.scope || this);
 	}
 });

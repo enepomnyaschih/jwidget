@@ -17,44 +17,43 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Collection.InstanceMapper/*<S extends JW.Class, T extends JW.Config>*/ = JW.Config.extend({
+JW.Collection.SetMapper/*<T extends JW.Class>*/ = JW.Config.extend({
 	/*
 	Required
-	JW.Collection<S> source;
-	Subclass<T> provider;
-	
-	Optional
-	JW.Collection<T> target;
-	String dataField;
-	Object extraCfg;
+	JW.Collection<T> source;
+	JW.Set<T> target;
 	
 	Fields
-	JW.Collection.Mapper<S, T> mapper;
+	JW.Collection.Mapper<T, T> _mapper;
 	*/
-	
-	dataField : "data",
 	
 	init: function(config) {
 		this._super(config);
 		
-		this.mapper = new JW.Collection.Mapper({
+		this._mapper = new JW.Collection.Mapper({
 			source      : this.source,
-			target      : this.target,
 			createItem  : this._createItem,
 			destroyItem : this._destroyItem,
+			destroyAll  : this._destroyAll,
 			scope       : this
 		});
-		
-		this.target = this.mapper.target;
 	},
 	
-	_createItem: function(data) {
-		var config = JW.apply({}, this.extraCfg);
-		config[this.dataField] = data;
-		return new this.provider(config);
+	destroy: function() {
+		this._mapper.destroy();
+		this._super();
+	},
+	
+	_createItem: function(item) {
+		this.target.add(item);
+		return item;
 	},
 	
 	_destroyItem: function(item) {
-		item.destroy();
+		this.target.remove(item);
+	},
+	
+	_destroyAll: function() {
+		this.target.clear();
 	}
 });

@@ -20,56 +20,64 @@
 // TODO: Synchronize changeEvent and lengthChangeEvent in bulk operations
 // TODO: Filter from end to begin
 
-JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Class.extend({
+JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Config.extend({
 	/*
 	Required
 	JW.Collection<S> source;
-	JW.Collection<T> target;
 	
 	Optional
+	JW.Collection<T> target;
 	Object scope; // defaults to this
 	
 	Abstract methods
 	T createItem(S data);
 	void destroyItem(T item, S data);
+	void destroyAll(Array<T> items); // optional
 	
 	Fields
-	Array<S> snapshot;
-	EventAttachment addEventAttachment;
-	EventAttachment removeEventAttachment;
-	EventAttachment replaceEventAttachment;
-	EventAttachment moveEventAttachment;
-	EventAttachment clearEventAttachment;
-	EventAttachment reorderEventAttachment;
-	EventAttachment filterEventAttachment;
-	EventAttachment resetEventAttachment;
+	Boolean _targetCreated;
+	Array<S> _snapshot;
+	EventAttachment _addEventAttachment;
+	EventAttachment _removeEventAttachment;
+	EventAttachment _replaceEventAttachment;
+	EventAttachment _moveEventAttachment;
+	EventAttachment _clearEventAttachment;
+	EventAttachment _reorderEventAttachment;
+	EventAttachment _filterEventAttachment;
+	EventAttachment _resetEventAttachment;
 	*/
 	
 	init: function(config) {
-		this._super();
-		JW.apply(this, config);
-		this.snapshot = [];
-		this.addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-		this.removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-		this.replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-		this.moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
-		this.clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
-		this.reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
-		this.filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
-		this.resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
+		this._super(config);
+		this._targetCreated = !this.target;
+		if (this._targetCreated) {
+			this.target = new JW.Collection();
+		}
+		this._snapshot = [];
+		this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
+		this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
+		this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
+		this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
+		this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+		this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
+		this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
+		this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
 		this.target.addAll(this._fill());
 	},
 	
 	destroy: function() {
-		this.addEventAttachment.destroy();
-		this.removeEventAttachment.destroy();
-		this.replaceEventAttachment.destroy();
-		this.moveEventAttachment.destroy();
-		this.clearEventAttachment.destroy();
-		this.reorderEventAttachment.destroy();
-		this.filterEventAttachment.destroy();
-		this.resetEventAttachment.destroy();
 		this._clear(this.target.clear());
+		this._addEventAttachment.destroy();
+		this._removeEventAttachment.destroy();
+		this._replaceEventAttachment.destroy();
+		this._moveEventAttachment.destroy();
+		this._clearEventAttachment.destroy();
+		this._reorderEventAttachment.destroy();
+		this._filterEventAttachment.destroy();
+		this._resetEventAttachment.destroy();
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
 		this._super();
 	},
 	
@@ -78,10 +86,14 @@ JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Class.exte
 	},
 	
 	_clear: function(items) {
-		for (var i = 0; i < items.length; ++i) {
-			this.destroyItem.call(this.scope || this, items[i], this.snapshot[i]);
+		if (this.destroyAll) {
+			this.destroyAll.call(this.scope || this, items);
+		} else {
+			for (var i = 0; i < items.length; ++i) {
+				this.destroyItem.call(this.scope || this, items[i], this._snapshot[i]);
+			}
 		}
-		this.snapshot.splice(0, this.snapshot.length);
+		this._snapshot.splice(0, this._snapshot.length);
 	},
 	
 	_fill: function() {
@@ -89,7 +101,7 @@ JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Class.exte
 		for (var i = 0; i < this.source.base.length; ++i) {
 			items[i] = this.createItem.call(this.scope || this, this.source.base[i]);
 		}
-		JW.Array.addAll(this.snapshot, this.source.base);
+		JW.Array.addAll(this._snapshot, this.source.base);
 		return items;
 	},
 	
@@ -99,7 +111,7 @@ JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Class.exte
 			items[i] = this.createItem.call(this.scope || this, params.items[i]);
 		}
 		this.target.addAll(items, params.index);
-		JW.Array.addAll(this.snapshot, params.items, params.index);
+		JW.Array.addAll(this._snapshot, params.items, params.index);
 	},
 	
 	_onRemove: function(params) {
@@ -107,23 +119,20 @@ JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Class.exte
 		for (var i = 0; i < items.length; ++i) {
 			this.destroyItem.call(this.scope || this, items[i], params.items[i]);
 		}
-		this.snapshot.splice(index, params.items.length);
+		this._snapshot.splice(index, params.items.length);
 	},
 	
 	_onReplace: function(params) {
-		var oldItem = this.target.remove(params.index)[0];
-		this.destroyItem.call(this.scope || this, oldItem, params.oldItem);
-		
 		var newItem = this.createItem.call(this.scope || this, params.newItem);
-		this.target.add(newItem, params.index);
-		
-		this.snapshot[params.index] = params.newItem;
+		var oldItem = this.target.set(params.index, newItem);
+		this.destroyItem.call(this.scope || this, oldItem, params.oldItem);
+		this._snapshot[params.index] = params.newItem;
 	},
 	
 	_onMove: function(params) {
 		this.target.move(params.fromIndex, params.toIndex);
-		this.snapshot.splice(params.fromIndex, 1);
-		this.snapshot.splice(params.toIndex, 0, params.item);
+		this._snapshot.splice(params.fromIndex, 1);
+		this._snapshot.splice(params.toIndex, 0, params.item);
 	},
 	
 	_onClear: function() {
@@ -132,8 +141,8 @@ JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Class.exte
 	
 	_onReorder: function() {
 		var itemMap = {};
-		for (var i = 0; i < this.snapshot.length; ++i) {
-			var data = this.snapshot[i];
+		for (var i = 0; i < this._snapshot.length; ++i) {
+			var data = this._snapshot[i];
 			var item = this.target.base[i];
 			var key = this.getKey.call(this.scope || this, data);
 			itemMap[key] = itemMap[key] || [];
@@ -145,7 +154,7 @@ JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Class.exte
 			var pair = JW.searchBy(arr, 0, data);
 			var item = pair[1];
 			this.target.base.splice(index, 0, item);
-			this.snapshot[index] = data;
+			this._snapshot[index] = data;
 			this.items[index] = item;
 		}, this);
 		
@@ -153,20 +162,20 @@ JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Class.exte
 	},
 	
 	_onFilter: function() {
-		var snapshot = JW.Array.clear(this.snapshot);
+		var _snapshot = JW.Array.clear(this._snapshot);
 		var items = JW.Array.clear(this.target.base);
 		
-		var sourceIndex = 0;
-		JW.each(snapshot, function(snapshotData, snapshotIndex) {
+		var collectionIndex = 0;
+		JW.each(_snapshot, function(snapshotData, snapshotIndex) {
 			var item = items[snapshotIndex];
-			var sourceData = this.source.getItemAt(sourceIndex);
-			if (snapshotData !== sourceData) {
+			var collectionData = this.source.getItemAt(collectionIndex);
+			if (snapshotData !== collectionData) {
 				this.destroyItem(item, snapshotData);
 				return;
 			}
 			this.target.base.push(item);
-			this.snapshot.push(snapshotData);
-			++sourceIndex;
+			this._snapshot.push(snapshotData);
+			++collectionIndex;
 		}, this);
 		
 		this.target.triggerFilter();
