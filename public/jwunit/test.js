@@ -17,38 +17,35 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Unit");
-
 JW.Unit.Test = JW.Unit.TestUnit.extend({
-	fn: null, // [required] Function
+	/*
+	Required
+	Function fn;
+	*/
 	
 	// override
-	__onStart: function()
-	{
+	__onStart: function() {
 		JW.Unit._runAsync(this.fn, this._onSuccess, this._onFail, this);
 	},
 	
-	_onSuccess: function()
-	{
+	_onSuccess: function() {
 		this.__onComplete();
 	},
 	
-	_onFail: function(msg, e)
-	{
+	_onFail: function(msg, e) {
 		this.__onFail(msg, e);
 		this.__onComplete();
 	}
 });
 
-JW.Unit.Test.getTest = function(config)
-{
-	if (config.__name.substr(0, 4) != "test")
+JW.Unit.Test.getTest = function(config) {
+	if (config.__name.substr(0, 4) != "test") {
 		return null;
-	
+	}
 	config.fn = config.__parent[config.__name];
-	if (typeof config.fn !== "function")
+	if (typeof config.fn !== "function") {
 		return null;
-	
+	}
 	config.fn = JW.Function.inScope(config.fn, config.__parent);
 	return new JW.Unit.Test(config);
-}
+};

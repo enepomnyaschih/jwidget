@@ -5,11 +5,19 @@
 	],
 	
 	"resources" : [
-		"jwunit/unit.js",
+		"jwunit/index.js",
+		
 		"jwunit/asyncRunner.js",
+		
 		"jwunit/broadcaster.js",
+		"jwunit/broadcaster/eventParams.js",
+		"jwunit/broadcaster/unitEventParams.js",
+		"jwunit/broadcaster/unitFailEventParams.js",
 		
 		"jwunit/testUnit.js",
+		"jwunit/testUnit/eventParams.js",
+		"jwunit/testUnit/failEventParams.js",
+		
 		"jwunit/testGroup.js",
 		
 		"jwunit/test.js",
@@ -17,9 +25,14 @@
 		"jwunit/testSuit.js",
 		"jwunit/testPlan.js",
 		
+		"jwunit/ui.js",
 		"jwunit/ui/unit.css",
 		"jwunit/ui/broadcaster.js",
+		"jwunit/ui/broadcaster/eventParams.js",
+		"jwunit/ui/broadcaster/unitEventParams.js",
 		"jwunit/ui/testUnit.js",
-		"jwunit/ui/view.js"
+		"jwunit/ui/testUnit.jw.html : JW.Unit.UI.TestUnit",
+		"jwunit/ui/view.js",
+		"jwunit/ui/view.jw.html : JW.Unit.UI.View"
 	]
 }

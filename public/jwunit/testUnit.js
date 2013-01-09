@@ -19,86 +19,95 @@
 
 JW.ns("JW.Unit");
 
-JW.Unit.TestUnit = JW.Observable.extend({
-	EVENT_START     : "start",      // handler(event)
-	EVENT_SUCCESS   : "success",    // handler(event)
-	EVENT_FAIL      : "fail",       // handler(event, message, exception)
-	EVENT_COMPLETE  : "complete",   // handler(event)
+JW.Unit.TestUnit = JW.Config.extend({
+	/*
+	Required
+	String __name;
+	JW.Unit.Broadcaster __broadcaster;
+	JW.Unit.TestUnit __parent;
 	
-	STATUS_READY    : "ready",
-	STATUS_START    : "start",
-	STATUS_SUCCESS  : "success",
-	STATUS_FAIL     : "fail",
+	Fields
+	JW.Event<JW.Unit.TestUnit.EventParams> startEvent;
+	JW.Event<JW.Unit.TestUnit.EventParams> successEvent;
+	JW.Event<JW.Unit.TestUnit.FailEventParams> failEvent;
+	JW.Event<JW.Unit.TestUnit.EventParams> completeEvent;
+	Boolean __failed;
+	String __msg;
+	Error __error;
+	String __status;
+	*/
 	
-	__name          : null,         // [required] String
-	__broadcaster   : null,         // [required] JW.Unit.Broadcaster
-	__parent        : null,         // [optional] JW.Unit.TestUnit
+	STATUS_READY   : "ready",
+	STATUS_START   : "start",
+	STATUS_SUCCESS : "success",
+	STATUS_FAIL    : "fail",
 	
-	__failed        : false,        // [readonly] Boolean
-	__msg           : null,         // [readonly] String
-	__error         : null,         // [readonly] Error
-	__status        : "ready",      // [readonly] String
+	__failed : false,
+	__status : "ready",
 	
-	init: function(config)
-	{
+	init: function(config) {
+		this._super(config);
+		this.startEvent = new JW.Event();
+		this.successEvent = new JW.Event();
+		this.failEvent = new JW.Event();
+		this.completeEvent = new JW.Event();
+	},
+	
+	destroy: function() {
+		this.completeEvent.destroy();
+		this.failEvent.destroy();
+		this.successEvent.destroy();
+		this.startEvent.destroy();
 		this._super();
-		JW.apply(this, config);
 	},
 	
-	__getFullName: function()
-	{
-		if (this.__parent)
+	__getFullName: function() {
+		if (this.__parent) {
 			return this.__parent.__getFullName() + "." + this.__name;
-		else
+		} else {
 			return this.__name;
+		}
 	},
 	
-	__start: function()
-	{
+	__start: function() {
 		this.__failed = false;
 		this.__status = "start";
-		this.trigger("start");
+		this.startEvent.trigger(new JW.Unit.TestUnit.EventParams(this));
+		this.__broadcaster.startEvent.trigger(new JW.Unit.Broadcaster.UnitEventParams(this.__broadcaster, this));
 		setTimeout(JW.Function.inScope(this.__onStart, this), 1);
 	},
 	
 	// virtual
-	__onStart: function()
-	{
-	},
+	__onStart: function() {},
 	
-	__onFail: function(msg, e)
-	{
-		if (this.__failed)
+	__onFail: function(msg, e) {
+		if (this.__failed) {
 			return;
+		}
+		this.__failed = true;
+		this.__msg    = msg;
+		this.__error  = e;
+		this.__status = "fail";
 		
-		this.__failed   = true;
-		this.__msg      = msg;
-		this.__error    = e;
-		this.__status   = "fail";
+		this.failEvent.trigger(new JW.Unit.TestUnit.FailEventParams(this, msg, e));
+		this.__broadcaster.failEvent.trigger(new JW.Unit.Broadcaster.UnitFailEventParams(this.__broadcaster, this, msg, e));
 		
-		this.trigger("fail", msg, e);
-		
-		if (this.__parent)
+		if (this.__parent) {
 			this.__parent.__onFail(msg, e);
+		}
 	},
 	
-	__onSuccess: function()
-	{
+	__onSuccess: function() {
 		this.__status = "success";
-		this.trigger("success");
+		this.successEvent.trigger(new JW.Unit.TestUnit.EventParams(this));
+		this.__broadcaster.successEvent.trigger(new JW.Unit.Broadcaster.UnitEventParams(this.__broadcaster, this));
 	},
 	
-	__onComplete: function()
-	{
-		if (!this.__failed)
+	__onComplete: function() {
+		if (!this.__failed) {
 			this.__onSuccess();
-		
-		this.trigger("complete");
-	},
-	
-	triggerArray: function(eventType, args)
-	{
-		this._super(eventType, args);
-		this.__broadcaster.triggerArray(eventType, [ this ].concat(args));
+		}
+		this.completeEvent.trigger(new JW.Unit.TestUnit.EventParams(this));
+		this.__broadcaster.completeEvent.trigger(new JW.Unit.Broadcaster.UnitEventParams(this.__broadcaster, this));
 	}
 });

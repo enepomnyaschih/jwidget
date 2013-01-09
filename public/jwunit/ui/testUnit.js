@@ -17,115 +17,94 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Unit.UI");
-
 JW.Unit.UI.TestUnit = JW.UI.Component.extend({
-	PADDING_PER_DEPTH: 20,
+	/*
+	Required
+	JW.Unit.UI.Broadcaster __broadcaster;
+	JW.Unit.TestUnit __testUnit;
 	
-	__broadcaster   : null, // [required] JW.Unit.UI.Broadcaster
-	__unit          : null, // [required] JW.Unit.TestUnit
-	__depth         : 0,    // [required] Integer
+	Optional
+	Integer __depth;
 	
-	children        : null, // [readonly] Array of JW.Unit.UI.TestUnit
+	Fields
+	JW.EventAttachment startEventAttachment;
+	JW.EventAttachment successEventAttachment;
+	JW.EventAttachment failEventAttachment;
+	*/
 	
-	childBox        : "list",
+	PADDING_PER_DEPTH : 20,
+	__depth           : 0,
 	
-	render: function()
-	{
+	render: function() {
 		this._super();
-		
 		this._renderElements();
 		this._renderChildren();
-		
 		this._subscribeUnit();
 	},
 	
-	destroyComponent: function()
-	{
-		this.__unit.purge(this);
-		
+	destroyComponent: function() {
+		this.failEventAttachment.destroy();
+		this.successEventAttachment.destroy();
+		this.startEventAttachment.destroy();
+		this.mapper.destroy();
 		this._super();
 	},
 	
-	_renderElements: function()
-	{
-		if (this.__unit instanceof JW.Unit.Test)
+	_renderElements: function() {
+		if (this.__unit instanceof JW.Unit.Test) {
 			this.el.attr("unit-type", "test");
-		else if (this.__unit instanceof JW.Unit.TestCase)
+		} else if (this.__unit instanceof JW.Unit.TestCase) {
 			this.el.attr("unit-type", "case");
-		else
+		} else {
 			this.el.attr("unit-type", "suit");
+		}
 		
 		var padding = this.__depth * this.PADDING_PER_DEPTH;
 		this.headerEl.css("padding-left", padding);
 		this.headerEl.css("width", 380 - padding);
-		
 		this.headerEl.mousedown(JW.Function.inScope(this._onClick, this));
-		
 		this.nameEl.text(this.__unit.__name);
 	},
 	
-	_renderChildren: function()
-	{
-		this.children = [];
+	_renderChildren: function() {
+		var units = new JW.Collection();
+		if (this.__unit.units) {
+			units.addAll(this.__unit.units);
+		}
 		
-		var units = this.__unit.units;
-		if (!units)
-			return;
-		
-		for (var i = 0; i < units.length; ++i)
-			this._renderChild(units[i]);
-	},
-	
-	_renderChild: function(unit)
-	{
-		var child = new JW.Unit.UI.TestUnit({
-			__broadcaster   : this.__broadcaster,
-			__unit          : unit,
-			__depth         : this.__depth + 1,
-			renderParent    : this
+		this.mapper = new JW.Collection.InstanceMapper({
+			source    : units,
+			provider  : JW.Unit.UI.TestUnit,
+			dataField : "__unit",
+			extraCfg : {
+				__broadcaster : this.__broadcaster,
+				__depth       : this.__depth + 1
+			}
 		});
 		
-		this.children.push(child);
+		this.addList(this.mapper.target, this.listEl);
 	},
 	
-	_subscribeUnit: function()
-	{
-		this.__unit.bind("start",     this._onUnitStart,      this);
-		this.__unit.bind("success",   this._onUnitSuccess,    this);
-		this.__unit.bind("fail",      this._onUnitFail,       this);
+	_subscribeUnit: function() {
+		this.startEventAttachment = this.__unit.startEvent.bind(this._onUnitStart, this);
+		this.successEventAttachment = this.__unit.successEvent.bind(this._onUnitSuccess, this);
+		this.failEventAttachment = this.__unit.failEvent.bind(this._onUnitFail, this);
 	},
 	
-	_onUnitStart: function(event)
-	{
-		this.__broadcaster.trigger("start", this);
+	_onUnitStart: function(event) {
+		this.__broadcaster.startEvent.trigger(new JW.Unit.UI.Broadcaster.UnitEventParams(this.__broadcaster, this));
 		this.iconEl.attr("status", "start");
 	},
 	
-	_onUnitSuccess: function(event)
-	{
+	_onUnitSuccess: function(event) {
 		this.iconEl.attr("status", "success");
 	},
 	
-	_onUnitFail: function(event)
-	{
+	_onUnitFail: function(event) {
 		this.iconEl.attr("status", "fail");
 	},
 	
-	_onClick: function(event)
-	{
-		this.__broadcaster.trigger("select", this);
+	_onClick: function(event) {
+		this.__broadcaster.selectEvent.trigger(new JW.Unit.UI.Broadcaster.UnitEventParams(this.__broadcaster, this));
 	}
 });
-
-JW.UI.template(JW.Unit.UI.TestUnit, {
-	main:
-		'<div jwclass="jw-unit-testunit"> \
-			<div jwid="header"> \
-				<div jwid="icon" /> \
-				<div jwid="name" /> \
-			</div> \
-			<div jwid="list" /> \
-		</div>'
-});
-

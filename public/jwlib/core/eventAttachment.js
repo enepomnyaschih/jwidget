@@ -17,10 +17,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.EventAttachment/*<P extends JW.Event.Params>*/ = JW.Class.extend({
+JW.EventAttachment = JW.Class.extend({
 	/*
 	Fields
-	JW.Event<P> event;
+	JW.Event<? extends JW.EventParams> event;
 	Function callback;
 	Object scope;
 	*/

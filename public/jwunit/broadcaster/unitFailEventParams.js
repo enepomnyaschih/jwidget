@@ -1,5 +1,5 @@
 ﻿/*
-	jWidget Lib source file.
+	jWidget Unit source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,31 +17,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Event/*<P extends JW.EventParams>*/ = JW.Class.extend({
+JW.Unit.Broadcaster.UnitFailEventParams = JW.Unit.Broadcaster.UnitEventParams.extend({
 	/*
 	Fields
-	Map<JW.EventAttachment> attachments;
+	String message;
+	Error exception;
 	*/
 	
-	bind: function(callback, scope) {
-		var attachment = new JW.EventAttachment(this, callback, scope);
-		this.attachments[attachment._iid] = attachment;
-		return attachment;
-	},
-	
-	unbind: function(attachment) {
-		delete this.attachments[attachment._iid];
-	},
-	
-	purge: function() {
-		this.attachments = {};
-	},
-	
-	trigger: function(params) {
-		JW.getValuesArray(this.attachments).eachByMethod("_trigger", [ params ]);
-	},
-	
-	destroy: function() {
-		this.purge();
+	init: function(sender, unit, message, exception) {
+		this._super(sender, unit);
+		this.message = message;
+		this.exception = exception;
 	}
 });

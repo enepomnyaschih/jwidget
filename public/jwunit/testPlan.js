@@ -19,51 +19,46 @@
 
 JW.ns("JW.Unit");
 
-JW.Unit.TestPlan = JW.Observable.extend({
-	__name          : null, // [required] String
-	ns              : null, // [required] Object
+JW.Unit.TestPlan = JW.Config.extend({
+	/*
+	Required
+	String __name;
+	Object ns;
 	
-	testSuit        : null, // [readonly] JW.Unit.TestSuit
-	__broadcaster   : null, // [readonly] JW.Unit.Broadcaster
-	view            : null, // [readonly] JW.Unit.UI.View
+	Fields
+	JW.Unit.TestSuit testSuit;
+	JW.Unit.Broadcaster __broadcaster;
+	JW.Unit.UI.View view;
+	*/
 	
-	init: function(config)
-	{
-		this._super();
-		
-		JW.apply(this, config);
-		
+	init: function(config) {
+		this._super(config);
 		this._initBroadcaster();
 		this._initTestSuit();
 		this._initView();
 	},
 	
-	run: function()
-	{
+	run: function() {
 		this.testSuit.__start();
 	},
 	
-	_initBroadcaster: function()
-	{
+	_initBroadcaster: function() {
 		this.__broadcaster = new JW.Unit.Broadcaster();
 	},
 	
-	_initTestSuit: function()
-	{
+	_initTestSuit: function() {
 		this.testSuit = JW.Unit.TestSuit.getSuit({
-			__name          : this.__name,
-			__broadcaster   : this.__broadcaster,
-			ns              : this.ns
+			__name        : this.__name,
+			__broadcaster : this.__broadcaster,
+			ns            : this.ns
 		});
-		
 		this.testSuit.__build();
 	},
 	
-	_initView: function()
-	{
+	_initView: function() {
 		this.view = new JW.Unit.UI.View({
-			testPlan: this,
-			renderTo: document.body
+			testPlan : this,
+			renderTo : document.body
 		});
 	}
 });

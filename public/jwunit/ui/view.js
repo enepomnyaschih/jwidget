@@ -17,56 +17,47 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Unit.UI");
-
 JW.Unit.UI.View = JW.UI.Component.extend({
-	testPlan        : null, // [required] JW.Unit.TestPlan
+	/*
+	Required
+	JW.Unit.TestPlan testPlan;
 	
-	unitView        : null, // [readonly] JW.Unit.UI.TestUnit
-	selUnitView     : null, // [readonly] JW.Unit.UI.TestUnit
-	__broadcaster   : null, // [readonly] JW.Unit.UI.Broadcaster
+	Fields
+	JW.Unit.UI.TestUnit unitView;
+	JW.Unit.UI.TestUnit selUnitView;
+	JW.Unit.UI.Broadcaster __broadcaster;
+	*/
 	
-	render: function()
-	{
+	render: function() {
 		this._super();
-		
 		this._initBroadcaster();
-		this._renderUnitView();
 		this._subscribe();
 	},
 	
-	_initBroadcaster: function()
-	{
+	_initBroadcaster: function() {
 		this.__broadcaster = new JW.Unit.UI.Broadcaster();
-		this.__broadcaster.bind("select", this._onUnitViewSelect, this);
-		this.__broadcaster.bind("start",  this._onUnitViewStart,  this);
+		this.__broadcaster.selectEvent.bind(this._onUnitViewSelect, this);
+		this.__broadcaster.startEvent.bind(this._onUnitViewStart, this);
 	},
 	
-	_renderUnitView: function()
-	{
+	_subscribe: function() {
+		this.testPlan.__broadcaster.startEvent.bind(this._onUnitStart, this);
+		this.testPlan.__broadcaster.successEvent.bind(this._onUnitSuccess, this);
+		this.testPlan.__broadcaster.failEvent.bind(this._onUnitFail, this);
+	},
+	
+	renderTestUnit: function() {
 		this.unitView = new JW.Unit.UI.TestUnit({
-			__unit          : this.testPlan.testSuit,
-			__broadcaster   : this.__broadcaster,
-			renderParent    : this,
-			renderPosition  : {
-				id              : "list",
-				insert          : true
-			}
+			__unit        : this.testPlan.testSuit,
+			__broadcaster : this.__broadcaster
 		});
+		return this.unitView;
 	},
 	
-	_subscribe: function()
-	{
-		this.testPlan.__broadcaster.bind("start",     this._onUnitStart,      this);
-		this.testPlan.__broadcaster.bind("success",   this._onUnitSuccess,    this);
-		this.testPlan.__broadcaster.bind("fail",      this._onUnitFail,       this);
-	},
-	
-	_onUnitViewSelect: function(event, unitView)
-	{
-		if (this.selUnitView)
+	_onUnitViewSelect: function(event, unitView) {
+		if (this.selUnitView) {
 			this.selUnitView.headerEl.removeClass("jw-unit-selected");
-		
+		}
 		this.selUnitView = unitView;
 		unitView.headerEl.addClass("jw-unit-selected");
 		
@@ -75,44 +66,36 @@ JW.Unit.UI.View = JW.UI.Component.extend({
 		this.statusValueEl.attr("status", unit.__status);
 		this.statusValueEl.text(this._statusText[unit.__status]);
 		
-		if (unit.__failed)
-		{
+		if (unit.__failed) {
 			this.errorValueEl.html('<pre>' + unit.__msg + '</pre>');
 			this.stackValueEl.html('<pre>' + JW.Unit._getStackTrace(unit.__error) + '</pre>');
-		}
-		else
-		{
+		} else {
 			this.errorValueEl.text("");
 			this.stackValueEl.html("");
 		}
 	},
 	
-	_onUnitViewStart: function(event, unitView)
-	{
-		if (this.selUnitView)
+	_onUnitViewStart: function(event, unitView) {
+		if (this.selUnitView) {
 			return;
-		
-		if (JW.isDefined(this._lastScroll) &&
-			this._lastScroll != this.listEl.scrollTop())
+		}
+		if (JW.isDefined(this._lastScroll) && (this._lastScroll != this.listEl.scrollTop())) {
 			return;
-		
+		}
 		var s = unitView.el.offset().top - this.listEl.offset().top - this.listEl.height() + unitView.headerEl.height() + this.listEl.scrollTop();
 		this._lastScroll = Math.max(0, s);
 		this.listEl.scrollTop(s);
 	},
 	
-	_onUnitStart: function(event, unit)
-	{
+	_onUnitStart: function(event, unit) {
 		//console.log("Start: ", unit);
 	},
 	
-	_onUnitSuccess: function(event, unit)
-	{
+	_onUnitSuccess: function(event, unit) {
 		//console.log("Success: ", unit);
 	},
 	
-	_onUnitFail: function(event, unit, msg, e)
-	{
+	_onUnitFail: function(event, unit, msg, e) {
 		//console.log("Fail: ", unit, ", Message: ", msg, ", Exception: ", e);
 	},
 	
@@ -122,26 +105,4 @@ JW.Unit.UI.View = JW.UI.Component.extend({
 		"success"   : "Success",
 		"fail"      : "Failed"
 	}
-});
-
-JW.UI.template(JW.Unit.UI.View, {
-	main:
-		'<div jwclass="jw-unit-view"> \
-			<div jwid="list" /> \
-			<div jwid="text"> \
-				<div jwid="text-name">&nbsp;</div> \
-				<div jwid="status"> \
-					<span jwid="status-label">Status: </span> \
-					<span jwid="status-value" /> \
-				</div> \
-				<div jwid="error"> \
-					<span jwid="error-label">Error: </span> \
-					<span jwid="error-value" /> \
-				</div> \
-				<div jwid="stack"> \
-					<div jwid="stack-label">Stack trace:</div> \
-					<div jwid="stack-value" /> \
-				</div> \
-			</div> \
-		</div>'
 });

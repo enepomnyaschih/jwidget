@@ -26,7 +26,7 @@ JW.UI.Component.Child = JW.Config.extend({
 	
 	Fields
 	Element _el;
-	JW.EventAttachment<JW.UI.Component.EventParams> _invokeRemoveAttachment;
+	JW.EventAttachment _invokeRemoveAttachment;
 	*/
 	
 	init: function(config) {

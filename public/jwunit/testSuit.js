@@ -17,67 +17,60 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Unit");
-
 JW.Unit.TestSuit = JW.Unit.TestGroup.extend({
-	ns: null, // [required] Object
+	/*
+	Required
+	Object ns;
+	*/
 	
 	// override
-	__build: function()
-	{
+	__build: function() {
 		this._buildSuits();
 		this._buildCases();
 	},
 	
-	_buildSuits: function()
-	{
-		for (var name in this.ns)
-		{
+	_buildSuits: function() {
+		for (var name in this.ns) {
 			var testSuit = JW.Unit.TestSuit.getSuit({
-				__name          : name,
-				__broadcaster   : this.__broadcaster,
-				__parent        : this
+				__name        : name,
+				__broadcaster : this.__broadcaster,
+				__parent      : this
 			});
-			
-			if (!testSuit)
+			if (!testSuit) {
 				continue;
-			
+			}
 			testSuit.__build();
-			if (!testSuit.units.length)
+			if (!testSuit.units.length) {
 				continue;
-			
+			}
 			this.units.push(testSuit);
 		}
 	},
 	
-	_buildCases: function()
-	{
-		for (var name in this.ns)
-		{
+	_buildCases: function() {
+		for (var name in this.ns) {
 			var testCase = JW.Unit.TestCase.getCase({
-				__name          : name,
-				__broadcaster   : this.__broadcaster,
-				__parent        : this
+				__name        : name,
+				__broadcaster : this.__broadcaster,
+				__parent      : this
 			});
-			
-			if (!testCase)
+			if (!testCase) {
 				continue;
-			
+			}
 			testCase.__build();
-			if (!testCase.units.length)
+			if (!testCase.units.length) {
 				continue;
-			
+			}
 			this.units.push(testCase);
 		}
 	}
 });
 
-JW.Unit.TestSuit.getSuit = function(config)
-{
+JW.Unit.TestSuit.getSuit = function(config) {
 	config.ns = config.ns || config.__parent.ns[config.__name];
-	if (typeof config.ns !== "object")
+	if (typeof config.ns !== "object") {
 		return null;
-	
+	}
 	var cls = config.ns.TestSuit || JW.Unit.TestSuit;
 	return new cls(config);
-}
+};

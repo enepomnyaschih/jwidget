@@ -17,11 +17,28 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Unit");
-
-JW.Unit.Broadcaster = JW.Observable.extend({
-	EVENT_START     : "start",      // handler(event, unit)
-	EVENT_SUCCESS   : "success",    // handler(event, unit)
-	EVENT_FAIL      : "fail",       // handler(event, unit, message, exception)
-	EVENT_COMPLETE  : "complete"    // handler(event, unit)
+JW.Unit.Broadcaster = JW.Class.extend({
+	/*
+	Fields
+	JW.Event<JW.Unit.Broadcaster.UnitEventParams> startEvent;
+	JW.Event<JW.Unit.Broadcaster.UnitEventParams> successEvent;
+	JW.Event<JW.Unit.Broadcaster.UnitFailEventParams> failEvent;
+	JW.Event<JW.Unit.Broadcaster.UnitEventParams> completeEvent;
+	*/
+	
+	init: function() {
+		this._super();
+		this.startEvent = new JW.Event();
+		this.successEvent = new JW.Event();
+		this.failEvent = new JW.Event();
+		this.completeEvent = new JW.Event();
+	},
+	
+	destroy: function() {
+		this.completeEvent.destroy();
+		this.failEvent.destroy();
+		this.successEvent.destroy();
+		this.startEvent.destroy();
+		this._super();
+	}
 });

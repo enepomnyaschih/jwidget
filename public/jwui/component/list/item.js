@@ -24,7 +24,7 @@ JW.UI.Component.List.Item = JW.Config.extend({
 	JW.UI.Component component;
 	
 	Fields
-	JW.EventAttachment<JW.UI.Component.EventParams> _invokeRemoveAttachment;
+	JW.EventAttachment _invokeRemoveAttachment;
 	*/
 	
 	init: function(config) {

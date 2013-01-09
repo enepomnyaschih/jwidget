@@ -17,9 +17,22 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Unit.UI");
-
-JW.Unit.UI.Broadcaster = JW.Observable.extend({
-	EVENT_SELECT    : "select", // handler(event, unitView)
-	EVENT_START     : "start"   // handler(event, unitView)
+JW.Unit.UI.Broadcaster = JW.Class.extend({
+	/*
+	Fields
+	JW.Event<JW.Unit.UI.Broadcaster.UnitEventParams> selectEvent;
+	JW.Event<JW.Unit.UI.Broadcaster.UnitEventParams> startEvent;
+	*/
+	
+	init: function() {
+		this._super();
+		this.selectEvent = new JW.Event();
+		this.startEvent = new JW.Event();
+	},
+	
+	destroy: function() {
+		this.startEvent.destroy();
+		this.selectEvent.destroy();
+		this._super();
+	}
 });

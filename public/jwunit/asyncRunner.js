@@ -17,67 +17,69 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Unit");
-
-JW.Unit.AsyncRunner = JW.Observable.extend({
-	fn              : null,     // [required] Function
-	success         : null,     // [required] Function()
-	fail            : null,     // [required] Function(message, exception)
-	scope           : null,     // [optional] Object
+JW.Unit.AsyncRunner = JW.Config.extend({
+	/*
+	Required
+	Function fn;
+	Function success();
+	Function fail(String message, Error exception);
 	
-	failed          : false,    // [readonly] Boolean
-	handlers        : null,     // [readonly] Map from handler index to Integer (number of successful calls)
-	index           : 0,        // [readonly] Integer, last used handler index
-	count           : 0,        // [readonly] Integer, pending handlers count
+	Optional
+	Object scope;
 	
-	expectedOutput  : null,     // [readonly] Array of String
-	outputIndex     : 0,        // [readonly] Integer
+	Fields
+	Boolean failed;
+	Map<Integer> handlers;
+	Integer index;
+	Integer count;
+	Array<String> expectedOutput;
+	Integer outputIndex;
+	*/
 	
-	init: function(config)
-	{
-		this._super();
-		JW.apply(this, config);
+	failed      : false,
+	index       : 0,
+	count       : 0,
+	outputIndex : 0,
+	
+	init: function(config) {
+		this._super(config);
 		this.handlers = {};
 		this.expectedOutput = [];
 	},
 	
-	run: function()
-	{
+	run: function() {
 		this.addHandler("root call", this.fn, 1)();
 	},
 	
-	addHandler: function(name, fn, timeout, callCount)
-	{
+	addHandler: function(name, fn, timeout, callCount) {
 		var index = ++this.index;
 		var runner = this;
 		
 		++this.count;
 		this.handlers[index] = 0;
 		
-		if (!JW.isSet(timeout))
+		if (!JW.isSet(timeout)) {
 			timeout = 30000;
-		
+		}
 		callCount = callCount || 1;
 		
-		function onTick()
-		{
-			if (runner.failed)
+		function onTick() {
+			if (runner.failed) {
 				return;
-			
-			runner.onFail("Async handler #" + index + " (" + name + ") has exceeded timeout of " + timeout + " milliseconds with " + runner.handlers[index] + "/" + callCount + " calls");
+			}
+			runner.onFail("Async handler #" + index + " (" + name + ") has exceeded timeout of " + timeout +
+				" milliseconds with " + runner.handlers[index] + "/" + callCount + " calls");
 		}
 		
 		var timer = new JW.Timer(timeout);
 		timer.bind("tick", onTick);
 		timer.start();
 		
-		return function()
-		{
-			if (runner.failed)
+		return function() {
+			if (runner.failed) {
 				return;
-			
-			if (runner.handlers[index] >= callCount)
-			{
+			}
+			if (runner.handlers[index] >= callCount) {
 				timer.stop();
 				runner.onFail("Async handler #" + index + " (" + name + ") has exceeded calls limit of " + callCount);
 				return;
@@ -85,19 +87,15 @@ JW.Unit.AsyncRunner = JW.Observable.extend({
 			
 			var result;
 			
-			try
-			{
+			try {
 				result = fn.apply(this, arguments);
-			}
-			catch(e)
-			{
+			} catch(e) {
 				timer.stop();
 				runner.onFail(e.message, e);
 				return;
 			}
 			
-			if (++runner.handlers[index] >= callCount)
-			{
+			if (++runner.handlers[index] >= callCount) {
 				timer.stop();
 				runner.trySuccess();
 			}
@@ -106,89 +104,72 @@ JW.Unit.AsyncRunner = JW.Observable.extend({
 		}
 	},
 	
-	forbidHandler: function(name)
-	{
+	forbidHandler: function(name) {
 		var runner = this;
-		
-		return function()
-		{
+		return function() {
 			runner.onFail("Forbidden async handler (" + name + ") is called");
 		}
 	},
 	
-	sleep: function(delay, fn, scope)
-	{
+	sleep: function(delay, fn, scope) {
 		var runner = this;
-		
 		++this.count;
 		
-		function onTick()
-		{
-			if (runner.failed)
+		function onTick() {
+			if (runner.failed) {
 				return;
-			
-			try
-			{
-				fn.call(scope || this);
 			}
-			catch(e)
-			{
+			try {
+				fn.call(scope || this);
+			} catch(e) {
 				runner.onFail(e.message, e);
 				return;
 			}
-			
 			runner.trySuccess();
 		}
 		
 		setTimeout(onTick, delay);
 	},
 	
-	addExpectedOutput: function(lines)
-	{
+	addExpectedOutput: function(lines) {
 		JW.Array.pushAll(this.expectedOutput, lines);
 	},
 	
-	assertOutputFinish: function()
-	{
-		if (this.expectedOutput.length > this.outputIndex)
+	assertOutputFinish: function() {
+		if (this.expectedOutput.length > this.outputIndex) {
 			throw new Error("Output has less lines than expected");
+		}
 	},
 	
-	output: function(line)
-	{
-		if (this.outputIndex >= this.expectedOutput.length)
+	output: function(line) {
+		if (this.outputIndex >= this.expectedOutput.length) {
 			throw new Error("Output has more lines than expected");
-		
+		}
 		var expected = this.expectedOutput[this.outputIndex];
-		if (line !== expected)
+		if (line !== expected) {
 			throw new Error('Incorrect output: "' + expected + '", "' + line + '" got');
-		
+		}
 		++this.outputIndex;
 	},
 	
-	trySuccess: function()
-	{
-		if (--this.count > 0)
+	trySuccess: function() {
+		if (--this.count > 0) {
 			return;
-		
-		try
-		{
-			this.assertOutputFinish();
 		}
-		catch(e)
-		{
+		try {
+			this.assertOutputFinish();
+		} catch(e) {
 			this.onFail(e.message, e);
 		}
-		
-		if (!this.failed)
+		if (!this.failed) {
 			this.success.call(this.scope || this);
+		}
 	},
 	
-	onFail: function(msg, e)
-	{
-		if (this.failed)
+	onFail: function(msg, e) {
+		if (this.failed) {
 			return;
-		
+		}
 		this.failed = true;
 		this.fail.call(this.scope || this, msg, e || new Error(msg));
 	}
