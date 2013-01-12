@@ -36,3 +36,22 @@ JW.Unit.UI.Broadcaster = JW.Class.extend({
 		this._super();
 	}
 });
+
+JW.Unit.UI.Broadcaster.EventParams = JW.EventParams.extend({
+	/*
+	Fields
+	JW.Unit.UI.Broadcaster sender;
+	*/
+});
+
+JW.Unit.UI.Broadcaster.UnitEventParams = JW.Unit.UI.Broadcaster.EventParams.extend({
+	/*
+	Fields
+	JW.Unit.UI.TestUnit unit;
+	*/
+	
+	init: function(sender, unit) {
+		this._super(sender);
+		this.unit = unit;
+	}
+});

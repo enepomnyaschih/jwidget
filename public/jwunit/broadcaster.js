@@ -42,3 +42,36 @@ JW.Unit.Broadcaster = JW.Class.extend({
 		this._super();
 	}
 });
+
+JW.Unit.Broadcaster.EventParams = JW.EventParams.extend({
+	/*
+	Fields
+	JW.Unit.Broadcaster sender;
+	*/
+});
+
+JW.Unit.Broadcaster.UnitEventParams = JW.Unit.Broadcaster.EventParams.extend({
+	/*
+	Fields
+	JW.Unit.TestUnit unit;
+	*/
+	
+	init: function(sender, unit) {
+		this._super(sender);
+		this.unit = unit;
+	}
+});
+
+JW.Unit.Broadcaster.UnitFailEventParams = JW.Unit.Broadcaster.UnitEventParams.extend({
+	/*
+	Fields
+	String message;
+	Error exception;
+	*/
+	
+	init: function(sender, unit, message, exception) {
+		this._super(sender, unit);
+		this.message = message;
+		this.exception = exception;
+	}
+});

@@ -204,3 +204,82 @@ JW.Collection/*<T extends JW.Class>*/ = JW.Class.extend({
 });
 
 JW.applyIf(JW.Collection.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);
+
+JW.Collection.EventParams/*<T extends JW.Class>*/ = JW.EventParams.extend({
+	/*
+	Fields
+	JW.Collection<T> sender;
+	*/
+});
+
+JW.Collection.ItemRangeEventParams/*<T extends JW.Class>*/ = JW.Collection.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	Array<T> items;
+	Integer index;
+	*/
+	
+	init: function(sender, items, index) {
+		this._super(sender);
+		this.items = items;
+		this.index = index;
+	}
+});
+
+JW.Collection.ItemsEventParams/*<T extends JW.Class>*/ = JW.Collection.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	Array<T> items;
+	*/
+	
+	init: function(sender, items) {
+		this._super(sender);
+		this.items = items;
+	}
+});
+
+JW.Collection.LengthChangeEventParams/*<T extends JW.Class>*/ = JW.Collection.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	Integer oldLength;
+	Integer newLength;
+	*/
+	
+	init: function(sender, oldLength, newLength) {
+		this._super(sender);
+		this.oldLength = oldLength;
+		this.newLength = newLength;
+	}
+});
+
+JW.Collection.MoveEventParams/*<T extends JW.Class>*/ = JW.Collection.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	Integer fromIndex;
+	Integer toIndex;
+	T item;
+	*/
+	
+	init: function(sender, fromIndex, toIndex, item) {
+		this._super(sender);
+		this.fromIndex = fromIndex;
+		this.toIndex = toIndex;
+		this.item = item;
+	}
+});
+
+JW.Collection.ReplaceEventParams/*<T extends JW.Class>*/ = JW.Collection.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	Integer index;
+	T oldItem;
+	T newItem;
+	*/
+	
+	init: function(sender, index, oldItem, newItem) {
+		this._super(sender);
+		this.index = index;
+		this.oldItem = oldItem;
+		this.newItem = newItem;
+	}
+});

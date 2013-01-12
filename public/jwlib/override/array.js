@@ -308,6 +308,8 @@ JW.apply(JW.Array, {
 	clearItems       : JW.descope(JW.Array._prototype.clearItems),
 	getLength        : JW.descope(JW.Array._prototype.getLength),
 	isEmpty          : JW.descope(JW.Array._prototype.isEmpty),
+	addAll           : JW.descope(JW.Array._prototype.addAll),
+	clear            : JW.descope(JW.Array._prototype.clear),
 	
 	/**
 	 * Arrays comparison function.

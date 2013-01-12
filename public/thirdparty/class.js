@@ -54,6 +54,7 @@
     
     // Enforce the constructor to be what we expect
     Class.prototype.constructor = Class;
+    Class.superclass = _super;
 
     // And make this class extendable
     Class.extend = arguments.callee;

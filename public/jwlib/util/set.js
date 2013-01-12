@@ -134,11 +134,44 @@ JW.Set/*<T extends JW.Class>*/ = JW.Class.extend({
 			return;
 		}
 		this.changeEvent.trigger(new JW.Set.EventParams(this));
-		if (this.bulkSize !== size) {
-			this.sizeChangeEvent.trigger(new JW.Set.SizeChangeEventParams(this, this.bulkSize, size));
-			this.bulkSize = size;
+		if (this.bulkSize !== this.size) {
+			this.sizeChangeEvent.trigger(new JW.Set.SizeChangeEventParams(this, this.bulkSize, this.size));
+			this.bulkSize = this.size;
 		}
 	}
 });
 
 JW.applyIf(JW.Set.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);
+
+JW.Set.EventParams/*<T extends JW.Class>*/ = JW.EventParams.extend({
+	/*
+	Fields
+	JW.Set<T> sender;
+	*/
+});
+
+JW.Set.ItemEventParams/*<T extends JW.Class>*/ = JW.Set.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	T item;
+	*/
+	
+	init: function(sender, item) {
+		this._super(sender);
+		this.item = item;
+	}
+});
+
+JW.Set.SizeChangeEventParams/*<T extends JW.Class>*/ = JW.Set.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	Integer oldSize;
+	Integer newSize;
+	*/
+	
+	init: function(sender, oldSize, newSize) {
+		this._super(sender);
+		this.oldSize = oldSize;
+		this.newSize = newSize;
+	}
+});

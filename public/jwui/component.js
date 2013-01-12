@@ -156,7 +156,7 @@ JW.UI.Component = JW.Config.extend({
 			anchorEl.addClass(this.getElementClass(jwId));
 			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
 			if (typeof this[renderMethodName] === "function") {
-				this.children.set(this[renderMethodName](), jwId);
+				this.children.set(this[renderMethodName].call(this), jwId);
 			}
 		}
 	},
@@ -179,4 +179,11 @@ JW.UI.Component = JW.Config.extend({
 
 JW.UI.template(JW.UI.Component, {
 	main: '<div />'
+});
+
+JW.UI.Component.EventParams = JW.EventParams.extend({
+	/*
+	Fields
+	JW.UI.Component sender;
+	*/
 });

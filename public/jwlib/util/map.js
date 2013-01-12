@@ -139,11 +139,46 @@ JW.Map/*<T extends JW.Class>*/ = JW.Class.extend({
 			return;
 		}
 		this.changeEvent.trigger(new JW.Map.EventParams(this));
-		if (this.bulkSize !== size) {
-			this.sizeChangeEvent.trigger(new JW.Map.SizeChangeEventParams(this, this.bulkSize, size));
-			this.bulkSize = size;
+		if (this.bulkSize !== this.size) {
+			this.sizeChangeEvent.trigger(new JW.Map.SizeChangeEventParams(this, this.bulkSize, this.size));
+			this.bulkSize = this.size;
 		}
 	}
 });
 
 JW.applyIf(JW.Map.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);
+
+JW.Map.EventParams/*<T extends JW.Class>*/ = JW.EventParams.extend({
+	/*
+	Fields
+	JW.Map<T> sender;
+	*/
+});
+
+JW.Map.ItemEventParams/*<T extends JW.Class>*/ = JW.Map.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	T item;
+	String key;
+	*/
+	
+	init: function(sender, item, key) {
+		this._super(sender);
+		this.item = item;
+		this.key = key;
+	}
+});
+
+JW.Map.SizeChangeEventParams/*<T extends JW.Class>*/ = JW.Map.EventParams/*<T>*/.extend({
+	/*
+	Fields
+	Integer oldSize;
+	Integer newSize;
+	*/
+	
+	init: function(sender, oldSize, newSize) {
+		this._super(sender);
+		this.oldSize = oldSize;
+		this.newSize = newSize;
+	}
+});

@@ -111,3 +111,24 @@ JW.Unit.TestUnit = JW.Config.extend({
 		this.__broadcaster.completeEvent.trigger(new JW.Unit.Broadcaster.UnitEventParams(this.__broadcaster, this));
 	}
 });
+
+JW.Unit.TestUnit.EventParams = JW.EventParams.extend({
+	/*
+	Fields
+	JW.Unit.TestUnit sender;
+	*/
+});
+
+JW.Unit.TestUnit.FailEventParams = JW.Unit.TestUnit.EventParams.extend({
+	/*
+	Fields
+	String message;
+	Error exception;
+	*/
+	
+	init: function(sender, message, exception) {
+		this._super(sender);
+		this.message = message;
+		this.exception = exception;
+	}
+});

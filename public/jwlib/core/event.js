@@ -23,6 +23,15 @@ JW.Event/*<P extends JW.EventParams>*/ = JW.Class.extend({
 	Map<JW.EventAttachment> attachments;
 	*/
 	
+	init: function() {
+		this._super();
+		this.attachments = {};
+	},
+	
+	destroy: function() {
+		this.purge();
+	},
+	
 	bind: function(callback, scope) {
 		var attachment = new JW.EventAttachment(this, callback, scope);
 		this.attachments[attachment._iid] = attachment;
@@ -39,9 +48,5 @@ JW.Event/*<P extends JW.EventParams>*/ = JW.Class.extend({
 	
 	trigger: function(params) {
 		JW.getValuesArray(this.attachments).eachByMethod("_trigger", [ params ]);
-	},
-	
-	destroy: function() {
-		this.purge();
 	}
 });

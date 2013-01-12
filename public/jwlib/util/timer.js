@@ -17,65 +17,75 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Timer = JW.Observable.extend({
-	// Events
-	// tick(event:JW.Event)
+JW.Timer = JW.Class.extend({
+	/*
+	Fields
+	JW.Event<JW.Timer.EventParams> tickEvent;
+	Number delay;
+	Boolean repeat;
+	Boolean sensitive;
+	*/
 	
-	delay     : 0,     // [optional] Number
-	repeat    : false, // [optional] Boolean
-	sensitive : false, // [optional] Boolean
+	delay     : 0,
+	repeat    : false,
+	sensitive : false,
 	
-	init: function(delay, repeat, sensitive)
-	{
-		JW.apply(this, {
-			delay     : delay,
-			repeat    : repeat,
-			sensitive : sensitive
-		});
+	init: function(delay, repeat, sensitive) {
+		this._super();
+		this.tickEvent = new JW.Event();
+		this.delay = delay;
+		this.repeat = repeat;
+		this.sensitive = sensitive;
 	},
 	
-	start: function()
-	{
-		if (this.isStarted())
+	destroy: function() {
+		this.stop();
+		this.tickEvent.destroy();
+		this._super();
+	},
+	
+	start: function() {
+		if (this.isStarted()) {
 			return;
-		
+		}
 		var runner = this._getRunner();
 		this._handle = runner(JW.Function.inScope(this._onTimeout, this), this.delay);
 	},
 	
-	stop: function()
-	{
-		if (!this.isStarted())
+	stop: function() {
+		if (!this.isStarted()) {
 			return;
-		
+		}
 		var stopper = this._getStopper();
 		stopper(this._handle);
 		delete this._handle;
 	},
 	
-	restart: function()
-	{
+	restart: function() {
 		this.stop();
 		this.start();
 	},
 	
-	isStarted: function()
-	{
+	isStarted: function() {
 		return !!this._handle;
 	},
 	
-	_getRunner: function()
-	{
+	_getRunner: function() {
 		return !this.repeat ? setTimeout : this.sensitive ? JW.setInterval : setInterval;
 	},
 	
-	_getStopper: function()
-	{
+	_getStopper: function() {
 		return this.repeat ? clearInterval : clearTimeout;
 	},
 	
-	_onTimeout: function()
-	{
-		this.trigger("tick");
+	_onTimeout: function() {
+		this.tickEvent.trigger(new JW.Timer.EventParams(this));
 	}
+});
+
+JW.Timer.EventParams = JW.EventParams.extend({
+	/*
+	Fields
+	JW.Timer sender;
+	*/
 });

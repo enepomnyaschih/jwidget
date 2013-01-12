@@ -71,16 +71,14 @@ JW.Unit.AsyncRunner = JW.Config.extend({
 				" milliseconds with " + runner.handlers[index] + "/" + callCount + " calls");
 		}
 		
-		var timer = new JW.Timer(timeout);
-		timer.bind("tick", onTick);
-		timer.start();
+		var timer = setTimeout(onTick, timeout);
 		
 		return function() {
 			if (runner.failed) {
 				return;
 			}
 			if (runner.handlers[index] >= callCount) {
-				timer.stop();
+				clearTimeout(timer);
 				runner.onFail("Async handler #" + index + " (" + name + ") has exceeded calls limit of " + callCount);
 				return;
 			}
@@ -90,13 +88,13 @@ JW.Unit.AsyncRunner = JW.Config.extend({
 			try {
 				result = fn.apply(this, arguments);
 			} catch(e) {
-				timer.stop();
+				clearTimeout(timer);
 				runner.onFail(e.message, e);
 				return;
 			}
 			
 			if (++runner.handlers[index] >= callCount) {
-				timer.stop();
+				clearTimeout(timer);
 				runner.trySuccess();
 			}
 			

@@ -11,7 +11,6 @@
 		"jwui/browsers.js",
 		"jwui/component.js",
 		"jwui/component/child.js",
-		"jwui/component/eventParams.js",
 		"jwui/component/list.js",
 		"jwui/component/list/item.js",
 		"jwui/inserter.js",
