@@ -54,14 +54,14 @@ JW.Unit.UI.View = JW.UI.Component.extend({
 		return this.unitView;
 	},
 	
-	_onUnitViewSelect: function(event, unitView) {
+	_onUnitViewSelect: function(params) {
 		if (this.selUnitView) {
 			this.selUnitView.headerEl.removeClass("jw-unit-selected");
 		}
-		this.selUnitView = unitView;
-		unitView.headerEl.addClass("jw-unit-selected");
+		this.selUnitView = params.unit;
+		params.unit.headerEl.addClass("jw-unit-selected");
 		
-		var unit = unitView.__unit;
+		var unit = params.unit.__unit;
 		this.textNameEl.text(unit.__getFullName());
 		this.statusValueEl.attr("status", unit.__status);
 		this.statusValueEl.text(this._statusText[unit.__status]);
@@ -75,27 +75,28 @@ JW.Unit.UI.View = JW.UI.Component.extend({
 		}
 	},
 	
-	_onUnitViewStart: function(event, unitView) {
+	_onUnitViewStart: function(params) {
 		if (this.selUnitView) {
 			return;
 		}
 		if (JW.isDefined(this._lastScroll) && (this._lastScroll != this.listEl.scrollTop())) {
 			return;
 		}
-		var s = unitView.el.offset().top - this.listEl.offset().top - this.listEl.height() + unitView.headerEl.height() + this.listEl.scrollTop();
+		var s = params.unit.el.offset().top - this.listEl.offset().top - this.listEl.height() +
+			params.unit.headerEl.height() + this.listEl.scrollTop();
 		this._lastScroll = Math.max(0, s);
 		this.listEl.scrollTop(s);
 	},
 	
-	_onUnitStart: function(event, unit) {
+	_onUnitStart: function(params) {
 		//console.log("Start: ", unit);
 	},
 	
-	_onUnitSuccess: function(event, unit) {
+	_onUnitSuccess: function(params) {
 		//console.log("Success: ", unit);
 	},
 	
-	_onUnitFail: function(event, unit, msg, e) {
+	_onUnitFail: function(params) {
 		//console.log("Fail: ", unit, ", Message: ", msg, ", Exception: ", e);
 	},
 	

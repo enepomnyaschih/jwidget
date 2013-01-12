@@ -57,8 +57,8 @@ JW.Unit.TestPlan = JW.Config.extend({
 	
 	_initView: function() {
 		this.view = new JW.Unit.UI.View({
-			testPlan : this,
-			renderTo : document.body
+			testPlan : this
 		});
+		this.view.renderTo("body");
 	}
 });

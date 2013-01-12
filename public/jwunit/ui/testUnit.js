@@ -91,16 +91,16 @@ JW.Unit.UI.TestUnit = JW.UI.Component.extend({
 		this.failEventAttachment = this.__unit.failEvent.bind(this._onUnitFail, this);
 	},
 	
-	_onUnitStart: function(event) {
+	_onUnitStart: function(params) {
 		this.__broadcaster.startEvent.trigger(new JW.Unit.UI.Broadcaster.UnitEventParams(this.__broadcaster, this));
 		this.iconEl.attr("status", "start");
 	},
 	
-	_onUnitSuccess: function(event) {
+	_onUnitSuccess: function(params) {
 		this.iconEl.attr("status", "success");
 	},
 	
-	_onUnitFail: function(event) {
+	_onUnitFail: function(params) {
 		this.iconEl.attr("status", "fail");
 	},
 	

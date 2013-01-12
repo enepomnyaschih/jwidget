@@ -59,8 +59,7 @@ JW.UI.Component = JW.Config.extend({
 		
 		this._lists = [];
 		this._invokeRemoveEvent = new JW.Event();
-		this._applyTemplate();
-		this.render();
+		this._render();
 	},
 	
 	destroy: function() {
@@ -137,7 +136,7 @@ JW.UI.Component = JW.Config.extend({
 		}));
 	},
 	
-	_applyTemplate: function() {
+	_render: function() {
 		this.el = jQuery(this.template || this.templates.main);
 		
 		this.rootClass = this.rootClass || this.el.attr("jwclass");
@@ -152,8 +151,14 @@ JW.UI.Component = JW.Config.extend({
 			var jwId = anchorEl.attr("jwid");
 			var jwIdCamel = JW.String.camel(jwId);
 			this[jwIdCamel + "El"] = anchorEl;
-			anchorEl.removeAttr("jwid");
 			anchorEl.addClass(this.getElementClass(jwId));
+		}
+		this.render();
+		for (var i = 0; i < anchorEls.length; ++i) {
+			var anchorEl = jQuery(anchorEls[i]);
+			var jwId = anchorEl.attr("jwid");
+			var jwIdCamel = JW.String.camel(jwId);
+			anchorEl.removeAttr("jwid");
 			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
 			if (typeof this[renderMethodName] === "function") {
 				this.children.set(this[renderMethodName].call(this), jwId);
