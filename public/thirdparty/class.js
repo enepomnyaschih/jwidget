@@ -44,6 +44,7 @@
     
     // The dummy class constructor
     function Class() {
+      this._super = null;
       // All construction is actually done in the init method
       if ( !initializing && this.init )
         this.init.apply(this, arguments);

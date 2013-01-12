@@ -26,6 +26,7 @@ JW.EventAttachment = JW.Class.extend({
 	*/
 	
 	init: function(event, callback, scope) {
+		this._super();
 		this.event = event;
 		this.callback = callback;
 		this.scope = scope;
