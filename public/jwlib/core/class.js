@@ -20,6 +20,8 @@
 JW.ClassUtil = {
 	_iid: 0,
 	
+	_fnTest: /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/,
+	
 	extend: function(subc, supc, body) {
 		body = body || {};
 		
@@ -41,18 +43,14 @@ JW.ClassUtil = {
 		return subc;
 	},
 	
-	/**
-	 * Create subclass method. Adds this._super call support.
-	 */
-	extendMethod: function(sub, sup)
-	{
-		if (typeof sup !== "function" ||
-			typeof sub !== "function" ||
-			sub.superclass)
+	extendMethod: function(sub, sup) {
+		if ((typeof sup !== "function") ||
+			(typeof sub !== "function") ||
+			sub.superclass ||
+			!JW.ClassUtil._fnTest.test(sub)) {
 			return sub;
-		
-		return function()
-		{
+		}
+		return function() {
 			var tmp = this._super;
 			this._super = sup;
 			var result = sub.apply(this, arguments);
