@@ -18,15 +18,16 @@
 */
 
 JW.Map.InstanceMapper = function(config) {
-	this.source = null;
-	this.provider = null;
-	this.dataField = "data";
-	this.keyField = "key";
-	JW.Map.InstanceMapper.superclass.call(this, config);
+	JW.Map.InstanceMapper.superclass.call(this);
+	this.source = config.source;
+	this.provider = config.provider;
+	this.dataField = JW.def(config.dataField, "data");
+	this.keyField = JW.def(config.keyField, "key");
+	this.extraCfg = config.extraCfg;
 	
 	this.mapper = new JW.Map.Mapper({
 		source      : this.source,
-		target      : this.target,
+		target      : config.target,
 		createItem  : this._createItem,
 		destroyItem : this._destroyItem,
 		scope       : this
@@ -35,7 +36,7 @@ JW.Map.InstanceMapper = function(config) {
 	this.target = this.mapper.target;
 };
 
-JW.extend(JW.Map.InstanceMapper/*<S extends JW.Class, T extends JW.Config>*/, JW.Config, {
+JW.extend(JW.Map.InstanceMapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Map<S> source;

@@ -21,12 +21,14 @@
 // TODO: Filter from end to begin
 
 JW.Collection.Mapper = function(config) {
-	this.source = null;
-	JW.Collection.Mapper.superclass.call(this, config);
-	this._targetCreated = !this.target;
-	if (this._targetCreated) {
-		this.target = new JW.Collection();
-	}
+	JW.Collection.Mapper.superclass.call(this);
+	this.source = config.source;
+	this.createItem = config.createItem;
+	this.destroyItem = config.destroyItem;
+	this._targetCreated = !config.target;
+	this.target = config.target || new JW.Collection();
+	this.scope = config.scope;
+	this.destroyAll = config.destroyAll;
 	this._snapshot = [];
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
@@ -39,19 +41,17 @@ JW.Collection.Mapper = function(config) {
 	this.target.addAll(this._fill());
 };
 
-JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Config, {
+JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Collection<S> source;
+	T createItem(S data);
+	void destroyItem(T item, S data);
 	
 	Optional
 	JW.Collection<T> target;
 	Object scope; // defaults to this
-	
-	Abstract methods
-	T createItem(S data);
-	void destroyItem(T item, S data);
-	void destroyAll(Array<T> items); // optional
+	void destroyAll(Array<T> items);
 	
 	Fields
 	Boolean _targetCreated;

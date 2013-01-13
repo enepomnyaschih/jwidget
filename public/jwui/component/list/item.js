@@ -18,16 +18,17 @@
 */
 
 JW.UI.Component.List.Item = function(config) {
-	this.list = null;
-	this.component = null;
-	JW.UI.Component.List.Item.superclass.call(this, config);
+	JW.UI.Component.List.Item.superclass.call(this);
+	this.list = config.list;
+	this.component = config.component;
+	this.component.render();
 	this.component.remove();
 	this.component.parent = this.list.parent;
 	this.list.parent.allChildren.add(this.component);
 	this._invokeRemoveAttachment = this.component._invokeRemoveEvent.bind(this._onInvokeRemove, this);
 };
 
-JW.extend(JW.UI.Component.List.Item, JW.Config, {
+JW.extend(JW.UI.Component.List.Item, JW.Class, {
 	/*
 	Required
 	JW.UI.Component.List list;
@@ -40,7 +41,7 @@ JW.extend(JW.UI.Component.List.Item, JW.Config, {
 	destroy: function() {
 		this._invokeRemoveAttachment.destroy();
 		this.list.parent.allChildren.remove(this.component);
-		delete this.component.parent;
+		this.component.parent = null;
 		this._super();
 	},
 	

@@ -21,6 +21,7 @@ JW.Unit.TestGroup = function(config) {
 	JW.Unit.TestGroup.superclass.call(this, config);
 	this.units = [];
 	this.unitIndex = 0;
+	this.unitCompleteAttachment = null;
 };
 
 JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
@@ -96,7 +97,7 @@ JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 	_onUnitComplete: function() {
 		var unit = this.units[this.unitIndex];
 		this.unitCompleteAttachment.destroy();
-		delete this.unitCompleteAttachment;
+		this.unitCompleteAttachment = null;
 		setTimeout(JW.Function.inScope(this._teardown, this), 1);
 	},
 	

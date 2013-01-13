@@ -18,8 +18,8 @@
 */
 
 JW.Unit.Test = function(config) {
-	this.fn = null;
 	JW.Unit.Test.superclass.call(this, config);
+	this.fn = config.fn;
 };
 
 JW.extend(JW.Unit.Test, JW.Unit.TestUnit, {

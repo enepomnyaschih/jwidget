@@ -18,15 +18,23 @@
 */
 
 JW.Unit.TestPlan = function(config) {
-	this.__name = "";
-	this.ns = null;
-	JW.Unit.TestPlan.superclass.call(this, config);
-	this._initBroadcaster();
-	this._initTestSuit();
-	this._initView();
+	JW.Unit.TestPlan.superclass.call(this);
+	this.__name = config.__name;
+	this.ns = config.ns;
+	this.__broadcaster = new JW.Unit.Broadcaster();
+	this.testSuit = JW.Unit.TestSuit.getSuit({
+		__name        : this.__name,
+		__broadcaster : this.__broadcaster,
+		ns            : this.ns
+	});
+	this.testSuit.__build();
+	this.view = new JW.Unit.UI.View({
+		testPlan : this
+	});
+	this.view.renderTo("body");
 };
 
-JW.extend(JW.Unit.TestPlan, JW.Config, {
+JW.extend(JW.Unit.TestPlan, JW.Class, {
 	/*
 	Required
 	String __name;
@@ -40,25 +48,5 @@ JW.extend(JW.Unit.TestPlan, JW.Config, {
 	
 	run: function() {
 		this.testSuit.__start();
-	},
-	
-	_initBroadcaster: function() {
-		this.__broadcaster = new JW.Unit.Broadcaster();
-	},
-	
-	_initTestSuit: function() {
-		this.testSuit = JW.Unit.TestSuit.getSuit({
-			__name        : this.__name,
-			__broadcaster : this.__broadcaster,
-			ns            : this.ns
-		});
-		this.testSuit.__build();
-	},
-	
-	_initView: function() {
-		this.view = new JW.Unit.UI.View({
-			testPlan : this
-		});
-		this.view.renderTo("body");
 	}
 });

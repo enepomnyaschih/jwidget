@@ -18,18 +18,16 @@
 */
 
 JW.Map.SetMapper = function(config) {
-	this.source = null;
-	JW.Map.SetMapper.superclass.call(this, config);
-	this._targetCreated = !this.target;
-	if (this._targetCreated) {
-		this.target = new JW.Set();
-	}
+	JW.Map.SetMapper.superclass.call(this);
+	this.source = config.source;
+	this._targetCreated = !config.target;
+	this.target = config.target || new JW.Set();
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this.source.every(this._add, this);
 };
 
-JW.extend(JW.Map.SetMapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Config, {
+JW.extend(JW.Map.SetMapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Map<S> source;

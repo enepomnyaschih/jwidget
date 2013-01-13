@@ -18,10 +18,11 @@
 */
 
 JW.UI.Component.Child = function(config) {
-	this.parent = null;
-	this.component = null;
-	this.name = "";
-	JW.UI.Component.Child.superclass.call(this, config);
+	JW.UI.Component.Child.superclass.call(this);
+	this.parent = config.parent;
+	this.component = config.component;
+	this.name = config.name;
+	this.component.render();
 	this.component.remove();
 	this._el = this.parent.getElement(this.name);
 	this._el.replaceBy(this.component.el);
@@ -31,7 +32,7 @@ JW.UI.Component.Child = function(config) {
 	this.component._afterAppend();
 };
 
-JW.extend(JW.UI.Component.Child, JW.Config, {
+JW.extend(JW.UI.Component.Child, JW.Class, {
 	/*
 	Required
 	JW.UI.Component parent;
@@ -46,7 +47,7 @@ JW.extend(JW.UI.Component.Child, JW.Config, {
 	destroy: function() {
 		this._invokeRemoveAttachment.destroy();
 		this.parent.allChildren.remove(this.component);
-		delete this.component.parent;
+		this.component.parent = null;
 		this.component.el.after(this._el);
 		this.component.el.detach();
 		this._super();

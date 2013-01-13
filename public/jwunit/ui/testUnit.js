@@ -18,25 +18,27 @@
 */
 
 JW.Unit.UI.TestUnit = function(config) {
-	this.__broadcaster = null;
-	this.__testUnit = null;
-	this.__depth = 0;
+	JW.Unit.UI.TestUnit.superclass.call(this, config);
+	this.__broadcaster = config.__broadcaster;
+	this.__unit = config.__unit;
+	this.__depth = JW.def(config.__depth, 0);
+	this._mapper = null;
 	this.startEventAttachment = null;
 	this.successEventAttachment = null;
 	this.failEventAttachment = null;
-	JW.Unit.UI.TestUnit.superclass.call(this, config);
 };
 
 JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	/*
 	Required
 	JW.Unit.UI.Broadcaster __broadcaster;
-	JW.Unit.TestUnit __testUnit;
+	JW.Unit.TestUnit __unit;
 	
 	Optional
 	Integer __depth;
 	
 	Fields
+	JW.Collection.InstanceMapper _mapper;
 	JW.EventAttachment startEventAttachment;
 	JW.EventAttachment successEventAttachment;
 	JW.EventAttachment failEventAttachment;
@@ -44,7 +46,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	
 	PADDING_PER_DEPTH : 20,
 	
-	render: function() {
+	renderComponent: function() {
 		this._super();
 		this._renderElements();
 		this._renderChildren();
@@ -81,7 +83,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 			units.addAll(this.__unit.units);
 		}
 		
-		this.mapper = new JW.Collection.InstanceMapper({
+		this._mapper = new JW.Collection.InstanceMapper({
 			source    : units,
 			provider  : JW.Unit.UI.TestUnit,
 			dataField : "__unit",
@@ -91,7 +93,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 			}
 		});
 		
-		this.addList(this.mapper.target, this.listEl);
+		this.addList(this._mapper.target, this.listEl);
 	},
 	
 	_subscribeUnit: function() {

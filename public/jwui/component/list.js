@@ -18,10 +18,10 @@
 */
 
 JW.UI.Component.List = function(config) {
-	this.parent = null;
-	this.collection = null;
-	this.el = null;
-	JW.UI.Component.List.superclass.call(this, config);
+	JW.UI.Component.List.superclass.call(this);
+	this.parent = config.parent;
+	this.collection = config.collection;
+	this.el = config.el;
 	
 	this._instanceMapper = new JW.Collection.InstanceMapper({
 		source    : this.collection,
@@ -43,7 +43,7 @@ JW.UI.Component.List = function(config) {
 	});
 };
 
-JW.extend(JW.UI.Component.List, JW.Config, {
+JW.extend(JW.UI.Component.List, JW.Class, {
 	/*
 	Required
 	JW.UI.Component parent;

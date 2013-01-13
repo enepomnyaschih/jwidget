@@ -39,6 +39,7 @@ JW.Collection = function() {
 	this.changeEvent = new JW.Event();
 	this.lengthChangeEvent = new JW.Event();
 	this.bulkCount = 0;
+	this.bulkDirty = false;
 	this.bulkLength = 0;
 };
 

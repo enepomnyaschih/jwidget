@@ -18,11 +18,11 @@
 */
 
 JW.Unit.UI.View = function(config) {
-	this.testPlan = null;
+	JW.Unit.UI.View.superclass.call(this, config);
+	this.testPlan = config.testPlan;
 	this.unitView = null;
 	this.selUnitView = null;
 	this.__broadcaster = null;
-	JW.Unit.UI.View.superclass.call(this, config);
 };
 
 JW.extend(JW.Unit.UI.View, JW.UI.Component, {
@@ -36,7 +36,7 @@ JW.extend(JW.Unit.UI.View, JW.UI.Component, {
 	JW.Unit.UI.Broadcaster __broadcaster;
 	*/
 	
-	render: function() {
+	renderComponent: function() {
 		this._super();
 		this._initBroadcaster();
 		this._subscribe();

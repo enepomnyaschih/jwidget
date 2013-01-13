@@ -23,6 +23,7 @@ JW.Timer = function(delay, repeat, sensitive) {
 	this.delay = delay;
 	this.repeat = repeat;
 	this.sensitive = sensitive;
+	this._handle = 0;
 };
 
 JW.extend(JW.Timer, JW.Class, {
@@ -32,6 +33,7 @@ JW.extend(JW.Timer, JW.Class, {
 	Number delay;
 	Boolean repeat;
 	Boolean sensitive;
+	Integer _handle;
 	*/
 	
 	destroy: function() {
@@ -54,7 +56,7 @@ JW.extend(JW.Timer, JW.Class, {
 		}
 		var stopper = this._getStopper();
 		stopper(this._handle);
-		delete this._handle;
+		this._handle = 0;;
 	},
 	
 	restart: function() {
@@ -63,7 +65,7 @@ JW.extend(JW.Timer, JW.Class, {
 	},
 	
 	isStarted: function() {
-		return !!this._handle;
+		return this._handle !== 0;
 	},
 	
 	_getRunner: function() {

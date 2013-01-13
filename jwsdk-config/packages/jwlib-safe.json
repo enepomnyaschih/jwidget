@@ -4,7 +4,6 @@
 		
 		"jwlib/core/core.js",
 		"jwlib/core/class.js",
-		"jwlib/core/config.js",
 		"jwlib/core/event.js",
 		"jwlib/core/eventAttachment.js",
 		"jwlib/core/eventParams.js",

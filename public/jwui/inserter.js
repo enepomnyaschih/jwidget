@@ -18,9 +18,9 @@
 */
 
 JW.UI.Inserter = function(config) {
-	this.el = null;
-	this.source = null;
-	JW.UI.Inserter.superclass.call(this, config);
+	JW.UI.Inserter.superclass.call(this);
+	this.el = config.el;
+	this.source = config.source;
 	
 	this._inserter = new JW.Collection.Inserter({
 		source     : this.source,
@@ -31,7 +31,7 @@ JW.UI.Inserter = function(config) {
 	});
 };
 
-JW.extend(JW.UI.Inserter, JW.Config, {
+JW.extend(JW.UI.Inserter, JW.Class, {
 	/*
 	Required
 	Element el;

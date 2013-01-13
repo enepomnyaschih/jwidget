@@ -18,8 +18,8 @@
 */
 
 JW.Unit.TestSuit = function(config) {
-	this.ns = null;
 	JW.Unit.TestSuit.superclass.call(this, config);
+	this.ns = config.ns;
 };
 
 JW.extend(JW.Unit.TestSuit, JW.Unit.TestGroup, {

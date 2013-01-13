@@ -18,31 +18,22 @@
 */
 
 JW.UI.Component = function(config) {
-	JW.UI.Component.superclass.call(this, config);
-	this.initComponent();
-	this.childrenCreated = !this.children;
-	if (this.childrenCreated) {
-		this.children = new JW.Map();
-	}
+	JW.UI.Component.superclass.call(this);
+	this.rootClass = config.rootClass;
+	this.template = config.template;
+	this._childrenCreated = !config.children;
+	this.children = config.children || new JW.Map();
+	this.parent = null;
+	this.el = null;
+	this.appended = false;
+	this.destroyed = false;
 	this.allChildren = new JW.Set();
-	
-	this._childMapper = new JW.Map.InstanceMapper({
-		source    : this.children,
-		provider  : JW.UI.Component.Child,
-		dataField : "component",
-		keyField  : "name",
-		extraCfg  : {
-			parent : this
-		}
-	});
-	
+	this._childMapper = null;
 	this._lists = [];
 	this._invokeRemoveEvent = new JW.Event();
-	this._render();
-	this.appended = false;
 },
 
-JW.extend(JW.UI.Component, JW.Config, {
+JW.extend(JW.UI.Component, JW.Class, {
 	/*
 	Optional
 	String rootClass;
@@ -50,10 +41,11 @@ JW.extend(JW.UI.Component, JW.Config, {
 	JW.Map<JW.UI.Component> children; // named children
 	
 	Fields
-	Boolean childrenCreated;
+	Boolean _childrenCreated;
 	JW.UI.Component parent;
 	Element el;
 	Boolean appended;
+	Boolean destroyed;
 	JW.Set<JW.UI.Component> allChildren; // children + (lists' contents)
 	JW.Map.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
 	Array<JW.UI.Component.List> _lists;
@@ -61,46 +53,96 @@ JW.extend(JW.UI.Component, JW.Config, {
 	*/
 	
 	destroy: function() {
-		if (!this.el) {
+		if (this.destroyed) {
 			return;
 		}
-		this.remove();
-		this.destroyComponent();
+		this.destroyed = true;
+		if (this.el) {
+			this.remove();
+			this.el.remove();
+			this.destroyComponent();
+			this._childMapper.destroy();
+		}
 		this._invokeRemoveEvent.destroy();
 		JW.eachByMethod(this._lists, "destroy");
-		this._childMapper.destroy();
 		this.allChildren.destroy();
-		if (this.childrenCreated) {
+		if (this._childrenCreated) {
 			this.children.destroy();
 		}
-		this.el.remove();
-		delete this.children;
-		delete this.parent;
-		delete this.el;
+		this._invokeRemoveEvent = null;
+		this._lists = null;
+		this._childMapper = null;
+		this.allChildren = null;
+		this.children = null;
+		this.parent = null;
+		this.el = null;
 		this._super();
 	},
 	
-	initComponent: function() {},
-	
-	render: function() {},
+	renderComponent: function() {},
 	
 	afterAppend: function() {},
 	
 	destroyComponent: function() {},
 	
+	render: function() {
+		if (this.el) {
+			return;
+		}
+		this.el = jQuery(this.template || this.templates.main);
+		this.rootClass = this.rootClass || this.el.attr("jwclass");
+		if (this.rootClass) {
+			this.el.removeAttr("jwclass");
+			this.el.addClass(this.rootClass);
+		}
+		var anchorEls = this.el.find("[jwid]");
+		for (var i = 0; i < anchorEls.length; ++i) {
+			var anchorEl = jQuery(anchorEls[i]);
+			var jwId = anchorEl.attr("jwid");
+			var jwIdCamel = JW.String.camel(jwId);
+			this[jwIdCamel + "El"] = anchorEl;
+			anchorEl.addClass(this.getElementClass(jwId));
+		}
+		this._childMapper = new JW.Map.InstanceMapper({
+			source    : this.children,
+			provider  : JW.UI.Component.Child,
+			dataField : "component",
+			keyField  : "name",
+			extraCfg  : {
+				parent : this
+			}
+		});
+		this.renderComponent();
+		for (var i = 0; i < anchorEls.length; ++i) {
+			var anchorEl = jQuery(anchorEls[i]);
+			var jwId = anchorEl.attr("jwid");
+			var jwIdCamel = JW.String.camel(jwId);
+			anchorEl.removeAttr("jwid");
+			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
+			if (typeof this[renderMethodName] === "function") {
+				this.children.set(this[renderMethodName].call(this), jwId);
+			}
+		}
+	},
+	
 	renderTo: function(el) {
+		this.render();
 		this.remove();
 		jQuery(el).insert(this.el);
 		this._afterAppend();
 	},
 	
 	renderAs: function(el) {
+		this.render();
 		this.remove();
 		jQuery(el).replaceBy(this.el);
 		this._afterAppend();
 	},
 	
 	remove: function() {
+		if (!this.el) {
+			return;
+		}
 		this._invokeRemoveEvent.trigger(new JW.UI.Component.EventParams(this));
 		this.el.detach();
 	},
@@ -132,36 +174,6 @@ JW.extend(JW.UI.Component, JW.Config, {
 			collection : collection,
 			el         : el
 		}));
-	},
-	
-	_render: function() {
-		this.el = jQuery(this.template || this.templates.main);
-		
-		this.rootClass = this.rootClass || this.el.attr("jwclass");
-		if (this.rootClass) {
-			this.el.removeAttr("jwclass");
-			this.el.addClass(this.rootClass);
-		}
-		
-		var anchorEls = this.el.find("[jwid]");
-		for (var i = 0; i < anchorEls.length; ++i) {
-			var anchorEl = jQuery(anchorEls[i]);
-			var jwId = anchorEl.attr("jwid");
-			var jwIdCamel = JW.String.camel(jwId);
-			this[jwIdCamel + "El"] = anchorEl;
-			anchorEl.addClass(this.getElementClass(jwId));
-		}
-		this.render();
-		for (var i = 0; i < anchorEls.length; ++i) {
-			var anchorEl = jQuery(anchorEls[i]);
-			var jwId = anchorEl.attr("jwid");
-			var jwIdCamel = JW.String.camel(jwId);
-			anchorEl.removeAttr("jwid");
-			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
-			if (typeof this[renderMethodName] === "function") {
-				this.children.set(this[renderMethodName].call(this), jwId);
-			}
-		}
 	},
 	
 	_afterAppend: function() {

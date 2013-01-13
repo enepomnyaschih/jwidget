@@ -26,12 +26,13 @@
 JW.Map = function() {
 	JW.Map.superclass.call(this);
 	this.base = {};
+	this.size = 0;
 	this.addEvent = new JW.Event();
 	this.removeEvent = new JW.Event();
 	this.changeEvent = new JW.Event();
 	this.sizeChangeEvent = new JW.Event();
-	this.size = 0;
 	this.bulkCount = 0;
+	this.bulkDirty = false;
 	this.bulkSize = 0;
 };
 

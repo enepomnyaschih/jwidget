@@ -18,19 +18,21 @@
 */
 
 JW.Unit.TestUnit = function(config) {
-	this.__name = "";
-	this.__broadcaster = null;
-	this.__parent = null;
-	JW.Unit.TestUnit.superclass.call(this, config);
+	JW.Unit.TestUnit.superclass.call(this);
+	this.__name = config.__name;
+	this.__broadcaster = config.__broadcaster;
+	this.__parent = config.__parent;
 	this.startEvent = new JW.Event();
 	this.successEvent = new JW.Event();
 	this.failEvent = new JW.Event();
 	this.completeEvent = new JW.Event();
 	this.__failed = false;
+	this.__msg = "";
+	this.__error = null;
 	this.__status = "ready";
 };
 
-JW.extend(JW.Unit.TestUnit, JW.Config, {
+JW.extend(JW.Unit.TestUnit, JW.Class, {
 	/*
 	Required
 	String __name;

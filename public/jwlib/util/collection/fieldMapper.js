@@ -18,14 +18,13 @@
 */
 
 JW.Collection.FieldMapper = function(config) {
-	this.source = null;
-	this.field = null;
-	
-	JW.Collection.FieldMapper.superclass.call(this, config);
+	JW.Collection.FieldMapper.superclass.call(this);
+	this.source = config.source;
+	this.field = config.field;
 	
 	this.mapper = new JW.Collection.Mapper({
 		source      : this.source,
-		target      : this.target,
+		target      : config.target,
 		createItem  : this._createItem,
 		destroyItem : this._destroyItem,
 		scope       : this
@@ -34,7 +33,7 @@ JW.Collection.FieldMapper = function(config) {
 	this.target = this.mapper.target;
 };
 
-JW.extend(JW.Collection.FieldMapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Config, {
+JW.extend(JW.Collection.FieldMapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Collection<S> source;

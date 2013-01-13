@@ -18,29 +18,28 @@
 */
 
 JW.Map.Mapper = function(config) {
-	this.source = null;
-	JW.Map.Mapper.superclass.call(this, config);
-	this._targetCreated = !this.target;
-	if (this._targetCreated) {
-		this.target = new JW.Map();
-	}
+	JW.Map.Mapper.superclass.call(this);
+	this.source = config.source;
+	this.createItem = config.createItem;
+	this.destroyItem = config.destroyItem;
+	this._targetCreated = !config.target;
+	this.target = config.target || new JW.Map();
+	this.scope = config.scope;
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this.source.every(this._add, this);
 };
 
-JW.extend(JW.Map.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Config, {
+JW.extend(JW.Map.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Map<S> source;
+	T createItem(S data, String key);
+	void destroyItem(T item, S data, String key);
 	
 	Optional
 	JW.Map<T> target;
 	Object scope; // defaults to this
-	
-	Abstract methods
-	T createItem(S data, String key);
-	void destroyItem(T item, S data, String key);
 	
 	Fields
 	Boolean _targetCreated;

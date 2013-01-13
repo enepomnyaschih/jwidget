@@ -20,8 +20,12 @@
 // TODO: Filter from end to begin
 
 JW.Collection.Inserter = function(config) {
-	this.source = null;
-	JW.Collection.Inserter.superclass.call(this, config);
+	JW.Collection.Inserter.superclass.call(this);
+	this.source = config.source;
+	this.addItem = config.addItem;
+	this.removeItem = config.removeItem;
+	this.scope = config.scope;
+	this.clearItems = config.clearItems;
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
@@ -34,18 +38,16 @@ JW.Collection.Inserter = function(config) {
 	this._fill();
 };
 
-JW.extend(JW.Collection.Inserter/*<T extends JW.Class>*/, JW.Config, {
+JW.extend(JW.Collection.Inserter/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Collection<T> source;
+	void addItem(T item, Integer index);
+	void removeItem(Integer index, T item);
 	
 	Optional
 	Object scope; // defaults to this
-	
-	Abstract methods
-	void addItem(T item, Integer index);
-	void removeItem(Integer index, T item);
-	void clearItems(); // optional
+	void clearItems();
 	
 	Fields
 	EventAttachment _addEventAttachment;

@@ -18,9 +18,9 @@
 */
 
 JW.Collection.SetMapper = function(config) {
-	this.source = null;
-	this.target = null;
-	JW.Collection.SetMapper.superclass.call(this, config);
+	JW.Collection.SetMapper.superclass.call(this);
+	this.source = config.source;
+	this.target = config.target;
 	
 	this._mapper = new JW.Collection.Mapper({
 		source      : this.source,
@@ -31,7 +31,7 @@ JW.Collection.SetMapper = function(config) {
 	});
 };
 
-JW.extend(JW.Collection.SetMapper/*<T extends JW.Class>*/, JW.Config, {
+JW.extend(JW.Collection.SetMapper/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Collection<T> source;

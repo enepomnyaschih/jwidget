@@ -18,19 +18,20 @@
 */
 
 JW.Unit.AsyncRunner = function(config) {
-	this.fn = null;
-	this.success = null;
-	this.fail = null;
-	JW.Unit.AsyncRunner.superclass.call(this, config);
-	this.handlers = {};
-	this.expectedOutput = [];
+	JW.Unit.AsyncRunner.superclass.call(this);
+	this.fn = config.fn;
+	this.success = config.success;
+	this.fail = config.fail;
+	this.scope = config.scope;
 	this.failed = false;
+	this.handlers = {};
 	this.index = 0;
 	this.count = 0;
+	this.expectedOutput = [];
 	this.outputIndex = 0;
 };
 
-JW.extend(JW.Unit.AsyncRunner, JW.Config, {
+JW.extend(JW.Unit.AsyncRunner, JW.Class, {
 	/*
 	Required
 	Function fn;

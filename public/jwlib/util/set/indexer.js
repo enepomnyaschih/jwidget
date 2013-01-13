@@ -18,28 +18,26 @@
 */
 
 JW.Set.Indexer = function(config) {
-	this.source = null;
-	JW.Set.Indexer.superclass.call(this, config);
-	this._targetCreated = !this.target;
-	if (this._targetCreated) {
-		this.target = new JW.Map();
-	}
+	JW.Set.Indexer.superclass.call(this);
+	this.source = config.source;
+	this.getKey = config.getKey;
+	this._targetCreated = !config.target;
+	this.target = config.target || new JW.Map();
+	this.scope = config.scope;
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this.source.every(this._add, this);
 };
 
-JW.extend(JW.Set.Indexer/*<T extends JW.Class>*/, JW.Config, {
+JW.extend(JW.Set.Indexer/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Set<T> source;
+	String getKey(T item);
 	
 	Optional
 	JW.Map<T> target;
 	Object scope;
-	
-	Abstract methods
-	String getKey(T item);
 	
 	Fields
 	Boolean _targetCreated;

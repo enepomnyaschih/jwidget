@@ -18,10 +18,12 @@
 */
 
 JW.Collection.Splitter = function(config) {
-	this.source = null;
-	this.rows = null;
+	JW.Collection.Splitter.superclass.call(this);
+	this.source = config.source;
+	this._rowsCreated = !config.rows;
+	this.rows = config.rows || new JW.Collection();
 	this.capacity = 1;
-	JW.Collection.Splitter.superclass.call(this, config);
+	this._length = 0;
 	
 	this._inserter = new JW.Collection.Inserter({
 		source     : this.source,
@@ -30,11 +32,9 @@ JW.Collection.Splitter = function(config) {
 		clearItems : this._clearItems,
 		scope      : this
 	});
-	
-	this._length = 0;
 };
 
-JW.extend(JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/, JW.Config, {
+JW.extend(JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/, JW.Class, {
 	/*
 	Required
 	JW.Collection<T> source;
@@ -44,12 +44,16 @@ JW.extend(JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T
 	Integer capacity;
 	
 	Fields
+	Boolean _rowsCreated;
 	Integer _length;
 	JW.Collection.Inserter<T> _inserter;
 	*/
 	
 	destroy: function() {
 		this._inserter.destroy();
+		if (this._rowsCreated) {
+			this.rows.destroy();
+		}
 		this._super();
 	},
 	
