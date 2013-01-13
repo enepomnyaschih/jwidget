@@ -23,7 +23,19 @@
 	reasonable changes).
 */
 
-JW.Map/*<T extends JW.Class>*/ = JW.Class.extend({
+JW.Map = function() {
+	JW.Map.superclass.call(this);
+	this.base = {};
+	this.addEvent = new JW.Event();
+	this.removeEvent = new JW.Event();
+	this.changeEvent = new JW.Event();
+	this.sizeChangeEvent = new JW.Event();
+	this.size = 0;
+	this.bulkCount = 0;
+	this.bulkSize = 0;
+};
+
+JW.extend(JW.Map/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Fields
 	Map<T> base;
@@ -36,19 +48,6 @@ JW.Map/*<T extends JW.Class>*/ = JW.Class.extend({
 	Boolean bulkDirty;
 	Integer bulkSize;
 	*/
-	
-	size      : 0,
-	bulkCount : 0,
-	bulkSize  : 0,
-	
-	init: function() {
-		this._super();
-		this.base = {};
-		this.addEvent = new JW.Event();
-		this.removeEvent = new JW.Event();
-		this.changeEvent = new JW.Event();
-		this.sizeChangeEvent = new JW.Event();
-	},
 	
 	destroy: function() {
 		this.clear();
@@ -148,37 +147,41 @@ JW.Map/*<T extends JW.Class>*/ = JW.Class.extend({
 
 JW.applyIf(JW.Map.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);
 
-JW.Map.EventParams/*<T extends JW.Class>*/ = JW.EventParams.extend({
+JW.Map.EventParams = function(sender) {
+	JW.Map.EventParams.superclass(sender);
+};
+
+JW.extend(JW.Map.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
 	/*
 	Fields
 	JW.Map<T> sender;
 	*/
 });
 
-JW.Map.ItemEventParams/*<T extends JW.Class>*/ = JW.Map.EventParams/*<T>*/.extend({
+JW.Map.ItemEventParams = function(sender, item, key) {
+	JW.Map.ItemEventParams.superclass(sender);
+	this.item = item;
+	this.key = key;
+};
+
+JW.extend(JW.Map.ItemEventParams/*<T extends JW.Class>*/, JW.Map.EventParams/*<T>*/, {
 	/*
 	Fields
 	T item;
 	String key;
 	*/
-	
-	init: function(sender, item, key) {
-		this._super(sender);
-		this.item = item;
-		this.key = key;
-	}
 });
 
-JW.Map.SizeChangeEventParams/*<T extends JW.Class>*/ = JW.Map.EventParams/*<T>*/.extend({
+JW.Map.SizeChangeEventParams = function(sender, oldSize, newSize) {
+	JW.Map.SizeChangeEventParams.superclass(sender);
+	this.oldSize = oldSize;
+	this.newSize = newSize;
+};
+
+JW.extend(JW.Map.SizeChangeEventParams/*<T extends JW.Class>*/, JW.Map.EventParams/*<T>*/, {
 	/*
 	Fields
 	Integer oldSize;
 	Integer newSize;
 	*/
-	
-	init: function(sender, oldSize, newSize) {
-		this._super(sender);
-		this.oldSize = oldSize;
-		this.newSize = newSize;
-	}
 });

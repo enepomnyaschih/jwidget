@@ -17,7 +17,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Unit.Broadcaster = JW.Class.extend({
+JW.Unit.Broadcaster = function() {
+	JW.Unit.Broadcaster.superclass.call(this);
+	this.startEvent = new JW.Event();
+	this.successEvent = new JW.Event();
+	this.failEvent = new JW.Event();
+	this.completeEvent = new JW.Event();
+};
+
+JW.extend(JW.Unit.Broadcaster, JW.Class, {
 	/*
 	Fields
 	JW.Event<JW.Unit.Broadcaster.UnitEventParams> startEvent;
@@ -25,14 +33,6 @@ JW.Unit.Broadcaster = JW.Class.extend({
 	JW.Event<JW.Unit.Broadcaster.UnitFailEventParams> failEvent;
 	JW.Event<JW.Unit.Broadcaster.UnitEventParams> completeEvent;
 	*/
-	
-	init: function() {
-		this._super();
-		this.startEvent = new JW.Event();
-		this.successEvent = new JW.Event();
-		this.failEvent = new JW.Event();
-		this.completeEvent = new JW.Event();
-	},
 	
 	destroy: function() {
 		this.completeEvent.destroy();
@@ -43,35 +43,39 @@ JW.Unit.Broadcaster = JW.Class.extend({
 	}
 });
 
-JW.Unit.Broadcaster.EventParams = JW.EventParams.extend({
+JW.Unit.Broadcaster.EventParams = function(sender) {
+	JW.Unit.Broadcaster.EventParams.superclass.call(this, sender);
+};
+
+JW.extend(JW.Unit.Broadcaster.EventParams, JW.EventParams, {
 	/*
 	Fields
 	JW.Unit.Broadcaster sender;
 	*/
 });
 
-JW.Unit.Broadcaster.UnitEventParams = JW.Unit.Broadcaster.EventParams.extend({
+JW.Unit.Broadcaster.UnitEventParams = function(sender, unit) {
+	JW.Unit.Broadcaster.UnitEventParams.superclass.call(this, sender);
+	this.unit = unit;
+};
+
+JW.extend(JW.Unit.Broadcaster.UnitEventParams, JW.Unit.Broadcaster.EventParams, {
 	/*
 	Fields
 	JW.Unit.TestUnit unit;
 	*/
-	
-	init: function(sender, unit) {
-		this._super(sender);
-		this.unit = unit;
-	}
 });
 
-JW.Unit.Broadcaster.UnitFailEventParams = JW.Unit.Broadcaster.UnitEventParams.extend({
+JW.Unit.Broadcaster.UnitFailEventParams = function(sender, unit, message, exception) {
+	JW.Unit.Broadcaster.UnitFailEventParams.superclass.call(this, sender, unit);
+	this.message = message;
+	this.exception = exception;
+};
+
+JW.extend(JW.Unit.Broadcaster.UnitFailEventParams, JW.Unit.Broadcaster.UnitEventParams, {
 	/*
 	Fields
 	String message;
 	Error exception;
 	*/
-	
-	init: function(sender, unit, message, exception) {
-		this._super(sender, unit);
-		this.message = message;
-		this.exception = exception;
-	}
 });

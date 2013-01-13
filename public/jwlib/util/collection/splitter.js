@@ -17,32 +17,36 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/ = JW.Config.extend({
+JW.Collection.Splitter = function(config) {
+	this.source = null;
+	this.rows = null;
+	this.capacity = 1;
+	JW.Collection.Splitter.superclass.call(this, config);
+	
+	this._inserter = new JW.Collection.Inserter({
+		source     : this.source,
+		addItem    : this._addItem,
+		removeItem : this._removeItem,
+		clearItems : this._clearItems,
+		scope      : this
+	});
+	
+	this._length = 0;
+};
+
+JW.extend(JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/, JW.Config, {
 	/*
 	Required
 	JW.Collection<T> source;
 	JW.Collection<R> rows;
+	
+	Optional
 	Integer capacity;
 	
 	Fields
 	Integer _length;
 	JW.Collection.Inserter<T> _inserter;
 	*/
-	
-	capacity : 1,
-	_length  : 0,
-	
-	init: function(config) {
-		this._super(config);
-		
-		this._inserter = new JW.Collection.Inserter({
-			source     : this.source,
-			addItem    : this._addItem,
-			removeItem : this._removeItem,
-			clearItems : this._clearItems,
-			scope      : this
-		});
-	},
 	
 	destroy: function() {
 		this._inserter.destroy();

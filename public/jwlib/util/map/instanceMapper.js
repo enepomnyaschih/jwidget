@@ -17,7 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Map.InstanceMapper/*<S extends JW.Class, T extends JW.Config>*/ = JW.Config.extend({
+JW.Map.InstanceMapper = function(config) {
+	this.source = null;
+	this.provider = null;
+	this.dataField = "data";
+	this.keyField = "key";
+	JW.Map.InstanceMapper.superclass.call(this, config);
+	
+	this.mapper = new JW.Map.Mapper({
+		source      : this.source,
+		target      : this.target,
+		createItem  : this._createItem,
+		destroyItem : this._destroyItem,
+		scope       : this
+	});
+	
+	this.target = this.mapper.target;
+};
+
+JW.extend(JW.Map.InstanceMapper/*<S extends JW.Class, T extends JW.Config>*/, JW.Config, {
 	/*
 	Required
 	JW.Map<S> source;
@@ -32,23 +50,6 @@ JW.Map.InstanceMapper/*<S extends JW.Class, T extends JW.Config>*/ = JW.Config.e
 	Fields
 	JW.Map.Mapper<S, T> mapper;
 	*/
-	
-	dataField : "data",
-	keyField  : "key",
-	
-	init: function(config) {
-		this._super(config);
-		
-		this.mapper = new JW.Map.Mapper({
-			source      : this.source,
-			target      : this.target,
-			createItem  : this._createItem,
-			destroyItem : this._destroyItem,
-			scope       : this
-		});
-		
-		this.target = this.mapper.target;
-	},
 	
 	_createItem: function(data, key) {
 		var config = JW.apply({}, this.extraCfg);

@@ -17,14 +17,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Function = JW.Class.extend({
-	base : null, // [readonly] Function
-	
-	init: function(x)
-	{
-		this.base = x;
-	}
-});
+JW.Function = function(x) {
+	JW.Function.superclass.call(this);
+	this.base = x;
+};
+
+JW.extend(JW.Function, JW.Class);
 
 JW.Function._prototype = {
 	/**

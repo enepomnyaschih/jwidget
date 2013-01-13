@@ -17,14 +17,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.EventParams = JW.Class.extend({
+JW.EventParams = function(sender) {
+	JW.EventParams.superclass.call(this);
+	this.sender = sender;
+};
+
+JW.extend(JW.EventParams, JW.Class, {
 	/*
 	Fields
 	JW.Class sender;
 	*/
-	
-	init: function(sender) {
-		this._super();
-		this.sender = sender;
-	}
 });

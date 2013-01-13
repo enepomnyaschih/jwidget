@@ -17,16 +17,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Event/*<P extends JW.EventParams>*/ = JW.Class.extend({
+JW.Event = function() {
+	JW.Event.superclass.call(this);
+	this.attachments = {};
+};
+
+JW.extend(JW.Event, JW.Class, {
 	/*
 	Fields
 	Map<JW.EventAttachment> attachments;
 	*/
-	
-	init: function() {
-		this._super();
-		this.attachments = {};
-	},
 	
 	destroy: function() {
 		this.purge();

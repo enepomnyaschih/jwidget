@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Unit.TestCase = JW.Unit.TestGroup.extend({
+JW.Unit.TestCase = function(config) {
+	JW.Unit.TestCase.superclass.call(this, config);
+};
+
+JW.extend(JW.Unit.TestCase, JW.Unit.TestGroup, {
 	// override
 	__build: function() {
 		for (var name in this) {

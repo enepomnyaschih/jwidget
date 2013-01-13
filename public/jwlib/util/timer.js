@@ -17,7 +17,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Timer = JW.Class.extend({
+JW.Timer = function(delay, repeat, sensitive) {
+	JW.Timer.superclass.call(this);
+	this.tickEvent = new JW.Event();
+	this.delay = delay;
+	this.repeat = repeat;
+	this.sensitive = sensitive;
+};
+
+JW.extend(JW.Timer, JW.Class, {
 	/*
 	Fields
 	JW.Event<JW.Timer.EventParams> tickEvent;
@@ -25,18 +33,6 @@ JW.Timer = JW.Class.extend({
 	Boolean repeat;
 	Boolean sensitive;
 	*/
-	
-	delay     : 0,
-	repeat    : false,
-	sensitive : false,
-	
-	init: function(delay, repeat, sensitive) {
-		this._super();
-		this.tickEvent = new JW.Event();
-		this.delay = delay;
-		this.repeat = repeat;
-		this.sensitive = sensitive;
-	},
 	
 	destroy: function() {
 		this.stop();
@@ -83,7 +79,11 @@ JW.Timer = JW.Class.extend({
 	}
 });
 
-JW.Timer.EventParams = JW.EventParams.extend({
+JW.Timer.EventParams = function(sender) {
+	JW.Timer.EventParams.superclass.call(this, sender);
+};
+
+JW.extend(JW.Timer.EventParams, JW.EventParams, {
 	/*
 	Fields
 	JW.Timer sender;

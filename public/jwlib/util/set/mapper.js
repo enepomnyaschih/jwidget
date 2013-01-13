@@ -17,7 +17,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Set.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Config.extend({
+JW.Set.Mapper = function(config) {
+	this.source = null;
+	JW.Set.Mapper.superclass.call(this, config);
+	this._targetCreated = !this.target;
+	if (this._targetCreated) {
+		this.target = new JW.Set();
+	}
+	this._items = {};
+	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
+	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
+	this.source.every(this._add, this);
+};
+
+JW.extend(JW.Set.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Config, {
 	/*
 	Required
 	JW.Set<S> source;
@@ -36,18 +49,6 @@ JW.Set.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Config.extend({
 	EventAttachment _addEventAttachment;
 	EventAttachment _removeEventAttachment;
 	*/
-	
-	init: function(config) {
-		this._super(config);
-		this._targetCreated = !this.target;
-		if (this._targetCreated) {
-			this.target = new JW.Set();
-		}
-		this._items = {};
-		this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-		this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-		this.source.every(this._add, this);
-	},
 	
 	destroy: function() {
 		this.source.every(this._remove, this);

@@ -17,9 +17,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Unit");
+JW.Unit.TestUnit = function(config) {
+	this.__name = "";
+	this.__broadcaster = null;
+	this.__parent = null;
+	JW.Unit.TestUnit.superclass.call(this, config);
+	this.startEvent = new JW.Event();
+	this.successEvent = new JW.Event();
+	this.failEvent = new JW.Event();
+	this.completeEvent = new JW.Event();
+	this.__failed = false;
+	this.__status = "ready";
+};
 
-JW.Unit.TestUnit = JW.Config.extend({
+JW.extend(JW.Unit.TestUnit, JW.Config, {
 	/*
 	Required
 	String __name;
@@ -41,17 +52,6 @@ JW.Unit.TestUnit = JW.Config.extend({
 	STATUS_START   : "start",
 	STATUS_SUCCESS : "success",
 	STATUS_FAIL    : "fail",
-	
-	__failed : false,
-	__status : "ready",
-	
-	init: function(config) {
-		this._super(config);
-		this.startEvent = new JW.Event();
-		this.successEvent = new JW.Event();
-		this.failEvent = new JW.Event();
-		this.completeEvent = new JW.Event();
-	},
 	
 	destroy: function() {
 		this.completeEvent.destroy();
@@ -112,23 +112,27 @@ JW.Unit.TestUnit = JW.Config.extend({
 	}
 });
 
-JW.Unit.TestUnit.EventParams = JW.EventParams.extend({
+JW.Unit.TestUnit.EventParams = function(sender) {
+	JW.Unit.TestUnit.EventParams.superclass.call(this, sender);
+};
+
+JW.extend(JW.Unit.TestUnit.EventParams, JW.EventParams, {
 	/*
 	Fields
 	JW.Unit.TestUnit sender;
 	*/
 });
 
-JW.Unit.TestUnit.FailEventParams = JW.Unit.TestUnit.EventParams.extend({
+JW.Unit.TestUnit.FailEventParams = function(sender, message, exception) {
+	JW.Unit.TestUnit.FailEventParams.superclass.call(this, sender);
+	this.message = message;
+	this.exception = exception;
+};
+
+JW.extend(JW.Unit.TestUnit.FailEventParams, JW.Unit.TestUnit.EventParams, {
 	/*
 	Fields
 	String message;
 	Error exception;
 	*/
-	
-	init: function(sender, message, exception) {
-		this._super(sender);
-		this.message = message;
-		this.exception = exception;
-	}
 });

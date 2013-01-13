@@ -17,7 +17,33 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Component.List = JW.Config.extend({
+JW.UI.Component.List = function(config) {
+	this.parent = null;
+	this.collection = null;
+	this.el = null;
+	JW.UI.Component.List.superclass.call(this, config);
+	
+	this._instanceMapper = new JW.Collection.InstanceMapper({
+		source    : this.collection,
+		provider  : JW.UI.Component.List.Item,
+		dataField : "component",
+		extraCfg  : {
+			list : this
+		}
+	});
+	
+	this._fieldMapper = new JW.Collection.FieldMapper({
+		source : this._instanceMapper.target,
+		field  : "component"
+	});
+	
+	this._inserter = new JW.UI.Inserter({
+		source : this._fieldMapper.target,
+		el     : this.el
+	});
+};
+
+JW.extend(JW.UI.Component.List, JW.Config, {
 	/*
 	Required
 	JW.UI.Component parent;
@@ -29,29 +55,6 @@ JW.UI.Component.List = JW.Config.extend({
 	JW.Collection.FieldMapper<JW.UI.Component.List.Item, JW.UI.Component> _fieldMapper;
 	JW.UI.Inserter _inserter;
 	*/
-	
-	init: function(config) {
-		this._super(config);
-		
-		this._instanceMapper = new JW.Collection.InstanceMapper({
-			source    : this.collection,
-			provider  : JW.UI.Component.List.Item,
-			dataField : "component",
-			extraCfg  : {
-				list : this
-			}
-		});
-		
-		this._fieldMapper = new JW.Collection.FieldMapper({
-			source : this._instanceMapper.target,
-			field  : "component"
-		});
-		
-		this._inserter = new JW.UI.Inserter({
-			source : this._fieldMapper.target,
-			el     : this.el
-		});
-	},
 	
 	destroy: function() {
 		this._inserter.destroy();

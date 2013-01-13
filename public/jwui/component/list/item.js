@@ -17,7 +17,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Component.List.Item = JW.Config.extend({
+JW.UI.Component.List.Item = function(config) {
+	this.list = null;
+	this.component = null;
+	JW.UI.Component.List.Item.superclass.call(this, config);
+	this.component.remove();
+	this.component.parent = this.list.parent;
+	this.list.parent.allChildren.add(this.component);
+	this._invokeRemoveAttachment = this.component._invokeRemoveEvent.bind(this._onInvokeRemove, this);
+};
+
+JW.extend(JW.UI.Component.List.Item, JW.Config, {
 	/*
 	Required
 	JW.UI.Component.List list;
@@ -26,14 +36,6 @@ JW.UI.Component.List.Item = JW.Config.extend({
 	Fields
 	JW.EventAttachment _invokeRemoveAttachment;
 	*/
-	
-	init: function(config) {
-		this._super(config);
-		this.component.remove();
-		this.component.parent = this.list.parent;
-		this.list.parent.allChildren.add(this.component);
-		this._invokeRemoveAttachment = this.component._invokeRemoveEvent.bind(this._onInvokeRemove, this);
-	},
 	
 	destroy: function() {
 		this._invokeRemoveAttachment.destroy();

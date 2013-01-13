@@ -1,5 +1,5 @@
-﻿/*
-	jWidget Lib source file.
+/*
+	JW simple inheritance.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,18 +17,58 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Class = Class.extend({
-	/*
-	Fields
-	Integer _iid;
-	*/
+JW.ClassUtil = {
+	_iid: 0,
 	
-	init: function() {
-		this._iid = ++JW.Class._iid;
+	extend: function(subc, supc, body) {
+		body = body || {};
+		
+		var F = function() {};
+		F.prototype = supc.prototype;
+		subc.prototype = new F();
+		subc.prototype.constructor = subc;
+		subc.superclass = supc;
+		for (var i in body) {
+			subc.prototype[i] = JW.ClassUtil.extendMethod(body[i], supc.prototype[i]);
+		}
+		subc.extend = function(body) {
+			var f = function() {
+				subc.apply(this, arguments);
+			};
+			JW.extend(f, subc, body);
+			return f;
+		};
+		return subc;
 	},
 	
-	destroy: function() {
+	/**
+	 * Create subclass method. Adds this._super call support.
+	 */
+	extendMethod: function(sub, sup)
+	{
+		if (typeof sup !== "function" ||
+			typeof sub !== "function" ||
+			sub.superclass)
+			return sub;
+		
+		return function()
+		{
+			var tmp = this._super;
+			this._super = sup;
+			var result = sub.apply(this, arguments);
+			this._super = tmp;
+			return result;
+		}
 	}
-});
+};
 
-JW.Class._iid = 0;
+JW.extend = JW.ClassUtil.extend;
+
+JW.Class = function() {
+	this._iid = ++JW.ClassUtil._iid;
+	this._super = null;
+};
+
+JW.extend(JW.Class, Object, {
+	destroy: function() {}
+});

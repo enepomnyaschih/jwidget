@@ -17,7 +17,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Unit.AsyncRunner = JW.Config.extend({
+JW.Unit.AsyncRunner = function(config) {
+	this.fn = null;
+	this.success = null;
+	this.fail = null;
+	JW.Unit.AsyncRunner.superclass.call(this, config);
+	this.handlers = {};
+	this.expectedOutput = [];
+	this.failed = false;
+	this.index = 0;
+	this.count = 0;
+	this.outputIndex = 0;
+};
+
+JW.extend(JW.Unit.AsyncRunner, JW.Config, {
 	/*
 	Required
 	Function fn;
@@ -35,17 +48,6 @@ JW.Unit.AsyncRunner = JW.Config.extend({
 	Array<String> expectedOutput;
 	Integer outputIndex;
 	*/
-	
-	failed      : false,
-	index       : 0,
-	count       : 0,
-	outputIndex : 0,
-	
-	init: function(config) {
-		this._super(config);
-		this.handlers = {};
-		this.expectedOutput = [];
-	},
 	
 	run: function() {
 		this.addHandler("root call", this.fn, 1)();

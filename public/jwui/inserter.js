@@ -17,7 +17,21 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Inserter = JW.Config.extend({
+JW.UI.Inserter = function(config) {
+	this.el = null;
+	this.source = null;
+	JW.UI.Inserter.superclass.call(this, config);
+	
+	this._inserter = new JW.Collection.Inserter({
+		source     : this.source,
+		addItem    : this._addItem,
+		removeItem : this._removeItem,
+		clearItems : this._clearItems,
+		scope      : this
+	});
+};
+
+JW.extend(JW.UI.Inserter, JW.Config, {
 	/*
 	Required
 	Element el;
@@ -26,18 +40,6 @@ JW.UI.Inserter = JW.Config.extend({
 	Fields
 	JW.Collection.Inserter<JW.UI.Component> _inserter;
 	*/
-	
-	init: function(config) {
-		this._super(config);
-		
-		this._inserter = new JW.Collection.Inserter({
-			source     : this.source,
-			addItem    : this._addItem,
-			removeItem : this._removeItem,
-			clearItems : this._clearItems,
-			scope      : this
-		});
-	},
 	
 	destroy: function() {
 		this._inserter.destroy();

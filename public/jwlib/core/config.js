@@ -17,9 +17,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Config = JW.Class.extend({
-	init: function(config) {
-		this._super();
-		JW.apply(this, config);
-	}
-});
+JW.Config = function(config) {
+	JW.Config.superclass.call(this);
+	JW.apply(this, config);
+};
+
+JW.extend(JW.Config, JW.Class);

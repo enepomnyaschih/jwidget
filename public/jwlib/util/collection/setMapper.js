@@ -17,7 +17,21 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Collection.SetMapper/*<T extends JW.Class>*/ = JW.Config.extend({
+JW.Collection.SetMapper = function(config) {
+	this.source = null;
+	this.target = null;
+	JW.Collection.SetMapper.superclass.call(this, config);
+	
+	this._mapper = new JW.Collection.Mapper({
+		source      : this.source,
+		createItem  : this._createItem,
+		destroyItem : this._destroyItem,
+		destroyAll  : this._destroyAll,
+		scope       : this
+	});
+};
+
+JW.extend(JW.Collection.SetMapper/*<T extends JW.Class>*/, JW.Config, {
 	/*
 	Required
 	JW.Collection<T> source;
@@ -26,18 +40,6 @@ JW.Collection.SetMapper/*<T extends JW.Class>*/ = JW.Config.extend({
 	Fields
 	JW.Collection.Mapper<T, T> _mapper;
 	*/
-	
-	init: function(config) {
-		this._super(config);
-		
-		this._mapper = new JW.Collection.Mapper({
-			source      : this.source,
-			createItem  : this._createItem,
-			destroyItem : this._destroyItem,
-			destroyAll  : this._destroyAll,
-			scope       : this
-		});
-	},
 	
 	destroy: function() {
 		this._mapper.destroy();

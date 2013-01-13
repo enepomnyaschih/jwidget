@@ -20,7 +20,26 @@
 // TODO: Synchronize changeEvent and lengthChangeEvent in bulk operations
 // TODO: Filter from end to begin
 
-JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Config.extend({
+JW.Collection.Mapper = function(config) {
+	this.source = null;
+	JW.Collection.Mapper.superclass.call(this, config);
+	this._targetCreated = !this.target;
+	if (this._targetCreated) {
+		this.target = new JW.Collection();
+	}
+	this._snapshot = [];
+	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
+	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
+	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
+	this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
+	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
+	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
+	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
+	this.target.addAll(this._fill());
+};
+
+JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Config, {
 	/*
 	Required
 	JW.Collection<S> source;
@@ -46,24 +65,6 @@ JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/ = JW.Config.ext
 	EventAttachment _filterEventAttachment;
 	EventAttachment _resetEventAttachment;
 	*/
-	
-	init: function(config) {
-		this._super(config);
-		this._targetCreated = !this.target;
-		if (this._targetCreated) {
-			this.target = new JW.Collection();
-		}
-		this._snapshot = [];
-		this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-		this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-		this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-		this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
-		this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
-		this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
-		this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
-		this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
-		this.target.addAll(this._fill());
-	},
 	
 	destroy: function() {
 		this._clear(this.target.clear());

@@ -17,7 +17,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Unit.UI.View = JW.UI.Component.extend({
+JW.Unit.UI.View = function(config) {
+	this.testPlan = null;
+	this.unitView = null;
+	this.selUnitView = null;
+	this.__broadcaster = null;
+	JW.Unit.UI.View.superclass.call(this, config);
+};
+
+JW.extend(JW.Unit.UI.View, JW.UI.Component, {
 	/*
 	Required
 	JW.Unit.TestPlan testPlan;

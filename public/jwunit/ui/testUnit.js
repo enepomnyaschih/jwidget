@@ -17,7 +17,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Unit.UI.TestUnit = JW.UI.Component.extend({
+JW.Unit.UI.TestUnit = function(config) {
+	this.__broadcaster = null;
+	this.__testUnit = null;
+	this.__depth = 0;
+	this.startEventAttachment = null;
+	this.successEventAttachment = null;
+	this.failEventAttachment = null;
+	JW.Unit.UI.TestUnit.superclass.call(this, config);
+};
+
+JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	/*
 	Required
 	JW.Unit.UI.Broadcaster __broadcaster;
@@ -33,7 +43,6 @@ JW.Unit.UI.TestUnit = JW.UI.Component.extend({
 	*/
 	
 	PADDING_PER_DEPTH : 20,
-	__depth           : 0,
 	
 	render: function() {
 		this._super();

@@ -19,10 +19,12 @@
 
 JW.Unit = {
 	run: function(name, ns) {
+		var time = new Date().getTime();
 		this._testPlan = new JW.Unit.TestPlan({
 			__name : name,
 			ns     : ns
 		});
+		console.log("Initialized tests in " + (new Date().getTime() - time) + "ms");
 		this._testPlan.run();
 		return this._testPlan;
 	},

@@ -17,7 +17,21 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Component.Child = JW.Config.extend({
+JW.UI.Component.Child = function(config) {
+	this.parent = null;
+	this.component = null;
+	this.name = "";
+	JW.UI.Component.Child.superclass.call(this, config);
+	this.component.remove();
+	this._el = this.parent.getElement(this.name);
+	this._el.replaceBy(this.component.el);
+	this.component.parent = this.parent;
+	this.parent.allChildren.add(this.component);
+	this._invokeRemoveAttachment = this.component._invokeRemoveEvent.bind(this._onInvokeRemove, this);
+	this.component._afterAppend();
+};
+
+JW.extend(JW.UI.Component.Child, JW.Config, {
 	/*
 	Required
 	JW.UI.Component parent;
@@ -28,17 +42,6 @@ JW.UI.Component.Child = JW.Config.extend({
 	Element _el;
 	JW.EventAttachment _invokeRemoveAttachment;
 	*/
-	
-	init: function(config) {
-		this._super(config);
-		this.component.remove();
-		this._el = this.parent.getElement(this.name);
-		this._el.replaceBy(this.component.el);
-		this.component.parent = this.parent;
-		this.parent.allChildren.add(this.component);
-		this._invokeRemoveAttachment = this.component._invokeRemoveEvent.bind(this._onInvokeRemove, this);
-		this.component._afterAppend();
-	},
 	
 	destroy: function() {
 		this._invokeRemoveAttachment.destroy();

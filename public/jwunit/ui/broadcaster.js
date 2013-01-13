@@ -17,18 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Unit.UI.Broadcaster = JW.Class.extend({
+JW.Unit.UI.Broadcaster = function() {
+	JW.Unit.UI.Broadcaster.superclass.call(this);
+	this.selectEvent = new JW.Event();
+	this.startEvent = new JW.Event();
+};
+
+JW.extend(JW.Unit.UI.Broadcaster, JW.Class, {
 	/*
 	Fields
 	JW.Event<JW.Unit.UI.Broadcaster.UnitEventParams> selectEvent;
 	JW.Event<JW.Unit.UI.Broadcaster.UnitEventParams> startEvent;
 	*/
-	
-	init: function() {
-		this._super();
-		this.selectEvent = new JW.Event();
-		this.startEvent = new JW.Event();
-	},
 	
 	destroy: function() {
 		this.startEvent.destroy();
@@ -37,21 +37,25 @@ JW.Unit.UI.Broadcaster = JW.Class.extend({
 	}
 });
 
-JW.Unit.UI.Broadcaster.EventParams = JW.EventParams.extend({
+JW.Unit.UI.Broadcaster.EventParams = function(sender) {
+	JW.Unit.UI.Broadcaster.EventParams.superclass.call(this, sender);
+};
+
+JW.extend(JW.Unit.UI.Broadcaster.EventParams, JW.EventParams, {
 	/*
 	Fields
 	JW.Unit.UI.Broadcaster sender;
 	*/
 });
 
-JW.Unit.UI.Broadcaster.UnitEventParams = JW.Unit.UI.Broadcaster.EventParams.extend({
+JW.Unit.UI.Broadcaster.UnitEventParams = function(sender, unit) {
+	JW.Unit.UI.Broadcaster.UnitEventParams.superclass.call(this, sender);
+	this.unit = unit;
+};
+
+JW.extend(JW.Unit.UI.Broadcaster.UnitEventParams, JW.Unit.UI.Broadcaster.EventParams, {
 	/*
 	Fields
 	JW.Unit.UI.TestUnit unit;
 	*/
-	
-	init: function(sender, unit) {
-		this._super(sender);
-		this.unit = unit;
-	}
 });

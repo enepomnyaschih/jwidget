@@ -17,10 +17,34 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Component = JW.Config.extend({
+JW.UI.Component = function(config) {
+	JW.UI.Component.superclass.call(this, config);
+	this.initComponent();
+	this.childrenCreated = !this.children;
+	if (this.childrenCreated) {
+		this.children = new JW.Map();
+	}
+	this.allChildren = new JW.Set();
+	
+	this._childMapper = new JW.Map.InstanceMapper({
+		source    : this.children,
+		provider  : JW.UI.Component.Child,
+		dataField : "component",
+		keyField  : "name",
+		extraCfg  : {
+			parent : this
+		}
+	});
+	
+	this._lists = [];
+	this._invokeRemoveEvent = new JW.Event();
+	this._render();
+	this.appended = false;
+},
+
+JW.extend(JW.UI.Component, JW.Config, {
 	/*
 	Optional
-	String elName;
 	String rootClass;
 	String template;
 	JW.Map<JW.UI.Component> children; // named children
@@ -35,32 +59,6 @@ JW.UI.Component = JW.Config.extend({
 	Array<JW.UI.Component.List> _lists;
 	JW.Event<JW.UI.Component.EventParams> _invokeRemoveEvent;
 	*/
-	
-	appended : false,
-	
-	init: function(config) {
-		this._super(config);
-		this.initComponent();
-		this.childrenCreated = !this.children;
-		if (this.childrenCreated) {
-			this.children = new JW.Map();
-		}
-		this.allChildren = new JW.Set();
-		
-		this._childMapper = new JW.Map.InstanceMapper({
-			source    : this.children,
-			provider  : JW.UI.Component.Child,
-			dataField : "component",
-			keyField  : "name",
-			extraCfg  : {
-				parent : this
-			}
-		});
-		
-		this._lists = [];
-		this._invokeRemoveEvent = new JW.Event();
-		this._render();
-	},
 	
 	destroy: function() {
 		if (!this.el) {
@@ -186,7 +184,11 @@ JW.UI.template(JW.UI.Component, {
 	main: '<div />'
 });
 
-JW.UI.Component.EventParams = JW.EventParams.extend({
+JW.UI.Component.EventParams = function(sender) {
+	JW.UI.Component.EventParams.superclass.call(this, sender);
+};
+
+JW.extend(JW.UI.Component.EventParams, JW.EventParams, {
 	/*
 	Fields
 	JW.UI.Component sender;

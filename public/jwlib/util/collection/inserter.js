@@ -19,7 +19,22 @@
 
 // TODO: Filter from end to begin
 
-JW.Collection.Inserter/*<T extends JW.Class>*/ = JW.Config.extend({
+JW.Collection.Inserter = function(config) {
+	this.source = null;
+	JW.Collection.Inserter.superclass.call(this, config);
+	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
+	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
+	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
+	this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
+	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
+	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
+	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
+	this._snapshot = [];
+	this._fill();
+};
+
+JW.extend(JW.Collection.Inserter/*<T extends JW.Class>*/, JW.Config, {
 	/*
 	Required
 	JW.Collection<T> source;
@@ -43,20 +58,6 @@ JW.Collection.Inserter/*<T extends JW.Class>*/ = JW.Config.extend({
 	EventAttachment _resetEventAttachment;
 	Array<T> _snapshot;
 	*/
-	
-	init: function(config) {
-		this._super(config);
-		this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-		this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-		this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-		this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
-		this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
-		this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
-		this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
-		this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
-		this._snapshot = [];
-		this._fill();
-	},
 	
 	destroy: function() {
 		this._clear();

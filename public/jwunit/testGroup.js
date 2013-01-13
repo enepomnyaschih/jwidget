@@ -17,20 +17,19 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Unit.TestGroup = JW.Unit.TestUnit.extend({
+JW.Unit.TestGroup = function(config) {
+	JW.Unit.TestGroup.superclass.call(this, config);
+	this.units = [];
+	this.unitIndex = 0;
+};
+
+JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 	/*
 	Fields
 	Array<JW.Unit.TestUnit> units;
 	Integer unitIndex;
 	JW.EventAttachment unitCompleteAttachment;
 	*/
-	
-	unitIndex : 0,
-	
-	init: function(config) {
-		this._super(config);
-		this.units = [];
-	},
 	
 	// virtual
 	__build: function() {},

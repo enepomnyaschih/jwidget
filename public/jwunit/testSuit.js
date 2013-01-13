@@ -17,7 +17,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Unit.TestSuit = JW.Unit.TestGroup.extend({
+JW.Unit.TestSuit = function(config) {
+	this.ns = null;
+	JW.Unit.TestSuit.superclass.call(this, config);
+};
+
+JW.extend(JW.Unit.TestSuit, JW.Unit.TestGroup, {
 	/*
 	Required
 	Object ns;

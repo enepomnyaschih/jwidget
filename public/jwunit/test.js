@@ -17,7 +17,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Unit.Test = JW.Unit.TestUnit.extend({
+JW.Unit.Test = function(config) {
+	this.fn = null;
+	JW.Unit.Test.superclass.call(this, config);
+};
+
+JW.extend(JW.Unit.Test, JW.Unit.TestUnit, {
 	/*
 	Required
 	Function fn;

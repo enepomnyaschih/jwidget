@@ -17,9 +17,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Unit");
+JW.Unit.TestPlan = function(config) {
+	this.__name = "";
+	this.ns = null;
+	JW.Unit.TestPlan.superclass.call(this, config);
+	this._initBroadcaster();
+	this._initTestSuit();
+	this._initView();
+};
 
-JW.Unit.TestPlan = JW.Config.extend({
+JW.extend(JW.Unit.TestPlan, JW.Config, {
 	/*
 	Required
 	String __name;
@@ -30,13 +37,6 @@ JW.Unit.TestPlan = JW.Config.extend({
 	JW.Unit.Broadcaster __broadcaster;
 	JW.Unit.UI.View view;
 	*/
-	
-	init: function(config) {
-		this._super(config);
-		this._initBroadcaster();
-		this._initTestSuit();
-		this._initView();
-	},
 	
 	run: function() {
 		this.testSuit.__start();

@@ -17,20 +17,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.EventAttachment = JW.Class.extend({
+JW.EventAttachment = function(event, callback, scope) {
+	JW.EventAttachment.superclass.call(this);
+	this.event = event;
+	this.callback = callback;
+	this.scope = scope;
+};
+
+JW.extend(JW.EventAttachment, JW.Class, {
 	/*
 	Fields
 	JW.Event<? extends JW.EventParams> event;
 	Function callback;
 	Object scope;
 	*/
-	
-	init: function(event, callback, scope) {
-		this._super();
-		this.event = event;
-		this.callback = callback;
-		this.scope = scope;
-	},
 	
 	destroy: function() {
 		this.event.unbind(this);

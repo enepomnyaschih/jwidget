@@ -17,14 +17,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Array = JW.Class.extend({
-	base : null, // [readonly] Array
-	
-	init: function(x)
-	{
-		this.base = x;
-	}
-});
+JW.Array = function(x) {
+	JW.Array.superclass.call(this);
+	this.base = x;
+};
+
+JW.extend(JW.Array, JW.Class);
 
 JW.Array._prototype = {
 	/**
