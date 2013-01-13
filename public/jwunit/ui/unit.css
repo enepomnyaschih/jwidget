@@ -58,7 +58,6 @@
 .jw-unit-testunit-header
 {
 	cursor:pointer;
-	display:inline-block;
 }
 
 .jw-unit-testunit-header.jw-unit-selected
@@ -71,8 +70,9 @@
 	background-color:#BBB;
 	border:1px solid #000;
 	float:left;
-	height:16px;
-	width:16px;
+	height:18px;
+	margin-top:1px;
+	width:18px;
 }
 
 .jw-unit-testunit-icon[status=start]
