@@ -17,8 +17,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Core");
-
 JW.Tests.Core.ObservableTestCase = JW.Unit.TestCase.extend({
 	setupAll: function()
 	{

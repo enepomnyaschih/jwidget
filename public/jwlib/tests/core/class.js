@@ -17,27 +17,24 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Core");
-
 JW.Tests.Core.ClassTestCase = JW.Unit.TestCase.extend({
 	testExtend: function()
 	{
-		var Shape = JW.Class.extend({
+		var Shape = function() {
+			Shape._super.call(this);
+		};
+		JW.extend(Shape, JW.Class, {
 			name: "shape",
-			
 			perimeter   : function() { return 0; },
 			area        : function() { return 0; }
 		});
 		
-		var Square = Shape.extend({
+		var Square = function(edge) {
+			Square._super.call(this);
+			this.edge = edge;
+		};
+		JW.extend(Square, Shape, {
 			name: "square",
-			edge: 0,
-			
-			init: function(edge)
-			{
-				this._super();
-				this.edge = edge;
-			},
 			
 			perimeter: function()
 			{
@@ -50,17 +47,13 @@ JW.Tests.Core.ClassTestCase = JW.Unit.TestCase.extend({
 			}
 		});
 		
-		var Rectangle = Shape.extend({
+		var Rectangle = function(a, b) {
+			Rectangle._super.call(this);
+			this.a = a;
+			this.b = b;
+		};
+		JW.extend(Rectangle, Shape, {
 			name: "rectangle",
-			a: 0,
-			b: 0,
-			
-			init: function(a, b)
-			{
-				this._super();
-				this.a = a;
-				this.b = b;
-			},
 			
 			perimeter: function()
 			{
@@ -73,15 +66,12 @@ JW.Tests.Core.ClassTestCase = JW.Unit.TestCase.extend({
 			}
 		});
 		
-		var Circle = Shape.extend({
+		var Circle = function(r) {
+			Circle._super.call(this);
+			this.r = r;
+		};
+		JW.extend(Circle, Shape, {
 			name: "circle",
-			r: 0,
-			
-			init: function(r)
-			{
-				this._super();
-				this.r = r;
-			},
 			
 			perimeter: function()
 			{
@@ -94,20 +84,19 @@ JW.Tests.Core.ClassTestCase = JW.Unit.TestCase.extend({
 			}
 		});
 		
-		var Complex = Shape.extend({
-			name: "complex",
-			x: null,
-			y: null,
-			
-			init: function(x, y)
-			{
-				this._super();
-				this.x = x;
-				this.y = y;
-			}
+		var Complex = function(x, y) {
+			Complex._super.call(this);
+			this.x = x;
+			this.y = y;
+		};
+		JW.extend(Complex, Shape, {
+			name: "complex"
 		});
 		
-		var Sum = Complex.extend({
+		var Sum = function(x, y) {
+			Sum._super.call(this, x, y);
+		};
+		JW.extend(Sum, Complex, {
 			name: "sum",
 			
 			perimeter: function()
@@ -121,13 +110,11 @@ JW.Tests.Core.ClassTestCase = JW.Unit.TestCase.extend({
 			}
 		});
 		
-		var Diff = Complex.extend({
+		var Diff = function(x, y) {
+			Diff._super.call(this, x, y);
+		};
+		JW.extend(Diff, Complex, {
 			name: "diff",
-			
-			init: function(x, y)
-			{
-				this._super(x, y);
-			},
 			
 			perimeter: function()
 			{

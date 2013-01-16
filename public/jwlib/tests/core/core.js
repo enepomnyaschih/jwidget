@@ -17,8 +17,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Core");
-
 JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 	testNs: function()
 	{

@@ -5,6 +5,9 @@
 	],
 	
 	"resources" : [
+		"jwlib/tests/index.js",
+		
+		"jwlib/tests/core.js",
 		"jwlib/tests/core/apply.js",
 		"jwlib/tests/core/core.js",
 		"jwlib/tests/core/class.js",
@@ -12,13 +15,16 @@
 		"jwlib/tests/core/mvc.js",
 		"jwlib/tests/core/observable.js",
 		
+		"jwlib/tests/alg.js",
 		"jwlib/tests/alg/simple.js",
 		"jwlib/tests/alg/build.js",
 		
+		"jwlib/tests/override.js",
 		"jwlib/tests/override/array.js",
 		"jwlib/tests/override/function.js",
 		"jwlib/tests/override/string.js",
 		
+		"jwlib/tests/util.js",
 		"jwlib/tests/util/collection.js",
 		"jwlib/tests/util/syncher.js",
 		"jwlib/tests/util/timer.js",
