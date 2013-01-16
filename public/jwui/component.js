@@ -27,6 +27,7 @@ JW.UI.Component = function(config) {
 	this.el = null;
 	this.appended = false;
 	this.destroyed = false;
+	this._elements = {};
 	this.allChildren = new JW.Set();
 	this._childMapper = null;
 	this._lists = [];
@@ -46,6 +47,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	Element el;
 	Boolean appended;
 	Boolean destroyed;
+	Map<Element> _elements;
 	JW.Set<JW.UI.Component> allChildren; // children + (lists' contents)
 	JW.Map.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
 	Array<JW.UI.Component.List> _lists;
@@ -75,6 +77,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.allChildren = null;
 		this.children = null;
 		this.parent = null;
+		this._elements = null;
 		this.el = null;
 		this._super();
 	},
@@ -99,8 +102,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 		for (var i = 0; i < anchorEls.length; ++i) {
 			var anchorEl = jQuery(anchorEls[i]);
 			var jwId = anchorEl.attr("jwid");
-			var jwIdCamel = JW.String.camel(jwId);
-			this[jwIdCamel + "El"] = anchorEl;
+			this._elements[jwId] = anchorEl;
+			anchorEl.removeAttr("jwid");
 			anchorEl.addClass(this.getElementClass(jwId));
 		}
 		this._childMapper = new JW.Map.InstanceMapper({
@@ -113,11 +116,9 @@ JW.extend(JW.UI.Component, JW.Class, {
 			}
 		});
 		this.renderComponent();
-		for (var i = 0; i < anchorEls.length; ++i) {
-			var anchorEl = jQuery(anchorEls[i]);
-			var jwId = anchorEl.attr("jwid");
+		for (var jwId in this._elements) {
+			var anchorEl = this._elements[jwId];
 			var jwIdCamel = JW.String.camel(jwId);
-			anchorEl.removeAttr("jwid");
 			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
 			if (typeof this[renderMethodName] === "function") {
 				this.children.set(this[renderMethodName].call(this), jwId);
@@ -148,11 +149,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	},
 	
 	getElement: function(id) {
-		return JW.isSet(id) ? this[this.getElementName(id)] : null;
-	},
-	
-	getElementName: function(id) {
-		return JW.isSet(id) ? (JW.String.camel(id) + "El") : "el";
+		return (typeof id === "string") ? this._elements[id] : id;
 	},
 	
 	getElementClass: function(id) {
@@ -160,19 +157,19 @@ JW.extend(JW.UI.Component, JW.Class, {
 	},
 	
 	removeElement: function(id) {
-		var elName = this.getElementName(id);
-		if (!this[elName]) {
+		var el = this._elements[id];
+		if (!el) {
 			return;
 		}
-		this[elName].remove();
-		delete this[elName];
+		el.remove();
+		delete this._elements[id];
 	},
 	
 	addList: function(collection, el) {
 		this._lists.push(new JW.UI.Component.List({
 			parent     : this,
 			collection : collection,
-			el         : el
+			el         : this.getElement(el)
 		}));
 	},
 	

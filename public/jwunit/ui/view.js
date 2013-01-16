@@ -64,22 +64,22 @@ JW.extend(JW.Unit.UI.View, JW.UI.Component, {
 	
 	_onUnitViewSelect: function(params) {
 		if (this.selUnitView) {
-			this.selUnitView.headerEl.removeClass("jw-unit-selected");
+			this.selUnitView.getElement("header").removeClass("jw-unit-selected");
 		}
 		this.selUnitView = params.unit;
-		params.unit.headerEl.addClass("jw-unit-selected");
+		params.unit.getElement("header").addClass("jw-unit-selected");
 		
 		var unit = params.unit.__unit;
-		this.textNameEl.text(unit.__getFullName());
-		this.statusValueEl.attr("status", unit.__status);
-		this.statusValueEl.text(this._statusText[unit.__status]);
+		this.getElement("text-name").text(unit.__getFullName());
+		this.getElement("status-value").attr("status", unit.__status);
+		this.getElement("status-value").text(this._statusText[unit.__status]);
 		
 		if (unit.__failed) {
-			this.errorValueEl.html('<pre>' + unit.__msg + '</pre>');
-			this.stackValueEl.html('<pre>' + JW.Unit._getStackTrace(unit.__error) + '</pre>');
+			this.getElement("error-value").html('<pre>' + unit.__msg + '</pre>');
+			this.getElement("stack-value").html('<pre>' + JW.Unit._getStackTrace(unit.__error) + '</pre>');
 		} else {
-			this.errorValueEl.text("");
-			this.stackValueEl.html("");
+			this.getElement("error-value").text("");
+			this.getElement("stack-value").html("");
 		}
 	},
 	
@@ -87,13 +87,14 @@ JW.extend(JW.Unit.UI.View, JW.UI.Component, {
 		if (this.selUnitView) {
 			return;
 		}
-		if (JW.isDefined(this._lastScroll) && (this._lastScroll != this.listEl.scrollTop())) {
+		var listEl = this.getElement("list");
+		if (JW.isDefined(this._lastScroll) && (this._lastScroll != listEl.scrollTop())) {
 			return;
 		}
-		var s = params.unit.el.offset().top - this.listEl.offset().top - this.listEl.height() +
-			params.unit.headerEl.height() + this.listEl.scrollTop();
+		var s = params.unit.el.offset().top - listEl.offset().top - listEl.height() +
+			params.unit.getElement("header").height() + listEl.scrollTop();
 		this._lastScroll = Math.max(0, s);
-		this.listEl.scrollTop(s);
+		listEl.scrollTop(s);
 	},
 	
 	_onUnitStart: function(params) {

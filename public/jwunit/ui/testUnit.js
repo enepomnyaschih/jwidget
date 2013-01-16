@@ -71,10 +71,13 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 		}
 		
 		var padding = this.__depth * this.PADDING_PER_DEPTH;
-		this.headerEl.css("padding-left", padding);
-		this.headerEl.css("width", 380 - padding);
-		this.headerEl.mousedown(JW.Function.inScope(this._onClick, this));
-		this.nameEl.text(this.__unit.__name);
+		
+		var headerEl = this.getElement("header");
+		headerEl.css("padding-left", padding);
+		headerEl.css("width", 380 - padding);
+		headerEl.mousedown(JW.Function.inScope(this._onClick, this));
+		
+		this.getElement("name").text(this.__unit.__name);
 	},
 	
 	_renderChildren: function() {
@@ -93,7 +96,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 			}
 		});
 		
-		this.addList(this._mapper.target, this.listEl);
+		this.addList(this._mapper.target, "list");
 	},
 	
 	_subscribeUnit: function() {
@@ -104,15 +107,15 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	
 	_onUnitStart: function(params) {
 		this.__broadcaster.startEvent.trigger(new JW.Unit.UI.Broadcaster.UnitEventParams(this.__broadcaster, this));
-		this.iconEl.attr("status", "start");
+		this.getElement("icon").attr("status", "start");
 	},
 	
 	_onUnitSuccess: function(params) {
-		this.iconEl.attr("status", "success");
+		this.getElement("icon").attr("status", "success");
 	},
 	
 	_onUnitFail: function(params) {
-		this.iconEl.attr("status", "fail");
+		this.getElement("icon").attr("status", "fail");
 	},
 	
 	_onClick: function(event) {
