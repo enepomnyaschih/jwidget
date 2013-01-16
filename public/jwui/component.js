@@ -18,7 +18,7 @@
 */
 
 JW.UI.Component = function(config) {
-	JW.UI.Component.superclass.call(this);
+	JW.UI.Component._super.call(this);
 	this.rootClass = config.rootClass;
 	this.template = config.template;
 	this._childrenCreated = !config.children;
@@ -194,7 +194,7 @@ JW.UI.template(JW.UI.Component, {
 });
 
 JW.UI.Component.EventParams = function(sender) {
-	JW.UI.Component.EventParams.superclass.call(this, sender);
+	JW.UI.Component.EventParams._super.call(this, sender);
 };
 
 JW.extend(JW.UI.Component.EventParams, JW.EventParams, {

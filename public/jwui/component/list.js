@@ -18,7 +18,7 @@
 */
 
 JW.UI.Component.List = function(config) {
-	JW.UI.Component.List.superclass.call(this);
+	JW.UI.Component.List._super.call(this);
 	this.parent = config.parent;
 	this.collection = config.collection;
 	this.el = config.el;

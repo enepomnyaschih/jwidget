@@ -24,7 +24,7 @@
 */
 
 JW.Map = function() {
-	JW.Map.superclass.call(this);
+	JW.Map._super.call(this);
 	this.base = {};
 	this.size = 0;
 	this.addEvent = new JW.Event();
@@ -149,7 +149,7 @@ JW.extend(JW.Map/*<T extends JW.Class>*/, JW.Class, {
 JW.applyIf(JW.Map.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);
 
 JW.Map.EventParams = function(sender) {
-	JW.Map.EventParams.superclass.call(this, sender);
+	JW.Map.EventParams._super.call(this, sender);
 };
 
 JW.extend(JW.Map.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
@@ -160,7 +160,7 @@ JW.extend(JW.Map.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
 });
 
 JW.Map.ItemEventParams = function(sender, item, key) {
-	JW.Map.ItemEventParams.superclass.call(this, sender);
+	JW.Map.ItemEventParams._super.call(this, sender);
 	this.item = item;
 	this.key = key;
 };
@@ -174,7 +174,7 @@ JW.extend(JW.Map.ItemEventParams/*<T extends JW.Class>*/, JW.Map.EventParams/*<T
 });
 
 JW.Map.SizeChangeEventParams = function(sender, oldSize, newSize) {
-	JW.Map.SizeChangeEventParams.superclass.call(this, sender);
+	JW.Map.SizeChangeEventParams._super.call(this, sender);
 	this.oldSize = oldSize;
 	this.newSize = newSize;
 };

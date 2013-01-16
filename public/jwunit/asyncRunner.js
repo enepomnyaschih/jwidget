@@ -18,7 +18,7 @@
 */
 
 JW.Unit.AsyncRunner = function(config) {
-	JW.Unit.AsyncRunner.superclass.call(this);
+	JW.Unit.AsyncRunner._super.call(this);
 	this.fn = config.fn;
 	this.success = config.success;
 	this.fail = config.fail;

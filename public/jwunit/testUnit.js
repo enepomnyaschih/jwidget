@@ -18,7 +18,7 @@
 */
 
 JW.Unit.TestUnit = function(config) {
-	JW.Unit.TestUnit.superclass.call(this);
+	JW.Unit.TestUnit._super.call(this);
 	this.__name = config.__name;
 	this.__broadcaster = config.__broadcaster;
 	this.__parent = config.__parent;
@@ -115,7 +115,7 @@ JW.extend(JW.Unit.TestUnit, JW.Class, {
 });
 
 JW.Unit.TestUnit.EventParams = function(sender) {
-	JW.Unit.TestUnit.EventParams.superclass.call(this, sender);
+	JW.Unit.TestUnit.EventParams._super.call(this, sender);
 };
 
 JW.extend(JW.Unit.TestUnit.EventParams, JW.EventParams, {
@@ -126,7 +126,7 @@ JW.extend(JW.Unit.TestUnit.EventParams, JW.EventParams, {
 });
 
 JW.Unit.TestUnit.FailEventParams = function(sender, message, exception) {
-	JW.Unit.TestUnit.FailEventParams.superclass.call(this, sender);
+	JW.Unit.TestUnit.FailEventParams._super.call(this, sender);
 	this.message = message;
 	this.exception = exception;
 };

@@ -18,7 +18,7 @@
 */
 
 JW.Event = function() {
-	JW.Event.superclass.call(this);
+	JW.Event._super.call(this);
 	this.attachments = {};
 };
 

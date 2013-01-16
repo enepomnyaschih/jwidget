@@ -18,7 +18,7 @@
 */
 
 JW.Set.Indexer = function(config) {
-	JW.Set.Indexer.superclass.call(this);
+	JW.Set.Indexer._super.call(this);
 	this.source = config.source;
 	this.getKey = config.getKey;
 	this._targetCreated = !config.target;

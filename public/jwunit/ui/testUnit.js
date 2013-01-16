@@ -18,7 +18,7 @@
 */
 
 JW.Unit.UI.TestUnit = function(config) {
-	JW.Unit.UI.TestUnit.superclass.call(this, config);
+	JW.Unit.UI.TestUnit._super.call(this, config);
 	this.__broadcaster = config.__broadcaster;
 	this.__unit = config.__unit;
 	this.__depth = JW.def(config.__depth, 0);

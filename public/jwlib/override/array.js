@@ -18,7 +18,7 @@
 */
 
 JW.Array = function(x) {
-	JW.Array.superclass.call(this);
+	JW.Array._super.call(this);
 	this.base = x;
 };
 

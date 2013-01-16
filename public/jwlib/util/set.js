@@ -24,7 +24,7 @@
 */
 
 JW.Set = function() {
-	JW.Set.superclass.call(this);
+	JW.Set._super.call(this);
 	this.base = {};
 	this.size = 0;
 	this.addEvent = new JW.Event();
@@ -144,7 +144,7 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 JW.applyIf(JW.Set.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);
 
 JW.Set.EventParams = function(sender) {
-	JW.Set.EventParams.superclass.call(this, sender);
+	JW.Set.EventParams._super.call(this, sender);
 };
 
 JW.extend(JW.Set.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
@@ -155,7 +155,7 @@ JW.extend(JW.Set.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
 });
 
 JW.Set.ItemEventParams = function(sender, item) {
-	JW.Set.ItemEventParams.superclass.call(this, sender);
+	JW.Set.ItemEventParams._super.call(this, sender);
 	this.item = item;
 };
 
@@ -167,7 +167,7 @@ JW.extend(JW.Set.ItemEventParams/*<T extends JW.Class>*/, JW.Set.EventParams/*<T
 });
 
 JW.Set.SizeChangeEventParams = function(sender, oldSize, newSize) {
-	JW.Set.SizeChangeEventParams.superclass.call(this, sender);
+	JW.Set.SizeChangeEventParams._super.call(this, sender);
 	this.oldSize = oldSize;
 	this.newSize = newSize;
 };

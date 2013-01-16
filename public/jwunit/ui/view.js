@@ -18,7 +18,7 @@
 */
 
 JW.Unit.UI.View = function(config) {
-	JW.Unit.UI.View.superclass.call(this, config);
+	JW.Unit.UI.View._super.call(this, config);
 	this.testPlan = config.testPlan;
 	this.unitView = null;
 	this.selUnitView = null;

@@ -18,7 +18,7 @@
 */
 
 JW.Map.Mapper = function(config) {
-	JW.Map.Mapper.superclass.call(this);
+	JW.Map.Mapper._super.call(this);
 	this.source = config.source;
 	this.createItem = config.createItem;
 	this.destroyItem = config.destroyItem;

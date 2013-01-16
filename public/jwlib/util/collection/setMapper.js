@@ -18,7 +18,7 @@
 */
 
 JW.Collection.SetMapper = function(config) {
-	JW.Collection.SetMapper.superclass.call(this);
+	JW.Collection.SetMapper._super.call(this);
 	this.source = config.source;
 	this.target = config.target;
 	

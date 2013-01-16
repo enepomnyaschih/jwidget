@@ -18,7 +18,7 @@
 */
 
 JW.Timer = function(delay, repeat, sensitive) {
-	JW.Timer.superclass.call(this);
+	JW.Timer._super.call(this);
 	this.tickEvent = new JW.Event();
 	this.delay = delay;
 	this.repeat = repeat;
@@ -82,7 +82,7 @@ JW.extend(JW.Timer, JW.Class, {
 });
 
 JW.Timer.EventParams = function(sender) {
-	JW.Timer.EventParams.superclass.call(this, sender);
+	JW.Timer.EventParams._super.call(this, sender);
 };
 
 JW.extend(JW.Timer.EventParams, JW.EventParams, {

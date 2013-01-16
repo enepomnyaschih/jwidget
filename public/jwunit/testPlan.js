@@ -18,7 +18,7 @@
 */
 
 JW.Unit.TestPlan = function(config) {
-	JW.Unit.TestPlan.superclass.call(this);
+	JW.Unit.TestPlan._super.call(this);
 	this.__name = config.__name;
 	this.ns = config.ns;
 	this.__broadcaster = new JW.Unit.Broadcaster();

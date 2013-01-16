@@ -18,7 +18,7 @@
 */
 
 JW.UI.Component.Child = function(config) {
-	JW.UI.Component.Child.superclass.call(this);
+	JW.UI.Component.Child._super.call(this);
 	this.parent = config.parent;
 	this.component = config.component;
 	this.name = config.name;

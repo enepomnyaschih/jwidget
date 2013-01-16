@@ -18,7 +18,7 @@
 */
 
 JW.String = function(x) {
-	JW.String.superclass.call(this);
+	JW.String._super.call(this);
 	this.base = x;
 };
 

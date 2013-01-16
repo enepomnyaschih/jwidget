@@ -18,7 +18,7 @@
 */
 
 JW.Unit.TestGroup = function(config) {
-	JW.Unit.TestGroup.superclass.call(this, config);
+	JW.Unit.TestGroup._super.call(this, config);
 	this.units = [];
 	this.unitIndex = 0;
 	this.unitCompleteAttachment = null;

@@ -29,7 +29,8 @@ JW.ClassUtil = {
 		F.prototype = supc.prototype;
 		subc.prototype = new F();
 		subc.prototype.constructor = subc;
-		subc.superclass = supc;
+		subc.superclass = supc.prototype;
+		subc._super = supc;
 		for (var i in body) {
 			subc.prototype[i] = JW.ClassUtil.extendMethod(body[i], supc.prototype[i]);
 		}

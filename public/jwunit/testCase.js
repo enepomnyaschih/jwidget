@@ -18,7 +18,7 @@
 */
 
 JW.Unit.TestCase = function(config) {
-	JW.Unit.TestCase.superclass.call(this, config);
+	JW.Unit.TestCase._super.call(this, config);
 };
 
 JW.extend(JW.Unit.TestCase, JW.Unit.TestGroup, {

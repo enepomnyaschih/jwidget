@@ -18,7 +18,7 @@
 */
 
 JW.Unit.Broadcaster = function() {
-	JW.Unit.Broadcaster.superclass.call(this);
+	JW.Unit.Broadcaster._super.call(this);
 	this.startEvent = new JW.Event();
 	this.successEvent = new JW.Event();
 	this.failEvent = new JW.Event();
@@ -44,7 +44,7 @@ JW.extend(JW.Unit.Broadcaster, JW.Class, {
 });
 
 JW.Unit.Broadcaster.EventParams = function(sender) {
-	JW.Unit.Broadcaster.EventParams.superclass.call(this, sender);
+	JW.Unit.Broadcaster.EventParams._super.call(this, sender);
 };
 
 JW.extend(JW.Unit.Broadcaster.EventParams, JW.EventParams, {
@@ -55,7 +55,7 @@ JW.extend(JW.Unit.Broadcaster.EventParams, JW.EventParams, {
 });
 
 JW.Unit.Broadcaster.UnitEventParams = function(sender, unit) {
-	JW.Unit.Broadcaster.UnitEventParams.superclass.call(this, sender);
+	JW.Unit.Broadcaster.UnitEventParams._super.call(this, sender);
 	this.unit = unit;
 };
 
@@ -67,7 +67,7 @@ JW.extend(JW.Unit.Broadcaster.UnitEventParams, JW.Unit.Broadcaster.EventParams, 
 });
 
 JW.Unit.Broadcaster.UnitFailEventParams = function(sender, unit, message, exception) {
-	JW.Unit.Broadcaster.UnitFailEventParams.superclass.call(this, sender, unit);
+	JW.Unit.Broadcaster.UnitFailEventParams._super.call(this, sender, unit);
 	this.message = message;
 	this.exception = exception;
 };

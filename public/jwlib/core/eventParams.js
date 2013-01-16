@@ -18,7 +18,7 @@
 */
 
 JW.EventParams = function(sender) {
-	JW.EventParams.superclass.call(this);
+	JW.EventParams._super.call(this);
 	this.sender = sender;
 };
 

@@ -18,7 +18,7 @@
 */
 
 JW.Collection.FieldMapper = function(config) {
-	JW.Collection.FieldMapper.superclass.call(this);
+	JW.Collection.FieldMapper._super.call(this);
 	this.source = config.source;
 	this.field = config.field;
 	

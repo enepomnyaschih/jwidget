@@ -18,7 +18,7 @@
 */
 
 JW.UI.Component.List.Item = function(config) {
-	JW.UI.Component.List.Item.superclass.call(this);
+	JW.UI.Component.List.Item._super.call(this);
 	this.list = config.list;
 	this.component = config.component;
 	this.component.render();

@@ -18,7 +18,7 @@
 */
 
 JW.Collection.InstanceMapper = function(config) {
-	JW.Collection.InstanceMapper.superclass.call(this);
+	JW.Collection.InstanceMapper._super.call(this);
 	this.source = config.source;
 	this.provider = config.provider;
 	this.dataField = JW.def(config.dataField, "data");

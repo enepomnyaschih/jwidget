@@ -18,7 +18,7 @@
 */
 
 JW.Collection.Splitter = function(config) {
-	JW.Collection.Splitter.superclass.call(this);
+	JW.Collection.Splitter._super.call(this);
 	this.source = config.source;
 	this._rowsCreated = !config.rows;
 	this.rows = config.rows || new JW.Collection();

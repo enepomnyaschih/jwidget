@@ -26,7 +26,7 @@
 // TODO: tests for bulk changes, "change" event and "lengthchange" event
 
 JW.Collection = function() {
-	JW.Collection.superclass.call(this);
+	JW.Collection._super.call(this);
 	this.base = [];
 	this.addEvent = new JW.Event();
 	this.removeEvent = new JW.Event();
@@ -206,7 +206,7 @@ JW.extend(JW.Collection/*<T extends JW.Class>*/, JW.Class, {
 JW.applyIf(JW.Collection.prototype, JW.Alg.SimpleMethods, JW.Alg.BuildMethods);
 
 JW.Collection.EventParams = function(sender) {
-	JW.Collection.EventParams.superclass.call(this, sender);
+	JW.Collection.EventParams._super.call(this, sender);
 };
 
 JW.extend(JW.Collection.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
@@ -217,7 +217,7 @@ JW.extend(JW.Collection.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
 });
 
 JW.Collection.ItemRangeEventParams = function(sender, items, index) {
-	JW.Collection.ItemRangeEventParams.superclass.call(this, sender);
+	JW.Collection.ItemRangeEventParams._super.call(this, sender);
 	this.items = items;
 	this.index = index;
 };
@@ -231,7 +231,7 @@ JW.extend(JW.Collection.ItemRangeEventParams/*<T extends JW.Class>*/, JW.Collect
 });
 
 JW.Collection.ItemsEventParams = function(sender, items) {
-	JW.Collection.ItemsEventParams.superclass.call(this, sender);
+	JW.Collection.ItemsEventParams._super.call(this, sender);
 	this.items = items;
 };
 
@@ -243,7 +243,7 @@ JW.extend(JW.Collection.ItemsEventParams/*<T extends JW.Class>*/, JW.Collection.
 });
 
 JW.Collection.LengthChangeEventParams = function(sender, oldLength, newLength) {
-	JW.Collection.LengthChangeEventParams.superclass.call(this, sender);
+	JW.Collection.LengthChangeEventParams._super.call(this, sender);
 	this.oldLength = oldLength;
 	this.newLength = newLength;
 };
@@ -257,7 +257,7 @@ JW.extend(JW.Collection.LengthChangeEventParams/*<T extends JW.Class>*/, JW.Coll
 });
 
 JW.Collection.MoveEventParams = function(sender, fromIndex, toIndex, item) {
-	JW.Collection.MoveEventParams.superclass.call(this, sender);
+	JW.Collection.MoveEventParams._super.call(this, sender);
 	this.fromIndex = fromIndex;
 	this.toIndex = toIndex;
 	this.item = item;
@@ -273,7 +273,7 @@ JW.extend(JW.Collection.MoveEventParams/*<T extends JW.Class>*/, JW.Collection.E
 });
 
 JW.Collection.ReplaceEventParams = function(sender, index, oldItem, newItem) {
-	JW.Collection.ReplaceEventParams.superclass.call(this, sender);
+	JW.Collection.ReplaceEventParams._super.call(this, sender);
 	this.index = index;
 	this.oldItem = oldItem;
 	this.newItem = newItem;

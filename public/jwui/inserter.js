@@ -18,7 +18,7 @@
 */
 
 JW.UI.Inserter = function(config) {
-	JW.UI.Inserter.superclass.call(this);
+	JW.UI.Inserter._super.call(this);
 	this.el = config.el;
 	this.source = config.source;
 	

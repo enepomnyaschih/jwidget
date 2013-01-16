@@ -18,7 +18,7 @@
 */
 
 JW.Unit.Test = function(config) {
-	JW.Unit.Test.superclass.call(this, config);
+	JW.Unit.Test._super.call(this, config);
 	this.fn = config.fn;
 };
 

@@ -18,7 +18,7 @@
 */
 
 JW.Function = function(x) {
-	JW.Function.superclass.call(this);
+	JW.Function._super.call(this);
 	this.base = x;
 };
 

@@ -18,7 +18,7 @@
 */
 
 JW.Unit.TestSuit = function(config) {
-	JW.Unit.TestSuit.superclass.call(this, config);
+	JW.Unit.TestSuit._super.call(this, config);
 	this.ns = config.ns;
 };
 

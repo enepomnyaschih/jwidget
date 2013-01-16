@@ -21,7 +21,7 @@
 // TODO: Filter from end to begin
 
 JW.Collection.Mapper = function(config) {
-	JW.Collection.Mapper.superclass.call(this);
+	JW.Collection.Mapper._super.call(this);
 	this.source = config.source;
 	this.createItem = config.createItem;
 	this.destroyItem = config.destroyItem;

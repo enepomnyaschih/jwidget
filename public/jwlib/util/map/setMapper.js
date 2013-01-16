@@ -18,7 +18,7 @@
 */
 
 JW.Map.SetMapper = function(config) {
-	JW.Map.SetMapper.superclass.call(this);
+	JW.Map.SetMapper._super.call(this);
 	this.source = config.source;
 	this._targetCreated = !config.target;
 	this.target = config.target || new JW.Set();

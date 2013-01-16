@@ -18,7 +18,7 @@
 */
 
 JW.EventAttachment = function(event, callback, scope) {
-	JW.EventAttachment.superclass.call(this);
+	JW.EventAttachment._super.call(this);
 	this.event = event;
 	this.callback = callback;
 	this.scope = scope;

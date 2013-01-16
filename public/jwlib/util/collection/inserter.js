@@ -20,7 +20,7 @@
 // TODO: Filter from end to begin
 
 JW.Collection.Inserter = function(config) {
-	JW.Collection.Inserter.superclass.call(this);
+	JW.Collection.Inserter._super.call(this);
 	this.source = config.source;
 	this.addItem = config.addItem;
 	this.removeItem = config.removeItem;
