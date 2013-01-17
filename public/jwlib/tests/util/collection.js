@@ -17,8 +17,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Util");
-
 JW.Tests.Util.CollectionTestCase = JW.Unit.TestCase.extend({
 	testSeparate: function()
 	{

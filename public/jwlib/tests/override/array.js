@@ -17,29 +17,22 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Override");
+JW.Tests.Override.ArrayTestCase = function(config) {
+	JW.Tests.Override.ArrayTestCase._super.call(this, config);
+	this.aa = [ 0, 1, 2, 3, 2, 3, 0, 1 ];
+	this.b1 = { a: 0, b: 1 };
+	this.b2 = { a: 0, b: 2 };
+	this.b3 = { a: 1, b: 3 };
+	this.bb = [ this.b1, this.b2, this.b3 ];
+	this.c1 = { q: this.b1 };
+	this.c2 = { q: this.b2 };
+	this.c3 = { q: this.b3 };
+	this.cc = [ this.c1, this.c2, null, this.c3 ];
+	this.arr = [ 10, null, "lala" ];
+	this.arrr = [ 10, "lala" ];
+};
 
-JW.Tests.Override.ArrayTestCase = JW.Unit.TestCase.extend({
-	setupAll: function()
-	{
-		this.aa = [ 0, 1, 2, 3, 2, 3, 0, 1 ];
-		
-		this.b1 = { a: 0, b: 1 };
-		this.b2 = { a: 0, b: 2 };
-		this.b3 = { a: 1, b: 3 };
-		
-		this.bb = [ this.b1, this.b2, this.b3 ];
-		
-		this.c1 = { q: this.b1 };
-		this.c2 = { q: this.b2 };
-		this.c3 = { q: this.b3 };
-		
-		this.cc = [ this.c1, this.c2, null, this.c3 ];
-		
-		this.arr = [ 10, null, "lala" ];
-		this.arrr = [ 10, "lala" ];
-	},
-	
+JW.extend(JW.Tests.Override.ArrayTestCase, JW.Unit.TestCase, {
 	testEvery: function()
 	{
 		this.assertTrue (this.arr.every(JW.isDefined));
