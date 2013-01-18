@@ -23,7 +23,7 @@
 	reasonable changes).
 */
 
-JW.Map = function() {
+JW.Map = function(base) {
 	JW.Map._super.call(this);
 	this.base = {};
 	this.size = 0;
@@ -34,6 +34,9 @@ JW.Map = function() {
 	this.bulkCount = 0;
 	this.bulkDirty = false;
 	this.bulkSize = 0;
+	if (base) {
+		this.setAll(base);
+	}
 };
 
 JW.extend(JW.Map/*<T extends JW.Class>*/, JW.Class, {
@@ -83,6 +86,12 @@ JW.extend(JW.Map/*<T extends JW.Class>*/, JW.Class, {
 		++this.size;
 		this.addEvent.trigger(new JW.Map.ItemEventParams(this, item, key));
 		this._triggerChange();
+	},
+	
+	setAll: function(map) {
+		for (var key in map) {
+			this.set(map[key], key);
+		}
 	},
 	
 	remove: function(key) {

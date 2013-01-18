@@ -18,8 +18,7 @@
 */
 
 JW.Tests.Util.CollectionTestCase = JW.Unit.TestCase.extend({
-	testSeparate: function()
-	{
+	testSeparate: function() {
 		this.addExpectedOutput(
 			"Added d at 0",
 			"Added f at 1",
@@ -40,126 +39,73 @@ JW.Tests.Util.CollectionTestCase = JW.Unit.TestCase.extend({
 		var collection = new JW.Collection();
 		this.subscribe(collection);
 		
-		collection.addItem("d");
+		collection.add(JW("d"));
 		this.assertCollection([ "d" ], collection);
 		
-		collection.addItem("f");
+		collection.addAll([ JW("f") ]);
 		this.assertCollection([ "d", "f" ], collection);
 		
-		collection.addItemAt("c", 1);
+		collection.add(JW("c"), 1);
 		this.assertCollection([ "d", "c", "f" ], collection);
 		
-		collection.addItemAt("b", 0);
-		this.assertCollection([ "b", "d", "c", "f" ], collection);
+		collection.addAll([ JW("b"), JW("m") ], 0);
+		this.assertCollection([ "b", "m", "d", "c", "f" ], collection);
 		
-		collection.addItemAt("a", 4);
+		collection.addAll([], 1);
+		this.assertCollection([ "b", "m", "d", "c", "f" ], collection);
+		
+		var a = JW("a");
+		
+		collection.add(a, 5);
+		this.assertCollection([ "b", "m", "d", "c", "f", "a" ], collection);
+		
+		collection.remove(1);
 		this.assertCollection([ "b", "d", "c", "f", "a" ], collection);
 		
-		collection.removeItem("f");
-		this.assertCollection([ "b", "d", "c", "a" ], collection);
+		collection.remove(0);
+		this.assertCollection([ "d", "c", "f", "a" ], collection);
 		
-		collection.removeItemAt(1);
-		this.assertCollection([ "b", "c", "a" ], collection);
+		collection.add(JW("k"));
+		this.assertCollection([ "d", "c", "f", "a", "k" ], collection);
 		
-		collection.removeItemAt(0);
-		this.assertCollection([ "c", "a" ], collection);
+		collection.set(JW("g"), 2);
+		this.assertCollection([ "d", "c", "g", "a", "k" ], collection);
 		
-		collection.addItem("k");
-		this.assertCollection([ "c", "a", "k" ], collection);
+		collection.set(a, 3);
+		this.assertCollection([ "d", "c", "g", "a", "k" ], collection);
 		
-		collection.setItem(1, "g");
-		this.assertCollection([ "c", "g", "k" ], collection);
+		collection.move(2, 1);
+		this.assertCollection([ "d", "g", "c", "a", "k" ], collection);
 		
-		collection.moveItem(2, 1);
-		this.assertCollection([ "c", "k", "g" ], collection);
+		collection.move(0, 4);
+		this.assertCollection([ "g", "c", "a", "k", "d" ], collection);
 		
-		collection.moveItem(0, 2);
-		this.assertCollection([ "k", "g", "c" ], collection);
+		collection.move(1, 1);
+		this.assertCollection([ "g", "c", "a", "k", "d" ], collection);
+		
+		JW.Array.sortBy(collection.base, "base");
+		collection.triggerReorder();
+		this.assertCollection([ "a", "c", "d", "g", "k" ], collection);
+		
+		collection.base.splice(0, 2);
+		collection.triggerFilter();
+		this.assertCollection([ "d", "g", "k" ], collection);
+		
+		collection.base = [ JW("u"), JW("t"), JW("c") ];
+		collection.triggerReset();
+		this.assertCollection([ "u", "t", "c" ], collection);
 		
 		collection.clear();
 		this.assertCollection([  ], collection);
 		
-		collection.addItem("h");
+		collection.add(JW("h"));
 		this.assertCollection([ "h" ], collection);
 		
 		collection.destroy();
 	},
 	
-	testAdapter: function()
-	{
-		this.addExpectedOutput(
-			"Added d at 2",
-			"Added f at 3",
-			"Added c at 1",
-			"Added b at 0",
-			"Added a at 6",
-			"Removed f at 5",
-			"Removed p at 1",
-			"Removed b at 0",
-			"Added k at 4",
-			"Replaced m with g at 1",
-			"Moved a from 3 to 1",
-			"Moved c from 0 to 2",
-			"Cleared",
-			"Added h at 0"
-		);
-		
-		var base = [ "p", "m" ];
-		
-		var collection = new JW.Collection();
-		collection.base = base;
-		
-		this.subscribe(collection);
-		this.assertCollection([ "p", "m" ], collection, base);
-		
-		collection.addItem("d");
-		this.assertCollection([ "p", "m", "d" ], collection, base);
-		
-		collection.addItem("f");
-		this.assertCollection([ "p", "m", "d", "f" ], collection, base);
-		
-		collection.addItemAt("c", 1);
-		this.assertCollection([ "p", "c", "m", "d", "f" ], collection, base);
-		
-		collection.addItemAt("b", 0);
-		this.assertCollection([ "b", "p", "c", "m", "d", "f" ], collection, base);
-		
-		collection.addItemAt("a", 6);
-		this.assertCollection([ "b", "p", "c", "m", "d", "f", "a" ], collection, base);
-		
-		collection.removeItem("f");
-		this.assertCollection([ "b", "p", "c", "m", "d", "a" ], collection, base);
-		
-		collection.removeItemAt(1);
-		this.assertCollection([ "b", "c", "m", "d", "a" ], collection, base);
-		
-		collection.removeItemAt(0);
-		this.assertCollection([ "c", "m", "d", "a" ], collection, base);
-		
-		collection.addItem("k");
-		this.assertCollection([ "c", "m", "d", "a", "k" ], collection, base);
-		
-		collection.setItem(1, "g");
-		this.assertCollection([ "c", "g", "d", "a", "k" ], collection, base);
-		
-		collection.moveItem(3, 1);
-		this.assertCollection([ "c", "a", "g", "d", "k" ], collection, base);
-		
-		collection.moveItem(0, 2);
-		this.assertCollection([ "a", "g", "c", "d", "k" ], collection, base);
-		
-		collection.clear();
-		this.assertCollection([  ], collection, base);
-		
-		collection.addItem("h");
-		this.assertCollection([ "h" ], collection, base);
-		
-		collection.destroy();
-	},
-	
-	testEvery: function()
-	{
-		var collection = new JW.Collection([ 0, null, "" ]);
+	testEvery: function() {
+		var collection = new JW.Collection([ JW(0), null, "" ]);
 		
 		this.assertTrue (collection.every(JW.isDefined));
 		this.assertFalse(collection.every(JW.isSet));
@@ -197,53 +143,63 @@ JW.Tests.Util.CollectionTestCase = JW.Unit.TestCase.extend({
 		this.assertTrue(JW.equal(expected, filtered.base, true, true));
 	},
 	
-	subscribe: function(collection)
-	{
-		collection.bind("add",     this.onAdd,     this);
-		collection.bind("remove",  this.onRemove,  this);
-		collection.bind("replace", this.onReplace, this);
-		collection.bind("move",    this.onMove,    this);
-		collection.bind("clear",   this.onClear,   this);
+	subscribe: function(collection) {
+		collection.addEvent.bind(this.onAdd, this);
+		collection.removeEvent.bind(this.onRemove, this);
+		collection.replaceEvent.bind(this.onReplace, this);
+		collection.moveEvent.bind(this.onMove, this);
+		collection.clearEvent.bind(this.onClear, this);
+		collection.reorderEvent.bind(this.onReorder, this);
+		collection.filterEvent.bind(this.onFilter, this);
+		collection.resetEvent.bind(this.onReset, this);
+		collection.changeEvent.bind(this.onChange, this);
+		collection.lengthChangeEvent.bind(this.onLengthChange, this);
 	},
 	
-	assertCollection: function(values, collection, base)
-	{
+	assertCollection: function(values, collection) {
 		this.assertStrictEqual(values.length, collection.getLength());
-		this.assertStrictEqual(values.length, collection.base.length);
-		for (var i = 0; i < collection.getLength(); ++i)
-		{
-			this.assertStrictEqual(values[i], collection.getItemAt(i));
-			this.assertStrictEqual(values[i], collection.base[i]);
+		for (var i = 0; i < collection.getLength(); ++i) {
+			this.assertStrictEqual(values[i], collection.get(i).base);
 		}
-		
-		if (!base)
-			return;
-		
-		this.assertTrue(JW.equal(values, base, false, true));
 	},
 	
-	onAdd: function(event, index, item)
-	{
-		this.output("Added " + item + " at " + index);
+	onAdd: function(params) {
+		this.output("Added " + JW.mapBy(params.items, "base").join(", ") + " at " + params.index);
 	},
 	
-	onRemove: function(event, index, item)
-	{
-		this.output("Removed " + item + " at " + index);
+	onRemove: function(params) {
+		this.output("Removed " + JW.mapBy(params.items, "base").join(", ") + " at " + params.index);
 	},
 	
-	onReplace: function(event, index, oldItem, newItem)
-	{
-		this.output("Replaced " + oldItem + " with " + newItem + " at " + index);
+	onReplace: function(params) {
+		this.output("Replaced " + params.oldItem + " with " + params.newItem + " at " + params.index);
 	},
 	
-	onMove: function(event, fromIndex, toIndex, item)
-	{
-		this.output("Moved " + item + " from " + fromIndex + " to " + toIndex);
+	onMove: function(params) {
+		this.output("Moved " + params.item + " from " + params.fromIndex + " to " + params.toIndex);
 	},
 	
-	onClear: function(event)
-	{
+	onClear: function(params) {
 		this.output("Cleared");
+	},
+	
+	onReorder: function(params) {
+		this.output("Reordered");
+	},
+	
+	onFilter: function(params) {
+		this.output("Filtered");
+	},
+	
+	onReset: function(params) {
+		this.output("Resetted");
+	},
+	
+	onChange: function(params) {
+		this.output("Changed");
+	},
+	
+	onLengthChange: function(params) {
+		this.output("Changed length from " + params.oldLength + " to " + params.toLength);
 	}
 });

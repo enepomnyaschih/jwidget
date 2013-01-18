@@ -23,7 +23,7 @@
 	reasonable changes).
 */
 
-JW.Set = function() {
+JW.Set = function(base) {
 	JW.Set._super.call(this);
 	this.base = {};
 	this.size = 0;
@@ -34,6 +34,9 @@ JW.Set = function() {
 	this.bulkCount = 0;
 	this.bulkDirty = false;
 	this.bulkSize = 0;
+	if (base) {
+		this.addAll(base);
+	}
 };
 
 JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
@@ -79,6 +82,10 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 		++this.size;
 		this.addEvent.trigger(new JW.Set.ItemEventParams(this, item));
 		this._triggerChange();
+	},
+	
+	addAll: function(items) {
+		JW.Array.each(items, this.add, this);
 	},
 	
 	remove: function(item) {

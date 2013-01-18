@@ -25,7 +25,7 @@
 
 // TODO: tests for bulk changes, "change" event and "lengthchange" event
 
-JW.Collection = function() {
+JW.Collection = function(base) {
 	JW.Collection._super.call(this);
 	this.base = [];
 	this.addEvent = new JW.Event();
@@ -41,6 +41,9 @@ JW.Collection = function() {
 	this.bulkCount = 0;
 	this.bulkDirty = false;
 	this.bulkLength = 0;
+	if (base) {
+		this.addAll(base);
+	}
 };
 
 JW.extend(JW.Collection/*<T extends JW.Class>*/, JW.Class, {
@@ -119,6 +122,9 @@ JW.extend(JW.Collection/*<T extends JW.Class>*/, JW.Class, {
 	
 	set: function(index, item) {
 		var oldItem = this.base[index];
+		if (oldItem === item) {
+			return;
+		}
 		this.base[index] = item;
 		this.replaceEvent.trigger(new JW.Collection.ReplaceEventParams(this, index, oldItem, item));
 		this._triggerChange();
@@ -126,6 +132,9 @@ JW.extend(JW.Collection/*<T extends JW.Class>*/, JW.Class, {
 	},
 	
 	move: function(fromIndex, toIndex) {
+		if (fromIndex === toIndex) {
+			return;
+		};
 		var item = this.base[fromIndex];
 		this.base.splice(fromIndex, 1);
 		this.base.splice(toIndex, 0, item);

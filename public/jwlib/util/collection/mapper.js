@@ -125,7 +125,7 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 	
 	_onReplace: function(params) {
 		var newItem = this.createItem.call(this.scope || this, params.newItem);
-		var oldItem = this.target.set(params.index, newItem);
+		var oldItem = this.target.set(newItem, params.index);
 		this.destroyItem.call(this.scope || this, oldItem, params.oldItem);
 		this._snapshot[params.index] = params.newItem;
 	},
