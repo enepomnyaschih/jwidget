@@ -47,7 +47,7 @@ JW.extend(JW.Collection.Inserter/*<T extends JW.Class>*/, JW.Class, {
 	
 	Optional
 	Object scope; // defaults to this
-	void clearItems();
+	void clearItems(Array<T> items);
 	
 	Fields
 	EventAttachment _addEventAttachment;
@@ -102,8 +102,8 @@ JW.extend(JW.Collection.Inserter/*<T extends JW.Class>*/, JW.Class, {
 	
 	_clear: function() {
 		if (this.clearItems) {
-			JW.Array.clear(this._snapshot);
-			this.clearItems.call(this.scope || this);
+			var items = JW.Array.clear(this._snapshot);
+			this.clearItems.call(this.scope || this, items);
 		} else {
 			this._removeItems(0, this._snapshot.length);
 		}
