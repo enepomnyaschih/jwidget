@@ -39,7 +39,7 @@ JW.Map = function(base) {
 	}
 };
 
-JW.extend(JW.Map/*<T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	/*
 	Fields
 	Map<T> base;
@@ -161,7 +161,7 @@ JW.Map.EventParams = function(sender) {
 	JW.Map.EventParams._super.call(this, sender);
 };
 
-JW.extend(JW.Map.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
+JW.extend(JW.Map.EventParams/*<T extends Any>*/, JW.EventParams, {
 	/*
 	Fields
 	JW.Map<T> sender;
@@ -174,7 +174,7 @@ JW.Map.ItemEventParams = function(sender, item, key) {
 	this.key = key;
 };
 
-JW.extend(JW.Map.ItemEventParams/*<T extends JW.Class>*/, JW.Map.EventParams/*<T>*/, {
+JW.extend(JW.Map.ItemEventParams/*<T extends Any>*/, JW.Map.EventParams/*<T>*/, {
 	/*
 	Fields
 	T item;
@@ -188,7 +188,7 @@ JW.Map.SizeChangeEventParams = function(sender, oldSize, newSize) {
 	this.newSize = newSize;
 };
 
-JW.extend(JW.Map.SizeChangeEventParams/*<T extends JW.Class>*/, JW.Map.EventParams/*<T>*/, {
+JW.extend(JW.Map.SizeChangeEventParams/*<T extends Any>*/, JW.Map.EventParams/*<T>*/, {
 	/*
 	Fields
 	Integer oldSize;

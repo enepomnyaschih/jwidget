@@ -46,7 +46,7 @@ JW.Collection = function(base) {
 	}
 };
 
-JW.extend(JW.Collection/*<T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.Collection/*<T extends Any>*/, JW.Class, {
 	/*
 	Fields
 	Array<T> base;
@@ -218,7 +218,7 @@ JW.Collection.EventParams = function(sender) {
 	JW.Collection.EventParams._super.call(this, sender);
 };
 
-JW.extend(JW.Collection.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
+JW.extend(JW.Collection.EventParams/*<T extends Any>*/, JW.EventParams, {
 	/*
 	Fields
 	JW.Collection<T> sender;
@@ -231,7 +231,7 @@ JW.Collection.ItemRangeEventParams = function(sender, items, index) {
 	this.index = index;
 };
 
-JW.extend(JW.Collection.ItemRangeEventParams/*<T extends JW.Class>*/, JW.Collection.EventParams/*<T>*/, {
+JW.extend(JW.Collection.ItemRangeEventParams/*<T extends Any>*/, JW.Collection.EventParams/*<T>*/, {
 	/*
 	Fields
 	Array<T> items;
@@ -244,7 +244,7 @@ JW.Collection.ItemsEventParams = function(sender, items) {
 	this.items = items;
 };
 
-JW.extend(JW.Collection.ItemsEventParams/*<T extends JW.Class>*/, JW.Collection.EventParams/*<T>*/, {
+JW.extend(JW.Collection.ItemsEventParams/*<T extends Any>*/, JW.Collection.EventParams/*<T>*/, {
 	/*
 	Fields
 	Array<T> items;
@@ -257,7 +257,7 @@ JW.Collection.LengthChangeEventParams = function(sender, oldLength, newLength) {
 	this.newLength = newLength;
 };
 
-JW.extend(JW.Collection.LengthChangeEventParams/*<T extends JW.Class>*/, JW.Collection.EventParams/*<T>*/, {
+JW.extend(JW.Collection.LengthChangeEventParams/*<T extends Any>*/, JW.Collection.EventParams/*<T>*/, {
 	/*
 	Fields
 	Integer oldLength;
@@ -272,7 +272,7 @@ JW.Collection.MoveEventParams = function(sender, fromIndex, toIndex, item) {
 	this.item = item;
 };
 
-JW.extend(JW.Collection.MoveEventParams/*<T extends JW.Class>*/, JW.Collection.EventParams/*<T>*/, {
+JW.extend(JW.Collection.MoveEventParams/*<T extends Any>*/, JW.Collection.EventParams/*<T>*/, {
 	/*
 	Fields
 	Integer fromIndex;
@@ -288,7 +288,7 @@ JW.Collection.ReplaceEventParams = function(sender, index, oldItem, newItem) {
 	this.newItem = newItem;
 };
 
-JW.extend(JW.Collection.ReplaceEventParams/*<T extends JW.Class>*/, JW.Collection.EventParams/*<T>*/, {
+JW.extend(JW.Collection.ReplaceEventParams/*<T extends Any>*/, JW.Collection.EventParams/*<T>*/, {
 	/*
 	Fields
 	Integer index;

@@ -36,7 +36,7 @@ JW.Map.InstanceMapper = function(config) {
 	this.target = this.mapper.target;
 };
 
-JW.extend(JW.Map.InstanceMapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.Map.InstanceMapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	/*
 	Required
 	JW.Map<S> source;

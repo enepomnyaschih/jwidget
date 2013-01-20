@@ -30,7 +30,7 @@ JW.Map.Mapper = function(config) {
 	this.source.every(this._add, this);
 };
 
-JW.extend(JW.Map.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.Map.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	/*
 	Required
 	JW.Map<S> source;

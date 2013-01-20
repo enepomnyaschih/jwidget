@@ -34,7 +34,7 @@ JW.Collection.Splitter = function(config) {
 	});
 };
 
-JW.extend(JW.Collection.Splitter/*<T extends JW.Class, R extends JW.Collection<T>>*/, JW.Class, {
+JW.extend(JW.Collection.Splitter/*<T extends Any, R extends JW.Collection<T>>*/, JW.Class, {
 	/*
 	Required
 	JW.Collection<T> source;

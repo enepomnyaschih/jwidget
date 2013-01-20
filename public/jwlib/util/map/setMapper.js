@@ -27,7 +27,7 @@ JW.Map.SetMapper = function(config) {
 	this.source.every(this._add, this);
 };
 
-JW.extend(JW.Map.SetMapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.Map.SetMapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	/*
 	Required
 	JW.Map<S> source;

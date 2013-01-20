@@ -38,7 +38,7 @@ JW.Collection.Inserter = function(config) {
 	this._fill();
 };
 
-JW.extend(JW.Collection.Inserter/*<T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.Collection.Inserter/*<T extends Any>*/, JW.Class, {
 	/*
 	Required
 	JW.Collection<T> source;
