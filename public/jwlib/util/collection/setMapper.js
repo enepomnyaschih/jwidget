@@ -26,7 +26,6 @@ JW.Collection.SetMapper = function(config) {
 		source      : this.source,
 		createItem  : this._createItem,
 		destroyItem : this._destroyItem,
-		destroyAll  : this._destroyAll,
 		scope       : this
 	});
 };
@@ -53,9 +52,5 @@ JW.extend(JW.Collection.SetMapper/*<T extends JW.Class>*/, JW.Class, {
 	
 	_destroyItem: function(item) {
 		this.target.remove(item);
-	},
-	
-	_destroyAll: function() {
-		this.target.clear();
 	}
 });

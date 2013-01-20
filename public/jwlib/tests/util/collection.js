@@ -273,3 +273,5 @@ JW.Tests.Util.CollectionTestCase = JW.Unit.TestCase.extend({
 		return typeof value.base === "number";
 	}
 });
+
+JW.Tests.Util.Collection = {};

@@ -28,7 +28,6 @@ JW.Collection.Mapper = function(config) {
 	this._targetCreated = !config.target;
 	this.target = config.target || new JW.Collection();
 	this.scope = config.scope;
-	this.destroyAll = config.destroyAll;
 	this._snapshot = [];
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
@@ -51,7 +50,6 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 	Optional
 	JW.Collection<T> target;
 	Object scope; // defaults to this
-	void destroyAll(Array<T> items);
 	
 	Fields
 	Boolean _targetCreated;
@@ -67,7 +65,7 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 	*/
 	
 	destroy: function() {
-		this._clear(this.target.clear());
+		this._clear();
 		this._addEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._replaceEventAttachment.destroy();
@@ -86,13 +84,10 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 		return data._iid;
 	},
 	
-	_clear: function(items) {
-		if (this.destroyAll) {
-			this.destroyAll.call(this.scope || this, items);
-		} else {
-			for (var i = 0; i < items.length; ++i) {
-				this.destroyItem.call(this.scope || this, items[i], this._snapshot[i]);
-			}
+	_clear: function() {
+		var items = this.target.clear();
+		for (var i = 0; i < items.length; ++i) {
+			this.destroyItem.call(this.scope || this, items[i], this._snapshot[i]);
 		}
 		this._snapshot.splice(0, this._snapshot.length);
 	},
@@ -120,7 +115,7 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 		for (var i = 0; i < items.length; ++i) {
 			this.destroyItem.call(this.scope || this, items[i], params.items[i]);
 		}
-		this._snapshot.splice(index, params.items.length);
+		this._snapshot.splice(params.index, params.items.length);
 	},
 	
 	_onReplace: function(params) {
@@ -137,7 +132,7 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 	},
 	
 	_onClear: function() {
-		this._clear(this.target.clear());
+		this._clear();
 	},
 	
 	_onReorder: function() {
@@ -150,13 +145,14 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 			itemMap[key].push([ data, item ]);
 		}
 		
+		JW.Array.clear(this.target.base);
+		
 		JW.each(this.source.base, function(data, index) {
 			var arr = itemMap[this.getKey.call(this.scope || this, data)];
-			var pair = JW.searchBy(arr, 0, data);
+			var pair = JW.searchBy(arr, "0", data);
 			var item = pair[1];
 			this.target.base.splice(index, 0, item);
 			this._snapshot[index] = data;
-			this.items[index] = item;
 		}, this);
 		
 		this.target.triggerReorder();
@@ -165,13 +161,14 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 	_onFilter: function() {
 		var _snapshot = JW.Array.clear(this._snapshot);
 		var items = JW.Array.clear(this.target.base);
+		var deletedItems = [];
 		
 		var collectionIndex = 0;
 		JW.each(_snapshot, function(snapshotData, snapshotIndex) {
 			var item = items[snapshotIndex];
-			var collectionData = this.source.getItemAt(collectionIndex);
+			var collectionData = this.source.get(collectionIndex);
 			if (snapshotData !== collectionData) {
-				this.destroyItem(item, snapshotData);
+				deletedItems.push([ item, snapshotData ]);
 				return;
 			}
 			this.target.base.push(item);
@@ -180,11 +177,20 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 		}, this);
 		
 		this.target.triggerFilter();
+		
+		for (var i = 0; i < deletedItems.length; ++i) {
+			var pair = deletedItems[i];
+			this.destroyItem.call(this.scope || this, pair[0], pair[1]);
+		}
 	},
 	
 	_onReset: function() {
-		this._clear(JW.Array.clear(this.target.base));
+		var items = JW.Array.clear(this.target.base);
+		var snapshot = this._snapshot.splice(0, this._snapshot.length);
 		JW.Array.addAll(this.target.base, this._fill());
 		this.target.triggerReset();
+		for (var i = 0; i < items.length; ++i) {
+			this.destroyItem.call(this.scope || this, items[i], snapshot[i]);
+		}
 	}
 });
