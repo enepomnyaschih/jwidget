@@ -19,44 +19,42 @@
 
 JW.Tests.Util.Collection.InserterTestCase = JW.Unit.TestCase.extend({
 	testInserter: function() {
-		var collection = new JW.Collection([ JW("d") ]);
+		var collection = new JW.Collection([ "d" ]);
 		
 		this.setExpectedOutput(
 			"Added d at 0"
 		);
 		var inserter = new JW.Collection.Inserter({
 			source     : collection,
-			addItem    : function(item, index) { this.output("Added " + item.base + " at " + index); },
-			removeItem : function(index, item) { this.output("Removed " + item.base + " at " + index); },
-			clearItems : function(items) { this.output("Cleared " + JW.mapBy(items, "base").join(", ")); },
+			addItem    : function(item, index) { this.output("Added " + item + " at " + index); },
+			removeItem : function(index, item) { this.output("Removed " + item + " at " + index); },
+			clearItems : function(items) { this.output("Cleared " + items.join(", ")); },
 			scope      : this
 		});
 		
 		this.setExpectedOutput(
 			"Added f at 1"
 		);
-		collection.addAll([ JW("f") ]);
+		collection.addAll([ "f" ]);
 		
 		this.setExpectedOutput(
 			"Added c at 1"
 		);
-		collection.add(JW("c"), 1);
+		collection.add("c", 1);
 		
 		this.setExpectedOutput(
 			"Added b at 0",
 			"Added m at 1"
 		);
-		collection.addAll([ JW("b"), JW("m") ], 0);
+		collection.addAll([ "b", "m" ], 0);
 		
 		this.setExpectedOutput();
 		collection.addAll([], 1);
 		
-		var a = JW("a");
-		
 		this.setExpectedOutput(
 			"Added a at 5"
 		);
-		collection.add(a, 5);
+		collection.add("a", 5);
 		
 		this.setExpectedOutput(
 			"Removed m at 1"
@@ -71,16 +69,16 @@ JW.Tests.Util.Collection.InserterTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Added k at 4"
 		);
-		collection.add(JW("k"));
+		collection.add("k");
 		
 		this.setExpectedOutput(
 			"Removed f at 2",
 			"Added g at 2"
 		);
-		collection.set(JW("g"), 2);
+		collection.set("g", 2);
 		
 		this.setExpectedOutput();
-		collection.set(a, 3);
+		collection.set("a", 3);
 		
 		this.setExpectedOutput(
 			"Removed g at 2",
@@ -105,7 +103,7 @@ JW.Tests.Util.Collection.InserterTestCase = JW.Unit.TestCase.extend({
 			"Added g at 3",
 			"Added k at 4"
 		);
-		JW.Array.sortBy(collection.base, "base");
+		collection.base.sort();
 		collection.triggerReorder();
 		
 		// If length has decreased more than 3 times, clear+add is used, remove specific items instead
@@ -128,7 +126,7 @@ JW.Tests.Util.Collection.InserterTestCase = JW.Unit.TestCase.extend({
 			"Added t at 1",
 			"Added c at 2"
 		);
-		collection.base = [ JW("u"), JW("t"), JW("c") ];
+		collection.base = [ "u", "t", "c" ];
 		collection.triggerReset();
 		
 		this.setExpectedOutput(
@@ -139,7 +137,7 @@ JW.Tests.Util.Collection.InserterTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Added h at 0"
 		);
-		collection.add(JW("h"));
+		collection.add("h");
 		
 		this.setExpectedOutput(
 			"Cleared h"
@@ -149,7 +147,7 @@ JW.Tests.Util.Collection.InserterTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testAutoClear: function() {
-		var collection = new JW.Collection([ JW("a"), JW("b"), JW("c"), JW("d"), JW("e") ]);
+		var collection = new JW.Collection([ "a", "b", "c", "d", "e" ]);
 		
 		this.setExpectedOutput(
 			"Added a at 0",
@@ -160,8 +158,8 @@ JW.Tests.Util.Collection.InserterTestCase = JW.Unit.TestCase.extend({
 		);
 		var inserter = new JW.Collection.Inserter({
 			source     : collection,
-			addItem    : function(item, index) { this.output("Added " + item.base + " at " + index); },
-			removeItem : function(index, item) { this.output("Removed " + item.base + " at " + index); },
+			addItem    : function(item, index) { this.output("Added " + item + " at " + index); },
+			removeItem : function(index, item) { this.output("Removed " + item + " at " + index); },
 			scope      : this
 		});
 		
