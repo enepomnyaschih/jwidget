@@ -138,8 +138,8 @@ JW.extend(JW.Map/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.Map();
 	},
 	
-	pushItem: function(params) {
-		this.set(params[0], params[1]);
+	pushItem: function(value, key) {
+		this.set(value, key);
 	},
 	
 	_triggerChange: function() {

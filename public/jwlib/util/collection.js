@@ -120,7 +120,7 @@ JW.extend(JW.Collection/*<T extends JW.Class>*/, JW.Class, {
 		return (count === undefined) ? items[0] : items;
 	},
 	
-	set: function(index, item) {
+	set: function(item, index) {
 		var oldItem = this.base[index];
 		if (oldItem === item) {
 			return;
@@ -194,8 +194,8 @@ JW.extend(JW.Collection/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.Collection();
 	},
 	
-	pushItem: function(params) {
-		this.add(params[0]);
+	pushItem: function(value) {
+		this.add(value);
 	},
 	
 	_triggerChange: function() {

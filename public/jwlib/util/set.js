@@ -131,8 +131,8 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.Set();
 	},
 	
-	pushItem: function(params) {
-		this.add(params[0]);
+	pushItem: function(value) {
+		this.add(value);
 	},
 	
 	_triggerChange: function() {
