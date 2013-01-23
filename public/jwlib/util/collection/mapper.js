@@ -86,7 +86,7 @@ JW.extend(JW.Collection.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.C
 	
 	_clear: function() {
 		var items = this.target.clear();
-		for (var i = 0; i < items.length; ++i) {
+		for (var i = items.length - 1; i >= 0; --i) {
 			this.destroyItem.call(this.scope || this, items[i], this._snapshot[i]);
 		}
 		this._snapshot.splice(0, this._snapshot.length);

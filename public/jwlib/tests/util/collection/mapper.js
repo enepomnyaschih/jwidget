@@ -176,9 +176,9 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Cleared",
 			"Changed",
 			"Changed length from 3 to 0",
-			"Destroyed U by u",
+			"Destroyed C by c",
 			"Destroyed T by t",
-			"Destroyed C by c"
+			"Destroyed U by u"
 		);
 		source.clear();
 		this.assertCollection([  ], target);

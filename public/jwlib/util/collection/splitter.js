@@ -17,12 +17,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// TODO: Refuse JW.Collection.Inserter in this implementation: listen raw events
+
 JW.Collection.Splitter = function(config) {
 	JW.Collection.Splitter._super.call(this);
 	this.source = config.source;
 	this._rowsCreated = !config.rows;
 	this.rows = config.rows || new JW.Collection();
-	this.capacity = 1;
+	this.capacity = config.capacity || 1;
 	this._length = 0;
 	
 	this._inserter = new JW.Collection.Inserter({
@@ -38,9 +40,9 @@ JW.extend(JW.Collection.Splitter/*<T extends Any, R extends JW.Collection<T>>*/,
 	/*
 	Required
 	JW.Collection<T> source;
-	JW.Collection<R> rows;
 	
 	Optional
+	JW.Collection<R> rows;
 	Integer capacity;
 	
 	Fields
@@ -67,7 +69,7 @@ JW.extend(JW.Collection.Splitter/*<T extends Any, R extends JW.Collection<T>>*/,
 	
 	_addItem: function(item, index) {
 		if (this._length % this.capacity === 0) {
-			this.rows.addItem(this.createRow.call(this.scope || this));
+			this.rows.add(this.createRow.call(this.scope || this));
 		}
 		var firstRow = Math.floor(index / this.capacity);
 		for (var i = this.rows.getLength() - 1; i > firstRow; --i) {

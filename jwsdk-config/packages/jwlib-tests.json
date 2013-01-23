@@ -28,6 +28,7 @@
 		"jwlib/tests/util/collection.js",
 		"jwlib/tests/util/collection/inserter.js",
 		"jwlib/tests/util/collection/mapper.js",
+		"jwlib/tests/util/collection/splitter.js",
 		"jwlib/tests/util/timer.js",
 		
 		"jwlib/tests/boot.js"

@@ -101,6 +101,9 @@ JW.extend(JW.Collection.Inserter/*<T extends Any>*/, JW.Class, {
 	},
 	
 	_clear: function() {
+		if (this._snapshot.length === 0) {
+			return;
+		}
 		if (this.clearItems) {
 			var items = JW.Array.clear(this._snapshot);
 			this.clearItems.call(this.scope || this, items);
