@@ -229,10 +229,23 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 	
 	createTarget: function() {
 		var target = new JW.Map();
-		target.addEvent.bind(this.onAdd, this);
-		target.removeEvent.bind(this.onRemove, this);
-		target.changeEvent.bind(this.onChange, this);
-		target.sizeChangeEvent.bind(this.onSizeChange, this);
+		
+		target.addEvent.bind(function(params) {
+			this.output("Added " + params.item.base + " at " + params.key);
+		}, this);
+		
+		target.removeEvent.bind(function(params) {
+			this.output("Removed " + params.item.base + " at " + params.key);
+		}, this);
+		
+		target.changeEvent.bind(function(params) {
+			this.output("Changed");
+		}, this);
+		
+		target.sizeChangeEvent.bind(function(params) {
+			this.output("Changed size from " + params.oldSize + " to " + params.newSize);
+		}, this);
+		
 		return target;
 	},
 	
@@ -243,21 +256,5 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			getKey : function(item) { return item.base; },
 			scope  : this
 		});
-	},
-	
-	onAdd: function(params) {
-		this.output("Added " + params.item.base + " at " + params.key);
-	},
-	
-	onRemove: function(params) {
-		this.output("Removed " + params.item.base + " at " + params.key);
-	},
-	
-	onChange: function(params) {
-		this.output("Changed");
-	},
-	
-	onSizeChange: function(params) {
-		this.output("Changed size from " + params.oldSize + " to " + params.newSize);
 	}
 });
