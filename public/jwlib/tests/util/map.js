@@ -72,12 +72,23 @@ JW.Tests.Util.MapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D", "c": "C", "a": "A", "b": "B" }, map);
 		
 		this.setExpectedOutput(
-			"Removed D at d",
 			"Removed C at c",
-			"Removed A at a",
 			"Removed B at b",
 			"Changed",
-			"Changed size from 4 to 0"
+			"Changed size from 4 to 2"
+		);
+		this.assertTrue(map.removeAll([ "c", "b" ]));
+		this.assertMap({ "d": "D", "a": "A" }, map);
+		
+		this.setExpectedOutput();
+		this.assertFalse(map.removeAll([ "c", "b" ]));
+		this.assertMap({ "d": "D", "a": "A" }, map);
+		
+		this.setExpectedOutput(
+			"Removed D at d",
+			"Removed A at a",
+			"Changed",
+			"Changed size from 2 to 0"
 		);
 		this.assertTrue(map.clear());
 		this.assertMap({}, map);

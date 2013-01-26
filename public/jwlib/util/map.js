@@ -106,6 +106,18 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		return item;
 	},
 	
+	removeAll: function(keys) {
+		var changed = false;
+		for (var i = 0, l = keys.length; i < l; ++i) {
+			changed = this._remove(keys[i]) || changed;
+		}
+		if (changed) {
+			this._triggerChange();
+			return true;
+		}
+		return false;
+	},
+	
 	clear: function() {
 		if (this.size === 0) {
 			return false;

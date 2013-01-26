@@ -253,6 +253,20 @@ JW.apply(JW, {
 	/**
 	 * Builds array of all values in a collection.
 	 */
+	getKeysArray: function(
+		target)     // [required] Mixed
+	{
+		var result = [];
+		JW.every(target, function(item, key) {
+			result.push(key);
+			return true;
+		});
+		return result;
+	},
+	
+	/**
+	 * Builds array of all values in a collection.
+	 */
 	getValuesArray: function(
 		target)     // [required] Mixed
 	{
@@ -411,6 +425,11 @@ JW.Alg.SimpleMethods = {
 	invokeByMethod: function(algorithm, method, args)
 	{
 		return JW.invokeByMethod(algorithm, this, method, args);
+	},
+	
+	getKeysArray: function()
+	{
+		return JW.getKeysArray(this);
 	},
 	
 	getValuesArray: function()

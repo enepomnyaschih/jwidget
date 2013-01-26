@@ -27,7 +27,10 @@ JW.Map.Mapper = function(config) {
 	this.scope = config.scope;
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
+	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
+	this._destructionQueue = [];
 	this.source.every(this._add, this);
+	this._change();
 };
 
 JW.extend(JW.Map.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
@@ -45,10 +48,14 @@ JW.extend(JW.Map.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	Boolean _targetCreated;
 	EventAttachment _addEventAttachment;
 	EventAttachment _removeEventAttachment;
+	EventAttachment _changeEventAttachment;
+	Array<Array> _destructionQueue;
 	*/
 	
 	destroy: function() {
 		this.source.every(this._remove, this);
+		this._change();
+		this._changeEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
 		if (this._targetCreated) {
@@ -59,15 +66,23 @@ JW.extend(JW.Map.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	
 	_add: function(data, key) {
 		var item = this.createItem.call(this.scope || this, data, key);
-		this.target.set(item, key);
+		this.target._set(item, key);
 		return true;
 	},
 	
 	_remove: function(data, key) {
-		var item = this.target.get(key);
-		this.target.remove(item);
-		this.destroyItem.call(this.scope || this, item, data, key);
+		var item = this.target._remove(key);
+		this._destructionQueue.push([ item, data, key ]);
 		return true;
+	},
+	
+	_change: function() {
+		this.target._triggerChange();
+		for (var i = 0; i < this._destructionQueue.length; ++i) {
+			var params = this._destructionQueue[i];
+			this.destroyItem.call(this.scope || this, params[0], params[1], params[2]);
+		}
+		this._destructionQueue = [];
 	},
 	
 	_onAdd: function(params) {
@@ -76,5 +91,9 @@ JW.extend(JW.Map.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	
 	_onRemove: function(params) {
 		this._remove(params.item, params.key);
+	},
+	
+	_onChange: function(params) {
+		this._change();
 	}
 });

@@ -141,6 +141,16 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 		this.assertFalse(this.cls.some(JW.isDefined.not()));
 	},
 	
+	testGetKeysArrayObject: function()
+	{
+		this.assertTrue(JW.equal([ "a", "b", "c" ], JW.getKeysArray(this.obj), true, true));
+	},
+	
+	testGetKeysArrayClass: function()
+	{
+		this.assertTrue(JW.equal([ 0, 1, 2 ], this.cls.getKeysArray(), true, true));
+	},
+	
 	testGetValuesArrayObject: function()
 	{
 		this.assertTrue(JW.equal([ 10, null, "lala" ], JW.getValuesArray(this.obj), true, true));

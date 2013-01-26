@@ -30,7 +30,9 @@
 		"jwlib/tests/util/collection/mapper.js",
 		"jwlib/tests/util/collection/splitter.js",
 		"jwlib/tests/util/map.js",
+		"jwlib/tests/util/map/mapper.js",
 		"jwlib/tests/util/set.js",
+		"jwlib/tests/util/set/mapper.js",
 		"jwlib/tests/util/timer.js",
 		
 		"jwlib/tests/boot.js"
