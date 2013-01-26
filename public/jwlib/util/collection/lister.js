@@ -35,6 +35,8 @@ JW.extend(JW.Collection.Lister/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Collection<T> source;
+	
+	Optional
 	JW.Set<T> target;
 	
 	Fields
