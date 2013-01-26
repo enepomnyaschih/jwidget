@@ -88,7 +88,7 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	
 	addAll: function(items) {
 		var changed = false;
-		for (var i = 0; i < items.length; ++i) {
+		for (var i = 0, l = items.length; i < l; ++i) {
 			changed = this._add(items[i]) || changed;
 		}
 		if (changed) {
@@ -100,6 +100,18 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	
 	remove: function(item) {
 		if (this._remove(item)) {
+			this._triggerChange();
+			return true;
+		}
+		return false;
+	},
+	
+	removeAll: function(items) {
+		var changed = false;
+		for (var i = 0, l = items.length; i < l; ++i) {
+			changed = this._remove(items[i]) || changed;
+		}
+		if (changed) {
 			this._triggerChange();
 			return true;
 		}

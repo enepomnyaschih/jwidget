@@ -77,17 +77,28 @@ JW.Tests.Util.SetTestCase = JW.Unit.TestCase.extend({
 		this.assertFalse(set.addAll([ b, c ]));
 		this.assertSet([ d, c, a, b ], [ e ], set);
 		
+		this.setExpectedOutput(
+			"Removed a",
+			"Removed d",
+			"Changed",
+			"Changed size from 4 to 2"
+		);
+		this.assertTrue(set.removeAll([ a, d ]));
+		this.assertSet([ c, b ], [ a, d, e ], set);
+		
+		this.setExpectedOutput();
+		this.assertFalse(set.removeAll([ a, d ]));
+		this.assertSet([ c, b ], [ a, d, e ], set);
+		
 		// The clearing order differs in Chrome and Firefox:
 		// Chrome optimizes integer-based maps and sorts the items, Firefox doesn't.
 		// That's why we created items in straight order to make sure that
 		// their _iid's will be sorted.
 		this.setExpectedOutput(
-			"Removed d",
 			"Removed c",
-			"Removed a",
 			"Removed b",
 			"Changed",
-			"Changed size from 4 to 0"
+			"Changed size from 2 to 0"
 		);
 		this.assertTrue(set.clear());
 		this.assertSet([], [ a, b, c, d, e ], set);
