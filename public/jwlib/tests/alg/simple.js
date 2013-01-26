@@ -277,6 +277,27 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 		this.assertTrue(JW.equal({ "10": true, "null": true, "lala": true }, JW.getValuesSet(this.everyArray), true, true));
 	},
 	
+	testIndex: function()
+	{
+		var array = [
+			{
+				id : 10
+			}, {
+				id : 5
+			}, {
+				id : 20
+			}
+		];
+		
+		var expected = {
+			"10" : array[0],
+			"5"  : array[1],
+			"20" : array[2]
+		};
+		
+		this.assertEqual(JSON.stringify(expected), JSON.stringify(array.index(function(item) { return item.id; })));
+	},
+	
 	testIndexBy: function()
 	{
 		var array = [
@@ -296,6 +317,23 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 		};
 		
 		this.assertEqual(JSON.stringify(expected), JSON.stringify(array.indexBy("id")));
+	},
+	
+	testIndexByMethod: function()
+	{
+		var array = [
+			{ getId : function(a) { return a + 5; } },
+			{ getId : function(a) { return a + 0; } },
+			{ getId : function(a) { return a + 15; } }
+		];
+		
+		var expected = {
+			"10" : array[0],
+			"5"  : array[1],
+			"20" : array[2]
+		};
+		
+		this.assertTrue(JW.equal(expected, array.indexByMethod("getId", [ 5 ])));
 	},
 	
 	

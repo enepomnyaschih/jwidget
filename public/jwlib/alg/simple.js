@@ -236,6 +236,19 @@ JW.apply(JW, {
 	},
 	
 	/**
+	 * Run specified algorithm with field value return callback.
+	 */
+	invokeByField: function(
+		algorithm,  // [required] Function(target, callback)
+		target,     // [required] Mixed
+		field)      // [required] String
+	{
+		return algorithm(target, function(item) {
+			return JW.get(item, field);
+		});
+	},
+	
+	/**
 	 * Run specified algorithm with method invokation callback.
 	 */
 	invokeByMethod: function(
@@ -318,20 +331,46 @@ JW.apply(JW, {
 	},
 	
 	/**
+	 * Indexes collection by specified callback.
+	 */
+	index: function( // Object
+		target,   // [required] Mixed
+		callback, // [required] Function(item, /* keys */):String
+		scope)    // [optional] Object
+	{
+		var result = {};
+		JW.every(target, function(item) {
+			if (item === undefined) {
+				return true;
+			}
+			var key = callback.apply(scope || this, arguments);
+			if (JW.isSet(key)) {
+				result[key] = item;
+			}
+			return true;
+		});
+		return result;
+	},
+	
+	/**
 	 * Indexes items by specified field.
 	 */
 	indexBy: function( // Object
 		target, // [required] Mixed
 		field)  // [required] String, field name
 	{
-		var result = {};
-		JW.every(target, function(item) {
-			var key = JW.get(item, field);
-			if (JW.isSet(key))
-				result[key] = item;
-			return true;
-		});
-		return result;
+		return JW.invokeByField(JW.index, target, field);
+	},
+	
+	/**
+	 * Indexes items by specified method.
+	 */
+	indexByMethod: function( // Object
+		target, // [required] Mixed
+		method, // [required] String
+		args)   // [optional] Array of arguments to pass into method
+	{
+		return JW.invokeByMethod(JW.index, target, method, args);
 	}
 });
 
@@ -422,6 +461,11 @@ JW.Alg.SimpleMethods = {
 		return JW.invokeBy(algorithm, this, field, value);
 	},
 	
+	invokeByField: function(algorithm, field)
+	{
+		return JW.invokeByField(algorithm, this, field);
+	},
+	
 	invokeByMethod: function(algorithm, method, args)
 	{
 		return JW.invokeByMethod(algorithm, this, method, args);
@@ -452,8 +496,18 @@ JW.Alg.SimpleMethods = {
 		return JW.isEmpty(this);
 	},
 	
+	index: function(callback, scope)
+	{
+		return JW.index(this, callback, scope);
+	},
+	
 	indexBy: function(field)
 	{
 		return JW.indexBy(this, field);
+	},
+	
+	indexByMethod: function(method, args)
+	{
+		return JW.indexByMethod(this, method, args);
 	}
 };

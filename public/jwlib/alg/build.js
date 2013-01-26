@@ -151,9 +151,7 @@ JW.apply(JW, {
 		target,     // [required] Mixed
 		field)      // [required] String, field name
 	{
-		return JW.map(target, function(item) {
-			return JW.get(item, field);
-		});
+		return JW.invokeByField(JW.map, target, field);
 	},
 	
 	/**
@@ -164,10 +162,7 @@ JW.apply(JW, {
 		method,     // [required] String
 		args)       // [optional] Array of arguments to pass into method
 	{
-		args = args || [];
-		return JW.map(target, function(item) {
-			return item[method].apply(item, args);
-		});
+		return JW.invokeByMethod(JW.map, target, method, args);
 	},
 	
 	/**
