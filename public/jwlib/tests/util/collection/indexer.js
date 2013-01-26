@@ -21,20 +21,14 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 	testIndexer: function() {
 		var d = JW("d");
 		var source = new JW.Collection([ d ]);
-		var target = new JW.Map();
-		this.subscribe(target);
+		var target = this.createTarget();
 		
 		this.setExpectedOutput(
 			"Added d at d",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
-		var indexer = new JW.Collection.Indexer({
-			source : source,
-			target : target,
-			getKey : function(item) { return item.base; },
-			scope  : this
-		});
+		var indexer = this.createIndexer(source, target);
 		this.assertTrue(JW.equal({ "d": d }, target.base));
 		
 		// d
@@ -211,14 +205,44 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 1 to 0"
 		);
 		indexer.destroy();
+		target.destroy();
 		source.destroy();
 	},
 	
-	subscribe: function(map) {
-		map.addEvent.bind(this.onAdd, this);
-		map.removeEvent.bind(this.onRemove, this);
-		map.changeEvent.bind(this.onChange, this);
-		map.sizeChangeEvent.bind(this.onSizeChange, this);
+	testEmptyChange: function() {
+		var source = new JW.Collection();
+		var target = this.createTarget();
+		var indexer = this.createIndexer(source, target);
+		indexer.destroy();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testAutoTarget: function() {
+		var d = JW("d");
+		var source = new JW.Collection([ d ]);
+		var indexer = this.createIndexer(source);
+		this.assertTrue(JW.equal({ "d": d }, indexer.target.base));
+		indexer.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function() {
+		var target = new JW.Map();
+		target.addEvent.bind(this.onAdd, this);
+		target.removeEvent.bind(this.onRemove, this);
+		target.changeEvent.bind(this.onChange, this);
+		target.sizeChangeEvent.bind(this.onSizeChange, this);
+		return target;
+	},
+	
+	createIndexer: function(source, target) {
+		return new JW.Collection.Indexer({
+			source : source,
+			target : target,
+			getKey : function(item) { return item.base; },
+			scope  : this
+		});
 	},
 	
 	onAdd: function(params) {
