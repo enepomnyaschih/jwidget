@@ -35,7 +35,7 @@ JW.Set = function(base) {
 	this.bulkDirty = false;
 	this.bulkSize = 0;
 	if (base) {
-		this.addAll(base);
+		this._fill(base);
 	}
 };
 
@@ -87,11 +87,7 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	},
 	
 	addAll: function(items) {
-		var changed = false;
-		for (var i = 0, l = items.length; i < l; ++i) {
-			changed = this._add(items[i]) || changed;
-		}
-		if (changed) {
+		if (this._fill(items)) {
 			this._triggerChange();
 			return true;
 		}
@@ -119,15 +115,11 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	},
 	
 	clear: function() {
-		if (this.size === 0) {
-			return false;
+		if (this._clear()) {
+			this._triggerChange();
+			return true;
 		}
-		var base = JW.apply({}, this.base);
-		for (var key in base) {
-			this._remove(base[key]);
-		}
-		this._triggerChange();
-		return true;
+		return false;
 	},
 	
 	startBulkChange: function() {
@@ -177,6 +169,25 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 		delete this.base[item._iid];
 		--this.size;
 		this.removeEvent.trigger(new JW.Map.ItemEventParams(this, item));
+		return true;
+	},
+	
+	_fill: function(items) {
+		var changed = false;
+		for (var i = 0, l = items.length; i < l; ++i) {
+			changed = this._add(items[i]) || changed;
+		}
+		return changed;
+	},
+	
+	_clear: function() {
+		if (this.size === 0) {
+			return false;
+		}
+		var base = JW.apply({}, this.base);
+		for (var key in base) {
+			this._remove(base[key]);
+		}
 		return true;
 	},
 	

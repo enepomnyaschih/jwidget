@@ -17,223 +17,223 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
-	testIndexer: function() {
+JW.Tests.Util.Collection.ListerTestCase = JW.Unit.TestCase.extend({
+	testLister: function() {
 		var d = JW("d");
 		var source = new JW.Collection([ d ]);
-		var target = new JW.Map();
-		this.subscribe(target);
+		var target = new JW.Set();
+		
+		target.addEvent.bind(function(params) {
+			this.output("Added " + params.item.base);
+		}, this);
+		
+		target.removeEvent.bind(function(params) {
+			this.output("Removed " + params.item.base);
+		}, this);
+		
+		target.changeEvent.bind(function(params) {
+			this.output("Changed");
+		}, this);
+		
+		target.sizeChangeEvent.bind(function(params) {
+			this.output("Changed size from " + params.oldSize + " to " + params.newSize);
+		}, this);
+		
+		var testCase = this;
+		
+		function assert(values) {
+			testCase.assertStrictEqual(values.length, target.getSize());
+			for (var i = 0; i < values.length; ++i) {
+				testCase.assertTrue(target.contains(values[i]));
+			}
+		}
 		
 		this.setExpectedOutput(
-			"Added d at d",
+			"Added d",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
-		var indexer = new JW.Collection.Indexer({
+		var lister = new JW.Collection.Lister({
 			source : source,
 			target : target,
-			getKey : function(item) { return item.base; },
 			scope  : this
 		});
-		this.assertTrue(JW.equal({ "d": d }, target.base));
+		assert([ d ]);
 		
 		// d
 		var f = JW("f");
 		this.setExpectedOutput(
-			"Added f at f",
+			"Added f",
 			"Changed",
 			"Changed size from 1 to 2"
 		);
 		source.addAll([ f ]);
-		this.assertTrue(JW.equal({ "d": d, "f": f }, target.base));
+		assert([ d, f ]);
 		
 		// d f
 		var c = JW("c");
 		this.setExpectedOutput(
-			"Added c at c",
+			"Added c",
 			"Changed",
 			"Changed size from 2 to 3"
 		);
 		source.add(c, 1);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c }, target.base));
+		assert([ d, f, c ]);
 		
 		// d c f
 		var b = JW("b");
 		var m = JW("m");
 		this.setExpectedOutput(
-			"Added b at b",
-			"Added m at m",
+			"Added b",
+			"Added m",
 			"Changed",
 			"Changed size from 3 to 5"
 		);
 		source.addAll([ b, m ], 0);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "b": b, "m": m }, target.base));
+		assert([ d, f, c, b, m ]);
 		
 		// b m d c f
 		this.setExpectedOutput();
 		source.addAll([], 1);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "b": b, "m": m }, target.base));
+		assert([ d, f, c, b, m ]);
 		
 		var a = JW("a");
 		this.setExpectedOutput(
-			"Added a at a",
+			"Added a",
 			"Changed",
 			"Changed size from 5 to 6"
 		);
 		source.add(a, 5);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "b": b, "m": m, "a": a }, target.base));
+		assert([ d, f, c, b, m, a ]);
 		
 		// b m d c f a
 		this.setExpectedOutput(
-			"Removed m at m",
+			"Removed m",
 			"Changed",
 			"Changed size from 6 to 5"
 		);
 		source.remove(1);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "b": b, "a": a }, target.base));
+		assert([ d, f, c, b, a ]);
 		
 		// b d c f a
 		this.setExpectedOutput(
-			"Removed b at b",
+			"Removed b",
 			"Changed",
 			"Changed size from 5 to 4"
 		);
 		source.remove(0);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "a": a }, target.base));
+		assert([ d, f, c, a ]);
 		
 		// d c f a
 		var k = JW("k");
 		this.setExpectedOutput(
-			"Added k at k",
+			"Added k",
 			"Changed",
 			"Changed size from 4 to 5"
 		);
 		source.add(k);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "a": a, "k": k }, target.base));
+		assert([ d, f, c, a, k ]);
 		
 		// d c f a k
 		var g = JW("g");
 		this.setExpectedOutput(
-			"Removed f at f",
-			"Added g at g",
+			"Removed f",
+			"Added g",
 			"Changed"
 		);
 		source.set(g, 2);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		assert([ d, c, a, k, g ]);
 		
 		// d c g a k
 		this.setExpectedOutput();
 		source.set(a, 3);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		assert([ d, c, a, k, g ]);
 		
 		this.setExpectedOutput();
 		source.move(2, 1);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		assert([ d, c, a, k, g ]);
 		
 		// d g c a k
 		this.setExpectedOutput();
 		source.move(0, 4);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		assert([ d, c, a, k, g ]);
 		
 		// g c a k d
 		this.setExpectedOutput();
 		source.move(1, 1);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		assert([ d, c, a, k, g ]);
 		
 		this.setExpectedOutput();
 		JW.Array.sortBy(source.base, "base");
 		source.triggerReorder();
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		assert([ d, c, a, k, g ]);
 		
 		// a c d g k
 		this.setExpectedOutput(
-			"Removed c at c",
+			"Removed c",
 			"Changed",
 			"Changed size from 5 to 4"
 		);
 		source.base.splice(1, 1);
 		source.triggerFilter();
-		this.assertTrue(JW.equal({ "d": d, "a": a, "k": k, "g": g }, target.base));
+		assert([ d, a, k, g ]);
 		
 		// a d g k
 		this.setExpectedOutput(
-			"Removed d at d",
-			"Removed a at a",
-			"Removed g at g",
+			"Removed d",
+			"Removed a",
+			"Removed g",
 			"Changed",
 			"Changed size from 4 to 1"
 		);
 		source.base.splice(0, 3);
 		source.triggerFilter();
-		this.assertTrue(JW.equal({ "k": k }, target.base));
+		assert([ k ]);
 		
 		// k
 		var u = JW("u");
 		var t = JW("t");
 		var c = JW("c");
 		this.setExpectedOutput(
-			"Removed k at k",
-			"Added u at u",
-			"Added t at t",
-			"Added c at c",
+			"Removed k",
+			"Added u",
+			"Added t",
+			"Added c",
 			"Changed",
 			"Changed size from 1 to 3"
 		);
 		source.base = [ u, t, c ];
 		source.triggerReset();
-		this.assertTrue(JW.equal({ "u": u, "t": t, "c": c }, target.base));
+		assert([ u, t, c ]);
 		
 		// u t c
 		this.setExpectedOutput(
-			"Removed u at u",
-			"Removed t at t",
-			"Removed c at c",
+			"Removed u",
+			"Removed t",
+			"Removed c",
 			"Changed",
 			"Changed size from 3 to 0"
 		);
 		source.clear();
-		this.assertTrue(JW.equal({}, target.base));
+		assert([]);
 		
 		// (empty)
 		var h = JW("h");
 		this.setExpectedOutput(
-			"Added h at h",
+			"Added h",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
 		source.add(h);
-		this.assertTrue(JW.equal({ "h": h }, target.base));
+		assert([ h ]);
 		
 		// h
 		this.setExpectedOutput(
-			"Removed h at h",
+			"Removed h",
 			"Changed",
 			"Changed size from 1 to 0"
 		);
-		indexer.destroy();
+		lister.destroy();
 		source.destroy();
-	},
-	
-	subscribe: function(map) {
-		map.addEvent.bind(this.onAdd, this);
-		map.removeEvent.bind(this.onRemove, this);
-		map.changeEvent.bind(this.onChange, this);
-		map.sizeChangeEvent.bind(this.onSizeChange, this);
-	},
-	
-	onAdd: function(params) {
-		this.output("Added " + params.item.base + " at " + params.key);
-	},
-	
-	onRemove: function(params) {
-		this.output("Removed " + params.item.base + " at " + params.key);
-	},
-	
-	onChange: function(params) {
-		this.output("Changed");
-	},
-	
-	onSizeChange: function(params) {
-		this.output("Changed size from " + params.oldSize + " to " + params.newSize);
 	}
 });

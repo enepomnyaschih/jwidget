@@ -68,20 +68,11 @@ JW.extend(JW.Collection.Indexer/*<T extends Any>*/, JW.Class, {
 	},
 	
 	_index: function(items) {
-		var index = {};
-		for (var i = 0, l = items.length; i < l; ++i) {
-			var item = items[i];
-			index[this.getKey.call(this.scope || this, item)] = item;
-		}
-		return index;
+		return JW.index(items, this.getKey, this.scope || this);
 	},
 	
 	_keys: function(items) {
-		var keys = [];
-		for (var i = 0, l = items.length; i < l; ++i) {
-			keys.push(this.getKey.call(this.scope || this, items[i]));
-		}
-		return keys;
+		return JW.map(items, this.getKey, this.scope || this);
 	},
 	
 	_onAdd: function(params) {

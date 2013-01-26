@@ -35,7 +35,7 @@ JW.Map = function(base) {
 	this.bulkDirty = false;
 	this.bulkSize = 0;
 	if (base) {
-		this.setAll(base);
+		this._fill(base);
 	}
 };
 
