@@ -66,6 +66,10 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		return this.size;
 	},
 	
+	getSize: function() {
+		return this.size;
+	},
+	
 	isEmpty: function() {
 		return this.size === 0;
 	},
@@ -75,41 +79,43 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	},
 	
 	set: function(item, key) {
-		var oldItem = this.base[key];
-		if (oldItem === item) {
-			return;
+		if (this._set(item, key)) {
+			this._triggerChange();
+			return true;
 		}
-		if (oldItem) {
-			this.remove(key);
-		}
-		this.base[key] = item;
-		++this.size;
-		this.addEvent.trigger(new JW.Map.ItemEventParams(this, item, key));
-		this._triggerChange();
+		return false;
 	},
 	
 	setAll: function(map) {
+		var changed = false;
 		for (var key in map) {
-			this.set(map[key], key);
+			changed = this._set(map[key], key) || changed;
 		}
+		if (changed) {
+			this._triggerChange();
+			return true;
+		}
+		return false;
 	},
 	
 	remove: function(key) {
-		var item = this.base[key];
-		if (!item) {
-			return;
+		var item = this._remove(key);
+		if (item !== undefined) {
+			this._triggerChange();
 		}
-		delete this.base[key];
-		--this.size;
-		this.removeEvent.trigger(new JW.Map.ItemEventParams(this, item, key));
-		this._triggerChange();
+		return item;
 	},
 	
 	clear: function() {
+		if (this.size === 0) {
+			return false;
+		}
 		var base = JW.apply({}, this.base);
 		for (var key in base) {
-			this.remove(key);
+			this._remove(key);
 		}
+		this._triggerChange();
+		return true;
 	},
 	
 	startBulkChange: function() {
@@ -140,6 +146,32 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	
 	pushItem: function(value, key) {
 		this.set(value, key);
+	},
+	
+	_set: function(item, key) {
+		if (item === undefined) {
+			return false;
+		}
+		var oldItem = this.base[key];
+		if (oldItem === item) {
+			return false;
+		}
+		this._remove(key);
+		this.base[key] = item;
+		++this.size;
+		this.addEvent.trigger(new JW.Map.ItemEventParams(this, item, key));
+		return true;
+	},
+	
+	_remove: function(key) {
+		if (!this.base.hasOwnProperty(key)) {
+			return undefined;
+		}
+		var item = this.base[key];
+		delete this.base[key];
+		--this.size;
+		this.removeEvent.trigger(new JW.Map.ItemEventParams(this, item, key));
+		return item;
 	},
 	
 	_triggerChange: function() {

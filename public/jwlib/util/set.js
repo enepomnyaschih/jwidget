@@ -66,6 +66,10 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 		return this.size;
 	},
 	
+	getSize: function() {
+		return this.size;
+	},
+	
 	isEmpty: function() {
 		return this.size === 0;
 	},
@@ -75,34 +79,43 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	},
 	
 	add: function(item) {
-		if (this.base[item._iid]) {
-			return;
+		if (this._add(item)) {
+			this._triggerChange();
+			return true;
 		}
-		this.base[item._iid] = item;
-		++this.size;
-		this.addEvent.trigger(new JW.Set.ItemEventParams(this, item));
-		this._triggerChange();
+		return false;
 	},
 	
 	addAll: function(items) {
-		JW.Array.each(items, this.add, this);
+		var changed = false;
+		for (var i = 0; i < items.length; ++i) {
+			changed = this._add(items[i]) || changed;
+		}
+		if (changed) {
+			this._triggerChange();
+			return true;
+		}
+		return false;
 	},
 	
 	remove: function(item) {
-		if (!this.base[item._iid]) {
-			return;
+		if (this._remove(item)) {
+			this._triggerChange();
+			return true;
 		}
-		delete this.base[item._iid];
-		--this.size;
-		this.removeEvent.trigger(new JW.Map.ItemEventParams(this, item));
-		this._triggerChange();
+		return false;
 	},
 	
 	clear: function() {
+		if (this.size === 0) {
+			return false;
+		}
 		var base = JW.apply({}, this.base);
 		for (var key in base) {
-			this.remove(base[key]);
+			this._remove(base[key]);
 		}
+		this._triggerChange();
+		return true;
 	},
 	
 	startBulkChange: function() {
@@ -133,6 +146,26 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	
 	pushItem: function(value) {
 		this.add(value);
+	},
+	
+	_add: function(item) {
+		if (this.base[item._iid]) {
+			return false;
+		}
+		this.base[item._iid] = item;
+		++this.size;
+		this.addEvent.trigger(new JW.Set.ItemEventParams(this, item));
+		return true;
+	},
+	
+	_remove: function(item) {
+		if (!this.base[item._iid]) {
+			return false;
+		}
+		delete this.base[item._iid];
+		--this.size;
+		this.removeEvent.trigger(new JW.Map.ItemEventParams(this, item));
+		return true;
 	},
 	
 	_triggerChange: function() {

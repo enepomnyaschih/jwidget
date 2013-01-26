@@ -186,8 +186,7 @@ JW.Tests.Util.CollectionTestCase = JW.Unit.TestCase.extend({
 		this.assertFalse(collection.some(this.isNumber));
 	},
 	
-	testFilter: function()
-	{
+	testFilter: function() {
 		var collection = new JW.Collection([ "a", "A", "b" ]);
 		var filtered = collection.filter(this.isA);
 		this.assertEqual(2, filtered.getLength());
