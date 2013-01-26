@@ -17,6 +17,7 @@
 		
 		"jwlib/util/collection.js",
 		"jwlib/util/collection/fieldMapper.js",
+		"jwlib/util/collection/indexer.js",
 		"jwlib/util/collection/inserter.js",
 		"jwlib/util/collection/instanceMapper.js",
 		"jwlib/util/collection/mapper.js",

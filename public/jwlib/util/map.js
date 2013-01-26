@@ -87,11 +87,7 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	},
 	
 	setAll: function(map) {
-		var changed = false;
-		for (var key in map) {
-			changed = this._set(map[key], key) || changed;
-		}
-		if (changed) {
+		if (this._fill(map)) {
 			this._triggerChange();
 			return true;
 		}
@@ -119,15 +115,11 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	},
 	
 	clear: function() {
-		if (this.size === 0) {
-			return false;
+		if (this._clear()) {
+			this._triggerChange();
+			return true;
 		}
-		var base = JW.apply({}, this.base);
-		for (var key in base) {
-			this._remove(key);
-		}
-		this._triggerChange();
-		return true;
+		return false;
 	},
 	
 	startBulkChange: function() {
@@ -184,6 +176,25 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		--this.size;
 		this.removeEvent.trigger(new JW.Map.ItemEventParams(this, item, key));
 		return item;
+	},
+	
+	_fill: function(map) {
+		var changed = false;
+		for (var key in map) {
+			changed = this._set(map[key], key) || changed;
+		}
+		return changed;
+	},
+	
+	_clear: function() {
+		if (this.size === 0) {
+			return false;
+		}
+		var base = JW.apply({}, this.base);
+		for (var key in base) {
+			this._remove(key);
+		}
+		return true;
 	},
 	
 	_triggerChange: function() {
