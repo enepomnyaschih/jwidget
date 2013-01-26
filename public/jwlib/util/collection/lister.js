@@ -17,8 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Collection.SetMapper = function(config) {
-	JW.Collection.SetMapper._super.call(this);
+JW.Collection.Lister = function(config) {
+	JW.Collection.Lister._super.call(this);
 	this.source = config.source;
 	this.target = config.target;
 	
@@ -30,7 +30,7 @@ JW.Collection.SetMapper = function(config) {
 	});
 };
 
-JW.extend(JW.Collection.SetMapper/*<T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.Collection.Lister/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
 	JW.Collection<T> source;

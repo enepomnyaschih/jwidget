@@ -17,8 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Map.SetMapper = function(config) {
-	JW.Map.SetMapper._super.call(this);
+JW.Map.Lister = function(config) {
+	JW.Map.Lister._super.call(this);
 	this.source = config.source;
 	this._targetCreated = !config.target;
 	this.target = config.target || new JW.Set();
@@ -27,7 +27,7 @@ JW.Map.SetMapper = function(config) {
 	this.source.every(this._add, this);
 };
 
-JW.extend(JW.Map.SetMapper/*<S extends Any, T extends Any>*/, JW.Class, {
+JW.extend(JW.Map.Lister/*<S extends Any, T extends Any>*/, JW.Class, {
 	/*
 	Required
 	JW.Map<S> source;
