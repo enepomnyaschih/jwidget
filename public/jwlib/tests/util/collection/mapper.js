@@ -20,8 +20,7 @@
 JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 	testMapper: function() {
 		var source = new JW.Collection([ JW("d") ]);
-		var target = new JW.Collection();
-		this.subscribe(target);
+		var target = this.createTarget();
 		
 		this.setExpectedOutput(
 			"Created by d",
@@ -29,14 +28,8 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 0 to 1"
 		);
-		var mapper = new JW.Collection.Mapper({
-			source      : source,
-			target      : target,
-			createItem  : function(data) { this.output("Created by " + data.base); return JW(data.base.toUpperCase()); },
-			destroyItem : function(item, data) { this.output("Destroyed " + item.base + " by " + data.base); },
-			scope       : this
-		});
-		this.assertCollection([ "D" ], target);
+		var mapper = this.createMapper(source, target);
+		this.assertTarget([ "D" ], target);
 		
 		this.setExpectedOutput(
 			"Created by f",
@@ -45,7 +38,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed length from 1 to 2"
 		);
 		source.addAll([ JW("f") ]);
-		this.assertCollection([ "D", "F" ], target);
+		this.assertTarget([ "D", "F" ], target);
 		
 		this.setExpectedOutput(
 			"Created by c",
@@ -54,7 +47,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed length from 2 to 3"
 		);
 		source.add(JW("c"), 1);
-		this.assertCollection([ "D", "C", "F" ], target);
+		this.assertTarget([ "D", "C", "F" ], target);
 		
 		this.setExpectedOutput(
 			"Created by b",
@@ -64,11 +57,11 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed length from 3 to 5"
 		);
 		source.addAll([ JW("b"), JW("m") ], 0);
-		this.assertCollection([ "B", "M", "D", "C", "F" ], target);
+		this.assertTarget([ "B", "M", "D", "C", "F" ], target);
 		
 		this.setExpectedOutput();
 		source.addAll([], 1);
-		this.assertCollection([ "B", "M", "D", "C", "F" ], target);
+		this.assertTarget([ "B", "M", "D", "C", "F" ], target);
 		
 		var a = JW("a");
 		
@@ -79,7 +72,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed length from 5 to 6"
 		);
 		source.add(a, 5);
-		this.assertCollection([ "B", "M", "D", "C", "F", "A" ], target);
+		this.assertTarget([ "B", "M", "D", "C", "F", "A" ], target);
 		
 		this.setExpectedOutput(
 			"Removed M at 1",
@@ -88,7 +81,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Destroyed M by m"
 		);
 		source.remove(1);
-		this.assertCollection([ "B", "D", "C", "F", "A" ], target);
+		this.assertTarget([ "B", "D", "C", "F", "A" ], target);
 		
 		this.setExpectedOutput(
 			"Removed B at 0",
@@ -97,7 +90,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Destroyed B by b"
 		);
 		source.remove(0);
-		this.assertCollection([ "D", "C", "F", "A" ], target);
+		this.assertTarget([ "D", "C", "F", "A" ], target);
 		
 		this.setExpectedOutput(
 			"Created by k",
@@ -106,7 +99,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed length from 4 to 5"
 		);
 		source.add(JW("k"));
-		this.assertCollection([ "D", "C", "F", "A", "K" ], target);
+		this.assertTarget([ "D", "C", "F", "A", "K" ], target);
 		
 		this.setExpectedOutput(
 			"Created by g",
@@ -115,29 +108,29 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Destroyed F by f"
 		);
 		source.set(JW("g"), 2);
-		this.assertCollection([ "D", "C", "G", "A", "K" ], target);
+		this.assertTarget([ "D", "C", "G", "A", "K" ], target);
 		
 		this.setExpectedOutput();
 		source.set(a, 3);
-		this.assertCollection([ "D", "C", "G", "A", "K" ], target);
+		this.assertTarget([ "D", "C", "G", "A", "K" ], target);
 		
 		this.setExpectedOutput(
 			"Moved G from 2 to 1",
 			"Changed"
 		);
 		source.move(2, 1);
-		this.assertCollection([ "D", "G", "C", "A", "K" ], target);
+		this.assertTarget([ "D", "G", "C", "A", "K" ], target);
 		
 		this.setExpectedOutput(
 			"Moved D from 0 to 4",
 			"Changed"
 		);
 		source.move(0, 4);
-		this.assertCollection([ "G", "C", "A", "K", "D" ], target);
+		this.assertTarget([ "G", "C", "A", "K", "D" ], target);
 		
 		this.setExpectedOutput();
 		source.move(1, 1);
-		this.assertCollection([ "G", "C", "A", "K", "D" ], target);
+		this.assertTarget([ "G", "C", "A", "K", "D" ], target);
 		
 		this.setExpectedOutput(
 			"Reordered",
@@ -145,7 +138,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 		);
 		JW.Array.sortBy(source.base, "base");
 		source.triggerReorder();
-		this.assertCollection([ "A", "C", "D", "G", "K" ], target);
+		this.assertTarget([ "A", "C", "D", "G", "K" ], target);
 		
 		this.setExpectedOutput(
 			"Filtered",
@@ -156,7 +149,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 		);
 		source.base.splice(0, 2);
 		source.triggerFilter();
-		this.assertCollection([ "D", "G", "K" ], target);
+		this.assertTarget([ "D", "G", "K" ], target);
 		
 		this.setExpectedOutput(
 			"Created by u",
@@ -170,7 +163,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 		);
 		source.base = [ JW("u"), JW("t"), JW("c") ];
 		source.triggerReset();
-		this.assertCollection([ "U", "T", "C" ], target);
+		this.assertTarget([ "U", "T", "C" ], target);
 		
 		this.setExpectedOutput(
 			"Cleared",
@@ -181,7 +174,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Destroyed U by u"
 		);
 		source.clear();
-		this.assertCollection([  ], target);
+		this.assertTarget([  ], target);
 		
 		this.setExpectedOutput(
 			"Created by h",
@@ -190,7 +183,7 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed length from 0 to 1"
 		);
 		source.add(JW("h"));
-		this.assertCollection([ "H" ], target);
+		this.assertTarget([ "H" ], target);
 		
 		this.setExpectedOutput(
 			"Cleared",
@@ -203,63 +196,93 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 		source.destroy();
 	},
 	
-	subscribe: function(collection) {
-		collection.addEvent.bind(this.onAdd, this);
-		collection.removeEvent.bind(this.onRemove, this);
-		collection.replaceEvent.bind(this.onReplace, this);
-		collection.moveEvent.bind(this.onMove, this);
-		collection.clearEvent.bind(this.onClear, this);
-		collection.reorderEvent.bind(this.onReorder, this);
-		collection.filterEvent.bind(this.onFilter, this);
-		collection.resetEvent.bind(this.onReset, this);
-		collection.changeEvent.bind(this.onChange, this);
-		collection.lengthChangeEvent.bind(this.onLengthChange, this);
+	testEmptyChange: function() {
+		var source = new JW.Collection();
+		var target = this.createTarget();
+		var mapper = this.createMapper(source, target);
+		mapper.destroy();
+		target.destroy();
+		source.destroy();
 	},
 	
-	assertCollection: function(values, collection) {
-		this.assertStrictEqual(values.length, collection.getLength());
-		for (var i = 0; i < collection.getLength(); ++i) {
-			this.assertStrictEqual(values[i], collection.get(i).base);
+	testAutoTarget: function() {
+		var d = JW("d");
+		var source = new JW.Collection([ d ]);
+		this.setExpectedOutput("Created by d");
+		var mapper = this.createMapper(source);
+		this.assertTarget([ "D" ], mapper.target);
+		this.setExpectedOutput("Destroyed D by d");
+		mapper.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function(target) {
+		var target = new JW.Collection();
+		
+		target.addEvent.bind(function(params) {
+			this.output("Added " + JW.mapBy(params.items, "base").join(", ") + " at " + params.index);
+		}, this);
+		
+		target.removeEvent.bind(function(params) {
+			this.output("Removed " + JW.mapBy(params.items, "base").join(", ") + " at " + params.index);
+		}, this);
+		
+		target.replaceEvent.bind(function(params) {
+			this.output("Replaced " + params.oldItem.base + " with " + params.newItem.base + " at " + params.index);
+		}, this);
+		
+		target.moveEvent.bind(function(params) {
+			this.output("Moved " + params.item.base + " from " + params.fromIndex + " to " + params.toIndex);
+		}, this);
+		
+		target.clearEvent.bind(function(params) {
+			this.output("Cleared");
+		}, this);
+		
+		target.reorderEvent.bind(function(params) {
+			this.output("Reordered");
+		}, this);
+		
+		target.filterEvent.bind(function(params) {
+			this.output("Filtered");
+		}, this);
+		
+		target.resetEvent.bind(function(params) {
+			this.output("Resetted");
+		}, this);
+		
+		target.changeEvent.bind(function(params) {
+			this.output("Changed");
+		}, this);
+		
+		target.lengthChangeEvent.bind(function(params) {
+			this.output("Changed length from " + params.oldLength + " to " + params.newLength);
+		}, this);
+		
+		return target;
+	},
+	
+	createMapper: function(source, target) {
+		return new JW.Collection.Mapper({
+			source : source,
+			target : target,
+			scope  : this,
+			
+			createItem: function(data) {
+				this.output("Created by " + data.base);
+				return JW(data.base.toUpperCase());
+			},
+			
+			destroyItem: function(item, data) {
+				this.output("Destroyed " + item.base + " by " + data.base);
+			}
+		});
+	},
+	
+	assertTarget: function(values, target) {
+		this.assertStrictEqual(values.length, target.getLength());
+		for (var i = 0; i < target.getLength(); ++i) {
+			this.assertStrictEqual(values[i], target.get(i).base);
 		}
-	},
-	
-	onAdd: function(params) {
-		this.output("Added " + JW.mapBy(params.items, "base").join(", ") + " at " + params.index);
-	},
-	
-	onRemove: function(params) {
-		this.output("Removed " + JW.mapBy(params.items, "base").join(", ") + " at " + params.index);
-	},
-	
-	onReplace: function(params) {
-		this.output("Replaced " + params.oldItem.base + " with " + params.newItem.base + " at " + params.index);
-	},
-	
-	onMove: function(params) {
-		this.output("Moved " + params.item.base + " from " + params.fromIndex + " to " + params.toIndex);
-	},
-	
-	onClear: function(params) {
-		this.output("Cleared");
-	},
-	
-	onReorder: function(params) {
-		this.output("Reordered");
-	},
-	
-	onFilter: function(params) {
-		this.output("Filtered");
-	},
-	
-	onReset: function(params) {
-		this.output("Resetted");
-	},
-	
-	onChange: function(params) {
-		this.output("Changed");
-	},
-	
-	onLengthChange: function(params) {
-		this.output("Changed length from " + params.oldLength + " to " + params.newLength);
 	}
 });
