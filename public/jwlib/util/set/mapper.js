@@ -30,8 +30,10 @@ JW.Set.Mapper = function(config) {
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
 	this._destructionQueue = [];
-	this.source.every(this._add, this);
-	this._change();
+	if (!this.source.isEmpty()) {
+		this.source.every(this._add, this);
+		this._change();
+	}
 };
 
 JW.extend(JW.Set.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
@@ -55,8 +57,10 @@ JW.extend(JW.Set.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.source.every(this._remove, this);
-		this._change();
+		if (!this.source.isEmpty()) {
+			this.source.every(this._remove, this);
+			this._change();
+		}
 		this._changeEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
