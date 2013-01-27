@@ -26,7 +26,11 @@ JW.Set.Indexer = function(config) {
 	this.scope = config.scope;
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this.source.every(this._add, this);
+	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
+	if (!this.source.isEmpty()) {
+		this.source.every(this._add, this);
+		this.target._triggerChange();
+	}
 };
 
 JW.extend(JW.Set.Indexer/*<T extends JW.Class>*/, JW.Class, {
@@ -43,10 +47,15 @@ JW.extend(JW.Set.Indexer/*<T extends JW.Class>*/, JW.Class, {
 	Boolean _targetCreated;
 	EventAttachment _addEventAttachment;
 	EventAttachment _removeEventAttachment;
+	EventAttachment _changeEventAttachment;
 	*/
 	
 	destroy: function() {
-		this.source.every(this._remove, this);
+		if (!this.source.isEmpty()) {
+			this.source.every(this._remove, this);
+			this.target._triggerChange();
+		}
+		this._changeEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
 		if (this._targetCreated) {
@@ -56,12 +65,12 @@ JW.extend(JW.Set.Indexer/*<T extends JW.Class>*/, JW.Class, {
 	},
 	
 	_add: function(item) {
-		this.target.set(item, this.getKey.call(this.scope || this, item));
+		this.target._set(item, this.getKey.call(this.scope || this, item));
 		return true;
 	},
 	
 	_remove: function(item) {
-		this.target.remove(this.getKey.call(this.scope || this, item));
+		this.target._remove(this.getKey.call(this.scope || this, item));
 		return true;
 	},
 	
@@ -71,5 +80,9 @@ JW.extend(JW.Set.Indexer/*<T extends JW.Class>*/, JW.Class, {
 	
 	_onRemove: function(params) {
 		this._remove(params.item);
+	},
+	
+	_onChange: function() {
+		this.target._triggerChange();
 	}
 });

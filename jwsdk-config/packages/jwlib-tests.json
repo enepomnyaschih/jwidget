@@ -35,6 +35,7 @@
 		"jwlib/tests/util/map/lister.js",
 		"jwlib/tests/util/map/mapper.js",
 		"jwlib/tests/util/set.js",
+		"jwlib/tests/util/set/indexer.js",
 		"jwlib/tests/util/set/mapper.js",
 		"jwlib/tests/util/timer.js",
 		
