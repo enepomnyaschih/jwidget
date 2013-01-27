@@ -55,9 +55,9 @@ JW.extend(JW.Collection/*<T extends Any>*/, JW.Class, {
 	JW.Event<JW.Collection.ReplaceEventParams<T>> replaceEvent;
 	JW.Event<JW.Collection.MoveEventParams<T>> moveEvent;
 	JW.Event<JW.Collection.ItemsEventParams<T>> clearEvent;
-	JW.Event<JW.Collection.EventParams<T>> reorderEvent;
-	JW.Event<JW.Collection.EventParams<T>> filterEvent;
-	JW.Event<JW.Collection.EventParams<T>> resetEvent;
+	JW.Event<JW.Collection.ItemsEventParams<T>> reorderEvent;
+	JW.Event<JW.Collection.ItemsEventParams<T>> filterEvent;
+	JW.Event<JW.Collection.ItemsEventParams<T>> resetEvent;
 	JW.Event<JW.Collection.EventParams<T>> changeEvent;
 	JW.Event<JW.Collection.LengthChangeEventParams<T>> lengthChangeEvent;
 	Integer bulkCount;
@@ -153,19 +153,16 @@ JW.extend(JW.Collection/*<T extends Any>*/, JW.Class, {
 		return items;
 	},
 	
-	triggerReorder: function() {
-		this.reorderEvent.trigger(new JW.Collection.EventParams(this));
-		this._triggerChange();
+	performReorder: function(callback, scope) {
+		this._perform(this.reorderEvent, callback, scope);
 	},
 	
-	triggerFilter: function() {
-		this.filterEvent.trigger(new JW.Collection.EventParams(this));
-		this._triggerChange();
+	performFilter: function(callback, scope) {
+		this._perform(this.filterEvent, callback, scope);
 	},
 	
-	triggerReset: function() {
-		this.resetEvent.trigger(new JW.Collection.EventParams(this));
-		this._triggerChange();
+	performReset: function(callback, scope) {
+		this._perform(this.resetEvent, callback, scope);
 	},
 	
 	startBulkChange: function() {
@@ -209,6 +206,17 @@ JW.extend(JW.Collection/*<T extends Any>*/, JW.Class, {
 			this.lengthChangeEvent.trigger(new JW.Collection.LengthChangeEventParams(this, this.bulkLength, length));
 			this.bulkLength = length;
 		}
+	},
+	
+	_perform: function(event, callback, scope) {
+		var params = new JW.Collection.ItemsEventParams(this, this.base.concat());
+		var items = callback.call(scope || this, this.base);
+		if (items && (items !== this.base)) {
+			JW.Array.clear(this.base);
+			JW.Array.pushAll(this.base, items);
+		}
+		event.trigger(params);
+		this._triggerChange();
 	}
 });
 

@@ -136,8 +136,9 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Reordered",
 			"Changed"
 		);
-		JW.Array.sortBy(source.base, "base");
-		source.triggerReorder();
+		source.performReorder(function(items) {
+			JW.Array.sortBy(items, "base");
+		}, this);
 		this.assertTarget([ "A", "C", "D", "G", "K" ], target);
 		
 		this.setExpectedOutput(
@@ -147,8 +148,9 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Destroyed A by a",
 			"Destroyed C by c"
 		);
-		source.base.splice(0, 2);
-		source.triggerFilter();
+		source.performFilter(function(items) {
+			items.splice(0, 2);
+		}, this);
 		this.assertTarget([ "D", "G", "K" ], target);
 		
 		this.setExpectedOutput(
@@ -161,8 +163,9 @@ JW.Tests.Util.Collection.MapperTestCase = JW.Unit.TestCase.extend({
 			"Destroyed G by g",
 			"Destroyed K by k"
 		);
-		source.base = [ JW("u"), JW("t"), JW("c") ];
-		source.triggerReset();
+		source.performReset(function() {
+			return [ JW("u"), JW("t"), JW("c") ];
+		}, this);
 		this.assertTarget([ "U", "T", "C" ], target);
 		
 		this.setExpectedOutput(

@@ -135,8 +135,9 @@ JW.Tests.Util.Collection.ListerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ d, c, a, k, g ], target);
 		
 		this.setExpectedOutput();
-		JW.Array.sortBy(source.base, "base");
-		source.triggerReorder();
+		source.performReorder(function(items) {
+			JW.Array.sortBy(items, "base");
+		}, this);
 		this.assertTarget([ d, c, a, k, g ], target);
 		
 		// a c d g k
@@ -145,8 +146,9 @@ JW.Tests.Util.Collection.ListerTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 5 to 4"
 		);
-		source.base.splice(1, 1);
-		source.triggerFilter();
+		source.performFilter(function(items) {
+			items.splice(1, 1);
+		}, this);
 		this.assertTarget([ d, a, k, g ], target);
 		
 		// a d g k
@@ -157,8 +159,9 @@ JW.Tests.Util.Collection.ListerTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 4 to 1"
 		);
-		source.base.splice(0, 3);
-		source.triggerFilter();
+		source.performFilter(function(items) {
+			items.splice(0, 3);
+		}, this);
 		this.assertTarget([ k ], target);
 		
 		// k
@@ -173,8 +176,9 @@ JW.Tests.Util.Collection.ListerTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 1 to 3"
 		);
-		source.base = [ u, t, c ];
-		source.triggerReset();
+		source.performReset(function(items) {
+			return [ u, t, c ];
+		}, this);
 		this.assertTarget([ u, t, c ], target);
 		
 		// u t c

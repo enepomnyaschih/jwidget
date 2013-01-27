@@ -103,22 +103,25 @@ JW.Tests.Util.Collection.InserterTestCase = JW.Unit.TestCase.extend({
 			"Added g at 3",
 			"Added k at 4"
 		);
-		collection.base.sort();
-		collection.triggerReorder();
+		collection.performReorder(function(items) {
+			items.sort();
+		}, this);
 		
 		// If length has decreased more than 3 times, clear+add is used, remove specific items instead
 		this.setExpectedOutput(
 			"Removed c at 1"
 		);
-		collection.base.splice(1, 1);
-		collection.triggerFilter();
+		collection.performFilter(function(items) {
+			items.splice(1, 1);
+		}, this);
 		
 		this.setExpectedOutput(
 			"Cleared a, d, g, k",
 			"Added k at 0"
 		);
-		collection.base.splice(0, 3);
-		collection.triggerFilter();
+		collection.performFilter(function(items) {
+			items.splice(0, 3);
+		}, this);
 		
 		this.setExpectedOutput(
 			"Cleared k",
@@ -126,8 +129,9 @@ JW.Tests.Util.Collection.InserterTestCase = JW.Unit.TestCase.extend({
 			"Added t at 1",
 			"Added c at 2"
 		);
-		collection.base = [ "u", "t", "c" ];
-		collection.triggerReset();
+		collection.performReset(function() {
+			return [ "u", "t", "c" ];
+		}, this);
 		
 		this.setExpectedOutput(
 			"Cleared u, t, c"

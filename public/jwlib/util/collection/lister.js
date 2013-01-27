@@ -95,7 +95,7 @@ JW.extend(JW.Collection.Lister/*<T extends JW.Class>*/, JW.Class, {
 	
 	_onReset: function() {
 		this.target._clear();
-		this.target._fill(this.source.base);
+		this.target._addAll(this.source.base);
 		this.target._triggerChange();
 	}
 });

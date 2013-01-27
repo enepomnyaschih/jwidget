@@ -35,7 +35,7 @@ JW.Map = function(base) {
 	this.bulkDirty = false;
 	this.bulkSize = 0;
 	if (base) {
-		this._fill(base);
+		this._setAll(base);
 	}
 };
 
@@ -87,7 +87,7 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	},
 	
 	setAll: function(map) {
-		if (this._fill(map)) {
+		if (this._setAll(map)) {
 			this._triggerChange();
 			return true;
 		}
@@ -103,11 +103,7 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	},
 	
 	removeAll: function(keys) {
-		var changed = false;
-		for (var i = 0, l = keys.length; i < l; ++i) {
-			changed = (this._remove(keys[i]) === undefined) ? changed : true;
-		}
-		if (changed) {
+		if (this._removeAll(keys)) {
 			this._triggerChange();
 			return true;
 		}
@@ -167,6 +163,14 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		return true;
 	},
 	
+	_setAll: function(map) {
+		var changed = false;
+		for (var key in map) {
+			changed = this._set(map[key], key) || changed;
+		}
+		return changed;
+	},
+	
 	_remove: function(key) {
 		if (!this.base.hasOwnProperty(key)) {
 			return undefined;
@@ -178,10 +182,10 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		return item;
 	},
 	
-	_fill: function(map) {
+	_removeAll: function(keys) {
 		var changed = false;
-		for (var key in map) {
-			changed = this._set(map[key], key) || changed;
+		for (var i = 0, l = keys.length; i < l; ++i) {
+			changed = (this._remove(keys[i]) === undefined) ? changed : true;
 		}
 		return changed;
 	},

@@ -54,7 +54,7 @@ JW.extend(JW.Collection.Indexer/*<T extends Any>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.target.clear();
+		this.target.removeAll(this._keys(this.source.base));
 		this._resetEventAttachment.destroy();
 		this._filterEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
@@ -89,24 +89,21 @@ JW.extend(JW.Collection.Indexer/*<T extends Any>*/, JW.Class, {
 		this.target._triggerChange();
 	},
 	
-	_onClear: function() {
-		this.target.clear();
+	_onClear: function(params) {
+		this.target.removeAll(this._keys(params.items));
 	},
 	
-	_onFilter: function() {
+	_onFilter: function(params) {
 		var map = this._index(this.source.base);
-		var keys = [];
-		for (var key in this.target.base) {
-			if (!map.hasOwnProperty(key)) {
-				keys.push(key);
-			}
-		}
-		this.target.removeAll(keys);
+		var keys = this._keys(params.items);
+		this.target.removeAll(JW.filter(keys, function(key) {
+			return !map.hasOwnProperty(key);
+		}, this));
 	},
 	
-	_onReset: function() {
-		this.target._clear();
-		this.target._fill(this._index(this.source.base));
+	_onReset: function(params) {
+		this.target._removeAll(this._keys(params.items));
+		this.target._setAll(this._index(this.source.base));
 		this.target._triggerChange();
 	}
 });

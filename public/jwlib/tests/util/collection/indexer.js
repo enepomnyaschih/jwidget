@@ -135,8 +135,9 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
 		
 		this.setExpectedOutput();
-		JW.Array.sortBy(source.base, "base");
-		source.triggerReorder();
+		source.performReorder(function(items) {
+			JW.Array.sortBy(items, "base");
+		}, this);
 		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
 		
 		// a c d g k
@@ -145,26 +146,27 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 5 to 4"
 		);
-		source.base.splice(1, 1);
-		source.triggerFilter();
+		source.performFilter(function(items) {
+			items.splice(1, 1);
+		}, this);
 		this.assertTarget({ "d": d, "a": a, "k": k, "g": g }, target);
 		
 		// a d g k
 		this.setExpectedOutput(
-			"Removed d at d",
 			"Removed a at a",
+			"Removed d at d",
 			"Removed g at g",
 			"Changed",
 			"Changed size from 4 to 1"
 		);
-		source.base.splice(0, 3);
-		source.triggerFilter();
+		source.performFilter(function(items) {
+			items.splice(0, 3);
+		}, this);
 		this.assertTarget({ "k": k }, target);
 		
 		// k
 		var u = JW("u");
 		var t = JW("t");
-		var c = JW("c");
 		this.setExpectedOutput(
 			"Removed k at k",
 			"Added u at u",
@@ -173,8 +175,9 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 1 to 3"
 		);
-		source.base = [ u, t, c ];
-		source.triggerReset();
+		source.performReset(function(items) {
+			return [ u, t, c ];
+		}, this);
 		this.assertTarget({ "u": u, "t": t, "c": c }, target);
 		
 		// u t c

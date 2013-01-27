@@ -123,8 +123,9 @@ JW.Tests.Util.CollectionTestCase = JW.Unit.TestCase.extend({
 			"Reordered",
 			"Changed"
 		);
-		collection.base.sort();
-		collection.triggerReorder();
+		collection.performReorder(function(items) {
+			items.sort();
+		}, this);
 		this.assertCollection([ "a", "c", "d", "g", "k" ], collection);
 		
 		this.setExpectedOutput(
@@ -132,16 +133,20 @@ JW.Tests.Util.CollectionTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 5 to 3"
 		);
-		collection.base.splice(0, 2);
-		collection.triggerFilter();
+		collection.performFilter(function(items) {
+			items.splice(0, 2);
+		}, this);
 		this.assertCollection([ "d", "g", "k" ], collection);
 		
 		this.setExpectedOutput(
 			"Resetted",
 			"Changed"
 		);
-		collection.base = [ "u", "t", "c" ];
-		collection.triggerReset();
+		var base = collection.base;
+		collection.performReset(function(items) {
+			return [ "u", "t", "c" ];
+		});
+		this.assertStrictEqual(base, collection.base);
 		this.assertCollection([ "u", "t", "c" ], collection);
 		
 		this.setExpectedOutput(

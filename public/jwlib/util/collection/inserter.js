@@ -34,7 +34,6 @@ JW.Collection.Inserter = function(config) {
 	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
 	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
 	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
-	this._snapshot = [];
 	this._fill();
 };
 
@@ -58,11 +57,10 @@ JW.extend(JW.Collection.Inserter/*<T extends Any>*/, JW.Class, {
 	EventAttachment _reorderEventAttachment;
 	EventAttachment _filterEventAttachment;
 	EventAttachment _resetEventAttachment;
-	Array<T> _snapshot;
 	*/
 	
 	destroy: function() {
-		this._clear();
+		this._clear(this.source.base);
 		this._addEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._replaceEventAttachment.destroy();
@@ -75,7 +73,6 @@ JW.extend(JW.Collection.Inserter/*<T extends Any>*/, JW.Class, {
 	},
 	
 	_addItem: function(item, index) {
-		this._snapshot.splice(index, 0, item);
 		this.addItem.call(this.scope || this, item, index);
 	},
 	
@@ -85,14 +82,13 @@ JW.extend(JW.Collection.Inserter/*<T extends Any>*/, JW.Class, {
 		}
 	},
 	
-	_removeItem: function(index) {
-		var item = this._snapshot.splice(index, 1)[0];
+	_removeItem: function(item, index) {
 		this.removeItem.call(this.scope || this, index, item);
 	},
 	
-	_removeItems: function(index, count) {
-		for (var i = count - 1; i >= 0; --i) {
-			this._removeItem(i + index);
+	_removeItems: function(items, index) {
+		for (var i = items.length - 1; i >= 0; --i) {
+			this._removeItem(items[i], i + index);
 		}
 	},
 	
@@ -100,15 +96,14 @@ JW.extend(JW.Collection.Inserter/*<T extends Any>*/, JW.Class, {
 		this._addItems(this.source.base.concat(), 0);
 	},
 	
-	_clear: function() {
-		if (this._snapshot.length === 0) {
+	_clear: function(items) {
+		if (items.length === 0) {
 			return;
 		}
 		if (this.clearItems) {
-			var items = JW.Array.clear(this._snapshot);
 			this.clearItems.call(this.scope || this, items);
 		} else {
-			this._removeItems(0, this._snapshot.length);
+			this._removeItems(items, 0);
 		}
 	},
 	
@@ -117,49 +112,53 @@ JW.extend(JW.Collection.Inserter/*<T extends Any>*/, JW.Class, {
 	},
 	
 	_onRemove: function(params) {
-		this._removeItems(params.index, params.items.length);
+		this._removeItems(params.items, params.index);
 	},
 	
 	_onReplace: function(params) {
-		this._removeItem(params.index);
+		this._removeItem(params.oldItem, params.index);
 		this._addItem(params.newItem, params.index);
 	},
 	
 	_onMove: function(params) {
-		this._removeItem(params.fromIndex);
+		this._removeItem(params.item, params.fromIndex);
 		this._addItem(params.item, params.toIndex);
 	},
 	
-	_onClear: function() {
-		this._clear();
+	_onClear: function(params) {
+		this._clear(params.items);
 	},
 	
-	_onReorder: function() {
-		this._clear();
+	_onReorder: function(params) {
+		this._clear(params.items);
 		this._fill();
 	},
 	
-	_onFilter: function() {
+	_onFilter: function(params) {
+		var base = this.source.base;
+		var items = params.items;
+		
 		// if there is an effective clearing function, just reset the controller
-		if (this.clearItems && (3 * this.source.base.length < this._snapshot.length)) {
-			this._clear();
+		if (this.clearItems && (3 * base.length < items.length)) {
+			this._clear(items);
 			this._fill();
 			return;
 		}
 		
 		// else, remove specific elements
-		var index = 0;
-		while (index < this._snapshot.length) {
-			if (this._snapshot[index] === this.source.base[index]) {
-				++index;
+		var baseIndex = 0;
+		for (var itemsIndex = 0, l = items.length; itemsIndex < l; ++itemsIndex) {
+			var item = items[itemsIndex];
+			if (item === base[baseIndex]) {
+				++baseIndex;
 			} else {
-				this._removeItem(index);
+				this._removeItem(item, baseIndex);
 			}
 		}
 	},
 	
-	_onReset: function() {
-		this._clear();
+	_onReset: function(params) {
+		this._clear(params.items);
 		this._fill();
 	}
 });
