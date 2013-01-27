@@ -54,7 +54,7 @@ JW.extend(JW.Collection.Indexer/*<T extends Any>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.target.clear();
+		this.target.removeAll(this._keys(this.source.base));
 		this._resetEventAttachment.destroy();
 		this._filterEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
@@ -89,8 +89,8 @@ JW.extend(JW.Collection.Indexer/*<T extends Any>*/, JW.Class, {
 		this.target._triggerChange();
 	},
 	
-	_onClear: function() {
-		this.target.clear();
+	_onClear: function(params) {
+		this.target.removeAll(this._keys(params.items));
 	},
 	
 	_onFilter: function() {

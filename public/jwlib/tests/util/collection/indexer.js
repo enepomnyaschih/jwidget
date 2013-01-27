@@ -227,6 +227,94 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 		source.destroy();
 	},
 	
+	testMultiSource: function() {
+		var a = JW("a");
+		var source1 = new JW.Collection([ a ]);
+		var b = JW("b");
+		var c = JW("c");
+		var source2 = new JW.Collection([ b, c ]);
+		var x = JW("x");
+		var target = this.createTarget();
+		this.setExpectedOutput(
+			"Added x at x",
+			"Changed",
+			"Changed size from 0 to 1"
+		);
+		target.set(x, "x");
+		
+		this.setExpectedOutput(
+			"Added a at a",
+			"Changed",
+			"Changed size from 1 to 2"
+		);
+		var indexer1 = this.createIndexer(source1, target);
+		
+		this.setExpectedOutput(
+			"Added b at b",
+			"Added c at c",
+			"Changed",
+			"Changed size from 2 to 4"
+		);
+		var indexer2 = this.createIndexer(source2, target);
+		
+		var d = JW("d");
+		this.setExpectedOutput(
+			"Added d at d",
+			"Changed",
+			"Changed size from 4 to 5"
+		);
+		source1.add(d);
+		
+		var e = JW("e");
+		this.setExpectedOutput(
+			"Removed b at b",
+			"Added e at e",
+			"Changed"
+		);
+		source2.set(e, 0);
+		
+		this.setExpectedOutput(
+			"Removed a at a",
+			"Removed d at d",
+			"Changed",
+			"Changed size from 5 to 3"
+		);
+		source1.clear();
+		
+		this.setExpectedOutput(
+			"Added d at d",
+			"Changed",
+			"Changed size from 3 to 4"
+		);
+		source1.add(d);
+		
+		this.setExpectedOutput(
+			"Removed e at e",
+			"Removed c at c",
+			"Changed",
+			"Changed size from 4 to 2"
+		);
+		indexer2.destroy();
+		
+		this.setExpectedOutput(
+			"Removed d at d",
+			"Changed",
+			"Changed size from 2 to 1"
+		);
+		indexer1.destroy();
+		
+		this.setExpectedOutput(
+			"Removed x at x",
+			"Changed",
+			"Changed size from 1 to 0"
+		);
+		target.destroy();
+		
+		this.setExpectedOutput();
+		source1.destroy();
+		source2.destroy();
+	},
+	
 	createTarget: function() {
 		var target = new JW.Map();
 		
