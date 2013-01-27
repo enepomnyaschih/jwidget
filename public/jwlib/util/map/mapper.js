@@ -29,8 +29,7 @@ JW.Map.Mapper = function(config) {
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
 	this._destructionQueue = [];
-	this.source.every(this._add, this);
-	this._change();
+	this.target.setAll(JW.map(this.source.base, this.createItem, this.scope || this));
 };
 
 JW.extend(JW.Map.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
@@ -53,8 +52,10 @@ JW.extend(JW.Map.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.source.every(this._remove, this);
-		this._change();
+		if (!this.source.isEmpty()) {
+			this.source.every(this._remove, this);
+			this._change();
+		}
 		this._changeEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
@@ -64,15 +65,8 @@ JW.extend(JW.Map.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 		this._super();
 	},
 	
-	_add: function(data, key) {
-		var item = this.createItem.call(this.scope || this, data, key);
-		this.target._set(item, key);
-		return true;
-	},
-	
 	_remove: function(data, key) {
-		var item = this.target._remove(key);
-		this._destructionQueue.push([ item, data, key ]);
+		this._destructionQueue.push([ this.target._remove(key), data, key ]);
 		return true;
 	},
 	
@@ -86,7 +80,7 @@ JW.extend(JW.Map.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	},
 	
 	_onAdd: function(params) {
-		this._add(params.item, params.key);
+		this.target._set(this.createItem.call(this.scope || this, params.item, params.key), params.key);
 	},
 	
 	_onRemove: function(params) {

@@ -20,8 +20,7 @@
 JW.Tests.Util.Map.MapperTestCase = JW.Unit.TestCase.extend({
 	testMapper: function() {
 		var source = new JW.Map({ "d": "D" });
-		var target = new JW.Map();
-		this.subscribe(target);
+		var target = this.createTarget();
 		
 		this.setExpectedOutput(
 			"Created D! by D at d",
@@ -29,22 +28,8 @@ JW.Tests.Util.Map.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 0 to 1"
 		);
-		var mapper = new JW.Map.Mapper({
-			source : source,
-			target : target,
-			scope  : this,
-			
-			createItem: function(data, key) {
-				var item = data + "!";
-				this.output("Created " + item + " by " + data + " at " + key);
-				return item;
-			},
-			
-			destroyItem: function(item, data, key) {
-				this.output("Destroyed " + item + " by " + data + " at " + key);
-			}
-		});
-		this.assertMap({ "d": "D!" }, target);
+		var mapper = this.createMapper(source, target);
+		this.assertTarget({ "d": "D!" }, target);
 		
 		this.setExpectedOutput(
 			"Created F! by F at f",
@@ -53,7 +38,7 @@ JW.Tests.Util.Map.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 1 to 2"
 		);
 		source.setAll({ "f": "F" });
-		this.assertMap({ "d": "D!", "f": "F!" }, target);
+		this.assertTarget({ "d": "D!", "f": "F!" }, target);
 		
 		this.setExpectedOutput(
 			"Created C! by C at c",
@@ -62,7 +47,7 @@ JW.Tests.Util.Map.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 2 to 3"
 		);
 		source.set("C", "c");
-		this.assertMap({ "d": "D!", "f": "F!", "c": "C!" }, target);
+		this.assertTarget({ "d": "D!", "f": "F!", "c": "C!" }, target);
 		
 		this.setExpectedOutput(
 			"Created B! by B at b",
@@ -73,11 +58,11 @@ JW.Tests.Util.Map.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 3 to 5"
 		);
 		source.setAll({ "b": "B", "m": "M" });
-		this.assertMap({ "d": "D!", "f": "F!", "c": "C!", "b": "B!", "m": "M!" }, target);
+		this.assertTarget({ "d": "D!", "f": "F!", "c": "C!", "b": "B!", "m": "M!" }, target);
 		
 		this.setExpectedOutput();
 		source.setAll({});
-		this.assertMap({ "d": "D!", "f": "F!", "c": "C!", "b": "B!", "m": "M!" }, target);
+		this.assertTarget({ "d": "D!", "f": "F!", "c": "C!", "b": "B!", "m": "M!" }, target);
 		
 		this.setExpectedOutput(
 			"Removed M! at m",
@@ -86,11 +71,11 @@ JW.Tests.Util.Map.MapperTestCase = JW.Unit.TestCase.extend({
 			"Destroyed M! by M at m"
 		);
 		source.remove("m");
-		this.assertMap({ "d": "D!", "f": "F!", "c": "C!", "b": "B!" }, target);
+		this.assertTarget({ "d": "D!", "f": "F!", "c": "C!", "b": "B!" }, target);
 		
 		this.setExpectedOutput();
 		source.remove("m");
-		this.assertMap({ "d": "D!", "f": "F!", "c": "C!", "b": "B!" }, target);
+		this.assertTarget({ "d": "D!", "f": "F!", "c": "C!", "b": "B!" }, target);
 		
 		this.setExpectedOutput(
 			"Removed D! at d",
@@ -105,7 +90,7 @@ JW.Tests.Util.Map.MapperTestCase = JW.Unit.TestCase.extend({
 			"Destroyed B! by B at b"
 		);
 		source.clear();
-		this.assertMap({}, target);
+		this.assertTarget({}, target);
 		
 		this.setExpectedOutput(
 			"Created H! by H at h",
@@ -114,7 +99,7 @@ JW.Tests.Util.Map.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 0 to 1"
 		);
 		source.set("H", "h");
-		this.assertMap({ "h": "H!" }, target);
+		this.assertTarget({ "h": "H!" }, target);
 		
 		this.setExpectedOutput(
 			"Removed H! at h",
@@ -127,33 +112,69 @@ JW.Tests.Util.Map.MapperTestCase = JW.Unit.TestCase.extend({
 		source.destroy();
 	},
 	
-	subscribe: function(map) {
-		map.addEvent.bind(this.onAdd, this);
-		map.removeEvent.bind(this.onRemove, this);
-		map.changeEvent.bind(this.onChange, this);
-		map.sizeChangeEvent.bind(this.onSizeChange, this);
+	testEmptyChange: function() {
+		var source = new JW.Map();
+		var target = this.createTarget();
+		var mapper = this.createMapper(source, target);
+		mapper.destroy();
+		target.destroy();
+		source.destroy();
 	},
 	
-	assertMap: function(expected, map) {
+	testAutoTarget: function() {
+		var source = new JW.Map({ "d": "D" });
+		this.setExpectedOutput("Created D! by D at d");
+		var mapper = this.createMapper(source);
+		this.assertTarget({ "d": "D!" }, mapper.target);
+		this.setExpectedOutput("Destroyed D! by D at d");
+		mapper.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function() {
+		var target = new JW.Map();
+		
+		target.addEvent.bind(function(params) {
+			this.output("Added " + params.item + " at " + params.key);
+		}, this);
+		
+		target.removeEvent.bind(function(params) {
+			this.output("Removed " + params.item + " at " + params.key);
+		}, this);
+		
+		target.changeEvent.bind(function(params) {
+			this.output("Changed");
+		}, this);
+		
+		target.sizeChangeEvent.bind(function(params) {
+			this.output("Changed size from " + params.oldSize + " to " + params.newSize);
+		}, this);
+		
+		return target;
+	},
+	
+	createMapper: function(source, target) {
+		return new JW.Map.Mapper({
+			source : source,
+			target : target,
+			scope  : this,
+			
+			createItem: function(data, key) {
+				var item = data + "!";
+				this.output("Created " + item + " by " + data + " at " + key);
+				return item;
+			},
+			
+			destroyItem: function(item, data, key) {
+				this.output("Destroyed " + item + " by " + data + " at " + key);
+			}
+		});
+	},
+	
+	assertTarget: function(expected, map) {
 		this.assertStrictEqual(JW.getLength(expected), map.getSize());
 		for (var key in expected) {
 			this.assertStrictEqual(expected[key], map.get(key));
 		}
-	},
-	
-	onAdd: function(params) {
-		this.output("Added " + params.item + " at " + params.key);
-	},
-	
-	onRemove: function(params) {
-		this.output("Removed " + params.item + " at " + params.key);
-	},
-	
-	onChange: function(params) {
-		this.output("Changed");
-	},
-	
-	onSizeChange: function(params) {
-		this.output("Changed size from " + params.oldSize + " to " + params.newSize);
 	}
 });
