@@ -105,7 +105,7 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	removeAll: function(keys) {
 		var changed = false;
 		for (var i = 0, l = keys.length; i < l; ++i) {
-			changed = this._remove(keys[i]) || changed;
+			changed = (this._remove(keys[i]) === undefined) ? changed : true;
 		}
 		if (changed) {
 			this._triggerChange();

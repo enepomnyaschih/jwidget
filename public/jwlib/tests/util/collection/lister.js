@@ -226,7 +226,106 @@ JW.Tests.Util.Collection.ListerTestCase = JW.Unit.TestCase.extend({
 		lister.destroy();
 		source.destroy();
 	},
-	
+	/*
+	testMultiSource: function() {
+		var a = JW("a");
+		var source1 = new JW.Collection([ a ]);
+		var b = JW("b");
+		var c = JW("c");
+		var source2 = new JW.Collection([ b, c ]);
+		var x = JW("x");
+		var target = this.createTarget();
+		this.setExpectedOutput(
+			"Added x",
+			"Changed",
+			"Changed size from 0 to 1"
+		);
+		target.add(x);
+		this.assertTarget([ x ], target);
+		
+		this.setExpectedOutput(
+			"Added a",
+			"Changed",
+			"Changed size from 1 to 2"
+		);
+		var lister1 = this.createLister(source1, target);
+		this.assertTarget([ x, a ], target);
+		
+		this.setExpectedOutput(
+			"Added b",
+			"Added c",
+			"Changed",
+			"Changed size from 2 to 4"
+		);
+		var lister2 = this.createLister(source2, target);
+		this.assertTarget([ x, a, b, c ], target);
+		
+		var d = JW("d");
+		this.setExpectedOutput(
+			"Added d",
+			"Changed",
+			"Changed size from 4 to 5"
+		);
+		source1.add(d);
+		this.assertTarget([ x, a, b, c, d ], target);
+		
+		var e = JW("e");
+		this.setExpectedOutput(
+			"Removed b",
+			"Added e",
+			"Changed"
+		);
+		source2.set(e, 0);
+		this.assertTarget([ x, a, c, d, e ], target);
+		
+		this.setExpectedOutput(
+			"Removed a",
+			"Removed d",
+			"Changed",
+			"Changed size from 5 to 3"
+		);
+		source1.clear();
+		this.assertTarget([ x, c, e ], target);
+		
+		this.setExpectedOutput(
+			"Added d",
+			"Changed",
+			"Changed size from 3 to 4"
+		);
+		source1.base.push(d);
+		source1.triggerReset();
+		this.assertTarget([ x, c, e, d ], target);
+		
+		this.setExpectedOutput(
+			"Removed e",
+			"Removed c",
+			"Changed",
+			"Changed size from 4 to 2"
+		);
+		lister2.destroy();
+		this.assertTarget([ x, d ], target);
+		
+		this.setExpectedOutput(
+			"Removed d",
+			"Changed",
+			"Changed size from 2 to 1"
+		);
+		lister1.destroy();
+		this.assertTarget([ x ], target);
+		
+		this.setExpectedOutput(
+			"Removed x",
+			"Changed",
+			"Changed size from 1 to 0"
+		);
+		target.destroy();
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		source1.destroy();
+		source2.destroy();
+	},
+	*/
 	createTarget: function() {
 		var target = new JW.Set();
 		

@@ -29,7 +29,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 0 to 1"
 		);
 		var indexer = this.createIndexer(source, target);
-		this.assertTrue(JW.equal({ "d": d }, target.base));
+		this.assertTarget({ "d": d }, target);
 		
 		// d
 		var f = JW("f");
@@ -39,7 +39,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 1 to 2"
 		);
 		source.addAll([ f ]);
-		this.assertTrue(JW.equal({ "d": d, "f": f }, target.base));
+		this.assertTarget({ "d": d, "f": f }, target);
 		
 		// d f
 		var c = JW("c");
@@ -49,7 +49,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 2 to 3"
 		);
 		source.add(c, 1);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c }, target.base));
+		this.assertTarget({ "d": d, "f": f, "c": c }, target);
 		
 		// d c f
 		var b = JW("b");
@@ -61,12 +61,12 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 3 to 5"
 		);
 		source.addAll([ b, m ], 0);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "b": b, "m": m }, target.base));
+		this.assertTarget({ "d": d, "f": f, "c": c, "b": b, "m": m }, target);
 		
 		// b m d c f
 		this.setExpectedOutput();
 		source.addAll([], 1);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "b": b, "m": m }, target.base));
+		this.assertTarget({ "d": d, "f": f, "c": c, "b": b, "m": m }, target);
 		
 		var a = JW("a");
 		this.setExpectedOutput(
@@ -75,7 +75,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 5 to 6"
 		);
 		source.add(a, 5);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "b": b, "m": m, "a": a }, target.base));
+		this.assertTarget({ "d": d, "f": f, "c": c, "b": b, "m": m, "a": a }, target);
 		
 		// b m d c f a
 		this.setExpectedOutput(
@@ -84,7 +84,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 6 to 5"
 		);
 		source.remove(1);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "b": b, "a": a }, target.base));
+		this.assertTarget({ "d": d, "f": f, "c": c, "b": b, "a": a }, target);
 		
 		// b d c f a
 		this.setExpectedOutput(
@@ -93,7 +93,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 5 to 4"
 		);
 		source.remove(0);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "a": a }, target.base));
+		this.assertTarget({ "d": d, "f": f, "c": c, "a": a }, target);
 		
 		// d c f a
 		var k = JW("k");
@@ -103,7 +103,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 4 to 5"
 		);
 		source.add(k);
-		this.assertTrue(JW.equal({ "d": d, "f": f, "c": c, "a": a, "k": k }, target.base));
+		this.assertTarget({ "d": d, "f": f, "c": c, "a": a, "k": k }, target);
 		
 		// d c f a k
 		var g = JW("g");
@@ -113,31 +113,31 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed"
 		);
 		source.set(g, 2);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
 		
 		// d c g a k
 		this.setExpectedOutput();
 		source.set(a, 3);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
 		
 		this.setExpectedOutput();
 		source.move(2, 1);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
 		
 		// d g c a k
 		this.setExpectedOutput();
 		source.move(0, 4);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
 		
 		// g c a k d
 		this.setExpectedOutput();
 		source.move(1, 1);
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
 		
 		this.setExpectedOutput();
 		JW.Array.sortBy(source.base, "base");
 		source.triggerReorder();
-		this.assertTrue(JW.equal({ "d": d, "c": c, "a": a, "k": k, "g": g }, target.base));
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
 		
 		// a c d g k
 		this.setExpectedOutput(
@@ -147,7 +147,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 		);
 		source.base.splice(1, 1);
 		source.triggerFilter();
-		this.assertTrue(JW.equal({ "d": d, "a": a, "k": k, "g": g }, target.base));
+		this.assertTarget({ "d": d, "a": a, "k": k, "g": g }, target);
 		
 		// a d g k
 		this.setExpectedOutput(
@@ -159,7 +159,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 		);
 		source.base.splice(0, 3);
 		source.triggerFilter();
-		this.assertTrue(JW.equal({ "k": k }, target.base));
+		this.assertTarget({ "k": k }, target);
 		
 		// k
 		var u = JW("u");
@@ -175,7 +175,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 		);
 		source.base = [ u, t, c ];
 		source.triggerReset();
-		this.assertTrue(JW.equal({ "u": u, "t": t, "c": c }, target.base));
+		this.assertTarget({ "u": u, "t": t, "c": c }, target);
 		
 		// u t c
 		this.setExpectedOutput(
@@ -186,7 +186,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 3 to 0"
 		);
 		source.clear();
-		this.assertTrue(JW.equal({}, target.base));
+		this.assertTarget({}, target);
 		
 		// (empty)
 		var h = JW("h");
@@ -196,7 +196,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 0 to 1"
 		);
 		source.add(h);
-		this.assertTrue(JW.equal({ "h": h }, target.base));
+		this.assertTarget({ "h": h }, target);
 		
 		// h
 		this.setExpectedOutput(
@@ -222,11 +222,11 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 		var d = JW("d");
 		var source = new JW.Collection([ d ]);
 		var indexer = this.createIndexer(source);
-		this.assertTrue(JW.equal({ "d": d }, indexer.target.base));
+		this.assertTarget({ "d": d }, indexer.target);
 		indexer.destroy();
 		source.destroy();
 	},
-	
+	/*
 	testMultiSource: function() {
 		var a = JW("a");
 		var source1 = new JW.Collection([ a ]);
@@ -241,6 +241,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 0 to 1"
 		);
 		target.set(x, "x");
+		this.assertTarget({ "x": x }, target);
 		
 		this.setExpectedOutput(
 			"Added a at a",
@@ -248,6 +249,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 1 to 2"
 		);
 		var indexer1 = this.createIndexer(source1, target);
+		this.assertTarget({ "x": x, "a": a }, target);
 		
 		this.setExpectedOutput(
 			"Added b at b",
@@ -256,6 +258,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 2 to 4"
 		);
 		var indexer2 = this.createIndexer(source2, target);
+		this.assertTarget({ "x": x, "a": a, "b": b, "c": c }, target);
 		
 		var d = JW("d");
 		this.setExpectedOutput(
@@ -264,6 +267,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 4 to 5"
 		);
 		source1.add(d);
+		this.assertTarget({ "x": x, "a": a, "b": b, "c": c, "d": d }, target);
 		
 		var e = JW("e");
 		this.setExpectedOutput(
@@ -272,6 +276,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed"
 		);
 		source2.set(e, 0);
+		this.assertTarget({ "x": x, "a": a, "c": c, "d": d, "e": e }, target);
 		
 		this.setExpectedOutput(
 			"Removed a at a",
@@ -280,13 +285,16 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 5 to 3"
 		);
 		source1.clear();
+		this.assertTarget({ "x": x, "c": c, "e": e }, target);
 		
 		this.setExpectedOutput(
 			"Added d at d",
 			"Changed",
 			"Changed size from 3 to 4"
 		);
-		source1.add(d);
+		source1.base.push(d);
+		source1.triggerReset();
+		this.assertTarget({ "x": x, "c": c, "e": e, "d": d }, target);
 		
 		this.setExpectedOutput(
 			"Removed e at e",
@@ -295,6 +303,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 4 to 2"
 		);
 		indexer2.destroy();
+		this.assertTarget({ "x": x, "d": d }, target);
 		
 		this.setExpectedOutput(
 			"Removed d at d",
@@ -302,6 +311,7 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 2 to 1"
 		);
 		indexer1.destroy();
+		this.assertTarget({ "x": x }, target);
 		
 		this.setExpectedOutput(
 			"Removed x at x",
@@ -309,12 +319,13 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed size from 1 to 0"
 		);
 		target.destroy();
+		this.assertTarget({}, target);
 		
 		this.setExpectedOutput();
 		source1.destroy();
 		source2.destroy();
 	},
-	
+	*/
 	createTarget: function() {
 		var target = new JW.Map();
 		
@@ -344,5 +355,9 @@ JW.Tests.Util.Collection.IndexerTestCase = JW.Unit.TestCase.extend({
 			getKey : function(item) { return item.base; },
 			scope  : this
 		});
+	},
+	
+	assertTarget: function(expected, target) {
+		this.assertTrue(JW.equal(expected, target.base));
 	}
 });
