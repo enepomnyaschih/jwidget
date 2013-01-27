@@ -25,8 +25,7 @@ JW.Map.Lister = function(config) {
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
-	this.source.every(this._add, this);
-	this.target._triggerChange();
+	this.target.addAll(JW.getValuesArray(this.source));
 };
 
 JW.extend(JW.Map.Lister/*<T extends JW.Class>*/, JW.Class, {
@@ -45,8 +44,7 @@ JW.extend(JW.Map.Lister/*<T extends JW.Class>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.source.every(this._remove, this);
-		this.target._triggerChange();
+		this.target.clear();
 		this._changeEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
