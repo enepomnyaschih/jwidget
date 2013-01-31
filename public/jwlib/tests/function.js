@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Override.FunctionTestCase = JW.Unit.TestCase.extend({
+JW.Tests.FunctionTestCase = JW.Unit.TestCase.extend({
 	testAs: function()
 	{
 		this.addExpectedOutput(

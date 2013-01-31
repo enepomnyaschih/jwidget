@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Override.StringTestCase = JW.Unit.TestCase.extend({
+JW.Tests.StringTestCase = JW.Unit.TestCase.extend({
 	testEllipsis: function()
 	{
 		this.assertStrictEqual("  abcde...", ("  abcdefghijklmno").ellipsis(10));

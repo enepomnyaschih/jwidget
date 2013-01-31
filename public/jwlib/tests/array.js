@@ -17,8 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Override.ArrayTestCase = function(config) {
-	JW.Tests.Override.ArrayTestCase._super.call(this, config);
+JW.Tests.ArrayTestCase = function(config) {
+	JW.Tests.ArrayTestCase._super.call(this, config);
 	this.aa = [ 0, 1, 2, 3, 2, 3, 0, 1 ];
 	this.b1 = { a: 0, b: 1 };
 	this.b2 = { a: 0, b: 2 };
@@ -32,7 +32,7 @@ JW.Tests.Override.ArrayTestCase = function(config) {
 	this.arrr = [ 10, "lala" ];
 };
 
-JW.extend(JW.Tests.Override.ArrayTestCase, JW.Unit.TestCase, {
+JW.extend(JW.Tests.ArrayTestCase, JW.Unit.TestCase, {
 	testEvery: function()
 	{
 		this.assertTrue (this.arr.every(JW.isDefined));

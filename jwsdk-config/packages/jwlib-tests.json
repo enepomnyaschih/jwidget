@@ -7,37 +7,9 @@
 	"resources" : [
 		"jwlib/tests/index.js",
 		
-		"jwlib/tests/core.js",
-		"jwlib/tests/core/apply.js",
-		"jwlib/tests/core/core.js",
-		"jwlib/tests/core/class.js",
-		"jwlib/tests/core/equal.js",
-		"jwlib/tests/core/mvc.js",
-		"jwlib/tests/core/observable.js",
-		
-		"jwlib/tests/alg.js",
-		"jwlib/tests/alg/simple.js",
-		"jwlib/tests/alg/build.js",
-		
-		"jwlib/tests/override.js",
-		"jwlib/tests/override/array.js",
-		"jwlib/tests/override/function.js",
-		"jwlib/tests/override/string.js",
-		
-		"jwlib/tests/util.js",
-		"jwlib/tests/util/collection.js",
-		"jwlib/tests/util/collection/indexer.js",
-		"jwlib/tests/util/collection/inserter.js",
-		"jwlib/tests/util/collection/lister.js",
-		"jwlib/tests/util/collection/mapper.js",
-		"jwlib/tests/util/collection/splitter.js",
-		"jwlib/tests/util/map.js",
-		"jwlib/tests/util/map/lister.js",
-		"jwlib/tests/util/map/mapper.js",
-		"jwlib/tests/util/set.js",
-		"jwlib/tests/util/set/indexer.js",
-		"jwlib/tests/util/set/mapper.js",
-		"jwlib/tests/util/timer.js",
+		"jwlib/tests/array.js",
+		"jwlib/tests/function.js",
+		"jwlib/tests/string.js",
 		
 		"jwlib/tests/boot.js"
 	]
