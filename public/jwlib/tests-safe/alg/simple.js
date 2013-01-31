@@ -17,9 +17,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Alg");
+JW.Tests.Alg.SimpleTestCase = function(config) {
+	JW.Tests.Alg.SimpleTestCase._super.call(this, config);
+	this.obj = null;
+	this.objj = null;
+	this.arr = null;
+	this.cls = null;
+};
 
-JW.Tests.Alg.SimpleTestCase = JW.Unit.TestCase.extend({
+JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 	setup: function()
 	{
 		this.obj = {
@@ -35,7 +41,11 @@ JW.Tests.Alg.SimpleTestCase = JW.Unit.TestCase.extend({
 		
 		this.arr = [ 10, null, "lala" ];
 		
-		var Cls = JW.Class.extend({
+		var Cls = function() {
+			Cls._super.call(this);
+		};
+		
+		JW.extend(Cls, JW.Class, {
 			items: this.arr,
 			every: function(callback, scope)
 			{
@@ -129,6 +139,16 @@ JW.Tests.Alg.SimpleTestCase = JW.Unit.TestCase.extend({
 		this.assertTrue (this.cls.some(JW.isSet));
 		this.assertTrue (this.cls.some(JW.isBlank));
 		this.assertFalse(this.cls.some(JW.Function.not(JW.isDefined)));
+	},
+	
+	testGetKeysArrayObject: function()
+	{
+		this.assertTrue(JW.equal([ "a", "b", "c" ], JW.getKeysArray(this.obj), true, true));
+	},
+	
+	testGetKeysArrayClass: function()
+	{
+		this.assertTrue(JW.equal([ 0, 1, 2 ], this.cls.getKeysArray(), true, true));
 	},
 	
 	testGetValuesArrayObject: function()
@@ -257,6 +277,27 @@ JW.Tests.Alg.SimpleTestCase = JW.Unit.TestCase.extend({
 		this.assertTrue(JW.equal({ "10": true, "null": true, "lala": true }, JW.getValuesSet(this.everyArray), true, true));
 	},
 	
+	testIndex: function()
+	{
+		var array = [
+			{
+				id : 10
+			}, {
+				id : 5
+			}, {
+				id : 20
+			}
+		];
+		
+		var expected = {
+			"10" : array[0],
+			"5"  : array[1],
+			"20" : array[2]
+		};
+		
+		this.assertEqual(JSON.stringify(expected), JSON.stringify(JW.index(array, function(item) { return item.id; })));
+	},
+	
 	testIndexBy: function()
 	{
 		var array = [
@@ -276,6 +317,23 @@ JW.Tests.Alg.SimpleTestCase = JW.Unit.TestCase.extend({
 		};
 		
 		this.assertEqual(JSON.stringify(expected), JSON.stringify(JW.indexBy(array, "id")));
+	},
+	
+	testIndexByMethod: function()
+	{
+		var array = [
+			{ getId : function(a) { return a + 5; } },
+			{ getId : function(a) { return a + 0; } },
+			{ getId : function(a) { return a + 15; } }
+		];
+		
+		var expected = {
+			"10" : array[0],
+			"5"  : array[1],
+			"20" : array[2]
+		};
+		
+		this.assertTrue(JW.equal(expected, JW.indexByMethod(array, "getId", [ 5 ])));
 	},
 	
 	

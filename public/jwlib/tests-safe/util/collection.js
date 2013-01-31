@@ -17,235 +17,263 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Util");
-
 JW.Tests.Util.CollectionTestCase = JW.Unit.TestCase.extend({
-	testSeparate: function()
-	{
-		this.addExpectedOutput(
-			"Added d at 0",
-			"Added f at 1",
-			"Added c at 1",
-			"Added b at 0",
-			"Added a at 4",
-			"Removed f at 3",
-			"Removed d at 1",
-			"Removed b at 0",
-			"Added k at 2",
-			"Replaced a with g at 1",
-			"Moved k from 2 to 1",
-			"Moved c from 0 to 2",
-			"Cleared",
-			"Added h at 0"
-		);
-		
+	testCollection: function() {
 		var collection = new JW.Collection();
 		this.subscribe(collection);
 		
-		collection.addItem("d");
+		this.setExpectedOutput(
+			"Added d at 0",
+			"Changed",
+			"Changed length from 0 to 1"
+		);
+		collection.add("d");
 		this.assertCollection([ "d" ], collection);
 		
-		collection.addItem("f");
+		this.setExpectedOutput(
+			"Added f at 1",
+			"Changed",
+			"Changed length from 1 to 2"
+		);
+		collection.addAll([ "f" ]);
 		this.assertCollection([ "d", "f" ], collection);
 		
-		collection.addItemAt("c", 1);
+		this.setExpectedOutput(
+			"Added c at 1",
+			"Changed",
+			"Changed length from 2 to 3"
+		);
+		collection.add("c", 1);
 		this.assertCollection([ "d", "c", "f" ], collection);
 		
-		collection.addItemAt("b", 0);
-		this.assertCollection([ "b", "d", "c", "f" ], collection);
+		this.setExpectedOutput(
+			"Added b, m at 0",
+			"Changed",
+			"Changed length from 3 to 5"
+		);
+		collection.addAll([ "b", "m" ], 0);
+		this.assertCollection([ "b", "m", "d", "c", "f" ], collection);
 		
-		collection.addItemAt("a", 4);
+		this.setExpectedOutput();
+		collection.addAll([], 1);
+		this.assertCollection([ "b", "m", "d", "c", "f" ], collection);
+		
+		this.setExpectedOutput(
+			"Added a at 5",
+			"Changed",
+			"Changed length from 5 to 6"
+		);
+		collection.add("a", 5);
+		this.assertCollection([ "b", "m", "d", "c", "f", "a" ], collection);
+		
+		this.setExpectedOutput(
+			"Removed m at 1",
+			"Changed",
+			"Changed length from 6 to 5"
+		);
+		collection.remove(1);
 		this.assertCollection([ "b", "d", "c", "f", "a" ], collection);
 		
-		collection.removeItem("f");
-		this.assertCollection([ "b", "d", "c", "a" ], collection);
+		this.setExpectedOutput(
+			"Removed b at 0",
+			"Changed",
+			"Changed length from 5 to 4"
+		);
+		collection.remove(0);
+		this.assertCollection([ "d", "c", "f", "a" ], collection);
 		
-		collection.removeItemAt(1);
-		this.assertCollection([ "b", "c", "a" ], collection);
+		this.setExpectedOutput(
+			"Added k at 4",
+			"Changed",
+			"Changed length from 4 to 5"
+		);
+		collection.add("k");
+		this.assertCollection([ "d", "c", "f", "a", "k" ], collection);
 		
-		collection.removeItemAt(0);
-		this.assertCollection([ "c", "a" ], collection);
+		this.setExpectedOutput(
+			"Replaced f with g at 2",
+			"Changed"
+		);
+		collection.set("g", 2);
+		this.assertCollection([ "d", "c", "g", "a", "k" ], collection);
 		
-		collection.addItem("k");
-		this.assertCollection([ "c", "a", "k" ], collection);
+		this.setExpectedOutput();
+		collection.set("a", 3);
+		this.assertCollection([ "d", "c", "g", "a", "k" ], collection);
 		
-		collection.setItem(1, "g");
-		this.assertCollection([ "c", "g", "k" ], collection);
+		this.setExpectedOutput(
+			"Moved g from 2 to 1",
+			"Changed"
+		);
+		collection.move(2, 1);
+		this.assertCollection([ "d", "g", "c", "a", "k" ], collection);
 		
-		collection.moveItem(2, 1);
-		this.assertCollection([ "c", "k", "g" ], collection);
+		this.setExpectedOutput(
+			"Moved d from 0 to 4",
+			"Changed"
+		);
+		collection.move(0, 4);
+		this.assertCollection([ "g", "c", "a", "k", "d" ], collection);
 		
-		collection.moveItem(0, 2);
-		this.assertCollection([ "k", "g", "c" ], collection);
+		this.setExpectedOutput();
+		collection.move(1, 1);
+		this.assertCollection([ "g", "c", "a", "k", "d" ], collection);
 		
+		this.setExpectedOutput(
+			"Reordered",
+			"Changed"
+		);
+		collection.performReorder(function(items) {
+			items.sort();
+		}, this);
+		this.assertCollection([ "a", "c", "d", "g", "k" ], collection);
+		
+		this.setExpectedOutput(
+			"Filtered",
+			"Changed",
+			"Changed length from 5 to 3"
+		);
+		collection.performFilter(function(items) {
+			items.splice(0, 2);
+		}, this);
+		this.assertCollection([ "d", "g", "k" ], collection);
+		
+		this.setExpectedOutput(
+			"Resetted",
+			"Changed"
+		);
+		var base = collection.base;
+		collection.performReset(function(items) {
+			return [ "u", "t", "c" ];
+		});
+		this.assertStrictEqual(base, collection.base);
+		this.assertCollection([ "u", "t", "c" ], collection);
+		
+		this.setExpectedOutput(
+			"Cleared",
+			"Changed",
+			"Changed length from 3 to 0"
+		);
 		collection.clear();
 		this.assertCollection([  ], collection);
 		
-		collection.addItem("h");
+		this.setExpectedOutput(
+			"Added h at 0",
+			"Changed",
+			"Changed length from 0 to 1"
+		);
+		collection.add("h");
 		this.assertCollection([ "h" ], collection);
 		
-		collection.destroy();
-	},
-	
-	testAdapter: function()
-	{
-		this.addExpectedOutput(
-			"Added d at 2",
-			"Added f at 3",
-			"Added c at 1",
-			"Added b at 0",
-			"Added a at 6",
-			"Removed f at 5",
-			"Removed p at 1",
-			"Removed b at 0",
-			"Added k at 4",
-			"Replaced m with g at 1",
-			"Moved a from 3 to 1",
-			"Moved c from 0 to 2",
+		this.setExpectedOutput(
 			"Cleared",
-			"Added h at 0"
+			"Changed",
+			"Changed length from 1 to 0"
 		);
-		
-		var base = [ "p", "m" ];
-		
-		var collection = new JW.Collection();
-		collection.base = base;
-		
-		this.subscribe(collection);
-		this.assertCollection([ "p", "m" ], collection, base);
-		
-		collection.addItem("d");
-		this.assertCollection([ "p", "m", "d" ], collection, base);
-		
-		collection.addItem("f");
-		this.assertCollection([ "p", "m", "d", "f" ], collection, base);
-		
-		collection.addItemAt("c", 1);
-		this.assertCollection([ "p", "c", "m", "d", "f" ], collection, base);
-		
-		collection.addItemAt("b", 0);
-		this.assertCollection([ "b", "p", "c", "m", "d", "f" ], collection, base);
-		
-		collection.addItemAt("a", 6);
-		this.assertCollection([ "b", "p", "c", "m", "d", "f", "a" ], collection, base);
-		
-		collection.removeItem("f");
-		this.assertCollection([ "b", "p", "c", "m", "d", "a" ], collection, base);
-		
-		collection.removeItemAt(1);
-		this.assertCollection([ "b", "c", "m", "d", "a" ], collection, base);
-		
-		collection.removeItemAt(0);
-		this.assertCollection([ "c", "m", "d", "a" ], collection, base);
-		
-		collection.addItem("k");
-		this.assertCollection([ "c", "m", "d", "a", "k" ], collection, base);
-		
-		collection.setItem(1, "g");
-		this.assertCollection([ "c", "g", "d", "a", "k" ], collection, base);
-		
-		collection.moveItem(3, 1);
-		this.assertCollection([ "c", "a", "g", "d", "k" ], collection, base);
-		
-		collection.moveItem(0, 2);
-		this.assertCollection([ "a", "g", "c", "d", "k" ], collection, base);
-		
-		collection.clear();
-		this.assertCollection([  ], collection, base);
-		
-		collection.addItem("h");
-		this.assertCollection([ "h" ], collection, base);
-		
 		collection.destroy();
 	},
 	
-	testEvery: function()
-	{
-		var collection = new JW.Collection([ 0, null, "" ]);
+	testEvery: function() {
+		var collection = new JW.Collection([ "a", "A", "b" ]);
 		
-		this.assertTrue (collection.every(JW.isDefined));
-		this.assertFalse(collection.every(JW.isSet));
-		this.assertTrue (collection.every(JW.isBlank));
-		this.assertFalse(collection.every(JW.Function.not(JW.isBlank)));
+		this.assertFalse(collection.every(this.isUpperCase));
+		this.assertFalse(collection.every(this.isA));
+		this.assertTrue (collection.every(this.isString));
+		this.assertFalse(collection.every(this.isNumber));
 	},
 	
-	testSome: function()
-	{
-		var collection = new JW.Collection([ 0, null, "" ]);
+	testSome: function() {
+		var collection = new JW.Collection([ "a", "A", "b" ]);
 		
-		this.assertTrue (collection.some(JW.isDefined));
-		this.assertTrue (collection.some(JW.isSet));
-		this.assertTrue (collection.some(JW.isBlank));
-		this.assertFalse(collection.some(JW.Function.not(JW.isBlank)));
+		this.assertTrue (collection.some(this.isUpperCase));
+		this.assertTrue (collection.some(this.isA));
+		this.assertTrue (collection.some(this.isString));
+		this.assertFalse(collection.some(this.isNumber));
 	},
 	
-	testFilterBy: function()
-	{
-		var collection = new JW.Collection([
-			{ q: { a: 1, b: 0 }},
-			{ q: { a: 0, b: 1 }},
-			{ q: { a: 0, b: 2 }},
-			{ q: { a: 1, b: 3 }}
-		]);
-		
-		var filtered = collection.filterBy("q.a", 0);
-		this.assertNotEqual(collection, filtered);
-		
-		var expected = [
-			{ q: { a: 0, b: 1 }},
-			{ q: { a: 0, b: 2 }}
-		];
-		
-		this.assertTrue(JW.equal(expected, filtered.base, true, true));
+	testFilter: function() {
+		var collection = new JW.Collection([ "a", "A", "b" ]);
+		var filtered = collection.filter(this.isA);
+		this.assertEqual(2, filtered.getLength());
+		this.assertEqual(collection.get(0), filtered.get(0));
+		this.assertEqual(collection.get(1), filtered.get(1));
 	},
 	
-	subscribe: function(collection)
-	{
-		collection.bind("add",     this.onAdd,     this);
-		collection.bind("remove",  this.onRemove,  this);
-		collection.bind("replace", this.onReplace, this);
-		collection.bind("move",    this.onMove,    this);
-		collection.bind("clear",   this.onClear,   this);
+	subscribe: function(collection) {
+		collection.addEvent.bind(this.onAdd, this);
+		collection.removeEvent.bind(this.onRemove, this);
+		collection.replaceEvent.bind(this.onReplace, this);
+		collection.moveEvent.bind(this.onMove, this);
+		collection.clearEvent.bind(this.onClear, this);
+		collection.reorderEvent.bind(this.onReorder, this);
+		collection.filterEvent.bind(this.onFilter, this);
+		collection.resetEvent.bind(this.onReset, this);
+		collection.changeEvent.bind(this.onChange, this);
+		collection.lengthChangeEvent.bind(this.onLengthChange, this);
 	},
 	
-	assertCollection: function(values, collection, base)
-	{
+	assertCollection: function(values, collection) {
 		this.assertStrictEqual(values.length, collection.getLength());
-		this.assertStrictEqual(values.length, collection.base.length);
-		for (var i = 0; i < collection.getLength(); ++i)
-		{
-			this.assertStrictEqual(values[i], collection.getItemAt(i));
-			this.assertStrictEqual(values[i], collection.base[i]);
+		for (var i = 0; i < collection.getLength(); ++i) {
+			this.assertStrictEqual(values[i], collection.get(i));
 		}
-		
-		if (!base)
-			return;
-		
-		this.assertTrue(JW.equal(values, base, false, true));
 	},
 	
-	onAdd: function(event, index, item)
-	{
-		this.output("Added " + item + " at " + index);
+	onAdd: function(params) {
+		this.output("Added " + params.items.join(", ") + " at " + params.index);
 	},
 	
-	onRemove: function(event, index, item)
-	{
-		this.output("Removed " + item + " at " + index);
+	onRemove: function(params) {
+		this.output("Removed " + params.items.join(", ") + " at " + params.index);
 	},
 	
-	onReplace: function(event, index, oldItem, newItem)
-	{
-		this.output("Replaced " + oldItem + " with " + newItem + " at " + index);
+	onReplace: function(params) {
+		this.output("Replaced " + params.oldItem + " with " + params.newItem + " at " + params.index);
 	},
 	
-	onMove: function(event, fromIndex, toIndex, item)
-	{
-		this.output("Moved " + item + " from " + fromIndex + " to " + toIndex);
+	onMove: function(params) {
+		this.output("Moved " + params.item + " from " + params.fromIndex + " to " + params.toIndex);
 	},
 	
-	onClear: function(event)
-	{
+	onClear: function(params) {
 		this.output("Cleared");
+	},
+	
+	onReorder: function(params) {
+		this.output("Reordered");
+	},
+	
+	onFilter: function(params) {
+		this.output("Filtered");
+	},
+	
+	onReset: function(params) {
+		this.output("Resetted");
+	},
+	
+	onChange: function(params) {
+		this.output("Changed");
+	},
+	
+	onLengthChange: function(params) {
+		this.output("Changed length from " + params.oldLength + " to " + params.newLength);
+	},
+	
+	isUpperCase: function(value) {
+		return value.toUpperCase() === value;
+	},
+	
+	isA: function(value) {
+		return value.toUpperCase() === "A";
+	},
+	
+	isString: function(value) {
+		return typeof value === "string";
+	},
+	
+	isNumber: function(value) {
+		return typeof value === "number";
 	}
 });
+
+JW.Tests.Util.Collection = {};

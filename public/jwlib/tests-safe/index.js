@@ -1,5 +1,5 @@
 ﻿/*
-	jWidget Lib source file.
+	jWidget library tests.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,36 +17,4 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Event = function() {
-	JW.Event._super.call(this);
-	this.attachments = {};
-};
-
-JW.extend(JW.Event, JW.Class, {
-	/*
-	Fields
-	Map<JW.EventAttachment> attachments;
-	*/
-	
-	destroy: function() {
-		this.purge();
-	},
-	
-	bind: function(callback, scope) {
-		var attachment = new JW.EventAttachment(this, callback, scope);
-		this.attachments[attachment._iid] = attachment;
-		return attachment;
-	},
-	
-	unbind: function(attachment) {
-		delete this.attachments[attachment._iid];
-	},
-	
-	purge: function() {
-		this.attachments = {};
-	},
-	
-	trigger: function(params) {
-		JW.eachByMethod(JW.getValuesArray(this.attachments), "_trigger", [ params ]);
-	}
-});
+JW.Tests = {};

@@ -17,30 +17,28 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Override");
-
 JW.Tests.Override.FunctionTestCase = JW.Unit.TestCase.extend({
 	testAs: function()
 	{
 		this.addExpectedOutput(
-			"Handler is called in scope 'This is scope!'. event = myevent, extraParam = 10, eventParam = 20"
+			"Handler is called in scope 'This is scope!'. param = 20, extraParam = 10"
 		);
 		
 		var testCase = this;
 		
-		var dispatcher = new JW.Observable();
+		var event = new JW.Event();
 		
 		var scope = {
 			a: "This is scope!"
 		};
 		
-		function handler(event, extraParam, eventParam)
+		function handler(param, extraParam)
 		{
-			testCase.output("Handler is called in scope '" + this.a + "'. event = " + event.type + ", extraParam = " + extraParam + ", eventParam = " + eventParam);
+			testCase.output("Handler is called in scope '" + this.a + "'. param = " + param + ", extraParam = " + extraParam);
 		}
 		
-		dispatcher.bind("myevent", JW.Function.as(handler, scope, "\0", 10, "\1"));
-		dispatcher.trigger("myevent", 20);
+		event.bind(JW.Function.as(handler, scope, "\0", 10));
+		event.trigger(20);
 	},
 	
 	testReturns: function()

@@ -17,9 +17,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Alg");
+JW.Tests.Alg.BuildTestCase = function(config) {
+	JW.Tests.Alg.BuildTestCase._super.call(this, config);
+	this.obj = null;
+	this.objDeep = null;
+	this.arr = null;
+	this.cls = null;
+	this.clsDeep = null;
+};
 
-JW.Tests.Alg.BuildTestCase = JW.Unit.TestCase.extend({
+JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
 	setup: function()
 	{
 		this.obj = {
@@ -57,13 +64,13 @@ JW.Tests.Alg.BuildTestCase = JW.Unit.TestCase.extend({
 		
 		this.arr = [ 10, null, "lala" ];
 		
-		var Cls = JW.Class.extend({
+		var Cls = function() {
+			Cls._super.call(this);
+			this.items = [];
+		};
+		
+		JW.extend(Cls, JW.Class, {
 			items: null,
-			
-			init: function()
-			{
-				this.items = [];
-			},
 			
 			every: function(callback, scope)
 			{

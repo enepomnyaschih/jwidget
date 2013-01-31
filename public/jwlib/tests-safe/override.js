@@ -1,5 +1,5 @@
 ﻿/*
-	JW utility methods tests.
+	jWidget library tests.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,13 +17,4 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests");
-
-JW.Tests.ExtrasTestCase = JW.Unit.TestCase.extend({
-	testExtras: function()
-	{
-		this.assertUndefined(Array.prototype.removeItem);
-		this.assertUndefined(Function.prototype.inScope);
-		this.assertUndefined(String.prototype.prepend);
-	}
-});
+JW.Tests.Override = {};

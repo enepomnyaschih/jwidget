@@ -17,9 +17,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Core");
+JW.Tests.Core.ApplyTestCase = function(config) {
+	JW.Tests.Core.ApplyTestCase._super.call(this, config);
+	this.a = null;
+	this.b = null;
+};
 
-JW.Tests.Core.ApplyTestCase = JW.Unit.TestCase.extend({
+JW.extend(JW.Tests.Core.ApplyTestCase, JW.Unit.TestCase, {
 	setup: function()
 	{
 		this.a = {

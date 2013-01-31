@@ -17,8 +17,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Override");
-
 JW.Tests.Override.StringTestCase = JW.Unit.TestCase.extend({
 	testEllipsis: function()
 	{

@@ -5,6 +5,9 @@
 	],
 	
 	"resources" : [
+		"jwlib/tests-safe/index.js",
+		
+		"jwlib/tests-safe/core.js",
 		"jwlib/tests-safe/core/apply.js",
 		"jwlib/tests-safe/core/core.js",
 		"jwlib/tests-safe/core/class.js",
@@ -12,17 +15,28 @@
 		"jwlib/tests-safe/core/mvc.js",
 		"jwlib/tests-safe/core/observable.js",
 		
+		"jwlib/tests-safe/alg.js",
 		"jwlib/tests-safe/alg/simple.js",
 		"jwlib/tests-safe/alg/build.js",
 		
+		"jwlib/tests-safe/override.js",
 		"jwlib/tests-safe/override/array.js",
 		"jwlib/tests-safe/override/function.js",
 		"jwlib/tests-safe/override/string.js",
 		
-		"jwlib/tests-safe/extras.js",
-		
+		"jwlib/tests-safe/util.js",
 		"jwlib/tests-safe/util/collection.js",
-		"jwlib/tests-safe/util/syncher.js",
+		"jwlib/tests-safe/util/collection/indexer.js",
+		"jwlib/tests-safe/util/collection/inserter.js",
+		"jwlib/tests-safe/util/collection/lister.js",
+		"jwlib/tests-safe/util/collection/mapper.js",
+		"jwlib/tests-safe/util/collection/splitter.js",
+		"jwlib/tests-safe/util/map.js",
+		"jwlib/tests-safe/util/map/lister.js",
+		"jwlib/tests-safe/util/map/mapper.js",
+		"jwlib/tests-safe/util/set.js",
+		"jwlib/tests-safe/util/set/indexer.js",
+		"jwlib/tests-safe/util/set/mapper.js",
 		"jwlib/tests-safe/util/timer.js",
 		
 		"jwlib/tests-safe/boot.js"

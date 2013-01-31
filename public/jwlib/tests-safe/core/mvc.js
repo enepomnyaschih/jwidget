@@ -17,29 +17,55 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Core");
+JW.Tests.Core.MvcTestCase = function(config) {
+	JW.Tests.Core.MvcTestCase._super.call(this, config);
+	this.Model = null;
+	this.model = null;
+};
 
-JW.Tests.Core.MvcTestCase = JW.Unit.TestCase.extend({
+JW.extend(JW.Tests.Core.MvcTestCase, JW.Unit.TestCase, {
 	setupAll: function()
 	{
-		this.Model = JW.ObservableConfig.extend({
-			EVENT_CHANGE : "change", // handler(event, value)
+		var EventParams = function(sender, value) {
+			EventParams._super.call(this, sender);
+			this.value = value;
+		};
+		JW.extend(EventParams, JW.EventParams, {
+			/*
+			Model sender;
+			String value;
+			*/
+		});
+		var Model = function() {
+			Model._super.call(this);
+			this.aValue = "aa";
+			this.bValue = "bb";
+			this.changeEvent = new JW.Event();
+		};
+		JW.extend(Model, JW.Class, {
+			/*
+			Fields
+			String aValue;
+			String bValue;
+			JW.Event<EventParams> changeEvent;
+			*/
 			
-			aValue : "aa", // String
-			bValue : "bb", // String
+			destroy: function() {
+				this.changeEvent.destroy();
+				this._super();
+			},
 			
-			getAValue: function()
-			{
+			getAValue: function() {
 				return this.aValue.toUpperCase();
 			},
 			
-			setAValue: function(value)
-			{
+			setAValue: function(value) {
 				value = value.toUpperCase();
 				this.aValue = value;
-				this.trigger("change", value);
+				this.changeEvent.trigger(new EventParams(this, value));
 			}
 		});
+		this.Model = Model;
 	},
 	
 	setup: function()
@@ -50,7 +76,7 @@ JW.Tests.Core.MvcTestCase = JW.Unit.TestCase.extend({
 	teardown: function()
 	{
 		this.model.destroy();
-		delete this.model;
+		this.model = null;
 	},
 	
 	testGetField: function()
@@ -64,9 +90,9 @@ JW.Tests.Core.MvcTestCase = JW.Unit.TestCase.extend({
 	
 	testSetField: function()
 	{
-		this.model.bind("change", function(event, value) {
+		var attachment = this.model.changeEvent.bind(function(params) {
 			this.output("Success!");
-			this.assertStrictEqual("LALA", value);
+			this.assertStrictEqual("LALA", params.value);
 		}, this);
 		
 		this.assertStrictEqual(this.model, JW.setField(this.model));
@@ -88,5 +114,7 @@ JW.Tests.Core.MvcTestCase = JW.Unit.TestCase.extend({
 		
 		this.assertStrictEqual(this.model, JW.setField(this.model, "-bValue", "gagaga"));
 		this.assertStrictEqual("gagaga", this.model.bValue);
+		
+		attachment.destroy();
 	}
 });
