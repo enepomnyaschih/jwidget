@@ -71,6 +71,17 @@ JW.Alg.createSimpleFunctions = function(every) {
 	namespace.searchBy = JW.Alg._createBy(namespace.search);
 	namespace.searchByMethod = JW.Alg._createByMethod(namespace.search);
 	
+	namespace.indexOf = function(target, value) {
+		var result;
+		every(target, function(item, key) {
+			if (item === value) {
+				result = key;
+				return false;
+			}
+		});
+		return result;
+	};
+	
 	namespace.index = function(target, callback, scope) {
 		var result = {};
 		every(target, function(item) {
@@ -139,6 +150,7 @@ JW.Alg.SimpleMethods = {
 	search          : function(callback, scope) { return JW.Alg.SimpleObjectFunctions.search         (this, callback, scope); },
 	searchBy        : function(field, value)    { return JW.Alg.SimpleObjectFunctions.searchBy       (this, field, value);    },
 	searchByMethod  : function(method, args)    { return JW.Alg.SimpleObjectFunctions.searchByMethod (this, method, args);    },
+	indexOf         : function(value)           { return JW.Alg.SimpleObjectFunctions.indexOf        (this, value);           },
 	index           : function(callback, scope) { return JW.Alg.SimpleObjectFunctions.index          (this, callback, scope); },
 	indexBy         : function(field)           { return JW.Alg.SimpleObjectFunctions.indexBy        (this, field);           },
 	indexByMethod   : function(method, args)    { return JW.Alg.SimpleObjectFunctions.indexByMethod  (this, method, args);    },

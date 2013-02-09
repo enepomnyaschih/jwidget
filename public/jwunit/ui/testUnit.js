@@ -58,7 +58,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 		this.failEventAttachment.destroy();
 		this.successEventAttachment.destroy();
 		this.startEventAttachment.destroy();
-		this.mapper.destroy();
+		this._mapper.destroy();
 		this._super();
 	},
 	

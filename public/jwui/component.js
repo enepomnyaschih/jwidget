@@ -65,6 +65,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this.destroyComponent();
 			this._childMapper.destroy();
 		}
+		this.allChildren.eachByMethod("destroy");
 		this._invokeRemoveEvent.destroy();
 		JW.Array.eachByMethod(this._lists, "destroy");
 		this.allChildren.destroy();
