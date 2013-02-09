@@ -34,9 +34,5 @@ JW.extend(JW.EventAttachment, JW.Class, {
 	
 	destroy: function() {
 		this.event.unbind(this);
-	},
-	
-	_trigger: function(params) {
-		this.callback.call(this.scope || this, params);
 	}
 });

@@ -17,497 +17,134 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Alg");
-
-JW.apply(JW, {
-	/**
-	 * Executes a function on each item in a collection, and returns true if
-	 * all items have returned value true.
-	 */
-	every: function(
-		target,     // [required] Mixed
-		callback,   // [required] Function(item, /* keys */)
-		scope)      // [optional] Object
-	{
-		if (typeof target === "function")
-			return target(callback, scope || JW.global);
-		
-		if (typeof target !== "object" || !target)
-			return true;
-		
-		if (typeof target.every === "function")
-			return target.every(callback, scope);
-		
-		if (JW.isArray(target))
-			return JW.Array.every(target, callback, scope);
-		
-		for (var i in target)
-		{
-			if (!callback.call(scope || target, target[i], i))
-				return false;
-		}
-		
-		return true;
-	},
+JW.Alg.createSimpleFunctions = function(every) {
+	var namespace = {};
 	
-	/**
-	 * Returns true if all items' specified field value is equal (==)
-	 * to specified one. Must contain objects only.
-	 */
-	everyBy: function(
-		target,     // [required] Mixed
-		field,      // [required] String
-		value)      // [required] *
-	{
-		return JW.invokeBy(JW.every, target, field, value);
-	},
+	namespace.everyBy = JW.Alg._createBy(every);
+	namespace.everyByMethod = JW.Alg._createByMethod(every);
 	
-	/**
-	 * Returns true if all items' specified method result is true.
-	 * Must contain objects only.
-	 */
-	everyByMethod: function(
-		target,     // [required] Mixed
-		method,     // [required] String
-		args)       // [optional] Array of arguments to pass into method
-	{
-		return JW.invokeByMethod(JW.every, target, method, args);
-	},
-	
-	/**
-	 * Executes a function on each item in a collection.
-	 */
-	each: function(
-		target,     // [required] Mixed
-		callback,   // [required] Function(item, /* keys */)
-		scope)      // [optional] Object
-	{
-		JW.every(target, JW.Function.returns(callback, true), scope);
+	namespace.each = function(target, callback, scope) {
+		every(target, function() {
+			callback.apply(this, arguments);
+		}, scope);
 		return target;
-	},
+	};
 	
-	/**
-	 * Executes a method of each item in collection. Must contain objects only.
-	 */
-	eachByMethod: function(
-		target,     // [required] Mixed
-		method,     // [required] String
-		args)       // [optional] Array of arguments to pass into method
-	{
-		return JW.invokeByMethod(JW.each, target, method, args);
-	},
+	namespace.forEach = namespace.each; // alias
+	namespace.eachByMethod = JW.Alg._createByMethod(namespace.each);
+	namespace.forEachByMethod = namespace.eachByMethod; // alias
 	
-	/**
-	 * Executes a function on each item in a collection, and returns true if
-	 * at least one item has returned value true.
-	 */
-	some: function(
-		target,     // [required] Mixed
-		callback,   // [required] Function(item, /* keys */)
-		scope)      // [optional] Object
-	{
-		return !JW.every(target, JW.Function.not(callback), scope);
-	},
+	namespace.some = function(target, callback, scope) {
+		return !every(target, function() {
+			return callback.apply(this, arguments) === false;
+		}, scope);
+	};
 	
-	/**
-	 * Returns true if some items' specified field value is equal (==)
-	 * to specified one. Must contain objects only.
-	 */
-	someBy: function(
-		target,     // [required] Mixed
-		field,      // [required] String
-		value)      // [required] *
-	{
-		return JW.invokeBy(JW.some, target, field, value);
-	},
+	namespace.someBy = JW.Alg._createBy(namespace.some);
+	namespace.someByMethod = JW.Alg._createByMethod(namespace.some);
 	
-	/**
-	 * Returns true if all items' specified method result is true.
-	 * Must contain objects only.
-	 */
-	someByMethod: function(
-		target,     // [required] Mixed
-		method,     // [required] String
-		args)       // [optional] Array of arguments to pass into method
-	{
-		return JW.invokeByMethod(JW.some, target, method, args);
-	},
-	
-	/**
-	 * Find first item index where callback returns true.
-	 */
-	find: function(
-		target,     // [required] Mixed
-		callback,   // [required] Function(item, /* keys */)
-		scope)      // [optional] Object
-	{
+	namespace.find = function(target, callback, scope) {
 		var result;
-		JW.every(target, function(item, index) {
-			if (callback.apply(scope || this, arguments))
-			{
-				result = index;
+		every(target, function(item, key) {
+			if (callback.apply(this, arguments) !== false) {
+				result = key;
 				return false;
 			}
-			
-			return true;
-		});
-		
+		}, scope);
 		return result;
-	},
+	};
 	
-	/**
-	 * Find first item index where specified field equals to specified value.
-	 */
-	findBy: function(
-		target,     // [required] Mixed
-		field,      // [required] String
-		value)      // [required] *
-	{
-		return JW.invokeBy(JW.find, target, field, value);
-	},
+	namespace.findBy = JW.Alg._createBy(namespace.find);
+	namespace.findByMethod = JW.Alg._createByMethod(namespace.find);
 	
-	/**
-	 * Find first item index where specified method returns true.
-	 */
-	findByMethod: function(
-		target,     // [required] Mixed
-		method,     // [required] String
-		args)       // [optional] Array of arguments to pass into method
-	{
-		return JW.invokeByMethod(JW.find, target, method, args);
-	},
-	
-	/**
-	 * Find first item where callback returns true.
-	 */
-	search: function(
-		target,     // [required] Mixed
-		callback,   // [required] Function(item, /* keys */)
-		scope)      // [optional] Object
-	{
+	namespace.search = function(target, callback, scope) {
 		var result;
-		JW.every(target, function(item) {
-			if (callback.apply(scope || this, arguments))
-			{
+		every(target, function(item) {
+			if (callback.apply(this, arguments) !== false) {
 				result = item;
 				return false;
 			}
-			
-			return true;
-		});
-		
+		}, scope);
 		return result;
-	},
+	};
 	
-	/**
-	 * Find first item where specified field equals to specified value.
-	 */
-	searchBy: function(
-		target,     // [required] Mixed
-		field,      // [required] String
-		value)      // [required] *
-	{
-		return JW.invokeBy(JW.search, target, field, value);
-	},
+	namespace.searchBy = JW.Alg._createBy(namespace.search);
+	namespace.searchByMethod = JW.Alg._createByMethod(namespace.search);
 	
-	/**
-	 * Find first item where specified method returns true.
-	 */
-	searchByMethod: function(
-		target,     // [required] Mixed
-		method,     // [required] String
-		args)       // [optional] Array of arguments to pass into method
-	{
-		return JW.invokeByMethod(JW.search, target, method, args);
-	},
-	
-	/**
-	 * Run specified algorithm with field value comparison callback.
-	 */
-	invokeBy: function(
-		algorithm,  // [required] Function(target, callback)
-		target,     // [required] Mixed
-		field,      // [required] String
-		value)      // [required] *
-	{
-		return algorithm(target, function(item) {
-			return JW.get(item, field) == value;
-		});
-	},
-	
-	/**
-	 * Run specified algorithm with field value return callback.
-	 */
-	invokeByField: function(
-		algorithm,  // [required] Function(target, callback)
-		target,     // [required] Mixed
-		field)      // [required] String
-	{
-		return algorithm(target, function(item) {
-			return JW.get(item, field);
-		});
-	},
-	
-	/**
-	 * Run specified algorithm with method invokation callback.
-	 */
-	invokeByMethod: function(
-		algorithm,  // [required] Function(target, callback)
-		target,     // [required] Mixed
-		method,     // [required] String
-		args)       // [optional] Array of arguments to pass into method
-	{
-		args = args || [];
-		return algorithm(target, function(item) {
-			return item[method].apply(item, args);
-		});
-	},
-	
-	/**
-	 * Builds array of all values in a collection.
-	 */
-	getKeysArray: function(
-		target)     // [required] Mixed
-	{
-		var result = [];
-		JW.every(target, function(item, key) {
-			result.push(key);
-			return true;
-		});
-		return result;
-	},
-	
-	/**
-	 * Builds array of all values in a collection.
-	 */
-	getValuesArray: function(
-		target)     // [required] Mixed
-	{
-		var result = [];
-		JW.every(target, function(item) {
-			result.push(item);
-			return true;
-		});
-		return result;
-	},
-	
-	/**
-	 * Builds set of all values in a collection (object from items to true).
-	 */
-	getValuesSet: function(
-		target)     // [required] Mixed
-	{
+	namespace.index = function(target, callback, scope) {
 		var result = {};
-		JW.every(target, function(item) {
-			result[item] = true;
-			return true;
-		});
-		return result;
-	},
-	
-	/**
-	 * Iterates collection and returns its length.
-	 */
-	getLength: function(
-		target)     // [required] Mixed
-	{
-		var result = 0;
-		JW.every(target, function(item) {
-			++result;
-			return true;
-		});
-		return result;
-	},
-	
-	/**
-	 * Returns true if collection doesn't contain any items.
-	 */
-	isEmpty: function(
-		target)     // [required] Mixed
-	{
-		return JW.every(target, function(item) {
-			return false;
-		});
-	},
-	
-	/**
-	 * Indexes collection by specified callback.
-	 */
-	index: function( // Object
-		target,   // [required] Mixed
-		callback, // [required] Function(item, /* keys */):String
-		scope)    // [optional] Object
-	{
-		var result = {};
-		JW.every(target, function(item) {
+		every(target, function(item) {
 			if (item === undefined) {
-				return true;
+				return;
 			}
-			var key = callback.apply(scope || this, arguments);
+			var key = callback.apply(this, arguments);
 			if (JW.isSet(key)) {
 				result[key] = item;
 			}
-			return true;
+		}, scope);
+		return result;
+	};
+	
+	namespace.indexBy = JW.Alg._createByField(namespace.index);
+	namespace.indexByMethod = JW.Alg._createByMethod(namespace.index);
+	
+	namespace.getKeysArray = function(target) {
+		var result = [];
+		every(target, function(item, key) {
+			result.push(key);
 		});
 		return result;
-	},
+	};
 	
-	/**
-	 * Indexes items by specified field.
-	 */
-	indexBy: function( // Object
-		target, // [required] Mixed
-		field)  // [required] String, field name
-	{
-		return JW.invokeByField(JW.index, target, field);
-	},
+	namespace.getValuesArray = function(target) {
+		var result = [];
+		every(target, function(item) {
+			result.push(item);
+		});
+		return result;
+	};
 	
-	/**
-	 * Indexes items by specified method.
-	 */
-	indexByMethod: function( // Object
-		target, // [required] Mixed
-		method, // [required] String
-		args)   // [optional] Array of arguments to pass into method
-	{
-		return JW.invokeByMethod(JW.index, target, method, args);
-	}
-});
+	namespace.getSize = function(target) {
+		var result = 0;
+		every(target, function() {
+			++result;
+		});
+		return result;
+	};
+	
+	namespace.getLength = namespace.getSize; // alias
+	
+	namespace.isEmpty = function(target) {
+		return every(target, function() { return false; });
+	};
+	
+	return namespace;
+};
 
-JW.forEach = JW.each;
-JW.forEachByMethod = JW.eachByMethod;
+JW.Alg.SimpleObjectFunctions = JW.Alg.createSimpleFunctions(JW.Alg._every);
 
-/**
- * Add these methods to prototype of your simple collection.
- */
 JW.Alg.SimpleMethods = {
-	everyBy: function(field, value)
-	{
-		return JW.everyBy(this, field, value);
-	},
-	
-	everyByMethod: function(method, args)
-	{
-		return JW.everyByMethod(this, method, args);
-	},
-	
-	each: function(callback, scope)
-	{
-		return JW.each(this, callback, scope);
-	},
-	
-	eachByMethod: function(method, args)
-	{
-		return JW.eachByMethod(this, method, args);
-	},
-	
-	forEach: function(callback, scope)
-	{
-		return JW.forEach(this, callback, scope);
-	},
-	
-	forEachByMethod: function(method, args)
-	{
-		return JW.forEachByMethod(this, method, args);
-	},
-	
-	some: function(callback, scope)
-	{
-		return JW.some(this, callback, scope);
-	},
-	
-	someBy: function(field, value)
-	{
-		return JW.someBy(this, field, value);
-	},
-	
-	someByMethod: function(method, args)
-	{
-		return JW.someByMethod(this, method, args);
-	},
-	
-	find: function(callback, scope)
-	{
-		return JW.find(this, callback, scope);
-	},
-	
-	findBy: function(field, value)
-	{
-		return JW.findBy(this, field, value);
-	},
-	
-	findByMethod: function(method, args)
-	{
-		return JW.findByMethod(this, method, args);
-	},
-	
-	search: function(callback, scope)
-	{
-		return JW.search(this, callback, scope);
-	},
-	
-	searchBy: function(field, value)
-	{
-		return JW.searchBy(this, field, value);
-	},
-	
-	searchByMethod: function(method, args)
-	{
-		return JW.searchByMethod(this, method, args);
-	},
-	
-	invokeBy: function(algorithm, field, value)
-	{
-		return JW.invokeBy(algorithm, this, field, value);
-	},
-	
-	invokeByField: function(algorithm, field)
-	{
-		return JW.invokeByField(algorithm, this, field);
-	},
-	
-	invokeByMethod: function(algorithm, method, args)
-	{
-		return JW.invokeByMethod(algorithm, this, method, args);
-	},
-	
-	getKeysArray: function()
-	{
-		return JW.getKeysArray(this);
-	},
-	
-	getValuesArray: function()
-	{
-		return JW.getValuesArray(this);
-	},
-	
-	getValuesSet: function()
-	{
-		return JW.getValuesSet(this);
-	},
-	
-	getLength: function()
-	{
-		return JW.getLength(this);
-	},
-	
-	isEmpty: function()
-	{
-		return JW.isEmpty(this);
-	},
-	
-	index: function(callback, scope)
-	{
-		return JW.index(this, callback, scope);
-	},
-	
-	indexBy: function(field)
-	{
-		return JW.indexBy(this, field);
-	},
-	
-	indexByMethod: function(method, args)
-	{
-		return JW.indexByMethod(this, method, args);
-	}
+	everyBy         : function(field, value)    { return JW.Alg.SimpleObjectFunctions.everyBy        (this, field, value);    },
+	everyByMethod   : function(method, args)    { return JW.Alg.SimpleObjectFunctions.everyByMethod  (this, method, args);    },
+	each            : function(callback, scope) { return JW.Alg.SimpleObjectFunctions.each           (this, callback, scope); },
+	eachByMethod    : function(method, args)    { return JW.Alg.SimpleObjectFunctions.eachByMethod   (this, method, args);    },
+	forEach         : function(callback, scope) { return JW.Alg.SimpleObjectFunctions.forEach        (this, callback, scope); },
+	forEachByMethod : function(method, args)    { return JW.Alg.SimpleObjectFunctions.forEachByMethod(this, method, args);    },
+	some            : function(callback, scope) { return JW.Alg.SimpleObjectFunctions.some           (this, callback, scope); },
+	someBy          : function(field, value)    { return JW.Alg.SimpleObjectFunctions.someBy         (this, field, value);    },
+	someByMethod    : function(method, args)    { return JW.Alg.SimpleObjectFunctions.someByMethod   (this, method, args);    },
+	find            : function(callback, scope) { return JW.Alg.SimpleObjectFunctions.find           (this, callback, scope); },
+	findBy          : function(field, value)    { return JW.Alg.SimpleObjectFunctions.findBy         (this, field, value);    },
+	findByMethod    : function(method, args)    { return JW.Alg.SimpleObjectFunctions.findByMethod   (this, method, args);    },
+	search          : function(callback, scope) { return JW.Alg.SimpleObjectFunctions.search         (this, callback, scope); },
+	searchBy        : function(field, value)    { return JW.Alg.SimpleObjectFunctions.searchBy       (this, field, value);    },
+	searchByMethod  : function(method, args)    { return JW.Alg.SimpleObjectFunctions.searchByMethod (this, method, args);    },
+	index           : function(callback, scope) { return JW.Alg.SimpleObjectFunctions.index          (this, callback, scope); },
+	indexBy         : function(field)           { return JW.Alg.SimpleObjectFunctions.indexBy        (this, field);           },
+	indexByMethod   : function(method, args)    { return JW.Alg.SimpleObjectFunctions.indexByMethod  (this, method, args);    },
+	getKeysArray    : function()                { return JW.Alg.SimpleObjectFunctions.getKeysArray   (this);                  },
+	getValuesArray  : function()                { return JW.Alg.SimpleObjectFunctions.getValuesArray (this);                  },
+	getSize         : function()                { return JW.Alg.SimpleObjectFunctions.getSize        (this);                  },
+	getLength       : function()                { return JW.Alg.SimpleObjectFunctions.getLength      (this);                  },
+	isEmpty         : function()                { return JW.Alg.SimpleObjectFunctions.isEmpty        (this);                  }
 };

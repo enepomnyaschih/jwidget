@@ -1,15 +1,39 @@
 ﻿{
 	"requires" : [
-		"jwlib",
 		"jwunit"
 	],
 	
 	"resources" : [
 		"jwlib/tests/index.js",
 		
-		"jwlib/tests/array.js",
-		"jwlib/tests/function.js",
-		"jwlib/tests/string.js",
+		"jwlib/tests/core.js",
+		"jwlib/tests/core/apply.js",
+		"jwlib/tests/core/core.js",
+		"jwlib/tests/core/class.js",
+		"jwlib/tests/core/observable.js",
+		
+		"jwlib/tests/alg.js",
+		"jwlib/tests/alg/simple.js",
+		"jwlib/tests/alg/build.js",
+		
+		"jwlib/tests/collection.js",
+		"jwlib/tests/collection/array.js",
+		"jwlib/tests/collection/observableArray.js",
+		"jwlib/tests/collection/observableArray/indexer.js",
+		"jwlib/tests/collection/observableArray/inserter.js",
+		"jwlib/tests/collection/observableArray/lister.js",
+		"jwlib/tests/collection/observableArray/mapper.js",
+		"jwlib/tests/collection/observableArray/splitter.js",
+		"jwlib/tests/collection/observableMap.js",
+		"jwlib/tests/collection/observableMap/lister.js",
+		"jwlib/tests/collection/observableMap/mapper.js",
+		"jwlib/tests/collection/observableSet.js",
+		"jwlib/tests/collection/observableSet/indexer.js",
+		"jwlib/tests/collection/observableSet/mapper.js",
+		
+		"jwlib/tests/util.js",
+		"jwlib/tests/util/timer.js",
+		"jwlib/tests/util/string.js",
 		
 		"jwlib/tests/boot.js"
 	]

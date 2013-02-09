@@ -1,5 +1,5 @@
 ﻿/*!
-	jWidget UI 0.3.1
+	jWidget UI 0.4.
 	
 	https://github.com/enepomnyaschih/jwui
 	
@@ -19,40 +19,22 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.UI");
-
-JW.apply(JW.UI, {
-	/**
-	 * Templates definition.
-	 * Use this function to build HTML templates for this component.
-	 * Defined templates can be accessed as this.templates.<name>
-	 */
-	template: function(cls, tpls)
-	{
-		if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls)
-		{
+JW.UI = {
+	template: function(cls, tpls) {
+		if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls) {
 			JW.apply(cls.prototype.Templates.prototype, tpls);
-		}
-		else
-		{
+		} else {
 			cls.prototype.Templates = (cls.superclass.Templates || JW.Class).extend(tpls);
 			cls.prototype.Templates.componentCls = cls;
 			cls.prototype.templates = new cls.prototype.Templates();
 		}
 	},
 	
-	/**
-	 * Test whether variable is jQuery element.
-	 */
-	isElement: function(v)
-	{
+	isElement: function(v) {
 		return v instanceof jQuery.fn.init;
 	}
-});
+};
 
-/**
- * Global JW.UI.windowEl and JW.UI.bodyEl variables definition.
- */
 jQuery(function() {
 	JW.UI.windowEl = jQuery(window);
 	JW.UI.bodyEl   = jQuery(document.body);

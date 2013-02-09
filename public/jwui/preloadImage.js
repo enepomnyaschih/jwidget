@@ -25,11 +25,11 @@ JW.UI.preloadImage = function(
 	var image = new Image();
 	jQuery(image).
 		load(function() {
-			if (callback)
+			if (typeof callback === "function")
 				callback.call(scope, image);
 		}).
 		error(function() {
-			if (callback)
+			if (typeof callback === "function")
 				callback.call(scope);
 		}).
 		attr("src", src);

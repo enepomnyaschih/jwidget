@@ -1,5 +1,5 @@
 ﻿/*
-	JW factory logic.
+	jWidget Lib source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,28 +17,24 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.makeFactory = function(cls, idField)
-{
+JW.makeFactory = function(cls, idField) {
 	idField = idField || "id";
 	
 	JW.apply(cls, {
 		items: {},
 		
-		registerItem: function(item)
-		{
+		registerItem: function(item) {
 			cls.items[item[idField]] = item;
 		},
 		
-		getItem: function(value)
-		{
+		getItem: function(value) {
 			return (value instanceof cls) ? value : cls.items[value];
 		},
 		
-		getId: function(value)
-		{
+		getId: function(value) {
 			return (value instanceof cls) ? value[idField] : value;
 		}
 	});
 	
 	return cls;
-}
+};

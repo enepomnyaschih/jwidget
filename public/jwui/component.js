@@ -1,5 +1,5 @@
 ﻿/*
-	JW base UI component.
+	jWidget UI source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -22,13 +22,13 @@ JW.UI.Component = function(config) {
 	this.rootClass = config.rootClass;
 	this.template = config.template;
 	this._childrenCreated = !config.children;
-	this.children = config.children || new JW.Map();
+	this.children = config.children || new JW.ObservableMap();
 	this.parent = null;
 	this.el = null;
 	this.appended = false;
 	this.destroyed = false;
 	this._elements = {};
-	this.allChildren = new JW.Set();
+	this.allChildren = new JW.ObservableSet();
 	this._childMapper = null;
 	this._lists = [];
 	this._invokeRemoveEvent = new JW.Event();
@@ -39,7 +39,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	Optional
 	String rootClass;
 	String template;
-	JW.Map<JW.UI.Component> children; // named children
+	JW.ObservableMap<JW.UI.Component> children; // named children
 	
 	Fields
 	Boolean _childrenCreated;
@@ -48,8 +48,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 	Boolean appended;
 	Boolean destroyed;
 	Map<Element> _elements;
-	JW.Set<JW.UI.Component> allChildren; // children + (lists' contents)
-	JW.Map.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
+	JW.ObservableSet<JW.UI.Component> allChildren; // children + (lists' contents)
+	JW.ObservableMap.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
 	Array<JW.UI.Component.List> _lists;
 	JW.Event<JW.UI.Component.EventParams> _invokeRemoveEvent;
 	*/
@@ -66,7 +66,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this._childMapper.destroy();
 		}
 		this._invokeRemoveEvent.destroy();
-		JW.eachByMethod(this._lists, "destroy");
+		JW.Array.eachByMethod(this._lists, "destroy");
 		this.allChildren.destroy();
 		if (this._childrenCreated) {
 			this.children.destroy();
@@ -106,7 +106,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			anchorEl.removeAttr("jwid");
 			anchorEl.addClass(this.getElementClass(jwId));
 		}
-		this._childMapper = new JW.Map.InstanceMapper({
+		this._childMapper = new JW.ObservableMap.InstanceMapper({
 			source    : this.children,
 			provider  : JW.UI.Component.Child,
 			dataField : "component",
@@ -153,7 +153,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	},
 	
 	getElementClass: function(id) {
-		return JW.map(JW.filter([ this.rootClass, id ], JW.isSet), JW.String.hyphen).join("-");
+		return JW.Array.map(JW.Array.filter([ this.rootClass, id ], JW.isSet), JW.String.hyphen).join("-");
 	},
 	
 	removeElement: function(id) {

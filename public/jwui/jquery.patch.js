@@ -18,31 +18,28 @@
 */
 
 JW.apply(jQuery.fn, {
-	insert: function(item, index)
-	{
-		if (!JW.isSet(index))
+	insert: function(item, index) {
+		if (!JW.isSet(index)) {
 			this.append(item);
-		else if (index == 0)
+		} else if (index == 0) {
 			this.prepend(item);
-		else
+		} else {
 			jQuery(this.children()[index - 1]).after(item);
+		}
 	},
 	
-	replaceBy: function(el)
-	{
+	replaceBy: function(el) {
+		var id = this.attr("id"),
+			cls = this.attr("class");
+		
 		el = jQuery(el);
-		var attr = {
-			id  : this.attr("id"),
-			cls : this.attr("class")
-		};
+		this.replaceWith(el);
 		
-		this.after(el);
-		this.remove();
-		
-		if (attr.id)
-			el.attr("id", attr.id);
-		
-		if (attr.cls)
-			el.addClass(attr.cls);
+		if (id) {
+			el.attr("id", id);
+		}
+		if (cls) {
+			el.addClass(cls);
+		}
 	}
 });

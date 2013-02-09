@@ -53,7 +53,7 @@ JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 	},
 	
 	_setupAll: function() {
-		JW.Unit._runAsync(JW.Function.inScope(this.setupAll, this), this._onSetupAllSuccess, this._onSetupAllFail, this);
+		JW.Unit._runAsync(JW.inScope(this.setupAll, this), this._onSetupAllSuccess, this._onSetupAllFail, this);
 	},
 	
 	_onSetupAllSuccess: function() {
@@ -68,18 +68,18 @@ JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 	
 	_continue: function() {
 		if (this.unitIndex < this.units.length) {
-			setTimeout(JW.Function.inScope(this._setup, this), 1);
+			setTimeout(JW.inScope(this._setup, this), 1);
 		} else {
-			setTimeout(JW.Function.inScope(this._teardownAll, this), 1);
+			setTimeout(JW.inScope(this._teardownAll, this), 1);
 		}
 	},
 	
 	_setup: function() {
-		JW.Unit._runAsync(JW.Function.inScope(this.setup, this), this._onSetupSuccess, this._onSetupFail, this);
+		JW.Unit._runAsync(JW.inScope(this.setup, this), this._onSetupSuccess, this._onSetupFail, this);
 	},
 	
 	_onSetupSuccess: function() {
-		setTimeout(JW.Function.inScope(this._startUnit, this), 1);
+		setTimeout(JW.inScope(this._startUnit, this), 1);
 	},
 	
 	_onSetupFail: function(msg, e) {
@@ -98,11 +98,11 @@ JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 		var unit = this.units[this.unitIndex];
 		this.unitCompleteAttachment.destroy();
 		this.unitCompleteAttachment = null;
-		setTimeout(JW.Function.inScope(this._teardown, this), 1);
+		setTimeout(JW.inScope(this._teardown, this), 1);
 	},
 	
 	_teardown: function() {
-		JW.Unit._runAsync(JW.Function.inScope(this.teardown, this), this._onTeardownSuccess, this._onTeardownFail, this);
+		JW.Unit._runAsync(JW.inScope(this.teardown, this), this._onTeardownSuccess, this._onTeardownFail, this);
 	},
 	
 	_onTeardownSuccess: function() {
@@ -121,7 +121,7 @@ JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 	},
 	
 	_teardownAll: function() {
-		JW.Unit._runAsync(JW.Function.inScope(this.teardownAll, this), this._onTeardownAllSuccess, this._onTeardownAllFail, this);
+		JW.Unit._runAsync(JW.inScope(this.teardownAll, this), this._onTeardownAllSuccess, this._onTeardownAllFail, this);
 	},
 	
 	_onTeardownAllSuccess: function() {

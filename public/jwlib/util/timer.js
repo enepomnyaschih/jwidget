@@ -24,6 +24,7 @@ JW.Timer = function(delay, repeat, sensitive) {
 	this.repeat = repeat;
 	this.sensitive = sensitive;
 	this._handle = 0;
+	this._onTimeout = JW.inScope(this._onTimeout, this);
 };
 
 JW.extend(JW.Timer, JW.Class, {
@@ -47,7 +48,7 @@ JW.extend(JW.Timer, JW.Class, {
 			return;
 		}
 		var runner = this._getRunner();
-		this._handle = runner(JW.Function.inScope(this._onTimeout, this), this.delay);
+		this._handle = runner(this._onTimeout, this.delay);
 	},
 	
 	stop: function() {

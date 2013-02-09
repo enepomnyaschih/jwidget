@@ -1,7 +1,7 @@
 ﻿{
 	"requires" : [
-		"thirdparty/jquery/jquery.js|auto"
-		// Also requires one of "jwlib" and "jwlib-safe" : select it manually before "jwui"
+		"thirdparty/jquery/jquery.js|auto",
+		"jwlib"
 	],
 	
 	"resources" : [

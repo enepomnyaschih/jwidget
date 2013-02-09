@@ -30,6 +30,7 @@ JW.Unit.TestUnit = function(config) {
 	this.__msg = "";
 	this.__error = null;
 	this.__status = "ready";
+	this.__onStart = JW.inScope(this.__onStart, this);
 };
 
 JW.extend(JW.Unit.TestUnit, JW.Class, {
@@ -76,7 +77,7 @@ JW.extend(JW.Unit.TestUnit, JW.Class, {
 		this.__status = "start";
 		this.startEvent.trigger(new JW.Unit.TestUnit.EventParams(this));
 		this.__broadcaster.startEvent.trigger(new JW.Unit.Broadcaster.UnitEventParams(this.__broadcaster, this));
-		setTimeout(JW.Function.inScope(this.__onStart, this), 1);
+		setTimeout(this.__onStart, 1);
 	},
 	
 	// virtual

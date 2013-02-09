@@ -23,7 +23,7 @@ JW.UI.Component.List = function(config) {
 	this.collection = config.collection;
 	this.el = config.el;
 	
-	this._instanceMapper = new JW.Collection.InstanceMapper({
+	this._instanceMapper = new JW.ObservableArray.InstanceMapper({
 		source    : this.collection,
 		provider  : JW.UI.Component.List.Item,
 		dataField : "component",
@@ -32,7 +32,7 @@ JW.UI.Component.List = function(config) {
 		}
 	});
 	
-	this._fieldMapper = new JW.Collection.FieldMapper({
+	this._fieldMapper = new JW.ObservableArray.FieldMapper({
 		source : this._instanceMapper.target,
 		field  : "component"
 	});
@@ -47,12 +47,12 @@ JW.extend(JW.UI.Component.List, JW.Class, {
 	/*
 	Required
 	JW.UI.Component parent;
-	JW.Collection<JW.UI.Component> collection;
+	JW.ObservableArray<JW.UI.Component> collection;
 	Element el;
 	
 	Fields
-	JW.Collection.InstanceMapper<JW.UI.Component, JW.UI.Component.List.Item> _instanceMapper;
-	JW.Collection.FieldMapper<JW.UI.Component.List.Item, JW.UI.Component> _fieldMapper;
+	JW.ObservableArray.InstanceMapper<JW.UI.Component, JW.UI.Component.List.Item> _instanceMapper;
+	JW.ObservableArray.FieldMapper<JW.UI.Component.List.Item, JW.UI.Component> _fieldMapper;
 	JW.UI.Inserter _inserter;
 	*/
 	

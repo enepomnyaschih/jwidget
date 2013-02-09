@@ -51,6 +51,6 @@ JW.Unit.Test.getTest = function(config) {
 	if (typeof config.fn !== "function") {
 		return null;
 	}
-	config.fn = JW.Function.inScope(config.fn, config.__parent);
+	config.fn = JW.inScope(config.fn, config.__parent);
 	return new JW.Unit.Test(config);
 };

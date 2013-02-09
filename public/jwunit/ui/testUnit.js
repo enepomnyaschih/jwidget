@@ -26,6 +26,7 @@ JW.Unit.UI.TestUnit = function(config) {
 	this.startEventAttachment = null;
 	this.successEventAttachment = null;
 	this.failEventAttachment = null;
+	this._onClick = JW.inScope(this._onClick, this);
 };
 
 JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
@@ -38,7 +39,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	Integer __depth;
 	
 	Fields
-	JW.Collection.InstanceMapper _mapper;
+	JW.ObservableArray.InstanceMapper _mapper;
 	JW.EventAttachment startEventAttachment;
 	JW.EventAttachment successEventAttachment;
 	JW.EventAttachment failEventAttachment;
@@ -75,18 +76,18 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 		var headerEl = this.getElement("header");
 		headerEl.css("padding-left", padding);
 		headerEl.css("width", 380 - padding);
-		headerEl.mousedown(JW.Function.inScope(this._onClick, this));
+		headerEl.mousedown(this._onClick);
 		
 		this.getElement("name").text(this.__unit.__name);
 	},
 	
 	_renderChildren: function() {
-		var units = new JW.Collection();
+		var units = new JW.ObservableArray();
 		if (this.__unit.units) {
 			units.addAll(this.__unit.units);
 		}
 		
-		this._mapper = new JW.Collection.InstanceMapper({
+		this._mapper = new JW.ObservableArray.InstanceMapper({
 			source    : units,
 			provider  : JW.Unit.UI.TestUnit,
 			dataField : "__unit",

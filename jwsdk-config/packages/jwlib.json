@@ -1,44 +1,39 @@
 ﻿{
-	"requires" : [
-		"thirdparty/class.js"
-	],
-	
 	"resources" : [
-		"jwlib/index.js",
-		
 		"jwlib/core/core.js",
 		"jwlib/core/class.js",
 		"jwlib/core/event.js",
 		"jwlib/core/eventAttachment.js",
 		"jwlib/core/eventParams.js",
 		
+		"jwlib/alg.js",
 		"jwlib/alg/simple.js",
 		"jwlib/alg/build.js",
 		
-		"jwlib/override/array.js",
-		"jwlib/override/function.js",
-		"jwlib/override/string.js",
+		"jwlib/collection/array.js",
+		"jwlib/collection/map.js",
+		"jwlib/collection/set.js",
+		"jwlib/collection/observableArray.js",
+		"jwlib/collection/observableArray/fieldMapper.js",
+		"jwlib/collection/observableArray/indexer.js",
+		"jwlib/collection/observableArray/inserter.js",
+		"jwlib/collection/observableArray/instanceMapper.js",
+		"jwlib/collection/observableArray/lister.js",
+		"jwlib/collection/observableArray/mapper.js",
+		"jwlib/collection/observableArray/splitter.js",
+		"jwlib/collection/observableMap.js",
+		"jwlib/collection/observableMap/instanceMapper.js",
+		"jwlib/collection/observableMap/lister.js",
+		"jwlib/collection/observableMap/mapper.js",
+		"jwlib/collection/observableSet.js",
+		"jwlib/collection/observableSet/indexer.js",
+		"jwlib/collection/observableSet/instanceMapper.js",
+		"jwlib/collection/observableSet/mapper.js",
 		
-		"jwlib/util/collection.js",
-		"jwlib/util/collection/fieldMapper.js",
-		"jwlib/util/collection/indexer.js",
-		"jwlib/util/collection/inserter.js",
-		"jwlib/util/collection/instanceMapper.js",
-		"jwlib/util/collection/lister.js",
-		"jwlib/util/collection/mapper.js",
-		"jwlib/util/collection/splitter.js",
 		"jwlib/util/factory.js",
-		"jwlib/util/map.js",
-		"jwlib/util/map/instanceMapper.js",
-		"jwlib/util/map/lister.js",
-		"jwlib/util/map/mapper.js",
-		"jwlib/util/set.js",
-		"jwlib/util/set/indexer.js",
-		"jwlib/util/set/instanceMapper.js",
-		"jwlib/util/set/mapper.js",
+		"jwlib/util/proxy.js",
 		"jwlib/util/setInterval.js",
-		"jwlib/util/timer.js",
-		
-		"jwlib/util/prototype.js"
+		"jwlib/util/string.js",
+		"jwlib/util/timer.js"
 	]
 }

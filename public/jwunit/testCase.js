@@ -142,12 +142,16 @@ JW.extend(JW.Unit.TestCase, JW.Unit.TestGroup, {
 	},
 	
 	load: function(url, dataType, callback, scope) {
+		var onLoadSuccess = function(response) {
+			return this._onLoadSuccess(response, callback, scope);
+		};
+		
 		$.ajax({
 			url      : url,
 			data     : { _dc: new Date().getTime() },
 			type     : "GET",
 			dataType : dataType,
-			success  : this.async("_onLoadSuccess", JW.Function.as(this._onLoadSuccess, this, '\0', callback, scope)),
+			success  : this.async("_onLoadSuccess", onLoadSuccess),
 			error    : this.forbid("_onLoadError"),
 			context  : this
 		});

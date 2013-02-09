@@ -47,6 +47,10 @@ JW.extend(JW.Event, JW.Class, {
 	},
 	
 	trigger: function(params) {
-		JW.eachByMethod(JW.getValuesArray(this.attachments), "_trigger", [ params ]);
+		// haven't splitted to simpler methods for debugging purposes
+		for (var iid in this.attachments) {
+			var attachment = this.attachments[iid];
+			attachment.callback.call(attachment.scope || attachment, params);
+		}
 	}
 });

@@ -1,5 +1,5 @@
 ﻿/*
-	JW sensitive setInterval implementation.
+	jWidget Lib source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,27 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.setInterval = function(callback, ms)
-{
-	if (!ms)
+JW.setInterval = function(callback, ms) {
+	if (!ms) {
 		return setInterval(callback, ms);
+	}
+	if (typeof callback == "string") {
+		callback = function() { eval(callback); };
+	}
 	
 	var lastTime = Date.getTime();
 	
-	if (typeof callback == "string")
-		callback = JW.Function.insertArgs(eval, 0, callback);
-	
-	function onInterval()
-	{
+	function onInterval() {
 		var curTime = Date.getTime();
 		
 		// Prevent inactive time lapses
-		if (curTime - lastTime > 10 * ms)
+		if (curTime - lastTime > 10 * ms) {
 			lastTime = curTime - ms;
-		
+		}
 		var b = true;
-		while (b || lastTime < curTime)
-		{
+		while (b || (lastTime < curTime)) {
 			b = false;
 			lastTime += ms;
 			callback();
@@ -45,4 +43,4 @@ JW.setInterval = function(callback, ms)
 	}
 	
 	return setInterval(onInterval, ms);
-}
+};

@@ -22,7 +22,7 @@ JW.UI.Inserter = function(config) {
 	this.el = config.el;
 	this.source = config.source;
 	
-	this._inserter = new JW.Collection.Inserter({
+	this._inserter = new JW.ObservableArray.Inserter({
 		source     : this.source,
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
@@ -35,10 +35,10 @@ JW.extend(JW.UI.Inserter, JW.Class, {
 	/*
 	Required
 	Element el;
-	JW.Collection<JW.UI.Component> source;
+	JW.ObservableArray<JW.UI.Component> source;
 	
 	Fields
-	JW.Collection.Inserter<JW.UI.Component> _inserter;
+	JW.ObservableArray.Inserter<JW.UI.Component> _inserter;
 	*/
 	
 	destroy: function() {

@@ -17,7 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$(function() {
+jQuery(function() {
+	$ = null;
 	setTimeout(function() {
 		JW.Unit.run("JW.Tests", JW.Tests);
 	}, 1000);

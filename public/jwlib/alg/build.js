@@ -17,233 +17,69 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Alg");
-
-JW.apply(JW, {
-	/**
-	 * Creates a collection of the same type as target, which does not contain
-	 * any items.
-	 */
-	createEmpty: function(
-		target)     // [required] Mixed
-	{
-		if (typeof target === "function")
-			return target();
-		
-		if (!target || typeof target !== "object")
-			return null;
-		
-		if (typeof target.createEmpty === "function")
-			return target.createEmpty();
-		
-		return JW.isArray(target) ? [] : {};
-	},
+JW.Alg.createBuildFunctions = function(every, createEmpty, pushItem) {
+	var namespace = JW.Alg.createSimpleFunctions(every);
 	
-	/**
-	 * Updates item value in target collection.
-	 * Returns updated collection.
-	 */
-	pushItem: function(
-		target,     // [required] Mixed
-		params)     // [required] Arguments of "every" method
-	{
-		if (typeof target === "function")
-			return target.apply(JW.global, params);
-		
-		if (!target || typeof target !== "object")
-			return target;
-		
-		if (typeof target.pushItem === "function")
-			return target.pushItem.apply(target, params);
-		
-		if (JW.isArray(target))
-			return target.push(params[0]);
-		
-		target[params[1]] = params[0];
+	namespace.merge = function(target, source) {
+		every(source, function(item, key) {
+			pushItem(target, item, key);
+		});
 		return target;
-	},
+	};
 	
-	/**
-	 * Constructs a new collection containing the same items that original
-	 * collection contains (clone copy).
-	 */
-	clone: function(
-		target)     // [required] Mixed
-	{
-		var result = JW.createEmpty(target);
-		return JW.merge(result, target);
-	},
+	namespace.clone = function(target) {
+		var result = createEmpty(target);
+		return namespace.merge(result, target);
+	};
 	
-	/**
-	 * Executes a function on each item in a collection, and constructs a new
-	 * collection of items in original collection which have returned true
-	 * value.
-	 */
-	filter: function(
-		target,     // [required] Mixed
-		callback,   // [required] Function(item, /* keys */)
-		scope)      // [optional] Object
-	{
-		var result = JW.createEmpty(target);
-		JW.every(target, function() {
-			if (callback.apply(scope || this, arguments))
-				JW.pushItem(result, arguments);
-			return true;
-		});
+	namespace.filter = function(target, callback, scope) {
+		var result = createEmpty(target);
+		every(target, function(item, key) {
+			if (callback.apply(this, arguments) !== false) {
+				pushItem(result, item, key);
+			}
+		}, scope);
 		return result;
-	},
+	};
 	
-	/**
-	 * Finds all item objects which contain field with value equal (==) to specified one
-	 * and builds new collection of such items.
-	 * This collection must contain objects only.
-	 */
-	filterBy: function(
-		target,     // [required] Mixed
-		field,      // [required] String, field name
-		value)      // [required] *
-	{
-		return JW.filter(target, function(item) {
-			return JW.get(item, field) == value;
-		});
-	},
+	namespace.filterBy = JW.Alg._createBy(namespace.filter);
+	namespace.filterByMethod = JW.Alg._createByMethod(namespace.filter);
 	
-	/**
-	 * Finds all item objects which contain method returning result is true
-	 * and builds new collection of such items.
-	 * This collection must contain objects only.
-	 */
-	filterByMethod: function (
-		target,     // [required] Mixed
-		method,     // [required] String
-		args)       // [optional] Array of arguments to pass into method
-	{
-		args = args || [];
-		return JW.filter(target, function(item) {
-			return item[method].apply(item, args);
-		});
-	},
-	
-	/**
-	 * Executes a function on each item in a collection, and constructs a new collection
-	 * of items corresponding to the results of the function on each item in the
-	 * original collection.
-	 */
-	map: function(
-		target,     // [required] Mixed
-		callback,   // [required] Function(item, /* keys */)
-		scope)      // [optional] Object
-	{
-		var result = JW.createEmpty(target);
-		JW.every(target, function() {
-			var args = JW.args(arguments);
-			args[0] = callback.apply(scope || this, arguments);
-			JW.pushItem(result, args);
-			return true;
-		});
+	namespace.map = function(target, callback, scope) {
+		var result = createEmpty(target);
+		every(target, function(item, key) {
+			pushItem(result, callback.apply(this, arguments), key);
+		}, scope);
 		return result;
-	},
+	};
 	
-	/**
-	 * Constructs a new collection of values of specified field of each item.
-	 */
-	mapBy: function(
-		target,     // [required] Mixed
-		field)      // [required] String, field name
-	{
-		return JW.invokeByField(JW.map, target, field);
-	},
+	namespace.mapBy = JW.Alg._createByField(namespace.map);
+	namespace.mapByMethod = JW.Alg._createByMethod(namespace.map);
 	
-	/**
-	 * Constructs a new collection of results of specified method of each item.
-	 */
-	mapByMethod: function(
-		target,     // [required] Mixed
-		method,     // [required] String
-		args)       // [optional] Array of arguments to pass into method
-	{
-		return JW.invokeByMethod(JW.map, target, method, args);
-	},
-	
-	/**
-	 * Builds an object which contains collections of corresponding fields of each item.
-	 */
-	mapFields: function(
-		target)     // [required] Mixed
-	{
+	namespace.mapFields = function(target) {
 		var result = {};
-		JW.every(target, function(item) {
-			for (var key in item)
-				result[key] = JW.mapBy(target, key);
-			
-			// Exit immediately
+		every(target, function(item) {
+			for (var key in item) {
+				result[key] = namespace.mapBy(target, key);
+			}
 			return false;
 		});
 		return result;
-	},
+	};
 	
-	/**
-	 * Merged items from source collection into target collection.
-	 * Returns target collection.
-	 */
-	merge: function(
-		target,     // [required] Mixed
-		source)     // [required] Mixed
-	{
-		JW.every(source, function() {
-			JW.pushItem(target, arguments);
-			return true;
-		});
-		return target;
-	}
-});
-
-/**
- * Add these methods to prototype of your building collection.
- */
-JW.Alg.BuildMethods = {
-	clone: function()
-	{
-		return JW.clone(this);
-	},
-	
-	filter: function(callback, scope)
-	{
-		return JW.filter(this, callback, scope);
-	},
-	
-	filterBy: function(field, value)
-	{
-		return JW.filterBy(this, field, value);
-	},
-	
-	filterByMethod: function(method, args)
-	{
-		return JW.filterByMethod(this, method, args);
-	},
-	
-	map: function(callback, scope)
-	{
-		return JW.map(this, callback, scope);
-	},
-	
-	mapBy: function(field)
-	{
-		return JW.mapBy(this, field);
-	},
-	
-	mapByMethod: function(method, args)
-	{
-		return JW.mapByMethod(this, method, args);
-	},
-	
-	mapFields: function()
-	{
-		return JW.mapFields(this);
-	},
-	
-	merge: function(source)
-	{
-		return JW.merge(this, source);
-	}
+	return namespace;
 };
+
+JW.Alg.BuildObjectFunctions = JW.Alg.createBuildFunctions(JW.Alg._every, JW.Alg._createEmpty, JW.Alg._pushItem);
+
+JW.Alg.BuildMethods = JW.apply({}, JW.Alg.SimpleMethods, {
+	merge          : function(source)          { return JW.Alg.BuildObjectFunctions.merge         (this, source);          },
+	clone          : function()                { return JW.Alg.BuildObjectFunctions.clone         (this);                  },
+	filter         : function(callback, scope) { return JW.Alg.BuildObjectFunctions.filter        (this, callback, scope); },
+	filterBy       : function(field, value)    { return JW.Alg.BuildObjectFunctions.filterBy      (this, field, value);    },
+	filterByMethod : function(method, args)    { return JW.Alg.BuildObjectFunctions.filterByMethod(this, method, args);    },
+	map            : function(callback, scope) { return JW.Alg.BuildObjectFunctions.map           (this, callback, scope); },
+	mapBy          : function(field)           { return JW.Alg.BuildObjectFunctions.mapBy         (this, field);           },
+	mapByMethod    : function(method, args)    { return JW.Alg.BuildObjectFunctions.mapByMethod   (this, method, args);    },
+	mapFields      : function()                { return JW.Alg.BuildObjectFunctions.mapFields     (this);                  }
+});
