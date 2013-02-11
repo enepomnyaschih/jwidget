@@ -19,6 +19,7 @@
 
 JW.UI.Component = function(config) {
 	JW.UI.Component._super.call(this);
+	config = config || {};
 	this.rootClass = config.rootClass;
 	this.template = config.template;
 	this._childrenCreated = !config.children;
@@ -150,7 +151,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	},
 	
 	getElement: function(id) {
-		return (typeof id === "string") ? this._elements[id] : id;
+		return this._elements[id];
 	},
 	
 	getElementClass: function(id) {
@@ -170,7 +171,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this._lists.push(new JW.UI.Component.List({
 			parent     : this,
 			collection : collection,
-			el         : this.getElement(el)
+			el         : (typeof el === "string") ? this.getElement(el) : (el || this.el)
 		}));
 	},
 	
