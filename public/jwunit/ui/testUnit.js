@@ -82,22 +82,16 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	},
 	
 	_renderChildren: function() {
-		var units = new JW.ObservableArray();
-		if (this.__unit.units) {
-			units.addAll(this.__unit.units);
-		}
-		
-		this._mapper = new JW.ObservableArray.InstanceMapper({
-			source    : units,
-			provider  : JW.Unit.UI.TestUnit,
-			dataField : "__unit",
-			extraCfg : {
+		var units = this.__unit.units || [];
+		var unitViews = units.map(function(unit) {
+			return new JW.Unit.UI.TestUnit({
+				__unit        : unit,
 				__broadcaster : this.__broadcaster,
 				__depth       : this.__depth + 1
-			}
-		});
+			});
+		}, this);
 		
-		this.addList(this._mapper.target, "list");
+		this.addObservableArray(mapper.target, "list");
 	},
 	
 	_subscribeUnit: function() {

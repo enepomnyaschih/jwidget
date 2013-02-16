@@ -17,27 +17,34 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Component.Child = function(parent, child, name) {
-	JW.UI.Component.Child._super.call(this);
+JW.UI.Component.ObservableArray = function(parent, source, el) {
+	JW.UI.Component.ObservableArray._super.call(this);
 	this.parent = parent;
-	this.child = child;
-	this._el = this.parent.getElement(name);
-	this.parent._initChild(this.child);
-	this._el.replaceBy(this.child.el);
-	this.child._afterAppend();
+	
+	this._mapper = new JW.ObservableArray.Mapper({
+		source      : source,
+		createItem  : function(child) { this.parent._initChild(child); return child; },
+		destroyItem : function(child) { this.parent._doneChild(child); },
+		scope       : this
+	});
+	
+	this._inserter = new JW.UI.Inserter({
+		source : this._mapper.target,
+		el     : el
+	});
 };
 
-JW.extend(JW.UI.Component.Child, JW.Class, {
+JW.extend(JW.UI.Component.ObservableArray, JW.Class, {
 	/*
 	Fields
 	JW.UI.Component parent;
-	JW.UI.Component child;
-	Element _el;
+	JW.ObservableArray.Mapper<JW.UI.Component, JW.UI.Component> _mapper;
+	JW.UI.Inserter _inserter;
 	*/
 	
 	destroy: function() {
-		this.parent._doneChild(this.child);
-		this.child.el.replaceWith(this._el);
+		this._inserter.destroy();
+		this._mapper.destroy();
 		this._super();
 	}
 });

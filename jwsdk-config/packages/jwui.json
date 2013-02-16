@@ -11,8 +11,7 @@
 		"jwui/browsers.js",
 		"jwui/component.js",
 		"jwui/component/child.js",
-		"jwui/component/list.js",
-		"jwui/component/list/item.js",
+		"jwui/component/observableArray.js",
 		"jwui/inserter.js",
 		"jwui/params.js",
 		"jwui/preloadImage.js"

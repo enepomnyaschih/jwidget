@@ -26,13 +26,12 @@ JW.UI.Component = function(config) {
 	this.children = config.children || new JW.ObservableMap();
 	this.parent = null;
 	this.el = null;
-	this.appended = false;
+	this.wasAfterAppend = false;
 	this.destroyed = false;
 	this._elements = {};
 	this.allChildren = new JW.ObservableSet();
 	this._childMapper = null;
-	this._lists = [];
-	this._invokeRemoveEvent = new JW.Event();
+	this._observableArrays = [];
 },
 
 JW.extend(JW.UI.Component, JW.Class, {
@@ -46,13 +45,12 @@ JW.extend(JW.UI.Component, JW.Class, {
 	Boolean _childrenCreated;
 	JW.UI.Component parent;
 	Element el;
-	Boolean appended;
+	Boolean wasAfterAppend;
 	Boolean destroyed;
 	Map<Element> _elements;
-	JW.ObservableSet<JW.UI.Component> allChildren; // children + (lists' contents)
+	JW.ObservableSet<JW.UI.Component> allChildren; // children + (arrays' contents)
 	JW.ObservableMap.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
-	Array<JW.UI.Component.List> _lists;
-	JW.Event<JW.UI.Component.EventParams> _invokeRemoveEvent;
+	Array<JW.UI.Component.ObservableArray> _observableArrays;
 	*/
 	
 	destroy: function() {
@@ -61,20 +59,17 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		this.destroyed = true;
 		if (this.el) {
-			this.remove();
 			this.el.remove();
 			this.destroyComponent();
 			this._childMapper.destroy();
 		}
 		this.allChildren.eachByMethod("destroy");
-		this._invokeRemoveEvent.destroy();
-		JW.Array.eachByMethod(this._lists, "destroy");
+		JW.Array.eachByMethod(this._observableArrays, "destroy");
 		this.allChildren.destroy();
 		if (this._childrenCreated) {
 			this.children.destroy();
 		}
-		this._invokeRemoveEvent = null;
-		this._lists = null;
+		this._observableArrays = null;
 		this._childMapper = null;
 		this.allChildren = null;
 		this.children = null;
@@ -108,14 +103,11 @@ JW.extend(JW.UI.Component, JW.Class, {
 			anchorEl.removeAttr("jwid");
 			anchorEl.addClass(this.getElementClass(jwId));
 		}
-		this._childMapper = new JW.ObservableMap.InstanceMapper({
-			source    : this.children,
-			provider  : JW.UI.Component.Child,
-			dataField : "component",
-			keyField  : "name",
-			extraCfg  : {
-				parent : this
-			}
+		this._childMapper = new JW.ObservableMap.Mapper({
+			source      : this.children,
+			createItem  : function(child, name) { return new JW.UI.Component.Child(this, child, name); },
+			destroyItem : function(componentChild) { componentChild.destroy(); },
+			scope       : this
 		});
 		this.renderComponent();
 		for (var jwId in this._elements) {
@@ -130,23 +122,20 @@ JW.extend(JW.UI.Component, JW.Class, {
 	
 	renderTo: function(el) {
 		this.render();
-		this.remove();
 		jQuery(el).insert(this.el);
 		this._afterAppend();
 	},
 	
 	renderAs: function(el) {
 		this.render();
-		this.remove();
 		jQuery(el).replaceBy(this.el);
 		this._afterAppend();
 	},
 	
 	remove: function() {
-		if (!this.el) {
-			return;
+		if (this.parent) {
+			throw new Error("JW.UI.Component.remove must be used for root components only");
 		}
-		this._invokeRemoveEvent.trigger(new JW.UI.Component.EventParams(this));
 		this.el.detach();
 	},
 	
@@ -167,27 +156,48 @@ JW.extend(JW.UI.Component, JW.Class, {
 		delete this._elements[id];
 	},
 	
-	addList: function(collection, el) {
-		this._lists.push(new JW.UI.Component.List({
-			parent     : this,
-			collection : collection,
-			el         : (typeof el === "string") ? this.getElement(el) : (el || this.el)
-		}));
+	addArray: function(source, el) {
+		el = this._getElement(el);
+		for (var i = 0, l = source.length; i < l; ++i) {
+			var component = source[i];
+			this._initChild(component);
+			el.append(component.el);
+			component._afterAppend();
+		}
+	},
+	
+	addObservableArray: function(source, el) {
+		this._observableArrays.push(new JW.UI.Component.ObservableArray(this, source, this._getElement(el)));
 	},
 	
 	_afterAppend: function() {
-		if (this.appended || !this.el) {
+		if (this.wasAfterAppend || !this.el) {
 			return;
 		}
-		if (this.parent && !this.parent.appended) {
+		if (this.parent && !this.parent.wasAfterAppend) {
 			return;
 		}
 		if (!this.parent && !this.el.parents("body").length) {
 			return;
 		}
-		this.appended = true;
+		this.wasAfterAppend = true;
 		this.afterAppend();
 		this.allChildren.eachByMethod("_afterAppend");
+	},
+	
+	_initChild: function(component) {
+		component.render();
+		component.parent = this;
+		this.allChildren.add(component);
+	},
+	
+	_doneChild: function(component) {
+		this.allChildren.remove(component);
+		component.parent = null;
+	},
+	
+	_getElement: function(el) {
+		return (typeof el === "string") ? this.getElement(el) : (el || this.el);
 	}
 });
 
