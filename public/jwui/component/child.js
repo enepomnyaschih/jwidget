@@ -36,8 +36,8 @@ JW.extend(JW.UI.Component.Child, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.parent._doneChild(this.child);
 		this.child.el.replaceWith(this._el);
+		this.parent._doneChild(this.child);
 		this._super();
 	}
 });

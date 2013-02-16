@@ -7,9 +7,10 @@
 	"resources" : [
 		"jwui/core.js",
 		"jwui/jquery.patch.js",
-        
+		
 		"jwui/browsers.js",
 		"jwui/component.js",
+		"jwui/component/array.js",
 		"jwui/component/child.js",
 		"jwui/component/observableArray.js",
 		"jwui/inserter.js",

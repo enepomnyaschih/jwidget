@@ -22,16 +22,16 @@ JW.UI.Component = function(config) {
 	config = config || {};
 	this.rootClass = config.rootClass;
 	this.template = config.template;
-	this._childrenCreated = !config.children;
-	this.children = config.children || new JW.ObservableMap();
 	this.parent = null;
-	this.el = null;
 	this.wasAfterAppend = false;
 	this.destroyed = false;
-	this._elements = {};
-	this.allChildren = new JW.ObservableSet();
+	this.el = null;
+	this.children = null;
+	this._elements = null;
+	this._allChildren = null;
 	this._childMapper = null;
-	this._observableArrays = [];
+	this._arrays = null;
+	this._observableArrays = null;
 },
 
 JW.extend(JW.UI.Component, JW.Class, {
@@ -39,21 +39,26 @@ JW.extend(JW.UI.Component, JW.Class, {
 	Optional
 	String rootClass;
 	String template;
-	JW.ObservableMap<JW.UI.Component> children; // named children
 	
 	Fields
-	Boolean _childrenCreated;
 	JW.UI.Component parent;
-	Element el;
 	Boolean wasAfterAppend;
 	Boolean destroyed;
+	
+	Fields (rendering)
+	Element el;
+	JW.ObservableMap<JW.UI.Component> children; // named children
 	Map<Element> _elements;
-	JW.ObservableSet<JW.UI.Component> allChildren; // children + (arrays' contents)
+	Set<JW.UI.Component> _allChildren; // children + (arrays' contents)
 	JW.ObservableMap.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
-	Array<JW.UI.Component.ObservableArray> _observableArrays;
+	Set<JW.UI.Component.Array> _arrays;
+	Set<JW.UI.Component.ObservableArray> _observableArrays;
 	*/
 	
 	destroy: function() {
+		if (this.parent) {
+			throw new Error("JW.UI.Component.destroy must be used for root and detached components only");
+		}
 		if (this.destroyed) {
 			return;
 		}
@@ -61,19 +66,21 @@ JW.extend(JW.UI.Component, JW.Class, {
 		if (this.el) {
 			this.el.remove();
 			this.destroyComponent();
+			
+			JW.Set.eachByMethod(this._observableArrays, "destroyAll");
+			JW.Set.eachByMethod(this._arrays, "destroyAll");
+			
+			var children = this.children.getValuesArray();
 			this._childMapper.destroy();
-		}
-		this.allChildren.eachByMethod("destroy");
-		JW.Array.eachByMethod(this._observableArrays, "destroy");
-		this.allChildren.destroy();
-		if (this._childrenCreated) {
 			this.children.destroy();
+			JW.Array.eachByMethod(children, "destroy");
+			
+			this._observableArrays = null;
+			this._arrays = null;
+			this._childMapper = null;
+			this.children = null;
 		}
-		this._observableArrays = null;
-		this._childMapper = null;
-		this.allChildren = null;
-		this.children = null;
-		this.parent = null;
+		this._allChildren = null;
 		this._elements = null;
 		this.el = null;
 		this._super();
@@ -90,6 +97,11 @@ JW.extend(JW.UI.Component, JW.Class, {
 			return;
 		}
 		this.el = jQuery(this.template || this.templates.main);
+		this._elements = {};
+		this._allChildren = {};
+		this.children = new JW.ObservableMap();
+		this._arrays = {};
+		this._observableArrays = {};
 		this.rootClass = this.rootClass || this.el.attr("jwclass");
 		if (this.rootClass) {
 			this.el.removeAttr("jwclass");
@@ -157,17 +169,11 @@ JW.extend(JW.UI.Component, JW.Class, {
 	},
 	
 	addArray: function(source, el) {
-		el = this._getElement(el);
-		for (var i = 0, l = source.length; i < l; ++i) {
-			var component = source[i];
-			this._initChild(component);
-			el.append(component.el);
-			component._afterAppend();
-		}
+		return new JW.UI.Component.Array(this, source, this._getElement(el));
 	},
 	
 	addObservableArray: function(source, el) {
-		this._observableArrays.push(new JW.UI.Component.ObservableArray(this, source, this._getElement(el)));
+		return new JW.UI.Component.ObservableArray(this, source, this._getElement(el));
 	},
 	
 	_afterAppend: function() {
@@ -182,17 +188,17 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		this.wasAfterAppend = true;
 		this.afterAppend();
-		this.allChildren.eachByMethod("_afterAppend");
+		JW.Set.eachByMethod(this._allChildren, "_afterAppend");
 	},
 	
 	_initChild: function(component) {
 		component.render();
 		component.parent = this;
-		this.allChildren.add(component);
+		JW.Set.add(this._allChildren, component);
 	},
 	
 	_doneChild: function(component) {
-		this.allChildren.remove(component);
+		JW.Set.remove(this._allChildren, component);
 		component.parent = null;
 	},
 	

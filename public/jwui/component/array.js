@@ -17,42 +17,41 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Component.ObservableArray = function(parent, source, el) {
-	JW.UI.Component.ObservableArray._super.call(this);
+JW.UI.Component.Array = function(parent, source, el) {
+	JW.UI.Component.Array._super.call(this);
 	this.parent = parent;
-	JW.Set.add(parent._observableArrays, this);
+	this.source = source;
+	JW.Set.add(parent._arrays, this);
 	
-	this._mapper = new JW.ObservableArray.Mapper({
-		source      : source,
-		createItem  : function(child) { this.parent._initChild(child); return child; },
-		destroyItem : function(child) { this.parent._doneChild(child); },
-		scope       : this
-	});
-	
-	this._inserter = new JW.UI.Inserter({
-		source : this._mapper.target,
-		el     : el
-	});
+	for (var i = 0, l = source.length; i < l; ++i) {
+		var component = source[i];
+		parent._initChild(component);
+		el.append(component.el);
+		component._afterAppend();
+	}
 };
 
-JW.extend(JW.UI.Component.ObservableArray, JW.Class, {
+JW.extend(JW.UI.Component.Array, JW.Class, {
 	/*
 	Fields
 	JW.UI.Component parent;
-	JW.ObservableArray.Mapper<JW.UI.Component, JW.UI.Component> _mapper;
-	JW.UI.Inserter _inserter;
+	Array<JW.UI.Component> source;
 	*/
 	
 	destroy: function() {
-		this._inserter.destroy();
-		this._mapper.destroy();
-		JW.Set.remove(this.parent._observableArrays, this);
+		var source = this.source;
+		for (var i = 0, l = source.length; i < l; ++i) {
+			var component = source[i];
+			component.el.detach();
+			this.parent._doneChild(component);
+		}
+		JW.Set.remove(this.parent._arrays, this);
 		this._super();
 	},
 	
 	destroyAll: function() {
-		var source = this._mapper.source;
+		var source = this.source;
 		this.destroy();
-		source.eachByMethod("destroy");
+		JW.Array.eachByMethod(source, "destroy");
 	}
 });

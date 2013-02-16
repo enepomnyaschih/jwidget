@@ -22,7 +22,6 @@ JW.Unit.UI.TestUnit = function(config) {
 	this.__broadcaster = config.__broadcaster;
 	this.__unit = config.__unit;
 	this.__depth = JW.def(config.__depth, 0);
-	this._mapper = null;
 	this.startEventAttachment = null;
 	this.successEventAttachment = null;
 	this.failEventAttachment = null;
@@ -39,7 +38,6 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	Integer __depth;
 	
 	Fields
-	JW.ObservableArray.InstanceMapper _mapper;
 	JW.EventAttachment startEventAttachment;
 	JW.EventAttachment successEventAttachment;
 	JW.EventAttachment failEventAttachment;
@@ -49,6 +47,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	
 	renderComponent: function() {
 		this._super();
+		//console.log("Rendering " + this.__unit.__name);
 		this._renderElements();
 		this._renderChildren();
 		this._subscribeUnit();
@@ -58,7 +57,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 		this.failEventAttachment.destroy();
 		this.successEventAttachment.destroy();
 		this.startEventAttachment.destroy();
-		this._mapper.destroy();
+		//console.log("Destroyed " + this.__unit.__name);
 		this._super();
 	},
 	
@@ -83,6 +82,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	
 	_renderChildren: function() {
 		var units = this.__unit.units || [];
+		
 		var unitViews = units.map(function(unit) {
 			return new JW.Unit.UI.TestUnit({
 				__unit        : unit,
@@ -90,8 +90,20 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 				__depth       : this.__depth + 1
 			});
 		}, this);
-		
+		this.addArray(unitViews, "list");
+		/*
+		var mapper = new JW.ObservableArray.InstanceMapper({
+			source    : new JW.ObservableArray(units),
+			provider  : JW.Unit.UI.TestUnit,
+			scope     : this,
+			dataField : "__unit",
+			extraCfg : {
+				__broadcaster : this.__broadcaster,
+				__depth       : this.__depth + 1
+			}
+		});
 		this.addObservableArray(mapper.target, "list");
+		*/
 	},
 	
 	_subscribeUnit: function() {
