@@ -17,7 +17,91 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Array = {
+JW.Array = function(items) {
+	JW.Array._super.call(this);
+	this.items = items ? items.concat() : [];
+};
+
+JW.extend(JW.Array, JW.Class, {
+	add: function(item, index) {
+		JW.Array.add(this.items, item, index);
+	},
+	
+	addAll: function(items, index) {
+		JW.Array.addAll(this.items, items, index);
+	},
+	
+	remove: function(index, count) {
+		return JW.Array.remove(this.items, index, count);
+	},
+	
+	move: function(fromIndex, toIndex) {
+		return JW.Array.move(this.items, fromIndex, toIndex);
+	},
+	
+	clear: function() {
+		return JW.Array.clear(this.items);
+	},
+	
+	every: function(callback, scope) {
+		return JW.Array.every(this.items, callback, scope);
+	},
+	
+	createEmpty: function() {
+		return new JW.Array();
+	},
+	
+	removeItem: function(item) {
+		return JW.Array.removeItem(this.items, item);
+	},
+	
+	removeBy: function(field, value) {
+		return JW.Array.removeBy(this.items, field, value);
+	},
+	
+	equal: function(arr) {
+		return JW.Array.equal(this.items, arr);
+	},
+	
+	pushAll: function(items) {
+		return JW.Array.pushAll(this.items, items);
+	},
+	
+	sortBy: function(field, order) {
+		return JW.Array.sortBy(this.items, field, order);
+	},
+	
+	top: function() {
+		return JW.Array.top(this.items);
+	},
+	
+	collapse: function(depth) {
+		return JW.Array.collapse(this.items, depth);
+	},
+	
+	indexOf: function(item) {
+		return JW.Array.indexOf(this.items, item);
+	},
+	
+	getSize: function() {
+		return this.items.length;
+	},
+	
+	isEmpty: function() {
+		return this.items.length === 0;
+	},
+	
+	clone: function() {
+		return this.items.concat();
+	}
+});
+
+JW.Array.prototype.getLength = JW.Array.prototype.getSize;
+JW.Array.prototype.pushItem = JW.Array.prototype.set;
+
+JW.applyIf(JW.Array.prototype, JW.Alg.BuildMethods);
+
+JW.apply(JW.Array, {
 	add: function(target, item, index) {
 		target.splice(index, 0, item);
 	},
@@ -175,7 +259,7 @@ JW.Array = {
 		}
 		return result;
 	}
-};
+});
 
 JW.Array.getLength = JW.Array.getSize; // alias
 
