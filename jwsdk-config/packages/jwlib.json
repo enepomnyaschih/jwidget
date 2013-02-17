@@ -6,6 +6,7 @@
 		"jwlib/core/eventAttachment.js",
 		"jwlib/core/eventParams.js",
 		"jwlib/core/valueEventParams.js",
+		"jwlib/core/itemValueEventParams.js",
 		
 		"jwlib/alg.js",
 		"jwlib/alg/simple.js",
