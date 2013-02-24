@@ -17,38 +17,31 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableArray.FieldMapper = function(config) {
-	JW.ObservableArray.FieldMapper._super.call(this);
-	this.source = config.source;
-	this.field = config.field;
-	
-	this.mapper = new JW.ObservableArray.Mapper({
-		source      : this.source,
-		target      : config.target,
-		createItem  : this._createItem,
-		destroyItem : this._destroyItem,
-		scope       : this
-	});
-	
-	this.target = this.mapper.target;
+JW.Array.Lister = function(source, config) {
+	JW.Array.Lister._super.call(this);
+	this.source = source;
+	this._targetCreated = !config.target;
+	this.target = config.target || this.source.createEmptySet();
+	this.target.addAll(this.source.getItems());
 };
 
-JW.extend(JW.ObservableArray.FieldMapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.Array.Lister/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
-	JW.ObservableArray<S> source;
-	String field;
+	JW.Array<T> source;
 	
 	Optional
-	JW.ObservableArray<T> target;
+	JW.Set<T> target;
 	
 	Fields
-	JW.ObservableArray.Mapper<S, T> mapper;
+	Boolean _targetCreated;
 	*/
 	
-	_createItem: function(data) {
-		return JW.get(data, this.field);
-	},
-	
-	_destroyItem: function() {}
+	destroy: function() {
+		this.target.removeAll(this.source.getItems());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this._super();
+	}
 });

@@ -352,8 +352,7 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	createIndexer: function(source, target) {
-		return new JW.ObservableArray.Indexer({
-			source : source,
+		return source.createIndexer({
 			target : target,
 			getKey : function(item) { return item.value; },
 			scope  : this

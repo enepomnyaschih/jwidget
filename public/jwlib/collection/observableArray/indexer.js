@@ -17,34 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableArray.Indexer = function(config) {
-	JW.ObservableArray.Indexer._super.call(this);
-	this.source = config.source;
-	this.getKey = config.getKey;
-	this._targetCreated = !config.target;
-	this.target = config.target || new JW.ObservableMap();
-	this.scope = config.scope;
+JW.ObservableArray.Indexer = function(source, config) {
+	JW.ObservableArray.Indexer._super.call(this, source, config);
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
 	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
-	this.target.setAll(this._index(this.source.array));
 };
 
-JW.extend(JW.ObservableArray.Indexer/*<T extends Any>*/, JW.Class, {
+JW.extend(JW.ObservableArray.Indexer/*<T extends Any>*/, JW.Array.Indexer/*<T>*/, {
 	/*
 	Required
 	JW.ObservableArray<T> source;
-	String getKey(T item);
 	
 	Optional
 	JW.ObservableMap<T> target;
-	Object scope;
 	
 	Fields
-	Boolean _targetCreated;
 	EventAttachment _addEventAttachment;
 	EventAttachment _removeEventAttachment;
 	EventAttachment _replaceEventAttachment;
@@ -54,25 +45,13 @@ JW.extend(JW.ObservableArray.Indexer/*<T extends Any>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.target.removeAll(this._keys(this.source.array));
 		this._resetEventAttachment.destroy();
 		this._filterEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
 		this._replaceEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
-	},
-	
-	_index: function(items) {
-		return JW.Array.index(items, this.getKey, this.scope || this);
-	},
-	
-	_keys: function(items) {
-		return JW.Array.map(items, this.getKey, this.scope || this);
 	},
 	
 	_onAdd: function(params) {

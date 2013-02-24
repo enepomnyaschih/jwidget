@@ -45,10 +45,10 @@ JW.extend(JW.Unit.TestSuit, JW.Unit.TestGroup, {
 				continue;
 			}
 			testSuit.__build();
-			if (!testSuit.units.length) {
+			if (testSuit.units.isEmpty()) {
 				continue;
 			}
-			this.units.push(testSuit);
+			this.units.add(testSuit);
 		}
 	},
 	
@@ -63,10 +63,10 @@ JW.extend(JW.Unit.TestSuit, JW.Unit.TestGroup, {
 				continue;
 			}
 			testCase.__build();
-			if (!testCase.units.length) {
+			if (testCase.units.isEmpty()) {
 				continue;
 			}
-			this.units.push(testCase);
+			this.units.add(testCase);
 		}
 	}
 });

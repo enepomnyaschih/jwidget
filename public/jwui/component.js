@@ -31,7 +31,6 @@ JW.UI.Component = function(config) {
 	this._allChildren = null;
 	this._childMapper = null;
 	this._arrays = null;
-	this._observableArrays = null;
 },
 
 JW.extend(JW.UI.Component, JW.Class, {
@@ -52,7 +51,6 @@ JW.extend(JW.UI.Component, JW.Class, {
 	Set<JW.UI.Component> _allChildren; // children + (arrays' contents)
 	JW.ObservableMap.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
 	Set<JW.UI.Component.Array> _arrays;
-	Set<JW.UI.Component.ObservableArray> _observableArrays;
 	*/
 	
 	destroy: function() {
@@ -65,19 +63,15 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.destroyed = true;
 		if (this.el) {
 			this.el.remove();
+			JW.Set.eachByMethod(this._arrays, "destroy");
+			this._arrays = null;
+			
 			this.destroyComponent();
 			
-			JW.Set.eachByMethod(this._observableArrays, "destroyAll");
-			JW.Set.eachByMethod(this._arrays, "destroyAll");
-			
-			var children = this.children.getValuesArray();
 			this._childMapper.destroy();
-			this.children.destroy();
-			JW.Array.eachByMethod(children, "destroy");
-			
-			this._observableArrays = null;
-			this._arrays = null;
 			this._childMapper = null;
+			this.children.eachByMethod("destroy");
+			this.children.destroy();
 			this.children = null;
 		}
 		this._allChildren = null;
@@ -101,7 +95,6 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this._allChildren = {};
 		this.children = new JW.ObservableMap();
 		this._arrays = {};
-		this._observableArrays = {};
 		this.rootClass = this.rootClass || this.el.attr("jwclass");
 		if (this.rootClass) {
 			this.el.removeAttr("jwclass");
@@ -170,10 +163,6 @@ JW.extend(JW.UI.Component, JW.Class, {
 	
 	addArray: function(source, el) {
 		return new JW.UI.Component.Array(this, source, this._getElement(el));
-	},
-	
-	addObservableArray: function(source, el) {
-		return new JW.UI.Component.ObservableArray(this, source, this._getElement(el));
 	},
 	
 	_afterAppend: function() {

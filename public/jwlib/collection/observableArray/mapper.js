@@ -1,5 +1,5 @@
 ﻿/*
-	JW ordered collection mapper.
+	jWidget Lib source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -20,14 +20,8 @@
 // TODO: Synchronize changeEvent and lengthChangeEvent in bulk operations
 // TODO: Filter from end to begin
 
-JW.ObservableArray.Mapper = function(config) {
-	JW.ObservableArray.Mapper._super.call(this);
-	this.source = config.source;
-	this.createItem = config.createItem;
-	this.destroyItem = config.destroyItem;
-	this._targetCreated = !config.target;
-	this.target = config.target || new JW.ObservableArray();
-	this.scope = config.scope;
+JW.ObservableArray.Mapper = function(source, config) {
+	JW.ObservableArray.Mapper._super.call(this, source, config);
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
@@ -36,22 +30,17 @@ JW.ObservableArray.Mapper = function(config) {
 	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
 	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
 	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
-	this.target.addAll(this._fill());
 };
 
-JW.extend(JW.ObservableArray.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.ObservableArray.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Array.Mapper/*<S, T>*/, {
 	/*
 	Required
 	JW.ObservableArray<S> source;
-	T createItem(S data);
-	void destroyItem(T item, S data);
 	
 	Optional
 	JW.ObservableArray<T> target;
-	Object scope; // defaults to this
 	
 	Fields
-	Boolean _targetCreated;
 	EventAttachment _addEventAttachment;
 	EventAttachment _removeEventAttachment;
 	EventAttachment _replaceEventAttachment;
@@ -63,7 +52,6 @@ JW.extend(JW.ObservableArray.Mapper/*<S extends JW.Class, T extends JW.Class>*/,
 	*/
 	
 	destroy: function() {
-		this._clear(this.source.array);
 		this._addEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._replaceEventAttachment.destroy();
@@ -72,25 +60,11 @@ JW.extend(JW.ObservableArray.Mapper/*<S extends JW.Class, T extends JW.Class>*/,
 		this._reorderEventAttachment.destroy();
 		this._filterEventAttachment.destroy();
 		this._resetEventAttachment.destroy();
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
 	},
 	
 	getKey: function(data) {
 		return data._iid;
-	},
-	
-	_clear: function(datas) {
-		var items = this.target.clear();
-		for (var i = items.length - 1; i >= 0; --i) {
-			this.destroyItem.call(this.scope || this, items[i], datas[i]);
-		}
-	},
-	
-	_fill: function() {
-		return JW.Array.map(this.source.array, this.createItem, this.scope || this);
 	},
 	
 	_onAdd: function(params) {

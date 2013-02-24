@@ -25,6 +25,7 @@ JW.Unit.UI.TestUnit = function(config) {
 	this.startEventAttachment = null;
 	this.successEventAttachment = null;
 	this.failEventAttachment = null;
+	this._mapper = null;
 	this._onClick = JW.inScope(this._onClick, this);
 };
 
@@ -41,6 +42,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	JW.EventAttachment startEventAttachment;
 	JW.EventAttachment successEventAttachment;
 	JW.EventAttachment failEventAttachment;
+	JW.AbstractArray.Mapper _mapper;
 	*/
 	
 	PADDING_PER_DEPTH : 20,
@@ -57,6 +59,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 		this.failEventAttachment.destroy();
 		this.successEventAttachment.destroy();
 		this.startEventAttachment.destroy();
+		this._mapper.destroy();
 		//console.log("Destroyed " + this.__unit.__name);
 		this._super();
 	},
@@ -81,29 +84,13 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	},
 	
 	_renderChildren: function() {
-		var units = this.__unit.units || [];
-		
-		var unitViews = units.map(function(unit) {
-			return new JW.Unit.UI.TestUnit({
-				__unit        : unit,
-				__broadcaster : this.__broadcaster,
-				__depth       : this.__depth + 1
-			});
-		}, this);
-		this.addArray(unitViews, "list");
-		/*
-		var mapper = new JW.ObservableArray.InstanceMapper({
-			source    : new JW.ObservableArray(units),
-			provider  : JW.Unit.UI.TestUnit,
-			scope     : this,
-			dataField : "__unit",
-			extraCfg : {
-				__broadcaster : this.__broadcaster,
-				__depth       : this.__depth + 1
-			}
+		var units = this.__unit.units || new JW.Array();
+		this._mapper = units.createMapper({
+			createItem  : this._createUnitView,
+			destroyItem : function(unitView) { unitView.destroy(); },
+			scope       : this
 		});
-		this.addObservableArray(mapper.target, "list");
-		*/
+		this.addArray(this._mapper.target, "list");
 	},
 	
 	_subscribeUnit: function() {
@@ -127,5 +114,13 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	
 	_onClick: function(event) {
 		this.__broadcaster.selectEvent.trigger(new JW.Unit.UI.Broadcaster.UnitEventParams(this.__broadcaster, this));
+	},
+	
+	_createUnitView: function(unit) {
+		return new JW.Unit.UI.TestUnit({
+			__unit        : unit,
+			__broadcaster : this.__broadcaster,
+			__depth       : this.__depth + 1
+		});
 	}
 });

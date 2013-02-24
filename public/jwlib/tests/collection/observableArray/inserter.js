@@ -24,8 +24,7 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Added d at 0"
 		);
-		var inserter = new JW.ObservableArray.Inserter({
-			source     : collection,
+		var inserter = collection.createInserter({
 			addItem    : function(item, index) { this.output("Added " + item + " at " + index); },
 			removeItem : function(index, item) { this.output("Removed " + item + " at " + index); },
 			clearItems : function(items) { this.output("Cleared " + items.join(", ")); },
@@ -160,8 +159,7 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 			"Added d at 3",
 			"Added e at 4"
 		);
-		var inserter = new JW.ObservableArray.Inserter({
-			source     : collection,
+		var inserter = collection.createInserter({
 			addItem    : function(item, index) { this.output("Added " + item + " at " + index); },
 			removeItem : function(index, item) { this.output("Removed " + item + " at " + index); },
 			scope      : this

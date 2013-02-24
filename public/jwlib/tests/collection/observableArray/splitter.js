@@ -23,8 +23,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 		var rowId = 0;
 		
 		var source = new JW.ObservableArray([ new JW.Proxy("a"), new JW.Proxy("b"), new JW.Proxy("c"), new JW.Proxy("d") ]);
-		var splitter = new JW.ObservableArray.Splitter({
-			source   : source,
+		var splitter = source.createSplitter({
 			capacity : 3
 		});
 		
@@ -33,8 +32,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 			this.id = ++rowId;
 			testCase.output("Created row " + this.id);
 			this.items = items;
-			this._inserter = new JW.ObservableArray.Inserter({
-				source     : items,
+			this._inserter = items.createInserter({
 				addItem    : this._addItem,
 				removeItem : this._removeItem,
 				clearItems : this._clearItems,
@@ -78,8 +76,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 			"Created row 2",
 			"Added item d at 2.0"
 		);
-		var mapper = new JW.ObservableArray.Mapper({
-			source      : splitter.rows,
+		var mapper = splitter.rows.createMapper({
 			createItem  : function(items) { return new Row(items); },
 			destroyItem : function(row) { row.destroy(); }
 		});

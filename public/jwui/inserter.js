@@ -17,13 +17,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Inserter = function(config) {
+JW.UI.Inserter = function(source, el) {
 	JW.UI.Inserter._super.call(this);
-	this.el = config.el;
-	this.source = config.source;
-	
-	this._inserter = new JW.ObservableArray.Inserter({
-		source     : this.source,
+	this.el = el;
+	this._inserter = source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
 		clearItems : this._clearItems,
@@ -33,11 +30,8 @@ JW.UI.Inserter = function(config) {
 
 JW.extend(JW.UI.Inserter, JW.Class, {
 	/*
-	Required
-	Element el;
-	JW.ObservableArray<JW.UI.Component> source;
-	
 	Fields
+	Element el;
 	JW.ObservableArray.Inserter<JW.UI.Component> _inserter;
 	*/
 	

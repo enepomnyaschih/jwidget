@@ -183,6 +183,38 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		return new JW.ObservableArray();
 	},
 	
+	createEmptyMap: function() {
+		return new JW.ObservableMap();
+	},
+	
+	createEmptySet: function() {
+		return new JW.ObservableSet();
+	},
+	
+	getItems: function() {
+		return this.array;
+	},
+	
+	createIndexer: function(config) {
+		return new JW.ObservableArray.Indexer(this, config);
+	},
+	
+	createInserter: function(config) {
+		return new JW.ObservableArray.Inserter(this, config);
+	},
+	
+	createLister: function(config) {
+		return new JW.ObservableArray.Lister(this, config);
+	},
+	
+	createMapper: function(config) {
+		return new JW.ObservableArray.Mapper(this, config);
+	},
+	
+	createSplitter: function(config) {
+		return new JW.Array.Splitter(this, config);
+	},
+	
 	_triggerChange: function() {
 		if (this.bulkCount !== 0) {
 			this.bulkDirty = true;

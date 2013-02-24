@@ -20,38 +20,30 @@
 JW.UI.Component.Array = function(parent, source, el) {
 	JW.UI.Component.Array._super.call(this);
 	this.parent = parent;
-	this.source = source;
 	JW.Set.add(parent._arrays, this);
 	
-	for (var i = 0, l = source.length; i < l; ++i) {
-		var component = source[i];
-		parent._initChild(component);
-		el.append(component.el);
-		component._afterAppend();
-	}
+	this._mapper = source.createMapper({
+		createItem  : function(child) { this.parent._initChild(child); return child; },
+		destroyItem : function(child) { this.parent._doneChild(child); },
+		scope       : this
+	});
+	
+	this._inserter = new JW.UI.Inserter(this._mapper.target, el);
 };
 
 JW.extend(JW.UI.Component.Array, JW.Class, {
 	/*
 	Fields
 	JW.UI.Component parent;
-	Array<JW.UI.Component> source;
+	JW.AbstractArray.Mapper<JW.UI.Component, JW.UI.Component> _mapper;
+	JW.AbstractArray.Inserter _inserter;
 	*/
 	
+	// override
 	destroy: function() {
-		var source = this.source;
-		for (var i = 0, l = source.length; i < l; ++i) {
-			var component = source[i];
-			component.el.detach();
-			this.parent._doneChild(component);
-		}
+		this._inserter.destroy();
+		this._mapper.destroy();
 		JW.Set.remove(this.parent._arrays, this);
 		this._super();
-	},
-	
-	destroyAll: function() {
-		var source = this.source;
-		this.destroy();
-		JW.Array.eachByMethod(source, "destroy");
 	}
 });

@@ -19,7 +19,7 @@
 
 JW.Unit.TestGroup = function(config) {
 	JW.Unit.TestGroup._super.call(this, config);
-	this.units = [];
+	this.units = new JW.Array();
 	this.unitIndex = 0;
 	this.unitCompleteAttachment = null;
 };
@@ -27,7 +27,7 @@ JW.Unit.TestGroup = function(config) {
 JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 	/*
 	Fields
-	Array<JW.Unit.TestUnit> units;
+	JW.Array<JW.Unit.TestUnit> units;
 	Integer unitIndex;
 	JW.EventAttachment unitCompleteAttachment;
 	*/
@@ -67,7 +67,7 @@ JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 	},
 	
 	_continue: function() {
-		if (this.unitIndex < this.units.length) {
+		if (this.unitIndex < this.units.getLength()) {
 			setTimeout(JW.inScope(this._setup, this), 1);
 		} else {
 			setTimeout(JW.inScope(this._teardownAll, this), 1);
@@ -83,19 +83,19 @@ JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 	},
 	
 	_onSetupFail: function(msg, e) {
-		var unit = this.units[this.unitIndex];
+		var unit = this.units.get(this.unitIndex);
 		unit.__onFail("Unit setup failed: " + msg, e);
 		this._nextUnit();
 	},
 	
 	_startUnit: function() {
-		var unit = this.units[this.unitIndex];
+		var unit = this.units.get(this.unitIndex);
 		this.unitCompleteAttachment = unit.completeEvent.bind(this._onUnitComplete, this);
 		unit.__start();
 	},
 	
 	_onUnitComplete: function() {
-		var unit = this.units[this.unitIndex];
+		var unit = this.units.get(this.unitIndex);
 		this.unitCompleteAttachment.destroy();
 		this.unitCompleteAttachment = null;
 		setTimeout(JW.inScope(this._teardown, this), 1);
@@ -110,7 +110,7 @@ JW.extend(JW.Unit.TestGroup, JW.Unit.TestUnit, {
 	},
 	
 	_onTeardownFail: function(msg, e) {
-		var unit = this.units[this.unitIndex];
+		var unit = this.units.get(this.unitIndex);
 		unit.__onFail("Unit teardown failed: " + msg, e);
 		this._nextUnit();
 	},

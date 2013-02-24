@@ -23,6 +23,10 @@ JW.Array = function(items) {
 };
 
 JW.extend(JW.Array, JW.Class, {
+	get: function(index) {
+		return this.items[index];
+	},
+	
 	add: function(item, index) {
 		JW.Array.add(this.items, item, index);
 	},
@@ -49,6 +53,14 @@ JW.extend(JW.Array, JW.Class, {
 	
 	createEmpty: function() {
 		return new JW.Array();
+	},
+	
+	createEmptyMap: function() {
+		return new JW.Map();
+	},
+	
+	createEmptySet: function() {
+		return new JW.Set();
 	},
 	
 	removeItem: function(item) {
@@ -93,6 +105,30 @@ JW.extend(JW.Array, JW.Class, {
 	
 	clone: function() {
 		return this.items.concat();
+	},
+	
+	getItems: function() {
+		return this.items;
+	},
+	
+	createIndexer: function(config) {
+		return new JW.Array.Indexer(this, config);
+	},
+	
+	createInserter: function(config) {
+		return new JW.Array.Inserter(this, config);
+	},
+	
+	createLister: function(config) {
+		return new JW.Array.Lister(this, config);
+	},
+	
+	createMapper: function(config) {
+		return new JW.Array.Mapper(this, config);
+	},
+	
+	createSplitter: function(config) {
+		return new JW.Array.Splitter(this, config);
 	}
 });
 

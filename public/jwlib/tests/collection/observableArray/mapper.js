@@ -266,8 +266,7 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	createMapper: function(source, target) {
-		return new JW.ObservableArray.Mapper({
-			source : source,
+		return source.createMapper({
 			target : target,
 			scope  : this,
 			

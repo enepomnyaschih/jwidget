@@ -353,8 +353,7 @@ JW.Tests.Collection.ObservableArray.ListerTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	createLister: function(source, target) {
-		return new JW.ObservableArray.Lister({
-			source : source,
+		return source.createLister({
 			target : target
 		});
 	},

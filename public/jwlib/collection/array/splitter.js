@@ -17,18 +17,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: Refuse JW.ObservableArray.Inserter in this implementation: listen raw events
-
-JW.ObservableArray.Splitter = function(config) {
-	JW.ObservableArray.Splitter._super.call(this);
-	this.source = config.source;
+JW.Array.Splitter = function(source, config) {
+	JW.Array.Splitter._super.call(this);
+	this.source = source;
 	this._rowsCreated = !config.rows;
-	this.rows = config.rows || new JW.ObservableArray();
+	this.rows = config.rows || this.source.createEmpty();
 	this.capacity = config.capacity || 1;
 	this._length = 0;
 	
-	this._inserter = new JW.ObservableArray.Inserter({
-		source     : this.source,
+	this._inserter = this.source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
 		clearItems : this._clearItems,
@@ -36,19 +33,19 @@ JW.ObservableArray.Splitter = function(config) {
 	});
 };
 
-JW.extend(JW.ObservableArray.Splitter/*<T extends Any, R extends JW.ObservableArray<T>>*/, JW.Class, {
+JW.extend(JW.Array.Splitter/*<T extends Any, R extends JW.Array<T>>*/, JW.Class, {
 	/*
 	Required
-	JW.ObservableArray<T> source;
+	JW.Array<T> source;
 	
 	Optional
-	JW.ObservableArray<R> rows;
+	JW.Array<R> rows;
 	Integer capacity;
 	
 	Fields
 	Boolean _rowsCreated;
 	Integer _length;
-	JW.ObservableArray.Inserter<T> _inserter;
+	JW.Array.Inserter<T> _inserter;
 	*/
 	
 	destroy: function() {
@@ -60,7 +57,7 @@ JW.extend(JW.ObservableArray.Splitter/*<T extends Any, R extends JW.ObservableAr
 	},
 	
 	createRow: function() {
-		return new JW.ObservableArray();
+		return this.source.createEmpty();
 	},
 	
 	destroyRow: function(row) {

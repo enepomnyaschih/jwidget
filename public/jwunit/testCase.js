@@ -33,7 +33,7 @@ JW.extend(JW.Unit.TestCase, JW.Unit.TestGroup, {
 			if (!test) {
 				continue;
 			}
-			this.units.push(test);
+			this.units.add(test);
 		}
 	},
 	

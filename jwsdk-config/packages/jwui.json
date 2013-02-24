@@ -12,7 +12,6 @@
 		"jwui/component.js",
 		"jwui/component/array.js",
 		"jwui/component/child.js",
-		"jwui/component/observableArray.js",
 		"jwui/inserter.js",
 		"jwui/params.js",
 		"jwui/preloadImage.js"

@@ -17,21 +17,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableArray.Lister = function(config) {
-	JW.ObservableArray.Lister._super.call(this);
-	this.source = config.source;
-	this._targetCreated = !config.target;
-	this.target = config.target || new JW.ObservableSet();
+JW.ObservableArray.Lister = function(source, config) {
+	JW.ObservableArray.Lister._super.call(this, source, config);
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
 	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
-	this.target.addAll(this.source.array);
 };
 
-JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.Array.Lister/*<T>*/, {
 	/*
 	Required
 	JW.ObservableArray<T> source;
@@ -40,7 +36,6 @@ JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.Class, {
 	JW.ObservableSet<T> target;
 	
 	Fields
-	Boolean _targetCreated;
 	EventAttachment _addEventAttachment;
 	EventAttachment _removeEventAttachment;
 	EventAttachment _replaceEventAttachment;
@@ -50,16 +45,12 @@ JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.target.clear();
 		this._resetEventAttachment.destroy();
 		this._filterEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
 		this._replaceEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
 	},
 	
