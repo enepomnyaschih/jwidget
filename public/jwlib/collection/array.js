@@ -27,6 +27,10 @@ JW.extend(JW.Array, JW.Class, {
 		return this.items[index];
 	},
 	
+	set: function(item, index) {
+		this.items[index] = item;
+	},
+	
 	add: function(item, index) {
 		JW.Array.add(this.items, item, index);
 	},
@@ -139,7 +143,7 @@ JW.applyIf(JW.Array.prototype, JW.Alg.BuildMethods);
 
 JW.apply(JW.Array, {
 	add: function(target, item, index) {
-		target.splice(index, 0, item);
+		target.splice(JW.def(index, target.length), 0, item);
 	},
 	
 	addAll: function(target, items, index) {
