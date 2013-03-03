@@ -17,8 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Array.Splitter = function(source, config) {
-	JW.Array.Splitter._super.call(this);
+JW.AbstractArray.Splitter = function(source, config) {
+	JW.AbstractArray.Splitter._super.call(this);
 	this.source = source;
 	this._rowsCreated = !config.rows;
 	this.rows = config.rows || this.source.createEmpty();
@@ -33,19 +33,19 @@ JW.Array.Splitter = function(source, config) {
 	});
 };
 
-JW.extend(JW.Array.Splitter/*<T extends Any, R extends JW.Array<T>>*/, JW.Class, {
+JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<T>>*/, JW.Class, {
 	/*
 	Required
-	JW.Array<T> source;
+	JW.AbstractArray<T> source;
 	
 	Optional
-	JW.Array<R> rows;
+	JW.AbstractArray<R> rows;
 	Integer capacity;
 	
 	Fields
 	Boolean _rowsCreated;
 	Integer _length;
-	JW.Array.Inserter<T> _inserter;
+	JW.AbstractArray.Inserter<T> _inserter;
 	*/
 	
 	destroy: function() {

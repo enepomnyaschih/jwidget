@@ -32,7 +32,7 @@ JW.ObservableArray.Mapper = function(source, config) {
 	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
 };
 
-JW.extend(JW.ObservableArray.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Array.Mapper/*<S, T>*/, {
+JW.extend(JW.ObservableArray.Mapper/*<S extends Any, T extends Any>*/, JW.AbstractArray.Mapper/*<S, T>*/, {
 	/*
 	Required
 	JW.ObservableArray<S> source;
@@ -64,7 +64,7 @@ JW.extend(JW.ObservableArray.Mapper/*<S extends JW.Class, T extends JW.Class>*/,
 	},
 	
 	getKey: function(data) {
-		return data._iid;
+		return data._iid || data;
 	},
 	
 	_onAdd: function(params) {

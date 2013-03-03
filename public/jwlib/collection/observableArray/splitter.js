@@ -17,31 +17,4 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Array.Lister = function(source, config) {
-	JW.Array.Lister._super.call(this);
-	this.source = source;
-	this._targetCreated = !config.target;
-	this.target = config.target || this.source.createEmptySet();
-	this.target.addAll(this.source.getItems());
-};
-
-JW.extend(JW.Array.Lister/*<T extends JW.Class>*/, JW.Class, {
-	/*
-	Required
-	JW.Array<T> source;
-	
-	Optional
-	JW.Set<T> target;
-	
-	Fields
-	Boolean _targetCreated;
-	*/
-	
-	destroy: function() {
-		this.target.removeAll(this.source.getItems());
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		this._super();
-	}
-});
+JW.ObservableArray.Splitter = JW.AbstractArray.Splitter.extend();

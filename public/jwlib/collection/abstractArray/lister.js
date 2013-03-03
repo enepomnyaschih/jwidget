@@ -17,48 +17,31 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Array.Mapper = function(source, config) {
-	JW.Array.Mapper._super.call(this);
+JW.AbstractArray.Lister = function(source, config) {
+	JW.AbstractArray.Lister._super.call(this);
 	this.source = source;
-	this.createItem = config.createItem;
-	this.destroyItem = config.destroyItem;
 	this._targetCreated = !config.target;
-	this.target = config.target || this.source.createEmpty();
-	this.scope = config.scope;
-	this.target.addAll(this._fill());
+	this.target = config.target || this.source.createEmptySet();
+	this.target.addAll(this.source.getItems());
 };
 
-JW.extend(JW.Array.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.AbstractArray.Lister/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
-	JW.Array<S> source;
-	T createItem(S data);
-	void destroyItem(T item, S data);
+	JW.AbstractArray<T> source;
 	
 	Optional
-	JW.Array<T> target;
-	Object scope; // defaults to this
+	JW.Set<T> target;
 	
 	Fields
 	Boolean _targetCreated;
 	*/
 	
 	destroy: function() {
-		this._clear(this.source.getItems());
+		this.target.removeAll(this.source.getItems());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		this._super();
-	},
-	
-	_clear: function(datas) {
-		var items = this.target.clear();
-		for (var i = items.length - 1; i >= 0; --i) {
-			this.destroyItem.call(this.scope || this, items[i], datas[i]);
-		}
-	},
-	
-	_fill: function() {
-		return JW.Array.map(this.source.getItems(), this.createItem, this.scope || this);
 	}
 });

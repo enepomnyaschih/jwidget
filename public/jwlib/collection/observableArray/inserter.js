@@ -31,7 +31,7 @@ JW.ObservableArray.Inserter = function(source, config) {
 	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
 };
 
-JW.extend(JW.ObservableArray.Inserter/*<T extends Any>*/, JW.Array.Inserter/*<T>*/, {
+JW.extend(JW.ObservableArray.Inserter/*<T extends Any>*/, JW.AbstractArray.Inserter/*<T>*/, {
 	/*
 	Required
 	JW.ObservableArray<T> source;

@@ -17,8 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Array.Inserter = function(source, config) {
-	JW.Array.Inserter._super.call(this);
+JW.AbstractArray.Inserter = function(source, config) {
+	JW.AbstractArray.Inserter._super.call(this);
 	this.source = source;
 	this.addItem = config.addItem;
 	this.removeItem = config.removeItem;
@@ -27,10 +27,10 @@ JW.Array.Inserter = function(source, config) {
 	this._fill();
 };
 
-JW.extend(JW.Array.Inserter/*<T extends Any>*/, JW.Class, {
+JW.extend(JW.AbstractArray.Inserter/*<T extends Any>*/, JW.Class, {
 	/*
 	Required
-	JW.Array<T> source;
+	JW.AbstractArray<T> source;
 	void addItem(T item, Integer index);
 	void removeItem(Integer index, T item);
 	

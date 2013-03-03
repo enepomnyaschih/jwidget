@@ -27,7 +27,7 @@ JW.ObservableArray.Indexer = function(source, config) {
 	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
 };
 
-JW.extend(JW.ObservableArray.Indexer/*<T extends Any>*/, JW.Array.Indexer/*<T>*/, {
+JW.extend(JW.ObservableArray.Indexer/*<T extends Any>*/, JW.AbstractArray.Indexer/*<T>*/, {
 	/*
 	Required
 	JW.ObservableArray<T> source;

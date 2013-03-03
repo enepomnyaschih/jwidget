@@ -27,7 +27,7 @@ JW.ObservableArray.Lister = function(source, config) {
 	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
 };
 
-JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.Array.Lister/*<T>*/, {
+JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Lister/*<T>*/, {
 	/*
 	Required
 	JW.ObservableArray<T> source;

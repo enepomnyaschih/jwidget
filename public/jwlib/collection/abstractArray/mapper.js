@@ -17,43 +17,48 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Array.Indexer = function(source, config) {
-	JW.Array.Indexer._super.call(this);
+JW.AbstractArray.Mapper = function(source, config) {
+	JW.AbstractArray.Mapper._super.call(this);
 	this.source = source;
-	this.getKey = config.getKey;
+	this.createItem = config.createItem;
+	this.destroyItem = config.destroyItem;
 	this._targetCreated = !config.target;
-	this.target = config.target || this.source.createEmptyMap();
+	this.target = config.target || this.source.createEmpty();
 	this.scope = config.scope;
-	this.target.setAll(this._index(this.source.getItems()));
+	this.target.addAll(this._fill());
 };
 
-JW.extend(JW.Array.Indexer/*<T extends Any>*/, JW.Class, {
+JW.extend(JW.AbstractArray.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	/*
 	Required
-	JW.Array<T> source;
-	String getKey(T item);
+	JW.AbstractArray<S> source;
+	T createItem(S data);
+	void destroyItem(T item, S data);
 	
 	Optional
-	JW.Map<T> target;
-	Object scope;
+	JW.AbstractArray<T> target;
+	Object scope; // defaults to this
 	
 	Fields
 	Boolean _targetCreated;
 	*/
 	
 	destroy: function() {
-		this.target.removeAll(this._keys(this.source.getItems()));
+		this._clear(this.source.getItems());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		this._super();
 	},
 	
-	_index: function(items) {
-		return JW.Array.index(items, this.getKey, this.scope || this);
+	_clear: function(datas) {
+		var items = this.target.clear();
+		for (var i = items.length - 1; i >= 0; --i) {
+			this.destroyItem.call(this.scope || this, items[i], datas[i]);
+		}
 	},
 	
-	_keys: function(items) {
-		return JW.Array.map(items, this.getKey, this.scope || this);
+	_fill: function() {
+		return JW.Array.map(this.source.getItems(), this.createItem, this.scope || this);
 	}
 });

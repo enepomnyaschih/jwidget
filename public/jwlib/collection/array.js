@@ -17,6 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// TODO: structurize and document removeItem, removeBy and other misc array methods
+
 JW.Array = function(items) {
 	JW.Array._super.call(this);
 	this.items = items ? items.concat() : [];
@@ -108,7 +110,7 @@ JW.extend(JW.Array, JW.Class, {
 	},
 	
 	clone: function() {
-		return this.items.concat();
+		return new JW.Array(this.items.concat());
 	},
 	
 	getItems: function() {
@@ -140,6 +142,12 @@ JW.Array.prototype.getLength = JW.Array.prototype.getSize;
 JW.Array.prototype.pushItem = JW.Array.prototype.set;
 
 JW.applyIf(JW.Array.prototype, JW.Alg.BuildMethods);
+
+JW.Array.Indexer = JW.AbstractArray.Indexer.extend();
+JW.Array.Inserter = JW.AbstractArray.Inserter.extend();
+JW.Array.Lister = JW.AbstractArray.Lister.extend();
+JW.Array.Mapper = JW.AbstractArray.Mapper.extend();
+JW.Array.Splitter = JW.AbstractArray.Splitter.extend();
 
 JW.apply(JW.Array, {
 	add: function(target, item, index) {
