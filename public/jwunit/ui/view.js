@@ -22,7 +22,7 @@ JW.Unit.UI.View = function(config) {
 	this.testPlan = config.testPlan;
 	this.unitView = null;
 	this.selUnitView = null;
-	this.__broadcaster = null;
+	this.__broadcaster = new JW.Unit.UI.Broadcaster();
 };
 
 JW.extend(JW.Unit.UI.View, JW.UI.Component, {
@@ -43,7 +43,6 @@ JW.extend(JW.Unit.UI.View, JW.UI.Component, {
 	},
 	
 	_initBroadcaster: function() {
-		this.__broadcaster = new JW.Unit.UI.Broadcaster();
 		this.__broadcaster.selectEvent.bind(this._onUnitViewSelect, this);
 		this.__broadcaster.startEvent.bind(this._onUnitViewStart, this);
 	},
