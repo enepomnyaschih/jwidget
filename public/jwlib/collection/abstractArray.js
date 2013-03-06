@@ -17,6 +17,4 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.AbstractArray = JW.Class.extend();
-
-JW.applyIf(JW.AbstractArray.prototype, JW.Alg.BuildMethods);
+JW.AbstractArray = {};

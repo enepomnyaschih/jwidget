@@ -34,7 +34,7 @@ JW.extend(JW.AbstractArray.Indexer/*<T extends Any>*/, JW.Class, {
 	String getKey(T item);
 	
 	Optional
-	JW.Map<T> target;
+	JW.AbstractMap<T> target;
 	Object scope;
 	
 	Fields

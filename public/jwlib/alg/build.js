@@ -17,6 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// TODO: make merge to take JW.AbstractCollection as argument
+
 JW.Alg.createBuildFunctions = function(every, createEmpty, pushItem) {
 	var namespace = JW.Alg.createSimpleFunctions(every);
 	

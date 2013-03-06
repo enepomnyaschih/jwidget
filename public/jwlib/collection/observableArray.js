@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: tests for bulk changes
+// TODO: tests and document bulk changes
 
 JW.ObservableArray = function(items) {
 	JW.ObservableArray._super.call(this);
@@ -180,6 +180,10 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	},
 	
 	createEmpty: function() {
+		return new JW.ObservableArray();
+	},
+	
+	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
 	

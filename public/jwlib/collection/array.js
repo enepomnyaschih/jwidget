@@ -61,6 +61,10 @@ JW.extend(JW.Array, JW.Class, {
 		return new JW.Array();
 	},
 	
+	createEmptyArray: function() {
+		return new JW.Array();
+	},
+	
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
@@ -118,23 +122,23 @@ JW.extend(JW.Array, JW.Class, {
 	},
 	
 	createIndexer: function(config) {
-		return new JW.Array.Indexer(this, config);
+		return new JW.AbstractArray.Indexer(this, config);
 	},
 	
 	createInserter: function(config) {
-		return new JW.Array.Inserter(this, config);
+		return new JW.AbstractArray.Inserter(this, config);
 	},
 	
 	createLister: function(config) {
-		return new JW.Array.Lister(this, config);
+		return new JW.AbstractArray.Lister(this, config);
 	},
 	
 	createMapper: function(config) {
-		return new JW.Array.Mapper(this, config);
+		return new JW.AbstractArray.Mapper(this, config);
 	},
 	
 	createSplitter: function(config) {
-		return new JW.Array.Splitter(this, config);
+		return new JW.AbstractArray.Splitter(this, config);
 	}
 });
 
@@ -142,12 +146,6 @@ JW.Array.prototype.getLength = JW.Array.prototype.getSize;
 JW.Array.prototype.pushItem = JW.Array.prototype.set;
 
 JW.applyIf(JW.Array.prototype, JW.Alg.BuildMethods);
-
-JW.Array.Indexer = JW.AbstractArray.Indexer.extend();
-JW.Array.Inserter = JW.AbstractArray.Inserter.extend();
-JW.Array.Lister = JW.AbstractArray.Lister.extend();
-JW.Array.Mapper = JW.AbstractArray.Mapper.extend();
-JW.Array.Splitter = JW.AbstractArray.Splitter.extend();
 
 JW.apply(JW.Array, {
 	add: function(target, item, index) {
