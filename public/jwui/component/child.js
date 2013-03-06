@@ -21,8 +21,10 @@ JW.UI.Component.Child = function(parent, child, name) {
 	JW.UI.Component.Child._super.call(this);
 	this.parent = parent;
 	this.child = child;
+	this.name = name;
 	this._el = this.parent.getElement(name);
 	this.parent._initChild(this.child);
+	this.parent._elements[name] = this.child.el;
 	this._el.replaceBy(this.child.el);
 	this.child._afterAppend();
 };
@@ -32,11 +34,15 @@ JW.extend(JW.UI.Component.Child, JW.Class, {
 	Fields
 	JW.UI.Component parent;
 	JW.UI.Component child;
+	String name;
 	Element _el;
 	*/
 	
 	destroy: function() {
-		this.child.el.replaceWith(this._el);
+		if (this.parent._elements[this.name] === this.child.el) {
+			this.parent._elements[this.name] = this._el;
+		}
+		this.child.el.replaceBy(this._el);
 		this.parent._doneChild(this.child);
 		this._super();
 	}
