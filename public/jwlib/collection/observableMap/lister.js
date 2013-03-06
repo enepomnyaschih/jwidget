@@ -17,57 +17,34 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableMap.Lister = function(config) {
-	JW.ObservableMap.Lister._super.call(this);
-	this.source = config.source;
-	this._targetCreated = !config.target;
-	this.target = config.target || new JW.ObservableSet();
+JW.ObservableMap.Lister = function(source, config) {
+	JW.ObservableMap.Lister._super.call(this, source, config);
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
-	this.target.addAll(this.source.getValuesArray());
 };
 
-JW.extend(JW.ObservableMap.Lister/*<T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.ObservableMap.Lister/*<T extends JW.Class>*/, JW.AbstractMap.Lister/*<T>*/, {
 	/*
-	Required
-	JW.ObservableMap<T> source;
-	
-	Optional
-	JW.ObservableSet<T> target;
-	
 	Fields
-	Boolean _targetCreated;
 	EventAttachment _addEventAttachment;
 	EventAttachment _removeEventAttachment;
 	EventAttachment _changeEventAttachment;
 	*/
 	
 	destroy: function() {
-		this.target.clear();
 		this._changeEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
 	},
 	
-	_add: function(item) {
-		this.target._add(item);
-	},
-	
-	_remove: function(item) {
-		this.target._remove(item);
-	},
-	
 	_onAdd: function(params) {
-		this._add(params.item);
+		this.target._add(params.item);
 	},
 	
 	_onRemove: function(params) {
-		this._remove(params.item);
+		this.target._remove(params.item);
 	},
 	
 	_onChange: function() {

@@ -88,11 +88,33 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	
 	createEmpty: function() {
 		return new JW.Set();
+	},
+	
+	createEmptyArray: function() {
+		return new JW.Array();
+	},
+	
+	createEmptyMap: function() {
+		return new JW.Map();
+	},
+	
+	createEmptySet: function() {
+		return new JW.Set();
+	},
+	
+	createIndexer: function(config) {
+		return new JW.AbstractSet.Indexer(this, config);
+	},
+	
+	createMapper: function(config) {
+		return new JW.AbstractSet.Mapper(this, config);
 	}
 });
 
 JW.Set.prototype.getLength = JW.Set.prototype.getSize;
 JW.Set.prototype.pushItem = JW.Set.prototype.add;
+JW.Set.prototype._add = JW.Set.prototype.add;
+JW.Set.prototype._remove = JW.Set.prototype.remove;
 
 JW.applyIf(JW.Set.prototype, JW.Alg.BuildMethods);
 

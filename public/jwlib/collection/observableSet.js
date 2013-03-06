@@ -142,6 +142,26 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.ObservableSet();
 	},
 	
+	createEmptyArray: function() {
+		return new JW.ObservableArray();
+	},
+	
+	createEmptyMap: function() {
+		return new JW.ObservableMap();
+	},
+	
+	createEmptySet: function() {
+		return new JW.ObservableSet();
+	},
+	
+	createIndexer: function(config) {
+		return new JW.ObservableSet.Indexer(this, config);
+	},
+	
+	createMapper: function(config) {
+		return new JW.ObservableSet.Mapper(this, config);
+	},
+	
 	_add: function(item) {
 		if (this.set.json[item._iid]) {
 			return false;

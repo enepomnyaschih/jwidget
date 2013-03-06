@@ -17,65 +17,31 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableMap.Mapper = function(config) {
-	JW.ObservableMap.Mapper._super.call(this);
-	this.source = config.source;
-	this.createItem = config.createItem;
-	this.destroyItem = config.destroyItem;
-	this._targetCreated = !config.target;
-	this.target = config.target || new JW.ObservableMap();
-	this.scope = config.scope;
+JW.ObservableMap.Mapper = function(source, config) {
+	JW.ObservableMap.Mapper._super.call(this, source, config);
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
-	this._destructionQueue = [];
-	this.target.setAll(JW.Map.map(this.source.map.json, this.createItem, this.scope || this));
 };
 
-JW.extend(JW.ObservableMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
+JW.extend(JW.ObservableMap.Mapper/*<S extends Any, T extends Any>*/, JW.AbstractMap.Mapper/*<S, T>*/, {
 	/*
-	Required
-	JW.ObservableMap<S> source;
-	T createItem(S data, String key);
-	void destroyItem(T item, S data, String key);
-	
-	Optional
-	JW.ObservableMap<T> target;
-	Object scope; // defaults to this
-	
 	Fields
-	Boolean _targetCreated;
 	EventAttachment _addEventAttachment;
 	EventAttachment _removeEventAttachment;
 	EventAttachment _changeEventAttachment;
-	Array<Array> _destructionQueue;
 	*/
 	
 	destroy: function() {
-		if (!this.source.isEmpty()) {
-			this.source.every(this._remove, this);
-			this._change();
-		}
 		this._changeEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
-	},
-	
-	_remove: function(data, key) {
-		this._destructionQueue.push([ this.target._remove(key), data, key ]);
 	},
 	
 	_change: function() {
 		this.target._triggerChange();
-		for (var i = 0; i < this._destructionQueue.length; ++i) {
-			var params = this._destructionQueue[i];
-			this.destroyItem.call(this.scope || this, params[0], params[1], params[2]);
-		}
-		this._destructionQueue = [];
+		this._super();
 	},
 	
 	_onAdd: function(params) {

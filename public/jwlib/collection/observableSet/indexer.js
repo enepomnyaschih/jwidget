@@ -17,59 +17,32 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableSet.Indexer = function(config) {
-	JW.ObservableSet.Indexer._super.call(this);
-	this.source = config.source;
-	this.getKey = config.getKey;
-	this._targetCreated = !config.target;
-	this.target = config.target || new JW.ObservableMap();
-	this.scope = config.scope;
+JW.ObservableSet.Indexer = function(source, config) {
+	JW.ObservableSet.Indexer._super.call(this, source, config);
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
-	if (!this.source.isEmpty()) {
-		this.source.every(this._add, this);
-		this.target._triggerChange();
-	}
 };
 
-JW.extend(JW.ObservableSet.Indexer/*<T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.ObservableSet.Indexer/*<T extends JW.Class>*/, JW.AbstractSet.Indexer/*<T>*/, {
 	/*
-	Required
-	JW.ObservableSet<T> source;
-	String getKey(T item);
-	
-	Optional
-	JW.ObservableMap<T> target;
-	Object scope;
-	
 	Fields
-	Boolean _targetCreated;
 	EventAttachment _addEventAttachment;
 	EventAttachment _removeEventAttachment;
 	EventAttachment _changeEventAttachment;
 	*/
 	
+	// override
 	destroy: function() {
-		if (!this.source.isEmpty()) {
-			this.source.every(this._remove, this);
-			this.target._triggerChange();
-		}
 		this._changeEventAttachment.destroy();
 		this._removeEventAttachment.destroy();
 		this._addEventAttachment.destroy();
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
 	},
 	
-	_add: function(item) {
-		this.target._set(item, this.getKey.call(this.scope || this, item));
-	},
-	
-	_remove: function(item) {
-		this.target._remove(this.getKey.call(this.scope || this, item));
+	// override
+	_change: function() {
+		this.target._triggerChange();
 	},
 	
 	_onAdd: function(params) {
@@ -80,7 +53,8 @@ JW.extend(JW.ObservableSet.Indexer/*<T extends JW.Class>*/, JW.Class, {
 		this._remove(params.item);
 	},
 	
+	// override
 	_onChange: function() {
-		this.target._triggerChange();
+		this._change();
 	}
 });

@@ -94,6 +94,26 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		return new JW.Map();
 	},
 	
+	createEmptyArray: function() {
+		return new JW.Array();
+	},
+	
+	createEmptyMap: function() {
+		return new JW.Map();
+	},
+	
+	createEmptySet: function() {
+		return new JW.Set();
+	},
+	
+	createIndexer: function(config) {
+		return new JW.AbstractMap.Indexer(this, config);
+	},
+	
+	createMapper: function(config) {
+		return new JW.AbstractMap.Mapper(this, config);
+	},
+	
 	equal: function(map) {
 		if (this === map) {
 			return true;
@@ -113,6 +133,8 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 
 JW.Map.prototype.getLength = JW.Map.prototype.getSize;
 JW.Map.prototype.pushItem = JW.Map.prototype.set;
+JW.Map.prototype._set = JW.Map.prototype.set;
+JW.Map.prototype._remove = JW.Map.prototype.remove;
 
 JW.applyIf(JW.Map.prototype, JW.Alg.BuildMethods);
 
