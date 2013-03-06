@@ -33,7 +33,8 @@ JW.apply(jQuery.fn, {
 			cls = this.attr("class");
 		
 		el = jQuery(el);
-		this.replaceWith(el);
+		this.after(el);
+		this.detach();
 		
 		if (id) {
 			el.attr("id", id);
