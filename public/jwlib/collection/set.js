@@ -39,6 +39,10 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	Integer size;
 	*/
 	
+	getJson: function() {
+		return this.json;
+	},
+	
 	getSize: function() {
 		return this.size;
 	},

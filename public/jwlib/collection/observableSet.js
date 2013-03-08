@@ -60,6 +60,10 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		this._super();
 	},
 	
+	getJson: function() {
+		return this.set.getJson();
+	},
+	
 	getSize: function() {
 		return this.set.size;
 	},
