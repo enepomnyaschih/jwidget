@@ -19,6 +19,7 @@
 
 JW.AbstractArray.Splitter = function(source, config) {
 	JW.AbstractArray.Splitter._super.call(this);
+	config = config || {};
 	this.source = source;
 	this._rowsCreated = !config.rows;
 	this.rows = config.rows || this.source.createEmpty();

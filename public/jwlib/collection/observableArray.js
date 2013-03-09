@@ -216,7 +216,7 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	},
 	
 	createSplitter: function(config) {
-		return new JW.Array.Splitter(this, config);
+		return new JW.ObservableArray.Splitter(this, config);
 	},
 	
 	_triggerChange: function() {

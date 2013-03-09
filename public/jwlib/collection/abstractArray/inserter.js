@@ -19,6 +19,7 @@
 
 JW.AbstractArray.Inserter = function(source, config) {
 	JW.AbstractArray.Inserter._super.call(this);
+	config = config || {};
 	this.source = source;
 	this.addItem = config.addItem;
 	this.removeItem = config.removeItem;

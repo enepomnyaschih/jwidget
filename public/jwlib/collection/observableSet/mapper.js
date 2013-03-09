@@ -17,8 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableSet.Mapper = function(config) {
-	JW.ObservableSet.Mapper._super.call(this);
+JW.ObservableSet.Mapper = function(source, config) {
+	JW.ObservableSet.Mapper._super.call(this, source, config);
 	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
 	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
 	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
