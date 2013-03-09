@@ -158,8 +158,8 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 		return new JW.ObservableSet();
 	},
 	
-	createIndexer: function(config) {
-		return new JW.ObservableMap.Indexer(this, config);
+	createLister: function(config) {
+		return new JW.ObservableMap.Lister(this, config);
 	},
 	
 	createMapper: function(config) {

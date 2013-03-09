@@ -18,7 +18,8 @@
 */
 
 JW.AbstractSet.Mapper = function(source, config) {
-	JW.AbstractSet.Mapper._super.call(this, source, config);
+	JW.AbstractSet.Mapper._super.call(this);
+	config = config || {};
 	this.source = source;
 	this.createItem = config.createItem;
 	this.destroyItem = config.destroyItem;

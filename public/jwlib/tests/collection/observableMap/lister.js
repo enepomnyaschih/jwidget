@@ -148,8 +148,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	createLister: function(source, target) {
-		return new JW.ObservableMap.Lister({
-			source : source,
+		return source.createLister({
 			target : target
 		});
 	},

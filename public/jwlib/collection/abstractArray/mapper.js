@@ -19,6 +19,7 @@
 
 JW.AbstractArray.Mapper = function(source, config) {
 	JW.AbstractArray.Mapper._super.call(this);
+	config = config || {};
 	this.source = source;
 	this.createItem = config.createItem;
 	this.destroyItem = config.destroyItem;

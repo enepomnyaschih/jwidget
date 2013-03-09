@@ -19,19 +19,20 @@
 
 JW.AbstractMap.Lister = function(source, config) {
 	JW.AbstractMap.Lister._super.call(this);
+	config = config || {};
 	this.source = source;
 	this._targetCreated = !config.target;
 	this.target = config.target || source.createEmptySet();
 	this.target.addAll(this.source.getValuesArray());
 };
 
-JW.extend(JW.ObservableMap.Lister/*<T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.AbstractMap.Lister/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Required
-	JW.ObservableMap<T> source;
+	JW.AbstractMap<T> source;
 	
 	Optional
-	JW.ObservableSet<T> target;
+	JW.AbstractSet<T> target;
 	
 	Fields
 	Boolean _targetCreated;

@@ -119,7 +119,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 				this.children.set(this[renderMethodName].call(this), jwId);
 			}
 		}
-		this._childMapper = new JW.ObservableMap.Mapper({
+		this._childMapper = this.children.createMapper({
 			source      : this.children,
 			createItem  : function(child, name) { return new JW.UI.Component.Child(this, child, name); },
 			destroyItem : function(componentChild) { componentChild.destroy(); },

@@ -147,8 +147,7 @@ JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	createIndexer: function(source, target) {
-		return new JW.ObservableSet.Indexer({
-			source : source,
+		return source.createIndexer({
 			target : target,
 			scope  : this,
 			

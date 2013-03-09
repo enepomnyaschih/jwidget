@@ -19,6 +19,7 @@
 
 JW.AbstractArray.Lister = function(source, config) {
 	JW.AbstractArray.Lister._super.call(this);
+	config = config || {};
 	this.source = source;
 	this._targetCreated = !config.target;
 	this.target = config.target || this.source.createEmptySet();

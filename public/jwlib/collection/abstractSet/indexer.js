@@ -21,6 +21,7 @@
 
 JW.AbstractSet.Indexer = function(source, config) {
 	JW.AbstractSet.Indexer._super.call(this);
+	config = config || {};
 	this.source = source;
 	this.getKey = config.getKey;
 	this._targetCreated = !config.target;

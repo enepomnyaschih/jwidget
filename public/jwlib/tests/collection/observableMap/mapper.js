@@ -154,8 +154,7 @@ JW.Tests.Collection.ObservableMap.MapperTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	createMapper: function(source, target) {
-		return new JW.ObservableMap.Mapper({
-			source : source,
+		return source.createMapper({
 			target : target,
 			scope  : this,
 			

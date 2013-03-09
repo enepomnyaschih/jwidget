@@ -110,8 +110,8 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		return new JW.Set();
 	},
 	
-	createIndexer: function(config) {
-		return new JW.AbstractMap.Indexer(this, config);
+	createLister: function(config) {
+		return new JW.AbstractMap.Lister(this, config);
 	},
 	
 	createMapper: function(config) {
