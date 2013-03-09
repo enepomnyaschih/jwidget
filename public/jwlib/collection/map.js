@@ -39,6 +39,10 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	Integer size;
 	*/
 	
+	getJson: function() {
+		return this.json;
+	},
+	
 	getSize: function() {
 		return this.size;
 	},

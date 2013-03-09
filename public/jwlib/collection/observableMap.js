@@ -60,6 +60,10 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 		this._super();
 	},
 	
+	getJson: function() {
+		return this.map.getJson();
+	},
+	
 	getSize: function() {
 		return this.map.size;
 	},
