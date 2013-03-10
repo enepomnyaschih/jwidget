@@ -27,8 +27,8 @@ JW.UI.Component = function(config) {
 	this.destroyed = false;
 	this.el = null;
 	this.children = null;
+	this.allChildren = null;
 	this._elements = null;
-	this._allChildren = null;
 	this._childMapper = null;
 	this._arrays = null;
 },
@@ -47,8 +47,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 	Fields (rendering)
 	Element el;
 	JW.ObservableMap<JW.UI.Component> children; // named children
+	Set<JW.UI.Component> allChildren; // children + (arrays' contents)
 	Map<Element> _elements;
-	Set<JW.UI.Component> _allChildren; // children + (arrays' contents)
 	JW.ObservableMap.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
 	Set<JW.UI.Component.Array> _arrays;
 	*/
@@ -74,7 +74,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this.children.destroy();
 			this.children = null;
 		}
-		this._allChildren = null;
+		this.allChildren = null;
 		this._elements = null;
 		this.el = null;
 		this._super();
@@ -94,7 +94,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		this.el = jQuery(this.template || this.templates.main);
 		this._elements = {};
-		this._allChildren = {};
+		this.allChildren = {};
 		this.children = new JW.ObservableMap();
 		this._arrays = {};
 		this.rootClass = this.rootClass || this.el.attr("jwclass");
@@ -180,17 +180,17 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		this.wasAfterAppend = true;
 		this.afterAppend();
-		JW.Set.eachByMethod(this._allChildren, "_afterAppend");
+		JW.Set.eachByMethod(this.allChildren, "_afterAppend");
 	},
 	
 	_initChild: function(component) {
 		component.render();
 		component.parent = this;
-		JW.Set.add(this._allChildren, component);
+		JW.Set.add(this.allChildren, component);
 	},
 	
 	_doneChild: function(component) {
-		JW.Set.remove(this._allChildren, component);
+		JW.Set.remove(this.allChildren, component);
 		component.parent = null;
 	},
 	

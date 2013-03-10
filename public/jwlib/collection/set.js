@@ -112,6 +112,22 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	
 	createMapper: function(config) {
 		return new JW.AbstractSet.Mapper(this, config);
+	},
+	
+	equal: function(set) {
+		if (this === set) {
+			return true;
+		}
+		if (this.getSize() !== set.getSize()) {
+			return false;
+		}
+		var json = this.json;
+		for (var key in json) {
+			if (set.get(key) !== json[key]) {
+				return false;
+			}
+		}
+		return true;
 	}
 });
 
@@ -157,6 +173,19 @@ JW.apply(JW.Set, {
 			}
 		}
 		return true;
+	},
+	
+	equal: function(x, y) {
+		if (x === y) {
+			return true;
+		}
+		var size = JW.Set.getSize(y);
+		for (var key in x) {
+			if ((--size < 0) || (x[key] !== y[key])) {
+				return false;
+			}
+		}
+		return size === 0;
 	},
 	
 	clone: JW.Map.clone

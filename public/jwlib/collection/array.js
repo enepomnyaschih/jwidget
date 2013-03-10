@@ -143,7 +143,7 @@ JW.extend(JW.Array, JW.Class, {
 });
 
 JW.Array.prototype.getLength = JW.Array.prototype.getSize;
-JW.Array.prototype.pushItem = JW.Array.prototype.set;
+JW.Array.prototype.pushItem = JW.Array.prototype.add;
 
 JW.applyIf(JW.Array.prototype, JW.Alg.BuildMethods);
 
