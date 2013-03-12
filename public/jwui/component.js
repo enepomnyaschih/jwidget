@@ -136,7 +136,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	
 	renderAs: function(el) {
 		this.render();
-		jQuery(el).replaceBy(this.el);
+		jQuery(el).replaceBy(this.el, true);
 		this._afterAppend();
 	},
 	

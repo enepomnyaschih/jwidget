@@ -28,9 +28,9 @@ JW.apply(jQuery.fn, {
 		}
 	},
 	
-	replaceBy: function(el) {
-		var id = this.attr("id"),
-			cls = this.attr("class");
+	replaceBy: function(el, attrs) {
+		var id = attrs ? this.attr("id") : null,
+			cls = attrs ? this.attr("class") : null;
 		
 		el = jQuery(el);
 		this.after(el);

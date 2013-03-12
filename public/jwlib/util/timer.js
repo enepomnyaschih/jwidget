@@ -20,9 +20,9 @@
 JW.Timer = function(delay, repeat, sensitive) {
 	JW.Timer._super.call(this);
 	this.tickEvent = new JW.Event();
-	this.delay = delay;
-	this.repeat = repeat;
-	this.sensitive = sensitive;
+	this.delay = delay || 0;
+	this.repeat = repeat || false;
+	this.sensitive = sensitive || false;
 	this._handle = 0;
 	this._onTimeout = JW.inScope(this._onTimeout, this);
 };
