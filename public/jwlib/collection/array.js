@@ -177,7 +177,7 @@ JW.apply(JW.Array, {
 	
 	every: function(target, callback, scope) {
 		for (var i = 0, l = target.length; i < l; ++i) {
-			if (callback.call(scope || target, target[i], i, target) === false) {
+			if (callback.call(scope || target, target[i], i) === false) {
 				return false;
 			}
 		}

@@ -37,25 +37,25 @@ JW.extend(JW.ObservableArray.Inserter/*<T extends Any>*/, JW.AbstractArray.Inser
 	JW.ObservableArray<T> source;
 	
 	Fields
-	EventAttachment _addEventAttachment;
-	EventAttachment _removeEventAttachment;
-	EventAttachment _replaceEventAttachment;
-	EventAttachment _moveEventAttachment;
-	EventAttachment _clearEventAttachment;
-	EventAttachment _reorderEventAttachment;
-	EventAttachment _filterEventAttachment;
-	EventAttachment _resetEventAttachment;
+	JW.EventAttachment _addEventAttachment;
+	JW.EventAttachment _removeEventAttachment;
+	JW.EventAttachment _replaceEventAttachment;
+	JW.EventAttachment _moveEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
+	JW.EventAttachment _reorderEventAttachment;
+	JW.EventAttachment _filterEventAttachment;
+	JW.EventAttachment _resetEventAttachment;
 	*/
 	
 	destroy: function() {
-		this._addEventAttachment.destroy();
-		this._removeEventAttachment.destroy();
-		this._replaceEventAttachment.destroy();
-		this._moveEventAttachment.destroy();
-		this._clearEventAttachment.destroy();
-		this._reorderEventAttachment.destroy();
-		this._filterEventAttachment.destroy();
 		this._resetEventAttachment.destroy();
+		this._filterEventAttachment.destroy();
+		this._reorderEventAttachment.destroy();
+		this._clearEventAttachment.destroy();
+		this._moveEventAttachment.destroy();
+		this._replaceEventAttachment.destroy();
+		this._removeEventAttachment.destroy();
+		this._addEventAttachment.destroy();
 		this._super();
 	},
 	
