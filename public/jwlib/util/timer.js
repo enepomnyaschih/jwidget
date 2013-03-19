@@ -57,7 +57,7 @@ JW.extend(JW.Timer, JW.Class, {
 		}
 		var stopper = this._getStopper();
 		stopper(this._handle);
-		this._handle = 0;;
+		this._handle = 0;
 	},
 	
 	restart: function() {
@@ -78,17 +78,11 @@ JW.extend(JW.Timer, JW.Class, {
 	},
 	
 	_onTimeout: function() {
+		if (!this.repeat) {
+			this._handle = 0;
+		}
 		this.tickEvent.trigger(new JW.Timer.EventParams(this));
 	}
 });
 
-JW.Timer.EventParams = function(sender) {
-	JW.Timer.EventParams._super.call(this, sender);
-};
-
-JW.extend(JW.Timer.EventParams, JW.EventParams, {
-	/*
-	Fields
-	JW.Timer sender;
-	*/
-});
+JW.Timer.EventParams = JW.EventParams.extend();
