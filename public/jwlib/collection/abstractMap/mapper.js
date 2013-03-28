@@ -27,7 +27,7 @@ JW.AbstractMap.Mapper = function(source, config) {
 	this.target = config.target || source.createEmpty();
 	this.scope = config.scope;
 	this._destructionQueue = [];
-	this.target.setAll(JW.Map.map(this.source.map.json, this.createItem, this.scope || this));
+	this.target.setAll(JW.Map.map(this.source.getJson(), this.createItem, this.scope || this));
 };
 
 JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
