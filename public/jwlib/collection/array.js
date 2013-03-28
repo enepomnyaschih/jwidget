@@ -139,11 +139,22 @@ JW.extend(JW.Array, JW.Class, {
 	
 	createSplitter: function(config) {
 		return new JW.AbstractArray.Splitter(this, config);
+	},
+	
+	_perform: function(callback, scope) {
+		var items = callback.call(scope || this, this.items);
+		if (items && (items !== this.items)) {
+			JW.Array.clear(this.items);
+			JW.Array.pushAll(this.items, items);
+		}
 	}
 });
 
 JW.Array.prototype.getLength = JW.Array.prototype.getSize;
 JW.Array.prototype.pushItem = JW.Array.prototype.add;
+JW.Array.prototype.performReorder = JW.Array.prototype._perform;
+JW.Array.prototype.performFilter = JW.Array.prototype._perform;
+JW.Array.prototype.performReset = JW.Array.prototype._perform;
 
 JW.applyIf(JW.Array.prototype, JW.Alg.BuildMethods);
 
