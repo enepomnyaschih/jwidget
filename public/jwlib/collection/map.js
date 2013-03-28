@@ -28,7 +28,7 @@ JW.Map = function(json) {
 	this.json = {};
 	this.size = 0;
 	if (json) {
-		this._setAll(json);
+		this.setAll(json);
 	}
 };
 
