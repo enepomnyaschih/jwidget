@@ -259,14 +259,15 @@ JW.apply(JW.Array, {
 	},
 	
 	indexOf: Array.prototype.indexOf ? function(target, item) {
-		return target.indexOf(item);
+		var index = target.indexOf(item);
+		return (index === -1) ? undefined : index;
 	} : function(target, item) {
 		for (var i = 0, l = target.length; i < l; ++i) {
 			if (target[i] === item) {
 				return i;
 			}
 		}
-		return -1;
+		return undefined;
 	},
 	
 	getSize: function(target) {
