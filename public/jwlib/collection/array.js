@@ -271,11 +271,11 @@ JW.apply(JW.Array, {
 	},
 	
 	getSize: function(target) {
-		return target.length;
+		return target ? target.length : 0;
 	},
 	
 	isEmpty: function(target) {
-		return target.length === 0;
+		return target ? (target.length === 0) : true;
 	},
 	
 	clone: function(target) {
