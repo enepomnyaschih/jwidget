@@ -74,7 +74,8 @@ JW.String = {
 	},
 	
 	capitalize: function(target) {
-		return String(target).charAt(0).toUpperCase() + target.substr(1);
+		target = String(target);
+		return target.charAt(0).toUpperCase() + target.substr(1);
 	},
 	
 	camel: function(target) {
