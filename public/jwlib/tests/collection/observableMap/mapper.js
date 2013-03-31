@@ -18,7 +18,7 @@
 */
 
 JW.Tests.Collection.ObservableMap.MapperTestCase = JW.Unit.TestCase.extend({
-	testUnobservable: function() {
+	testUnobservableTarget: function() {
 		var source = new JW.ObservableMap({ "d": "D" });
 		var target = new JW.Map();
 		
@@ -87,7 +87,7 @@ JW.Tests.Collection.ObservableMap.MapperTestCase = JW.Unit.TestCase.extend({
 		source.destroy();
 	},
 	
-	testObservable: function() {
+	testObservableTarget: function() {
 		var source = new JW.ObservableMap({ "d": "D" });
 		var target = this.createTarget();
 		

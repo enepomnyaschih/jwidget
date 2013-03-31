@@ -18,7 +18,82 @@
 */
 
 JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
-	testMapper: function() {
+	testUnobservableTarget: function() {
+		var d = new JW.Proxy("d");
+		var source = new JW.ObservableSet([ d ]);
+		var target = new JW.Set();
+		
+		this.setExpectedOutput(
+			"Created D by d"
+		);
+		var mapper = this.createMapper(source, target);
+		this.assertTarget([ d ], target);
+		
+		var f = new JW.Proxy("f");
+		this.setExpectedOutput(
+			"Created F by f"
+		);
+		source.addAll([ f ]);
+		this.assertTarget([ d, f ], target);
+		
+		var c = new JW.Proxy("c");
+		this.setExpectedOutput(
+			"Created C by c"
+		);
+		source.add(c);
+		this.assertTarget([ d, f, c ], target);
+		
+		var b = new JW.Proxy("b");
+		var m = new JW.Proxy("m");
+		this.setExpectedOutput(
+			"Created B by b",
+			"Created M by m"
+		);
+		source.addAll([ b, m ]);
+		this.assertTarget([ d, f, c, b, m ], target);
+		
+		this.setExpectedOutput();
+		source.addAll([]);
+		this.assertTarget([ d, f, c, b, m ], target);
+		
+		this.setExpectedOutput(
+			"Destroyed M by m"
+		);
+		source.remove(m);
+		this.assertTarget([ d, f, c, b ], target);
+		
+		this.setExpectedOutput();
+		source.remove(m);
+		this.assertTarget([ d, f, c, b ], target);
+		
+		this.setExpectedOutput(
+			"Destroyed D by d",
+			"Destroyed F by f",
+			"Destroyed C by c",
+			"Destroyed B by b"
+		);
+		source.clear();
+		this.assertTarget([], target);
+		
+		var h = new JW.Proxy("h");
+		this.setExpectedOutput(
+			"Created H by h"
+		);
+		source.add(h);
+		this.assertTarget([ h ], target);
+		
+		this.setExpectedOutput(
+			"Destroyed H by h"
+		);
+		mapper.destroy();
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testObservableTarget: function() {
 		var d = new JW.Proxy("d");
 		var source = new JW.ObservableSet([ d ]);
 		var target = this.createTarget();
@@ -114,10 +189,113 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 			"Destroyed H by h"
 		);
 		mapper.destroy();
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
 		target.destroy();
 		source.destroy();
 	},
 	
+	testMultiSource: function() {
+		var a = new JW.Proxy("a");
+		var b = new JW.Proxy("b");
+		var c = new JW.Proxy("c");
+		var d = new JW.Proxy("d");
+		var x = new JW.Proxy("x");
+		x.result = new JW.Proxy("X");
+		
+		var source1 = new JW.ObservableSet([ a, b ]);
+		var source2 = new JW.ObservableSet([ c, d ]);
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			"Added X",
+			"Changed",
+			"Changed size from 0 to 1"
+		);
+		target.add(x.result);
+		this.assertTarget([ x ], target);
+		
+		this.setExpectedOutput(
+			"Created A by a",
+			"Added A",
+			"Created B by b",
+			"Added B",
+			"Changed",
+			"Changed size from 1 to 3"
+		);
+		var mapper1 = this.createMapper(source1, target);
+		this.assertTarget([ a, b, x ], target);
+		
+		this.setExpectedOutput(
+			"Created C by c",
+			"Added C",
+			"Created D by d",
+			"Added D",
+			"Changed",
+			"Changed size from 3 to 5"
+		);
+		var mapper2 = this.createMapper(source2, target);
+		this.assertTarget([ a, b, c, d, x ], target);
+		
+		var e = new JW.Proxy("e");
+		this.setExpectedOutput(
+			"Created E by e",
+			"Added E",
+			"Changed",
+			"Changed size from 5 to 6"
+		);
+		source1.add(e);
+		this.assertTarget([ a, b, c, d, e, x ], target);
+		
+		this.setExpectedOutput(
+			"Removed D",
+			"Changed",
+			"Changed size from 6 to 5",
+			"Destroyed D by d"
+		);
+		source2.remove(d);
+		this.assertTarget([ a, b, c, e, x ], target);
+		
+		this.setExpectedOutput(
+			"Removed A",
+			"Removed B",
+			"Removed E",
+			"Changed",
+			"Changed size from 5 to 2",
+			"Destroyed A by a",
+			"Destroyed B by b",
+			"Destroyed E by e"
+		);
+		source1.clear();
+		this.assertTarget([ c, x ], target);
+		
+		this.setExpectedOutput(
+			"Removed C",
+			"Changed",
+			"Changed size from 2 to 1",
+			"Destroyed C by c"
+		);
+		mapper2.destroy();
+		this.assertTarget([ x ], target);
+		
+		this.setExpectedOutput();
+		mapper1.destroy();
+		this.assertTarget([ x ], target);
+		
+		this.setExpectedOutput(
+			"Removed X",
+			"Changed",
+			"Changed size from 1 to 0"
+		);
+		target.destroy();
+		
+		this.setExpectedOutput();
+		source1.destroy();
+		source2.destroy();
+	},
+	
+	// tests that empty source doesn't caused target to trigger "change" on synchronizer initialization
 	testEmptyChange: function() {
 		var source = new JW.ObservableSet();
 		var target = this.createTarget();
@@ -132,6 +310,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var source = new JW.ObservableSet([ d ]);
 		this.setExpectedOutput("Created D by d");
 		var mapper = this.createMapper(source);
+		this.assertTrue(mapper.target instanceof JW.ObservableSet);
 		this.assertTarget([ d ], mapper.target);
 		this.setExpectedOutput("Destroyed D by d");
 		mapper.destroy();

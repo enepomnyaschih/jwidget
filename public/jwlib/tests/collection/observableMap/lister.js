@@ -18,6 +18,54 @@
 */
 
 JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
+	testUnobservableTarget: function() {
+		var testCase = this;
+		var d = new JW.Proxy("d");
+		var source = new JW.ObservableMap({ "d": d });
+		var target = new JW.Set();
+		
+		var lister = this.createLister(source, target);
+		this.assertTarget([ d ], target);
+		
+		var f = new JW.Proxy("f");
+		source.setAll({ "f": f });
+		this.assertTarget([ d, f ], target);
+		
+		var c = new JW.Proxy("c");
+		source.set(c, "c");
+		this.assertTarget([ d, f, c ], target);
+		
+		var b = new JW.Proxy("b");
+		var m = new JW.Proxy("m");
+		source.setAll({ "b": b, "m": m });
+		this.assertTarget([ d, f, c, b, m ], target);
+		
+		this.setExpectedOutput();
+		source.setAll({});
+		this.assertTarget([ d, f, c, b, m ], target);
+		
+		source.remove("m");
+		this.assertTarget([ d, f, c, b ], target);
+		
+		this.setExpectedOutput();
+		source.remove("m");
+		this.assertTarget([ d, f, c, b ], target);
+		
+		source.clear();
+		this.assertTarget([], target);
+		
+		var h = new JW.Proxy("h");
+		source.set(h, "h");
+		this.assertTarget([ h ], target);
+		
+		lister.destroy();
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
 	testObservableTarget: function() {
 		var testCase = this;
 		var d = new JW.Proxy("d");
@@ -102,54 +150,6 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 1 to 0"
 		);
-		lister.destroy();
-		this.assertTarget([], target);
-		
-		this.setExpectedOutput();
-		target.destroy();
-		source.destroy();
-	},
-
-	testUnobservableTarget: function() {
-		var testCase = this;
-		var d = new JW.Proxy("d");
-		var source = new JW.ObservableMap({ "d": d });
-		var target = new JW.Set();
-		
-		var lister = this.createLister(source, target);
-		this.assertTarget([ d ], target);
-		
-		var f = new JW.Proxy("f");
-		source.setAll({ "f": f });
-		this.assertTarget([ d, f ], target);
-		
-		var c = new JW.Proxy("c");
-		source.set(c, "c");
-		this.assertTarget([ d, f, c ], target);
-		
-		var b = new JW.Proxy("b");
-		var m = new JW.Proxy("m");
-		source.setAll({ "b": b, "m": m });
-		this.assertTarget([ d, f, c, b, m ], target);
-		
-		this.setExpectedOutput();
-		source.setAll({});
-		this.assertTarget([ d, f, c, b, m ], target);
-		
-		source.remove("m");
-		this.assertTarget([ d, f, c, b ], target);
-		
-		this.setExpectedOutput();
-		source.remove("m");
-		this.assertTarget([ d, f, c, b ], target);
-		
-		source.clear();
-		this.assertTarget([], target);
-		
-		var h = new JW.Proxy("h");
-		source.set(h, "h");
-		this.assertTarget([ h ], target);
-		
 		lister.destroy();
 		this.assertTarget([], target);
 		
@@ -247,7 +247,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		source1.destroy();
 		source2.destroy();
 	},
-
+	
 	// tests that empty source doesn't caused target to trigger "change" on synchronizer initialization
 	testEmptyChange: function() {
 		var source = new JW.ObservableMap();

@@ -18,7 +18,7 @@
 */
 
 JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
-	testUnobservable: function() {
+	testUnobservableTarget: function() {
 		var d = new JW.Proxy("d");
 		var source = new JW.ObservableSet([ d ]);
 		var target = new JW.Map();
@@ -62,7 +62,7 @@ JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
 		source.destroy();
 	},
 	
-	testObservable: function() {
+	testObservableTarget: function() {
 		var d = new JW.Proxy("d");
 		var source = new JW.ObservableSet([ d ]);
 		var target = this.createTarget();
