@@ -39,7 +39,7 @@ JW.extend(JW.AbstractMap.Lister/*<T extends JW.Class>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.target.clear();
+		this.target.removeAll(this.source.getValuesArray());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
