@@ -144,7 +144,7 @@ JW.extend(JW.Unit.AsyncRunner, JW.Class, {
 	
 	output: function(line) {
 		if (this.outputIndex >= this.expectedOutput.length) {
-			throw new Error("Output has more lines than expected");
+			throw new Error('Output has more lines than expected. Line: "' + line + '"');
 		}
 		var expected = this.expectedOutput[this.outputIndex];
 		if (line !== expected) {
