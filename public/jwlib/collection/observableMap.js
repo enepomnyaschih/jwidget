@@ -189,10 +189,10 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 	},
 	
 	_remove: function(key) {
-		if (!this.map.json.hasOwnProperty(key)) {
+		var item = this.map.json[key];
+		if (item === undefined) {
 			return undefined;
 		}
-		var item = this.map.json[key];
 		this.map.remove(key);
 		this.removeEvent.trigger(new JW.ObservableMap.ItemEventParams(this, item, key));
 		return item;
