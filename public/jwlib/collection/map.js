@@ -132,13 +132,17 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 			}
 		}
 		return true;
-	}
+	},
+	
+	_triggerChange: function() {}
 });
 
 JW.Map.prototype.getLength = JW.Map.prototype.getSize;
 JW.Map.prototype.pushItem = JW.Map.prototype.set;
 JW.Map.prototype._set = JW.Map.prototype.set;
 JW.Map.prototype._remove = JW.Map.prototype.remove;
+JW.Map.prototype._setAll = JW.Map.prototype.setAll;
+JW.Map.prototype._removeAll = JW.Map.prototype.removeAll;
 
 JW.applyIf(JW.Map.prototype, JW.Alg.BuildMethods);
 

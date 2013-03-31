@@ -17,6 +17,8 @@
 		"jwlib/tests/alg/build.js",
 		
 		"jwlib/tests/collection.js",
+		"jwlib/tests/collection/abstractArray.js",
+		"jwlib/tests/collection/abstractArray/indexer.js",
 		"jwlib/tests/collection/array.js",
 		"jwlib/tests/collection/observableArray.js",
 		"jwlib/tests/collection/observableArray/indexer.js",
