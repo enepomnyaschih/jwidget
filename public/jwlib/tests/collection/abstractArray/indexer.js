@@ -138,6 +138,7 @@ JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		source2.destroy();
 	},
 	
+	// tests that empty source doesn't caused target to trigger "change" on synchronizer initialization
 	testEmptyChange: function() {
 		var source = new JW.Array();
 		var target = this.createTarget();
