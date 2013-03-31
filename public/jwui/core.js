@@ -1,7 +1,7 @@
 ﻿/*!
 	jWidget UI 0.4.
 	
-	https://github.com/enepomnyaschih/jwui
+	https://github.com/enepomnyaschih/jwidget/wiki
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
