@@ -192,6 +192,14 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		return true;
 	},
 	
+	_removeAll: function(items) {
+		var changed = false;
+		for (var i = 0, l = items.length; i < l; ++i) {
+			changed = this._remove(items[i]) || changed;
+		}
+		return changed;
+	},
+	
 	_clear: function() {
 		if (this.set.size === 0) {
 			return false;
