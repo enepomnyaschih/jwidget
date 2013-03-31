@@ -134,7 +134,7 @@ JW.Tests.Collection.AbstractArray.ListerTestCase = JW.Unit.TestCase.extend({
 	
 	// tests that empty array doesn't trigger "change" on initialization
 	testEmptyChange: function() {
-		var source = new JW.ObservableArray();
+		var source = new JW.Array();
 		var target = this.createTarget();
 		var lister = this.createLister(source, target);
 		lister.destroy();
@@ -144,9 +144,9 @@ JW.Tests.Collection.AbstractArray.ListerTestCase = JW.Unit.TestCase.extend({
 	
 	testAutoTarget: function() {
 		var d = new JW.Proxy("d");
-		var source = new JW.ObservableArray([ d ]);
+		var source = new JW.Array([ d ]);
 		var lister = this.createLister(source);
-		this.assertTrue(lister.target instanceof JW.ObservableSet);
+		this.assertTrue(lister.target instanceof JW.Set);
 		this.assertTarget([ d ], lister.target);
 		lister.destroy();
 		source.destroy();
