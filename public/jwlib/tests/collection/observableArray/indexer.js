@@ -229,7 +229,7 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		indexer.destroy();
 		source.destroy();
 	},
-	/*
+	
 	testMultiSource: function() {
 		var a = new JW.Proxy("a");
 		var source1 = new JW.ObservableArray([ a ]);
@@ -295,8 +295,9 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 3 to 4"
 		);
-		source1.base.push(d);
-		source1.triggerReset();
+		source1.performReset(function(items) {
+			items.push(d);
+		}, this);
 		this.assertTarget({ "x": x, "c": c, "e": e, "d": d }, target);
 		
 		this.setExpectedOutput(
@@ -328,7 +329,7 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		source1.destroy();
 		source2.destroy();
 	},
-	*/
+	
 	createTarget: function() {
 		var target = new JW.ObservableMap();
 		
