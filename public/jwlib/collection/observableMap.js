@@ -25,7 +25,7 @@
 
 JW.ObservableMap = function(json) {
 	JW.ObservableMap._super.call(this);
-	this.map = new JW.Map();
+	this._map = new JW.Map();
 	this.addEvent = new JW.Event();
 	this.removeEvent = new JW.Event();
 	this.changeEvent = new JW.Event();
@@ -41,7 +41,7 @@ JW.ObservableMap = function(json) {
 JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 	/*
 	Fields
-	JW.Map<T> map;
+	JW.Map<T> _map;
 	JW.Event<JW.ObservableMap.ItemEventParams<T>> addEvent;
 	JW.Event<JW.ObservableMap.ItemEventParams<T>> removeEvent;
 	JW.Event<JW.ObservableMap.EventParams<T>> changeEvent;
@@ -61,23 +61,23 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 	},
 	
 	getJson: function() {
-		return this.map.getJson();
+		return this._map.getJson();
 	},
 	
 	getSize: function() {
-		return this.map.size;
+		return this._map.size;
 	},
 	
 	isEmpty: function() {
-		return this.map.size === 0;
+		return this._map.size === 0;
 	},
 	
 	contains: function(key) {
-		return this.map.json.hasOwnProperty(key);
+		return this._map.json.hasOwnProperty(key);
 	},
 	
 	get: function(key) {
-		return this.map.json[key];
+		return this._map.json[key];
 	},
 	
 	set: function(item, key) {
@@ -139,7 +139,7 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 	},
 	
 	every: function(callback, scope) {
-		return JW.Map.every(this.map.json, callback, scope);
+		return JW.Map.every(this._map.json, callback, scope);
 	},
 	
 	createEmpty: function() {
@@ -170,12 +170,12 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 		if (item === undefined) {
 			return false;
 		}
-		var oldItem = this.map.json[key];
+		var oldItem = this._map.json[key];
 		if (oldItem === item) {
 			return false;
 		}
 		this._remove(key);
-		this.map.set(item, key);
+		this._map.set(item, key);
 		this.addEvent.trigger(new JW.ObservableMap.ItemEventParams(this, item, key));
 		return true;
 	},
@@ -189,11 +189,11 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 	},
 	
 	_remove: function(key) {
-		var item = this.map.json[key];
+		var item = this._map.json[key];
 		if (item === undefined) {
 			return undefined;
 		}
-		this.map.remove(key);
+		this._map.remove(key);
 		this.removeEvent.trigger(new JW.ObservableMap.ItemEventParams(this, item, key));
 		return item;
 	},
@@ -207,10 +207,10 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 	},
 	
 	_clear: function() {
-		if (this.map.size === 0) {
+		if (this._map.size === 0) {
 			return false;
 		}
-		var json = JW.Map.clone(this.map.json);
+		var json = JW.Map.clone(this._map.json);
 		for (var key in json) {
 			this._remove(key);
 		}
@@ -223,9 +223,9 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 			return;
 		}
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
-		if (this.bulkSize !== this.map.size) {
-			this.sizeChangeEvent.trigger(new JW.ObservableMap.SizeChangeEventParams(this, this.bulkSize, this.map.size));
-			this.bulkSize = this.map.size;
+		if (this.bulkSize !== this._map.size) {
+			this.sizeChangeEvent.trigger(new JW.ObservableMap.SizeChangeEventParams(this, this.bulkSize, this._map.size));
+			this.bulkSize = this._map.size;
 		}
 	}
 });
