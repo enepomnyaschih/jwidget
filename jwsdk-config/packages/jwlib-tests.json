@@ -23,6 +23,8 @@
 		"jwlib/tests/collection/abstractArray/lister.js",
 		"jwlib/tests/collection/abstractArray/mapper.js",
 		"jwlib/tests/collection/abstractArray/splitter.js",
+		"jwlib/tests/collection/abstractMap.js",
+		"jwlib/tests/collection/abstractMap/lister.js",
 		"jwlib/tests/collection/array.js",
 		"jwlib/tests/collection/observableArray.js",
 		"jwlib/tests/collection/observableArray/indexer.js",
