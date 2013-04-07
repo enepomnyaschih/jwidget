@@ -147,11 +147,76 @@ JW.Tests.Collection.ObservableSetTestCase = JW.Unit.TestCase.extend({
 		var b = new JW.Proxy("b");
 		var set = new JW.ObservableSet([ a, A, b ]);
 		var filtered = set.filter(this.isA);
-		this.assertEqual(3, set.getLength());
-		this.assertEqual(2, filtered.getLength());
+		this.assertTrue(filtered instanceof JW.ObservableSet);
+		this.assertEqual(3, set.getSize());
+		this.assertEqual(2, filtered.getSize());
 		this.assertTrue(filtered.contains(a));
 		this.assertTrue(filtered.contains(A));
 		this.assertFalse(filtered.contains(b));
+	},
+	
+	testMap: function() {
+		var a = new JW.Proxy("a");
+		var b = new JW.Proxy("b");
+		var c = new JW.Proxy("c");
+		var results = {
+			a: new JW.Proxy("A"),
+			b: new JW.Proxy("B"),
+			c: new JW.Proxy("C")
+		};
+		var set = new JW.ObservableSet([ a, b, c ]);
+		var mapped = set.map(function(x) { return results[x.value]; });
+		this.assertTrue(mapped instanceof JW.Set);
+		this.assertStrictEqual(3, mapped.getSize());
+		this.assertTrue(mapped.contains(results.a));
+		this.assertTrue(mapped.contains(results.b));
+		this.assertTrue(mapped.contains(results.c));
+	},
+	
+	testClone: function() {
+		var a = new JW.Proxy("a");
+		var b = new JW.Proxy("b");
+		var c = new JW.Proxy("c");
+		var set = new JW.ObservableSet([ a, b, c ]);
+		var cloned = set.clone();
+		this.assertTrue(mapped instanceof JW.ObservableSet);
+		this.assertStrictNotEqual(set, cloned);
+		this.assertStrictEqual(3, cloned.getSize());
+		this.assertTrue(mapped.contains(a));
+		this.assertTrue(mapped.contains(b));
+		this.assertTrue(mapped.contains(c));
+	},
+	
+	testCloneUnobservable: function() {
+		var a = new JW.Proxy("a");
+		var b = new JW.Proxy("b");
+		var c = new JW.Proxy("c");
+		var set = new JW.ObservableSet([ a, b, c ]);
+		var cloned = set.cloneUnobservable();
+		this.assertTrue(mapped instanceof JW.Set);
+		this.assertStrictEqual(3, cloned.getSize());
+		this.assertTrue(mapped.contains(a));
+		this.assertTrue(mapped.contains(b));
+		this.assertTrue(mapped.contains(c));
+	},
+	
+	testMapFields: function() {
+		var array = new JW.ObservableArray([
+			{ x: "a", y: "d" },
+			{ x: "b", y: "e" },
+			{ x: "c", y: "f" }
+		]);
+		var mapped = array.mapFields();
+		this.assertTrue(mapped.x instanceof JW.Array);
+		this.assertTrue(mapped.y instanceof JW.Array);
+		this.assertStrictEqual(3, mapped.x.getSize());
+		this.assertStrictEqual(3, mapped.y.getSize());
+		this.assertStrictEqual("a", mapped.x.get(0));
+		this.assertStrictEqual("b", mapped.x.get(1));
+		this.assertStrictEqual("c", mapped.x.get(2));
+		this.assertStrictEqual("d", mapped.y.get(0));
+		this.assertStrictEqual("e", mapped.y.get(1));
+		this.assertStrictEqual("f", mapped.y.get(2));
 	},
 	
 	subscribe: function(set) {

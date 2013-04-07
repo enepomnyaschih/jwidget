@@ -194,9 +194,60 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 	testFilter: function() {
 		var array = new JW.ObservableArray([ "a", "A", "b" ]);
 		var filtered = array.filter(this.isA);
+		this.assertTrue(filtered instanceof JW.Array);
 		this.assertEqual(2, filtered.getLength());
 		this.assertEqual(array.get(0), filtered.get(0));
 		this.assertEqual(array.get(1), filtered.get(1));
+	},
+	
+	testMap: function() {
+		var array = new JW.ObservableArray([ "a", "b", "c" ]);
+		var mapped = array.map(function(x) { return x.toUpperCase(); });
+		this.assertTrue(mapped instanceof JW.Array);
+		this.assertStrictEqual(3, mapped.getLength());
+		this.assertStrictEqual("A", mapped.get(0));
+		this.assertStrictEqual("B", mapped.get(1));
+		this.assertStrictEqual("C", mapped.get(2));
+	},
+	
+	testClone: function() {
+		var array = new JW.ObservableArray([ "a", "b", "c" ]);
+		var cloned = array.clone();
+		this.assertTrue(mapped instanceof JW.ObservableArray);
+		this.assertStrictNotEqual(array, cloned);
+		this.assertStrictEqual(3, cloned.getLength());
+		this.assertStrictEqual("a", cloned.get(0));
+		this.assertStrictEqual("b", cloned.get(1));
+		this.assertStrictEqual("c", cloned.get(2));
+	},
+	
+	testCloneUnobservable: function() {
+		var array = new JW.ObservableArray([ "a", "b", "c" ]);
+		var cloned = array.cloneUnobservable();
+		this.assertTrue(mapped instanceof JW.Array);
+		this.assertStrictEqual(3, cloned.getLength());
+		this.assertStrictEqual("a", cloned.get(0));
+		this.assertStrictEqual("b", cloned.get(1));
+		this.assertStrictEqual("c", cloned.get(2));
+	},
+	
+	testMapFields: function() {
+		var array = new JW.ObservableArray([
+			{ x: "a", y: "d" },
+			{ x: "b", y: "e" },
+			{ x: "c", y: "f" }
+		]);
+		var mapped = array.mapFields();
+		this.assertTrue(mapped.x instanceof JW.Array);
+		this.assertTrue(mapped.y instanceof JW.Array);
+		this.assertStrictEqual(3, mapped.x.getLength());
+		this.assertStrictEqual(3, mapped.y.getLength());
+		this.assertStrictEqual("a", mapped.x.get(0));
+		this.assertStrictEqual("b", mapped.x.get(1));
+		this.assertStrictEqual("c", mapped.x.get(2));
+		this.assertStrictEqual("d", mapped.y.get(0));
+		this.assertStrictEqual("e", mapped.y.get(1));
+		this.assertStrictEqual("f", mapped.y.get(2));
 	},
 	
 	subscribe: function(array) {
