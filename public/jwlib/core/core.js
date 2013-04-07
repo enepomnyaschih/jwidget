@@ -1,7 +1,7 @@
 ﻿/*!
-	jWidget Lib 0.4.
+	jWidget Lib 0.4.2.
 	
-	https://github.com/enepomnyaschih/jwlib
+	https://github.com/enepomnyaschih/jwidget/wiki
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	

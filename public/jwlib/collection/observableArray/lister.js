@@ -68,14 +68,14 @@ JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Li
 		this.target._triggerChange();
 	},
 	
-	_onClear: function() {
-		this.target.clear();
+	_onClear: function(params) {
+		this.target.removeAll(params.items);
 	},
 	
 	_onFilter: function() {
 		var map = JW.Array.indexBy(this.source.array, "_iid");
 		var items = [];
-		var json = this.target.set.json;
+		var json = this.target.getJson();
 		for (var iid in json) {
 			if (!map.hasOwnProperty(iid)) {
 				items.push(json[iid]);
@@ -84,8 +84,8 @@ JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Li
 		this.target.removeAll(items);
 	},
 	
-	_onReset: function() {
-		this.target._clear();
+	_onReset: function(params) {
+		this.target._removeAll(params.items);
 		this.target._addAll(this.source.array);
 		this.target._triggerChange();
 	}

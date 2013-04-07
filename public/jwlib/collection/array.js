@@ -30,7 +30,7 @@ JW.extend(JW.Array, JW.Class, {
 	},
 	
 	set: function(item, index) {
-		this.items[index] = item;
+		return JW.Array.set(this.items, item, index);
 	},
 	
 	add: function(item, index) {
@@ -58,6 +58,10 @@ JW.extend(JW.Array, JW.Class, {
 	},
 	
 	createEmpty: function() {
+		return new JW.Array();
+	},
+	
+	createEmptyUnobservable: function() {
 		return new JW.Array();
 	},
 	
@@ -159,6 +163,12 @@ JW.Array.prototype.performReset = JW.Array.prototype._perform;
 JW.applyIf(JW.Array.prototype, JW.Alg.BuildMethods);
 
 JW.apply(JW.Array, {
+	set: function(target, item, index) {
+		var oldItem = target[index];
+		target[index] = item;
+		return oldItem;
+	},
+	
 	add: function(target, item, index) {
 		target.splice(JW.def(index, target.length), 0, item);
 	},
@@ -325,6 +335,7 @@ JW.applyIf(
 	JW.Array,
 	JW.Alg.createBuildFunctions(
 		JW.Array.every,
+		function() { return []; },
 		function() { return []; },
 		function(target, item) { target.push(item); }
 	)

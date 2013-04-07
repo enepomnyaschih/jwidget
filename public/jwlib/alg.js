@@ -51,6 +51,10 @@ JW.Alg = {
 		return target.createEmpty();
 	},
 	
+	_createEmptyUnobservable: function(target) {
+		return target.createEmptyUnobservable();
+	},
+	
 	_pushItem: function(target, item, key) {
 		return target.pushItem(item, key);
 	}

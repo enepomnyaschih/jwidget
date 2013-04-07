@@ -146,6 +146,10 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.ObservableSet();
 	},
 	
+	createEmptyUnobservable: function() {
+		return new JW.Set();
+	},
+	
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
@@ -190,6 +194,14 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		this.set.remove(item);
 		this.removeEvent.trigger(new JW.ObservableSet.ItemEventParams(this, item));
 		return true;
+	},
+	
+	_removeAll: function(items) {
+		var changed = false;
+		for (var i = 0, l = items.length; i < l; ++i) {
+			changed = this._remove(items[i]) || changed;
+		}
+		return changed;
 	},
 	
 	_clear: function() {

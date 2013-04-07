@@ -138,13 +138,13 @@ JW.extend(JW.Unit.AsyncRunner, JW.Class, {
 	
 	assertOutputFinish: function() {
 		if (this.expectedOutput.length > this.outputIndex) {
-			throw new Error("Output has less lines than expected");
+			throw new Error('Output has less lines than expected. Expected: "' + this.expectedOutput[this.outputIndex] + '"');
 		}
 	},
 	
 	output: function(line) {
 		if (this.outputIndex >= this.expectedOutput.length) {
-			throw new Error("Output has more lines than expected");
+			throw new Error('Output has more lines than expected. Got: "' + line + '"');
 		}
 		var expected = this.expectedOutput[this.outputIndex];
 		if (line !== expected) {

@@ -62,6 +62,7 @@ JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	},
 	
 	_change: function() {
+		this.target._triggerChange();
 		for (var i = 0; i < this._destructionQueue.length; ++i) {
 			var params = this._destructionQueue[i];
 			this.destroyItem.call(this.scope || this, params[0], params[1], params[2]);

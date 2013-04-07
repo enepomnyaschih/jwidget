@@ -1,7 +1,5 @@
-﻿/*!
-	jWidget UI 0.4.2.
-	
-	https://github.com/enepomnyaschih/jwidget/wiki
+﻿/*
+	jWidget Lib tests.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -19,23 +17,4 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI = {
-	template: function(cls, tpls) {
-		if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls) {
-			JW.apply(cls.prototype.Templates.prototype, tpls);
-		} else {
-			cls.prototype.Templates = (cls.superclass.Templates || JW.Class).extend(tpls);
-			cls.prototype.Templates.componentCls = cls;
-			cls.prototype.templates = new cls.prototype.Templates();
-		}
-	},
-	
-	isElement: function(v) {
-		return v instanceof jQuery.fn.init;
-	}
-};
-
-jQuery(function() {
-	JW.UI.windowEl = jQuery(window);
-	JW.UI.bodyEl   = jQuery(document.body);
-});
+JW.Tests.Collection.AbstractMap = {};

@@ -306,8 +306,8 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	
 	testIndexOf: function()
 	{
-		this.assertStrictEqual( 3, JW.Array.indexOf([ "a", "b", "c", "d", "e", "f" ], "d"));
-		this.assertStrictEqual(-1, JW.Array.indexOf([ "a", "b", "c", "d", "e", "f" ], "h"));
+		this.assertStrictEqual(3, JW.Array.indexOf([ "a", "b", "c", "d", "e", "f" ], "d"));
+		this.assertUndefined(JW.Array.indexOf([ "a", "b", "c", "d", "e", "f" ], "h"));
 	},
 	
 	testCmp: function()

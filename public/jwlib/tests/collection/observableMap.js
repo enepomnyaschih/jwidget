@@ -147,10 +147,61 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 	testFilter: function() {
 		var map = new JW.ObservableMap({ "a1": "a", "a2": "A", "a3": "b" });
 		var filtered = map.filter(this.isA);
-		this.assertEqual(3, map.getLength());
-		this.assertEqual(2, filtered.getLength());
+		this.assertTrue(filtered instanceof JW.Map);
+		this.assertEqual(3, map.getSize());
+		this.assertEqual(2, filtered.getSize());
 		this.assertEqual(map.get("a1"), filtered.get("a1"));
 		this.assertEqual(map.get("a2"), filtered.get("a2"));
+	},
+	
+	testMap: function() {
+		var map = new JW.ObservableMap({ x: "a", y: "b", z: "c" });
+		var mapped = map.map(function(x, y) { return y + x; });
+		this.assertTrue(mapped instanceof JW.Map);
+		this.assertStrictEqual(3, mapped.getSize());
+		this.assertStrictEqual("xa", mapped.get("x"));
+		this.assertStrictEqual("yb", mapped.get("y"));
+		this.assertStrictEqual("zc", mapped.get("z"));
+	},
+	
+	testClone: function() {
+		var map = new JW.ObservableMap({ x: "a", y: "b", z: "c" });
+		var cloned = map.clone();
+		this.assertTrue(cloned instanceof JW.ObservableMap);
+		this.assertStrictNotEqual(map, cloned);
+		this.assertStrictEqual(3, cloned.getSize());
+		this.assertStrictEqual("a", cloned.get("x"));
+		this.assertStrictEqual("b", cloned.get("y"));
+		this.assertStrictEqual("c", cloned.get("z"));
+	},
+	
+	testCloneUnobservable: function() {
+		var map = new JW.ObservableMap({ x: "a", y: "b", z: "c" });
+		var cloned = map.cloneUnobservable();
+		this.assertTrue(cloned instanceof JW.Map);
+		this.assertStrictEqual(3, cloned.getSize());
+		this.assertStrictEqual("a", cloned.get("x"));
+		this.assertStrictEqual("b", cloned.get("y"));
+		this.assertStrictEqual("c", cloned.get("z"));
+	},
+	
+	testMapFields: function() {
+		var map = new JW.ObservableMap({
+			p: { x: "a", y: "d" },
+			q: { x: "b", y: "e" },
+			r: { x: "c", y: "f" }
+		});
+		var mapped = map.mapFields();
+		this.assertTrue(mapped.x instanceof JW.Map);
+		this.assertTrue(mapped.y instanceof JW.Map);
+		this.assertStrictEqual(3, mapped.x.getSize());
+		this.assertStrictEqual(3, mapped.y.getSize());
+		this.assertStrictEqual("a", mapped.x.get("p"));
+		this.assertStrictEqual("b", mapped.x.get("q"));
+		this.assertStrictEqual("c", mapped.x.get("r"));
+		this.assertStrictEqual("d", mapped.y.get("p"));
+		this.assertStrictEqual("e", mapped.y.get("q"));
+		this.assertStrictEqual("f", mapped.y.get("r"));
 	},
 	
 	subscribe: function(map) {

@@ -146,6 +146,8 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 			"Cleared h"
 		);
 		inserter.destroy();
+		
+		this.setExpectedOutput();
 		collection.destroy();
 	},
 	
@@ -173,6 +175,8 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 			"Removed a at 0"
 		);
 		inserter.destroy();
+		
+		this.setExpectedOutput();
 		collection.destroy();
 	}
 });

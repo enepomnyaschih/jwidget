@@ -39,11 +39,6 @@ JW.extend(JW.ObservableSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, J
 		this._super();
 	},
 	
-	_change: function() {
-		this.target._triggerChange();
-		this._super();
-	},
-	
 	_onAdd: function(params) {
 		this._add(params.item);
 	},

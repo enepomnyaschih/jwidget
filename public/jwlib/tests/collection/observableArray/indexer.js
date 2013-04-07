@@ -18,7 +18,119 @@
 */
 
 JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
-	testIndexer: function() {
+	testUnobservableTarget: function() {
+		var d = new JW.Proxy("d");
+		var source = new JW.ObservableArray([ d ]);
+		var target = new JW.Map();
+		var indexer = this.createIndexer(source, target);
+		this.assertTarget({ "d": d }, target);
+		
+		// d
+		var f = new JW.Proxy("f");
+		source.addAll([ f ]);
+		this.assertTarget({ "d": d, "f": f }, target);
+		
+		// d f
+		var c = new JW.Proxy("c");
+		source.add(c, 1);
+		this.assertTarget({ "d": d, "f": f, "c": c }, target);
+		
+		// d c f
+		var b = new JW.Proxy("b");
+		var m = new JW.Proxy("m");
+		source.addAll([ b, m ], 0);
+		this.assertTarget({ "d": d, "f": f, "c": c, "b": b, "m": m }, target);
+		
+		// b m d c f
+		this.setExpectedOutput();
+		source.addAll([], 1);
+		this.assertTarget({ "d": d, "f": f, "c": c, "b": b, "m": m }, target);
+		
+		var a = new JW.Proxy("a");
+		source.add(a, 5);
+		this.assertTarget({ "d": d, "f": f, "c": c, "b": b, "m": m, "a": a }, target);
+		
+		// b m d c f a
+		source.remove(1);
+		this.assertTarget({ "d": d, "f": f, "c": c, "b": b, "a": a }, target);
+		
+		// b d c f a
+		source.remove(0);
+		this.assertTarget({ "d": d, "f": f, "c": c, "a": a }, target);
+		
+		// d c f a
+		var k = new JW.Proxy("k");
+		source.add(k);
+		this.assertTarget({ "d": d, "f": f, "c": c, "a": a, "k": k }, target);
+		
+		// d c f a k
+		var g = new JW.Proxy("g");
+		source.set(g, 2);
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
+		
+		// d c g a k
+		this.setExpectedOutput();
+		source.set(a, 3);
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
+		
+		this.setExpectedOutput();
+		source.move(2, 1);
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
+		
+		// d g c a k
+		this.setExpectedOutput();
+		source.move(0, 4);
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
+		
+		// g c a k d
+		this.setExpectedOutput();
+		source.move(1, 1);
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
+		
+		this.setExpectedOutput();
+		source.performReorder(function(items) {
+			JW.Array.sortBy(items, "value");
+		}, this);
+		this.assertTarget({ "d": d, "c": c, "a": a, "k": k, "g": g }, target);
+		
+		// a c d g k
+		source.performFilter(function(items) {
+			items.splice(1, 1);
+		}, this);
+		this.assertTarget({ "d": d, "a": a, "k": k, "g": g }, target);
+		
+		// a d g k
+		source.performFilter(function(items) {
+			items.splice(0, 3);
+		}, this);
+		this.assertTarget({ "k": k }, target);
+		
+		// k
+		var u = new JW.Proxy("u");
+		var t = new JW.Proxy("t");
+		source.performReset(function(items) {
+			return [ u, t, c ];
+		}, this);
+		this.assertTarget({ "u": u, "t": t, "c": c }, target);
+		
+		// u t c
+		source.clear();
+		this.assertTarget({}, target);
+		
+		// (empty)
+		var h = new JW.Proxy("h");
+		source.add(h);
+		this.assertTarget({ "h": h }, target);
+		
+		// h
+		indexer.destroy();
+		this.assertTarget({}, target);
+		
+		target.destroy();
+		source.destroy();
+	},
+	
+	testObservableTarget: function() {
 		var d = new JW.Proxy("d");
 		var source = new JW.ObservableArray([ d ]);
 		var target = this.createTarget();
@@ -207,29 +319,15 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 1 to 0"
 		);
+		
 		indexer.destroy();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput();
 		target.destroy();
 		source.destroy();
 	},
 	
-	testEmptyChange: function() {
-		var source = new JW.ObservableArray();
-		var target = this.createTarget();
-		var indexer = this.createIndexer(source, target);
-		indexer.destroy();
-		target.destroy();
-		source.destroy();
-	},
-	
-	testAutoTarget: function() {
-		var d = new JW.Proxy("d");
-		var source = new JW.ObservableArray([ d ]);
-		var indexer = this.createIndexer(source);
-		this.assertTarget({ "d": d }, indexer.target);
-		indexer.destroy();
-		source.destroy();
-	},
-	/*
 	testMultiSource: function() {
 		var a = new JW.Proxy("a");
 		var source1 = new JW.ObservableArray([ a ]);
@@ -295,8 +393,9 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 3 to 4"
 		);
-		source1.base.push(d);
-		source1.triggerReset();
+		source1.performReset(function(items) {
+			items.push(d);
+		}, this);
 		this.assertTarget({ "x": x, "c": c, "e": e, "d": d }, target);
 		
 		this.setExpectedOutput(
@@ -328,7 +427,27 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		source1.destroy();
 		source2.destroy();
 	},
-	*/
+	
+	// tests that empty array doesn't trigger "change" on initialization
+	testEmptyChange: function() {
+		var source = new JW.ObservableArray();
+		var target = this.createTarget();
+		var indexer = this.createIndexer(source, target);
+		indexer.destroy();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testAutoTarget: function() {
+		var d = new JW.Proxy("d");
+		var source = new JW.ObservableArray([ d ]);
+		var indexer = this.createIndexer(source);
+		this.assertTrue(indexer.target instanceof JW.ObservableMap);
+		this.assertTarget({ "d": d }, indexer.target);
+		indexer.destroy();
+		source.destroy();
+	},
+	
 	createTarget: function() {
 		var target = new JW.ObservableMap();
 		
@@ -360,6 +479,6 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	assertTarget: function(expected, target) {
-		this.assertTrue(JW.Map.equal(expected, target.map.json));
+		this.assertTrue(JW.Map.equal(expected, target.getJson()));
 	}
 });

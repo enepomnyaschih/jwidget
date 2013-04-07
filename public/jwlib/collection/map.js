@@ -60,34 +60,53 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	},
 	
 	set: function(item, key) {
-		if (!this.json.hasOwnProperty(key)) {
+		if (item === undefined) {
+			return false;
+		}
+		var oldItem = this.json[key];
+		if (oldItem === item) {
+			return false;
+		}
+		if (oldItem === undefined) {
 			++this.size;
 		}
 		this.json[key] = item;
+		return true;
 	},
 	
 	setAll: function(json) {
+		var changed = false;
 		for (var key in json) {
-			this.set(json[key], key);
+			changed = this.set(json[key], key) || changed;
 		}
+		return changed;
 	},
 	
 	remove: function(key) {
-		if (this.json.hasOwnProperty(key)) {
-			delete this.json[key];
-			--this.size;
+		var item = this.json[key];
+		if (item === undefined) {
+			return undefined;
 		}
+		delete this.json[key];
+		--this.size;
+		return item;
 	},
 	
 	removeAll: function(keys) {
+		var changed = false;
 		for (var i = 0, l = keys.length; i < l; ++i) {
-			this.remove(keys[i]);
+			changed = this.remove(keys[i]) || changed;
 		}
+		return changed;
 	},
 	
 	clear: function() {
+		if (this.size === 0) {
+			return false;
+		}
 		this.json = {};
 		this.size = 0;
+		return true;
 	},
 	
 	every: function(callback, scope) {
@@ -95,6 +114,10 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	},
 	
 	createEmpty: function() {
+		return new JW.Map();
+	},
+	
+	createEmptyUnobservable: function() {
 		return new JW.Map();
 	},
 	
@@ -132,13 +155,17 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 			}
 		}
 		return true;
-	}
+	},
+	
+	_triggerChange: function() {}
 });
 
 JW.Map.prototype.getLength = JW.Map.prototype.getSize;
 JW.Map.prototype.pushItem = JW.Map.prototype.set;
 JW.Map.prototype._set = JW.Map.prototype.set;
 JW.Map.prototype._remove = JW.Map.prototype.remove;
+JW.Map.prototype._setAll = JW.Map.prototype.setAll;
+JW.Map.prototype._removeAll = JW.Map.prototype.removeAll;
 
 JW.applyIf(JW.Map.prototype, JW.Alg.BuildMethods);
 
@@ -148,23 +175,33 @@ JW.apply(JW.Map, {
 	},
 	
 	set: function(target, item, key) {
+		if ((item === undefined) || (target[key] === item)) {
+			return false;
+		}
 		target[key] = item;
+		return true;
 	},
 	
 	setAll: function(target, map) {
+		var changed = false;
 		for (var key in map) {
-			target[key] = map[key];
+			changed = JW.Map.set(target, map[key], key) || changed;
 		}
+		return changed;
 	},
 	
 	remove: function(target, key) {
+		var item = target[key];
 		delete target[key];
+		return item;
 	},
 	
 	removeAll: function(target, keys) {
+		var changed = false;
 		for (var i = 0, l = keys.length; i < l; ++i) {
-			delete target[keys[i]];
+			changed = JW.Map.remove(target, keys[i]) || changed;
 		}
+		return changed;
 	},
 	
 	clear: function(target) {
@@ -172,9 +209,7 @@ JW.apply(JW.Map, {
 		for (var key in target) {
 			keys.push(key);
 		}
-		for (var i = 0, l = keys.length; i < l; ++i) {
-			delete target[keys[i]];
-		}
+		return JW.Map.removeAll(keys);
 	},
 	
 	every: function(target, callback, scope) {
@@ -208,6 +243,7 @@ JW.applyIf(
 	JW.Map,
 	JW.Alg.createBuildFunctions(
 		JW.Map.every,
+		function() { return {}; },
 		function() { return {}; },
 		function(target, item, key) { target[key] = item; }
 	)
