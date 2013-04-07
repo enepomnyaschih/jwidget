@@ -39,11 +39,6 @@ JW.extend(JW.ObservableMap.Mapper/*<S extends Any, T extends Any>*/, JW.Abstract
 		this._super();
 	},
 	
-	_change: function() {
-		this.target._triggerChange();
-		this._super();
-	},
-	
 	_onAdd: function(params) {
 		this.target._set(this.createItem.call(this.scope || this, params.item, params.key), params.key);
 	},
