@@ -17,73 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
+JW.Tests.Collection.AbstractSet.MapperTestCase = JW.Unit.TestCase.extend({
 	testUnobservableTarget: function() {
-		var d = new JW.Proxy("d");
-		var source = new JW.ObservableSet([ d ]);
+		var a = new JW.Proxy("a");
+		var b = new JW.Proxy("b");
+		var c = new JW.Proxy("c");
+		var source = new JW.Set([ a, b, c ]);
 		var target = new JW.Set();
 		
 		this.setExpectedOutput(
-			"Created D by d"
-		);
-		var mapper = this.createMapper(source, target);
-		this.assertTarget([ d ], target);
-		
-		var f = new JW.Proxy("f");
-		this.setExpectedOutput(
-			"Created F by f"
-		);
-		source.addAll([ f ]);
-		this.assertTarget([ d, f ], target);
-		
-		var c = new JW.Proxy("c");
-		this.setExpectedOutput(
+			"Created A by a",
+			"Created B by b",
 			"Created C by c"
 		);
-		source.add(c);
-		this.assertTarget([ d, f, c ], target);
-		
-		var b = new JW.Proxy("b");
-		var m = new JW.Proxy("m");
-		this.setExpectedOutput(
-			"Created B by b",
-			"Created M by m"
-		);
-		source.addAll([ b, m ]);
-		this.assertTarget([ d, f, c, b, m ], target);
-		
-		this.setExpectedOutput();
-		source.addAll([]);
-		this.assertTarget([ d, f, c, b, m ], target);
+		var mapper = this.createMapper(source, target);
+		this.assertTarget([ a, b, c ], target);
 		
 		this.setExpectedOutput(
-			"Destroyed M by m"
-		);
-		source.remove(m);
-		this.assertTarget([ d, f, c, b ], target);
-		
-		this.setExpectedOutput();
-		source.remove(m);
-		this.assertTarget([ d, f, c, b ], target);
-		
-		this.setExpectedOutput(
-			"Destroyed D by d",
-			"Destroyed F by f",
-			"Destroyed C by c",
-			"Destroyed B by b"
-		);
-		source.clear();
-		this.assertTarget([], target);
-		
-		var h = new JW.Proxy("h");
-		this.setExpectedOutput(
-			"Created H by h"
-		);
-		source.add(h);
-		this.assertTarget([ h ], target);
-		
-		this.setExpectedOutput(
-			"Destroyed H by h"
+			"Destroyed A by a",
+			"Destroyed B by b",
+			"Destroyed C by c"
 		);
 		mapper.destroy();
 		this.assertTarget([], target);
@@ -94,99 +47,34 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testObservableTarget: function() {
-		var d = new JW.Proxy("d");
-		var source = new JW.ObservableSet([ d ]);
+		var a = new JW.Proxy("a");
+		var b = new JW.Proxy("b");
+		var c = new JW.Proxy("c");
+		var source = new JW.Set([ a, b, c ]);
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
-			"Created D by d",
-			"Added D",
-			"Changed",
-			"Changed size from 0 to 1"
-		);
-		var mapper = this.createMapper(source, target);
-		this.assertTarget([ d ], target);
-		
-		var f = new JW.Proxy("f");
-		this.setExpectedOutput(
-			"Created F by f",
-			"Added F",
-			"Changed",
-			"Changed size from 1 to 2"
-		);
-		source.addAll([ f ]);
-		this.assertTarget([ d, f ], target);
-		
-		var c = new JW.Proxy("c");
-		this.setExpectedOutput(
+			"Created A by a",
+			"Created B by b",
 			"Created C by c",
+			"Added A",
+			"Added B",
 			"Added C",
 			"Changed",
-			"Changed size from 2 to 3"
+			"Changed size from 0 to 3"
 		);
-		source.add(c);
-		this.assertTarget([ d, f, c ], target);
-		
-		var b = new JW.Proxy("b");
-		var m = new JW.Proxy("m");
-		this.setExpectedOutput(
-			"Created B by b",
-			"Added B",
-			"Created M by m",
-			"Added M",
-			"Changed",
-			"Changed size from 3 to 5"
-		);
-		source.addAll([ b, m ]);
-		this.assertTarget([ d, f, c, b, m ], target);
-		
-		this.setExpectedOutput();
-		source.addAll([]);
-		this.assertTarget([ d, f, c, b, m ], target);
+		var mapper = this.createMapper(source, target);
+		this.assertTarget([ a, b, c ], target);
 		
 		this.setExpectedOutput(
-			"Removed M",
-			"Changed",
-			"Changed size from 5 to 4",
-			"Destroyed M by m"
-		);
-		source.remove(m);
-		this.assertTarget([ d, f, c, b ], target);
-		
-		this.setExpectedOutput();
-		source.remove(m);
-		this.assertTarget([ d, f, c, b ], target);
-		
-		this.setExpectedOutput(
-			"Removed D",
-			"Removed F",
-			"Removed C",
+			"Removed A",
 			"Removed B",
+			"Removed C",
 			"Changed",
-			"Changed size from 4 to 0",
-			"Destroyed D by d",
-			"Destroyed F by f",
-			"Destroyed C by c",
-			"Destroyed B by b"
-		);
-		source.clear();
-		this.assertTarget([], target);
-		
-		var h = new JW.Proxy("h");
-		this.setExpectedOutput(
-			"Created H by h",
-			"Added H",
-			"Changed",
-			"Changed size from 0 to 1"
-		);
-		source.add(h);
-		this.assertTarget([ h ], target);
-		
-		this.setExpectedOutput(
-			"Removed H",
-			"Changed",
-			"Changed size from 1 to 0",
-			"Destroyed H by h"
+			"Changed size from 3 to 0",
+			"Destroyed A by a",
+			"Destroyed B by b",
+			"Destroyed C by c"
 		);
 		mapper.destroy();
 		this.assertTarget([], target);
@@ -204,8 +92,8 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var x = new JW.Proxy("x");
 		x.result = new JW.Proxy("X");
 		
-		var source1 = new JW.ObservableSet([ a, b ]);
-		var source2 = new JW.ObservableSet([ c, d ]);
+		var source1 = new JW.Set([ a, b ]);
+		var source2 = new JW.Set([ c, d ]);
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
@@ -238,49 +126,26 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var mapper2 = this.createMapper(source2, target);
 		this.assertTarget([ a, b, c, d, x ], target);
 		
-		var e = new JW.Proxy("e");
-		this.setExpectedOutput(
-			"Created E by e",
-			"Added E",
-			"Changed",
-			"Changed size from 5 to 6"
-		);
-		source1.add(e);
-		this.assertTarget([ a, b, c, d, e, x ], target);
-		
-		this.setExpectedOutput(
-			"Removed D",
-			"Changed",
-			"Changed size from 6 to 5",
-			"Destroyed D by d"
-		);
-		source2.remove(d);
-		this.assertTarget([ a, b, c, e, x ], target);
-		
 		this.setExpectedOutput(
 			"Removed A",
 			"Removed B",
-			"Removed E",
 			"Changed",
-			"Changed size from 5 to 2",
+			"Changed size from 5 to 3",
 			"Destroyed A by a",
-			"Destroyed B by b",
-			"Destroyed E by e"
+			"Destroyed B by b"
 		);
-		source1.clear();
-		this.assertTarget([ c, x ], target);
+		mapper1.destroy();
+		this.assertTarget([ c, d, x ], target);
 		
 		this.setExpectedOutput(
 			"Removed C",
+			"Removed D",
 			"Changed",
-			"Changed size from 2 to 1",
-			"Destroyed C by c"
+			"Changed size from 3 to 1",
+			"Destroyed C by c",
+			"Destroyed D by d"
 		);
 		mapper2.destroy();
-		this.assertTarget([ x ], target);
-		
-		this.setExpectedOutput();
-		mapper1.destroy();
 		this.assertTarget([ x ], target);
 		
 		this.setExpectedOutput(
@@ -307,10 +172,10 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 	
 	testAutoTarget: function() {
 		var d = new JW.Proxy("d");
-		var source = new JW.ObservableSet([ d ]);
+		var source = new JW.Set([ d ]);
 		this.setExpectedOutput("Created D by d");
 		var mapper = this.createMapper(source);
-		this.assertTrue(mapper.target instanceof JW.ObservableSet);
+		this.assertTrue(mapper.target instanceof JW.Set);
 		this.assertTarget([ d ], mapper.target);
 		this.setExpectedOutput("Destroyed D by d");
 		mapper.destroy();

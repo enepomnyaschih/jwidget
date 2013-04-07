@@ -28,6 +28,7 @@
 		"jwlib/tests/collection/abstractMap/mapper.js",
 		"jwlib/tests/collection/abstractSet.js",
 		"jwlib/tests/collection/abstractSet/indexer.js",
+		"jwlib/tests/collection/abstractSet/mapper.js",
 		"jwlib/tests/collection/array.js",
 		"jwlib/tests/collection/observableArray.js",
 		"jwlib/tests/collection/observableArray/indexer.js",

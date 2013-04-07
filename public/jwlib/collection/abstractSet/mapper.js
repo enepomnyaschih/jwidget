@@ -28,10 +28,7 @@ JW.AbstractSet.Mapper = function(source, config) {
 	this.scope = config.scope;
 	this._items = {};
 	this._destructionQueue = [];
-	if (!this.source.isEmpty()) {
-		this.source.every(this._add, this);
-		this._change();
-	}
+	this.target.addAll(JW.Array.map(this.source.getValuesArray(), this._createItem, this))
 };
 
 JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
@@ -62,10 +59,14 @@ JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.
 		this._super();
 	},
 	
-	_add: function(data) {
+	_createItem: function(data) {
 		var item = this.createItem.call(this.scope || this, data);
-		this.target._add(item);
 		this._items[data._iid] = item;
+		return item;
+	},
+	
+	_add: function(data) {
+		this.target._add(this._createItem(data));
 	},
 	
 	_remove: function(data) {
@@ -76,6 +77,7 @@ JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.
 	},
 	
 	_change: function() {
+		this.target._triggerChange();
 		for (var i = 0; i < this._destructionQueue.length; ++i) {
 			var params = this._destructionQueue[i];
 			this.destroyItem.call(this.scope || this, params[0], params[1]);
