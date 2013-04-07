@@ -147,7 +147,7 @@ JW.Tests.Collection.ObservableSetTestCase = JW.Unit.TestCase.extend({
 		var b = new JW.Proxy("b");
 		var set = new JW.ObservableSet([ a, A, b ]);
 		var filtered = set.filter(this.isA);
-		this.assertTrue(filtered instanceof JW.ObservableSet);
+		this.assertTrue(filtered instanceof JW.Set);
 		this.assertEqual(3, set.getSize());
 		this.assertEqual(2, filtered.getSize());
 		this.assertTrue(filtered.contains(a));

@@ -167,7 +167,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 	testClone: function() {
 		var map = new JW.ObservableMap({ x: "a", y: "b", z: "c" });
 		var cloned = map.clone();
-		this.assertTrue(cloned instanceof JW.ObservableArray);
+		this.assertTrue(cloned instanceof JW.ObservableMap);
 		this.assertStrictNotEqual(map, cloned);
 		this.assertStrictEqual(3, cloned.getSize());
 		this.assertStrictEqual("a", cloned.get("x"));
@@ -176,7 +176,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testCloneUnobservable: function() {
-		var map = new JW.ObservableMap([ "a", "b", "c" ]);
+		var map = new JW.ObservableMap({ x: "a", y: "b", z: "c" });
 		var cloned = map.cloneUnobservable();
 		this.assertTrue(cloned instanceof JW.Map);
 		this.assertStrictEqual(3, cloned.getSize());
