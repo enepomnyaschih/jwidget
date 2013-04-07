@@ -40,11 +40,6 @@ JW.extend(JW.ObservableSet.Indexer/*<T extends JW.Class>*/, JW.AbstractSet.Index
 		this._super();
 	},
 	
-	// override
-	_change: function() {
-		this.target._triggerChange();
-	},
-	
 	_onAdd: function(params) {
 		this._add(params.item);
 	},

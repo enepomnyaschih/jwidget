@@ -66,5 +66,7 @@ JW.extend(JW.AbstractSet.Indexer/*<T extends JW.Class>*/, JW.Class, {
 		this.target._remove(this.getKey.call(this.scope || this, item));
 	},
 	
-	_change: function() {}
+	_change: function() {
+		this.target._triggerChange();
+	}
 });
