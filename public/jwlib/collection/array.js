@@ -61,6 +61,10 @@ JW.extend(JW.Array, JW.Class, {
 		return new JW.Array();
 	},
 	
+	createEmptyUnobservable: function() {
+		return new JW.Array();
+	},
+	
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
@@ -331,6 +335,7 @@ JW.applyIf(
 	JW.Array,
 	JW.Alg.createBuildFunctions(
 		JW.Array.every,
+		function() { return []; },
 		function() { return []; },
 		function(target, item) { target.push(item); }
 	)

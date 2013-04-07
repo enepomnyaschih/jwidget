@@ -85,6 +85,10 @@ JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
 				return new Cls();
 			},
 			
+			createEmptyUnobservable: function() {
+				return new Cls();
+			},
+			
 			pushItem: function(item) {
 				this.items.push(item);
 				return this;

@@ -94,6 +94,10 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.Set();
 	},
 	
+	createEmptyUnobservable: function() {
+		return new JW.Set();
+	},
+	
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
@@ -199,6 +203,7 @@ JW.applyIf(
 	JW.Set,
 	JW.Alg.createBuildFunctions(
 		JW.Set.every,
+		function() { return {}; },
 		function() { return {}; },
 		function(target, item) { target[item._iid] = item; }
 	)

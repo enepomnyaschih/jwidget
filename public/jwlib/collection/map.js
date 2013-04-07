@@ -117,6 +117,10 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		return new JW.Map();
 	},
 	
+	createEmptyUnobservable: function() {
+		return new JW.Map();
+	},
+	
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
@@ -239,6 +243,7 @@ JW.applyIf(
 	JW.Map,
 	JW.Alg.createBuildFunctions(
 		JW.Map.every,
+		function() { return {}; },
 		function() { return {}; },
 		function(target, item, key) { target[key] = item; }
 	)

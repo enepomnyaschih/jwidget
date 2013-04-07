@@ -146,6 +146,10 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 		return new JW.ObservableMap();
 	},
 	
+	createEmptyUnobservable: function() {
+		return new JW.Map();
+	},
+	
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},

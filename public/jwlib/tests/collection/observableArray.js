@@ -213,7 +213,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 	testClone: function() {
 		var array = new JW.ObservableArray([ "a", "b", "c" ]);
 		var cloned = array.clone();
-		this.assertTrue(mapped instanceof JW.ObservableArray);
+		this.assertTrue(cloned instanceof JW.ObservableArray);
 		this.assertStrictNotEqual(array, cloned);
 		this.assertStrictEqual(3, cloned.getLength());
 		this.assertStrictEqual("a", cloned.get(0));
@@ -224,7 +224,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 	testCloneUnobservable: function() {
 		var array = new JW.ObservableArray([ "a", "b", "c" ]);
 		var cloned = array.cloneUnobservable();
-		this.assertTrue(mapped instanceof JW.Array);
+		this.assertTrue(cloned instanceof JW.Array);
 		this.assertStrictEqual(3, cloned.getLength());
 		this.assertStrictEqual("a", cloned.get(0));
 		this.assertStrictEqual("b", cloned.get(1));

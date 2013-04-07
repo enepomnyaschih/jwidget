@@ -19,7 +19,7 @@
 
 // TODO: make merge to take JW.AbstractCollection as argument
 
-JW.Alg.createBuildFunctions = function(every, createEmpty, pushItem) {
+JW.Alg.createBuildFunctions = function(every, createEmpty, createEmptyUnobservable, pushItem) {
 	var namespace = JW.Alg.createSimpleFunctions(every);
 	
 	namespace.merge = function(target, source) {
@@ -34,8 +34,13 @@ JW.Alg.createBuildFunctions = function(every, createEmpty, pushItem) {
 		return namespace.merge(result, target);
 	};
 	
+	namespace.cloneUnobservable = function(target) {
+		var result = createEmptyUnobservable(target);
+		return namespace.merge(result, target);
+	};
+	
 	namespace.filter = function(target, callback, scope) {
-		var result = createEmpty(target);
+		var result = createEmptyUnobservable(target);
 		every(target, function(item, key) {
 			if (callback.apply(this, arguments) !== false) {
 				pushItem(result, item, key);
@@ -48,7 +53,7 @@ JW.Alg.createBuildFunctions = function(every, createEmpty, pushItem) {
 	namespace.filterByMethod = JW.Alg._createByMethod(namespace.filter);
 	
 	namespace.map = function(target, callback, scope) {
-		var result = createEmpty(target);
+		var result = createEmptyUnobservable(target);
 		every(target, function(item, key) {
 			pushItem(result, callback.apply(this, arguments), key);
 		}, scope);
@@ -72,16 +77,18 @@ JW.Alg.createBuildFunctions = function(every, createEmpty, pushItem) {
 	return namespace;
 };
 
-JW.Alg.BuildObjectFunctions = JW.Alg.createBuildFunctions(JW.Alg._every, JW.Alg._createEmpty, JW.Alg._pushItem);
+JW.Alg.BuildObjectFunctions = JW.Alg.createBuildFunctions(
+	JW.Alg._every, JW.Alg._createEmpty, JW.Alg._createEmptyUnobservable, JW.Alg._pushItem);
 
 JW.Alg.BuildMethods = JW.apply({}, JW.Alg.SimpleMethods, {
-	merge          : function(source)          { return JW.Alg.BuildObjectFunctions.merge         (this, source);          },
-	clone          : function()                { return JW.Alg.BuildObjectFunctions.clone         (this);                  },
-	filter         : function(callback, scope) { return JW.Alg.BuildObjectFunctions.filter        (this, callback, scope); },
-	filterBy       : function(field, value)    { return JW.Alg.BuildObjectFunctions.filterBy      (this, field, value);    },
-	filterByMethod : function(method, args)    { return JW.Alg.BuildObjectFunctions.filterByMethod(this, method, args);    },
-	map            : function(callback, scope) { return JW.Alg.BuildObjectFunctions.map           (this, callback, scope); },
-	mapBy          : function(field)           { return JW.Alg.BuildObjectFunctions.mapBy         (this, field);           },
-	mapByMethod    : function(method, args)    { return JW.Alg.BuildObjectFunctions.mapByMethod   (this, method, args);    },
-	mapFields      : function()                { return JW.Alg.BuildObjectFunctions.mapFields     (this);                  }
+	merge             : function(source)          { return JW.Alg.BuildObjectFunctions.merge            (this, source);          },
+	clone             : function()                { return JW.Alg.BuildObjectFunctions.clone            (this);                  },
+	cloneUnobservable : function()                { return JW.Alg.BuildObjectFunctions.cloneUnobservable(this);                  },
+	filter            : function(callback, scope) { return JW.Alg.BuildObjectFunctions.filter           (this, callback, scope); },
+	filterBy          : function(field, value)    { return JW.Alg.BuildObjectFunctions.filterBy         (this, field, value);    },
+	filterByMethod    : function(method, args)    { return JW.Alg.BuildObjectFunctions.filterByMethod   (this, method, args);    },
+	map               : function(callback, scope) { return JW.Alg.BuildObjectFunctions.map              (this, callback, scope); },
+	mapBy             : function(field)           { return JW.Alg.BuildObjectFunctions.mapBy            (this, field);           },
+	mapByMethod       : function(method, args)    { return JW.Alg.BuildObjectFunctions.mapByMethod      (this, method, args);    },
+	mapFields         : function()                { return JW.Alg.BuildObjectFunctions.mapFields        (this);                  }
 });

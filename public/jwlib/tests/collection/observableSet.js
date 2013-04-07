@@ -179,12 +179,12 @@ JW.Tests.Collection.ObservableSetTestCase = JW.Unit.TestCase.extend({
 		var c = new JW.Proxy("c");
 		var set = new JW.ObservableSet([ a, b, c ]);
 		var cloned = set.clone();
-		this.assertTrue(mapped instanceof JW.ObservableSet);
+		this.assertTrue(cloned instanceof JW.ObservableSet);
 		this.assertStrictNotEqual(set, cloned);
 		this.assertStrictEqual(3, cloned.getSize());
-		this.assertTrue(mapped.contains(a));
-		this.assertTrue(mapped.contains(b));
-		this.assertTrue(mapped.contains(c));
+		this.assertTrue(cloned.contains(a));
+		this.assertTrue(cloned.contains(b));
+		this.assertTrue(cloned.contains(c));
 	},
 	
 	testCloneUnobservable: function() {
@@ -193,11 +193,11 @@ JW.Tests.Collection.ObservableSetTestCase = JW.Unit.TestCase.extend({
 		var c = new JW.Proxy("c");
 		var set = new JW.ObservableSet([ a, b, c ]);
 		var cloned = set.cloneUnobservable();
-		this.assertTrue(mapped instanceof JW.Set);
+		this.assertTrue(cloned instanceof JW.Set);
 		this.assertStrictEqual(3, cloned.getSize());
-		this.assertTrue(mapped.contains(a));
-		this.assertTrue(mapped.contains(b));
-		this.assertTrue(mapped.contains(c));
+		this.assertTrue(cloned.contains(a));
+		this.assertTrue(cloned.contains(b));
+		this.assertTrue(cloned.contains(c));
 	},
 	
 	testMapFields: function() {

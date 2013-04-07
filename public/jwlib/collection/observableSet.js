@@ -146,6 +146,10 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.ObservableSet();
 	},
 	
+	createEmptyUnobservable: function() {
+		return new JW.Set();
+	},
+	
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
