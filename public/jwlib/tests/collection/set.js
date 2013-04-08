@@ -35,11 +35,11 @@ JW.extend(JW.Tests.Collection.SetTestCase, JW.Unit.TestCase, {
 	
 	testRemoveItemStatic: function() {
 		var set = {};
-		set.addAll([ this.a, this.b, this.c, this.d, this.e ]);
+		JW.Set.addAll(set, [ this.a, this.b, this.c, this.d, this.e ]);
 		this.assertUndefined(JW.Set.removeItem(set, this.b));
 		
 		var expected = {};
-		expected.addAll([ this.a, this.c, this.d, this.e ]);
+		JW.Set.addAll(expected, [ this.a, this.c, this.d, this.e ]);
 		this.assertTrue(JW.Set.equal(expected, set));
 	},
 	
@@ -66,12 +66,12 @@ JW.extend(JW.Tests.Collection.SetTestCase, JW.Unit.TestCase, {
 		var e = {};
 		var f = {};
 		var g = {};
-		a.addAll([ this.a, this.b, this.c, this.d ]);
-		b.addAll([ this.a, this.b, this.c, this.d ]);
-		c.addAll([ this.a, this.d, this.b, this.c ]);
-		d.addAll([ this.a, this.b, this.e, this.d ]);
-		e.addAll([ this.a, this.b, this.c, this.d, this.e ]);
-		f.addAll([ this.a, this.b, this.c ]);
+		JW.Set.addAll(a, [ this.a, this.b, this.c, this.d ]);
+		JW.Set.addAll(b, [ this.a, this.b, this.c, this.d ]);
+		JW.Set.addAll(c, [ this.a, this.d, this.b, this.c ]);
+		JW.Set.addAll(d, [ this.a, this.b, this.e, this.d ]);
+		JW.Set.addAll(e, [ this.a, this.b, this.c, this.d, this.e ]);
+		JW.Set.addAll(f, [ this.a, this.b, this.c ]);
 		this.assertTrue(JW.Set.equal(a, a));
 		this.assertTrue(JW.Set.equal(a, b));
 		this.assertTrue(JW.Set.equal(a, c));

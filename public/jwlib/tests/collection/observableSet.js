@@ -212,7 +212,10 @@ JW.extend(JW.Tests.Collection.ObservableSetTestCase, JW.Unit.TestCase, {
 	testRemoveItem: function() {
 		var set = new JW.ObservableSet([ this.a, this.b, this.c, this.d, this.e ]);
 		this.assertUndefined(set.removeItem(this.b));
-		this.assertTrue(set.equal(new JW.Set([ this.a, this.c, this.d, this.e ])));
+		
+		var expected = {};
+		JW.Set.addAll(expected, [ this.a, this.c, this.d, this.e ]);
+		this.assertTrue(JW.Set.equal(expected, set.getJson()));
 	},
 	
 	testMapFields: function() {

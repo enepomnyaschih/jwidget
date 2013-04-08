@@ -84,12 +84,20 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	
 	remove: function(key) {
 		var item = this.json[key];
-		if (item === undefined) {
-			return undefined;
+		if (item !== undefined) {
+			delete this.json[key];
+			--this.size;
 		}
-		delete this.json[key];
-		--this.size;
 		return item;
+	},
+	
+	removeItem: function(item) {
+		var key = this.indexOf(item);
+		if (key !== undefined) {
+			delete this.json[key];
+			--this.size;
+		}
+		return key;
 	},
 	
 	removeAll: function(keys) {
@@ -194,6 +202,14 @@ JW.apply(JW.Map, {
 		var item = target[key];
 		delete target[key];
 		return item;
+	},
+	
+	removeItem: function(target, item) {
+		var key = JW.Map.indexOf(target, item);
+		if (key !== undefined) {
+			delete target[key];
+		}
+		return key;
 	},
 	
 	removeAll: function(target, keys) {

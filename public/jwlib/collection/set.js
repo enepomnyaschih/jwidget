@@ -125,9 +125,8 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 		if (this.getSize() !== set.getSize()) {
 			return false;
 		}
-		var json = this.json;
-		for (var key in json) {
-			if (set.get(key) !== json[key]) {
+		for (var iid in this.json) {
+			if (!set.json.hasOwnProperty(iid)) {
 				return false;
 			}
 		}
@@ -139,6 +138,7 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 
 JW.Set.prototype.getLength = JW.Set.prototype.getSize;
 JW.Set.prototype.pushItem = JW.Set.prototype.add;
+JW.Set.prototype.removeItem = JW.Set.prototype.remove;
 JW.Set.prototype._add = JW.Set.prototype.add;
 JW.Set.prototype._addAll = JW.Set.prototype.addAll;
 JW.Set.prototype._remove = JW.Set.prototype.remove;
@@ -188,8 +188,8 @@ JW.apply(JW.Set, {
 			return true;
 		}
 		var size = JW.Set.getSize(y);
-		for (var key in x) {
-			if ((--size < 0) || (x[key] !== y[key])) {
+		for (var iid in x) {
+			if ((--size < 0) || !y.hasOwnProperty(iid)) {
 				return false;
 			}
 		}
@@ -198,6 +198,8 @@ JW.apply(JW.Set, {
 	
 	clone: JW.Map.clone
 });
+
+JW.Set.removeItem = JW.Set.remove;
 
 JW.applyIf(
 	JW.Set,

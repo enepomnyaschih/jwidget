@@ -100,6 +100,10 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		return false;
 	},
 	
+	removeItem: function(item) {
+		this.remove(item); // return undefined
+	},
+	
 	removeAll: function(items) {
 		var changed = false;
 		for (var i = 0, l = items.length; i < l; ++i) {

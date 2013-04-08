@@ -206,13 +206,11 @@ JW.apply(JW.Array, {
 	},
 	
 	removeItem: function(target, item) {
-		for (var i = 0; i < target.length; ++i) {
-			if (target[i] === item) {
-				target.splice(i, 1);
-				--i;
-			}
+		var index = JW.Array.indexOf(target, item);
+		if (index !== undefined) {
+			target.splice(index, 1);
 		}
-		return target;
+		return index;
 	},
 	
 	removeBy: function(target, field, value) {

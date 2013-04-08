@@ -104,6 +104,14 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 		return item;
 	},
 	
+	removeItem: function(item) {
+		var key = this.indexOf(item);
+		if (key !== undefined) {
+			this.remove(key);
+		}
+		return key;
+	},
+	
 	removeAll: function(keys) {
 		if (this._removeAll(keys)) {
 			this._triggerChange();

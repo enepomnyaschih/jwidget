@@ -114,6 +114,14 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		return (count === undefined) ? items[0] : items;
 	},
 	
+	removeItem: function(item) {
+		var index = this.indexOf(item);
+		if (index !== undefined) {
+			this.remove(index);
+		}
+		return index;
+	},
+	
 	set: function(item, index) {
 		var oldItem = this.array[index];
 		if (oldItem === item) {
