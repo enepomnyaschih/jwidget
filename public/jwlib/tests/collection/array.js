@@ -147,21 +147,18 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 		this.assertNotEqual(bb, JW.Array.filterBy(bb, 'a', 0));
 	},
 	
-	testMerge: function()
-	{
-		var target = JW.Array.clone(this.aa);
-		this.assertEqual(target, JW.Array.merge(target, this.arr));
-		
-		var expected = [ 0, 1, 2, 3, 2, 3, 0, 1, 10, null, "lala" ];
-		this.assertTrue(JW.Array.equal(expected, target, true, true));
-	},
-	
 	testRemoveItem: function()
 	{
-		this.assertTrue(JW.Array.equal(JW.Array.removeItem(this.aa.concat(), 1), [ 0, 2, 3, 2, 3, 0 ]));
-		
-		var aa = this.aa.concat();
-		this.assertEqual(aa, JW.Array.removeItem(aa, 1));
+		var array = new JW.Array([ 0, 2, 3, 2, 3, 0 ]);
+		this.assertStrictEqual(1, array.removeItem(2));
+		this.assertTrue(JW.Array.equal([ 0, 3, 2, 3, 0 ], array.getItems(), true, true));
+	},
+	
+	testRemoveItemStatic: function()
+	{
+		var array = [ 0, 2, 3, 2, 3, 0 ];
+		this.assertStrictEqual(1, JW.Array.removeItem(array, 2));
+		this.assertTrue(JW.Array.equal([ 0, 3, 2, 3, 0 ], array, true, true));
 	},
 	
 	testEqual: function()

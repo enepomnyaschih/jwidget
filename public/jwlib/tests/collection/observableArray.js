@@ -231,6 +231,13 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual("c", cloned.get(2));
 	},
 	
+	testRemoveItem: function()
+	{
+		var array = new JW.ObservableArray([ 0, 2, 3, 2, 3, 0 ]);
+		this.assertStrictEqual(1, array.removeItem(2));
+		this.assertTrue(JW.Array.equal([ 0, 3, 2, 3, 0 ], array.getItems(), true, true));
+	},
+	
 	testMapFields: function() {
 		var array = new JW.ObservableArray([
 			{ x: "a", y: "d" },

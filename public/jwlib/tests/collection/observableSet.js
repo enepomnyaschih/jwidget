@@ -17,7 +17,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.ObservableSetTestCase = JW.Unit.TestCase.extend({
+JW.Tests.Collection.ObservableSetTestCase = function(config) {
+	JW.Tests.Collection.ObservableSetTestCase._super.call(this, config);
+	this.a = new JW.Class();
+	this.b = new JW.Class();
+	this.c = new JW.Class();
+	this.d = new JW.Class();
+	this.e = new JW.Class();
+};
+
+JW.extend(JW.Tests.Collection.ObservableSetTestCase, JW.Unit.TestCase, {
 	testSet: function() {
 		var set = new JW.ObservableSet();
 		this.subscribe(set);
@@ -198,6 +207,12 @@ JW.Tests.Collection.ObservableSetTestCase = JW.Unit.TestCase.extend({
 		this.assertTrue(cloned.contains(a));
 		this.assertTrue(cloned.contains(b));
 		this.assertTrue(cloned.contains(c));
+	},
+	
+	testRemoveItem: function() {
+		var set = new JW.ObservableSet([ this.a, this.b, this.c, this.d, this.e ]);
+		this.assertUndefined(set.removeItem(this.b));
+		this.assertTrue(set.equal(new JW.Set([ this.a, this.c, this.d, this.e ])));
 	},
 	
 	testMapFields: function() {
