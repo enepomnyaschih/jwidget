@@ -118,6 +118,10 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.AbstractSet.Mapper(this, config);
 	},
 	
+	createObserver: function(config) {
+		return new JW.AbstractSet.Observer(this, config);
+	},
+	
 	equal: function(set) {
 		if (this === set) {
 			return true;

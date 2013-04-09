@@ -174,6 +174,10 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.ObservableSet.Mapper(this, config);
 	},
 	
+	createObserver: function(config) {
+		return new JW.ObservableSet.Observer(this, config);
+	},
+	
 	_add: function(item) {
 		if (this.set.json[item._iid]) {
 			return false;

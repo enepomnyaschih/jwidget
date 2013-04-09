@@ -32,7 +32,7 @@ JW.Tests.Collection.AbstractSet.ObserverTestCase = JW.Unit.TestCase.extend({
 		var syncher = source.createObserver({
 			addItem    : function(item) { this.output("Added " + item.value); },
 			removeItem : function(item) { this.output("Removed " + item.value); },
-			clearItems : function(items) { this.output("Cleared " + JW.Array.mapByField(items, "value").join(", ")); },
+			clearItems : function(items) { this.output("Cleared " + JW.Array.mapBy(items, "value").join(", ")); },
 			scope      : this
 		});
 		

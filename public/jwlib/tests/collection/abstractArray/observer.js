@@ -29,7 +29,7 @@ JW.Tests.Collection.AbstractArray.ObserverTestCase = JW.Unit.TestCase.extend({
 			"Added e"
 		);
 		var syncher = collection.createObserver({
-			addItem    : function(item) { this.output("Added" + item); },
+			addItem    : function(item) { this.output("Added " + item); },
 			removeItem : function(item) { this.output("Removed " + item); },
 			clearItems : function(items) { this.output("Cleared " + items.join(", ")); },
 			scope      : this

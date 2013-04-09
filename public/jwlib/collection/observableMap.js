@@ -178,6 +178,10 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 		return new JW.ObservableMap.Mapper(this, config);
 	},
 	
+	createObserver: function(config) {
+		return new JW.ObservableMap.Observer(this, config);
+	},
+	
 	_set: function(item, key) {
 		if (item === undefined) {
 			return false;

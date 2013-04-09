@@ -65,7 +65,10 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		source.set("T", "f");
 		
 		this.setExpectedOutput(
-			"Cleared D, T, C, B"
+			"Removed D",
+			"Removed C",
+			"Removed B",
+			"Removed T"
 		);
 		source.clear();
 		

@@ -57,6 +57,10 @@ JW.extend(JW.Array, JW.Class, {
 		return JW.Array.every(this.items, callback, scope);
 	},
 	
+	backEvery: function(callback, scope) {
+		return JW.Array.backEvery(this.items, callback, scope);
+	},
+	
 	createEmpty: function() {
 		return new JW.Array();
 	},
@@ -129,6 +133,10 @@ JW.extend(JW.Array, JW.Class, {
 		return new JW.AbstractArray.Indexer(this, config);
 	},
 	
+	createObserver: function(config) {
+		return new JW.AbstractArray.Observer(this, config);
+	},
+	
 	createInserter: function(config) {
 		return new JW.AbstractArray.Inserter(this, config);
 	},
@@ -198,6 +206,15 @@ JW.apply(JW.Array, {
 	
 	every: function(target, callback, scope) {
 		for (var i = 0, l = target.length; i < l; ++i) {
+			if (callback.call(scope || target, target[i], i) === false) {
+				return false;
+			}
+		}
+		return true;
+	},
+	
+	backEvery: function(target, callback, scope) {
+		for (var i = target.length - 1; i >= 0; --i) {
 			if (callback.call(scope || target, target[i], i) === false) {
 				return false;
 			}

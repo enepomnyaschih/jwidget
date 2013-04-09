@@ -215,6 +215,10 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		return new JW.ObservableArray.Indexer(this, config);
 	},
 	
+	createObserver: function(config) {
+		return new JW.ObservableArray.Observer(this, config);
+	},
+	
 	createInserter: function(config) {
 		return new JW.ObservableArray.Inserter(this, config);
 	},

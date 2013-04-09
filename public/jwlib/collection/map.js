@@ -149,6 +149,10 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		return new JW.AbstractMap.Mapper(this, config);
 	},
 	
+	createObserver: function(config) {
+		return new JW.AbstractMap.Observer(this, config);
+	},
+	
 	equal: function(map) {
 		if (this === map) {
 			return true;
