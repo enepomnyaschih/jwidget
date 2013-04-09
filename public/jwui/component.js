@@ -117,12 +117,20 @@ JW.extend(JW.UI.Component, JW.Class, {
 			scope       : this
 		});
 		this.beforeRender();
-		for (var jwId in this._elements) {
-			var anchorEl = this._elements[jwId];
+		var elements = JW.apply({}, this._elements);
+		for (var jwId in elements) {
+			var anchorEl = elements[jwId];
 			var jwIdCamel = JW.String.camel(jwId);
 			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
 			if (typeof this[renderMethodName] === "function") {
-				this.children.set(this[renderMethodName].call(this), jwId);
+				var result = this[renderMethodName](anchorEl);
+				if (result instanceof JW.UI.Component) {
+					this.children.set(result, jwId);
+				} else if ((result instanceof JW.Array) || (result instanceof JW.ObservableArray)) {
+					this.addArray(result, jwId);
+				} else if (result === false) {
+					this.removeElement(jwId);
+				}
 			}
 		}
 		this.renderComponent();
