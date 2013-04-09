@@ -238,6 +238,18 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 		this.assertStrictEqual(null, JW.Array.top([ 10, 20, null ]));
 	},
 	
+	testPop: function() {
+		var arr = new JW.Array([ "a", "b", "c" ]);
+		this.assertStrictEqual("c", arr.pop());
+		this.assertTrue(JW.Array.equal([ "a", "b" ], arr.getItems(), true, true));
+	},
+	
+	testPopEmpty: function() {
+		var arr = new JW.Array();
+		this.assertUndefined(arr.pop());
+		this.assertTrue(JW.Array.equal([], arr.getItems(), true, true));
+	},
+	
 	testCollapse: function()
 	{
 		var a = [

@@ -95,6 +95,10 @@ JW.extend(JW.Array, JW.Class, {
 		return JW.Array.top(this.items);
 	},
 	
+	pop: function() {
+		return this.items.pop();
+	},
+	
 	collapse: function(depth) {
 		return JW.Array.collapse(this.items, depth);
 	},
@@ -245,6 +249,10 @@ JW.apply(JW.Array, {
 	
 	top: function(target) {
 		return target[target.length - 1];
+	},
+	
+	pop: function(target) {
+		return target.pop();
 	},
 	
 	collapse: function(target, depth) {

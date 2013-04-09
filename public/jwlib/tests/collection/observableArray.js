@@ -266,6 +266,32 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual("f", mapped.y.get(2));
 	},
 	
+	testTop: function() {
+		this.assertUndefined(new JW.ObservableArray().top());
+		this.assertStrictEqual("c", new JW.ObservableArray([ "a", "b", "c" ]).top());
+	},
+	
+	testPop: function() {
+		var arr = new JW.ObservableArray([ "a", "b", "c" ]);
+		this.subscribe(arr);
+		this.setExpectedOutput(
+			"Removed c at 2",
+			"Changed",
+			"Changed length from 3 to 2"
+		);
+		this.assertStrictEqual("c", arr.pop());
+		this.setExpectedOutput();
+		this.assertTrue(JW.Array.equal([ "a", "b" ], arr.getItems(), true, true));
+	},
+	
+	testPopEmpty: function() {
+		var arr = new JW.ObservableArray();
+		this.subscribe(arr);
+		this.setExpectedOutput();
+		this.assertUndefined(arr.pop());
+		this.assertTrue(JW.Array.equal([], arr.getItems(), true, true));
+	},
+	
 	subscribe: function(array) {
 		array.addEvent.bind(this.onAdd, this);
 		array.removeEvent.bind(this.onRemove, this);
