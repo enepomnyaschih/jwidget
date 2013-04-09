@@ -32,10 +32,10 @@ JW.ObservableSet = function(items) {
 	this.sizeChangeEvent = new JW.Event();
 	this.bulkCount = 0;
 	this.bulkDirty = false;
-	this.bulkSize = 0;
 	if (items) {
 		this._addAll(items);
 	}
+	this.bulkSize = this.set.size;
 };
 
 JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {

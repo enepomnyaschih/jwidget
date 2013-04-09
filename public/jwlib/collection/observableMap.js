@@ -32,10 +32,10 @@ JW.ObservableMap = function(json) {
 	this.sizeChangeEvent = new JW.Event();
 	this.bulkCount = 0;
 	this.bulkDirty = false;
-	this.bulkSize = 0;
 	if (json) {
 		this._setAll(json);
 	}
+	this.bulkSize = this._map.size;
 };
 
 JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {

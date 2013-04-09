@@ -19,11 +19,11 @@
 
 JW.Tests.Collection.ObservableSetTestCase = function(config) {
 	JW.Tests.Collection.ObservableSetTestCase._super.call(this, config);
-	this.a = new JW.Class();
-	this.b = new JW.Class();
-	this.c = new JW.Class();
-	this.d = new JW.Class();
-	this.e = new JW.Class();
+	this.a = new JW.Proxy("a");
+	this.b = new JW.Proxy("b");
+	this.c = new JW.Proxy("c");
+	this.d = new JW.Proxy("d");
+	this.e = new JW.Proxy("e");
 };
 
 JW.extend(JW.Tests.Collection.ObservableSetTestCase, JW.Unit.TestCase, {
@@ -210,11 +210,20 @@ JW.extend(JW.Tests.Collection.ObservableSetTestCase, JW.Unit.TestCase, {
 	},
 	
 	testRemoveItem: function() {
-		var set = new JW.ObservableSet([ this.a, this.b, this.c, this.d, this.e ]);
+		var set = new JW.ObservableSet([ this.a, this.b, this.c, this.d ]);
+		this.subscribe(set);
+		
+		this.setExpectedOutput(
+			"Removed b",
+			"Changed",
+			"Changed size from 4 to 3"
+		);
 		this.assertUndefined(set.removeItem(this.b));
+		this.setExpectedOutput();
+		this.assertUndefined(set.removeItem(this.e));
 		
 		var expected = {};
-		JW.Set.addAll(expected, [ this.a, this.c, this.d, this.e ]);
+		JW.Set.addAll(expected, [ this.a, this.c, this.d ]);
 		this.assertTrue(JW.Set.equal(expected, set.getJson()));
 	},
 	

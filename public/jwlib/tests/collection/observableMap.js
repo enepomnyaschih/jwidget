@@ -187,7 +187,16 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 	
 	testRemoveItem: function() {
 		var map = new JW.ObservableMap({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 });
+		this.subscribe(map);
+		
+		this.setExpectedOutput(
+			"Removed 2 at b",
+			"Changed",
+			"Changed size from 6 to 5"
+		);
 		this.assertStrictEqual("b", map.removeItem(2));
+		this.setExpectedOutput();
+		this.assertUndefined(map.removeItem(1));
 		this.assertTrue(JW.Map.equal({ "a": 0, "c": 3, "d": 2, "e": 3, "f": 0 }, map.getJson()));
 	},
 	
