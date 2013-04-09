@@ -25,12 +25,14 @@ JW.extend(JW.Tests.Collection.MapTestCase, JW.Unit.TestCase, {
 	testRemoveItem: function() {
 		var map = new JW.Map({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 });
 		this.assertStrictEqual("b", map.removeItem(2));
+		this.assertUndefined(map.removeItem(1));
 		this.assertTrue(JW.Map.equal({ "a": 0, "c": 3, "d": 2, "e": 3, "f": 0 }, map.getJson()));
 	},
 	
 	testRemoveItemStatic: function() {
 		var map = { "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 };
 		this.assertStrictEqual("b", JW.Map.removeItem(map, 2));
+		this.assertUndefined(JW.Map.removeItem(map, 1));
 		this.assertTrue(JW.Map.equal({ "a": 0, "c": 3, "d": 2, "e": 3, "f": 0 }, map));
 	},
 	

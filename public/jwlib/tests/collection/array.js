@@ -151,6 +151,7 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	{
 		var array = new JW.Array([ 0, 2, 3, 2, 3, 0 ]);
 		this.assertStrictEqual(1, array.removeItem(2));
+		this.assertUndefined(array.removeItem(1));
 		this.assertTrue(JW.Array.equal([ 0, 3, 2, 3, 0 ], array.getItems(), true, true));
 	},
 	
@@ -158,6 +159,7 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	{
 		var array = [ 0, 2, 3, 2, 3, 0 ];
 		this.assertStrictEqual(1, JW.Array.removeItem(array, 2));
+		this.assertUndefined(JW.Array.removeItem(array, 1));
 		this.assertTrue(JW.Array.equal([ 0, 3, 2, 3, 0 ], array, true, true));
 	},
 	

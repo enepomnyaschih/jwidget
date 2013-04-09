@@ -28,18 +28,20 @@ JW.Tests.Collection.SetTestCase = function(config) {
 
 JW.extend(JW.Tests.Collection.SetTestCase, JW.Unit.TestCase, {
 	testRemoveItem: function() {
-		var set = new JW.Set([ this.a, this.b, this.c, this.d, this.e ]);
+		var set = new JW.Set([ this.a, this.b, this.c, this.d ]);
 		this.assertUndefined(set.removeItem(this.b));
-		this.assertTrue(set.equal(new JW.Set([ this.a, this.c, this.d, this.e ])));
+		this.assertUndefined(set.removeItem(this.e));
+		this.assertTrue(set.equal(new JW.Set([ this.a, this.c, this.d ])));
 	},
 	
 	testRemoveItemStatic: function() {
 		var set = {};
-		JW.Set.addAll(set, [ this.a, this.b, this.c, this.d, this.e ]);
+		JW.Set.addAll(set, [ this.a, this.b, this.c, this.d ]);
 		this.assertUndefined(JW.Set.removeItem(set, this.b));
+		this.assertUndefined(JW.Set.removeItem(set, this.e));
 		
 		var expected = {};
-		JW.Set.addAll(expected, [ this.a, this.c, this.d, this.e ]);
+		JW.Set.addAll(expected, [ this.a, this.c, this.d ]);
 		this.assertTrue(JW.Set.equal(expected, set));
 	},
 	
