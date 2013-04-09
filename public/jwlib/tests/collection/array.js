@@ -131,15 +131,6 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 		this.assertUndefined(JW.Array.searchBy(this.cc, 'q.a', 2));
 	},
 	
-	testRemoveBy: function()
-	{
-		this.assertTrue(JW.Array.equal(JW.Array.removeBy(this.bb.concat(), 'a', 0), [ this.b3 ]));
-		this.assertTrue(JW.Array.equal(JW.Array.removeBy(this.cc.concat(), 'q.a', 0), [ null, this.c3 ]));
-		
-		var bb = this.bb.concat();
-		this.assertEqual(bb, JW.Array.removeBy(bb, 'a', 0));
-	},
-	
 	testFilter: function()
 	{
 		var result = JW.Array.filter(this.bb, function(item) {

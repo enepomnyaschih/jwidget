@@ -17,8 +17,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: structurize and document removeItem, removeBy and other misc array methods
-
 JW.Array = function(items) {
 	JW.Array._super.call(this);
 	this.items = items ? items.concat() : [];
@@ -83,10 +81,6 @@ JW.extend(JW.Array, JW.Class, {
 	
 	removeItem: function(item) {
 		return JW.Array.removeItem(this.items, item);
-	},
-	
-	removeBy: function(field, value) {
-		return JW.Array.removeBy(this.items, field, value);
 	},
 	
 	equal: function(arr) {
@@ -228,16 +222,6 @@ JW.apply(JW.Array, {
 			target.splice(index, 1);
 		}
 		return index;
-	},
-	
-	removeBy: function(target, field, value) {
-		for (var i = 0; i < target.length; ++i) {
-			if (JW.get(target[i], field) === value) {
-				target.splice(i, 1);
-				--i;
-			}
-		}
-		return target;
 	},
 	
 	equal: function(target, arr) {
