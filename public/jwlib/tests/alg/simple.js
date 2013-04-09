@@ -66,6 +66,7 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 	{
 		this.assertTrue (JW.Map.every(this.obj, JW.isDefined));
 		this.assertFalse(JW.Map.every(this.obj, JW.isSet));
+		this.assertTrue (JW.Map.every(this.objj, JW.emptyFn));
 	},
 	
 	testEveryObjectScope: function()
@@ -129,6 +130,7 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 		this.assertTrue (JW.Map.some(this.objj, JW.isDefined));
 		this.assertTrue (JW.Map.some(this.objj, JW.isSet));
 		this.assertFalse(JW.Map.some(this.objj, JW.isBlank));
+		this.assertTrue (JW.Map.some(this.objj, JW.emptyFn));
 	},
 	
 	testSomeClass: function()

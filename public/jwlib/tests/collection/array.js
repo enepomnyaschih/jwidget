@@ -37,6 +37,7 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	{
 		this.assertTrue (JW.Array.every(this.arr, JW.isDefined));
 		this.assertFalse(JW.Array.every(this.arr, JW.isSet));
+		this.assertTrue (JW.Array.every(this.arr, JW.emptyFn));
 	},
 	
 	testEach: function()
@@ -57,6 +58,7 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 		this.assertTrue (JW.Array.some(this.arrr, JW.isDefined));
 		this.assertTrue (JW.Array.some(this.arrr, JW.isSet));
 		this.assertFalse(JW.Array.some(this.arrr, JW.isBlank));
+		this.assertTrue (JW.Array.some(this.arrr, JW.emptyFn));
 	},
 	
 	testGetValuesArray: function()
@@ -97,12 +99,28 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 		this.assertNotEqual(bb, JW.Array.mapBy(bb, "b"));
 	},
 	
+	testFindStatic: function()
+	{
+		var arr = [ 1, 2, 3, 3, 4 ];
+		this.assertStrictEqual(2, JW.Array.find(arr, function(x) { return x === 3; }));
+		this.assertUndefined(JW.Array.find(arr, function(x) { return x === 0; }));
+		this.assertStrictEqual(0, JW.Array.find(arr, JW.emptyFn));
+	},
+	
 	testFindBy: function()
 	{
 		this.assertEqual(2, JW.Array.findBy(this.bb, 'a', 1));
 		this.assertEqual(3, JW.Array.findBy(this.cc, 'q.a', 1));
 		this.assertEqual(undefined, JW.Array.findBy(this.bb, 'a', 2));
 		this.assertEqual(undefined, JW.Array.findBy(this.cc, 'q.a', 2));
+	},
+	
+	testSearchStatic: function()
+	{
+		var arr = [ 1, 2, 3, 3, 4 ];
+		this.assertStrictEqual(3, JW.Array.search(arr, function(x) { return x === 3; }));
+		this.assertUndefined(JW.Array.search(arr, function(x) { return x === 0; }));
+		this.assertStrictEqual(1, JW.Array.search(arr, JW.emptyFn));
 	},
 	
 	testSearchBy: function()
@@ -136,6 +154,12 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 		}, this);
 		
 		this.assertTrue(JW.Array.equal(result, [ this.b3 ]));
+	},
+	
+	testFilterStatic: function()
+	{
+		this.assertTrue(JW.Array.equal([ 1, 3, 3 ], JW.Array.filter([ 1, 2, 3, 3, 4 ], function(x) { return x % 2 === 1; })));
+		this.assertTrue(JW.Array.equal([ 1, 2, 3, 0, 3, 0, 4 ], JW.Array.filter([ 1, 2, 3, 0, 3, 0, 4 ], JW.emptyFn)));
 	},
 	
 	testFilterBy: function()
