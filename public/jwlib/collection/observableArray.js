@@ -187,6 +187,10 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		return JW.Array.every(this.array, callback, scope);
 	},
 	
+	backEvery: function(target, callback, scope) {
+		return JW.Array.backEvery(this.array, callback, scope);
+	},
+	
 	createEmpty: function() {
 		return new JW.ObservableArray();
 	},
