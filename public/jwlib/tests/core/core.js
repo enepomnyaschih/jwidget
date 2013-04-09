@@ -113,6 +113,25 @@ JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 		this.assertFalse(JW.isNull(new Date()));
 	},
 	
+	testIsNotNull: function()
+	{
+		this.assertTrue (JW.isNotNull(undefined));
+		this.assertFalse(JW.isNotNull(null));
+		this.assertTrue (JW.isNotNull(0));
+		this.assertTrue (JW.isNotNull(1));
+		this.assertTrue (JW.isNotNull(true));
+		this.assertTrue (JW.isNotNull(false));
+		this.assertTrue (JW.isNotNull(''));
+		this.assertTrue (JW.isNotNull('lala'));
+		this.assertTrue (JW.isNotNull({}));
+		this.assertTrue (JW.isNotNull({ length: 1 }));
+		this.assertTrue (JW.isNotNull([]));
+		this.assertTrue (JW.isNotNull([ 1 ]));
+		this.assertTrue (JW.isNotNull(JW.emptyFn));
+		this.assertTrue (JW.isNotNull(/abc/i));
+		this.assertTrue (JW.isNotNull(new Date()));
+	},
+	
 	testIsSet: function()
 	{
 		this.assertFalse(JW.isSet(undefined));
@@ -132,6 +151,25 @@ JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 		this.assertTrue (JW.isSet(new Date()));
 	},
 	
+	testIsNotSet: function()
+	{
+		this.assertTrue (JW.isNotSet(undefined));
+		this.assertTrue (JW.isNotSet(null));
+		this.assertFalse(JW.isNotSet(0));
+		this.assertFalse(JW.isNotSet(1));
+		this.assertFalse(JW.isNotSet(true));
+		this.assertFalse(JW.isNotSet(false));
+		this.assertFalse(JW.isNotSet(''));
+		this.assertFalse(JW.isNotSet('lala'));
+		this.assertFalse(JW.isNotSet({}));
+		this.assertFalse(JW.isNotSet({ length: 1 }));
+		this.assertFalse(JW.isNotSet([]));
+		this.assertFalse(JW.isNotSet([ 1 ]));
+		this.assertFalse(JW.isNotSet(JW.emptyFn));
+		this.assertFalse(JW.isNotSet(/abc/i));
+		this.assertFalse(JW.isNotSet(new Date()));
+	},
+	
 	testIsBlank: function()
 	{
 		this.assertTrue (JW.isBlank(undefined));
@@ -149,6 +187,25 @@ JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 		this.assertFalse(JW.isBlank(JW.emptyFn));
 		this.assertFalse(JW.isBlank(/abc/i));
 		this.assertFalse(JW.isBlank(new Date()));
+	},
+	
+	testIsNotBlank: function()
+	{
+		this.assertFalse(JW.isNotBlank(undefined));
+		this.assertFalse(JW.isNotBlank(null));
+		this.assertFalse(JW.isNotBlank(0));
+		this.assertTrue (JW.isNotBlank(1));
+		this.assertTrue (JW.isNotBlank(true));
+		this.assertFalse(JW.isNotBlank(false));
+		this.assertFalse(JW.isNotBlank(''));
+		this.assertTrue (JW.isNotBlank('lala'));
+		this.assertTrue (JW.isNotBlank({}));
+		this.assertTrue (JW.isNotBlank({ length: 1 }));
+		this.assertTrue (JW.isNotBlank([]));
+		this.assertTrue (JW.isNotBlank([ 1 ]));
+		this.assertTrue (JW.isNotBlank(JW.emptyFn));
+		this.assertTrue (JW.isNotBlank(/abc/i));
+		this.assertTrue (JW.isNotBlank(new Date()));
 	},
 	
 	testIsInt: function()
