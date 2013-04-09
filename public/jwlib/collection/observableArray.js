@@ -257,7 +257,7 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		var items = callback.call(scope || this, this.array);
 		if (items && (items !== this.array)) {
 			JW.Array.clear(this.array);
-			JW.Array.pushAll(this.array, items);
+			JW.Array.addAll(this.array, items);
 		}
 		event.trigger(params);
 		this._triggerChange();

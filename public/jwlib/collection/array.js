@@ -87,10 +87,6 @@ JW.extend(JW.Array, JW.Class, {
 		return JW.Array.equal(this.items, arr);
 	},
 	
-	pushAll: function(items) {
-		return JW.Array.pushAll(this.items, items);
-	},
-	
 	sortBy: function(field, order) {
 		return JW.Array.sortBy(this.items, field, order);
 	},
@@ -151,7 +147,7 @@ JW.extend(JW.Array, JW.Class, {
 		var items = callback.call(scope || this, this.items);
 		if (items && (items !== this.items)) {
 			JW.Array.clear(this.items);
-			JW.Array.pushAll(this.items, items);
+			JW.Array.addAll(this.items, items);
 		}
 	}
 });
@@ -239,13 +235,6 @@ JW.apply(JW.Array, {
 		return true;
 	},
 	
-	pushAll: function(target, items) {
-		if (!items) {
-			return target.length;
-		}
-		return target.push.apply(target, items);
-	},
-	
 	sortBy: function(target, field, order) {
 		order = order || 1;
 		target.sort(function(x, y) {
@@ -266,11 +255,11 @@ JW.apply(JW.Array, {
 				continue;
 			}
 			if (!JW.isSet(depth)) {
-				JW.Array.pushAll(result, JW.Array.collapse(target[i]));
+				JW.Array.addAll(result, JW.Array.collapse(target[i]));
 				continue;
 			}
 			if (depth) {
-				JW.Array.pushAll(result, JW.Array.collapse(target[i], depth - 1));
+				JW.Array.addAll(result, JW.Array.collapse(target[i], depth - 1));
 				continue;
 			}
 			result.push(target[i]);

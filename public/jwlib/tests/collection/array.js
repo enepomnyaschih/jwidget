@@ -199,11 +199,14 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 		this.assertFalse(JW.Array.equal(a1, a6));
 	},
 	
-	testPushAll: function()
+	testAddAll: function()
 	{
 		var a = [ 0, 1, 2, 3 ];
-		JW.Array.pushAll(a, [ 4, 5, 6 ]);
+		JW.Array.addAll(a, [ 4, 5, 6 ]);
 		this.assertTrue(JW.Array.equal([ 0, 1, 2, 3, 4, 5, 6 ], a));
+        
+		JW.Array.addAll(a, [ 7, 8 ], 3);
+		this.assertTrue(JW.Array.equal([ 0, 1, 2, 7, 8, 3, 4, 5, 6 ], a));
 	},
 	
 	testSortBy: function()

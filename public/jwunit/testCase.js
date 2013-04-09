@@ -50,7 +50,7 @@ JW.extend(JW.Unit.TestCase, JW.Unit.TestGroup, {
 	},
 	
 	addExpectedOutput: function(/* lines */) {
-		this.addExpectedOutputArray(arguments);
+		this.addExpectedOutputArray(JW.toArray(arguments));
 	},
 	
 	addExpectedOutputArray: function(lines) {
@@ -58,7 +58,7 @@ JW.extend(JW.Unit.TestCase, JW.Unit.TestGroup, {
 	},
 	
 	setExpectedOutput: function(/* lines */) {
-		this.setExpectedOutputArray(arguments);
+		this.setExpectedOutputArray(JW.toArray(arguments));
 	},
 	
 	setExpectedOutputArray: function(lines) {

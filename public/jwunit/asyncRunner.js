@@ -133,7 +133,7 @@ JW.extend(JW.Unit.AsyncRunner, JW.Class, {
 	},
 	
 	addExpectedOutput: function(lines) {
-		JW.Array.pushAll(this.expectedOutput, lines);
+		JW.Array.addAll(this.expectedOutput, lines);
 	},
 	
 	assertOutputFinish: function() {
