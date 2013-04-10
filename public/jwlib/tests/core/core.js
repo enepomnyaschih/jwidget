@@ -449,7 +449,8 @@ JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 				_base               : "/calclines",
 				add                 : "/create",
 				modify              : "/modify",
-				delet_              : "/delete"
+				delet_              : "/delete",
+				"0"                 : "/zero"
 			},
 			extractor           : {
 				_base               : "/extractor",
@@ -477,6 +478,9 @@ JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 		this.assertEqual("default!", JW.get(api, [ "extractor", "launch", "now" ], "default!"));
 		this.assertEqual("default!", JW.get(api, "extractor.run.now", "default!"));
 		this.assertEqual("default!", JW.get(api, [ "extractor", "run", "now" ], "default!"));
+		
+		this.assertEqual("/zero", JW.get(api, "calculationlines.0"));
+		this.assertEqual("/zero", JW.get(api, [ "calculationlines", 0 ]));
 	},
 	
 	testSet: function()
@@ -502,6 +506,7 @@ JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 		
 		JW.set(api, "Run", "extractor.run.now");
 		JW.set(api, "Update", [ "calculationlines", "update", "now" ]);
+		JW.set(api, "Zero", [ "calculationlines", 0, "now" ]);
 		
 		var expected = {
 			_base               : "/app",
@@ -513,6 +518,9 @@ JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 				delet_              : "/delete",
 				update              : {
 					now                 : "Update"
+				},
+				"0"                 : {
+					now                 : "Zero"
 				}
 			},
 			extractor           : {
