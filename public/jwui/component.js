@@ -159,6 +159,10 @@ JW.extend(JW.UI.Component, JW.Class, {
 		return this._elements[id];
 	},
 	
+	setElement: function(el, id) {
+		this._elements[id] = el;
+	},
+	
 	getElementClass: function(id) {
 		return JW.Array.map(JW.Array.filter([ this.rootClass, id ], JW.isSet), JW.String.hyphen).join("-");
 	},
