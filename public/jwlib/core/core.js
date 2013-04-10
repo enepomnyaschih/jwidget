@@ -55,8 +55,24 @@ JW.apply(JW, {
 		return v === null;
 	},
 	
+	isNotNull: function(v) {
+		return v !== null;
+	},
+	
 	isSet: function(v) {
 		return (v !== undefined) && (v !== null);
+	},
+	
+	isNotSet: function(v) {
+		return (v === undefined) || (v === null);
+	},
+	
+	isBlank: function(v) {
+		return !v;
+	},
+	
+	isNotBlank: function(v) {
+		return Boolean(v);
 	},
 	
 	isInt: function(v) {
@@ -93,10 +109,6 @@ JW.apply(JW, {
 	
 	isDate: function(v) {
 		return Object.prototype.toString.apply(v) === '[object Date]';
-	},
-	
-	isBlank: function(v) {
-		return !v;
 	},
 	
 	def: function(v, d) {
@@ -197,14 +209,41 @@ JW.apply(JW, {
 		if (!field) {
 			return JW.def(obj, def);
 		}
-		field = field.split(".");
-		for (var i = 0; i < field.length; ++i) {
+		if (typeof field === "string") {
+			field = field.split(".");
+		}
+		field = JW.Array.filter(field, function(token) {
+			return JW.isSet(token) && (token !== "");
+		});
+		for (var i = 0, l = field.length; i < l; ++i) {
 			if (!obj) {
 				return def;
 			}
 			obj = obj[field[i]];
 		}
 		return JW.def(obj, def);
+	},
+	
+	set: function(obj, value, field) {
+		if (!field) {
+			return;
+		}
+		if (typeof field === "string") {
+			field = field.split(".");
+		}
+		field = JW.Array.filter(field, function(token) {
+			return JW.isSet(token) && (token !== "");
+		});
+		for (var i = 0, l = field.length - 1; i < l; ++i) {
+			token = field[i];
+			obj[token] = obj[token] || {};
+			obj = obj[token];
+		}
+		obj[JW.Array.top(field)] = value;
+	},
+	
+	destroy: function(obj) {
+		obj.destroy();
 	},
 	
 	eq: function(x, y) {

@@ -32,6 +32,10 @@ JW.UI = {
 	
 	isElement: function(v) {
 		return v instanceof jQuery.fn.init;
+	},
+	
+	preventDefault: function(event) {
+		event.preventDefault();
 	}
 };
 
