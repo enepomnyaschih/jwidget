@@ -460,17 +460,72 @@ JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 		
 		this.assertEqual("/details", JW.get(api.details));
 		this.assertEqual("/status", JW.get(api, "extractor.status"));
+		this.assertEqual("/status", JW.get(api, [ "extractor", "status" ]));
 		
-		this.assertFalse(JW.isDefined(JW.get(api.lala)));
-		this.assertFalse(JW.isDefined(JW.get(api, "extractor.launch.now")));
-		this.assertFalse(JW.isDefined(JW.get(api, "extractor.run.now")));
+		this.assertUndefined(JW.get(api.lala));
+		this.assertUndefined(JW.get(api, "extractor.launch.now"));
+		this.assertUndefined(JW.get(api, [ "extractor", "launch", "now" ]));
+		this.assertUndefined(JW.get(api, "extractor.run.now"));
+		this.assertUndefined(JW.get(api, [ "extractor", "run", "now" ]));
 		
 		this.assertEqual("/details", JW.get(api.details, null, "default!"));
 		this.assertEqual("/status", JW.get(api, "extractor.status", "default!"));
+		this.assertEqual("/status", JW.get(api, [ "extractor", "status" ], "default!"));
 		
 		this.assertEqual("default!", JW.get(api.lala, null, "default!"));
 		this.assertEqual("default!", JW.get(api, "extractor.launch.now", "default!"));
+		this.assertEqual("default!", JW.get(api, [ "extractor", "launch", "now" ], "default!"));
 		this.assertEqual("default!", JW.get(api, "extractor.run.now", "default!"));
+		this.assertEqual("default!", JW.get(api, [ "extractor", "run", "now" ], "default!"));
+	},
+	
+	testSet: function()
+	{
+		var api = {
+			_base               : "/app",
+			details             : "/details",
+			calculationlines    : {
+				_base               : "/calclines",
+				add                 : "/create",
+				modify              : "/modify",
+				delet_              : "/delete"
+			},
+			extractor           : {
+				_base               : "/extractor",
+				launch              : "/launch",
+				status              : "/status"
+			}
+		};
+		
+		JW.set(api, "Status", "extractor.status");
+		JW.set(api, "Base", [ "extractor", "_base" ]);
+		
+		JW.set(api, "Run", "extractor.run.now");
+		JW.set(api, "Update", [ "calculationlines", "update", "now" ]);
+		
+		var expected = {
+			_base               : "/app",
+			details             : "/details",
+			calculationlines    : {
+				_base               : "/calclines",
+				add                 : "/create",
+				modify              : "/modify",
+				delet_              : "/delete",
+				update              : {
+					now                 : "Update"
+				}
+			},
+			extractor           : {
+				_base               : "Base",
+				launch              : "/launch",
+				status              : "Status",
+				run                 : {
+					now                 : "Run"
+				}
+			}
+		};
+		
+		this.assertStrictEqual(JSON.stringify(expected), JSON.stringify(api));
 	},
 	
 	testMod: function()
