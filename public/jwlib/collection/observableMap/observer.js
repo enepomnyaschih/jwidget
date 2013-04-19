@@ -19,29 +19,34 @@
 
 JW.ObservableMap.Observer = function(source, config) {
 	JW.ObservableMap.Observer._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
+	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
 JW.extend(JW.ObservableMap.Observer/*<S extends Any, T extends Any>*/, JW.AbstractMap.Observer/*<S, T>*/, {
 	/*
 	Fields
-	EventAttachment _addEventAttachment;
-	EventAttachment _removeEventAttachment;
+	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
 	*/
 	
 	// override
 	destroy: function() {
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		this._clearEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this._addItem(params.item);
+	_onSplice: function(params) {
+		if (this.removeItem) {
+			JW.Map.every(params.removedItems, this.removeItem, this.scope);
+		}
+		if (this.addItem) {
+			JW.Map.every(params.addedItems, this.addItem, this.scope);
+		}
 	},
 	
-	_onRemove: function(params) {
-		this._removeItem(params.item);
+	_onClear: function(params) {
+		this._clearItems(JW.Map.getValuesArray(params.items));
 	}
 });

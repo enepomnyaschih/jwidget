@@ -17,8 +17,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: Introduce addAll, setAll, removeAll to fix "change" event hacks
-
 JW.AbstractSet.Indexer = function(source, config) {
 	JW.AbstractSet.Indexer._super.call(this);
 	config = config || {};
@@ -27,10 +25,7 @@ JW.AbstractSet.Indexer = function(source, config) {
 	this._targetCreated = !config.target;
 	this.target = config.target || source.createEmptyMap();
 	this.scope = config.scope;
-	if (!this.source.isEmpty()) {
-		this.source.every(this._add, this);
-		this._change();
-	}
+	this.target.setAll(source.index(this.getKey, this.scope || this));
 };
 
 JW.extend(JW.AbstractSet.Indexer/*<T extends JW.Class>*/, JW.Class, {
@@ -48,25 +43,10 @@ JW.extend(JW.AbstractSet.Indexer/*<T extends JW.Class>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		if (!this.source.isEmpty()) {
-			this.source.every(this._remove, this);
-			this._change();
-		}
+		this.target.removeAll(JW.Array.map(this.source.getValuesArray(), this.getKey, this.scope || this));
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		this._super();
-	},
-	
-	_add: function(item) {
-		this.target._set(item, this.getKey.call(this.scope || this, item));
-	},
-	
-	_remove: function(item) {
-		this.target._remove(this.getKey.call(this.scope || this, item));
-	},
-	
-	_change: function() {
-		this.target._triggerChange();
 	}
 });

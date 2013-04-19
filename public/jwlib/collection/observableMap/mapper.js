@@ -19,35 +19,47 @@
 
 JW.ObservableMap.Mapper = function(source, config) {
 	JW.ObservableMap.Mapper._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
+	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
+	this._reindexEventAttachment = this.source.reindexEvent.bind(this._onReindex, this);
+	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
 JW.extend(JW.ObservableMap.Mapper/*<S extends Any, T extends Any>*/, JW.AbstractMap.Mapper/*<S, T>*/, {
 	/*
 	Fields
-	EventAttachment _addEventAttachment;
-	EventAttachment _removeEventAttachment;
-	EventAttachment _changeEventAttachment;
+	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _reindexEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
 	*/
 	
+	// override
 	destroy: function() {
-		this._changeEventAttachment.destroy();
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		this._clearEventAttachment.destroy();
+		this._reindexEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this.target._set(this.createItem.call(this.scope || this, params.item, params.key), params.key);
+	_onSplice: function(params) {
+		var removedDatas = params.removedItems;
+		var addedDatas = params.addedItems;
+		var spliceResult = this.target.splice(
+			JW.AbstractMap.getRemovedKeys(removedDatas, addedDatas),
+			JW.Map.map(addedDatas, this.createItem, this.scope || this));
+		if (spliceResult) {
+			this._destroyItems(spliceResult.removedItems, removedDatas);
+		}
 	},
 	
-	_onRemove: function(params) {
-		this._remove(params.item, params.key);
+	_onReindex: function(params) {
+		this.target.reindex(params.keyMap);
 	},
 	
-	_onChange: function(params) {
-		this._change();
+	_onClear: function(params) {
+		var datas = params.items;
+		var items = this.target.removeAll(JW.Map.getKeysArray(datas));
+		if (items) {
+			this._destroyItems(items, datas);
+		}
 	}
 });

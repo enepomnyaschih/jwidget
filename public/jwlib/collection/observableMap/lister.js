@@ -19,35 +19,32 @@
 
 JW.ObservableMap.Lister = function(source, config) {
 	JW.ObservableMap.Lister._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
+	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
 JW.extend(JW.ObservableMap.Lister/*<T extends JW.Class>*/, JW.AbstractMap.Lister/*<T>*/, {
 	/*
 	Fields
-	EventAttachment _addEventAttachment;
-	EventAttachment _removeEventAttachment;
-	EventAttachment _changeEventAttachment;
+	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
 	*/
 	
+	// override
 	destroy: function() {
-		this._changeEventAttachment.destroy();
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		this._clearEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this.target._add(params.item);
+	_onSplice: function(params) {
+		this.target.splice(
+			JW.Map.getValuesArray(params.removedItems),
+			JW.Map.getValuesArray(params.addedItems));
 	},
 	
-	_onRemove: function(params) {
-		this.target._remove(params.item);
-	},
-	
-	_onChange: function() {
-		this.target._triggerChange();
+	_onClear: function(params) {
+		this.target.removeAll(
+			JW.Map.getValuesArray(params.items));
 	}
 });

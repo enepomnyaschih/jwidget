@@ -19,37 +19,31 @@
 
 JW.ObservableSet.Indexer = function(source, config) {
 	JW.ObservableSet.Indexer._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
+	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
 JW.extend(JW.ObservableSet.Indexer/*<T extends JW.Class>*/, JW.AbstractSet.Indexer/*<T>*/, {
 	/*
 	Fields
-	EventAttachment _addEventAttachment;
-	EventAttachment _removeEventAttachment;
-	EventAttachment _changeEventAttachment;
+	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
 	*/
 	
 	// override
 	destroy: function() {
-		this._changeEventAttachment.destroy();
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		this._clearEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this._add(params.item);
+	_onSplice: function(params) {
+		this.target.splice(
+			JW.Array.map(params.removedItems, this.getKey, this.scope || this),
+			JW.Array.index(params.addedItems, this.getKey, this.scope || this));
 	},
 	
-	_onRemove: function(params) {
-		this._remove(params.item);
-	},
-	
-	// override
-	_onChange: function() {
-		this._change();
+	_onClear: function(params) {
+		this.target.removeAll(JW.Array.map(params.items, this.getKey, this.scope || this));
 	}
 });

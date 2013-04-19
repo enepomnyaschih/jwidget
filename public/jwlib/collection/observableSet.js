@@ -15,48 +15,40 @@
 	
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	
-	----
-	
-	This is an adapter of array that triggers events about modifications.
-	Events are taken from ActionScript's CollectionEventKind (with small
-	reasonable changes).
 */
 
 JW.ObservableSet = function(items) {
 	JW.ObservableSet._super.call(this);
 	this.set = new JW.Set();
-	this.addEvent = new JW.Event();
-	this.removeEvent = new JW.Event();
+	this.spliceEvent = new JW.Event();
+	this.clearEvent = new JW.Event();
 	this.changeEvent = new JW.Event();
 	this.sizeChangeEvent = new JW.Event();
-	this.bulkCount = 0;
-	this.bulkDirty = false;
+	this.getKey = null;
 	if (items) {
 		this._addAll(items);
 	}
-	this.bulkSize = this.set.size;
+	this._lastSize = this.set.size;
 };
 
 JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 	/*
 	Fields
 	JW.Set<T> set;
-	JW.Event<JW.ObservableSet.ItemEventParams<T>> addEvent;
-	JW.Event<JW.ObservableSet.ItemEventParams<T>> removeEvent;
+	JW.Event<JW.ObservableSet.SpliceEventParams<T>> spliceEvent;
+	JW.Event<JW.ObservableSet.ItemsEventParams<T>> clearEvent;
 	JW.Event<JW.ObservableSet.EventParams<T>> changeEvent;
 	JW.Event<JW.ObservableSet.SizeChangeEventParams<T>> sizeChangeEvent;
-	Integer bulkCount;
-	Boolean bulkDirty;
-	Integer bulkSize;
+	Integer _lastSize;
+	String getKey(T item);
 	*/
 	
 	destroy: function() {
 		this.clear();
 		this.sizeChangeEvent.destroy();
 		this.changeEvent.destroy();
-		this.removeEvent.destroy();
-		this.addEvent.destroy();
+		this.clearEvent.destroy();
+		this.spliceEvent.destroy();
 		this._super();
 	},
 	
@@ -77,69 +69,74 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 	},
 	
 	add: function(item) {
-		if (this._add(item)) {
-			this._triggerChange();
-			return true;
+		if (!this.set.add(item)) {
+			return null;
 		}
-		return false;
+		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, [], [ item ]));
+		this._triggerChange();
+		return true;
 	},
 	
 	addAll: function(items) {
-		if (this._addAll(items)) {
-			this._triggerChange();
-			return true;
+		items = this.set.addAll(items);
+		if (!items) {
+			return null;
 		}
-		return false;
+		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, [], items));
+		this._triggerChange();
+		return items;
 	},
 	
 	remove: function(item) {
-		if (this._remove(item)) {
-			this._triggerChange();
-			return true;
+		if (!this.set.remove(item)) {
+			return null;
 		}
-		return false;
+		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, [ item ], []));
+		this._triggerChange();
+		return true;
 	},
 	
 	removeItem: function(item) {
-		this.remove(item); // return undefined
+		return this.remove(item) ? item._iid : null;
 	},
 	
 	removeAll: function(items) {
-		var changed = false;
-		for (var i = 0, l = items.length; i < l; ++i) {
-			changed = this._remove(items[i]) || changed;
+		items = this.set.removeAll(items);
+		if (!items) {
+			return null;
 		}
-		if (changed) {
-			this._triggerChange();
-			return true;
-		}
-		return false;
+		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, items, []));
+		this._triggerChange();
+		return items;
 	},
 	
 	clear: function() {
-		if (this._clear()) {
-			this._triggerChange();
-			return true;
+		var items = this.set.clear();
+		if (!items) {
+			return null;
 		}
-		return false;
+		this.clearEvent.trigger(new JW.ObservableSet.ItemsEventParams(this, items));
+		this._triggerChange();
+		return items;
 	},
 	
-	startBulkChange: function() {
-		++this.bulkCount;
-		if (this.bulkCount !== 1) {
-			return;
+	splice: function(removedItems, addedItems) {
+		var result = this.set.splice(removedItems, addedItems);
+		if (!result) {
+			return null;
 		}
-		this.bulkDirty = false;
+		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, result.removedItems, result.addedItems));
+		this._triggerChange();
+		return result;
 	},
 	
-	stopBulkChange: function() {
-		if (this.bulkCount === 0) {
-			return;
-		}
-		--this.bulkCount;
-		if (this.bulkDirty) {
-			this._triggerChange();
-		}
+	detectSplice: function(newItems) {
+		return this.set.detectSplice(newItems);
+	},
+	
+	performSplice: function(newItems) {
+		var spliceParams = this.detectSplice(newItems);
+		return spliceParams ? this.splice(spliceParams.removedItems, spliceParams.addedItems) : null;
 	},
 	
 	every: function(callback, scope) {
@@ -178,60 +175,11 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		return new JW.ObservableSet.Observer(this, config);
 	},
 	
-	_add: function(item) {
-		if (this.set.json[item._iid]) {
-			return false;
-		}
-		this.set.add(item);
-		this.addEvent.trigger(new JW.ObservableSet.ItemEventParams(this, item));
-		return true;
-	},
-	
-	_addAll: function(items) {
-		var changed = false;
-		for (var i = 0, l = items.length; i < l; ++i) {
-			changed = this._add(items[i]) || changed;
-		}
-		return changed;
-	},
-	
-	_remove: function(item) {
-		if (!this.set.json[item._iid]) {
-			return false;
-		}
-		this.set.remove(item);
-		this.removeEvent.trigger(new JW.ObservableSet.ItemEventParams(this, item));
-		return true;
-	},
-	
-	_removeAll: function(items) {
-		var changed = false;
-		for (var i = 0, l = items.length; i < l; ++i) {
-			changed = this._remove(items[i]) || changed;
-		}
-		return changed;
-	},
-	
-	_clear: function() {
-		if (this.set.size === 0) {
-			return false;
-		}
-		var json = JW.Set.clone(this.set.json);
-		for (var key in json) {
-			this._remove(json[key]);
-		}
-		return true;
-	},
-	
 	_triggerChange: function() {
-		if (this.bulkCount !== 0) {
-			this.bulkDirty = true;
-			return;
-		}
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
-		if (this.bulkSize !== this.set.size) {
-			this.sizeChangeEvent.trigger(new JW.ObservableSet.SizeChangeEventParams(this, this.bulkSize, this.set.size));
-			this.bulkSize = this.set.size;
+		if (this._lastSize !== this.set.size) {
+			this.sizeChangeEvent.trigger(new JW.ObservableSet.SizeChangeEventParams(this, this._lastSize, this.set.size));
+			this._lastSize = this.set.size;
 		}
 	}
 });
@@ -240,6 +188,8 @@ JW.ObservableSet.prototype.getLength = JW.ObservableSet.prototype.getSize;
 JW.ObservableSet.prototype.pushItem = JW.ObservableSet.prototype.add;
 
 JW.applyIf(JW.ObservableSet.prototype, JW.Alg.BuildMethods);
+
+//--------
 
 JW.ObservableSet.EventParams = function(sender) {
 	JW.ObservableSet.EventParams._super.call(this, sender);
@@ -252,17 +202,37 @@ JW.extend(JW.ObservableSet.EventParams/*<T extends JW.Class>*/, JW.EventParams, 
 	*/
 });
 
-JW.ObservableSet.ItemEventParams = function(sender, item) {
-	JW.ObservableSet.ItemEventParams._super.call(this, sender);
-	this.item = item;
+//--------
+
+JW.ObservableSet.SpliceEventParams = function(sender, removedItems, addedItems) {
+	JW.ObservableSet.SpliceEventParams._super.call(this, sender);
+	this.removedItems = removedItems;
+	this.addedItems = addedItems;
 };
 
-JW.extend(JW.ObservableSet.ItemEventParams/*<T extends JW.Class>*/, JW.ObservableSet.EventParams/*<T>*/, {
+JW.extend(JW.ObservableSet.SpliceEventParams/*<T extends JW.Class>*/, JW.ObservableSet.EventParams/*<T>*/, {
 	/*
 	Fields
-	T item;
+	Array<T> removedItems;
+	Array<T> addedItems;
 	*/
 });
+
+//--------
+
+JW.ObservableSet.ItemsEventParams = function(sender, items) {
+	JW.ObservableSet.ItemsEventParams._super.call(this, sender);
+	this.items = items;
+};
+
+JW.extend(JW.ObservableSet.ItemsEventParams/*<T extends JW.Class>*/, JW.ObservableSet.EventParams/*<T>*/, {
+	/*
+	Fields
+	Array<T> items;
+	*/
+});
+
+//--------
 
 JW.ObservableSet.SizeChangeEventParams = function(sender, oldSize, newSize) {
 	JW.ObservableSet.SizeChangeEventParams._super.call(this, sender);

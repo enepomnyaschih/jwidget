@@ -17,4 +17,102 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.AbstractMap = {};
+JW.AbstractMap = {
+	getRemovedKeys: function(removedItems, addedItems) {
+		var removedKeys = [];
+		for (var key in removedItems) {
+			if (!addedItems.hasOwnProperty(key)) {
+				removedItems.push(key);
+			}
+		}
+		return removedKeys;
+	}
+};
+/*
+//--------
+
+JW.AbstractMap.ItemResult = function(item) {
+	JW.AbstractMap.ItemResult._super.call(this);
+	this.item = item;
+};
+
+JW.extend(JW.AbstractMap.ItemResult/*<T>*/, JW.Class, {
+	/*
+	Fields
+	T item;
+	*/
+});
+
+//--------
+
+JW.AbstractMap.KeyResult = function(key) {
+	JW.AbstractMap.KeyResult._super.call(this);
+	this.key = key;
+};
+
+JW.extend(JW.AbstractMap.KeyResult, JW.Class, {
+	/*
+	Fields
+	String key;
+	*/
+});
+
+//--------
+
+JW.AbstractMap.ItemsResult = function(items) {
+	JW.AbstractMap.ItemsResult._super.call(this);
+	this.items = items;
+};
+
+JW.extend(JW.AbstractMap.ItemsResult/*<T>*/, JW.Class, {
+	/*
+	Fields
+	Map<T> items;
+	*/
+});
+*/
+//--------
+
+JW.AbstractMap.SpliceResult = function(removedItems, addedItems) {
+	JW.AbstractMap.SpliceResult._super.call(this);
+	this.removedItems = removedItems;
+	this.addedItems = addedItems;
+};
+
+JW.extend(JW.AbstractMap.SpliceResult/*<T>*/, JW.Class, {
+	/*
+	Fields
+	Map<T> removedItems;
+	Map<T> addedItems;
+	*/
+});
+/*
+//--------
+
+JW.AbstractMap.ReindexResult = function(keyMap) {
+	JW.AbstractMap.ReindexResult._super.call(this);
+	this.keyMap = keyMap;
+};
+
+JW.extend(JW.AbstractMap.ReindexResult, JW.Class, {
+	/*
+	Fields
+	Map<String> keyMap;
+	*/
+});
+*/
+//--------
+
+JW.AbstractMap.SpliceParams = function(removedKeys, updatedItems) {
+	JW.AbstractMap.SpliceParams._super.call(this);
+	this.removedKeys = removedKeys;
+	this.updatedItems = updatedItems;
+};
+
+JW.extend(JW.AbstractMap.SpliceParams/*<T>*/, JW.Class, {
+	/*
+	Fields
+	Array<String> removedKeys;
+	Map<T> updatedItems;
+	*/
+});

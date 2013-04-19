@@ -166,39 +166,73 @@ JW.applyIf(JW.Array.prototype, JW.Alg.BuildMethods);
 
 JW.apply(JW.Array, {
 	set: function(target, item, index) {
+		// JW.assertArray(target);
+		// JW.assertDefined(item);
+		// JW.assertInt(index, 0, target.length + 1);
 		var oldItem = target[index];
+		if (item === oldItem) {
+			return;
+		}
 		target[index] = item;
-		return oldItem;
+		return new JW.Proxy(oldItem);
 	},
 	
 	add: function(target, item, index) {
+		// JW.assertArray(target);
+		// JW.assertDefined(item);
+		// JW.assertInt(index, 0, target.length + 1);
 		target.splice(JW.def(index, target.length), 0, item);
+		return true;
 	},
 	
 	addAll: function(target, items, index) {
-		target.splice.apply(target, [ JW.def(index, target.length), 0 ].concat(items));
+		// JW.assertArray(target);
+		// JW.assertArray(items, JW.assertDefined);
+		// JW.assertInt(index, 0, target.length + 1);
+		var length = items.length;
+		if (length === 0) {
+			return;
+		}
+		target.splice.apply(target, [ index, 0 ].concat(items));
+		return true;
 	},
 	
 	remove: function(target, index, count) {
-		var items = target.splice(index, JW.def(count, 1));
-		return (count === undefined) ? items[0] : items;
+		// JW.assertArray(target);
+		// JW.assertInt(index, 0, target.length);
+		if (count === undefined) {
+			return target.splice(index, 1)[0];
+		}
+		// JW.assertInt(count, 0);
+		if (count === 0) {
+			return;
+		}
+		return target.splice(index, count);
 	},
 	
 	move: function(target, fromIndex, toIndex) {
-		var item = target[fromIndex];
+		// JW.assertArray(target);
+		// JW.assertInt(fromIndex, 0, target.length);
+		// JW.assertInt(toIndex, 0, target.length);
 		if (fromIndex === toIndex) {
-			return item;
+			return;
 		}
+		var item = target[fromIndex];
 		target.splice(fromIndex, 1);
 		target.splice(toIndex, 0, item);
 		return item;
 	},
 	
 	clear: function(target) {
-		return target.splice(0, target.length);
+		// JW.assertArray(target);
+		if (target.length !== 0) {
+			return target.splice(0, target.length);
+		}
 	},
 	
 	every: function(target, callback, scope) {
+		// JW.assertArray(target);
+		// JW.assertFunction(target);
 		for (var i = 0, l = target.length; i < l; ++i) {
 			if (callback.call(scope || target, target[i], i) === false) {
 				return false;

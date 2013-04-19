@@ -25,7 +25,9 @@ JW.AbstractMap.Observer = function(source, config) {
 	this.removeItem = config.removeItem;
 	this.clearItems = config.clearItems;
 	this.scope = config.scope || this;
-	this.source.every(this._addItem, this);
+	if (this.addItem) {
+		this.source.every(this.addItem, this.scope);
+	}
 };
 
 JW.extend(JW.AbstractMap.Observer/*<T>*/, JW.Class, {
@@ -42,25 +44,18 @@ JW.extend(JW.AbstractMap.Observer/*<T>*/, JW.Class, {
 	
 	// override
 	destroy: function() {
-		if (!this.source.isEmpty()) {
-			if (this.clearItems) {
-				this.clearItems.call(this.scope || this, this.source.getValuesArray());
-			} else {
-				this.source.every(this._removeItem, this);
-			}
-		}
+		this._clearItems(this.source.getValuesArray());
 		this._super();
 	},
 	
-	_addItem: function(item) {
-		if (this.addItem) {
-			this.addItem.call(this.scope || this, item);
+	_clearItems: function(items) {
+		if (items.length === 0) {
+			return;
 		}
-	},
-	
-	_removeItem: function(item) {
-		if (this.removeItem) {
-			this.removeItem.call(this.scope || this, item);
+		if (this.clearItems) {
+			this.clearItems.call(this.scope, items);
+		} else if (this.removeItem) {
+			JW.Array.every(items, this.removeItem, this.scope);
 		}
 	}
 });

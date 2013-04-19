@@ -123,6 +123,7 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	},
 	
 	set: function(item, index) {
+		// TODO: special case (index === length)
 		var oldItem = this.array[index];
 		if (oldItem === item) {
 			return oldItem;

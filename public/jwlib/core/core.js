@@ -242,6 +242,10 @@ JW.apply(JW, {
 		obj[JW.Array.top(field)] = value;
 	},
 	
+	iid: function(obj) {
+		return obj._iid;
+	},
+	
 	destroy: function(obj) {
 		obj.destroy();
 	},

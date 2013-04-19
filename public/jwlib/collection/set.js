@@ -27,6 +27,7 @@ JW.Set = function(json) {
 	JW.Set._super.call(this);
 	this.json = {};
 	this.size = 0;
+	this.getKey = null;
 	if (json) {
 		this._addAll(json);
 	}
@@ -37,6 +38,7 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	Fields
 	Map<T> json;
 	Integer size;
+	String getKey(T item);
 	*/
 	
 	getJson: function() {
@@ -56,34 +58,71 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	},
 	
 	add: function(item) {
-		if (!this.json.hasOwnProperty(item._iid)) {
-			this.json[item._iid] = item;
-			++this.size;
+		var iid = item._iid;
+		if (this.json.hasOwnProperty(iid)) {
+			return null;
 		}
+		this.json[iid] = item;
+		++this.size;
+		return true;
 	},
 	
 	addAll: function(items) {
+		var addedItems = [];
 		for (var i = 0, l = items.length; i < l; ++i) {
-			this.add(items[i]);
+			var item = items[i];
+			if (this.add(item)) {
+				addedItems.push(item);
+			}
 		}
+		return addedItems.length ? addedItems : null;
 	},
 	
 	remove: function(item) {
-		if (this.json.hasOwnProperty(item._iid)) {
-			delete this.json[item._iid];
-			--this.size;
+		var iid = item._iid;
+		if (!this.json.hasOwnProperty(iid)) {
+			return null;
 		}
+		delete this.json[iid];
+		--this.size;
+		return true;
 	},
 	
 	removeAll: function(items) {
+		var removedItems = [];
 		for (var i = 0, l = items.length; i < l; ++i) {
-			this.remove(items[i]);
+			var item = items[i];
+			if (this.remove(item)) {
+				removedItems.push(item);
+			}
 		}
+		return removedItems.length ? removedItems : null;
 	},
 	
 	clear: function() {
+		if (this.size === 0) {
+			return null;
+		}
+		var removedItems = this.getValuesArray();
 		this.json = {};
 		this.size = 0;
+		return removedItems;
+	},
+	
+	splice: function(removedItems, addedItems) {
+		removedItems = this.removeAll(removedItems);
+		addedItems = this.addAll(addedItems);
+		return (removedItems || addedItems) ?
+			new JW.AbstractSet.SpliceResult(removedItems || [], addedItems || []) : null;
+	},
+	
+	detectSplice: function(newItems) {
+		return JW.Set.detectSplice(this.json, newItems);
+	},
+	
+	performSplice: function(newItems) {
+		var spliceParams = this.detectSplice(newItems);
+		return spliceParams ? this.splice(spliceParams.removedItems, spliceParams.addedItems) : null;
 	},
 	
 	every: function(callback, scope) {
@@ -135,18 +174,12 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 			}
 		}
 		return true;
-	},
-	
-	_triggerChange: function() {}
+	}
 });
 
 JW.Set.prototype.getLength = JW.Set.prototype.getSize;
 JW.Set.prototype.pushItem = JW.Set.prototype.add;
 JW.Set.prototype.removeItem = JW.Set.prototype.remove;
-JW.Set.prototype._add = JW.Set.prototype.add;
-JW.Set.prototype._addAll = JW.Set.prototype.addAll;
-JW.Set.prototype._remove = JW.Set.prototype.remove;
-JW.Set.prototype._removeAll = JW.Set.prototype.removeAll;
 
 JW.applyIf(JW.Set.prototype, JW.Alg.BuildMethods);
 
@@ -156,27 +189,82 @@ JW.apply(JW.Set, {
 	},
 	
 	add: function(target, item) {
-		target[item._iid] = item;
+		var iid = item._iid;
+		if (target.hasOwnProperty(iid)) {
+			return null;
+		}
+		target[iid] = item;
+		return true;
 	},
 	
 	addAll: function(target, items) {
+		var addedItems = [];
 		for (var i = 0, l = items.length; i < l; ++i) {
 			var item = items[i];
-			target[item._iid] = item;
+			if (JW.Set.add(target, item)) {
+				addedItems.push(item);
+			}
 		}
+		return addedItems.length ? addedItems : null;
 	},
 	
 	remove: function(target, item) {
-		delete target[item._iid];
+		var iid = item._iid;
+		if (!target.hasOwnProperty(iid)) {
+			return null;
+		}
+		delete target[iid];
+		return true;
 	},
 	
 	removeAll: function(target, items) {
+		var removedItems = [];
 		for (var i = 0, l = items.length; i < l; ++i) {
-			delete target[items[i]._iid];
+			var item = items[i];
+			if (JW.Set.remove(target, item)) {
+				removedItems.push(item);
+			}
 		}
+		return removedItems.length ? removedItems : null;
 	},
 	
-	clear: JW.Map.clear,
+	clear: function(target) {
+		if (JW.Set.isEmpty(target)) {
+			return null;
+		}
+		var items = JW.Set.getValuesArray(target);
+		JW.Set.removeAll(target, items);
+		return items;
+	},
+	
+	splice: function(target, removedItems, addedItems) {
+		removedItems = JW.Set.removeAll(target, removedItems);
+		addedItems = JW.Set.addAll(target, addedItems);
+		return (removedItems || addedItems) ?
+			new JW.AbstractSet.SpliceResult(removedItems || [], addedItems || []) : null;
+	},
+	
+	detectSplice: function(oldItems, newItems) {
+		var removedItems = [];
+		var addedItems = [];
+		for (var key in oldItems) {
+			if (!newItems.hasOwnProperty(key)) {
+				removedItems.push(oldItems[key]);
+			}
+		}
+		for (var key in newItems) {
+			if (!oldItems.hasOwnProperty(key)) {
+				addedItems.push(newItems[key]);
+			}
+		}
+		return (removedItems.length || addedItems.length) ?
+			new JW.AbstractSet.SpliceParams(removedItems, addedItems) : null;
+	},
+	
+	performSplice: function(target, newItems) {
+		var spliceParams = JW.Set.detectSplice(target, newItems);
+		return spliceParams ? JW.Set.splice(target, spliceParams.removedItems, spliceParams.addedItems) : null;
+	},
 	
 	every: function(target, callback, scope) {
 		for (var key in target) {
@@ -200,7 +288,13 @@ JW.apply(JW.Set, {
 		return size === 0;
 	},
 	
-	clone: JW.Map.clone
+	clone: JW.Map.clone,
+	
+	single: function(item) {
+		var result = {};
+		result[item._iid] = item;
+		return result;
+	}
 });
 
 JW.Set.removeItem = JW.Set.remove;

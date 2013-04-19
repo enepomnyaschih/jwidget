@@ -26,7 +26,6 @@ JW.AbstractMap.Mapper = function(source, config) {
 	this._targetCreated = !config.target;
 	this.target = config.target || source.createEmpty();
 	this.scope = config.scope;
-	this._destructionQueue = [];
 	this.target.setAll(JW.Map.map(this.source.getJson(), this.createItem, this.scope || this));
 };
 
@@ -43,30 +42,22 @@ JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	
 	Fields
 	Boolean _targetCreated;
-	Array<Array> _destructionQueue;
 	*/
 	
+	_destroyItems: function(items, datas) {
+		JW.Map.every(items, function(item, key) {
+			this.destroyItem.call(this.scope || this, item, datas[key], key);
+		}, this);
+	},
+	
 	destroy: function() {
-		if (!this.source.isEmpty()) {
-			this.source.every(this._remove, this);
-			this._change();
+		var items = this.target.removeAll(this.source.getKeysArray());
+		if (items) {
+			this._destroyItems(items, this.source.getJson());
 		}
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		this._super();
-	},
-	
-	_remove: function(data, key) {
-		this._destructionQueue.push([ this.target._remove(key), data, key ]);
-	},
-	
-	_change: function() {
-		this.target._triggerChange();
-		for (var i = 0; i < this._destructionQueue.length; ++i) {
-			var params = this._destructionQueue[i];
-			this.destroyItem.call(this.scope || this, params[0], params[1], params[2]);
-		}
-		this._destructionQueue = [];
 	}
 });
