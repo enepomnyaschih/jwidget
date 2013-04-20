@@ -19,12 +19,8 @@
 
 JW.ObservableArray.Lister = function(source, config) {
 	JW.ObservableArray.Lister._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
+	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
-	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
-	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
 };
 
 JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Lister/*<T>*/, {
@@ -32,61 +28,23 @@ JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Li
 	Required
 	JW.ObservableArray<T> source;
 	
-	Optional
-	JW.ObservableSet<T> target;
-	
 	Fields
-	EventAttachment _addEventAttachment;
-	EventAttachment _removeEventAttachment;
-	EventAttachment _replaceEventAttachment;
-	EventAttachment _clearEventAttachment;
-	EventAttachment _filterEventAttachment;
-	EventAttachment _resetEventAttachment;
+	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
 	*/
 	
+	// override
 	destroy: function() {
-		this._resetEventAttachment.destroy();
-		this._filterEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
-		this._replaceEventAttachment.destroy();
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this.target.addAll(params.items);
-	},
-	
-	_onRemove: function(params) {
-		this.target.removeAll(params.items);
-	},
-	
-	_onReplace: function(params) {
-		this.target._remove(params.oldItem);
-		this.target._add(params.newItem);
-		this.target._triggerChange();
+	_onSplice: function(params) {
+		this.target.splice(params.removedItems, params.addedItems);
 	},
 	
 	_onClear: function(params) {
 		this.target.removeAll(params.items);
-	},
-	
-	_onFilter: function() {
-		var map = JW.Array.indexBy(this.source.array, "_iid");
-		var items = [];
-		var json = this.target.getJson();
-		for (var iid in json) {
-			if (!map.hasOwnProperty(iid)) {
-				items.push(json[iid]);
-			}
-		}
-		this.target.removeAll(items);
-	},
-	
-	_onReset: function(params) {
-		this.target._removeAll(params.items);
-		this.target._addAll(this.source.array);
-		this.target._triggerChange();
 	}
 });

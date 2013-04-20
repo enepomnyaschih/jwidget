@@ -20,10 +20,18 @@
 JW.Array = function(items) {
 	JW.Array._super.call(this);
 	this.items = items ? items.concat() : [];
+	this.getKey = null;
 };
 
-JW.extend(JW.Array, JW.Class, {
+JW.extend(JW.Array/*<T>*/, JW.Class, {
+	/*
+	Fields
+	Array<T> items;
+	String getKey(T item);
+	*/
+	
 	get: function(index) {
+		// JW.assertInt(index, 0, this.items.length);
 		return this.items[index];
 	},
 	
@@ -32,11 +40,11 @@ JW.extend(JW.Array, JW.Class, {
 	},
 	
 	add: function(item, index) {
-		JW.Array.add(this.items, item, index);
+		return JW.Array.add(this.items, item, index);
 	},
 	
 	addAll: function(items, index) {
-		JW.Array.addAll(this.items, items, index);
+		return JW.Array.addAll(this.items, items, index);
 	},
 	
 	remove: function(index, count) {
@@ -49,6 +57,10 @@ JW.extend(JW.Array, JW.Class, {
 	
 	clear: function() {
 		return JW.Array.clear(this.items);
+	},
+	
+	splice: function(removeParamsList, addParamsList) {
+		return JW.Array.splice(removeParamsList, addParamsList);
 	},
 	
 	every: function(callback, scope) {
@@ -189,11 +201,14 @@ JW.apply(JW.Array, {
 		// JW.assertArray(target);
 		// JW.assertArray(items, JW.assertDefined);
 		// JW.assertInt(index, 0, target.length + 1);
-		var length = items.length;
-		if (length === 0) {
+		if (items.length === 0) {
 			return;
 		}
-		target.splice.apply(target, [ index, 0 ].concat(items));
+		if (index === undefined) {
+			target.push.apply(target, items);
+		} else {
+			target.splice.apply(target, [ index, 0 ].concat(items));
+		}
 		return true;
 	},
 	
@@ -228,6 +243,50 @@ JW.apply(JW.Array, {
 		if (target.length !== 0) {
 			return target.splice(0, target.length);
 		}
+	},
+	
+	splice: function(target, removeParamsList, addParamsList) {
+		// JW.assertArray(target);
+		// JW.assertArray(removeParamsList, function(params) { return params instanceof JW.AbstractArray.IndexCount; }, this);
+		// JW.assertArray(addParamsList, function(params) { return params instanceof JW.AbstractArray.IndexItems; }, this);
+		// TODO: assert whether there aren't insertions with equal indexes
+		// TODO: assert whether there aren't insertions inside removals
+		var paramsList = removeParamsList.concat(addParamsList);
+		JW.Array.sortBy(paramsList, "index");
+		var offset = 0;
+		var oldItems = target.concat();
+		var removedItemsList = [];
+		for (var i = 0, l = paramsList.length; i < l; ++i) {
+			var params = paramsList[i];
+			if (params instanceof JW.AbstractArray.IndexItems) {
+				JW.Array.addAll(target, params.items, offset + params.index);
+				offset += params.items.length;
+			} else {
+				removedItemsList.push(JW.Array.remove(target, offset + params.index, params.count) || []);
+				offset -= params.count;
+			}
+		}
+		if ((removedItemsList.length !== 0) || (offset !== 0)) {
+			return new JW.AbstractArray.SpliceResult(oldItems, removedItemsList);
+		}
+	},
+	
+	reorder: function(target, indexArray) {
+		// JW.assertArray(target);
+		// JW.assertArray(indexArray);
+		// JW.assert(target.length === indexArray.length, '"target" and "indexArray" must have equal length');
+		// var indexArraySorted = indexArray.concat();
+		// indexArraySorted.sort();
+		// JW.assert(JW.Array.isIdentity(indexArraySorted), '"indexArray" must contain all indexes from 0 to target.length - 1');
+		var length = target.length;
+		if ((length === 0) || JW.Array.isIdentity(indexArray)) {
+			return;
+		}
+		var oldItems = target.concat();
+		for (var i = 0; i < length; ++i) {
+			target[indexArray[i]] = oldItems[i];
+		}
+		return oldItems;
 	},
 	
 	every: function(target, callback, scope) {
@@ -356,6 +415,15 @@ JW.apply(JW.Array, {
 			result[j] = t;
 		}
 		return result;
+	},
+	
+	isIdentity: function(array) {
+		for (var i = 0, l = array.length; i < l; ++i) {
+			if (array[i] !== i) {
+				return false;
+			}
+		}
+		return true;
 	}
 });
 

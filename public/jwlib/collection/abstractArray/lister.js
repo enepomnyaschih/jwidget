@@ -32,12 +32,13 @@ JW.extend(JW.AbstractArray.Lister/*<T extends JW.Class>*/, JW.Class, {
 	JW.AbstractArray<T> source;
 	
 	Optional
-	JW.Set<T> target;
+	JW.AbstractSet<T> target;
 	
 	Fields
 	Boolean _targetCreated;
 	*/
 	
+	// override
 	destroy: function() {
 		this.target.removeAll(this.source.getItems());
 		if (this._targetCreated) {

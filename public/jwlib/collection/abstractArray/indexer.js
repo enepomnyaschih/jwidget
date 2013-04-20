@@ -24,11 +24,11 @@ JW.AbstractArray.Indexer = function(source, config) {
 	this.getKey = config.getKey;
 	this._targetCreated = !config.target;
 	this.target = config.target || this.source.createEmptyMap();
-	this.scope = config.scope;
-	this.target.setAll(this._index(this.source.getItems()));
+	this.scope = config.scope || this;
+	this.target.setAll(JW.Array.index(source.getItems(), this.getKey, this.scope));
 };
 
-JW.extend(JW.AbstractArray.Indexer/*<T extends Any>*/, JW.Class, {
+JW.extend(JW.AbstractArray.Indexer/*<T>*/, JW.Class, {
 	/*
 	Required
 	JW.AbstractArray<T> source;
@@ -43,18 +43,10 @@ JW.extend(JW.AbstractArray.Indexer/*<T extends Any>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.target.removeAll(this._keys(this.source.getItems()));
+		this.target.removeAll(JW.Array.map(this.source.getItems(), this.getKey, this.scope));
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		this._super();
-	},
-	
-	_index: function(items) {
-		return JW.Array.index(items, this.getKey, this.scope || this);
-	},
-	
-	_keys: function(items) {
-		return JW.Array.map(items, this.getKey, this.scope || this);
 	}
 });

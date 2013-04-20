@@ -17,15 +17,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: Synchronize changeEvent and lengthChangeEvent in bulk operations
-// TODO: Filter from end to begin
-
 JW.ObservableArray.Mapper = function(source, config) {
 	JW.ObservableArray.Mapper._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
+	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
 	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);

@@ -23,12 +23,12 @@ JW.AbstractArray.Inserter = function(source, config) {
 	this.source = source;
 	this.addItem = config.addItem;
 	this.removeItem = config.removeItem;
-	this.scope = config.scope;
+	this.scope = config.scope || this;
 	this.clearItems = config.clearItems;
-	this._fill();
+	this._addItems(this.source.getItems(), 0);
 };
 
-JW.extend(JW.AbstractArray.Inserter/*<T extends Any>*/, JW.Class, {
+JW.extend(JW.AbstractArray.Inserter/*<T>*/, JW.Class, {
 	/*
 	Required
 	JW.AbstractArray<T> source;
@@ -41,35 +41,23 @@ JW.extend(JW.AbstractArray.Inserter/*<T extends Any>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this._clear(this.source.getItems());
+		this._clearItems(this.source.getItems());
 		this._super();
-	},
-	
-	_addItem: function(item, index) {
-		this.addItem.call(this.scope || this, item, index);
 	},
 	
 	_addItems: function(items, index) {
 		for (var i = 0; i < items.length; ++i) {
-			this._addItem(items[i], i + index);
+			this.addItem.call(this.scope, items[i], i + index);
 		}
-	},
-	
-	_removeItem: function(item, index) {
-		this.removeItem.call(this.scope || this, index, item);
 	},
 	
 	_removeItems: function(items, index) {
 		for (var i = items.length - 1; i >= 0; --i) {
-			this._removeItem(items[i], i + index);
+			this.removeItem.call(this.scope, i + index, items[i]);
 		}
 	},
 	
-	_fill: function() {
-		this._addItems(this.source.getItems().concat(), 0);
-	},
-	
-	_clear: function(items) {
+	_clearItems: function(items) {
 		if (items.length === 0) {
 			return;
 		}

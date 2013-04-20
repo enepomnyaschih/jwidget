@@ -17,100 +17,65 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: Filter from end to begin
-
 JW.ObservableArray.Inserter = function(source, config) {
 	JW.ObservableArray.Inserter._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
+	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
-	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
-	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
 };
 
-JW.extend(JW.ObservableArray.Inserter/*<T extends Any>*/, JW.AbstractArray.Inserter/*<T>*/, {
+JW.extend(JW.ObservableArray.Inserter/*<T>*/, JW.AbstractArray.Inserter/*<T>*/, {
 	/*
 	Required
 	JW.ObservableArray<T> source;
 	
 	Fields
-	JW.EventAttachment _addEventAttachment;
-	JW.EventAttachment _removeEventAttachment;
-	JW.EventAttachment _replaceEventAttachment;
-	JW.EventAttachment _moveEventAttachment;
+	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
 	JW.EventAttachment _reorderEventAttachment;
-	JW.EventAttachment _filterEventAttachment;
-	JW.EventAttachment _resetEventAttachment;
 	*/
 	
 	destroy: function() {
-		this._resetEventAttachment.destroy();
-		this._filterEventAttachment.destroy();
 		this._reorderEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
-		this._moveEventAttachment.destroy();
-		this._replaceEventAttachment.destroy();
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this._addItems(params.items, params.index);
-	},
-	
-	_onRemove: function(params) {
-		this._removeItems(params.items, params.index);
-	},
-	
-	_onReplace: function(params) {
-		this._removeItem(params.oldItem, params.index);
-		this._addItem(params.newItem, params.index);
-	},
-	
-	_onMove: function(params) {
-		this._removeItem(params.item, params.fromIndex);
-		this._addItem(params.item, params.toIndex);
+	_onSplice: function(params) {
+		var removeParamsList = params.removeParamsList;
+		var addParamsList = params.addParamsList;
+		
+		// if there is an effective clearing function, just reset the controller
+		if (this.clearItems) {
+			var removedCount = 0;
+			for (var i = 0, l = removeParamsList.length; i < l; ++i) {
+				removedCount += removeParamsList[i].items.length;
+			}
+			if (3 * removedCount > 2 * this.target.getLength()) {
+				this._clearItems(params.oldItems);
+				this._addItems(this.source.getItems(), 0);
+				return;
+			}
+		}
+		
+		// else, splice the elements
+		for (var i = removeParamsList.length - 1; i >= 0; --i) {
+			var params = removeParamsList[i];
+			this._removeItems(params.items, params.index);
+		}
+		for (var i = 0, l = addParamsList.length; i < l; ++i) {
+			var params = addParamsList[i];
+			this._addItems(params.items, params.index);
+		}
 	},
 	
 	_onClear: function(params) {
-		this._clear(params.items);
+		this._clearItems(params.items);
 	},
 	
 	_onReorder: function(params) {
-		this._clear(params.items);
-		this._fill();
-	},
-	
-	_onFilter: function(params) {
-		var array = this.source.array;
-		var items = params.items;
-		
-		// if there is an effective clearing function, just reset the controller
-		if (this.clearItems && (3 * array.length < items.length)) {
-			this._clear(items);
-			this._fill();
-			return;
-		}
-		
-		// else, remove specific elements
-		var arrayIndex = 0;
-		for (var itemsIndex = 0, l = items.length; itemsIndex < l; ++itemsIndex) {
-			var item = items[itemsIndex];
-			if (item === array[arrayIndex]) {
-				++arrayIndex;
-			} else {
-				this._removeItem(item, arrayIndex);
-			}
-		}
-	},
-	
-	_onReset: function(params) {
-		this._clear(params.items);
-		this._fill();
+		this._clearItems(params.oldItems);
+		this._addItems(this.source.getItems(), 0);
 	}
 });
