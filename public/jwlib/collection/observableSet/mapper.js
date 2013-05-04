@@ -30,6 +30,7 @@ JW.extend(JW.ObservableSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, J
 	EventAttachment _clearEventAttachment;
 	*/
 	
+	// override
 	destroy: function() {
 		this._clearEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
@@ -37,17 +38,16 @@ JW.extend(JW.ObservableSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, J
 	},
 	
 	_onSplice: function(params) {
-		var removedDatas = params.removedItems;
-		var addedDatas = params.addedItems;
-		this.target.splice(
-			this._getItems(removedDatas),
-			JW.Array.map(addedDatas, this._createItem, this));
-		JW.Array.every(removedDatas, this._destroyItem, this);
+		var spliceResult = params.spliceResult;
+		var removedDatas = spliceResult.removedItems;
+		var addedDatas = spliceResult.addedItems;
+		this.target.splice(this._getItems(removedDatas), this._createItems(addedDatas));
+		this._destroyItems(removedDatas);
 	},
 	
 	_onClear: function(params) {
 		var datas = params.items;
 		this.target.removeAll(this._getItems(datas));
-		JW.Array.every(datas, this._destroyItem, this);
+		this._destroyItems(datas);
 	}
 });

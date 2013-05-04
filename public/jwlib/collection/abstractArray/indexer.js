@@ -25,7 +25,7 @@ JW.AbstractArray.Indexer = function(source, config) {
 	this._targetCreated = !config.target;
 	this.target = config.target || this.source.createEmptyMap();
 	this.scope = config.scope || this;
-	this.target.setAll(JW.Array.index(source.getItems(), this.getKey, this.scope));
+	this.target.setAll(this._index(source.getItems()));
 };
 
 JW.extend(JW.AbstractArray.Indexer/*<T>*/, JW.Class, {
@@ -42,11 +42,29 @@ JW.extend(JW.AbstractArray.Indexer/*<T>*/, JW.Class, {
 	Boolean _targetCreated;
 	*/
 	
+	// override
 	destroy: function() {
-		this.target.removeAll(JW.Array.map(this.source.getItems(), this.getKey, this.scope));
+		this.target.removeAll(this._keys(this.source.getItems()));
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		this._super();
+	},
+	
+	_index: function(items) {
+		var index = {};
+		for (var i = 0, l = items.length; i < l; ++i) {
+			var item = items[i];
+			index[this.getKey.call(this.scope, item)] = item;
+		}
+		return index;
+	},
+	
+	_keys: function(items) {
+		var keys = [];
+		for (var i = 0, l = items.length; i < l; ++i) {
+			keys.push(this.getKey.call(this.scope, item));
+		}
+		return keys;
 	}
 });

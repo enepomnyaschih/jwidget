@@ -69,51 +69,37 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 	},
 	
 	add: function(item) {
-		if (!this.set.add(item)) {
-			return null;
-		}
-		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, [], [ item ]));
-		this._triggerChange();
-		return true;
+		return this.splice([], [ item ]) !== undefined;
 	},
 	
 	addAll: function(items) {
-		items = this.set.addAll(items);
-		if (!items) {
-			return null;
+		var result = this.splice([], items);
+		if (result !== undefined) {
+			return result.addedItems;
 		}
-		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, [], items));
-		this._triggerChange();
-		return items;
 	},
 	
 	remove: function(item) {
-		if (!this.set.remove(item)) {
-			return null;
-		}
-		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, [ item ], []));
-		this._triggerChange();
-		return true;
+		return this.splice([ item ], []) !== undefined;
 	},
 	
 	removeItem: function(item) {
-		return this.remove(item) ? item._iid : null;
+		if (this.remove(item)) {
+			return item._iid;
+		}
 	},
 	
 	removeAll: function(items) {
-		items = this.set.removeAll(items);
-		if (!items) {
-			return null;
+		var result = this.splice(items, []);
+		if (result !== undefined) {
+			return result.removedItems;
 		}
-		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, items, []));
-		this._triggerChange();
-		return items;
 	},
 	
 	clear: function() {
 		var items = this.set.clear();
-		if (!items) {
-			return null;
+		if (items === undefined) {
+			return;
 		}
 		this.clearEvent.trigger(new JW.ObservableSet.ItemsEventParams(this, items));
 		this._triggerChange();
@@ -121,13 +107,13 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 	},
 	
 	splice: function(removedItems, addedItems) {
-		var result = this.set.splice(removedItems, addedItems);
-		if (!result) {
-			return null;
+		var spliceResult = this.set.splice(removedItems, addedItems);
+		if (spliceResult === undefined) {
+			return;
 		}
-		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, result.removedItems, result.addedItems));
+		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, spliceResult));
 		this._triggerChange();
-		return result;
+		return spliceResult;
 	},
 	
 	detectSplice: function(newItems) {
@@ -136,7 +122,9 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 	
 	performSplice: function(newItems) {
 		var spliceParams = this.detectSplice(newItems);
-		return spliceParams ? this.splice(spliceParams.removedItems, spliceParams.addedItems) : null;
+		if (spliceParams !== undefined) {
+			return this.splice(spliceParams.removedItems, spliceParams.addedItems);
+		}
 	},
 	
 	every: function(callback, scope) {
@@ -204,17 +192,15 @@ JW.extend(JW.ObservableSet.EventParams/*<T extends JW.Class>*/, JW.EventParams, 
 
 //--------
 
-JW.ObservableSet.SpliceEventParams = function(sender, removedItems, addedItems) {
+JW.ObservableSet.SpliceEventParams = function(sender, spliceResult) {
 	JW.ObservableSet.SpliceEventParams._super.call(this, sender);
-	this.removedItems = removedItems;
-	this.addedItems = addedItems;
+	this.spliceResult = spliceResult;
 };
 
 JW.extend(JW.ObservableSet.SpliceEventParams/*<T extends JW.Class>*/, JW.ObservableSet.EventParams/*<T>*/, {
 	/*
 	Fields
-	Array<T> removedItems;
-	Array<T> addedItems;
+	JW.AbstractSet.SpliceResult<T> spliceResult;
 	*/
 });
 

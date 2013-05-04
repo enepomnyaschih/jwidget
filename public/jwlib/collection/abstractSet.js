@@ -18,3 +18,33 @@
 */
 
 JW.AbstractSet = {};
+
+JW.AbstractSet.SpliceParams = function(removedItems, addedItems) {
+	JW.AbstractSet.SpliceParams._super.call(this);
+	this.removedItems = removedItems;
+	this.addedItems = addedItems;
+};
+
+JW.extend(JW.AbstractSet.SpliceParams/*<T extends JW.Class>*/, JW.Class, {
+	/*
+	Fields
+	Array<T> removedItems;
+	Array<T> addedItems;
+	*/
+});
+
+//--------
+
+JW.AbstractSet.SpliceResult = function(removedItems, addedItems) {
+	JW.AbstractSet.SpliceResult._super.call(this);
+	this.removedItems = removedItems;
+	this.addedItems = addedItems;
+};
+
+JW.extend(JW.AbstractSet.SpliceResult/*<T extends JW.Class>*/, JW.Class, {
+	/*
+	Fields
+	Array<T> removedItems;
+	Array<T> addedItems;
+	*/
+});

@@ -77,104 +77,73 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 	},
 	
 	set: function(item, key) {
-		var result = this._map.set(item, key);
-		if (!result) {
-			return null;
+		var spliceResult = this.splice([], JW.Map.single(item, key));
+		if (spliceResult !== undefined) {
+			return new JW.Proxy(spliceResult.removedItems[key]);
 		}
-		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this,
-			JW.Map.single(result.item, key), JW.Map.single(item, key)));
-		this._triggerChange();
-		return result;
 	},
 	
 	setAll: function(map) {
-		var result = this._map.setAll(map);
-		if (!result) {
-			return null;
-		}
-		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this,
-			result.removedItems, result.addedItems));
-		this._triggerChange();
-		return result;
+		return this.splice([], map);
 	},
 	
 	setKey: function(oldKey, newKey) {
-		var result = this._map.setKey(oldKey, newKey);
-		if (!result) {
-			return null;
+		if (this.reindex(JW.Map.single(newKey, oldKey)) !== undefined) {
+			return this._map.get(newKey);
 		}
-		this.reindexEvent.trigger(new JW.ObservableMap.ReindexEventParams(this,
-			JW.Map.single(newKey, oldKey)));
-		this._triggerChange();
-		return result;
 	},
 	
 	remove: function(key) {
-		var result = this._map.remove(key);
-		if (!result) {
-			return null;
+		var spliceResult = this.splice([ key ], {});
+		if (spliceResult !== undefined) {
+			return spliceResult.removedItems[key];
 		}
-		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this,
-			result.removedItems, result.addedItems));
-		this._triggerChange();
-		return result;
 	},
 	
 	removeItem: function(item) {
 		var key = this.indexOf(item);
 		if (key === undefined) {
-			return null;
+			return;
 		}
 		this.remove(key);
 		return key;
 	},
 	
 	removeAll: function(keys) {
-		var result = this._map.removeAll(keys);
-		if (!result) {
-			return null;
+		var spliceResult = this.splice(keys, {});
+		if (spliceResult) {
+			return spliceResult.removedItems;
 		}
-		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this,
-			result.items, {}));
-		this._triggerChange();
-		return result;
 	},
 	
 	clear: function() {
-		var result = this._map.clear();
-		if (!result) {
-			return null;
+		var items = this._map.clear();
+		if (items === undefined) {
+			return;
 		}
-		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this,
-			result.items));
+		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this, items));
 		this._triggerChange();
-		return result;
+		return items;
 	},
 	
 	splice: function(removedKeys, updatedItems) {
-		var result = this._map.splice(removedKeys, updatedItems);
-		if (!result) {
-			return null;
+		var spliceResult = this._map.splice(removedKeys, updatedItems);
+		if (spliceResult === undefined) {
+			return;
 		}
-		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this,
-			result.removedItems, result.addedItems));
+		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
 		this._triggerChange();
-		return result;
+		return spliceResult;
 	},
-	/*
-	getSpliceParams: function(removedKeys, updatedItems) {
-		return this._map.getSpliceParams(removedKeys, updatedItems);
-	},
-	*/
+	
 	reindex: function(keyMap) {
-		var result = this._map.reindex(keyMap);
-		if (!result) {
-			return null;
+		var resultMap = this._map.reindex(keyMap);
+		if (resultMap === undefined) {
+			return;
 		}
-		this.reindexEvent.trigger(new JW.ObservableMap.ReindexEventParams(this,
-			result.keyMap));
+		this.reindexEvent.trigger(new JW.ObservableMap.ReindexEventParams(this, resultMap));
 		this._triggerChange();
-		return true;
+		return resultMap;
 	},
 	
 	detectSplice: function(newItems) {
@@ -187,12 +156,16 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 	
 	performSplice: function(newItems) {
 		var spliceParams = this.detectSplice(newItems);
-		return spliceParams ? this.splice(spliceParams.removedKeys, spliceParams.updatedItems) : null;
+		if (spliceParams !== undefined) {
+			return this.splice(spliceParams.removedKeys, spliceParams.updatedItems);
+		}
 	},
 	
 	performReindex: function(newItems, getKey, scope) {
-		var keyMap = this.detectReindex(newItems, getKey, scope);
-		return keyMap ? this.reindex(keyMap) : null;
+		var keyMap = this.detectReindex(newItems, getKey || this.getKey, scope || this);
+		if (keyMap !== undefined) {
+			return this.reindex(keyMap);
+		}
 	},
 	
 	every: function(callback, scope) {
@@ -251,7 +224,7 @@ JW.ObservableMap.EventParams = function(sender) {
 	JW.ObservableMap.EventParams._super.call(this, sender);
 };
 
-JW.extend(JW.ObservableMap.EventParams/*<T extends Any>*/, JW.EventParams, {
+JW.extend(JW.ObservableMap.EventParams/*<T>*/, JW.EventParams, {
 	/*
 	Fields
 	JW.ObservableMap<T> sender;
@@ -260,17 +233,15 @@ JW.extend(JW.ObservableMap.EventParams/*<T extends Any>*/, JW.EventParams, {
 
 //--------
 
-JW.ObservableMap.SpliceEventParams = function(sender, removedItems, addedItems) {
+JW.ObservableMap.SpliceEventParams = function(sender, spliceResult) {
 	JW.ObservableMap.SpliceEventParams._super.call(this, sender);
-	this.removedItems = removedItems;
-	this.addedItems = addedItems;
+	this.spliceResult = spliceResult;
 };
 
-JW.extend(JW.ObservableMap.SpliceEventParams/*<T extends Any>*/, JW.ObservableMap.EventParams/*<T>*/, {
+JW.extend(JW.ObservableMap.SpliceEventParams/*<T>*/, JW.ObservableMap.EventParams/*<T>*/, {
 	/*
 	Fields
-	Map<T> removedItems;
-	Map<T> addedItems;
+	JW.AbstractMap.SpliceResult<T> spliceResult;
 	*/
 });
 
@@ -281,7 +252,7 @@ JW.ObservableMap.ReindexEventParams = function(sender, keyMap) {
 	this.keyMap = keyMap;
 };
 
-JW.extend(JW.ObservableMap.ReindexEventParams/*<T extends Any>*/, JW.ObservableMap.EventParams/*<T>*/, {
+JW.extend(JW.ObservableMap.ReindexEventParams/*<T>*/, JW.ObservableMap.EventParams/*<T>*/, {
 	/*
 	Fields
 	Map<String> keyMap;
@@ -295,7 +266,7 @@ JW.ObservableMap.ItemsEventParams = function(sender, items) {
 	this.items = items;
 };
 
-JW.extend(JW.ObservableMap.ItemsEventParams/*<T extends Any>*/, JW.ObservableMap.EventParams/*<T>*/, {
+JW.extend(JW.ObservableMap.ItemsEventParams/*<T>*/, JW.ObservableMap.EventParams/*<T>*/, {
 	/*
 	Fields
 	Map<T> items;
@@ -310,7 +281,7 @@ JW.ObservableMap.SizeChangeEventParams = function(sender, oldSize, newSize) {
 	this.newSize = newSize;
 };
 
-JW.extend(JW.ObservableMap.SizeChangeEventParams/*<T extends Any>*/, JW.ObservableMap.EventParams/*<T>*/, {
+JW.extend(JW.ObservableMap.SizeChangeEventParams/*<T>*/, JW.ObservableMap.EventParams/*<T>*/, {
 	/*
 	Fields
 	Integer oldSize;

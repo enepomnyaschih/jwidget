@@ -62,38 +62,36 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	},
 	
 	set: function(item, key) {
-		if (item === undefined) {
-			return null;
-		}
+		// JW.assertDefined(item);
 		var oldItem = this.json[key];
 		if (oldItem === item) {
-			return null;
+			return;
 		}
 		if (oldItem === undefined) {
 			++this.size;
 		}
 		this.json[key] = item;
-		return new JW.AbstractMap.ItemResult(oldItem);
+		return new JW.Proxy(oldItem);
 	},
 	
 	setAll: function(json) {
-		var changed = false;
 		var removedItems = {};
 		var addedItems = {};
 		for (var key in json) {
 			var item = json[key];
-			var result = this.set(item, key);
-			if (!result) {
+			var oldItem = this.set(item, key);
+			if (oldItem === undefined) {
 				continue;
 			}
-			changed = true;
-			var removedItem = result.item;
-			if (removedItem) {
+			var removedItem = oldItem.value;
+			if (removedItem !== undefined) {
 				removedItems[key] = removedItem;
 			}
 			addedItems[key] = item;
 		}
-		return changed ? new JW.AbstractMap.SpliceResult(removedItems, addedItems) : null;
+		if (!JW.Map.isEmpty(removedItems) || !JW.Map.isEmpty(addedItems)) {
+			return new JW.AbstractMap.SpliceResult(removedItems, addedItems);
+		}
 	},
 	
 	setKey: function(oldKey, newKey) {
@@ -103,77 +101,62 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	remove: function(key) {
 		var item = this.json[key];
 		if (item === undefined) {
-			return null;
+			return;
 		}
 		delete this.json[key];
 		--this.size;
-		return new JW.AbstractMap.ItemResult(item);
+		return item;
 	},
 	
 	removeItem: function(item) {
 		var key = this.indexOf(item);
 		if (key === undefined) {
-			return null;
+			return;
 		}
 		delete this.json[key];
 		--this.size;
-		return new JW.AbstractMap.KeyResult(key);
+		return key;
 	},
 	
 	removeAll: function(keys) {
-		var changed = false;
 		var items = {};
 		for (var i = 0, l = keys.length; i < l; ++i) {
 			var key = keys[i];
-			var result = this.remove(key);
-			if (!result) {
-				continue;
+			var item = this.remove(key);
+			if (item !== undefined) {
+				items[key] = item;
 			}
-			changed = true;
-			items[key] = result.item;
 		}
-		return changed ? new JW.AbstractMap.ItemsResult(items) : null;
+		if (!JW.Map.isEmpty(items)) {
+			return items;
+		}
 	},
 	
 	clear: function() {
 		if (this.size === 0) {
-			return null;
+			return;
 		}
-		var oldItems = this.json;
+		var items = this.json;
 		this.json = {};
 		this.size = 0;
-		return new JW.AbstractMap.ItemsResult(items);
+		return items;
 	},
 	
 	splice: function(removedKeys, updatedItems) {
-		var changed = false;
-		var removedItems = {};
-		for (var i = 0, l = removedKeys.length; i < l; ++i) {
-			var key = removedKeys[i];
-			if (updatedItems[key] === undefined) {
-				continue;
-			}
-			var item = this.json[key];
-			if (item === undefined) {
-				continue;
-			}
-			changed = true;
-			removedItems[key] = item;
-			delete this.json[key];
-			--this.size;
+		removedKeys = JW.Array.filter(removedKeys, function(key) {
+			return !updatedItems.hasOwnProperty(key);
+		}, this);
+		var removedItems = this.removeAll(removedKeys);
+		var spliceResult = this.setAll(updatedItems);
+		if (spliceResult !== undefined) {
+			JW.apply(spliceResult.removedItems, removedItems);
+			return spliceResult;
 		}
-		var result = this.setAll(updatedItems);
-		if (result) {
-			JW.apply(result.removedItems, removedItems);
-			return result;
+		if (removedItems !== undefined) {
+			return new JW.AbstractMap.SpliceResult(removedItems, {});
 		}
-		return changed ? new JW.AbstractMap.SpliceResult(removedItems, {}) : null;
 	},
-	/*
-	getSpliceParams: function(removedKeys, updatedItems) {
-		return JW.AbstractMap.getSpliceParams(this.json, removedKeys, updatedItems);
-	},
-	*/
+	
 	reindex: function(keyMap) {
 		return JW.Map.reindex(this.json, keyMap);
 	},
@@ -188,12 +171,16 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 	
 	performSplice: function(newItems) {
 		var spliceParams = this.detectSplice(newItems);
-		return spliceParams ? this.splice(spliceParams.removedKeys, spliceParams.updatedItems) : null;
+		if (spliceParams !== undefined) {
+			return this.splice(spliceParams.removedKeys, spliceParams.updatedItems);
+		}
 	},
 	
 	performReindex: function(newItems, getKey, scope) {
-		var keyMap = this.detectReindex(newItems, getKey, scope);
-		return keyMap ? this.reindex(keyMap) : null;
+		var keyMap = this.detectReindex(newItems, getKey || this.getKey, scope || this);
+		if (keyMap !== undefined) {
+			return this.reindex(keyMap);
+		}
 	},
 	
 	every: function(callback, scope) {
@@ -278,12 +265,12 @@ JW.apply(JW.Map, {
 		var addedItems = {};
 		for (var key in map) {
 			var item = map[key];
-			var result = JW.Map.set(target, item, key);
-			if (result === undefined) {
+			var oldItem = JW.Map.set(target, item, key);
+			if (oldItem === undefined) {
 				continue;
 			}
-			var removedItem = result.value;
-			if (removedItem) {
+			var removedItem = oldItem.value;
+			if (removedItem !== undefined) {
 				removedItems[key] = removedItem;
 			}
 			addedItems[key] = item;
@@ -333,9 +320,9 @@ JW.apply(JW.Map, {
 		var items = {};
 		for (var i = 0, l = keys.length; i < l; ++i) {
 			var key = keys[i];
-			var result = JW.Map.remove(target, key);
-			if (result !== undefined) {
-				items[key] = result.value;
+			var item = JW.Map.remove(target, key);
+			if (item !== undefined) {
+				items[key] = item;
 			}
 		}
 		if (!JW.Map.isEmpty(items)) {
@@ -359,22 +346,16 @@ JW.apply(JW.Map, {
 		// JW.assertMap(target);
 		// JW.assertArray(item, JW.assertString);
 		// JW.assertMap(updatedItems, JW.assertDefined);
-		var removedItems = {};
-		for (var i = 0, l = removedKeys.length; i < l; ++i) {
-			var key = removedKeys[i];
-			var item = target[key];
-			if (item === undefined) {
-				continue;
-			}
-			removedItems[key] = item;
-			delete target[key];
+		var removedKeys = JW.Array.filter(function(key) {
+			return !updatedItems.hasOwnProperty(key);
+		});
+		var removedItems = JW.Map.removeAll(target, removedKeys);
+		var spliceResult = JW.Map.setAll(target, updatedItems);
+		if (spliceResult !== undefined) {
+			JW.apply(spliceResult.removedItems, removedItems);
+			return spliceResult;
 		}
-		var result = JW.Map.setAll(target, updatedItems);
-		if (result) {
-			JW.apply(result.removedItems, removedItems);
-			return result;
-		}
-		if (!JW.Map.isEmpty(removedItems)) {
+		if (removedItems !== undefined) {
 			return new JW.AbstractMap.SpliceResult(removedItems, {});
 		}
 	},
@@ -383,46 +364,20 @@ JW.apply(JW.Map, {
 		// JW.assertMap(target);
 		// JW.assertMap(keyMap, JW.assertString);
 		// JW.assertMap(keyMap, function(key) { return target.hasOwnProperty(key); }, this);
-		var resultMap = {};
-		for (var oldKey in keyMap) {
-			var newKey = keyMap[oldKey];
-			var item = JW.Map.setKey(target, oldKey, newKey);
-			if (item !== undefined) {
-				resultMap[oldKey] = newKey;
-			}
-		}
+		var resultMap = JW.Map.filter(keyMap, function(newKey, oldKey) {
+			return JW.Map.setKey(target, oldKey, newKey) !== undefined;
+		});
 		if (!JW.Map.isEmpty(resultMap)) {
 			return resultMap;
 		}
 	},
-	/*
-	getSpliceParams: function(target, removedKeys, updatedItems) {
-		var removedItems = {};
-		var addedItems = {};
-		for (var i = 0, l = removedKeys.length; i < l; ++i) {
-			var key = removedKeys[i];
-			if (target.hasOwnProperty(key) && !updatedItems.hasOwnProperty(key)) {
-				removedItems[key] = target[key];
-			}
-		}
-		for (var key in updatedItems) {
-			var oldItem = target[key];
-			var newItem = updatedItems[key];
-			if (oldItem !== newItem) {
-				removedItems[key] = oldItem;
-				addedItems[key] = newItem;
-			}
-		}
-		return new JW.AbstractMap.SpliceParams(removedItems, addedItems);
-	},
-	*/
+	
 	detectSplice: function(oldItems, newItems) {
 		// JW.assertMap(oldItems);
 		// JW.assertMap(newItems, JW.assertDefined);
 		var removedKeys = [];
 		var updatedItems = {};
 		for (var key in oldItems) {
-			var item = oldItems[key];
 			if (!newItems.hasOwnProperty(key)) {
 				removedKeys.push(key);
 			}
@@ -442,14 +397,15 @@ JW.apply(JW.Map, {
 		// JW.assertMap(oldItems);
 		// JW.assertMap(newItems, JW.assertDefined);
 		getKey = getKey || JW.iid;
+		scope = scope || oldItems;
 		var newItemKeys = {};
 		for (var key in newItems) {
 			var item = newItems[key];
-			newItemKeys[getKey.call(scope || oldItems, item)] = item;
+			newItemKeys[getKey.call(scope, item)] = item;
 		}
 		var keyMap = {};
 		for (var oldKey in oldItems) {
-			var newKey = newItemKeys[getKey.call(scope || oldItems, oldItems[oldKey])];
+			var newKey = newItemKeys[getKey.call(scope, oldItems[oldKey])];
 			if (oldKey !== newKey) {
 				keyMap[oldKey] = newKey;
 			}
@@ -461,14 +417,14 @@ JW.apply(JW.Map, {
 	
 	performSplice: function(target, newItems) {
 		var spliceParams = JW.Map.detectSplice(target, newItems);
-		if (spliceParams) {
+		if (spliceParams !== undefined) {
 			return JW.Map.splice(target, spliceParams.removedKeys, spliceParams.updatedItems);
 		}
 	},
 	
 	performReindex: function(target, newItems, getKey, scope) {
 		var keyMap = JW.Map.detectReindex(target, newItems, getKey, scope);
-		if (keyMap) {
+		if (keyMap !== undefined) {
 			return JW.Map.reindex(target, keyMap);
 		}
 	},
@@ -503,6 +459,16 @@ JW.apply(JW.Map, {
 		var result = {};
 		result[key] = item;
 		return result;
+	},
+	
+	getRemovedKeys: function(removedItems, addedItems) {
+		var removedKeys = [];
+		for (var key in removedItems) {
+			if (!addedItems.hasOwnProperty(key)) {
+				removedItems.push(key);
+			}
+		}
+		return removedKeys;
 	}
 });
 

@@ -38,9 +38,10 @@ JW.extend(JW.ObservableMap.Lister/*<T extends JW.Class>*/, JW.AbstractMap.Lister
 	},
 	
 	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
 		this.target.splice(
-			JW.Map.getValuesArray(params.removedItems),
-			JW.Map.getValuesArray(params.addedItems));
+			JW.Map.getValuesArray(spliceResult.removedItems),
+			JW.Map.getValuesArray(spliceResult.addedItems));
 	},
 	
 	_onClear: function(params) {

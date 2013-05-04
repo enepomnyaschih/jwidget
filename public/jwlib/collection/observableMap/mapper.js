@@ -24,7 +24,7 @@ JW.ObservableMap.Mapper = function(source, config) {
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableMap.Mapper/*<S extends Any, T extends Any>*/, JW.AbstractMap.Mapper/*<S, T>*/, {
+JW.extend(JW.ObservableMap.Mapper/*<S, T>*/, JW.AbstractMap.Mapper/*<S, T>*/, {
 	/*
 	Fields
 	JW.EventAttachment _spliceEventAttachment;
@@ -41,13 +41,14 @@ JW.extend(JW.ObservableMap.Mapper/*<S extends Any, T extends Any>*/, JW.Abstract
 	},
 	
 	_onSplice: function(params) {
-		var removedDatas = params.removedItems;
-		var addedDatas = params.addedItems;
-		var spliceResult = this.target.splice(
-			JW.AbstractMap.getRemovedKeys(removedDatas, addedDatas),
-			JW.Map.map(addedDatas, this.createItem, this.scope || this));
-		if (spliceResult) {
-			this._destroyItems(spliceResult.removedItems, removedDatas);
+		var sourceResult = params.spliceResult;
+		var removedDatas = sourceResult.removedItems;
+		var addedDatas = sourceResult.addedItems;
+		var targetResult = this.target.splice(
+			JW.Map.getRemovedKeys(removedDatas, addedDatas),
+			this._createItems(addedDatas));
+		if (targetResult !== undefined) {
+			this._destroyItems(targetResult.removedItems, removedDatas);
 		}
 	},
 	
@@ -57,9 +58,6 @@ JW.extend(JW.ObservableMap.Mapper/*<S extends Any, T extends Any>*/, JW.Abstract
 	
 	_onClear: function(params) {
 		var datas = params.items;
-		var items = this.target.removeAll(JW.Map.getKeysArray(datas));
-		if (items) {
-			this._destroyItems(items, datas);
-		}
+		this._destroyItems(this.target.removeAll(JW.Map.getKeysArray(datas)), datas);
 	}
 });

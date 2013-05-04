@@ -46,7 +46,7 @@ JW.extend(JW.AbstractArray.Mapper/*<S, T>*/, JW.Class, {
 	
 	// override
 	destroy: function() {
-		this._destroyItems(this.target.clearItems(), this.source.getItems());
+		this._destroyItems(this.target.clear(), this.source.getItems());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -62,6 +62,9 @@ JW.extend(JW.AbstractArray.Mapper/*<S, T>*/, JW.Class, {
 	},
 	
 	_destroyItems: function(items, datas) {
+		if (items === undefined) {
+			return;
+		}
 		for (var i = items.length - 1; i >= 0; --i) {
 			this.destroyItem.call(this.scope, items[i], datas[i]);
 		}

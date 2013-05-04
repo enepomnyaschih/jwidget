@@ -38,12 +38,14 @@ JW.extend(JW.ObservableSet.Indexer/*<T extends JW.Class>*/, JW.AbstractSet.Index
 	},
 	
 	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
 		this.target.splice(
-			JW.Array.map(params.removedItems, this.getKey, this.scope || this),
-			JW.Array.index(params.addedItems, this.getKey, this.scope || this));
+			this._keys(spliceResult.removedItems),
+			this._index(spliceResult.addedItems));
 	},
 	
 	_onClear: function(params) {
-		this.target.removeAll(JW.Array.map(params.items, this.getKey, this.scope || this));
+		this.target.removeAll(
+			this._keys(params.items));
 	}
 });

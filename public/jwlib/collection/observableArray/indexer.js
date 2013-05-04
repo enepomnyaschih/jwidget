@@ -42,18 +42,20 @@ JW.extend(JW.ObservableArray.Indexer/*<T>*/, JW.AbstractArray.Indexer/*<T>*/, {
 	},
 	
 	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
 		this.target.splice(
-			JW.Array.map(params.spliceResult.getRemovedItems(), this.getKey, this.scope),
-			JW.Array.index(params.spliceResult.getAddedItems(), this.getKey, this.scope));
+			this._keys(spliceResult.getRemovedItems()),
+			this._index(spliceResult.getAddedItems()));
 	},
 	
 	_onReplace: function(params) {
 		this.target.splice(
-			[ this.getKey.call(this.scope, params.oldItem) ],
-			JW.Map.single(params.newItem, this.getKey.call(this.scope, params.newItem)));
+			this._keys([ params.oldItem ]),
+			this._index([ params.newItem ]));
 	},
 	
 	_onClear: function(params) {
-		this.target.removeAll(JW.Array.index(params.items, this.getKey, this.scope));
+		this.target.removeAll(
+			this._keys(params.items));
 	}
 });

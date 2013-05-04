@@ -60,7 +60,7 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	add: function(item) {
 		var iid = item._iid;
 		if (this.json.hasOwnProperty(iid)) {
-			return null;
+			return;
 		}
 		this.json[iid] = item;
 		++this.size;
@@ -75,13 +75,15 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 				addedItems.push(item);
 			}
 		}
-		return addedItems.length ? addedItems : null;
+		if (addedItems.length !== 0) {
+			return addedItems;
+		}
 	},
 	
 	remove: function(item) {
 		var iid = item._iid;
 		if (!this.json.hasOwnProperty(iid)) {
-			return null;
+			return;
 		}
 		delete this.json[iid];
 		--this.size;
@@ -96,12 +98,14 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 				removedItems.push(item);
 			}
 		}
-		return removedItems.length ? removedItems : null;
+		if (removedItems.length !== 0) {
+			return removedItems;
+		}
 	},
 	
 	clear: function() {
 		if (this.size === 0) {
-			return null;
+			return;
 		}
 		var removedItems = this.getValuesArray();
 		this.json = {};
@@ -112,8 +116,9 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	splice: function(removedItems, addedItems) {
 		removedItems = this.removeAll(removedItems);
 		addedItems = this.addAll(addedItems);
-		return (removedItems || addedItems) ?
-			new JW.AbstractSet.SpliceResult(removedItems || [], addedItems || []) : null;
+		if ((removedItems !== undefined) || (addedItems !== undefined)) {
+			return new JW.AbstractSet.SpliceResult(removedItems || [], addedItems || []);
+		}
 	},
 	
 	detectSplice: function(newItems) {
@@ -122,7 +127,9 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 	
 	performSplice: function(newItems) {
 		var spliceParams = this.detectSplice(newItems);
-		return spliceParams ? this.splice(spliceParams.removedItems, spliceParams.addedItems) : null;
+		if (spliceParams !== undefined) {
+			return this.splice(spliceParams.removedItems, spliceParams.addedItems);
+		}
 	},
 	
 	every: function(callback, scope) {
@@ -191,7 +198,7 @@ JW.apply(JW.Set, {
 	add: function(target, item) {
 		var iid = item._iid;
 		if (target.hasOwnProperty(iid)) {
-			return null;
+			return;
 		}
 		target[iid] = item;
 		return true;
@@ -205,13 +212,15 @@ JW.apply(JW.Set, {
 				addedItems.push(item);
 			}
 		}
-		return addedItems.length ? addedItems : null;
+		if (addedItems.length !== 0) {
+			return addedItems;
+		}
 	},
 	
 	remove: function(target, item) {
 		var iid = item._iid;
 		if (!target.hasOwnProperty(iid)) {
-			return null;
+			return;
 		}
 		delete target[iid];
 		return true;
@@ -225,12 +234,14 @@ JW.apply(JW.Set, {
 				removedItems.push(item);
 			}
 		}
-		return removedItems.length ? removedItems : null;
+		if (removedItems.length !== 0) {
+			return removedItems;
+		}
 	},
 	
 	clear: function(target) {
 		if (JW.Set.isEmpty(target)) {
-			return null;
+			return;
 		}
 		var items = JW.Set.getValuesArray(target);
 		JW.Set.removeAll(target, items);
@@ -240,8 +251,9 @@ JW.apply(JW.Set, {
 	splice: function(target, removedItems, addedItems) {
 		removedItems = JW.Set.removeAll(target, removedItems);
 		addedItems = JW.Set.addAll(target, addedItems);
-		return (removedItems || addedItems) ?
-			new JW.AbstractSet.SpliceResult(removedItems || [], addedItems || []) : null;
+		if ((removedItems !== undefined) || (addedItems !== undefined)) {
+			return new JW.AbstractSet.SpliceResult(removedItems || [], addedItems || []);
+		}
 	},
 	
 	detectSplice: function(oldItems, newItems) {
@@ -257,13 +269,16 @@ JW.apply(JW.Set, {
 				addedItems.push(newItems[key]);
 			}
 		}
-		return (removedItems.length || addedItems.length) ?
-			new JW.AbstractSet.SpliceParams(removedItems, addedItems) : undefined;
+		if ((removedItems.length !== 0) || (addedItems.length !== 0)) {
+			return new JW.AbstractSet.SpliceParams(removedItems, addedItems);
+		}
 	},
 	
 	performSplice: function(target, newItems) {
 		var spliceParams = JW.Set.detectSplice(target, newItems);
-		return spliceParams ? JW.Set.splice(target, spliceParams.removedItems, spliceParams.addedItems) : null;
+		if (spliceParams !== undefined) {
+			return JW.Set.splice(target, spliceParams.removedItems, spliceParams.addedItems);
+		}
 	},
 	
 	every: function(target, callback, scope) {

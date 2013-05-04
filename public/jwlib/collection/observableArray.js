@@ -74,17 +74,18 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	},
 	
 	add: function(item, index) {
-		return JW.isDefined(this.splice([], [ new JW.AbstractArray.IndexItems(index, [ item ]) ]));
+		return this.splice([], [ new JW.AbstractArray.IndexItems(index, [ item ]) ]) !== undefined;
 	},
 	
 	addAll: function(items, index) {
-		return JW.isDefined(this.splice([], [ new JW.AbstractArray.IndexItems(index, items) ]));
+		return this.splice([], [ new JW.AbstractArray.IndexItems(index, items) ]) !== undefined;
 	},
 	
 	remove: function(index, count) {
-		var result = this.splice([ new JW.AbstractArray.IndexCount(index, count) ], []);
+		var result = this.splice([ new JW.AbstractArray.IndexCount(index, JW.defn(count, 1)) ], []);
 		if (result) {
-			return result.removedItemsList[0].items;
+			var items = result.removedItemsList[0].items;
+			return (count === undefined) ? items[0] : items;
 		}
 	},
 	
@@ -160,14 +161,14 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	
 	performSplice: function(items, getKey, scope) {
 		var spliceParams = this.detectSplice(items, getKey, scope);
-		if (spliceParams) {
+		if (spliceParams !== undefined) {
 			return this.splice(spliceParams.removeParamsList, spliceParams.addParamsList);
 		}
 	},
 	
 	performReorder: function(items, getKey, scope) {
 		var indexArray = this.detectReorder(items, getKey, scope);
-		if (indexArray) {
+		if (indexArray !== undefined) {
 			return this.reorder(indexArray);
 		}
 	},
@@ -186,7 +187,9 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	
 	pop: function() {
 		var length = this.getLength();
-		return (length === 0) ? undefined : this.remove(length - 1);
+		if (length !== 0) {
+			return this.remove(length - 1);
+		}
 	},
 	
 	createEmpty: function() {

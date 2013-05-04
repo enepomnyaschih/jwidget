@@ -25,16 +25,16 @@ JW.AbstractMap.Mapper = function(source, config) {
 	this.destroyItem = config.destroyItem;
 	this._targetCreated = !config.target;
 	this.target = config.target || source.createEmpty();
-	this.scope = config.scope;
-	this.target.setAll(JW.Map.map(this.source.getJson(), this.createItem, this.scope || this));
+	this.scope = config.scope || this;
+	this.target.setAll(this._createItems(this.source.getJson()));
 };
 
 JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	/*
 	Required
 	JW.AbstractMap<S> source;
-	T createItem(S data, String key);
-	void destroyItem(T item, S data, String key);
+	T createItem(S data);
+	void destroyItem(T item, S data);
 	
 	Optional
 	JW.AbstractMap<T> target;
@@ -44,20 +44,29 @@ JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	Boolean _targetCreated;
 	*/
 	
-	_destroyItems: function(items, datas) {
-		JW.Map.every(items, function(item, key) {
-			this.destroyItem.call(this.scope || this, item, datas[key], key);
-		}, this);
-	},
-	
+	// override
 	destroy: function() {
-		var items = this.target.removeAll(this.source.getKeysArray());
-		if (items) {
-			this._destroyItems(items, this.source.getJson());
-		}
+		this._destroyItems(this.target.removeAll(this.source.getKeysArray()), this.source.getJson());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		this._super();
+	},
+	
+	_createItems: function(datas) {
+		var items = {};
+		for (var key in datas) {
+			items[key] = this.createItem.call(this.scope, datas[key]);
+		}
+		return items;
+	},
+	
+	_destroyItems: function(items, datas) {
+		if (items === undefined) {
+			return;
+		}
+		for (var key in items) {
+			this.destroyItem.call(this.scope, items[key], datas[key]);
+		}
 	}
 });

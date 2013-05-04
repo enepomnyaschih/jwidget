@@ -32,10 +32,10 @@ JW.extend(JW.AbstractArray.Observer/*<T>*/, JW.Class, {
 	/*
 	Required
 	JW.AbstractArray<T> source;
-	void addItem(T item);
-	void removeItem(T item);
 	
 	Optional
+	void addItem(T item);
+	void removeItem(T item);
 	void clearItems(Array<T> items);
 	Object scope;
 	*/

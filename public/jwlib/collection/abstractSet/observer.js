@@ -25,19 +25,17 @@ JW.AbstractSet.Observer = function(source, config) {
 	this.removeItem = config.removeItem;
 	this.clearItems = config.clearItems;
 	this.scope = config.scope || this;
-	if (this.addItem) {
-		this.source.every(this.addItem, this.scope);
-	}
+	this._addItems(this.source.getValuesArray());
 };
 
 JW.extend(JW.AbstractSet.Observer/*<T>*/, JW.Class, {
 	/*
 	Required
 	JW.AbstractSet<T> source;
-	void addItem(T item);
-	void removeItem(T item);
 	
 	Optional
+	void addItem(T item);
+	void removeItem(T item);
 	void clearItems(Array<T> items);
 	Object scope;
 	*/
@@ -48,14 +46,32 @@ JW.extend(JW.AbstractSet.Observer/*<T>*/, JW.Class, {
 		this._super();
 	},
 	
+	_addItems: function(items) {
+		if (!this.addItem) {
+			return;
+		}
+		for (var i = 0, l = items.length; i < l; ++i) {
+			this.addItem.call(this.scope, items[i]);
+		}
+	},
+	
+	_removeItems: function(items) {
+		if (!this.removeItem) {
+			return;
+		}
+		for (var i = items.length - 1; i >= 0; --i) {
+			this.removeItem.call(this.scope, items[i]);
+		}
+	},
+	
 	_clearItems: function(items) {
 		if (items.length === 0) {
 			return;
 		}
 		if (this.clearItems) {
 			this.clearItems.call(this.scope, items);
-		} else if (this.removeItem) {
-			JW.Array.every(items, this.removeItem, this.scope);
+		} else {
+			this._removeItems(items);
 		}
 	}
 });

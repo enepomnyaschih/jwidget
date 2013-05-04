@@ -38,15 +38,12 @@ JW.extend(JW.ObservableMap.Observer/*<S extends Any, T extends Any>*/, JW.Abstra
 	},
 	
 	_onSplice: function(params) {
-		if (this.removeItem) {
-			JW.Map.every(params.removedItems, this.removeItem, this.scope);
-		}
-		if (this.addItem) {
-			JW.Map.every(params.addedItems, this.addItem, this.scope);
-		}
+		var spliceResult = params.spliceResult;
+		this._removeItems(spliceResult.removedItems);
+		this._addItems(spliceResult.addedItems);
 	},
 	
 	_onClear: function(params) {
-		this._clearItems(JW.Map.getValuesArray(params.items));
+		this._clearItems(params.items);
 	}
 });

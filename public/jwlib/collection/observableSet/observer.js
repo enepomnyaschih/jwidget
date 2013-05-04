@@ -38,12 +38,9 @@ JW.extend(JW.ObservableSet.Observer/*<S extends Any, T extends Any>*/, JW.Abstra
 	},
 	
 	_onSplice: function(params) {
-		if (this.removeItem) {
-			JW.Array.every(params.removedItems, this.removeItem, this.scope);
-		}
-		if (this.addItem) {
-			JW.Array.every(params.addedItems, this.addItem, this.scope);
-		}
+		var spliceResult = params.spliceResult;
+		this._removeItems(spliceResult.removedItems);
+		this._addItems(spliceResult.addedItems);
 	},
 	
 	_onClear: function(params) {

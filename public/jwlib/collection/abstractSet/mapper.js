@@ -25,9 +25,9 @@ JW.AbstractSet.Mapper = function(source, config) {
 	this.destroyItem = config.destroyItem;
 	this._targetCreated = !config.target;
 	this.target = config.target || source.createEmpty();
-	this.scope = config.scope;
+	this.scope = config.scope || {};
 	this._items = {};
-	this.target.addAll(JW.Array.map(this.source.getValuesArray(), this._createItem, this))
+	this.target.addAll(this._createItems(this.source.getValuesArray()));
 };
 
 JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
@@ -46,10 +46,11 @@ JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.
 	Map<T> _items;
 	*/
 	
+	// override
 	destroy: function() {
 		var datas = this.source.getValuesArray();
 		this.target.removeAll(this._getItems(datas));
-		JW.Array.every(datas, this._destroyItem, this);
+		this._destroyItems(datas);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -62,16 +63,24 @@ JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.
 		}, this);
 	},
 	
-	_createItem: function(data) {
-		var item = this.createItem.call(this.scope || this, data);
-		this._items[data._iid] = item;
-		return item;
+	_createItems: function(datas) {
+		var items = [];
+		for (var i = 0, l = datas.length; i < l; ++i) {
+			var data = datas[i];
+			var item = this.createItem.call(this.scope || this, data);
+			items.push(item);
+			this._items[data._iid] = item;
+		}
+		return items;
 	},
 	
-	_destroyItem: function(data) {
-		var iid = data._iid;
-		var item = this._items[iid];
-		delete this._items[iid];
-		this.destroyItem.call(this.scope || this, item, data);
+	_destroyItems: function(datas) {
+		for (var i = datas.length - 1; i >= 0; --i) {
+			var data = datas[i];
+			var iid = data._iid;
+			var item = this._items[iid];
+			delete this._items[iid];
+			this.destroyItem.call(this.scope || this, item, data);
+		}
 	}
 });
