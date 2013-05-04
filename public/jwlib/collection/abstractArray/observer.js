@@ -25,7 +25,7 @@ JW.AbstractArray.Observer = function(source, config) {
 	this.removeItem = config.removeItem;
 	this.clearItems = config.clearItems;
 	this.scope = config.scope || this;
-	this._fill();
+	this._addItems(this.source.getItems());
 };
 
 JW.extend(JW.AbstractArray.Observer/*<T>*/, JW.Class, {
@@ -42,34 +42,36 @@ JW.extend(JW.AbstractArray.Observer/*<T>*/, JW.Class, {
 	
 	// override
 	destroy: function() {
-		this._clear(this.source.getItems());
+		this._clearItems(this.source.getItems());
 		this._super();
 	},
 	
-	_addItem: function(item) {
-		if (this.addItem) {
-			this.addItem.call(this.scope || this, item);
+	_addItems: function(items) {
+		if (!this.addItem) {
+			return;
+		}
+		for (var i = 0, l = items.length; i < l; ++i) {
+			this.addItem.call(this.scope, items[i]);
 		}
 	},
 	
-	_removeItem: function(item) {
-		if (this.removeItem) {
-			this.removeItem.call(this.scope || this, item);
+	_removeItems: function(items) {
+		if (!this.removeItem) {
+			return;
+		}
+		for (var i = items.length - 1; i >= 0; --i) {
+			this.removeItem.call(this.scope, items[i]);
 		}
 	},
 	
-	_fill: function() {
-		this.source.every(this._addItem, this);
-	},
-	
-	_clear: function(items) {
+	_clearItems: function(items) {
 		if (items.length === 0) {
 			return;
 		}
 		if (this.clearItems) {
-			this.clearItems.call(this.scope || this, items);
+			this.clearItems.call(this.scope, items);
 		} else {
-			JW.Array.backEvery(items, this._removeItem, this);
+			this._removeItems(items);
 		}
 	}
 });

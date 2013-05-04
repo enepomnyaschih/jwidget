@@ -20,6 +20,7 @@
 JW.ObservableArray.Lister = function(source, config) {
 	JW.ObservableArray.Lister._super.call(this, source, config);
 	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
@@ -30,18 +31,24 @@ JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Li
 	
 	Fields
 	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _replaceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
 	*/
 	
 	// override
 	destroy: function() {
 		this._clearEventAttachment.destroy();
+		this._replaceEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
 	_onSplice: function(params) {
-		this.target.splice(params.removedItems, params.addedItems);
+		this.target.splice(params.getRemovedItems(), params.getAddedItems());
+	},
+	
+	_onReplace: function(params) {
+		this.target.splice([ params.oldItem ], [ params.newItem ]);
 	},
 	
 	_onClear: function(params) {

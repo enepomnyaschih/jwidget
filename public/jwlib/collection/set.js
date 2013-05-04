@@ -258,7 +258,7 @@ JW.apply(JW.Set, {
 			}
 		}
 		return (removedItems.length || addedItems.length) ?
-			new JW.AbstractSet.SpliceParams(removedItems, addedItems) : null;
+			new JW.AbstractSet.SpliceParams(removedItems, addedItems) : undefined;
 	},
 	
 	performSplice: function(target, newItems) {

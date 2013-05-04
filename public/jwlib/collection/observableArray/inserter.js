@@ -20,6 +20,8 @@
 JW.ObservableArray.Inserter = function(source, config) {
 	JW.ObservableArray.Inserter._super.call(this, source, config);
 	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
+	this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
 };
@@ -31,43 +33,53 @@ JW.extend(JW.ObservableArray.Inserter/*<T>*/, JW.AbstractArray.Inserter/*<T>*/, 
 	
 	Fields
 	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _replaceEventAttachment;
+	JW.EventAttachment _moveEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
 	JW.EventAttachment _reorderEventAttachment;
 	*/
 	
+	// override
 	destroy: function() {
 		this._reorderEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
+		this._moveEventAttachment.destroy();
+		this._replaceEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
 	_onSplice: function(params) {
-		var removeParamsList = params.removeParamsList;
-		var addParamsList = params.addParamsList;
+		var spliceResult = params.spliceResult;
+		var removedItemsList = spliceResult.removedItemsList;
+		var addedItemsList = spliceResult.addedItemsList;
 		
 		// if there is an effective clearing function, just reset the controller
-		if (this.clearItems) {
-			var removedCount = 0;
-			for (var i = 0, l = removeParamsList.length; i < l; ++i) {
-				removedCount += removeParamsList[i].items.length;
-			}
-			if (3 * removedCount > 2 * this.target.getLength()) {
-				this._clearItems(params.oldItems);
-				this._addItems(this.source.getItems(), 0);
-				return;
-			}
+		if (this.clearItems && (3 * removedItems.length > 2 * this.target.getLength())) {
+			this.clearItems.call(this.scope, spliceResult.oldItems);
+			this._addItems(this.source.getItems(), 0);
+			return;
 		}
 		
 		// else, splice the elements
-		for (var i = removeParamsList.length - 1; i >= 0; --i) {
-			var params = removeParamsList[i];
-			this._removeItems(params.items, params.index);
+		for (var i = removedItemsList.length - 1; i >= 0; --i) {
+			var removeRarams = removedItemsList[i];
+			this._removeItems(removeRarams.items, removeRarams.index);
 		}
-		for (var i = 0, l = addParamsList.length; i < l; ++i) {
-			var params = addParamsList[i];
-			this._addItems(params.items, params.index);
+		for (var i = 0, l = addedItemsList.length; i < l; ++i) {
+			var addParams = addedItemsList[i];
+			this._addItems(addParams.items, addParams.index);
 		}
+	},
+	
+	_onReplace: function(params) {
+		this.removeItem.call(this.scope, params.index, params.oldItem);
+		this.addItem.call(this.scope, params.newItem, params.index);
+	},
+	
+	_onMove: function(params) {
+		this.removeItem.call(this.scope, params.fromIndex, params.item);
+		this.addItem.call(this.scope, params.item, params.toIndex);
 	},
 	
 	_onClear: function(params) {
@@ -75,7 +87,7 @@ JW.extend(JW.ObservableArray.Inserter/*<T>*/, JW.AbstractArray.Inserter/*<T>*/, 
 	},
 	
 	_onReorder: function(params) {
-		this._clearItems(params.oldItems);
+		this._clearItems(params.items);
 		this._addItems(this.source.getItems(), 0);
 	}
 });

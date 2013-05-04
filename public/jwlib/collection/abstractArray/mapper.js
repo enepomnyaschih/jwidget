@@ -26,7 +26,7 @@ JW.AbstractArray.Mapper = function(source, config) {
 	this._targetCreated = !config.target;
 	this.target = config.target || this.source.createEmpty();
 	this.scope = config.scope || this;
-	this.target.addAll(JW.Array.map(this.source.getItems(), this.createItem, this.scope));
+	this.target.addAll(this._createItems(this.source.getItems()));
 };
 
 JW.extend(JW.AbstractArray.Mapper/*<S, T>*/, JW.Class, {
@@ -44,16 +44,24 @@ JW.extend(JW.AbstractArray.Mapper/*<S, T>*/, JW.Class, {
 	Boolean _targetCreated;
 	*/
 	
+	// override
 	destroy: function() {
-		this._clearItems(this.source.getItems());
+		this._destroyItems(this.target.clearItems(), this.source.getItems());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		this._super();
 	},
 	
-	_clearItems: function(datas) {
-		var items = this.target.clearItems();
+	_createItems: function(datas) {
+		var items = [];
+		for (var i = 0, l = datas.length; i < l; ++i) {
+			items.push(this.createItem.call(this.scope, datas[i]));
+		}
+		return items;
+	},
+	
+	_destroyItems: function(items, datas) {
 		for (var i = items.length - 1; i >= 0; --i) {
 			this.destroyItem.call(this.scope, items[i], datas[i]);
 		}

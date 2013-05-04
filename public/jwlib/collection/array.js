@@ -60,7 +60,27 @@ JW.extend(JW.Array/*<T>*/, JW.Class, {
 	},
 	
 	splice: function(removeParamsList, addParamsList) {
-		return JW.Array.splice(removeParamsList, addParamsList);
+		return JW.Array.splice(this.items, removeParamsList, addParamsList);
+	},
+	
+	reorder: function(indexArray) {
+		return JW.Array.reorder(this.items, indexArray);
+	},
+	
+	detectSplice: function(items, getKey, scope) {
+		return JW.Array.detectSplice(this.items, items, getKey || this.getKey, scope || this);
+	},
+	
+	detectReorder: function(items, getKey, scope) {
+		return JW.Array.detectReorder(this.items, items, getKey || this.getKey, scope || this);
+	},
+	
+	performSplice: function(items, getKey, scope) {
+		return JW.Array.performSplice(this.items, items, getKey || this.getKey, scope || this);
+	},
+	
+	performReorder: function(items, getKey, scope) {
+		return JW.Array.performReorder(this.items, items, getKey || this.getKey, scope || this);
 	},
 	
 	every: function(callback, scope) {
@@ -157,22 +177,11 @@ JW.extend(JW.Array/*<T>*/, JW.Class, {
 	
 	createSplitter: function(config) {
 		return new JW.AbstractArray.Splitter(this, config);
-	},
-	
-	_perform: function(callback, scope) {
-		var items = callback.call(scope || this, this.items);
-		if (items && (items !== this.items)) {
-			JW.Array.clear(this.items);
-			JW.Array.addAll(this.items, items);
-		}
 	}
 });
 
 JW.Array.prototype.getLength = JW.Array.prototype.getSize;
 JW.Array.prototype.pushItem = JW.Array.prototype.add;
-JW.Array.prototype.performReorder = JW.Array.prototype._perform;
-JW.Array.prototype.performFilter = JW.Array.prototype._perform;
-JW.Array.prototype.performReset = JW.Array.prototype._perform;
 
 JW.applyIf(JW.Array.prototype, JW.Alg.BuildMethods);
 
@@ -249,9 +258,31 @@ JW.apply(JW.Array, {
 		// JW.assertArray(target);
 		// JW.assertArray(removeParamsList, function(params) { return params instanceof JW.AbstractArray.IndexCount; }, this);
 		// JW.assertArray(addParamsList, function(params) { return params instanceof JW.AbstractArray.IndexItems; }, this);
-		// TODO: assert whether there aren't insertions with equal indexes
-		// TODO: assert whether there aren't insertions inside removals
-		var paramsList = removeParamsList.concat(addParamsList);
+		// TODO: assert out of bounds stuff
+		var oldItems = target.concat();
+		var removedItemsList = [];
+		for (var i = removeParamsList.length - 1; i >= 0; --i) {
+			var params = removeParamsList[i];
+			var index = params.index;
+			var items = JW.Array.remove(target, index, params.count));
+			if (items === undefined) {
+				continue;
+			}
+			removedItemsList.push(new JW.AbstractArray.IndexItems(index, items));
+		}
+		var addedItemsList = []
+		for (var i = 0, l = addParamsList.length; i < l; ++i) {
+			var params = addParamsList[i];
+			if (JW.Array.addAll(target, params.items, params.index) === undefined) {
+				continue;
+			}
+			addItemsList.push(params);
+		}
+		if ((removedItemsList.length !== 0) || (addedItemsList.length !== 0)) {
+			removedItemsList.reverse();
+			return new JW.AbstractArray.SpliceResult(oldItems, removedItemsList, addedItemsList);
+		}
+		/*var paramsList = removeParamsList.concat(addParamsList);
 		JW.Array.sortBy(paramsList, "index");
 		var offset = 0;
 		var oldItems = target.concat();
@@ -267,8 +298,9 @@ JW.apply(JW.Array, {
 			}
 		}
 		if ((removedItemsList.length !== 0) || (offset !== 0)) {
+			removedItemsList.reverse();
 			return new JW.AbstractArray.SpliceResult(oldItems, removedItemsList);
-		}
+		}*/
 	},
 	
 	reorder: function(target, indexArray) {
@@ -279,7 +311,7 @@ JW.apply(JW.Array, {
 		// indexArraySorted.sort();
 		// JW.assert(JW.Array.isIdentity(indexArraySorted), '"indexArray" must contain all indexes from 0 to target.length - 1');
 		var length = target.length;
-		if ((length === 0) || JW.Array.isIdentity(indexArray)) {
+		if (JW.Array.isIdentity(indexArray)) {
 			return;
 		}
 		var oldItems = target.concat();
@@ -287,6 +319,79 @@ JW.apply(JW.Array, {
 			target[indexArray[i]] = oldItems[i];
 		}
 		return oldItems;
+	},
+	
+	detectSplice: function(oldItems, newItems, getKey, scope) {
+		getKey = getKey || JW.iid;
+		scope = scope || oldItems;
+		var removeParamsList = [];
+		var addParamsList = [];
+		var oldIndexMap = {};
+		for (var i = 0, l = oldItems.length; i < l; ++i) {
+			oldIndexMap[getKey.call(scope, oldItems[i])] = i;
+		}
+		var nextOldIndex = 0;
+		var newItemBuffer = [];
+		
+		function buffer(item) {
+			newItemBuffer.push(item);
+		}
+		
+		function flush() {
+			if (newItemBuffer.length === 0) {
+				return;
+			}
+			addParamsList.push(new JW.AbstractArray.IndexItems(nextOldIndex, newItemBuffer));
+			newItemBuffer = [];
+		}
+		
+		for (var newIndex = 0, l = newItems.length; newIndex < l; ++newIndex) {
+			var item = newItems[newIndex];
+			var key = getKey.call(scope, item);
+			var oldIndex = oldIndexMap[key];
+			if ((oldIndex === undefined) || (oldIndex < nextOldIndex)) {
+				buffer(item);
+			} else {
+				flush();
+				if (oldIndex > nextOldIndex) {
+					removeParamsList.push(new JW.AbstractArray.IndexCount(nextOldIndex, oldIndex - nextOldIndex));
+				}
+				nextOldIndex = oldIndex + 1;
+			}
+		}
+		if ((removeParamsList.length !== 0) || (addParamsList.length !== 0)) {
+			return new JW.AbstractArray.SpliceParams(removeParamsList, addParamsList);
+		}
+	},
+	
+	detectReorder: function(oldItems, newItems, getKey, scope) {
+		getKey = getKey || JW.iid;
+		scope = scope || oldItems;
+		var indexArray = [];
+		var newIndexMap = {};
+		for (var i = 0, l = newItems.length; i < l; ++i) {
+			newIndexMap[getKey.call(scope, newItems[i])] = i;
+		}
+		for (var i = 0, l = oldItems.length; i < l; ++i) {
+			indexArray.push(newIndexMap[getKey.call(scope, oldItems[i])]);
+		}
+		if (!JW.Array.isIdentity(indexArray)) {
+			return indexArray;
+		}
+	},
+	
+	performSplice: function(oldItems, newItems, getKey, scope) {
+		var spliceParams = JW.Array.detectSplice(oldItems, newItems, getKey, scope);
+		if (spliceParams !== undefined) {
+			return JW.Array.splice(oldItems, spliceParams.removeParamsList, spliceParams.addParamsList);
+		}
+	},
+	
+	performReorder: function(oldItems, newItems, getKey, scope) {
+		var indexArray = JW.Array.detectReorder(oldItems, newItems, getKey, scope);
+		if (indexArray !== undefined) {
+			return JW.Array.reorder(oldItems, indexArray);
+		}
 	},
 	
 	every: function(target, callback, scope) {
@@ -424,6 +529,14 @@ JW.apply(JW.Array, {
 			}
 		}
 		return true;
+	},
+	
+	merge: function(arrays) {
+		var result = [];
+		for (var i = 0, l = arrays.length; i < l; ++i) {
+			result.push.apply(result, arrays[i]);
+		}
+		return result;
 	}
 });
 
