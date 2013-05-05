@@ -23,7 +23,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.subscribe(map);
 		
 		this.setExpectedOutput(
-			"Added D at d",
+			"Spliced -{} +{d:D}",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
@@ -31,7 +31,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D" }, map);
 		
 		this.setExpectedOutput(
-			"Added F at f",
+			"Spliced -{} +{f:F}",
 			"Changed",
 			"Changed size from 1 to 2"
 		);
@@ -39,8 +39,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D", "f": "F" }, map);
 		
 		this.setExpectedOutput(
-			"Added C at c",
-			"Added A at a",
+			"Spliced -{} +{c:C,a:A}",
 			"Changed",
 			"Changed size from 2 to 4"
 		);
@@ -48,7 +47,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D", "f": "F", "c": "C", "a": "A" }, map);
 		
 		this.setExpectedOutput(
-			"Removed F at f",
+			"Spliced -{f:F} +{}",
 			"Changed",
 			"Changed size from 4 to 3"
 		);
@@ -60,7 +59,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D", "c": "C", "a": "A" }, map);
 		
 		this.setExpectedOutput(
-			"Added B at b",
+			"Spliced -{} +{b:B}",
 			"Changed",
 			"Changed size from 3 to 4"
 		);
@@ -72,8 +71,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D", "c": "C", "a": "A", "b": "B" }, map);
 		
 		this.setExpectedOutput(
-			"Removed C at c",
-			"Removed B at b",
+			"Spliced -{c:C,b:B} +{}",
 			"Changed",
 			"Changed size from 4 to 2"
 		);
@@ -85,8 +83,21 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D", "a": "A" }, map);
 		
 		this.setExpectedOutput(
-			"Removed D at d",
-			"Removed A at a",
+			"Spliced -{a:A} +{a:B}",
+			"Changed"
+		);
+		this.assertTrue(map.set("B", "a"));
+		this.assertMap({ "d": "D", "a": "B" }, map);
+		
+		this.setExpectedOutput(
+			"Reindexed by {d:c}",
+			"Changed"
+		);
+		this.assertTrue(map.setKey("d", "c"));
+		this.assertMap({ "a": "B", "c": "D" }, map);
+		
+		this.setExpectedOutput(
+			"Cleared {a:B,c:D}",
 			"Changed",
 			"Changed size from 2 to 0"
 		);
@@ -220,33 +231,11 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	subscribe: function(map) {
-		map.addEvent.bind(this.onAdd, this);
-		map.removeEvent.bind(this.onRemove, this);
-		map.changeEvent.bind(this.onChange, this);
-		map.sizeChangeEvent.bind(this.onSizeChange, this);
+		JW.Tests.Collection.subscribeToMap(this, map);
 	},
 	
 	assertMap: function(expected, map) {
-		this.assertStrictEqual(JW.Map.getSize(expected), map.getSize());
-		for (var key in expected) {
-			this.assertStrictEqual(expected[key], map.get(key));
-		}
-	},
-	
-	onAdd: function(params) {
-		this.output("Added " + params.item + " at " + params.key);
-	},
-	
-	onRemove: function(params) {
-		this.output("Removed " + params.item + " at " + params.key);
-	},
-	
-	onChange: function(params) {
-		this.output("Changed");
-	},
-	
-	onSizeChange: function(params) {
-		this.output("Changed size from " + params.oldSize + " to " + params.newSize);
+		JW.Tests.Collection.assertMap(this, expected, map);
 	},
 	
 	isUpperCase: function(value) {

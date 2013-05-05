@@ -75,12 +75,16 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	
 	add: function(item, index) {
 		index = JW.defn(index, this.array.length);
-		return this.splice([], [ new JW.AbstractArray.IndexItems(index, [ item ]) ]) !== undefined;
+		if (this.splice([], [ new JW.AbstractArray.IndexItems(index, [ item ]) ]) !== undefined) {
+			return true;
+		}
 	},
 	
 	addAll: function(items, index) {
 		index = JW.defn(index, this.array.length);
-		return this.splice([], [ new JW.AbstractArray.IndexItems(index, items) ]) !== undefined;
+		if (this.splice([], [ new JW.AbstractArray.IndexItems(index, items) ]) !== undefined) {
+			return true;
+		}
 	},
 	
 	remove: function(index, count) {

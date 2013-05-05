@@ -27,7 +27,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 0 to 1"
 		);
-		array.add("d");
+		this.assertTrue(array.add("d"));
 		this.assertArray([ "d" ], array);
 		
 		this.setExpectedOutput(
@@ -35,7 +35,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 1 to 2"
 		);
-		array.addAll([ "f" ]);
+		this.assertTrue(array.addAll([ "f" ]));
 		this.assertArray([ "d", "f" ], array);
 		
 		this.setExpectedOutput(
@@ -43,7 +43,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 2 to 3"
 		);
-		array.add("c", 1);
+		this.assertTrue(array.add("c", 1));
 		this.assertArray([ "d", "c", "f" ], array);
 		
 		this.setExpectedOutput(
@@ -51,11 +51,11 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 3 to 5"
 		);
-		array.addAll([ "b", "m" ], 0);
+		this.assertTrue(array.addAll([ "b", "m" ], 0));
 		this.assertArray([ "b", "m", "d", "c", "f" ], array);
 		
 		this.setExpectedOutput();
-		array.addAll([], 1);
+		this.assertUndefined(array.addAll([], 1));
 		this.assertArray([ "b", "m", "d", "c", "f" ], array);
 		
 		this.setExpectedOutput(
@@ -63,7 +63,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 5 to 6"
 		);
-		array.add("a", 5);
+		this.assertTrue(array.add("a", 5));
 		this.assertArray([ "b", "m", "d", "c", "f", "a" ], array);
 		
 		this.setExpectedOutput(
@@ -71,7 +71,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 6 to 5"
 		);
-		array.remove(1);
+		this.assertStrictEqual("m", array.remove(1));
 		this.assertArray([ "b", "d", "c", "f", "a" ], array);
 		
 		this.setExpectedOutput(
@@ -79,7 +79,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 5 to 4"
 		);
-		array.remove(0);
+		this.assertStrictEqual("b", array.remove(0));
 		this.assertArray([ "d", "c", "f", "a" ], array);
 		
 		this.setExpectedOutput(
@@ -87,36 +87,36 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 4 to 5"
 		);
-		array.add("k");
+		this.assertTrue(array.add("k"));
 		this.assertArray([ "d", "c", "f", "a", "k" ], array);
 		
 		this.setExpectedOutput(
 			"Replaced f with g at 2",
 			"Changed"
 		);
-		array.set("g", 2);
+		this.assertStrictEqual("f", array.set("g", 2).value);
 		this.assertArray([ "d", "c", "g", "a", "k" ], array);
 		
 		this.setExpectedOutput();
-		array.set("a", 3);
+		this.assertUndefined(array.set("a", 3));
 		this.assertArray([ "d", "c", "g", "a", "k" ], array);
 		
 		this.setExpectedOutput(
 			"Moved g from 2 to 1",
 			"Changed"
 		);
-		array.move(2, 1);
+		this.assertStrictEqual("g", array.move(2, 1));
 		this.assertArray([ "d", "g", "c", "a", "k" ], array);
 		
 		this.setExpectedOutput(
 			"Moved d from 0 to 4",
 			"Changed"
 		);
-		array.move(0, 4);
+		this.assertStrictEqual("d", array.move(0, 4));
 		this.assertArray([ "g", "c", "a", "k", "d" ], array);
 		
 		this.setExpectedOutput();
-		array.move(1, 1);
+		this.assertUndefined(array.move(1, 1));
 		this.assertArray([ "g", "c", "a", "k", "d" ], array);
 		
 		this.setExpectedOutput(
@@ -124,7 +124,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 5 to 6"
 		);
-		array.splice(
+		var spliceResult = array.splice(
 			[
 				new JW.AbstractArray.IndexCount(0, 2),
 				new JW.AbstractArray.IndexCount(3, 1),
@@ -136,17 +136,41 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 				new JW.AbstractArray.IndexItems(5, [ "p" ])
 			]
 		);
+		JW.Tests.Collection.assertArraySpliceResult(this, {
+			oldItems: [ "g", "c", "a", "k", "d" ],
+			removedItemsList: [
+				{
+					index: 0,
+					items: [ "g", "c" ]
+				},
+				{
+					index: 3,
+					items: [ "k" ]
+				}
+			],
+			addedItemsList: [
+				{
+					index: 0,
+					items: [ "o", "n", "m" ]
+				},
+				{
+					index: 5,
+					items: [ "p" ]
+				}
+			]
+		}, spliceResult);
 		this.assertArray([ "o", "n", "m", "a", "d", "p" ], array);
 		
 		this.setExpectedOutput(
 			"Reordered [o,n,m,a,d,p] by [3,2,4,0,1,5]",
 			"Changed"
 		);
-		array.reorder([ 3, 2, 4, 0, 1, 5 ]);
+		var oldItems = array.reorder([ 3, 2, 4, 0, 1, 5 ]);
+		this.assertTrue(JW.Array.equal([ "o", "n", "m", "a", "d", "p" ], oldItems));
 		this.assertArray([ "a", "d", "n", "o", "m", "p" ], array);
 		
 		this.setExpectedOutput();
-		array.reorder([ 0, 1, 2, 3, 4, 5 ]);
+		this.assertUndefined(array.reorder([ 0, 1, 2, 3, 4, 5 ]));
 		this.assertArray([ "a", "d", "n", "o", "m", "p" ], array);
 		
 		this.setExpectedOutput(
@@ -155,7 +179,8 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 		);
 		var items = array.getItems().concat();
 		items.sort();
-		array.performReorder(items);
+		var oldItems = array.performReorder(items);
+		this.assertTrue(JW.Array.equal([ "a", "d", "n", "o", "m", "p" ], oldItems));
 		this.assertArray([ "a", "d", "m", "n", "o", "p" ], array);
 		
 		this.setExpectedOutput(
@@ -168,7 +193,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 		items.splice(0, 1);
 		items.splice(1, 0, "q", "r");
 		items.splice(6, 0, "s");
-		array.performSplice(items);
+		this.assertTrue(array.performSplice(items) instanceof JW.AbstractArray.SpliceResult);
 		this.assertArray([ "d", "q", "r", "m", "n", "p", "s" ], array);
 		
 		this.setExpectedOutput(
@@ -181,7 +206,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 		items.splice(1, 1);
 		items.splice(1, 0, "t");
 		items.splice(3, 0, "u");
-		array.performSplice(items);
+		this.assertTrue(array.performSplice(items) instanceof JW.AbstractArray.SpliceResult);
 		this.assertArray([ "d", "t", "r", "u", "m", "n" ], array);
 		
 		this.setExpectedOutput(
@@ -192,15 +217,26 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 		var items = array.getItems().concat();
 		items.splice(4, 2);
 		items.splice(4, 0, "v");
-		array.performSplice(items);
+		this.assertTrue(array.performSplice(items) instanceof JW.AbstractArray.SpliceResult);
 		this.assertArray([ "d", "t", "r", "u", "v" ], array);
-
+		
+		this.setExpectedOutput();
+		var items = array.getItems().concat();
+		this.assertUndefined(array.performSplice(items));
+		this.assertArray([ "d", "t", "r", "u", "v" ], array);
+		
+		this.setExpectedOutput();
+		var items = array.getItems().concat();
+		this.assertUndefined(array.performReorder(items));
+		this.assertArray([ "d", "t", "r", "u", "v" ], array);
+		
 		this.setExpectedOutput(
 			"Spliced -[] +[0:[a],2:[b],4:[c],6:[e],8:[f],10:[g]] to [d,t,r,u,v]",
 			"Changed",
 			"Changed length from 5 to 11"
 		);
-		array.performSplice([ "a", "d", "b", "t", "c", "r", "e", "u", "f", "v", "g" ]);
+		this.assertTrue(array.performSplice([ "a", "d", "b", "t", "c", "r", "e", "u", "f", "v", "g" ]) instanceof
+			JW.AbstractArray.SpliceResult);
 		this.assertArray([ "a", "d", "b", "t", "c", "r", "e", "u", "f", "v", "g" ], array);
 		
 		this.setExpectedOutput(
@@ -208,7 +244,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 11 to 5"
 		);
-		array.performSplice([ "d", "t", "r", "u", "v" ]);
+		this.assertTrue(array.performSplice([ "d", "t", "r", "u", "v" ]) instanceof JW.AbstractArray.SpliceResult);
 		this.assertArray([ "d", "t", "r", "u", "v" ], array);
 		
 		this.setExpectedOutput(
@@ -216,7 +252,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 5 to 0"
 		);
-		array.clear();
+		this.assertTrue(JW.Array.equal([ "d", "t", "r", "u", "v" ], array.clear()));
 		this.assertArray([], array);
 		
 		this.setExpectedOutput(
@@ -224,7 +260,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed length from 0 to 1"
 		);
-		array.add("h");
+		this.assertTrue(array.add("h"));
 		this.assertArray([ "h" ], array);
 		
 		this.setExpectedOutput(

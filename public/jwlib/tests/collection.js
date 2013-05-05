@@ -67,10 +67,77 @@ JW.Tests.Collection = {
 		});
 	},
 	
+	subscribeToMap: function(testCase, map, formatter) {
+		formatter = formatter || function(x) { return x; };
+		
+		function formatMap(map) {
+			return "{" + JW.Map.getValuesArray(JW.Map.map(items, function(item, key) {
+				return key + ":" + item;
+			})).join(",") + "}";
+		}
+		
+		function formatItems(items) {
+			return "{" + formatMap(JW.Map.map(items, formatter)) + "}";
+		}
+		
+		map.spliceEvent.bind(function(params) {
+			var spliceResult = params.spliceResult;
+			testCase.output(
+				"Spliced -" + formatItems(spliceResult.removedItems) +
+				" +" + formatItems(spliceResult.addedItems));
+		});
+		
+		map.reindexEvent.bind(function(params) {
+			testCase.output("Reindexed by " + formatMap(params.keyMap));
+		});
+		
+		map.clearEvent.bind(function(params) {
+			testCase.output("Cleared " + formatItems(params.items));
+		});
+		
+		map.changeEvent.bind(function(params) {
+			testCase.output("Changed");
+		});
+		
+		map.sizeChangeEvent.bind(function(params) {
+			testCase.output("Changed size from " + params.oldSize + " to " + params.newSize);
+		});
+	},
+	
 	assertArray: function(testCase, values, array) {
 		testCase.assertStrictEqual(values.length, array.getLength());
 		for (var i = 0; i < array.getLength(); ++i) {
 			testCase.assertStrictEqual(values[i], array.get(i));
+		}
+	},
+	
+	assertMap: function(testCase, expected, map) {
+		testCase.assertStrictEqual(JW.Map.getSize(expected), map.getSize());
+		for (var key in expected) {
+			testCase.assertStrictEqual(expected[key], map.get(key));
+		}
+	},
+	
+	assertArraySpliceResult: function(testCase, expected, spliceResult) {
+		testCase.assertTrue(spliceResult instanceof JW.AbstractArray.SpliceResult);
+		testCase.assertTrue(JW.Array.equal(expected.oldItems, spliceResult.oldItems));
+		
+		testCase.assertStrictEqual(expected.removedItemsList.length, spliceResult.removedItemsList.length);
+		for (var i = 0; i < spliceResult.removedItemsList.length; ++i) {
+			var expectedParams = expected.removedItemsList[i];
+			var params = spliceResult.removedItemsList[i];
+			testCase.assertTrue(params instanceof JW.AbstractArray.IndexItems);
+			testCase.assertStrictEqual(expectedParams.index, params.index);
+			testCase.assertTrue(JW.Array.equal(expectedParams.items, params.items));
+		}
+		
+		testCase.assertStrictEqual(expected.addedItemsList.length, spliceResult.addedItemsList.length);
+		for (var i = 0; i < spliceResult.addedItemsList.length; ++i) {
+			var expectedParams = expected.addedItemsList[i];
+			var params = spliceResult.addedItemsList[i];
+			testCase.assertTrue(params instanceof JW.AbstractArray.IndexItems);
+			testCase.assertStrictEqual(expectedParams.index, params.index);
+			testCase.assertTrue(JW.Array.equal(expectedParams.items, params.items));
 		}
 	}
 };
