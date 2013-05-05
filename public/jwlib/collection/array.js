@@ -264,7 +264,7 @@ JW.apply(JW.Array, {
 		for (var i = removeParamsList.length - 1; i >= 0; --i) {
 			var params = removeParamsList[i];
 			var index = params.index;
-			var items = JW.Array.remove(target, index, params.count));
+			var items = JW.Array.remove(target, index, params.count);
 			if (items === undefined) {
 				continue;
 			}
