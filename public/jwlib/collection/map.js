@@ -289,6 +289,7 @@ JW.apply(JW.Map, {
 		// JW.assertString(oldKey);
 		// JW.assertString(newKey);
 		// JW.assertDefined(target[oldKey]);
+		// JW.assertUndefined(target[newKey]);
 		if (oldKey === newKey) {
 			return;
 		}
@@ -368,9 +369,22 @@ JW.apply(JW.Map, {
 		// JW.assertMap(target);
 		// JW.assertMap(keyMap, JW.assertString);
 		// JW.assertMap(keyMap, function(key) { return target.hasOwnProperty(key); }, this);
-		var resultMap = JW.Map.filter(keyMap, function(newKey, oldKey) {
-			return JW.Map.setKey(target, oldKey, newKey) !== undefined;
-		});
+		var oldItems = JW.Map.clear(target);
+		if (oldItems === undefined) {
+			return;
+		}
+		var resultMap = {};
+		for (var oldKey in oldItems) {
+			var newKey = keyMap[oldKey];
+			if ((newKey === undefined) || (newKey === oldKey)) {
+				// JW.assertUndefined(target[oldKey]);
+				target[oldKey] = oldItems[oldKey];
+			} else {
+				// JW.assertUndefined(target[newKey]);
+				target[newKey] = oldItems[oldKey];
+				resultMap[oldKey] = newKey;
+			}
+		}
 		if (!JW.Map.isEmpty(resultMap)) {
 			return resultMap;
 		}
@@ -404,8 +418,7 @@ JW.apply(JW.Map, {
 		scope = scope || oldItems;
 		var newItemKeys = {};
 		for (var key in newItems) {
-			var item = newItems[key];
-			newItemKeys[getKey.call(scope, item)] = item;
+			newItemKeys[getKey.call(scope, newItems[key])] = key;
 		}
 		var keyMap = {};
 		for (var oldKey in oldItems) {

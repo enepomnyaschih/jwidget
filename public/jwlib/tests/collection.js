@@ -70,14 +70,14 @@ JW.Tests.Collection = {
 	subscribeToMap: function(testCase, map, formatter) {
 		formatter = formatter || function(x) { return x; };
 		
-		function formatMap(map) {
+		function formatMap(items) {
 			return "{" + JW.Map.getValuesArray(JW.Map.map(items, function(item, key) {
 				return key + ":" + item;
 			})).join(",") + "}";
 		}
 		
 		function formatItems(items) {
-			return "{" + formatMap(JW.Map.map(items, formatter)) + "}";
+			return formatMap(JW.Map.map(items, formatter))
 		}
 		
 		map.spliceEvent.bind(function(params) {
@@ -139,5 +139,11 @@ JW.Tests.Collection = {
 			testCase.assertStrictEqual(expectedParams.index, params.index);
 			testCase.assertTrue(JW.Array.equal(expectedParams.items, params.items));
 		}
+	},
+	
+	assertMapSpliceResult: function(testCase, expected, spliceResult) {
+		testCase.assertTrue(spliceResult instanceof JW.AbstractMap.SpliceResult);
+		testCase.assertTrue(JW.Map.equal(expected.removedItems, spliceResult.removedItems));
+		testCase.assertTrue(JW.Map.equal(expected.addedItems, spliceResult.addedItems));
 	}
 };
