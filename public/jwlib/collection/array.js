@@ -276,7 +276,7 @@ JW.apply(JW.Array, {
 			if (JW.Array.addAll(target, params.items, params.index) === undefined) {
 				continue;
 			}
-			addItemsList.push(params);
+			addedItemsList.push(params);
 		}
 		if ((removedItemsList.length !== 0) || (addedItemsList.length !== 0)) {
 			removedItemsList.reverse();
@@ -331,6 +331,7 @@ JW.apply(JW.Array, {
 			oldIndexMap[getKey.call(scope, oldItems[i])] = i;
 		}
 		var nextOldIndex = 0;
+		var offset = 0;
 		var newItemBuffer = [];
 		
 		function buffer(item) {
@@ -341,8 +342,17 @@ JW.apply(JW.Array, {
 			if (newItemBuffer.length === 0) {
 				return;
 			}
-			addParamsList.push(new JW.AbstractArray.IndexItems(nextOldIndex, newItemBuffer));
+			addParamsList.push(new JW.AbstractArray.IndexItems(offset + nextOldIndex, newItemBuffer));
+			offset += newItemBuffer.length;
 			newItemBuffer = [];
+		}
+		
+		function testRemove(oldIndex) {
+			if (oldIndex > nextOldIndex) {
+				var count = oldIndex - nextOldIndex;
+				removeParamsList.push(new JW.AbstractArray.IndexCount(nextOldIndex, count));
+				offset -= count;
+			}
 		}
 		
 		for (var newIndex = 0, l = newItems.length; newIndex < l; ++newIndex) {
@@ -353,12 +363,12 @@ JW.apply(JW.Array, {
 				buffer(item);
 			} else {
 				flush();
-				if (oldIndex > nextOldIndex) {
-					removeParamsList.push(new JW.AbstractArray.IndexCount(nextOldIndex, oldIndex - nextOldIndex));
-				}
+				testRemove(oldIndex);
 				nextOldIndex = oldIndex + 1;
 			}
 		}
+		flush();
+		testRemove(oldItems.length);
 		if ((removeParamsList.length !== 0) || (addParamsList.length !== 0)) {
 			return new JW.AbstractArray.SpliceParams(removeParamsList, addParamsList);
 		}
@@ -396,7 +406,7 @@ JW.apply(JW.Array, {
 	
 	every: function(target, callback, scope) {
 		// JW.assertArray(target);
-		// JW.assertFunction(target);
+		// JW.assertFunction(callback);
 		for (var i = 0, l = target.length; i < l; ++i) {
 			if (callback.call(scope || target, target[i], i) === false) {
 				return false;

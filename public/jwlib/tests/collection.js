@@ -34,10 +34,11 @@ JW.Tests.Collection = {
 		}
 		
 		array.spliceEvent.bind(function(params) {
+			var spliceResult = params.spliceResult;
 			testCase.output(
-				"Spliced -" + formatItemsList(params.removedItemsList) +
-				" +" + formatItemsList(params.addedItemsList) +
-				" to " + formatItems(params.oldItems));
+				"Spliced -" + formatItemsList(spliceResult.removedItemsList) +
+				" +" + formatItemsList(spliceResult.addedItemsList) +
+				" to " + formatItems(spliceResult.oldItems));
 		});
 		
 		array.replaceEvent.bind(function(params) {
@@ -54,7 +55,7 @@ JW.Tests.Collection = {
 		});
 		
 		array.reorderEvent.bind(function(params) {
-			testCase.output("Reordered " + formatItems(params.items) + " by [" + indexArray.join(",") + "]");
+			testCase.output("Reordered " + formatItems(params.items) + " by [" + params.indexArray.join(",") + "]");
 		});
 		
 		array.changeEvent.bind(function(params) {

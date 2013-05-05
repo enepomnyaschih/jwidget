@@ -47,7 +47,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 		this.assertArray([ "d", "c", "f" ], array);
 		
 		this.setExpectedOutput(
-			"Spliced -[] +[0:[b, m]] to [d,c,f]",
+			"Spliced -[] +[0:[b,m]] to [d,c,f]",
 			"Changed",
 			"Changed length from 3 to 5"
 		);
@@ -120,7 +120,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 		this.assertArray([ "g", "c", "a", "k", "d" ], array);
 		
 		this.setExpectedOutput(
-			"Spliced -[0:[g,c],3:[k]] +[0:[o,n,m],2:[p]] to [g,c,a,k,d]",
+			"Spliced -[0:[g,c],3:[k]] +[0:[o,n,m],5:[p]] to [g,c,a,k,d]",
 			"Changed",
 			"Changed length from 5 to 6"
 		);
@@ -132,8 +132,8 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			],
 			[
 				new JW.AbstractArray.IndexItems(0, [ "o", "n", "m" ]),
-				new JW.AbstractArray.IndexItems(1, []),
-				new JW.AbstractArray.IndexItems(2, [ "p" ])
+				new JW.AbstractArray.IndexItems(4, []),
+				new JW.AbstractArray.IndexItems(5, [ "p" ])
 			]
 		);
 		this.assertArray([ "o", "n", "m", "a", "d", "p" ], array);
@@ -159,20 +159,62 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 		this.assertArray([ "a", "d", "m", "n", "o", "p" ], array);
 		
 		this.setExpectedOutput(
-			"Spliced -[0:[a],4:[o]] +[1:[q,r]] to [a,d,m,n,o,p]",
-			"Changed"
+			"Spliced -[0:[a],4:[o]] +[1:[q,r],6:[s]] to [a,d,m,n,o,p]",
+			"Changed",
+			"Changed length from 6 to 7"
 		);
 		var items = array.getItems().concat();
 		items.splice(4, 1);
 		items.splice(0, 1);
-		items.splice(1, "q", "r");
+		items.splice(1, 0, "q", "r");
+		items.splice(6, 0, "s");
 		array.performSplice(items);
-		this.assertArray([ "d", "q", "r", "m", "n", "p" ], array);
+		this.assertArray([ "d", "q", "r", "m", "n", "p", "s" ], array);
 		
 		this.setExpectedOutput(
-			"Cleared [d,q,r,m,n,p]",
+			"Spliced -[1:[q],5:[p,s]] +[1:[t],3:[u]] to [d,q,r,m,n,p,s]",
 			"Changed",
-			"Changed length from 6 to 0"
+			"Changed length from 7 to 6"
+		);
+		var items = array.getItems().concat();
+		items.splice(5, 2);
+		items.splice(1, 1);
+		items.splice(1, 0, "t");
+		items.splice(3, 0, "u");
+		array.performSplice(items);
+		this.assertArray([ "d", "t", "r", "u", "m", "n" ], array);
+		
+		this.setExpectedOutput(
+			"Spliced -[4:[m,n]] +[4:[v]] to [d,t,r,u,m,n]",
+			"Changed",
+			"Changed length from 6 to 5"
+		);
+		var items = array.getItems().concat();
+		items.splice(4, 2);
+		items.splice(4, 0, "v");
+		array.performSplice(items);
+		this.assertArray([ "d", "t", "r", "u", "v" ], array);
+
+		this.setExpectedOutput(
+			"Spliced -[] +[0:[a],2:[b],4:[c],6:[e],8:[f],10:[g]] to [d,t,r,u,v]",
+			"Changed",
+			"Changed length from 5 to 11"
+		);
+		array.performSplice([ "a", "d", "b", "t", "c", "r", "e", "u", "f", "v", "g" ]);
+		this.assertArray([ "a", "d", "b", "t", "c", "r", "e", "u", "f", "v", "g" ], array);
+		
+		this.setExpectedOutput(
+			"Spliced -[0:[a],2:[b],4:[c],6:[e],8:[f],10:[g]] +[] to [a,d,b,t,c,r,e,u,f,v,g]",
+			"Changed",
+			"Changed length from 11 to 5"
+		);
+		array.performSplice([ "d", "t", "r", "u", "v" ]);
+		this.assertArray([ "d", "t", "r", "u", "v" ], array);
+		
+		this.setExpectedOutput(
+			"Cleared [d,t,r,u,v]",
+			"Changed",
+			"Changed length from 5 to 0"
 		);
 		array.clear();
 		this.assertArray([], array);

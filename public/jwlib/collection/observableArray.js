@@ -74,10 +74,12 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	},
 	
 	add: function(item, index) {
+		index = JW.defn(index, this.array.length);
 		return this.splice([], [ new JW.AbstractArray.IndexItems(index, [ item ]) ]) !== undefined;
 	},
 	
 	addAll: function(items, index) {
+		index = JW.defn(index, this.array.length);
 		return this.splice([], [ new JW.AbstractArray.IndexItems(index, items) ]) !== undefined;
 	},
 	
@@ -102,11 +104,11 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 			this.add(item);
 			return new JW.Proxy();
 		}
-		var result = JW.Array.set(this.array, item, index);
-		if (result === undefined) {
+		var oldItem = JW.Array.set(this.array, item, index);
+		if (oldItem === undefined) {
 			return;
 		}
-		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, result.value, item));
+		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem.value, item));
 		this._triggerChange();
 		return oldItem;
 	},

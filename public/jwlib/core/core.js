@@ -243,7 +243,7 @@ JW.apply(JW, {
 	},
 	
 	iid: function(obj) {
-		return obj._iid;
+		return (typeof obj === "object") ? obj._iid : obj;
 	},
 	
 	destroy: function(obj) {
