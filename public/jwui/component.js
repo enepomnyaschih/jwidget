@@ -30,6 +30,7 @@ JW.UI.Component = function(config) {
 	this.allChildren = null;
 	this._elements = null;
 	this._childMapper = null;
+	this._childInserter = null;
 	this._arrays = null;
 },
 
@@ -50,6 +51,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	Set<JW.UI.Component> allChildren; // children + (arrays' contents)
 	Map<Element> _elements;
 	JW.ObservableMap.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
+	JW.ObservableMap.Inserter<JW.UI.Component.Child> _childInserter;
 	Set<JW.UI.Component.Array> _arrays;
 	*/
 	
@@ -68,6 +70,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 			
 			this.destroyComponent();
 			
+			this._childInserter.destroy();
+			this._childInserter = null;
 			this._childMapper.destroy();
 			this._childMapper = null;
 			this.children.eachByMethod("destroy");
@@ -111,10 +115,14 @@ JW.extend(JW.UI.Component, JW.Class, {
 			anchorEl.addClass(this.getElementClass(jwId));
 		}
 		this._childMapper = this.children.createMapper({
-			source      : this.children,
-			createItem  : function(child, name) { return new JW.UI.Component.Child(this, child, name); },
+			createItem  : function(child) { return new JW.UI.Component.Child(this, child); },
 			destroyItem : function(componentChild) { componentChild.destroy(); },
 			scope       : this
+		});
+		this._childInserter = this._childMapper.target.createInserter({
+			addItem    : function(componentChild, key) { componentChild.attach(key); },
+			removeItem : function(key, componentChild) { componentChild.detach(); },
+			scope      : this
 		});
 		this.beforeRender();
 		var elements = JW.apply({}, this._elements);

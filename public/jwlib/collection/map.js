@@ -207,6 +207,10 @@ JW.extend(JW.Map/*<T extends Any>*/, JW.Class, {
 		return new JW.Set();
 	},
 	
+	createInserter: function(config) {
+		return new JW.AbstractMap.Inserter(this, config);
+	},
+	
 	createLister: function(config) {
 		return new JW.AbstractMap.Lister(this, config);
 	},

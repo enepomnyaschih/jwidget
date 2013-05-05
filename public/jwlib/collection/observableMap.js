@@ -32,7 +32,7 @@ JW.ObservableMap = function(json) {
 	this._lastSize = this._map.size;
 };
 
-JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
+JW.extend(JW.ObservableMap/*<T>*/, JW.Class, {
 	/*
 	Fields
 	JW.Map<T> _map;
@@ -190,6 +190,10 @@ JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
 	
 	createEmptySet: function() {
 		return new JW.ObservableSet();
+	},
+	
+	createInserter: function(config) {
+		return new JW.ObservableMap.Inserter(this, config);
 	},
 	
 	createLister: function(config) {

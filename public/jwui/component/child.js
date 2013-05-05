@@ -17,16 +17,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.UI.Component.Child = function(parent, child, name) {
+JW.UI.Component.Child = function(parent, child) {
 	JW.UI.Component.Child._super.call(this);
 	this.parent = parent;
 	this.child = child;
-	this.name = name;
-	this._el = this.parent.getElement(name);
+	this.name = null;
+	this._el = null;
 	this.parent._initChild(this.child);
-	this.parent._elements[name] = this.child.el;
-	this._el.replaceBy(this.child.el, true);
-	this.child._afterAppend();
 };
 
 JW.extend(JW.UI.Component.Child, JW.Class, {
@@ -38,12 +35,28 @@ JW.extend(JW.UI.Component.Child, JW.Class, {
 	Element _el;
 	*/
 	
+	// override
 	destroy: function() {
+		this.parent._doneChild(this.child);
+		this._super();
+	},
+	
+	attach: function(name) {
+		// JW.assertNull(this.name);
+		this.name = name;
+		this._el = this.parent.getElement(name);
+		this.parent._elements[name] = this.child.el;
+		this._el.replaceBy(this.child.el, true);
+		this.child._afterAppend();
+	},
+	
+	detach: function() {
+		// JW.assertString(this.name, JW.isNotBlank);
 		if (this.parent._elements[this.name] === this.child.el) {
 			this.parent._elements[this.name] = this._el;
 		}
 		this.child.el.replaceBy(this._el);
-		this.parent._doneChild(this.child);
-		this._super();
+		this._el = null;
+		this.name = null;
 	}
 });
