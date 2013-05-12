@@ -47,11 +47,11 @@
 		// "jwlib/tests/collection/observableMap/lister.js",
 		// "jwlib/tests/collection/observableMap/mapper.js",
 		// "jwlib/tests/collection/observableMap/observer.js",
-		// "jwlib/tests/collection/observableSet.js",
+		"jwlib/tests/collection/observableSet.js",
 		// "jwlib/tests/collection/observableSet/indexer.js",
 		// "jwlib/tests/collection/observableSet/mapper.js",
 		// "jwlib/tests/collection/observableSet/observer.js",
-		// "jwlib/tests/collection/set.js",
+		"jwlib/tests/collection/set.js",
 		
 		"jwlib/tests/util.js",
 		"jwlib/tests/util/timer.js",

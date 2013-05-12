@@ -26,7 +26,7 @@ JW.ObservableSet = function(items) {
 	this.sizeChangeEvent = new JW.Event();
 	this.getKey = null;
 	if (items) {
-		this._addAll(items);
+		this.addAll(items);
 	}
 	this._lastSize = this.set.size;
 };

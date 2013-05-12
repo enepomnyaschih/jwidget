@@ -29,7 +29,7 @@ JW.Tests.Collection.SetTestCase = function(config) {
 JW.extend(JW.Tests.Collection.SetTestCase, JW.Unit.TestCase, {
 	testRemoveItem: function() {
 		var set = new JW.Set([ this.a, this.b, this.c, this.d ]);
-		this.assertUndefined(set.removeItem(this.b));
+		this.assertStrictEqual(this.b._iid, set.removeItem(this.b));
 		this.assertUndefined(set.removeItem(this.e));
 		this.assertTrue(set.equal(new JW.Set([ this.a, this.c, this.d ])));
 	},
@@ -37,7 +37,7 @@ JW.extend(JW.Tests.Collection.SetTestCase, JW.Unit.TestCase, {
 	testRemoveItemStatic: function() {
 		var set = {};
 		JW.Set.addAll(set, [ this.a, this.b, this.c, this.d ]);
-		this.assertUndefined(JW.Set.removeItem(set, this.b));
+		this.assertStrictEqual(this.b._iid, JW.Set.removeItem(set, this.b));
 		this.assertUndefined(JW.Set.removeItem(set, this.e));
 		
 		var expected = {};

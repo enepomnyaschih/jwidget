@@ -104,6 +104,39 @@ JW.Tests.Collection = {
 		});
 	},
 	
+	subscribeToSet: function(testCase, set, formatter) {
+		formatter = formatter || function(x) { return x.value; };
+		
+		function formatItems(items) {
+			items = items.concat();
+			items.sort(compareItems);
+			return "[" + JW.Array.map(items, formatter).join(",") + "]";
+		}
+		
+		function compareItems(x, y) {
+			return JW.cmp(formatter(x), formatter(y));
+		}
+		
+		set.spliceEvent.bind(function(params) {
+			var spliceResult = params.spliceResult;
+			testCase.output(
+				"Spliced -" + formatItems(spliceResult.removedItems) +
+				" +" + formatItems(spliceResult.addedItems));
+		});
+		
+		set.clearEvent.bind(function(params) {
+			testCase.output("Cleared " + formatItems(params.items));
+		});
+		
+		set.changeEvent.bind(function(params) {
+			testCase.output("Changed");
+		});
+		
+		set.sizeChangeEvent.bind(function(params) {
+			testCase.output("Changed size from " + params.oldSize + " to " + params.newSize);
+		});
+	},
+	
 	assertArray: function(testCase, values, array) {
 		testCase.assertStrictEqual(values.length, array.getLength());
 		for (var i = 0; i < array.getLength(); ++i) {
@@ -115,6 +148,16 @@ JW.Tests.Collection = {
 		testCase.assertStrictEqual(JW.Map.getSize(expected), map.getSize());
 		for (var key in expected) {
 			testCase.assertStrictEqual(expected[key], map.get(key));
+		}
+	},
+	
+	assertSet: function(testCase, expected, unexpected, set) {
+		testCase.assertStrictEqual(expected.length, set.getSize());
+		for (var i = 0; i < expected.length; ++i) {
+			testCase.assertTrue(set.contains(expected[i]));
+		}
+		for (var i = 0; i < unexpected.length; ++i) {
+			testCase.assertFalse(set.contains(unexpected[i]));
 		}
 	},
 	
@@ -145,5 +188,15 @@ JW.Tests.Collection = {
 		testCase.assertTrue(spliceResult instanceof JW.AbstractMap.SpliceResult);
 		testCase.assertTrue(JW.Map.equal(expected.removedItems, spliceResult.removedItems));
 		testCase.assertTrue(JW.Map.equal(expected.addedItems, spliceResult.addedItems));
+	},
+	
+	assertSetSpliceResult: function(testCase, expected, spliceResult) {
+		testCase.assertTrue(spliceResult instanceof JW.AbstractSet.SpliceResult);
+		testCase.assertTrue(JW.Set.equal(
+			JW.Array.indexBy(expected.removedItems, "_iid"),
+			JW.Array.indexBy(spliceResult.removedItems, "_iid")));
+		testCase.assertTrue(JW.Set.equal(
+			JW.Array.indexBy(expected.addedItems, "_iid"),
+			JW.Array.indexBy(spliceResult.addedItems, "_iid")));
 	}
 };

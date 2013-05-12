@@ -29,7 +29,7 @@ JW.Set = function(json) {
 	this.size = 0;
 	this.getKey = null;
 	if (json) {
-		this._addAll(json);
+		this.addAll(json);
 	}
 };
 
@@ -88,6 +88,12 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 		delete this.json[iid];
 		--this.size;
 		return true;
+	},
+	
+	removeItem: function(item) {
+		if (this.remove(item)) {
+			return item._iid;
+		}
 	},
 	
 	removeAll: function(items) {
@@ -186,7 +192,6 @@ JW.extend(JW.Set/*<T extends JW.Class>*/, JW.Class, {
 
 JW.Set.prototype.getLength = JW.Set.prototype.getSize;
 JW.Set.prototype.pushItem = JW.Set.prototype.add;
-JW.Set.prototype.removeItem = JW.Set.prototype.remove;
 
 JW.applyIf(JW.Set.prototype, JW.Alg.BuildMethods);
 
@@ -226,6 +231,12 @@ JW.apply(JW.Set, {
 		return true;
 	},
 	
+	removeItem: function(target, item) {
+		if (JW.Set.remove(target, item)) {
+			return item._iid;
+		}
+	},
+	
 	removeAll: function(target, items) {
 		var removedItems = [];
 		for (var i = 0, l = items.length; i < l; ++i) {
@@ -256,9 +267,10 @@ JW.apply(JW.Set, {
 		}
 	},
 	
-	detectSplice: function(oldItems, newItems) {
+	detectSplice: function(oldItems, newItemArray) {
 		var removedItems = [];
 		var addedItems = [];
+		var newItems = JW.Array.indexBy(newItemArray, "_iid");
 		for (var key in oldItems) {
 			if (!newItems.hasOwnProperty(key)) {
 				removedItems.push(oldItems[key]);
@@ -274,8 +286,8 @@ JW.apply(JW.Set, {
 		}
 	},
 	
-	performSplice: function(target, newItems) {
-		var spliceParams = JW.Set.detectSplice(target, newItems);
+	performSplice: function(target, newItemArray) {
+		var spliceParams = JW.Set.detectSplice(target, newItemArray);
 		if (spliceParams !== undefined) {
 			return JW.Set.splice(target, spliceParams.removedItems, spliceParams.addedItems);
 		}
@@ -311,8 +323,6 @@ JW.apply(JW.Set, {
 		return result;
 	}
 });
-
-JW.Set.removeItem = JW.Set.remove;
 
 JW.applyIf(
 	JW.Set,
