@@ -44,7 +44,7 @@ JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Li
 	},
 	
 	_onSplice: function(params) {
-		this.target.splice(params.getRemovedItems(), params.getAddedItems());
+		this.target.splice(params.spliceResult.getRemovedItems(), params.spliceResult.getAddedItems());
 	},
 	
 	_onReplace: function(params) {
