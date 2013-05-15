@@ -89,25 +89,21 @@ JW.Tests.Collection.ObservableArray.ObserverTestCase = JW.Unit.TestCase.extend({
 		collection.move(1, 1);
 		
 		this.setExpectedOutput();
-		collection.performReorder(function(items) {
-			items.sort();
-		}, this);
+		var items = collection.getItems().concat();
+		items.sort();
+		collection.performReorder(items);
 		
 		// If length has decreased more than 3 times, clear+add is used, remove specific items instead
 		this.setExpectedOutput(
 			"Removed c"
 		);
-		collection.performFilter(function(items) {
-			items.splice(1, 1);
-		}, this);
+		collection.performSplice([ "a", "d", "g", "k" ]);
 		
 		this.setExpectedOutput(
 			"Cleared a, d, g, k",
 			"Added k"
 		);
-		collection.performFilter(function(items) {
-			items.splice(0, 3);
-		}, this);
+		collection.performSplice([ "k" ]);
 		
 		this.setExpectedOutput(
 			"Cleared k",
@@ -115,9 +111,7 @@ JW.Tests.Collection.ObservableArray.ObserverTestCase = JW.Unit.TestCase.extend({
 			"Added t",
 			"Added c"
 		);
-		collection.performReset(function() {
-			return [ "u", "t", "c" ];
-		}, this);
+		collection.performSplice([ "u", "t", "c" ]);
 		
 		this.setExpectedOutput(
 			"Cleared u, t, c"

@@ -45,16 +45,18 @@ JW.extend(JW.ObservableArray.Observer/*<T>*/, JW.AbstractArray.Observer/*<T>*/, 
 	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
+		var oldItems = spliceResult.oldItems;
+		var removedItems = spliceResult.getRemovedItems();
 		
 		// if there is an effective clearing function, just reset the controller
-		if (this.clearItems && (3 * removedItems.length > 2 * this.target.getLength())) {
-			this.clearItems.call(this.scope, spliceResult.oldItems);
+		if (this.clearItems && (3 * removedItems.length > 2 * oldItems.length)) {
+			this.clearItems.call(this.scope, oldItems);
 			this._addItems(this.source.getItems());
 			return;
 		}
 		
 		// else, splice the elements
-		this._removeItems(spliceResult.getRemovedItems());
+		this._removeItems(removedItems);
 		this._addItems(spliceResult.getAddedItems());
 	},
 	
