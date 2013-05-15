@@ -43,7 +43,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D", "f": "F" }, map);
 		
 		this.setExpectedOutput(
-			"Spliced -{} +{c:C,a:A}",
+			"Spliced -{} +{a:A,c:C}",
 			"Changed",
 			"Changed size from 2 to 4"
 		);
@@ -83,7 +83,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D", "c": "C", "a": "A", "b": "B" }, map);
 		
 		this.setExpectedOutput(
-			"Spliced -{c:C,b:B} +{}",
+			"Spliced -{b:B,c:C} +{}",
 			"Changed",
 			"Changed size from 4 to 2"
 		);
@@ -141,7 +141,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "a": "A", "e": "E", "b": "B", "c": "C" }, map);
 		
 		this.setExpectedOutput(
-			"Reindexed by {a:b,e:a,b:d}",
+			"Reindexed by {a:b,b:d,e:a}",
 			"Changed"
 		);
 		this.assertTrue(JW.Map.equal({ a: "b", e: "a", b: "d" },
@@ -180,7 +180,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "b": "B", "e": "E", "g": "C", "f": "F" }, map);
 		
 		this.setExpectedOutput(
-			"Cleared {b:B,e:E,g:C,f:F}",
+			"Cleared {b:B,e:E,f:F,g:C}",
 			"Changed",
 			"Changed size from 4 to 0"
 		);

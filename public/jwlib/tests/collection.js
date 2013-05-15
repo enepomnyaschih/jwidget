@@ -71,9 +71,17 @@ JW.Tests.Collection = {
 		formatter = formatter || function(x) { return x; };
 		
 		function formatMap(items) {
-			return "{" + JW.Map.getValuesArray(JW.Map.map(items, function(item, key) {
-				return key + ":" + item;
-			})).join(",") + "}";
+			var pairs = [];
+			for (var key in items) {
+				pairs.push([ key, items[key] ]);
+			}
+			pairs.sort(function(x, y) {
+				return JW.cmp(x[0], y[0]);
+			});
+			var strs = JW.Array.map(pairs, function(pair) {
+				return pair[0] + ":" + pair[1];
+			});
+			return "{" + strs.join(",") + "}";
 		}
 		
 		function formatItems(items) {
