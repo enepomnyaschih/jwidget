@@ -40,16 +40,29 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		source.setAll({ "b": b, "m": m });
 		this.assertTarget([ d, f, c, b, m ], target);
 		
-		this.setExpectedOutput();
 		source.setAll({});
 		this.assertTarget([ d, f, c, b, m ], target);
 		
 		source.remove("m");
 		this.assertTarget([ d, f, c, b ], target);
 		
-		this.setExpectedOutput();
 		source.remove("m");
 		this.assertTarget([ d, f, c, b ], target);
+		
+		source.setKey("c", "a");
+		this.assertTarget([ d, f, c, b ], target);
+		
+		source.splice([ "a", "f" ], { "m": m });
+		this.assertTarget([ d, b, m ], target);
+		
+		source.performReindex({ "a": d, "b": b, "d": m });
+		this.assertTarget([ d, b, m ], target);
+		
+		source.performSplice({ "a": d, "b": b, "c": c });
+		this.assertTarget([ d, b, c ], target);
+		
+		source.removeAll([ "b", "c" ]);
+		this.assertTarget([ d ], target);
 		
 		source.clear();
 		this.assertTarget([], target);
@@ -61,7 +74,6 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		lister.destroy();
 		this.assertTarget([], target);
 		
-		this.setExpectedOutput();
 		target.destroy();
 		source.destroy();
 	},
@@ -73,7 +85,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
-			"Added d",
+			"Spliced -[] +[d]",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
@@ -82,7 +94,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		
 		var f = new JW.Proxy("f");
 		this.setExpectedOutput(
-			"Added f",
+			"Spliced -[] +[f]",
 			"Changed",
 			"Changed size from 1 to 2"
 		);
@@ -91,7 +103,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		
 		var c = new JW.Proxy("c");
 		this.setExpectedOutput(
-			"Added c",
+			"Spliced -[] +[c]",
 			"Changed",
 			"Changed size from 2 to 3"
 		);
@@ -101,8 +113,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		var b = new JW.Proxy("b");
 		var m = new JW.Proxy("m");
 		this.setExpectedOutput(
-			"Added b",
-			"Added m",
+			"Spliced -[] +[b,m]",
 			"Changed",
 			"Changed size from 3 to 5"
 		);
@@ -114,7 +125,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ d, f, c, b, m ], target);
 		
 		this.setExpectedOutput(
-			"Removed m",
+			"Spliced -[m] +[]",
 			"Changed",
 			"Changed size from 5 to 4"
 		);
@@ -125,20 +136,48 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		source.remove("m");
 		this.assertTarget([ d, f, c, b ], target);
 		
+		this.setExpectedOutput();
+		source.setKey("c", "a");
+		this.assertTarget([ d, f, c, b ], target);
+		
 		this.setExpectedOutput(
-			"Removed d",
-			"Removed f",
-			"Removed c",
-			"Removed b",
+			"Spliced -[c,f] +[m]",
 			"Changed",
-			"Changed size from 4 to 0"
+			"Changed size from 4 to 3"
+		);
+		source.splice([ "a", "f" ], { "m": m });
+		this.assertTarget([ d, b, m ], target);
+		
+		this.setExpectedOutput();
+		source.performReindex({ "a": d, "b": b, "d": m });
+		this.assertTarget([ d, b, m ], target);
+		
+		this.setExpectedOutput(
+			"Spliced -[m] +[c]",
+			"Changed"
+		);
+		source.performSplice({ "a": d, "b": b, "c": c });
+		this.assertTarget([ d, b, c ], target);
+		
+		this.setExpectedOutput(
+			"Spliced -[b,c] +[]",
+			"Changed",
+			"Changed size from 3 to 1"
+		);
+		source.removeAll([ "b", "c" ]);
+		this.assertTarget([ d ], target);
+		
+		this.setExpectedOutput(
+			"Spliced -[d] +[]",
+			"Changed",
+			"Changed size from 1 to 0"
 		);
 		source.clear();
 		this.assertTarget([], target);
 		
 		var h = new JW.Proxy("h");
 		this.setExpectedOutput(
-			"Added h",
+			"Spliced -[] +[h]",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
@@ -146,7 +185,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ h ], target);
 		
 		this.setExpectedOutput(
-			"Removed h",
+			"Spliced -[h] +[]",
 			"Changed",
 			"Changed size from 1 to 0"
 		);
@@ -170,7 +209,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
-			"Added x",
+			"Spliced -[] +[x]",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
@@ -178,8 +217,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ x ], target);
 		
 		this.setExpectedOutput(
-			"Added a",
-			"Added b",
+			"Spliced -[] +[a,b]",
 			"Changed",
 			"Changed size from 1 to 3"
 		);
@@ -187,8 +225,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ a, b, x ], target);
 		
 		this.setExpectedOutput(
-			"Added c",
-			"Added d",
+			"Spliced -[] +[c,d]",
 			"Changed",
 			"Changed size from 3 to 5"
 		);
@@ -197,7 +234,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		
 		var e = new JW.Proxy("e");
 		this.setExpectedOutput(
-			"Added e",
+			"Spliced -[] +[e]",
 			"Changed",
 			"Changed size from 5 to 6"
 		);
@@ -206,17 +243,14 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		
 		var f = new JW.Proxy("f");
 		this.setExpectedOutput(
-			"Removed d",
-			"Added f",
+			"Spliced -[d] +[f]",
 			"Changed"
 		);
 		source2.set(f, "d");
 		this.assertTarget([ a, b, c, e, f, x ], target);
 		
 		this.setExpectedOutput(
-			"Removed a",
-			"Removed b",
-			"Removed e",
+			"Spliced -[a,b,e] +[]",
 			"Changed",
 			"Changed size from 6 to 3"
 		);
@@ -228,8 +262,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ c, f, x ], target);
 		
 		this.setExpectedOutput(
-			"Removed c",
-			"Removed f",
+			"Spliced -[c,f] +[]",
 			"Changed",
 			"Changed size from 3 to 1"
 		);
@@ -237,7 +270,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ x ], target);
 		
 		this.setExpectedOutput(
-			"Removed x",
+			"Cleared [x]",
 			"Changed",
 			"Changed size from 1 to 0"
 		);
@@ -270,23 +303,7 @@ JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
 	
 	createTarget: function() {
 		var target = new JW.ObservableSet();
-		
-		target.addEvent.bind(function(params) {
-			this.output("Added " + params.item.value);
-		}, this);
-		
-		target.removeEvent.bind(function(params) {
-			this.output("Removed " + params.item.value);
-		}, this);
-		
-		target.changeEvent.bind(function(params) {
-			this.output("Changed");
-		}, this);
-		
-		target.sizeChangeEvent.bind(function(params) {
-			this.output("Changed size from " + params.oldSize + " to " + params.newSize);
-		}, this);
-		
+		JW.Tests.Collection.subscribeToSet(this, target);
 		return target;
 	},
 	
