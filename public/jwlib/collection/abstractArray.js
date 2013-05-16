@@ -105,6 +105,6 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 	},
 	
 	getRemoveParamsList: function() {
-		return JW.Array.mapByMethod(this.removedItems, "getIndexCount");
+		return JW.Array.mapByMethod(this.removedItemsList, "getIndexCount");
 	}
 });

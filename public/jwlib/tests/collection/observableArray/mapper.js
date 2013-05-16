@@ -19,7 +19,7 @@
 
 JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 	testUnobservableTarget: function() {
-		var source = new JW.ObservableArray([ new JW.Proxy("d") ]);
+		var source = new JW.ObservableArray([ "d" ]);
 		var target = new JW.Array();
 		
 		this.setExpectedOutput(
@@ -31,32 +31,30 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created by f"
 		);
-		source.addAll([ new JW.Proxy("f") ]);
+		source.addAll([ "f" ]);
 		this.assertTarget([ "D", "F" ], target);
 		
 		this.setExpectedOutput(
 			"Created by c"
 		);
-		source.add(new JW.Proxy("c"), 1);
+		source.add("c", 1);
 		this.assertTarget([ "D", "C", "F" ], target);
 		
 		this.setExpectedOutput(
 			"Created by b",
 			"Created by m"
 		);
-		source.addAll([ new JW.Proxy("b"), new JW.Proxy("m") ], 0);
+		source.addAll([ "b", "m" ], 0);
 		this.assertTarget([ "B", "M", "D", "C", "F" ], target);
 		
 		this.setExpectedOutput();
 		source.addAll([], 1);
 		this.assertTarget([ "B", "M", "D", "C", "F" ], target);
 		
-		var a = new JW.Proxy("a");
-		
 		this.setExpectedOutput(
 			"Created by a"
 		);
-		source.add(a, 5);
+		source.add("a", 5);
 		this.assertTarget([ "B", "M", "D", "C", "F", "A" ], target);
 		
 		this.setExpectedOutput(
@@ -74,18 +72,18 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created by k"
 		);
-		source.add(new JW.Proxy("k"));
+		source.add("k");
 		this.assertTarget([ "D", "C", "F", "A", "K" ], target);
 		
 		this.setExpectedOutput(
 			"Created by g",
 			"Destroyed F by f"
 		);
-		source.set(new JW.Proxy("g"), 2);
+		source.set("g", 2);
 		this.assertTarget([ "D", "C", "G", "A", "K" ], target);
 		
 		this.setExpectedOutput();
-		source.set(a, 3);
+		source.set("a", 3);
 		this.assertTarget([ "D", "C", "G", "A", "K" ], target);
 		
 		this.setExpectedOutput();
@@ -101,31 +99,27 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ "G", "C", "A", "K", "D" ], target);
 		
 		this.setExpectedOutput();
-		source.performReorder(function(items) {
-			JW.Array.sortBy(items, "value");
-		}, this);
+		var items = source.getItems().concat();
+		items.sort();
+		source.performReorder(items);
 		this.assertTarget([ "A", "C", "D", "G", "K" ], target);
 		
 		this.setExpectedOutput(
-			"Destroyed A by a",
-			"Destroyed C by c"
+			"Destroyed C by c",
+			"Destroyed A by a"
 		);
-		source.performFilter(function(items) {
-			items.splice(0, 2);
-		}, this);
+		source.performSplice([ "d", "g", "k" ]);
 		this.assertTarget([ "D", "G", "K" ], target);
 		
 		this.setExpectedOutput(
 			"Created by u",
 			"Created by t",
 			"Created by c",
-			"Destroyed D by d",
+			"Destroyed K by k",
 			"Destroyed G by g",
-			"Destroyed K by k"
+			"Destroyed D by d"
 		);
-		source.performReset(function() {
-			return [ new JW.Proxy("u"), new JW.Proxy("t"), new JW.Proxy("c") ];
-		}, this);
+		source.performSplice([ "u", "t", "c" ]);
 		this.assertTarget([ "U", "T", "C" ], target);
 		
 		this.setExpectedOutput(
@@ -139,7 +133,7 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created by h"
 		);
-		source.add(new JW.Proxy("h"));
+		source.add("h");
 		this.assertTarget([ "H" ], target);
 		
 		this.setExpectedOutput(
@@ -154,12 +148,12 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testObservableTarget: function() {
-		var source = new JW.ObservableArray([ new JW.Proxy("d") ]);
+		var source = new JW.ObservableArray([ "d" ]);
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
 			"Created by d",
-			"Added D at 0",
+			"Spliced -[] +[0:[D]] to []",
 			"Changed",
 			"Changed length from 0 to 1"
 		);
@@ -168,49 +162,47 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput(
 			"Created by f",
-			"Added F at 1",
+			"Spliced -[] +[1:[F]] to [D]",
 			"Changed",
 			"Changed length from 1 to 2"
 		);
-		source.addAll([ new JW.Proxy("f") ]);
+		source.addAll([ "f" ]);
 		this.assertTarget([ "D", "F" ], target);
 		
 		this.setExpectedOutput(
 			"Created by c",
-			"Added C at 1",
+			"Spliced -[] +[1:[C]] to [D,F]",
 			"Changed",
 			"Changed length from 2 to 3"
 		);
-		source.add(new JW.Proxy("c"), 1);
+		source.add("c", 1);
 		this.assertTarget([ "D", "C", "F" ], target);
 		
 		this.setExpectedOutput(
 			"Created by b",
 			"Created by m",
-			"Added B, M at 0",
+			"Spliced -[] +[0:[B,M]] to [D,C,F]",
 			"Changed",
 			"Changed length from 3 to 5"
 		);
-		source.addAll([ new JW.Proxy("b"), new JW.Proxy("m") ], 0);
+		source.addAll([ "b", "m" ], 0);
 		this.assertTarget([ "B", "M", "D", "C", "F" ], target);
 		
 		this.setExpectedOutput();
 		source.addAll([], 1);
 		this.assertTarget([ "B", "M", "D", "C", "F" ], target);
 		
-		var a = new JW.Proxy("a");
-		
 		this.setExpectedOutput(
 			"Created by a",
-			"Added A at 5",
+			"Spliced -[] +[5:[A]] to [B,M,D,C,F]",
 			"Changed",
 			"Changed length from 5 to 6"
 		);
-		source.add(a, 5);
+		source.add("a", 5);
 		this.assertTarget([ "B", "M", "D", "C", "F", "A" ], target);
 		
 		this.setExpectedOutput(
-			"Removed M at 1",
+			"Spliced -[1:[M]] +[] to [B,M,D,C,F,A]",
 			"Changed",
 			"Changed length from 6 to 5",
 			"Destroyed M by m"
@@ -219,7 +211,7 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ "B", "D", "C", "F", "A" ], target);
 		
 		this.setExpectedOutput(
-			"Removed B at 0",
+			"Spliced -[0:[B]] +[] to [B,D,C,F,A]",
 			"Changed",
 			"Changed length from 5 to 4",
 			"Destroyed B by b"
@@ -229,11 +221,11 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput(
 			"Created by k",
-			"Added K at 4",
+			"Spliced -[] +[4:[K]] to [D,C,F,A]",
 			"Changed",
 			"Changed length from 4 to 5"
 		);
-		source.add(new JW.Proxy("k"));
+		source.add("k");
 		this.assertTarget([ "D", "C", "F", "A", "K" ], target);
 		
 		this.setExpectedOutput(
@@ -242,11 +234,11 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Destroyed F by f"
 		);
-		source.set(new JW.Proxy("g"), 2);
+		source.set("g", 2);
 		this.assertTarget([ "D", "C", "G", "A", "K" ], target);
 		
 		this.setExpectedOutput();
-		source.set(a, 3);
+		source.set("a", 3);
 		this.assertTarget([ "D", "C", "G", "A", "K" ], target);
 		
 		this.setExpectedOutput(
@@ -268,43 +260,37 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ "G", "C", "A", "K", "D" ], target);
 		
 		this.setExpectedOutput(
-			"Reordered",
+			"Reordered [G,C,A,K,D] by [3,1,0,4,2]",
 			"Changed"
 		);
-		source.performReorder(function(items) {
-			JW.Array.sortBy(items, "value");
-		}, this);
+		var items = source.getItems().concat();
+		items.sort();
+		source.performReorder(items);
 		this.assertTarget([ "A", "C", "D", "G", "K" ], target);
 		
 		this.setExpectedOutput(
-			"Filtered",
+			"Spliced -[0:[A],2:[D]] +[] to [A,C,D,G,K]",
 			"Changed",
 			"Changed length from 5 to 3",
-			"Destroyed A by a",
-			"Destroyed C by c"
+			"Destroyed D by d",
+			"Destroyed A by a"
 		);
-		source.performFilter(function(items) {
-			items.splice(0, 2);
-		}, this);
-		this.assertTarget([ "D", "G", "K" ], target);
+		source.performSplice([ "c", "g", "k" ]);
+		this.assertTarget([ "C", "G", "K" ], target);
 		
 		this.setExpectedOutput(
 			"Created by u",
 			"Created by t",
-			"Created by c",
-			"Resetted",
+			"Spliced -[1:[G,K]] +[0:[U,T]] to [C,G,K]",
 			"Changed",
-			"Destroyed D by d",
-			"Destroyed G by g",
-			"Destroyed K by k"
+			"Destroyed K by k",
+			"Destroyed G by g"
 		);
-		source.performReset(function() {
-			return [ new JW.Proxy("u"), new JW.Proxy("t"), new JW.Proxy("c") ];
-		}, this);
+		source.performSplice([ "u", "t", "c" ]);
 		this.assertTarget([ "U", "T", "C" ], target);
 		
 		this.setExpectedOutput(
-			"Cleared",
+			"Cleared [U,T,C]",
 			"Changed",
 			"Changed length from 3 to 0",
 			"Destroyed C by c",
@@ -316,15 +302,15 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput(
 			"Created by h",
-			"Added H at 0",
+			"Spliced -[] +[0:[H]] to []",
 			"Changed",
 			"Changed length from 0 to 1"
 		);
-		source.add(new JW.Proxy("h"));
+		source.add("h");
 		this.assertTarget([ "H" ], target);
 		
 		this.setExpectedOutput(
-			"Cleared",
+			"Cleared [H]",
 			"Changed",
 			"Changed length from 1 to 0",
 			"Destroyed H by h"
@@ -348,8 +334,7 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testAutoTarget: function() {
-		var d = new JW.Proxy("d");
-		var source = new JW.ObservableArray([ d ]);
+		var source = new JW.ObservableArray([ "d" ]);
 		this.setExpectedOutput("Created by d");
 		var mapper = this.createMapper(source);
 		this.assertTrue(mapper.target instanceof JW.ObservableArray);
@@ -361,47 +346,7 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 	
 	createTarget: function(target) {
 		var target = new JW.ObservableArray();
-		
-		target.addEvent.bind(function(params) {
-			this.output("Added " + JW.Array.mapBy(params.items, "value").join(", ") + " at " + params.index);
-		}, this);
-		
-		target.removeEvent.bind(function(params) {
-			this.output("Removed " + JW.Array.mapBy(params.items, "value").join(", ") + " at " + params.index);
-		}, this);
-		
-		target.replaceEvent.bind(function(params) {
-			this.output("Replaced " + params.oldItem.value + " with " + params.newItem.value + " at " + params.index);
-		}, this);
-		
-		target.moveEvent.bind(function(params) {
-			this.output("Moved " + params.item.value + " from " + params.fromIndex + " to " + params.toIndex);
-		}, this);
-		
-		target.clearEvent.bind(function(params) {
-			this.output("Cleared");
-		}, this);
-		
-		target.reorderEvent.bind(function(params) {
-			this.output("Reordered");
-		}, this);
-		
-		target.filterEvent.bind(function(params) {
-			this.output("Filtered");
-		}, this);
-		
-		target.resetEvent.bind(function(params) {
-			this.output("Resetted");
-		}, this);
-		
-		target.changeEvent.bind(function(params) {
-			this.output("Changed");
-		}, this);
-		
-		target.lengthChangeEvent.bind(function(params) {
-			this.output("Changed length from " + params.oldLength + " to " + params.newLength);
-		}, this);
-		
+		JW.Tests.Collection.subscribeToArray(this, target);
 		return target;
 	},
 	
@@ -411,12 +356,12 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 			scope  : this,
 			
 			createItem: function(data) {
-				this.output("Created by " + data.value);
-				return new JW.Proxy(data.value.toUpperCase());
+				this.output("Created by " + data);
+				return data.toUpperCase();
 			},
 			
 			destroyItem: function(item, data) {
-				this.output("Destroyed " + item.value + " by " + data.value);
+				this.output("Destroyed " + item + " by " + data);
 			}
 		});
 	},
@@ -424,7 +369,7 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 	assertTarget: function(values, target) {
 		this.assertStrictEqual(values.length, target.getLength());
 		for (var i = 0; i < target.getLength(); ++i) {
-			this.assertStrictEqual(values[i], target.get(i).value);
+			this.assertStrictEqual(values[i], target.get(i));
 		}
 	}
 });

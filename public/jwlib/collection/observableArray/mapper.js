@@ -59,12 +59,12 @@ JW.extend(JW.ObservableArray.Mapper/*<S, T>*/, JW.AbstractArray.Mapper/*<S, T>*/
 		for (var i = 0, l = sourceAddedItemsList.length; i < l; ++i) {
 			var addParams = sourceAddedItemsList[i];
 			targetAddParamsList.push(new JW.AbstractArray.IndexItems(
-				addParams.index, JW.Array.map(addParams.items, this._createItem, this)));
+				addParams.index, this._createItems(addParams.items)));
 		}
 		var targetResult = this.target.splice(sourceResult.getRemoveParamsList(), targetAddParamsList);
 		var sourceRemovedItemsList = sourceResult.removedItemsList;
 		var targetRemovedItemsList = targetResult.removedItemsList;
-		for (var i = targetRemovedItemsList.length - 1; i >= 0; ++i) {
+		for (var i = targetRemovedItemsList.length - 1; i >= 0; --i) {
 			this._destroyItems(targetRemovedItemsList[i].items, sourceRemovedItemsList[i].items);
 		}
 	},
