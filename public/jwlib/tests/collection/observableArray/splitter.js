@@ -22,7 +22,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 		var testCase = this;
 		var rowId = 0;
 		
-		var source = new JW.ObservableArray([ new JW.Proxy("a"), new JW.Proxy("b"), new JW.Proxy("c"), new JW.Proxy("d") ]);
+		var source = new JW.ObservableArray([ "a", "b", "c", "d" ]);
 		var splitter = source.createSplitter({
 			capacity : 3
 		});
@@ -44,8 +44,8 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 			/*
 			Fields
 			Integer id;
-			JW.ObservableArray<JW.String> items;
-			JW.ObservableArray.Inserter<JW.String> _inserter;
+			JW.ObservableArray<String> items;
+			JW.ObservableArray.Inserter<String> _inserter;
 			*/
 			
 			// override
@@ -56,15 +56,15 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 			},
 			
 			_addItem: function(item, index) {
-				testCase.output("Added item " + item.value + " at " + this.id + "." + index);
+				testCase.output("Added item " + item + " at " + this.id + "." + index);
 			},
 			
 			_removeItem: function(index, item) {
-				testCase.output("Removed item " + item.value + " at " + this.id + "." + index);
+				testCase.output("Removed item " + item + " at " + this.id + "." + index);
 			},
 			
 			_clearItems: function(items) {
-				testCase.output("Cleared items " + JW.Array.mapBy(items, "value").join(", ") + " at row " + this.id);
+				testCase.output("Cleared items " + items.join(", ") + " at row " + this.id);
 			}
 		});
 		
@@ -86,7 +86,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Added item e at 2.1"
 		);
-		source.add(new JW.Proxy("e"));
+		source.add("e");
 		
 		// (a b c) (d e)
 		
@@ -105,7 +105,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 			"Added item d at 3.0",
 			"Added item h at 2.1"
 		);
-		source.addAll([ new JW.Proxy("f"), new JW.Proxy("g"), new JW.Proxy("h") ], 2);
+		source.addAll([ "f", "g", "h" ], 2);
 		
 		// (a b f) (g h c) (d e)
 		
@@ -116,7 +116,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 			"Added item f at 2.0",
 			"Added item i at 1.0"
 		);
-		source.add(new JW.Proxy("i"), 0);
+		source.add("i", 0);
 		
 		// (i a b) (f g h) (c d e)
 		
@@ -141,7 +141,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			// remove h
 			"Removed item h at 2.0",
-			"Removed item e at 3.0",
+			"Cleared items e at row 3", // inserter's tweak: if 2/3 rows are spliced out, then clear & add items
 			"Added item e at 2.2",
 			"Destroyed row 3",
 			// remove g
