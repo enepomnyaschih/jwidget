@@ -23,7 +23,7 @@ JW.UI.Component.Child = function(parent, child, name) {
 	this.child = child;
 	this.name = name;
 	this._el = this.parent.getElement(name);
-	this.parent._initChild(this.child);
+	this.parent._initChild(this.child, this._el);
 	this.parent._elements[name] = this.child.el;
 	this._el.replaceBy(this.child.el, true);
 	this.child._afterAppend();
