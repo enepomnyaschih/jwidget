@@ -27,7 +27,11 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		var syncher = source.createObserver({
 			addItem    : function(item) { this.output("Added " + item); },
 			removeItem : function(item) { this.output("Removed " + item); },
-			clearItems : function(items) { this.output("Cleared " + items.join(", ")); },
+			clearItems : function(items) {
+				items = items.concat();
+				items.sort();
+				this.output("Cleared " + items.join(", "));
+			},
 			scope      : this
 		});
 		
@@ -65,10 +69,7 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		source.set("T", "f");
 		
 		this.setExpectedOutput(
-			"Removed D",
-			"Removed C",
-			"Removed B",
-			"Removed T"
+			"Cleared B, C, D, T"
 		);
 		source.clear();
 		
