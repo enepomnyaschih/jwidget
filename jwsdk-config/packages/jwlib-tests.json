@@ -31,7 +31,7 @@
 		"jwlib/tests/collection/abstractMap/observer.js",
 		"jwlib/tests/collection/abstractSet.js",
 		"jwlib/tests/collection/abstractSet/indexer.js",
-		// "jwlib/tests/collection/abstractSet/mapper.js",
+		"jwlib/tests/collection/abstractSet/mapper.js",
 		// "jwlib/tests/collection/abstractSet/observer.js",
 		"jwlib/tests/collection/array.js",
 		"jwlib/tests/collection/map.js",
@@ -49,7 +49,7 @@
 		"jwlib/tests/collection/observableMap/observer.js",
 		"jwlib/tests/collection/observableSet.js",
 		"jwlib/tests/collection/observableSet/indexer.js",
-		// "jwlib/tests/collection/observableSet/mapper.js",
+		"jwlib/tests/collection/observableSet/mapper.js",
 		// "jwlib/tests/collection/observableSet/observer.js",
 		"jwlib/tests/collection/set.js",
 		
