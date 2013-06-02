@@ -63,7 +63,7 @@ JW.extend(JW.AbstractSet.Indexer/*<T extends JW.Class>*/, JW.Class, {
 	_keys: function(items) {
 		var keys = [];
 		for (var i = 0, l = items.length; i < l; ++i) {
-			keys.push(this.getKey.call(this.scope, item));
+			keys.push(this.getKey.call(this.scope, items[i]));
 		}
 		return keys;
 	}
