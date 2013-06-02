@@ -482,7 +482,7 @@ JW.apply(JW.Map, {
 		var removedKeys = [];
 		for (var key in removedItems) {
 			if (!addedItems.hasOwnProperty(key)) {
-				removedItems.push(key);
+				removedKeys.push(key);
 			}
 		}
 		return removedKeys;
