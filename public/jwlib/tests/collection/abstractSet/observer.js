@@ -60,9 +60,9 @@ JW.Tests.Collection.AbstractSet.ObserverTestCase = JW.Unit.TestCase.extend({
 		});
 		
 		this.setExpectedOutput(
-			"Removed a",
+			"Removed c",
 			"Removed b",
-			"Removed c"
+			"Removed a"
 		);
 		syncher.destroy();
 	}
