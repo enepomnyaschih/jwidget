@@ -68,8 +68,33 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		);
 		source.set("T", "f");
 		
+		this.setExpectedOutput();
+		source.setKey("c", "a");
+		
 		this.setExpectedOutput(
-			"Cleared B, C, D, T"
+			"Removed C",
+			"Removed T",
+			"Added M"
+		);
+		source.splice([ "a", "f" ], { "m": "M" });
+		
+		this.setExpectedOutput();
+		source.performReindex({ "a": "D", "b": "B", "d": "M" });
+		
+		this.setExpectedOutput(
+			"Removed M",
+			"Added C"
+		);
+		source.performSplice({ "a": "D", "b": "B", "c": "C" });
+		
+		this.setExpectedOutput(
+			"Removed B",
+			"Removed C"
+		);
+		source.removeAll([ "b", "c" ]);
+		
+		this.setExpectedOutput(
+			"Cleared D"
 		);
 		source.clear();
 		

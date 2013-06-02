@@ -70,22 +70,8 @@ JW.Tests.Collection = {
 	subscribeToMap: function(testCase, map, formatter) {
 		formatter = formatter || function(x) { return x; };
 		
-		function formatMap(items) {
-			var pairs = [];
-			for (var key in items) {
-				pairs.push([ key, items[key] ]);
-			}
-			pairs.sort(function(x, y) {
-				return JW.cmp(x[0], y[0]);
-			});
-			var strs = JW.Array.map(pairs, function(pair) {
-				return pair[0] + ":" + pair[1];
-			});
-			return "{" + strs.join(",") + "}";
-		}
-		
 		function formatItems(items) {
-			return formatMap(JW.Map.map(items, formatter))
+			return JW.Tests.Collection.formatMap(JW.Map.map(items, formatter))
 		}
 		
 		map.spliceEvent.bind(function(params) {
@@ -96,7 +82,7 @@ JW.Tests.Collection = {
 		});
 		
 		map.reindexEvent.bind(function(params) {
-			testCase.output("Reindexed by " + formatMap(params.keyMap));
+			testCase.output("Reindexed by " + JW.Tests.Collection.formatMap(params.keyMap));
 		});
 		
 		map.clearEvent.bind(function(params) {
@@ -206,5 +192,19 @@ JW.Tests.Collection = {
 		testCase.assertTrue(JW.Set.equal(
 			JW.Array.indexBy(expected.addedItems, "_iid"),
 			JW.Array.indexBy(spliceResult.addedItems, "_iid")));
+	},
+	
+	formatMap: function(items) {
+		var pairs = [];
+		for (var key in items) {
+			pairs.push([ key, items[key] ]);
+		}
+		pairs.sort(function(x, y) {
+			return JW.cmp(x[0], y[0]);
+		});
+		var strs = JW.Array.map(pairs, function(pair) {
+			return pair[0] + ":" + pair[1];
+		});
+		return "{" + strs.join(",") + "}";
 	}
 };
