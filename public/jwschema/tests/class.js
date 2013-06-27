@@ -106,5 +106,18 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. First error:\n" +
 			"(root): boolean expected",
 			this.schema.validate("Boolean", []).toString());
+	},
+	
+	testDefined: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", 0).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", false).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", null).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", "").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", {}).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", []).toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): not undefined expected",
+			this.schema.validate("Defined", undefined).toString());
 	}
 });
