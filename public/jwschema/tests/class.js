@@ -73,9 +73,38 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"(root): array expected",
 			this.schema.validate("MyArray", "").toString());
 		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): array expected",
+			this.schema.validate("MyArray", {}).toString());
+		this.assertStrictEqual(
 			"Data is invalid. Full errors list:\n" +
 			"0: number expected\n" +
 			"2: integer expected",
 			this.schema.validate("MyArray", [null, 1, .5], true).toString());
+	},
+	
+	testBoolean: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate("Boolean", true).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("Boolean", false).toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): boolean expected",
+			this.schema.validate("Boolean", 0).toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): boolean expected",
+			this.schema.validate("Boolean", null).toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): boolean expected",
+			this.schema.validate("Boolean", "").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): boolean expected",
+			this.schema.validate("Boolean", {}).toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): boolean expected",
+			this.schema.validate("Boolean", []).toString());
 	}
 });
