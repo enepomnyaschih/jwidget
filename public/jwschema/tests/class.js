@@ -50,5 +50,32 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"(root): must be more than 0\n" +
 			"(root): integer expected",
 			this.schema.validate("MyAnd", -.5, true).toString());
+	},
+	
+	testArray: function() {
+		this.schema.parseClass({
+			"provider": "Array",
+			"item": "Int"
+		}, "MyArray");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate("MyArray", []).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("MyArray", [0, 1, 2]).toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): array expected",
+			this.schema.validate("MyArray", 0).toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): array expected",
+			this.schema.validate("MyArray", null).toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): array expected",
+			this.schema.validate("MyArray", "").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"0: number expected\n" +
+			"2: integer expected",
+			this.schema.validate("MyArray", [null, 1, .5], true).toString());
 	}
 });
