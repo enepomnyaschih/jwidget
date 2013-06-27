@@ -5,16 +5,8 @@
 	],
 	
 	"resources" : [
-		"jwschema/tests/testCase.js",
-		"jwschema/tests/schema.js",
-		
-		"jwschema/tests/digmydata.js",
-		"jwschema/tests/digmydata/account.js",
-		"jwschema/tests/digmydata/account/info.js",
-		"jwschema/tests/digmydata/calclines.js",
-		"jwschema/tests/digmydata/calclines/create.js",
-		"jwschema/tests/digmydata/chart.js",
-		
+		"jwschema/tests/index.js",
+		"jwschema/tests/class.js",
 		"jwschema/tests/boot.js"
 	]
 }

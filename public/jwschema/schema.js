@@ -40,6 +40,10 @@ JW.extend(JW.Schema, JW.Class, {
 		}
 	},
 	
+	parseClass: function(cls, type) {
+		this._parseClass(cls, type);
+	},
+	
 	getProvider: function(type) {
 		return this.providers[type];
 	},
@@ -70,11 +74,19 @@ JW.extend(JW.Schema, JW.Class, {
 	},
 	
 	validate: function(type, data, full) {
-		return this.getClass(type).validate(data, full);
+		var cls = this.getClass(type);
+		if (!cls) {
+			throw new Error("Validation class '" + type + "' is not registered");
+		}
+		return cls.validate(data, full);
 	},
 	
 	_validate: function(type, data, validation, key) {
-		return this.getClass(type)._validate(data, validation, key);
+		var cls = this.getClass(type);
+		if (!cls) {
+			throw new Error("Validation class '" + type + "' is not registered");
+		}
+		return cls._validate(data, validation, key);
 	},
 	
 	_runValidate: function(type, validation) {

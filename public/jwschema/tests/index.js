@@ -1,5 +1,5 @@
 ﻿/*
-	jWidget library tests boot loader.
+	JW Schema validation test (one of many).
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,8 +17,4 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-jQuery(function() {
-	setTimeout(function() {
-		JW.Unit.run("JW.Schema.Tests", JW.Schema.Tests);
-	}, 1000);
-});
+JW.Schema.Tests = {};

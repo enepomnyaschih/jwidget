@@ -36,6 +36,6 @@ JW.extend(JW.Schema.Error, JW.Class, {
 	},
 	
 	toString: function() {
-		return this.path.join(".") + ": " + this.msg.join(", ");
+		return ((this.path.length !== 0) ? this.path.join(".") : "(root)") + ": " + this.msg.join(", ");
 	}
 });
