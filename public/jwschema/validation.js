@@ -108,6 +108,14 @@ JW.extend(JW.Schema.Validation, JW.Class, {
 		return buf.join("\n");
 	},
 	
+	getStack: function() {
+		return this.isValid() ? null : JW.Array.mapByMethod(this.errors, "toString");
+	},
+	
+	getFirstError: function() {
+		return this.errors[0];
+	},
+	
 	_getCurrentItem: function() {
 		return JW.Array.top(this.items);
 	}

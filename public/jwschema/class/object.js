@@ -40,7 +40,7 @@ JW.extend(JW.Schema.Class.Object, JW.Schema.Class, {
 	onRegister: function(schema)
 	{
 		for (var i = 0; i < this.base.length; ++i)
-			this.base[i] = schema._parseClass(this.base[i]);
+			this.base[i] = schema.getClass(this.base[i]);
 		
 		for (var key in this.fields)
 			this.fields[key] = schema._parseClass(this.fields[key]);
