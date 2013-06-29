@@ -230,5 +230,33 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"[0]: must be more than 0\n" +
 			"[1]: integer expected",
 			this.schema.validate([-1, .5], "MyArray", true).toString());
+	},
+	
+	testNull: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(null, "Null").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null expected",
+			this.schema.validate(0, "Null", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null expected",
+			this.schema.validate(false, "Null", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null expected",
+			this.schema.validate("", "Null", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null expected",
+			this.schema.validate({}, "Null", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null expected",
+			this.schema.validate([], "Null", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null expected",
+			this.schema.validate(undefined, "Null", true).toString());
 	}
 });
