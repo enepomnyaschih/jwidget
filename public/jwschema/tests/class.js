@@ -506,5 +506,19 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): garbage found: c, garbage found: d",
 			this.schema.validate({"a": .5, "b": -1, "c": 0, "d": 0}, "MyObject", true).toString());
+	},
+	
+	testObjectGarbage: function() {
+		this.schema.registerClass({
+			"provider": "Object",
+			"fields": {
+				"a": "Positive",
+				"b": "Int"
+			},
+			"garbage": true
+		}, "MyObject");
+		
+		this.assertStrictEqual("Data is valid",
+			this.schema.validate({"a": .5, "b": -1, "c": 0, "d": 0}, "MyObject").toString());
 	}
 });
