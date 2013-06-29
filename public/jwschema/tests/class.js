@@ -119,5 +119,36 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. First error:\n" +
 			"(root): not undefined expected",
 			this.schema.validate(undefined, "Defined").toString());
+	},
+	
+	testDictionary: function() {
+		this.schema.registerClass({
+			"provider": "Dictionary",
+			"item": "Int"
+		}, "MyDict");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate({}, "MyDict").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate({a: 0, b: 1, c: 2}, "MyDict").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): object expected",
+			this.schema.validate(0, "MyDict").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): object expected",
+			this.schema.validate(null, "MyDict").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): object expected",
+			this.schema.validate("", "MyDict").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): object expected",
+			this.schema.validate([], "MyDict").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"a: number expected\n" +
+			"c: integer expected",
+			this.schema.validate({a: null, b: 1, c: .5}, "MyDict", true).toString());
 	}
 });

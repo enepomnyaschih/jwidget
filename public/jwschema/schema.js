@@ -188,7 +188,7 @@ JW.Schema.pathToString = function(path) {
 		if (typeof path[i] === "number") {
 			buf.push("[", path[i], "]");
 		} else {
-			buf.push(".", path[i]);
+			buf.push(i ? "." : "", path[i]);
 		}
 	}
 	return buf.join("");
