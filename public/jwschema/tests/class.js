@@ -150,5 +150,39 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"a: number expected\n" +
 			"c: integer expected",
 			this.schema.validate({a: null, b: 1, c: .5}, "MyDict", true).toString());
+	},
+	
+	testEnum: function() {
+		this.schema.registerClass({
+			"provider": "Enum",
+			"values": ["a", 1]
+		}, "MyEnum");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate("a", "MyEnum").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(1, "MyEnum").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): value is not an element of enumeration",
+			this.schema.validate(0, "MyEnum").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): value is not an element of enumeration",
+			this.schema.validate(null, "MyEnum").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): value is not an element of enumeration",
+			this.schema.validate("", "MyEnum").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): value is not an element of enumeration",
+			this.schema.validate([], "MyEnum").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): value is not an element of enumeration",
+			this.schema.validate({}, "MyEnum").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): value is not an element of enumeration",
+			this.schema.validate([1], "MyEnum").toString());
 	}
 });
