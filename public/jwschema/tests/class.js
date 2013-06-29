@@ -258,5 +258,51 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): null expected",
 			this.schema.validate(undefined, "Null", true).toString());
+	},
+	
+	testNumber: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Number").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(false, "Number", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate("", "Number", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate({}, "Number", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate([], "Number", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(undefined, "Number", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(null, "Number", true).toString());
+	},
+	
+	testInt: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Int").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(1, "Int").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(-1, "Int").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(false, "Int", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(null, "Int", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): integer expected",
+			this.schema.validate(.5, "Int", true).toString());
 	}
 });
