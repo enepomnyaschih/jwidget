@@ -33,6 +33,9 @@ JW.extend(JW.Schema.Class.FixedArray, JW.Schema.Class, {
 			return validation.addError("array expected");
 		}
 		var items = this.items;
+		if (items.length !== data.length) {
+			return validation.addError("array length of " + items.length + " expected");
+		}
 		var schema = validation.schema;
 		for (var i = 0, l = items.length; i < l; ++i) {
 			var item = schema.compileClass(items[i]);

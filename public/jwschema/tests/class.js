@@ -184,5 +184,51 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. First error:\n" +
 			"(root): value is not an element of enumeration",
 			this.schema.validate([1], "MyEnum").toString());
+	},
+	
+	testFixedArray: function() {
+		this.schema.registerClass({
+			"provider": "FixedArray",
+			"items": ["Positive", "Int"]
+		}, "MyArray");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate([.5, -1], "MyArray").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): array expected",
+			this.schema.validate(0, "MyArray").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): array expected",
+			this.schema.validate(null, "MyArray").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): array expected",
+			this.schema.validate("", "MyArray").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): array expected",
+			this.schema.validate({}, "MyArray").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): array length of 2 expected",
+			this.schema.validate([], "MyArray", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): array length of 2 expected",
+			this.schema.validate([.5, -1, 0], "MyArray", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"[0]: must be more than 0",
+			this.schema.validate([-1, -1], "MyArray", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"[1]: integer expected",
+			this.schema.validate([.5, .5], "MyArray", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"[0]: must be more than 0\n" +
+			"[1]: integer expected",
+			this.schema.validate([-1, .5], "MyArray", true).toString());
 	}
 });
