@@ -22,7 +22,6 @@ JW.Schema.Class.Number.Part = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Number.Part, JW.Schema.Class.Number, {
-	type    : "Part",
-	min     : 0,
-	max     : 1
+	min: 0,
+	max: 1
 });

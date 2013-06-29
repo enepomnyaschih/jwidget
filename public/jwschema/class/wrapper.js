@@ -20,7 +20,7 @@
 JW.Schema.Class.Wrapper = function(config) {
 	JW.Schema.Class.Wrapper._super.call(this, config);
 	config = config || {};
-	this.wrap = config.wrap || this.wrap;
+	this.wrap = JW.defn(config.wrap, this.wrap);
 };
 
 JW.extend(JW.Schema.Class.Wrapper, JW.Schema.Class, {
@@ -28,11 +28,11 @@ JW.extend(JW.Schema.Class.Wrapper, JW.Schema.Class, {
 	JW.Schema.Class wrap;
 	*/
 	
-	type: "Wrapper",
 	wrap: "Any",
 	
-	_validateData: function(data, validation)
-	{
-		return this.schema.getClass(this.wrap)._validate(data, validation);
+	_validateData: function(data, validation) {
+		var schema = validation.schema;
+		this.wrap = schema.compileClass(this.wrap);
+		return schema._validate(this.wrap, data, validation);
 	}
 });

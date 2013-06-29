@@ -28,7 +28,7 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 	},
 	
 	testAnd: function() {
-		this.schema.parseClass({
+		this.schema.registerClass({
 			"provider": "And",
 			"items": [
 				"Positive",
@@ -36,88 +36,88 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			]
 		}, "MyAnd");
 		
-		this.assertStrictEqual("Data is valid", this.schema.validate("MyAnd", 1).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(1, "MyAnd").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): must be more than 0",
-			this.schema.validate("MyAnd", 0).toString());
+			this.schema.validate(0, "MyAnd").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): integer expected",
-			this.schema.validate("MyAnd", .5).toString());
+			this.schema.validate(.5, "MyAnd").toString());
 		this.assertStrictEqual(
 			"Data is invalid. Full errors list:\n" +
 			"(root): must be more than 0\n" +
 			"(root): integer expected",
-			this.schema.validate("MyAnd", -.5, true).toString());
+			this.schema.validate(-.5, "MyAnd", true).toString());
 	},
 	
 	testArray: function() {
-		this.schema.parseClass({
+		this.schema.registerClass({
 			"provider": "Array",
 			"item": "Int"
 		}, "MyArray");
 		
-		this.assertStrictEqual("Data is valid", this.schema.validate("MyArray", []).toString());
-		this.assertStrictEqual("Data is valid", this.schema.validate("MyArray", [0, 1, 2]).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate([], "MyArray").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate([0, 1, 2], "MyArray").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): array expected",
-			this.schema.validate("MyArray", 0).toString());
+			this.schema.validate(0, "MyArray").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): array expected",
-			this.schema.validate("MyArray", null).toString());
+			this.schema.validate(null, "MyArray").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): array expected",
-			this.schema.validate("MyArray", "").toString());
+			this.schema.validate("", "MyArray").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): array expected",
-			this.schema.validate("MyArray", {}).toString());
+			this.schema.validate({}, "MyArray").toString());
 		this.assertStrictEqual(
 			"Data is invalid. Full errors list:\n" +
-			"0: number expected\n" +
-			"2: integer expected",
-			this.schema.validate("MyArray", [null, 1, .5], true).toString());
+			"[0]: number expected\n" +
+			"[2]: integer expected",
+			this.schema.validate([null, 1, .5], "MyArray", true).toString());
 	},
 	
 	testBoolean: function() {
-		this.assertStrictEqual("Data is valid", this.schema.validate("Boolean", true).toString());
-		this.assertStrictEqual("Data is valid", this.schema.validate("Boolean", false).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(true, "Boolean").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(false, "Boolean").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): boolean expected",
-			this.schema.validate("Boolean", 0).toString());
+			this.schema.validate(0, "Boolean").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): boolean expected",
-			this.schema.validate("Boolean", null).toString());
+			this.schema.validate(null, "Boolean").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): boolean expected",
-			this.schema.validate("Boolean", "").toString());
+			this.schema.validate("", "Boolean").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): boolean expected",
-			this.schema.validate("Boolean", {}).toString());
+			this.schema.validate({}, "Boolean").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): boolean expected",
-			this.schema.validate("Boolean", []).toString());
+			this.schema.validate([], "Boolean").toString());
 	},
 	
 	testDefined: function() {
-		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", 0).toString());
-		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", false).toString());
-		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", null).toString());
-		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", "").toString());
-		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", {}).toString());
-		this.assertStrictEqual("Data is valid", this.schema.validate("Defined", []).toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Defined").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(false, "Defined").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(null, "Defined").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("", "Defined").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate({}, "Defined").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate([], "Defined").toString());
 		this.assertStrictEqual(
 			"Data is invalid. First error:\n" +
 			"(root): not undefined expected",
-			this.schema.validate("Defined", undefined).toString());
+			this.schema.validate(undefined, "Defined").toString());
 	}
 });

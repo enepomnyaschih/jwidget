@@ -36,20 +36,20 @@ JW.extend(JW.Schema.Class.Number, JW.Schema.Class, {
 	Boolean maxOut; // optional
 	*/
 	
-	type    : "Number",
-	integer : false,
-	minOut  : false,
-	maxOut  : false,
+	integer: false,
+	min: null,
+	max: null,
+	minOut: false,
+	maxOut: false,
 	
-	_validateData: function(data, validation)
-	{
-		if (typeof data !== "number")
+	_validateData: function(data, validation) {
+		if (typeof data !== "number") {
 			return validation.addError("number expected");
-		
-		(this.integer && data !== Math.round(data) && validation.addError("integer expected")) ||
-		(JW.isSet(this.min) && !this.minOut && data < this.min && validation.addError("must be minimum of " + this.min)) ||
-		(JW.isSet(this.max) && !this.maxOut && data > this.max && validation.addError("must be maximum of " + this.max)) ||
-		(JW.isSet(this.min) && this.minOut && data <= this.min && validation.addError("must be more than " + this.min)) ||
-		(JW.isSet(this.max) && this.maxOut && data >= this.max && validation.addError("must be less than " + this.max));
+		}
+		(this.integer && (data !== Math.round(data)) && validation.addError("integer expected")) ||
+		(JW.isSet(this.min) && !this.minOut && (data < this.min) && validation.addError("must be minimum of " + this.min)) ||
+		(JW.isSet(this.max) && !this.maxOut && (data > this.max) && validation.addError("must be maximum of " + this.max)) ||
+		(JW.isSet(this.min) && this.minOut && (data <= this.min) && validation.addError("must be more than " + this.min)) ||
+		(JW.isSet(this.max) && this.maxOut && (data >= this.max) && validation.addError("must be less than " + this.max));
 	}
 });

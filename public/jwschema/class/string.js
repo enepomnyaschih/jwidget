@@ -28,12 +28,10 @@ JW.extend(JW.Schema.Class.String, JW.Schema.Class, {
 	String pattern;
 	*/
 	
-	type    : "String",
-	pattern : null,
+	pattern: null,
 	
-	_validateData: function(data, validation)
-	{
-		(typeof data !== "string" && validation.addError("string expected")) ||
+	_validateData: function(data, validation) {
+		((typeof data !== "string") && validation.addError("string expected")) ||
 		(JW.isSet(this.pattern) && !(new RegExp(this.pattern).test(data)) && validation.addError("string doesn't match pattern"));
 	}
 });

@@ -20,51 +20,53 @@
 JW.Schema.Class.Or = function(config) {
 	JW.Schema.Class.Or._super.call(this, config);
 	config = config || {};
-	this.items = JW.makeArray(config.items).concat();
+	this.items = JW.makeArray(config.items);
 };
 
 JW.extend(JW.Schema.Class.Or, JW.Schema.Class, {
 	/*
-	Array<String> items;
+	Array items;
 	*/
 	
-	type: "Or",
-	
-	onRegister: function(schema)
-	{
-		for (var i = 0; i < this.items.length; ++i)
-			this.items[i] = schema._parseClass(this.items[i]);
-	},
-	
-	_validateData: function(data, validation)
-	{
-		var errors = [];
-		if (JW.Array.every(this.items, function(item) { return this._validateItem(item, errors, data, validation); }, this))
-		{
-			validation.addError("data doesn't fit any item (see errors below)");
-			for (var i = 0; i < this.items.length; ++i)
-			{
-				var itemType = this.schema.getClass(this.items[i]).type || ("Option #" + i);
-				
-				var beginError = new JW.Schema.Error(data, JW.Array.top(validation.items).path.concat());
-				beginError.addMessage("--- " + itemType + " error dump BEGIN ---");
-				
-				var endError = new JW.Schema.Error(data, JW.Array.top(validation.items).path.concat());
-				endError.addMessage("--- " + itemType + " error dump END ---");
-				
-				validation.errors.push(beginError);
-				JW.Array.addAll(validation.errors, errors[i]);
-				validation.errors.push(endError);
-			}
+	_validateData: function(data, validation) {
+		var errors = this._validateOptions(data, validation);
+		if (errors) {
+			this._flushErrors(data, validation, errors);
 		}
 	},
 	
-	_validateItem: function(item, errors, data, validation)
-	{
-		validation.saveErrors();
-		this.schema._validate(item, data, validation);
-		var newErrors = validation.resetErrors();
-		errors.push(newErrors);
-		return newErrors.length !== 0;
+	_validateOptions: function(data, validation) {
+		var errors = [];
+		var schema = validation.schema;
+		var items = this.items;
+		for (var i = 0, l = items.length; i < l; ++i) {
+			var item = schema.compileClass(items[i]);
+			items[i] = item;
+			validation.saveErrors();
+			schema._validate(item, data, validation);
+			var newErrors = validation.resetErrors();
+			errors.push(newErrors);
+			if (newErrors.length === 0) {
+				return null;
+			}
+		}
+		return errors;
+	},
+	
+	_flushErrors: function(data, validation, errors) {
+		var schema = validation.schema;
+		var items = this.items;
+		validation.addError("data doesn't fit any item (see errors below)");
+		for (var i = 0; i < items.length; ++i) {
+			var beginError = new JW.Schema.Error(data, JW.Array.top(validation.items).path.concat());
+			beginError.addMessage("--- Option #" + i + " error dump BEGIN ---");
+			
+			var endError = new JW.Schema.Error(data, JW.Array.top(validation.items).path.concat());
+			endError.addMessage("--- Option #" + i + " error dump END ---");
+			
+			validation.errors.push(beginError);
+			JW.Array.addAll(validation.errors, errors[i]);
+			validation.errors.push(endError);
+		}
 	}
 });

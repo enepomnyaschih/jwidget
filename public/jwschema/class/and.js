@@ -25,19 +25,18 @@ JW.Schema.Class.And = function(config) {
 
 JW.extend(JW.Schema.Class.And, JW.Schema.Class, {
 	/*
-	Array<JW.Schema.Class> items; // required
+	Array items; // optional
 	*/
 	
-	type : "And",
-	
-	onRegister: function(schema) {
-		for (var i = 0; i < this.items.length; ++i)
-			this.items[i] = schema._parseClass(this.items[i]);
-	},
-	
 	_validateData: function(data, validation) {
-		return JW.Array.some(this.items, function(item) {
-			return this.schema._validate(item, data, validation);
-		}, this);
+		var items = this.items;
+		var schema = validation.schema;
+		for (var i = 0, l = items.length; i < l; ++i) {
+			var item = schema.compileClass(items[i]);
+			items[i] = item;
+			if (schema._validate(item, data, validation)) {
+				return;
+			}
+		}
 	}
 });

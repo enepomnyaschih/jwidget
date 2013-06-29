@@ -22,10 +22,7 @@ JW.Schema.Class.Boolean = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Boolean, JW.Schema.Class, {
-	type: "Boolean",
-	
-	_validateData: function(data, validation)
-	{
-		typeof data !== "boolean" && validation.addError("boolean expected");
+	_validateData: function(data, validation) {
+		(typeof data !== "boolean") && validation.addError("boolean expected");
 	}
 });

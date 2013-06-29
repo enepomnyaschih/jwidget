@@ -20,37 +20,26 @@
 JW.Schema.Class.FixedArray = function(config) {
 	JW.Schema.Class.FixedArray._super.call(this, config);
 	config = config || {};
-	this.items = JW.makeArray(config.items).concat();
+	this.items = JW.makeArray(config.items);
 };
 
 JW.extend(JW.Schema.Class.FixedArray, JW.Schema.Class, {
 	/*
-	Array<JW.Schema.Class> items;
+	Array items;
 	*/
 	
-	type: "FixedArray",
-	
-	onRegister: function(schema)
-	{
-		for (var i = 0; i < this.items.length; ++i)
-			this.items[i] = schema._parseClass(this.items[i]);
-	},
-	
-	_validateData: function(data, validation)
-	{
-		if (!JW.isArray(data))
+	_validateData: function(data, validation) {
+		if (!JW.isArray(data)) {
 			return validation.addError("array expected");
-		
-		for (var i = 0; i < this.items.length; ++i)
-		{
-			var item  = this.items[i];
-			var child = data[i];
-			
-			if (this._skip(child, item))
-				continue;
-			
-			if (this.schema._validate(item, child, validation, i))
+		}
+		var items = this.items;
+		var schema = validation.schema;
+		for (var i = 0, l = items.length; i < l; ++i) {
+			var item = schema.compileClass(items[i]);
+			items[i] = item;
+			if (schema._validate(item, data[i], validation, i)) {
 				return;
+			}
 		}
 	}
 });

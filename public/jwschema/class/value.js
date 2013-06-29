@@ -25,13 +25,10 @@ JW.Schema.Class.Value = function(config) {
 
 JW.extend(JW.Schema.Class.Value, JW.Schema.Class, {
 	/*
-	Any value; // required
+	Any value;
 	*/
 	
-	type: "Value",
-	
-	_validateData: function(data, validation)
-	{
-		data !== this.value && validation.addError("illegal value");
+	_validateData: function(data, validation) {
+		(data !== this.value) && validation.addError("illegal value");
 	}
 });

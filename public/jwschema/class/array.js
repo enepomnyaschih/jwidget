@@ -20,29 +20,27 @@
 JW.Schema.Class.Array = function(config) {
 	JW.Schema.Class.Array._super.call(this, config);
 	config = config || {};
-	this.item = config.item || this.item;
+	this.item = JW.defn(config.item, this.item);
 };
 
 JW.extend(JW.Schema.Class.Array, JW.Schema.Class, {
 	/*
-	JW.Schema.Class item; // optional
+	dynamic item; // optional
 	*/
 	
-	type : "Array",
-	item : "Any",
-	
-	onRegister: function(schema) {
-		this.item = schema._parseClass(this.item);
-	},
+	item: "Any",
 	
 	_validateData: function(data, validation) {
-		if (!JW.isArray(data))
+		if (!JW.isArray(data)) {
 			return validation.addError("array expected");
-		
-		for (var i = 0; i < data.length; ++i)
-		{
-			if (this.schema._validate(this.item, data[i], validation, i))
+		}
+		var schema = validation.schema;
+		var item = schema.compileClass(this.item);
+		this.item = item;
+		for (var i = 0, l = data.length; i < l; ++i) {
+			if (schema._validate(item, data[i], validation, i)) {
 				return;
+			}
 		}
 	}
 });

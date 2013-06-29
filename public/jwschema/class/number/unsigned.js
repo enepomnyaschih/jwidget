@@ -22,6 +22,5 @@ JW.Schema.Class.Number.Unsigned = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Number.Unsigned, JW.Schema.Class.Number, {
-	type    : "Unsigned",
-	min     : 0
+	min: 0
 });

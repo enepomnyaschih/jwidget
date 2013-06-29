@@ -20,31 +20,27 @@
 JW.Schema.Class.Dictionary = function(config) {
 	JW.Schema.Class.Dictionary._super.call(this, config);
 	config = config || {};
-	this.item = config.item || this.item;
+	this.item = JW.defn(config.item, this.item);
 };
 
 JW.extend(JW.Schema.Class.Dictionary, JW.Schema.Class, {
 	/*
-	JW.Schema.Class item;
+	dynamic item;
 	*/
 	
-	type: "Dictionary",
 	item: "Any",
 	
-	onRegister: function(schema)
-	{
-		this.item = schema._parseClass(this.item);
-	},
-	
-	_validateData: function(data, validation)
-	{
-		if (!JW.isObject(data))
+	_validateData: function(data, validation) {
+		if (!JW.isObject(data)) {
 			return validation.addError("object expected");
-		
-		for (var key in data)
-		{
-			if (this.schema._validate(this.item, data[key], validation, key))
+		}
+		var schema = validation.schema;
+		var item = schema.compileClass(this.item);
+		this.item = item;
+		for (var key in data) {
+			if (schema._validate(item, data[key], validation, key)) {
 				return;
+			}
 		}
 	}
 });

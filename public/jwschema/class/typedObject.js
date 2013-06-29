@@ -21,37 +21,31 @@ JW.Schema.Class.TypedObject = function(config) {
 	JW.Schema.Class.TypedObject._super.call(this, config);
 	config = config || {};
 	this.options = JW.apply({}, config.options);
-	this.key = config.key || this.key;
+	this.key = JW.defn(config.key, this.key);
 };
 
 JW.extend(JW.Schema.Class.TypedObject, JW.Schema.Class, {
 	/*
-	Map<JW.Schema.Class> options; // optional
+	Map options; // optional
 	String key; // optional
 	*/
 	
-	type : "TypedObject",
-	key  : "type",
+	key: "type",
 	
-	onRegister: function(schema)
-	{
-		for (var key in this.options)
-			this.options[key] = schema._parseClass(this.options[key]);
-	},
-	
-	_validateData: function(data, validation)
-	{
-		if (!JW.isObject(data))
+	_validateData: function(data, validation) {
+		if (!JW.isObject(data)) {
 			return validation.addError("object expected");
-		
+		}
 		var type = data[this.key];
-		if (typeof type !== "string")
+		if (typeof type !== "string") {
 			return validation.addError("object has non-string type");
-		
-		var option = this.options[type];
-		if (!option)
+		}
+		var schema = validation.schema;
+		var option = schema.compileClass(this.options[type]);
+		this.options[type] = option;
+		if (!option) {
 			return validation.addError("object has invalid type '" + type + "'");
-		
-		return this.schema._validate(option, data, validation);
+		}
+		return schema._validate(option, data, validation);
 	}
 });

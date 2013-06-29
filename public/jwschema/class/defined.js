@@ -22,10 +22,7 @@ JW.Schema.Class.Defined = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Defined, JW.Schema.Class, {
-	type: "Defined",
-	
-	_validateData: function(data, validation)
-	{
+	_validateData: function(data, validation) {
 		!JW.isDefined(data) && validation.addError("not undefined expected");
 	}
 });

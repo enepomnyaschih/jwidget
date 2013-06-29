@@ -28,10 +28,7 @@ JW.extend(JW.Schema.Class.Enum, JW.Schema.Class, {
 	Array values;
 	*/
 	
-	type: "Enum",
-	
-	_validateData: function(data, validation)
-	{
-		this.values.indexOf(data) === -1 && validation.addError("value is not an element of enumeration");
+	_validateData: function(data, validation) {
+		!JW.isSet(JW.Array.indexOf(this.values, data)) && validation.addError("value is not an element of enumeration");
 	}
 });

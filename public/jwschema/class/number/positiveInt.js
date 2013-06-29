@@ -22,8 +22,7 @@ JW.Schema.Class.Number.PositiveInt = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Number.PositiveInt, JW.Schema.Class.Number, {
-	type    : "PositiveInt",
-	integer : true,
-	min     : 0,
-	minOut  : true
+	integer: true,
+	min: 0,
+	minOut: true
 });

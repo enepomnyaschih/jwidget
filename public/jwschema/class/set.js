@@ -22,10 +22,7 @@ JW.Schema.Class.Set = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Set, JW.Schema.Class, {
-	type: "Set",
-	
-	_validateData: function(data, validation)
-	{
+	_validateData: function(data, validation) {
 		!JW.isSet(data) && validation.addError("not null/undefined expected");
 	}
 });

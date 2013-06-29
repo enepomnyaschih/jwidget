@@ -17,8 +17,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Validation = function(data, full) {
+JW.Schema.Validation = function(schema, cls, data, full) {
 	JW.Schema.Validation._super.call(this);
+	this.schema = schema;
+	this.cls = cls;
 	this.data = data;
 	this.full = full;
 	this.items = [];
@@ -28,6 +30,8 @@ JW.Schema.Validation = function(data, full) {
 
 JW.extend(JW.Schema.Validation, JW.Class, {
 	/*
+	JW.Schema schema;
+	JW.Schema.Class cls;
 	Any data;
 	Boolean full;
 	Array<JW.Schema.Validation.Item> items;
@@ -56,20 +60,13 @@ JW.extend(JW.Schema.Validation, JW.Class, {
 	},
 	
 	push: function(data, key) {
-		//if (key)
-		//    console.log("Push: ", key);
-		
 		var path = this.items.length ? this._getCurrentItem().path : [];
 		path = JW.isSet(key) ? path.concat(key) : path.concat();
-		
 		var item = new JW.Schema.Validation.Item(data, key, path);
 		this.items.push(item);
 	},
 	
 	pop: function() {
-		//if (this._getCurrentItem().key)
-		//    console.log("Pop : ", this._getCurrentItem().key);
-		
 		this.items.pop();
 	},
 	
@@ -79,32 +76,26 @@ JW.extend(JW.Schema.Validation, JW.Class, {
 			storeItem.topError = this._getCurrentItem().error;
 			this._getCurrentItem().error = null;
 		}
-		
 		this.store.push(storeItem);
 	},
 	
 	resetErrors: function() {
 		var storeItem = this.store.pop();
-		if (this.items.length)
+		if (this.items.length) {
 			this._getCurrentItem().error = storeItem.error;
-		
+		}
 		return this.errors.splice(storeItem.errorIndex, this.errors.length - storeItem.errorIndex);
 	},
 	
-	toString: function()
-	{
-		if (this.isValid())
+	toString: function() {
+		if (this.isValid()) {
 			return "Data is valid";
-		
+		}
 		var buf = [];
-		if (this.full)
-			buf.push("Data is invalid. Full errors list:");
-		else
-			buf.push("Data is invalid. First error:");
-		
-		for (var i = 0; i < this.errors.length; ++i)
+		buf.push(this.full ? "Data is invalid. Full errors list:" : "Data is invalid. First error:");
+		for (var i = 0; i < this.errors.length; ++i) {
 			buf.push(this.errors[i].toString());
-		
+		}
 		return buf.join("\n");
 	},
 	

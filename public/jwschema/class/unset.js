@@ -22,10 +22,7 @@ JW.Schema.Class.Unset = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Unset, JW.Schema.Class, {
-	type: "Unset",
-	
-	_validateData: function(data, validation)
-	{
+	_validateData: function(data, validation) {
 		JW.isSet(data) && validation.addError("null/undefined expected");
 	}
 });

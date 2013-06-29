@@ -22,6 +22,5 @@ JW.Schema.Class.Number.Int = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Number.Int, JW.Schema.Class.Number, {
-	type    : "Int",
-	integer : true
+	integer: true
 });

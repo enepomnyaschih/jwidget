@@ -22,7 +22,6 @@ JW.Schema.Class.Number.Percent = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Number.Percent, JW.Schema.Class.Number, {
-	type    : "Percent",
-	min     : 0,
-	max     : 100
+	min: 0,
+	max: 100
 });

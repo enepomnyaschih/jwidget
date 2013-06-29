@@ -22,10 +22,7 @@ JW.Schema.Class.Null = function(config) {
 };
 
 JW.extend(JW.Schema.Class.Null, JW.Schema.Class, {
-	type: "Null",
-	
-	_validateData: function(data, validation)
-	{
-		data !== null && validation.addError("null expected");
+	_validateData: function(data, validation) {
+		(data !== null) && validation.addError("null expected");
 	}
 });
