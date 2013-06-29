@@ -520,5 +520,10 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 		
 		this.assertStrictEqual("Data is valid",
 			this.schema.validate({"a": .5, "b": -1, "c": 0, "d": 0}, "MyObject").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"a: number expected\n" +
+			"b: number expected",
+			this.schema.validate({}, "MyObject", true).toString());
 	}
 });
