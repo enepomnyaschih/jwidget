@@ -356,5 +356,54 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): must be maximum of 100",
 			this.schema.validate(101, "Percent", true).toString());
+	},
+	
+	testPositive: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(.5, "Positive").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(1, "Positive").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(false, "Positive", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(null, "Positive", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be more than 0",
+			this.schema.validate(0, "Positive", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be more than 0",
+			this.schema.validate(-1, "Positive", true).toString());
+	},
+	
+	testPositiveInt: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(1, "PositiveInt").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(false, "PositiveInt", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(null, "PositiveInt", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be more than 0",
+			this.schema.validate(0, "PositiveInt", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be more than 0",
+			this.schema.validate(-1, "PositiveInt", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): integer expected",
+			this.schema.validate(.5, "PositiveInt", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): integer expected, must be more than 0",
+			this.schema.validate(-.5, "PositiveInt", true).toString());
 	}
 });
