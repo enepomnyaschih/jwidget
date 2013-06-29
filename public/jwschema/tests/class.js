@@ -304,5 +304,57 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): integer expected",
 			this.schema.validate(.5, "Int", true).toString());
+	},
+	
+	testPart: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Part").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(.5, "Part").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(1, "Part").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(false, "Part", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(null, "Part", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be minimum of 0",
+			this.schema.validate(-.5, "Part", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be minimum of 0",
+			this.schema.validate(-1, "Part", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be maximum of 1",
+			this.schema.validate(1.5, "Part", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be maximum of 1",
+			this.schema.validate(2, "Part", true).toString());
+	},
+	
+	testPercent: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Percent").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(.5, "Percent").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(100, "Percent").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(false, "Percent", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(null, "Percent", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be minimum of 0",
+			this.schema.validate(-1, "Percent", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be maximum of 100",
+			this.schema.validate(101, "Percent", true).toString());
 	}
 });
