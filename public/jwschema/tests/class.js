@@ -456,5 +456,55 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): integer expected, must be minimum of 0",
 			this.schema.validate(-.5, "UnsignedInt", true).toString());
+	},
+	
+	testObject: function() {
+		this.schema.registerClass({
+			"provider": "Object",
+			"fields": {
+				"a": "Positive",
+				"b": "Int"
+			}
+		}, "MyObject");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate({a: .5, b: -1}, "MyObject").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): object expected",
+			this.schema.validate(0, "MyObject").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): object expected",
+			this.schema.validate(null, "MyObject").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): object expected",
+			this.schema.validate("", "MyObject").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): object expected",
+			this.schema.validate([], "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"a: number expected\n" +
+			"b: number expected",
+			this.schema.validate({}, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"a: must be more than 0",
+			this.schema.validate({"a": -1, "b": -1}, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"b: integer expected",
+			this.schema.validate({"a": .5, "b": .5}, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"a: must be more than 0\n" +
+			"b: integer expected",
+			this.schema.validate({"a": -1, "b": .5}, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): garbage found: c, garbage found: d",
+			this.schema.validate({"a": .5, "b": -1, "c": 0, "d": 0}, "MyObject", true).toString());
 	}
 });
