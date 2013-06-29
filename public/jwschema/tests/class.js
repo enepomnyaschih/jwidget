@@ -377,6 +377,10 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): must be more than 0",
 			this.schema.validate(-1, "Positive", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be more than 0",
+			this.schema.validate(-.5, "Positive", true).toString());
 	},
 	
 	testPositiveInt: function() {
@@ -405,5 +409,52 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): integer expected, must be more than 0",
 			this.schema.validate(-.5, "PositiveInt", true).toString());
+	},
+	
+	testUnsigned: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Unsigned").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(.5, "Unsigned").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(1, "Unsigned").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(false, "Unsigned", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(null, "Unsigned", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be minimum of 0",
+			this.schema.validate(-1, "Unsigned", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be minimum of 0",
+			this.schema.validate(-.5, "Unsigned", true).toString());
+	},
+	
+	testUnsignedInt: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "UnsignedInt").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(1, "UnsignedInt").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(false, "UnsignedInt", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(null, "UnsignedInt", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): must be minimum of 0",
+			this.schema.validate(-1, "UnsignedInt", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): integer expected",
+			this.schema.validate(.5, "UnsignedInt", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): integer expected, must be minimum of 0",
+			this.schema.validate(-.5, "UnsignedInt", true).toString());
 	}
 });
