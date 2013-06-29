@@ -525,5 +525,70 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"a: number expected\n" +
 			"b: number expected",
 			this.schema.validate({}, "MyObject", true).toString());
+	},
+	
+	testObjectInheritance: function() {
+		this.schema.registerClass({
+			"provider": "Object",
+			"fields": {
+				"a": "Positive",
+				"b": "Boolean"
+			},
+			"garbage": true
+		}, "BaseObject");
+		this.schema.registerClass({
+			"provider": "Object",
+			"base": "BaseObject",
+			"fields": {
+				"b": "Int",
+				"c": "Boolean"
+			}
+		}, "MyObject");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate({a: .5, b: -1, c: false}, "MyObject").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): object expected",
+			this.schema.validate(0, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): object expected",
+			this.schema.validate(null, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): object expected",
+			this.schema.validate("", "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): object expected",
+			this.schema.validate([], "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"a: number expected\n" +
+			"b: number expected\n" +
+			"c: boolean expected",
+			this.schema.validate({}, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"a: must be more than 0",
+			this.schema.validate({"a": -1, "b": -1, "c": true}, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"b: integer expected",
+			this.schema.validate({"a": .5, "b": .5, "c": true}, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"c: boolean expected",
+			this.schema.validate({"a": .5, "b": -1, "c": 0}, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"a: must be more than 0\n" +
+			"b: integer expected\n" +
+			"c: boolean expected",
+			this.schema.validate({"a": -1, "b": .5, "c": 0}, "MyObject", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): garbage found: d, garbage found: e",
+			this.schema.validate({"a": .5, "b": -1, "c": true, "d": 0, "e": 0}, "MyObject", true).toString());
 	}
 });
