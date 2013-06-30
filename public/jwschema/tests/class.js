@@ -777,5 +777,33 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"brand: string expected\n" +
 			"wings: number expected",
 			this.schema.validate({ type: "AIR_CRAFT" }, "GenericTransport", true).toString());
+	},
+	
+	testUndefined: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(undefined, "Undefined").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): undefined expected",
+			this.schema.validate(0, "Undefined", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): undefined expected",
+			this.schema.validate(false, "Undefined", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): undefined expected",
+			this.schema.validate("", "Undefined", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): undefined expected",
+			this.schema.validate(null, "Undefined", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): undefined expected",
+			this.schema.validate({}, "Undefined", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): undefined expected",
+			this.schema.validate([], "Undefined", true).toString());
 	}
 });
