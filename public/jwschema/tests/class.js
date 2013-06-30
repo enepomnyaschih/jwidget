@@ -805,5 +805,30 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): undefined expected",
 			this.schema.validate([], "Undefined", true).toString());
+	},
+	
+	testUnset: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(null, "Unset").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(undefined, "Unset").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null/undefined expected",
+			this.schema.validate(0, "Unset", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null/undefined expected",
+			this.schema.validate(false, "Unset", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null/undefined expected",
+			this.schema.validate("", "Unset", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null/undefined expected",
+			this.schema.validate({}, "Unset", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): null/undefined expected",
+			this.schema.validate([], "Unset", true).toString());
 	}
 });
