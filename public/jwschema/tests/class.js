@@ -830,5 +830,72 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): null/undefined expected",
 			this.schema.validate([], "Unset", true).toString());
+	},
+	
+	testValue: function() {
+		this.schema.registerClass({
+			"provider": "Value",
+			"value": 0
+		}, "MyValue");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "MyValue").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): illegal value",
+			this.schema.validate(false, "MyValue", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): illegal value",
+			this.schema.validate("", "MyValue", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): illegal value",
+			this.schema.validate(null, "MyValue", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): illegal value",
+			this.schema.validate(undefined, "MyValue", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): illegal value",
+			this.schema.validate({}, "MyValue", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): illegal value",
+			this.schema.validate([], "MyValue", true).toString());
+	},
+	
+	testWrapper: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Number,allowNull").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Number,allowUndefined").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Number,optional").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(null, "Number,allowNull").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(undefined, "Number,allowUndefined").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(null, "Number,optional").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(undefined, "Number,optional").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(false, "Number,allowNull", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate("", "Number,allowNull", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate({}, "Number,allowNull", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate([], "Number,allowNull", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(undefined, "Number,allowNull", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): number expected",
+			this.schema.validate(null, "Number,allowUndefined", true).toString());
 	}
 });
