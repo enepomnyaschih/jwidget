@@ -615,5 +615,21 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"(root): integer expected\n" +
 			"(root): --- Option #2 error dump END ---",
 			this.schema.validate(-.5, "MyOr").toString());
+	},
+	
+	testSet: function() {
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "Set").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(false, "Set").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("", "Set").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate({}, "Set").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate([], "Set").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): not null/undefined expected",
+			this.schema.validate(null, "Set", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): not null/undefined expected",
+			this.schema.validate(undefined, "Set", true).toString());
 	}
 });
