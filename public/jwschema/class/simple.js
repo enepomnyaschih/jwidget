@@ -23,6 +23,6 @@ JW.Schema.Class.Simple = function(config) {
 
 JW.extend(JW.Schema.Class.Simple, JW.Schema.Class, {
 	_validateData: function(data, validation) {
-		(typeof data === "object") && validation.addError("simple value expected");
+		(typeof data === "object") && (data !== null) && validation.addError("simple value expected");
 	}
 });
