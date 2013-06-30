@@ -56,13 +56,13 @@ JW.extend(JW.Schema.Class.Or, JW.Schema.Class, {
 	_flushErrors: function(data, validation, errors) {
 		var schema = validation.schema;
 		var items = this.items;
-		validation.addError("data doesn't fit any item (see errors below)");
+		validation.addError("data doesn't fit any option (see errors below)");
 		for (var i = 0; i < items.length; ++i) {
 			var beginError = new JW.Schema.Error(data, JW.Array.top(validation.items).path.concat());
-			beginError.addMessage("--- Option #" + i + " error dump BEGIN ---");
+			beginError.addMessage("--- Option #" + (i + 1) + " error dump BEGIN ---");
 			
 			var endError = new JW.Schema.Error(data, JW.Array.top(validation.items).path.concat());
-			endError.addMessage("--- Option #" + i + " error dump END ---");
+			endError.addMessage("--- Option #" + (i + 1) + " error dump END ---");
 			
 			validation.errors.push(beginError);
 			JW.Array.addAll(validation.errors, errors[i]);

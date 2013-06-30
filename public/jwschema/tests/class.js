@@ -590,5 +590,30 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): garbage found: d, garbage found: e",
 			this.schema.validate({"a": .5, "b": -1, "c": true, "d": 0, "e": 0}, "MyObject", true).toString());
+	},
+	
+	testOr: function() {
+		this.schema.registerClass({
+			"provider": "Or",
+			"items": [
+				"Positive",
+				"Int"
+			]
+		}, "MyOr");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate(1, "MyOr").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(0, "MyOr").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(-1, "MyOr").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate(.5, "MyOr").toString());
+		this.assertStrictEqual(
+			"Data is invalid. First error:\n" +
+			"(root): data doesn't fit any option (see errors below)\n" +
+			"(root): --- Option #1 error dump BEGIN ---\n" +
+			"(root): must be more than 0\n" +
+			"(root): --- Option #1 error dump END ---\n" +
+			"(root): --- Option #2 error dump BEGIN ---\n" +
+			"(root): integer expected\n" +
+			"(root): --- Option #2 error dump END ---",
+			this.schema.validate(-.5, "MyOr").toString());
 	}
 });
