@@ -647,5 +647,48 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): simple value expected",
 			this.schema.validate([], "Simple", true).toString());
+	},
+	
+	testString: function() {
+		this.schema.registerClass({
+			"provider": "String",
+			"pattern": "\\d{4}-\\d{2}-\\d{2}"
+		}, "MyString");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate("", "String").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("blablabla", "String").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate("2103-06-30", "MyString").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): string expected",
+			this.schema.validate(0, "String", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): string expected",
+			this.schema.validate(false, "String", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): string expected",
+			this.schema.validate(null, "String", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): string expected",
+			this.schema.validate(undefined, "String", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): string expected",
+			this.schema.validate({}, "String", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): string expected",
+			this.schema.validate([], "String", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): string doesn't match pattern",
+			this.schema.validate("", "MyString", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): string doesn't match pattern",
+			this.schema.validate("blablabla", "MyString", true).toString());
 	}
 });
