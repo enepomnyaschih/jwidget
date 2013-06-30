@@ -690,5 +690,92 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			"Data is invalid. Full errors list:\n" +
 			"(root): string doesn't match pattern",
 			this.schema.validate("blablabla", "MyString", true).toString());
+	},
+	
+	testTypedObject: function() {
+		this.schema.parse({
+			"classes": {
+				"Transport": {
+					"provider": "Object",
+					"fields": {
+						"type": "String",
+						"brand": "String"
+					}
+				},
+				"AutoMobile": {
+					"provider": "Object",
+					"base": "Transport",
+					"fields": {
+						"wheels": "PositiveInt"
+					}
+				},
+				"HardTruck": {
+					"provider": "Object",
+					"base": "AutoMobile",
+					"fields": {
+						"cargoWeight": "Positive"
+					}
+				},
+				"GenericTransport": {
+					"provider": "TypedObject",
+					"options": {
+						"AUTO_MOBILE": "AutoMobile",
+						"HARD_TRUCK": "HardTruck",
+						"AIR_CRAFT": {
+							"provider": "Object",
+							"base": "Transport",
+							"fields": {
+								"wings": "PositiveInt"
+							}
+						}
+					}
+				}
+			}
+		});
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate({
+			"type": "AUTO_MOBILE",
+			"brand": "Toyota",
+			"wheels": 4
+		}, "GenericTransport").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate({
+			"type": "HARD_TRUCK",
+			"brand": "Daf",
+			"wheels": 6,
+			"cargoWeight": 18800
+		}, "GenericTransport").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate({
+			"type": "AIR_CRAFT",
+			"brand": "Airbus",
+			"wings": 2
+		}, "GenericTransport").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): object expected",
+			this.schema.validate(0, "GenericTransport", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): object has non-string type",
+			this.schema.validate({}, "GenericTransport", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): object has invalid type 'UNKNOWN'",
+			this.schema.validate({ type: "UNKNOWN" }, "GenericTransport", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"brand: string expected\n" +
+			"wheels: number expected",
+			this.schema.validate({ type: "AUTO_MOBILE" }, "GenericTransport", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"brand: string expected\n" +
+			"wheels: number expected\n" +
+			"cargoWeight: number expected",
+			this.schema.validate({ type: "HARD_TRUCK" }, "GenericTransport", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"brand: string expected\n" +
+			"wings: number expected",
+			this.schema.validate({ type: "AIR_CRAFT" }, "GenericTransport", true).toString());
 	}
 });

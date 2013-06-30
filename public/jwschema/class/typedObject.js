@@ -41,11 +41,12 @@ JW.extend(JW.Schema.Class.TypedObject, JW.Schema.Class, {
 			return validation.addError("object has non-string type");
 		}
 		var schema = validation.schema;
-		var option = schema.compileClass(this.options[type]);
-		this.options[type] = option;
+		var option = this.options[type];
 		if (!option) {
 			return validation.addError("object has invalid type '" + type + "'");
 		}
+		option = schema.compileClass(option);
+		this.options[type] = option;
 		return schema._validate(option, data, validation);
 	}
 });

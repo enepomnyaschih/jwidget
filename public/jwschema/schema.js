@@ -78,20 +78,20 @@ JW.extend(JW.Schema, JW.Class, {
 				return cls;
 			}
 		}
-		var message = "Can't compile JW.Schema class. ";
+		var message = "Can't compile JW.Schema class: ";
 		console && console.warn && console.warn(message, source);
 		throw new Error(message + source);
 	},
 	
 	parse: function(source) {
 		var deprecates = source.deprecates || [];
-		for (var i = 0; i < source.deprecates.length; ++i) {
-			this.unregisterClass(source.deprecates[i]);
+		for (var i = 0; i < deprecates.length; ++i) {
+			this.unregisterClass(deprecates[i]);
 		}
-		for (var type in (source.overrides || [])) {
+		for (var type in (source.overrides || {})) {
 			this.overrideClass(source.overrides[type], type);
 		}
-		for (var type in (source.classes || [])) {
+		for (var type in (source.classes || {})) {
 			this.registerClass(source.classes[type], type);
 		}
 	},
