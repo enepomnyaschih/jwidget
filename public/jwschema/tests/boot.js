@@ -1,5 +1,5 @@
 ﻿/*
-	JW Schema dictionary validation class.
+	jWidget library tests boot loader.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,34 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Dictionary = function(config) {
-	JW.Schema.Class.Dictionary._super.call(this, config);
-	config = config || {};
-	this.item = config.item || this.item;
-};
-
-JW.extend(JW.Schema.Class.Dictionary, JW.Schema.Class, {
-	/*
-	JW.Schema.Class item;
-	*/
-	
-	type: "Dictionary",
-	item: "Any",
-	
-	onRegister: function(schema)
-	{
-		this.item = schema._parseClass(this.item);
-	},
-	
-	_validateData: function(data, validation)
-	{
-		if (!JW.isObject(data))
-			return validation.addError("object expected");
-		
-		for (var key in data)
-		{
-			if (this.schema._validate(this.item, data[key], validation, key))
-				return;
-		}
-	}
+jQuery(function() {
+	setTimeout(function() {
+		JW.Unit.run("JW.Tests.Schema", JW.Tests.Schema);
+	}, 1000);
 });

@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Defined = JW.Schema.Class.extend({
+JW.Schema.Class.Defined = function(config) {
+	JW.Schema.Class.Defined._super.call(this, config);
+};
+
+JW.extend(JW.Schema.Class.Defined, JW.Schema.Class, {
 	type: "Defined",
 	
 	_validateData: function(data, validation)

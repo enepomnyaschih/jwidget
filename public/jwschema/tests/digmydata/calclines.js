@@ -17,10 +17,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Schema.DigMyData");
+JW.Tests.Schema.DigMyData.CalcLines = {};
 
 JW.Tests.Schema.DigMyData.CalcLinesTestCase = JW.Schema.TestCase.extend({
-	schemaUrl: "/tests/schema/digmydata/calclines",
+	schemaUrl: "digmydata/calclines",
 	
 	testValid: function()
 	{

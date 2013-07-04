@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Number.Int = JW.Schema.Class.Number.extend({
+JW.Schema.Class.Number.Int = function(config) {
+	JW.Schema.Class.Number.Int._super.call(this, config);
+};
+
+JW.extend(JW.Schema.Class.Number.Int, JW.Schema.Class.Number, {
 	type    : "Int",
 	integer : true
 });

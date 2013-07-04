@@ -274,6 +274,10 @@ JW.apply(JW, {
 		return function() {
 			return func.apply(scope, arguments);
 		};
+	},
+	
+	makeArray: function(v) {
+		return JW.isArray(v) ? v : JW.isSet(v) ? [v] : [];
 	}
 });
 

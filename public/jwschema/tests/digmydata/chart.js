@@ -17,10 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Schema.DigMyData");
-
 JW.Tests.Schema.DigMyData.ChartTestCase = JW.Schema.TestCase.extend({
-	schemaUrl: "/tests/schema/digmydata/chart",
+	schemaUrl: "digmydata/chart",
 	
 	testValid: function()
 	{

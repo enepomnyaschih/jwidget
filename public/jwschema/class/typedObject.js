@@ -17,17 +17,21 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.TypedObject = JW.Schema.Class.extend({
-	type    : "TypedObject",
+JW.Schema.Class.TypedObject = function(config) {
+	JW.Schema.Class.TypedObject._super.call(this, config);
+	config = config || {};
+	this.options = JW.apply({}, config.options);
+	this.key = config.key || this.key;
+};
+
+JW.extend(JW.Schema.Class.TypedObject, JW.Schema.Class, {
+	/*
+	Map<JW.Schema.Class> options; // optional
+	String key; // optional
+	*/
 	
-	options : null,     // [required] Map from (String or Number) to String
-	key     : "type",   // [optional] String
-	
-	init: function(config)
-	{
-		this._super(config);
-		this.options = JW.apply({}, this.options);
-	},
+	type : "TypedObject",
+	key  : "type",
 	
 	onRegister: function(schema)
 	{

@@ -17,22 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Object = JW.Schema.Class.extend({
+JW.Schema.Class.Object = function(config) {
+	JW.Schema.Class.Object._super.call(this, config);
+	config = config || {};
+	this.fields = JW.apply({}, config.fields);
+	this.base = JW.makeArray(config.base).concat();
+	this.garbage = JW.defn(config.garbage, this.garbage);
+	this._fields = null;
+};
+
+JW.extend(JW.Schema.Class.Object, JW.Schema.Class, {
+	/*
+	Map<JW.Schema.Class> fields;
+	Array<String> base;
+	Boolean garbage;
+	Map<JW.Schema.Class> _fields;
+	*/
+	
 	type    : "Object",
-	
-	fields  : null,     // [optional] Map from String to JW.Schema.Class
-	base    : null,     // [optional] Array of String
-	garbage : false,    // [optional] Boolean, unexpected fields are allowed
-	
-	_fields : null,     // [readonly] Map from String to JW.Schema.Class
-	
-	init: function(config)
-	{
-		this._super(config);
-		
-		this.fields = JW.apply({}, this.fields);
-		this.base = JW.makeArray(this.base).concat();
-	},
+	garbage : false,
 	
 	onRegister: function(schema)
 	{

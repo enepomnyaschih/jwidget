@@ -17,25 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Error = JW.Class.extend({
-	data    : null,     // [readonly] *
-	path    : null,     // [readonly] Array of (String or Number)
-	msg     : null,     // [readonly] Array of String
+JW.Schema.Error = function(data, path) {
+	JW.Schema.Error._super.call(this);
+	this.data = data;
+	this.path = path;
+	this.msg = [];
+};
+
+JW.extend(JW.Schema.Error, JW.Class, {
+	/*
+	Any data;
+	Array path;
+	Array<String> msg;
+	*/
 	
-	init: function(data, path)
-	{
-		this.data = data;
-		this.path = path;
-		this.msg  = [];
-	},
-	
-	addMessage: function(msg)
-	{
+	addMessage: function(msg) {
 		this.msg.push(msg);
 	},
 	
-	toString: function()
-	{
+	toString: function() {
 		return this.path.join(".") + ": " + this.msg.join(", ");
 	}
 });

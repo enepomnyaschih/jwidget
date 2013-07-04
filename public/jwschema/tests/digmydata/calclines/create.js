@@ -17,10 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Schema.DigMyData.CalcLines");
-
 JW.Tests.Schema.DigMyData.CalcLines.CreateTestCase = JW.Schema.TestCase.extend({
-	schemaUrl: "/tests/schema/digmydata/calclines/create",
+	schemaUrl: "digmydata/calclines/create",
 	
 	testValid: function()
 	{

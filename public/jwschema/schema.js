@@ -17,76 +17,71 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema = JW.Class.extend({
-	providers   : null,     // [readonly] Map from type to JW.Schema.Class subclass
-	classes     : null,     // [readonly] Map from type to JW.Schema.Class
+JW.Schema = function(source) {
+	JW.Schema._super.call(this, source);
+	this.providers = {};
+	this.classes = {};
+	this._registerDefaultProviders();
+	this._registerDefaultClasses();
+	if (source) {
+		this.parse(source);
+	}
+};
+
+JW.extend(JW.Schema, JW.Class, {
+	/*
+	Map<Class<JW.Schema.Class>> providers;
+	Map<JW.Schema.Class> classes;
+	*/
 	
-	init: function(source)
-	{
-		this._registerDefaultProviders();
-		this._registerDefaultClasses();
-		
-		if (source)
-			this.parse(source);
-	},
-	
-	parse: function(source)
-	{
-		for (var type in source.classes)
+	parse: function(source) {
+		for (var type in source.classes) {
 			this._parseClass(source.classes[type], type);
+		}
 	},
 	
-	getProvider: function(type)
-	{
+	getProvider: function(type) {
 		return this.providers[type];
 	},
 	
-	getClass: function(type)
-	{
+	getClass: function(type) {
 		return (typeof type === "string") ? this.classes[type] : type;
 	},
 	
-	registerProvider: function(provider)
-	{
+	registerProvider: function(provider) {
 		this.providers[provider.prototype.type] = provider;
 	},
 	
-	registerClass: function(cls)
-	{
+	registerClass: function(cls) {
 		cls.schema = this;
-		if (cls.type)
+		if (cls.type) {
 			this.classes[cls.type] = cls;
+		}
 		cls.onRegister(this);
 	},
 	
-	unregisterClass: function(type)
-	{
+	unregisterClass: function(type) {
 		var cls = this.getClass(type);
-		if (!cls)
+		if (!cls) {
 			return;
-		
-		delete cls.schema;
+		}
+		cls.schema = null;
 		delete this.classes[type];
 	},
 	
-	validate: function(type, data, full)
-	{
+	validate: function(type, data, full) {
 		return this.getClass(type).validate(data, full);
 	},
 	
-	_validate: function(type, data, validation, key)
-	{
+	_validate: function(type, data, validation, key) {
 		return this.getClass(type)._validate(data, validation, key);
 	},
 	
-	_runValidate: function(type, validation)
-	{
+	_runValidate: function(type, validation) {
 		return this.getClass(type)._runValidate(validation);
 	},
 	
-	_registerDefaultProviders: function()
-	{
-		this.providers = {};
+	_registerDefaultProviders: function() {
 		this.registerProvider(JW.Schema.Class);
 		
 		// Simple types
@@ -107,9 +102,7 @@ JW.Schema = JW.Class.extend({
 		this.registerProvider(JW.Schema.Class.Or);
 	},
 	
-	_registerDefaultClasses: function()
-	{
-		this.classes = {};
+	_registerDefaultClasses: function() {
 		this.registerClass(new JW.Schema.Class());
 		
 		// Existance types
@@ -140,32 +133,28 @@ JW.Schema = JW.Class.extend({
 		this.registerClass(new JW.Schema.Class.Number.Percent());
 	},
 	
-	_parseClass: function(data, type)
-	{
+	_parseClass: function(data, type) {
 		return (typeof data === "string") ? this._parseClassString(data, type) : this._parseClassObject(data, type);
 	},
 	
-	_parseClassString: function(data, type)
-	{
-		var tokens = data.split(",").map($.trim, $);
-		if (tokens.length == 1)
+	_parseClassString: function(data, type) {
+		var tokens = JW.Array.map(data.split(","), JW.String.trim);
+		if (tokens.length == 1) {
 			return tokens[0];
-		
+		}
 		var config = {
 			wrap: tokens[0]
 		};
-		
-		for (var i = 1; i < tokens.length; ++i)
+		for (var i = 1; i < tokens.length; ++i) {
 			config[tokens[i]] = true;
-		
+		}
 		var cls = new JW.Schema.Class.Wrapper(config);
 		cls.type = type;
 		this.registerClass(cls);
 		return cls;
 	},
 	
-	_parseClassObject: function(data, type)
-	{
+	_parseClassObject: function(data, type) {
 		var provider = this.getProvider(data.provider);
 		var config = JW.apply({}, data);
 		delete config.provider;

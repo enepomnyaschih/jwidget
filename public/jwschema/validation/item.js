@@ -17,18 +17,21 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Validation.Item = JW.Class.extend({
-	data    : null,     // [readonly] *
-	key     : null,     // [readonly] String
-	path    : null,     // [readonly] Array of (String or Number)
-	error   : null,     // [property] JW.Schema.Validation.Error or null
-	
-	init: function(data, key, path)
-	{
-		this.data = data;
-		this.key  = key;
-		this.path = path;
-	},
+JW.Schema.Validation.Item = function(data, key, path) {
+	JW.Schema.Validation.Item._super.call(this);
+	this.data = data;
+	this.key = key;
+	this.path = path;
+	this.error = null;
+};
+
+JW.extend(JW.Schema.Validation.Item, JW.Class, {
+	/*
+	Any data;
+	String key;
+	Array path;
+	JW.Schema.Error error;
+	*/
 	
 	addMessage: function(msg)
 	{

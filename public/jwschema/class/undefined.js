@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Undefined = JW.Schema.Class.extend({
+JW.Schema.Class.Undefined = function(config) {
+	JW.Schema.Class.Undefined._super.call(this, config);
+};
+
+JW.extend(JW.Schema.Class.Undefined, JW.Schema.Class, {
 	type: "Undefined",
 	
 	_validateData: function(data, validation)

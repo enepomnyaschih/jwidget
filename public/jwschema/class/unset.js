@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Unset = JW.Schema.Class.extend({
+JW.Schema.Class.Unset = function(config) {
+	JW.Schema.Class.Unset._super.call(this, config);
+};
+
+JW.extend(JW.Schema.Class.Unset, JW.Schema.Class, {
 	type: "Unset",
 	
 	_validateData: function(data, validation)

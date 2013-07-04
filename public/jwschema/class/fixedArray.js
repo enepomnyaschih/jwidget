@@ -17,16 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.FixedArray = JW.Schema.Class.extend({
-	type    : "FixedArray",
+JW.Schema.Class.FixedArray = function(config) {
+	JW.Schema.Class.FixedArray._super.call(this, config);
+	config = config || {};
+	this.items = JW.makeArray(config.items).concat();
+};
+
+JW.extend(JW.Schema.Class.FixedArray, JW.Schema.Class, {
+	/*
+	Array<JW.Schema.Class> items;
+	*/
 	
-	items   : null,     // [required] Array of JW.Schema.Class
-	
-	init: function(config)
-	{
-		this._super(config);
-		this.items = JW.makeArray(this.items).concat();
-	},
+	type: "FixedArray",
 	
 	onRegister: function(schema)
 	{

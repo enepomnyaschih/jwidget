@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Boolean = JW.Schema.Class.extend({
+JW.Schema.Class.Boolean = function(config) {
+	JW.Schema.Class.Boolean._super.call(this, config);
+};
+
+JW.extend(JW.Schema.Class.Boolean, JW.Schema.Class, {
 	type: "Boolean",
 	
 	_validateData: function(data, validation)

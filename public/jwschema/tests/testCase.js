@@ -17,6 +17,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+JW.Tests = {};
+JW.Tests.Schema = {};
+
 JW.Schema.TestCase = JW.Unit.TestCase.extend({
 	schemaUrl   : null,     // [required] String, URL of folder containing JW.Schema and data JSON-files
 	schema      : null,     // [readonly] JW.Schema
@@ -54,12 +57,12 @@ JW.Schema.TestCase = JW.Unit.TestCase.extend({
 	
 	assertValidUrl: function(url, type, full, schema)
 	{
-		this.load(url, "json", this.assertValid.as(this, '\0', type, full, schema), this);
+		this.load(JW.Schema.TestCase.baseUrl + url, "json", function(result) { this.assertValid(result, type, full, schema); }, this);
 	},
 	
 	assertInvalidUrl: function(url, type, full, errors, schema)
 	{
-		this.load(url, "json", this.assertInvalid.as(this, '\0', type, full, errors, schema), this);
+		this.load(JW.Schema.TestCase.baseUrl + url, "json", function(result) { this.assertInvalid(result, type, full, errors, schema); }, this);
 	},
 	
 	assertValidName: function(name, type, full, schema)
@@ -74,7 +77,7 @@ JW.Schema.TestCase = JW.Unit.TestCase.extend({
 	
 	_loadMainSchema: function()
 	{
-		this.load("/schema/schema.json", "json", this._onMainSchemaLoaded, this);
+		this.load(JW.Schema.TestCase.baseUrl + "schema.json", "json", this._onMainSchemaLoaded, this);
 	},
 	
 	_loadThisSchema: function()
@@ -82,7 +85,7 @@ JW.Schema.TestCase = JW.Unit.TestCase.extend({
 		if (!this.schemaUrl)
 			return;
 		
-		this.load(this.schemaUrl + "/schema.json", "json", this._onThisSchemaLoaded, this);
+		this.load(JW.Schema.TestCase.baseUrl + this.schemaUrl + "/schema.json", "json", this._onThisSchemaLoaded, this);
 	},
 	
 	_onMainSchemaLoaded: function(response)
@@ -106,3 +109,5 @@ JW.Schema.TestCase = JW.Unit.TestCase.extend({
 		this.schema = new JW.Schema(response);
 	}
 });
+
+JW.Schema.TestCase.baseUrl = "/jwschema/tests/";

@@ -17,10 +17,19 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Wrapper = JW.Schema.Class.extend({
-	type    : "Wrapper",
+JW.Schema.Class.Wrapper = function(config) {
+	JW.Schema.Class.Wrapper._super.call(this, config);
+	config = config || {};
+	this.wrap = config.wrap || this.wrap;
+};
+
+JW.extend(JW.Schema.Class.Wrapper, JW.Schema.Class, {
+	/*
+	JW.Schema.Class wrap;
+	*/
 	
-	wrap    : "Any",    // [required] JW.Schema.Class
+	type: "Wrapper",
+	wrap: "Any",
 	
 	_validateData: function(data, validation)
 	{

@@ -17,25 +17,27 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.And = JW.Schema.Class.extend({
-	type    : "And",
+JW.Schema.Class.And = function(config) {
+	JW.Schema.Class.And._super.call(this, config);
+	config = config || {};
+	this.items = JW.makeArray(config.items).concat();
+};
+
+JW.extend(JW.Schema.Class.And, JW.Schema.Class, {
+	/*
+	Array<JW.Schema.Class> items; // required
+	*/
 	
-	items   : null,     // [required] Array of String
+	type : "And",
 	
-	init: function(config)
-	{
-		this._super(config);
-		this.items = JW.makeArray(this.items).concat();
-	},
-	
-	onRegister: function(schema)
-	{
+	onRegister: function(schema) {
 		for (var i = 0; i < this.items.length; ++i)
 			this.items[i] = schema._parseClass(this.items[i]);
 	},
 	
-	_validateData: function(data, validation)
-	{
-		return this.items.some(this.schema._validate.as(this.schema, '\0', data, validation));
+	_validateData: function(data, validation) {
+		return JW.Array.some(this.items, function(item) {
+			return this.schema._validate(item, data, validation);
+		}, this);
 	}
 });

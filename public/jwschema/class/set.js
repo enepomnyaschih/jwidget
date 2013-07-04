@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Set = JW.Schema.Class.extend({
+JW.Schema.Class.Set = function(config) {
+	JW.Schema.Class.Set._super.call(this, config);
+};
+
+JW.extend(JW.Schema.Class.Set, JW.Schema.Class, {
 	type: "Set",
 	
 	_validateData: function(data, validation)

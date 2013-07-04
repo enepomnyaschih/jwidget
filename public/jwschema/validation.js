@@ -17,85 +17,76 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Validation = JW.Class.extend({
-	data    : null,     // [required] *
-	full    : false,    // [required] Boolean
+JW.Schema.Validation = function(data, full) {
+	JW.Schema.Validation._super.call(this);
+	this.data = data;
+	this.full = full;
+	this.items = [];
+	this.errors = [];
+	this.store = [];
+};
+
+JW.extend(JW.Schema.Validation, JW.Class, {
+	/*
+	Any data;
+	Boolean full;
+	Array<JW.Schema.Validation.Item> items;
+	Array<JW.Schema.Error> errors;
+	Array<JW.Schema.Validation.StoreItem> store;
+	*/
 	
-	items   : null,     // [readonly] Array of JW.Schema.Validation.Item
-	errors  : null,     // [readonly] Array of JW.Schema.Error
-	store   : null,     // [readonly] Array of JW.Schema.Validation.StoreItem
-	
-	init: function(data, full)
-	{
-		this.data   = data;
-		this.full   = full;
-		
-		this.items  = [];
-		this.errors = [];
-		this.store  = [];
-	},
-	
-	addError: function(msg)
-	{
-		var error = this.items.top().addMessage(msg);
-		if (JW.isSet(error))
+	addError: function(msg) {
+		var error = this._getCurrentItem().addMessage(msg);
+		if (JW.isSet(error)) {
 			this.errors.push(error);
-		
+		}
 		return this.isStopped();
 	},
 	
-	isValid: function()
-	{
+	isValid: function() {
 		return this.errors.length == 0;
 	},
 	
-	isStopped: function()
-	{
+	isStopped: function() {
 		return !this.full && !this.isValid();
 	},
 	
-	getCurrentData: function()
-	{
-		return this.items.top().data;
+	getCurrentData: function() {
+		return this._getCurrentItem().data;
 	},
 	
-	push: function(data, key)
-	{
+	push: function(data, key) {
 		//if (key)
 		//    console.log("Push: ", key);
 		
-		var path = this.items.length ? this.items.top().path : [];
+		var path = this.items.length ? this._getCurrentItem().path : [];
 		path = JW.isSet(key) ? path.concat(key) : path.concat();
 		
 		var item = new JW.Schema.Validation.Item(data, key, path);
 		this.items.push(item);
 	},
 	
-	pop: function()
-	{
-		//if (this.items.top().key)
-		//    console.log("Pop : ", this.items.top().key);
+	pop: function() {
+		//if (this._getCurrentItem().key)
+		//    console.log("Pop : ", this._getCurrentItem().key);
 		
 		this.items.pop();
 	},
 	
-	saveErrors: function()
-	{
+	saveErrors: function() {
 		var storeItem = new JW.Schema.Validation.StoreItem(this.errors.length);
-		if (this.items.length)
-		{
-			storeItem.topError = this.items.top().error;
-			this.items.top().error = null;
+		if (this.items.length) {
+			storeItem.topError = this._getCurrentItem().error;
+			this._getCurrentItem().error = null;
 		}
 		
 		this.store.push(storeItem);
 	},
 	
-	resetErrors: function()
-	{
+	resetErrors: function() {
 		var storeItem = this.store.pop();
 		if (this.items.length)
-			this.items.top().error = storeItem.error;
+			this._getCurrentItem().error = storeItem.error;
 		
 		return this.errors.splice(storeItem.errorIndex, this.errors.length - storeItem.errorIndex);
 	},
@@ -115,5 +106,9 @@ JW.Schema.Validation = JW.Class.extend({
 			buf.push(this.errors[i].toString());
 		
 		return buf.join("\n");
+	},
+	
+	_getCurrentItem: function() {
+		return JW.Array.top(this.items);
 	}
 });

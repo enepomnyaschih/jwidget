@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Number.UnsignedInt = JW.Schema.Class.Number.extend({
+JW.Schema.Class.Number.UnsignedInt = function(config) {
+	JW.Schema.Class.Number.UnsignedInt._super.call(this, config);
+};
+
+JW.extend(JW.Schema.Class.Number.UnsignedInt, JW.Schema.Class.Number, {
 	type    : "UnsignedInt",
 	integer : true,
 	min     : 0

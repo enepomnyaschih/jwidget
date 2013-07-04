@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Number.PositiveInt = JW.Schema.Class.Number.extend({
+JW.Schema.Class.Number.PositiveInt = function(config) {
+	JW.Schema.Class.Number.PositiveInt._super.call(this, config);
+};
+
+JW.extend(JW.Schema.Class.Number.PositiveInt, JW.Schema.Class.Number, {
 	type    : "PositiveInt",
 	integer : true,
 	min     : 0,

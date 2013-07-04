@@ -17,16 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Or = JW.Schema.Class.extend({
-	type    : "Or",
+JW.Schema.Class.Or = function(config) {
+	JW.Schema.Class.Or._super.call(this, config);
+	config = config || {};
+	this.items = JW.makeArray(config.items).concat();
+};
+
+JW.extend(JW.Schema.Class.Or, JW.Schema.Class, {
+	/*
+	Array<String> items;
+	*/
 	
-	items   : null,     // [required] Array of String
-	
-	init: function(config)
-	{
-		this._super(config);
-		this.items = JW.makeArray(this.items).concat();
-	},
+	type: "Or",
 	
 	onRegister: function(schema)
 	{
@@ -37,21 +39,21 @@ JW.Schema.Class.Or = JW.Schema.Class.extend({
 	_validateData: function(data, validation)
 	{
 		var errors = [];
-		if (this.items.every(this._validateItem.as(this, '\0', errors, data, validation)))
+		if (JW.Array.every(this.items, function(item) { return this._validateItem(item, errors, data, validation); }, this))
 		{
 			validation.addError("data doesn't fit any item (see errors below)");
 			for (var i = 0; i < this.items.length; ++i)
 			{
 				var itemType = this.schema.getClass(this.items[i]).type || ("Option #" + i);
 				
-				var beginError = new JW.Schema.Error(data, validation.items.top().path.concat());
+				var beginError = new JW.Schema.Error(data, JW.Array.top(validation.items).path.concat());
 				beginError.addMessage("--- " + itemType + " error dump BEGIN ---");
 				
-				var endError = new JW.Schema.Error(data, validation.items.top().path.concat());
+				var endError = new JW.Schema.Error(data, JW.Array.top(validation.items).path.concat());
 				endError.addMessage("--- " + itemType + " error dump END ---");
 				
 				validation.errors.push(beginError);
-				validation.errors.pushAll(errors[i]);
+				JW.Array.addAll(validation.errors, errors[i]);
 				validation.errors.push(endError);
 			}
 		}
@@ -63,6 +65,6 @@ JW.Schema.Class.Or = JW.Schema.Class.extend({
 		this.schema._validate(item, data, validation);
 		var newErrors = validation.resetErrors();
 		errors.push(newErrors);
-		return newErrors.length;
+		return newErrors.length !== 0;
 	}
 });

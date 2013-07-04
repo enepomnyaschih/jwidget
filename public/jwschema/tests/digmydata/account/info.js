@@ -17,10 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Schema.DigMyData.Account");
-
 JW.Tests.Schema.DigMyData.Account.InfoTestCase = JW.Schema.TestCase.extend({
-	schemaUrl: "/tests/schema/digmydata/account/info",
+	schemaUrl: "digmydata/account/info",
 	
 	testData: function()
 	{

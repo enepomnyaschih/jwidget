@@ -17,10 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Value = JW.Schema.Class.extend({
-	type    : "Value",
+JW.Schema.Class.Value = function(config) {
+	JW.Schema.Class.Value._super.call(this, config);
+	config = config || {};
+	this.value = JW.defn(config.value, this.value);
+};
+
+JW.extend(JW.Schema.Class.Value, JW.Schema.Class, {
+	/*
+	Any value; // required
+	*/
 	
-	value   : null,     // [required] * (simple type)
+	type: "Value",
 	
 	_validateData: function(data, validation)
 	{

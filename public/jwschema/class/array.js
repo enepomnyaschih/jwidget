@@ -17,18 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Array = JW.Schema.Class.extend({
-	type    : "Array",
+JW.Schema.Class.Array = function(config) {
+	JW.Schema.Class.Array._super.call(this, config);
+	config = config || {};
+	this.item = config.item || this.item;
+};
+
+JW.extend(JW.Schema.Class.Array, JW.Schema.Class, {
+	/*
+	JW.Schema.Class item; // optional
+	*/
 	
-	item    : "Any",    // [optional] String
+	type : "Array",
+	item : "Any",
 	
-	onRegister: function(schema)
-	{
+	onRegister: function(schema) {
 		this.item = schema._parseClass(this.item);
 	},
 	
-	_validateData: function(data, validation)
-	{
+	_validateData: function(data, validation) {
 		if (!JW.isArray(data))
 			return validation.addError("array expected");
 		

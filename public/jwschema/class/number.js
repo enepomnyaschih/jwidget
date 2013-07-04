@@ -17,14 +17,29 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Number = JW.Schema.Class.extend({
-	type    : "Number",
+JW.Schema.Class.Number = function(config) {
+	JW.Schema.Class.Number._super.call(this, config);
+	config = config || {};
+	this.integer = JW.defn(config.integer, this.integer);
+	this.min = JW.defn(config.min, this.min);
+	this.max = JW.defn(config.max, this.max);
+	this.minOut = JW.defn(config.minOut, this.minOut);
+	this.maxOut = JW.defn(config.maxOut, this.maxOut);
+};
+
+JW.extend(JW.Schema.Class.Number, JW.Schema.Class, {
+	/*
+	Boolean integer; // optional
+	Number min; // optional
+	Number max; // optional
+	Boolean minOut; // optional
+	Boolean maxOut; // optional
+	*/
 	
-	integer : false,    // [optional] Boolean
-	min     : null,     // [optional] Number
-	max     : null,     // [optional] Number
-	minOut  : false,    // [optional] Boolean
-	maxOut  : false,    // [optional] Boolean
+	type    : "Number",
+	integer : false,
+	minOut  : false,
+	maxOut  : false,
 	
 	_validateData: function(data, validation)
 	{

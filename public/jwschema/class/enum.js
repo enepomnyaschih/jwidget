@@ -17,10 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Enum = JW.Schema.Class.extend({
-	type    : "Enum",
+JW.Schema.Class.Enum = function(config) {
+	JW.Schema.Class.Enum._super.call(this, config);
+	config = config || {};
+	this.values = config.values;
+};
+
+JW.extend(JW.Schema.Class.Enum, JW.Schema.Class, {
+	/*
+	Array values;
+	*/
 	
-	values  : null,     // [required] Array of * (simple type)
+	type: "Enum",
 	
 	_validateData: function(data, validation)
 	{

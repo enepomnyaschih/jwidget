@@ -17,13 +17,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Validation.StoreItem = JW.Class.extend({
-	errorIndex  : 0,        // [optional] Integer
-	topError    : null,     // [optional] JW.Schema.Error
-	
-	init: function(errorIndex, topError)
-	{
-		this.errorIndex = errorIndex;
-		this.topError   = topError;
-	}
+JW.Schema.Validation.StoreItem = function(errorIndex, topError) {
+	JW.Schema.Validation.StoreItem._super.call(this);
+	this.errorIndex = errorIndex || 0;
+	this.topError = topError;
+};
+
+JW.extend(JW.Schema.Validation.StoreItem, JW.Class, {
+	/*
+	Integer errorIndex;
+	JW.Schema.Error topError;
+	*/
 });

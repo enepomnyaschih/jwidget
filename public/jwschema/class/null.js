@@ -17,7 +17,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Schema.Class.Null = JW.Schema.Class.extend({
+JW.Schema.Class.Null = function(config) {
+	JW.Schema.Class.Null._super.call(this, config);
+};
+
+JW.extend(JW.Schema.Class.Null, JW.Schema.Class, {
 	type: "Null",
 	
 	_validateData: function(data, validation)

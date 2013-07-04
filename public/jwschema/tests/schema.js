@@ -17,8 +17,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ns("JW.Tests.Schema");
-
 JW.Tests.Schema.SchemaTestCase = JW.Schema.TestCase.extend({
 	testSchemaSource: function()
 	{
@@ -27,11 +25,11 @@ JW.Tests.Schema.SchemaTestCase = JW.Schema.TestCase.extend({
 	
 	testSchema: function()
 	{
-		this.assertValidUrl("/schema/schema.json", "Schema", false, JW.Schema.schema);
+		this.assertValidUrl("schema.json", "Schema", false, JW.Schema.schema);
 	},
 	
 	testSchema2: function()
 	{
-		this.assertValidUrl("/schema/schema2.json", "Schema", false, JW.Schema.schema);
+		this.assertValidUrl("schema2.json", "Schema", false, JW.Schema.schema);
 	}
 });
