@@ -20,7 +20,7 @@
 JW.Schema.Class.Enum = function(config) {
 	JW.Schema.Class.Enum._super.call(this, config);
 	config = config || {};
-	this.values = config.values;
+	this.values = JW.makeArray(config.values);
 };
 
 JW.extend(JW.Schema.Class.Enum, JW.Schema.Class, {
