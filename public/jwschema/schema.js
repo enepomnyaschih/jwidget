@@ -134,32 +134,34 @@ JW.extend(JW.Schema, JW.Class, {
 	},
 	
 	_parseClass: function(data, type) {
+		if (type) {
+			var cls = this.getClass(type);
+			if (cls) {
+				return cls;
+			}
+		}
 		return (typeof data === "string") ? this._parseClassString(data, type) : this._parseClassObject(data, type);
 	},
 	
 	_parseClassString: function(data, type) {
 		var tokens = JW.Array.map(data.split(","), JW.String.trim);
-		if (tokens.length == 1) {
-			return tokens[0];
-		}
 		var config = {
 			wrap: tokens[0]
 		};
 		for (var i = 1; i < tokens.length; ++i) {
 			config[tokens[i]] = true;
 		}
-		var cls = new JW.Schema.Class.Wrapper(config);
-		cls.type = type;
-		this.registerClass(cls);
-		return cls;
+		return this._createClass(new JW.Schema.Class.Wrapper(config), type);
 	},
 	
 	_parseClassObject: function(data, type) {
 		var provider = this.getProvider(data.provider);
 		var config = JW.apply({}, data);
 		delete config.provider;
-		
-		var cls = new provider(config);
+		return this._createClass(new provider(config), type);
+	},
+	
+	_createClass: function(cls, type) {
 		cls.type = type;
 		this.registerClass(cls);
 		return cls;
