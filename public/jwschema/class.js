@@ -53,6 +53,8 @@ JW.extend(JW.Schema.Class, JW.Class, {
 	
 	_validateData: function(data, validation) {},
 	
+	_update: function(updates, schema) {},
+	
 	_validate: function(data, validation, key) {
 		if (this._skip(data, this)) {
 			return false;

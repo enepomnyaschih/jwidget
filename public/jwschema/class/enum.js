@@ -28,7 +28,13 @@ JW.extend(JW.Schema.Class.Enum, JW.Schema.Class, {
 	Array values;
 	*/
 	
+	// override
 	_validateData: function(data, validation) {
 		!JW.isSet(JW.Array.indexOf(this.values, data)) && validation.addError("value is not an element of enumeration");
+	},
+	
+	// override
+	_update: function(updates, schema) {
+		JW.Array.addAll(this.values, JW.makeArray(updates["+values"]));
 	}
 });

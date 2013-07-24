@@ -592,6 +592,42 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			this.schema.validate({"a": .5, "b": -1, "c": true, "d": 0, "e": 0}, "MyObject", true).toString());
 	},
 	
+	testObjectMultiInheritance: function() {
+		this.schema.registerClass({
+			"provider": "Object",
+			"fields": {
+				"a": "Positive"
+			}
+		}, "Base");
+		this.schema.registerClass({
+			"provider": "Object",
+			"base": "Base",
+			"fields": {
+				"a": "PositiveInt",
+				"b": "Number"
+			}
+		}, "A");
+		this.schema.registerClass({
+			"provider": "Object",
+			"base": "Base",
+			"fields": {
+				"b": "String"
+			}
+		}, "B");
+		this.schema.registerClass({
+			"provider": "Object",
+			"base": ["A", "B"]
+		}, "C");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate({a: 1, b: "b"}, "C").toString());
+		this.assertStrictEqual("Data is valid", this.schema.validate({a: 1.5, b: "b"}, "B").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"a: integer expected\n" +
+			"b: string expected",
+			this.schema.validate({a: 1.5, b: 1}, "C", true).toString());
+	},
+	
 	testOr: function() {
 		this.schema.registerClass({
 			"provider": "Or",

@@ -32,6 +32,7 @@ JW.extend(JW.Schema.Class.TypedObject, JW.Schema.Class, {
 	
 	key: "type",
 	
+	// override
 	_validateData: function(data, validation) {
 		if (!JW.isObject(data)) {
 			return validation.addError("object expected");
@@ -48,5 +49,10 @@ JW.extend(JW.Schema.Class.TypedObject, JW.Schema.Class, {
 		option = schema.compileClass(option);
 		this.options[type] = option;
 		return schema._validate(option, data, validation);
+	},
+	
+	// override
+	_update: function(updates, schema) {
+		JW.Map.setAll(this.options, updates["+options"] || {});
 	}
 });

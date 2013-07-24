@@ -56,6 +56,12 @@ JW.extend(JW.Schema, JW.Class, {
 		delete this.classes[type];
 	},
 	
+	updateClass: function(updates, type) {
+		var cls = this.compileClass(this.classes[type]);
+		this.classes[type] = cls;
+		cls._update(updates, this);
+	},
+	
 	compileClass: function(source) {
 		if (source instanceof JW.Schema.Class) {
 			return source;
@@ -93,6 +99,9 @@ JW.extend(JW.Schema, JW.Class, {
 		}
 		for (var type in (source.classes || {})) {
 			this.registerClass(source.classes[type], type);
+		}
+		for (var type in (source.updates || {})) {
+			this.updateClass(source.updates[type], type);
 		}
 	},
 	
@@ -163,6 +172,9 @@ JW.extend(JW.Schema, JW.Class, {
 	
 	_createClassByString: function(str) {
 		var tokens = JW.Array.map(str.split(","), JW.String.trim);
+		if (!this.classes[tokens[0]]) {
+			throw new Error("Can't create JW.Schema class by string. Class '" + tokens[0] + "' is not registered.");
+		}
 		var config = {wrap: tokens[0]};
 		for (var i = 1; i < tokens.length; ++i) {
 			config[tokens[i]] = true;

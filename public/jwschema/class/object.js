@@ -39,7 +39,9 @@ JW.extend(JW.Schema.Class.Object, JW.Schema.Class, {
 			return validation.addError("object expected");
 		}
 		var schema = validation.schema;
-		var fields = this._prepareFields(schema);
+		var fields = {};
+		var classes = {};
+		this._prepareFields(schema, fields, classes);
 		for (var key in fields) {
 			var field = schema.compileClass(fields[key]);
 			fields[key] = field;
@@ -58,8 +60,12 @@ JW.extend(JW.Schema.Class.Object, JW.Schema.Class, {
 		}
 	},
 	
-	_prepareFields: function(schema) {
-		var fields = {};
+	_prepareFields: function(schema, fields, classes) {
+		if (classes[this._iid]) {
+			return;
+		}
+		classes[this._iid] = this;
+		
 		var base = this.base;
 		for (var i = 0, l = base.length; i < l; ++i) {
 			var cls = schema.compileClass(base[i]);
@@ -67,9 +73,8 @@ JW.extend(JW.Schema.Class.Object, JW.Schema.Class, {
 				throw new Error("Base JW.Schema class '" + base[i] + "' must be an instance 'Object' provider.");
 			}
 			base[i] = cls;
-			JW.apply(fields, cls._prepareFields(schema));
+			cls._prepareFields(schema, fields, classes);
 		}
 		JW.apply(fields, this.fields);
-		return fields;
 	}
 });
