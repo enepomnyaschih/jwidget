@@ -76,5 +76,10 @@ JW.extend(JW.Schema.Class.Object, JW.Schema.Class, {
 			cls._prepareFields(schema, fields, classes);
 		}
 		JW.apply(fields, this.fields);
+	},
+	
+	// override
+	_update: function(updates, schema) {
+		JW.Map.setAll(this.fields, updates["+fields"] || {});
 	}
 });
