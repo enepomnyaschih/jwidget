@@ -23,7 +23,6 @@ JW.UI.Component.Child = function(parent, child) {
 	this.child = child;
 	this.name = null;
 	this._el = null;
-	this.parent._initChild(this.child);
 };
 
 JW.extend(JW.UI.Component.Child, JW.Class, {
@@ -45,6 +44,7 @@ JW.extend(JW.UI.Component.Child, JW.Class, {
 		// JW.assertNull(this.name);
 		this.name = name;
 		this._el = this.parent.getElement(name);
+		this.parent.initChild(this.child, this._el);
 		this.parent._elements[name] = this.child.el;
 		this._el.replaceBy(this.child.el, true);
 		this.child._afterAppend();
@@ -56,6 +56,7 @@ JW.extend(JW.UI.Component.Child, JW.Class, {
 			this.parent._elements[this.name] = this._el;
 		}
 		this.child.el.replaceBy(this._el);
+		this.parent.doneChild(this.child);
 		this._el = null;
 		this.name = null;
 	}

@@ -23,7 +23,6 @@ JW.UI.Inserter = function(source, el) {
 	this._inserter = source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
-		clearItems : this._clearItems,
 		scope      : this
 	});
 };
@@ -47,9 +46,5 @@ JW.extend(JW.UI.Inserter, JW.Class, {
 	
 	_removeItem: function(index, item) {
 		item.el.detach();
-	},
-	
-	_clearItems: function() {
-		this.el.empty();
 	}
 });

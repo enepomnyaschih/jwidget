@@ -26,6 +26,7 @@ JW.UI.Component = function(config) {
 	this.wasAfterAppend = false;
 	this.destroyed = false;
 	this.el = null;
+	this.replacedEl = null;
 	this.children = null;
 	this.allChildren = null;
 	this._elements = null;
@@ -47,6 +48,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	
 	Fields (rendering)
 	Element el;
+	Element replacedEl;
 	JW.ObservableMap<JW.UI.Component> children; // named children
 	Set<JW.UI.Component> allChildren; // children + (arrays' contents)
 	Map<Element> _elements;
@@ -92,10 +94,11 @@ JW.extend(JW.UI.Component, JW.Class, {
 	
 	destroyComponent: function() {},
 	
-	render: function() {
+	render: function(replacedEl) {
 		if (this.el) {
 			return;
 		}
+		this.replacedEl = replacedEl;
 		this.el = jQuery(this.template || this.templates.main);
 		this._elements = {};
 		this.allChildren = {};
@@ -151,7 +154,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	},
 	
 	renderAs: function(el) {
-		this.render();
+		this.render(el);
 		jQuery(el).replaceBy(this.el, true);
 		this._afterAppend();
 	},
@@ -203,8 +206,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 		JW.Set.eachByMethod(this.allChildren, "_afterAppend");
 	},
 	
-	_initChild: function(component) {
-		component.render();
+	_initChild: function(component, replacedEl) {
+		component.render(replacedEl);
 		component.parent = this;
 		JW.Set.add(this.allChildren, component);
 	},

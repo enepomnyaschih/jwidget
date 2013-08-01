@@ -1,5 +1,5 @@
 ﻿/*!
-	jWidget UI 0.5.
+	jWidget UI 0.5.1
 	
 	https://github.com/enepomnyaschih/jwidget/wiki
 	
