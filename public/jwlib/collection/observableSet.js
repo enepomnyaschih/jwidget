@@ -17,87 +17,37 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableSet = function(items) {
-	JW.ObservableSet._super.call(this);
-	this.set = new JW.Set();
+JW.ObservableSet = function(json, adapter) {
+	JW.ObservableSet._super.call(this, json, adapter);
 	this.spliceEvent = new JW.Event();
 	this.clearEvent = new JW.Event();
 	this.changeEvent = new JW.Event();
-	this.sizeChangeEvent = new JW.Event();
-	this.getKey = null;
-	if (items) {
-		this.addAll(items);
-	}
-	this._lastSize = this.set.size;
+	this.lengthChangeEvent = new JW.Event();
+	this._lastLength = this.getLength();
 };
 
-JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.AbstractSet/*<T>*/, {
 	/*
 	Fields
-	JW.Set<T> set;
 	JW.Event<JW.ObservableSet.SpliceEventParams<T>> spliceEvent;
 	JW.Event<JW.ObservableSet.ItemsEventParams<T>> clearEvent;
 	JW.Event<JW.ObservableSet.EventParams<T>> changeEvent;
-	JW.Event<JW.ObservableSet.SizeChangeEventParams<T>> sizeChangeEvent;
-	Integer _lastSize;
-	String getKey(T item);
+	JW.Event<JW.ObservableSet.LengthChangeEventParams<T>> lengthChangeEvent;
+	Integer _lastLength;
 	*/
 	
+	// override
 	destroy: function() {
-		this.clear();
-		this.sizeChangeEvent.destroy();
+		this.lengthChangeEvent.destroy();
 		this.changeEvent.destroy();
 		this.clearEvent.destroy();
 		this.spliceEvent.destroy();
 		this._super();
 	},
 	
-	getJson: function() {
-		return this.set.getJson();
-	},
-	
-	getSize: function() {
-		return this.set.size;
-	},
-	
-	isEmpty: function() {
-		return this.set.size === 0;
-	},
-	
-	contains: function(item) {
-		return this.set.json.hasOwnProperty(item._iid);
-	},
-	
-	add: function(item) {
-		return this.splice([], [ item ]) !== undefined;
-	},
-	
-	addAll: function(items) {
-		var result = this.splice([], items);
-		if (result !== undefined) {
-			return result.addedItems;
-		}
-	},
-	
-	remove: function(item) {
-		return this.splice([ item ], []) !== undefined;
-	},
-	
-	removeItem: function(item) {
-		if (this.remove(item)) {
-			return item._iid;
-		}
-	},
-	
-	removeAll: function(items) {
-		var result = this.splice(items, []);
-		if (result !== undefined) {
-			return result.removedItems;
-		}
-	},
-	
-	clear: function() {
-		var items = this.set.clear();
+	// override
+	tryClear: function() {
+		var items = this._super();
 		if (items === undefined) {
 			return;
 		}
@@ -106,8 +56,9 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		return items;
 	},
 	
-	splice: function(removedItems, addedItems) {
-		var spliceResult = this.set.splice(removedItems, addedItems);
+	// override
+	trySplice: function(removedItems, addedItems) {
+		var spliceResult = this._super(removedItems, addedItems);
 		if (spliceResult === undefined) {
 			return;
 		}
@@ -116,66 +67,65 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.Class, {
 		return spliceResult;
 	},
 	
-	detectSplice: function(newItems) {
-		return this.set.detectSplice(newItems);
-	},
-	
-	performSplice: function(newItems) {
-		var spliceParams = this.detectSplice(newItems);
-		if (spliceParams !== undefined) {
-			return this.splice(spliceParams.removedItems, spliceParams.addedItems);
-		}
-	},
-	
-	every: function(callback, scope) {
-		return JW.Set.every(this.set.json, callback, scope);
-	},
-	
+	// override
 	createEmpty: function() {
 		return new JW.ObservableSet();
 	},
 	
-	createEmptyUnobservable: function() {
-		return new JW.Set();
-	},
-	
+	// override
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
 	
+	// override
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
 	
+	// override
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
 	
-	createIndexer: function(config) {
-		return new JW.ObservableSet.Indexer(this, config);
-	},
-	
+	// override
 	createMapper: function(config) {
 		return new JW.ObservableSet.Mapper(this, config);
 	},
 	
+	// override
 	createObserver: function(config) {
 		return new JW.ObservableSet.Observer(this, config);
 	},
 	
+	// override
+	createOrderer: function(config) {
+		return new JW.ObservableSet.Orderer(this, config);
+	},
+	
+	// override
+	createSorter: function(config) {
+		return new JW.ObservableSet.Sorter(this, config);
+	},
+	
+	// override
+	createIndexer: function(config) {
+		return new JW.ObservableSet.Indexer(this, config);
+	},
+	
+	// override
+	createLister: function(config) {
+		return new JW.ObservableSet.Lister(this, config);
+	},
+	
 	_triggerChange: function() {
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
-		if (this._lastSize !== this.set.size) {
-			this.sizeChangeEvent.trigger(new JW.ObservableSet.SizeChangeEventParams(this, this._lastSize, this.set.size));
-			this._lastSize = this.set.size;
+		var newLength = this.getLength();
+		if (this._lastLength !== newLength) {
+			this.lengthChangeEvent.trigger(new JW.ObservableSet.LengthChangeEventParams(this, this._lastLength, newLength));
+			this._lastLength = newLength;
 		}
 	}
 });
-
-JW.ObservableSet.prototype.getLength = JW.ObservableSet.prototype.getSize;
-JW.ObservableSet.prototype.pushItem = JW.ObservableSet.prototype.add;
-
-JW.applyIf(JW.ObservableSet.prototype, JW.Alg.BuildMethods);
 
 //--------
 
@@ -220,16 +170,16 @@ JW.extend(JW.ObservableSet.ItemsEventParams/*<T extends JW.Class>*/, JW.Observab
 
 //--------
 
-JW.ObservableSet.SizeChangeEventParams = function(sender, oldSize, newSize) {
-	JW.ObservableSet.SizeChangeEventParams._super.call(this, sender);
-	this.oldSize = oldSize;
-	this.newSize = newSize;
+JW.ObservableSet.LengthChangeEventParams = function(sender, oldLength, newLength) {
+	JW.ObservableSet.LengthChangeEventParams._super.call(this, sender);
+	this.oldLength = oldLength;
+	this.newLength = newLength;
 };
 
-JW.extend(JW.ObservableSet.SizeChangeEventParams/*<T extends JW.Class>*/, JW.ObservableSet.EventParams/*<T>*/, {
+JW.extend(JW.ObservableSet.LengthChangeEventParams/*<T extends JW.Class>*/, JW.ObservableSet.EventParams/*<T>*/, {
 	/*
 	Fields
-	Integer oldSize;
-	Integer newSize;
+	Integer oldLength;
+	Integer newLength;
 	*/
 });

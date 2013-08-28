@@ -17,10 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.ObservableArray = function(items) {
-	JW.ObservableArray._super.call(this);
-	this.array = [];
-	this.getKey = null;
+JW.ObservableArray = function(items, adapter) {
+	JW.ObservableArray._super.call(this, items, adapter);
 	this.spliceEvent = new JW.Event();
 	this.replaceEvent = new JW.Event();
 	this.moveEvent = new JW.Event();
@@ -28,17 +26,12 @@ JW.ObservableArray = function(items) {
 	this.reorderEvent = new JW.Event();
 	this.changeEvent = new JW.Event();
 	this.lengthChangeEvent = new JW.Event();
-	this._lastLength = 0;
-	if (items) {
-		this.addAll(items);
-	}
+	this._lastLength = this.items.length;
 };
 
-JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
+JW.extend(JW.ObservableArray/*<T>*/, JW.AbstractArray/*<T>*/, {
 	/*
 	Fields
-	Array<T> array;
-	String getKey(T item);
 	JW.Event<JW.ObservableArray.SpliceEventParams<T>> spliceEvent;
 	JW.Event<JW.ObservableArray.ReplaceEventParams<T>> replaceEvent;
 	JW.Event<JW.ObservableArray.MoveEventParams<T>> moveEvent;
@@ -49,8 +42,8 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	Integer _lastLength;
 	*/
 	
+	// override
 	destroy: function() {
-		this.clear();
 		this.lengthChangeEvent.destroy();
 		this.changeEvent.destroy();
 		this.reorderEvent.destroy();
@@ -61,64 +54,20 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		this._super();
 	},
 	
-	getSize: function() {
-		return this.array.length;
-	},
-	
-	isEmpty: function() {
-		return this.array.length === 0;
-	},
-	
-	get: function(index) {
-		return this.array[index];
-	},
-	
-	add: function(item, index) {
-		index = JW.defn(index, this.array.length);
-		if (this.splice([], [ new JW.AbstractArray.IndexItems(index, [ item ]) ]) !== undefined) {
-			return true;
-		}
-	},
-	
-	addAll: function(items, index) {
-		index = JW.defn(index, this.array.length);
-		if (this.splice([], [ new JW.AbstractArray.IndexItems(index, items) ]) !== undefined) {
-			return true;
-		}
-	},
-	
-	remove: function(index, count) {
-		var result = this.splice([ new JW.AbstractArray.IndexCount(index, JW.defn(count, 1)) ], []);
-		if (result) {
-			var items = result.removedItemsList[0].items;
-			return (count === undefined) ? items[0] : items;
-		}
-	},
-	
-	removeItem: function(item) {
-		var index = this.indexOf(item);
-		if (index !== undefined) {
-			this.remove(index);
-		}
-		return index;
-	},
-	
-	set: function(item, index) {
-		if (index === this.array.length) {
-			this.add(item);
-			return new JW.Proxy();
-		}
-		var oldItem = JW.Array.set(this.array, item, index);
-		if (oldItem === undefined) {
+	// override
+	trySet: function(item, index) {
+		var wrap = this._super(item, index);
+		if (wrap === undefined) {
 			return;
 		}
-		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem.value, item));
+		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, wrap.value, item));
 		this._triggerChange();
-		return oldItem;
+		return wrap;
 	},
 	
-	move: function(fromIndex, toIndex) {
-		var item = JW.Array.move(this.array, fromIndex, toIndex);
+	// override
+	tryMove: function(fromIndex, toIndex) {
+		var item = this._super(fromIndex, toIndex);
 		if (item === undefined) {
 			return;
 		}
@@ -127,18 +76,20 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		return item;
 	},
 	
-	clear: function() {
-		var items = JW.Array.clear(this.array);
-		if (items === undefined) {
+	// override
+	tryClear: function() {
+		var oldItems = this._super();
+		if (oldItems === undefined) {
 			return;
 		}
-		this.clearEvent.trigger(new JW.ObservableArray.ItemsEventParams(this, items));
+		this.clearEvent.trigger(new JW.ObservableArray.ItemsEventParams(this, oldItems));
 		this._triggerChange();
-		return items;
+		return oldItems;
 	},
 	
-	splice: function(removeParamsList, addParamsList) {
-		var result = JW.Array.splice(this.array, removeParamsList, addParamsList);
+	// override
+	trySplice: function(removeParamsList, addParamsList) {
+		var result = this._super(removeParamsList, addParamsList);
 		if (result === undefined) {
 			return;
 		}
@@ -147,8 +98,9 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		return result;
 	},
 	
-	reorder: function(indexArray) {
-		var items = JW.Array.reorder(this.array, indexArray);
+	// override
+	tryReorder: function(indexArray) {
+		var items = this._super(indexArray);
 		if (items === undefined) {
 			return;
 		}
@@ -157,91 +109,62 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		return items;
 	},
 	
-	detectSplice: function(items, getKey, scope) {
-		return JW.Array.detectSplice(this.array, items, getKey || this.getKey, scope || this);
-	},
-	
-	detectReorder: function(items, getKey, scope) {
-		return JW.Array.detectReorder(this.array, items, getKey || this.getKey, scope || this);
-	},
-	
-	performSplice: function(items, getKey, scope) {
-		var spliceParams = this.detectSplice(items, getKey, scope);
-		if (spliceParams !== undefined) {
-			return this.splice(spliceParams.removeParamsList, spliceParams.addParamsList);
-		}
-	},
-	
-	performReorder: function(items, getKey, scope) {
-		var indexArray = this.detectReorder(items, getKey, scope);
-		if (indexArray !== undefined) {
-			return this.reorder(indexArray);
-		}
-	},
-	
-	every: function(callback, scope) {
-		return JW.Array.every(this.array, callback, scope);
-	},
-	
-	backEvery: function(target, callback, scope) {
-		return JW.Array.backEvery(this.array, callback, scope);
-	},
-	
-	top: function() {
-		return JW.Array.top(this.array);
-	},
-	
-	pop: function() {
-		var length = this.getLength();
-		if (length !== 0) {
-			return this.remove(length - 1);
-		}
-	},
-	
+	// override
 	createEmpty: function() {
 		return new JW.ObservableArray();
 	},
 	
-	createEmptyUnobservable: function() {
-		return new JW.Array();
-	},
-	
+	// override
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
 	
+	// override
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
 	
+	// override
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
 	
-	getItems: function() {
-		return this.array;
-	},
-	
-	createIndexer: function(config) {
-		return new JW.ObservableArray.Indexer(this, config);
-	},
-	
-	createObserver: function(config) {
-		return new JW.ObservableArray.Observer(this, config);
-	},
-	
-	createInserter: function(config) {
-		return new JW.ObservableArray.Inserter(this, config);
-	},
-	
-	createLister: function(config) {
-		return new JW.ObservableArray.Lister(this, config);
-	},
-	
+	// override
 	createMapper: function(config) {
 		return new JW.ObservableArray.Mapper(this, config);
 	},
 	
+	// override
+	createObserver: function(config) {
+		return new JW.ObservableArray.Observer(this, config);
+	},
+	
+	// override
+	createOrderer: function(config) {
+		return new JW.ObservableArray.Orderer(this, config);
+	},
+	
+	// override
+	createSorter: function(config) {
+		return new JW.ObservableArray.Sorter(this, config);
+	},
+	
+	// override
+	createIndexer: function(config) {
+		return new JW.ObservableArray.Indexer(this, config);
+	},
+	
+	// override
+	createLister: function(config) {
+		return new JW.ObservableArray.Lister(this, config);
+	},
+	
+	// override
+	createInserter: function(config) {
+		return new JW.ObservableArray.Inserter(this, config);
+	},
+	
+	// override
 	createSplitter: function(config) {
 		return new JW.ObservableArray.Splitter(this, config);
 	},
@@ -255,11 +178,6 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 		}
 	}
 });
-
-JW.ObservableArray.prototype.getLength = JW.ObservableArray.prototype.getSize;
-JW.ObservableArray.prototype.pushItem = JW.ObservableArray.prototype.add;
-
-JW.apply(JW.ObservableArray.prototype, JW.Alg.BuildMethods);
 
 //--------
 

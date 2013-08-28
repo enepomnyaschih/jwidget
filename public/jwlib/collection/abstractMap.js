@@ -17,7 +17,205 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.AbstractMap = {};
+JW.AbstractMap = function(json, adapter) {
+	JW.AbstractMap._super.call(this);
+	this.json = adapter ? json : json ? JW.apply({}, json) : {};
+	this.length = JW.Map.getLength(this.json);
+	this.getKey = null;
+};
+
+JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
+	/*
+	Fields
+	Map<T> json;
+	Integer length;
+	String getKey(T item);
+	*/
+	
+	getJson: function() {
+		return this.json;
+	},
+	
+	getLength: function() {
+		return this.length;
+	},
+	
+	isEmpty: function() {
+		return this.length === 0;
+	},
+	
+	get: function(key) {
+		return this.json[key];
+	},
+	
+	getKeys: function() {
+		return JW.Map.getKeys(this.json);
+	},
+	
+	every: function(callback, scope) {
+		return JW.Map.every(this.json, callback, scope);
+	},
+	
+	filter: function(callback, scope) {
+		return JW.Map.filter(this.json, callback, scope);
+	},
+	
+	$filter: JW.AbstractCollection._create$Map("filter"),
+	
+	map: function(callback, scope) {
+		return JW.Map.map(this.json, callback, scope);
+	},
+	
+	$map: JW.AbstractCollection._create$Map("map"),
+	
+	asMap: function() {
+		return this.json;
+	},
+	
+	$asMap: function() {
+		return this;
+	},
+	
+	trySet: function(item, key) {
+		var spliceResult = this.trySplice([], JW.Map.single(key, item));
+		if (spliceResult !== undefined) {
+			return new JW.Proxy(spliceResult.removedItems[key]);
+		}
+	},
+	
+	setAll: function(items) {
+		var spliceResult = this.trySetAll(items);
+		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
+	},
+	
+	trySetAll: function(items) {
+		return this.trySplice([], items);
+	},
+	
+	setKey: function(oldKey, newKey) {
+		var item = this.trySetKey(oldKey, newKey);
+		return (item !== undefined) ? item : this.json[newKey];
+	},
+	
+	trySetKey: function(oldKey, newKey) {
+		var keyMap = this.tryReindex(JW.Map.single(oldKey, newKey));
+		if (keyMap !== undefined) {
+			return this.json[newKey];
+		}
+	},
+	
+	tryRemove: function(key) {
+		var spliceResult = this.trySplice([key], {});
+		if (spliceResult !== undefined) {
+			return spliceResult.removedItems[key];
+		}
+	},
+	
+	removeAll: function(keys) {
+		var items = this.tryRemoveAll(keys);
+		return (items !== undefined) ? items : {};
+	},
+	
+	$removeAll: JW.AbstractCollection._create$Map("removeAll"),
+	
+	tryRemoveAll: function(keys) {
+		var spliceResult = this.trySplice(keys);
+		if (spliceResult !== undefined) {
+			return spliceResult.removedItems;
+		}
+	},
+	
+	removeItems: function(items) {
+		var itemSet = new JW.Set(items);
+		var newItems = this.filter(function(item) {
+			return !itemSet.contains(item);
+		});
+		this.performSplice(newItems);
+	},
+	
+	clear: function() {
+		var result = this.tryClear();
+		return (result !== undefined) ? result : {};
+	},
+	
+	$clear: JW.AbstractCollection._create$Map("clear"),
+	
+	tryClear: function() {
+		return JW.Map.tryClear(this.json);
+	},
+	
+	splice: function(removedKeys, updatedItems) {
+		var spliceResult = this.trySplice(removedKeys, updatedItems);
+		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
+	},
+	
+	trySplice: function(removedKeys, updatedItems) {
+		return JW.Map.trySplice(this.json, removedKeys, updatedItems);
+	},
+	
+	reindex: function(keyMap) {
+		var result = this.tryReindex(keyMap);
+		return (result !== undefined) ? result : {};
+	},
+	
+	tryReindex: function(keyMap) {
+		return JW.Map.tryReindex(this.json, keyMap);
+	},
+	
+	detectSplice: function(newItems) {
+		return JW.Map.detectSplice(this.json, newItems);
+	},
+	
+	detectReindex: function(newItems, getKey, scope) {
+		return JW.Map.detectReindex(this.json, newItems, getKey || this.getKey, scope || this);
+	},
+	
+	performSplice: function(newItems) {
+		var params = this.detectSplice(newItems);
+		if (params !== undefined) {
+			this.trySplice(params.removedKeys, params.updatedItems);s
+		}
+	},
+	
+	performReindex: function(newItems, getKey, scope) {
+		var keyMap = this.detectReindex(newItems, getKey, scope);
+		if (keyMap !== undefined) {
+			this.tryReindex(keyMap);
+		}
+	},
+	
+	createMapper: function(config) {
+		return new JW.AbstractMap.Mapper(this, config);
+	},
+	
+	createObserver: function(config) {
+		return new JW.AbstractMap.Observer(this, config);
+	},
+	
+	createOrderer: function(config) {
+		return new JW.AbstractMap.Orderer(this, config);
+	},
+	
+	createSorter: function(config) {
+		return new JW.AbstractMap.Sorter(this, config);
+	},
+	
+	createIndexer: function(config) {
+		return new JW.AbstractMap.Indexer(this, config);
+	},
+	
+	createLister: function(config) {
+		return new JW.AbstractMap.Lister(this, config);
+	},
+	
+	createInserter: function(config) {
+		return new JW.AbstractMap.Inserter(this, config);
+	},
+	
+	equal: function(map) {
+		return JW.Map.equal(this.json, map);
+	}
+});
 
 JW.AbstractMap.SpliceParams = function(removedKeys, updatedItems) {
 	JW.AbstractMap.SpliceParams._super.call(this);

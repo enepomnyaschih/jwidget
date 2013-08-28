@@ -1,0 +1,468 @@
+﻿/*
+	JW array extension.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+JW.IndexedCollection.createStaticMethods(JW.Array);
+
+JW.apply(JW.Array, {
+	getFirst: function(target) {
+		return target[0];
+	},
+	
+	getLast: function(target) {
+		return target[target.length - 1];
+	},
+	
+	getLength: function(target) {
+		return target.length;
+	},
+	
+	isEmpty: function(target) {
+		return target.length === 0;
+	},
+	
+	get: function(target, index) {
+		return target[index];
+	},
+	
+	getKeys: function(target) {
+		var result = new Array(target.length);
+		for (var i = 0, l = target.length; i < l; ++i) {
+			result[i] = i;
+		}
+		return result;
+	},
+	
+	every: function(target, callback, scope) {
+		// JW.assertArray(target);
+		// JW.assertFunction(callback);
+		for (var i = 0, l = target.length; i < l; ++i) {
+			if (callback.call(scope || target, target[i], i) === false) {
+				return false;
+			}
+		}
+		return true;
+	},
+	
+	filter: function(target, callback, scope) {
+		var result = [];
+		JW.Array.every(target, function(item, index) {
+			if (callback.call(this, item, index) !== false) {
+				result.push(item);
+			}
+		}, scope);
+		return result;
+	},
+	
+	$filter: JW.AbstractCollection._createStatic$Array(JW.Array, "filter"),
+	
+	map: function(target, callback, scope) {
+		var result = [];
+		JW.Array.every(target, function(item, index) {
+			result.push(callback.call(this, item, index));
+		}, scope);
+		return result;
+	},
+	
+	$map: JW.AbstractCollection._create$Array(JW.Array, "map"),
+	
+	toList: function(target) {
+		return target.concat();
+	},
+	
+	toSet: function(target) {
+		return new JW.Set(target);
+	},
+	
+	asList: function(target) {
+		return target;
+	},
+	
+	add: function(target, item, index) {
+		JW.Array.tryAdd(target, item, index);
+	},
+	
+	tryAdd: function(target, item, index) {
+		target.splice(JW.def(index, target.length), 0, item);
+		return true;
+	},
+	
+	addAll: function(target, items, index) {
+		JW.Array.tryAddAll(target, items, index);
+	},
+	
+	tryAddAll: function(target, items, index) {
+		if (items.length === 0) {
+			return;
+		}
+		if (index === undefined) {
+			target.push.apply(target, items);
+		} else {
+			target.splice.apply(target, [ index, 0 ].concat(items));
+		}
+		return true;
+	},
+	
+	trySet: function(target, item, index) {
+		// JW.assertArray(target);
+		// JW.assertIsSet(item);
+		// JW.assertInt(index, 0, target.length + 1);
+		var oldItem = target[index];
+		if (item !== oldItem) {
+			target[index] = item;
+			return oldItem;
+		}
+	},
+	
+	tryRemove: function(target, index) {
+		return target.splice(index, 1)[0];
+	},
+	
+	removeAll: function(target, index, count) {
+		var result = JW.Array.tryRemoveAll(target, index, count);
+		return result || [];
+	},
+	
+	$removeAll: JW.AbstractCollection._createStatic$Array(JW.Array, "removeAll"),
+	
+	tryRemoveAll: function(target, index, count) {
+		if (count === 0) {
+			return;
+		}
+		return target.splice(index, count);
+	},
+	
+	removeItems: function(target, items) {
+		var itemSet = new JW.Set(items);
+		var newItems = JW.Array.filter(target, function(v) { return !itemSet.contains(item); });
+		JW.Array.performSplice(target, newItems);
+	},
+	
+	move: function(target, fromIndex, toIndex) {
+		JW.Array.tryMove(target, fromIndex, toIndex);
+		return JW.Array.get(target, toIndex);
+	},
+	
+	tryMove: function(target, fromIndex, toIndex) {
+		// JW.assertArray(target);
+		// JW.assertInt(fromIndex, 0, target.length);
+		// JW.assertInt(toIndex, 0, target.length);
+		if (fromIndex === toIndex) {
+			return;
+		}
+		var item = target[fromIndex];
+		target.splice(fromIndex, 1);
+		target.splice(toIndex, 0, item);
+		return item;
+	},
+	
+	clear: function(target) {
+		var result = JW.Array.tryClear(target);
+		return (result !== undefined) ? result : [];
+	},
+	
+	$clear: JW.AbstractCollection._createStatic$Array(JW.Array, "clear"),
+	
+	tryClear: function(target) {
+		// JW.assertArray(target);
+		if (target.length !== 0) {
+			return target.splice(0, target.length);
+		}
+	},
+	
+	splice: function(target, removeParamsList, addParamsList) {
+		var result = JW.Array.trySplice(target, removeParamsList, addParamsList);
+		return (result !== undefined) ? result : new JW.AbstractArray.SpliceResult(this.items.concat(), [], []);
+	},
+	
+	trySplice: function(target, removeParamsList, addParamsList) {
+		// JW.assertArray(target);
+		// JW.assertArray(removeParamsList, function(params) { return params instanceof JW.AbstractArray.IndexCount; }, this);
+		// JW.assertArray(addParamsList, function(params) { return params instanceof JW.AbstractArray.IndexItems; }, this);
+		// TODO: assert out of bounds stuff
+		var oldItems = target.concat();
+		var removedItemsList = [];
+		for (var i = removeParamsList.length - 1; i >= 0; --i) {
+			var params = removeParamsList[i];
+			var index = params.index;
+			var items = JW.Array.tryRemove(target, index, params.count);
+			if (items === undefined) {
+				continue;
+			}
+			removedItemsList.push(new JW.AbstractArray.IndexItems(index, items));
+		}
+		var addedItemsList = []
+		for (var i = 0, l = addParamsList.length; i < l; ++i) {
+			var params = addParamsList[i];
+			if (JW.Array.tryAddAll(target, params.items, params.index) === undefined) {
+				continue;
+			}
+			addedItemsList.push(params);
+		}
+		if ((removedItemsList.length !== 0) || (addedItemsList.length !== 0)) {
+			removedItemsList.reverse();
+			return new JW.AbstractArray.SpliceResult(oldItems, removedItemsList, addedItemsList);
+		}
+	},
+	
+	reorder: function(target, indexList) {
+		JW.Array.tryReorder(target, indexList);
+	},
+	
+	tryReorder: function(target, indexArray) {
+		// JW.assertArray(target);
+		// JW.assertArray(indexArray);
+		// JW.assert(target.length === indexArray.length, '"target" and "indexArray" must have equal length');
+		// var indexArraySorted = indexArray.concat();
+		// indexArraySorted.sort();
+		// JW.assert(JW.Array.isIdentity(indexArraySorted), '"indexArray" must contain all indexes from 0 to target.length - 1');
+		var length = target.length;
+		if (JW.Array.isIdentity(indexArray)) {
+			return;
+		}
+		var oldItems = target.concat();
+		for (var i = 0; i < length; ++i) {
+			target[indexArray[i]] = oldItems[i];
+		}
+		return oldItems;
+	},
+	
+	detectSplice: function(oldItems, newItems, getKey, scope) {
+		getKey = getKey || JW.iid;
+		scope = scope || oldItems;
+		var removeParamsList = [];
+		var addParamsList = [];
+		var oldIndexMap = {};
+		for (var i = 0, l = oldItems.length; i < l; ++i) {
+			oldIndexMap[getKey.call(scope, oldItems[i])] = i;
+		}
+		var nextOldIndex = 0;
+		var offset = 0;
+		var newItemBuffer = [];
+		
+		function buffer(item) {
+			newItemBuffer.push(item);
+		}
+		
+		function flush() {
+			if (newItemBuffer.length === 0) {
+				return;
+			}
+			addParamsList.push(new JW.AbstractArray.IndexItems(offset + nextOldIndex, newItemBuffer));
+			offset += newItemBuffer.length;
+			newItemBuffer = [];
+		}
+		
+		function testRemove(oldIndex) {
+			if (oldIndex > nextOldIndex) {
+				var count = oldIndex - nextOldIndex;
+				removeParamsList.push(new JW.AbstractArray.IndexCount(nextOldIndex, count));
+				offset -= count;
+			}
+		}
+		
+		for (var newIndex = 0, l = newItems.length; newIndex < l; ++newIndex) {
+			var item = newItems[newIndex];
+			var key = getKey.call(scope, item);
+			var oldIndex = oldIndexMap[key];
+			if ((oldIndex === undefined) || (oldIndex < nextOldIndex)) {
+				buffer(item);
+			} else {
+				flush();
+				testRemove(oldIndex);
+				nextOldIndex = oldIndex + 1;
+			}
+		}
+		flush();
+		testRemove(oldItems.length);
+		if ((removeParamsList.length !== 0) || (addParamsList.length !== 0)) {
+			return new JW.AbstractArray.SpliceParams(removeParamsList, addParamsList);
+		}
+	},
+	
+	detectReorder: function(oldItems, newItems, getKey, scope) {
+		getKey = getKey || JW.iid;
+		scope = scope || oldItems;
+		var indexArray = [];
+		var newIndexMap = {};
+		for (var i = 0, l = newItems.length; i < l; ++i) {
+			newIndexMap[getKey.call(scope, newItems[i])] = i;
+		}
+		for (var i = 0, l = oldItems.length; i < l; ++i) {
+			indexArray.push(newIndexMap[getKey.call(scope, oldItems[i])]);
+		}
+		if (!JW.Array.isIdentity(indexArray)) {
+			return indexArray;
+		}
+	},
+	
+	performSplice: function(target, newItems, getKey, scope) {
+		var params = JW.Array.detectSplice(target, newItems, getKey, scope);
+		if (params !== undefined) {
+			JW.Array.trySplice(target, params.removeParamsList, params.addParamsList);
+		}
+	},
+	
+	performReorder: function(target, newItems, getKey, scope) {
+		var indexArray = JW.Array.detectReorder(target, newItems, getKey, scope);
+		if (indexArray !== undefined) {
+			JW.Array.tryReorder(target, indexArray);
+		}
+	},
+	
+	sort: function(target, callback, scope, order) {
+		JW.Array.performReorder(target, JW.Array.toSorted(target, callback, scope, order));
+	},
+	
+	sortBy: function(target, field, order) {
+		JW.Array.performReorder(target, JW.Array.toSortedBy(target, field, order));
+	},
+	
+	sortByMethod: function(target, method, args, order) {
+		JW.Array.performReorder(target, JW.Array.toSortedByMethod(target, method, args, order));
+	},
+	
+	sortComparing: function(target, compare, scope, order) {
+		JW.Array.performReorder(target, JW.Array.toSortedComparing(target, compare, scope, order));
+	},
+	
+	createMapper: function(source, config) {
+		return new JW.AbstractArray.Mapper(new JW.Array(source, true), config);
+	},
+	
+	createObserver: function(source, config) {
+		return new JW.AbstractArray.Observer(new JW.Array(source, true), config);
+	},
+	
+	createOrderer: function(source, config) {
+		return new JW.AbstractArray.Orderer(new JW.Array(source, true), config);
+	},
+	
+	createSorter: function(source, config) {
+		return new JW.AbstractArray.Sorter(new JW.Array(source, true), config);
+	},
+	
+	createIndexer: function(source, config) {
+		return new JW.AbstractArray.Indexer(new JW.Array(source, true), config);
+	},
+	
+	createLister: function(source, config) {
+		return new JW.AbstractArray.Lister(new JW.Array(source, true), config);
+	},
+	
+	createInserter: function(source, config) {
+		return new JW.AbstractArray.Inserter(new JW.Array(source, true), config);
+	},
+	
+	createSplitter: function(source, config) {
+		return new JW.AbstractArray.Splitter(new JW.Array(source, true), config);
+	},
+	
+	equal: function(target, arr) {
+		if (target === arr) {
+			return true;
+		}
+		if (target.length !== arr.length) {
+			return false;
+		}
+		for (var i = 0, l = target.length; i < l; ++i) {
+			if (target[i] !== arr[i]) {
+				return false;
+			}
+		}
+		return true;
+	},
+	
+	collapse: function(target, depth) {
+		var result = [];
+		for (var i = 0, l = target.length; i < l; ++i) {
+			if (!JW.isArray(target[i])) {
+				result.push(target[i]);
+				continue;
+			}
+			if (!JW.isSet(depth)) {
+				JW.Array.tryAddAll(result, JW.Array.collapse(target[i]));
+				continue;
+			}
+			if (depth) {
+				JW.Array.tryAddAll(result, JW.Array.collapse(target[i], depth - 1));
+				continue;
+			}
+			result.push(target[i]);
+		}
+		return result;
+	},
+	
+	indexOf: Array.prototype.indexOf ? function(target, item) {
+		return target.indexOf(item);
+	} : function(target, item) {
+		var key = JW.Array.keyOf(target, item);
+		return (key !== undefined) ? key : -1;
+	},
+	
+	backEvery: function(target, callback, scope) {
+		for (var i = target.length - 1; i >= 0; --i) {
+			if (callback.call(scope || target, target[i], i) === false) {
+				return false;
+			}
+		}
+		return true;
+	},
+	
+	cmp: function(x, y, caseInsensitive) {
+		var n = Math.min(x.length, y.length);
+		for (var i = 0; i < n; ++i) {
+			var result = JW.cmp(x[i], y[i], caseInsensitive);
+			if (result) {
+				return result;
+			}
+		}
+		return JW.cmp(x.length, y.length);
+	},
+	
+	shuffle: function(n) {
+		var result = new Array(n);
+		for (var i = 0; i < n; ++i) {
+			result[i] = i;
+		}
+		for (var i = 0; i < n; ++i) {
+			var j = i + Math.floor(Math.random() * (n - i));
+			var t = result[i];
+			result[i] = result[j];
+			result[j] = t;
+		}
+		return result;
+	},
+	
+	isIdentity: function(array) {
+		for (var i = 0, l = array.length; i < l; ++i) {
+			if (array[i] !== i) {
+				return false;
+			}
+		}
+		return true;
+	},
+	
+	merge: function(arrays) {
+		var result = [];
+		for (var i = 0, l = arrays.length; i < l; ++i) {
+			result.push.apply(result, arrays[i]);
+		}
+		return result;
+	}
+});
