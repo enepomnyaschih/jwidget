@@ -175,8 +175,8 @@ JW.extend(JW.AbstractSet/*<T>*/, JW.AbstractCollection/*<T>*/, {
 		return new JW.AbstractSet.Lister(this, config);
 	},
 	
-	equal: function(set) {
-		return JW.Set.equal(this.json, set);
+	equal: function(array) {
+		return JW.Set.equal(this.json, array);
 	}
 });
 

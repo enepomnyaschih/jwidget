@@ -239,7 +239,7 @@ JW.apply(JW, {
 			obj[token] = obj[token] || {};
 			obj = obj[token];
 		}
-		obj[JW.Array.top(field)] = value;
+		obj[JW.Array.getLast(field)] = value;
 	},
 	
 	iid: function(obj) {

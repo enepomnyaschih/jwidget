@@ -232,13 +232,15 @@ JW.apply(JW.Set, {
 		if (x === y) {
 			return true;
 		}
-		var size = JW.Set.getLength(y);
-		for (var iid in x) {
-			if ((--size < 0) || !y.hasOwnProperty(iid)) {
+		if (JW.Set.getLength(x) !== y.length) {
+			return false;
+		}
+		for (var i = 0, l = y.length; i < l; ++i) {
+			if (!x.hasOwnProperty(y[i]._iid)) {
 				return false;
 			}
 		}
-		return size === 0;
+		return true;
 	},
 	
 	single: function(item) {

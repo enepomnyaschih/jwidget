@@ -464,5 +464,10 @@ JW.apply(JW.Array, {
 			result.push.apply(result, arrays[i]);
 		}
 		return result;
+	},
+	
+	// deprecated
+	top: function(target) {
+		return JW.Array.getLast(target);
 	}
 });

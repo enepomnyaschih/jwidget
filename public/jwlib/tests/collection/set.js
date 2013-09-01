@@ -29,56 +29,36 @@ JW.Tests.Collection.SetTestCase = function(config) {
 JW.extend(JW.Tests.Collection.SetTestCase, JW.Unit.TestCase, {
 	testRemoveItem: function() {
 		var set = new JW.Set([ this.a, this.b, this.c, this.d ]);
-		this.assertStrictEqual(this.b._iid, set.removeItem(this.b));
-		this.assertUndefined(set.removeItem(this.e));
-		this.assertTrue(set.equal(new JW.Set([ this.a, this.c, this.d ])));
+		set.removeItem(this.b);
+		set.removeItem(this.e);
+		this.assertTrue(set.equal([ this.a, this.c, this.d ]));
 	},
 	
 	testRemoveItemStatic: function() {
 		var set = {};
 		JW.Set.addAll(set, [ this.a, this.b, this.c, this.d ]);
-		this.assertStrictEqual(this.b._iid, JW.Set.removeItem(set, this.b));
-		this.assertUndefined(JW.Set.removeItem(set, this.e));
+		JW.Set.removeItem(set, this.b);
+		JW.Set.removeItem(set, this.e);
 		
-		var expected = {};
-		JW.Set.addAll(expected, [ this.a, this.c, this.d ]);
-		this.assertTrue(JW.Set.equal(expected, set));
+		this.assertTrue(JW.Set.equal(set, [ this.a, this.c, this.d ]));
 	},
 	
 	testEqual: function() {
 		var a = new JW.Set([ this.a, this.b, this.c, this.d ]);
-		var b = new JW.Set([ this.a, this.b, this.c, this.d ]);
-		var c = new JW.Set([ this.a, this.d, this.b, this.c ]);
-		var d = new JW.Set([ this.a, this.b, this.e, this.d ]);
-		var e = new JW.Set([ this.a, this.b, this.c, this.d, this.e ]);
-		var f = new JW.Set([ this.a, this.b, this.c ]);
-		this.assertTrue(a.equal(a));
-		this.assertTrue(a.equal(b));
-		this.assertTrue(a.equal(c));
-		this.assertFalse(a.equal(d));
-		this.assertFalse(a.equal(e));
-		this.assertFalse(a.equal(f));
+		this.assertTrue(a.equal([ this.a, this.b, this.c, this.d ]));
+		this.assertTrue(a.equal([ this.a, this.d, this.b, this.c ]));
+		this.assertFalse(a.equal([ this.a, this.b, this.e, this.d ]));
+		this.assertFalse(a.equal([ this.a, this.b, this.c, this.d, this.e ]));
+		this.assertFalse(a.equal([ this.a, this.b, this.c ]));
 	},
 	
 	testEqualStatic: function() {
 		var a = {};
-		var b = {};
-		var c = {};
-		var d = {};
-		var e = {};
-		var f = {};
-		var g = {};
 		JW.Set.addAll(a, [ this.a, this.b, this.c, this.d ]);
-		JW.Set.addAll(b, [ this.a, this.b, this.c, this.d ]);
-		JW.Set.addAll(c, [ this.a, this.d, this.b, this.c ]);
-		JW.Set.addAll(d, [ this.a, this.b, this.e, this.d ]);
-		JW.Set.addAll(e, [ this.a, this.b, this.c, this.d, this.e ]);
-		JW.Set.addAll(f, [ this.a, this.b, this.c ]);
-		this.assertTrue(JW.Set.equal(a, a));
-		this.assertTrue(JW.Set.equal(a, b));
-		this.assertTrue(JW.Set.equal(a, c));
-		this.assertFalse(JW.Set.equal(a, d));
-		this.assertFalse(JW.Set.equal(a, e));
-		this.assertFalse(JW.Set.equal(a, f));
+		this.assertTrue(JW.Set.equal(a, [ this.a, this.b, this.c, this.d ]));
+		this.assertTrue(JW.Set.equal(a, [ this.a, this.d, this.b, this.c ]));
+		this.assertFalse(JW.Set.equal(a, [ this.a, this.b, this.e, this.d ]));
+		this.assertFalse(JW.Set.equal(a, [ this.a, this.b, this.c, this.d, this.e ]));
+		this.assertFalse(JW.Set.equal(a, [ this.a, this.b, this.c ]));
 	}
 });
