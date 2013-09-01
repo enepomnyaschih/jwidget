@@ -104,7 +104,7 @@ JW.apply(JW.Map, {
 		var addedItems = {};
 		for (var key in map) {
 			var item = map[key];
-			var oldItem = JW.Map.set(target, item, key);
+			var oldItem = JW.Map.trySet(target, item, key);
 			if (oldItem === undefined) {
 				continue;
 			}
@@ -161,7 +161,7 @@ JW.apply(JW.Map, {
 		var items = {};
 		for (var i = 0, l = keys.length; i < l; ++i) {
 			var key = keys[i];
-			var item = JW.Map.remove(target, key);
+			var item = JW.Map.tryRemove(target, key);
 			if (item !== undefined) {
 				items[key] = item;
 			}
@@ -348,7 +348,7 @@ JW.apply(JW.Map, {
 		return length === 0;
 	},
 	
-	single: function(item, key) {
+	single: function(key, item) {
 		var result = {};
 		result[key] = item;
 		return result;
