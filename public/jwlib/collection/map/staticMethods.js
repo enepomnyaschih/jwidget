@@ -335,7 +335,7 @@ JW.apply(JW.Map, {
 		return new JW.AbstractMap.Inserter(new JW.Map(source, true), config);
 	},
 	
-	equal: function(map) {
+	equal: function(x, y) {
 		if (x === y) {
 			return true;
 		}

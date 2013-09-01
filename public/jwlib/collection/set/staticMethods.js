@@ -233,9 +233,6 @@ JW.apply(JW.Set, {
 	},
 	
 	equal: function(x, y) {
-		if (x === y) {
-			return true;
-		}
 		if (JW.Set.getLength(x) !== y.length) {
 			return false;
 		}

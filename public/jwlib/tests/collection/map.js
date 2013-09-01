@@ -38,19 +38,12 @@ JW.extend(JW.Tests.Collection.MapTestCase, JW.Unit.TestCase, {
 	
 	testEqual: function() {
 		var a = new JW.Map({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 });
-		var b = new JW.Map({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 });
-		var c = new JW.Map({ "a": 0, "f": 0, "b": 2, "c": 3, "d": 2, "e": 3 });
-		var d = new JW.Map({ "a": 0, "b": 2, "c": 3, "d": 3, "e": 3, "f": 0 });
-		var e = new JW.Map({ "a": 0, "b": 2, "c": 3, "D": 2, "e": 3, "f": 0 });
-		var f = new JW.Map({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0, "g": 0 });
-		var g = new JW.Map({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3 });
-		this.assertTrue(a.equal(a));
-		this.assertTrue(a.equal(b));
-		this.assertTrue(a.equal(c));
-		this.assertFalse(a.equal(d));
-		this.assertFalse(a.equal(e));
-		this.assertFalse(a.equal(f));
-		this.assertFalse(a.equal(g));
+		this.assertTrue(a.equal({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 }));
+		this.assertTrue(a.equal({ "a": 0, "f": 0, "b": 2, "c": 3, "d": 2, "e": 3 }));
+		this.assertFalse(a.equal({ "a": 0, "b": 2, "c": 3, "d": 3, "e": 3, "f": 0 }));
+		this.assertFalse(a.equal({ "a": 0, "b": 2, "c": 3, "D": 2, "e": 3, "f": 0 }));
+		this.assertFalse(a.equal({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0, "g": 0 }));
+		this.assertFalse(a.equal({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3 }));
 	},
 	
 	testEqualStatic: function() {
