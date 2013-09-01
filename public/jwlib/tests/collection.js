@@ -126,8 +126,8 @@ JW.Tests.Collection = {
 			testCase.output("Changed");
 		});
 		
-		set.sizeChangeEvent.bind(function(params) {
-			testCase.output("Changed size from " + params.oldSize + " to " + params.newSize);
+		set.lengthChangeEvent.bind(function(params) {
+			testCase.output("Changed size from " + params.oldLength + " to " + params.newLength);
 		});
 	},
 	
@@ -146,7 +146,7 @@ JW.Tests.Collection = {
 	},
 	
 	assertSet: function(testCase, expected, unexpected, set) {
-		testCase.assertStrictEqual(expected.length, set.getSize());
+		testCase.assertStrictEqual(expected.length, set.getLength());
 		for (var i = 0; i < expected.length; ++i) {
 			testCase.assertTrue(set.contains(expected[i]));
 		}
@@ -186,12 +186,8 @@ JW.Tests.Collection = {
 	
 	assertSetSpliceResult: function(testCase, expected, spliceResult) {
 		testCase.assertTrue(spliceResult instanceof JW.AbstractSet.SpliceResult);
-		testCase.assertTrue(JW.Set.equal(
-			JW.Array.indexBy(expected.removedItems, "_iid"),
-			JW.Array.indexBy(spliceResult.removedItems, "_iid")));
-		testCase.assertTrue(JW.Set.equal(
-			JW.Array.indexBy(expected.addedItems, "_iid"),
-			JW.Array.indexBy(spliceResult.addedItems, "_iid")));
+		testCase.assertTrue(new JW.Set(expected.removedItems).equal(spliceResult.removedItems));
+		testCase.assertTrue(new JW.Set(expected.addedItems).equal(spliceResult.addedItems));
 	},
 	
 	formatMap: function(items) {

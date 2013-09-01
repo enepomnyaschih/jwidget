@@ -78,7 +78,7 @@ JW.extend(JW.AbstractArray/*<V>*/, JW.IndexedCollection/*<Integer, V>*/, {
 	
 	$map: JW.AbstractCollection._create$Array("map"),
 	
-	toList: function() {
+	toArray: function() {
 		return this.items.concat();
 	},
 	

@@ -40,6 +40,10 @@ JW.extend(JW.AbstractSet/*<T>*/, JW.AbstractCollection/*<T>*/, {
 		return this.json.hasOwnProperty(item._iid);
 	},
 	
+	contains: function(item) {
+		return this.json.hasOwnProperty(item._iid);
+	},
+	
 	every: function(callback, scope) {
 		return JW.Set.every(this.json, callback, scope);
 	},
@@ -122,12 +126,13 @@ JW.extend(JW.AbstractSet/*<T>*/, JW.AbstractCollection/*<T>*/, {
 	
 	clear: function() {
 		var items = this.tryClear();
-		return (result !== undefined) ? result : [];
+		return (items !== undefined) ? items : [];
 	},
 	
 	$clear: JW.AbstractCollection._create$Array("clear"),
 	
 	tryClear: function() {
+		this.length = 0;
 		return JW.Set.tryClear(this.json);
 	},
 	
@@ -137,7 +142,11 @@ JW.extend(JW.AbstractSet/*<T>*/, JW.AbstractCollection/*<T>*/, {
 	},
 	
 	trySplice: function(removedItems, addedItems) {
-		return JW.Set.trySplice(this.json, removedItems, addedItems);
+		var spliceResult = JW.Set.trySplice(this.json, removedItems, addedItems);
+		if (spliceResult) {
+			this.length += spliceResult.addedItems.length - spliceResult.removedItems.length;
+			return spliceResult;
+		}
 	},
 	
 	detectSplice: function(newItems) {
@@ -145,7 +154,7 @@ JW.extend(JW.AbstractSet/*<T>*/, JW.AbstractCollection/*<T>*/, {
 	},
 	
 	performSplice: function(newItems) {
-		var spliceParams = this.detectSplice(this.json, newItems);
+		var spliceParams = this.detectSplice(newItems);
 		if (spliceParams !== undefined) {
 			this.trySplice(spliceParams.removedItems, spliceParams.addedItems);
 		}

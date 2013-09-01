@@ -141,6 +141,7 @@ JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
 	$clear: JW.AbstractCollection._create$Map("clear"),
 	
 	tryClear: function() {
+		this.length = 0;
 		return JW.Map.tryClear(this.json);
 	},
 	
@@ -150,7 +151,11 @@ JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
 	},
 	
 	trySplice: function(removedKeys, updatedItems) {
-		return JW.Map.trySplice(this.json, removedKeys, updatedItems);
+		var spliceResult = JW.Map.trySplice(this.json, removedKeys, updatedItems);
+		if (spliceResult) {
+			this.length += JW.Map.getLength(spliceResult.addedItems) - JW.Map.getLength(spliceResult.removedItems);
+			return spliceResult;
+		}
 	},
 	
 	reindex: function(keyMap) {

@@ -144,7 +144,7 @@ JW.extend(JW.AbstractCollection/*<V>*/, JW.Class, {
 		compare = compare || JW.cmp;
 		scope = scope || this;
 		order = order || 1;
-		var items = this.toList();
+		var items = this.toArray();
 		items.sort(function(x, y) {
 			return order * compare.call(scope, x, y);
 		});

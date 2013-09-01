@@ -81,7 +81,7 @@ JW.apply(JW.Array, {
 	
 	$map: JW.AbstractCollection._create$Array(JW.Array, "map"),
 	
-	toList: function(target) {
+	toArray: function(target) {
 		return target.concat();
 	},
 	

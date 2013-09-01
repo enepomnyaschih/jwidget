@@ -135,7 +135,7 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
 		compare = compare || JW.cmp;
 		scope = scope || target;
 		order = order || 1;
-		var items = namespace.toList();
+		var items = namespace.toArray();
 		items.sort(function(x, y) {
 			return order * compare.call(scope, x, y);
 		});

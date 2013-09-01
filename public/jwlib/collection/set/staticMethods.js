@@ -39,6 +39,10 @@ JW.apply(JW.Set, {
 		return target.hasOwnProperty(item._iid);
 	},
 	
+	contains: function(target, item) {
+		return target.hasOwnProperty(item._iid);
+	},
+	
 	every: function(target, callback, scope) {
 		scope = scope || target;
 		for (var iid in target) {
@@ -64,7 +68,7 @@ JW.apply(JW.Set, {
 	map: function(target, callback, scope) {
 		var result = {};
 		JW.Set.every(target, function(item) {
-			result[item._iid] = callback.call(this, item);
+			JW.Set.tryAdd(result, callback.call(this, item));
 		}, scope);
 		return result;
 	},
@@ -157,7 +161,7 @@ JW.apply(JW.Set, {
 	$clear: JW.AbstractCollection._createStatic$Array(JW.Set, "clear"),
 	
 	tryClear: function(target) {
-		var items = JW.Set.toList(target);
+		var items = JW.Set.toArray(target);
 		if (!items.length) {
 			return;
 		}
@@ -178,7 +182,7 @@ JW.apply(JW.Set, {
 		}
 	},
 	
-	detectSplice: function(target, newItemArray) {
+	detectSplice: function(oldItems, newItemArray) {
 		var removedItems = [];
 		var addedItems = [];
 		var newItems = JW.Array.indexBy(newItemArray, "_iid");
