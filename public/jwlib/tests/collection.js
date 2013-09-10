@@ -93,8 +93,8 @@ JW.Tests.Collection = {
 			testCase.output("Changed");
 		});
 		
-		map.sizeChangeEvent.bind(function(params) {
-			testCase.output("Changed size from " + params.oldSize + " to " + params.newSize);
+		map.lengthChangeEvent.bind(function(params) {
+			testCase.output("Changed size from " + params.oldLength + " to " + params.newLength);
 		});
 	},
 	

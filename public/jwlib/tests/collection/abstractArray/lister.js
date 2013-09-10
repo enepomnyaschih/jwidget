@@ -114,11 +114,7 @@ JW.Tests.Collection.AbstractArray.ListerTestCase = JW.Unit.TestCase.extend({
 		lister2.destroy();
 		this.assertTarget([ x ], target);
 		
-		this.setExpectedOutput(
-			"Cleared [x]",
-			"Changed",
-			"Changed size from 1 to 0"
-		);
+		this.setExpectedOutput();
 		target.destroy();
 		
 		this.setExpectedOutput();
@@ -159,7 +155,7 @@ JW.Tests.Collection.AbstractArray.ListerTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	assertTarget: function(values, target) {
-		this.assertStrictEqual(values.length, target.getSize());
+		this.assertStrictEqual(values.length, target.getLength());
 		for (var i = 0; i < values.length; ++i) {
 			this.assertTrue(target.contains(values[i]));
 		}

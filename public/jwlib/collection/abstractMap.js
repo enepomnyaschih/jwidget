@@ -119,7 +119,7 @@ JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
 	$removeAll: JW.AbstractCollection._create$Map("removeAll"),
 	
 	tryRemoveAll: function(keys) {
-		var spliceResult = this.trySplice(keys);
+		var spliceResult = this.trySplice(keys, {});
 		if (spliceResult !== undefined) {
 			return spliceResult.removedItems;
 		}

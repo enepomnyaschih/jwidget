@@ -108,7 +108,7 @@ JW.extend(JW.AbstractArray/*<V>*/, JW.IndexedCollection/*<Integer, V>*/, {
 	
 	tryAddAll: function(items, index) {
 		if (index === undefined) {
-			index = items.length;
+			index = this.items.length;
 		}
 		if (this.trySplice([], [new JW.AbstractArray.IndexItems(index, items)])) {
 			return true;

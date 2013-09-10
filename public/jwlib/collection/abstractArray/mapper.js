@@ -26,7 +26,7 @@ JW.AbstractArray.Mapper = function(source, config) {
 	this._targetCreated = !config.target;
 	this.target = config.target || this.source.createEmpty();
 	this.scope = config.scope || this;
-	this.target.addAll(this._createItems(this.source.getItems()));
+	this.target.tryAddAll(this._createItems(this.source.getItems()));
 };
 
 JW.extend(JW.AbstractArray.Mapper/*<S, T>*/, JW.Class, {
