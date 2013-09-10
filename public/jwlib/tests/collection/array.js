@@ -63,21 +63,13 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	
 	testGetValuesArray: function()
 	{
-		this.assertTrue(JW.Array.equal([ 10, null, "lala" ], JW.Array.getValuesArray(this.arr)));
-		this.assertNotEqual(this.arr, JW.Array.getValuesArray(this.arr));
+		this.assertTrue(JW.Array.equal([ 10, null, "lala" ], JW.Array.toArray(this.arr)));
+		this.assertNotEqual(this.arr, JW.Array.toArray(this.arr));
 	},
 	
 	testGetValuesSet: function()
 	{
 		this.assertTrue(JW.Map.equal({ "10": 10, "lala": "lala" }, JW.Array.indexBy(this.arr)));
-	},
-	
-	testClone: function()
-	{
-		var clone = JW.Array.clone(this.aa);
-		
-		this.assertNotEqual(this.aa, clone);
-		this.assertTrue(JW.Array.equal(this.aa, clone));
 	},
 	
 	testMap: function()
@@ -336,7 +328,7 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	testIndexOf: function()
 	{
 		this.assertStrictEqual(3, JW.Array.indexOf([ "a", "b", "c", "d", "e", "f" ], "d"));
-		this.assertUndefined(JW.Array.indexOf([ "a", "b", "c", "d", "e", "f" ], "h"));
+		this.assertStrictEqual(-1, JW.Array.indexOf([ "a", "b", "c", "d", "e", "f" ], "h"));
 	},
 	
 	testCmp: function()

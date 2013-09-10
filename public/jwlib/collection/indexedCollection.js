@@ -93,20 +93,17 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 		return result;
 	},
 	
-	toSorted: function(callback, scope, order) {
-		callback = callback || function(x) { return x; };
-		order = order || 1;
-		var trios = [];
-		this.every(function(item, key) {
-			trios.add([item, key, callback.call(this, item, key)]);
-		}, scope);
-		trios.sort(function(x, y) {
-			return order * JW.cmp(x[2], y[2]);
-		});
-		return JW.Array.map(trios, function(trio) {
-			return pair[0];
-		});
+	getSortingKeys: function(callback, scope, order) {
+		return this._callStatic("getSortingKeys", [callback, scope || this, order]);
 	},
+	
+	$getSortingKeys: JW.AbstractCollection._create$Array("getSortingKeys"),
+	
+	getSortingKeysComparing: function(compare, scope, order) {
+		return this._callStatic("getSortingKeysComparing", [compare, scope || this, order]);
+	},
+	
+	$getSortingKeysComparing: JW.AbstractCollection._create$Array("getSortingKeysComparing"),
 	
 	index: function(callback, scope) {
 		var result = {};

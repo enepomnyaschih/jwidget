@@ -107,49 +107,20 @@ JW.extend(JW.AbstractCollection/*<V>*/, JW.Class, {
 	searchByMethod: JW.AbstractCollection._createByMethod("search"),
 	
 	toSorted: function(callback, scope, order) {
-		callback = callback || function(x) { return x; };
-		order = order || 1;
-		var pairs = [];
-		this.every(function(item) {
-			pairs.add([item, callback.call(this, item)]);
-		}, scope);
-		pairs.sort(function(x, y) {
-			return order * JW.cmp(x[1], y[1]);
-		});
-		return JW.Array.map(pairs, function(pair) {
-			return pair[0];
-		});
+		return this._callStatic("toSorted", [callback, scope || this, order]);
 	},
 	
 	$toSorted: JW.AbstractCollection._create$Array("toSorted"),
-	
-	toSortedBy: function(field, order) {
-		return this.toSorted(function(item) {
-			return JW.get(item, field);
-		}, this, order);
-	},
-	
+	toSortedBy: JW.AbstractCollection._createByField("toSorted"),
 	$toSortedBy: JW.AbstractCollection._create$Array("toSortedBy"),
-	
-	toSortedByMethod: function(method, args, order) {
-		args = args || [];
-		return this.toSorted(function(item) {
-			return item[method].apply(item, args);
-		}, this, order);
-	},
-	
+	toSortedByMethod: JW.AbstractCollection._createByMethod("toSorted"),
 	$toSortedByMethod: JW.AbstractCollection._create$Array("toSortedByMethod"),
 	
 	toSortedComparing: function(compare, scope, order) {
-		compare = compare || JW.cmp;
-		scope = scope || this;
-		order = order || 1;
-		var items = this.toArray();
-		items.sort(function(x, y) {
-			return order * compare.call(scope, x, y);
-		});
-		return items;
+		return this._callStatic("toSortedComparing", [compare, scope || this, order]);
 	},
+	
+	$toSortedComparing: JW.AbstractCollection._create$Array("toSortedComparing"),
 	
 	index: function(callback, scope) {
 		var result = {};

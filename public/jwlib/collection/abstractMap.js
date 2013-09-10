@@ -219,6 +219,10 @@ JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
 	
 	equal: function(map) {
 		return JW.Map.equal(this.json, map);
+	},
+	
+	_callStatic: function(algorithm, args) {
+		return JW.Map[algorithm].apply(JW.Map, [this.json].concat(JW.args(args)));
 	}
 });
 

@@ -311,6 +311,14 @@ JW.apply(JW.Array, {
 		}
 	},
 	
+	detectSort: function(target, callback, scope, order) {
+		return JW.Array.invert(JW.Array.getSortingKeys(target, callback, scope, order));
+	},
+	
+	detectSortComparing: function(target, compare, scope, order) {
+		return JW.Array.invert(JW.Array.getSortingKeysComparing(target, compare, scope, order));
+	},
+	
 	performSplice: function(target, newItems, getKey, scope) {
 		var params = JW.Array.detectSplice(target, newItems, getKey, scope);
 		if (params !== undefined) {
@@ -326,19 +334,23 @@ JW.apply(JW.Array, {
 	},
 	
 	sort: function(target, callback, scope, order) {
-		JW.Array.performReorder(target, JW.Array.toSorted(target, callback, scope, order));
+		JW.Array.tryReorder(target, JW.Array.detectSort(target, callback, scope, order));
 	},
 	
 	sortBy: function(target, field, order) {
-		JW.Array.performReorder(target, JW.Array.toSortedBy(target, field, order));
+		JW.Array.sort(target, function(item) {
+			return JW.get(item, field);
+		}, target, order);
 	},
 	
 	sortByMethod: function(target, method, args, order) {
-		JW.Array.performReorder(target, JW.Array.toSortedByMethod(target, method, args, order));
+		JW.Array.sort(target, function(item) {
+			return item[method].apply(item, args);
+		}, target, order);
 	},
 	
 	sortComparing: function(target, compare, scope, order) {
-		JW.Array.performReorder(target, JW.Array.toSortedComparing(target, compare, scope, order));
+		JW.Array.tryReorder(target, JW.Array.detectSortComparing(target, compare, scope, order));
 	},
 	
 	createMapper: function(source, config) {
@@ -458,6 +470,15 @@ JW.apply(JW.Array, {
 		return true;
 	},
 	
+	invert: function(array) {
+		var l = array.length;
+		var result = new Array(l);
+		for (var i = 0; i < l; ++i) {
+			result[array[i]] = i;
+		}
+		return result;
+	},
+	
 	merge: function(arrays) {
 		var result = [];
 		for (var i = 0, l = arrays.length; i < l; ++i) {
@@ -469,5 +490,9 @@ JW.apply(JW.Array, {
 	// deprecated
 	top: function(target) {
 		return JW.Array.getLast(target);
+	},
+	
+	pop: function(target) {
+		return target.pop();
 	}
 });

@@ -91,20 +91,54 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 		return result;
 	};
 	
-	namespace.toSorted = function(target, callback, scope, order) {
+	namespace.getSortingKeys = function(target, callback, scope, order) {
 		callback = callback || function(x) { return x; };
 		order = order || 1;
-		var trios = [];
+		var pairs = [];
 		namespace.every(target, function(item, key) {
-			trios.add([item, key, callback.call(this, item, key)]);
+			pairs.push([key, callback.call(this, item, key)]);
 		}, scope);
-		trios.sort(function(x, y) {
-			return order * JW.cmp(x[2], y[2]);
+		pairs.sort(function(x, y) {
+			return order * JW.cmp(x[1], y[1]);
 		});
-		return JW.Array.map(trios, function(trio) {
+		return JW.Array.map(pairs, function(pair) {
 			return pair[0];
 		});
 	};
+	
+	namespace.$getSortingKeys = JW.AbstractCollection._createStatic$Array(namespace, "getSortingKeys");
+	
+	namespace.getSortingKeysComparing = function(target, compare, scope, order) {
+		order = order || 1;
+		var pairs = [];
+		namespace.every(target, function(item, key) {
+			pairs.push([key, value]);
+		}, scope);
+		pairs.sort(function(x, y) {
+			return order * compare(x[1], y[1], x[0], y[0]);
+		});
+		return JW.Array.map(pairs, function(pair) {
+			return pair[0];
+		});
+	};
+	
+	namespace.$getSortingKeysComparing = JW.AbstractCollection._createStatic$Array(namespace, "getSortingKeysComparing");
+	
+	namespace.toSorted = function(target, callback, scope, order) {
+		return namespace.map(namespace.getSortingKeys(target, callback, scope, order), function(key) {
+			return namespace.get(target, key);
+		});
+	};
+	
+	namespace.$toSorted = JW.AbstractCollection._createStatic$Array(namespace, "toSorted");
+	
+	namespace.toSortedComparing = function(target, compare, scope, order) {
+		return namespace.map(namespace.getSortingKeysComparing(target, compare, scope, order), function(key) {
+			return namespace.get(target, key);
+		});
+	};
+	
+	namespace.$toSortedComparing = JW.AbstractCollection._createStatic$Array(namespace, "toSortedComparing");
 	
 	namespace.index = function(target, callback, scope) {
 		var result = {};

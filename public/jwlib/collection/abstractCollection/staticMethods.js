@@ -102,7 +102,7 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
 		order = order || 1;
 		var pairs = [];
 		namespace.every(target, function(item) {
-			pairs.add([item, callback.call(this, item)]);
+			pairs.push([item, callback.call(this, item)]);
 		}, scope);
 		pairs.sort(function(x, y) {
 			return order * JW.cmp(x[1], y[1]);

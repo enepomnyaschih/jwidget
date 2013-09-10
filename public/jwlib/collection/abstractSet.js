@@ -186,6 +186,10 @@ JW.extend(JW.AbstractSet/*<T>*/, JW.AbstractCollection/*<T>*/, {
 	
 	equal: function(array) {
 		return JW.Set.equal(this.json, array);
+	},
+	
+	_callStatic: function(algorithm, args) {
+		return JW.Set[algorithm].apply(JW.Set, [this.json].concat(JW.args(args)));
 	}
 });
 

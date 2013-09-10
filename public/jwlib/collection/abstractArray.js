@@ -191,6 +191,14 @@ JW.extend(JW.AbstractArray/*<V>*/, JW.IndexedCollection/*<Integer, V>*/, {
 		return JW.Array.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
 	},
 	
+	detectSort: function(callback, scope, order) {
+		return JW.Array.detectSort(this.items, callback, scope || this, order);
+	},
+	
+	detectSortComparing: function(compare, scope, order) {
+		return JW.Array.detectSortComparing(this.items, compare, scope || this, order);
+	},
+	
 	performSplice: function(newItems, getKey, scope) {
 		var params = this.detectSplice(newItems, getKey || this.getKey, scope || this);
 		if (params !== undefined) {
@@ -206,19 +214,24 @@ JW.extend(JW.AbstractArray/*<V>*/, JW.IndexedCollection/*<Integer, V>*/, {
 	},
 	
 	sort: function(callback, scope, order) {
-		this.performReorder(this.toSorted(callback, scope, order));
+		this.tryReorder(this.detectSort(callback, scope, order));
 	},
 	
 	sortBy: function(field, order) {
-		this.performReorder(this.toSortedBy(field, order));
+		this.sort(function(item) {
+			return JW.get(item, field);
+		}, this, order);
 	},
 	
 	sortByMethod: function(method, args, order) {
-		this.performReorder(this.toSortedByMethod(method, args, order));
+		args = args || [];
+		this.sort(function(item) {
+			return item[method].apply(item, args);
+		}, this, order);
 	},
 	
 	sortComparing: function(compare, scope, order) {
-		this.performReorder(this.toSortedComparing(compare, scope, order));
+		this.tryReorder(this.detectSortComparing(compare, scope, order));
 	},
 	
 	createMapper: function(config) {
@@ -266,7 +279,20 @@ JW.extend(JW.AbstractArray/*<V>*/, JW.IndexedCollection/*<Integer, V>*/, {
 	},
 	
 	backEvery: function(callback, scope) {
-		return JW.Array.backEvery(this.item, callback, scope);
+		return JW.Array.backEvery(this.items, callback, scope);
+	},
+	
+	// deprecated
+	top: function() {
+		return JW.Array.top(this.items);
+	},
+	
+	pop: function() {
+		return this.items.pop();
+	},
+	
+	_callStatic: function(algorithm, args) {
+		return JW.Array[algorithm].apply(JW.Array, [this.items].concat(args));
 	}
 });
 
