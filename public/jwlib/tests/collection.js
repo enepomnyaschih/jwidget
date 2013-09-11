@@ -139,7 +139,7 @@ JW.Tests.Collection = {
 	},
 	
 	assertMap: function(testCase, expected, map) {
-		testCase.assertStrictEqual(JW.Map.getSize(expected), map.getSize());
+		testCase.assertStrictEqual(JW.Map.getLength(expected), map.getLength());
 		for (var key in expected) {
 			testCase.assertStrictEqual(expected[key], map.get(key));
 		}

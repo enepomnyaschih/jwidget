@@ -178,7 +178,7 @@ JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
 	performSplice: function(newItems) {
 		var params = this.detectSplice(newItems);
 		if (params !== undefined) {
-			this.trySplice(params.removedKeys, params.updatedItems);s
+			this.trySplice(params.removedKeys, params.updatedItems);
 		}
 	},
 	

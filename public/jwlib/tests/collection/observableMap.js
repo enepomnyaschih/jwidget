@@ -27,7 +27,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 0 to 1"
 		);
-		this.assertUndefined(map.set("D", "d").value);
+		this.assertUndefined(map.trySet("D", "d").value);
 		this.assertMap({ "d": "D" }, map);
 		
 		this.setExpectedOutput(
@@ -35,7 +35,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 1 to 2"
 		);
-		var spliceResult = map.setAll({ "f": "F" });
+		var spliceResult = map.trySetAll({ "f": "F" });
 		JW.Tests.Collection.assertMapSpliceResult(this, {
 			removedItems: {},
 			addedItems: { f: "F" }
@@ -47,7 +47,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 2 to 4"
 		);
-		var spliceResult = map.setAll({ "c": "C", "a": "A" });
+		var spliceResult = map.trySetAll({ "c": "C", "a": "A" });
 		JW.Tests.Collection.assertMapSpliceResult(this, {
 			removedItems: {},
 			addedItems: { c: "C", a: "A" }
@@ -59,11 +59,11 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 4 to 3"
 		);
-		this.assertStrictEqual("F", map.remove("f"));
+		this.assertStrictEqual("F", map.tryRemove("f"));
 		this.assertMap({ "d": "D", "c": "C", "a": "A" }, map);
 		
 		this.setExpectedOutput();
-		this.assertUndefined(map.setAll({}));
+		this.assertUndefined(map.trySetAll({}));
 		this.assertMap({ "d": "D", "c": "C", "a": "A" }, map);
 		
 		this.setExpectedOutput(
@@ -71,7 +71,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 3 to 4"
 		);
-		var spliceResult = map.setAll({ "b": "B", "c": "C" });
+		var spliceResult = map.trySetAll({ "b": "B", "c": "C" });
 		JW.Tests.Collection.assertMapSpliceResult(this, {
 			removedItems: {},
 			addedItems: { b: "B" }
@@ -79,7 +79,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "d": "D", "c": "C", "a": "A", "b": "B" }, map);
 		
 		this.setExpectedOutput();
-		this.assertUndefined(map.setAll({ "b": "B", "c": "C" }));
+		this.assertUndefined(map.trySetAll({ "b": "B", "c": "C" }));
 		this.assertMap({ "d": "D", "c": "C", "a": "A", "b": "B" }, map);
 		
 		this.setExpectedOutput(
@@ -87,25 +87,25 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 4 to 2"
 		);
-		this.assertTrue(JW.Map.equal({ "c": "C", "b": "B" }, map.removeAll([ "c", "b" ])));
+		this.assertTrue(JW.Map.equal({ "c": "C", "b": "B" }, map.tryRemoveAll([ "c", "b" ])));
 		this.assertMap({ "d": "D", "a": "A" }, map);
 		
 		this.setExpectedOutput();
-		this.assertUndefined(map.removeAll([ "c", "b" ]));
+		this.assertUndefined(map.tryRemoveAll([ "c", "b" ]));
 		this.assertMap({ "d": "D", "a": "A" }, map);
 		
 		this.setExpectedOutput(
 			"Spliced -{a:A} +{a:B}",
 			"Changed"
 		);
-		this.assertStrictEqual("A", map.set("B", "a").value);
+		this.assertStrictEqual("A", map.trySet("B", "a").value);
 		this.assertMap({ "d": "D", "a": "B" }, map);
 		
 		this.setExpectedOutput(
 			"Reindexed by {d:c}",
 			"Changed"
 		);
-		this.assertStrictEqual("D", map.setKey("d", "c"));
+		this.assertStrictEqual("D", map.trySetKey("d", "c"));
 		this.assertMap({ "a": "B", "c": "D" }, map);
 		
 		this.setExpectedOutput(
@@ -113,7 +113,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 2 to 3"
 		);
-		var spliceResult = map.splice([ "c" ], { "e": "E", "f": "F" });
+		var spliceResult = map.trySplice([ "c" ], { "e": "E", "f": "F" });
 		JW.Tests.Collection.assertMapSpliceResult(this, {
 			removedItems: { c: "D" },
 			addedItems: { e: "E", f: "F" }
@@ -125,7 +125,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 3 to 4"
 		);
-		var spliceResult = map.splice([ "a", "f" ], { "a": "A", "b": "B", "c": "C" });
+		var spliceResult = map.trySplice([ "a", "f" ], { "a": "A", "b": "B", "c": "C" });
 		JW.Tests.Collection.assertMapSpliceResult(this, {
 			removedItems: { a: "B", f: "F" },
 			addedItems: { a: "A", b: "B", c: "C" }
@@ -133,11 +133,11 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.assertMap({ "a": "A", "e": "E", "b": "B", "c": "C" }, map);
 		
 		this.setExpectedOutput();
-		this.assertUndefined(map.splice([], {}));
+		this.assertUndefined(map.trySplice([], {}));
 		this.assertMap({ "a": "A", "e": "E", "b": "B", "c": "C" }, map);
 		
 		this.setExpectedOutput();
-		this.assertUndefined(map.splice([], { e: "E", c: "C" }));
+		this.assertUndefined(map.trySplice([], { e: "E", c: "C" }));
 		this.assertMap({ "a": "A", "e": "E", "b": "B", "c": "C" }, map);
 		
 		this.setExpectedOutput(
@@ -145,38 +145,33 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed"
 		);
 		this.assertTrue(JW.Map.equal({ a: "b", e: "a", b: "d" },
-			map.reindex({ a: "b", e: "a", b: "d", c: "c" })));
+			map.tryReindex({ a: "b", e: "a", b: "d", c: "c" })));
 		this.assertMap({ "c": "C", "b": "A", "a": "E", "d": "B" }, map);
 		
 		this.setExpectedOutput();
-		this.assertUndefined(map.reindex({ a: "a", b: "b" }));
+		this.assertUndefined(map.tryReindex({ a: "a", b: "b" }));
 		this.assertMap({ "c": "C", "b": "A", "a": "E", "d": "B" }, map);
 		
 		this.setExpectedOutput(
 			"Spliced -{b:A,d:B} +{b:B,f:F}",
 			"Changed"
 		);
-		var spliceResult = map.performSplice({ "c": "C", "b": "B", "a": "E", "f": "F" });
-		JW.Tests.Collection.assertMapSpliceResult(this, {
-			removedItems: { b: "A", d: "B" },
-			addedItems: { b: "B", f: "F" }
-		}, spliceResult);
+		map.performSplice({ "c": "C", "b": "B", "a": "E", "f": "F" });
 		this.assertMap({ "c": "C", "a": "E", "b": "B", "f": "F" }, map);
 		
 		this.setExpectedOutput();
-		this.assertUndefined(map.performSplice({ "c": "C", "a": "E", "b": "B", "f": "F" }));
+		map.performSplice({ "c": "C", "a": "E", "b": "B", "f": "F" });
 		this.assertMap({ "c": "C", "a": "E", "b": "B", "f": "F" }, map);
 		
 		this.setExpectedOutput(
 			"Reindexed by {a:e,c:g}",
 			"Changed"
 		);
-		this.assertTrue(JW.Map.equal({ c: "g", a: "e" },
-			map.performReindex({ "g": "C", "b": "B", "e": "E", "f": "F" })));
+		map.performReindex({ "g": "C", "b": "B", "e": "E", "f": "F" });
 		this.assertMap({ "b": "B", "e": "E", "g": "C", "f": "F" }, map);
 		
 		this.setExpectedOutput();
-		this.assertUndefined(map.performReindex({ "b": "B", "e": "E", "g": "C", "f": "F" }));
+		map.performReindex({ "b": "B", "e": "E", "g": "C", "f": "F" });
 		this.assertMap({ "b": "B", "e": "E", "g": "C", "f": "F" }, map);
 		
 		this.setExpectedOutput(
@@ -184,11 +179,11 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 4 to 0"
 		);
-		this.assertTrue(JW.Map.equal({ "b": "B", "e": "E", "g": "C", "f": "F" }, map.clear()));
+		this.assertTrue(JW.Map.equal({ "b": "B", "e": "E", "g": "C", "f": "F" }, map.tryClear()));
 		this.assertMap({}, map);
 		
 		this.setExpectedOutput();
-		this.assertUndefined(map.clear());
+		this.assertUndefined(map.tryClear());
 		this.assertMap({}, map);
 		
 		this.setExpectedOutput(
@@ -196,7 +191,7 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 0 to 1"
 		);
-		this.assertUndefined(map.set("A", "a").value);
+		this.assertUndefined(map.trySet("A", "a").value);
 		this.assertMap({ "a": "A" }, map);
 		
 		this.setExpectedOutput(
@@ -204,14 +199,10 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 1 to 2"
 		);
-		this.assertUndefined(map.set(null, "c").value);
+		this.assertUndefined(map.trySet(null, "c").value);
 		this.assertMap({ "a": "A", "c": null }, map);
 		
-		this.setExpectedOutput(
-			"Cleared {a:A,c:null}",
-			"Changed",
-			"Changed size from 2 to 0"
-		);
+		this.setExpectedOutput();
 		map.destroy();
 	},
 	
@@ -235,43 +226,22 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 	
 	testFilter: function() {
 		var map = new JW.ObservableMap({ "a1": "a", "a2": "A", "a3": "b" });
-		var filtered = map.filter(this.isA);
+		var filtered = map.$filter(this.isA);
 		this.assertTrue(filtered instanceof JW.Map);
-		this.assertEqual(3, map.getSize());
-		this.assertEqual(2, filtered.getSize());
+		this.assertEqual(3, map.getLength());
+		this.assertEqual(2, filtered.getLength());
 		this.assertEqual(map.get("a1"), filtered.get("a1"));
 		this.assertEqual(map.get("a2"), filtered.get("a2"));
 	},
 	
 	testMap: function() {
 		var map = new JW.ObservableMap({ x: "a", y: "b", z: "c" });
-		var mapped = map.map(function(x, y) { return y + x; });
+		var mapped = map.$map(function(x, y) { return y + x; });
 		this.assertTrue(mapped instanceof JW.Map);
-		this.assertStrictEqual(3, mapped.getSize());
+		this.assertStrictEqual(3, mapped.getLength());
 		this.assertStrictEqual("xa", mapped.get("x"));
 		this.assertStrictEqual("yb", mapped.get("y"));
 		this.assertStrictEqual("zc", mapped.get("z"));
-	},
-	
-	testClone: function() {
-		var map = new JW.ObservableMap({ x: "a", y: "b", z: "c" });
-		var cloned = map.clone();
-		this.assertTrue(cloned instanceof JW.ObservableMap);
-		this.assertStrictNotEqual(map, cloned);
-		this.assertStrictEqual(3, cloned.getSize());
-		this.assertStrictEqual("a", cloned.get("x"));
-		this.assertStrictEqual("b", cloned.get("y"));
-		this.assertStrictEqual("c", cloned.get("z"));
-	},
-	
-	testCloneUnobservable: function() {
-		var map = new JW.ObservableMap({ x: "a", y: "b", z: "c" });
-		var cloned = map.cloneUnobservable();
-		this.assertTrue(cloned instanceof JW.Map);
-		this.assertStrictEqual(3, cloned.getSize());
-		this.assertStrictEqual("a", cloned.get("x"));
-		this.assertStrictEqual("b", cloned.get("y"));
-		this.assertStrictEqual("c", cloned.get("z"));
 	},
 	
 	testRemoveItem: function() {
@@ -287,25 +257,6 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput();
 		this.assertUndefined(map.removeItem(1));
 		this.assertTrue(JW.Map.equal({ "a": 0, "c": 3, "d": 2, "e": 3, "f": 0 }, map.getJson()));
-	},
-	
-	testMapFields: function() {
-		var map = new JW.ObservableMap({
-			p: { x: "a", y: "d" },
-			q: { x: "b", y: "e" },
-			r: { x: "c", y: "f" }
-		});
-		var mapped = map.mapFields();
-		this.assertTrue(mapped.x instanceof JW.Map);
-		this.assertTrue(mapped.y instanceof JW.Map);
-		this.assertStrictEqual(3, mapped.x.getSize());
-		this.assertStrictEqual(3, mapped.y.getSize());
-		this.assertStrictEqual("a", mapped.x.get("p"));
-		this.assertStrictEqual("b", mapped.x.get("q"));
-		this.assertStrictEqual("c", mapped.x.get("r"));
-		this.assertStrictEqual("d", mapped.y.get("p"));
-		this.assertStrictEqual("e", mapped.y.get("q"));
-		this.assertStrictEqual("f", mapped.y.get("r"));
 	},
 	
 	subscribe: function(map) {
