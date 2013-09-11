@@ -26,7 +26,7 @@ JW.AbstractMap.Mapper = function(source, config) {
 	this._targetCreated = !config.target;
 	this.target = config.target || source.createEmpty();
 	this.scope = config.scope || this;
-	this.target.setAll(this._createItems(this.source.getJson()));
+	this.target.trySetAll(this._createItems(this.source.getJson()));
 };
 
 JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
@@ -46,7 +46,7 @@ JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	
 	// override
 	destroy: function() {
-		this._destroyItems(this.target.removeAll(this.source.getKeysArray()), this.source.getJson());
+		this._destroyItems(this.target.tryRemoveAll(this.source.getKeys()), this.source.getJson());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}

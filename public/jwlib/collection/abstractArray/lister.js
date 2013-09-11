@@ -23,7 +23,7 @@ JW.AbstractArray.Lister = function(source, config) {
 	this.source = source;
 	this._targetCreated = !config.target;
 	this.target = config.target || this.source.createEmptySet();
-	this.target.addAll(this.source.getItems());
+	this.target.tryAddAll(this.source.getItems());
 };
 
 JW.extend(JW.AbstractArray.Lister/*<T extends JW.Class>*/, JW.Class, {
@@ -40,7 +40,7 @@ JW.extend(JW.AbstractArray.Lister/*<T extends JW.Class>*/, JW.Class, {
 	
 	// override
 	destroy: function() {
-		this.target.removeAll(this.source.getItems());
+		this.target.tryRemoveAll(this.source.getItems());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}

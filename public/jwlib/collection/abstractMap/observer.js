@@ -42,7 +42,7 @@ JW.extend(JW.AbstractMap.Observer/*<T>*/, JW.Class, {
 	
 	// override
 	destroy: function() {
-		this._clearItems(this.source.getValuesArray());
+		this._clearItems(this.source.toArray());
 		this._super();
 	},
 	
@@ -69,7 +69,7 @@ JW.extend(JW.AbstractMap.Observer/*<T>*/, JW.Class, {
 			return;
 		}
 		if (this.clearItems) {
-			this.clearItems.call(this.scope, JW.Map.getValuesArray(items));
+			this.clearItems.call(this.scope, JW.Map.toArray(items));
 		} else {
 			this._removeItems(items);
 		}

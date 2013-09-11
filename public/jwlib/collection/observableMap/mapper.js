@@ -44,7 +44,7 @@ JW.extend(JW.ObservableMap.Mapper/*<S, T>*/, JW.AbstractMap.Mapper/*<S, T>*/, {
 		var sourceResult = params.spliceResult;
 		var removedDatas = sourceResult.removedItems;
 		var addedDatas = sourceResult.addedItems;
-		var targetResult = this.target.splice(
+		var targetResult = this.target.trySplice(
 			JW.Map.getRemovedKeys(removedDatas, addedDatas),
 			this._createItems(addedDatas));
 		if (targetResult !== undefined) {
@@ -53,11 +53,11 @@ JW.extend(JW.ObservableMap.Mapper/*<S, T>*/, JW.AbstractMap.Mapper/*<S, T>*/, {
 	},
 	
 	_onReindex: function(params) {
-		this.target.reindex(params.keyMap);
+		this.target.tryReindex(params.keyMap);
 	},
 	
 	_onClear: function(params) {
 		var datas = params.items;
-		this._destroyItems(this.target.removeAll(JW.Map.getKeysArray(datas)), datas);
+		this._destroyItems(this.target.tryRemoveAll(JW.Map.getKeys(datas)), datas);
 	}
 });

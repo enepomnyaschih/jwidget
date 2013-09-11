@@ -23,7 +23,7 @@ JW.AbstractMap.Lister = function(source, config) {
 	this.source = source;
 	this._targetCreated = !config.target;
 	this.target = config.target || source.createEmptySet();
-	this.target.addAll(this.source.getValuesArray());
+	this.target.addAll(this.source.toArray());
 };
 
 JW.extend(JW.AbstractMap.Lister/*<T extends JW.Class>*/, JW.Class, {
@@ -39,7 +39,7 @@ JW.extend(JW.AbstractMap.Lister/*<T extends JW.Class>*/, JW.Class, {
 	*/
 	
 	destroy: function() {
-		this.target.removeAll(this.source.getValuesArray());
+		this.target.tryRemoveAll(this.source.toArray());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}

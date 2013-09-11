@@ -46,7 +46,7 @@ JW.extend(JW.AbstractArray.Mapper/*<S, T>*/, JW.Class, {
 	
 	// override
 	destroy: function() {
-		this._destroyItems(this.target.clear(), this.source.getItems());
+		this._destroyItems(this.target.tryClear(), this.source.getItems());
 		if (this._targetCreated) {
 			this.target.destroy();
 		}

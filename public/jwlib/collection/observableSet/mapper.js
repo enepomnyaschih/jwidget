@@ -41,13 +41,13 @@ JW.extend(JW.ObservableSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, J
 		var spliceResult = params.spliceResult;
 		var removedDatas = spliceResult.removedItems;
 		var addedDatas = spliceResult.addedItems;
-		this.target.splice(this._getItems(removedDatas), this._createItems(addedDatas));
+		this.target.trySplice(this._getItems(removedDatas), this._createItems(addedDatas));
 		this._destroyItems(removedDatas);
 	},
 	
 	_onClear: function(params) {
 		var datas = params.items;
-		this.target.removeAll(this._getItems(datas));
+		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);
 	}
 });

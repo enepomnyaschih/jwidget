@@ -61,7 +61,7 @@ JW.extend(JW.ObservableArray.Mapper/*<S, T>*/, JW.AbstractArray.Mapper/*<S, T>*/
 			targetAddParamsList.push(new JW.AbstractArray.IndexItems(
 				addParams.index, this._createItems(addParams.items)));
 		}
-		var targetResult = this.target.splice(sourceResult.getRemoveParamsList(), targetAddParamsList);
+		var targetResult = this.target.trySplice(sourceResult.getRemoveParamsList(), targetAddParamsList);
 		var sourceRemovedItemsList = sourceResult.removedItemsList;
 		var targetRemovedItemsList = targetResult.removedItemsList;
 		for (var i = targetRemovedItemsList.length - 1; i >= 0; --i) {
@@ -71,19 +71,19 @@ JW.extend(JW.ObservableArray.Mapper/*<S, T>*/, JW.AbstractArray.Mapper/*<S, T>*/
 	
 	_onReplace: function(params) {
 		var newItem = this.createItem.call(this.scope, params.newItem);
-		var oldItem = this.target.set(newItem, params.index).value;
+		var oldItem = this.target.trySet(newItem, params.index);
 		this.destroyItem.call(this.scope, oldItem, params.oldItem);
 	},
 	
 	_onMove: function(params) {
-		this.target.move(params.fromIndex, params.toIndex);
+		this.target.tryMove(params.fromIndex, params.toIndex);
 	},
 	
 	_onClear: function(params) {
-		this._destroyItems(this.target.clear(), params.items);
+		this._destroyItems(this.target.tryClear(), params.items);
 	},
 	
 	_onReorder: function(params) {
-		this.target.reorder(params.indexArray);
+		this.target.tryReorder(params.indexArray);
 	}
 });

@@ -324,11 +324,7 @@ JW.Tests.Collection.ObservableMap.MapperTestCase = JW.Unit.TestCase.extend({
 		mapper1.destroy();
 		this.assertTarget({ "x": "X!" }, target);
 		
-		this.setExpectedOutput(
-			"Cleared {x:X!}",
-			"Changed",
-			"Changed size from 1 to 0"
-		);
+		this.setExpectedOutput();
 		target.destroy();
 		
 		source1.destroy();

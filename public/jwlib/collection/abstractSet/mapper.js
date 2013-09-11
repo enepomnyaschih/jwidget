@@ -27,7 +27,7 @@ JW.AbstractSet.Mapper = function(source, config) {
 	this.target = config.target || source.createEmpty();
 	this.scope = config.scope || {};
 	this._items = {};
-	this.target.addAll(this._createItems(this.source.getValuesArray()));
+	this.target.tryAddAll(this._createItems(this.source.toArray()));
 };
 
 JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
@@ -48,8 +48,8 @@ JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.
 	
 	// override
 	destroy: function() {
-		var datas = this.source.getValuesArray();
-		this.target.removeAll(this._getItems(datas));
+		var datas = this.source.toArray();
+		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);
 		if (this._targetCreated) {
 			this.target.destroy();

@@ -25,7 +25,7 @@ JW.AbstractSet.Observer = function(source, config) {
 	this.removeItem = config.removeItem;
 	this.clearItems = config.clearItems;
 	this.scope = config.scope || this;
-	this._addItems(this.source.getValuesArray());
+	this._addItems(this.source.toArray());
 };
 
 JW.extend(JW.AbstractSet.Observer/*<T>*/, JW.Class, {
@@ -42,7 +42,7 @@ JW.extend(JW.AbstractSet.Observer/*<T>*/, JW.Class, {
 	
 	// override
 	destroy: function() {
-		this._clearItems(this.source.getValuesArray());
+		this._clearItems(this.source.toArray());
 		this._super();
 	},
 	

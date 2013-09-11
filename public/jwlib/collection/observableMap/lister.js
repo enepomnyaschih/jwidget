@@ -39,13 +39,13 @@ JW.extend(JW.ObservableMap.Lister/*<T extends JW.Class>*/, JW.AbstractMap.Lister
 	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
-		this.target.splice(
-			JW.Map.getValuesArray(spliceResult.removedItems),
-			JW.Map.getValuesArray(spliceResult.addedItems));
+		this.target.trySplice(
+			JW.Map.toArray(spliceResult.removedItems),
+			JW.Map.toArray(spliceResult.addedItems));
 	},
 	
 	_onClear: function(params) {
-		this.target.removeAll(
-			JW.Map.getValuesArray(params.items));
+		this.target.tryRemoveAll(
+			JW.Map.toArray(params.items));
 	}
 });

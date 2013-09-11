@@ -44,14 +44,14 @@ JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Li
 	},
 	
 	_onSplice: function(params) {
-		this.target.splice(params.spliceResult.getRemovedItems(), params.spliceResult.getAddedItems());
+		this.target.trySplice(params.spliceResult.getRemovedItems(), params.spliceResult.getAddedItems());
 	},
 	
 	_onReplace: function(params) {
-		this.target.splice([ params.oldItem ], [ params.newItem ]);
+		this.target.trySplice([ params.oldItem ], [ params.newItem ]);
 	},
 	
 	_onClear: function(params) {
-		this.target.removeAll(params.items);
+		this.target.tryRemoveAll(params.items);
 	}
 });

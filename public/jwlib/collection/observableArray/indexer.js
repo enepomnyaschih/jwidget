@@ -43,19 +43,19 @@ JW.extend(JW.ObservableArray.Indexer/*<T>*/, JW.AbstractArray.Indexer/*<T>*/, {
 	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
-		this.target.splice(
+		this.target.trySplice(
 			this._keys(spliceResult.getRemovedItems()),
 			this._index(spliceResult.getAddedItems()));
 	},
 	
 	_onReplace: function(params) {
-		this.target.splice(
+		this.target.trySplice(
 			this._keys([ params.oldItem ]),
 			this._index([ params.newItem ]));
 	},
 	
 	_onClear: function(params) {
-		this.target.removeAll(
+		this.target.tryRemoveAll(
 			this._keys(params.items));
 	}
 });

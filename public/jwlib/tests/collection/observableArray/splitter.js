@@ -134,7 +134,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 			"Removed item d at 3.0",
 			"Added item d at 2.2"
 		);
-		source.remove(1, 2);
+		source.removeAll(1, 2);
 		
 		// (i f g) (h c d) (e)
 		
@@ -149,7 +149,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 			"Removed item c at 2.0",
 			"Added item c at 1.2"
 		);
-		source.remove(2, 2);
+		source.removeAll(2, 2);
 		
 		// (i f c) (d e)
 		

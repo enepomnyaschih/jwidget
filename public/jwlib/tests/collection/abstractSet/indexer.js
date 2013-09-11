@@ -114,11 +114,7 @@ JW.Tests.Collection.AbstractSet.IndexerTestCase = JW.Unit.TestCase.extend({
 		indexer2.destroy();
 		this.assertTarget({ "x": x }, target);
 		
-		this.setExpectedOutput(
-			"Cleared {x:x}",
-			"Changed",
-			"Changed size from 1 to 0"
-		);
+		this.setExpectedOutput();
 		target.destroy();
 		
 		this.setExpectedOutput();

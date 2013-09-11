@@ -140,11 +140,7 @@ JW.Tests.Collection.AbstractSet.MapperTestCase = JW.Unit.TestCase.extend({
 		mapper2.destroy();
 		this.assertTarget([ x ], target);
 		
-		this.setExpectedOutput(
-			"Cleared [X]",
-			"Changed",
-			"Changed size from 1 to 0"
-		);
+		this.setExpectedOutput();
 		target.destroy();
 		
 		this.setExpectedOutput();
@@ -199,7 +195,7 @@ JW.Tests.Collection.AbstractSet.MapperTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	assertTarget: function(expected, target) {
-		this.assertStrictEqual(expected.length, target.getSize());
+		this.assertStrictEqual(expected.length, target.getLength());
 		for (var i = 0; i < expected.length; ++i) {
 			this.assertTrue(target.contains(expected[i].result));
 		}
