@@ -17,14 +17,22 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * `<T>` Параметры события с элементом. Обычно используется в событии изменения значения какого-либо элемента коллекции.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {Object} sender Отправитель события.
+ * @param {T} item Элемент.
+ */
 JW.ItemEventParams = function(sender, item) {
 	JW.ItemEventParams._super.call(this, sender);
 	this.item = item;
 };
 
-JW.extend(JW.ItemEventParams/*<T extends Any>*/, JW.EventParams, {
-	/*
-	Fields
-	T item;
-	*/
+JW.extend(JW.ItemEventParams, JW.EventParams, {
+	/**
+	 * @property {T} item Элемент.
+	 */
 });

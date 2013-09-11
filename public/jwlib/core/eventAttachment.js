@@ -17,6 +17,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * Подписка на событие. Когда клиент подписывается на какое-то событие, ему следует сохранить объект-подписку, чтобы
+ * впоследствии он мог отписаться от этого события путем уничтожения подписки.
+ * @extends JW.Class
+ * @constructor
+ */
 JW.EventAttachment = function(event, callback, scope) {
 	JW.EventAttachment._super.call(this);
 	this.event = event;
@@ -26,7 +33,6 @@ JW.EventAttachment = function(event, callback, scope) {
 
 JW.extend(JW.EventAttachment, JW.Class, {
 	/*
-	Fields
 	JW.Event<? extends JW.EventParams> event;
 	Function callback;
 	Object scope;

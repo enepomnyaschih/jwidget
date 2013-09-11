@@ -17,14 +17,23 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * `<V>` Параметры события со значением. Обычно используются в событии изменения значения какой-либо переменной или
+ * поля.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {Object} sender Отправитель события.
+ * @param {V} value Значение.
+ */
 JW.ValueEventParams = function(sender, value) {
 	JW.ValueEventParams._super.call(this, sender);
 	this.value = value;
 };
 
-JW.extend(JW.ValueEventParams/*<T extends Any>*/, JW.EventParams, {
-	/*
-	Fields
-	T value;
-	*/
+JW.extend(JW.ValueEventParams, JW.EventParams, {
+	/**
+	 * @property {V} value Значение.
+	 */
 });
