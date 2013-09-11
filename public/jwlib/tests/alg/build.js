@@ -22,8 +22,6 @@ JW.Tests.Alg.BuildTestCase = function(config) {
 	this.obj = null;
 	this.objDeep = null;
 	this.arr = null;
-	this.cls = null;
-	this.clsDeep = null;
 };
 
 JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
@@ -63,83 +61,6 @@ JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
 		};
 		
 		this.arr = [ 10, null, "lala" ];
-		
-		var Cls = function() {
-			Cls._super.call(this);
-			this.items = [];
-		};
-		
-		JW.extend(Cls, JW.Class, {
-			items: null,
-			
-			every: function(callback, scope) {
-				for (var i = 0; i < this.items.length; ++i) {
-					if (callback.call(scope || this, this.items[i], i) === false) {
-						return false;
-					}
-				}
-				return true;
-			},
-			
-			createEmpty: function() {
-				return new Cls();
-			},
-			
-			createEmptyUnobservable: function() {
-				return new Cls();
-			},
-			
-			pushItem: function(item) {
-				this.items.push(item);
-				return this;
-			}
-		});
-		
-		JW.apply(Cls.prototype, JW.Alg.BuildMethods);
-		
-		this.cls = new Cls();
-		this.cls.items.push(10, null, "lala");
-		
-		this.clsDeep = new Cls();
-		this.clsDeep.items.push(
-			{
-				q: {
-					a: 1,
-					b: 0
-				}
-			}, {
-				q: {
-					a: 0,
-					b: 1
-				}
-			}, {
-				q: {
-					a: 0,
-					b: 2
-				}
-			}, {
-				q: {
-					a: 1,
-					b: 3
-				}
-			}
-		);
-	},
-	
-	testCloneObject: function()
-	{
-		var clone = JW.Map.clone(this.obj);
-		
-		this.assertNotEqual(this.obj, clone);
-		this.assertTrue(JW.Map.equal(this.obj, clone));
-	},
-	
-	testCloneClass: function()
-	{
-		var clone = this.cls.clone();
-		
-		this.assertNotEqual(this.cls.items, clone.items);
-		this.assertTrue(JW.Map.equal(this.cls.items, clone.items));
 	},
 	
 	testFilterObject: function()
@@ -151,17 +72,6 @@ JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
 		
 		this.assertNotEqual(this.obj, result);
 		this.assertTrue(JW.Map.equal({ a: 10, c: "lala" }, result));
-	},
-	
-	testFilterClass: function()
-	{
-		var result = this.cls.filter(function(item, key) {
-			this.assertStrictEqual(this.cls.items[key], item);
-			return JW.isSet(item);
-		}, this);
-		
-		this.assertNotEqual(this.cls.items, result.items);
-		this.assertTrue(JW.Array.equal([ 10, "lala" ], result.items));
 	},
 	
 	testFilterByObject: function()
@@ -177,19 +87,6 @@ JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
 		this.assertTrue(JW.Map.equal(expected, result));
 	},
 	
-	testFilterByClass: function()
-	{
-		var result = this.clsDeep.filterBy("q.a", 1);
-		
-		var expected = [
-			this.clsDeep.items[0],
-			this.clsDeep.items[3]
-		];
-		
-		this.assertNotEqual(this.cls.items, result.items);
-		this.assertTrue(JW.Array.equal(expected, result.items));
-	},
-	
 	testMapObject: function()
 	{
 		var result = JW.Map.map(this.obj, function(item, key) {
@@ -199,17 +96,6 @@ JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
 		
 		this.assertNotEqual(this.obj, result);
 		this.assertTrue(JW.Map.equal({ a: true, b: false, c: true }, result));
-	},
-	
-	testMapClass: function()
-	{
-		var result = this.cls.map(function(item, key) {
-			this.assertStrictEqual(this.cls.items[key], item);
-			return JW.isSet(item);
-		}, this);
-		
-		this.assertNotEqual(this.cls.items, result.items);
-		this.assertTrue(JW.Array.equal([ true, false, true ], result.items));
 	},
 	
 	testMapByObject: function()
@@ -225,50 +111,5 @@ JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
 		
 		this.assertNotEqual(this.objDeep, result);
 		this.assertTrue(JW.Map.equal(expected, result));
-	},
-	
-	testMapByClass: function()
-	{
-		var result = this.clsDeep.mapBy("q.a");
-		
-		var expected = [ 1, 0, 0, 1 ];
-		
-		this.assertNotEqual(this.cls.items, result.items);
-		this.assertTrue(JW.Array.equal(expected, result.items));
-	},
-	
-	testMergeObject: function()
-	{
-		var target = JW.Map.clone(this.obj);
-		this.assertEqual(target, JW.Map.merge(target, this.arr));
-		
-		var expected = {
-			a: 10,
-			b: null,
-			c: "lala",
-			"0": 10,
-			"1": null,
-			"2": "lala"
-		};
-		
-		this.assertTrue(JW.Map.equal(expected, target));
-	},
-	
-	testMergeClass: function()
-	{
-		var target = this.cls.clone();
-		this.cls.items = [ "a", "b", undefined ];
-		this.assertEqual(target, target.merge(this.cls));
-		
-		var expected = [
-			10,
-			null,
-			"lala",
-			"a",
-			"b",
-			undefined
-		];
-		
-		this.assertTrue(JW.Array.equal(expected, target.items));
 	}
 });
