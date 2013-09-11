@@ -22,7 +22,6 @@ JW.Tests.Alg.SimpleTestCase = function(config) {
 	this.obj = null;
 	this.objj = null;
 	this.arr = null;
-	this.cls = null;
 };
 
 JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
@@ -40,26 +39,6 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 		};
 		
 		this.arr = [ 10, null, "lala" ];
-		
-		var Cls = function() {
-			Cls._super.call(this);
-		};
-		
-		JW.extend(Cls, JW.Class, {
-			items: this.arr,
-			every: function(callback, scope) {
-				for (var i = 0; i < this.items.length; ++i) {
-					if (callback.call(scope || this, this.items[i], i, this) === false) {
-						return false;
-					}
-				}
-				return true;
-			}
-		});
-		
-		JW.apply(Cls.prototype, JW.Alg.SimpleMethods);
-		
-		this.cls = new Cls();
 	},
 	
 	testEveryObject: function()
@@ -93,12 +72,6 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 		}, this);
 	},
 	
-	testEveryClass: function()
-	{
-		this.assertTrue (this.cls.every(JW.isDefined));
-		this.assertFalse(this.cls.every(JW.isSet));
-	},
-	
 	testEachObject: function()
 	{
 		this.addExpectedOutput(
@@ -112,19 +85,6 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 		}, this);
 	},
 	
-	testEachClass: function()
-	{
-		this.addExpectedOutput(
-			"0: 10",
-			"1: null",
-			"2: lala"
-		);
-		
-		this.cls.each(function(item, key) {
-			this.output(key + ": " + item);
-		}, this);
-	},
-	
 	testSomeObject: function()
 	{
 		this.assertTrue (JW.Map.some(this.objj, JW.isDefined));
@@ -133,42 +93,19 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 		this.assertTrue (JW.Map.some(this.objj, JW.emptyFn));
 	},
 	
-	testSomeClass: function()
-	{
-		this.assertTrue (this.cls.some(JW.isDefined));
-		this.assertTrue (this.cls.some(JW.isSet));
-		this.assertTrue (this.cls.some(JW.isBlank));
-		this.assertFalse(this.cls.some(function(item) { return !JW.isDefined(item); }));
-	},
-	
 	testGetKeysArrayObject: function()
 	{
-		this.assertTrue(JW.Array.equal([ "a", "b", "c" ], JW.Map.getKeysArray(this.obj)));
-	},
-	
-	testGetKeysArrayClass: function()
-	{
-		this.assertTrue(JW.Array.equal([ 0, 1, 2 ], this.cls.getKeysArray()));
+		this.assertTrue(JW.Array.equal([ "a", "b", "c" ], JW.Map.getKeys(this.obj)));
 	},
 	
 	testGetValuesArrayObject: function()
 	{
-		this.assertTrue(JW.Array.equal([ 10, null, "lala" ], JW.Map.getValuesArray(this.obj)));
-	},
-	
-	testGetValuesArrayClass: function()
-	{
-		this.assertTrue(JW.Array.equal([ 10, null, "lala" ], this.cls.getValuesArray()));
+		this.assertTrue(JW.Array.equal([ 10, null, "lala" ], JW.Map.toArray(this.obj)));
 	},
 	
 	testGetValuesSetObject: function()
 	{
 		this.assertTrue(JW.Map.equal({ "10": 10, "lala": "lala" }, JW.Map.indexBy(this.obj)));
-	},
-	
-	testGetValuesSetClass: function()
-	{
-		this.assertTrue(JW.Map.equal({ "10": 10, "lala": "lala" }, this.cls.indexBy()));
 	},
 	
 	testIndex: function()
