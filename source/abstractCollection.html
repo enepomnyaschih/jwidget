@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-AbstractCollection'>/**
+</span> * @class
+ * @extends JW.Class
+ */
+JW.AbstractCollection = function() {
+	JW.AbstractCollection._super.call(this);
+};
+
+JW.AbstractCollection._createBy = function(algorithm) {
+	return function(field, value) {
+		return this[algorithm](function(item) {
+			return JW.get(item, field) === value;
+		});
+	};
+};
+
+JW.AbstractCollection._createByField = function(algorithm) {
+	return function(field) {
+		return this[algorithm](function(item) {
+			return JW.get(item, field);
+		});
+	};
+};
+
+JW.AbstractCollection._createByMethod = function(algorithm) {
+	return function(method, args) {
+		args = args || [];
+		return this[algorithm](function(item) {
+			return item[method].apply(item, args);
+		});
+	};
+};
+
+JW.AbstractCollection._create$Array = function(algorithm) {
+	return function() {
+		return new JW.Array(this[algorithm].apply(this, arguments), true);
+	};
+};
+
+JW.AbstractCollection._create$Map = function(algorithm) {
+	return function() {
+		return new JW.Map(this[algorithm].apply(this, arguments), true);
+	};
+};
+
+JW.AbstractCollection._create$Set = function(algorithm) {
+	return function() {
+		return new JW.Set(this[algorithm].apply(this, arguments), true);
+	};
+};
+
+JW.extend(JW.AbstractCollection/*&lt;V&gt;*/, JW.Class, {
+	destroy: function() {
+		this.tryClear();
+		this._super();
+	},
+	
+	everyBy: JW.AbstractCollection._createBy(&quot;every&quot;),
+	everyByMethod: JW.AbstractCollection._createByMethod(&quot;every&quot;),
+	
+	some: function(callback, scope) {
+		return !this.every(function(item) {
+			return callback.call(this, item) === false;
+		}, scope);
+	},
+	
+	someBy: JW.AbstractCollection._createBy(&quot;some&quot;),
+	someByMethod: JW.AbstractCollection._createByMethod(&quot;some&quot;),
+	
+	each: function(callback, scope) {
+		this.every(function(item) {
+			callback.call(this, item);
+			return true;
+		}, scope);
+	},
+	
+	eachByMethod: JW.AbstractCollection._createByMethod(&quot;each&quot;),
+	
+	search: function(callback, scope) {
+		var result;
+		this.every(function(item) {
+			if (callback.call(this, item) !== false) {
+				result = item;
+				return false;
+			}
+			return true;
+		}, scope);
+		return result;
+	},
+	
+	searchBy: JW.AbstractCollection._createBy(&quot;search&quot;),
+	searchByMethod: JW.AbstractCollection._createByMethod(&quot;search&quot;),
+	
+	toSorted: function(callback, scope, order) {
+		return this._callStatic(&quot;toSorted&quot;, [callback, scope || this, order]);
+	},
+	
+	$toSorted: JW.AbstractCollection._create$Array(&quot;toSorted&quot;),
+	toSortedBy: JW.AbstractCollection._createByField(&quot;toSorted&quot;),
+	$toSortedBy: JW.AbstractCollection._create$Array(&quot;toSortedBy&quot;),
+	toSortedByMethod: JW.AbstractCollection._createByMethod(&quot;toSorted&quot;),
+	$toSortedByMethod: JW.AbstractCollection._create$Array(&quot;toSortedByMethod&quot;),
+	
+	toSortedComparing: function(compare, scope, order) {
+		return this._callStatic(&quot;toSortedComparing&quot;, [compare, scope || this, order]);
+	},
+	
+	$toSortedComparing: JW.AbstractCollection._create$Array(&quot;toSortedComparing&quot;),
+	
+	index: function(callback, scope) {
+		var result = {};
+		this.every(function(item) {
+			var key = callback.call(this, item);
+			if (JW.isSet(key)) {
+				result[key] = item;
+			}
+			return true;
+		}, scope);
+		return result;
+	},
+	
+	$index: JW.AbstractCollection._create$Map(&quot;index&quot;),
+	indexBy: JW.AbstractCollection._createByField(&quot;index&quot;),
+	$indexBy: JW.AbstractCollection._create$Map(&quot;indexBy&quot;),
+	indexByMethod: JW.AbstractCollection._createByMethod(&quot;index&quot;),
+	$indexByMethod: JW.AbstractCollection._create$Map(&quot;indexByMethod&quot;),
+	
+	toArray: function() {
+		var result = new Array(this.getLength());
+		var index = 0;
+		this.every(function(item) {
+			result[index++] = item;
+		});
+		return result;
+	},
+	
+	$toArray: JW.AbstractCollection._create$Array(&quot;toArray&quot;),
+	
+	toSet: function() {
+		var result = {};
+		this.every(function(item) {
+			JW.Set.add(result, item);
+		});
+		return result;
+	},
+	
+	$toSet: JW.AbstractCollection._create$Set(&quot;toSet&quot;),
+	
+	asArray: function() {
+		return this.toArray();
+	},
+	
+	$asArray: JW.AbstractCollection._create$Array(&quot;asArray&quot;),
+	
+	asSet: function() {
+		return this.toSet();
+	},
+	
+	$asSet: JW.AbstractCollection._create$Set(&quot;asSet&quot;),
+	
+	filterBy: JW.AbstractCollection._createBy(&quot;filter&quot;),
+	$filterBy: JW.AbstractCollection._createBy(&quot;$filter&quot;),
+	filterByMethod: JW.AbstractCollection._createByMethod(&quot;filter&quot;),
+	$filterByMethod: JW.AbstractCollection._createByMethod(&quot;$filter&quot;),
+	
+	mapBy: JW.AbstractCollection._createByField(&quot;map&quot;),
+	$mapBy: JW.AbstractCollection._createByField(&quot;$map&quot;),
+	mapByMethod: JW.AbstractCollection._createByMethod(&quot;map&quot;),
+	$mapByMethod: JW.AbstractCollection._createByMethod(&quot;$map&quot;)
+});
+</pre>
+</body>
+</html>

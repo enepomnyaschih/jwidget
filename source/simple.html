@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	JW simple collection methods tests.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Alg.SimpleTestCase = function(config) {
+	JW.Tests.Alg.SimpleTestCase._super.call(this, config);
+	this.obj = null;
+	this.objj = null;
+	this.arr = null;
+};
+
+JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
+	setup: function()
+	{
+		this.obj = {
+			a: 10,
+			b: null,
+			c: &quot;lala&quot;
+		};
+		
+		this.objj = {
+			a: 10,
+			c: &quot;lala&quot;
+		};
+		
+		this.arr = [ 10, null, &quot;lala&quot; ];
+	},
+	
+	testEveryObject: function()
+	{
+		this.assertTrue (JW.Map.every(this.obj, JW.isDefined));
+		this.assertFalse(JW.Map.every(this.obj, JW.isSet));
+		this.assertTrue (JW.Map.every(this.objj, JW.emptyFn));
+	},
+	
+	testEveryObjectScope: function()
+	{
+		this.assertTrue(JW.Map.every(this.obj, function(item, key) {
+			return this.obj[key] === item;
+		}, this));
+		
+		this.assertFalse(JW.Map.every(this.obj, function(item, key) {
+			return JW.isSet(this.obj[key]);
+		}, this));
+	},
+	
+	testEveryObjectSequence: function()
+	{
+		this.addExpectedOutput(
+			&quot;a: 10&quot;,
+			&quot;b: null&quot;
+		);
+		
+		JW.Map.every(this.obj, function(item, key) {
+			this.output(key + &quot;: &quot; + item);
+			return JW.isSet(item);
+		}, this);
+	},
+	
+	testEachObject: function()
+	{
+		this.addExpectedOutput(
+			&quot;a: 10&quot;,
+			&quot;b: null&quot;,
+			&quot;c: lala&quot;
+		);
+		
+		JW.Map.each(this.obj, function(item, key) {
+			this.output(key + &quot;: &quot; + item);
+		}, this);
+	},
+	
+	testSomeObject: function()
+	{
+		this.assertTrue (JW.Map.some(this.objj, JW.isDefined));
+		this.assertTrue (JW.Map.some(this.objj, JW.isSet));
+		this.assertFalse(JW.Map.some(this.objj, JW.isBlank));
+		this.assertTrue (JW.Map.some(this.objj, JW.emptyFn));
+	},
+	
+	testGetKeysArrayObject: function()
+	{
+		this.assertTrue(JW.Array.equal([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ], JW.Map.getKeys(this.obj)));
+	},
+	
+	testGetValuesArrayObject: function()
+	{
+		this.assertTrue(JW.Array.equal([ 10, null, &quot;lala&quot; ], JW.Map.toArray(this.obj)));
+	},
+	
+	testGetValuesSetObject: function()
+	{
+		this.assertTrue(JW.Map.equal({ &quot;10&quot;: 10, &quot;lala&quot;: &quot;lala&quot; }, JW.Map.indexBy(this.obj)));
+	},
+	
+	testIndex: function()
+	{
+		var array = [
+			{
+				id : 10
+			}, {
+				id : 5
+			}, {
+				id : 20
+			}
+		];
+		
+		var expected = {
+			&quot;10&quot; : array[0],
+			&quot;5&quot;  : array[1],
+			&quot;20&quot; : array[2]
+		};
+		
+		this.assertEqual(JSON.stringify(expected), JSON.stringify(JW.Array.index(array, function(item) { return item.id; })));
+	},
+	
+	testIndexBy: function()
+	{
+		var array = [
+			{
+				id : 10
+			}, {
+				id : 5
+			}, {
+				id : 20
+			}
+		];
+		
+		var expected = {
+			&quot;10&quot; : array[0],
+			&quot;5&quot;  : array[1],
+			&quot;20&quot; : array[2]
+		};
+		
+		this.assertEqual(JSON.stringify(expected), JSON.stringify(JW.Array.indexBy(array, &quot;id&quot;)));
+	},
+	
+	testIndexByMethod: function()
+	{
+		var array = [
+			{ getId : function(a) { return a + 5; } },
+			{ getId : function(a) { return a + 0; } },
+			{ getId : function(a) { return a + 15; } }
+		];
+		
+		var expected = {
+			&quot;10&quot; : array[0],
+			&quot;5&quot;  : array[1],
+			&quot;20&quot; : array[2]
+		};
+		
+		this.assertTrue(JW.Array.equal(expected, JW.Array.indexByMethod(array, &quot;getId&quot;, [ 5 ])));
+	}
+});
+</pre>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.ObservableSet = function(json, adapter) {
+	JW.ObservableSet._super.call(this, json, adapter);
+	this.spliceEvent = new JW.Event();
+	this.clearEvent = new JW.Event();
+	this.changeEvent = new JW.Event();
+	this.lengthChangeEvent = new JW.Event();
+	this._lastLength = this.getLength();
+};
+
+JW.extend(JW.ObservableSet/*&lt;T extends JW.Class&gt;*/, JW.AbstractSet/*&lt;T&gt;*/, {
+	/*
+	Fields
+	JW.Event&lt;JW.ObservableSet.SpliceEventParams&lt;T&gt;&gt; spliceEvent;
+	JW.Event&lt;JW.ObservableSet.ItemsEventParams&lt;T&gt;&gt; clearEvent;
+	JW.Event&lt;JW.ObservableSet.EventParams&lt;T&gt;&gt; changeEvent;
+	JW.Event&lt;JW.ObservableSet.LengthChangeEventParams&lt;T&gt;&gt; lengthChangeEvent;
+	Integer _lastLength;
+	*/
+	
+	// override
+	destroy: function() {
+		this.lengthChangeEvent.destroy();
+		this.changeEvent.destroy();
+		this.clearEvent.destroy();
+		this.spliceEvent.destroy();
+		this._super();
+	},
+	
+	// override
+	tryClear: function() {
+		var items = this._super();
+		if (items === undefined) {
+			return;
+		}
+		this.clearEvent.trigger(new JW.ObservableSet.ItemsEventParams(this, items));
+		this._triggerChange();
+		return items;
+	},
+	
+	// override
+	trySplice: function(removedItems, addedItems) {
+		var spliceResult = this._super(removedItems, addedItems);
+		if (spliceResult === undefined) {
+			return;
+		}
+		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, spliceResult));
+		this._triggerChange();
+		return spliceResult;
+	},
+	
+	// override
+	createEmpty: function() {
+		return new JW.ObservableSet();
+	},
+	
+	// override
+	createEmptyArray: function() {
+		return new JW.ObservableArray();
+	},
+	
+	// override
+	createEmptyMap: function() {
+		return new JW.ObservableMap();
+	},
+	
+	// override
+	createEmptySet: function() {
+		return new JW.ObservableSet();
+	},
+	
+	// override
+	createMapper: function(config) {
+		return new JW.ObservableSet.Mapper(this, config);
+	},
+	
+	// override
+	createObserver: function(config) {
+		return new JW.ObservableSet.Observer(this, config);
+	},
+	
+	// override
+	createOrderer: function(config) {
+		return new JW.ObservableSet.Orderer(this, config);
+	},
+	
+	// override
+	createSorter: function(config) {
+		return new JW.ObservableSet.Sorter(this, config);
+	},
+	
+	// override
+	createIndexer: function(config) {
+		return new JW.ObservableSet.Indexer(this, config);
+	},
+	
+	// override
+	createLister: function(config) {
+		return new JW.ObservableSet.Lister(this, config);
+	},
+	
+	_triggerChange: function() {
+		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
+		var newLength = this.getLength();
+		if (this._lastLength !== newLength) {
+			this.lengthChangeEvent.trigger(new JW.ObservableSet.LengthChangeEventParams(this, this._lastLength, newLength));
+			this._lastLength = newLength;
+		}
+	}
+});
+
+//--------
+
+JW.ObservableSet.EventParams = function(sender) {
+	JW.ObservableSet.EventParams._super.call(this, sender);
+};
+
+JW.extend(JW.ObservableSet.EventParams/*&lt;T extends JW.Class&gt;*/, JW.EventParams, {
+	/*
+	Fields
+	JW.ObservableSet&lt;T&gt; sender;
+	*/
+});
+
+//--------
+
+JW.ObservableSet.SpliceEventParams = function(sender, spliceResult) {
+	JW.ObservableSet.SpliceEventParams._super.call(this, sender);
+	this.spliceResult = spliceResult;
+};
+
+JW.extend(JW.ObservableSet.SpliceEventParams/*&lt;T extends JW.Class&gt;*/, JW.ObservableSet.EventParams/*&lt;T&gt;*/, {
+	/*
+	Fields
+	JW.AbstractSet.SpliceResult&lt;T&gt; spliceResult;
+	*/
+});
+
+//--------
+
+JW.ObservableSet.ItemsEventParams = function(sender, items) {
+	JW.ObservableSet.ItemsEventParams._super.call(this, sender);
+	this.items = items;
+};
+
+JW.extend(JW.ObservableSet.ItemsEventParams/*&lt;T extends JW.Class&gt;*/, JW.ObservableSet.EventParams/*&lt;T&gt;*/, {
+	/*
+	Fields
+	Array&lt;T&gt; items;
+	*/
+});
+
+//--------
+
+JW.ObservableSet.LengthChangeEventParams = function(sender, oldLength, newLength) {
+	JW.ObservableSet.LengthChangeEventParams._super.call(this, sender);
+	this.oldLength = oldLength;
+	this.newLength = newLength;
+};
+
+JW.extend(JW.ObservableSet.LengthChangeEventParams/*&lt;T extends JW.Class&gt;*/, JW.ObservableSet.EventParams/*&lt;T&gt;*/, {
+	/*
+	Fields
+	Integer oldLength;
+	Integer newLength;
+	*/
+});
+</pre>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractMap.ObserverTestCase = JW.Unit.TestCase.extend({
+	testObserver: function() {
+		var source = new JW.Map({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Added A&quot;,
+			&quot;Added B&quot;,
+			&quot;Added C&quot;
+		);
+		var syncher = source.createObserver({
+			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
+			clearItems : function(items) { this.output(&quot;Cleared &quot; + items.join(&quot;, &quot;)); },
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Cleared A, B, C&quot;
+		);
+		syncher.destroy();
+	},
+	
+	testAutoClear: function() {
+		var source = new JW.Map({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Added A&quot;,
+			&quot;Added B&quot;,
+			&quot;Added C&quot;
+		);
+		var syncher = source.createObserver({
+			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Removed A&quot;,
+			&quot;Removed B&quot;,
+			&quot;Removed C&quot;
+		);
+		syncher.destroy();
+	}
+});
+</pre>
+</body>
+</html>

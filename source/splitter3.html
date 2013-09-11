@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractArray.SplitterTestCase = JW.Unit.TestCase.extend({
+	testSplitter: function() {
+		var testCase = this;
+		var rowId = 0;
+		
+		var source = new JW.Array([
+			&quot;a&quot;, &quot;b&quot;, &quot;c&quot;,
+			&quot;d&quot;, &quot;e&quot;, &quot;f&quot;,
+			&quot;g&quot;
+		]);
+		
+		var splitter = source.createSplitter({
+			capacity : 3
+		});
+		
+		this.assertStrictEqual(3, splitter.rows.getLength());
+		this.assertTrue(splitter.rows.get(0) instanceof JW.Array);
+		this.assertTrue(splitter.rows.get(1) instanceof JW.Array);
+		this.assertTrue(splitter.rows.get(2) instanceof JW.Array);
+		
+		this.assertTarget([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ], splitter.rows.get(0));
+		this.assertTarget([ &quot;d&quot;, &quot;e&quot;, &quot;f&quot; ], splitter.rows.get(1));
+		this.assertTarget([ &quot;g&quot; ], splitter.rows.get(2));
+		
+		splitter.destroy();
+		source.destroy();
+	},
+	
+	assertTarget: function(values, target) {
+		this.assertStrictEqual(values.length, target.getLength());
+		for (var i = 0; i &lt; target.getLength(); ++i) {
+			this.assertStrictEqual(values[i], target.get(i));
+		}
+	}
+});
+</pre>
+</body>
+</html>

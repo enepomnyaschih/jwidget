@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.MapTestCase = function(config) {
+	JW.Tests.Collection.MapTestCase._super.call(this, config);
+};
+
+JW.extend(JW.Tests.Collection.MapTestCase, JW.Unit.TestCase, {
+	testRemoveItem: function() {
+		var map = new JW.Map({ &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 });
+		this.assertStrictEqual(&quot;b&quot;, map.removeItem(2));
+		this.assertUndefined(map.removeItem(1));
+		this.assertTrue(JW.Map.equal({ &quot;a&quot;: 0, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 }, map.getJson()));
+	},
+	
+	testRemoveItemStatic: function() {
+		var map = { &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 };
+		this.assertStrictEqual(&quot;b&quot;, JW.Map.removeItem(map, 2));
+		this.assertUndefined(JW.Map.removeItem(map, 1));
+		this.assertTrue(JW.Map.equal({ &quot;a&quot;: 0, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 }, map));
+	},
+	
+	testEqual: function() {
+		var a = new JW.Map({ &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 });
+		this.assertTrue(a.equal({ &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 }));
+		this.assertTrue(a.equal({ &quot;a&quot;: 0, &quot;f&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3 }));
+		this.assertFalse(a.equal({ &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 3, &quot;e&quot;: 3, &quot;f&quot;: 0 }));
+		this.assertFalse(a.equal({ &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;D&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 }));
+		this.assertFalse(a.equal({ &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0, &quot;g&quot;: 0 }));
+		this.assertFalse(a.equal({ &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3 }));
+	},
+	
+	testEqualStatic: function() {
+		var a = { &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 };
+		var b = { &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 };
+		var c = { &quot;a&quot;: 0, &quot;f&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3 };
+		var d = { &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 3, &quot;e&quot;: 3, &quot;f&quot;: 0 };
+		var e = { &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;D&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0 };
+		var f = { &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3, &quot;f&quot;: 0, &quot;g&quot;: 0 };
+		var g = { &quot;a&quot;: 0, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 2, &quot;e&quot;: 3 };
+		this.assertTrue(JW.Map.equal(a, a));
+		this.assertTrue(JW.Map.equal(a, b));
+		this.assertTrue(JW.Map.equal(a, c));
+		this.assertFalse(JW.Map.equal(a, d));
+		this.assertFalse(JW.Map.equal(a, e));
+		this.assertFalse(JW.Map.equal(a, f));
+		this.assertFalse(JW.Map.equal(a, g));
+	}
+});
+</pre>
+</body>
+</html>

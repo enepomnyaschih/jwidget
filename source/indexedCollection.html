@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.IndexedCollection = function() {
+	JW.IndexedCollection._super.call(this);
+};
+
+JW.extend(JW.IndexedCollection/*&lt;K, V&gt;*/, JW.AbstractCollection/*&lt;V&gt;*/, {
+	$getKeys: JW.AbstractCollection._create$Array(&quot;getKeys&quot;),
+	
+	containsKey: function(key) {
+		return this.get(key) !== undefined;
+	},
+	
+	containsItem: function(item) {
+		return !this.every(function(v) { return item !== v; });
+	},
+	
+	keyOf: function(item) {
+		return this.find(function(v) { return item === v; });
+	},
+	
+	set: function(item, key) {
+		var result = this.trySet(item, key);
+		return (result !== undefined) ? result.item : this.get(key);
+	},
+	
+	remove: function(key) {
+		return this.tryRemove(key);
+	},
+	
+	removeItem: function(item) {
+		var key = this.keyOf(item);
+		if (key !== undefined) {
+			this.tryRemove(key);
+		}
+		return key;
+	},
+	
+	some: function(callback, scope) {
+		return !this.every(function(item, key) {
+			return callback.call(this, item, key) === false;
+		}, scope);
+	},
+	
+	each: function(callback, scope) {
+		this.every(function(item, key) {
+			callback.call(this, item, key);
+			return true;
+		}, scope);
+	},
+	
+	find: function(callback, scope) {
+		var result;
+		this.every(function(item, key) {
+			if (callback.call(this, item, key) !== false) {
+				result = key;
+				return false;
+			}
+			return true;
+		}, scope);
+		return result;
+	},
+	
+	findBy: JW.AbstractCollection._createBy(&quot;find&quot;),
+	findByMethod: JW.AbstractCollection._createByMethod(&quot;find&quot;),
+	
+	search: function(callback, scope) {
+		var result;
+		this.every(function(item, key) {
+			if (callback.call(this, item, key) !== false) {
+				result = item;
+				return false;
+			}
+			return true;
+		}, scope);
+		return result;
+	},
+	
+	getSortingKeys: function(callback, scope, order) {
+		return this._callStatic(&quot;getSortingKeys&quot;, [callback, scope || this, order]);
+	},
+	
+	$getSortingKeys: JW.AbstractCollection._create$Array(&quot;getSortingKeys&quot;),
+	
+	getSortingKeysComparing: function(compare, scope, order) {
+		return this._callStatic(&quot;getSortingKeysComparing&quot;, [compare, scope || this, order]);
+	},
+	
+	$getSortingKeysComparing: JW.AbstractCollection._create$Array(&quot;getSortingKeysComparing&quot;),
+	
+	index: function(callback, scope) {
+		var result = {};
+		this.every(function(item, k) {
+			var key = callback.call(this, item, k);
+			if (JW.isSet(key)) {
+				result[key] = item;
+			}
+			return true;
+		}, scope);
+		return result;
+	},
+	
+	toMap: function() {
+		var result = {};
+		this.every(function(v, k) {
+			result[k] = v;
+		});
+		return result;
+	},
+	
+	$toMap: JW.AbstractCollection._create$Map(&quot;toMap&quot;),
+	
+	asMap: function() {
+		return this.toMap();
+	},
+	
+	$asMap: JW.AbstractCollection._create$Map(&quot;asMap&quot;)
+});
+</pre>
+</body>
+</html>

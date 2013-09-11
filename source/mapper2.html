@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.AbstractMap.Mapper = function(source, config) {
+	JW.AbstractMap.Mapper._super.call(this);
+	config = config || {};
+	this.source = source;
+	this.createItem = config.createItem;
+	this.destroyItem = config.destroyItem;
+	this._targetCreated = !config.target;
+	this.target = config.target || source.createEmpty();
+	this.scope = config.scope || this;
+	this.target.trySetAll(this._createItems(this.source.getJson()));
+};
+
+JW.extend(JW.AbstractMap.Mapper/*&lt;S extends Any, T extends Any&gt;*/, JW.Class, {
+	/*
+	Required
+	JW.AbstractMap&lt;S&gt; source;
+	T createItem(S data);
+	void destroyItem(T item, S data);
+	
+	Optional
+	JW.AbstractMap&lt;T&gt; target;
+	Object scope; // defaults to this
+	
+	Fields
+	Boolean _targetCreated;
+	*/
+	
+	// override
+	destroy: function() {
+		this._destroyItems(this.target.tryRemoveAll(this.source.getKeys()), this.source.getJson());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this._super();
+	},
+	
+	_createItems: function(datas) {
+		var items = {};
+		for (var key in datas) {
+			items[key] = this.createItem.call(this.scope, datas[key]);
+		}
+		return items;
+	},
+	
+	_destroyItems: function(items, datas) {
+		if (items === undefined) {
+			return;
+		}
+		for (var key in items) {
+			this.destroyItem.call(this.scope, items[key], datas[key]);
+		}
+	}
+});
+</pre>
+</body>
+</html>
