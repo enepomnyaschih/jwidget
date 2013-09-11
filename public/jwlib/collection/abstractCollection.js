@@ -17,6 +17,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * @extends JW.Class
+ */
 JW.AbstractCollection = function() {
 	JW.AbstractCollection._super.call(this);
 };

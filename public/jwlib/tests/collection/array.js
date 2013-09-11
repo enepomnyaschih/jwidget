@@ -348,7 +348,7 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	equal: function(x, y, recursively, strict)
 	{
 		var pairs = [];
-		var eq = strict ? JW.seq : JW.eq;
+		var eq = strict ? function(x, y) { return x === y; } : function(x, y) { return x == y; };
 		var req;
 		
 		function rec(x, y)
