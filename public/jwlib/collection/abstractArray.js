@@ -288,7 +288,9 @@ JW.extend(JW.AbstractArray/*<V>*/, JW.IndexedCollection/*<Integer, V>*/, {
 	},
 	
 	pop: function() {
-		return this.items.pop();
+		if (this.items.length !== 0) {
+			return this.tryRemove(this.items.length - 1);
+		}
 	},
 	
 	_callStatic: function(algorithm, args) {

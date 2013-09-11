@@ -121,7 +121,7 @@ JW.apply(JW.Array, {
 	trySet: function(target, item, index) {
 		// JW.assertArray(target);
 		// JW.assertIsSet(item);
-		// JW.assertInt(index, 0, target.length + 1);
+		// JW.assertInt(index, 0, target.length);
 		var oldItem = target[index];
 		if (item !== oldItem) {
 			target[index] = item;
@@ -200,7 +200,7 @@ JW.apply(JW.Array, {
 		for (var i = removeParamsList.length - 1; i >= 0; --i) {
 			var params = removeParamsList[i];
 			var index = params.index;
-			var items = JW.Array.tryRemove(target, index, params.count);
+			var items = JW.Array.tryRemoveAll(target, index, params.count);
 			if (items === undefined) {
 				continue;
 			}

@@ -56,13 +56,13 @@ JW.extend(JW.ObservableArray/*<T>*/, JW.AbstractArray/*<T>*/, {
 	
 	// override
 	trySet: function(item, index) {
-		var wrap = this._super(item, index);
-		if (wrap === undefined) {
+		var oldItem = this._super(item, index);
+		if (oldItem === undefined) {
 			return;
 		}
-		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, wrap.value, item));
+		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem, item));
 		this._triggerChange();
-		return wrap;
+		return oldItem;
 	},
 	
 	// override
