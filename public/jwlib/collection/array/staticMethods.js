@@ -125,7 +125,7 @@ JW.apply(JW.Array, {
 		var oldItem = target[index];
 		if (item !== oldItem) {
 			target[index] = item;
-			return oldItem;
+			return new JW.Proxy(oldItem);
 		}
 	},
 	

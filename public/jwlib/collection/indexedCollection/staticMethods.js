@@ -36,7 +36,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 	
 	namespace.set = function(target, item, key) {
 		var result = namespace.trySet(target, item, key);
-		return (result !== undefined) ? result.item : namespace.get(target, key);
+		return (result !== undefined) ? result.value : namespace.get(target, key);
 	};
 	
 	namespace.remove = function(target, key) {

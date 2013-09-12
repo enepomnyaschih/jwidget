@@ -31,6 +31,10 @@
  * @class V Обозначение переменного типа данных для generic-классов и методов.
  * @abstract
  */
+/**
+ * @class K Обозначение переменного типа данных для generic-классов и методов.
+ * @abstract
+ */
 if (typeof JW !== "undefined") {
 	throw new Error("Can't initialize jWidget Lib: JW namespace already defined");
 }

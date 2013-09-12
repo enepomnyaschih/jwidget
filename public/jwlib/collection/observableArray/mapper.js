@@ -71,7 +71,7 @@ JW.extend(JW.ObservableArray.Mapper/*<S, T>*/, JW.AbstractArray.Mapper/*<S, T>*/
 	
 	_onReplace: function(params) {
 		var newItem = this.createItem.call(this.scope, params.newItem);
-		var oldItem = this.target.trySet(newItem, params.index);
+		var oldItem = this.target.trySet(newItem, params.index).value;
 		this.destroyItem.call(this.scope, oldItem, params.oldItem);
 	},
 	

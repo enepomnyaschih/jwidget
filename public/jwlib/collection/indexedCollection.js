@@ -17,13 +17,71 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<K, T> extends JW.AbstractCollection<T>`
+ *
+ * Абстрактная коллекция элементов типа T с ключами типа K (индексированная коллекция).
+ *
+ * Существует 2 типа индексированных коллекций:
+ *
+ * - JW.AbstractArray (массив, ключ - number)
+ * - JW.AbstractMap (словарь, ключ - string)
+ *
+ * Функции-коллбеки следующих алгоритмов коллекций переопределены и принимают дополнительные параметры -
+ * ключи элементов:
+ *
+ * - {@link #every} - Проверяет все элементы по критерию.
+ * - {@link #some} - Проверяет каждый элемент по критерию.
+ * - {@link #each} - Перебирает элементы.
+ * - {@link #search} - Ищет элемент по критерию.
+ * - {@link #filter}, #$filter - Фильтрует коллекцию по критерию.
+ * - {@link #map}, #$map - Отображает элементы коллекции.
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing - Преобразует коллекцию в отсортированный
+ * массив.
+ * - {@link #index}, #$index - Индексирует коллекцию.
+ *
+ * Добавлены следующие алгоритмы:
+ *
+ * - {@link #getKeys}, #$getKeys - Возвращает массив ключей всех элементов.
+ * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysBy, #$getSortingKeysBy, #getSortingKeysByMethod,
+ * {@link #$getSortingKeysByMethod}, #getSortingKeysComparing, #$getSortingKeysComparing - Возвращает ключи элементов,
+ * отсортированных по индексу или компаратору.
+ * - {@link #toMap}, #$toMap - Строит новый словарь из элементов коллекции.
+ * - {@link #asMap}, #$asMap - Представляет коллекцию в виде словаря.
+ *
+ * @extends JW.AbstractCollection
+ * @abstract
+ */
 JW.IndexedCollection = function() {
 	JW.IndexedCollection._super.call(this);
 };
 
 JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
+	/**
+	 * @method get
+	 * Возвращает элемент по ключу. В случае, если элемента с таким ключом нет, вернет undefined.
+	 * @param {K} key Ключ.
+	 * @returns {T} Элемент.
+	 */
+	
+	/**
+	 * @method getKeys
+	 * Возвращает массив ключей всех элементов коллекции.
+	 * @returns {Array} Массив ключей.
+	 */
+	/**
+	 * Возвращает массив ключей всех элементов коллекции.
+	 * @returns {JW.Array} `<K>` Массив ключей.
+	 */
 	$getKeys: JW.AbstractCollection._create$Array("getKeys"),
 	
+	/**
+	 * Проверяет наличие элемента с заданным ключом в коллекции.
+	 * @param {K} key Ключ.
+	 * @returns {boolean} Коллекция содержит элемент с указанным ключом.
+	 */
 	containsKey: function(key) {
 		return this.get(key) !== undefined;
 	},
@@ -32,15 +90,62 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 		return !this.every(function(v) { return item !== v; });
 	},
 	
+	/**
+	 * Определяет ключ элемента в данной коллекции. Если такого элемента в коллекции нет, вернет undefined.
+	 * @param {T} item Элемент.
+	 * @returns {K} Ключ элемента.
+	 */
 	keyOf: function(item) {
 		return this.find(function(v) { return item === v; });
 	},
 	
+	/**
+	 * @method trySet
+	 *
+	 * Заменяет элемент по ключу. В случае если элемента с таким ключом нет:
+	 *
+	 * - Массив сломается
+	 * - Словарь добавит новый элемент
+	 *
+	 * @param {T} item Элемент.
+	 * @param {K} key Ключ.
+	 * @returns {JW.Proxy} `<T>` Обертка над бывшим элементом коллекции. Если нет изменений - undefined.
+	 */
+	/**
+	 * Заменяет элемент по ключу. В случае если элемента с таким ключом нет:
+	 *
+	 * - Массив сломается
+	 * - Словарь добавит новый элемент
+	 *
+	 * @param {T} item Элемент.
+	 * @param {K} key Ключ.
+	 * @returns {T} Бывший элемент коллекции.
+	 */
 	set: function(item, key) {
 		var result = this.trySet(item, key);
 		return (result !== undefined) ? result.item : this.get(key);
 	},
 	
+	/**
+	 * @method tryRemove
+	 *
+	 * Удаляет элемент по ключу. В случае если элемента с таким ключом нет:
+	 *
+	 * - Массив сломается
+	 * - Словарь вернет undefined
+	 *
+	 * @param {K} key Ключ.
+	 * @returns {T} Бывший элемент коллекции. Если нет изменений - undefined.
+	 */
+	/**
+	 * Удаляет элемент по ключу. В случае если элемента с таким ключом нет:
+	 *
+	 * - Массив сломается
+	 * - Словарь вернет undefined
+	 *
+	 * @param {K} key Ключ.
+	 * @returns {T} Бывший элемент коллекции.
+	 */
 	remove: function(key) {
 		return this.tryRemove(key);
 	},
@@ -53,12 +158,60 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 		return key;
 	},
 	
+	/**
+	 * @method every
+	 *
+	 * Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @param {Function} f
+	 *
+	 * `boolean f(item: T, key: K)`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {boolean} Результат проверки.
+	 */
+	/**
+	 * Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false хотя бы на одном элементе коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @param {Function} f
+	 *
+	 * `boolean f(item: T, key: K)`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {boolean} Результат проверки.
+	 */
 	some: function(callback, scope) {
 		return !this.every(function(item, key) {
 			return callback.call(this, item, key) === false;
 		}, scope);
 	},
 	
+	/**
+	 * Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
+	 *
+	 * @param {Function} f
+	 *
+	 * `void f(item: T, key: K)`
+	 *
+	 * Функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {void}
+	 */
 	each: function(callback, scope) {
 		this.every(function(item, key) {
 			callback.call(this, item, key);
@@ -66,6 +219,23 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 		}, scope);
 	},
 	
+	/**
+	 * Ищет элемент по критерию.
+	 * 
+	 * Возвращает ключ первого элемента, функция f на котором возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @param {Function} f
+	 *
+	 * `boolean f(item: T, key: K)`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {K} Ключ найденного элемента или undefined.
+	 */
 	find: function(callback, scope) {
 		var result;
 		this.every(function(item, key) {
@@ -78,9 +248,52 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 		return result;
 	},
 	
+	/**
+	 * Ищет элемент по критерию.
+	 * 
+	 * Возвращает ключ первого элемента, поле field которого строго равно (===) значению value.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @param {String/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {K} Ключ найденного элемента или undefined.
+	 */
 	findBy: JW.AbstractCollection._createBy("find"),
+	
+	/**
+	 * Ищет элемент по критерию.
+	 * 
+	 * Возвращает ключ первого элемента, указанный метод которого с аргументами args возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @param {String} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {K} Ключ найденного элемента или undefined.
+	 */
 	findByMethod: JW.AbstractCollection._createByMethod("find"),
 	
+	/**
+	 * Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, функция f на котором возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @param {Function} f
+	 *
+	 * `boolean f(item: T, key: K)`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
 	search: function(callback, scope) {
 		var result;
 		this.every(function(item, key) {
@@ -93,18 +306,191 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 		return result;
 	},
 	
+	/**
+	 * Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @param {Function} f
+	 *
+	 * `Mixed f(item: T, key: K)`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} Отсортированный массив.
+	 */
+	/**
+	 * Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @param {Function} f
+	 *
+	 * `Mixed f(item: T, key: K)`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 */
+	 
+	/**
+	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @param {Function} f
+	 *
+	 * `Mixed f(item: T, key: K)`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} Отсортированный массив.
+	 */
 	getSortingKeys: function(callback, scope, order) {
 		return this._callStatic("getSortingKeys", [callback, scope || this, order]);
 	},
 	
+	/**
+	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @param {Function} f
+	 *
+	 * `Mixed f(item: T, key: K)`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `<K>` Отсортированный массив.
+	 */
 	$getSortingKeys: JW.AbstractCollection._create$Array("getSortingKeys"),
 	
+	/**
+	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @param {String/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} Отсортированный массив.
+	 */
+	getSortingKeysBy: JW.AbstractCollection._createByField("getSortingKeys"),
+	
+	/**
+	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @param {String/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `<K>` Отсортированный массив.
+	 */
+	$getSortingKeysBy: JW.AbstractCollection._create$Array("getSortingKeysBy"),
+	
+	/**
+	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @param {String} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Array} Отсортированный массив.
+	 */
+	getSortingKeysByMethod: JW.AbstractCollection._createByMethod("getSortingKeys"),
+	
+	/**
+	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @param {String} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 */
+	$getSortingKeysByMethod: JW.AbstractCollection._create$Array("getSortingKeysByMethod"),
+	
+	/**
+	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @param {Function} compare
+	 *
+	 * `Number f(t1: T, t2: T, k1: K, k2: K)`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} Отсортированный массив.
+	 */
 	getSortingKeysComparing: function(compare, scope, order) {
 		return this._callStatic("getSortingKeysComparing", [compare, scope || this, order]);
 	},
 	
+	/**
+	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @param {Function} compare
+	 *
+	 * `Number f(t1: T, t2: T, k1: K, k2: K)`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `<K>` Отсортированный массив.
+	 */
 	$getSortingKeysComparing: JW.AbstractCollection._create$Array("getSortingKeysComparing"),
 	
+	/**
+	 * @method $index
+	 *
+	 * Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @param {Function} f
+	 *
+	 * `String f(item: T, key: K)`
+	 *
+	 * Функция-индексатор для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Map} `<T>` Индекс коллекции.
+	 */
+	/**
+	 * Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @param {Function} f
+	 *
+	 * `String f(item: T, key: K)`
+	 *
+	 * Функция-индексатор для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Индекс коллекции.
+	 */
 	index: function(callback, scope) {
 		var result = {};
 		this.every(function(item, k) {
@@ -117,6 +503,13 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 		return result;
 	},
 	
+	/**
+	 * Преобразует коллекцию в словарь.
+	 *
+	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 *
+	 * @returns {Object} Словарь элементов.
+	 */
 	toMap: function() {
 		var result = {};
 		this.every(function(v, k) {
@@ -125,11 +518,36 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 		return result;
 	},
 	
+	/**
+	 * Преобразует коллекцию в словарь.
+	 *
+	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 *
+	 * @returns {JW.Map} `<K, T>` Словарь элементов.
+	 */
 	$toMap: JW.AbstractCollection._create$Map("toMap"),
 	
+	/**
+	 * Представляет коллекцию в виде словаря.
+	 *
+	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод #toMap.
+	 * Данная функция работает как правило быстрее #toMap, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @returns {Object} Словарь элементов.
+	 */
 	asMap: function() {
 		return this.toMap();
 	},
 	
+	/**
+	 * Представляет коллекцию в виде словаря.
+	 *
+	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод #toMap.
+	 * Данная функция работает как правило быстрее #toMap, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @returns {JW.Map} `<K, T>` Словарь элементов.
+	 */
 	$asMap: JW.AbstractCollection._create$Map("asMap")
 });

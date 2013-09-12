@@ -60,7 +60,7 @@ JW.extend(JW.ObservableArray/*<T>*/, JW.AbstractArray/*<T>*/, {
 		if (oldItem === undefined) {
 			return;
 		}
-		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem, item));
+		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem.value, item));
 		this._triggerChange();
 		return oldItem;
 	},
