@@ -20,6 +20,13 @@
 JW.IndexedCollection.createStaticMethods = function(namespace) {
 	JW.AbstractCollection.createStaticMethods(namespace);
 	
+	namespace.getFirst = function(target) {
+		var key = namespace.getFirstKey(target);
+		if (key !== undefined) {
+			return namespace.get(target, key);
+		}
+	};
+	
 	namespace.$getKeys = JW.AbstractCollection._createStatic$Array(namespace, "getKeys");
 	
 	namespace.containsKey = function(target, key) {

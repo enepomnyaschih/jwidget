@@ -35,6 +35,13 @@ JW.apply(JW.Map, {
 		return true;
 	},
 	
+	getFirstKey: function(target) {
+		for (var key in target) {
+			return key;
+		}
+		return undefined;
+	},
+	
 	get: function(target, key) {
 		return target[key];
 	},

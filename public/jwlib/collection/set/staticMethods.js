@@ -35,6 +35,13 @@ JW.apply(JW.Set, {
 		return true;
 	},
 	
+	getFirst: function(target) {
+		for (var key in target) {
+			return target[key];
+		}
+		return undefined;
+	},
+	
 	containsItem: function(target, item) {
 		return target.hasOwnProperty(item._iid);
 	},

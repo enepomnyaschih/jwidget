@@ -29,6 +29,9 @@
  * - JW.AbstractArray (массив, ключ - number)
  * - JW.AbstractMap (словарь, ключ - string)
  *
+ * При работе с индексированными коллекциями следует помнить одно простое правило: во всех методах и коллбеках,
+ * принимающих на вход элемент и его ключ, элемент всегда идет первым параметром, а ключ - вторым.
+ *
  * Функции-коллбеки следующих алгоритмов коллекций переопределены и принимают дополнительные параметры -
  * ключи элементов:
  *
@@ -58,13 +61,26 @@ JW.IndexedCollection = function() {
 	JW.IndexedCollection._super.call(this);
 };
 
-JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
+JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	/**
 	 * @method get
 	 * Возвращает элемент по ключу. В случае, если элемента с таким ключом нет, вернет undefined.
 	 * @param {K} key Ключ.
 	 * @returns {T} Элемент.
 	 */
+	/**
+	 * @method $clear
+	 * Очищает коллекцию.
+	 * @returns {JW.IndexedCollection} `<K, T>` Бывшее содержимое коллекции.
+	 */
+	
+	/**
+	 * Возвращает ключ первого элемента коллекции. Если коллекция пуста, вернет undefined.
+	 * @returns {K} Ключ.
+	 */
+	getFirstKey: function() {
+		return this._callStatic("getFirstKey");
+	},
 	
 	/**
 	 * @method getKeys
@@ -170,7 +186,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `boolean f(item: T, key: K)`
+	 * `f(item: T, key: K): boolean`
 	 *
 	 * Критерий проверки элементов.
 	 *
@@ -187,7 +203,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `boolean f(item: T, key: K)`
+	 * `f(item: T, key: K): boolean`
 	 *
 	 * Критерий проверки элементов.
 	 *
@@ -205,7 +221,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `void f(item: T, key: K)`
+	 * `f(item: T, key: K): void`
 	 *
 	 * Функция.
 	 *
@@ -229,7 +245,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `boolean f(item: T, key: K)`
+	 * `f(item: T, key: K): boolean`
 	 *
 	 * Критерий проверки элементов.
 	 *
@@ -257,7 +273,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
 	 * критерию.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {Mixed} value Значение.
 	 * @returns {K} Ключ найденного элемента или undefined.
 	 */
@@ -271,7 +287,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
 	 * критерию.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {K} Ключ найденного элемента или undefined.
 	 */
@@ -287,7 +303,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `boolean f(item: T, key: K)`
+	 * `f(item: T, key: K): boolean`
 	 *
 	 * Критерий проверки элементов.
 	 *
@@ -307,13 +323,15 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	},
 	
 	/**
+	 * @method toSorted
+	 *
 	 * Преобразует коллекцию в отсортированный массив.
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
 	 * @param {Function} f
 	 *
-	 * `Mixed f(item: T, key: K)`
+	 * `f(item: T, key: K): number/string`
 	 *
 	 * Функция-сортировщик для элемента.
 	 *
@@ -322,13 +340,15 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 * @returns {Array} Отсортированный массив.
 	 */
 	/**
+	 * @method $toSorted
+	 *
 	 * Преобразует коллекцию в отсортированный массив.
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
 	 * @param {Function} f
 	 *
-	 * `Mixed f(item: T, key: K)`
+	 * `f(item: T, key: K): number/string`
 	 *
 	 * Функция-сортировщик для элемента.
 	 *
@@ -336,126 +356,162 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {JW.Array} `<T>` Отсортированный массив.
 	 */
+	/**
+	 * @method toSortedComparing
+	 *
+	 * Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, k1: K, k2: K): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} Отсортированный массив.
+	 */
+	/**
+	 * @method $toSortedComparing
+	 *
+	 * Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, k1: K, k2: K): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 */
 	 
 	/**
-	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 * Возвращает массив ключей отсортированных элементов.
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
 	 * @param {Function} f
 	 *
-	 * `Mixed f(item: T, key: K)`
+	 * `f(item: T, key: K): number/string`
 	 *
 	 * Функция-сортировщик для элемента.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @returns {Array} `<K>` Массив ключей отсортированных элементов.
 	 */
 	getSortingKeys: function(callback, scope, order) {
 		return this._callStatic("getSortingKeys", [callback, scope || this, order]);
 	},
 	
 	/**
-	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 * Возвращает массив ключей отсортированных элементов.
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
 	 * @param {Function} f
 	 *
-	 * `Mixed f(item: T, key: K)`
+	 * `f(item: T, key: K): number/string`
 	 *
 	 * Функция-сортировщик для элемента.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<K>` Отсортированный массив.
+	 * @returns {JW.Array} `<K>` Массив ключей отсортированных элементов.
 	 */
 	$getSortingKeys: JW.AbstractCollection._create$Array("getSortingKeys"),
 	
 	/**
-	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 * Возвращает массив ключей отсортированных элементов.
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
 	 * Поле элемента извлекается с помощью функции JW.get.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @returns {Array} `<K>` Массив ключей отсортированных элементов.
 	 */
 	getSortingKeysBy: JW.AbstractCollection._createByField("getSortingKeys"),
 	
 	/**
-	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 * Возвращает массив ключей отсортированных элементов.
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
 	 * Поле элемента извлекается с помощью функции JW.get.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<K>` Отсортированный массив.
+	 * @returns {JW.Array} `<K>` Массив ключей отсортированных элементов.
 	 */
 	$getSortingKeysBy: JW.AbstractCollection._create$Array("getSortingKeysBy"),
 	
 	/**
-	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 * Возвращает массив ключей отсортированных элементов.
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
 	 * элемента.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
-	 * @returns {Array} Отсортированный массив.
+	 * @returns {Array} `<K>` Массив ключей отсортированных элементов.
 	 */
 	getSortingKeysByMethod: JW.AbstractCollection._createByMethod("getSortingKeys"),
 	
 	/**
-	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 * Возвращает массив ключей отсортированных элементов.
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
 	 * элемента.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @returns {JW.Array} `<K>` Массив ключей отсортированных элементов.
 	 */
 	$getSortingKeysByMethod: JW.AbstractCollection._create$Array("getSortingKeysByMethod"),
 	
 	/**
-	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 * Возвращает массив ключей отсортированных элементов.
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
 	 *
 	 * @param {Function} compare
 	 *
-	 * `Number f(t1: T, t2: T, k1: K, k2: K)`
+	 * `f(t1: T, t2: T, k1: K, k2: K): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
 	 * 0, если t1 == t2.
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @returns {Array} `<K>` Массив ключей отсортированных элементов.
 	 */
 	getSortingKeysComparing: function(compare, scope, order) {
 		return this._callStatic("getSortingKeysComparing", [compare, scope || this, order]);
 	},
 	
 	/**
-	 * Преобразует коллекцию в массив ключей отсортированных элементов.
+	 * Возвращает массив ключей отсортированных элементов.
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
 	 *
 	 * @param {Function} compare
 	 *
-	 * `Number f(t1: T, t2: T, k1: K, k2: K)`
+	 * `f(t1: T, t2: T, k1: K, k2: K): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
 	 * 0, если t1 == t2.
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<K>` Отсортированный массив.
+	 * @returns {JW.Array} `<K>` Массив ключей отсортированных элементов.
 	 */
 	$getSortingKeysComparing: JW.AbstractCollection._create$Array("getSortingKeysComparing"),
 	
@@ -469,7 +525,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `String f(item: T, key: K)`
+	 * `f(item: T, key: K): string`
 	 *
 	 * Функция-индексатор для элемента.
 	 *
@@ -484,7 +540,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `String f(item: T, key: K)`
+	 * `f(item: T, key: K): string`
 	 *
 	 * Функция-индексатор для элемента.
 	 *
@@ -523,7 +579,7 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 *
 	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
 	 *
-	 * @returns {JW.Map} `<K, T>` Словарь элементов.
+	 * @returns {JW.Map} `<T>` Словарь элементов.
 	 */
 	$toMap: JW.AbstractCollection._create$Map("toMap"),
 	
@@ -550,4 +606,117 @@ JW.extend(JW.IndexedCollection/*<K, V>*/, JW.AbstractCollection/*<V>*/, {
 	 * @returns {JW.Map} `<K, T>` Словарь элементов.
 	 */
 	$asMap: JW.AbstractCollection._create$Map("asMap")
+	
+	/**
+	 * @method filter
+	 *
+	 * Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(T item, key: K): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Array/Object} Отфильтрованная коллекция.
+	 */
+	/**
+	 * @method $filter
+	 *
+	 * Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(T item, key: K): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.IndexedCollection} `<K, T>` Отфильтрованная коллекция.
+	 */
+	/**
+	 * @method $filterBy
+	 *
+	 * Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.IndexedCollection} `<K, T>` Отфильтрованная коллекция.
+	 */
+	/**
+	 * @method $filterByMethod
+	 *
+	 * Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
+	 * возвращает !== false для всех элементов коллекции.
+	 * 
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.IndexedCollection} `<K, T>` Отфильтрованная коллекция.
+	 */
+	/**
+	 * @method map
+	 *
+	 * `<U>` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(T item, key: K): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Array/Object} Отображенная коллекция.
+	 */
+	/**
+	 * @method $map
+	 *
+	 * `<U>` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(T item, key: K): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.IndexedCollection} `<K, U>` Отображенная коллекция.
+	 */
+	/**
+	 * @method $mapBy
+	 *
+	 * `<U>` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
+	 * извлекается с помощью функции JW.get.
+	 * 
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.IndexedCollection} `<K, U>` Отображенная коллекция.
+	 */
+	/**
+	 * @method $mapByMethod
+	 *
+	 * `<U>` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
+	 * у всех элементов коллекции.
+	 * 
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.IndexedCollection} `<K, U>` Отображенная коллекция.
+	 */
 });

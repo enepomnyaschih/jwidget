@@ -166,6 +166,14 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {boolean} Коллекция не содержит ни одного элемента.
 	 */
 	/**
+	 * Возвращает первый элемент коллекции. Если коллекция пуста, вернет undefined.
+	 * @returns {T} Элемент.
+	 */
+	getFirst: function() {
+		return this._callStatic("getFirst");
+	},
+	
+	/**
 	 * @method containsItem
 	 * Проверяет наличие элемента в коллекции.
 	 * @param {T} item Элемент.
@@ -186,12 +194,17 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	/**
 	 * @method tryClear
 	 * Очищает коллекцию.
-	 * @returns {Mixed} Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 * @returns {Array/Object} Бывшее содержимое коллекции. Если нет изменений - undefined.
 	 */
 	/**
 	 * @method clear
 	 * Очищает коллекцию.
-	 * @returns {Mixed} Бывшее содержимое коллекции.
+	 * @returns {Array/Object} Бывшее содержимое коллекции.
+	 */
+	/**
+	 * @method $clear
+	 * Очищает коллекцию.
+	 * @returns {JW.AbstractCollection} `<T>` Бывшее содержимое коллекции.
 	 */
 	
 	destroy: function() {
@@ -211,7 +224,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `boolean f(item: T)`
+	 * `f(item: T): boolean`
 	 *
 	 * Критерий проверки элементов.
 	 *
@@ -227,7 +240,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
 	 * критерию.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {Mixed} value Значение.
 	 * @returns {boolean} Результат проверки.
 	 */
@@ -242,7 +255,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
 	 * критерию.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {boolean} Результат проверки.
 	 */
@@ -258,7 +271,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `boolean f(item: T)`
+	 * `f(item: T): boolean`
 	 *
 	 * Критерий проверки элементов.
 	 *
@@ -280,7 +293,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
 	 * критерию.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {Mixed} value Значение.
 	 * @returns {boolean} Результат проверки.
 	 */
@@ -295,7 +308,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
 	 * критерию.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {boolean} Результат проверки.
 	 */
@@ -306,7 +319,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `void f(item: T)`
+	 * `f(item: T): void`
 	 *
 	 * Функция.
 	 *
@@ -322,7 +335,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	
 	/**
 	 * Перебирает элементы коллекции. Запускает указанный метод у всех элементов.
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {void}
 	 */
@@ -338,7 +351,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `boolean f(item: T)`
+	 * `f(item: T): boolean`
 	 *
 	 * Критерий проверки элементов.
 	 *
@@ -366,7 +379,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
 	 * критерию.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {Mixed} value Значение.
 	 * @returns {T} Найденный элемент или undefined.
 	 */
@@ -380,7 +393,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
 	 * критерию.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {T} Найденный элемент или undefined.
 	 */
@@ -393,7 +406,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `Mixed f(item: T)`
+	 * `f(item: T): number/string`
 	 *
 	 * Функция-сортировщик для элемента.
 	 *
@@ -412,7 +425,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `Mixed f(item: T)`
+	 * `f(item: T): number/string`
 	 *
 	 * Функция-сортировщик для элемента.
 	 *
@@ -428,7 +441,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
 	 * Поле элемента извлекается с помощью функции JW.get.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {Array} Отсортированный массив.
 	 */
@@ -440,7 +453,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
 	 * Поле элемента извлекается с помощью функции JW.get.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {JW.Array} `<T>` Отсортированный массив.
 	 */
@@ -452,7 +465,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
 	 * элемента.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {Array} Отсортированный массив.
 	 */
@@ -464,7 +477,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
 	 * элемента.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {JW.Array} `<T>` Отсортированный массив.
 	 */
@@ -477,7 +490,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} compare
 	 *
-	 * `Number f(t1: T, t2: T)`
+	 * `f(t1: T, t2: T): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
 	 * 0, если t1 == t2.
@@ -497,7 +510,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} compare
 	 *
-	 * `Number f(t1: T, t2: T)`
+	 * `f(t1: T, t2: T): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
 	 * 0, если t1 == t2.
@@ -516,7 +529,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `String f(item: T)`
+	 * `f(item: T): string`
 	 *
 	 * Функция-индексатор для элемента.
 	 *
@@ -543,7 +556,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `String f(item: T)`
+	 * `f(item: T): string`
 	 *
 	 * Функция-индексатор для элемента.
 	 *
@@ -558,7 +571,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
 	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @returns {Object} Индекс коллекции.
 	 */
 	indexBy: JW.AbstractCollection._createByField("index"),
@@ -569,7 +582,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
 	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
 	 *
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @returns {JW.Map} `<T>` Индекс коллекции.
 	 */
 	$indexBy: JW.AbstractCollection._create$Map("indexBy"),
@@ -580,7 +593,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
 	 * а в значениях - соответствующие элементы.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {Object} Индекс коллекции.
 	 */
@@ -592,7 +605,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
 	 * а в значениях - соответствующие элементы.
 	 *
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {JW.Map} `<T>` Индекс коллекции.
 	 */
@@ -704,7 +717,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `boolean f(T item)`
+	 * `f(T item): boolean`
 	 *
 	 * Фильтрующая функция.
 	 *
@@ -720,7 +733,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `boolean f(T item)`
+	 * `f(T item): boolean`
 	 *
 	 * Фильтрующая функция.
 	 *
@@ -733,7 +746,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
 	 * значению value. Поле элемента извлекается с помощью функции JW.get.
 	 * 
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {Mixed} value Значение.
 	 * @returns {Array/Object} Отфильтрованная коллекция.
 	 */
@@ -745,7 +758,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
 	 * значению value. Поле элемента извлекается с помощью функции JW.get.
 	 * 
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {Mixed} value Значение.
 	 * @returns {JW.AbstractCollection} `<T>` Отфильтрованная коллекция.
 	 */
@@ -757,7 +770,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
 	 * возвращает !== false для всех элементов коллекции.
 	 * 
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {Array/Object} Отфильтрованная коллекция.
 	 */
@@ -769,7 +782,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
 	 * возвращает !== false для всех элементов коллекции.
 	 * 
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {JW.AbstractCollection} `<T>` Отфильтрованная коллекция.
 	 */
@@ -784,7 +797,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `U f(T item)`
+	 * `f(T item): U`
 	 *
 	 * Отображающая функция.
 	 *
@@ -800,7 +813,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `U f(T item)`
+	 * `f(T item): U`
 	 *
 	 * Отображающая функция.
 	 *
@@ -813,7 +826,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
 	 * извлекается с помощью функции JW.get.
 	 * 
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {Mixed} value Значение.
 	 * @returns {Array/Object} Отображенная коллекция.
 	 */
@@ -825,7 +838,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
 	 * извлекается с помощью функции JW.get.
 	 * 
-	 * @param {String/Array} field Поле элемента.
+	 * @param {string/Array} field Поле элемента.
 	 * @param {Mixed} value Значение.
 	 * @returns {JW.AbstractCollection} `<U>` Отображенная коллекция.
 	 */
@@ -837,7 +850,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
 	 * у всех элементов коллекции.
 	 * 
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {Array/Object} Отображенная коллекция.
 	 */
@@ -849,7 +862,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
 	 * у всех элементов коллекции.
 	 * 
-	 * @param {String} method Имя метода элемента.
+	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
 	 * @returns {JW.AbstractCollection} `<U>` Отображенная коллекция.
 	 */

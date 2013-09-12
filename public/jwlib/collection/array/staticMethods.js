@@ -20,8 +20,8 @@
 JW.IndexedCollection.createStaticMethods(JW.Array);
 
 JW.apply(JW.Array, {
-	getFirst: function(target) {
-		return target[0];
+	getFirstKey: function(target) {
+		return (target.length !== 0) ? 0 : undefined;
 	},
 	
 	getLast: function(target) {

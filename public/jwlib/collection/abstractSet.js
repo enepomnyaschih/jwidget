@@ -189,7 +189,7 @@ JW.extend(JW.AbstractSet/*<T>*/, JW.AbstractCollection/*<T>*/, {
 	},
 	
 	_callStatic: function(algorithm, args) {
-		return JW.Set[algorithm].apply(JW.Set, [this.json].concat(JW.args(args)));
+		return JW.Set[algorithm].apply(JW.Set, [this.json].concat(JW.args(args || [])));
 	}
 });
 

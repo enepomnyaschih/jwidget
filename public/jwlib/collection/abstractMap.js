@@ -222,7 +222,7 @@ JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
 	},
 	
 	_callStatic: function(algorithm, args) {
-		return JW.Map[algorithm].apply(JW.Map, [this.json].concat(JW.args(args)));
+		return JW.Map[algorithm].apply(JW.Map, [this.json].concat(JW.args(args || [])));
 	}
 });
 
