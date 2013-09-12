@@ -684,14 +684,14 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Возвращает уникальный идентификатор объекта. Вернет {@link JW.Class#_iid _iid} объекта, если он является
+	 * Возвращает уникальный идентификатор объекта. Вернет {@link JW.Class#_iid iid} объекта, если он является
 	 * экземпляром JW.Class, в противном случае вернет сам объект.
 	 *
 	 * Эта функция является значением о умолчанию для полей JW.AbstractArray#getKey и JW.AbstractMap#getKey, а также
-	 * для параметра getKey статических методов JW.AbstractArray#detectSplice,
-	 * JW.AbstractArray#performSplice, JW.AbstractArray#detectReorder,
-	 * JW.AbstractArray#performReorder, JW.AbstractMap#detectReindex,
-	 * JW.AbstractMap#performReindex.
+	 * для параметра getKey статических методов JW.Array#static-method-detectSplice,
+	 * JW.Array#static-method-performSplice, JW.Array#static-method-detectReorder,
+	 * JW.Array#static-method-performReorder, JW.Map#static-method-detectReindex,
+	 * JW.Map#static-method-performReindex.
 	 *
 	 * @static
 	 * @param {Object} obj Объект.

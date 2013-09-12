@@ -17,6 +17,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractArray<T>`
+ *
+ * Простой массив.
+ *
+ * @extends JW.AbstractArray
+ *
+ * @constructor
+ * @param {Array} [items] `<T>` Изначальное содержимое массива. По умолчанию, создается пустой массив.
+ * @param {boolean} [adapter] Создать массив как адаптер над items. По умолчанию, равен false, т.е. создается
+ * копия массива items.
+ */
 JW.Array = function(items, adapter) {
 	JW.Array._super.call(this, items, adapter);
 };
