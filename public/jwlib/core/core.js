@@ -19,22 +19,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- * @class T Обозначение переменного типа данных для generic-классов и методов.
- * @abstract
- */
-/**
- * @class P Обозначение переменного типа данных для generic-классов и методов.
- * @abstract
- */
-/**
- * @class V Обозначение переменного типа данных для generic-классов и методов.
- * @abstract
- */
-/**
- * @class K Обозначение переменного типа данных для generic-классов и методов.
- * @abstract
- */
 if (typeof JW !== "undefined") {
 	throw new Error("Can't initialize jWidget Lib: JW namespace already defined");
 }
