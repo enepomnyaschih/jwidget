@@ -129,7 +129,7 @@ JW.extend(JW.Event, JW.Class, {
 	 *
 	 * @param {Function} callback
 	 *
-	 * `void callback(P params)`
+	 * `void callback(params: P)`
 	 *
 	 * Функция-обработчик события.
 	 *
