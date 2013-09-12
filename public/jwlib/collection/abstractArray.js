@@ -1066,6 +1066,16 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	}
 });
 
+/**
+ * @class
+ * Пара "индекс-количество". Используется в параметрах метода JW.AbstractArray#splice чтобы указать, какие
+ * элементы нужно удалить из массива.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {number} index Индекс.
+ * @param {number} count Количество.
+ */
 JW.AbstractArray.IndexCount = function(index, count) {
 	JW.AbstractArray.IndexCount._super.call(this);
 	this.index = index;
@@ -1073,35 +1083,56 @@ JW.AbstractArray.IndexCount = function(index, count) {
 };
 
 JW.extend(JW.AbstractArray.IndexCount, JW.Class, {
-	/*
-	Fields
-	Integer index;
-	Integer count;
-	*/
+	/**
+	 * @property {number} index Индекс.
+	 */
+	/**
+	 * @property {number} count Количество.
+	 */
 });
 
-//--------
-
+/**
+ * @class
+ * `<T>` Пара "индекс-элементы". Используется в параметрах метода JW.AbstractArray#splice чтобы указать, какие
+ * элементы нужно вставить в массив.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {number} index Индекс.
+ * @param {Array} items `<T>` Элементы.
+ */
 JW.AbstractArray.IndexItems = function(index, items) {
 	JW.AbstractArray.IndexItems._super.call(this);
 	this.index = index;
 	this.items = items;
 };
 
-JW.extend(JW.AbstractArray.IndexItems/*<T>*/, JW.Class, {
-	/*
-	Fields
-	Integer index;
-	Array<T> items;
-	*/
+JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
+	/**
+	 * @property {number} index Индекс.
+	 */
+	/**
+	 * @property {Array} items `<T>` Элементы.
+	 */
 	
+	/**
+	 * Преобразует в пару "индекс-количество".
+	 * @returns {JW.AbstractArray.IndexCount} Пара "индекс-количество".
+	 */
 	toIndexCount: function() {
 		return new JW.AbstractArray.IndexCount(this.index, this.items.length);
 	}
 });
 
-//--------
-
+/**
+ * @class
+ * `<T>` Параметры метода JW.AbstractArray#splice.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Сегменты для удаления.
+ * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Наборы для вставки.
+ */
 JW.AbstractArray.SpliceParams = function(removeParamsList, addParamsList) {
 	JW.AbstractArray.SpliceParams._super.call(this);
 	this.removeParamsList = removeParamsList;
@@ -1109,15 +1140,24 @@ JW.AbstractArray.SpliceParams = function(removeParamsList, addParamsList) {
 };
 
 JW.extend(JW.AbstractArray.SpliceParams/*<T>*/, JW.Class, {
-	/*
-	Fields
-	Array<JW.AbstractArray.IndexCount<T>> removeParamsList;
-	Array<JW.AbstractArray.IndexItems<T>> addParamsList;
-	*/
+	/**
+	 * @property {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Сегменты для удаления.
+	 */
+	/**
+	 * @property {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Наборы для вставки.
+	 */
 });
 
-//--------
-
+/**
+ * @class
+ * `<T>` Результат метода JW.AbstractArray#splice.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} oldItems `<T>` Бывшее содержимое массива.
+ * @param {Array} removedItemsList `<JW.AbstractArray.IndexItems<T>>` Наборы удаленных элементов.
+ * @param {Array} addedItemsList `<JW.AbstractArray.IndexItems<T>>` Наборы вставленных элементов.
+ */
 JW.AbstractArray.SpliceResult = function(oldItems, removedItemsList, addedItemsList) {
 	JW.AbstractArray.SpliceResult._super.call(this);
 	this.oldItems = oldItems;
@@ -1129,16 +1169,25 @@ JW.AbstractArray.SpliceResult = function(oldItems, removedItemsList, addedItemsL
 };
 
 JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
+	/**
+	 * @property {Array} oldItems `<T>` Бывшее содержимое массива.
+	 */
+	/**
+	 * @property {Array} removedItemsList `<JW.AbstractArray.IndexItems<T>>` Наборы удаленных элементов.
+	 */
+	/**
+	 * @property {Array} addedItemsList `<JW.AbstractArray.IndexItems<T>>` Наборы вставленных элементов.
+	 */
 	/*
-	Fields
-	Array<T> oldItems;
-	Array<JW.AbstractArray.IndexItems<T>> removedItemsList;
-	Array<JW.AbstractArray.IndexItems<T>> addedItemsList;
 	Array<T> removedItems;
 	Array<T> addedItems;
 	Array<JW.AbstractArray.IndexCount<T>> removeParamsList;
 	*/
 	
+	/**
+	 * Возвращает общий массив удаленных элементов.
+	 * @returns {Array} `<T>` Массив удаленных элементов.
+	 */
 	getRemovedItems: function() {
 		if (!this.removedItems) {
 			this.removedItems = JW.Array.merge(JW.Array.mapBy(this.removedItemsList, "items"));
@@ -1146,6 +1195,10 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 		return this.removedItems;
 	},
 	
+	/**
+	 * Возвращает общий массив добавленных элементов.
+	 * @returns {Array} `<T>` Массив добавленных элементов.
+	 */
 	getAddedItems: function() {
 		if (!this.addedItems) {
 			this.addedItems = JW.Array.merge(JW.Array.mapBy(this.addedItemsList, "items"));
@@ -1153,6 +1206,10 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 		return this.addedItems;
 	},
 	
+	/**
+	 * Преобразует наборы удаленных элементов в сегменты для удаления.
+	 * @returns {Array} `<JW.AbstractArray.IndexCount<T>>` Сегменты для удаления.
+	 */
 	getRemoveParamsList: function() {
 		if (!this.removeParamsList) {
 			this.removeParamsList = JW.Array.mapByMethod(this.removedItemsList, "toIndexCount");
@@ -1160,6 +1217,10 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 		return this.removeParamsList;
 	},
 	
+	/**
+	 * Проверяет, что массив не изменился в результате вызова JW.AbstractArray#splice.
+	 * @returns {boolean} Массив не изменился.
+	 */
 	isEmpty: function() {
 		return (this.removedItemsList.length === 0) && (this.addedItemsList.length === 0);
 	}
