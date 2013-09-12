@@ -15,19 +15,27 @@
 	
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	
-	----
-	
-	This is an adapter of array that triggers events about modifications.
-	Events are taken from ActionScript's CollectionEventKind (with small
-	reasonable changes).
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractMap<T>`
+ *
+ * Простой словарь.
+ *
+ * @extends JW.AbstractMap
+ *
+ * @constructor
+ * @param {Object} [items] Изначальное содержимое словаря. По умолчанию, создается пустой словарь.
+ * @param {boolean} [adapter] Создать словарь как адаптер над items. По умолчанию, равен false, т.е. создается
+ * копия словаря items.
+ */
 JW.Map = function(json, adapter) {
 	JW.Map._super.call(this, json, adapter);
 };
 
-JW.extend(JW.Map/*<T>*/, JW.AbstractMap/*<T>*/, {
+JW.extend(JW.Map, JW.AbstractMap, {
 	createEmpty: function() {
 		return new JW.Map();
 	},

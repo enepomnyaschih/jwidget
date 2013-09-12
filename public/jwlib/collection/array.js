@@ -35,7 +35,7 @@ JW.Array = function(items, adapter) {
 	JW.Array._super.call(this, items, adapter);
 };
 
-JW.extend(JW.Array/*<T>*/, JW.AbstractArray/*<T>*/, {
+JW.extend(JW.Array, JW.AbstractArray, {
 	createEmpty: function() {
 		return new JW.Array();
 	},

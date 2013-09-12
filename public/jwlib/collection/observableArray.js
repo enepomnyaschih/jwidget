@@ -85,9 +85,6 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	 * Изменена длина массива. Возникает после события #changeEvent в случае изменения длины.
 	 * @param {JW.ObservableArray.LengthChangeEventParams} params `<T>` Параметры.
 	 */
-	/*
-	Integer _lastLength;
-	*/
 	
 	// override
 	destroy: function() {

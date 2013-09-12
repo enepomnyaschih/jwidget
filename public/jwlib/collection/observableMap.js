@@ -17,6 +17,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractMap<T>`
+ *
+ * Оповещающий словарь.
+ *
+ * @extends JW.AbstractMap
+ *
+ * @constructor
+ * @param {Object} [items] Изначальное содержимое словаря. По умолчанию, создается пустой словарь.
+ * @param {boolean} [adapter] Создать словарь как адаптер над items. По умолчанию, равен false, т.е. создается
+ * копия словаря items.
+ */
 JW.ObservableMap = function(json, adapter) {
 	JW.ObservableMap._super.call(this, json, adapter);
 	this.spliceEvent = new JW.Event();
@@ -27,16 +41,38 @@ JW.ObservableMap = function(json, adapter) {
 	this._lastLength = this.getLength();
 };
 
-JW.extend(JW.ObservableMap/*<T>*/, JW.AbstractMap/*<T>*/, {
-	/*
-	Fields
-	JW.Event<JW.ObservableMap.SpliceEventParams<T>> spliceEvent;
-	JW.Event<JW.ObservableMap.ReindexEventParams<T>> reindexEvent;
-	JW.Event<JW.ObservableMap.ItemsEventParams<T>> clearEvent;
-	JW.Event<JW.ObservableMap.EventParams<T>> changeEvent;
-	JW.Event<JW.ObservableMap.LengthChangeEventParams<T>> lengthChangeEvent;
-	Integer _lastLength;
-	*/
+JW.extend(JW.ObservableMap, JW.AbstractMap, {
+	/**
+	 * @event spliceEvent
+	 * Элементы удалены/добавлены в словарь. Возникает в результате запуска
+	 * метода #set, #trySet, #setAll, #trySetAll, #remove, #tryRemove, #removeItem, #removeAll, #tryRemoveAll,
+	 * {@link #removeItems}, #splice, #trySplice, #performSplice.
+	 * @param {JW.ObservableMap.SpliceEventParams} params `<T>` Параметры.
+	 */
+	/**
+	 * @event reindexEvent
+	 * Изменены ключи элементов в словаре. Возникает в результате запуска
+	 * метода #setKey, #trySetKey, #reindex, #tryReindex, #performReindex.
+	 * @param {JW.ObservableMap.ReindexEventParams} params `<T>` Параметры.
+	 */
+	/**
+	 * @event clearEvent
+	 * Словарь очищен. Возникает в результате запуска
+	 * метода #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableMap.ItemsEventParams} params
+	 * `<T>` Параметры. JW.ObservableMap.ItemsEventParams#items обозначает бывшее содержимое коллекции.
+	 */
+	/**
+	 * @event changeEvent
+	 * Словарь изменен. Возникает после одного из
+	 * событий #spliceEvent, #reindexEvent, #clearEvent.
+	 * @param {JW.ObservableMap.EventParams} params `<T>` Параметры.
+	 */
+	/**
+	 * @event lengthChangeEvent
+	 * Изменен размер словаря. Возникает после события #changeEvent в случае изменения размера.
+	 * @param {JW.ObservableMap.LengthChangeEventParams} params `<T>` Параметры.
+	 */
 	
 	// override
 	destroy: function() {
@@ -146,63 +182,110 @@ JW.extend(JW.ObservableMap/*<T>*/, JW.AbstractMap/*<T>*/, {
 	}
 });
 
-//--------
-
+/**
+ * @class
+ * `<T>` Параметры события JW.ObservableMap.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Отправитель события.
+ */
 JW.ObservableMap.EventParams = function(sender) {
 	JW.ObservableMap.EventParams._super.call(this, sender);
 };
 
-JW.extend(JW.ObservableMap.EventParams/*<T>*/, JW.EventParams, {
-	/*
-	Fields
-	JW.ObservableMap<T> sender;
-	*/
+JW.extend(JW.ObservableMap.EventParams, JW.EventParams, {
+	/**
+	 * @property {JW.ObservableMap} sender `<T>` Отправитель события.
+	 */
 });
 
-//--------
-
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableMap.EventParams<T>`
+ *
+ * Параметры события JW.ObservableMap#spliceEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Отправитель события.
+ * @param {JW.AbstractMap.SpliceResult} spliceResult `<T>` Результат метода JW.AbstractMap#splice.
+ */
 JW.ObservableMap.SpliceEventParams = function(sender, spliceResult) {
 	JW.ObservableMap.SpliceEventParams._super.call(this, sender);
 	this.spliceResult = spliceResult;
 };
 
-JW.extend(JW.ObservableMap.SpliceEventParams/*<T>*/, JW.ObservableMap.EventParams/*<T>*/, {
-	/*
-	Fields
-	JW.AbstractMap.SpliceResult<T> spliceResult;
-	*/
+JW.extend(JW.ObservableMap.SpliceEventParams, JW.ObservableMap.EventParams, {
+	/**
+	 * @property {JW.AbstractMap.SpliceResult} spliceResult `<T>` Результат метода JW.AbstractMap#splice.
+	 */
 });
 
-//--------
-
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableMap.EventParams<T>`
+ *
+ * Параметры события JW.ObservableMap#reindexEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Отправитель события.
+ * @param {Object} keyMap Ключи элементов в измененном словаре.
+ */
 JW.ObservableMap.ReindexEventParams = function(sender, keyMap) {
 	JW.ObservableMap.ReindexEventParams._super.call(this, sender);
 	this.keyMap = keyMap;
 };
 
 JW.extend(JW.ObservableMap.ReindexEventParams/*<T>*/, JW.ObservableMap.EventParams/*<T>*/, {
-	/*
-	Fields
-	Map<String> keyMap;
-	*/
+	/**
+	 * @property {Object} keyMap Ключи элементов в измененном словаре.
+	 */
 });
 
-//--------
-
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableMap.EventParams<T>`
+ *
+ * Параметры события JW.ObservableMap с элементами.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Отправитель события.
+ * @param {Object} items Набор элементов.
+ */
 JW.ObservableMap.ItemsEventParams = function(sender, items) {
 	JW.ObservableMap.ItemsEventParams._super.call(this, sender);
 	this.items = items;
 };
 
-JW.extend(JW.ObservableMap.ItemsEventParams/*<T>*/, JW.ObservableMap.EventParams/*<T>*/, {
-	/*
-	Fields
-	Map<T> items;
-	*/
+JW.extend(JW.ObservableMap.ItemsEventParams, JW.ObservableMap.EventParams, {
+	/**
+	 * @property {Object} items Набор элементов.
+	 */
 });
 
-//--------
-
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableMap.EventParams<T>`
+ *
+ * Параметры события JW.ObservableMap#lengthChangeEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Отправитель события.
+ * @param {number} oldLength Старый размер коллекции.
+ * @param {number} newLength Новый размер коллекции.
+ */
 JW.ObservableMap.LengthChangeEventParams = function(sender, oldLength, newLength) {
 	JW.ObservableMap.LengthChangeEventParams._super.call(this, sender);
 	this.oldLength = oldLength;
@@ -210,9 +293,10 @@ JW.ObservableMap.LengthChangeEventParams = function(sender, oldLength, newLength
 };
 
 JW.extend(JW.ObservableMap.LengthChangeEventParams/*<T>*/, JW.ObservableMap.EventParams/*<T>*/, {
-	/*
-	Fields
-	Integer oldLength;
-	Integer newLength;
-	*/
+	/**
+	 * @property {number} oldLength Старый размер коллекции.
+	 */
+	/**
+	 * @property {number} newLength Новый размер коллекции.
+	 */
 });

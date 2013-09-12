@@ -85,7 +85,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	/**
 	 * @method getKeys
 	 * Возвращает массив ключей всех элементов коллекции.
-	 * @returns {Array} Массив ключей.
+	 * @returns {Array} `<K>` Массив ключей.
 	 */
 	/**
 	 * Возвращает массив ключей всех элементов коллекции.

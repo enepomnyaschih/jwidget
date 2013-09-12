@@ -796,7 +796,8 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * Переупорядочивает элементы массива.
-	 * @param {Array} indexArray `<number>` Массив индексов. Элемент с индексом i будет перемещен в индекс indexArray[i].
+	 * @param {Array} indexArray `<number>` Массив индексов. Элемент с индексом i будет перемещен в
+	 * индекс indexArray[i]. Должен содержать все индексы от 0 до (length - 1).
 	 * @returns {void}
 	 */
 	reorder: function(indexArray) {
@@ -805,7 +806,8 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * Переупорядочивает элементы массива.
-	 * @param {Array} indexArray `<number>` Массив индексов. Элемент с индексом i будет перемещен в индекс indexArray[i].
+	 * @param {Array} indexArray `<number>` Массив индексов. Элемент с индексом i будет перемещен в
+	 * индекс indexArray[i]. Должен содержать все индексы от 0 до (length - 1).
 	 * @returns {Array} `<T>` Бывшее содержимое массива.
 	 */
 	tryReorder: function(indexArray) {
@@ -828,8 +830,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * Определяет параметр метода #reorder, с которым содержимое массива станет равно newItems.
 	 * Т.е. определяет, какие элементы куда нужно переместить.
-	 * Если содержимое newItems отличается от содержимого массива, это неизбежно вызовет форматирование
-	 * диска C: на вашем компьютере.
+	 * Если содержимое newItems отличается от содержимого массива, массив сломается.
 	 * @param {Array} newItems `<T>` Новое содержимое массива.
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
