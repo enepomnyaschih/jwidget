@@ -748,7 +748,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * Очищает коллекцию.
-	 * @returns {Array} Бывшее содержимое коллекции.
+	 * @returns {Array} `<T>` Бывшее содержимое коллекции.
 	 */
 	clear: function() {
 		var result = this.tryClear();
@@ -1001,7 +1001,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * Поэлементно сравнивает с другим массивом.
-	 * @param {Array} arr Другой массив.
+	 * @param {Array} arr `<T>` Другой массив.
 	 * @returns {boolean} Массивы поэлементно равны.
 	 */
 	equal: function(arr) {

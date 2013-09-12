@@ -17,6 +17,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractSet<T>`
+ *
+ * Оповещающее множество.
+ *
+ * @extends JW.AbstractSet
+ *
+ * @constructor
+ * @param {Array} [items] `<T>` Изначальное содержимое множества. По умолчанию, создается пустое множество.
+ * @param {boolean} [adapter] Создать множество как адаптер над items (тогда это должен быть Object, а не Array).
+ * По умолчанию, равен false.
+ */
 JW.ObservableSet = function(json, adapter) {
 	JW.ObservableSet._super.call(this, json, adapter);
 	this.spliceEvent = new JW.Event();
@@ -26,15 +40,32 @@ JW.ObservableSet = function(json, adapter) {
 	this._lastLength = this.getLength();
 };
 
-JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.AbstractSet/*<T>*/, {
-	/*
-	Fields
-	JW.Event<JW.ObservableSet.SpliceEventParams<T>> spliceEvent;
-	JW.Event<JW.ObservableSet.ItemsEventParams<T>> clearEvent;
-	JW.Event<JW.ObservableSet.EventParams<T>> changeEvent;
-	JW.Event<JW.ObservableSet.LengthChangeEventParams<T>> lengthChangeEvent;
-	Integer _lastLength;
-	*/
+JW.extend(JW.ObservableSet, JW.AbstractSet, {
+	/**
+	 * @event spliceEvent
+	 * Элементы удалены/добавлены в множество. Возникает в результате запуска
+	 * метода #add, #tryAdd, #addAll, #$addAll, #tryAddAll, #remove, #tryRemove, #removeItem, #removeAll, #$removeAll,
+	 * {@link #tryRemoveAll}, #removeItems, #splice, #trySplice, #performSplice.
+	 * @param {JW.ObservableSet.SpliceEventParams} params `<T>` Параметры.
+	 */
+	/**
+	 * @event clearEvent
+	 * Множество очищено. Возникает в результате запуска
+	 * метода #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableSet.ItemsEventParams} params
+	 * `<T>` Параметры. JW.ObservableSet.ItemsEventParams#items обозначает бывшее содержимое коллекции.
+	 */
+	/**
+	 * @event changeEvent
+	 * Множество изменено. Возникает после одного из
+	 * событий #spliceEvent, #clearEvent.
+	 * @param {JW.ObservableSet.EventParams} params `<T>` Параметры.
+	 */
+	/**
+	 * @event lengthChangeEvent
+	 * Изменен размер множества. Возникает после события #changeEvent в случае изменения размера.
+	 * @param {JW.ObservableSet.LengthChangeEventParams} params `<T>` Параметры.
+	 */
 	
 	// override
 	destroy: function() {
@@ -127,59 +158,97 @@ JW.extend(JW.ObservableSet/*<T extends JW.Class>*/, JW.AbstractSet/*<T>*/, {
 	}
 });
 
-//--------
-
+/**
+ * @class
+ * `<T>` Параметры события JW.ObservableSet.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableSet} sender `<T>` Отправитель события.
+ */
 JW.ObservableSet.EventParams = function(sender) {
 	JW.ObservableSet.EventParams._super.call(this, sender);
 };
 
-JW.extend(JW.ObservableSet.EventParams/*<T extends JW.Class>*/, JW.EventParams, {
-	/*
-	Fields
-	JW.ObservableSet<T> sender;
-	*/
+JW.extend(JW.ObservableSet.EventParams, JW.EventParams, {
+	/**
+	 * @property {JW.ObservableSet} sender `<T>` Отправитель события.
+	 */
 });
 
-//--------
-
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableSet.EventParams<T>`
+ *
+ * Параметры события JW.ObservableSet#spliceEvent.
+ *
+ * @extends JW.ObservableSet.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableSet} sender `<T>` Отправитель события.
+ * @param {JW.AbstractSet.SpliceResult} spliceResult `<T>` Результат метода JW.AbstractSet#splice.
+ */
 JW.ObservableSet.SpliceEventParams = function(sender, spliceResult) {
 	JW.ObservableSet.SpliceEventParams._super.call(this, sender);
 	this.spliceResult = spliceResult;
 };
 
-JW.extend(JW.ObservableSet.SpliceEventParams/*<T extends JW.Class>*/, JW.ObservableSet.EventParams/*<T>*/, {
-	/*
-	Fields
-	JW.AbstractSet.SpliceResult<T> spliceResult;
-	*/
+JW.extend(JW.ObservableSet.SpliceEventParams, JW.ObservableSet.EventParams, {
+	/**
+	 * @property {JW.AbstractSet.SpliceResult} spliceResult `<T>` Результат метода JW.AbstractSet#splice.
+	 */
 });
 
-//--------
-
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableSet.EventParams<T>`
+ *
+ * Параметры события JW.ObservableSet с элементами.
+ *
+ * @extends JW.ObservableSet.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableSet} sender `<T>` Отправитель события.
+ * @param {Array} items `<T>` Набор элементов.
+ */
 JW.ObservableSet.ItemsEventParams = function(sender, items) {
 	JW.ObservableSet.ItemsEventParams._super.call(this, sender);
 	this.items = items;
 };
 
-JW.extend(JW.ObservableSet.ItemsEventParams/*<T extends JW.Class>*/, JW.ObservableSet.EventParams/*<T>*/, {
-	/*
-	Fields
-	Array<T> items;
-	*/
+JW.extend(JW.ObservableSet.ItemsEventParams, JW.ObservableSet.EventParams, {
+	/**
+	 * @property {Array} items `<T>` Набор элементов.
+	 */
 });
 
-//--------
-
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableSet.EventParams<T>`
+ *
+ * Параметры события JW.ObservableSet#lengthChangeEvent.
+ *
+ * @extends JW.ObservableSet.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableSet} sender `<T>` Отправитель события.
+ * @param {number} oldLength Старый размер коллекции.
+ * @param {number} newLength Новый размер коллекции.
+ */
 JW.ObservableSet.LengthChangeEventParams = function(sender, oldLength, newLength) {
 	JW.ObservableSet.LengthChangeEventParams._super.call(this, sender);
 	this.oldLength = oldLength;
 	this.newLength = newLength;
 };
 
-JW.extend(JW.ObservableSet.LengthChangeEventParams/*<T extends JW.Class>*/, JW.ObservableSet.EventParams/*<T>*/, {
-	/*
-	Fields
-	Integer oldLength;
-	Integer newLength;
-	*/
+JW.extend(JW.ObservableSet.LengthChangeEventParams, JW.ObservableSet.EventParams, {
+	/**
+	 * @property {number} oldLength Старый размер коллекции.
+	 */
+	/**
+	 * @property {number} newLength Новый размер коллекции.
+	 */
 });

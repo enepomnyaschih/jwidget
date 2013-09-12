@@ -23,11 +23,25 @@
 	reasonable changes).
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractSet<T>`
+ *
+ * Простое множество.
+ *
+ * @extends JW.AbstractSet
+ *
+ * @constructor
+ * @param {Array} [items] `<T>` Изначальное содержимое множества. По умолчанию, создается пустое множество.
+ * @param {boolean} [adapter] Создать множество как адаптер над items (тогда это должен быть Object, а не Array).
+ * По умолчанию, равен false.
+ */
 JW.Set = function(json, adapter) {
 	JW.Set._super.call(this, json, adapter);
 };
 
-JW.extend(JW.Set/*<T extends JW.Class>*/, JW.AbstractSet/*<T>*/, {
+JW.extend(JW.Set, JW.AbstractSet, {
 	createEmpty: function() {
 		return new JW.Set();
 	},

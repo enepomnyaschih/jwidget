@@ -104,7 +104,7 @@ JW.apply(JW.Set, {
 		return (result !== undefined) ? result : [];
 	},
 	
-	$addAll: JW.AbstractCollection._createStatic$Set(JW.Set, "addAll"),
+	$addAll: JW.AbstractCollection._createStatic$Array(JW.Set, "addAll"),
 	
 	tryAddAll: function(target, items) {
 		var addedItems = [];
