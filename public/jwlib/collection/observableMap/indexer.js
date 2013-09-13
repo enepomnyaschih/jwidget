@@ -20,38 +20,35 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractArray.Indexer<T>`
+ * `<T extends JW.Class> extends JW.AbstractMap.Indexer<T>`
  *
- * Индексатор оповещающего массива. Подробнее читайте JW.AbstractCollection.Indexer.
+ * Индексатор оповещающего словаря. Подробнее читайте JW.AbstractCollection.Indexer.
  *
- * @extends JW.AbstractArray.Indexer
+ * @extends JW.AbstractMap.Indexer
  *
  * @constructor
  * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.ObservableArray} source `<T>` Коллекция-источник.
+ * @param {JW.ObservableMap} source `<T>` Коллекция-источник.
  * @param {Object} config Конфигурация (см. Config options).
  */
-JW.ObservableArray.Indexer = function(source, config) {
-	JW.ObservableArray.Indexer._super.call(this, source, config);
+JW.ObservableMap.Indexer = function(source, config) {
+	JW.ObservableMap.Indexer._super.call(this, source, config);
 	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableArray.Indexer, JW.AbstractArray.Indexer, {
+JW.extend(JW.ObservableMap.Indexer, JW.AbstractMap.Indexer, {
 	/**
-	 * @property {JW.ObservableArray} source `<T>` Коллекция-источник.
+	 * @property {JW.ObservableMap} source `<T>` Коллекция-источник.
 	 */
 	/*
 	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _replaceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
 	*/
 	
 	// override
 	destroy: function() {
 		this._clearEventAttachment.destroy();
-		this._replaceEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
 	},
@@ -59,18 +56,12 @@ JW.extend(JW.ObservableArray.Indexer, JW.AbstractArray.Indexer, {
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
-			this._keys(spliceResult.getRemovedItems()),
-			this._index(spliceResult.getAddedItems()));
-	},
-	
-	_onReplace: function(params) {
-		this.target.trySplice(
-			this._keys([params.oldItem]),
-			this._index([params.newItem]));
+			this._keys(JW.Map.toArray(spliceResult.removedItems)),
+			this._index(JW.Map.toArray(spliceResult.addedItems)));
 	},
 	
 	_onClear: function(params) {
 		this.target.tryRemoveAll(
-			this._keys(params.items));
+			this._keys(JW.Map.toArray(params.items)));
 	}
 });

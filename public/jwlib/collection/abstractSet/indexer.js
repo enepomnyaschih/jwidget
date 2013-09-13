@@ -17,54 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class> extends JW.AbstractCollection.Indexer<T, JW.AbstractSet<T>>`
+ *
+ * Индексатор множества. Подробнее читайте JW.AbstractCollection.Indexer.
+ *
+ * @extends JW.AbstractCollection.Indexer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
+ * @param {JW.AbstractSet} source `<T>` Коллекция-источник.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.AbstractSet.Indexer = function(source, config) {
-	JW.AbstractSet.Indexer._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.getKey = config.getKey;
-	this._targetCreated = !config.target;
-	this.target = config.target || source.createEmptyMap();
-	this.scope = config.scope || this;
-	this.target.trySetAll(this._index(source.toArray()));
+	JW.AbstractSet.Indexer._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractSet.Indexer/*<T extends JW.Class>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractSet<T> source;
-	String getKey(T item);
-	
-	Optional
-	JW.AbstractMap<T> target;
-	Object scope;
-	
-	Fields
-	Boolean _targetCreated;
-	*/
-	
-	// override
-	destroy: function() {
-		this.target.tryRemoveAll(this._keys(this.source.toArray()));
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		this._super();
-	},
-	
-	_index: function(items) {
-		var index = {};
-		for (var i = 0, l = items.length; i < l; ++i) {
-			var item = items[i];
-			index[this.getKey.call(this.scope, item)] = item;
-		}
-		return index;
-	},
-	
-	_keys: function(items) {
-		var keys = [];
-		for (var i = 0, l = items.length; i < l; ++i) {
-			keys.push(this.getKey.call(this.scope, items[i]));
-		}
-		return keys;
-	}
+JW.extend(JW.AbstractSet.Indexer, JW.AbstractCollection.Indexer, {
+	/**
+	 * @property {JW.AbstractSet} source `<T>` Коллекция-источник.
+	 */
 });

@@ -17,15 +17,31 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class> extends JW.AbstractSet.Indexer<T>`
+ *
+ * Индексатор оповещающего множества. Подробнее читайте JW.AbstractCollection.Indexer.
+ *
+ * @extends JW.AbstractSet.Indexer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
+ * @param {JW.ObservableSet} source `<T>` Коллекция-источник.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableSet.Indexer = function(source, config) {
 	JW.ObservableSet.Indexer._super.call(this, source, config);
 	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableSet.Indexer/*<T extends JW.Class>*/, JW.AbstractSet.Indexer/*<T>*/, {
+JW.extend(JW.ObservableSet.Indexer, JW.AbstractSet.Indexer, {
+	/**
+	 * @property {JW.ObservableSet} source `<T>` Коллекция-источник.
+	 */
 	/*
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
 	*/

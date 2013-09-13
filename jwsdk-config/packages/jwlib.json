@@ -11,6 +11,7 @@
 		
 		"jwlib/collection/abstractCollection.js",
 		"jwlib/collection/abstractCollection/lister.js",
+		"jwlib/collection/abstractCollection/indexer.js",
 		"jwlib/collection/abstractCollection/staticMethods.js",
 		"jwlib/collection/indexedCollection.js",
 		"jwlib/collection/indexedCollection/staticMethods.js",
@@ -22,6 +23,7 @@
 		"jwlib/collection/abstractArray/mapper.js",
 		"jwlib/collection/abstractArray/splitter.js",
 		"jwlib/collection/abstractMap.js",
+		"jwlib/collection/abstractMap/indexer.js",
 		"jwlib/collection/abstractMap/inserter.js",
 		"jwlib/collection/abstractMap/lister.js",
 		"jwlib/collection/abstractMap/mapper.js",
@@ -45,6 +47,7 @@
 		"jwlib/collection/observableArray/mapper.js",
 		"jwlib/collection/observableArray/splitter.js",
 		"jwlib/collection/observableMap.js",
+		"jwlib/collection/observableMap/indexer.js",
 		"jwlib/collection/observableMap/inserter.js",
 		"jwlib/collection/observableMap/lister.js",
 		"jwlib/collection/observableMap/mapper.js",
