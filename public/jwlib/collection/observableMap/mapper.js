@@ -17,16 +17,29 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T, U> extends JW.AbstractMap.Mapper<T, U>`
+ *
+ * Конвертер элементов оповещающего словаря. Подробнее читайте JW.AbstractCollection.Mapper.
+ *
+ * @extends JW.AbstractMap.Mapper
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
+ * @param {JW.ObservableMap} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableMap.Mapper = function(source, config) {
 	JW.ObservableMap.Mapper._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._reindexEventAttachment = this.source.reindexEvent.bind(this._onReindex, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._reindexEventAttachment = source.reindexEvent.bind(this._onReindex, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableMap.Mapper/*<S, T>*/, JW.AbstractMap.Mapper/*<S, T>*/, {
+JW.extend(JW.ObservableMap.Mapper, JW.AbstractMap.Mapper, {
 	/*
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _reindexEventAttachment;
 	JW.EventAttachment _clearEventAttachment;

@@ -28,7 +28,7 @@
  *
  * @constructor
  * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.ObservableSet} source `<T>` Коллекция-источник.
+ * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
 JW.ObservableSet.Lister = function(source, config) {
@@ -38,9 +38,6 @@ JW.ObservableSet.Lister = function(source, config) {
 };
 
 JW.extend(JW.ObservableSet.Lister, JW.AbstractSet.Lister, {
-	/**
-	 * @property {JW.ObservableSet} source `<T>` Коллекция-источник.
-	 */
 	/*
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;

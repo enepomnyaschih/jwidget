@@ -28,7 +28,7 @@
  *
  * @constructor
  * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.AbstractMap} source `<T>` Коллекция-источник.
+ * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
 JW.AbstractMap.Lister = function(source, config) {
@@ -37,6 +37,6 @@ JW.AbstractMap.Lister = function(source, config) {
 
 JW.extend(JW.AbstractMap.Lister, JW.AbstractCollection.Lister, {
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Коллекция-источник.
+	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
 	 */
 });

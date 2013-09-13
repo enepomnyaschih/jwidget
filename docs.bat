@@ -6,6 +6,6 @@ rd /S /Q ..\docs\resources
 rd /S /Q ..\docs\source
 del /Q ..\docs\*
 md ..\docs-temp
-jsduck-5.2.0 public/jw* --output ../docs-temp --external=C,K,P,T,V
+jsduck-5.2.0 public/jw* --output ../docs-temp --external=C,K,P,T,TC,U,UC,V
 xcopy /I /Y /E /Q ..\docs-temp\* ..\docs
 rd /S /Q ..\docs-temp

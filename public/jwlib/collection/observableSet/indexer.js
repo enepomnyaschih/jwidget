@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractSet.Indexer<T>`
+ * `<T> extends JW.AbstractSet.Indexer<T>`
  *
  * Индексатор оповещающего множества. Подробнее читайте JW.AbstractCollection.Indexer.
  *
@@ -28,7 +28,7 @@
  *
  * @constructor
  * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.ObservableSet} source `<T>` Коллекция-источник.
+ * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
 JW.ObservableSet.Indexer = function(source, config) {
@@ -38,9 +38,6 @@ JW.ObservableSet.Indexer = function(source, config) {
 };
 
 JW.extend(JW.ObservableSet.Indexer, JW.AbstractSet.Indexer, {
-	/**
-	 * @property {JW.ObservableSet} source `<T>` Коллекция-источник.
-	 */
 	/*
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;

@@ -12,6 +12,7 @@
 		"jwlib/collection/abstractCollection.js",
 		"jwlib/collection/abstractCollection/lister.js",
 		"jwlib/collection/abstractCollection/indexer.js",
+		"jwlib/collection/abstractCollection/mapper.js",
 		"jwlib/collection/abstractCollection/staticMethods.js",
 		"jwlib/collection/indexedCollection.js",
 		"jwlib/collection/indexedCollection/staticMethods.js",

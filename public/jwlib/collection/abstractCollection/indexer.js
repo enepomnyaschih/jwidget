@@ -20,10 +20,10 @@
 /**
  * @class
  *
- * `<T extends JW.Class, C extends JW.AbstractCollection<T>>`
+ * `<T, C extends JW.AbstractCollection<T>>`
  *
  * Индексатор коллекции. Преобразует исходную коллекцию в словарь, присваивая каждому элементу определенный ключ,
- * используя функцию, указанную пользователем.
+ * используя функцию, указанную пользователем. Используется для быстрого поиска элементов по ключу (например, по ID).
  * 
  * **Замечание:** Все элементы должны иметь разные ключи.
  *
@@ -62,7 +62,7 @@
  *
  * @constructor
  * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.AbstractCollection} source `<T>` Коллекция-источник.
+ * @param {JW.AbstractCollection} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
 JW.AbstractCollection.Indexer = function(source, config) {
@@ -91,7 +91,7 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
 	 * @cfg {Object} scope Контекст вызова getKey.
 	 */
 	/**
-	 * @property {JW.AbstractCollection} source `<T>` Коллекция-источник.
+	 * @property {C} source Исходная коллекция.
 	 */
 	/**
 	 * @property {JW.AbstractMap} target `<T>` Целевой словарь.

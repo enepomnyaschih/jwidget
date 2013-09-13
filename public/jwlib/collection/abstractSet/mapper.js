@@ -17,32 +17,37 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class, U extends JW.Class> extends JW.AbstractCollection.Mapper<T, U, JW.AbstractSet<T>, JW.AbstractSet<U>>`
+ *
+ * Конвертер элементов множества. Подробнее читайте JW.AbstractCollection.Mapper.
+ *
+ * @extends JW.AbstractCollection.Mapper
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
+ * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.AbstractSet.Mapper = function(source, config) {
-	JW.AbstractSet.Mapper._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.createItem = config.createItem;
-	this.destroyItem = config.destroyItem;
-	this._targetCreated = !config.target;
-	this.target = config.target || source.createEmpty();
-	this.scope = config.scope || {};
+	JW.AbstractSet.Mapper._super.call(this, source, config);
 	this._items = {};
-	this.target.tryAddAll(this._createItems(this.source.toArray()));
+	this.target.tryAddAll(this._createItems(source.toArray()));
 };
 
-JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.AbstractSet.Mapper, JW.AbstractCollection.Mapper, {
+	/**
+	 * @cfg {JW.AbstractSet} target `<U>` Целевая коллекция.
+	 */
+	/**
+	 * @property {JW.AbstractSet} source `<T>` Исходная коллекция.
+	 */
+	/**
+	 * @property {JW.AbstractSet} target `<U>` Целевая коллекция.
+	 */
 	/*
-	Required
-	JW.AbstractSet<S> source;
-	T createItem(S data);
-	void destroyItem(T item, S data);
-	
-	Optional
-	JW.AbstractSet<T> target;
-	Object scope; // defaults to this
-	
-	Fields
-	Boolean _targetCreated;
 	Map<T> _items;
 	*/
 	
@@ -51,9 +56,6 @@ JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.
 		var datas = this.source.toArray();
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
 	},
 	
@@ -75,6 +77,9 @@ JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.
 	},
 	
 	_destroyItems: function(datas) {
+		if (this.destroyItem === undefined) {
+			return
+		}
 		for (var i = datas.length - 1; i >= 0; --i) {
 			var data = datas[i];
 			var iid = data._iid;

@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractCollection.Indexer<T, JW.AbstractMap<T>>`
+ * `<T> extends JW.AbstractCollection.Indexer<T, JW.AbstractMap<T>>`
  *
  * Индексатор словаря. Подробнее читайте JW.AbstractCollection.Indexer.
  *
@@ -28,7 +28,7 @@
  *
  * @constructor
  * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.AbstractMap} source `<T>` Коллекция-источник.
+ * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
 JW.AbstractMap.Indexer = function(source, config) {
@@ -37,6 +37,6 @@ JW.AbstractMap.Indexer = function(source, config) {
 
 JW.extend(JW.AbstractMap.Indexer, JW.AbstractCollection.Indexer, {
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Коллекция-источник.
+	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
 	 */
 });

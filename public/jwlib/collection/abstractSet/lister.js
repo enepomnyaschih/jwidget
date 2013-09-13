@@ -28,7 +28,7 @@
  *
  * @constructor
  * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.AbstractSet} source `<T>` Коллекция-источник.
+ * @param {JW.AbstractSet} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
 JW.AbstractSet.Lister = function(source, config) {
@@ -37,6 +37,6 @@ JW.AbstractSet.Lister = function(source, config) {
 
 JW.extend(JW.AbstractSet.Lister, JW.AbstractCollection.Lister, {
 	/**
-	 * @property {JW.AbstractSet} source `<T>` Коллекция-источник.
+	 * @property {JW.AbstractSet} source `<T>` Исходная коллекция.
 	 */
 });

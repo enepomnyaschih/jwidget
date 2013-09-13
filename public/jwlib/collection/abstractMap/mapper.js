@@ -17,39 +17,39 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T, U> extends JW.AbstractCollection.Mapper<T, U, JW.AbstractMap<T>, JW.AbstractMap<U>>`
+ *
+ * Конвертер элементов словаря. Подробнее читайте JW.AbstractCollection.Mapper.
+ *
+ * @extends JW.AbstractCollection.Mapper
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
+ * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.AbstractMap.Mapper = function(source, config) {
-	JW.AbstractMap.Mapper._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.createItem = config.createItem;
-	this.destroyItem = config.destroyItem;
-	this._targetCreated = !config.target;
-	this.target = config.target || source.createEmpty();
-	this.scope = config.scope || this;
-	this.target.trySetAll(this._createItems(this.source.getJson()));
+	JW.AbstractMap.Mapper._super.call(this, source, config);
+	this.target.trySetAll(this._createItems(source.getJson()));
 };
 
-JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractMap<S> source;
-	T createItem(S data);
-	void destroyItem(T item, S data);
-	
-	Optional
-	JW.AbstractMap<T> target;
-	Object scope; // defaults to this
-	
-	Fields
-	Boolean _targetCreated;
-	*/
+JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
+	/**
+	 * @cfg {JW.AbstractMap} target `<U>` Целевая коллекция.
+	 */
+	/**
+	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
+	 */
+	/**
+	 * @property {JW.AbstractMap} target `<U>` Целевая коллекция.
+	 */
 	
 	// override
 	destroy: function() {
-		this._destroyItems(this.target.tryRemoveAll(this.source.getKeys()), this.source.getJson());
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
+		this._destroyItems(this.target.removeAll(this.source.getKeys()), this.source.getJson());
 		this._super();
 	},
 	
@@ -62,7 +62,7 @@ JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
 	},
 	
 	_destroyItems: function(items, datas) {
-		if (items === undefined) {
+		if (this.destroyItem === undefined) {
 			return;
 		}
 		for (var key in items) {

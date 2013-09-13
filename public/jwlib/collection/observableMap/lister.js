@@ -28,7 +28,7 @@
  *
  * @constructor
  * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.ObservableMap} source `<T>` Коллекция-источник.
+ * @param {JW.ObservableMap} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
 JW.ObservableMap.Lister = function(source, config) {
@@ -38,9 +38,6 @@ JW.ObservableMap.Lister = function(source, config) {
 };
 
 JW.extend(JW.ObservableMap.Lister, JW.AbstractMap.Lister, {
-	/**
-	 * @property {JW.ObservableMap} source `<T>` Коллекция-источник.
-	 */
 	/*
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;

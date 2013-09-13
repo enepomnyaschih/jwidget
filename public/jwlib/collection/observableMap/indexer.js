@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractMap.Indexer<T>`
+ * `<T> extends JW.AbstractMap.Indexer<T>`
  *
  * Индексатор оповещающего словаря. Подробнее читайте JW.AbstractCollection.Indexer.
  *
@@ -28,7 +28,7 @@
  *
  * @constructor
  * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.ObservableMap} source `<T>` Коллекция-источник.
+ * @param {JW.ObservableMap} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
 JW.ObservableMap.Indexer = function(source, config) {
@@ -38,9 +38,6 @@ JW.ObservableMap.Indexer = function(source, config) {
 };
 
 JW.extend(JW.ObservableMap.Indexer, JW.AbstractMap.Indexer, {
-	/**
-	 * @property {JW.ObservableMap} source `<T>` Коллекция-источник.
-	 */
 	/*
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;

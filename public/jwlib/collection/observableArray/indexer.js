@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractArray.Indexer<T>`
+ * `<T> extends JW.AbstractArray.Indexer<T>`
  *
  * Индексатор оповещающего массива. Подробнее читайте JW.AbstractCollection.Indexer.
  *
@@ -28,20 +28,17 @@
  *
  * @constructor
  * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.ObservableArray} source `<T>` Коллекция-источник.
+ * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
 JW.ObservableArray.Indexer = function(source, config) {
 	JW.ObservableArray.Indexer._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
 };
 
 JW.extend(JW.ObservableArray.Indexer, JW.AbstractArray.Indexer, {
-	/**
-	 * @property {JW.ObservableArray} source `<T>` Коллекция-источник.
-	 */
 	/*
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _replaceEventAttachment;

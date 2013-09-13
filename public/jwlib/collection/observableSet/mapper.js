@@ -17,15 +17,28 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class, U extends JW.Class> extends JW.AbstractSet.Mapper<T, U>`
+ *
+ * Конвертер элементов оповещающего множества. Подробнее читайте JW.AbstractCollection.Mapper.
+ *
+ * @extends JW.AbstractSet.Mapper
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
+ * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableSet.Mapper = function(source, config) {
 	JW.ObservableSet.Mapper._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.AbstractSet.Mapper/*<S, T>*/, {
+JW.extend(JW.ObservableSet.Mapper, JW.AbstractSet.Mapper, {
 	/*
-	Fields
 	EventAttachment _spliceEventAttachment;
 	EventAttachment _clearEventAttachment;
 	*/

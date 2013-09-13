@@ -17,21 +17,31 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T, U> extends JW.AbstractArray.Mapper<T, U>`
+ *
+ * Конвертер элементов оповещающего массива. Подробнее читайте JW.AbstractCollection.Mapper.
+ *
+ * @extends JW.AbstractArray.Mapper
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
+ * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableArray.Mapper = function(source, config) {
 	JW.ObservableArray.Mapper._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
-	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
+	this._moveEventAttachment = source.moveEvent.bind(this._onMove, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	this._reorderEventAttachment = source.reorderEvent.bind(this._onReorder, this);
 };
 
-JW.extend(JW.ObservableArray.Mapper/*<S, T>*/, JW.AbstractArray.Mapper/*<S, T>*/, {
+JW.extend(JW.ObservableArray.Mapper, JW.AbstractArray.Mapper, {
 	/*
-	Required
-	JW.ObservableArray<S> source;
-	
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _replaceEventAttachment;
 	JW.EventAttachment _moveEventAttachment;
@@ -46,10 +56,6 @@ JW.extend(JW.ObservableArray.Mapper/*<S, T>*/, JW.AbstractArray.Mapper/*<S, T>*/
 		this._replaceEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
-	},
-	
-	getKey: function(data) {
-		return data._iid || data;
 	},
 	
 	_onSplice: function(params) {
