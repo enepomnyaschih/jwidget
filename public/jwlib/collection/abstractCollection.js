@@ -107,6 +107,12 @@
  * - {@link #asArray}, #$asArray - Представляет коллекцию в виде массива.
  * - {@link #asSet}, #$asSet - Представляет коллекцию в виде множества.
  *
+ * Все те же самые алгоритмы доступны и для нативных коллекций JavaScript:
+ *
+ * - Array, смотрите статические методы JW.Array
+ * - Object как словарь, смотрите статические методы JW.Map
+ * - Object как множество, смотрите статические методы JW.Set
+ *
  * @extends JW.Class
  * @abstract
  */
@@ -415,7 +421,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @returns {Array} `<T>` Отсортированный массив.
 	 */
 	toSorted: function(callback, scope, order) {
 		return this._callStatic("toSorted", [callback, scope || this, order]);
@@ -446,7 +452,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {string/Array} field Поле элемента.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @returns {Array} `<T>` Отсортированный массив.
 	 */
 	toSortedBy: JW.AbstractCollection._createByField("toSorted"),
 	
@@ -470,7 +476,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {string} method Имя метода элемента.
 	 * @param {Array} [args] Аргументы.
-	 * @returns {Array} Отсортированный массив.
+	 * @returns {Array} `<T>` Отсортированный массив.
 	 */
 	toSortedByMethod: JW.AbstractCollection._createByMethod("toSorted"),
 	
@@ -500,7 +506,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @returns {Array} `<T>` Отсортированный массив.
 	 */
 	toSortedComparing: function(compare, scope, order) {
 		return this._callStatic("toSortedComparing", [compare, scope || this, order]);
@@ -619,7 +625,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * Строит новый массив, включающий все элементы коллекции.
 	 *
-	 * @returns {Array} Массив элементов.
+	 * @returns {Array} `<T>` Массив элементов.
 	 */
 	toArray: function() {
 		var result = new Array(this.getLength());
@@ -670,7 +676,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Данная функция работает как правило быстрее #toArray, но сначала убедитесь, что возвращенный массив
 	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
 	 *
-	 * @returns {Array} Массив элементов.
+	 * @returns {Array} `<T>` Массив элементов.
 	 */
 	asArray: function() {
 		return this.toArray();

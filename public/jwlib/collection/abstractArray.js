@@ -763,7 +763,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * Очищает коллекцию.
-	 * @returns {Array} Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 * @returns {Array} `<T>` Бывшее содержимое коллекции. Если нет изменений - undefined.
 	 */
 	tryClear: function() {
 		return JW.Array.tryClear(this.items);
@@ -808,7 +808,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * Переупорядочивает элементы массива.
 	 * @param {Array} indexArray `<number>` Массив индексов. Элемент с индексом i будет перемещен в
 	 * индекс indexArray[i]. Должен содержать все индексы от 0 до (length - 1).
-	 * @returns {Array} `<T>` Бывшее содержимое массива.
+	 * @returns {Array} `<T>` Бывшее содержимое массива. Если нет изменений - undefined.
 	 */
 	tryReorder: function(indexArray) {
 		return JW.Array.tryReorder(this.items, indexArray);

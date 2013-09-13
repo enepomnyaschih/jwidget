@@ -227,8 +227,8 @@ JW.apply(JW.Set, {
 		return new JW.AbstractSet.Orderer(new JW.Set(source, true), config);
 	},
 	
-	createSorter: function(source, config) {
-		return new JW.AbstractSet.Sorter(new JW.Set(source, true), config);
+	createSorterComparing: function(source, config) {
+		return new JW.AbstractSet.SorterComparing(new JW.Set(source, true), config);
 	},
 	
 	createIndexer: function(source, config) {

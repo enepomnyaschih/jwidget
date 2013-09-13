@@ -326,8 +326,8 @@ JW.apply(JW.Map, {
 		return new JW.AbstractMap.Orderer(new JW.Map(source, true), config);
 	},
 	
-	createSorter: function(source, config) {
-		return new JW.AbstractMap.Sorter(new JW.Map(source, true), config);
+	createSorterComparing: function(source, config) {
+		return new JW.AbstractMap.SorterComparing(new JW.Map(source, true), config);
 	},
 	
 	createIndexer: function(source, config) {

@@ -365,8 +365,8 @@ JW.apply(JW.Array, {
 		return new JW.AbstractArray.Orderer(new JW.Array(source, true), config);
 	},
 	
-	createSorter: function(source, config) {
-		return new JW.AbstractArray.Sorter(new JW.Array(source, true), config);
+	createSorterComparing: function(source, config) {
+		return new JW.AbstractArray.SorterComparing(new JW.Array(source, true), config);
 	},
 	
 	createIndexer: function(source, config) {
