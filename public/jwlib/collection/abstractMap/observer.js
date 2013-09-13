@@ -17,61 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractCollection.Observer<T, JW.AbstractMap<T>>`
+ *
+ * Наблюдатель словаря. Подробнее читайте JW.AbstractCollection.Observer.
+ *
+ * @extends JW.AbstractCollection.Observer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
+ * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.AbstractMap.Observer = function(source, config) {
-	JW.AbstractMap.Observer._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.addItem = config.addItem;
-	this.removeItem = config.removeItem;
-	this.clearItems = config.clearItems;
-	this.scope = config.scope || this;
-	this._addItems(source.getJson());
+	JW.AbstractMap.Observer._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractMap.Observer/*<T>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractMap<T> source;
-	void addItem(T item);
-	void removeItem(T item);
-	
-	Optional
-	void clearItems(Array<T> items);
-	Object scope;
-	*/
-	
-	// override
-	destroy: function() {
-		this._clearItems(this.source.toArray());
-		this._super();
-	},
-	
-	_addItems: function(items) {
-		if (!this.addItem) {
-			return;
-		}
-		for (var key in items) {
-			this.addItem.call(this.scope, items[key]);
-		}
-	},
-	
-	_removeItems: function(items) {
-		if (!this.removeItem) {
-			return;
-		}
-		for (var key in items) {
-			this.removeItem.call(this.scope, items[key]);
-		}
-	},
-	
-	_clearItems: function(items) {
-		if (JW.Map.isEmpty(items)) {
-			return;
-		}
-		if (this.clearItems) {
-			this.clearItems.call(this.scope, JW.Map.toArray(items));
-		} else {
-			this._removeItems(items);
-		}
-	}
+JW.extend(JW.AbstractMap.Observer, JW.AbstractCollection.Observer, {
+	/**
+	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
+	 */
 });

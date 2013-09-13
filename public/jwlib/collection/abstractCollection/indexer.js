@@ -83,7 +83,7 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
 	/**
 	 * @cfg {Function} getKey (required)
 	 *
-	 * `getKey(item: T):string`
+	 * `getKey(item: T): string`
 	 *
 	 * Индексирующая функция. Определяет ключ элемента в целевом словаре.
 	 */

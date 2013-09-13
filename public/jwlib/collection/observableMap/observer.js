@@ -17,21 +17,41 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractMap.Observer<T>`
+ *
+ * Наблюдатель оповещающего словаря. Подробнее читайте JW.AbstractCollection.Observer.
+ *
+ * @extends JW.AbstractMap.Observer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
+ * @param {JW.ObservableMap} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableMap.Observer = function(source, config) {
 	JW.ObservableMap.Observer._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	if (this.change) {
+		this._changeAttachment = source.changeEvent.bind(this._onChange, this);
+	}
 };
 
-JW.extend(JW.ObservableMap.Observer/*<S extends Any, T extends Any>*/, JW.AbstractMap.Observer/*<S, T>*/, {
+JW.extend(JW.ObservableMap.Observer, JW.AbstractMap.Observer, {
 	/*
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
+	JW.EventAttachment _changeAttachment;
 	*/
 	
 	// override
 	destroy: function() {
+		if (this._changeAttachment) {
+			this._changeAttachment.destroy();
+		}
 		this._clearEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
@@ -39,11 +59,11 @@ JW.extend(JW.ObservableMap.Observer/*<S extends Any, T extends Any>*/, JW.Abstra
 	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
-		this._removeItems(spliceResult.removedItems);
-		this._addItems(spliceResult.addedItems);
+		this._removeItems(JW.Map.toArray(spliceResult.removedItems));
+		this._addItems(JW.Map.toArray(spliceResult.addedItems));
 	},
 	
 	_onClear: function(params) {
-		this._clearItems(params.items);
+		this._clearItems(JW.Map.toArray(params.items));
 	}
 });

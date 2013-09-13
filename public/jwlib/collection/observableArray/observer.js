@@ -17,26 +17,43 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractArray.Observer<T>`
+ *
+ * Наблюдатель оповещающего массива. Подробнее читайте JW.AbstractCollection.Observer.
+ *
+ * @extends JW.AbstractArray.Observer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
+ * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableArray.Observer = function(source, config) {
 	JW.ObservableArray.Observer._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	if (this.change) {
+		this._changeAttachment = source.changeEvent.bind(this._onChange, this);
+	}
 };
 
-JW.extend(JW.ObservableArray.Observer/*<T>*/, JW.AbstractArray.Observer/*<T>*/, {
+JW.extend(JW.ObservableArray.Observer, JW.AbstractArray.Observer, {
 	/*
-	Required
-	JW.ObservableArray<T> source;
-	
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _replaceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
+	JW.EventAttachment _changeAttachment;
 	*/
 	
 	// override
 	destroy: function() {
+		if (this._changeAttachment) {
+			this._changeAttachment.destroy();
+		}
 		this._clearEventAttachment.destroy();
 		this._replaceEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
@@ -48,16 +65,15 @@ JW.extend(JW.ObservableArray.Observer/*<T>*/, JW.AbstractArray.Observer/*<T>*/, 
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.getRemovedItems();
 		
-		// if there is an effective clearing function, just reset the controller
 		if (this.clearItems && (3 * removedItems.length > 2 * oldItems.length)) {
+			// if there is an effective clearing function, just reset the controller
 			this.clearItems.call(this.scope, oldItems);
 			this._addItems(this.source.getItems());
-			return;
+		} else {
+			// else, splice the elements
+			this._removeItems(removedItems);
+			this._addItems(spliceResult.getAddedItems());
 		}
-		
-		// else, splice the elements
-		this._removeItems(removedItems);
-		this._addItems(spliceResult.getAddedItems());
 	},
 	
 	_onReplace: function(params) {

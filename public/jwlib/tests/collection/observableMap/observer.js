@@ -72,8 +72,8 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		source.setKey("c", "a");
 		
 		this.setExpectedOutput(
-			"Removed C",
 			"Removed T",
+			"Removed C",
 			"Added M"
 		);
 		source.splice([ "a", "f" ], { "m": "M" });
@@ -88,8 +88,8 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		source.performSplice({ "a": "D", "b": "B", "c": "C" });
 		
 		this.setExpectedOutput(
-			"Removed B",
-			"Removed C"
+			"Removed C",
+			"Removed B"
 		);
 		source.removeAll([ "b", "c" ]);
 		
@@ -124,9 +124,9 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		});
 		
 		this.setExpectedOutput(
-			"Removed A",
+			"Removed C",
 			"Removed B",
-			"Removed C"
+			"Removed A"
 		);
 		syncher.destroy();
 	}

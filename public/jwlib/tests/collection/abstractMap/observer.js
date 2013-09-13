@@ -54,9 +54,9 @@ JW.Tests.Collection.AbstractMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		});
 		
 		this.setExpectedOutput(
-			"Removed A",
+			"Removed C",
 			"Removed B",
-			"Removed C"
+			"Removed A"
 		);
 		syncher.destroy();
 	}

@@ -17,21 +17,41 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractSet.Observer<T>`
+ *
+ * Наблюдатель оповещающего множества. Подробнее читайте JW.AbstractCollection.Observer.
+ *
+ * @extends JW.AbstractSet.Observer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
+ * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableSet.Observer = function(source, config) {
 	JW.ObservableSet.Observer._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	if (this.change) {
+		this._changeAttachment = source.changeEvent.bind(this._onChange, this);
+	}
 };
 
-JW.extend(JW.ObservableSet.Observer/*<S extends Any, T extends Any>*/, JW.AbstractSet.Observer/*<S, T>*/, {
+JW.extend(JW.ObservableSet.Observer, JW.AbstractSet.Observer, {
 	/*
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
+	JW.EventAttachment _changeAttachment;
 	*/
 	
 	// override
 	destroy: function() {
+		if (this._changeAttachment) {
+			this._changeAttachment.destroy();
+		}
 		this._clearEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
