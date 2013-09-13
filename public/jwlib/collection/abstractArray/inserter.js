@@ -17,28 +17,83 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T>`
+ *
+ * Синхронизатор представления массива. Прослушивает все события массива и сводит их к 2 элементарным функциям:
+ * элемент добавлен в указанное место и элемент удален из указанного места. В целях оптимизации, можно определить
+ * третью функцию: коллекция очищена (в случае, если есть более эффективный алгоритм очистки, чем удаление всех
+ * элементов простым перебором). В отличие от JW.AbstractCollection.Observer, следит за порядком элементов.
+ * Синхронизатор используется, прежде всего, для синхронизации DOM-элемента с массивом дочерних элементов.
+ *
+ * Создавайте синхронизатор с помощью метода JW.AbstractArray#createInserter:
+ *
+ *     var inserter = array.createInserter({
+ *         addItem: function(el, index) { this.el.insert(el, index); },
+ *         removeItem: function(el, index) { el.detach(); },
+ *         scope: this
+ *     });
+ *
+ * Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
+ *
+ * Справка: jQuery.insert
+ *
+ * Правила работы синхронизатора:
+ *
+ * - При конструировании синхронизатора для всех элементов исходной коллекции вызывается функция
+ * {@link #cfg-addItem}.
+ * - При уничтожении синхронизатора вызывается функция {@link #cfg-clearItems}, либо для всех элементов
+ * вызывается функция {@link #cfg-removeItem}.
+ * - При перемещении/переупорядочении элементов вызовами функций синхронизируется порядок элементов.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractArray#createInserter.
+ * @param {JW.AbstractArray} source `<T>` Исходный массив.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.AbstractArray.Inserter = function(source, config) {
 	JW.AbstractArray.Inserter._super.call(this);
 	config = config || {};
 	this.source = source;
 	this.addItem = config.addItem;
 	this.removeItem = config.removeItem;
-	this.scope = config.scope || this;
 	this.clearItems = config.clearItems;
+	this.scope = config.scope || this;
 	this._addItems(this.source.getItems(), 0);
 };
 
-JW.extend(JW.AbstractArray.Inserter/*<T>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractArray<T> source;
-	void addItem(T item, Integer index);
-	void removeItem(Integer index, T item);
-	
-	Optional
-	Object scope; // defaults to this
-	void clearItems(Array<T> items);
-	*/
+JW.extend(JW.AbstractArray.Inserter, JW.Class, {
+	/**
+	 * @cfg {Function} addItem
+	 *
+	 * `addItem(item: T, index: number): void`
+	 *
+	 * Элемент добавлен в указанное место массива.
+	 */
+	/**
+	 * @cfg {Function} removeItem
+	 *
+	 * `removeItem(item: T, index: number): void`
+	 *
+	 * Элемент удален из указанного места массива.
+	 */
+	/**
+	 * @cfg {Function} clearItems
+	 *
+	 * `clearItems(items: Array<T>): void`
+	 *
+	 * Массив очищен. По умолчанию, вызывает removeItem для всех элементов массива.
+	 */
+	/**
+	 * @cfg {Object} scope Контекст вызова addItem, removeItem, clearItems.
+	 */
+	/**
+	 * @property {JW.AbstractArray} source `<T>` Исходный массив.
+	 */
 	
 	destroy: function() {
 		this._clearItems(this.source.getItems());
@@ -46,14 +101,20 @@ JW.extend(JW.AbstractArray.Inserter/*<T>*/, JW.Class, {
 	},
 	
 	_addItems: function(items, index) {
+		if (!this.addItem) {
+			return;
+		}
 		for (var i = 0; i < items.length; ++i) {
 			this.addItem.call(this.scope, items[i], i + index);
 		}
 	},
 	
 	_removeItems: function(items, index) {
+		if (!this.removeItem) {
+			return;
+		}
 		for (var i = items.length - 1; i >= 0; --i) {
-			this.removeItem.call(this.scope, i + index, items[i]);
+			this.removeItem.call(this.scope, items[i], i + index);
 		}
 	},
 	

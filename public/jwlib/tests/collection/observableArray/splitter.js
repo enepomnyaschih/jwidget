@@ -59,7 +59,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 				testCase.output("Added item " + item + " at " + this.id + "." + index);
 			},
 			
-			_removeItem: function(index, item) {
+			_removeItem: function(item, index) {
 				testCase.output("Removed item " + item + " at " + this.id + "." + index);
 			},
 			

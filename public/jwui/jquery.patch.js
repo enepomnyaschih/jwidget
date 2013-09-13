@@ -17,7 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class jQuery
+ *
+ * Элемент jQuery. Расширен дополнительным набором методов.
+ */
 JW.apply(jQuery.fn, {
+	/**
+	 * Вставить элемент в качестве дочернего элемента текущего элемента в указанное место.
+	 * @param {jQuery} el Элемент.
+	 * @param {number} index Индекс дочернего элемента, перед которым вставить el.
+	 * @returns {jQuery} this.
+	 */
 	insert: function(item, index) {
 		if (!JW.isSet(index)) {
 			this.append(item);
@@ -26,8 +37,17 @@ JW.apply(jQuery.fn, {
 		} else {
 			jQuery(this.children()[index - 1]).after(item);
 		}
+		return this;
 	},
 	
+	/**
+	 * Заменить элемент другим элементом в DOM. В отличие от стандартного replaceWith, не убивает
+	 * обработчики событий, а только убирает элемент из DOM.
+	 * @param {jQuery} el Элемент.
+	 * @param {boolean} [attrs=false] Присвоить аттрибут id (если определен) и добавить все классы текущего элемента
+	 * в el.
+	 * @returns {jQuery} this.
+	 */
 	replaceBy: function(el, attrs) {
 		var id = attrs ? this.attr("id") : null,
 			cls = attrs ? this.attr("class") : null;
@@ -42,5 +62,6 @@ JW.apply(jQuery.fn, {
 		if (cls) {
 			el.addClass(cls);
 		}
+		return this;
 	}
 });

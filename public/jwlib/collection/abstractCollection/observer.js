@@ -94,7 +94,7 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
 	 *
 	 * `clearItems(items: Array<T>): void`
 	 *
-	 * Коллекция очищена.
+	 * Коллекция очищена. По умолчанию, вызывает removeItem для всех элементов коллекции.
 	 */
 	/**
 	 * @cfg {Function} change

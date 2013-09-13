@@ -30,7 +30,7 @@ JW.Tests.Collection.AbstractArray.InserterTestCase = JW.Unit.TestCase.extend({
 		);
 		var inserter = collection.createInserter({
 			addItem    : function(item, index) { this.output("Added " + item + " at " + index); },
-			removeItem : function(index, item) { this.output("Removed " + item + " at " + index); },
+			removeItem : function(item, index) { this.output("Removed " + item + " at " + index); },
 			clearItems : function(items) { this.output("Cleared " + items.join(", ")); },
 			scope      : this
 		});
@@ -56,7 +56,7 @@ JW.Tests.Collection.AbstractArray.InserterTestCase = JW.Unit.TestCase.extend({
 		);
 		var inserter = collection.createInserter({
 			addItem    : function(item, index) { this.output("Added " + item + " at " + index); },
-			removeItem : function(index, item) { this.output("Removed " + item + " at " + index); },
+			removeItem : function(item, index) { this.output("Removed " + item + " at " + index); },
 			scope      : this
 		});
 		
