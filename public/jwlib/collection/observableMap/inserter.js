@@ -17,19 +17,29 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractMap.Inserter<T>`
+ *
+ * Синхронизатор представления оповещающего словаря. Подробнее читайте JW.AbstractMap.Inserter.
+ *
+ * @extends JW.AbstractMap.Inserter
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractMap#createInserter.
+ * @param {JW.ObservableMap} source `<T>` Исходный словарь.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableMap.Inserter = function(source, config) {
 	JW.ObservableMap.Inserter._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._reindexEventAttachment = this.source.reindexEvent.bind(this._onReindex, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._reindexEventAttachment = source.reindexEvent.bind(this._onReindex, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableMap.Inserter/*<T>*/, JW.AbstractMap.Inserter/*<T>*/, {
+JW.extend(JW.ObservableMap.Inserter, JW.AbstractMap.Inserter, {
 	/*
-	Required
-	JW.ObservableMap<T> source;
-	
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _reindexEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
@@ -54,8 +64,12 @@ JW.extend(JW.ObservableMap.Inserter/*<T>*/, JW.AbstractMap.Inserter/*<T>*/, {
 		for (var oldKey in keyMap) {
 			var newKey = keyMap[oldKey];
 			var item = this.source.get(newKey);
-			this.removeItem.call(this.scope, oldKey, item);
-			this.addItem.call(this.scope, item, newKey);
+			if (this.removeItem) {
+				this.removeItem.call(this.scope, oldKey, item);
+			}
+			if (this.addItem) {
+				this.addItem.call(this.scope, item, newKey);
+			}
 		}
 	},
 	
