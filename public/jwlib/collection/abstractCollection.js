@@ -325,7 +325,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	
 	/**
 	 * Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
-	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T): void`
