@@ -17,6 +17,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class> extends JW.AbstractArray.Lister<T>`
+ *
+ * Конвертер оповещающего массива в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ *
+ * @extends JW.AbstractArray.Lister
+ *
+ * @constructor
+ * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
+ * @param {JW.ObservableArray} source `<T>` Коллекция-источник.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableArray.Lister = function(source, config) {
 	JW.ObservableArray.Lister._super.call(this, source, config);
 	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
@@ -24,12 +38,11 @@ JW.ObservableArray.Lister = function(source, config) {
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Lister/*<T>*/, {
+JW.extend(JW.ObservableArray.Lister, JW.AbstractArray.Lister, {
+	/**
+	 * @property {JW.ObservableArray} source `<T>` Коллекция-источник.
+	 */
 	/*
-	Required
-	JW.ObservableArray<T> source;
-	
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _replaceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
@@ -44,11 +57,12 @@ JW.extend(JW.ObservableArray.Lister/*<T extends JW.Class>*/, JW.AbstractArray.Li
 	},
 	
 	_onSplice: function(params) {
-		this.target.trySplice(params.spliceResult.getRemovedItems(), params.spliceResult.getAddedItems());
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(spliceResult.getRemovedItems(), spliceResult.getAddedItems());
 	},
 	
 	_onReplace: function(params) {
-		this.target.trySplice([ params.oldItem ], [ params.newItem ]);
+		this.target.trySplice([params.oldItem], [params.newItem]);
 	},
 	
 	_onClear: function(params) {

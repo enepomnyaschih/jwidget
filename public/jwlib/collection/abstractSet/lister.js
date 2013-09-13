@@ -20,23 +20,23 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractCollection.Lister<T, JW.AbstractMap<T>>`
+ * `<T extends JW.Class> extends JW.AbstractCollection.Lister<T, JW.AbstractSet<T>>`
  *
- * Конвертер словаря в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ * Конвертер множества в множество. Подробнее читайте JW.AbstractCollection.Lister.
  *
  * @extends JW.AbstractCollection.Lister
  *
  * @constructor
  * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.AbstractMap} source `<T>` Коллекция-источник.
+ * @param {JW.AbstractSet} source `<T>` Коллекция-источник.
  * @param {Object} config Конфигурация (см. Config options).
  */
-JW.AbstractMap.Lister = function(source, config) {
-	JW.AbstractMap.Lister._super.call(this, source, config);
+JW.AbstractSet.Lister = function(source, config) {
+	JW.AbstractSet.Lister._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractMap.Lister, JW.AbstractCollection.Lister, {
+JW.extend(JW.AbstractSet.Lister, JW.AbstractCollection.Lister, {
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Коллекция-источник.
+	 * @property {JW.AbstractSet} source `<T>` Коллекция-источник.
 	 */
 });

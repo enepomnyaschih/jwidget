@@ -10,6 +10,7 @@
 		"jwlib/core/itemValueEventParams.js",
 		
 		"jwlib/collection/abstractCollection.js",
+		"jwlib/collection/abstractCollection/lister.js",
 		"jwlib/collection/abstractCollection/staticMethods.js",
 		"jwlib/collection/indexedCollection.js",
 		"jwlib/collection/indexedCollection/staticMethods.js",
@@ -27,6 +28,7 @@
 		"jwlib/collection/abstractMap/observer.js",
 		"jwlib/collection/abstractSet.js",
 		"jwlib/collection/abstractSet/indexer.js",
+		"jwlib/collection/abstractSet/lister.js",
 		"jwlib/collection/abstractSet/mapper.js",
 		"jwlib/collection/abstractSet/observer.js",
 		"jwlib/collection/array.js",
@@ -49,6 +51,7 @@
 		"jwlib/collection/observableMap/observer.js",
 		"jwlib/collection/observableSet.js",
 		"jwlib/collection/observableSet/indexer.js",
+		"jwlib/collection/observableSet/lister.js",
 		"jwlib/collection/observableSet/mapper.js",
 		"jwlib/collection/observableSet/observer.js",
 		

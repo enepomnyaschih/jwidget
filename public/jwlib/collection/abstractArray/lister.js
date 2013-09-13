@@ -17,33 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class> extends JW.AbstractCollection.Lister<T, JW.AbstractArray<T>>`
+ *
+ * Конвертер массива в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ *
+ * @extends JW.AbstractCollection.Lister
+ *
+ * @constructor
+ * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
+ * @param {JW.AbstractArray} source `<T>` Коллекция-источник.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.AbstractArray.Lister = function(source, config) {
-	JW.AbstractArray.Lister._super.call(this);
-	config = config || {};
-	this.source = source;
-	this._targetCreated = !config.target;
-	this.target = config.target || this.source.createEmptySet();
-	this.target.tryAddAll(this.source.getItems());
+	JW.AbstractArray.Lister._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractArray.Lister/*<T extends JW.Class>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractArray<T> source;
-	
-	Optional
-	JW.AbstractSet<T> target;
-	
-	Fields
-	Boolean _targetCreated;
-	*/
-	
-	// override
-	destroy: function() {
-		this.target.tryRemoveAll(this.source.getItems());
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		this._super();
-	}
+JW.extend(JW.AbstractArray.Lister, JW.AbstractCollection.Lister, {
+	/**
+	 * @property {JW.AbstractArray} source `<T>` Коллекция-источник.
+	 */
 });

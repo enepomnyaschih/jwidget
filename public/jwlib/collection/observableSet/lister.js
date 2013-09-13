@@ -20,26 +20,26 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractMap.Lister<T>`
+ * `<T extends JW.Class> extends JW.AbstractSet.Lister<T>`
  *
- * Конвертер оповещающего словаря в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ * Конвертер оповещающего множества в множество. Подробнее читайте JW.AbstractCollection.Lister.
  *
- * @extends JW.AbstractMap.Lister
+ * @extends JW.AbstractSet.Lister
  *
  * @constructor
  * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.ObservableMap} source `<T>` Коллекция-источник.
+ * @param {JW.ObservableSet} source `<T>` Коллекция-источник.
  * @param {Object} config Конфигурация (см. Config options).
  */
-JW.ObservableMap.Lister = function(source, config) {
-	JW.ObservableMap.Lister._super.call(this, source, config);
+JW.ObservableSet.Lister = function(source, config) {
+	JW.ObservableSet.Lister._super.call(this, source, config);
 	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
 	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableMap.Lister, JW.AbstractMap.Lister, {
+JW.extend(JW.ObservableSet.Lister, JW.AbstractSet.Lister, {
 	/**
-	 * @property {JW.ObservableMap} source `<T>` Коллекция-источник.
+	 * @property {JW.ObservableSet} source `<T>` Коллекция-источник.
 	 */
 	/*
 	JW.EventAttachment _spliceEventAttachment;
@@ -55,13 +55,10 @@ JW.extend(JW.ObservableMap.Lister, JW.AbstractMap.Lister, {
 	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(
-			JW.Map.toArray(spliceResult.removedItems),
-			JW.Map.toArray(spliceResult.addedItems));
+		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	},
 	
 	_onClear: function(params) {
-		this.target.tryRemoveAll(
-			JW.Map.toArray(params.items));
+		this.target.tryRemoveAll(params.items);
 	}
 });
