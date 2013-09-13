@@ -425,26 +425,68 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		}
 	},
 	
+	/**
+	 * `<U>` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Mapper}
+	 * `<T, U>` Синхронизатор.
+	 */
 	createMapper: function(config) {
 		return new JW.AbstractSet.Mapper(this, config);
 	},
 	
+	/**
+	 * Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Observer}
+	 * `<T>` Синхронизатор.
+	 */
 	createObserver: function(config) {
 		return new JW.AbstractSet.Observer(this, config);
 	},
 	
+	/**
+	 * Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Orderer}
+	 * `<T>` Синхронизатор.
+	 */
 	createOrderer: function(config) {
 		return new JW.AbstractSet.Orderer(this, config);
 	},
 	
-	createSorter: function(config) {
-		return new JW.AbstractSet.Sorter(this, config);
+	/**
+	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.SorterComparing}
+	 * `<T>` Синхронизатор.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.AbstractSet.SorterComparing(this, config);
 	},
 	
+	/**
+	 * Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Indexer}
+	 * `<T>` Синхронизатор.
+	 */
 	createIndexer: function(config) {
 		return new JW.AbstractSet.Indexer(this, config);
 	},
 	
+	/**
+	 * Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Lister}
+	 * `<T>` Синхронизатор.
+	 */
 	createLister: function(config) {
 		return new JW.AbstractSet.Lister(this, config);
 	},
@@ -461,6 +503,12 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	_callStatic: function(algorithm, args) {
 		return JW.Set[algorithm].apply(JW.Set, [this.json].concat(JW.args(args || [])));
 	}
+	
+	/**
+	 * @method createEmpty
+	 * `<U>` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.AbstractSet} `<U>` Коллекция.
+	 */
 });
 
 /**

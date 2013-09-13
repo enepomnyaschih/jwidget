@@ -864,30 +864,79 @@ JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
 		}
 	},
 	
+	/**
+	 * `<U>` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Mapper}
+	 * `<T, U>` Синхронизатор.
+	 */
 	createMapper: function(config) {
 		return new JW.AbstractMap.Mapper(this, config);
 	},
 	
+	/**
+	 * Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Observer}
+	 * `<T>` Синхронизатор.
+	 */
 	createObserver: function(config) {
 		return new JW.AbstractMap.Observer(this, config);
 	},
 	
+	/**
+	 * Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Orderer}
+	 * `<T>` Синхронизатор.
+	 */
 	createOrderer: function(config) {
 		return new JW.AbstractMap.Orderer(this, config);
 	},
 	
-	createSorter: function(config) {
-		return new JW.AbstractMap.Sorter(this, config);
+	/**
+	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.SorterComparing}
+	 * `<T>` Синхронизатор.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.AbstractMap.SorterComparing(this, config);
 	},
 	
+	/**
+	 * Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Indexer}
+	 * `<T>` Синхронизатор.
+	 */
 	createIndexer: function(config) {
 		return new JW.AbstractMap.Indexer(this, config);
 	},
 	
+	/**
+	 * Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Lister}
+	 * `<T>` Синхронизатор.
+	 */
 	createLister: function(config) {
 		return new JW.AbstractMap.Lister(this, config);
 	},
 	
+	/**
+	 * Конструирует синхронизатор представления с массивом.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Inserter}
+	 * `<T>` Синхронизатор.
+	 */
 	createInserter: function(config) {
 		return new JW.AbstractMap.Inserter(this, config);
 	},
@@ -904,6 +953,12 @@ JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
 	_callStatic: function(algorithm, args) {
 		return JW.Map[algorithm].apply(JW.Map, [this.json].concat(JW.args(args || [])));
 	}
+	
+	/**
+	 * @method createEmpty
+	 * `<U>` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.AbstractMap} `<U>` Коллекция.
+	 */
 });
 
 /**

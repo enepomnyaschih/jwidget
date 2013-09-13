@@ -117,57 +117,111 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		return result;
 	},
 	
-	// override
+	/**
+	 * `<U>` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.ObservableMap} `<U>` Коллекция.
+	 */
 	createEmpty: function() {
 		return new JW.ObservableMap();
 	},
 	
-	// override
+	/**
+	 * `<U>` Конструирует пустой массив того же типа (простой или оповещающий).
+	 * @returns {JW.ObservableArray} `<U>` Массив.
+	 */
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
 	
-	// override
+	/**
+	 * `<U>` Конструирует пустой словарь того же типа (простой или оповещающий).
+	 * @returns {JW.ObservableMap} `<U>` Словарь.
+	 */
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
 	
-	// override
+	/**
+	 * `<U>` Конструирует пустое множество того же типа (простое или оповещающее).
+	 * @returns {JW.ObservableSet} `<U>` Множество.
+	 */
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
 	
-	// override
+	/**
+	 * `<U>` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Mapper}
+	 * `<T, U>` Синхронизатор.
+	 */
 	createMapper: function(config) {
 		return new JW.ObservableMap.Mapper(this, config);
 	},
 	
-	// override
+	/**
+	 * Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Observer}
+	 * `<T>` Синхронизатор.
+	 */
 	createObserver: function(config) {
 		return new JW.ObservableMap.Observer(this, config);
 	},
 	
-	// override
+	/**
+	 * Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Orderer}
+	 * `<T>` Синхронизатор.
+	 */
 	createOrderer: function(config) {
 		return new JW.ObservableMap.Orderer(this, config);
 	},
 	
-	// override
-	createSorter: function(config) {
-		return new JW.ObservableMap.Sorter(this, config);
+	/**
+	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.SorterComparing}
+	 * `<T>` Синхронизатор.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.ObservableMap.SorterComparing(this, config);
 	},
 	
-	// override
+	/**
+	 * Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Indexer}
+	 * `<T>` Синхронизатор.
+	 */
 	createIndexer: function(config) {
 		return new JW.ObservableMap.Indexer(this, config);
 	},
 	
-	// override
+	/**
+	 * Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Lister}
+	 * `<T>` Синхронизатор.
+	 */
 	createLister: function(config) {
 		return new JW.ObservableMap.Lister(this, config);
 	},
 	
-	// override
+	/**
+	 * Конструирует синхронизатор представления с массивом.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Inserter}
+	 * `<T>` Синхронизатор.
+	 */
 	createInserter: function(config) {
 		return new JW.ObservableMap.Inserter(this, config);
 	},

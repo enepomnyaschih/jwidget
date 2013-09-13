@@ -43,7 +43,7 @@
  * - Конвертер в множество: JW.AbstractCollection.Lister
  * - Конвертер в словарь (индексатор): JW.AbstractCollection.Indexer
  * - Конвертер в массив (упорядочитель): JW.AbstractCollection.Orderer
- * - Конвертер в массив (сортировщик): JW.AbstractCollection.Sorter
+ * - Конвертер в массив (сортировщик по компаратору): JW.AbstractCollection.SorterComparing
  * - Наблюдатель: JW.AbstractCollection.Observer
  * - Синхронизаторы представления: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
  *
@@ -870,4 +870,73 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.AbstractCollection} `<U>` Отображенная коллекция.
 	 */
 	$mapByMethod: JW.AbstractCollection._createByMethod("$map")
+	
+	/**
+	 * @method createEmpty
+	 * `<U>` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.AbstractCollection} `<U>` Коллекция.
+	 */
+	/**
+	 * @method createEmptyArray
+	 * `<U>` Конструирует пустой массив того же типа (простой или оповещающий).
+	 * @returns {JW.AbstractArray} `<U>` Массив.
+	 */
+	/**
+	 * @method createEmptyMap
+	 * `<U>` Конструирует пустой словарь того же типа (простой или оповещающий).
+	 * @returns {JW.AbstractMap} `<U>` Словарь.
+	 */
+	/**
+	 * @method createEmptySet
+	 * `<U>` Конструирует пустое множество того же типа (простое или оповещающее).
+	 * @returns {JW.AbstractSet} `<U>` Множество.
+	 */
+	/**
+	 * @method createMapper
+	 * `<U>` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractCollection.Mapper}
+	 * `<T, U, JW.AbstractCollection<T>, JW.AbstractCollection<U>>` Синхронизатор.
+	 */
+	/**
+	 * @method createObserver
+	 * Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractCollection.Observer}
+	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 */
+	/**
+	 * @method createOrderer
+	 * Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractCollection.Orderer}
+	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 */
+	/**
+	 * @method createSorterComparing
+	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractCollection.SorterComparing}
+	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 */
+	/**
+	 * @method createIndexer
+	 * Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractCollection.Indexer}
+	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 */
+	/**
+	 * @method createLister
+	 * Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractCollection.Lister}
+	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 */
 });

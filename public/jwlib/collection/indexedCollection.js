@@ -719,4 +719,10 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @param {Array} [args] Аргументы.
 	 * @returns {JW.IndexedCollection} `<K, U>` Отображенная коллекция.
 	 */
+	
+	/**
+	 * @method createEmpty
+	 * `<U>` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.IndexedCollection} `<K, U>` Коллекция.
+	 */
 });

@@ -36,18 +36,34 @@ JW.Map = function(json, adapter) {
 };
 
 JW.extend(JW.Map, JW.AbstractMap, {
+	/**
+	 * `<U>` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.Map} `<U>` Коллекция.
+	 */
 	createEmpty: function() {
 		return new JW.Map();
 	},
 	
+	/**
+	 * `<U>` Конструирует пустой массив того же типа (простой или оповещающий).
+	 * @returns {JW.Array} `<U>` Массив.
+	 */
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
 	
+	/**
+	 * `<U>` Конструирует пустой словарь того же типа (простой или оповещающий).
+	 * @returns {JW.Map} `<U>` Словарь.
+	 */
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
 	
+	/**
+	 * `<U>` Конструирует пустое множество того же типа (простое или оповещающее).
+	 * @returns {JW.Set} `<U>` Множество.
+	 */
 	createEmptySet: function() {
 		return new JW.Set();
 	}
