@@ -43,7 +43,7 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 		);
 		var inserter = collection.createInserter({
 			addItem    : function(item, index) { this.output(&quot;Added &quot; + item + &quot; at &quot; + index); },
-			removeItem : function(index, item) { this.output(&quot;Removed &quot; + item + &quot; at &quot; + index); },
+			removeItem : function(item, index) { this.output(&quot;Removed &quot; + item + &quot; at &quot; + index); },
 			clearItems : function(items) { this.output(&quot;Cleared &quot; + items.join(&quot;, &quot;)); },
 			scope      : this
 		});
@@ -174,7 +174,7 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 		);
 		var inserter = collection.createInserter({
 			addItem    : function(item, index) { this.output(&quot;Added &quot; + item + &quot; at &quot; + index); },
-			removeItem : function(index, item) { this.output(&quot;Removed &quot; + item + &quot; at &quot; + index); },
+			removeItem : function(item, index) { this.output(&quot;Removed &quot; + item + &quot; at &quot; + index); },
 			scope      : this
 		});
 		

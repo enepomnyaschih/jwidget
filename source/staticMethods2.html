@@ -37,8 +37,8 @@
 JW.IndexedCollection.createStaticMethods(JW.Array);
 
 JW.apply(JW.Array, {
-	getFirst: function(target) {
-		return target[0];
+	getFirstKey: function(target) {
+		return (target.length !== 0) ? 0 : undefined;
 	},
 	
 	getLast: function(target) {
@@ -142,7 +142,7 @@ JW.apply(JW.Array, {
 		var oldItem = target[index];
 		if (item !== oldItem) {
 			target[index] = item;
-			return oldItem;
+			return new JW.Proxy(oldItem);
 		}
 	},
 	
@@ -382,8 +382,8 @@ JW.apply(JW.Array, {
 		return new JW.AbstractArray.Orderer(new JW.Array(source, true), config);
 	},
 	
-	createSorter: function(source, config) {
-		return new JW.AbstractArray.Sorter(new JW.Array(source, true), config);
+	createSorterComparing: function(source, config) {
+		return new JW.AbstractArray.SorterComparing(new JW.Array(source, true), config);
 	},
 	
 	createIndexer: function(source, config) {

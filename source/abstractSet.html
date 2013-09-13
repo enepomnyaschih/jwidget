@@ -34,13 +34,34 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-AbstractSet'>/**
+</span> * @class
+ *
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractCollection&lt;T&gt;`
+ *
+ * Абстрактное множество.
+ *
+ * Множество - это неупорядоченная коллекция, оптимизированная под добавление/удаление/поиск элемента. В отличие от
+ * массива и словаря, множество может содержать только экземпляры JW.Class. Внутреннее представление множества - это
+ * словарь из {@link JW.Class#_iid iid} элемента в сам элемент.
+ *
+ * @extends JW.AbstractCollection
+ * @abstract
+ */
 JW.AbstractSet = function(items, adapter) {
 	JW.AbstractSet._super.call(this);
 	this.json = adapter ? items : items ? JW.Array.indexBy(items, &quot;_iid&quot;) : {};
 	this.length = JW.Set.getLength(this.json);
 };
 
-JW.extend(JW.AbstractSet/*&lt;T&gt;*/, JW.AbstractCollection/*&lt;T&gt;*/, {
+JW.extend(JW.AbstractSet, JW.AbstractCollection, {
+<span id='JW-AbstractSet-method-getJson'>	/**
+</span>	 * Возвращает внутреннее представление множества.
+	 *
+	 * **Метод не копирует коллекцию, будьте осторожны.**
+	 *
+	 * @returns {Object} Внутреннее представление множества.
+	 */
 	getJson: function() {
 		return this.json;
 	},
@@ -57,6 +78,11 @@ JW.extend(JW.AbstractSet/*&lt;T&gt;*/, JW.AbstractCollection/*&lt;T&gt;*/, {
 		return this.json.hasOwnProperty(item._iid);
 	},
 	
+<span id='JW-AbstractSet-method-contains'>	/**
+</span>	 * Проверяет наличие элемента в коллекции. Сокращение #containsItem.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 */
 	contains: function(item) {
 		return this.json.hasOwnProperty(item._iid);
 	},
@@ -65,17 +91,171 @@ JW.extend(JW.AbstractSet/*&lt;T&gt;*/, JW.AbstractCollection/*&lt;T&gt;*/, {
 		return JW.Set.every(this.json, callback, scope);
 	},
 	
+<span id='JW-AbstractSet-method-filter'>	/**
+</span>	 * Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(T item): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Отфильтрованная коллекция.
+	 */
 	filter: function(callback, scope) {
 		return JW.Set.filter(this.json, callback, scope);
 	},
 	
+<span id='JW-AbstractSet-method-S-filter'>	/**
+</span>	 * Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(T item): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Set} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
 	$filter: JW.AbstractCollection._create$Set(&quot;filter&quot;),
 	
+<span id='JW-AbstractSet-method-filterBy'>	/**
+</span>	 * @method filterBy
+	 *
+	 * Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {Object} Отфильтрованная коллекция.
+	 */
+<span id='JW-AbstractSet-method-S-filterBy'>	/**
+</span>	 * @method $filterBy
+	 *
+	 * Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.Set} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-AbstractSet-method-filterByMethod'>	/**
+</span>	 * @method filterByMethod
+	 *
+	 * Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
+	 * возвращает !== false для всех элементов коллекции.
+	 * 
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Object} Отфильтрованная коллекция.
+	 */
+<span id='JW-AbstractSet-method-S-filterByMethod'>	/**
+</span>	 * @method $filterByMethod
+	 *
+	 * Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
+	 * возвращает !== false для всех элементов коллекции.
+	 * 
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Set} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+	
+<span id='JW-AbstractSet-method-map'>	/**
+</span>	 * `&lt;U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(T item): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Отображенная коллекция.
+	 */
 	map: function(callback, scope) {
 		return JW.Set.map(this.json, callback, scope);
 	},
 	
+<span id='JW-AbstractSet-method-S-map'>	/**
+</span>	 * `&lt;U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(T item): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Set} `&lt;U&gt;` Отображенная коллекция.
+	 */
 	$map: JW.AbstractCollection._create$Set(&quot;map&quot;),
+	
+<span id='JW-AbstractSet-method-mapBy'>	/**
+</span>	 * @method mapBy
+	 *
+	 * `&lt;U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
+	 * извлекается с помощью функции JW.get.
+	 * 
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {Object} Отображенная коллекция.
+	 */
+<span id='JW-AbstractSet-method-S-mapBy'>	/**
+</span>	 * @method $mapBy
+	 *
+	 * `&lt;U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
+	 * извлекается с помощью функции JW.get.
+	 * 
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.Set} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-AbstractSet-method-mapByMethod'>	/**
+</span>	 * @method mapByMethod
+	 *
+	 * `&lt;U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
+	 * у всех элементов коллекции.
+	 * 
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Object} Отображенная коллекция.
+	 */
+<span id='JW-AbstractSet-method-S-mapByMethod'>	/**
+</span>	 * @method $mapByMethod
+	 *
+	 * `&lt;U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
+	 * у всех элементов коллекции.
+	 * 
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Set} `&lt;U&gt;` Отображенная коллекция.
+	 */
 	
 	asSet: function() {
 		return this.json;
@@ -85,23 +265,48 @@ JW.extend(JW.AbstractSet/*&lt;T&gt;*/, JW.AbstractCollection/*&lt;T&gt;*/, {
 		return this;
 	},
 	
+<span id='JW-AbstractSet-method-add'>	/**
+</span>	 * Добавляет элемент в множество, если его еще нет.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Элемент добавлен.
+	 */
 	add: function(item) {
 		return this.tryAdd(item) !== undefined;
 	},
 	
+<span id='JW-AbstractSet-method-tryAdd'>	/**
+</span>	 * Добавляет элемент в множество, если его еще нет.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Элемент добавлен. Если нет изменений - undefined.
+	 */
 	tryAdd: function(item) {
 		if (this.trySplice([], [item]) !== undefined) {
 			return true;
 		}
 	},
 	
+<span id='JW-AbstractSet-method-addAll'>	/**
+</span>	 * Добавляет набор элементов в множество, если их еще нет.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {Array} `&lt;T&gt;` Добавленные элементы.
+	 */
 	addAll: function(items) {
 		var result = this.tryAddAll(items);
 		return (result !== undefined) ? result : [];
 	},
 	
-	$addAll: JW.AbstractCollection._create$Set(&quot;addAll&quot;),
+<span id='JW-AbstractSet-method-S-addAll'>	/**
+</span>	 * Добавляет набор элементов в множество, если их еще нет.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {JW.Array} `&lt;T&gt;` Добавленные элементы.
+	 */
+	$addAll: JW.AbstractCollection._create$Array(&quot;addAll&quot;),
 	
+<span id='JW-AbstractSet-method-tryAddAll'>	/**
+</span>	 * Добавляет набор элементов в множество, если их еще нет.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {Array} `&lt;T&gt;` Добавленные элементы. Если нет изменений - undefined.
+	 */
 	tryAddAll: function(items) {
 		var spliceResult = this.trySplice([], items);
 		if (spliceResult !== undefined) {
@@ -109,10 +314,20 @@ JW.extend(JW.AbstractSet/*&lt;T&gt;*/, JW.AbstractCollection/*&lt;T&gt;*/, {
 		}
 	},
 	
+<span id='JW-AbstractSet-method-remove'>	/**
+</span>	 * Удаляет элемент из множества, если он там есть.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Элемент удален.
+	 */
 	remove: function(item) {
 		return this.tryRemove(item) !== undefined;
 	},
 	
+<span id='JW-AbstractSet-method-tryRemove'>	/**
+</span>	 * Удаляет элемент из множества, если он там есть.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Элемент удален. Если нет изменений - undefined.
+	 */
 	tryRemove: function(item) {
 		if (this.trySplice([item], []) !== undefined) {
 			return true;
@@ -123,13 +338,28 @@ JW.extend(JW.AbstractSet/*&lt;T&gt;*/, JW.AbstractCollection/*&lt;T&gt;*/, {
 		this.tryRemove(item);
 	},
 	
+<span id='JW-AbstractSet-method-removeAll'>	/**
+</span>	 * Удаляет набор элементов из множества, если они там есть.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {Array} `&lt;T&gt;` Удаленные элементы.
+	 */
 	removeAll: function(items) {
 		var result = this.tryRemoveAll(items);
 		return (result !== undefined) ? result : [];
 	},
 	
+<span id='JW-AbstractSet-method-S-removeAll'>	/**
+</span>	 * Удаляет набор элементов из множества, если они там есть.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {JW.Array} `&lt;T&gt;` Удаленные элементы.
+	 */
 	$removeAll: JW.AbstractCollection._create$Array(&quot;removeAll&quot;),
 	
+<span id='JW-AbstractSet-method-tryRemoveAll'>	/**
+</span>	 * Удаляет набор элементов из множества, если они там есть.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {Array} `&lt;T&gt;` Удаленные элементы. Если нет изменений - undefined.
+	 */
 	tryRemoveAll: function(items) {
 		var spliceResult = this.trySplice(items, []);
 		if (spliceResult !== undefined) {
@@ -141,23 +371,47 @@ JW.extend(JW.AbstractSet/*&lt;T&gt;*/, JW.AbstractCollection/*&lt;T&gt;*/, {
 		this.tryRemoveAll(items);
 	},
 	
+<span id='JW-AbstractSet-method-clear'>	/**
+</span>	 * Очищает коллекцию.
+	 * @returns {Array} `&lt;T&gt;` Бывшее содержимое коллекции.
+	 */
 	clear: function() {
 		var items = this.tryClear();
 		return (items !== undefined) ? items : [];
 	},
 	
+<span id='JW-AbstractSet-method-S-clear'>	/**
+</span>	 * Очищает коллекцию.
+	 * @returns {JW.Array} `&lt;T&gt;` Бывшее содержимое коллекции.
+	 */
 	$clear: JW.AbstractCollection._create$Array(&quot;clear&quot;),
 	
+<span id='JW-AbstractSet-method-tryClear'>	/**
+</span>	 * Очищает коллекцию.
+	 * @returns {Array} `&lt;T&gt;`. Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 */
 	tryClear: function() {
 		this.length = 0;
 		return JW.Set.tryClear(this.json);
 	},
 	
+<span id='JW-AbstractSet-method-splice'>	/**
+</span>	 * Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * @param {Array} removedItems `&lt;T&gt;` Список элементов для удаления.
+	 * @param {Array} addedItems `&lt;T&gt;` Список элементов для добавления.
+	 * @returns {JW.AbstractSet.SpliceResult} `&lt;T&gt;` Результат.
+	 */
 	splice: function(removedItems, addedItems) {
 		var spliceResult = this.trySplice(removedItems, addedItems);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractSet.SpliceResult([], []);
 	},
 	
+<span id='JW-AbstractSet-method-trySplice'>	/**
+</span>	 * Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * @param {Array} removedItems `&lt;T&gt;` Список элементов для удаления.
+	 * @param {Array} addedItems `&lt;T&gt;` Список элементов для добавления.
+	 * @returns {JW.AbstractSet.SpliceResult} `&lt;T&gt;` Результат. Если нет изменений - undefined.
+	 */
 	trySplice: function(removedItems, addedItems) {
 		var spliceResult = JW.Set.trySplice(this.json, removedItems, addedItems);
 		if (spliceResult) {
@@ -166,10 +420,21 @@ JW.extend(JW.AbstractSet/*&lt;T&gt;*/, JW.AbstractCollection/*&lt;T&gt;*/, {
 		}
 	},
 	
+<span id='JW-AbstractSet-method-detectSplice'>	/**
+</span>	 * Определяет параметры метода #splice, с которыми содержимое множества станет равно newItems.
+	 * Т.е. определяет, какие элементы нужно удалить, какие добавить.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое множества.
+	 * @returns {JW.AbstractSet.SpliceParams} `&lt;T&gt;` Параметры метода #splice.
+	 */
 	detectSplice: function(newItems) {
 		return JW.Set.detectSplice(this.json, newItems);
 	},
 	
+<span id='JW-AbstractSet-method-performSplice'>	/**
+</span>	 * Преобразует содержимое множества к newItems комбинацией методов #detectSplice и #splice.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое множества.
+	 * @returns {void}
+	 */
 	performSplice: function(newItems) {
 		var spliceParams = this.detectSplice(newItems);
 		if (spliceParams !== undefined) {
@@ -177,67 +442,138 @@ JW.extend(JW.AbstractSet/*&lt;T&gt;*/, JW.AbstractCollection/*&lt;T&gt;*/, {
 		}
 	},
 	
+<span id='JW-AbstractSet-method-createMapper'>	/**
+</span>	 * `&lt;U&gt;` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Mapper}
+	 * `&lt;T, U&gt;` Синхронизатор.
+	 */
 	createMapper: function(config) {
 		return new JW.AbstractSet.Mapper(this, config);
 	},
 	
+<span id='JW-AbstractSet-method-createObserver'>	/**
+</span>	 * Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Observer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
 	createObserver: function(config) {
 		return new JW.AbstractSet.Observer(this, config);
 	},
 	
+<span id='JW-AbstractSet-method-createOrderer'>	/**
+</span>	 * Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Orderer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
 	createOrderer: function(config) {
 		return new JW.AbstractSet.Orderer(this, config);
 	},
 	
-	createSorter: function(config) {
-		return new JW.AbstractSet.Sorter(this, config);
+<span id='JW-AbstractSet-method-createSorterComparing'>	/**
+</span>	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.SorterComparing}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.AbstractSet.SorterComparing(this, config);
 	},
 	
+<span id='JW-AbstractSet-method-createIndexer'>	/**
+</span>	 * Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Indexer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
 	createIndexer: function(config) {
 		return new JW.AbstractSet.Indexer(this, config);
 	},
 	
+<span id='JW-AbstractSet-method-createLister'>	/**
+</span>	 * Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Lister}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
 	createLister: function(config) {
 		return new JW.AbstractSet.Lister(this, config);
 	},
 	
+<span id='JW-AbstractSet-method-equal'>	/**
+</span>	 * Поэлементно сравнивает с массивом.
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {boolean} Множество равно массиву.
+	 */
 	equal: function(array) {
 		return JW.Set.equal(this.json, array);
 	},
 	
 	_callStatic: function(algorithm, args) {
-		return JW.Set[algorithm].apply(JW.Set, [this.json].concat(JW.args(args)));
+		return JW.Set[algorithm].apply(JW.Set, [this.json].concat(JW.args(args || [])));
 	}
+	
+<span id='JW-AbstractSet-method-createEmpty'>	/**
+</span>	 * @method createEmpty
+	 * `&lt;U&gt;` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.AbstractSet} `&lt;U&gt;` Коллекция.
+	 */
 });
 
+<span id='JW-AbstractSet-SpliceParams-method-constructor'><span id='JW-AbstractSet-SpliceParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` Параметры метода JW.AbstractSet#splice.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} removedItems `&lt;T&gt;` Элементы для удаления.
+ * @param {Array} addedItems `&lt;T&gt;` Элементы для добавления.
+ */
 JW.AbstractSet.SpliceParams = function(removedItems, addedItems) {
 	JW.AbstractSet.SpliceParams._super.call(this);
 	this.removedItems = removedItems;
 	this.addedItems = addedItems;
 };
 
-JW.extend(JW.AbstractSet.SpliceParams/*&lt;T extends JW.Class&gt;*/, JW.Class, {
-	/*
-	Fields
-	Array&lt;T&gt; removedItems;
-	Array&lt;T&gt; addedItems;
-	*/
+JW.extend(JW.AbstractSet.SpliceParams, JW.Class, {
+<span id='JW-AbstractSet-SpliceParams-property-removedItems'>	/**
+</span>	 * @property {Array} removedItems `&lt;T&gt;` Элементы для удаления.
+	 */
+<span id='JW-AbstractSet-SpliceParams-property-addedItems'>	/**
+</span>	 * @property {Array} addedItems `&lt;T&gt;` Элементы для добавления.
+	 */
 });
 
-//--------
-
+<span id='JW-AbstractSet-SpliceResult-method-constructor'><span id='JW-AbstractSet-SpliceResult'>/**
+</span></span> * @class
+ * `&lt;T&gt;` Результат метода JW.AbstractSet#splice.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} removedItems `&lt;T&gt;` Удаленные элементы.
+ * @param {Array} addedItems `&lt;T&gt;` Добавленные элементы.
+ */
 JW.AbstractSet.SpliceResult = function(removedItems, addedItems) {
 	JW.AbstractSet.SpliceResult._super.call(this);
 	this.removedItems = removedItems;
 	this.addedItems = addedItems;
 };
 
-JW.extend(JW.AbstractSet.SpliceResult/*&lt;T extends JW.Class&gt;*/, JW.Class, {
-	/*
-	Fields
-	Array&lt;T&gt; removedItems;
-	Array&lt;T&gt; addedItems;
-	*/
+JW.extend(JW.AbstractSet.SpliceResult, JW.Class, {
+<span id='JW-AbstractSet-SpliceResult-property-removedItems'>	/**
+</span>	 * @property {Array} removedItems `&lt;T&gt;` Удаленные элементы.
+	 */
+<span id='JW-AbstractSet-SpliceResult-property-addedItems'>	/**
+</span>	 * @property {Array} addedItems `&lt;T&gt;` Добавленные элементы.
+	 */
 });
 </pre>
 </body>

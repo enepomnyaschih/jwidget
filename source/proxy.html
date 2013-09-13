@@ -34,15 +34,28 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-Proxy-method-constructor'><span id='JW-Proxy'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt;` Адаптер объекта jWidget. Обертка JW.Class над произвольным значением типа T.
+ *
+ * Поскольку некоторые классы jWidget работают исключительно с экземплярами JW.Class (например, JW.AbstractSet),
+ * библиотека предлагает простой адаптер для приведения любых объектов и значений к классу JW.Class.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {T} value Объект.
+ */
 JW.Proxy = function(value) {
 	JW.Proxy._super.call(this);
 	this.value = value;
 };
 
-JW.extend(JW.Proxy/*&lt;T extends Any&gt;*/, JW.Class, {
-	/*
-	T value;
-	*/
+JW.extend(JW.Proxy, JW.Class, {
+<span id='JW-Proxy-property-value'>	/**
+</span>	 * @property {T} value Объект.
+	 */
 });
 </pre>
 </body>

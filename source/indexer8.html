@@ -34,49 +34,16 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
+JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 	testUnobservableTarget: function() {
-		var d = new JW.Proxy(&quot;d&quot;);
-		var source = new JW.ObservableSet([ d ]);
-		var target = new JW.Map();
-		
-		var indexer = this.createIndexer(source, target);
-		this.assertTarget({ &quot;d&quot;: d }, target);
-		
-		var f = new JW.Proxy(&quot;f&quot;);
-		source.addAll([ f ]);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f }, target);
-		
-		var c = new JW.Proxy(&quot;c&quot;);
-		source.add(c);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c }, target);
-		
+		var a = new JW.Proxy(&quot;a&quot;);
 		var b = new JW.Proxy(&quot;b&quot;);
-		var m = new JW.Proxy(&quot;m&quot;);
-		source.addAll([ b, m ]);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m }, target);
-		
-		source.addAll([]);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m }, target);
-		
-		source.remove(m);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b }, target);
-		
-		source.remove(m);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b }, target);
-		
-		source.removeAll([ f, b ]);
-		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c }, target);
-		
-		source.splice([ d ], [ f, b ]);
-		this.assertTarget({ &quot;c&quot;: c, &quot;b&quot;: b, &quot;f&quot;: f }, target);
-		
-		source.clear();
-		this.assertTarget({}, target);
-		
-		var h = new JW.Proxy(&quot;h&quot;);
-		source.add(h);
-		this.assertTarget({ &quot;h&quot;: h }, target);
+		var d = new JW.Proxy(&quot;d&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var source = new JW.Array([ a, d, c, b ]);
+		var target = new JW.Map();
+		var indexer = this.createIndexer(source, target);
+		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c, &quot;d&quot;: d }, target);
 		
 		indexer.destroy();
 		this.assertTarget({}, target);
@@ -86,99 +53,25 @@ JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testObservableTarget: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
 		var d = new JW.Proxy(&quot;d&quot;);
-		var source = new JW.ObservableSet([ d ]);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var source = new JW.Array([ a, d, c, b ]);
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
-			&quot;Spliced -{} +{d:d}&quot;,
+			&quot;Spliced -{} +{a:a,b:b,c:c,d:d}&quot;,
 			&quot;Changed&quot;,
-			&quot;Changed size from 0 to 1&quot;
+			&quot;Changed size from 0 to 4&quot;
 		);
 		var indexer = this.createIndexer(source, target);
-		this.assertTarget({ &quot;d&quot;: d }, target);
-		
-		var f = new JW.Proxy(&quot;f&quot;);
-		this.setExpectedOutput(
-			&quot;Spliced -{} +{f:f}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 1 to 2&quot;
-		);
-		source.addAll([ f ]);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f }, target);
-		
-		var c = new JW.Proxy(&quot;c&quot;);
-		this.setExpectedOutput(
-			&quot;Spliced -{} +{c:c}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 2 to 3&quot;
-		);
-		source.add(c);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c }, target);
-		
-		var b = new JW.Proxy(&quot;b&quot;);
-		var m = new JW.Proxy(&quot;m&quot;);
-		this.setExpectedOutput(
-			&quot;Spliced -{} +{b:b,m:m}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 3 to 5&quot;
-		);
-		source.addAll([ b, m ]);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m }, target);
-		
-		this.setExpectedOutput();
-		source.addAll([]);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m }, target);
+		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c, &quot;d&quot;: d }, target);
 		
 		this.setExpectedOutput(
-			&quot;Spliced -{m:m} +{}&quot;,
+			&quot;Spliced -{a:a,b:b,c:c,d:d} +{}&quot;,
 			&quot;Changed&quot;,
-			&quot;Changed size from 5 to 4&quot;
-		);
-		source.remove(m);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b }, target);
-		
-		this.setExpectedOutput();
-		source.remove(m);
-		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b }, target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -{b:b,f:f} +{}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 4 to 2&quot;
-		);
-		source.removeAll([ f, b ]);
-		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c }, target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -{d:d} +{b:b,f:f}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 2 to 3&quot;
-		);
-		source.splice([ d ], [ f, b ]);
-		this.assertTarget({ &quot;c&quot;: c, &quot;b&quot;: b, &quot;f&quot;: f }, target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -{b:b,c:c,f:f} +{}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 3 to 0&quot;
-		);
-		source.clear();
-		this.assertTarget({}, target);
-		
-		var h = new JW.Proxy(&quot;h&quot;);
-		this.setExpectedOutput(
-			&quot;Spliced -{} +{h:h}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 0 to 1&quot;
-		);
-		source.add(h);
-		this.assertTarget({ &quot;h&quot;: h }, target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -{h:h} +{}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 1 to 0&quot;
+			&quot;Changed size from 4 to 0&quot;
 		);
 		indexer.destroy();
 		this.assertTarget({}, target);
@@ -195,10 +88,10 @@ JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
 		var d = new JW.Proxy(&quot;d&quot;);
 		var x = new JW.Proxy(&quot;x&quot;);
 		
-		var source1 = new JW.ObservableSet([ a, b ]);
-		var source2 = new JW.ObservableSet([ c, d ]);
-		var target = this.createTarget();
+		var source1 = new JW.Array([ a, b ]);
+		var source2 = new JW.Array([ c, d ]);
 		
+		var target = this.createTarget();
 		this.setExpectedOutput(
 			&quot;Spliced -{} +{x:x}&quot;,
 			&quot;Changed&quot;,
@@ -213,7 +106,7 @@ JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
 			&quot;Changed size from 1 to 3&quot;
 		);
 		var indexer1 = this.createIndexer(source1, target);
-		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;x&quot;: x }, target);
+		this.assertTarget({ &quot;x&quot;: x, &quot;a&quot;: a, &quot;b&quot;: b }, target);
 		
 		this.setExpectedOutput(
 			&quot;Spliced -{} +{c:c,d:d}&quot;,
@@ -221,56 +114,36 @@ JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
 			&quot;Changed size from 3 to 5&quot;
 		);
 		var indexer2 = this.createIndexer(source2, target);
-		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c, &quot;d&quot;: d, &quot;x&quot;: x }, target);
-		
-		var e = new JW.Proxy(&quot;e&quot;);
-		this.setExpectedOutput(
-			&quot;Spliced -{} +{e:e}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 5 to 6&quot;
-		);
-		source1.add(e);
-		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c, &quot;d&quot;: d, &quot;e&quot;: e, &quot;x&quot;: x }, target);
+		this.assertTarget({ &quot;x&quot;: x, &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c, &quot;d&quot;: d }, target);
 		
 		this.setExpectedOutput(
-			&quot;Spliced -{d:d} +{}&quot;,
+			&quot;Spliced -{c:c,d:d} +{}&quot;,
 			&quot;Changed&quot;,
-			&quot;Changed size from 6 to 5&quot;
-		);
-		source2.remove(d);
-		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c, &quot;e&quot;: e, &quot;x&quot;: x }, target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -{a:a,b:b,e:e} +{}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 5 to 2&quot;
-		);
-		source1.clear();
-		this.assertTarget({ &quot;c&quot;: c, &quot;x&quot;: x }, target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -{c:c} +{}&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 2 to 1&quot;
+			&quot;Changed size from 5 to 3&quot;
 		);
 		indexer2.destroy();
-		this.assertTarget({ &quot;x&quot;: x }, target);
+		this.assertTarget({ &quot;x&quot;: x, &quot;a&quot;: a, &quot;b&quot;: b }, target);
 		
-		this.setExpectedOutput();
+		this.setExpectedOutput(
+			&quot;Spliced -{a:a,b:b} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 1&quot;
+		);
 		indexer1.destroy();
 		this.assertTarget({ &quot;x&quot;: x }, target);
 		
 		this.setExpectedOutput();
 		target.destroy();
+		this.assertTarget({}, target);
 		
 		this.setExpectedOutput();
 		source1.destroy();
 		source2.destroy();
 	},
 	
-	// tests that empty source doesn't cause target to trigger &quot;change&quot; on synchronizer initialization
+	// tests that empty source doesn't caused target to trigger &quot;change&quot; on synchronizer initialization
 	testEmptyChange: function() {
-		var source = new JW.ObservableSet();
+		var source = new JW.Array();
 		var target = this.createTarget();
 		var indexer = this.createIndexer(source, target);
 		indexer.destroy();
@@ -280,9 +153,9 @@ JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
 	
 	testAutoTarget: function() {
 		var d = new JW.Proxy(&quot;d&quot;);
-		var source = new JW.ObservableSet([ d ]);
+		var source = new JW.Array([ d ]);
 		var indexer = this.createIndexer(source);
-		this.assertTrue(indexer.target instanceof JW.ObservableMap);
+		this.assertTrue(indexer.target instanceof JW.Map);
 		this.assertTarget({ &quot;d&quot;: d }, indexer.target);
 		indexer.destroy();
 		source.destroy();
@@ -297,11 +170,8 @@ JW.Tests.Collection.ObservableSet.IndexerTestCase = JW.Unit.TestCase.extend({
 	createIndexer: function(source, target) {
 		return source.createIndexer({
 			target : target,
-			scope  : this,
-			
-			getKey: function(item) {
-				return item.value;
-			}
+			getKey : function(item) { return item.value; },
+			scope  : this
 		});
 	},
 	

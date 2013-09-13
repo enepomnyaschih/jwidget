@@ -34,47 +34,28 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.ObservableArray.Indexer = function(source, config) {
-	JW.ObservableArray.Indexer._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+<span id='JW-AbstractMap-Indexer-method-constructor'><span id='JW-AbstractMap-Indexer'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractCollection.Indexer&lt;T, JW.AbstractMap&lt;T&gt;&gt;`
+ *
+ * Индексатор словаря. Подробнее читайте JW.AbstractCollection.Indexer.
+ *
+ * @extends JW.AbstractCollection.Indexer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
+ * @param {JW.AbstractMap} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.AbstractMap.Indexer = function(source, config) {
+	JW.AbstractMap.Indexer._super.call(this, source, config);
 };
 
-JW.extend(JW.ObservableArray.Indexer/*&lt;T&gt;*/, JW.AbstractArray.Indexer/*&lt;T&gt;*/, {
-	/*
-	Fields
-	JW.ObservableArray&lt;T&gt; source;
-	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _replaceEventAttachment;
-	JW.EventAttachment _clearEventAttachment;
-	*/
-	
-	// override
-	destroy: function() {
-		this._clearEventAttachment.destroy();
-		this._replaceEventAttachment.destroy();
-		this._spliceEventAttachment.destroy();
-		this._super();
-	},
-	
-	_onSplice: function(params) {
-		var spliceResult = params.spliceResult;
-		this.target.trySplice(
-			this._keys(spliceResult.getRemovedItems()),
-			this._index(spliceResult.getAddedItems()));
-	},
-	
-	_onReplace: function(params) {
-		this.target.trySplice(
-			this._keys([ params.oldItem ]),
-			this._index([ params.newItem ]));
-	},
-	
-	_onClear: function(params) {
-		this.target.tryRemoveAll(
-			this._keys(params.items));
-	}
+JW.extend(JW.AbstractMap.Indexer, JW.AbstractCollection.Indexer, {
+<span id='JW-AbstractMap-Indexer-property-source'>	/**
+</span>	 * @property {JW.AbstractMap} source `&lt;T&gt;` Исходная коллекция.
+	 */
 });
 </pre>
 </body>

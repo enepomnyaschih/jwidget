@@ -34,26 +34,1523 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-Array-method-constructor'><span id='JW-Array'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractArray&lt;T&gt;`
+ *
+ * Простой массив.
+ *
+ * @extends JW.AbstractArray
+ *
+ * @constructor
+ * @param {Array} [items] `&lt;T&gt;` Изначальное содержимое массива. По умолчанию, создается пустой массив.
+ * @param {boolean} [adapter] Создать массив как адаптер над items. По умолчанию, равен false, т.е. создается
+ * копия массива items.
+ */
 JW.Array = function(items, adapter) {
 	JW.Array._super.call(this, items, adapter);
 };
 
-JW.extend(JW.Array/*&lt;T&gt;*/, JW.AbstractArray/*&lt;T&gt;*/, {
+JW.extend(JW.Array, JW.AbstractArray, {
+<span id='JW-Array-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.Array} `&lt;U&gt;` Коллекция.
+	 */
 	createEmpty: function() {
 		return new JW.Array();
 	},
 	
+<span id='JW-Array-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой массив того же типа (простой или оповещающий).
+	 * @returns {JW.Array} `&lt;U&gt;` Массив.
+	 */
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
 	
+<span id='JW-Array-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой словарь того же типа (простой или оповещающий).
+	 * @returns {JW.Map} `&lt;U&gt;` Словарь.
+	 */
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
 	
+<span id='JW-Array-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустое множество того же типа (простое или оповещающее).
+	 * @returns {JW.Set} `&lt;U&gt;` Множество.
+	 */
 	createEmptySet: function() {
 		return new JW.Set();
 	}
+	
+<span id='JW-Array-static-method-getLength'>	/**
+</span>	 * @method getLength
+	 * `&lt;T&gt;` Возвращает количество элементов в коллекции.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {number} Количество элементов в коллекции.
+	 */
+<span id='JW-Array-static-method-isEmpty'>	/**
+</span>	 * @method isEmpty
+	 * `&lt;T&gt;` Проверяет коллекцию на пустоту.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {boolean} Коллекция не содержит ни одного элемента.
+	 */
+<span id='JW-Array-static-method-getFirst'>	/**
+</span>	 * @method getFirst
+	 * `&lt;T&gt;` Возвращает первый элемент коллекции. Если коллекция пуста, вернет undefined.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {T} Элемент.
+	 */
+<span id='JW-Array-static-method-getFirstKey'>	/**
+</span>	 * @method getFirstKey
+	 * `&lt;T&gt;` Возвращает индекс первого элемента коллекции. Если коллекция пуста, вернет undefined.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {number} Индекс.
+	 */
+<span id='JW-Array-static-method-getLast'>	/**
+</span>	 * @method getLast
+	 * `&lt;T&gt;` Возвращает последний элемент коллекции. Если коллекция пуста, вернет undefined.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {T} Элемент.
+	 */
+<span id='JW-Array-static-method-get'>	/**
+</span>	 * @method get
+	 * `&lt;T&gt;` Возвращает элемент по индексу. В случае, если элемента с таким индексом нет, вернет undefined.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} index Индекс.
+	 * @returns {T} Элемент.
+	 */
+<span id='JW-Array-static-method-containsKey'>	/**
+</span>	 * @method containsKey
+	 * `&lt;T&gt;` Проверяет наличие элемента с заданным индексом в коллекции.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} index Индекс.
+	 * @returns {boolean} Коллекция содержит элемент с указанным индексом.
+	 */
+<span id='JW-Array-static-method-containsItem'>	/**
+</span>	 * @method containsItem
+	 * `&lt;T&gt;` Проверяет наличие элемента в коллекции.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 */
+<span id='JW-Array-static-method-keyOf'>	/**
+</span>	 * @method keyOf
+	 * `&lt;T&gt;` Определяет индекс элемента в данной коллекции. Если такого элемента в коллекции нет, вернет undefined.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {T} item Элемент.
+	 * @returns {number} Индекс элемента.
+	 */
+<span id='JW-Array-static-method-getKeys'>	/**
+</span>	 * @method getKeys
+	 * `&lt;T&gt;` Возвращает массив индексов всех элементов коллекции, т.е. массив `[0, 1, ... , length - 1]`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {Array} Массив индексов.
+	 */
+<span id='JW-Array-static-method-S-getKeys'>	/**
+</span>	 * @method $getKeys
+	 * `&lt;T&gt;` Возвращает массив индексов всех элементов коллекции, т.е. массив `[0, 1, ... , length - 1]`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {JW.Array} `&lt;number&gt;` Массив ключей.
+	 */
+<span id='JW-Array-static-method-removeItem'>	/**
+</span>	 * @method removeItem
+	 * `&lt;T&gt;` Удаляет первое вхождение указанного элемента из коллекции.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {T} item Элемент.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-removeItems'>	/**
+</span>	 * @method removeItems
+	 * `&lt;T&gt;` Удаляет все вхождения указанных элементов из коллекции.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-tryClear'>	/**
+</span>	 * @method tryClear
+	 * `&lt;T&gt;` Очищает коллекцию.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {Array} Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 */
+<span id='JW-Array-static-method-clear'>	/**
+</span>	 * @method clear
+	 * `&lt;T&gt;` Очищает коллекцию.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {Array} Бывшее содержимое коллекции.
+	 */
+<span id='JW-Array-static-method-S-clear'>	/**
+</span>	 * @method $clear
+	 * `&lt;T&gt;` Очищает коллекцию.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {JW.Array} `&lt;T&gt;` Бывшее содержимое коллекции.
+	 */
+<span id='JW-Array-static-method-every'>	/**
+</span>	 * @method every
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Array-static-method-everyBy'>	/**
+</span>	 * @method everyBy
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда поле field всех элементов коллекции строго равно (===) значению
+	 * value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Array-static-method-everyByMethod'>	/**
+</span>	 * @method everyByMethod
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false для всех
+	 * элементов коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Array-static-method-some'>	/**
+</span>	 * @method some
+	 *
+	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false хотя бы на одном элементе коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Array-static-method-someBy'>	/**
+</span>	 * @method someBy
+	 *
+	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда поле field хотя бы одного элемента коллекции строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Array-static-method-someByMethod'>	/**
+</span>	 * @method someByMethod
+	 *
+	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false хотя бы у
+	 * одного элемента коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Array-static-method-each'>	/**
+</span>	 * @method each
+	 * `&lt;T&gt;` Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): void`
+	 *
+	 * Функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-eachByMethod'>	/**
+</span>	 * @method eachByMethod
+	 * `&lt;T&gt;` Перебирает элементы коллекции. Запускает указанный метод у всех элементов.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-find'>	/**
+</span>	 * @method find
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает индекс первого элемента, функция f на котором возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {number} Индекс найденного элемента или undefined.
+	 */
+<span id='JW-Array-static-method-findBy'>	/**
+</span>	 * @method findBy
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает индекс первого элемента, поле field которого строго равно (===) значению value.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {number} Индекс найденного элемента или undefined.
+	 */
+<span id='JW-Array-static-method-findByMethod'>	/**
+</span>	 * @method findByMethod
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает индекс первого элемента, указанный метод которого с аргументами args возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {number} Индекс найденного элемента или undefined.
+	 */
+<span id='JW-Array-static-method-search'>	/**
+</span>	 * @method search
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, функция f на котором возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
+<span id='JW-Array-static-method-searchBy'>	/**
+</span>	 * @method searchBy
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, поле field которого строго равно (===) значению value.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
+<span id='JW-Array-static-method-searchByMethod'>	/**
+</span>	 * @method searchByMethod
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, указанный метод которого с аргументами args возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
+<span id='JW-Array-static-method-toSorted'>	/**
+</span>	 * @method toSorted
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Array-static-method-S-toSorted'>	/**
+</span>	 * @method $toSorted
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Array-static-method-toSortedBy'>	/**
+</span>	 * @method toSortedBy
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Array-static-method-S-toSortedBy'>	/**
+</span>	 * @method $toSortedBy
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Array-static-method-toSortedByMethod'>	/**
+</span>	 * @method toSortedByMethod
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Array-static-method-S-toSortedByMethod'>	/**
+</span>	 * @method $toSortedByMethod
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Array-static-method-toSortedComparing'>	/**
+</span>	 * @method toSortedComparing
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Array-static-method-S-toSortedComparing'>	/**
+</span>	 * @method $toSortedComparing
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Array-static-method-getSortingKeys'>	/**
+</span>	 * @method getSortingKeys
+	 *
+	 * `&lt;T&gt;` Возвращает массив индексов отсортированных элементов.
+	 *
+	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска функции f на каждом
+	 * элементе.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;number&gt;` Массив индексов отсортированных элементов.
+	 */
+<span id='JW-Array-static-method-S-getSortingKeys'>	/**
+</span>	 * @method $getSortingKeys
+	 *
+	 * `&lt;T&gt;` Возвращает массив индексов отсортированных элементов.
+	 *
+	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска функции f на каждом
+	 * элементе.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;number&gt;` Массив индексов отсортированных элементов.
+	 */
+<span id='JW-Array-static-method-getSortingKeysBy'>	/**
+</span>	 * @method getSortingKeysBy
+	 *
+	 * `&lt;T&gt;` Возвращает массив индексов отсортированных элементов.
+	 *
+	 * Строит массив из индексов элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;number&gt;` Массив индексов отсортированных элементов.
+	 */
+<span id='JW-Array-static-method-S-getSortingKeysBy'>	/**
+</span>	 * @method $getSortingKeysBy
+	 *
+	 * `&lt;T&gt;` Возвращает массив индексов отсортированных элементов.
+	 *
+	 * Строит массив из индексов элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;number&gt;` Массив индексов отсортированных элементов.
+	 */
+<span id='JW-Array-static-method-getSortingKeysByMethod'>	/**
+</span>	 * @method getSortingKeysByMethod
+	 *
+	 * `&lt;T&gt;` Возвращает массив индексов отсортированных элементов.
+	 *
+	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Array} `&lt;number&gt;` Массив индексов отсортированных элементов.
+	 */
+<span id='JW-Array-static-method-S-getSortingKeysByMethod'>	/**
+</span>	 * @method $getSortingKeysByMethod
+	 *
+	 * `&lt;T&gt;` Возвращает массив индексов отсортированных элементов.
+	 *
+	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Array} `&lt;number&gt;` Массив индексов отсортированных элементов.
+	 */
+<span id='JW-Array-static-method-getSortingKeysComparing'>	/**
+</span>	 * @method getSortingKeysComparing
+	 *
+	 * `&lt;T&gt;` Возвращает массив индексов отсортированных элементов.
+	 *
+	 * Строит массив из индексов элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;number&gt;` Массив индексов отсортированных элементов.
+	 */
+<span id='JW-Array-static-method-S-getSortingKeysComparing'>	/**
+</span>	 * @method $getSortingKeysComparing
+	 *
+	 * `&lt;T&gt;` Возвращает массив индексов отсортированных элементов.
+	 *
+	 * Строит массив из индексов элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;number&gt;` Массив индексов отсортированных элементов.
+	 */
+<span id='JW-Array-static-method-index'>	/**
+</span>	 * @method index
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): string`
+	 *
+	 * Функция-индексатор для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Индекс коллекции.
+	 */
+<span id='JW-Array-static-method-S-index'>	/**
+</span>	 * @method $index
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): string`
+	 *
+	 * Функция-индексатор для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
+	 */
+<span id='JW-Array-static-method-indexBy'>	/**
+</span>	 * @method indexBy
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
+	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @returns {Object} Индекс коллекции.
+	 */
+<span id='JW-Array-static-method-S-indexBy'>	/**
+</span>	 * @method $indexBy
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
+	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
+	 */
+<span id='JW-Array-static-method-indexByMethod'>	/**
+</span>	 * @method indexByMethod
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Object} Индекс коллекции.
+	 */
+<span id='JW-Array-static-method-S-indexByMethod'>	/**
+</span>	 * @method $indexByMethod
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
+	 */
+<span id='JW-Array-static-method-toArray'>	/**
+</span>	 * @method toArray
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в массив.
+	 *
+	 * Строит новый массив, включающий все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Array-static-method-S-toArray'>	/**
+</span>	 * @method $toArray
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в массив.
+	 *
+	 * Строит новый массив, включающий все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {JW.Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Array-static-method-toMap'>	/**
+</span>	 * @method toMap
+	 *
+	 * Преобразует коллекцию в словарь.
+	 *
+	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {Object} Словарь элементов.
+	 */
+<span id='JW-Array-static-method-S-toMap'>	/**
+</span>	 * @method $toMap
+	 *
+	 * Преобразует коллекцию в словарь.
+	 *
+	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {JW.Map} `&lt;T&gt;` Словарь элементов.
+	 */
+<span id='JW-Array-static-method-toSet'>	/**
+</span>	 * @method toSet
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в множество.
+	 *
+	 * Строит новое множество, включающее все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {Object} Множество элементов.
+	 */
+<span id='JW-Array-static-method-S-toSet'>	/**
+</span>	 * @method $toSet
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в множество.
+	 *
+	 * Строит новое множество, включающее все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {JW.Set} `&lt;T&gt;` Множество элементов.
+	 */
+<span id='JW-Array-static-method-asArray'>	/**
+</span>	 * @method asArray
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде массива.
+	 *
+	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Array-static-method-S-asArray'>	/**
+</span>	 * @method $asArray
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде массива.
+	 *
+	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {JW.Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Array-static-method-asMap'>	/**
+</span>	 * @method asMap
+	 *
+	 * Представляет коллекцию в виде словаря.
+	 *
+	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод {@link #static-method-toMap}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toMap}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {Object} Словарь элементов.
+	 */
+<span id='JW-Array-static-method-S-asMap'>	/**
+</span>	 * @method $asMap
+	 *
+	 * Представляет коллекцию в виде словаря.
+	 *
+	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод {@link #static-method-toMap}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toMap}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {JW.Map} `&lt;T&gt;` Словарь элементов.
+	 */
+<span id='JW-Array-static-method-asSet'>	/**
+</span>	 * @method asSet
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде множества.
+	 *
+	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {Object} Множество элементов.
+	 */
+<span id='JW-Array-static-method-S-asSet'>	/**
+</span>	 * @method $asSet
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде множества.
+	 *
+	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {JW.Set} `&lt;T&gt;` Множество элементов.
+	 */
+<span id='JW-Array-static-method-filter'>	/**
+</span>	 * @method filter
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(T item, index: number): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Array} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Array-static-method-S-filter'>	/**
+</span>	 * @method $filter
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(T item, index: number): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Array} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Array-static-method-filterBy'>	/**
+</span>	 * @method filterBy
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {Array} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Array-static-method-S-filterBy'>	/**
+</span>	 * @method $filterBy
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.Array} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Array-static-method-filterByMethod'>	/**
+</span>	 * @method filterByMethod
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
+	 * возвращает !== false для всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Array} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Array-static-method-S-filterByMethod'>	/**
+</span>	 * @method $filterByMethod
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
+	 * возвращает !== false для всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Array} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Array-static-method-map'>	/**
+</span>	 * @method map
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(T item, index: number): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Array} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Array-static-method-S-map'>	/**
+</span>	 * @method $map
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(T item, index: number): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Array} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Array-static-method-mapBy'>	/**
+</span>	 * @method mapBy
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
+	 * извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {Array} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Array-static-method-S-mapBy'>	/**
+</span>	 * @method $mapBy
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
+	 * извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.Array} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Array-static-method-mapByMethod'>	/**
+</span>	 * @method mapByMethod
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
+	 * у всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Array} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Array-static-method-S-mapByMethod'>	/**
+</span>	 * @method $mapByMethod
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
+	 * у всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Array} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Array-static-method-add'>	/**
+</span>	 * @method add
+	 * `&lt;T&gt;` Добавляет элемент в массив.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {T} item Элемент.
+	 * @param {number} [index] Индекс элемента, перед которым вставить новый элемент. По умолчанию, добавляет элемент
+	 * в конец массива.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-tryAdd'>	/**
+</span>	 * @method tryAdd
+	 * `&lt;T&gt;` Добавляет элемент в массив.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {T} item Элемент.
+	 * @param {number} [index] Индекс элемента, перед которым вставить новый элемент. По умолчанию, добавляет элемент
+	 * в конец массива.
+	 * @returns {boolean} true.
+	 */
+<span id='JW-Array-static-method-addAll'>	/**
+</span>	 * @method addAll
+	 * `&lt;T&gt;` Добавляет набор элементов в массив.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @param {number} [index] Индекс элемента, перед которым вставить новые элементы. По умолчанию, добавляет элементы
+	 * в конец массива.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-tryAddAll'>	/**
+</span>	 * @method tryAddAll
+	 * `&lt;T&gt;` Добавляет набор элементов в массив.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @param {number} [index] Индекс элемента, перед которым вставить новые элементы. По умолчанию, добавляет элементы
+	 * в конец массива.
+	 * @returns {boolean} true. Если нет изменений - undefined.
+	 */
+<span id='JW-Array-static-method-set'>	/**
+</span>	 * @method set
+	 * `&lt;T&gt;` Заменяет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
+	 * (не надо так).
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {T} item Элемент.
+	 * @param {number} index Индекс.
+	 * @returns {T} Бывший элемент коллекции.
+	 */
+<span id='JW-Array-static-method-trySet'>	/**
+</span>	 * @method trySet
+	 * `&lt;T&gt;` Заменяет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
+	 * (не надо так).
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {T} item Элемент.
+	 * @param {number} index Индекс.
+	 * @returns {JW.Proxy} `&lt;T&gt;` Обертка над бывшим элементом коллекции. Если нет изменений - undefined.
+	 */
+<span id='JW-Array-static-method-remove'>	/**
+</span>	 * @method remove
+	 * `&lt;T&gt;` Удаляет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
+	 * (не надо так).
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} index Индекс.
+	 * @returns {T} Бывший элемент коллекции.
+	 */
+<span id='JW-Array-static-method-tryRemove'>	/**
+</span>	 * @method tryRemove
+	 * `&lt;T&gt;` Удаляет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
+	 * (не надо так).
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} index Индекс.
+	 * @returns {T} Бывший элемент коллекции. Если нет изменений - undefined.
+	 */
+<span id='JW-Array-static-method-removeAll'>	/**
+</span>	 * @method removeAll
+	 * `&lt;T&gt;` Удаляет набор элементов из массива.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} index Индекс элемента, начиная с которого удалять.
+	 * @param {number} count Количество удаленных элементов.
+	 * @returns {Array} `&lt;T&gt;` Удаленные элементы.
+	 */
+<span id='JW-Array-static-method-S-removeAll'>	/**
+</span>	 * @method $removeAll
+	 * `&lt;T&gt;` Удаляет набор элементов из массива.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} index Индекс элемента, начиная с которого удалять.
+	 * @param {number} count Количество удаленных элементов.
+	 * @returns {JW.Array} `&lt;T&gt;` Удаленные элементы.
+	 */
+<span id='JW-Array-static-method-tryRemoveAll'>	/**
+</span>	 * @method tryRemoveAll
+	 * `&lt;T&gt;` Удаляет набор элементов из массива.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} index Индекс элемента, начиная с которого удалять.
+	 * @param {number} count Количество удаленных элементов.
+	 * @returns {Array} `&lt;T&gt;` Удаленные элементы. Если нет изменений - undefined.
+	 */
+<span id='JW-Array-static-method-move'>	/**
+</span>	 * @method move
+	 * `&lt;T&gt;` Перемещает элемент в массиве.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} fromIndex Индекс элемента, который переместить.
+	 * @param {number} toIndex Куда переместить.
+	 * @returns {T} Перемещенный элемент.
+	 */
+<span id='JW-Array-static-method-tryMove'>	/**
+</span>	 * @method tryMove
+	 * `&lt;T&gt;` Перемещает элемент в массиве.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} fromIndex Индекс элемента, который переместить.
+	 * @param {number} toIndex Куда переместить.
+	 * @returns {T} Перемещенный элемент. Если нет изменений - undefined.
+	 */
+<span id='JW-Array-static-method-splice'>	/**
+</span>	 * @method splice
+	 * `&lt;T&gt;` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} removeParamsList `&lt;JW.AbstractArray.IndexCount&gt;` Список отрезков для удаления по возрастанию
+	 * индекса. Отрезки удаляются от конца к началу массива.
+	 * @param {Array} addParamsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;` Список наборов для вставки по возрастанию
+	 * индекса. Наборы вставляются от начала к концу массива.
+	 * @returns {JW.AbstractArray.SpliceResult} `&lt;T&gt;` Результат.
+	 */
+<span id='JW-Array-static-method-trySplice'>	/**
+</span>	 * @method trySplice
+	 * `&lt;T&gt;` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} removeParamsList `&lt;JW.AbstractArray.IndexCount&gt;` Список отрезков для удаления по возрастанию
+	 * индекса. Отрезки удаляются от конца к началу массива.
+	 * @param {Array} addParamsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;` Список наборов для вставки по возрастанию
+	 * индекса. Наборы вставляются от начала к концу массива.
+	 * @returns {JW.AbstractArray.SpliceResult} `&lt;T&gt;` Результат. Если нет изменений - undefined.
+	 */
+<span id='JW-Array-static-method-reorder'>	/**
+</span>	 * @method reorder
+	 * `&lt;T&gt;` Переупорядочивает элементы массива.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} indexArray `&lt;number&gt;` Массив индексов. Элемент с индексом i будет перемещен в
+	 * индекс indexArray[i]. Должен содержать все индексы от 0 до (length - 1).
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-tryReorder'>	/**
+</span>	 * @method tryReorder
+	 * `&lt;T&gt;` Переупорядочивает элементы массива.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} indexArray `&lt;number&gt;` Массив индексов. Элемент с индексом i будет перемещен в
+	 * индекс indexArray[i]. Должен содержать все индексы от 0 до (length - 1).
+	 * @returns {Array} `&lt;T&gt;` Бывшее содержимое массива. Если нет изменений - undefined.
+	 */
+<span id='JW-Array-static-method-detectSplice'>	/**
+</span>	 * @method detectSplice
+	 * `&lt;T&gt;` Определяет параметры метода {@link #static-method-splice}, с которыми содержимое массива станет равно newItems.
+	 * Т.е. определяет, какие элементы нужно удалить, какие вставить, и в какое место.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое массива.
+	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
+	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
+	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @returns {JW.AbstractArray.SpliceParams} `&lt;T&gt;` Параметры метода {@link #static-method-splice}.
+	 */
+<span id='JW-Array-static-method-detectReorder'>	/**
+</span>	 * @method detectReorder
+	 * `&lt;T&gt;` Определяет параметр метода {@link #static-method-reorder}, с которым содержимое массива станет равно newItems.
+	 * Т.е. определяет, какие элементы куда нужно переместить.
+	 * Если содержимое newItems отличается от содержимого массива, массив сломается.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое массива.
+	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
+	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
+	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @returns {Array} `&lt;number&gt;` Параметр indexArray метода {@link #static-method-reorder}.
+	 */
+<span id='JW-Array-static-method-detectSort'>	/**
+</span>	 * @method detectSort
+	 * `&lt;T&gt;` Определяет параметр метода {@link #static-method-reorder}, с которым содержимое массива отсортируется по результату вызова
+	 * функции f на всех элементах.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;number&gt;` Параметр indexArray метода {@link #static-method-reorder}.
+	 */
+<span id='JW-Array-static-method-detectSortComparing'>	/**
+</span>	 * @method detectSortComparing
+	 * `&lt;T&gt;` Определяет параметр метода {@link #static-method-reorder}, с которым содержимое массива отсортируется по компаратору.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;number&gt;` Параметр indexArray метода {@link #static-method-reorder}.
+	 */
+<span id='JW-Array-static-method-performSplice'>	/**
+</span>	 * @method performSplice
+	 * `&lt;T&gt;` Преобразует содержимое массива к newItems комбинацией методов {@link #static-method-detectSplice} и {@link #static-method-splice}.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое массива.
+	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
+	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
+	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-performReorder'>	/**
+</span>	 * @method performReorder
+	 * `&lt;T&gt;` Преобразует содержимое массива к newItems комбинацией методов {@link #static-method-detectReorder} и {@link #static-method-reorder}.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое массива.
+	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
+	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
+	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-sort'>	/**
+</span>	 * @method sort
+	 * `&lt;T&gt;` Сортирует массив по результату запуска функции f на элементах.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-sortBy'>	/**
+</span>	 * @method sortBy
+	 * `&lt;T&gt;` Сортирует массив по значению указанного поля элемента. Поле элемента извлекается с помощью функции JW.get.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-sortByMethod'>	/**
+</span>	 * @method sortByMethod
+	 * `&lt;T&gt;` Сортирует массив по результату запуска указанного метода элемента.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-sortComparing'>	/**
+</span>	 * @method sortComparing
+	 * `&lt;T&gt;` Сортирует массив по компаратору.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-createMapper'>	/**
+</span>	 * @method createMapper
+	 * `&lt;T, U&gt;` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Mapper}
+	 * `&lt;T, U&gt;` Синхронизатор.
+	 */
+<span id='JW-Array-static-method-createObserver'>	/**
+</span>	 * @method createObserver
+	 * `&lt;T&gt;` Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Observer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Array-static-method-createOrderer'>	/**
+</span>	 * @method createOrderer
+	 * `&lt;T&gt;` Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Orderer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Array-static-method-createSorterComparing'>	/**
+</span>	 * @method createSorterComparing
+	 * `&lt;T&gt;` Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.SorterComparing}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Array-static-method-createIndexer'>	/**
+</span>	 * @method createIndexer
+	 * `&lt;T&gt;` Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Indexer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Array-static-method-createLister'>	/**
+</span>	 * @method createLister
+	 * `&lt;T&gt;` Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Lister}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Array-static-method-createInserter'>	/**
+</span>	 * @method createInserter
+	 * `&lt;T&gt;` Конструирует синхронизатор представления с массивом.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Inserter}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Array-static-method-equal'>	/**
+</span>	 * @method equal
+	 * `&lt;T&gt;` Поэлементно сравнивает два массива.
+	 * @static
+	 * @param {Array} array1 `&lt;T&gt;` Массив.
+	 * @param {Array} array2 `&lt;T&gt;` Другой массив.
+	 * @returns {boolean} Массивы поэлементно равны.
+	 */
+<span id='JW-Array-static-method-collapse'>	/**
+</span>	 * @method collapse
+	 * `&lt;T&gt;` Сплющивает массив массивов массивов... в один массив.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {number} depth Глубина сплющивания.
+	 * @returns {Array} Сплющенный массив.
+	 */
+<span id='JW-Array-static-method-indexOf'>	/**
+</span>	 * @method indexOf
+	 * `&lt;T&gt;` Определяет индекс элемента в данной коллекции. Если такого элемента в коллекции нет, вернет -1.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {T} item Элемент.
+	 * @returns {number} Индекс элемента.
+	 */
+<span id='JW-Array-static-method-backEvery'>	/**
+</span>	 * @method backEvery
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию в обратном порядке.
+	 * 
+	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * 
+	 * Алгоритм перебирает все элементы с конца в начало, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Array-static-method-pop'>	/**
+</span>	 * @method pop
+	 * `&lt;T&gt;` Удаляет последний элемент массива. Ничего не делает, если массив пуст.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {T} Удаленный элемент или undefined.
+	 */
 });
 </pre>
 </body>

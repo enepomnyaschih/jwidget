@@ -34,21 +34,31 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-ObservableArray-Inserter-method-constructor'><span id='JW-ObservableArray-Inserter'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractArray.Inserter&lt;T&gt;`
+ *
+ * Синхронизатор представления оповещающего массива. Подробнее читайте JW.AbstractArray.Inserter.
+ *
+ * @extends JW.AbstractArray.Inserter
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractArray#createInserter.
+ * @param {JW.ObservableArray} source `&lt;T&gt;` Исходный массив.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.ObservableArray.Inserter = function(source, config) {
 	JW.ObservableArray.Inserter._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
-	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
+	this._moveEventAttachment = source.moveEvent.bind(this._onMove, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	this._reorderEventAttachment = source.reorderEvent.bind(this._onReorder, this);
 };
 
-JW.extend(JW.ObservableArray.Inserter/*&lt;T&gt;*/, JW.AbstractArray.Inserter/*&lt;T&gt;*/, {
+JW.extend(JW.ObservableArray.Inserter, JW.AbstractArray.Inserter, {
 	/*
-	Required
-	JW.ObservableArray&lt;T&gt; source;
-	
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _replaceEventAttachment;
 	JW.EventAttachment _moveEventAttachment;
@@ -92,13 +102,21 @@ JW.extend(JW.ObservableArray.Inserter/*&lt;T&gt;*/, JW.AbstractArray.Inserter/*&
 	},
 	
 	_onReplace: function(params) {
-		this.removeItem.call(this.scope, params.index, params.oldItem);
-		this.addItem.call(this.scope, params.newItem, params.index);
+		if (this.removeItem) {
+			this.removeItem.call(this.scope, params.oldItem, params.index);
+		}
+		if (this.addItem) {
+			this.addItem.call(this.scope, params.newItem, params.index);
+		}
 	},
 	
 	_onMove: function(params) {
-		this.removeItem.call(this.scope, params.fromIndex, params.item);
-		this.addItem.call(this.scope, params.item, params.toIndex);
+		if (this.removeItem) {
+			this.removeItem.call(this.scope, params.item, params.fromIndex);
+		}
+		if (this.addItem) {
+			this.addItem.call(this.scope, params.item, params.toIndex);
+		}
 	},
 	
 	_onClear: function(params) {

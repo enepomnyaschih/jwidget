@@ -34,16 +34,25 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-ValueEventParams-method-constructor'><span id='JW-ValueEventParams'>/**
+</span></span> * @class
+ * `&lt;V&gt;` Параметры события со значением. Обычно используются в событии изменения значения какой-либо переменной или
+ * поля.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {Object} sender Отправитель события.
+ * @param {V} value Значение.
+ */
 JW.ValueEventParams = function(sender, value) {
 	JW.ValueEventParams._super.call(this, sender);
 	this.value = value;
 };
 
-JW.extend(JW.ValueEventParams/*&lt;T extends Any&gt;*/, JW.EventParams, {
-	/*
-	Fields
-	T value;
-	*/
+JW.extend(JW.ValueEventParams, JW.EventParams, {
+<span id='JW-ValueEventParams-property-value'>	/**
+</span>	 * @property {V} value Значение.
+	 */
 });
 </pre>
 </body>

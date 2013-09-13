@@ -32,34 +32,1348 @@
 	
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-	
-	----
-	
-	This is an adapter of array that triggers events about modifications.
-	Events are taken from ActionScript's CollectionEventKind (with small
-	reasonable changes).
 */
 
+<span id='JW-Map-method-constructor'><span id='JW-Map'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractMap&lt;T&gt;`
+ *
+ * Простой словарь.
+ *
+ * @extends JW.AbstractMap
+ *
+ * @constructor
+ * @param {Object} [items] Изначальное содержимое словаря. По умолчанию, создается пустой словарь.
+ * @param {boolean} [adapter] Создать словарь как адаптер над items. По умолчанию, равен false, т.е. создается
+ * копия словаря items.
+ */
 JW.Map = function(json, adapter) {
 	JW.Map._super.call(this, json, adapter);
 };
 
-JW.extend(JW.Map/*&lt;T&gt;*/, JW.AbstractMap/*&lt;T&gt;*/, {
+JW.extend(JW.Map, JW.AbstractMap, {
+<span id='JW-Map-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.Map} `&lt;U&gt;` Коллекция.
+	 */
 	createEmpty: function() {
 		return new JW.Map();
 	},
 	
+<span id='JW-Map-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой массив того же типа (простой или оповещающий).
+	 * @returns {JW.Array} `&lt;U&gt;` Массив.
+	 */
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
 	
+<span id='JW-Map-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой словарь того же типа (простой или оповещающий).
+	 * @returns {JW.Map} `&lt;U&gt;` Словарь.
+	 */
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
 	
+<span id='JW-Map-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустое множество того же типа (простое или оповещающее).
+	 * @returns {JW.Set} `&lt;U&gt;` Множество.
+	 */
 	createEmptySet: function() {
 		return new JW.Set();
 	}
+	
+<span id='JW-Map-static-method-getLength'>	/**
+</span>	 * @method getLength
+	 * `&lt;T&gt;` Возвращает количество элементов в коллекции.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {number} Количество элементов в коллекции.
+	 */
+<span id='JW-Map-static-method-isEmpty'>	/**
+</span>	 * @method isEmpty
+	 * `&lt;T&gt;` Проверяет коллекцию на пустоту.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {boolean} Коллекция не содержит ни одного элемента.
+	 */
+<span id='JW-Map-static-method-getFirst'>	/**
+</span>	 * @method getFirst
+	 * `&lt;T&gt;` Возвращает первый элемент коллекции. Если коллекция пуста, вернет undefined.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {T} Элемент.
+	 */
+<span id='JW-Map-static-method-getFirstKey'>	/**
+</span>	 * @method getFirstKey
+	 * `&lt;T&gt;` Возвращает ключ первого элемента коллекции. Если коллекция пуста, вернет undefined.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {string} Ключ.
+	 */
+<span id='JW-Map-static-method-get'>	/**
+</span>	 * @method get
+	 * `&lt;T&gt;` Возвращает элемент по ключу. В случае, если элемента с таким ключом нет, вернет undefined.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} key Ключ.
+	 * @returns {T} Элемент.
+	 */
+<span id='JW-Map-static-method-getKeys'>	/**
+</span>	 * @method getKeys
+	 * `&lt;T&gt;` Возвращает массив ключей всех элементов коллекции.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {Array} `&lt;string&gt;` Массив ключей.
+	 */
+<span id='JW-Map-static-method-S-getKeys'>	/**
+</span>	 * @method $getKeys
+	 * `&lt;T&gt;` Возвращает массив ключей всех элементов коллекции.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {JW.Array} `&lt;string&gt;` Массив ключей.
+	 */
+<span id='JW-Map-static-method-containsKey'>	/**
+</span>	 * @method containsKey
+	 * `&lt;T&gt;` Проверяет наличие элемента с заданным ключом в коллекции.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} key Ключ.
+	 * @returns {boolean} Коллекция содержит элемент с указанным ключом.
+	 */
+<span id='JW-Map-static-method-containsItem'>	/**
+</span>	 * @method containsItem
+	 * `&lt;T&gt;` Проверяет наличие элемента в коллекции.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 */
+<span id='JW-Map-static-method-keyOf'>	/**
+</span>	 * @method keyOf
+	 * `&lt;T&gt;` Определяет ключ элемента в данной коллекции. Если такого элемента в коллекции нет, вернет undefined.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {T} item Элемент.
+	 * @returns {string} Ключ элемента.
+	 */
+<span id='JW-Map-static-method-removeItem'>	/**
+</span>	 * @method removeItem
+	 * `&lt;T&gt;` Удаляет первое вхождение указанного элемента из коллекции.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {T} item Элемент.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-removeItems'>	/**
+</span>	 * @method removeItems
+	 * `&lt;T&gt;` Удаляет все вхождения указанных элементов из коллекции.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-tryClear'>	/**
+</span>	 * @method tryClear
+	 * `&lt;T&gt;` Очищает коллекцию.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {Object} Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 */
+<span id='JW-Map-static-method-clear'>	/**
+</span>	 * @method clear
+	 * `&lt;T&gt;` Очищает коллекцию.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {Object} Бывшее содержимое коллекции.
+	 */
+<span id='JW-Map-static-method-S-clear'>	/**
+</span>	 * @method $clear
+	 * `&lt;T&gt;` Очищает коллекцию.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {JW.Map} `&lt;T&gt;` Бывшее содержимое коллекции.
+	 */
+<span id='JW-Map-static-method-every'>	/**
+</span>	 * @method every
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Map-static-method-everyBy'>	/**
+</span>	 * @method everyBy
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда поле field всех элементов коллекции строго равно (===) значению
+	 * value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Map-static-method-everyByMethod'>	/**
+</span>	 * @method everyByMethod
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false для всех
+	 * элементов коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Map-static-method-some'>	/**
+</span>	 * @method some
+	 *
+	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false хотя бы на одном элементе коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Map-static-method-someBy'>	/**
+</span>	 * @method someBy
+	 *
+	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда поле field хотя бы одного элемента коллекции строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Map-static-method-someByMethod'>	/**
+</span>	 * @method someByMethod
+	 *
+	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false хотя бы у
+	 * одного элемента коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Map-static-method-each'>	/**
+</span>	 * @method each
+	 *
+	 * `&lt;T&gt;` Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): void`
+	 *
+	 * Функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-eachByMethod'>	/**
+</span>	 * @method eachByMethod
+	 * `&lt;T&gt;` Перебирает элементы коллекции. Запускает указанный метод у всех элементов.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-find'>	/**
+</span>	 * @method find
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает ключ первого элемента, функция f на котором возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {string} Ключ найденного элемента или undefined.
+	 */
+<span id='JW-Map-static-method-findBy'>	/**
+</span>	 * @method findBy
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает ключ первого элемента, поле field которого строго равно (===) значению value.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {string} Ключ найденного элемента или undefined.
+	 */
+<span id='JW-Map-static-method-findByMethod'>	/**
+</span>	 * @method findByMethod
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает ключ первого элемента, указанный метод которого с аргументами args возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {string} Ключ найденного элемента или undefined.
+	 */
+<span id='JW-Map-static-method-search'>	/**
+</span>	 * @method search
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, функция f на котором возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
+<span id='JW-Map-static-method-searchBy'>	/**
+</span>	 * @method searchBy
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, поле field которого строго равно (===) значению value.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
+<span id='JW-Map-static-method-searchByMethod'>	/**
+</span>	 * @method searchByMethod
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, указанный метод которого с аргументами args возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
+<span id='JW-Map-static-method-toSorted'>	/**
+</span>	 * @method toSorted
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Map-static-method-S-toSorted'>	/**
+</span>	 * @method $toSorted
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Map-static-method-toSortedBy'>	/**
+</span>	 * @method toSortedBy
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Map-static-method-S-toSortedBy'>	/**
+</span>	 * @method $toSortedBy
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Map-static-method-toSortedByMethod'>	/**
+</span>	 * @method toSortedByMethod
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Map-static-method-S-toSortedByMethod'>	/**
+</span>	 * @method $toSortedByMethod
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Map-static-method-toSortedComparing'>	/**
+</span>	 * @method toSortedComparing
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Map-static-method-S-toSortedComparing'>	/**
+</span>	 * @method $toSortedComparing
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Map-static-method-getSortingKeys'>	/**
+</span>	 * @method getSortingKeys
+	 *
+	 * `&lt;T&gt;` Возвращает массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
+	 */
+<span id='JW-Map-static-method-S-getSortingKeys'>	/**
+</span>	 * @method $getSortingKeys
+	 *
+	 * `&lt;T&gt;` Возвращает массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
+	 */
+<span id='JW-Map-static-method-getSortingKeysBy'>	/**
+</span>	 * @method getSortingKeysBy
+	 *
+	 * `&lt;T&gt;` Возвращает массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
+	 */
+<span id='JW-Map-static-method-S-getSortingKeysBy'>	/**
+</span>	 * @method $getSortingKeysBy
+	 *
+	 * `&lt;T&gt;` Возвращает массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
+	 */
+<span id='JW-Map-static-method-getSortingKeysByMethod'>	/**
+</span>	 * @method getSortingKeysByMethod
+	 *
+	 * `&lt;T&gt;` Возвращает массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
+	 */
+<span id='JW-Map-static-method-S-getSortingKeysByMethod'>	/**
+</span>	 * @method $getSortingKeysByMethod
+	 *
+	 * `&lt;T&gt;` Возвращает массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
+	 */
+<span id='JW-Map-static-method-getSortingKeysComparing'>	/**
+</span>	 * @method getSortingKeysComparing
+	 *
+	 * `&lt;T&gt;` Возвращает массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
+	 */
+<span id='JW-Map-static-method-S-getSortingKeysComparing'>	/**
+</span>	 * @method $getSortingKeysComparing
+	 *
+	 * `&lt;T&gt;` Возвращает массив ключей отсортированных элементов.
+	 *
+	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
+	 */
+<span id='JW-Map-static-method-index'>	/**
+</span>	 * @method index
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): string`
+	 *
+	 * Функция-индексатор для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Индекс коллекции.
+	 */
+<span id='JW-Map-static-method-S-index'>	/**
+</span>	 * @method $index
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): string`
+	 *
+	 * Функция-индексатор для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
+	 */
+<span id='JW-Map-static-method-indexBy'>	/**
+</span>	 * @method indexBy
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
+	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @returns {Object} Индекс коллекции.
+	 */
+<span id='JW-Map-static-method-S-indexBy'>	/**
+</span>	 * @method $indexBy
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
+	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
+	 */
+<span id='JW-Map-static-method-indexByMethod'>	/**
+</span>	 * @method indexByMethod
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Object} Индекс коллекции.
+	 */
+<span id='JW-Map-static-method-S-indexByMethod'>	/**
+</span>	 * @method $indexByMethod
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
+	 */
+<span id='JW-Map-static-method-toArray'>	/**
+</span>	 * @method toArray
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в массив.
+	 *
+	 * Строит новый массив, включающий все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Map-static-method-S-toArray'>	/**
+</span>	 * @method $toArray
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в массив.
+	 *
+	 * Строит новый массив, включающий все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {JW.Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Map-static-method-toMap'>	/**
+</span>	 * @method toMap
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в словарь.
+	 *
+	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {Object} Словарь элементов.
+	 */
+<span id='JW-Map-static-method-S-toMap'>	/**
+</span>	 * @method $toMap
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в словарь.
+	 *
+	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {JW.Map} `&lt;T&gt;` Словарь элементов.
+	 */
+<span id='JW-Map-static-method-toSet'>	/**
+</span>	 * @method toSet
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в множество.
+	 *
+	 * Строит новое множество, включающее все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {Object} Множество элементов.
+	 */
+<span id='JW-Map-static-method-S-toSet'>	/**
+</span>	 * @method $toSet
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в множество.
+	 *
+	 * Строит новое множество, включающее все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {JW.Set} `&lt;T&gt;` Множество элементов.
+	 */
+<span id='JW-Map-static-method-asArray'>	/**
+</span>	 * @method asArray
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде массива.
+	 *
+	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Map-static-method-S-asArray'>	/**
+</span>	 * @method $asArray
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде массива.
+	 *
+	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {JW.Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Map-static-method-asMap'>	/**
+</span>	 * @method asMap
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде словаря.
+	 *
+	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод {@link #static-method-toMap}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toMap}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {Object} Словарь элементов.
+	 */
+<span id='JW-Map-static-method-S-asMap'>	/**
+</span>	 * @method $asMap
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде словаря.
+	 *
+	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод {@link #static-method-toMap}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toMap}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {JW.Map} `&lt;T&gt;` Словарь элементов.
+	 */
+<span id='JW-Map-static-method-asSet'>	/**
+</span>	 * @method asSet
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде множества.
+	 *
+	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {Object} Множество элементов.
+	 */
+<span id='JW-Map-static-method-S-asSet'>	/**
+</span>	 * @method $asSet
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде множества.
+	 *
+	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @returns {JW.Set} `&lt;T&gt;` Множество элементов.
+	 */
+<span id='JW-Map-static-method-filter'>	/**
+</span>	 * @method filter
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Отфильтрованная коллекция.
+	 */
+<span id='JW-Map-static-method-S-filter'>	/**
+</span>	 * @method $filter
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Map} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Map-static-method-filterBy'>	/**
+</span>	 * @method filterBy
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {Object} Отфильтрованная коллекция.
+	 */
+<span id='JW-Map-static-method-S-filterBy'>	/**
+</span>	 * @method $filterBy
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.Map} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Map-static-method-filterByMethod'>	/**
+</span>	 * @method filterByMethod
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
+	 * возвращает !== false для всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Object} Отфильтрованная коллекция.
+	 */
+<span id='JW-Map-static-method-S-filterByMethod'>	/**
+</span>	 * @method $filterByMethod
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
+	 * возвращает !== false для всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Map} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Map-static-method-map'>	/**
+</span>	 * @method map
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Отображенная коллекция.
+	 */
+<span id='JW-Map-static-method-S-map'>	/**
+</span>	 * @method $map
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Map} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Map-static-method-mapBy'>	/**
+</span>	 * @method mapBy
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
+	 * извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {Object} Отображенная коллекция.
+	 */
+<span id='JW-Map-static-method-S-mapBy'>	/**
+</span>	 * @method $mapBy
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
+	 * извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.Map} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Map-static-method-mapByMethod'>	/**
+</span>	 * @method mapByMethod
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
+	 * у всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Object} Отображенная коллекция.
+	 */
+<span id='JW-Map-static-method-S-mapByMethod'>	/**
+</span>	 * @method $mapByMethod
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
+	 * у всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Map} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Map-static-method-set'>	/**
+</span>	 * @method set
+	 * `&lt;T&gt;` Заменяет элемент по ключу. В случае если элемента с таким ключом нет, он будет добавлен.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {T} item Элемент.
+	 * @param {string} key Ключ.
+	 * @returns {T} Бывший элемент коллекции.
+	 */
+<span id='JW-Map-static-method-trySet'>	/**
+</span>	 * @method trySet
+	 * `&lt;T&gt;` Заменяет элемент по ключу. В случае если элемента с таким ключом нет, он будет добавлен.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {T} item Элемент.
+	 * @param {string} key Ключ.
+	 * @returns {JW.Proxy} `&lt;T&gt;` Обертка над бывшим элементом коллекции. Если нет изменений - undefined.
+	 */
+<span id='JW-Map-static-method-setAll'>	/**
+</span>	 * @method setAll
+	 * `&lt;T&gt;` Заменяет/добавляет набор элементов в словаре.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} items Элементы.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Результат метода {@link #static-method-splice}.
+	 */
+<span id='JW-Map-static-method-trySetAll'>	/**
+</span>	 * @method trySetAll
+	 * `&lt;T&gt;` Заменяет/добавляет набор элементов в словаре.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} items Элементы.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Результат метода {@link #static-method-splice}. Если нет изменений - undefined.
+	 */
+<span id='JW-Map-static-method-setKey'>	/**
+</span>	 * @method setKey
+	 * `&lt;T&gt;` Меняет ключ элемента в словаре. Если элемента с таким ключом нет, метод сломается.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} oldKey Старый ключ элемента.
+	 * @param {string} newKey Новый ключ элемента.
+	 * @returns {T} Элемент.
+	 */
+<span id='JW-Map-static-method-trySetKey'>	/**
+</span>	 * @method trySetKey
+	 * `&lt;T&gt;` Меняет ключ элемента в словаре.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {string} oldKey Старый ключ элемента.
+	 * @param {string} newKey Новый ключ элемента.
+	 * @returns {T} Элемент. Если нет изменений - undefined.
+	 */
+<span id='JW-Map-static-method-remove'>	/**
+</span>	 * @method remove
+	 * `&lt;T&gt;` Удаляет элемент по ключу, если он существует в коллекции.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {K} key Ключ.
+	 * @returns {T} Бывший элемент коллекции или undefined.
+	 */
+<span id='JW-Map-static-method-tryRemove'>	/**
+</span>	 * @method tryRemove
+	 * `&lt;T&gt;` Удаляет элемент по ключу, если он существует в коллекции.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {K} key Ключ.
+	 * @returns {T} Бывший элемент коллекции. Если нет изменений - undefined.
+	 */
+<span id='JW-Map-static-method-removeAll'>	/**
+</span>	 * @method removeAll
+	 * `&lt;T&gt;` Удаляет набор элементов из словаря.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Array} keys `&lt;string&gt;` Ключи элементов.
+	 * @returns {Object} Удаленные элементы.
+	 */
+<span id='JW-Map-static-method-S-removeAll'>	/**
+</span>	 * @method $removeAll
+	 * `&lt;T&gt;` Удаляет набор элементов из словаря.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Array} keys `&lt;string&gt;` Ключи элементов.
+	 * @returns {JW.Map} `&lt;T&gt;` Удаленные элементы.
+	 */
+<span id='JW-Map-static-method-tryRemoveAll'>	/**
+</span>	 * @method tryRemoveAll
+	 * `&lt;T&gt;` Удаляет набор элементов из словаря.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Array} keys `&lt;string&gt;` Ключи элементов.
+	 * @returns {Object} Удаленные элементы. Если нет изменений - undefined.
+	 */
+<span id='JW-Map-static-method-splice'>	/**
+</span>	 * @method splice
+	 * `&lt;T&gt;` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Array} removedKeys `&lt;string&gt;` Ключи элементов для удаления.
+	 * @param {Object} updatedItems Элементы для добавления/замены.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Результат.
+	 */
+<span id='JW-Map-static-method-trySplice'>	/**
+</span>	 * @method trySplice
+	 * `&lt;T&gt;` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Array} removedKeys `&lt;string&gt;` Ключи элементов для удаления.
+	 * @param {Object} updatedItems Элементы для добавления/замены.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Результат. Если нет изменений - undefined.
+	 */
+<span id='JW-Map-static-method-reindex'>	/**
+</span>	 * @method reindex
+	 * `&lt;T&gt;` Меняет ключи элементов словаря.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} keyMap `&lt;string&gt;` Словарь ключей. Элемент с ключем k будет перемещен в ключ keyMap[k].
+	 * Обязательно указывать только изменившиеся ключи.
+	 * @returns {Object} Словарь изменившихся ключей.
+	 */
+<span id='JW-Map-static-method-tryReindex'>	/**
+</span>	 * @method tryReindex
+	 * `&lt;T&gt;` Меняет ключи элементов словаря.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} keyMap `&lt;string&gt;` Словарь ключей. Элемент с ключем k будет перемещен в ключ keyMap[k].
+	 * Обязательно указывать только изменившиеся ключи.
+	 * @returns {Object} Словарь изменившихся ключей. Если нет изменений - undefined.
+	 */
+<span id='JW-Map-static-method-detectSplice'>	/**
+</span>	 * @method detectSplice
+	 * `&lt;T&gt;` Определяет параметры метода {@link #static-method-splice}, с которыми содержимое словаря станет равно newItems.
+	 * Т.е. определяет, какие элементы нужно удалить, какие добавить, и с каким ключом.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} newItems Новое содержимое словаря.
+	 * @returns {JW.AbstractMap.SpliceParams} `&lt;T&gt;` Параметры метода {@link #static-method-splice}.
+	 */
+<span id='JW-Map-static-method-detectReindex'>	/**
+</span>	 * @method detectReindex
+	 * `&lt;T&gt;` Определяет параметр метода {@link #static-method-reindex}, с которым содержимое словаря станет равно newItems.
+	 * Т.е. определяет, какие элементы куда нужно переместить.
+	 * Если содержимое newItems отличается от содержимого словаря, словарь сломается.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} newItems Новое содержимое словаря.
+	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
+	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
+	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @returns {Object} Параметр keyMap метода {@link #static-method-reindex}.
+	 */
+<span id='JW-Map-static-method-performSplice'>	/**
+</span>	 * @method performSplice
+	 * `&lt;T&gt;` Преобразует содержимое словаря к newItems комбинацией методов {@link #static-method-detectSplice} и {@link #static-method-splice}.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} newItems Новое содержимое словаря.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-performReindex'>	/**
+</span>	 * @method performReindex
+	 * `&lt;T&gt;` Преобразует содержимое словаря к newItems комбинацией методов {@link #static-method-detectReindex} и {@link #static-method-reindex}.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} newItems Новое содержимое словаря.
+	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
+	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
+	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-createMapper'>	/**
+</span>	 * @method createMapper
+	 * `&lt;T, U&gt;` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Mapper}
+	 * `&lt;T, U&gt;` Синхронизатор.
+	 */
+<span id='JW-Map-static-method-createObserver'>	/**
+</span>	 * @method createObserver
+	 * `&lt;T&gt;` Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Observer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Map-static-method-createOrderer'>	/**
+</span>	 * @method createOrderer
+	 * `&lt;T&gt;` Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Orderer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Map-static-method-createSorterComparing'>	/**
+</span>	 * @method createSorterComparing
+	 * `&lt;T&gt;` Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.SorterComparing}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Map-static-method-createIndexer'>	/**
+</span>	 * @method createIndexer
+	 * `&lt;T&gt;` Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Indexer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Map-static-method-createLister'>	/**
+</span>	 * @method createLister
+	 * `&lt;T&gt;` Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Lister}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Map-static-method-createInserter'>	/**
+</span>	 * @method createInserter
+	 * `&lt;T&gt;` Конструирует синхронизатор представления с массивом.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractMap.Inserter}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Map-static-method-equal'>	/**
+</span>	 * @method equal
+	 * `&lt;T&gt;` Поэлементно сравнивает два словаря.
+	 * @static
+	 * @param {Object} map1 `&lt;T&gt;` Словарь.
+	 * @param {Object} map2 `&lt;T&gt;` Другой словарь.
+	 * @returns {boolean} Словари поэлементно равны.
+	 */
 });
 </pre>
 </body>

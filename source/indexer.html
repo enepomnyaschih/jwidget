@@ -34,56 +34,28 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-AbstractArray-Indexer-method-constructor'><span id='JW-AbstractArray-Indexer'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractCollection.Indexer&lt;T, JW.AbstractArray&lt;T&gt;&gt;`
+ *
+ * Индексатор массива. Подробнее читайте JW.AbstractCollection.Indexer.
+ *
+ * @extends JW.AbstractCollection.Indexer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
+ * @param {JW.AbstractArray} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
 JW.AbstractArray.Indexer = function(source, config) {
-	JW.AbstractArray.Indexer._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.getKey = config.getKey;
-	this._targetCreated = !config.target;
-	this.target = config.target || this.source.createEmptyMap();
-	this.scope = config.scope || this;
-	this.target.trySetAll(this._index(source.getItems()));
+	JW.AbstractArray.Indexer._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractArray.Indexer/*&lt;T&gt;*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractArray&lt;T&gt; source;
-	String getKey(T item);
-	
-	Optional
-	JW.AbstractMap&lt;T&gt; target;
-	Object scope;
-	
-	Fields
-	Boolean _targetCreated;
-	*/
-	
-	// override
-	destroy: function() {
-		this.target.tryRemoveAll(this._keys(this.source.getItems()));
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		this._super();
-	},
-	
-	_index: function(items) {
-		var index = {};
-		for (var i = 0, l = items.length; i &lt; l; ++i) {
-			var item = items[i];
-			index[this.getKey.call(this.scope, item)] = item;
-		}
-		return index;
-	},
-	
-	_keys: function(items) {
-		var keys = [];
-		for (var i = 0, l = items.length; i &lt; l; ++i) {
-			keys.push(this.getKey.call(this.scope, items[i]));
-		}
-		return keys;
-	}
+JW.extend(JW.AbstractArray.Indexer, JW.AbstractCollection.Indexer, {
+<span id='JW-AbstractArray-Indexer-property-source'>	/**
+</span>	 * @property {JW.AbstractArray} source `&lt;T&gt;` Исходная коллекция.
+	 */
 });
 </pre>
 </body>

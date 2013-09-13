@@ -34,16 +34,23 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-EventParams-method-constructor'><span id='JW-EventParams'>/**
+</span></span> * @class
+ * Параметры события.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Object} sender Отправитель события.
+ */
 JW.EventParams = function(sender) {
 	JW.EventParams._super.call(this);
 	this.sender = sender;
 };
 
 JW.extend(JW.EventParams, JW.Class, {
-	/*
-	Fields
-	JW.Class sender;
-	*/
+<span id='JW-EventParams-property-sender'>	/**
+</span>	 * @property {Object} sender Отправитель события.
+	 */
 });
 </pre>
 </body>

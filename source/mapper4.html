@@ -34,74 +34,76 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.ObservableArray.Mapper = function(source, config) {
-	JW.ObservableArray.Mapper._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
-	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
+<span id='JW-AbstractSet-Mapper-method-constructor'><span id='JW-AbstractSet-Mapper'>/**
+</span></span> * @class
+ *
+ * `&lt;T extends JW.Class, U extends JW.Class&gt; extends JW.AbstractCollection.Mapper&lt;T, U, JW.AbstractSet&lt;T&gt;, JW.AbstractSet&lt;U&gt;&gt;`
+ *
+ * Конвертер элементов множества. Подробнее читайте JW.AbstractCollection.Mapper.
+ *
+ * @extends JW.AbstractCollection.Mapper
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
+ * @param {JW.AbstractArray} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.AbstractSet.Mapper = function(source, config) {
+	JW.AbstractSet.Mapper._super.call(this, source, config);
+	this._items = {};
+	this.target.tryAddAll(this._createItems(source.toArray()));
 };
 
-JW.extend(JW.ObservableArray.Mapper/*&lt;S, T&gt;*/, JW.AbstractArray.Mapper/*&lt;S, T&gt;*/, {
+JW.extend(JW.AbstractSet.Mapper, JW.AbstractCollection.Mapper, {
+<span id='JW-AbstractSet-Mapper-cfg-target'>	/**
+</span>	 * @cfg {JW.AbstractSet} target `&lt;U&gt;` Целевая коллекция.
+	 */
+<span id='JW-AbstractSet-Mapper-property-source'>	/**
+</span>	 * @property {JW.AbstractSet} source `&lt;T&gt;` Исходная коллекция.
+	 */
+<span id='JW-AbstractSet-Mapper-property-target'>	/**
+</span>	 * @property {JW.AbstractSet} target `&lt;U&gt;` Целевая коллекция.
+	 */
 	/*
-	Required
-	JW.ObservableArray&lt;S&gt; source;
-	
-	Fields
-	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _replaceEventAttachment;
-	JW.EventAttachment _moveEventAttachment;
-	JW.EventAttachment _clearEventAttachment;
-	JW.EventAttachment _reorderEventAttachment;
+	Map&lt;T&gt; _items;
 	*/
 	
+	// override
 	destroy: function() {
-		this._reorderEventAttachment.destroy();
-		this._clearEventAttachment.destroy();
-		this._moveEventAttachment.destroy();
-		this._replaceEventAttachment.destroy();
-		this._spliceEventAttachment.destroy();
+		var datas = this.source.toArray();
+		this.target.tryRemoveAll(this._getItems(datas));
+		this._destroyItems(datas);
 		this._super();
 	},
 	
-	getKey: function(data) {
-		return data._iid || data;
+	_getItems: function(datas) {
+		return JW.Array.map(datas, function(data) {
+			return this._items[data._iid];
+		}, this);
 	},
 	
-	_onSplice: function(params) {
-		var sourceResult = params.spliceResult;
-		var sourceAddedItemsList = sourceResult.addedItemsList;
-		var targetAddParamsList = [];
-		for (var i = 0, l = sourceAddedItemsList.length; i &lt; l; ++i) {
-			var addParams = sourceAddedItemsList[i];
-			targetAddParamsList.push(new JW.AbstractArray.IndexItems(
-				addParams.index, this._createItems(addParams.items)));
+	_createItems: function(datas) {
+		var items = [];
+		for (var i = 0, l = datas.length; i &lt; l; ++i) {
+			var data = datas[i];
+			var item = this.createItem.call(this.scope || this, data);
+			items.push(item);
+			this._items[data._iid] = item;
 		}
-		var targetResult = this.target.trySplice(sourceResult.getRemoveParamsList(), targetAddParamsList);
-		var sourceRemovedItemsList = sourceResult.removedItemsList;
-		var targetRemovedItemsList = targetResult.removedItemsList;
-		for (var i = targetRemovedItemsList.length - 1; i &gt;= 0; --i) {
-			this._destroyItems(targetRemovedItemsList[i].items, sourceRemovedItemsList[i].items);
+		return items;
+	},
+	
+	_destroyItems: function(datas) {
+		if (this.destroyItem === undefined) {
+			return
 		}
-	},
-	
-	_onReplace: function(params) {
-		var newItem = this.createItem.call(this.scope, params.newItem);
-		var oldItem = this.target.trySet(newItem, params.index);
-		this.destroyItem.call(this.scope, oldItem, params.oldItem);
-	},
-	
-	_onMove: function(params) {
-		this.target.tryMove(params.fromIndex, params.toIndex);
-	},
-	
-	_onClear: function(params) {
-		this._destroyItems(this.target.tryClear(), params.items);
-	},
-	
-	_onReorder: function(params) {
-		this.target.tryReorder(params.indexArray);
+		for (var i = datas.length - 1; i &gt;= 0; --i) {
+			var data = datas[i];
+			var iid = data._iid;
+			var item = this._items[iid];
+			delete this._items[iid];
+			this.destroyItem.call(this.scope || this, item, data);
+		}
 	}
 });
 </pre>

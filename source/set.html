@@ -40,26 +40,1007 @@
 	reasonable changes).
 */
 
+<span id='JW-Set-method-constructor'><span id='JW-Set'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractSet&lt;T&gt;`
+ *
+ * Простое множество.
+ *
+ * @extends JW.AbstractSet
+ *
+ * @constructor
+ * @param {Array} [items] `&lt;T&gt;` Изначальное содержимое множества. По умолчанию, создается пустое множество.
+ * @param {boolean} [adapter] Создать множество как адаптер над items (тогда это должен быть Object, а не Array).
+ * По умолчанию, равен false.
+ */
 JW.Set = function(json, adapter) {
 	JW.Set._super.call(this, json, adapter);
 };
 
-JW.extend(JW.Set/*&lt;T extends JW.Class&gt;*/, JW.AbstractSet/*&lt;T&gt;*/, {
+JW.extend(JW.Set, JW.AbstractSet, {
+<span id='JW-Set-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.Set} `&lt;U&gt;` Коллекция.
+	 */
 	createEmpty: function() {
 		return new JW.Set();
 	},
 	
+<span id='JW-Set-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой массив того же типа (простой или оповещающий).
+	 * @returns {JW.Array} `&lt;U&gt;` Массив.
+	 */
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
 	
+<span id='JW-Set-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой словарь того же типа (простой или оповещающий).
+	 * @returns {JW.Map} `&lt;U&gt;` Словарь.
+	 */
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
 	
+<span id='JW-Set-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустое множество того же типа (простое или оповещающее).
+	 * @returns {JW.Set} `&lt;U&gt;` Множество.
+	 */
 	createEmptySet: function() {
 		return new JW.Set();
 	}
+	
+<span id='JW-Set-static-method-getLength'>	/**
+</span>	 * @method getLength
+	 * `&lt;T&gt;` Возвращает количество элементов в коллекции.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {number} Количество элементов в коллекции.
+	 */
+<span id='JW-Set-static-method-isEmpty'>	/**
+</span>	 * @method isEmpty
+	 * `&lt;T&gt;` Проверяет коллекцию на пустоту.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {boolean} Коллекция не содержит ни одного элемента.
+	 */
+<span id='JW-Set-static-method-getFirst'>	/**
+</span>	 * @method getFirst
+	 * `&lt;T&gt;` Возвращает первый элемент коллекции. Если коллекция пуста, вернет undefined.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {T} Элемент.
+	 */
+<span id='JW-Set-static-method-containsItem'>	/**
+</span>	 * @method containsItem
+	 * `&lt;T&gt;` Проверяет наличие элемента в коллекции.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 */
+<span id='JW-Set-static-method-contains'>	/**
+</span>	 * @method contains
+	 * `&lt;T&gt;` Проверяет наличие элемента в коллекции. Сокращение {@link #static-method-containsItem}.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 */
+<span id='JW-Set-static-method-removeItem'>	/**
+</span>	 * @method removeItem
+	 * `&lt;T&gt;` Удаляет первое вхождение указанного элемента из коллекции.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {T} item Элемент.
+	 * @returns {void}
+	 */
+<span id='JW-Set-static-method-removeItems'>	/**
+</span>	 * @method removeItems
+	 * `&lt;T&gt;` Удаляет все вхождения указанных элементов из коллекции.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {void}
+	 */
+<span id='JW-Set-static-method-tryClear'>	/**
+</span>	 * @method tryClear
+	 * `&lt;T&gt;` Очищает коллекцию.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {Array} `&lt;T&gt;` Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 */
+<span id='JW-Set-static-method-clear'>	/**
+</span>	 * @method clear
+	 * `&lt;T&gt;` Очищает коллекцию.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {Array} `&lt;T&gt;` Бывшее содержимое коллекции.
+	 */
+<span id='JW-Set-static-method-S-clear'>	/**
+</span>	 * @method $clear
+	 * `&lt;T&gt;` Очищает коллекцию.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {JW.Array} `&lt;T&gt;` Бывшее содержимое коллекции.
+	 */
+<span id='JW-Set-static-method-every'>	/**
+</span>	 * @method every
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Set-static-method-everyBy'>	/**
+</span>	 * @method everyBy
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда поле field всех элементов коллекции строго равно (===) значению
+	 * value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Set-static-method-everyByMethod'>	/**
+</span>	 * @method everyByMethod
+	 *
+	 * `&lt;T&gt;` Проверяет все элементы по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false для всех
+	 * элементов коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Set-static-method-some'>	/**
+</span>	 * @method some
+	 *
+	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false хотя бы на одном элементе коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Set-static-method-someBy'>	/**
+</span>	 * @method someBy
+	 *
+	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда поле field хотя бы одного элемента коллекции строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Set-static-method-someByMethod'>	/**
+</span>	 * @method someByMethod
+	 *
+	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
+	 * 
+	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false хотя бы у
+	 * одного элемента коллекции.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {boolean} Результат проверки.
+	 */
+<span id='JW-Set-static-method-each'>	/**
+</span>	 * @method each
+	 * `&lt;T&gt;` Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): void`
+	 *
+	 * Функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {void}
+	 */
+<span id='JW-Set-static-method-eachByMethod'>	/**
+</span>	 * @method eachByMethod
+	 * `&lt;T&gt;` Перебирает элементы коллекции. Запускает указанный метод у всех элементов.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {void}
+	 */
+<span id='JW-Set-static-method-search'>	/**
+</span>	 * @method search
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, функция f на котором возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Критерий проверки элементов.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
+<span id='JW-Set-static-method-searchBy'>	/**
+</span>	 * @method searchBy
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, поле field которого строго равно (===) значению value.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
+<span id='JW-Set-static-method-searchByMethod'>	/**
+</span>	 * @method searchByMethod
+	 *
+	 * `&lt;T&gt;` Ищет элемент по критерию.
+	 * 
+	 * Возвращает первый элемент, указанный метод которого с аргументами args возвращает !== false.
+	 * 
+	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
+	 * критерию.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {T} Найденный элемент или undefined.
+	 */
+<span id='JW-Set-static-method-toSorted'>	/**
+</span>	 * @method toSorted
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Set-static-method-S-toSorted'>	/**
+</span>	 * @method $toSorted
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): number/string`
+	 *
+	 * Функция-сортировщик для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Set-static-method-toSortedBy'>	/**
+</span>	 * @method toSortedBy
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Set-static-method-S-toSortedBy'>	/**
+</span>	 * @method $toSortedBy
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
+	 * Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Set-static-method-toSortedByMethod'>	/**
+</span>	 * @method toSortedByMethod
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Set-static-method-S-toSortedByMethod'>	/**
+</span>	 * @method $toSortedByMethod
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
+	 * элемента.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Set-static-method-toSortedComparing'>	/**
+</span>	 * @method toSortedComparing
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Set-static-method-S-toSortedComparing'>	/**
+</span>	 * @method $toSortedComparing
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
+	 *
+	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} compare
+	 *
+	 * `f(t1: T, t2: T): Number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2.
+	 *
+	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
+	 * @param {1/-1} [order] Порядок сортировки.
+	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
+	 */
+<span id='JW-Set-static-method-index'>	/**
+</span>	 * @method index
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): string`
+	 *
+	 * Функция-индексатор для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Индекс коллекции.
+	 */
+<span id='JW-Set-static-method-S-index'>	/**
+</span>	 * @method $index
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): string`
+	 *
+	 * Функция-индексатор для элемента.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
+	 */
+<span id='JW-Set-static-method-indexBy'>	/**
+</span>	 * @method indexBy
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
+	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @returns {Object} Индекс коллекции.
+	 */
+<span id='JW-Set-static-method-S-indexBy'>	/**
+</span>	 * @method $indexBy
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
+	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
+	 */
+<span id='JW-Set-static-method-indexByMethod'>	/**
+</span>	 * @method indexByMethod
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Object} Индекс коллекции.
+	 */
+<span id='JW-Set-static-method-S-indexByMethod'>	/**
+</span>	 * @method $indexByMethod
+	 *
+	 * `&lt;T&gt;` Индексирует коллекцию.
+	 *
+	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
+	 * а в значениях - соответствующие элементы.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
+	 */
+<span id='JW-Set-static-method-toArray'>	/**
+</span>	 * @method toArray
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в массив.
+	 *
+	 * Строит новый массив, включающий все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Set-static-method-S-toArray'>	/**
+</span>	 * @method $toArray
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в массив.
+	 *
+	 * Строит новый массив, включающий все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {JW.Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Set-static-method-toSet'>	/**
+</span>	 * @method toSet
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в множество.
+	 *
+	 * Строит новое множество, включающее все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {Object} Множество элементов.
+	 */
+<span id='JW-Set-static-method-S-toSet'>	/**
+</span>	 * @method $toSet
+	 *
+	 * `&lt;T&gt;` Преобразует коллекцию в множество.
+	 *
+	 * Строит новое множество, включающее все элементы коллекции.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {JW.Set} `&lt;T&gt;` Множество элементов.
+	 */
+<span id='JW-Set-static-method-asArray'>	/**
+</span>	 * @method asArray
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде массива.
+	 *
+	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Set-static-method-S-asArray'>	/**
+</span>	 * @method $asArray
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде массива.
+	 *
+	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {JW.Array} `&lt;T&gt;` Массив элементов.
+	 */
+<span id='JW-Set-static-method-asSet'>	/**
+</span>	 * @method asSet
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде множества.
+	 *
+	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {Object} Множество элементов.
+	 */
+<span id='JW-Set-static-method-S-asSet'>	/**
+</span>	 * @method $asSet
+	 *
+	 * `&lt;T&gt;` Представляет коллекцию в виде множества.
+	 *
+	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
+	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
+	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @returns {JW.Set} `&lt;T&gt;` Множество элементов.
+	 */
+<span id='JW-Set-static-method-filter'>	/**
+</span>	 * @method filter
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Отфильтрованная коллекция.
+	 */
+<span id='JW-Set-static-method-S-filter'>	/**
+</span>	 * @method $filter
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 *
+	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Фильтрующая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Set} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Set-static-method-filterBy'>	/**
+</span>	 * @method filterBy
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {Object} Отфильтрованная коллекция.
+	 */
+<span id='JW-Set-static-method-S-filterBy'>	/**
+</span>	 * @method $filterBy
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
+	 * значению value. Поле элемента извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.Set} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Set-static-method-filterByMethod'>	/**
+</span>	 * @method filterByMethod
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
+	 * возвращает !== false для всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Object} Отфильтрованная коллекция.
+	 */
+<span id='JW-Set-static-method-S-filterByMethod'>	/**
+</span>	 * @method $filterByMethod
+	 *
+	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
+	 * 
+	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
+	 * возвращает !== false для всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Set} `&lt;T&gt;` Отфильтрованная коллекция.
+	 */
+<span id='JW-Set-static-method-map'>	/**
+</span>	 * @method map
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {Object} Отображенная коллекция.
+	 */
+<span id='JW-Set-static-method-S-map'>	/**
+</span>	 * @method $map
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Отображающая функция.
+	 *
+	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @returns {JW.Set} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Set-static-method-mapBy'>	/**
+</span>	 * @method mapBy
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
+	 * извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {Object} Отображенная коллекция.
+	 */
+<span id='JW-Set-static-method-S-mapBy'>	/**
+</span>	 * @method $mapBy
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
+	 * извлекается с помощью функции JW.get.
+	 * 
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string/Array} field Поле элемента.
+	 * @param {Mixed} value Значение.
+	 * @returns {JW.Set} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Set-static-method-mapByMethod'>	/**
+</span>	 * @method mapByMethod
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
+	 * у всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {Object} Отображенная коллекция.
+	 */
+<span id='JW-Set-static-method-S-mapByMethod'>	/**
+</span>	 * @method $mapByMethod
+	 *
+	 * `&lt;T, U&gt;` Отображает элементы коллекции.
+	 * 
+	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
+	 * у всех элементов коллекции.
+	 * 
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {string} method Имя метода элемента.
+	 * @param {Array} [args] Аргументы.
+	 * @returns {JW.Set} `&lt;U&gt;` Отображенная коллекция.
+	 */
+<span id='JW-Set-static-method-add'>	/**
+</span>	 * @method add
+	 * `&lt;T&gt;` Добавляет элемент в множество, если его еще нет.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Элемент добавлен.
+	 */
+<span id='JW-Set-static-method-tryAdd'>	/**
+</span>	 * @method tryAdd
+	 * `&lt;T&gt;` Добавляет элемент в множество, если его еще нет.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Элемент добавлен. Если нет изменений - undefined.
+	 */
+<span id='JW-Set-static-method-addAll'>	/**
+</span>	 * @method addAll
+	 * `&lt;T&gt;` Добавляет набор элементов в множество, если их еще нет.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {Array} `&lt;T&gt;` Добавленные элементы.
+	 */
+<span id='JW-Set-static-method-S-addAll'>	/**
+</span>	 * @method $addAll
+	 * `&lt;T&gt;` Добавляет набор элементов в множество, если их еще нет.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {JW.Array} `&lt;T&gt;` Добавленные элементы.
+	 */
+<span id='JW-Set-static-method-tryAddAll'>	/**
+</span>	 * @method tryAddAll
+	 * `&lt;T&gt;` Добавляет набор элементов в множество, если их еще нет.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {Array} `&lt;T&gt;` Добавленные элементы. Если нет изменений - undefined.
+	 */
+<span id='JW-Set-static-method-remove'>	/**
+</span>	 * @method remove
+	 * `&lt;T&gt;` Удаляет элемент из множества, если он там есть.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Элемент удален.
+	 */
+<span id='JW-Set-static-method-tryRemove'>	/**
+</span>	 * @method tryRemove
+	 * `&lt;T&gt;` Удаляет элемент из множества, если он там есть.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {T} item Элемент.
+	 * @returns {boolean} Элемент удален. Если нет изменений - undefined.
+	 */
+<span id='JW-Set-static-method-removeAll'>	/**
+</span>	 * @method removeAll
+	 * `&lt;T&gt;` Удаляет набор элементов из множества, если они там есть.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {Array} `&lt;T&gt;` Удаленные элементы.
+	 */
+<span id='JW-Set-static-method-S-removeAll'>	/**
+</span>	 * @method $removeAll
+	 * `&lt;T&gt;` Удаляет набор элементов из множества, если они там есть.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {JW.Array} `&lt;T&gt;` Удаленные элементы.
+	 */
+<span id='JW-Set-static-method-tryRemoveAll'>	/**
+</span>	 * @method tryRemoveAll
+	 * `&lt;T&gt;` Удаляет набор элементов из множества, если они там есть.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} items `&lt;T&gt;` Элементы.
+	 * @returns {Array} `&lt;T&gt;` Удаленные элементы. Если нет изменений - undefined.
+	 */
+<span id='JW-Set-static-method-splice'>	/**
+</span>	 * @method splice
+	 * `&lt;T&gt;` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} removedItems `&lt;T&gt;` Список элементов для удаления.
+	 * @param {Array} addedItems `&lt;T&gt;` Список элементов для добавления.
+	 * @returns {JW.AbstractSet.SpliceResult} `&lt;T&gt;` Результат.
+	 */
+<span id='JW-Set-static-method-trySplice'>	/**
+</span>	 * @method trySplice
+	 * `&lt;T&gt;` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} removedItems `&lt;T&gt;` Список элементов для удаления.
+	 * @param {Array} addedItems `&lt;T&gt;` Список элементов для добавления.
+	 * @returns {JW.AbstractSet.SpliceResult} `&lt;T&gt;` Результат. Если нет изменений - undefined.
+	 */
+<span id='JW-Set-static-method-detectSplice'>	/**
+</span>	 * @method detectSplice
+	 * `&lt;T&gt;` Определяет параметры метода {@link #static-method-splice}, с которыми содержимое множества станет равно newItems.
+	 * Т.е. определяет, какие элементы нужно удалить, какие добавить.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое множества.
+	 * @returns {JW.AbstractSet.SpliceParams} `&lt;T&gt;` Параметры метода {@link #static-method-splice}.
+	 */
+<span id='JW-Set-static-method-performSplice'>	/**
+</span>	 * @method performSplice
+	 * `&lt;T&gt;` Преобразует содержимое множества к newItems комбинацией методов {@link #static-method-detectSplice} и {@link #static-method-splice}.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое множества.
+	 * @returns {void}
+	 */
+<span id='JW-Set-static-method-createMapper'>	/**
+</span>	 * @method createMapper
+	 * `&lt;T, U&gt;` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Mapper}
+	 * `&lt;T, U&gt;` Синхронизатор.
+	 */
+<span id='JW-Set-static-method-createObserver'>	/**
+</span>	 * @method createObserver
+	 * `&lt;T&gt;` Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Observer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Set-static-method-createOrderer'>	/**
+</span>	 * @method createOrderer
+	 * `&lt;T&gt;` Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Orderer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Set-static-method-createSorterComparing'>	/**
+</span>	 * @method createSorterComparing
+	 * `&lt;T&gt;` Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.SorterComparing}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Set-static-method-createIndexer'>	/**
+</span>	 * @method createIndexer
+	 * `&lt;T&gt;` Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Indexer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Set-static-method-createLister'>	/**
+</span>	 * @method createLister
+	 * `&lt;T&gt;` Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractSet.Lister}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+<span id='JW-Set-static-method-equal'>	/**
+</span>	 * @method equal
+	 * `&lt;T&gt;` Поэлементно сравнивает множество с массивом.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Множество.
+	 * @param {Array} array `&lt;T&gt;` Массив.
+	 * @returns {boolean} Множество равно массиву.
+	 */
 });
 </pre>
 </body>

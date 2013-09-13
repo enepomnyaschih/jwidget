@@ -34,37 +34,28 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.ObservableSet.Indexer = function(source, config) {
-	JW.ObservableSet.Indexer._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+<span id='JW-AbstractSet-Indexer-method-constructor'><span id='JW-AbstractSet-Indexer'>/**
+</span></span> * @class
+ *
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractCollection.Indexer&lt;T, JW.AbstractSet&lt;T&gt;&gt;`
+ *
+ * Индексатор множества. Подробнее читайте JW.AbstractCollection.Indexer.
+ *
+ * @extends JW.AbstractCollection.Indexer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
+ * @param {JW.AbstractSet} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.AbstractSet.Indexer = function(source, config) {
+	JW.AbstractSet.Indexer._super.call(this, source, config);
 };
 
-JW.extend(JW.ObservableSet.Indexer/*&lt;T extends JW.Class&gt;*/, JW.AbstractSet.Indexer/*&lt;T&gt;*/, {
-	/*
-	Fields
-	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _clearEventAttachment;
-	*/
-	
-	// override
-	destroy: function() {
-		this._clearEventAttachment.destroy();
-		this._spliceEventAttachment.destroy();
-		this._super();
-	},
-	
-	_onSplice: function(params) {
-		var spliceResult = params.spliceResult;
-		this.target.trySplice(
-			this._keys(spliceResult.removedItems),
-			this._index(spliceResult.addedItems));
-	},
-	
-	_onClear: function(params) {
-		this.target.tryRemoveAll(
-			this._keys(params.items));
-	}
+JW.extend(JW.AbstractSet.Indexer, JW.AbstractCollection.Indexer, {
+<span id='JW-AbstractSet-Indexer-property-source'>	/**
+</span>	 * @property {JW.AbstractSet} source `&lt;T&gt;` Исходная коллекция.
+	 */
 });
 </pre>
 </body>

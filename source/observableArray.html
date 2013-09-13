@@ -34,6 +34,20 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-ObservableArray-method-constructor'><span id='JW-ObservableArray'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractArray&lt;T&gt;`
+ *
+ * Оповещающий массив.
+ *
+ * @extends JW.AbstractArray
+ *
+ * @constructor
+ * @param {Array} [items] `&lt;T&gt;` Изначальное содержимое массива. По умолчанию, создается пустой массив.
+ * @param {boolean} [adapter] Создать массив как адаптер над items. По умолчанию, равен false, т.е. создается
+ * копия массива items.
+ */
 JW.ObservableArray = function(items, adapter) {
 	JW.ObservableArray._super.call(this, items, adapter);
 	this.spliceEvent = new JW.Event();
@@ -46,18 +60,48 @@ JW.ObservableArray = function(items, adapter) {
 	this._lastLength = this.items.length;
 };
 
-JW.extend(JW.ObservableArray/*&lt;T&gt;*/, JW.AbstractArray/*&lt;T&gt;*/, {
-	/*
-	Fields
-	JW.Event&lt;JW.ObservableArray.SpliceEventParams&lt;T&gt;&gt; spliceEvent;
-	JW.Event&lt;JW.ObservableArray.ReplaceEventParams&lt;T&gt;&gt; replaceEvent;
-	JW.Event&lt;JW.ObservableArray.MoveEventParams&lt;T&gt;&gt; moveEvent;
-	JW.Event&lt;JW.ObservableArray.ItemsEventParams&lt;T&gt;&gt; clearEvent;
-	JW.Event&lt;JW.ObservableArray.ReorderEventParams&lt;T&gt;&gt; reorderEvent;
-	JW.Event&lt;JW.ObservableArray.EventParams&lt;T&gt;&gt; changeEvent;
-	JW.Event&lt;JW.ObservableArray.LengthChangeEventParams&lt;T&gt;&gt; lengthChangeEvent;
-	Integer _lastLength;
-	*/
+JW.extend(JW.ObservableArray, JW.AbstractArray, {
+<span id='JW-ObservableArray-event-spliceEvent'>	/**
+</span>	 * @event spliceEvent
+	 * Элементы удалены/вставлены в массив. Возникает в результате запуска
+	 * метода #add, #tryAdd, #addAll, #tryAddAll, #remove, #tryRemove, #removeItem, #pop, #removeAll, #tryRemoveAll,
+	 * {@link #removeItems}, #splice, #trySplice, #performSplice.
+	 * @param {JW.ObservableArray.SpliceEventParams} params `&lt;T&gt;` Параметры.
+	 */
+<span id='JW-ObservableArray-event-replaceEvent'>	/**
+</span>	 * @event replaceEvent
+	 * Элемент заменен в массиве. Возникает в результате запуска метода #set, #trySet.
+	 * @param {JW.ObservableArray.ReplaceEventParams} params `&lt;T&gt;` Параметры.
+	 */
+<span id='JW-ObservableArray-event-moveEvent'>	/**
+</span>	 * @event moveEvent
+	 * Элемент перемещен в массиве. Возникает в результате запуска метода #move, #tryMove.
+	 * @param {JW.ObservableArray.MoveEventParams} params `&lt;T&gt;` Параметры.
+	 */
+<span id='JW-ObservableArray-event-clearEvent'>	/**
+</span>	 * @event clearEvent
+	 * Массив очищен. Возникает в результате запуска метода #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableArray.ItemsEventParams} params
+	 * `&lt;T&gt;` Параметры. JW.ObservableArray.ItemsEventParams#items обозначает бывшее содержимое массива.
+	 */
+<span id='JW-ObservableArray-event-reorderEvent'>	/**
+</span>	 * @event reorderEvent
+	 * Элементы переупорядочены в массиве. Возникает в результате запуска
+	 * метода #reorder, #tryReorder, #performReorder, #sort, #sortBy, #sortByMethod, #sortComparing.
+	 * @param {JW.ObservableArray.ReorderEventParams} params
+	 * `&lt;T&gt;` Параметры. JW.ObservableArray.ReorderEventParams#items обозначает бывшее содержимое массива.
+	 */
+<span id='JW-ObservableArray-event-changeEvent'>	/**
+</span>	 * @event changeEvent
+	 * Массив изменен. Возникает после одного из
+	 * событий #spliceEvent, #replaceEvent, #moveEvent, #clearEvent, #reorderEvent.
+	 * @param {JW.ObservableArray.EventParams} params `&lt;T&gt;` Параметры.
+	 */
+<span id='JW-ObservableArray-event-lengthChangeEvent'>	/**
+</span>	 * @event lengthChangeEvent
+	 * Изменена длина массива. Возникает после события #changeEvent в случае изменения длины.
+	 * @param {JW.ObservableArray.LengthChangeEventParams} params `&lt;T&gt;` Параметры.
+	 */
 	
 	// override
 	destroy: function() {
@@ -77,7 +121,7 @@ JW.extend(JW.ObservableArray/*&lt;T&gt;*/, JW.AbstractArray/*&lt;T&gt;*/, {
 		if (oldItem === undefined) {
 			return;
 		}
-		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem, item));
+		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem.value, item));
 		this._triggerChange();
 		return oldItem;
 	},
@@ -126,62 +170,115 @@ JW.extend(JW.ObservableArray/*&lt;T&gt;*/, JW.AbstractArray/*&lt;T&gt;*/, {
 		return items;
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.ObservableArray} `&lt;U&gt;` Коллекция.
+	 */
 	createEmpty: function() {
 		return new JW.ObservableArray();
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой массив того же типа (простой или оповещающий).
+	 * @returns {JW.ObservableArray} `&lt;U&gt;` Массив.
+	 */
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой словарь того же типа (простой или оповещающий).
+	 * @returns {JW.ObservableMap} `&lt;U&gt;` Словарь.
+	 */
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустое множество того же типа (простое или оповещающее).
+	 * @returns {JW.ObservableSet} `&lt;U&gt;` Множество.
+	 */
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createMapper'>	/**
+</span>	 * `&lt;U&gt;` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableArray.Mapper}
+	 * `&lt;T, U&gt;` Синхронизатор.
+	 */
 	createMapper: function(config) {
 		return new JW.ObservableArray.Mapper(this, config);
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createObserver'>	/**
+</span>	 * Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableArray.Observer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
 	createObserver: function(config) {
 		return new JW.ObservableArray.Observer(this, config);
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createOrderer'>	/**
+</span>	 * Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableArray.Orderer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
 	createOrderer: function(config) {
 		return new JW.ObservableArray.Orderer(this, config);
 	},
 	
-	// override
-	createSorter: function(config) {
-		return new JW.ObservableArray.Sorter(this, config);
+<span id='JW-ObservableArray-method-createSorterComparing'>	/**
+</span>	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableArray.SorterComparing}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.ObservableArray.SorterComparing(this, config);
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createIndexer'>	/**
+</span>	 * Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableArray.Indexer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
 	createIndexer: function(config) {
 		return new JW.ObservableArray.Indexer(this, config);
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createLister'>	/**
+</span>	 * Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableArray.Lister}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
 	createLister: function(config) {
 		return new JW.ObservableArray.Lister(this, config);
 	},
 	
-	// override
+<span id='JW-ObservableArray-method-createInserter'>	/**
+</span>	 * Конструирует синхронизатор представления с массивом.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableArray.Inserter}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
 	createInserter: function(config) {
 		return new JW.ObservableArray.Inserter(this, config);
 	},
 	
-	// override
 	createSplitter: function(config) {
 		return new JW.ObservableArray.Splitter(this, config);
 	},
@@ -196,35 +293,63 @@ JW.extend(JW.ObservableArray/*&lt;T&gt;*/, JW.AbstractArray/*&lt;T&gt;*/, {
 	}
 });
 
-//--------
-
+<span id='JW-ObservableArray-EventParams-method-constructor'><span id='JW-ObservableArray-EventParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` Параметры события JW.ObservableArray.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Отправитель события.
+ */
 JW.ObservableArray.EventParams = function(sender) {
 	JW.ObservableArray.EventParams._super.call(this, sender);
 };
 
-JW.extend(JW.ObservableArray.EventParams/*&lt;T&gt;*/, JW.EventParams, {
-	/*
-	Fields
-	JW.ObservableArray&lt;T&gt; sender;
-	*/
+JW.extend(JW.ObservableArray.EventParams, JW.EventParams, {
+<span id='JW-ObservableArray-EventParams-property-sender'>	/**
+</span>	 * @property {JW.ObservableArray} sender `&lt;T&gt;` Отправитель события.
+	 */
 });
 
-//--------
-
+<span id='JW-ObservableArray-SpliceEventParams-method-constructor'><span id='JW-ObservableArray-SpliceEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.EventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableArray#spliceEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Отправитель события.
+ * @param {JW.AbstractArray.SpliceResult} spliceResult `&lt;T&gt;` Результат метода JW.AbstractArray#splice.
+ */
 JW.ObservableArray.SpliceEventParams = function(sender, spliceResult) {
 	JW.ObservableArray.SpliceEventParams._super.call(this, sender);
 	this.spliceResult = spliceResult;
 };
 
 JW.extend(JW.ObservableArray.SpliceEventParams/*&lt;T&gt;*/, JW.ObservableArray.EventParams/*&lt;T&gt;*/, {
-	/*
-	Fields
-	JW.AbstractArray.SpliceResult&lt;T&gt; spliceResult;
-	*/
+<span id='JW-ObservableArray-SpliceEventParams-property-spliceResult'>	/**
+</span>	 * @property {JW.AbstractArray.SpliceResult} spliceResult `&lt;T&gt;` Результат метода JW.AbstractArray#splice.
+	 */
 });
 
-//--------
-
+<span id='JW-ObservableArray-MoveEventParams-method-constructor'><span id='JW-ObservableArray-MoveEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.EventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableArray#moveEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Отправитель события.
+ * @param {number} fromIndex Откуда перенесен элемент.
+ * @param {number} toIndex Куда перенесен элемент.
+ * @param {T} item Элемент.
+ */
 JW.ObservableArray.MoveEventParams = function(sender, fromIndex, toIndex, item) {
 	JW.ObservableArray.MoveEventParams._super.call(this, sender);
 	this.fromIndex = fromIndex;
@@ -232,17 +357,33 @@ JW.ObservableArray.MoveEventParams = function(sender, fromIndex, toIndex, item) 
 	this.item = item;
 };
 
-JW.extend(JW.ObservableArray.MoveEventParams/*&lt;T&gt;*/, JW.ObservableArray.EventParams/*&lt;T&gt;*/, {
-	/*
-	Fields
-	Integer fromIndex;
-	Integer toIndex;
-	T item;
-	*/
+JW.extend(JW.ObservableArray.MoveEventParams, JW.ObservableArray.EventParams, {
+<span id='JW-ObservableArray-MoveEventParams-property-fromIndex'>	/**
+</span>	 * @property {number} fromIndex Откуда перенесен элемент.
+	 */
+<span id='JW-ObservableArray-MoveEventParams-property-toIndex'>	/**
+</span>	 * @property {number} toIndex Куда перенесен элемент.
+	 */
+<span id='JW-ObservableArray-MoveEventParams-property-item'>	/**
+</span>	 * @property {T} item Элемент.
+	 */
 });
 
-//--------
-
+<span id='JW-ObservableArray-ReplaceEventParams-method-constructor'><span id='JW-ObservableArray-ReplaceEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.EventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableArray#replaceEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Отправитель события.
+ * @param {number} index Индекс элемента.
+ * @param {T} oldItem Старое значение.
+ * @param {T} newItem Новое значение.
+ */
 JW.ObservableArray.ReplaceEventParams = function(sender, index, oldItem, newItem) {
 	JW.ObservableArray.ReplaceEventParams._super.call(this, sender);
 	this.index = index;
@@ -250,57 +391,94 @@ JW.ObservableArray.ReplaceEventParams = function(sender, index, oldItem, newItem
 	this.newItem = newItem;
 };
 
-JW.extend(JW.ObservableArray.ReplaceEventParams/*&lt;T&gt;*/, JW.ObservableArray.EventParams/*&lt;T&gt;*/, {
-	/*
-	Fields
-	Integer index;
-	T oldItem;
-	T newItem;
-	*/
+JW.extend(JW.ObservableArray.ReplaceEventParams, JW.ObservableArray.EventParams, {
+<span id='JW-ObservableArray-ReplaceEventParams-property-index'>	/**
+</span>	 * @property {number} index Индекс элемента.
+	 */
+<span id='JW-ObservableArray-ReplaceEventParams-property-oldItem'>	/**
+</span>	 * @property {T} oldItem Старое значение.
+	 */
+<span id='JW-ObservableArray-ReplaceEventParams-property-newItem'>	/**
+</span>	 * @property {T} newItem Новое значение.
+	 */
 });
 
-//--------
-
+<span id='JW-ObservableArray-ItemsEventParams-method-constructor'><span id='JW-ObservableArray-ItemsEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.EventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableArray с элементами.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Отправитель события.
+ * @param {Array} items `&lt;T&gt;` Набор элементов.
+ */
 JW.ObservableArray.ItemsEventParams = function(sender, items) {
 	JW.ObservableArray.ItemsEventParams._super.call(this, sender);
 	this.items = items;
 };
 
-JW.extend(JW.ObservableArray.ItemsEventParams/*&lt;T&gt;*/, JW.ObservableArray.EventParams/*&lt;T&gt;*/, {
-	/*
-	Fields
-	Array&lt;T&gt; items;
-	*/
+JW.extend(JW.ObservableArray.ItemsEventParams, JW.ObservableArray.EventParams, {
+<span id='JW-ObservableArray-ItemsEventParams-property-items'>	/**
+</span>	 * @property {Array} items `&lt;T&gt;` Набор элементов.
+	 */
 });
 
-//--------
-
+<span id='JW-ObservableArray-ReorderEventParams-method-constructor'><span id='JW-ObservableArray-ReorderEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.ItemsEventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableArray#reorderEvent.
+ *
+ * @extends JW.ObservableArray.ItemsEventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Отправитель события.
+ * @param {Array} indexArray `&lt;number&gt;` Индексы элементов в переупорядоченном массиве.
+ * @param {Array} items `&lt;T&gt;` Набор элементов.
+ */
 JW.ObservableArray.ReorderEventParams = function(sender, indexArray, items) {
 	JW.ObservableArray.ReorderEventParams._super.call(this, sender, items);
 	this.indexArray = indexArray;
 };
 
-JW.extend(JW.ObservableArray.ReorderEventParams/*&lt;T&gt;*/, JW.ObservableArray.ItemsEventParams/*&lt;T&gt;*/, {
-	/*
-	Fields
-	Array&lt;Integer&gt; indexArray;
-	*/
+JW.extend(JW.ObservableArray.ReorderEventParams, JW.ObservableArray.ItemsEventParams, {
+<span id='JW-ObservableArray-ReorderEventParams-property-indexArray'>	/**
+</span>	 * @property {Array} indexArray `&lt;number&gt;` Индексы элементов в переупорядоченном массиве.
+	 */
 });
 
-//--------
-
+<span id='JW-ObservableArray-LengthChangeEventParams-method-constructor'><span id='JW-ObservableArray-LengthChangeEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.EventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableArray#lengthChangeEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Отправитель события.
+ * @param {number} oldLength Старая длина массива.
+ * @param {number} newLength Новая длина массива.
+ */
 JW.ObservableArray.LengthChangeEventParams = function(sender, oldLength, newLength) {
 	JW.ObservableArray.LengthChangeEventParams._super.call(this, sender);
 	this.oldLength = oldLength;
 	this.newLength = newLength;
 };
 
-JW.extend(JW.ObservableArray.LengthChangeEventParams/*&lt;T&gt;*/, JW.ObservableArray.EventParams/*&lt;T&gt;*/, {
-	/*
-	Fields
-	Integer oldLength;
-	Integer newLength;
-	*/
+JW.extend(JW.ObservableArray.LengthChangeEventParams, JW.ObservableArray.EventParams, {
+<span id='JW-ObservableArray-LengthChangeEventParams-property-oldLength'>	/**
+</span>	 * @property {number} oldLength Старая длина массива.
+	 */
+<span id='JW-ObservableArray-LengthChangeEventParams-property-newLength'>	/**
+</span>	 * @property {number} newLength Новая длина массива.
+	 */
 });
 </pre>
 </body>

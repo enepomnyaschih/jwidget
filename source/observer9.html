@@ -34,52 +34,46 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.Tests.Collection.AbstractSet.ObserverTestCase = JW.Unit.TestCase.extend({
+JW.Tests.Collection.AbstractMap.ObserverTestCase = JW.Unit.TestCase.extend({
 	testObserver: function() {
-		var a = new JW.Proxy(&quot;a&quot;);
-		var b = new JW.Proxy(&quot;b&quot;);
-		var c = new JW.Proxy(&quot;c&quot;);
-		var source = new JW.Set([ a, b, c ]);
+		var source = new JW.Map({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
 		
 		this.setExpectedOutput(
-			&quot;Added a&quot;,
-			&quot;Added b&quot;,
-			&quot;Added c&quot;
+			&quot;Added A&quot;,
+			&quot;Added B&quot;,
+			&quot;Added C&quot;
 		);
 		var syncher = source.createObserver({
-			addItem    : function(item) { this.output(&quot;Added &quot; + item.value); },
-			removeItem : function(item) { this.output(&quot;Removed &quot; + item.value); },
-			clearItems : function(items) { this.output(&quot;Cleared &quot; + JW.Array.mapBy(items, &quot;value&quot;).join(&quot;, &quot;)); },
+			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
+			clearItems : function(items) { this.output(&quot;Cleared &quot; + items.join(&quot;, &quot;)); },
 			scope      : this
 		});
 		
 		this.setExpectedOutput(
-			&quot;Cleared a, b, c&quot;
+			&quot;Cleared A, B, C&quot;
 		);
 		syncher.destroy();
 	},
 	
 	testAutoClear: function() {
-		var a = new JW.Proxy(&quot;a&quot;);
-		var b = new JW.Proxy(&quot;b&quot;);
-		var c = new JW.Proxy(&quot;c&quot;);
-		var source = new JW.Set([ a, b, c ]);
+		var source = new JW.Map({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
 		
 		this.setExpectedOutput(
-			&quot;Added a&quot;,
-			&quot;Added b&quot;,
-			&quot;Added c&quot;
+			&quot;Added A&quot;,
+			&quot;Added B&quot;,
+			&quot;Added C&quot;
 		);
 		var syncher = source.createObserver({
-			addItem    : function(item) { this.output(&quot;Added &quot; + item.value); },
-			removeItem : function(item) { this.output(&quot;Removed &quot; + item.value); },
+			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
 			scope      : this
 		});
 		
 		this.setExpectedOutput(
-			&quot;Removed c&quot;,
-			&quot;Removed b&quot;,
-			&quot;Removed a&quot;
+			&quot;Removed C&quot;,
+			&quot;Removed B&quot;,
+			&quot;Removed A&quot;
 		);
 		syncher.destroy();
 	}

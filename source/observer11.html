@@ -34,118 +34,148 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
+JW.Tests.Collection.ObservableArray.ObserverTestCase = JW.Unit.TestCase.extend({
 	testObserver: function() {
-		var source = new JW.ObservableMap({ &quot;d&quot;: &quot;D&quot; });
+		var collection = new JW.ObservableArray([ &quot;d&quot; ]);
 		
 		this.setExpectedOutput(
-			&quot;Added D&quot;
+			&quot;Added d&quot;
 		);
-		var syncher = source.createObserver({
+		var syncher = collection.createObserver({
 			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
 			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
-			clearItems : function(items) {
-				items = items.concat();
-				items.sort();
-				this.output(&quot;Cleared &quot; + items.join(&quot;, &quot;));
-			},
+			clearItems : function(items) { this.output(&quot;Cleared &quot; + items.join(&quot;, &quot;)); },
 			scope      : this
 		});
 		
 		this.setExpectedOutput(
-			&quot;Added F&quot;
+			&quot;Added f&quot;
 		);
-		source.setAll({ &quot;f&quot;: &quot;F&quot; });
+		collection.addAll([ &quot;f&quot; ]);
 		
 		this.setExpectedOutput(
-			&quot;Added C&quot;
+			&quot;Added c&quot;
 		);
-		source.set(&quot;C&quot;, &quot;c&quot;);
+		collection.add(&quot;c&quot;, 1);
 		
 		this.setExpectedOutput(
-			&quot;Added B&quot;,
-			&quot;Added M&quot;
+			&quot;Added b&quot;,
+			&quot;Added m&quot;
 		);
-		source.setAll({ &quot;b&quot;: &quot;B&quot;, &quot;m&quot;: &quot;M&quot; });
+		collection.addAll([ &quot;b&quot;, &quot;m&quot; ], 0);
 		
 		this.setExpectedOutput();
-		source.setAll({});
+		collection.addAll([], 1);
 		
 		this.setExpectedOutput(
-			&quot;Removed M&quot;
+			&quot;Added a&quot;
 		);
-		source.remove(&quot;m&quot;);
+		collection.add(&quot;a&quot;, 5);
+		
+		this.setExpectedOutput(
+			&quot;Removed m&quot;
+		);
+		collection.remove(1);
+		
+		this.setExpectedOutput(
+			&quot;Removed b&quot;
+		);
+		collection.remove(0);
+		
+		this.setExpectedOutput(
+			&quot;Added k&quot;
+		);
+		collection.add(&quot;k&quot;);
+		
+		this.setExpectedOutput(
+			&quot;Removed f&quot;,
+			&quot;Added g&quot;
+		);
+		collection.set(&quot;g&quot;, 2);
 		
 		this.setExpectedOutput();
-		source.remove(&quot;m&quot;);
-		
-		this.setExpectedOutput(
-			&quot;Removed F&quot;,
-			&quot;Added T&quot;
-		);
-		source.set(&quot;T&quot;, &quot;f&quot;);
+		collection.set(&quot;a&quot;, 3);
 		
 		this.setExpectedOutput();
-		source.setKey(&quot;c&quot;, &quot;a&quot;);
-		
-		this.setExpectedOutput(
-			&quot;Removed C&quot;,
-			&quot;Removed T&quot;,
-			&quot;Added M&quot;
-		);
-		source.splice([ &quot;a&quot;, &quot;f&quot; ], { &quot;m&quot;: &quot;M&quot; });
+		collection.move(2, 1);
 		
 		this.setExpectedOutput();
-		source.performReindex({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;d&quot;: &quot;M&quot; });
+		collection.move(0, 4);
 		
+		this.setExpectedOutput();
+		collection.move(1, 1);
+		
+		this.setExpectedOutput();
+		var items = collection.getItems().concat();
+		items.sort();
+		collection.performReorder(items);
+		
+		// If length has decreased more than 3 times, clear+add is used, remove specific items instead
 		this.setExpectedOutput(
-			&quot;Removed M&quot;,
-			&quot;Added C&quot;
+			&quot;Removed c&quot;
 		);
-		source.performSplice({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		collection.performSplice([ &quot;a&quot;, &quot;d&quot;, &quot;g&quot;, &quot;k&quot; ]);
 		
 		this.setExpectedOutput(
-			&quot;Removed B&quot;,
-			&quot;Removed C&quot;
+			&quot;Cleared a, d, g, k&quot;,
+			&quot;Added k&quot;
 		);
-		source.removeAll([ &quot;b&quot;, &quot;c&quot; ]);
+		collection.performSplice([ &quot;k&quot; ]);
 		
 		this.setExpectedOutput(
-			&quot;Cleared D&quot;
+			&quot;Cleared k&quot;,
+			&quot;Added u&quot;,
+			&quot;Added t&quot;,
+			&quot;Added c&quot;
 		);
-		source.clear();
+		collection.performSplice([ &quot;u&quot;, &quot;t&quot;, &quot;c&quot; ]);
 		
 		this.setExpectedOutput(
-			&quot;Added H&quot;
+			&quot;Cleared u, t, c&quot;
 		);
-		source.set(&quot;H&quot;, &quot;h&quot;);
+		collection.clear();
 		
 		this.setExpectedOutput(
-			&quot;Cleared H&quot;
+			&quot;Added h&quot;
+		);
+		collection.add(&quot;h&quot;);
+		
+		this.setExpectedOutput(
+			&quot;Cleared h&quot;
 		);
 		syncher.destroy();
+		
+		this.setExpectedOutput();
+		collection.destroy();
 	},
 	
 	testAutoClear: function() {
-		var source = new JW.ObservableMap({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		var collection = new JW.ObservableArray([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot; ]);
 		
 		this.setExpectedOutput(
-			&quot;Added A&quot;,
-			&quot;Added B&quot;,
-			&quot;Added C&quot;
+			&quot;Added a&quot;,
+			&quot;Added b&quot;,
+			&quot;Added c&quot;,
+			&quot;Added d&quot;,
+			&quot;Added e&quot;
 		);
-		var syncher = source.createObserver({
+		var syncher = collection.createObserver({
 			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
 			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
 			scope      : this
 		});
 		
 		this.setExpectedOutput(
-			&quot;Removed A&quot;,
-			&quot;Removed B&quot;,
-			&quot;Removed C&quot;
+			&quot;Removed e&quot;,
+			&quot;Removed d&quot;,
+			&quot;Removed c&quot;,
+			&quot;Removed b&quot;,
+			&quot;Removed a&quot;
 		);
 		syncher.destroy();
+		
+		this.setExpectedOutput();
+		collection.destroy();
 	}
 });
 </pre>

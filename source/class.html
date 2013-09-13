@@ -39,6 +39,21 @@ JW.ClassUtil = {
 	
 	_fnTest: /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/,
 	
+<span id='JW-static-method-extend'>	/**
+</span>	 * Наследует один класс от другого. Тело класса передается в аргументе body - все поля и методы body станут полями
+	 * и методами подкласса. Содержимое body в несколько преобразованном виде переходит в прототип подкласса.
+	 * 
+	 * Перед использованием этой функции необходимо объявить конструктор подкласса.
+	 * 
+	 * Для примера наследования класса смотрите JW.Class.
+	 *
+	 * @static
+	 * @member JW
+	 * @param {Function} subclass Подкласс.
+	 * @param {Function} superclass Базовый класс.
+	 * @param {Object} body Тело класса.
+	 * @returns {Function} Возвращает subclass.
+	 */
 	extend: function(subc, supc, body) {
 		body = body || {};
 		

@@ -34,61 +34,28 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.ObservableArray.Observer = function(source, config) {
-	JW.ObservableArray.Observer._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+<span id='JW-AbstractSet-Observer-method-constructor'><span id='JW-AbstractSet-Observer'>/**
+</span></span> * @class
+ *
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractCollection.Observer&lt;T, JW.AbstractSet&lt;T&gt;&gt;`
+ *
+ * Наблюдатель множества. Подробнее читайте JW.AbstractCollection.Observer.
+ *
+ * @extends JW.AbstractCollection.Observer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
+ * @param {JW.AbstractSet} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.AbstractSet.Observer = function(source, config) {
+	JW.AbstractSet.Observer._super.call(this, source, config);
 };
 
-JW.extend(JW.ObservableArray.Observer/*&lt;T&gt;*/, JW.AbstractArray.Observer/*&lt;T&gt;*/, {
-	/*
-	Required
-	JW.ObservableArray&lt;T&gt; source;
-	
-	Fields
-	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _replaceEventAttachment;
-	JW.EventAttachment _clearEventAttachment;
-	*/
-	
-	// override
-	destroy: function() {
-		this._clearEventAttachment.destroy();
-		this._replaceEventAttachment.destroy();
-		this._spliceEventAttachment.destroy();
-		this._super();
-	},
-	
-	_onSplice: function(params) {
-		var spliceResult = params.spliceResult;
-		var oldItems = spliceResult.oldItems;
-		var removedItems = spliceResult.getRemovedItems();
-		
-		// if there is an effective clearing function, just reset the controller
-		if (this.clearItems &amp;&amp; (3 * removedItems.length &gt; 2 * oldItems.length)) {
-			this.clearItems.call(this.scope, oldItems);
-			this._addItems(this.source.getItems());
-			return;
-		}
-		
-		// else, splice the elements
-		this._removeItems(removedItems);
-		this._addItems(spliceResult.getAddedItems());
-	},
-	
-	_onReplace: function(params) {
-		if (this.removeItem) {
-			this.removeItem.call(this.scope, params.oldItem);
-		}
-		if (this.addItem) {
-			this.addItem.call(this.scope, params.newItem);
-		}
-	},
-	
-	_onClear: function(params) {
-		this._clearItems(params.items);
-	}
+JW.extend(JW.AbstractSet.Observer, JW.AbstractCollection.Observer, {
+<span id='JW-AbstractSet-Observer-property-source'>	/**
+</span>	 * @property {JW.AbstractSet} source `&lt;T&gt;` Исходная коллекция.
+	 */
 });
 </pre>
 </body>

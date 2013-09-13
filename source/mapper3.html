@@ -34,70 +34,56 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.AbstractSet.Mapper = function(source, config) {
-	JW.AbstractSet.Mapper._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.createItem = config.createItem;
-	this.destroyItem = config.destroyItem;
-	this._targetCreated = !config.target;
-	this.target = config.target || source.createEmpty();
-	this.scope = config.scope || {};
-	this._items = {};
-	this.target.tryAddAll(this._createItems(this.source.toArray()));
+<span id='JW-AbstractMap-Mapper-method-constructor'><span id='JW-AbstractMap-Mapper'>/**
+</span></span> * @class
+ *
+ * `&lt;T, U&gt; extends JW.AbstractCollection.Mapper&lt;T, U, JW.AbstractMap&lt;T&gt;, JW.AbstractMap&lt;U&gt;&gt;`
+ *
+ * Конвертер элементов словаря. Подробнее читайте JW.AbstractCollection.Mapper.
+ *
+ * @extends JW.AbstractCollection.Mapper
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
+ * @param {JW.AbstractMap} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.AbstractMap.Mapper = function(source, config) {
+	JW.AbstractMap.Mapper._super.call(this, source, config);
+	this.target.trySetAll(this._createItems(source.getJson()));
 };
 
-JW.extend(JW.AbstractSet.Mapper/*&lt;S extends JW.Class, T extends JW.Class&gt;*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractSet&lt;S&gt; source;
-	T createItem(S data);
-	void destroyItem(T item, S data);
-	
-	Optional
-	JW.AbstractSet&lt;T&gt; target;
-	Object scope; // defaults to this
-	
-	Fields
-	Boolean _targetCreated;
-	Map&lt;T&gt; _items;
-	*/
+JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
+<span id='JW-AbstractMap-Mapper-cfg-target'>	/**
+</span>	 * @cfg {JW.AbstractMap} target `&lt;U&gt;` Целевая коллекция.
+	 */
+<span id='JW-AbstractMap-Mapper-property-source'>	/**
+</span>	 * @property {JW.AbstractMap} source `&lt;T&gt;` Исходная коллекция.
+	 */
+<span id='JW-AbstractMap-Mapper-property-target'>	/**
+</span>	 * @property {JW.AbstractMap} target `&lt;U&gt;` Целевая коллекция.
+	 */
 	
 	// override
 	destroy: function() {
-		var datas = this.source.toArray();
-		this.target.tryRemoveAll(this._getItems(datas));
-		this._destroyItems(datas);
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
+		this._destroyItems(this.target.removeAll(this.source.getKeys()), this.source.getJson());
 		this._super();
 	},
 	
-	_getItems: function(datas) {
-		return JW.Array.map(datas, function(data) {
-			return this._items[data._iid];
-		}, this);
-	},
-	
 	_createItems: function(datas) {
-		var items = [];
-		for (var i = 0, l = datas.length; i &lt; l; ++i) {
-			var data = datas[i];
-			var item = this.createItem.call(this.scope || this, data);
-			items.push(item);
-			this._items[data._iid] = item;
+		var items = {};
+		for (var key in datas) {
+			items[key] = this.createItem.call(this.scope, datas[key]);
 		}
 		return items;
 	},
 	
-	_destroyItems: function(datas) {
-		for (var i = datas.length - 1; i &gt;= 0; --i) {
-			var data = datas[i];
-			var iid = data._iid;
-			var item = this._items[iid];
-			delete this._items[iid];
-			this.destroyItem.call(this.scope || this, item, data);
+	_destroyItems: function(items, datas) {
+		if (this.destroyItem === undefined) {
+			return;
+		}
+		for (var key in items) {
+			this.destroyItem.call(this.scope, items[key], datas[key]);
 		}
 	}
 });

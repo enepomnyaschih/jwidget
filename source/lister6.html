@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*
-	jWidget Lib tests.
+	jWidget Lib source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -34,151 +34,49 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.Tests.Collection.AbstractMap.ListerTestCase = JW.Unit.TestCase.extend({
-	testUnobservableTarget: function() {
-		var testCase = this;
-		var a = new JW.Proxy(&quot;a&quot;);
-		var b = new JW.Proxy(&quot;b&quot;);
-		var c = new JW.Proxy(&quot;c&quot;);
-		var source = new JW.Map({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c });
-		var target = new JW.Set();
-		
-		var lister = this.createLister(source, target);
-		this.assertTarget([ a, b, c ], target);
-		
-		lister.destroy();
-		this.assertTarget([], target);
-		
-		this.setExpectedOutput();
-		target.destroy();
-		source.destroy();
+<span id='JW-ObservableMap-Lister-method-constructor'><span id='JW-ObservableMap-Lister'>/**
+</span></span> * @class
+ *
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractMap.Lister&lt;T&gt;`
+ *
+ * Конвертер оповещающего словаря в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ *
+ * @extends JW.AbstractMap.Lister
+ *
+ * @constructor
+ * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
+ * @param {JW.ObservableMap} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.ObservableMap.Lister = function(source, config) {
+	JW.ObservableMap.Lister._super.call(this, source, config);
+	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+};
+
+JW.extend(JW.ObservableMap.Lister, JW.AbstractMap.Lister, {
+	/*
+	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
+	*/
+	
+	// override
+	destroy: function() {
+		this._clearEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
+		this._super();
 	},
 	
-	testObservableTarget: function() {
-		var testCase = this;
-		var a = new JW.Proxy(&quot;a&quot;);
-		var b = new JW.Proxy(&quot;b&quot;);
-		var c = new JW.Proxy(&quot;c&quot;);
-		var source = new JW.Map({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c });
-		var target = this.createTarget();
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[] +[a,b,c]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 0 to 3&quot;
-		);
-		var lister = this.createLister(source, target);
-		this.assertTarget([ a, b, c ], target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[a,b,c] +[]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 3 to 0&quot;
-		);
-		lister.destroy();
-		this.assertTarget([], target);
-		
-		this.setExpectedOutput();
-		target.destroy();
-		source.destroy();
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(
+			JW.Map.toArray(spliceResult.removedItems),
+			JW.Map.toArray(spliceResult.addedItems));
 	},
 	
-	testMultiSource: function() {
-		var a = new JW.Proxy(&quot;a&quot;);
-		var b = new JW.Proxy(&quot;b&quot;);
-		var c = new JW.Proxy(&quot;c&quot;);
-		var d = new JW.Proxy(&quot;d&quot;);
-		var x = new JW.Proxy(&quot;x&quot;);
-		
-		var source1 = new JW.Map({ &quot;a&quot;: a, &quot;b&quot;: b });
-		var source2 = new JW.Map({ &quot;c&quot;: c, &quot;d&quot;: d });
-		var target = this.createTarget();
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[] +[x]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 0 to 1&quot;
-		);
-		target.add(x);
-		this.assertTarget([ x ], target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[] +[a,b]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 1 to 3&quot;
-		);
-		var lister1 = this.createLister(source1, target);
-		this.assertTarget([ a, b, x ], target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[] +[c,d]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 3 to 5&quot;
-		);
-		var lister2 = this.createLister(source2, target);
-		this.assertTarget([ a, b, c, d, x ], target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[a,b] +[]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 5 to 3&quot;
-		);
-		lister1.destroy();
-		this.assertTarget([ c, d, x ], target);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[c,d] +[]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 3 to 1&quot;
-		);
-		lister2.destroy();
-		this.assertTarget([ x ], target);
-		
-		this.setExpectedOutput();
-		target.destroy();
-		
-		this.setExpectedOutput();
-		source1.destroy();
-		source2.destroy();
-	},
-	
-	// tests that empty source doesn't caused target to trigger &quot;change&quot; on synchronizer initialization
-	testEmptyChange: function() {
-		var source = new JW.Map();
-		var target = this.createTarget();
-		var lister = this.createLister(source, target);
-		lister.destroy();
-		target.destroy();
-		source.destroy();
-	},
-	
-	testAutoTarget: function() {
-		var d = new JW.Proxy(&quot;d&quot;);
-		var source = new JW.Map({ &quot;d&quot;: d });
-		var lister = this.createLister(source);
-		this.assertTrue(lister.target instanceof JW.Set);
-		this.assertTarget([ d ], lister.target);
-		lister.destroy();
-		source.destroy();
-	},
-	
-	createTarget: function() {
-		var target = new JW.ObservableSet();
-		JW.Tests.Collection.subscribeToSet(this, target);
-		return target;
-	},
-	
-	createLister: function(source, target) {
-		return source.createLister({
-			target : target
-		});
-	},
-	
-	assertTarget: function(values, target) {
-		this.assertStrictEqual(values.length, target.getLength());
-		for (var i = 0; i &lt; values.length; ++i) {
-			this.assertTrue(target.contains(values[i]));
-		}
+	_onClear: function(params) {
+		this.target.tryRemoveAll(
+			JW.Map.toArray(params.items));
 	}
 });
 </pre>

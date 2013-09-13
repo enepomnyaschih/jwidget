@@ -34,48 +34,80 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.ObservableMap.Mapper = function(source, config) {
-	JW.ObservableMap.Mapper._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._reindexEventAttachment = this.source.reindexEvent.bind(this._onReindex, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+<span id='JW-ObservableArray-Mapper-method-constructor'><span id='JW-ObservableArray-Mapper'>/**
+</span></span> * @class
+ *
+ * `&lt;T, U&gt; extends JW.AbstractArray.Mapper&lt;T, U&gt;`
+ *
+ * Конвертер элементов оповещающего массива. Подробнее читайте JW.AbstractCollection.Mapper.
+ *
+ * @extends JW.AbstractArray.Mapper
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
+ * @param {JW.ObservableArray} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.ObservableArray.Mapper = function(source, config) {
+	JW.ObservableArray.Mapper._super.call(this, source, config);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
+	this._moveEventAttachment = source.moveEvent.bind(this._onMove, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	this._reorderEventAttachment = source.reorderEvent.bind(this._onReorder, this);
 };
 
-JW.extend(JW.ObservableMap.Mapper/*&lt;S, T&gt;*/, JW.AbstractMap.Mapper/*&lt;S, T&gt;*/, {
+JW.extend(JW.ObservableArray.Mapper, JW.AbstractArray.Mapper, {
 	/*
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _reindexEventAttachment;
+	JW.EventAttachment _replaceEventAttachment;
+	JW.EventAttachment _moveEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
+	JW.EventAttachment _reorderEventAttachment;
 	*/
 	
-	// override
 	destroy: function() {
+		this._reorderEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
-		this._reindexEventAttachment.destroy();
+		this._moveEventAttachment.destroy();
+		this._replaceEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
 	_onSplice: function(params) {
 		var sourceResult = params.spliceResult;
-		var removedDatas = sourceResult.removedItems;
-		var addedDatas = sourceResult.addedItems;
-		var targetResult = this.target.trySplice(
-			JW.Map.getRemovedKeys(removedDatas, addedDatas),
-			this._createItems(addedDatas));
-		if (targetResult !== undefined) {
-			this._destroyItems(targetResult.removedItems, removedDatas);
+		var sourceAddedItemsList = sourceResult.addedItemsList;
+		var targetAddParamsList = [];
+		for (var i = 0, l = sourceAddedItemsList.length; i &lt; l; ++i) {
+			var addParams = sourceAddedItemsList[i];
+			targetAddParamsList.push(new JW.AbstractArray.IndexItems(
+				addParams.index, this._createItems(addParams.items)));
+		}
+		var targetResult = this.target.trySplice(sourceResult.getRemoveParamsList(), targetAddParamsList);
+		var sourceRemovedItemsList = sourceResult.removedItemsList;
+		var targetRemovedItemsList = targetResult.removedItemsList;
+		for (var i = targetRemovedItemsList.length - 1; i &gt;= 0; --i) {
+			this._destroyItems(targetRemovedItemsList[i].items, sourceRemovedItemsList[i].items);
 		}
 	},
 	
-	_onReindex: function(params) {
-		this.target.tryReindex(params.keyMap);
+	_onReplace: function(params) {
+		var newItem = this.createItem.call(this.scope, params.newItem);
+		var oldItem = this.target.trySet(newItem, params.index).value;
+		this.destroyItem.call(this.scope, oldItem, params.oldItem);
+	},
+	
+	_onMove: function(params) {
+		this.target.tryMove(params.fromIndex, params.toIndex);
 	},
 	
 	_onClear: function(params) {
-		var datas = params.items;
-		this._destroyItems(this.target.tryRemoveAll(JW.Map.getKeys(datas)), datas);
+		this._destroyItems(this.target.tryClear(), params.items);
+	},
+	
+	_onReorder: function(params) {
+		this.target.tryReorder(params.indexArray);
 	}
 });
 </pre>

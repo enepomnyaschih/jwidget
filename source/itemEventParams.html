@@ -34,16 +34,24 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-ItemEventParams-method-constructor'><span id='JW-ItemEventParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` Параметры события с элементом. Обычно используется в событии изменения значения какого-либо элемента коллекции.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {Object} sender Отправитель события.
+ * @param {T} item Элемент.
+ */
 JW.ItemEventParams = function(sender, item) {
 	JW.ItemEventParams._super.call(this, sender);
 	this.item = item;
 };
 
-JW.extend(JW.ItemEventParams/*&lt;T extends Any&gt;*/, JW.EventParams, {
-	/*
-	Fields
-	T item;
-	*/
+JW.extend(JW.ItemEventParams, JW.EventParams, {
+<span id='JW-ItemEventParams-property-item'>	/**
+</span>	 * @property {T} item Элемент.
+	 */
 });
 </pre>
 </body>

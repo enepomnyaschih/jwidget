@@ -34,107 +34,116 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.Tests.Collection.ObservableSet.ObserverTestCase = JW.Unit.TestCase.extend({
+JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 	testObserver: function() {
-		var d = new JW.Proxy(&quot;d&quot;);
-		var source = new JW.ObservableSet([ d ]);
+		var source = new JW.ObservableMap({ &quot;d&quot;: &quot;D&quot; });
 		
 		this.setExpectedOutput(
-			&quot;Added d&quot;
+			&quot;Added D&quot;
 		);
 		var syncher = source.createObserver({
-			addItem    : function(item) { this.output(&quot;Added &quot; + item.value); },
-			removeItem : function(item) { this.output(&quot;Removed &quot; + item.value); },
+			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
 			clearItems : function(items) {
 				items = items.concat();
-				JW.Array.sortBy(items, &quot;value&quot;);
-				this.output(&quot;Cleared &quot; + JW.Array.mapBy(items, &quot;value&quot;).join(&quot;, &quot;));
+				items.sort();
+				this.output(&quot;Cleared &quot; + items.join(&quot;, &quot;));
 			},
 			scope      : this
 		});
 		
-		var f = new JW.Proxy(&quot;f&quot;);
 		this.setExpectedOutput(
-			&quot;Added f&quot;
+			&quot;Added F&quot;
 		);
-		source.addAll([ f ]);
+		source.setAll({ &quot;f&quot;: &quot;F&quot; });
 		
-		var c = new JW.Proxy(&quot;c&quot;);
 		this.setExpectedOutput(
-			&quot;Added c&quot;
+			&quot;Added C&quot;
 		);
-		source.add(c);
+		source.set(&quot;C&quot;, &quot;c&quot;);
 		
-		var b = new JW.Proxy(&quot;b&quot;);
-		var m = new JW.Proxy(&quot;m&quot;);
 		this.setExpectedOutput(
-			&quot;Added b&quot;,
-			&quot;Added m&quot;
+			&quot;Added B&quot;,
+			&quot;Added M&quot;
 		);
-		source.addAll([ b, m ]);
+		source.setAll({ &quot;b&quot;: &quot;B&quot;, &quot;m&quot;: &quot;M&quot; });
 		
 		this.setExpectedOutput();
-		source.addAll([]);
+		source.setAll({});
 		
 		this.setExpectedOutput(
-			&quot;Removed m&quot;
+			&quot;Removed M&quot;
 		);
-		source.remove(m);
+		source.remove(&quot;m&quot;);
 		
 		this.setExpectedOutput();
-		source.remove(m);
+		source.remove(&quot;m&quot;);
 		
 		this.setExpectedOutput(
-			&quot;Removed b&quot;,
-			&quot;Removed f&quot;
+			&quot;Removed F&quot;,
+			&quot;Added T&quot;
 		);
-		source.removeAll([ f, b ]);
+		source.set(&quot;T&quot;, &quot;f&quot;);
+		
+		this.setExpectedOutput();
+		source.setKey(&quot;c&quot;, &quot;a&quot;);
 		
 		this.setExpectedOutput(
-			&quot;Removed d&quot;,
-			&quot;Added f&quot;,
-			&quot;Added b&quot;
+			&quot;Removed T&quot;,
+			&quot;Removed C&quot;,
+			&quot;Added M&quot;
 		);
-		source.splice([ d ], [ f, b ]);
+		source.splice([ &quot;a&quot;, &quot;f&quot; ], { &quot;m&quot;: &quot;M&quot; });
+		
+		this.setExpectedOutput();
+		source.performReindex({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;d&quot;: &quot;M&quot; });
 		
 		this.setExpectedOutput(
-			&quot;Cleared b, c, f&quot;
+			&quot;Removed M&quot;,
+			&quot;Added C&quot;
+		);
+		source.performSplice({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Removed C&quot;,
+			&quot;Removed B&quot;
+		);
+		source.removeAll([ &quot;b&quot;, &quot;c&quot; ]);
+		
+		this.setExpectedOutput(
+			&quot;Cleared D&quot;
 		);
 		source.clear();
 		
-		var h = new JW.Proxy(&quot;h&quot;);
 		this.setExpectedOutput(
-			&quot;Added h&quot;
+			&quot;Added H&quot;
 		);
-		source.add(h);
+		source.set(&quot;H&quot;, &quot;h&quot;);
 		
 		this.setExpectedOutput(
-			&quot;Cleared h&quot;
+			&quot;Cleared H&quot;
 		);
 		syncher.destroy();
 	},
 	
 	testAutoClear: function() {
-		var a = new JW.Proxy(&quot;a&quot;);
-		var b = new JW.Proxy(&quot;b&quot;);
-		var c = new JW.Proxy(&quot;c&quot;);
-		var source = new JW.ObservableSet([ a, b, c ]);
+		var source = new JW.ObservableMap({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
 		
 		this.setExpectedOutput(
-			&quot;Added a&quot;,
-			&quot;Added b&quot;,
-			&quot;Added c&quot;
+			&quot;Added A&quot;,
+			&quot;Added B&quot;,
+			&quot;Added C&quot;
 		);
 		var syncher = source.createObserver({
-			addItem    : function(item) { this.output(&quot;Added &quot; + item.value); },
-			removeItem : function(item) { this.output(&quot;Removed &quot; + item.value); },
+			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
 			scope      : this
 		});
 		
 		this.setExpectedOutput(
-			&quot;Removed c&quot;,
-			&quot;Removed b&quot;,
-			&quot;Removed a&quot;
+			&quot;Removed C&quot;,
+			&quot;Removed B&quot;,
+			&quot;Removed A&quot;
 		);
 		syncher.destroy();
 	}

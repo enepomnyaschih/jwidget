@@ -95,7 +95,7 @@ JW.extend(JW.AbstractArray.Splitter/*&lt;T extends Any, R extends JW.AbstractArr
 		++this._length;
 	},
 	
-	_removeItem: function(index) {
+	_removeItem: function(item, index) {
 		var firstRow = Math.floor(index / this.capacity);
 		this.rows.get(firstRow).tryRemove(index % this.capacity);
 		for (var i = firstRow + 1; i &lt; this.rows.getLength(); ++i) {

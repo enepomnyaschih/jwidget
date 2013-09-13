@@ -111,7 +111,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Unit.TestCase.extend({
 			&quot;Replaced f with g at 2&quot;,
 			&quot;Changed&quot;
 		);
-		this.assertStrictEqual(&quot;f&quot;, array.trySet(&quot;g&quot;, 2));
+		this.assertStrictEqual(&quot;f&quot;, array.trySet(&quot;g&quot;, 2).value);
 		this.assertArray([ &quot;d&quot;, &quot;c&quot;, &quot;g&quot;, &quot;a&quot;, &quot;k&quot; ], array);
 		
 		this.setExpectedOutput();

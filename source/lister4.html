@@ -34,37 +34,28 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.ObservableMap.Lister = function(source, config) {
-	JW.ObservableMap.Lister._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+<span id='JW-AbstractSet-Lister-method-constructor'><span id='JW-AbstractSet-Lister'>/**
+</span></span> * @class
+ *
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractCollection.Lister&lt;T, JW.AbstractSet&lt;T&gt;&gt;`
+ *
+ * Конвертер множества в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ *
+ * @extends JW.AbstractCollection.Lister
+ *
+ * @constructor
+ * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
+ * @param {JW.AbstractSet} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.AbstractSet.Lister = function(source, config) {
+	JW.AbstractSet.Lister._super.call(this, source, config);
 };
 
-JW.extend(JW.ObservableMap.Lister/*&lt;T extends JW.Class&gt;*/, JW.AbstractMap.Lister/*&lt;T&gt;*/, {
-	/*
-	Fields
-	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _clearEventAttachment;
-	*/
-	
-	// override
-	destroy: function() {
-		this._clearEventAttachment.destroy();
-		this._spliceEventAttachment.destroy();
-		this._super();
-	},
-	
-	_onSplice: function(params) {
-		var spliceResult = params.spliceResult;
-		this.target.trySplice(
-			JW.Map.toArray(spliceResult.removedItems),
-			JW.Map.toArray(spliceResult.addedItems));
-	},
-	
-	_onClear: function(params) {
-		this.target.tryRemoveAll(
-			JW.Map.toArray(params.items));
-	}
+JW.extend(JW.AbstractSet.Lister, JW.AbstractCollection.Lister, {
+<span id='JW-AbstractSet-Lister-property-source'>	/**
+</span>	 * @property {JW.AbstractSet} source `&lt;T&gt;` Исходная коллекция.
+	 */
 });
 </pre>
 </body>

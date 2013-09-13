@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*
-	jWidget Lib tests.
+	jWidget Lib source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -34,111 +34,51 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
-	testUnobservableTarget: function() {
-		var source = new JW.Array([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ]);
-		var target = new JW.Array();
-		
-		this.setExpectedOutput(
-			&quot;Created by a&quot;,
-			&quot;Created by b&quot;,
-			&quot;Created by c&quot;
-		);
-		var mapper = this.createMapper(source, target);
-		this.assertTarget([ &quot;A&quot;, &quot;B&quot;, &quot;C&quot; ], target);
-		
-		this.setExpectedOutput(
-			&quot;Destroyed C by c&quot;,
-			&quot;Destroyed B by b&quot;,
-			&quot;Destroyed A by a&quot;
-		);
-		mapper.destroy();
-		this.assertTarget([], target);
-		
-		this.setExpectedOutput();
-		target.destroy();
-		source.destroy();
+<span id='JW-ObservableSet-Mapper-method-constructor'><span id='JW-ObservableSet-Mapper'>/**
+</span></span> * @class
+ *
+ * `&lt;T extends JW.Class, U extends JW.Class&gt; extends JW.AbstractSet.Mapper&lt;T, U&gt;`
+ *
+ * Конвертер элементов оповещающего множества. Подробнее читайте JW.AbstractCollection.Mapper.
+ *
+ * @extends JW.AbstractSet.Mapper
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
+ * @param {JW.ObservableSet} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.ObservableSet.Mapper = function(source, config) {
+	JW.ObservableSet.Mapper._super.call(this, source, config);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+};
+
+JW.extend(JW.ObservableSet.Mapper, JW.AbstractSet.Mapper, {
+	/*
+	EventAttachment _spliceEventAttachment;
+	EventAttachment _clearEventAttachment;
+	*/
+	
+	// override
+	destroy: function() {
+		this._clearEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
+		this._super();
 	},
 	
-	testObservableTarget: function() {
-		var source = new JW.Array([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ]);
-		var target = this.createTarget();
-		
-		this.setExpectedOutput(
-			&quot;Created by a&quot;,
-			&quot;Created by b&quot;,
-			&quot;Created by c&quot;,
-			&quot;Spliced -[] +[0:[A,B,C]] to []&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed length from 0 to 3&quot;
-		);
-		var mapper = this.createMapper(source, target);
-		this.assertTarget([ &quot;A&quot;, &quot;B&quot;, &quot;C&quot; ], target);
-		
-		this.setExpectedOutput(
-			&quot;Cleared [A,B,C]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed length from 3 to 0&quot;,
-			&quot;Destroyed C by c&quot;,
-			&quot;Destroyed B by b&quot;,
-			&quot;Destroyed A by a&quot;
-		);
-		mapper.destroy();
-		this.assertTarget([], target);
-		
-		this.setExpectedOutput();
-		target.destroy();
-		source.destroy();
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		var removedDatas = spliceResult.removedItems;
+		var addedDatas = spliceResult.addedItems;
+		this.target.trySplice(this._getItems(removedDatas), this._createItems(addedDatas));
+		this._destroyItems(removedDatas);
 	},
 	
-	// tests that empty source doesn't caused target to trigger &quot;change&quot; on synchronizer initialization
-	testEmptyChange: function() {
-		var source = new JW.Array();
-		var target = this.createTarget();
-		var mapper = this.createMapper(source, target);
-		mapper.destroy();
-		target.destroy();
-		source.destroy();
-	},
-	
-	testAutoTarget: function() {
-		var source = new JW.Array([ &quot;d&quot; ]);
-		this.setExpectedOutput(&quot;Created by d&quot;);
-		var mapper = this.createMapper(source);
-		this.assertTrue(mapper.target instanceof JW.Array);
-		this.assertTarget([ &quot;D&quot; ], mapper.target);
-		this.setExpectedOutput(&quot;Destroyed D by d&quot;);
-		mapper.destroy();
-		source.destroy();
-	},
-	
-	createTarget: function(target) {
-		var target = new JW.ObservableArray();
-		JW.Tests.Collection.subscribeToArray(this, target);
-		return target;
-	},
-	
-	createMapper: function(source, target) {
-		return source.createMapper({
-			target : target,
-			scope  : this,
-			
-			createItem: function(data) {
-				this.output(&quot;Created by &quot; + data);
-				return data.toUpperCase();
-			},
-			
-			destroyItem: function(item, data) {
-				this.output(&quot;Destroyed &quot; + item + &quot; by &quot; + data);
-			}
-		});
-	},
-	
-	assertTarget: function(values, target) {
-		this.assertStrictEqual(values.length, target.getLength());
-		for (var i = 0; i &lt; target.getLength(); ++i) {
-			this.assertStrictEqual(values[i], target.get(i));
-		}
+	_onClear: function(params) {
+		var datas = params.items;
+		this.target.tryRemoveAll(this._getItems(datas));
+		this._destroyItems(datas);
 	}
 });
 </pre>

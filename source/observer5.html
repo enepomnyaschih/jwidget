@@ -34,30 +34,72 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.ObservableMap.Observer = function(source, config) {
-	JW.ObservableMap.Observer._super.call(this, source, config);
-	this._spliceEventAttachment = this.source.spliceEvent.bind(this._onSplice, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
+<span id='JW-ObservableArray-Observer-method-constructor'><span id='JW-ObservableArray-Observer'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractArray.Observer&lt;T&gt;`
+ *
+ * Наблюдатель оповещающего массива. Подробнее читайте JW.AbstractCollection.Observer.
+ *
+ * @extends JW.AbstractArray.Observer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
+ * @param {JW.ObservableArray} source `&lt;T&gt;` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.ObservableArray.Observer = function(source, config) {
+	JW.ObservableArray.Observer._super.call(this, source, config);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	if (this.change) {
+		this._changeAttachment = source.changeEvent.bind(this._onChange, this);
+	}
 };
 
-JW.extend(JW.ObservableMap.Observer/*&lt;S extends Any, T extends Any&gt;*/, JW.AbstractMap.Observer/*&lt;S, T&gt;*/, {
+JW.extend(JW.ObservableArray.Observer, JW.AbstractArray.Observer, {
 	/*
-	Fields
 	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _replaceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
+	JW.EventAttachment _changeAttachment;
 	*/
 	
 	// override
 	destroy: function() {
+		if (this._changeAttachment) {
+			this._changeAttachment.destroy();
+		}
 		this._clearEventAttachment.destroy();
+		this._replaceEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
-		this._removeItems(spliceResult.removedItems);
-		this._addItems(spliceResult.addedItems);
+		var oldItems = spliceResult.oldItems;
+		var removedItems = spliceResult.getRemovedItems();
+		
+		if (this.clearItems &amp;&amp; (3 * removedItems.length &gt; 2 * oldItems.length)) {
+			// if there is an effective clearing function, just reset the controller
+			this.clearItems.call(this.scope, oldItems);
+			this._addItems(this.source.getItems());
+		} else {
+			// else, splice the elements
+			this._removeItems(removedItems);
+			this._addItems(spliceResult.getAddedItems());
+		}
+	},
+	
+	_onReplace: function(params) {
+		if (this.removeItem) {
+			this.removeItem.call(this.scope, params.oldItem);
+		}
+		if (this.addItem) {
+			this.addItem.call(this.scope, params.newItem);
+		}
 	},
 	
 	_onClear: function(params) {
