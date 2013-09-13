@@ -726,7 +726,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): boolean`
+	 * `f(item: T): boolean`
 	 *
 	 * Фильтрующая функция.
 	 *
@@ -742,7 +742,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): boolean`
+	 * `f(item: T): boolean`
 	 *
 	 * Фильтрующая функция.
 	 *
@@ -806,7 +806,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): U`
+	 * `f(item: T): U`
 	 *
 	 * Отображающая функция.
 	 *
@@ -822,7 +822,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): U`
+	 * `f(item: T): U`
 	 *
 	 * Отображающая функция.
 	 *

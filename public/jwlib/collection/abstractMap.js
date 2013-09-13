@@ -36,7 +36,7 @@ JW.AbstractMap = function(json, adapter) {
 	this.getKey = null;
 };
 
-JW.extend(JW.AbstractMap/*<T>*/, JW.IndexedCollection/*<String, T>*/, {
+JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	/**
 	 * @property {Function} getKey
 	 *
