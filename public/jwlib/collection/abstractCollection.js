@@ -24,8 +24,8 @@
  *
  * Существует 3 типа коллекций:
  *
- * - JW.AbstractArray (массив)
- * - JW.AbstractMap (словарь)
+ * - JW.AbstractArray (массив), наследуется от JW.IndexedCollection
+ * - JW.AbstractMap (словарь), наследуется от JW.IndexedCollection
  * - JW.AbstractSet (множество)
  *
  * Коллекции можно преобразовывать друг в друга с помощью алгоритмов.
