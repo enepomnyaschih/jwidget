@@ -20,50 +20,50 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractSet.Observer<T>`
+ * `<T> extends JW.AbstractArray.SorterComparing<T>`
  *
- * Наблюдатель оповещающего множества. Подробнее читайте JW.AbstractCollection.Observer.
+ * Конвертер оповещающего массива в массив (сортировщик по компаратору).
+ * Подробнее читайте JW.AbstractCollection.SorterComparing.
  *
- * @extends JW.AbstractSet.Observer
+ * @extends JW.AbstractArray.SorterComparing
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
- * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
+ * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createSorterComparing.
+ * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
-JW.ObservableSet.Observer = function(source, config) {
-	JW.ObservableSet.Observer._super.call(this, source, config);
+JW.ObservableArray.SorterComparing = function(source, config) {
+	JW.ObservableArray.SorterComparing._super.call(this, source, config);
 	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
 	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
-	if (this.change) {
-		this._changeAttachment = source.changeEvent.bind(this._onChange, this);
-	}
 };
 
-JW.extend(JW.ObservableSet.Observer, JW.AbstractSet.Observer, {
+JW.extend(JW.ObservableArray.SorterComparing, JW.AbstractArray.SorterComparing, {
 	/*
 	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _replaceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
-	JW.EventAttachment _changeAttachment;
 	*/
 	
 	// override
 	destroy: function() {
-		if (this._changeAttachment) {
-			this._changeAttachment.destroy();
-		}
 		this._clearEventAttachment.destroy();
+		this._replaceEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
-		this._removeItems(spliceResult.removedItems);
-		this._addItems(spliceResult.addedItems);
+		this._splice(spliceResult.getRemovedItems(), spliceResult.getAddedItems());
+	},
+	
+	_onReplace: function(params) {
+		this._splice([params.oldItem], [params.newItem]);
 	},
 	
 	_onClear: function(params) {
-		this._clearItems(params.items);
+		this._splice(params.items, []);
 	}
 });

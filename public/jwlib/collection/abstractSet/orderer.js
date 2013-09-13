@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T> extends JW.AbstractCollection.Orderer<T, JW.AbstractSet<T>>`
+ * `<T extends JW.Class> extends JW.AbstractCollection.Orderer<T, JW.AbstractSet<T>>`
  *
  * Конвертер множества в массив (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
  *

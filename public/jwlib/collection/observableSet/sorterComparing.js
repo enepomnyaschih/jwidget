@@ -20,38 +20,32 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractSet.Observer<T>`
+ * `<T extends JW.Class> extends JW.AbstractSet.SorterComparing<T>`
  *
- * Наблюдатель оповещающего множества. Подробнее читайте JW.AbstractCollection.Observer.
+ * Конвертер оповещающего множества в массив (сортировщик по компаратору).
+ * Подробнее читайте JW.AbstractCollection.SorterComparing.
  *
- * @extends JW.AbstractSet.Observer
+ * @extends JW.AbstractSet.SorterComparing
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
+ * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createSorterComparing.
  * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
-JW.ObservableSet.Observer = function(source, config) {
-	JW.ObservableSet.Observer._super.call(this, source, config);
+JW.ObservableSet.SorterComparing = function(source, config) {
+	JW.ObservableSet.SorterComparing._super.call(this, source, config);
 	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
 	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
-	if (this.change) {
-		this._changeAttachment = source.changeEvent.bind(this._onChange, this);
-	}
 };
 
-JW.extend(JW.ObservableSet.Observer, JW.AbstractSet.Observer, {
+JW.extend(JW.ObservableSet.SorterComparing, JW.AbstractSet.SorterComparing, {
 	/*
 	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
-	JW.EventAttachment _changeAttachment;
 	*/
 	
 	// override
 	destroy: function() {
-		if (this._changeAttachment) {
-			this._changeAttachment.destroy();
-		}
 		this._clearEventAttachment.destroy();
 		this._spliceEventAttachment.destroy();
 		this._super();
@@ -59,11 +53,10 @@ JW.extend(JW.ObservableSet.Observer, JW.AbstractSet.Observer, {
 	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
-		this._removeItems(spliceResult.removedItems);
-		this._addItems(spliceResult.addedItems);
+		this._splice(spliceResult.removedItems, spliceResult.addedItems);
 	},
 	
 	_onClear: function(params) {
-		this._clearItems(params.items);
+		this._splice(params.items, []);
 	}
 });

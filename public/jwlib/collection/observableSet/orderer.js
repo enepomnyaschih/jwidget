@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T> extends JW.AbstractSet.Orderer<T>`
+ * `<T extends JW.Class> extends JW.AbstractSet.Orderer<T>`
  *
  * Конвертер оповещающего множества в массив (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
  *

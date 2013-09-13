@@ -20,23 +20,24 @@
 /**
  * @class
  *
- * `<T extends JW.Class> extends JW.AbstractCollection.Observer<T, JW.AbstractSet<T>>`
+ * `<T> extends JW.AbstractCollection.SorterComparing<T, JW.AbstractArray<T>>`
  *
- * Наблюдатель множества. Подробнее читайте JW.AbstractCollection.Observer.
+ * Конвертер массива в массив lol (сортировщик по компаратору).
+ * Подробнее читайте JW.AbstractCollection.SorterComparing.
  *
- * @extends JW.AbstractCollection.Observer
+ * @extends JW.AbstractCollection.SorterComparing
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
- * @param {JW.AbstractSet} source `<T>` Исходная коллекция.
+ * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createSorterComparing.
+ * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
-JW.AbstractSet.Observer = function(source, config) {
-	JW.AbstractSet.Observer._super.call(this, source, config);
+JW.AbstractArray.SorterComparing = function(source, config) {
+	JW.AbstractArray.SorterComparing._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractSet.Observer, JW.AbstractCollection.Observer, {
+JW.extend(JW.AbstractArray.SorterComparing, JW.AbstractCollection.SorterComparing, {
 	/**
-	 * @property {JW.AbstractSet} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractArray} source `<T>` Исходная коллекция.
 	 */
 });

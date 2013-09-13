@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T> extends JW.AbstractCollection.Indexer<T, JW.AbstractSet<T>>`
+ * `<T extends JW.Class> extends JW.AbstractCollection.Indexer<T, JW.AbstractSet<T>>`
  *
  * Индексатор множества. Подробнее читайте JW.AbstractCollection.Indexer.
  *
