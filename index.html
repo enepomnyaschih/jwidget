@@ -6,10 +6,8 @@ var version = "0.6";
 if (location.href.indexOf("index.html") !== -1) {
 	location.href = location.href.replace("index.html", version + "/index.html");
 } else {
-	console.log(location.protocol + location.host + location.pathname.replace(/\/?$/, "/") + version +
-		"/index.html" + location.search + location.hash);
-	//location.href = location.protocol + location.host + location.pathname.replace(/\/?$/, "/") + version +
-		//"/index.html" + location.search + location.hash;
+	location.href = location.protocol + "//" + location.host + location.pathname.replace(/\/?$/, "/") + version +
+		"/index.html" + location.search + location.hash;
 }
 </script>
 </head>
