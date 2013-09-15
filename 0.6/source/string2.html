@@ -34,7 +34,18 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
+<span id='JW-String'>/**
+</span> * @class
+ *
+ * Набор утилитарных функций для строк.
+ */
 JW.String = {
+<span id='JW-String-method-htmlEncode'>	/**
+</span>	 * Экранирует специальные символы HTML в строке.
+	 * Преобразует символы &amp;amp;, &amp;gt;, &amp;lt;, &amp;quot; в `&amp;amp;` `&amp;gt;` `&amp;lt;` `&amp;quot;` соответственно.
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	htmlEncode: function(target) {
 		return String(target).
 			replace(/&amp;/g, &quot;&amp;amp;&quot;).
@@ -43,6 +54,12 @@ JW.String = {
 			replace(/&quot;/g, &quot;&amp;quot;&quot;);
 	},
 	
+<span id='JW-String-method-htmlDecode'>	/**
+</span>	 * Деэкранирует специальные символы HTML в строке.
+	 * Преобразует символы `&amp;amp;` `&amp;gt;` `&amp;lt;` `&amp;quot;` в &amp;amp;, &amp;gt;, &amp;lt;, &amp;quot; соответственно.
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	htmlDecode: function(target) {
 		return String(target).
 			replace(/&amp;quot;/g, '&quot;').
@@ -51,8 +68,8 @@ JW.String = {
 			replace(/&amp;amp;/g, &quot;&amp;&quot;);
 	},
 	
-	removeScripts: function(target) {
-		target = String(target);
+<span id='JW-String-method-removeScripts'>	removeScripts: function(target) {
+</span>		target = String(target);
 		var result = [];
 		var index = 0;
 		while (true) {
@@ -70,6 +87,15 @@ JW.String = {
 		return result.join(&quot;&quot;);
 	},
 	
+<span id='JW-String-method-ellipsis'>	/**
+</span>	 * Сокращает строку до указанного количества символов. Если строка укладывается в указанную длину, она не меняется.
+	 * В противном случае, она обрезается, и в конце добавляется подстрока ellipsis, так что итоговая строка
+	 * получается длины length.
+	 * @param {string} str Строка.
+	 * @param {number} length Максимальная длина искомой строки.
+	 * @param {string} [ellipsis] Конец строки при сокращении. По умолчанию равен многоточию `...`
+	 * @returns {string} Результат.
+	 */
 	ellipsis: function(target, length, ellipsis) {
 		target = String(target);
 		if (target.length &lt;= length) {
@@ -79,6 +105,17 @@ JW.String = {
 		return target.substr(0, length - ellipsis.length) + ellipsis;
 	},
 	
+<span id='JW-String-method-prepend'>	/**
+</span>	 * Дополняет строку в начале указанным символом до фиксированной длины.
+	 * Если строка длиннее указанной длины, она не меняется.
+	 * 
+	 *     JW.String.prepend(&quot;123&quot;, 5, &quot;0&quot;)  // &quot;00123&quot;
+	 * 
+	 * @param {string} str Строка.
+	 * @param {number} length Длина искомой строки.
+	 * @param {string} ch Символ, которым дополнить строку.
+	 * @returns {string} Результат.
+	 */
 	prepend: function(target, length, ch) {
 		target = String(target);
 		var buf = [];
@@ -90,29 +127,61 @@ JW.String = {
 		return buf.join(&quot;&quot;);
 	},
 	
+<span id='JW-String-method-capitalize'>	/**
+</span>	 * Переводит первый символ в верхний регистр.
+	 * 
+	 *     JW.String.capitalize(&quot;vasya&quot;)  // &quot;Vasya&quot;
+	 * 
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	capitalize: function(target) {
 		target = String(target);
 		return target.charAt(0).toUpperCase() + target.substr(1);
 	},
 	
+<span id='JW-String-method-camel'>	/**
+</span>	 * Преобразует hyphen-style в camelStyle.
+	 * 
+	 *     JW.String.camel(&quot;i-love-js&quot;)  // &quot;iLoveJs&quot;
+	 *
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	camel: function(target) {
 		return String(target).replace(/-([a-z])/ig, JW.String._fcamel);
 	},
 	
+<span id='JW-String-method-hyphen'>	/**
+</span>	 * Преобразует camelStyle в hyphen-style.
+	 * 
+	 *     JW.String.hyphen(&quot;iLoveJs&quot;)  // &quot;i-love-js&quot;
+	 *
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	hyphen: function(target) {
 		return String(target).replace(/([A-Z])/g, JW.String._fhyphen);
 	},
 	
+<span id='JW-String-method-trim'>	/**
+</span>	 * Удаляет пробельные символы в начале и в конце строки.
+	 * 
+	 *     JW.String.trim(&quot;\t\tI love JS!    &quot;)  // &quot;I love JS!&quot;
+	 *
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	trim: function(target) {
 		return String(target).replace(/^\s*/, &quot;&quot;).replace(/\s*$/, &quot;&quot;);
 	},
 	
-	_fcamel: function(a, b) {
-		return b.toUpperCase();
+<span id='JW-String-method-_fcamel'>	_fcamel: function(a, b) {
+</span>		return b.toUpperCase();
 	},
 	
-	_fhyphen: function(a, b) {
-		return &quot;-&quot; + b.toLowerCase();
+<span id='JW-String-method-_fhyphen'>	_fhyphen: function(a, b) {
+</span>		return &quot;-&quot; + b.toLowerCase();
 	}
 };
 </pre>
