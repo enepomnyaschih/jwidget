@@ -17,7 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * Набор утилитарных функций для строк.
+ */
 JW.String = {
+	/**
+	 * Экранирует специальные символы HTML в строке.
+	 * Преобразует символы &amp;, &gt;, &lt;, &quot; в `&amp;` `&gt;` `&lt;` `&quot;` соответственно.
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	htmlEncode: function(target) {
 		return String(target).
 			replace(/&/g, "&amp;").
@@ -26,6 +37,12 @@ JW.String = {
 			replace(/"/g, "&quot;");
 	},
 	
+	/**
+	 * Деэкранирует специальные символы HTML в строке.
+	 * Преобразует символы `&amp;` `&gt;` `&lt;` `&quot;` в &amp;, &gt;, &lt;, &quot; соответственно.
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	htmlDecode: function(target) {
 		return String(target).
 			replace(/&quot;/g, '"').
@@ -53,6 +70,15 @@ JW.String = {
 		return result.join("");
 	},
 	
+	/**
+	 * Сокращает строку до указанного количества символов. Если строка укладывается в указанную длину, она не меняется.
+	 * В противном случае, она обрезается, и в конце добавляется подстрока ellipsis, так что итоговая строка
+	 * получается длины length.
+	 * @param {string} str Строка.
+	 * @param {number} length Максимальная длина искомой строки.
+	 * @param {string} [ellipsis] Конец строки при сокращении. По умолчанию равен многоточию `...`
+	 * @returns {string} Результат.
+	 */
 	ellipsis: function(target, length, ellipsis) {
 		target = String(target);
 		if (target.length <= length) {
@@ -62,6 +88,17 @@ JW.String = {
 		return target.substr(0, length - ellipsis.length) + ellipsis;
 	},
 	
+	/**
+	 * Дополняет строку в начале указанным символом до фиксированной длины.
+	 * Если строка длиннее указанной длины, она не меняется.
+	 * 
+	 *     JW.String.prepend("123", 5, "0")  // "00123"
+	 * 
+	 * @param {string} str Строка.
+	 * @param {number} length Длина искомой строки.
+	 * @param {string} ch Символ, которым дополнить строку.
+	 * @returns {string} Результат.
+	 */
 	prepend: function(target, length, ch) {
 		target = String(target);
 		var buf = [];
@@ -73,19 +110,51 @@ JW.String = {
 		return buf.join("");
 	},
 	
+	/**
+	 * Переводит первый символ в верхний регистр.
+	 * 
+	 *     JW.String.capitalize("vasya")  // "Vasya"
+	 * 
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	capitalize: function(target) {
 		target = String(target);
 		return target.charAt(0).toUpperCase() + target.substr(1);
 	},
 	
+	/**
+	 * Преобразует hyphen-style в camelStyle.
+	 * 
+	 *     JW.String.camel("i-love-js")  // "iLoveJs"
+	 *
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	camel: function(target) {
 		return String(target).replace(/-([a-z])/ig, JW.String._fcamel);
 	},
 	
+	/**
+	 * Преобразует camelStyle в hyphen-style.
+	 * 
+	 *     JW.String.hyphen("iLoveJs")  // "i-love-js"
+	 *
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	hyphen: function(target) {
 		return String(target).replace(/([A-Z])/g, JW.String._fhyphen);
 	},
 	
+	/**
+	 * Удаляет пробельные символы в начале и в конце строки.
+	 * 
+	 *     JW.String.trim("\t\tI love JS!    ")  // "I love JS!"
+	 *
+	 * @param {string} str Строка.
+	 * @returns {string} Результат.
+	 */
 	trim: function(target) {
 		return String(target).replace(/^\s*/, "").replace(/\s*$/, "");
 	},

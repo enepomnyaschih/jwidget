@@ -1,11 +1,12 @@
 @echo off
-rd /S /Q ..\docs\extjs
-rd /S /Q ..\docs\member-icons
-rd /S /Q ..\docs\output
-rd /S /Q ..\docs\resources
-rd /S /Q ..\docs\source
-del /Q ..\docs\*
+set version=0.6
+rd /S /Q ..\docs\%version%\extjs
+rd /S /Q ..\docs\%version%\member-icons
+rd /S /Q ..\docs\%version%\output
+rd /S /Q ..\docs\%version%\resources
+rd /S /Q ..\docs\%version%\source
+del /Q ..\docs\%version%\*
 md ..\docs-temp
-jsduck-5.2.0 public/jw* --output ../docs-temp --external=C,K,P,T,TC,U,UC,V
-xcopy /I /Y /E /Q ..\docs-temp\* ..\docs
+jsduck-5.2.0 public/jw* --output ../docs-temp --external=C,K,P,T,TC,U,UC,V --title "jWidget %version% API documentation"
+xcopy /I /Y /E /Q ..\docs-temp\* ..\docs\%version%
 rd /S /Q ..\docs-temp

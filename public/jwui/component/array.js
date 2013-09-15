@@ -17,6 +17,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * Список дочерних компонентов JW.UI.Component.
+ * 
+ * Возвращается методом JW.UI.Component.addArray. Если его уничтожить, дочерние компоненты будут удалены из родителя.
+ *
+ * @extends JW.Class
+ */
 JW.UI.Component.Array = function(parent, source, el) {
 	JW.UI.Component.Array._super.call(this);
 	this.parent = parent;
@@ -33,7 +42,6 @@ JW.UI.Component.Array = function(parent, source, el) {
 
 JW.extend(JW.UI.Component.Array, JW.Class, {
 	/*
-	Fields
 	JW.UI.Component parent;
 	JW.AbstractArray.Mapper<JW.UI.Component, JW.UI.Component> _mapper;
 	JW.AbstractArray.Inserter _inserter;
