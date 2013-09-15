@@ -193,35 +193,6 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {number} Индекс найденного элемента или undefined.
 	 */
 	/**
-	 * @method findBy
-	 *
-	 * Ищет элемент по критерию.
-	 * 
-	 * Возвращает индекс первого элемента, поле field которого строго равно (===) значению value.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {number} Индекс найденного элемента или undefined.
-	 */
-	/**
-	 * @method findByMethod
-	 *
-	 * Ищет элемент по критерию.
-	 * 
-	 * Возвращает индекс первого элемента, указанный метод которого с аргументами args возвращает !== false.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {number} Индекс найденного элемента или undefined.
-	 */
-	/**
 	 * @method search
 	 *
 	 * Ищет элемент по критерию.
@@ -347,54 +318,6 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Array} `<number>` Массив индексов отсортированных элементов.
 	 */
 	/**
-	 * @method getSortingKeysBy
-	 *
-	 * Возвращает массив индексов отсортированных элементов.
-	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<number>` Массив индексов отсортированных элементов.
-	 */
-	/**
-	 * @method $getSortingKeysBy
-	 *
-	 * Возвращает массив индексов отсортированных элементов.
-	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<number>` Массив индексов отсортированных элементов.
-	 */
-	/**
-	 * @method getSortingKeysByMethod
-	 *
-	 * Возвращает массив индексов отсортированных элементов.
-	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Array} `<number>` Массив индексов отсортированных элементов.
-	 */
-	/**
-	 * @method $getSortingKeysByMethod
-	 *
-	 * Возвращает массив индексов отсортированных элементов.
-	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Array} `<number>` Массив индексов отсортированных элементов.
-	 */
-	/**
 	 * @method getSortingKeysComparing
 	 *
 	 * Возвращает массив индексов отсортированных элементов.
@@ -500,31 +423,6 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	$filter: JW.AbstractCollection._create$Array("filter"),
 	
 	/**
-	 * @method $filterBy
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.Array} `<T>` Отфильтрованная коллекция.
-	 */
-	/**
-	 * @method $filterByMethod
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Array} `<T>` Отфильтрованная коллекция.
-	 */
-	
-	/**
 	 * `<U>` Отображает элементы коллекции.
 	 * 
 	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
@@ -557,31 +455,6 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Array} `<U>` Отображенная коллекция.
 	 */
 	$map: JW.AbstractCollection._create$Array("map"),
-	
-	/**
-	 * @method $mapBy
-	 *
-	 * `<U>` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.Array} `<U>` Отображенная коллекция.
-	 */
-	/**
-	 * @method $mapByMethod
-	 *
-	 * `<U>` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Array} `<U>` Отображенная коллекция.
-	 */
 	
 	toArray: function() {
 		return this.items.concat();
@@ -925,31 +798,6 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Сортирует массив по значению указанного поля элемента. Поле элемента извлекается с помощью функции JW.get.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {void}
-	 */
-	sortBy: function(field, order) {
-		this.sort(function(item) {
-			return JW.get(item, field);
-		}, this, order);
-	},
-	
-	/**
-	 * Сортирует массив по результату запуска указанного метода элемента.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {void}
-	 */
-	sortByMethod: function(method, args, order) {
-		args = args || [];
-		this.sort(function(item) {
-			return item[method].apply(item, args);
-		}, this, order);
-	},
-	
-	/**
 	 * Сортирует массив по компаратору.
 	 *
 	 * @param {Function} compare
@@ -1246,7 +1094,7 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 	 */
 	getRemovedItems: function() {
 		if (!this.removedItems) {
-			this.removedItems = JW.Array.merge(JW.Array.mapBy(this.removedItemsList, "items"));
+			this.removedItems = JW.Array.merge(JW.Array.map(this.removedItemsList, JW.byField("items")));
 		}
 		return this.removedItems;
 	},
@@ -1257,7 +1105,7 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 	 */
 	getAddedItems: function() {
 		if (!this.addedItems) {
-			this.addedItems = JW.Array.merge(JW.Array.mapBy(this.addedItemsList, "items"));
+			this.addedItems = JW.Array.merge(JW.Array.map(this.addedItemsList, JW.byField("items")));
 		}
 		return this.addedItems;
 	},
@@ -1268,7 +1116,7 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 	 */
 	getRemoveParamsList: function() {
 		if (!this.removeParamsList) {
-			this.removeParamsList = JW.Array.mapByMethod(this.removedItemsList, "toIndexCount");
+			this.removeParamsList = JW.Array.map(this.removedItemsList, JW.byMethod("toIndexCount"));
 		}
 		return this.removeParamsList;
 	},

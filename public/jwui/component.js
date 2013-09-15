@@ -357,7 +357,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.destroyed = true;
 		if (this.el) {
 			this.el.remove();
-			JW.Set.eachByMethod(this._arrays, "destroy");
+			JW.Set.each(this._arrays, JW.byMethod("destroy"));
 			this._arrays = null;
 			
 			this.destroyComponent();
@@ -366,7 +366,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this._childInserter = null;
 			this._childMapper.destroy();
 			this._childMapper = null;
-			this.children.eachByMethod("destroy");
+			this.children.each(JW.byMethod("destroy"));
 			this.children.destroy();
 			this.children = null;
 		}
@@ -607,7 +607,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		this.wasAfterAppend = true;
 		this.afterAppend();
-		JW.Set.eachByMethod(this.allChildren, "_afterAppend");
+		JW.Set.each(this.allChildren, JW.byMethod("_afterAppend"));
 	},
 	
 	_initChild: function(component, replacedEl) {

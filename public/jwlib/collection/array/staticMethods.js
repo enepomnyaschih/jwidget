@@ -337,18 +337,6 @@ JW.apply(JW.Array, {
 		JW.Array.tryReorder(target, JW.Array.detectSort(target, callback, scope, order));
 	},
 	
-	sortBy: function(target, field, order) {
-		JW.Array.sort(target, function(item) {
-			return JW.get(item, field);
-		}, target, order);
-	},
-	
-	sortByMethod: function(target, method, args, order) {
-		JW.Array.sort(target, function(item) {
-			return item[method].apply(item, args);
-		}, target, order);
-	},
-	
 	sortComparing: function(target, compare, scope, order) {
 		JW.Array.tryReorder(target, JW.Array.detectSortComparing(target, compare, scope, order));
 	},

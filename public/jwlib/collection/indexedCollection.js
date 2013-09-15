@@ -48,9 +48,8 @@
  * Добавлены следующие алгоритмы:
  *
  * - {@link #getKeys}, #$getKeys - Возвращает массив ключей всех элементов.
- * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysBy, #$getSortingKeysBy, #getSortingKeysByMethod,
- * {@link #$getSortingKeysByMethod}, #getSortingKeysComparing, #$getSortingKeysComparing - Возвращает ключи элементов,
- * отсортированных по индексу или компаратору.
+ * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
+ * Возвращает ключи элементов, отсортированных по индексу или компаратору.
  * - {@link #toMap}, #$toMap - Строит новый словарь из элементов коллекции.
  * - {@link #asMap}, #$asMap - Представляет коллекцию в виде словаря.
  *
@@ -272,35 +271,6 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	/**
 	 * Ищет элемент по критерию.
 	 * 
-	 * Возвращает ключ первого элемента, поле field которого строго равно (===) значению value.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {K} Ключ найденного элемента или undefined.
-	 */
-	findBy: JW.AbstractCollection._createBy("find"),
-	
-	/**
-	 * Ищет элемент по критерию.
-	 * 
-	 * Возвращает ключ первого элемента, указанный метод которого с аргументами args возвращает !== false.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {K} Ключ найденного элемента или undefined.
-	 */
-	findByMethod: JW.AbstractCollection._createByMethod("find"),
-	
-	/**
-	 * Ищет элемент по критерию.
-	 * 
 	 * Возвращает первый элемент, функция f на котором возвращает !== false.
 	 * 
 	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
@@ -433,54 +403,6 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Array} `<K>` Массив ключей отсортированных элементов.
 	 */
 	$getSortingKeys: JW.AbstractCollection._create$Array("getSortingKeys"),
-	
-	/**
-	 * Возвращает массив ключей отсортированных элементов.
-	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<K>` Массив ключей отсортированных элементов.
-	 */
-	getSortingKeysBy: JW.AbstractCollection._createByField("getSortingKeys"),
-	
-	/**
-	 * Возвращает массив ключей отсортированных элементов.
-	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<K>` Массив ключей отсортированных элементов.
-	 */
-	$getSortingKeysBy: JW.AbstractCollection._create$Array("getSortingKeysBy"),
-	
-	/**
-	 * Возвращает массив ключей отсортированных элементов.
-	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Array} `<K>` Массив ключей отсортированных элементов.
-	 */
-	getSortingKeysByMethod: JW.AbstractCollection._createByMethod("getSortingKeys"),
-	
-	/**
-	 * Возвращает массив ключей отсортированных элементов.
-	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Array} `<K>` Массив ключей отсортированных элементов.
-	 */
-	$getSortingKeysByMethod: JW.AbstractCollection._create$Array("getSortingKeysByMethod"),
 	
 	/**
 	 * Возвращает массив ключей отсортированных элементов.
@@ -645,30 +567,6 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.IndexedCollection} `<K, T>` Отфильтрованная коллекция.
 	 */
 	/**
-	 * @method $filterBy
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.IndexedCollection} `<K, T>` Отфильтрованная коллекция.
-	 */
-	/**
-	 * @method $filterByMethod
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.IndexedCollection} `<K, T>` Отфильтрованная коллекция.
-	 */
-	/**
 	 * @method map
 	 *
 	 * `<U>` Отображает элементы коллекции.
@@ -698,30 +596,6 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * Отображающая функция.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.IndexedCollection} `<K, U>` Отображенная коллекция.
-	 */
-	/**
-	 * @method $mapBy
-	 *
-	 * `<U>` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.IndexedCollection} `<K, U>` Отображенная коллекция.
-	 */
-	/**
-	 * @method $mapByMethod
-	 *
-	 * `<U>` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
 	 * @returns {JW.IndexedCollection} `<K, U>` Отображенная коллекция.
 	 */
 	

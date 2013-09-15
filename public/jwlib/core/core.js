@@ -1,5 +1,5 @@
 ﻿/*!
-	jWidget Lib 0.5.1
+	jWidget Lib 0.6
 	
 	https://github.com/enepomnyaschih/jwidget/wiki
 	
@@ -580,8 +580,7 @@ JW.apply(JW, {
 	 *     // эквивалентный вариант
 	 *     return JW.get(obj, [ "abc", 0, "qwe" ]); // "xyz"
 	 * 
-	 * Функция используется такими алгоритмами коллекций, как JW.AbstractCollection.filterBy,
-	 * JW.AbstractCollection.searchBy и пр.
+	 * Функция используется коллбеками JW.byField и JW.byValue.
 	 * 
 	 * Пример 2
 	 * 
@@ -595,9 +594,9 @@ JW.apply(JW, {
 	 *         }
 	 *     ];
 	 *     
-	 *     return JW.Array.searchBy(arr, "id", 2).name; // "Second item"
+	 *     return JW.Array.search(arr, JW.byValue("id", 2)).name; // "Second item"
 	 * 
-	 * В данном примере функция JW.get неявно вызывается внутри метода JW.Array.searchBy с аргументом field === "id".
+	 * В данном примере функция JW.get неявно вызывается внутри метода JW.byValue с аргументом field === "id".
 	 *
 	 * @static
 	 * @param {Object} obj Объект.
@@ -793,6 +792,63 @@ JW.apply(JW, {
 	inScope: function(func, scope) {
 		return function() {
 			return func.apply(scope, arguments);
+		};
+	},
+	
+	/**
+	 * Возвращает коллбек-функцию для алгоритмов коллекций. Функция возвращает значение указанного поля
+	 * элемента коллекции. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * Пример (получить имена всех элементов коллекции):
+	 *
+	 *     var titles = collection.$map(JW.byField("title"));
+	 *
+	 * @static
+	 * @param {string} field Имя поля элемента коллекции.
+	 * @returns {Function} Коллбек-функция.
+	 */
+	byField: function(field) {
+		return function(item) {
+			return JW.get(item, field);
+		};
+	},
+	
+	/**
+	 * Возвращает коллбек-функцию для алгоритмов коллекций. Функция проверяет, равно ли (===) указанное поле элемента
+	 * коллекции указанному значению. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * Пример (найти элемент по id):
+	 *
+	 *     var item = collection.$search(JW.byValue("id", id));
+	 *
+	 * @static
+	 * @param {string} field Имя поля элемента коллекции.
+	 * @param {Mixed} value Значение поля.
+	 * @returns {Function} Коллбек-функция.
+	 */
+	byValue: function(field, value) {
+		return function(item) {
+			return JW.get(item, field) === value;
+		};
+	},
+	
+	/**
+	 * Возвращает коллбек-функцию для алгоритмов коллекций. Функция проверяет, возвращает ли указанный метод
+	 * элемента с указанными аргументами не false (!==).
+	 *
+	 * Пример (отфильтровать задачи, относящиеся к указанной задаче):
+	 *
+	 *     var tasks = collection.$filter(JW.byMethod("relatesTo", [task]));
+	 *
+	 * @static
+	 * @param {string} method Имя метода элемента коллекции.
+	 * @param {Array} [args] Аргументы метода.
+	 * @returns {Function} Коллбек-функция.
+	 */
+	byMethod: function(method, args) {
+		args = args || [];
+		return function(item) {
+			return item[method].apply(item, args);
 		};
 	}
 });

@@ -33,7 +33,7 @@
  */
 JW.AbstractSet = function(items, adapter) {
 	JW.AbstractSet._super.call(this);
-	this.json = adapter ? items : items ? JW.Array.indexBy(items, "_iid") : {};
+	this.json = adapter ? items : items ? JW.Array.index(items, JW.byField("_iid")) : {};
 	this.length = JW.Set.getLength(this.json);
 };
 
@@ -109,55 +109,6 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	$filter: JW.AbstractCollection._create$Set("filter"),
 	
 	/**
-	 * @method filterBy
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {Object} Отфильтрованная коллекция.
-	 */
-	/**
-	 * @method $filterBy
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.Set} `<T>` Отфильтрованная коллекция.
-	 */
-	/**
-	 * @method filterByMethod
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Object} Отфильтрованная коллекция.
-	 */
-	/**
-	 * @method $filterByMethod
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Set} `<T>` Отфильтрованная коллекция.
-	 */
-	
-	/**
 	 * `<U>` Отображает элементы коллекции.
 	 * 
 	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
@@ -190,55 +141,6 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {JW.Set} `<U>` Отображенная коллекция.
 	 */
 	$map: JW.AbstractCollection._create$Set("map"),
-	
-	/**
-	 * @method mapBy
-	 *
-	 * `<U>` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {Object} Отображенная коллекция.
-	 */
-	/**
-	 * @method $mapBy
-	 *
-	 * `<U>` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.Set} `<U>` Отображенная коллекция.
-	 */
-	/**
-	 * @method mapByMethod
-	 *
-	 * `<U>` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Object} Отображенная коллекция.
-	 */
-	/**
-	 * @method $mapByMethod
-	 *
-	 * `<U>` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Set} `<U>` Отображенная коллекция.
-	 */
 	
 	asSet: function() {
 		return this.json;

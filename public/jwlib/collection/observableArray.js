@@ -70,7 +70,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	/**
 	 * @event reorderEvent
 	 * Элементы переупорядочены в массиве. Возникает в результате запуска
-	 * метода #reorder, #tryReorder, #performReorder, #sort, #sortBy, #sortByMethod, #sortComparing.
+	 * метода #reorder, #tryReorder, #performReorder, #sort, #sortComparing.
 	 * @param {JW.ObservableArray.ReorderEventParams} params
 	 * `<T>` Параметры. JW.ObservableArray.ReorderEventParams#items обозначает бывшее содержимое массива.
 	 */

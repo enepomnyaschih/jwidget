@@ -83,9 +83,6 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 		return result;
 	};
 	
-	namespace.findBy = JW.AbstractCollection._createStaticBy(namespace, "find");
-	namespace.findByMethod = JW.AbstractCollection._createStaticByMethod(namespace, "find");
-	
 	namespace.search = function(target, callback, scope) {
 		var result;
 		namespace.every(target, function(item, key) {
