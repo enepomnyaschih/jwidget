@@ -67,11 +67,6 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 		this.assertNotEqual(this.arr, JW.Array.toArray(this.arr));
 	},
 	
-	testGetValuesSet: function()
-	{
-		this.assertTrue(JW.Map.equal({ "10": 10, "lala": "lala" }, JW.Array.indexBy(this.arr)));
-	},
-	
 	testMap: function()
 	{
 		var result = JW.Array.map(this.aa, function(item) {
@@ -84,11 +79,11 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	
 	testMapBy: function()
 	{
-		this.assertTrue(JW.Array.equal(JW.Array.mapBy(this.bb, "b"), [ 1, 2, 3 ]));
-		this.assertTrue(JW.Array.equal(JW.Array.mapBy(this.cc, "q.b"), [ 1, 2, undefined, 3 ]));
+		this.assertTrue(JW.Array.equal(JW.Array.map(this.bb, JW.byField("b")), [ 1, 2, 3 ]));
+		this.assertTrue(JW.Array.equal(JW.Array.map(this.cc, JW.byField("q.b")), [ 1, 2, undefined, 3 ]));
 		
 		var bb = this.bb.concat();
-		this.assertNotEqual(bb, JW.Array.mapBy(bb, "b"));
+		this.assertNotEqual(bb, JW.Array.map(bb, JW.byField("b")));
 	},
 	
 	testFindStatic: function()
@@ -101,10 +96,10 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	
 	testFindBy: function()
 	{
-		this.assertEqual(2, JW.Array.findBy(this.bb, 'a', 1));
-		this.assertEqual(3, JW.Array.findBy(this.cc, 'q.a', 1));
-		this.assertEqual(undefined, JW.Array.findBy(this.bb, 'a', 2));
-		this.assertEqual(undefined, JW.Array.findBy(this.cc, 'q.a', 2));
+		this.assertEqual(2, JW.Array.find(this.bb, JW.byValue('a', 1)));
+		this.assertEqual(3, JW.Array.find(this.cc, JW.byValue('q.a', 1)));
+		this.assertEqual(undefined, JW.Array.find(this.bb, JW.byValue('a', 2)));
+		this.assertEqual(undefined, JW.Array.find(this.cc, JW.byValue('q.a', 2)));
 	},
 	
 	testSearchStatic: function()
@@ -117,10 +112,10 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	
 	testSearchBy: function()
 	{
-		this.assertEqual(this.b3, JW.Array.searchBy(this.bb, 'a', 1));
-		this.assertEqual(this.c3, JW.Array.searchBy(this.cc, 'q.a', 1));
-		this.assertUndefined(JW.Array.searchBy(this.bb, 'a', 2));
-		this.assertUndefined(JW.Array.searchBy(this.cc, 'q.a', 2));
+		this.assertEqual(this.b3, JW.Array.search(this.bb, JW.byValue('a', 1)));
+		this.assertEqual(this.c3, JW.Array.search(this.cc, JW.byValue('q.a', 1)));
+		this.assertUndefined(JW.Array.search(this.bb, JW.byValue('a', 2)));
+		this.assertUndefined(JW.Array.search(this.cc, JW.byValue('q.a', 2)));
 	},
 	
 	testFilter: function()
@@ -147,11 +142,11 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 	
 	testFilterBy: function()
 	{
-		this.assertTrue(JW.Array.equal(JW.Array.filterBy(this.bb, 'a', 0), [ this.b1, this.b2 ]));
-		this.assertTrue(JW.Array.equal(JW.Array.filterBy(this.cc, 'q.a', 0), [ this.c1, this.c2 ]));
+		this.assertTrue(JW.Array.equal(JW.Array.filter(this.bb, JW.byValue('a', 0)), [ this.b1, this.b2 ]));
+		this.assertTrue(JW.Array.equal(JW.Array.filter(this.cc, JW.byValue('q.a', 0)), [ this.c1, this.c2 ]));
 		
 		var bb = this.bb.concat();
-		this.assertNotEqual(bb, JW.Array.filterBy(bb, 'a', 0));
+		this.assertNotEqual(bb, JW.Array.filter(bb, JW.byValue('a', 0)));
 	},
 	
 	testRemoveItem: function()
@@ -214,11 +209,11 @@ JW.extend(JW.Tests.Collection.ArrayTestCase, JW.Unit.TestCase, {
 		var c = [ b5, b4, b3, b2, b1 ];
 		
 		var bb = a.concat();
-		JW.Array.sortBy(bb, "p.q");
+		JW.Array.sort(bb, JW.byField("p.q"));
 		this.assertTrue(JW.Array.equal(bb, b));
 		
 		var cc = a.concat();
-		JW.Array.sortBy(cc, "p.q", -1);
+		JW.Array.sort(cc, JW.byField("p.q"), this, -1);
 		this.assertTrue(JW.Array.equal(cc, c));
 	},
 	
