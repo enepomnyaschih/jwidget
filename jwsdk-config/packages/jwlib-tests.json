@@ -8,6 +8,7 @@
 		
 		"jwlib/tests/core.js",
 		"jwlib/tests/core/apply.js",
+		"jwlib/tests/core/callback.js",
 		"jwlib/tests/core/core.js",
 		"jwlib/tests/core/class.js",
 		"jwlib/tests/core/observable.js",
