@@ -22,7 +22,7 @@
  *
  * `<T> extends JW.AbstractArray<T>`
  *
- * Оповещающий массив.
+ * Оповещающий массив. Структурированный список методов смотрите в JW.AbstractArray.
  *
  * @extends JW.AbstractArray
  *

@@ -22,7 +22,7 @@
  *
  * `<T> extends JW.AbstractSet<T>`
  *
- * Оповещающее множество.
+ * Оповещающее множество. Структурированный список методов смотрите в JW.AbstractSet.
  *
  * @extends JW.AbstractSet
  *

@@ -22,7 +22,7 @@
  *
  * `<T> extends JW.AbstractMap<T>`
  *
- * Оповещающий словарь.
+ * Оповещающий словарь. Структурированный список методов смотрите в JW.AbstractMap.
  *
  * @extends JW.AbstractMap
  *
