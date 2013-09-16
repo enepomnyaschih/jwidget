@@ -104,6 +104,13 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @returns {T} Элемент.
 	 */
 	/**
+	 * @method getLastKey
+	 * `<T>` Возвращает индекс последнего элемента коллекции. Если коллекция пуста, вернет undefined.
+	 * @static
+	 * @param {Array} array `<T>` Массив.
+	 * @returns {number} Индекс.
+	 */
+	/**
 	 * @method get
 	 * `<T>` Возвращает элемент по индексу. В случае, если элемента с таким индексом нет, вернет undefined.
 	 * @static

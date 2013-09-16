@@ -21,11 +21,20 @@ JW.IndexedCollection.createStaticMethods(JW.Array);
 
 JW.apply(JW.Array, {
 	getFirstKey: function(target) {
-		return (target.length !== 0) ? 0 : undefined;
+		if (target.length !== 0) {
+			return 0;
+		}
 	},
 	
 	getLast: function(target) {
 		return target[target.length - 1];
+	},
+	
+	getLastKey: function(target) {
+		var l = target.length;
+		if (l !== 0) {
+			return l - 1;
+		}
 	},
 	
 	getLength: function(target) {
