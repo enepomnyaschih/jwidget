@@ -216,7 +216,7 @@ JavaScript или другие значения.**
             }
         ]);
         tweetFeed = new mt.TweetFeed(data);
-        tweetFeed.renderTo("#container");
+        tweetFeed.{@link JW.UI.Component#renderTo renderTo}("#container");
     });
 
 Запустив приложение в браузере, мы увидим то, что от нас и требовалось.
