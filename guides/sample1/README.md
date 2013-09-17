@@ -1,9 +1,9 @@
-﻿# Пример 1. Модель и представление
+﻿# Часть 1. Модель и представление
 
 Демонстрация доступна по адресу
 [http://enepomnyaschih.github.io/mt1/public/](http://enepomnyaschih.github.io/mt1/public/)
 
-Исходный код [https://github.com/enepomnyaschih/mt1](https://github.com/enepomnyaschih/mt/tree/mt-1) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1](https://github.com/enepomnyaschih/mt/tree/mt-1) (ветка)
 
 Серия примеров jWidget покажет, как разработать свой собственный Twitter за несколько шагов с помощью jWidget.
 
