@@ -262,6 +262,12 @@ JW.ItemValueEventParams в большинстве случаев вполне д
         
         // ... код
         
+        // override
+        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
+            clearInterval(this._timer);
+            // ...
+        },
+        
         _updateTime: function() {
             var timeAgo = new Date().getTime() - this.tweetData.time;
             var text = this._getTimeString(timeAgo);
