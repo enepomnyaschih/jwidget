@@ -38,11 +38,20 @@ JW.IndexedCollection.createStaticMethods(JW.Array);
 
 JW.apply(JW.Array, {
 	getFirstKey: function(target) {
-		return (target.length !== 0) ? 0 : undefined;
+		if (target.length !== 0) {
+			return 0;
+		}
 	},
 	
 	getLast: function(target) {
 		return target[target.length - 1];
+	},
+	
+	getLastKey: function(target) {
+		var l = target.length;
+		if (l !== 0) {
+			return l - 1;
+		}
 	},
 	
 	getLength: function(target) {
@@ -352,18 +361,6 @@ JW.apply(JW.Array, {
 	
 	sort: function(target, callback, scope, order) {
 		JW.Array.tryReorder(target, JW.Array.detectSort(target, callback, scope, order));
-	},
-	
-	sortBy: function(target, field, order) {
-		JW.Array.sort(target, function(item) {
-			return JW.get(item, field);
-		}, target, order);
-	},
-	
-	sortByMethod: function(target, method, args, order) {
-		JW.Array.sort(target, function(item) {
-			return item[method].apply(item, args);
-		}, target, order);
 	},
 	
 	sortComparing: function(target, compare, scope, order) {

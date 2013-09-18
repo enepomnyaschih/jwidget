@@ -120,11 +120,6 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 		this.assertTrue(JW.Array.equal([ 10, null, &quot;lala&quot; ], JW.Map.toArray(this.obj)));
 	},
 	
-	testGetValuesSetObject: function()
-	{
-		this.assertTrue(JW.Map.equal({ &quot;10&quot;: 10, &quot;lala&quot;: &quot;lala&quot; }, JW.Map.indexBy(this.obj)));
-	},
-	
 	testIndex: function()
 	{
 		var array = [
@@ -164,7 +159,7 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 			&quot;20&quot; : array[2]
 		};
 		
-		this.assertEqual(JSON.stringify(expected), JSON.stringify(JW.Array.indexBy(array, &quot;id&quot;)));
+		this.assertEqual(JSON.stringify(expected), JSON.stringify(JW.Array.index(array, JW.byField(&quot;id&quot;))));
 	},
 	
 	testIndexByMethod: function()
@@ -181,7 +176,7 @@ JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
 			&quot;20&quot; : array[2]
 		};
 		
-		this.assertTrue(JW.Array.equal(expected, JW.Array.indexByMethod(array, &quot;getId&quot;, [ 5 ])));
+		this.assertTrue(JW.Array.equal(expected, JW.Array.index(array, JW.byMethod(&quot;getId&quot;, [ 5 ]))));
 	}
 });
 </pre>

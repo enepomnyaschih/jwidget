@@ -209,7 +209,7 @@ JW.apply(JW.Set, {
 	detectSplice: function(oldItems, newItemArray) {
 		var removedItems = [];
 		var addedItems = [];
-		var newItems = JW.Array.indexBy(newItemArray, &quot;_iid&quot;);
+		var newItems = JW.Array.index(newItemArray, JW.byField(&quot;_iid&quot;));
 		for (var key in oldItems) {
 			if (!newItems.hasOwnProperty(key)) {
 				removedItems.push(oldItems[key]);

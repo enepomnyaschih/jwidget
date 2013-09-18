@@ -374,7 +374,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.destroyed = true;
 		if (this.el) {
 			this.el.remove();
-			JW.Set.eachByMethod(this._arrays, &quot;destroy&quot;);
+			JW.Set.each(this._arrays, JW.byMethod(&quot;destroy&quot;));
 			this._arrays = null;
 			
 			this.destroyComponent();
@@ -383,7 +383,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this._childInserter = null;
 			this._childMapper.destroy();
 			this._childMapper = null;
-			this.children.eachByMethod(&quot;destroy&quot;);
+			this.children.each(JW.byMethod(&quot;destroy&quot;));
 			this.children.destroy();
 			this.children = null;
 		}
@@ -425,8 +425,9 @@ JW.extend(JW.UI.Component, JW.Class, {
 	
 <span id='JW-UI-Component-method-destroyComponent'>	/**
 </span>	 * Метод жизненного цикла компонента. Служит для уничтожения компонента. Здесь откатывается все, что было сделано
-	 * во время рендеринга компонента, т.е. в методах #beforeRender, `render&lt;ChildId&gt;`, #renderComponent и
-	 * #afterAppend. При вызове этого метода все списки дочерних компонентов, добавленные через метод #addArray, уже
+	 * во время рендеринга компонента, т.е. в
+	 * методах #beforeRender, `render&lt;ChildId&gt;`, #renderComponent и #afterAppend.
+	 * При вызове этого метода все списки дочерних компонентов, добавленные через метод #addArray, уже
 	 * удалены, но еще не уничтожены. Уничтожать их надо явно. Напротив, дочерние компоненты, состоящие в #children
 	 * нужно удалить оттуда вручную, если вы не хотите, чтобы они были уничтожены. Это обосновано работой
 	 * синхронизаторов. Вызов &lt;code&gt;this._super()&lt;/code&gt; осуществляется в конце метода.
@@ -624,7 +625,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		this.wasAfterAppend = true;
 		this.afterAppend();
-		JW.Set.eachByMethod(this.allChildren, &quot;_afterAppend&quot;);
+		JW.Set.each(this.allChildren, JW.byMethod(&quot;_afterAppend&quot;));
 	},
 	
 	_initChild: function(component, replacedEl) {

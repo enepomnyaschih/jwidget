@@ -45,7 +45,9 @@
  *
  * `&lt;T&gt; extends JW.AbstractSet&lt;T&gt;`
  *
- * Простое множество.
+ * Простое множество. Структурированный список методов смотрите в JW.AbstractSet.
+ * Статические методы повторяют интерфейс JW.AbstractSet, только принимают нативный Object в качестве
+ * первого аргумента.
  *
  * @extends JW.AbstractSet
  *
@@ -186,40 +188,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @returns {boolean} Результат проверки.
 	 */
-<span id='JW-Set-static-method-everyBy'>	/**
-</span>	 * @method everyBy
-	 *
-	 * `&lt;T&gt;` Проверяет все элементы по критерию.
-	 * 
-	 * Возвращает true тогда и только тогда, когда поле field всех элементов коллекции строго равно (===) значению
-	 * value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {boolean} Результат проверки.
-	 */
-<span id='JW-Set-static-method-everyByMethod'>	/**
-</span>	 * @method everyByMethod
-	 *
-	 * `&lt;T&gt;` Проверяет все элементы по критерию.
-	 * 
-	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false для всех
-	 * элементов коллекции.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {boolean} Результат проверки.
-	 */
 <span id='JW-Set-static-method-some'>	/**
 </span>	 * @method some
 	 *
@@ -241,40 +209,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @returns {boolean} Результат проверки.
 	 */
-<span id='JW-Set-static-method-someBy'>	/**
-</span>	 * @method someBy
-	 *
-	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
-	 * 
-	 * Возвращает true тогда и только тогда, когда поле field хотя бы одного элемента коллекции строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {boolean} Результат проверки.
-	 */
-<span id='JW-Set-static-method-someByMethod'>	/**
-</span>	 * @method someByMethod
-	 *
-	 * `&lt;T&gt;` Проверяет каждый элемент по критерию.
-	 * 
-	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false хотя бы у
-	 * одного элемента коллекции.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {boolean} Результат проверки.
-	 */
 <span id='JW-Set-static-method-each'>	/**
 </span>	 * @method each
 	 * `&lt;T&gt;` Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
@@ -287,15 +221,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * Функция.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {void}
-	 */
-<span id='JW-Set-static-method-eachByMethod'>	/**
-</span>	 * @method eachByMethod
-	 * `&lt;T&gt;` Перебирает элементы коллекции. Запускает указанный метод у всех элементов.
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
 	 * @returns {void}
 	 */
 <span id='JW-Set-static-method-search'>	/**
@@ -317,39 +242,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * Критерий проверки элементов.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {T} Найденный элемент или undefined.
-	 */
-<span id='JW-Set-static-method-searchBy'>	/**
-</span>	 * @method searchBy
-	 *
-	 * `&lt;T&gt;` Ищет элемент по критерию.
-	 * 
-	 * Возвращает первый элемент, поле field которого строго равно (===) значению value.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {T} Найденный элемент или undefined.
-	 */
-<span id='JW-Set-static-method-searchByMethod'>	/**
-</span>	 * @method searchByMethod
-	 *
-	 * `&lt;T&gt;` Ищет элемент по критерию.
-	 * 
-	 * Возвращает первый элемент, указанный метод которого с аргументами args возвращает !== false.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
 	 * @returns {T} Найденный элемент или undefined.
 	 */
 <span id='JW-Set-static-method-toSorted'>	/**
@@ -388,62 +280,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
-	 */
-<span id='JW-Set-static-method-toSortedBy'>	/**
-</span>	 * @method toSortedBy
-	 *
-	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
-	 *
-	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
-	 */
-<span id='JW-Set-static-method-S-toSortedBy'>	/**
-</span>	 * @method $toSortedBy
-	 *
-	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
-	 *
-	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
-	 */
-<span id='JW-Set-static-method-toSortedByMethod'>	/**
-</span>	 * @method toSortedByMethod
-	 *
-	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
-	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
-	 */
-<span id='JW-Set-static-method-S-toSortedByMethod'>	/**
-</span>	 * @method $toSortedByMethod
-	 *
-	 * `&lt;T&gt;` Преобразует коллекцию в отсортированный массив.
-	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
 	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
 	 */
 <span id='JW-Set-static-method-toSortedComparing'>	/**
@@ -522,60 +358,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * Функция-индексатор для элемента.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
-	 */
-<span id='JW-Set-static-method-indexBy'>	/**
-</span>	 * @method indexBy
-	 *
-	 * `&lt;T&gt;` Индексирует коллекцию.
-	 *
-	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
-	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @returns {Object} Индекс коллекции.
-	 */
-<span id='JW-Set-static-method-S-indexBy'>	/**
-</span>	 * @method $indexBy
-	 *
-	 * `&lt;T&gt;` Индексирует коллекцию.
-	 *
-	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
-	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
-	 */
-<span id='JW-Set-static-method-indexByMethod'>	/**
-</span>	 * @method indexByMethod
-	 *
-	 * `&lt;T&gt;` Индексирует коллекцию.
-	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
-	 * а в значениях - соответствующие элементы.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Object} Индекс коллекции.
-	 */
-<span id='JW-Set-static-method-S-indexByMethod'>	/**
-</span>	 * @method $indexByMethod
-	 *
-	 * `&lt;T&gt;` Индексирует коллекцию.
-	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
-	 * а в значениях - соответствующие элементы.
-	 *
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
 	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
 	 */
 <span id='JW-Set-static-method-toArray'>	/**
@@ -710,62 +492,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @returns {JW.Set} `&lt;T&gt;` Отфильтрованная коллекция.
 	 */
-<span id='JW-Set-static-method-filterBy'>	/**
-</span>	 * @method filterBy
-	 *
-	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {Object} Отфильтрованная коллекция.
-	 */
-<span id='JW-Set-static-method-S-filterBy'>	/**
-</span>	 * @method $filterBy
-	 *
-	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.Set} `&lt;T&gt;` Отфильтрованная коллекция.
-	 */
-<span id='JW-Set-static-method-filterByMethod'>	/**
-</span>	 * @method filterByMethod
-	 *
-	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Object} Отфильтрованная коллекция.
-	 */
-<span id='JW-Set-static-method-S-filterByMethod'>	/**
-</span>	 * @method $filterByMethod
-	 *
-	 * `&lt;T&gt;` Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Set} `&lt;T&gt;` Отфильтрованная коллекция.
-	 */
 <span id='JW-Set-static-method-map'>	/**
 </span>	 * @method map
 	 *
@@ -800,62 +526,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * Отображающая функция.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Set} `&lt;U&gt;` Отображенная коллекция.
-	 */
-<span id='JW-Set-static-method-mapBy'>	/**
-</span>	 * @method mapBy
-	 *
-	 * `&lt;T, U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {Object} Отображенная коллекция.
-	 */
-<span id='JW-Set-static-method-S-mapBy'>	/**
-</span>	 * @method $mapBy
-	 *
-	 * `&lt;T, U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.Set} `&lt;U&gt;` Отображенная коллекция.
-	 */
-<span id='JW-Set-static-method-mapByMethod'>	/**
-</span>	 * @method mapByMethod
-	 *
-	 * `&lt;T, U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Object} Отображенная коллекция.
-	 */
-<span id='JW-Set-static-method-S-mapByMethod'>	/**
-</span>	 * @method $mapByMethod
-	 *
-	 * `&lt;T, U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @static
-	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
 	 * @returns {JW.Set} `&lt;U&gt;` Отображенная коллекция.
 	 */
 <span id='JW-Set-static-method-add'>	/**

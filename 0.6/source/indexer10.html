@@ -106,7 +106,7 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput();
 		var items = source.getItems().concat();
-		JW.Array.sortBy(items, &quot;value&quot;);
+		JW.Array.sort(items, JW.byField(&quot;value&quot;));
 		source.performReorder(items);
 		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
 		
@@ -257,7 +257,7 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput();
 		var items = source.getItems().concat();
-		JW.Array.sortBy(items, &quot;value&quot;);
+		JW.Array.sort(items, JW.byField(&quot;value&quot;));
 		source.performReorder(items);
 		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
 		

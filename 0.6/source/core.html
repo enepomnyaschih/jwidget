@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*!
-	jWidget Lib 0.5.1
+	jWidget Lib 0.6
 	
 	https://github.com/enepomnyaschih/jwidget/wiki
 	
@@ -597,8 +597,7 @@ JW.apply(JW, {
 	 *     // эквивалентный вариант
 	 *     return JW.get(obj, [ &quot;abc&quot;, 0, &quot;qwe&quot; ]); // &quot;xyz&quot;
 	 * 
-	 * Функция используется такими алгоритмами коллекций, как JW.AbstractCollection.filterBy,
-	 * JW.AbstractCollection.searchBy и пр.
+	 * Функция используется коллбеками JW.byField и JW.byValue.
 	 * 
 	 * Пример 2
 	 * 
@@ -612,9 +611,9 @@ JW.apply(JW, {
 	 *         }
 	 *     ];
 	 *     
-	 *     return JW.Array.searchBy(arr, &quot;id&quot;, 2).name; // &quot;Second item&quot;
+	 *     return JW.Array.search(arr, JW.byValue(&quot;id&quot;, 2)).name; // &quot;Second item&quot;
 	 * 
-	 * В данном примере функция JW.get неявно вызывается внутри метода JW.Array.searchBy с аргументом field === &quot;id&quot;.
+	 * В данном примере функция JW.get неявно вызывается внутри метода JW.byValue с аргументом field === &quot;id&quot;.
 	 *
 	 * @static
 	 * @param {Object} obj Объект.
@@ -810,6 +809,63 @@ JW.apply(JW, {
 	inScope: function(func, scope) {
 		return function() {
 			return func.apply(scope, arguments);
+		};
+	},
+	
+<span id='JW-static-method-byField'>	/**
+</span>	 * Возвращает коллбек-функцию для алгоритмов коллекций. Функция возвращает значение указанного поля
+	 * элемента коллекции. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * Пример (получить имена всех элементов коллекции):
+	 *
+	 *     var titles = collection.$map(JW.byField(&quot;title&quot;));
+	 *
+	 * @static
+	 * @param {string} field Имя поля элемента коллекции.
+	 * @returns {Function} Коллбек-функция.
+	 */
+	byField: function(field) {
+		return function(item) {
+			return JW.get(item, field);
+		};
+	},
+	
+<span id='JW-static-method-byValue'>	/**
+</span>	 * Возвращает коллбек-функцию для алгоритмов коллекций. Функция проверяет, равно ли (===) указанное поле элемента
+	 * коллекции указанному значению. Поле элемента извлекается с помощью функции JW.get.
+	 *
+	 * Пример (найти элемент по id):
+	 *
+	 *     var item = collection.$search(JW.byValue(&quot;id&quot;, id));
+	 *
+	 * @static
+	 * @param {string} field Имя поля элемента коллекции.
+	 * @param {Mixed} value Значение поля.
+	 * @returns {Function} Коллбек-функция.
+	 */
+	byValue: function(field, value) {
+		return function(item) {
+			return JW.get(item, field) === value;
+		};
+	},
+	
+<span id='JW-static-method-byMethod'>	/**
+</span>	 * Возвращает коллбек-функцию для алгоритмов коллекций. Функция проверяет, возвращает ли указанный метод
+	 * элемента с указанными аргументами не false (!==).
+	 *
+	 * Пример (отфильтровать задачи, относящиеся к указанной задаче):
+	 *
+	 *     var tasks = collection.$filter(JW.byMethod(&quot;relatesTo&quot;, [task]));
+	 *
+	 * @static
+	 * @param {string} method Имя метода элемента коллекции.
+	 * @param {Array} [args] Аргументы метода.
+	 * @returns {Function} Коллбек-функция.
+	 */
+	byMethod: function(method, args) {
+		args = args || [];
+		return function(item) {
+			return item[method].apply(item, args);
 		};
 	}
 });

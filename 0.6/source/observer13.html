@@ -47,8 +47,8 @@ JW.Tests.Collection.ObservableSet.ObserverTestCase = JW.Unit.TestCase.extend({
 			removeItem : function(item) { this.output(&quot;Removed &quot; + item.value); },
 			clearItems : function(items) {
 				items = items.concat();
-				JW.Array.sortBy(items, &quot;value&quot;);
-				this.output(&quot;Cleared &quot; + JW.Array.mapBy(items, &quot;value&quot;).join(&quot;, &quot;));
+				JW.Array.sort(items, JW.byField(&quot;value&quot;));
+				this.output(&quot;Cleared &quot; + JW.Array.map(items, JW.byField(&quot;value&quot;)).join(&quot;, &quot;));
 			},
 			scope      : this
 		});

@@ -43,6 +43,93 @@
  *
  * Словарь - это неупорядоченная коллекция, в которой каждый элемент имеет свой строковый ключ.
  *
+ * # Методы словаря
+ *
+ * **Жирным шрифтом выделены изменения по сравнению с JW.IndexedCollection.**
+ *
+ * Получение содержимого:
+ *
+ * - {@link #getLength} - Возвращает количество элементов в коллекции.
+ * - {@link #isEmpty} - Проверяет коллекцию на пустоту.
+ * - {@link #get} - Возвращает элемент коллекции по ключу.
+ * - {@link #getFirst} - Возвращает первый элемент коллекции.
+ * - {@link #getFirstKey} - Возвращает ключ первого элемента коллекции.
+ * - {@link #getKeys}, #$getKeys - Возвращает массив ключей всех элементов.
+ * - {@link #containsItem} - Содержит ли коллекция элемент.
+ * - {@link #containsKey} - Содержит ли коллекция ключ.
+ * - {@link #keyOf} - Возвращает ключ элемента.
+ * - **{@link #getJson} - Возвращает внутреннее представление словаря.**
+ *
+ * Алгоритмы перебора:
+ *
+ * - {@link #every} - Проверяет все элементы по критерию.
+ * Возвращает true тогда и только тогда, когда все элементы удовлетворяют критерию.
+ * - {@link #some} - Проверяет каждый элемент по критерию.
+ * Возвращает true тогда и только тогда, когда хотя бы один элемент удовлетворяет критерию.
+ * - {@link #each} - Перебирает элементы.
+ * - {@link #search} - Ищет элемент по критерию.
+ * Возвращает первый элемент, удовлетворяющий критерию.
+ * - {@link #find} - Ищет элемент по критерию.
+ * Возвращает ключ первого элемента, удовлетворяющего критерию.
+ * - {@link #filter}, #$filter - Фильтрует коллекцию по критерию.
+ * Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
+ * - {@link #map}, #$map - Отображает элементы коллекции.
+ * Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
+ * коллекции.
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * Строит массив из элементов коллекции, отсортированный по индексу
+ * или компаратору.
+ * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
+ * Возвращает ключи элементов, отсортированных по индексу или компаратору.
+ * - {@link #index}, #$index - Индексирует коллекцию.
+ * Строит словарь, в ключах которого находятся индексы элементов, а в значениях - соответствующие элементы.
+ * - {@link #toArray}, #$toArray - Строит новый массив из элементов коллекции.
+ * - {@link #toMap}, #$toMap - Строит новый словарь из элементов коллекции.
+ * - {@link #toSet}, #$toSet - Строит новое множество из элементов коллекции.
+ * - {@link #asArray}, #$asArray - Представляет коллекцию в виде массива.
+ * - {@link #asMap}, #$asMap - Представляет коллекцию в виде словаря.
+ * - {@link #asSet}, #$asSet - Представляет коллекцию в виде множества.
+ *
+ * Изменение коллекции:
+ *
+ * - {@link #set}, #trySet - Добавляет/заменяет элемент по ключу.
+ * - **{@link #setAll}, #trySetAll - Добавляет/заменяет набор элементов.**
+ * - {@link #remove}, #tryRemove - Удаляет элемент по ключу.
+ * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Удаляет набор элементов.**
+ * - {@link #removeItem} - Удаляет первое вхождение элемента из коллекции.
+ * - {@link #removeItems} - Удаляет все вхождения элементов из коллекции.
+ * - **{@link #setKey}, #trySetKey - Меняет ключ элемента.**
+ * - {@link #clear}, #$clear, #tryClear - Очищает коллекцию.
+ * - **{@link #splice}, #trySplice - Удаляет/добавляет элементы.**
+ * - **{@link #reindex}, #tryReindex - Меняет ключи элементов.**
+ * - **{@link #performSplice} - Приводит содержимое методом #splice.**
+ * - **{@link #performReindex} - Приводит содержимое методом #reindex.**
+ *
+ * Создание синхронизаторов:
+ *
+ * - {@link #createMapper} - Создает конвертер элементов.
+ * - {@link #createLister} - Создает конвертер в множество.
+ * - {@link #createIndexer} - Создает индексатор.
+ * - {@link #createOrderer} - Создает конвертер в массив (упорядочитель).
+ * - {@link #createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
+ * - {@link #createObserver} - Создает наблюдатель.
+ * - **{@link #createInserter} - Создает синхронизатор представления со словарем.**
+ *
+ * Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
+ *
+ * - {@link #createEmpty} - Создает пустую коллекцию того же типа.
+ * - {@link #createEmptyArray} - Создает пустой массив того же типа.
+ * - {@link #createEmptyMap} - Создает пустой словарь того же типа.
+ * - {@link #createEmptySet} - Создает пустое множество того же типа.
+ *
+ * Другие методы:
+ *
+ * - **{@link #detectSplice} - Определяет параметры метода #splice для приведения содержимого.**
+ * - **{@link #detectReindex} - Определяет параметры метода #reindex для приведения содержимого.**
+ * - **{@link #equal} - Сравнивает с другим словарем.**
+ *
+ * Все те же самые алгоритмы доступны и для нативного словаря JavaScript Object, смотрите статические методы JW.Map.
+ *
  * @extends JW.IndexedCollection
  * @abstract
  */
@@ -196,35 +283,6 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @returns {string} Ключ найденного элемента или undefined.
 	 */
-<span id='JW-AbstractMap-method-findBy'>	/**
-</span>	 * @method findBy
-	 *
-	 * Ищет элемент по критерию.
-	 * 
-	 * Возвращает ключ первого элемента, поле field которого строго равно (===) значению value.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {string} Ключ найденного элемента или undefined.
-	 */
-<span id='JW-AbstractMap-method-findByMethod'>	/**
-</span>	 * @method findByMethod
-	 *
-	 * Ищет элемент по критерию.
-	 * 
-	 * Возвращает ключ первого элемента, указанный метод которого с аргументами args возвращает !== false.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {string} Ключ найденного элемента или undefined.
-	 */
 <span id='JW-AbstractMap-method-search'>	/**
 </span>	 * @method search
 	 *
@@ -348,54 +406,6 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {JW.Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
 	 */
-<span id='JW-AbstractMap-method-getSortingKeysBy'>	/**
-</span>	 * @method getSortingKeysBy
-	 *
-	 * Возвращает массив ключей отсортированных элементов.
-	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
-	 */
-<span id='JW-AbstractMap-method-S-getSortingKeysBy'>	/**
-</span>	 * @method $getSortingKeysBy
-	 *
-	 * Возвращает массив ключей отсортированных элементов.
-	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
-	 */
-<span id='JW-AbstractMap-method-getSortingKeysByMethod'>	/**
-</span>	 * @method getSortingKeysByMethod
-	 *
-	 * Возвращает массив ключей отсортированных элементов.
-	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
-	 */
-<span id='JW-AbstractMap-method-S-getSortingKeysByMethod'>	/**
-</span>	 * @method $getSortingKeysByMethod
-	 *
-	 * Возвращает массив ключей отсортированных элементов.
-	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Array} `&lt;string&gt;` Массив ключей отсортированных элементов.
-	 */
 <span id='JW-AbstractMap-method-getSortingKeysComparing'>	/**
 </span>	 * @method getSortingKeysComparing
 	 *
@@ -502,55 +512,6 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 */
 	$filter: JW.AbstractCollection._create$Map(&quot;filter&quot;),
 	
-<span id='JW-AbstractMap-method-filterBy'>	/**
-</span>	 * @method filterBy
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {Object} Отфильтрованная коллекция.
-	 */
-<span id='JW-AbstractMap-method-S-filterBy'>	/**
-</span>	 * @method $filterBy
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.Map} `&lt;T&gt;` Отфильтрованная коллекция.
-	 */
-<span id='JW-AbstractMap-method-filterByMethod'>	/**
-</span>	 * @method filterByMethod
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Object} Отфильтрованная коллекция.
-	 */
-<span id='JW-AbstractMap-method-S-filterByMethod'>	/**
-</span>	 * @method $filterByMethod
-	 *
-	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Map} `&lt;T&gt;` Отфильтрованная коллекция.
-	 */
-	
 <span id='JW-AbstractMap-method-map'>	/**
 </span>	 * `&lt;U&gt;` Отображает элементы коллекции.
 	 * 
@@ -584,55 +545,6 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.Map} `&lt;T&gt;` Отображенная коллекция.
 	 */
 	$map: JW.AbstractCollection._create$Map(&quot;map&quot;),
-	
-<span id='JW-AbstractMap-method-mapBy'>	/**
-</span>	 * @method mapBy
-	 *
-	 * `&lt;U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {Object} Отображенная коллекция.
-	 */
-<span id='JW-AbstractMap-method-S-mapBy'>	/**
-</span>	 * @method $mapBy
-	 *
-	 * `&lt;U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.Map} `&lt;U&gt;` Отображенная коллекция.
-	 */
-<span id='JW-AbstractMap-method-mapByMethod'>	/**
-</span>	 * @method mapByMethod
-	 *
-	 * `&lt;U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Object} Отображенная коллекция.
-	 */
-<span id='JW-AbstractMap-method-S-mapByMethod'>	/**
-</span>	 * @method $mapByMethod
-	 *
-	 * `&lt;U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Map} `&lt;U&gt;` Отображенная коллекция.
-	 */
 	
 	asMap: function() {
 		return this.json;

@@ -93,7 +93,7 @@ JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
 	
 	testFilterByObject: function()
 	{
-		var result = JW.Map.filterBy(this.objDeep, &quot;q.a&quot;, 1);
+		var result = JW.Map.filter(this.objDeep, JW.byValue(&quot;q.a&quot;, 1));
 		
 		var expected = {
 			t: this.objDeep.t,
@@ -117,7 +117,7 @@ JW.extend(JW.Tests.Alg.BuildTestCase, JW.Unit.TestCase, {
 	
 	testMapByObject: function()
 	{
-		var result = JW.Map.mapBy(this.objDeep, &quot;q.a&quot;);
+		var result = JW.Map.map(this.objDeep, JW.byField(&quot;q.a&quot;));
 		
 		var expected = {
 			t: 1,

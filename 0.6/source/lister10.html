@@ -151,7 +151,7 @@ JW.Tests.Collection.ObservableArray.ListerTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput();
 		var items = source.getItems().concat();
-		JW.Array.sortBy(items, &quot;value&quot;);
+		JW.Array.sort(items, JW.byField(&quot;value&quot;));
 		source.performReorder(items);
 		this.assertTarget([ d, c, a, k, g ], target);
 		
@@ -290,7 +290,7 @@ JW.Tests.Collection.ObservableArray.ListerTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput();
 		var items = source.getItems().concat();
-		JW.Array.sortBy(items, &quot;value&quot;);
+		JW.Array.sort(items, JW.byField(&quot;value&quot;));
 		source.performReorder(items);
 		this.assertTarget([ d, c, a, k, g ], target);
 		

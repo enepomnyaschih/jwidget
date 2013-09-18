@@ -100,31 +100,62 @@
  * JW.AbstractArray#performReorder, требуют, чтобы у каждого элемента коллекции был свой уникальный ключ. Если 2
  * элемента коллекции совпадают, то совпадают и их ключи, поэтому такой метод работать не будет.
  *
- * Алгоритмы коллекций:
+ * # Методы коллекции
  *
- * - {@link #every}, #everyBy, #everyByMethod - Проверяет все элементы по критерию.
+ * Получение содержимого:
+ *
+ * - {@link #getLength} - Возвращает количество элементов в коллекции.
+ * - {@link #isEmpty} - Проверяет коллекцию на пустоту.
+ * - {@link #getFirst} - Возвращает первый элемент коллекции.
+ * - {@link #containsItem} - Содержит ли коллекция элемент.
+ *
+ * Алгоритмы перебора:
+ *
+ * - {@link #every} - Проверяет все элементы по критерию.
  * Возвращает true тогда и только тогда, когда все элементы удовлетворяют критерию.
- * - {@link #some}, #someBy, #someByMethod - Проверяет каждый элемент по критерию.
+ * - {@link #some} - Проверяет каждый элемент по критерию.
  * Возвращает true тогда и только тогда, когда хотя бы один элемент удовлетворяет критерию.
- * - {@link #each}, #eachByMethod - Перебирает элементы.
- * - {@link #search}, #searchBy, #searchByMethod - Ищет элемент по критерию.
+ * - {@link #each} - Перебирает элементы.
+ * - {@link #search} - Ищет элемент по критерию.
  * Возвращает первый элемент, удовлетворяющий критерию.
- * - {@link #filter}, #$filter, #filterBy, #$filterBy, #filterByMethod, #$filterByMethod - Фильтрует коллекцию по критерию.
+ * - {@link #filter}, #$filter - Фильтрует коллекцию по критерию.
  * Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
- * - {@link #map}, #$map, #mapBy, #$mapBy, #mapByMethod, #$mapByMethod - Отображает элементы коллекции.
+ * - {@link #map}, #$map - Отображает элементы коллекции.
  * Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
  * коллекции.
- * - {@link #toSorted}, #$toSorted, #toSortedBy, #$toSortedBy, #toSortedByMethod, #$toSortedByMethod,
- * {@link #toSortedComparing}, #$toSortedComparing - Строит массив из элементов коллекции, отсортированный по индексу
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * Строит массив из элементов коллекции, отсортированный по индексу
  * или компаратору.
- * - {@link #index}, #$index, #indexBy, #$indexBy, #indexByMethod, #$indexByMethod - Индексирует коллекцию.
+ * - {@link #index}, #$index - Индексирует коллекцию.
  * Строит словарь, в ключах которого находятся индексы элементов, а в значениях - соответствующие элементы.
  * - {@link #toArray}, #$toArray - Строит новый массив из элементов коллекции.
  * - {@link #toSet}, #$toSet - Строит новое множество из элементов коллекции.
  * - {@link #asArray}, #$asArray - Представляет коллекцию в виде массива.
  * - {@link #asSet}, #$asSet - Представляет коллекцию в виде множества.
  *
- * Все те же самые алгоритмы доступны и для нативных коллекций JavaScript:
+ * Изменение коллекции:
+ *
+ * - {@link #removeItem} - Удаляет первое вхождение элемента из коллекции.
+ * - {@link #removeItems} - Удаляет все вхождения элементов из коллекции.
+ * - {@link #clear}, #$clear, #tryClear - Очищает коллекцию.
+ *
+ * Создание синхронизаторов:
+ *
+ * - {@link #createMapper} - Создает конвертер элементов.
+ * - {@link #createLister} - Создает конвертер в множество.
+ * - {@link #createIndexer} - Создает индексатор.
+ * - {@link #createOrderer} - Создает конвертер в массив (упорядочитель).
+ * - {@link #createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
+ * - {@link #createObserver} - Создает наблюдатель.
+ *
+ * Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
+ *
+ * - {@link #createEmpty} - Создает пустую коллекцию того же типа.
+ * - {@link #createEmptyArray} - Создает пустой массив того же типа.
+ * - {@link #createEmptyMap} - Создает пустой словарь того же типа.
+ * - {@link #createEmptySet} - Создает пустое множество того же типа.
+ *
+ * Все те же самые методы доступны и для нативных коллекций JavaScript:
  *
  * - Array, смотрите статические методы JW.Array
  * - Object как словарь, смотрите статические методы JW.Map
@@ -135,31 +166,6 @@
  */
 JW.AbstractCollection = function() {
 	JW.AbstractCollection._super.call(this);
-};
-
-JW.AbstractCollection._createBy = function(algorithm) {
-	return function(field, value) {
-		return this[algorithm](function(item) {
-			return JW.get(item, field) === value;
-		});
-	};
-};
-
-JW.AbstractCollection._createByField = function(algorithm) {
-	return function(field) {
-		return this[algorithm](function(item) {
-			return JW.get(item, field);
-		});
-	};
-};
-
-JW.AbstractCollection._createByMethod = function(algorithm) {
-	return function(method, args) {
-		args = args || [];
-		return this[algorithm](function(item) {
-			return item[method].apply(item, args);
-		});
-	};
 };
 
 JW.AbstractCollection._create$Array = function(algorithm) {
@@ -257,35 +263,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @returns {boolean} Результат проверки.
 	 */
-<span id='JW-AbstractCollection-method-everyBy'>	/**
-</span>	 * Проверяет все элементы по критерию.
-	 * 
-	 * Возвращает true тогда и только тогда, когда поле field всех элементов коллекции строго равно (===) значению
-	 * value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {boolean} Результат проверки.
-	 */
-	everyBy: JW.AbstractCollection._createBy(&quot;every&quot;),
-	
-<span id='JW-AbstractCollection-method-everyByMethod'>	/**
-</span>	 * Проверяет все элементы по критерию.
-	 * 
-	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false для всех
-	 * элементов коллекции.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {boolean} Результат проверки.
-	 */
-	everyByMethod: JW.AbstractCollection._createByMethod(&quot;every&quot;),
 	
 <span id='JW-AbstractCollection-method-some'>	/**
 </span>	 * Проверяет каждый элемент по критерию.
@@ -310,36 +287,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		}, scope);
 	},
 	
-<span id='JW-AbstractCollection-method-someBy'>	/**
-</span>	 * Проверяет каждый элемент по критерию.
-	 * 
-	 * Возвращает true тогда и только тогда, когда поле field хотя бы одного элемента коллекции строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {boolean} Результат проверки.
-	 */
-	someBy: JW.AbstractCollection._createBy(&quot;some&quot;),
-	
-<span id='JW-AbstractCollection-method-someByMethod'>	/**
-</span>	 * Проверяет каждый элемент по критерию.
-	 * 
-	 * Возвращает true тогда и только тогда, когда метод method с аргументами args возвращает !== false хотя бы у
-	 * одного элемента коллекции.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {boolean} Результат проверки.
-	 */
-	someByMethod: JW.AbstractCollection._createByMethod(&quot;some&quot;),
-	
 <span id='JW-AbstractCollection-method-each'>	/**
 </span>	 * Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
 	 * @param {Function} f
@@ -357,14 +304,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 			return true;
 		}, scope);
 	},
-	
-<span id='JW-AbstractCollection-method-eachByMethod'>	/**
-</span>	 * Перебирает элементы коллекции. Запускает указанный метод у всех элементов.
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {void}
-	 */
-	eachByMethod: JW.AbstractCollection._createByMethod(&quot;each&quot;),
 	
 <span id='JW-AbstractCollection-method-search'>	/**
 </span>	 * Ищет элемент по критерию.
@@ -394,35 +333,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		}, scope);
 		return result;
 	},
-	
-<span id='JW-AbstractCollection-method-searchBy'>	/**
-</span>	 * Ищет элемент по критерию.
-	 * 
-	 * Возвращает первый элемент, поле field которого строго равно (===) значению value.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {T} Найденный элемент или undefined.
-	 */
-	searchBy: JW.AbstractCollection._createBy(&quot;search&quot;),
-	
-<span id='JW-AbstractCollection-method-searchByMethod'>	/**
-</span>	 * Ищет элемент по критерию.
-	 * 
-	 * Возвращает первый элемент, указанный метод которого с аргументами args возвращает !== false.
-	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {T} Найденный элемент или undefined.
-	 */
-	searchByMethod: JW.AbstractCollection._createByMethod(&quot;search&quot;),
 	
 <span id='JW-AbstractCollection-method-toSorted'>	/**
 </span>	 * Преобразует коллекцию в отсортированный массив.
@@ -459,54 +369,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
 	 */
 	$toSorted: JW.AbstractCollection._create$Array(&quot;toSorted&quot;),
-	
-<span id='JW-AbstractCollection-method-toSortedBy'>	/**
-</span>	 * Преобразует коллекцию в отсортированный массив.
-	 *
-	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
-	 */
-	toSortedBy: JW.AbstractCollection._createByField(&quot;toSorted&quot;),
-	
-<span id='JW-AbstractCollection-method-S-toSortedBy'>	/**
-</span>	 * Преобразует коллекцию в отсортированный массив.
-	 *
-	 * Строит массив из элементов коллекции, отсортированный по указанному полю каждого элемента.
-	 * Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
-	 */
-	$toSortedBy: JW.AbstractCollection._create$Array(&quot;toSortedBy&quot;),
-	
-<span id='JW-AbstractCollection-method-toSortedByMethod'>	/**
-</span>	 * Преобразует коллекцию в отсортированный массив.
-	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
-	 */
-	toSortedByMethod: JW.AbstractCollection._createByMethod(&quot;toSorted&quot;),
-	
-<span id='JW-AbstractCollection-method-S-toSortedByMethod'>	/**
-</span>	 * Преобразует коллекцию в отсортированный массив.
-	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска указанного метода у каждого
-	 * элемента.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
-	 */
-	$toSortedByMethod: JW.AbstractCollection._create$Array(&quot;toSortedByMethod&quot;),
 	
 <span id='JW-AbstractCollection-method-toSortedComparing'>	/**
 </span>	 * Преобразует коллекцию в отсортированный массив.
@@ -589,52 +451,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
 	 */
 	$index: JW.AbstractCollection._create$Map(&quot;index&quot;),
-	
-<span id='JW-AbstractCollection-method-indexBy'>	/**
-</span>	 * Индексирует коллекцию.
-	 *
-	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
-	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @returns {Object} Индекс коллекции.
-	 */
-	indexBy: JW.AbstractCollection._createByField(&quot;index&quot;),
-	
-<span id='JW-AbstractCollection-method-S-indexBy'>	/**
-</span>	 * Индексирует коллекцию.
-	 *
-	 * Строит словарь, в ключах которого находятся значения указанного поля элементов,
-	 * а в значениях - соответствующие элементы. Поле элемента извлекается с помощью функции JW.get.
-	 *
-	 * @param {string/Array} field Поле элемента.
-	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
-	 */
-	$indexBy: JW.AbstractCollection._create$Map(&quot;indexBy&quot;),
-	
-<span id='JW-AbstractCollection-method-indexByMethod'>	/**
-</span>	 * Индексирует коллекцию.
-	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
-	 * а в значениях - соответствующие элементы.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Object} Индекс коллекции.
-	 */
-	indexByMethod: JW.AbstractCollection._createByMethod(&quot;index&quot;),
-	
-<span id='JW-AbstractCollection-method-S-indexByMethod'>	/**
-</span>	 * Индексирует коллекцию.
-	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска указанного метода у элементов,
-	 * а в значениях - соответствующие элементы.
-	 *
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.Map} `&lt;T&gt;` Индекс коллекции.
-	 */
-	$indexByMethod: JW.AbstractCollection._create$Map(&quot;indexByMethod&quot;),
 	
 <span id='JW-AbstractCollection-method-toArray'>	/**
 </span>	 * Преобразует коллекцию в массив.
@@ -731,7 +547,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @returns {JW.Set} `&lt;T&gt;` Множество элементов.
 	 */
-	$asSet: JW.AbstractCollection._create$Set(&quot;asSet&quot;),
+	$asSet: JW.AbstractCollection._create$Set(&quot;asSet&quot;)
 	
 <span id='JW-AbstractCollection-method-filter'>	/**
 </span>	 * @method filter
@@ -765,53 +581,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @returns {JW.AbstractCollection} `&lt;T&gt;` Отфильтрованная коллекция.
 	 */
-<span id='JW-AbstractCollection-method-filterBy'>	/**
-</span>	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {Array/Object} Отфильтрованная коллекция.
-	 */
-	filterBy: JW.AbstractCollection._createBy(&quot;filter&quot;),
-	
-<span id='JW-AbstractCollection-method-S-filterBy'>	/**
-</span>	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, поле field которых строго равно (===)
-	 * значению value. Поле элемента извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.AbstractCollection} `&lt;T&gt;` Отфильтрованная коллекция.
-	 */
-	$filterBy: JW.AbstractCollection._createBy(&quot;$filter&quot;),
-	
-<span id='JW-AbstractCollection-method-filterByMethod'>	/**
-</span>	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Array/Object} Отфильтрованная коллекция.
-	 */
-	filterByMethod: JW.AbstractCollection._createByMethod(&quot;filter&quot;),
-	
-<span id='JW-AbstractCollection-method-S-filterByMethod'>	/**
-</span>	 * Фильтрует коллекцию по критерию.
-	 * 
-	 * Строит новую коллекцию того же типа, включающую только те элементы, метод method которых с аргументами args
-	 * возвращает !== false для всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.AbstractCollection} `&lt;T&gt;` Отфильтрованная коллекция.
-	 */
-	$filterByMethod: JW.AbstractCollection._createByMethod(&quot;$filter&quot;),
 	
 <span id='JW-AbstractCollection-method-map'>	/**
 </span>	 * @method map
@@ -845,53 +614,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @returns {JW.AbstractCollection} `&lt;U&gt;` Отображенная коллекция.
 	 */
-<span id='JW-AbstractCollection-method-mapBy'>	/**
-</span>	 * `&lt;U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {Array/Object} Отображенная коллекция.
-	 */
-	mapBy: JW.AbstractCollection._createByField(&quot;map&quot;),
-	
-<span id='JW-AbstractCollection-method-S-mapBy'>	/**
-</span>	 * `&lt;U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из значений поля field всех элементов коллекции. Поле элемента
-	 * извлекается с помощью функции JW.get.
-	 * 
-	 * @param {string/Array} field Поле элемента.
-	 * @param {Mixed} value Значение.
-	 * @returns {JW.AbstractCollection} `&lt;U&gt;` Отображенная коллекция.
-	 */
-	$mapBy: JW.AbstractCollection._createByField(&quot;$map&quot;),
-	
-<span id='JW-AbstractCollection-method-mapByMethod'>	/**
-</span>	 * `&lt;U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {Array/Object} Отображенная коллекция.
-	 */
-	mapByMethod: JW.AbstractCollection._createByMethod(&quot;map&quot;),
-	
-<span id='JW-AbstractCollection-method-S-mapByMethod'>	/**
-</span>	 * `&lt;U&gt;` Отображает элементы коллекции.
-	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска метода method с аргументами args
-	 * у всех элементов коллекции.
-	 * 
-	 * @param {string} method Имя метода элемента.
-	 * @param {Array} [args] Аргументы.
-	 * @returns {JW.AbstractCollection} `&lt;U&gt;` Отображенная коллекция.
-	 */
-	$mapByMethod: JW.AbstractCollection._createByMethod(&quot;$map&quot;)
 	
 <span id='JW-AbstractCollection-method-createEmpty'>	/**
 </span>	 * @method createEmpty
