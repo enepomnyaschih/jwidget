@@ -1,7 +1,7 @@
 ﻿# Часть 5. Синхронизаторы коллекций
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt5/public/](http://enepomnyaschih.github.io/mt5/public/)
+[http://enepomnyaschih.github.io/mt/5/](http://enepomnyaschih.github.io/mt/5/)
 
 Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-5](https://github.com/enepomnyaschih/mt/tree/mt-5) (ветка)
 

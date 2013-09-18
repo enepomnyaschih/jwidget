@@ -1,7 +1,7 @@
 ﻿# Часть 2. Дочерние компоненты, массивы
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt2/public/](http://enepomnyaschih.github.io/mt2/public/)
+[http://enepomnyaschih.github.io/mt/2/](http://enepomnyaschih.github.io/mt/2/)
 
 Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-2](https://github.com/enepomnyaschih/mt/tree/mt-2) (ветка)
 

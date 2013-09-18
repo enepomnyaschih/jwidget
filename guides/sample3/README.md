@@ -1,7 +1,7 @@
 ﻿# Часть 3. Именованные дочерние компоненты
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt3/public/](http://enepomnyaschih.github.io/mt3/public/)
+[http://enepomnyaschih.github.io/mt/3/](http://enepomnyaschih.github.io/mt/3/)
 
 Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-3](https://github.com/enepomnyaschih/mt/tree/mt-3) (ветка)
 

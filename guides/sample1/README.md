@@ -1,7 +1,7 @@
 ﻿# Часть 1. Модель и представление
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt1/public/](http://enepomnyaschih.github.io/mt1/public/)
+[http://enepomnyaschih.github.io/mt/1/](http://enepomnyaschih.github.io/mt/1/)
 
 Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1](https://github.com/enepomnyaschih/mt/tree/mt-1) (ветка)
 
