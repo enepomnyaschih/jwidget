@@ -236,11 +236,11 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 *
 	 * @static
 	 * @param {Object} set `<T>` Множество.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -255,11 +255,11 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 *
 	 * @static
 	 * @param {Object} set `<T>` Множество.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -274,12 +274,12 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 *
 	 * @static
 	 * @param {Object} set `<T>` Множество.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -294,12 +294,12 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 *
 	 * @static
 	 * @param {Object} set `<T>` Множество.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.

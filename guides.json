@@ -1,15 +1,6 @@
 ﻿[
 	{
-		"title": "Инструкции",
-		"items": [
-			{
-				"name": "philosophy",
-				"title": "Философия jWidget"
-			}
-		]
-	},
-	{
-		"title": "Примеры",
+		"title": "С чего начать",
 		"items": [
 			{
 				"name": "sample1",
@@ -34,6 +25,15 @@
 			{
 				"name": "sample6",
 				"title": "Часть 6. Инфраструктура проекта"
+			}
+		]
+	},
+	{
+		"title": "Статьи",
+		"items": [
+			{
+				"name": "philosophy",
+				"title": "Философия jWidget"
 			}
 		]
 	}

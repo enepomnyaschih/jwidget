@@ -305,11 +305,11 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @static
 	 * @param {Array} array `<T>` Массив.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -325,11 +325,11 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @static
 	 * @param {Array} array `<T>` Массив.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -344,12 +344,12 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -364,12 +364,12 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -385,11 +385,11 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -405,11 +405,11 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -424,12 +424,12 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -444,12 +444,12 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -903,11 +903,11 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * функции f на всех элементах.
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -918,12 +918,12 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * `<T>` Определяет параметр метода {@link #static-method-reorder}, с которым содержимое массива отсортируется по компаратору.
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -956,11 +956,11 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * `<T>` Сортирует массив по результату запуска функции f на элементах.
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -971,12 +971,12 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * `<T>` Сортирует массив по компаратору.
 	 * @static
 	 * @param {Array} array `<T>` Массив.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.

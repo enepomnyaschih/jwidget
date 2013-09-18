@@ -290,11 +290,11 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `<T>` Словарь.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -309,11 +309,11 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `<T>` Словарь.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -326,15 +326,15 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @static
+	 * @param {Object} map `<T>` Словарь.
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
-	 * @static
-	 * @param {Object} map `<T>` Словарь.
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {Array} `<T>` Отсортированный массив.
@@ -346,15 +346,15 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @static
+	 * @param {Object} map `<T>` Словарь.
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
-	 * @static
-	 * @param {Object} map `<T>` Словарь.
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {JW.Array} `<T>` Отсортированный массив.
@@ -368,11 +368,11 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `<T>` Словарь.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -387,11 +387,11 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `<T>` Словарь.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -406,12 +406,12 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `<T>` Словарь.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -426,12 +426,12 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `<T>` Словарь.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.

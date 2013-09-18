@@ -113,6 +113,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 	namespace.$getSortingKeys = JW.AbstractCollection._createStatic$Array(namespace, "getSortingKeys");
 	
 	namespace.getSortingKeysComparing = function(target, compare, scope, order) {
+		compare = compare || JW.cmp;
 		order = order || 1;
 		var pairs = [];
 		namespace.every(target, function(item, key) {
