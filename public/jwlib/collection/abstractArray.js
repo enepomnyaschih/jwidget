@@ -568,10 +568,6 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		return this.items.concat();
 	},
 	
-	toSet: function() {
-		return new JW.Set(this.items);
-	},
-	
 	asArray: function() {
 		return this.items;
 	},

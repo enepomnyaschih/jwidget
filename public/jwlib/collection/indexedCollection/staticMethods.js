@@ -117,7 +117,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 		order = order || 1;
 		var pairs = [];
 		namespace.every(target, function(item, key) {
-			pairs.push([key, value]);
+			pairs.push([key, item]);
 		}, scope);
 		pairs.sort(function(x, y) {
 			return order * compare(x[1], y[1], x[0], y[0]);
