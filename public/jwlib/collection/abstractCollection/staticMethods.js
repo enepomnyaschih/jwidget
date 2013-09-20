@@ -37,7 +37,7 @@ JW.AbstractCollection._createStatic$Set = function(namespace, algorithm) {
 
 JW.AbstractCollection.createStaticMethods = function(namespace) {
 	namespace.some = function(target, callback, scope) {
-		return namespace.every(target, function(item) {
+		return !namespace.every(target, function(item) {
 			return callback.call(this, item) === false;
 		}, scope);
 	};
@@ -82,7 +82,7 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
 		compare = compare || JW.cmp;
 		scope = scope || target;
 		order = order || 1;
-		var items = namespace.toArray();
+		var items = namespace.toArray(target);
 		items.sort(function(x, y) {
 			return order * compare.call(scope, x, y);
 		});

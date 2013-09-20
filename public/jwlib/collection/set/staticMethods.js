@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.IndexedCollection.createStaticMethods(JW.Set);
+JW.AbstractCollection.createStaticMethods(JW.Set);
 
 JW.apply(JW.Set, {
 	getLength: function(target) {

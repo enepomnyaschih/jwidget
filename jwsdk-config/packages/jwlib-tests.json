@@ -55,6 +55,7 @@
 		"jwlib/tests/collection/observableSet/mapper.js",
 		"jwlib/tests/collection/observableSet/observer.js",
 		"jwlib/tests/collection/set.js",
+		"jwlib/tests/collection/set/staticMethods.js",
 		
 		"jwlib/tests/util.js",
 		"jwlib/tests/util/timer.js",

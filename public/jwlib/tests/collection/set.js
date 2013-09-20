@@ -1,5 +1,5 @@
 ﻿/*
-	jWidget Lib tests.
+	JW tests.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,48 +17,59 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.SetTestCase = function(config) {
-	JW.Tests.Collection.SetTestCase._super.call(this, config);
-	this.a = new JW.Class();
-	this.b = new JW.Class();
-	this.c = new JW.Class();
-	this.d = new JW.Class();
-	this.e = new JW.Class();
-};
-
-JW.extend(JW.Tests.Collection.SetTestCase, JW.Unit.TestCase, {
-	testRemoveItem: function() {
-		var set = new JW.Set([ this.a, this.b, this.c, this.d ]);
-		set.removeItem(this.b);
-		set.removeItem(this.e);
-		this.assertTrue(set.equal([ this.a, this.c, this.d ]));
+JW.Tests.Collection.SetTestCase = JW.Tests.Collection.AbstractSet.extend({
+	// override
+	createSet: function(items) {
+		return new JW.Set(items);
 	},
 	
-	testRemoveItemStatic: function() {
-		var set = {};
-		JW.Set.addAll(set, [ this.a, this.b, this.c, this.d ]);
-		JW.Set.removeItem(set, this.b);
-		JW.Set.removeItem(set, this.e);
-		
-		this.assertTrue(JW.Set.equal(set, [ this.a, this.c, this.d ]));
+	// override
+	invoke: function(set, method, args) {
+		return set[method].apply(set, args || []);
 	},
 	
-	testEqual: function() {
-		var a = new JW.Set([ this.a, this.b, this.c, this.d ]);
-		this.assertTrue(a.equal([ this.a, this.b, this.c, this.d ]));
-		this.assertTrue(a.equal([ this.a, this.d, this.b, this.c ]));
-		this.assertFalse(a.equal([ this.a, this.b, this.e, this.d ]));
-		this.assertFalse(a.equal([ this.a, this.b, this.c, this.d, this.e ]));
-		this.assertFalse(a.equal([ this.a, this.b, this.c ]));
+	testNotAdapter: function() {
+		var items = [this.b, this.d];
+		var set = new JW.Set(items);
+		this.assertStrictEqual(2, set.getLength());
+		this.assertFalse(set.isEmpty());
+		this.assertTrue(set.contains(this.b));
+		this.assertTrue(set.contains(this.d));
+		set.add(this.c);
+		this.assertTrue(set.contains(this.c));
+		this.assertTrue(JW.Array.equal(items, [this.b, this.d]));
 	},
 	
-	testEqualStatic: function() {
-		var a = {};
-		JW.Set.addAll(a, [ this.a, this.b, this.c, this.d ]);
-		this.assertTrue(JW.Set.equal(a, [ this.a, this.b, this.c, this.d ]));
-		this.assertTrue(JW.Set.equal(a, [ this.a, this.d, this.b, this.c ]));
-		this.assertFalse(JW.Set.equal(a, [ this.a, this.b, this.e, this.d ]));
-		this.assertFalse(JW.Set.equal(a, [ this.a, this.b, this.c, this.d, this.e ]));
-		this.assertFalse(JW.Set.equal(a, [ this.a, this.b, this.c ]));
+	testAdapter: function() {
+		var items = {};
+		JW.Set.addAll(items, [this.b, this.d]);
+		var set = new JW.Set(items, this);
+		this.assertStrictEqual(2, set.getLength());
+		this.assertFalse(set.isEmpty());
+		this.assertTrue(set.contains(this.b));
+		this.assertTrue(set.contains(this.d));
+		this.assertFalse(set.contains(this.c));
+		this.assertFalse(JW.Set.contains(items, this.c));
+		set.add(this.c);
+		this.assertTrue(set.contains(this.c));
+		this.assertTrue(JW.Set.contains(items, this.c));
+	},
+	
+	testToSet: function() {
+		var set = new JW.Set([this.b, this.d]);
+		this.assertTrue(JW.Set.equal(set.toSet(), [this.b, this.d]));
+		this.assertTrue(set.$toSet().equal([this.b, this.d]));
+		this.assertFalse(set.toSet() === set.getJson());
+		this.assertFalse(set.$toSet() === set);
+		this.assertTrue(set.equal([this.b, this.d]));
+	},
+	
+	testAsSet: function() {
+		var set = new JW.Set([this.b, this.d]);
+		this.assertTrue(set.asSet() === set.getJson());
+		this.assertTrue(set.$asSet() === set);
+		this.assertTrue(set.equal([this.b, this.d]));
 	}
 });
+
+JW.Tests.Collection.Set = {};
