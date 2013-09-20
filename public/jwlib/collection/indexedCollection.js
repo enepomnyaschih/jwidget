@@ -193,7 +193,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 */
 	set: function(item, key) {
 		var result = this.trySet(item, key);
-		return (result !== undefined) ? result.item : this.get(key);
+		return (result !== undefined) ? result.value : this.get(key);
 	},
 	
 	/**

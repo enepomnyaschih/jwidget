@@ -698,7 +698,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	removeItems: function(items) {
 		var itemSet = new JW.Set(items);
-		var newItems = this.filter(function(v) { return !itemSet.contains(item); });
+		var newItems = this.filter(function(item) { return !itemSet.contains(item); });
 		this.performSplice(newItems);
 	},
 	
@@ -1097,6 +1097,14 @@ JW.extend(JW.AbstractArray.IndexCount, JW.Class, {
 	/**
 	 * @property {number} count Количество.
 	 */
+	
+	/**
+	 * Клонирует пару.
+	 * @returns JW.AbstractArray.IndexCount
+	 */
+	clone: function() {
+		return new JW.AbstractArray.IndexCount(this.index, this.count);
+	}
 });
 
 /**
@@ -1129,6 +1137,14 @@ JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
 	 */
 	toIndexCount: function() {
 		return new JW.AbstractArray.IndexCount(this.index, this.items.length);
+	},
+	
+	/**
+	 * Клонирует пару.
+	 * @returns JW.AbstractArray.IndexItems
+	 */
+	clone: function() {
+		return new JW.AbstractArray.IndexItems(this.index, this.items.concat());
 	}
 });
 

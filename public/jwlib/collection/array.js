@@ -168,7 +168,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 */
 	/**
 	 * @method removeItems
-	 * `<T>` Удаляет все вхождения указанных элементов из коллекции.
+	 * `<T extends JW.Class>` Удаляет все вхождения указанных элементов из коллекции.
 	 * @static
 	 * @param {Array} array `<T>` Массив.
 	 * @param {Array} items `<T>` Элементы.

@@ -204,10 +204,36 @@ JW.apply(JW.Array, {
 		// JW.assertArray(removeParamsList, function(params) { return params instanceof JW.AbstractArray.IndexCount; }, this);
 		// JW.assertArray(addParamsList, function(params) { return params instanceof JW.AbstractArray.IndexItems; }, this);
 		// TODO: assert out of bounds stuff
+		var last;
+		
+		var optimizedRemoveParamsList = [];
+		last = null;
+		for (var i = 0, l = removeParamsList.length; i < l; ++i) {
+			var params = removeParamsList[i];
+			if (last && (params.index === last.index + last.count)) {
+				last.count += params.count;
+			} else {
+				last = params.clone();
+				optimizedRemoveParamsList.push(last);
+			}
+		}
+		
+		var optimizedAddParamsList = [];
+		last = null;
+		for (var i = 0, l = addParamsList.length; i < l; ++i) {
+			var params = addParamsList[i];
+			if (last && (params.index === last.index + last.items.length)) {
+				JW.Array.tryAddAll(last.items, params.items);
+			} else {
+				last = params.clone();
+				optimizedAddParamsList.push(last);
+			}
+		}
+		
 		var oldItems = target.concat();
 		var removedItemsList = [];
-		for (var i = removeParamsList.length - 1; i >= 0; --i) {
-			var params = removeParamsList[i];
+		for (var i = optimizedRemoveParamsList.length - 1; i >= 0; --i) {
+			var params = optimizedRemoveParamsList[i];
 			var index = params.index;
 			var items = JW.Array.tryRemoveAll(target, index, params.count);
 			if (items === undefined) {
@@ -215,9 +241,9 @@ JW.apply(JW.Array, {
 			}
 			removedItemsList.push(new JW.AbstractArray.IndexItems(index, items));
 		}
-		var addedItemsList = []
-		for (var i = 0, l = addParamsList.length; i < l; ++i) {
-			var params = addParamsList[i];
+		var addedItemsList = [];
+		for (var i = 0, l = optimizedAddParamsList.length; i < l; ++i) {
+			var params = optimizedAddParamsList[i];
 			if (JW.Array.tryAddAll(target, params.items, params.index) === undefined) {
 				continue;
 			}

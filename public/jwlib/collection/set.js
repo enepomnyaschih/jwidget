@@ -123,7 +123,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 */
 	/**
 	 * @method removeItems
-	 * `<T>` Удаляет все вхождения указанных элементов из коллекции.
+	 * `<T extends JW.Class>` Удаляет все вхождения указанных элементов из коллекции.
 	 * @static
 	 * @param {Object} set `<T>` Множество.
 	 * @param {Array} items `<T>` Элементы.

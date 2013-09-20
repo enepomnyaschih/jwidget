@@ -154,7 +154,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 */
 	/**
 	 * @method removeItems
-	 * `<T>` Удаляет все вхождения указанных элементов из коллекции.
+	 * `<T extends JW.Class>` Удаляет все вхождения указанных элементов из коллекции.
 	 * @static
 	 * @param {Object} map `<T>` Словарь.
 	 * @param {Array} items `<T>` Элементы.
