@@ -875,13 +875,27 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	/**
 	 * @method detectSplice
 	 * `<T>` Определяет параметры метода {@link #static-method-splice}, с которыми содержимое массива станет равно newItems.
-	 * Т.е. определяет, какие элементы нужно удалить, какие вставить, и в какое место.
+	 * Т.е. определяет, какие элементы нужно удалить, какие вставить, и в какое место. Все элементы должны быть
+	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод
+	 * {@link #static-method-detectFilter}.
 	 * @static
 	 * @param {Array} array `<T>` Массив.
 	 * @param {Array} newItems `<T>` Новое содержимое массива.
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @returns {JW.AbstractArray.SpliceParams}
+	 * `<T>` Параметры метода {@link #static-method-splice}.
+	 * Если вызова метода не требуется - undefined.
+	 */
+	/**
+	 * @method detectFilter
+	 * Определяет параметры метода {@link #static-method-splice}, с которыми содержимое массива станет равно newItems.
+	 * Определяет, какие элементы нужно удалить. Не предусматривает вставку новых элементов. В отличие от
+	 * метода {@link #static-method-detectSplice}, не требует уникальности элементов массива.
+	 * @static
+	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} newItems `<T>` Новое содержимое массива.
 	 * @returns {JW.AbstractArray.SpliceParams}
 	 * `<T>` Параметры метода {@link #static-method-splice}.
 	 * Если вызова метода не требуется - undefined.
@@ -940,12 +954,24 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	/**
 	 * @method performSplice
 	 * `<T>` Преобразует содержимое массива к newItems комбинацией методов {@link #static-method-detectSplice} и {@link #static-method-splice}.
+	 * Все элементы должны быть
+	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод {@link #static-method-performFilter}.
 	 * @static
 	 * @param {Array} array `<T>` Массив.
 	 * @param {Array} newItems `<T>` Новое содержимое массива.
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @returns {void}
+	 */
+	/**
+	 * @method performFilter
+	 * `<T>` Преобразует содержимое массива к newItems комбинацией методов {@link #static-method-detectFilter} и {@link #static-method-splice}.
+	 * Только удаляет элементы. Не предусматривает вставку новых элементов. В отличие от
+	 * метода {@link #static-method-performSplice}, не требует уникальности элементов массива.
+	 * @static
+	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} newItems `<T>` Новое содержимое массива.
 	 * @returns {void}
 	 */
 	/**

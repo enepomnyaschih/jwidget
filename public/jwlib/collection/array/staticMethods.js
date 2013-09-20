@@ -330,6 +330,27 @@ JW.apply(JW.Array, {
 		}
 	},
 	
+	detectFilter: function(oldItems, newItems) {
+		var removeParamsList = [];
+		var oldIndex = 0;
+		var oldLength = oldItems.length;
+		var newLength = newItems.length;
+		for (var newIndex = 0; newIndex <= newLength; ++newIndex) {
+			var newItem = newItems[newIndex];
+			var count = 0;
+			while ((oldIndex + count < oldLength) && (oldItems[oldIndex + count] !== newItem)) {
+				++count;
+			}
+			if (count !== 0) {
+				removeParamsList.push(new JW.AbstractArray.IndexCount(oldIndex, count));
+			}
+			oldIndex += count + 1;
+		}
+		if (removeParamsList.length !== 0) {
+			return new JW.AbstractArray.SpliceParams(removeParamsList, []);
+		}
+	},
+	
 	detectReorder: function(oldItems, newItems, getKey, scope) {
 		getKey = getKey || JW.iid;
 		scope = scope || oldItems;
@@ -362,6 +383,13 @@ JW.apply(JW.Array, {
 	
 	performSplice: function(target, newItems, getKey, scope) {
 		var params = JW.Array.detectSplice(target, newItems, getKey, scope);
+		if (params !== undefined) {
+			JW.Array.trySplice(target, params.removeParamsList, params.addParamsList);
+		}
+	},
+	
+	performFilter: function(target, newItems) {
+		var params = JW.Array.detectFilter(target, newItems);
 		if (params !== undefined) {
 			JW.Array.trySplice(target, params.removeParamsList, params.addParamsList);
 		}

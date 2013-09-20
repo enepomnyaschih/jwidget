@@ -130,7 +130,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 	namespace.$getSortingKeysComparing = JW.AbstractCollection._createStatic$Array(namespace, "getSortingKeysComparing");
 	
 	namespace.toSorted = function(target, callback, scope, order) {
-		return namespace.map(namespace.getSortingKeys(target, callback, scope, order), function(key) {
+		return JW.Array.map(namespace.getSortingKeys(target, callback, scope, order), function(key) {
 			return namespace.get(target, key);
 		});
 	};
@@ -138,7 +138,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 	namespace.$toSorted = JW.AbstractCollection._createStatic$Array(namespace, "toSorted");
 	
 	namespace.toSortedComparing = function(target, compare, scope, order) {
-		return namespace.map(namespace.getSortingKeysComparing(target, compare, scope, order), function(key) {
+		return JW.Array.map(namespace.getSortingKeysComparing(target, compare, scope, order), function(key) {
 			return namespace.get(target, key);
 		});
 	};

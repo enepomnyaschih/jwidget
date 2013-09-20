@@ -1,5 +1,5 @@
 ﻿/*
-	jWidget Lib tests.
+	JW tests.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,49 +17,56 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.MapTestCase = function(config) {
-	JW.Tests.Collection.MapTestCase._super.call(this, config);
-};
-
-JW.extend(JW.Tests.Collection.MapTestCase, JW.Unit.TestCase, {
-	testRemoveItem: function() {
-		var map = new JW.Map({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 });
-		this.assertStrictEqual("b", map.removeItem(2));
-		this.assertUndefined(map.removeItem(1));
-		this.assertTrue(JW.Map.equal({ "a": 0, "c": 3, "d": 2, "e": 3, "f": 0 }, map.getJson()));
+JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMap.extend({
+	// override
+	createMap: function(items) {
+		return new JW.Map(items);
 	},
 	
-	testRemoveItemStatic: function() {
-		var map = { "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 };
-		this.assertStrictEqual("b", JW.Map.removeItem(map, 2));
-		this.assertUndefined(JW.Map.removeItem(map, 1));
-		this.assertTrue(JW.Map.equal({ "a": 0, "c": 3, "d": 2, "e": 3, "f": 0 }, map));
+	// override
+	invoke: function(map, method, args) {
+		return map[method].apply(map, args || []);
 	},
 	
-	testEqual: function() {
-		var a = new JW.Map({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 });
-		this.assertTrue(a.equal({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 }));
-		this.assertTrue(a.equal({ "a": 0, "f": 0, "b": 2, "c": 3, "d": 2, "e": 3 }));
-		this.assertFalse(a.equal({ "a": 0, "b": 2, "c": 3, "d": 3, "e": 3, "f": 0 }));
-		this.assertFalse(a.equal({ "a": 0, "b": 2, "c": 3, "D": 2, "e": 3, "f": 0 }));
-		this.assertFalse(a.equal({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0, "g": 0 }));
-		this.assertFalse(a.equal({ "a": 0, "b": 2, "c": 3, "d": 2, "e": 3 }));
+	testNotAdapter: function() {
+		var items = {a: 2, b: 4};
+		var map = new JW.Map(items);
+		this.assertStrictEqual(2, map.getLength());
+		this.assertFalse(map.isEmpty());
+		this.assertStrictEqual(2, map.get("a"));
+		this.assertStrictEqual(4, map.get("b"));
+		map.set(3, "a");
+		this.assertStrictEqual(3, map.get("a"));
+		this.assertStrictEqual(2, items.a);
 	},
 	
-	testEqualStatic: function() {
-		var a = { "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 };
-		var b = { "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0 };
-		var c = { "a": 0, "f": 0, "b": 2, "c": 3, "d": 2, "e": 3 };
-		var d = { "a": 0, "b": 2, "c": 3, "d": 3, "e": 3, "f": 0 };
-		var e = { "a": 0, "b": 2, "c": 3, "D": 2, "e": 3, "f": 0 };
-		var f = { "a": 0, "b": 2, "c": 3, "d": 2, "e": 3, "f": 0, "g": 0 };
-		var g = { "a": 0, "b": 2, "c": 3, "d": 2, "e": 3 };
-		this.assertTrue(JW.Map.equal(a, a));
-		this.assertTrue(JW.Map.equal(a, b));
-		this.assertTrue(JW.Map.equal(a, c));
-		this.assertFalse(JW.Map.equal(a, d));
-		this.assertFalse(JW.Map.equal(a, e));
-		this.assertFalse(JW.Map.equal(a, f));
-		this.assertFalse(JW.Map.equal(a, g));
+	testAdapter: function() {
+		var items = {a: 2, b: 4};
+		var map = new JW.Map(items, true);
+		this.assertStrictEqual(2, map.getLength());
+		this.assertFalse(map.isEmpty());
+		this.assertStrictEqual(2, map.get("a"));
+		this.assertStrictEqual(4, map.get("b"));
+		map.set(3, "a");
+		this.assertStrictEqual(3, map.get("a"));
+		this.assertStrictEqual(3, items.a);
+	},
+	
+	testToMap: function() {
+		var map = new JW.Map({a: 2, b: 4});
+		this.assertTrue(JW.Map.equal(map.toMap(), map.getJson()));
+		this.assertTrue(map.$toMap().equal(map.getJson()));
+		this.assertFalse(map.toMap() === map.getJson());
+		this.assertFalse(map.$toMap() === map);
+		this.assertTrue(map.equal({a: 2, b: 4}));
+	},
+	
+	testAsMap: function() {
+		var map = new JW.Map({a: 2, b: 4});
+		this.assertTrue(map.asMap() === map.getJson());
+		this.assertTrue(map.$asMap() === map);
+		this.assertTrue(map.equal({a: 2, b: 4}));
 	}
 });
+
+JW.Tests.Collection.Map = {};

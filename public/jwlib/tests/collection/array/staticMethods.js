@@ -19,7 +19,7 @@
 
 JW.Tests.Collection.Array.StaticMethodsTestCase = JW.Tests.Collection.AbstractArray.extend({
 	// override
-	createArray: function(items, adapter) {
+	createArray: function(items) {
 		return items || [];
 	},
 	

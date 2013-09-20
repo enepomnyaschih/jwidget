@@ -84,7 +84,7 @@ JW.apply(JW.Map, {
 		return result;
 	},
 	
-	$map: JW.AbstractCollection._create$Map(JW.Map, "map"),
+	$map: JW.AbstractCollection._createStatic$Map(JW.Map, "map"),
 	
 	asMap: function(target) {
 		return target;

@@ -37,6 +37,7 @@
 		"jwlib/tests/collection/array.js",
 		"jwlib/tests/collection/array/staticMethods.js",
 		"jwlib/tests/collection/map.js",
+		"jwlib/tests/collection/map/staticMethods.js",
 		"jwlib/tests/collection/observableArray.js",
 		"jwlib/tests/collection/observableArray/indexer.js",
 		"jwlib/tests/collection/observableArray/observer.js",

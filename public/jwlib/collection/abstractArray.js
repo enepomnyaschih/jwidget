@@ -94,6 +94,7 @@
  * - **{@link #reorder}, #tryReorder - Переупорядочивает элементы.**
  * - **{@link #sort}, #sortComparing - Сортирует массив.**
  * - **{@link #performSplice} - Приводит содержимое методом #splice.**
+ * - **{@link #performFilter} - Фильтрует содержимое методом #splice.**
  * - **{@link #performReorder} - Приводит содержимое методом #reorder.**
  *
  * Создание синхронизаторов:
@@ -116,6 +117,7 @@
  * Другие методы:
  *
  * - **{@link #detectSplice} - Определяет параметры метода #splice для приведения содержимого.**
+ * - **{@link #detectFilter} - Определяет параметры метода #splice для фильтрации содержимого.**
  * - **{@link #detectReorder} - Определяет параметры метода #reorder для приведения содержимого.**
  * - **{@link #detectSort} - Определяет параметры метода #reorder для сортировки по индексу.**
  * - **{@link #detectSortComparing} - Определяет параметры метода #reorder для сортировки по компаратору.**
@@ -699,7 +701,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	removeItems: function(items) {
 		var itemSet = new JW.Set(items);
 		var newItems = this.filter(function(item) { return !itemSet.contains(item); });
-		this.performSplice(newItems);
+		this.performFilter(newItems);
 	},
 	
 	/**
@@ -793,7 +795,8 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * Определяет параметры метода #splice, с которыми содержимое массива станет равно newItems.
-	 * Т.е. определяет, какие элементы нужно удалить, какие вставить, и в какое место.
+	 * Т.е. определяет, какие элементы нужно удалить, какие вставить, и в какое место. Все элементы должны быть
+	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод #detectFilter.
 	 * @param {Array} newItems `<T>` Новое содержимое массива.
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
@@ -804,6 +807,19 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 */
 	detectSplice: function(newItems, getKey, scope) {
 		return JW.Array.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
+	},
+	
+	/**
+	 * Определяет параметры метода #splice, с которыми содержимое массива станет равно newItems.
+	 * Определяет, какие элементы нужно удалить. Не предусматривает вставку новых элементов. В отличие от
+	 * метода #detectSplice, не требует уникальности элементов массива.
+	 * @param {Array} newItems `<T>` Новое содержимое массива.
+	 * @returns {JW.AbstractArray.SpliceParams}
+	 * `<T>` Параметры метода #splice.
+	 * Если вызова метода не требуется - undefined.
+	 */
+	detectFilter: function(newItems) {
+		return JW.Array.detectFilter(this.items, newItems);
 	},
 	
 	/**
@@ -864,6 +880,8 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * Преобразует содержимое массива к newItems комбинацией методов #detectSplice и #splice.
+	 * Все элементы должны быть
+	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод #performFilter.
 	 * @param {Array} newItems `<T>` Новое содержимое массива.
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
@@ -872,6 +890,20 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 */
 	performSplice: function(newItems, getKey, scope) {
 		var params = this.detectSplice(newItems, getKey || this.getKey, scope || this);
+		if (params !== undefined) {
+			this.trySplice(params.removeParamsList, params.addParamsList);
+		}
+	},
+	
+	/**
+	 * Преобразует содержимое массива к newItems комбинацией методов #detectFilter и #splice.
+	 * Только удаляет элементы. Не предусматривает вставку новых элементов. В отличие от
+	 * метода #performSplice, не требует уникальности элементов массива.
+	 * @param {Array} newItems `<T>` Новое содержимое массива.
+	 * @returns {void}
+	 */
+	performFilter: function(newItems) {
+		var params = this.detectFilter(newItems);
 		if (params !== undefined) {
 			this.trySplice(params.removeParamsList, params.addParamsList);
 		}
