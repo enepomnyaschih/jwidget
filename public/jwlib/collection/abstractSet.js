@@ -380,7 +380,9 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * Определяет параметры метода #splice, с которыми содержимое множества станет равно newItems.
 	 * Т.е. определяет, какие элементы нужно удалить, какие добавить.
 	 * @param {Array} newItems `<T>` Новое содержимое множества.
-	 * @returns {JW.AbstractSet.SpliceParams} `<T>` Параметры метода #splice.
+	 * @returns {JW.AbstractSet.SpliceParams}
+	 * `<T>` Параметры метода #splice.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSplice: function(newItems) {
 		return JW.Set.detectSplice(this.json, newItems);

@@ -826,7 +826,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @static
 	 * @param {Object} map `<T>` Словарь.
 	 * @param {Object} newItems Новое содержимое словаря.
-	 * @returns {JW.AbstractMap.SpliceParams} `<T>` Параметры метода {@link #static-method-splice}.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `<T>` Параметры метода {@link #static-method-splice}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	/**
 	 * @method detectReindex
@@ -839,7 +841,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {Object} Параметр keyMap метода {@link #static-method-reindex}.
+	 * @returns {Object}
+	 * Параметр keyMap метода {@link #static-method-reindex}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	/**
 	 * @method performSplice

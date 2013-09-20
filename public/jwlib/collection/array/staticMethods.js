@@ -347,11 +347,17 @@ JW.apply(JW.Array, {
 	},
 	
 	detectSort: function(target, callback, scope, order) {
-		return JW.Array.invert(JW.Array.getSortingKeys(target, callback, scope, order));
+		var keys = JW.Array.getSortingKeys(target, callback, scope, order);
+		if (!JW.Array.isIdentity(keys)) {
+			return JW.Array.invert(keys);
+		}
 	},
 	
 	detectSortComparing: function(target, compare, scope, order) {
-		return JW.Array.invert(JW.Array.getSortingKeysComparing(target, compare, scope, order));
+		var keys = JW.Array.getSortingKeysComparing(target, compare, scope, order);
+		if (!JW.Array.isIdentity(keys)) {
+			return JW.Array.invert(keys);
+		}
 	},
 	
 	performSplice: function(target, newItems, getKey, scope) {
@@ -369,11 +375,17 @@ JW.apply(JW.Array, {
 	},
 	
 	sort: function(target, callback, scope, order) {
-		JW.Array.tryReorder(target, JW.Array.detectSort(target, callback, scope, order));
+		var indexArray = JW.Array.detectSort(target, callback, scope, order);
+		if (indexArray !== undefined) {
+			JW.Array.tryReorder(target, indexArray);
+		}
 	},
 	
 	sortComparing: function(target, compare, scope, order) {
-		JW.Array.tryReorder(target, JW.Array.detectSortComparing(target, compare, scope, order));
+		var indexArray = JW.Array.detectSortComparing(target, compare, scope, order);
+		if (indexArray !== undefined) {
+			JW.Array.tryReorder(target, indexArray);
+		}
 	},
 	
 	createMapper: function(source, config) {

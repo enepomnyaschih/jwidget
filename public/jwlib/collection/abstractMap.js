@@ -729,7 +729,9 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * Определяет параметры метода #splice, с которыми содержимое словаря станет равно newItems.
 	 * Т.е. определяет, какие элементы нужно удалить, какие добавить, и с каким ключом.
 	 * @param {Object} newItems Новое содержимое словаря.
-	 * @returns {JW.AbstractMap.SpliceParams} `<T>` Параметры метода #splice.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `<T>` Параметры метода #splice.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSplice: function(newItems) {
 		return JW.Map.detectSplice(this.json, newItems);
@@ -743,7 +745,9 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {Object} Параметр keyMap метода #reindex.
+	 * @returns {Object}
+	 * Параметр keyMap метода #reindex.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectReindex: function(newItems, getKey, scope) {
 		return JW.Map.detectReindex(this.json, newItems, getKey || this.getKey, scope || this);

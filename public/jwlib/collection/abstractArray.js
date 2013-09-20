@@ -798,7 +798,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {JW.AbstractArray.SpliceParams} `<T>` Параметры метода #splice.
+	 * @returns {JW.AbstractArray.SpliceParams}
+	 * `<T>` Параметры метода #splice.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSplice: function(newItems, getKey, scope) {
 		return JW.Array.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
@@ -812,7 +814,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {Array} `<number>` Параметр indexArray метода #reorder.
+	 * @returns {Array}
+	 * `<number>` Параметр indexArray метода #reorder.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectReorder: function(newItems, getKey, scope) {
 		return JW.Array.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
@@ -830,7 +834,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<number>` Параметр indexArray метода #reorder.
+	 * @returns {Array}
+	 * `<number>` Параметр indexArray метода #reorder.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSort: function(callback, scope, order) {
 		return JW.Array.detectSort(this.items, callback, scope || this, order);
@@ -848,7 +854,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<number>` Параметр indexArray метода #reorder.
+	 * @returns {Array}
+	 * `<number>` Параметр indexArray метода #reorder.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSortComparing: function(compare, scope, order) {
 		return JW.Array.detectSortComparing(this.items, compare, scope || this, order);
@@ -898,7 +906,10 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {void}
 	 */
 	sort: function(callback, scope, order) {
-		this.tryReorder(this.detectSort(callback, scope, order));
+		var indexArray = this.detectSort(callback, scope, order);
+		if (indexArray !== undefined) {
+			this.tryReorder(indexArray);
+		}
 	},
 	
 	/**
@@ -916,7 +927,10 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {void}
 	 */
 	sortComparing: function(compare, scope, order) {
-		this.tryReorder(this.detectSortComparing(compare, scope, order));
+		var indexArray = this.detectSortComparing(compare, scope, order);
+		if (indexArray !== undefined) {
+			this.tryReorder(indexArray);
+		}
 	},
 	
 	/**

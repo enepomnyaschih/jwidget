@@ -506,5 +506,187 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 		]);
 		JW.Tests.Collection.assertArraySpliceResult(this, expected, got);
 		this.assertTrue(array.equal([7, 8, 10, 1, 4, 9]));
+	},
+	
+	testTrySplice: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(array.trySplice([
+			new JW.AbstractArray.IndexCount(1, 0),
+			new JW.AbstractArray.IndexCount(3, 0),
+		], [
+			new JW.AbstractArray.IndexItems(3, []),
+		]));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		
+		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [
+			new JW.AbstractArray.IndexItems(1, [2, 3]),
+			new JW.AbstractArray.IndexItems(4, [5, 6])
+		], [
+			new JW.AbstractArray.IndexItems(0, [7, 8, 10]),
+			new JW.AbstractArray.IndexItems(5, [9])
+		]);
+		var got = array.trySplice([
+			new JW.AbstractArray.IndexCount(1, 1),
+			new JW.AbstractArray.IndexCount(2, 0),
+			new JW.AbstractArray.IndexCount(2, 1),
+			new JW.AbstractArray.IndexCount(3, 0),
+			new JW.AbstractArray.IndexCount(4, 2)
+		], [
+			new JW.AbstractArray.IndexItems(0, [7, 8]),
+			new JW.AbstractArray.IndexItems(2, []),
+			new JW.AbstractArray.IndexItems(2, [10]),
+			new JW.AbstractArray.IndexItems(4, []),
+			new JW.AbstractArray.IndexItems(5, [9])
+		]);
+		JW.Tests.Collection.assertArraySpliceResult(this, expected, got);
+		this.assertTrue(array.equal([7, 8, 10, 1, 4, 9]));
+	},
+	
+	testReorder: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		array.reorder([0, 1, 2, 3, 4, 5]);
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		array.reorder([2, 1, 4, 5, 0, 3]);
+		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+	},
+	
+	testTryReorder: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(array.tryReorder([0, 1, 2, 3, 4, 5]));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(JW.Array.equal(array.tryReorder([2, 1, 4, 5, 0, 3]), [1, 2, 3, 4, 5, 6]));
+		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+	},
+	
+	testSort: function() {
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		array.sort();
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		array.sort(function(x) { return -x; });
+		this.assertTrue(array.equal([6, 5, 4, 3, 2, 1]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		array.sort(null, null, -1);
+		this.assertTrue(array.equal([6, 5, 4, 3, 2, 1]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		array.sort(function(x) { return -x; }, this, -1);
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+	},
+	
+	testSortComparing: function() {
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		array.sortComparing();
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		array.sortComparing(function(x, y) { return -JW.cmp(x, y); });
+		this.assertTrue(array.equal([6, 5, 4, 3, 2, 1]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		array.sortComparing(null, null, -1);
+		this.assertTrue(array.equal([6, 5, 4, 3, 2, 1]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		array.sortComparing(function(x, y) { return -JW.cmp(x, y); }, this, -1);
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+	},
+	
+	testPerformSplice: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		array.performSplice([1, 3, 7, 5, 8, 6, 9]);
+		this.assertTrue(array.equal([1, 3, 7, 5, 8, 6, 9]));
+	},
+	
+	testPerformReorder: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		array.performReorder([5, 2, 1, 6, 3, 4]);
+		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+	},
+	
+	testDetectSplice: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(array.detectSplice([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		
+		var expected = new JW.AbstractArray.SpliceParams([
+			new JW.AbstractArray.IndexCount(1, 2),
+			new JW.AbstractArray.IndexCount(4, 2)
+		], [
+			new JW.AbstractArray.IndexItems(0, [7, 8, 10]),
+			new JW.AbstractArray.IndexItems(5, [9])
+		]);
+		var got = array.detectSplice([7, 8, 10, 1, 4, 9]);
+		JW.Tests.Collection.assertArraySpliceParams(this, expected, got);
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+	},
+	
+	testDetectReorder: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(array.detectReorder([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(JW.Array.equal(array.detectReorder([5, 2, 1, 6, 3, 4]), [2, 1, 4, 5, 0, 3]));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+	},
+	
+	testDetectSort: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(array.detectSort());
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(JW.Array.equal(array.detectSort(function(x) { return -x; }), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(JW.Array.equal(array.detectSort(null, null, -1), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertUndefined(array.detectSort(function(x) { return -x; }, this, -1));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		this.assertTrue(JW.Array.equal(array.detectSort(), [4, 1, 0, 5, 2, 3]));
+		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+		this.assertTrue(JW.Array.equal(array.detectSort(function(x) { return -x; }), [1, 4, 5, 0, 3, 2]));
+		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+	},
+	
+	testDetectSortComparing: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(array.detectSortComparing());
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(JW.Array.equal(array.detectSortComparing(function(x, y) { return -JW.cmp(x, y); }), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(JW.Array.equal(array.detectSortComparing(null, null, -1), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertUndefined(array.detectSortComparing(function(x, y) { return -JW.cmp(x, y); }, this, -1), [0, 1, 2, 3, 4, 5]);
+		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		this.assertTrue(JW.Array.equal(array.detectSortComparing(), [4, 1, 0, 5, 2, 3]));
+		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+		this.assertTrue(JW.Array.equal(array.detectSortComparing(function(x, y) { return -JW.cmp(x, y); }), [1, 4, 5, 0, 3, 2]));
+		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+	},
+	
+	testCollapse: function() {
+		var a = [1, 2, 3];
+		var b = [5, 6];
+		var c = [8, 9];
+		var d = [b, 7, c];
+		var array = this.createArray([a, 4, d, 10]);
+		this.assertTrue(JW.Array.equal(array.collapse(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
+		this.assertTrue(array.equal([a, 4, d, 10]));
+		this.assertTrue(JW.Array.equal(array.collapse(1), [1, 2, 3, 4, b, 7, c, 10]));
+		this.assertTrue(array.equal([a, 4, d, 10]));
+		this.assertTrue(JW.Array.equal(array.collapse(0), [a, 4, d, 10]));
+		this.assertTrue(array.equal([a, 4, d, 10]));
+	},
+	
+	testEqual: function() {
+		var array = this.createArray([2, 3]);
+		this.assertTrue(array.equal([2, 3]));
+		this.assertFalse(array.equal([2, 3, 4]));
+		this.assertFalse(array.equal([2]));
+		this.assertFalse(array.equal([2, 4]));
+		this.assertFalse(array.equal([1, 3]));
 	}
 });

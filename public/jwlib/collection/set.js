@@ -616,7 +616,9 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @static
 	 * @param {Object} set `<T>` Множество.
 	 * @param {Array} newItems `<T>` Новое содержимое множества.
-	 * @returns {JW.AbstractSet.SpliceParams} `<T>` Параметры метода {@link #static-method-splice}.
+	 * @returns {JW.AbstractSet.SpliceParams}
+	 * `<T>` Параметры метода {@link #static-method-splice}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	/**
 	 * @method performSplice

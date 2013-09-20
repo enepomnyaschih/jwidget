@@ -882,7 +882,9 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {JW.AbstractArray.SpliceParams} `<T>` Параметры метода {@link #static-method-splice}.
+	 * @returns {JW.AbstractArray.SpliceParams}
+	 * `<T>` Параметры метода {@link #static-method-splice}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	/**
 	 * @method detectReorder
@@ -895,7 +897,9 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {Array} `<number>` Параметр indexArray метода {@link #static-method-reorder}.
+	 * @returns {Array}
+	 * `<number>` Параметр indexArray метода {@link #static-method-reorder}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	/**
 	 * @method detectSort
@@ -911,7 +915,9 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<number>` Параметр indexArray метода {@link #static-method-reorder}.
+	 * @returns {Array}
+	 * `<number>` Параметр indexArray метода {@link #static-method-reorder}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	/**
 	 * @method detectSortComparing
@@ -927,7 +933,9 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<number>` Параметр indexArray метода {@link #static-method-reorder}.
+	 * @returns {Array}
+	 * `<number>` Параметр indexArray метода {@link #static-method-reorder}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	/**
 	 * @method performSplice

@@ -155,6 +155,28 @@ JW.Tests.Collection = {
 		}
 	},
 	
+	assertArraySpliceParams: function(testCase, expected, spliceParams) {
+		testCase.assertTrue(spliceParams instanceof JW.AbstractArray.SpliceParams);
+		
+		testCase.assertStrictEqual(expected.removeParamsList.length, spliceParams.removeParamsList.length);
+		for (var i = 0; i < spliceParams.removeParamsList.length; ++i) {
+			var expectedParams = expected.removeParamsList[i];
+			var params = spliceParams.removeParamsList[i];
+			testCase.assertTrue(params instanceof JW.AbstractArray.IndexCount);
+			testCase.assertStrictEqual(expectedParams.index, params.index);
+			testCase.assertStrictEqual(expectedParams.count, params.count);
+		}
+		
+		testCase.assertStrictEqual(expected.addParamsList.length, spliceParams.addParamsList.length);
+		for (var i = 0; i < spliceParams.addParamsList.length; ++i) {
+			var expectedParams = expected.addParamsList[i];
+			var params = spliceParams.addParamsList[i];
+			testCase.assertTrue(params instanceof JW.AbstractArray.IndexItems);
+			testCase.assertStrictEqual(expectedParams.index, params.index);
+			testCase.assertTrue(JW.Array.equal(expectedParams.items, params.items));
+		}
+	},
+	
 	assertArraySpliceResult: function(testCase, expected, spliceResult) {
 		testCase.assertTrue(spliceResult instanceof JW.AbstractArray.SpliceResult);
 		testCase.assertTrue(JW.Array.equal(expected.oldItems, spliceResult.oldItems));
