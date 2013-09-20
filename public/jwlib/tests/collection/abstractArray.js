@@ -19,9 +19,11 @@
 
 JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 	/*
-	JW.AbstractArray createArray(items);
+	JW.AbstractArray createArray(items, formatter);
 	Mixed invoke(target, method, args);
 	*/
+	
+	setObservableOutput: function() {},
 	
 	testEmpty: function() {
 		var array = this.createArray();
@@ -312,142 +314,272 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 	
 	testAdd: function() {
 		var array = this.createArray([2, 4]);
+		
+		this.setObservableOutput(
+			"Spliced -[] +[2:[3]] to [2,4]",
+			"Changed",
+			"Changed length from 2 to 3"
+		);
 		this.invoke(array, "add", [3]);
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
 	},
 	
 	testTryAdd: function() {
 		var array = this.createArray([2, 4]);
+		
+		this.setObservableOutput(
+			"Spliced -[] +[2:[3]] to [2,4]",
+			"Changed",
+			"Changed length from 2 to 3"
+		);
 		this.assertTrue(this.invoke(array, "tryAdd", [3]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
 	},
 	
 	testAddAll: function() {
 		var array = this.createArray([2, 4]);
+		
+		this.setObservableOutput(
+			"Spliced -[] +[2:[3,5]] to [2,4]",
+			"Changed",
+			"Changed length from 2 to 4"
+		);
 		this.invoke(array, "addAll", [[3, 5]]);
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3, 5]]));
 	},
 	
 	testTryAddAll: function() {
 		var array = this.createArray([2, 4]);
+		
+		this.setObservableOutput(
+			"Spliced -[] +[2:[3,5]] to [2,4]",
+			"Changed",
+			"Changed length from 2 to 4"
+		);
 		this.assertTrue(this.invoke(array, "tryAddAll", [[3, 5]]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3, 5]]));
 	},
 	
 	testSet: function() {
 		var array = this.createArray([2, 4]);
+		
+		this.setObservableOutput();
 		this.assertStrictEqual(4, this.invoke(array, "set", [4, 1]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4]]));
+		
+		this.setObservableOutput(
+			"Replaced 4 with 3 at 1",
+			"Changed"
+		);
 		this.assertStrictEqual(4, this.invoke(array, "set", [3, 1]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testTrySet: function() {
 		var array = this.createArray([2, 4]);
+		
+		this.setObservableOutput();
 		this.assertUndefined(this.invoke(array, "trySet", [4, 1]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4]]));
+		
+		this.setObservableOutput(
+			"Replaced 4 with 3 at 1",
+			"Changed"
+		);
 		this.assertStrictEqual(4, this.invoke(array, "trySet", [3, 1]).value);
 		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testRemove: function() {
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput(
+			"Spliced -[1:[4]] +[] to [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 2"
+		);
 		this.assertStrictEqual(4, this.invoke(array, "remove", [1]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testTryRemove: function() {
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput(
+			"Spliced -[1:[4]] +[] to [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 2"
+		);
 		this.assertStrictEqual(4, this.invoke(array, "tryRemove", [1]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testRemoveAll: function() {
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput();
 		this.assertTrue(JW.Array.equal(this.invoke(array, "removeAll", [1, 0]), []));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		
+		this.setObservableOutput(
+			"Spliced -[1:[4,3]] +[] to [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 1"
+		);
 		this.assertTrue(JW.Array.equal(this.invoke(array, "removeAll", [1, 2]), [4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[2]]));
 		
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput();
 		this.assertTrue(this.invoke(array, "$removeAll", [1, 0]).equal([]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		
+		this.setObservableOutput(
+			"Spliced -[1:[4,3]] +[] to [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 1"
+		);
 		this.assertTrue(this.invoke(array, "$removeAll", [1, 2]).equal([4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[2]]));
 	},
 	
 	testTryRemoveAll: function() {
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput();
 		this.assertUndefined(this.invoke(array, "tryRemoveAll", [1, 0]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		
+		this.setObservableOutput(
+			"Spliced -[1:[4,3]] +[] to [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 1"
+		);
 		this.assertTrue(JW.Array.equal(this.invoke(array, "tryRemoveAll", [1, 2]), [4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[2]]));
 	},
 	
 	testRemoveItem: function() {
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput(
+			"Spliced -[1:[4]] +[] to [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 2"
+		);
 		this.invoke(array, "removeItem", [4]);
 		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testRemoveItems: function() {
-		var a = new JW.Proxy();
-		var b = new JW.Proxy();
-		var c = new JW.Proxy();
-		var array = this.createArray([a, b, c]);
+		var a = new JW.Proxy("a");
+		var b = new JW.Proxy("b");
+		var c = new JW.Proxy("c");
+		var array = this.createArray([a, b, c], function(x) { return x.value; });
+		
+		this.setObservableOutput(
+			"Spliced -[0:[a],2:[c]] +[] to [a,b,c]",
+			"Changed",
+			"Changed length from 3 to 1"
+		);
 		this.invoke(array, "removeItems", [[a, c]]);
 		this.assertTrue(this.invoke(array, "equal", [[b]]));
 	},
 	
-	testRemoveItem: function() {
+	testPop: function() {
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput(
+			"Spliced -[2:[3]] +[] to [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 2"
+		);
 		this.assertStrictEqual(3, this.invoke(array, "pop"));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4]]));
 	},
 	
 	testMove: function() {
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput();
 		this.assertStrictEqual(4, this.invoke(array, "move", [1, 1]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		
+		this.setObservableOutput(
+			"Moved 4 from 1 to 0",
+			"Changed"
+		);
 		this.assertStrictEqual(4, this.invoke(array, "move", [1, 0]));
 		this.assertTrue(this.invoke(array, "equal", [[4, 2, 3]]));
 	},
 	
 	testTryMove: function() {
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput();
 		this.assertUndefined(this.invoke(array, "tryMove", [1, 1]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		
+		this.setObservableOutput(
+			"Moved 4 from 1 to 0",
+			"Changed"
+		);
 		this.assertStrictEqual(4, this.invoke(array, "tryMove", [1, 0]));
 		this.assertTrue(this.invoke(array, "equal", [[4, 2, 3]]));
 	},
 	
 	testClear: function() {
 		var array = this.createArray();
+		
+		this.setObservableOutput();
 		this.assertTrue(JW.Array.equal(this.invoke(array, "clear"), []));
 		this.assertTrue(this.invoke(array, "$clear").equal([]));
 		this.assertTrue(this.invoke(array, "equal", [[]]));
 		
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput(
+			"Cleared [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 0"
+		);
 		this.assertTrue(JW.Array.equal(this.invoke(array, "clear"), [2, 4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[]]));
 		
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput(
+			"Cleared [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 0"
+		);
 		this.assertTrue(this.invoke(array, "$clear").equal([2, 4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[]]));
 	},
 	
 	testTryClear: function() {
 		var array = this.createArray();
+		
+		this.setObservableOutput();
 		this.assertUndefined(this.invoke(array, "tryClear"), []);
 		this.assertTrue(this.invoke(array, "equal", [[]]));
 		
 		var array = this.createArray([2, 4, 3]);
+		
+		this.setObservableOutput(
+			"Cleared [2,4,3]",
+			"Changed",
+			"Changed length from 3 to 0"
+		);
 		this.assertTrue(JW.Array.equal(this.invoke(array, "tryClear"), [2, 4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[]]));
 	},
 	
 	testSplice: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		
+		this.setObservableOutput();
 		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [], []);
 		var got = this.invoke(array, "splice", [[
 			new JW.AbstractArray.IndexCount(1, 0),
@@ -458,6 +590,10 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 		JW.Tests.Collection.assertArraySpliceResult(this, expected, got);
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
+		this.setObservableOutput(
+			"Spliced -[1:[2,3],4:[5,6]] +[0:[7,8,10],5:[9]] to [1,2,3,4,5,6]",
+			"Changed"
+		);
 		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [
 			new JW.AbstractArray.IndexItems(1, [2, 3]),
 			new JW.AbstractArray.IndexItems(4, [5, 6])
@@ -484,6 +620,8 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 	
 	testTrySplice: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		
+		this.setObservableOutput();
 		this.assertUndefined(this.invoke(array, "trySplice", [[
 			new JW.AbstractArray.IndexCount(1, 0),
 			new JW.AbstractArray.IndexCount(3, 0),
@@ -492,6 +630,10 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 		]]));
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
+		this.setObservableOutput(
+			"Spliced -[1:[2,3],4:[5,6]] +[0:[7,8,10],5:[9]] to [1,2,3,4,5,6]",
+			"Changed"
+		);
 		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [
 			new JW.AbstractArray.IndexItems(1, [2, 3]),
 			new JW.AbstractArray.IndexItems(4, [5, 6])
@@ -518,64 +660,147 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 	
 	testReorder: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		
+		this.setObservableOutput();
 		this.invoke(array, "reorder", [[0, 1, 2, 3, 4, 5]]);
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		
+		this.setObservableOutput(
+			"Reordered [1,2,3,4,5,6] by [2,1,4,5,0,3]",
+			"Changed"
+		);
 		this.invoke(array, "reorder", [[2, 1, 4, 5, 0, 3]]);
 		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
 	},
 	
 	testTryReorder: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		
+		this.setObservableOutput();
 		this.assertUndefined(this.invoke(array, "tryReorder", [[0, 1, 2, 3, 4, 5]]));
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		
+		this.setObservableOutput(
+			"Reordered [1,2,3,4,5,6] by [2,1,4,5,0,3]",
+			"Changed"
+		);
 		this.assertTrue(JW.Array.equal(this.invoke(array, "tryReorder", [[2, 1, 4, 5, 0, 3]]), [1, 2, 3, 4, 5, 6]));
 		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
 	},
 	
 	testSort: function() {
-		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		
+		this.setObservableOutput();
 		this.invoke(array, "sort");
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		
+		this.setObservableOutput(
+			"Reordered [5,2,1,6,3,4] by [4,1,0,5,2,3]",
+			"Changed"
+		);
+		this.invoke(array, "sort");
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		
+		this.setObservableOutput(
+			"Reordered [5,2,1,6,3,4] by [1,4,5,0,3,2]",
+			"Changed"
+		);
 		this.invoke(array, "sort", [function(x) { return -x; }]);
 		this.assertTrue(this.invoke(array, "equal", [[6, 5, 4, 3, 2, 1]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		
+		this.setObservableOutput(
+			"Reordered [5,2,1,6,3,4] by [1,4,5,0,3,2]",
+			"Changed"
+		);
 		this.invoke(array, "sort", [null, null, -1]);
 		this.assertTrue(this.invoke(array, "equal", [[6, 5, 4, 3, 2, 1]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		
+		this.setObservableOutput(
+			"Reordered [5,2,1,6,3,4] by [4,1,0,5,2,3]",
+			"Changed"
+		);
 		this.invoke(array, "sort", [function(x) { return -x; }, this, -1]);
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 	},
 	
 	testSortComparing: function() {
-		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		
+		this.setObservableOutput();
 		this.invoke(array, "sortComparing");
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		
+		this.setObservableOutput(
+			"Reordered [5,2,1,6,3,4] by [4,1,0,5,2,3]",
+			"Changed"
+		);
+		this.invoke(array, "sortComparing");
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		
+		this.setObservableOutput(
+			"Reordered [5,2,1,6,3,4] by [1,4,5,0,3,2]",
+			"Changed"
+		);
 		this.invoke(array, "sortComparing", [function(x, y) { return -JW.cmp(x, y); }]);
 		this.assertTrue(this.invoke(array, "equal", [[6, 5, 4, 3, 2, 1]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		
+		this.setObservableOutput(
+			"Reordered [5,2,1,6,3,4] by [1,4,5,0,3,2]",
+			"Changed"
+		);
 		this.invoke(array, "sortComparing", [null, null, -1]);
 		this.assertTrue(this.invoke(array, "equal", [[6, 5, 4, 3, 2, 1]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		
+		this.setObservableOutput(
+			"Reordered [5,2,1,6,3,4] by [4,1,0,5,2,3]",
+			"Changed"
+		);
 		this.invoke(array, "sortComparing", [function(x, y) { return -JW.cmp(x, y); }, this, -1]);
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 	},
 	
 	testPerformSplice: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.setObservableOutput();
+		this.invoke(array, "performSplice", [[1, 2, 3, 4, 5, 6]]);
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		
+		this.setObservableOutput(
+			"Spliced -[1:[2],3:[4]] +[2:[7],4:[8],6:[9]] to [1,2,3,4,5,6]",
+			"Changed",
+			"Changed length from 6 to 7"
+		);
 		this.invoke(array, "performSplice", [[1, 3, 7, 5, 8, 6, 9]]);
 		this.assertTrue(this.invoke(array, "equal", [[1, 3, 7, 5, 8, 6, 9]]));
 	},
 	
 	testPerformReorder: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.setObservableOutput();
+		this.invoke(array, "performReorder", [[1, 2, 3, 4, 5, 6]]);
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		
+		this.setObservableOutput(
+			"Reordered [1,2,3,4,5,6] by [2,1,4,5,0,3]",
+			"Changed"
+		);
 		this.invoke(array, "performReorder", [[5, 2, 1, 6, 3, 4]]);
 		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
 	},

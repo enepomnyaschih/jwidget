@@ -19,8 +19,10 @@
 
 JW.Tests.Collection.ObservableArrayTestCase = JW.Tests.Collection.AbstractArray.extend({
 	// override
-	createArray: function(items, adapter) {
-		return new JW.ObservableArray(items, adapter);
+	createArray: function(items, formatter) {
+		var array = new JW.ObservableArray(items);
+		JW.Tests.Collection.subscribeToArray(this, array, formatter);
+		return array;
 	},
 	
 	// override
@@ -28,9 +30,14 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Tests.Collection.AbstractArray.
 		return array[method].apply(array, args || []);
 	},
 	
+	// override
+	setObservableOutput: function() {
+		this.setExpectedOutput.apply(this, arguments);
+	},
+	
 	testNotAdapter: function() {
 		var items = [2, 4];
-		var array = this.createArray(items);
+		var array = new JW.ObservableArray(items);
 		this.assertStrictEqual(2, array.getLength());
 		this.assertFalse(array.isEmpty());
 		this.assertStrictEqual(2, array.get(0));
@@ -42,7 +49,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Tests.Collection.AbstractArray.
 	
 	testAdapter: function() {
 		var items = [2, 4];
-		var array = this.createArray(items, true);
+		var array = new JW.ObservableArray(items, true);
 		this.assertStrictEqual(2, array.getLength());
 		this.assertFalse(array.isEmpty());
 		this.assertStrictEqual(2, array.get(0));
@@ -53,7 +60,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Tests.Collection.AbstractArray.
 	},
 	
 	testToArray: function() {
-		var array = this.createArray([2, 4]);
+		var array = new JW.ObservableArray([2, 4]);
 		this.assertTrue(JW.Array.equal(array.toArray(), array.getItems()));
 		this.assertTrue(array.$toArray().equal(array.getItems()));
 		this.assertFalse(array.toArray() === array.getItems());
@@ -62,7 +69,7 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Tests.Collection.AbstractArray.
 	},
 	
 	testAsArray: function() {
-		var array = this.createArray([2, 4]);
+		var array = new JW.ObservableArray([2, 4]);
 		this.assertTrue(array.asArray() === array.getItems());
 		this.assertTrue(array.$asArray() === array);
 		this.assertTrue(array.equal([2, 4]));
