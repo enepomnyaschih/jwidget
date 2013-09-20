@@ -88,17 +88,17 @@ JW.apply(JW.Array, {
 		return result;
 	},
 	
-	$map: JW.AbstractCollection._create$Array(JW.Array, "map"),
+	$map: JW.AbstractCollection._createStatic$Array(JW.Array, "map"),
 	
 	toArray: function(target) {
 		return target.concat();
 	},
 	
 	toSet: function(target) {
-		return new JW.Set(target);
+		return JW.Array.index(target, JW.iid);
 	},
 	
-	asList: function(target) {
+	asArray: function(target) {
 		return target;
 	},
 	
@@ -158,7 +158,7 @@ JW.apply(JW.Array, {
 	
 	removeItems: function(target, items) {
 		var itemSet = new JW.Set(items);
-		var newItems = JW.Array.filter(target, function(v) { return !itemSet.contains(item); });
+		var newItems = JW.Array.filter(target, function(item) { return !itemSet.contains(item); });
 		JW.Array.performSplice(target, newItems);
 	},
 	
@@ -196,7 +196,7 @@ JW.apply(JW.Array, {
 	
 	splice: function(target, removeParamsList, addParamsList) {
 		var result = JW.Array.trySplice(target, removeParamsList, addParamsList);
-		return (result !== undefined) ? result : new JW.AbstractArray.SpliceResult(this.items.concat(), [], []);
+		return (result !== undefined) ? result : new JW.AbstractArray.SpliceResult(target.concat(), [], []);
 	},
 	
 	trySplice: function(target, removeParamsList, addParamsList) {

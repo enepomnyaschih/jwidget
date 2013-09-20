@@ -19,174 +19,158 @@
 
 JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 	/*
-	JW.AbstractArray createArray(items, adapter);
+	JW.AbstractArray createArray(items);
+	Mixed invoke(target, method, args);
 	*/
 	
 	testEmpty: function() {
 		var array = this.createArray();
-		this.assertStrictEqual(0, array.getLength());
-		this.assertTrue(array.isEmpty());
-		this.assertUndefined(array.get(0));
-		this.assertUndefined(array.getFirst());
-		this.assertUndefined(array.getFirstKey());
-		this.assertUndefined(array.getLast());
-		this.assertUndefined(array.getLastKey());
-		this.assertTrue(JW.Array.equal(array.getKeys(), []));
-		this.assertTrue(array.$getKeys().equal([]));
-		this.assertFalse(array.containsItem(0));
-		this.assertFalse(array.containsKey(0));
-		this.assertUndefined(array.keyOf(0));
-		this.assertStrictEqual(-1, array.indexOf(0));
-		this.assertTrue(JW.Array.equal(array.getItems(), []));
-		this.assertTrue(array.every(JW.isInt));
-		this.assertFalse(array.some(JW.isInt));
-		this.assertUndefined(array.search(JW.isInt));
-		this.assertUndefined(array.find(JW.isInt));
-		this.assertTrue(JW.Array.equal(array.filter(JW.isInt), []));
-		this.assertTrue(array.$filter(JW.isInt).equal([]));
-		this.assertTrue(JW.Array.equal(array.map(function(x) { return x + 1; }), []));
-		this.assertTrue(array.$map(function(x) { return x + 1; }).equal([]));
-		this.assertTrue(JW.Array.equal(array.toSorted(), []));
-		this.assertTrue(array.$toSorted().equal([]));
-		this.assertTrue(JW.Array.equal(array.toSortedComparing(), []));
-		this.assertTrue(array.$toSortedComparing().equal([]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeys(), []));
-		this.assertTrue(array.$getSortingKeys().equal([]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeysComparing(), []));
-		this.assertTrue(array.$getSortingKeysComparing().equal([]));
-		this.assertTrue(JW.Map.equal(array.index(function(x) { return x; }), {}));
-		this.assertTrue(array.$index(function(x) { return x; }).equal({}));
-		this.assertTrue(JW.Array.equal(array.toArray(), []));
-		this.assertTrue(array.$toArray().equal([]));
-		this.assertTrue(JW.Map.equal(array.toMap(), {}));
-		this.assertTrue(array.$toMap().equal({}));
-		this.assertTrue(JW.Set.equal(array.toSet(), []));
-		this.assertTrue(array.$toSet().equal([]));
-		this.assertTrue(JW.Array.equal(array.asArray(), []));
-		this.assertTrue(array.$asArray().equal([]));
-		this.assertTrue(JW.Map.equal(array.asMap(), {}));
-		this.assertTrue(array.$asMap().equal({}));
-		this.assertTrue(JW.Set.equal(array.asSet(), []));
-		this.assertTrue(array.$asSet().equal([]));
-		this.assertTrue(array.backEvery(JW.isInt));
+		this.assertStrictEqual(0, this.invoke(array, "getLength"));
+		this.assertTrue(this.invoke(array, "isEmpty"));
+		this.assertUndefined(this.invoke(array, "get", [0]));
+		this.assertUndefined(this.invoke(array, "getFirst"));
+		this.assertUndefined(this.invoke(array, "getFirstKey"));
+		this.assertUndefined(this.invoke(array, "getLast"));
+		this.assertUndefined(this.invoke(array, "getLastKey"));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getKeys"), []));
+		this.assertTrue(this.invoke(array, "$getKeys").equal([]));
+		this.assertFalse(this.invoke(array, "containsItem", [0]));
+		this.assertFalse(this.invoke(array, "containsKey", [0]));
+		this.assertUndefined(this.invoke(array, "keyOf", [0]));
+		this.assertStrictEqual(-1, this.invoke(array, "indexOf", [0]));
+		this.assertTrue(this.invoke(array, "every", [JW.isInt]));
+		this.assertFalse(this.invoke(array, "some", [JW.isInt]));
+		this.assertUndefined(this.invoke(array, "search", [JW.isInt]));
+		this.assertUndefined(this.invoke(array, "find", [JW.isInt]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "filter", [JW.isInt]), []));
+		this.assertTrue(this.invoke(array, "$filter", [JW.isInt]).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "map", [function(x) { return x + 1; }]), []));
+		this.assertTrue(this.invoke(array, "$map", [function(x) { return x + 1; }]).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSorted"), []));
+		this.assertTrue(this.invoke(array, "$toSorted").equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSortedComparing"), []));
+		this.assertTrue(this.invoke(array, "$toSortedComparing").equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeys"), []));
+		this.assertTrue(this.invoke(array, "$getSortingKeys").equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeysComparing"), []));
+		this.assertTrue(this.invoke(array, "$getSortingKeysComparing").equal([]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, "index", [function(x) { return x; }]), {}));
+		this.assertTrue(this.invoke(array, "$index", [function(x) { return x; }]).equal({}));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toArray"), []));
+		this.assertTrue(this.invoke(array, "$toArray").equal([]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, "toMap"), {}));
+		this.assertTrue(this.invoke(array, "$toMap").equal({}));
+		this.assertTrue(JW.Set.equal(this.invoke(array, "toSet"), []));
+		this.assertTrue(this.invoke(array, "$toSet").equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "asArray"), []));
+		this.assertTrue(this.invoke(array, "$asArray").equal([]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, "asMap"), {}));
+		this.assertTrue(this.invoke(array, "$asMap").equal({}));
+		this.assertTrue(JW.Set.equal(this.invoke(array, "asSet"), []));
+		this.assertTrue(this.invoke(array, "$asSet").equal([]));
+		this.assertTrue(this.invoke(array, "backEvery", [JW.isInt]));
 	},
 	
 	testItems: function() {
 		var items = [2, 4];
 		var array = this.createArray(items);
-		this.assertStrictEqual(2, array.getLength());
-		this.assertFalse(array.isEmpty());
-		this.assertStrictEqual(2, array.get(0));
-		this.assertStrictEqual(4, array.get(1));
-		this.assertStrictEqual(2, array.getFirst());
-		this.assertStrictEqual(0, array.getFirstKey());
-		this.assertStrictEqual(4, array.getLast());
-		this.assertStrictEqual(1, array.getLastKey());
-		this.assertTrue(JW.Array.equal(array.getKeys(), [0, 1]));
-		this.assertTrue(array.$getKeys().equal([0, 1]));
-		this.assertFalse(array.containsItem(0));
-		this.assertTrue(array.containsItem(2));
-		this.assertFalse(array.containsKey(2));
-		this.assertTrue(array.containsKey(0));
-		this.assertUndefined(array.keyOf(0));
-		this.assertStrictEqual(0, array.keyOf(2));
-		this.assertStrictEqual(-1, array.indexOf(0));
-		this.assertStrictEqual(0, array.indexOf(2));
-		this.assertTrue(JW.Array.equal(array.getItems(), [2, 4]));
-		this.assertTrue(array.every(JW.isInt));
-		this.assertTrue(array.some(JW.isInt));
-		this.assertStrictEqual(2, array.search(JW.isInt));
-		this.assertStrictEqual(0, array.find(JW.isInt));
-		this.assertTrue(JW.Array.equal(array.filter(JW.isInt), [2, 4]));
-		this.assertTrue(array.$filter(JW.isInt).equal([2, 4]));
-		this.assertTrue(JW.Array.equal(array.map(function(x) { return x + 1; }), [3, 5]));
-		this.assertTrue(array.$map(function(x) { return x + 1; }).equal([3, 5]));
-		this.assertTrue(JW.Array.equal(array.toSorted(), [2, 4]));
-		this.assertTrue(array.$toSorted().equal([2, 4]));
-		this.assertTrue(JW.Array.equal(array.toSortedComparing(), [2, 4]));
-		this.assertTrue(array.$toSortedComparing().equal([2, 4]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeys(), [0, 1]));
-		this.assertTrue(array.$getSortingKeys().equal([0, 1]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeysComparing(), [0, 1]));
-		this.assertTrue(array.$getSortingKeysComparing().equal([0, 1]));
-		this.assertTrue(JW.Map.equal(array.index(function(x) { return x; }), {"2": 2, "4": 4}));
-		this.assertTrue(array.$index(function(x) { return x; }).equal({"2": 2, "4": 4}));
-		this.assertTrue(JW.Array.equal(array.toArray(), [2, 4]));
-		this.assertTrue(array.$toArray().equal([2, 4]));
-		this.assertTrue(JW.Map.equal(array.toMap(), {"0": 2, "1": 4}));
-		this.assertTrue(array.$toMap().equal({"0": 2, "1": 4}));
+		this.assertStrictEqual(2, this.invoke(array, "getLength"));
+		this.assertFalse(this.invoke(array, "isEmpty"));
+		this.assertStrictEqual(2, this.invoke(array, "get", [0]));
+		this.assertStrictEqual(4, this.invoke(array, "get", [1]));
+		this.assertStrictEqual(2, this.invoke(array, "getFirst"));
+		this.assertStrictEqual(0, this.invoke(array, "getFirstKey"));
+		this.assertStrictEqual(4, this.invoke(array, "getLast"));
+		this.assertStrictEqual(1, this.invoke(array, "getLastKey"));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getKeys"), [0, 1]));
+		this.assertTrue(this.invoke(array, "$getKeys").equal([0, 1]));
+		this.assertFalse(this.invoke(array, "containsItem", [0]));
+		this.assertTrue(this.invoke(array, "containsItem", [2]));
+		this.assertFalse(this.invoke(array, "containsKey", [2]));
+		this.assertTrue(this.invoke(array, "containsKey", [0]));
+		this.assertUndefined(this.invoke(array, "keyOf", [0]));
+		this.assertStrictEqual(0, this.invoke(array, "keyOf", [2]));
+		this.assertStrictEqual(-1, this.invoke(array, "indexOf", [0]));
+		this.assertStrictEqual(0, this.invoke(array, "indexOf", [2]));
+		this.assertTrue(this.invoke(array, "every", [JW.isInt]));
+		this.assertTrue(this.invoke(array, "some", [JW.isInt]));
+		this.assertStrictEqual(2, this.invoke(array, "search", [JW.isInt]));
+		this.assertStrictEqual(0, this.invoke(array, "find", [JW.isInt]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "filter", [JW.isInt]), [2, 4]));
+		this.assertTrue(this.invoke(array, "$filter", [JW.isInt]).equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "map", [function(x) { return x + 1; }]), [3, 5]));
+		this.assertTrue(this.invoke(array, "$map", [function(x) { return x + 1; }]).equal([3, 5]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSorted"), [2, 4]));
+		this.assertTrue(this.invoke(array, "$toSorted").equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSortedComparing"), [2, 4]));
+		this.assertTrue(this.invoke(array, "$toSortedComparing").equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeys"), [0, 1]));
+		this.assertTrue(this.invoke(array, "$getSortingKeys").equal([0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeysComparing"), [0, 1]));
+		this.assertTrue(this.invoke(array, "$getSortingKeysComparing").equal([0, 1]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, "index", [function(x) { return x; }]), {"2": 2, "4": 4}));
+		this.assertTrue(this.invoke(array, "$index", [function(x) { return x; }]).equal({"2": 2, "4": 4}));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toArray"), [2, 4]));
+		this.assertTrue(this.invoke(array, "$toArray").equal([2, 4]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, "toMap"), {"0": 2, "1": 4}));
+		this.assertTrue(this.invoke(array, "$toMap").equal({"0": 2, "1": 4}));
 		//this.assertTrue(JW.Set.equal(array.toSet(), [2, 4]));
 		//this.assertTrue(array.$toSet().equal([2, 4]));
-		this.assertTrue(JW.Array.equal(array.asArray(), [2, 4]));
-		this.assertTrue(array.$asArray().equal([2, 4]));
-		this.assertTrue(JW.Map.equal(array.asMap(), {"0": 2, "1": 4}));
-		this.assertTrue(array.$asMap().equal({"0": 2, "1": 4}));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "asArray"), [2, 4]));
+		this.assertTrue(this.invoke(array, "$asArray").equal([2, 4]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, "asMap"), {"0": 2, "1": 4}));
+		this.assertTrue(this.invoke(array, "$asMap").equal({"0": 2, "1": 4}));
 		//this.assertTrue(JW.Set.equal(array.asSet(), [2, 4]));
 		//this.assertTrue(array.$asSet().equal([2, 4]));
-		this.assertTrue(array.backEvery(JW.isInt));
-		array.set(3, 0);
-		this.assertStrictEqual(3, array.get(0));
-		this.assertStrictEqual(2, items[0]);
-	},
-	
-	testAdapter: function() {
-		var items = [2, 4];
-		var array = this.createArray(items, true);
-		this.assertStrictEqual(2, array.getLength());
-		this.assertFalse(array.isEmpty());
-		this.assertStrictEqual(2, array.get(0));
-		this.assertStrictEqual(4, array.get(1));
-		array.set(3, 0);
-		this.assertStrictEqual(3, array.get(0));
-		this.assertStrictEqual(3, items[0]);
+		this.assertTrue(this.invoke(array, "backEvery", [JW.isInt]));
 	},
 	
 	testEvery: function() {
 		var array = this.createArray([2, 3.5, 4]);
-		this.assertTrue(array.every(JW.isNumber));
-		this.assertFalse(array.every(JW.isInt));
-		this.assertFalse(array.every(JW.isString));
+		this.assertTrue(this.invoke(array, "every", [JW.isNumber]));
+		this.assertFalse(this.invoke(array, "every", [JW.isInt]));
+		this.assertFalse(this.invoke(array, "every", [JW.isString]));
 		
 		this.setExpectedOutput(
 			"2 at 0",
 			"3.5 at 1",
 			"4 at 2"
 		);
-		array.every(function(item, index) {
+		this.invoke(array, "every", [function(item, index) {
 			this.output(item + " at " + index);
-		}, this);
+		}, this]);
 		
 		this.setExpectedOutput(
 			"2 at 0",
 			"3.5 at 1"
 		);
-		array.every(function(item, index) {
+		this.invoke(array, "every", [function(item, index) {
 			this.output(item + " at " + index);
 			return JW.isInt(item);
-		}, this);
+		}, this]);
 	},
 	
 	testSome: function() {
 		var array = this.createArray([2, 3.5, 4]);
-		this.assertTrue(array.some(JW.isNumber));
-		this.assertTrue(array.some(JW.isInt));
-		this.assertFalse(array.some(JW.isString));
+		this.assertTrue(this.invoke(array, "some", [JW.isNumber]));
+		this.assertTrue(this.invoke(array, "some", [JW.isInt]));
+		this.assertFalse(this.invoke(array, "some", [JW.isString]));
 		
 		this.setExpectedOutput(
 			"2 at 0"
 		);
-		array.some(function(item, index) {
+		this.invoke(array, "some", [function(item, index) {
 			this.output(item + " at " + index);
-		}, this);
+		}, this]);
 		
 		this.setExpectedOutput(
 			"2 at 0",
 			"3.5 at 1"
 		);
-		array.some(function(item, index) {
+		this.invoke(array, "some", [function(item, index) {
 			this.output(item + " at " + index);
 			return !JW.isInt(item);
-		}, this);
+		}, this]);
 	},
 	
 	testEach: function() {
@@ -196,224 +180,214 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 			"3.5 at 1",
 			"4 at 2"
 		);
-		array.each(function(item, index) {
+		this.invoke(array, "each", [function(item, index) {
 			this.output(item + " at " + index);
 			return false;
-		}, this);
+		}, this]);
 	},
 	
 	testSearch: function() {
 		var array = this.createArray([2.5, 3.5, 4]);
-		this.assertStrictEqual(4, array.search(JW.isInt));
+		this.assertStrictEqual(4, this.invoke(array, "search", [JW.isInt]));
 	},
 	
 	testFind: function() {
 		var array = this.createArray([2.5, 3.5, 4]);
-		this.assertStrictEqual(2, array.find(JW.isInt));
+		this.assertStrictEqual(2, this.invoke(array, "find", [JW.isInt]));
 	},
 	
 	testFilter: function() {
 		var array = this.createArray([2, 3.5, 4]);
-		this.assertTrue(JW.Array.equal(array.filter(JW.isInt), [2, 4]));
-		this.assertTrue(array.$filter(JW.isInt).equal([2, 4]));
-		this.assertTrue(array.equal([2, 3.5, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "filter", [JW.isInt]), [2, 4]));
+		this.assertTrue(this.invoke(array, "$filter", [JW.isInt]).equal([2, 4]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 3.5, 4]]));
 	},
 	
 	testMap: function() {
 		var array = this.createArray([2, 4]);
-		this.assertTrue(JW.Array.equal(array.map(function(x) { return x + 1; }), [3, 5]));
-		this.assertTrue(array.$map(function(x) { return x + 1; }).equal([3, 5]));
-		this.assertTrue(array.equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "map", [function(x) { return x + 1; }]), [3, 5]));
+		this.assertTrue(this.invoke(array, "$map", [function(x) { return x + 1; }]).equal([3, 5]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4]]));
 	},
 	
 	testToSorted: function() {
 		var array = this.createArray([3, 2, 4]);
-		this.assertTrue(JW.Array.equal(array.toSorted(), [2, 3, 4]));
-		this.assertTrue(array.$toSorted().equal([2, 3, 4]));
-		this.assertTrue(JW.Array.equal(array.toSorted(null, null, -1), [4, 3, 2]));
-		this.assertTrue(array.$toSorted(null, null, -1).equal([4, 3, 2]));
-		this.assertTrue(JW.Array.equal(array.toSorted(function(x) { return -x; }), [4, 3, 2]));
-		this.assertTrue(array.$toSorted(function(x) { return -x; }).equal([4, 3, 2]));
-		this.assertTrue(JW.Array.equal(array.toSorted(function(x) { return -x; }, null, -1), [2, 3, 4]));
-		this.assertTrue(array.$toSorted(function(x) { return -x; }, null, -1).equal([2, 3, 4]));
-		this.assertTrue(array.equal([3, 2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSorted"), [2, 3, 4]));
+		this.assertTrue(this.invoke(array, "$toSorted").equal([2, 3, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSorted", [null, null, -1]), [4, 3, 2]));
+		this.assertTrue(this.invoke(array, "$toSorted", [null, null, -1]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSorted", [function(x) { return -x; }]), [4, 3, 2]));
+		this.assertTrue(this.invoke(array, "$toSorted", [function(x) { return -x; }]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSorted", [function(x) { return -x; }, null, -1]), [2, 3, 4]));
+		this.assertTrue(this.invoke(array, "$toSorted", [function(x) { return -x; }, null, -1]).equal([2, 3, 4]));
+		this.assertTrue(this.invoke(array, "equal", [[3, 2, 4]]));
 	},
 	
 	testToSortedComparing: function() {
 		var array = this.createArray([3, 2, 4]);
-		this.assertTrue(JW.Array.equal(array.toSortedComparing(), [2, 3, 4]));
-		this.assertTrue(array.$toSortedComparing().equal([2, 3, 4]));
-		this.assertTrue(JW.Array.equal(array.toSortedComparing(null, null, -1), [4, 3, 2]));
-		this.assertTrue(array.$toSortedComparing(null, null, -1).equal([4, 3, 2]));
-		this.assertTrue(JW.Array.equal(array.toSortedComparing(function(x, y) { return -JW.cmp(x, y); }), [4, 3, 2]));
-		this.assertTrue(array.$toSortedComparing(function(x, y) { return -JW.cmp(x, y); }).equal([4, 3, 2]));
-		this.assertTrue(JW.Array.equal(array.toSortedComparing(function(x, y) { return -JW.cmp(x, y); }, null, -1), [2, 3, 4]));
-		this.assertTrue(array.$toSortedComparing(function(x, y) { return -JW.cmp(x, y); }, null, -1).equal([2, 3, 4]));
-		this.assertTrue(array.equal([3, 2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSortedComparing"), [2, 3, 4]));
+		this.assertTrue(this.invoke(array, "$toSortedComparing").equal([2, 3, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSortedComparing", [null, null, -1]), [4, 3, 2]));
+		this.assertTrue(this.invoke(array, "$toSortedComparing", [null, null, -1]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSortedComparing", [function(x, y) { return -JW.cmp(x, y); }]), [4, 3, 2]));
+		this.assertTrue(this.invoke(array, "$toSortedComparing", [function(x, y) { return -JW.cmp(x, y); }]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "toSortedComparing", [function(x, y) { return -JW.cmp(x, y); }, null, -1]), [2, 3, 4]));
+		this.assertTrue(this.invoke(array, "$toSortedComparing", [function(x, y) { return -JW.cmp(x, y); }, null, -1]).equal([2, 3, 4]));
+		this.assertTrue(this.invoke(array, "equal", [[3, 2, 4]]));
 	},
 	
 	testGetSortingKeys: function() {
 		var array = this.createArray([3, 2, 4]);
-		this.assertTrue(JW.Array.equal(array.getSortingKeys(), [1, 0, 2]));
-		this.assertTrue(array.$getSortingKeys().equal([1, 0, 2]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeys(null, null, -1), [2, 0, 1]));
-		this.assertTrue(array.$getSortingKeys(null, null, -1).equal([2, 0, 1]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeys(function(x) { return -x; }), [2, 0, 1]));
-		this.assertTrue(array.$getSortingKeys(function(x) { return -x; }).equal([2, 0, 1]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeys(function(x) { return -x; }, null, -1), [1, 0, 2]));
-		this.assertTrue(array.$getSortingKeys(function(x) { return -x; }, null, -1).equal([1, 0, 2]));
-		this.assertTrue(array.equal([3, 2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeys"), [1, 0, 2]));
+		this.assertTrue(this.invoke(array, "$getSortingKeys").equal([1, 0, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeys", [null, null, -1]), [2, 0, 1]));
+		this.assertTrue(this.invoke(array, "$getSortingKeys", [null, null, -1]).equal([2, 0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeys", [function(x) { return -x; }]), [2, 0, 1]));
+		this.assertTrue(this.invoke(array, "$getSortingKeys", [function(x) { return -x; }]).equal([2, 0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeys", [function(x) { return -x; }, null, -1]), [1, 0, 2]));
+		this.assertTrue(this.invoke(array, "$getSortingKeys", [function(x) { return -x; }, null, -1]).equal([1, 0, 2]));
+		this.assertTrue(this.invoke(array, "equal", [[3, 2, 4]]));
 	},
 	
 	testGetSortingKeysComparing: function() {
 		var array = this.createArray([3, 2, 4]);
-		this.assertTrue(JW.Array.equal(array.getSortingKeysComparing(), [1, 0, 2]));
-		this.assertTrue(array.$getSortingKeysComparing().equal([1, 0, 2]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeysComparing(null, null, -1), [2, 0, 1]));
-		this.assertTrue(array.$getSortingKeysComparing(null, null, -1).equal([2, 0, 1]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeysComparing(function(x, y) { return -JW.cmp(x, y); }), [2, 0, 1]));
-		this.assertTrue(array.$getSortingKeysComparing(function(x, y) { return -JW.cmp(x, y); }).equal([2, 0, 1]));
-		this.assertTrue(JW.Array.equal(array.getSortingKeysComparing(function(x, y) { return -JW.cmp(x, y); }, null, -1), [1, 0, 2]));
-		this.assertTrue(array.$getSortingKeysComparing(function(x, y) { return -JW.cmp(x, y); }, null, -1).equal([1, 0, 2]));
-		this.assertTrue(array.equal([3, 2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeysComparing"), [1, 0, 2]));
+		this.assertTrue(this.invoke(array, "$getSortingKeysComparing").equal([1, 0, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeysComparing", [null, null, -1]), [2, 0, 1]));
+		this.assertTrue(this.invoke(array, "$getSortingKeysComparing", [null, null, -1]).equal([2, 0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeysComparing", [function(x, y) { return -JW.cmp(x, y); }]), [2, 0, 1]));
+		this.assertTrue(this.invoke(array, "$getSortingKeysComparing", [function(x, y) { return -JW.cmp(x, y); }]).equal([2, 0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "getSortingKeysComparing", [function(x, y) { return -JW.cmp(x, y); }, null, -1]), [1, 0, 2]));
+		this.assertTrue(this.invoke(array, "$getSortingKeysComparing", [function(x, y) { return -JW.cmp(x, y); }, null, -1]).equal([1, 0, 2]));
+		this.assertTrue(this.invoke(array, "equal", [[3, 2, 4]]));
 	},
 	
 	testIndex: function() {
 		var array = this.createArray([2, 4]);
-		this.assertTrue(JW.Map.equal(array.index(function(x) { return x + 1; }), {"3": 2, "5": 4}));
-		this.assertTrue(array.$index(function(x) { return x + 1; }).equal({"3": 2, "5": 4}));
-		this.assertTrue(array.equal([2, 4]));
-	},
-	
-	testToArray: function() {
-		var array = this.createArray([2, 4]);
-		this.assertTrue(JW.Array.equal(array.toArray(), array.getItems()));
-		this.assertTrue(array.$toArray().equal(array.getItems()));
-		this.assertFalse(array.toArray() === array.getItems());
-		this.assertFalse(array.$toArray() === array);
+		this.assertTrue(JW.Map.equal(this.invoke(array, "index", [function(x) { return x + 1; }]), {"3": 2, "5": 4}));
+		this.assertTrue(this.invoke(array, "$index", [function(x) { return x + 1; }]).equal({"3": 2, "5": 4}));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4]]));
 	},
 	
 	testToSet: function() {
-		var array = this.createArray([new JW.Proxy(), new JW.Proxy()]);
-		this.assertTrue(JW.Set.equal(array.toSet(), array.getItems()));
-		this.assertTrue(array.$toSet().equal(array.getItems()));
-	},
-	
-	testAsArray: function() {
-		var array = this.createArray([2, 4]);
-		this.assertTrue(array.asArray() === array.getItems());
-		this.assertTrue(array.$asArray() === array);
+		var items = [new JW.Proxy(), new JW.Proxy()];
+		var array = this.createArray(items);
+		this.assertTrue(JW.Set.equal(this.invoke(array, "toSet"), items));
+		this.assertTrue(this.invoke(array, "$toSet").equal(items));
+		this.assertTrue(this.invoke(array, "equal", [items]));
 	},
 	
 	testAsSet: function() {
-		var array = this.createArray([new JW.Proxy(), new JW.Proxy()]);
-		this.assertTrue(JW.Set.equal(array.asSet(), array.getItems()));
-		this.assertTrue(array.$asSet().equal(array.getItems()));
+		var items = [new JW.Proxy(), new JW.Proxy()];
+		var array = this.createArray(items);
+		this.assertTrue(JW.Set.equal(this.invoke(array, "asSet"), items));
+		this.assertTrue(this.invoke(array, "$asSet").equal(items));
+		this.assertTrue(this.invoke(array, "equal", [items]));
 	},
 	
 	testBackEvery: function() {
 		var array = this.createArray([2, 3.5, 4]);
-		this.assertTrue(array.backEvery(JW.isNumber));
-		this.assertFalse(array.backEvery(JW.isInt));
-		this.assertFalse(array.backEvery(JW.isString));
+		this.assertTrue(this.invoke(array, "backEvery", [JW.isNumber]));
+		this.assertFalse(this.invoke(array, "backEvery", [JW.isInt]));
+		this.assertFalse(this.invoke(array, "backEvery", [JW.isString]));
 		
 		this.setExpectedOutput(
 			"4 at 2",
 			"3.5 at 1",
 			"2 at 0"
 		);
-		array.backEvery(function(item, index) {
+		this.invoke(array, "backEvery", [function(item, index) {
 			this.output(item + " at " + index);
-		}, this);
+		}, this]);
 		
 		this.setExpectedOutput(
 			"4 at 2",
 			"3.5 at 1"
 		);
-		array.backEvery(function(item, index) {
+		this.invoke(array, "backEvery", [function(item, index) {
 			this.output(item + " at " + index);
 			return JW.isInt(item);
-		}, this);
+		}, this]);
 	},
 	
 	testAdd: function() {
 		var array = this.createArray([2, 4]);
-		array.add(3);
-		this.assertTrue(array.equal([2, 4, 3]));
+		this.invoke(array, "add", [3]);
+		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
 	},
 	
 	testTryAdd: function() {
 		var array = this.createArray([2, 4]);
-		this.assertTrue(array.tryAdd(3));
-		this.assertTrue(array.equal([2, 4, 3]));
+		this.assertTrue(this.invoke(array, "tryAdd", [3]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
 	},
 	
 	testAddAll: function() {
 		var array = this.createArray([2, 4]);
-		array.addAll([3, 5]);
-		this.assertTrue(array.equal([2, 4, 3, 5]));
+		this.invoke(array, "addAll", [[3, 5]]);
+		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3, 5]]));
 	},
 	
 	testTryAddAll: function() {
 		var array = this.createArray([2, 4]);
-		this.assertTrue(array.tryAddAll([3, 5]));
-		this.assertTrue(array.equal([2, 4, 3, 5]));
+		this.assertTrue(this.invoke(array, "tryAddAll", [[3, 5]]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3, 5]]));
 	},
 	
 	testSet: function() {
 		var array = this.createArray([2, 4]);
-		this.assertStrictEqual(4, array.set(4, 1));
-		this.assertTrue(array.equal([2, 4]));
-		this.assertStrictEqual(4, array.set(3, 1));
-		this.assertTrue(array.equal([2, 3]));
+		this.assertStrictEqual(4, this.invoke(array, "set", [4, 1]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4]]));
+		this.assertStrictEqual(4, this.invoke(array, "set", [3, 1]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testTrySet: function() {
 		var array = this.createArray([2, 4]);
-		this.assertUndefined(array.trySet(4, 1));
-		this.assertTrue(array.equal([2, 4]));
-		this.assertStrictEqual(4, array.trySet(3, 1).value);
-		this.assertTrue(array.equal([2, 3]));
+		this.assertUndefined(this.invoke(array, "trySet", [4, 1]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4]]));
+		this.assertStrictEqual(4, this.invoke(array, "trySet", [3, 1]).value);
+		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testRemove: function() {
 		var array = this.createArray([2, 4, 3]);
-		this.assertStrictEqual(4, array.remove(1));
-		this.assertTrue(array.equal([2, 3]));
+		this.assertStrictEqual(4, this.invoke(array, "remove", [1]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testTryRemove: function() {
 		var array = this.createArray([2, 4, 3]);
-		this.assertStrictEqual(4, array.tryRemove(1));
-		this.assertTrue(array.equal([2, 3]));
+		this.assertStrictEqual(4, this.invoke(array, "tryRemove", [1]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testRemoveAll: function() {
 		var array = this.createArray([2, 4, 3]);
-		this.assertTrue(JW.Array.equal(array.removeAll(1, 0), []));
-		this.assertTrue(array.equal([2, 4, 3]));
-		this.assertTrue(JW.Array.equal(array.removeAll(1, 2), [4, 3]));
-		this.assertTrue(array.equal([2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "removeAll", [1, 0]), []));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "removeAll", [1, 2]), [4, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[2]]));
 		
 		var array = this.createArray([2, 4, 3]);
-		this.assertTrue(array.$removeAll(1, 0).equal([]));
-		this.assertTrue(array.equal([2, 4, 3]));
-		this.assertTrue(array.$removeAll(1, 2).equal([4, 3]));
-		this.assertTrue(array.equal([2]));
+		this.assertTrue(this.invoke(array, "$removeAll", [1, 0]).equal([]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		this.assertTrue(this.invoke(array, "$removeAll", [1, 2]).equal([4, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[2]]));
 	},
 	
 	testTryRemoveAll: function() {
 		var array = this.createArray([2, 4, 3]);
-		this.assertUndefined(array.tryRemoveAll(1, 0));
-		this.assertTrue(array.equal([2, 4, 3]));
-		this.assertTrue(JW.Array.equal(array.tryRemoveAll(1, 2), [4, 3]));
-		this.assertTrue(array.equal([2]));
+		this.assertUndefined(this.invoke(array, "tryRemoveAll", [1, 0]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "tryRemoveAll", [1, 2]), [4, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[2]]));
 	},
 	
 	testRemoveItem: function() {
 		var array = this.createArray([2, 4, 3]);
-		array.removeItem(4);
-		this.assertTrue(array.equal([2, 3]));
+		this.invoke(array, "removeItem", [4]);
+		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
 	},
 	
 	testRemoveItems: function() {
@@ -421,68 +395,68 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 		var b = new JW.Proxy();
 		var c = new JW.Proxy();
 		var array = this.createArray([a, b, c]);
-		array.removeItems([a, c]);
-		this.assertTrue(array.equal([b]));
+		this.invoke(array, "removeItems", [[a, c]]);
+		this.assertTrue(this.invoke(array, "equal", [[b]]));
 	},
 	
 	testRemoveItem: function() {
 		var array = this.createArray([2, 4, 3]);
-		this.assertStrictEqual(3, array.pop());
-		this.assertTrue(array.equal([2, 4]));
+		this.assertStrictEqual(3, this.invoke(array, "pop"));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4]]));
 	},
 	
 	testMove: function() {
 		var array = this.createArray([2, 4, 3]);
-		this.assertStrictEqual(4, array.move(1, 1));
-		this.assertTrue(array.equal([2, 4, 3]));
-		this.assertStrictEqual(4, array.move(1, 0));
-		this.assertTrue(array.equal([4, 2, 3]));
+		this.assertStrictEqual(4, this.invoke(array, "move", [1, 1]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		this.assertStrictEqual(4, this.invoke(array, "move", [1, 0]));
+		this.assertTrue(this.invoke(array, "equal", [[4, 2, 3]]));
 	},
 	
 	testTryMove: function() {
 		var array = this.createArray([2, 4, 3]);
-		this.assertUndefined(array.tryMove(1, 1));
-		this.assertTrue(array.equal([2, 4, 3]));
-		this.assertStrictEqual(4, array.tryMove(1, 0));
-		this.assertTrue(array.equal([4, 2, 3]));
+		this.assertUndefined(this.invoke(array, "tryMove", [1, 1]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
+		this.assertStrictEqual(4, this.invoke(array, "tryMove", [1, 0]));
+		this.assertTrue(this.invoke(array, "equal", [[4, 2, 3]]));
 	},
 	
 	testClear: function() {
 		var array = this.createArray();
-		this.assertTrue(JW.Array.equal(array.clear(), []));
-		this.assertTrue(array.$clear().equal([]));
-		this.assertTrue(array.equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "clear"), []));
+		this.assertTrue(this.invoke(array, "$clear").equal([]));
+		this.assertTrue(this.invoke(array, "equal", [[]]));
 		
 		var array = this.createArray([2, 4, 3]);
-		this.assertTrue(JW.Array.equal(array.clear(), [2, 4, 3]));
-		this.assertTrue(array.equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "clear"), [2, 4, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[]]));
 		
 		var array = this.createArray([2, 4, 3]);
-		this.assertTrue(array.$clear().equal([2, 4, 3]));
-		this.assertTrue(array.equal([]));
+		this.assertTrue(this.invoke(array, "$clear").equal([2, 4, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[]]));
 	},
 	
 	testTryClear: function() {
 		var array = this.createArray();
-		this.assertUndefined(array.tryClear(), []);
-		this.assertTrue(array.equal([]));
+		this.assertUndefined(this.invoke(array, "tryClear"), []);
+		this.assertTrue(this.invoke(array, "equal", [[]]));
 		
 		var array = this.createArray([2, 4, 3]);
-		this.assertTrue(JW.Array.equal(array.tryClear(), [2, 4, 3]));
-		this.assertTrue(array.equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "tryClear"), [2, 4, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[]]));
 	},
 	
 	testSplice: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
 		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [], []);
-		var got = array.splice([
+		var got = this.invoke(array, "splice", [[
 			new JW.AbstractArray.IndexCount(1, 0),
 			new JW.AbstractArray.IndexCount(3, 0),
 		], [
 			new JW.AbstractArray.IndexItems(3, []),
-		]);
+		]]);
 		JW.Tests.Collection.assertArraySpliceResult(this, expected, got);
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [
 			new JW.AbstractArray.IndexItems(1, [2, 3]),
@@ -491,7 +465,7 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 			new JW.AbstractArray.IndexItems(0, [7, 8, 10]),
 			new JW.AbstractArray.IndexItems(5, [9])
 		]);
-		var got = array.splice([
+		var got = this.invoke(array, "splice", [[
 			new JW.AbstractArray.IndexCount(1, 1),
 			new JW.AbstractArray.IndexCount(2, 0),
 			new JW.AbstractArray.IndexCount(2, 1),
@@ -503,20 +477,20 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 			new JW.AbstractArray.IndexItems(2, [10]),
 			new JW.AbstractArray.IndexItems(4, []),
 			new JW.AbstractArray.IndexItems(5, [9])
-		]);
+		]]);
 		JW.Tests.Collection.assertArraySpliceResult(this, expected, got);
-		this.assertTrue(array.equal([7, 8, 10, 1, 4, 9]));
+		this.assertTrue(this.invoke(array, "equal", [[7, 8, 10, 1, 4, 9]]));
 	},
 	
 	testTrySplice: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
-		this.assertUndefined(array.trySplice([
+		this.assertUndefined(this.invoke(array, "trySplice", [[
 			new JW.AbstractArray.IndexCount(1, 0),
 			new JW.AbstractArray.IndexCount(3, 0),
 		], [
 			new JW.AbstractArray.IndexItems(3, []),
-		]));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		]]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [
 			new JW.AbstractArray.IndexItems(1, [2, 3]),
@@ -525,7 +499,7 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 			new JW.AbstractArray.IndexItems(0, [7, 8, 10]),
 			new JW.AbstractArray.IndexItems(5, [9])
 		]);
-		var got = array.trySplice([
+		var got = this.invoke(array, "trySplice", [[
 			new JW.AbstractArray.IndexCount(1, 1),
 			new JW.AbstractArray.IndexCount(2, 0),
 			new JW.AbstractArray.IndexCount(2, 1),
@@ -537,79 +511,79 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 			new JW.AbstractArray.IndexItems(2, [10]),
 			new JW.AbstractArray.IndexItems(4, []),
 			new JW.AbstractArray.IndexItems(5, [9])
-		]);
+		]]);
 		JW.Tests.Collection.assertArraySpliceResult(this, expected, got);
-		this.assertTrue(array.equal([7, 8, 10, 1, 4, 9]));
+		this.assertTrue(this.invoke(array, "equal", [[7, 8, 10, 1, 4, 9]]));
 	},
 	
 	testReorder: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
-		array.reorder([0, 1, 2, 3, 4, 5]);
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
-		array.reorder([2, 1, 4, 5, 0, 3]);
-		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+		this.invoke(array, "reorder", [[0, 1, 2, 3, 4, 5]]);
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		this.invoke(array, "reorder", [[2, 1, 4, 5, 0, 3]]);
+		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
 	},
 	
 	testTryReorder: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
-		this.assertUndefined(array.tryReorder([0, 1, 2, 3, 4, 5]));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
-		this.assertTrue(JW.Array.equal(array.tryReorder([2, 1, 4, 5, 0, 3]), [1, 2, 3, 4, 5, 6]));
-		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+		this.assertUndefined(this.invoke(array, "tryReorder", [[0, 1, 2, 3, 4, 5]]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "tryReorder", [[2, 1, 4, 5, 0, 3]]), [1, 2, 3, 4, 5, 6]));
+		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
 	},
 	
 	testSort: function() {
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		array.sort();
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.invoke(array, "sort");
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		array.sort(function(x) { return -x; });
-		this.assertTrue(array.equal([6, 5, 4, 3, 2, 1]));
+		this.invoke(array, "sort", [function(x) { return -x; }]);
+		this.assertTrue(this.invoke(array, "equal", [[6, 5, 4, 3, 2, 1]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		array.sort(null, null, -1);
-		this.assertTrue(array.equal([6, 5, 4, 3, 2, 1]));
+		this.invoke(array, "sort", [null, null, -1]);
+		this.assertTrue(this.invoke(array, "equal", [[6, 5, 4, 3, 2, 1]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		array.sort(function(x) { return -x; }, this, -1);
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.invoke(array, "sort", [function(x) { return -x; }, this, -1]);
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 	},
 	
 	testSortComparing: function() {
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		array.sortComparing();
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.invoke(array, "sortComparing");
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		array.sortComparing(function(x, y) { return -JW.cmp(x, y); });
-		this.assertTrue(array.equal([6, 5, 4, 3, 2, 1]));
+		this.invoke(array, "sortComparing", [function(x, y) { return -JW.cmp(x, y); }]);
+		this.assertTrue(this.invoke(array, "equal", [[6, 5, 4, 3, 2, 1]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		array.sortComparing(null, null, -1);
-		this.assertTrue(array.equal([6, 5, 4, 3, 2, 1]));
+		this.invoke(array, "sortComparing", [null, null, -1]);
+		this.assertTrue(this.invoke(array, "equal", [[6, 5, 4, 3, 2, 1]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		array.sortComparing(function(x, y) { return -JW.cmp(x, y); }, this, -1);
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.invoke(array, "sortComparing", [function(x, y) { return -JW.cmp(x, y); }, this, -1]);
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 	},
 	
 	testPerformSplice: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
-		array.performSplice([1, 3, 7, 5, 8, 6, 9]);
-		this.assertTrue(array.equal([1, 3, 7, 5, 8, 6, 9]));
+		this.invoke(array, "performSplice", [[1, 3, 7, 5, 8, 6, 9]]);
+		this.assertTrue(this.invoke(array, "equal", [[1, 3, 7, 5, 8, 6, 9]]));
 	},
 	
 	testPerformReorder: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
-		array.performReorder([5, 2, 1, 6, 3, 4]);
-		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+		this.invoke(array, "performReorder", [[5, 2, 1, 6, 3, 4]]);
+		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
 	},
 	
 	testDetectSplice: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
-		this.assertUndefined(array.detectSplice([1, 2, 3, 4, 5, 6]));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertUndefined(this.invoke(array, "detectSplice", [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		var expected = new JW.AbstractArray.SpliceParams([
 			new JW.AbstractArray.IndexCount(1, 2),
@@ -618,53 +592,53 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 			new JW.AbstractArray.IndexItems(0, [7, 8, 10]),
 			new JW.AbstractArray.IndexItems(5, [9])
 		]);
-		var got = array.detectSplice([7, 8, 10, 1, 4, 9]);
+		var got = this.invoke(array, "detectSplice", [[7, 8, 10, 1, 4, 9]]);
 		JW.Tests.Collection.assertArraySpliceParams(this, expected, got);
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 	},
 	
 	testDetectReorder: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
-		this.assertUndefined(array.detectReorder([1, 2, 3, 4, 5, 6]));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
-		this.assertTrue(JW.Array.equal(array.detectReorder([5, 2, 1, 6, 3, 4]), [2, 1, 4, 5, 0, 3]));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertUndefined(this.invoke(array, "detectReorder", [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "detectReorder", [[5, 2, 1, 6, 3, 4]]), [2, 1, 4, 5, 0, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 	},
 	
 	testDetectSort: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
-		this.assertUndefined(array.detectSort());
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
-		this.assertTrue(JW.Array.equal(array.detectSort(function(x) { return -x; }), [5, 4, 3, 2, 1, 0]));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
-		this.assertTrue(JW.Array.equal(array.detectSort(null, null, -1), [5, 4, 3, 2, 1, 0]));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
-		this.assertUndefined(array.detectSort(function(x) { return -x; }, this, -1));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertUndefined(this.invoke(array, "detectSort"));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "detectSort", [function(x) { return -x; }]), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "detectSort", [null, null, -1]), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		this.assertUndefined(this.invoke(array, "detectSort", [function(x) { return -x; }, this, -1]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		this.assertTrue(JW.Array.equal(array.detectSort(), [4, 1, 0, 5, 2, 3]));
-		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
-		this.assertTrue(JW.Array.equal(array.detectSort(function(x) { return -x; }), [1, 4, 5, 0, 3, 2]));
-		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "detectSort"), [4, 1, 0, 5, 2, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "detectSort", [function(x) { return -x; }]), [1, 4, 5, 0, 3, 2]));
+		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
 	},
 	
 	testDetectSortComparing: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
-		this.assertUndefined(array.detectSortComparing());
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
-		this.assertTrue(JW.Array.equal(array.detectSortComparing(function(x, y) { return -JW.cmp(x, y); }), [5, 4, 3, 2, 1, 0]));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
-		this.assertTrue(JW.Array.equal(array.detectSortComparing(null, null, -1), [5, 4, 3, 2, 1, 0]));
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
-		this.assertUndefined(array.detectSortComparing(function(x, y) { return -JW.cmp(x, y); }, this, -1), [0, 1, 2, 3, 4, 5]);
-		this.assertTrue(array.equal([1, 2, 3, 4, 5, 6]));
+		this.assertUndefined(this.invoke(array, "detectSortComparing"));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "detectSortComparing", [function(x, y) { return -JW.cmp(x, y); }]), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "detectSortComparing", [null, null, -1]), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
+		this.assertUndefined(this.invoke(array, "detectSortComparing", [function(x, y) { return -JW.cmp(x, y); }, this, -1]), [0, 1, 2, 3, 4, 5]);
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		var array = this.createArray([5, 2, 1, 6, 3, 4]);
-		this.assertTrue(JW.Array.equal(array.detectSortComparing(), [4, 1, 0, 5, 2, 3]));
-		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
-		this.assertTrue(JW.Array.equal(array.detectSortComparing(function(x, y) { return -JW.cmp(x, y); }), [1, 4, 5, 0, 3, 2]));
-		this.assertTrue(array.equal([5, 2, 1, 6, 3, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "detectSortComparing"), [4, 1, 0, 5, 2, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "detectSortComparing", [function(x, y) { return -JW.cmp(x, y); }]), [1, 4, 5, 0, 3, 2]));
+		this.assertTrue(this.invoke(array, "equal", [[5, 2, 1, 6, 3, 4]]));
 	},
 	
 	testCollapse: function() {
@@ -673,20 +647,20 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 		var c = [8, 9];
 		var d = [b, 7, c];
 		var array = this.createArray([a, 4, d, 10]);
-		this.assertTrue(JW.Array.equal(array.collapse(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
-		this.assertTrue(array.equal([a, 4, d, 10]));
-		this.assertTrue(JW.Array.equal(array.collapse(1), [1, 2, 3, 4, b, 7, c, 10]));
-		this.assertTrue(array.equal([a, 4, d, 10]));
-		this.assertTrue(JW.Array.equal(array.collapse(0), [a, 4, d, 10]));
-		this.assertTrue(array.equal([a, 4, d, 10]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "collapse"), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
+		this.assertTrue(this.invoke(array, "equal", [[a, 4, d, 10]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "collapse", [1]), [1, 2, 3, 4, b, 7, c, 10]));
+		this.assertTrue(this.invoke(array, "equal", [[a, 4, d, 10]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, "collapse", [0]), [a, 4, d, 10]));
+		this.assertTrue(this.invoke(array, "equal", [[a, 4, d, 10]]));
 	},
 	
 	testEqual: function() {
 		var array = this.createArray([2, 3]);
-		this.assertTrue(array.equal([2, 3]));
-		this.assertFalse(array.equal([2, 3, 4]));
-		this.assertFalse(array.equal([2]));
-		this.assertFalse(array.equal([2, 4]));
-		this.assertFalse(array.equal([1, 3]));
+		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
+		this.assertFalse(this.invoke(array, "equal", [[2, 3, 4]]));
+		this.assertFalse(this.invoke(array, "equal", [[2]]));
+		this.assertFalse(this.invoke(array, "equal", [[2, 4]]));
+		this.assertFalse(this.invoke(array, "equal", [[1, 3]]));
 	}
 });

@@ -21,6 +21,51 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Tests.Collection.AbstractArray.
 	// override
 	createArray: function(items, adapter) {
 		return new JW.ObservableArray(items, adapter);
+	},
+	
+	// override
+	invoke: function(array, method, args) {
+		return array[method].apply(array, args || []);
+	},
+	
+	testNotAdapter: function() {
+		var items = [2, 4];
+		var array = this.createArray(items);
+		this.assertStrictEqual(2, array.getLength());
+		this.assertFalse(array.isEmpty());
+		this.assertStrictEqual(2, array.get(0));
+		this.assertStrictEqual(4, array.get(1));
+		array.set(3, 0);
+		this.assertStrictEqual(3, array.get(0));
+		this.assertStrictEqual(2, items[0]);
+	},
+	
+	testAdapter: function() {
+		var items = [2, 4];
+		var array = this.createArray(items, true);
+		this.assertStrictEqual(2, array.getLength());
+		this.assertFalse(array.isEmpty());
+		this.assertStrictEqual(2, array.get(0));
+		this.assertStrictEqual(4, array.get(1));
+		array.set(3, 0);
+		this.assertStrictEqual(3, array.get(0));
+		this.assertStrictEqual(3, items[0]);
+	},
+	
+	testToArray: function() {
+		var array = this.createArray([2, 4]);
+		this.assertTrue(JW.Array.equal(array.toArray(), array.getItems()));
+		this.assertTrue(array.$toArray().equal(array.getItems()));
+		this.assertFalse(array.toArray() === array.getItems());
+		this.assertFalse(array.$toArray() === array);
+		this.assertTrue(array.equal([2, 4]));
+	},
+	
+	testAsArray: function() {
+		var array = this.createArray([2, 4]);
+		this.assertTrue(array.asArray() === array.getItems());
+		this.assertTrue(array.$asArray() === array);
+		this.assertTrue(array.equal([2, 4]));
 	}
 });
 
