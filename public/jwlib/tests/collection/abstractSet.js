@@ -188,6 +188,190 @@ JW.Tests.Collection.AbstractSet = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.b, this.d]]));
 	},
 	
+	testAdd: function() {
+		var set = this.createSet([this.a, this.b]);
+		
+		this.setObservableOutput();
+		this.assertFalse(this.invoke(set, "add", [this.b]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput(
+			"Spliced -[] +[3]",
+			"Changed",
+			"Changed size from 2 to 3"
+		);
+		this.assertTrue(this.invoke(set, "add", [this.c]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
+	},
+	
+	testTryAdd: function() {
+		var set = this.createSet([this.a, this.b]);
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(set, "tryAdd", [this.b]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput(
+			"Spliced -[] +[3]",
+			"Changed",
+			"Changed size from 2 to 3"
+		);
+		this.assertTrue(this.invoke(set, "tryAdd", [this.c]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
+	},
+	
+	testAddAll: function() {
+		var set = this.createSet([this.a, this.b]);
+		
+		this.setObservableOutput();
+		this.assertTrue(JW.Array.equal(this.invoke(set, "addAll", [[]]), []));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput();
+		this.assertTrue(JW.Array.equal(this.invoke(set, "addAll", [[this.a, this.b]]), []));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput(
+			"Spliced -[] +[3,4]",
+			"Changed",
+			"Changed size from 2 to 4"
+		);
+		this.assertTrue(new JW.Set([this.c, this.d]).equal(this.invoke(set, "addAll", [[this.b, this.c, this.d]])));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c, this.d]]));
+	},
+	
+	test$AddAll: function() {
+		var set = this.createSet([this.a, this.b]);
+		
+		this.setObservableOutput();
+		this.assertTrue(this.invoke(set, "$addAll", [[]]).equal([]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput();
+		this.assertTrue(this.invoke(set, "$addAll", [[this.a, this.b]]).equal([]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput(
+			"Spliced -[] +[3,4]",
+			"Changed",
+			"Changed size from 2 to 4"
+		);
+		this.assertTrue(new JW.Set([this.c, this.d]).equal(this.invoke(set, "$addAll", [[this.b, this.c, this.d]]).getItems()));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c, this.d]]));
+	},
+	
+	testTryAddAll: function() {
+		var set = this.createSet([this.a, this.b]);
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(set, "tryAddAll", [[]]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(set, "tryAddAll", [[this.a, this.b]]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput(
+			"Spliced -[] +[3,4]",
+			"Changed",
+			"Changed size from 2 to 4"
+		);
+		this.assertTrue(new JW.Set([this.c, this.d]).equal(this.invoke(set, "tryAddAll", [[this.b, this.c, this.d]])));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c, this.d]]));
+	},
+	
+	testRemove: function() {
+		var set = this.createSet([this.a, this.b]);
+		
+		this.setObservableOutput();
+		this.assertFalse(this.invoke(set, "remove", [this.c]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput(
+			"Spliced -[2] +[]",
+			"Changed",
+			"Changed size from 2 to 1"
+		);
+		this.assertTrue(this.invoke(set, "remove", [this.b]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a]]));
+	},
+	
+	testTryRemove: function() {
+		var set = this.createSet([this.a, this.b]);
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(set, "tryRemove", [this.c]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
+		
+		this.setObservableOutput(
+			"Spliced -[2] +[]",
+			"Changed",
+			"Changed size from 2 to 1"
+		);
+		this.assertTrue(this.invoke(set, "tryRemove", [this.b]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a]]));
+	},
+	
+	testRemoveAll: function() {
+		var set = this.createSet([this.a, this.b, this.c]);
+		
+		this.setObservableOutput();
+		this.assertTrue(JW.Array.equal(this.invoke(set, "removeAll", [[]]), []));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
+		
+		this.setObservableOutput();
+		this.assertTrue(JW.Array.equal(this.invoke(set, "removeAll", [[this.d, this.e]]), []));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
+		
+		this.setObservableOutput(
+			"Spliced -[1,3] +[]",
+			"Changed",
+			"Changed size from 3 to 1"
+		);
+		this.assertTrue(new JW.Set([this.a, this.c]).equal(this.invoke(set, "removeAll", [[this.a, this.d, this.c, this.e]])));
+		this.assertTrue(this.invoke(set, "equal", [[this.b]]));
+	},
+	
+	test$RemoveAll: function() {
+		var set = this.createSet([this.a, this.b, this.c]);
+		
+		this.setObservableOutput();
+		this.assertTrue(this.invoke(set, "$removeAll", [[]]).equal([]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
+		
+		this.setObservableOutput();
+		this.assertTrue(this.invoke(set, "$removeAll", [[this.d, this.e]]).equal([]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
+		
+		this.setObservableOutput(
+			"Spliced -[1,3] +[]",
+			"Changed",
+			"Changed size from 3 to 1"
+		);
+		this.assertTrue(new JW.Set([this.a, this.c]).equal(this.invoke(set, "$removeAll", [[this.a, this.d, this.c, this.e]]).getItems()));
+		this.assertTrue(this.invoke(set, "equal", [[this.b]]));
+	},
+	
+	testTryRemoveAll: function() {
+		var set = this.createSet([this.a, this.b, this.c]);
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(set, "tryRemoveAll", [[]]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(set, "tryRemoveAll", [[this.d, this.e]]));
+		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
+		
+		this.setObservableOutput(
+			"Spliced -[1,3] +[]",
+			"Changed",
+			"Changed size from 3 to 1"
+		);
+		this.assertTrue(new JW.Set([this.a, this.c]).equal(this.invoke(set, "tryRemoveAll", [[this.a, this.d, this.c, this.e]])));
+		this.assertTrue(this.invoke(set, "equal", [[this.b]]));
+	},
+	
 	callFn: function(callback) {
 		return function(proxy) {
 			return callback.call(this, proxy.value);
