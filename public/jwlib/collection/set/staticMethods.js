@@ -161,7 +161,7 @@ JW.apply(JW.Set, {
 	},
 	
 	clear: function(target) {
-		var items = JW.Set.tryClear(target);
+		var result = JW.Set.tryClear(target);
 		return (result !== undefined) ? result : [];
 	},
 	
@@ -182,6 +182,8 @@ JW.apply(JW.Set, {
 	},
 	
 	trySplice: function(target, removedItems, addedItems) {
+		var addedItemSet = new JW.Set(addedItems);
+		removedItems = JW.Array.filter(removedItems, function(item) { return !addedItemSet.contains(item); });
 		removedItems = JW.Set.tryRemoveAll(target, removedItems);
 		addedItems = JW.Set.tryAddAll(target, addedItems);
 		if ((removedItems !== undefined) || (addedItems !== undefined)) {

@@ -212,6 +212,12 @@ JW.Tests.Collection = {
 		testCase.assertTrue(JW.Map.equal(expected.addedItems, spliceResult.addedItems));
 	},
 	
+	assertSetSpliceParams: function(testCase, expected, spliceParams) {
+		testCase.assertTrue(spliceParams instanceof JW.AbstractSet.SpliceParams);
+		testCase.assertTrue(new JW.Set(expected.removedItems).equal(spliceParams.removedItems));
+		testCase.assertTrue(new JW.Set(expected.addedItems).equal(spliceParams.addedItems));
+	},
+	
 	assertSetSpliceResult: function(testCase, expected, spliceResult) {
 		testCase.assertTrue(spliceResult instanceof JW.AbstractSet.SpliceResult);
 		testCase.assertTrue(new JW.Set(expected.removedItems).equal(spliceResult.removedItems));
