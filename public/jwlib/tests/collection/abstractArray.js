@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
+JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 	/*
 	JW.AbstractArray createArray(items, formatter);
 	Mixed invoke(target, method, args);
@@ -930,3 +930,5 @@ JW.Tests.Collection.AbstractArray = JW.Unit.TestCase.extend({
 		this.assertFalse(this.invoke(array, "equal", [[1, 3]]));
 	}
 });
+
+JW.Tests.Collection.AbstractArray = {};

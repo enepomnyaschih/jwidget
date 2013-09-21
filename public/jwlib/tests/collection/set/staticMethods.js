@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.Set.StaticMethodsTestCase = JW.Tests.Collection.AbstractSet.extend({
+JW.Tests.Collection.Set.StaticMethodsTestCase = JW.Tests.Collection.AbstractSetBase.extend({
 	// override
 	createSet: function(items) {
 		items = items || [];

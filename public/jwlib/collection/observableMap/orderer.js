@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T> extends JW.AbstractMap.Orderer<T>`
+ * `<T extends JW.Class> extends JW.AbstractMap.Orderer<T>`
  *
  * Конвертер оповещающего словаря в массив (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
  *

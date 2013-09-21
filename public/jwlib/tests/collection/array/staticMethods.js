@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.Array.StaticMethodsTestCase = JW.Tests.Collection.AbstractArray.extend({
+JW.Tests.Collection.Array.StaticMethodsTestCase = JW.Tests.Collection.AbstractArrayBase.extend({
 	// override
 	createArray: function(items) {
 		return items || [];

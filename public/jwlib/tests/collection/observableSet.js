@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.ObservableSetTestCase = JW.Tests.Collection.AbstractSet.extend({
+JW.Tests.Collection.ObservableSetTestCase = JW.Tests.Collection.AbstractSetBase.extend({
 	// override
 	createSet: function(items, formatter) {
 		var set = new JW.ObservableSet(items);

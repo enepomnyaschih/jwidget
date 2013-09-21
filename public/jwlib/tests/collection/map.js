@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMap.extend({
+JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 	// override
 	createMap: function(items) {
 		return new JW.Map(items);

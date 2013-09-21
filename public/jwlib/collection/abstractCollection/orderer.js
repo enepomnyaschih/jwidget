@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T, C extends JW.AbstractCollection<T>>`
+ * `<T extends JW.Class, C extends JW.AbstractCollection<T>>`
  *
  * Конвертер в массив (упорядочитель). Преобразует исходную коллекцию в массив. Новые элементы добавляются в конец
  * массива.
@@ -64,7 +64,7 @@ JW.AbstractCollection.Orderer = function(source, config) {
 	JW.AbstractCollection.Orderer._super.call(this);
 	config = config || {};
 	this.source = source;
-	this._targetCreated = config.target === undefined;
+	this._targetCreated = !config.target;
 	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
 	this.target.tryAddAll(source.asArray());
 };

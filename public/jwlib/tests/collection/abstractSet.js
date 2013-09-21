@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.AbstractSet = JW.Unit.TestCase.extend({
+JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 	/*
 	JW.AbstractSet createSet(items, formatter);
 	Mixed invoke(target, method, args);
@@ -549,3 +549,5 @@ JW.Tests.Collection.AbstractSet = JW.Unit.TestCase.extend({
 		return JW.cmp(x.value, y.value);
 	}
 });
+
+JW.Tests.Collection.AbstractSet = {};

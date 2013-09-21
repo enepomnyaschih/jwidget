@@ -63,7 +63,7 @@ JW.AbstractCollection.Lister = function(source, config) {
 	JW.AbstractCollection.Lister._super.call(this);
 	config = config || {};
 	this.source = source;
-	this._targetCreated = config.target === undefined;
+	this._targetCreated = !config.target;
 	this.target = this._targetCreated ? source.createEmptySet() : config.target;
 	this.target.tryAddAll(source.asArray());
 };

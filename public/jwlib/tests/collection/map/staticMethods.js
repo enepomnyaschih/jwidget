@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.Map.StaticMethodsTestCase = JW.Tests.Collection.AbstractMap.extend({
+JW.Tests.Collection.Map.StaticMethodsTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 	// override
 	createMap: function(items) {
 		return items || {};

@@ -20,7 +20,7 @@
 /**
  * @class
  *
- * `<T> extends JW.AbstractCollection.Orderer<T, JW.AbstractMap<T>>`
+ * `<T extends JW.Class> extends JW.AbstractCollection.Orderer<T, JW.AbstractMap<T>>`
  *
  * Конвертер словаря в массив (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
  *

@@ -74,12 +74,12 @@ JW.AbstractCollection.SorterComparing = function(source, config) {
 	JW.AbstractCollection.SorterComparing._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.compare = config.compare;
+	this.compare = config.compare || JW.cmp;
 	this.scope = config.scope || this;
 	var scope = this.scope;
 	var compare = this.compare;
 	this._compare = function(x, y) { return compare.call(scope, x, y); };
-	this._targetCreated = config.target === undefined;
+	this._targetCreated = !config.target;
 	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
 	this._splice([], source.asArray());
 };
@@ -89,11 +89,11 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	 * @cfg {JW.AbstractArray} target `<T>` Целевой массив.
 	 */
 	/**
-	 * @cfg {Function} compare (required)
+	 * @cfg {Function} compare
 	 *
 	 * `compare(t1: T, t2: T): number`
 	 *
-	 * Функция-компаратор.
+	 * Функция-компаратор. По умолчанию равна JW.cmp.
 	 */
 	/**
 	 * @cfg {Object} scope Контекст вызова compare.
