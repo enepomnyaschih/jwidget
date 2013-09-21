@@ -46,6 +46,7 @@
  * - {@link #keyOf} - Возвращает индекс элемента. Если элемент не найден, вернет undefined.
  * - **{@link #indexOf} - Возвращает индекс элемента. Если элемент не найден, вернет -1.**
  * - **{@link #getItems} - Возвращает внутреннее представление массива.**
+ * - **{@link #binarySearch} - Ищет позицию бинарным поиском.**
  *
  * Алгоритмы перебора:
  *
@@ -949,7 +950,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
 	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
@@ -1107,6 +1108,25 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		if (this.items.length !== 0) {
 			return this.tryRemove(this.items.length - 1);
 		}
+	},
+	
+	/**
+	 * Ищет индекс первого элемента, который больше указанного значения относительно функции compare,
+	 * используя бинарный поиск. Массив должен быть отсортирован по функции compare.
+	 * @param {T} value Значение.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T): number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 *
+	 * @param {Object} scope
+	 * Контекст вызова compare. По умолчанию, вызывается в контексте массива.
+	 * @returns {number} Индекс элемента.
+	 */
+	binarySearch: function(value, compare, scope) {
+		return JW.Array.binarySearch(this.items, value, compare, scope);
 	},
 	
 	_callStatic: function(algorithm, args) {

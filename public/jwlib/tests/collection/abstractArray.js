@@ -928,6 +928,31 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.assertFalse(this.invoke(array, "equal", [[3, 2]]));
 		this.assertFalse(this.invoke(array, "equal", [[2, 4]]));
 		this.assertFalse(this.invoke(array, "equal", [[1, 3]]));
+	},
+	
+	testBinarySearch: function() {
+		this.assertStrictEqual(0, this.invoke(this.createArray(), "binarySearch", [4]));
+		this.assertStrictEqual(0, this.invoke(this.createArray([1]), "binarySearch", [0]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1]), "binarySearch", [1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1]), "binarySearch", [2]));
+		this.assertStrictEqual(0, this.invoke(this.createArray([1, 3]), "binarySearch", [0]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1, 3]), "binarySearch", [1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1, 3]), "binarySearch", [2]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([1, 3]), "binarySearch", [3]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([1, 3]), "binarySearch", [4]));
+		this.assertStrictEqual(0, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [-2]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [0]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [.5]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [1]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [2]));
+		this.assertStrictEqual(3, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [4]));
+		this.assertStrictEqual(3, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [5]));
+		this.assertStrictEqual(4, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [7]));
+		this.assertStrictEqual(4, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [9]));
+		this.assertStrictEqual(5, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [10]));
+		this.assertStrictEqual(5, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [14]));
+		this.assertStrictEqual(6, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [15]));
+		this.assertStrictEqual(6, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), "binarySearch", [18]));
 	}
 });
 

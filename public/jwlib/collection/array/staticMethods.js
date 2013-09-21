@@ -557,5 +557,24 @@ JW.apply(JW.Array, {
 	
 	pop: function(target) {
 		return target.pop();
+	},
+	
+	binarySearch: function(target, value, compare, scope) {
+		compare = compare || function(x, y) { return (x < y) ? -1 : (x > y) ? 1 : 0 };
+		scope = scope || target;
+		var length = target.length;
+		var len2 = length >> 1;
+		var step = 1;
+		while (step <= len2) {
+			step <<= 1;
+		}
+		var index = 0;
+		while (step) {
+			if ((index + step <= length) && (compare.call(scope, value, target[index + step - 1]) >= 0)) {
+				index += step;
+			}
+			step >>= 1;
+		}
+		return index;
 	}
 });
