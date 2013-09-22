@@ -39,7 +39,7 @@ JW.Tests.Collection.AbstractArray.SorterComparingTestCase = JW.Unit.TestCase.ext
 		this.setExpectedOutput(
 			"Spliced -[] +[0:[0,2,3,1]] to []",
 			"Changed",
-			"Changed size from 0 to 4"
+			"Changed length from 0 to 4"
 		);
 		var sorterComparing = this.createSorterComparing(source, target, this.compare);
 		this.assertTarget([ 0, 2, 3, 1 ], target);
@@ -47,7 +47,7 @@ JW.Tests.Collection.AbstractArray.SorterComparingTestCase = JW.Unit.TestCase.ext
 		this.setExpectedOutput(
 			"Spliced -[0:[0,2,3,1]] +[] to [0,2,3,1]",
 			"Changed",
-			"Changed size from 4 to 0"
+			"Changed length from 4 to 0"
 		);
 		sorterComparing.destroy();
 		this.assertTarget([], target);
@@ -65,7 +65,7 @@ JW.Tests.Collection.AbstractArray.SorterComparingTestCase = JW.Unit.TestCase.ext
 		this.setExpectedOutput(
 			"Spliced -[] +[0:[8]] to []",
 			"Changed",
-			"Changed size from 0 to 1"
+			"Changed length from 0 to 1"
 		);
 		target.add(8);
 		this.assertTarget([ 8 ], target);
@@ -73,7 +73,7 @@ JW.Tests.Collection.AbstractArray.SorterComparingTestCase = JW.Unit.TestCase.ext
 		this.setExpectedOutput(
 			"Spliced -[] +[0:[0,2],3:[3,1]] to [8]",
 			"Changed",
-			"Changed size from 1 to 5"
+			"Changed length from 1 to 5"
 		);
 		var sorterComparing1 = this.createSorterComparing(source1, target, this.compare);
 		this.assertTarget([0, 2, 8, 3, 1], target);
@@ -81,7 +81,7 @@ JW.Tests.Collection.AbstractArray.SorterComparingTestCase = JW.Unit.TestCase.ext
 		this.setExpectedOutput(
 			"Spliced -[] +[2:[4,6],5:[7,5]] to [0,2,8,3,1]",
 			"Changed",
-			"Changed size from 5 to 9"
+			"Changed length from 5 to 9"
 		);
 		var sorterComparing2 = this.createSorterComparing(source2, target, this.compare);
 		this.assertTarget([0, 2, 4, 6, 8, 7, 5, 3, 1], target);
@@ -89,15 +89,15 @@ JW.Tests.Collection.AbstractArray.SorterComparingTestCase = JW.Unit.TestCase.ext
 		this.setExpectedOutput(
 			"Spliced -[0:[0,2],7:[3,1]] +[] to [0,2,4,6,8,7,5,3,1]",
 			"Changed",
-			"Changed size from 9 to 5"
+			"Changed length from 9 to 5"
 		);
 		sorterComparing1.destroy();
 		this.assertTarget([4, 6, 8, 7, 5], target);
 		
 		this.setExpectedOutput(
-			"Spliced -[0:[4,6],3:[7,5]] +[]",
+			"Spliced -[0:[4,6],3:[7,5]] +[] to [4,6,8,7,5]",
 			"Changed",
-			"Changed size from 3 to 1"
+			"Changed length from 5 to 1"
 		);
 		sorterComparing2.destroy();
 		this.assertTarget([8], target);
@@ -123,14 +123,14 @@ JW.Tests.Collection.AbstractArray.SorterComparingTestCase = JW.Unit.TestCase.ext
 	testAutoTarget: function() {
 		var source = new JW.Array([0, 1, 2, 3]);
 		var sorterComparing = this.createSorterComparing(source, null, this.compare);
-		this.assertTrue(sorterComparing.target instanceof JW.Set);
+		this.assertTrue(sorterComparing.target instanceof JW.Array);
 		this.assertTarget([0, 2, 3, 1], sorterComparing.target);
 		sorterComparing.destroy();
 		source.destroy();
 	},
 	
 	testDefaultCompare: function() {
-		var source = new JW.Array(4, 3, 2, 0, 1);
+		var source = new JW.Array([4, 3, 2, 0, 1]);
 		var target = new JW.Array();
 		var sorterComparing = this.createSorterComparing(source, target);
 		this.assertTarget([0, 1, 2, 3, 4], target);
@@ -157,6 +157,6 @@ JW.Tests.Collection.AbstractArray.SorterComparingTestCase = JW.Unit.TestCase.ext
 	},
 	
 	compare: function(x, y) {
-		return JW.cmp(x % 2, y % 2) || ((x % 2) ? JW.cmp(x, y) : -JW.cmp(x, y));
+		return JW.cmp(x % 2, y % 2) || ((x % 2) ? -JW.cmp(x, y) : JW.cmp(x, y));
 	}
 });

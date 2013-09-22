@@ -78,7 +78,6 @@ JW.AbstractCollection.SorterComparing = function(source, config) {
 	this.scope = config.scope || this;
 	var scope = this.scope;
 	var compare = this.compare;
-	this._compare = function(x, y) { return compare.call(scope, x, y); };
 	this._targetCreated = !config.target;
 	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
 	this._splice([], source.asArray());
@@ -105,11 +104,10 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	 * @property {JW.AbstractArray} target `<T>` Целевой массив.
 	 */
 	// boolean _targetCreated;
-	// number _compare(T x, T y);
 	
 	// override
 	destroy: function() {
-		this._splice(this.source.asArray());
+		this._splice(this.source.asArray(), []);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -121,31 +119,41 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	 * @returns {void}
 	 */
 	resort: function() {
-		this.target.sortComparing(this._compare);
+		this.target.sortComparing(this.compare, this.scope);
 	},
 	
 	_splice: function(removedItems, addedItems) {
-		var removes = JW.Array.toSet(removedItems);
-		var adds = addedItems.concat();
-		adds.sort(this._compare);
-		var iTarget = 0;
+		removedItems = JW.Array.toSortedComparing(removedItems, this.compare, this.scope);
+		addedItems = JW.Array.toSortedComparing(addedItems, this.compare, this.scope);
 		var iAdds = 0;
-		var i = 0;
-		var result = new Array(this.target.length + addedItems.length - removedItems.length);
-		while (iTarget < this.target.length) {
-			var value = this.target[iTarget];
-			if (JW.Set.contains(removes, value)) {
-				++iTarget;
-			} else {
-				while ((iAdds < adds.length) && (this._compare(adds[iAdds], value) < 0)) {
-					result[i++] = adds[iAdds++];
+		var addShift = 0;
+		var removeParamsList = [];
+		var addParamsList = [];
+		var removeParams = null;
+		for (iTarget = 0, lTarget = this.target.getLength(); iTarget < lTarget; ++iTarget) {
+			var value = this.target.get(iTarget);
+			if (removedItems[JW.Array.binarySearch(removedItems, value, this.compare, this.scope) - 1] === value) {
+				if (!removeParams) {
+					removeParams = new JW.AbstractArray.IndexCount(iTarget, 0);
+					removeParamsList.push(removeParams);
 				}
-				result[i++] = this.target[iTarget++];
+				++removeParams.count;
+				--addShift;
+			} else {
+				removeParams = null;
+				var addParams = new JW.AbstractArray.IndexItems(iTarget + addShift, []);
+				while ((iAdds < addedItems.length) && (this.compare.call(this.scope, addedItems[iAdds], value) < 0)) {
+					addParams.items.push(addedItems[iAdds++]);
+					++addShift;
+				}
+				if (addParams.items.length !== 0) {
+					addParamsList.push(addParams);
+				}
 			}
 		}
-		while (i < result.length) {
-			result[i++] = adds[iAdds++];
+		if (iAdds < addedItems.length) {
+			addParamsList.push(new JW.AbstractArray.IndexItems(iTarget + addShift, addedItems.slice(iAdds)));
 		}
-		this.target.performSplice(result);
+		this.target.splice(removeParamsList, addParamsList);
 	}
 });
