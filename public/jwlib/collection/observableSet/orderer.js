@@ -53,8 +53,8 @@ JW.extend(JW.ObservableSet.Orderer, JW.AbstractSet.Orderer, {
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
 		this._splice(
-			JW.Set.toSet(spliceResult.removedItems),
-			spliceResult.addedItems);
+			JW.Array.toSet(spliceResult.removedItems),
+			JW.Array.toSet(spliceResult.addedItems));
 	},
 	
 	_onClear: function(params) {

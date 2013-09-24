@@ -118,7 +118,7 @@
  * Другие методы:
  *
  * - **{@link #detectSplice} - Определяет параметры метода #splice для приведения содержимого.**
- * - **{@link #detectFilter} - Определяет параметры метода #splice для фильтрации содержимого.**
+ * - **{@link #detectFilter} - Определяет параметр removeParamsList метода #splice для фильтрации содержимого.**
  * - **{@link #detectReorder} - Определяет параметры метода #reorder для приведения содержимого.**
  * - **{@link #detectSort} - Определяет параметры метода #reorder для сортировки по индексу.**
  * - **{@link #detectSortComparing} - Определяет параметры метода #reorder для сортировки по компаратору.**
@@ -811,12 +811,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Определяет параметры метода #splice, с которыми содержимое массива станет равно newItems.
+	 * Определяет параметр removeParamsList метода #splice, с которыми содержимое массива станет равно newItems.
 	 * Определяет, какие элементы нужно удалить. Не предусматривает вставку новых элементов. В отличие от
 	 * метода #detectSplice, не требует уникальности элементов массива.
 	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @returns {JW.AbstractArray.SpliceParams}
-	 * `<T>` Параметры метода #splice.
+	 * @returns {Array}
+	 * `<JW.AbstractArray.IndexCount>` Параметр removeParamsList метода #splice.
 	 * Если вызова метода не требуется - undefined.
 	 */
 	detectFilter: function(newItems) {
@@ -906,7 +906,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	performFilter: function(newItems) {
 		var params = this.detectFilter(newItems);
 		if (params !== undefined) {
-			this.trySplice(params.removeParamsList, params.addParamsList);
+			this.trySplice(params, []);
 		}
 	},
 	

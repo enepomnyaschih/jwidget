@@ -347,7 +347,7 @@ JW.apply(JW.Array, {
 			oldIndex += count + 1;
 		}
 		if (removeParamsList.length !== 0) {
-			return new JW.AbstractArray.SpliceParams(removeParamsList, []);
+			return removeParamsList;
 		}
 	},
 	

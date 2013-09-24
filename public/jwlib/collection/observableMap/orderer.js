@@ -54,7 +54,7 @@ JW.extend(JW.ObservableMap.Orderer, JW.AbstractMap.Orderer, {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			JW.Map.toSet(spliceResult.removedItems),
-			JW.Map.toArray(spliceResult.addedItems));
+			JW.Map.toSet(spliceResult.addedItems));
 	},
 	
 	_onClear: function(params) {

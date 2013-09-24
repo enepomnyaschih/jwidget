@@ -90,11 +90,16 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
 		this._super();
 	},
 	
-	_splice: function(removedItemsSet, addedItemsArray) {
-		var newItems = this.target.filter(function(item) {
+	_splice: function(removedItemsSet, addedItemsSet) {
+		var filteredItems = this.target.filter(function(item) {
+			return !JW.Set.contains(removedItemsSet, item) || JW.Set.contains(addedItemsSet, item);
+		}, this);
+		var addedItems = JW.Set.$toArray(addedItemsSet).filter(function(item) {
 			return !JW.Set.contains(removedItemsSet, item);
 		}, this);
-		JW.Array.tryAddAll(newItems, addedItemsArray);
-		this.target.performSplice(newItems);
+		this.target.trySplice(
+			this.target.detectFilter(filteredItems) || [],
+			[new JW.AbstractArray.IndexItems(filteredItems.length, addedItems)]
+		);
 	}
 });

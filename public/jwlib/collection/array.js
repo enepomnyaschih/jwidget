@@ -890,14 +890,14 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 */
 	/**
 	 * @method detectFilter
-	 * Определяет параметры метода {@link #static-method-splice}, с которыми содержимое массива станет равно newItems.
+	 * Определяет параметр removeParamsList метода {@link #static-method-splice}, с которыми содержимое массива станет равно newItems.
 	 * Определяет, какие элементы нужно удалить. Не предусматривает вставку новых элементов. В отличие от
 	 * метода {@link #static-method-detectSplice}, не требует уникальности элементов массива.
 	 * @static
 	 * @param {Array} array `<T>` Массив.
 	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @returns {JW.AbstractArray.SpliceParams}
-	 * `<T>` Параметры метода {@link #static-method-splice}.
+	 * @returns {Array}
+	 * `<JW.AbstractArray.IndexCount>` Параметр removeParamsList метода {@link #static-method-splice}.
 	 * Если вызова метода не требуется - undefined.
 	 */
 	/**

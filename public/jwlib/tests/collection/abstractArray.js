@@ -858,7 +858,7 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 			new JW.AbstractArray.IndexCount(4, 2)
 		], []);
 		var got = this.invoke(array, "detectFilter", [[1, 4]]);
-		JW.Tests.Collection.assertArraySpliceParams(this, expected, got);
+		JW.Tests.Collection.assertArraySpliceParams(this, expected, new JW.AbstractArray.SpliceParams(got, []));
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 	},
 	
