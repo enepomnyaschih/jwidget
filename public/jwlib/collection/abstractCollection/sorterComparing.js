@@ -123,8 +123,34 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	},
 	
 	_splice: function(removedItems, addedItems) {
-		removedItems = JW.Array.toSortedComparing(removedItems, this.compare, this.scope);
-		addedItems = JW.Array.toSortedComparing(addedItems, this.compare, this.scope);
+		var removedItemsSorted = JW.Array.toSortedComparing(removedItems, this.compare, this.scope);
+		var addedItemsSorted = JW.Array.toSortedComparing(addedItems, this.compare, this.scope);
+		removedItems = new Array(removedItems.length);
+		addedItems = new Array(addedItems.length);
+		var iRemoved = 0;
+		var iAdded = 0;
+		var jRemoved = 0;
+		var jAdded = 0;
+		// ignore out the items which are removed and added at the same time
+		while ((iRemoved < removedItemsSorted.length) || (iAdded < addedItemsSorted.length)) {
+			var removedItem = removedItemsSorted[iRemoved];
+			var addedItem = addedItemsSorted[iAdded];
+			var c = JW.cmp(removedItem === undefined, addedItem === undefined) ||
+				this.compare.call(this.scope, removedItem, addedItem);
+			if (c < 0) {
+				removedItems[jRemoved++] = removedItem;
+				++iRemoved;
+			} else if (c > 0) {
+				addedItems[jAdded++] = addedItem;
+				++iAdded;
+			} else {
+				++iRemoved;
+				++iAdded;
+			}
+		}
+		removedItems.splice(jRemoved, removedItems.length - jRemoved);
+		addedItems.splice(jAdded, addedItems.length - jAdded);
+		
 		var iAdds = 0;
 		var addShift = 0;
 		var removeParamsList = [];

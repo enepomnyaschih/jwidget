@@ -43,6 +43,7 @@
 		"jwlib/tests/collection/observableArray/lister.js",
 		"jwlib/tests/collection/observableArray/mapper.js",*/
 		"jwlib/tests/collection/observableArray/orderer.js",
+		"jwlib/tests/collection/observableArray/sorterComparing.js",
 		/*"jwlib/tests/collection/observableArray/splitter.js",
 		"jwlib/tests/collection/observableMap.js",
 		"jwlib/tests/collection/observableMap/inserter.js",
