@@ -96,108 +96,39 @@ JW.Tests.Collection.ObservableArray.OrdererTestCase = JW.Unit.TestCase.extend({
 		target.destroy();
 		source.destroy();
 	},
-	/*
-	testUnobservableTarget: function() {
-		var d = new JW.Proxy("d");
-		var source = new JW.ObservableArray([ d ]);
-		var target = new JW.Set();
+	
+	
+	testObservableTarget: function() {
+		var source = new JW.ObservableArray([this.a, this.b, this.c, this.d]);
+		var target = new JW.Array();
 		
 		var orderer = this.createOrderer(source, target);
-		this.assertTarget([ d ], target);
+		this.assertTarget([this.a, this.b, this.c, this.d], target);
 		
-		// d
-		var f = new JW.Proxy("f");
-		source.addAll([ f ]);
-		this.assertTarget([ d, f ], target);
+		source.splice([
+			new JW.AbstractArray.IndexCount(0, 2),
+			new JW.AbstractArray.IndexCount(3, 1)
+		], [
+			new JW.AbstractArray.IndexItems(0, [this.e, this.f]),
+			new JW.AbstractArray.IndexItems(3, [this.a])
+		]); // e,f,c,a
+		this.assertTarget([this.a, this.c, this.e, this.f], target);
 		
-		// d f
-		var c = new JW.Proxy("c");
-		source.add(c, 1);
-		this.assertTarget([ d, f, c ], target);
+		source.set(this.b, 2); // e,f,b,a
+		this.assertTarget([this.a, this.e, this.f, this.b], target);
 		
-		// d c f
-		var b = new JW.Proxy("b");
-		var m = new JW.Proxy("m");
-		source.addAll([ b, m ], 0);
-		this.assertTarget([ d, f, c, b, m ], target);
+		source.move(0, 2); // f,b,e,a
+		this.assertTarget([this.a, this.e, this.f, this.b], target);
 		
-		// b m d c f
-		this.setExpectedOutput();
-		source.addAll([], 1);
-		this.assertTarget([ d, f, c, b, m ], target);
+		source.reorder([2, 0, 1, 3]); // b,e,f,a
+		this.assertTarget([this.a, this.e, this.f, this.b], target);
 		
-		var a = new JW.Proxy("a");
-		source.add(a, 5);
-		this.assertTarget([ d, f, c, b, m, a ], target);
-		
-		// b m d c f a
-		source.remove(1);
-		this.assertTarget([ d, f, c, b, a ], target);
-		
-		// b d c f a
-		source.remove(0);
-		this.assertTarget([ d, f, c, a ], target);
-		
-		// d c f a
-		var k = new JW.Proxy("k");
-		source.add(k);
-		this.assertTarget([ d, f, c, a, k ], target);
-		
-		// d c f a k
-		var g = new JW.Proxy("g");
-		source.set(g, 2);
-		this.assertTarget([ d, c, a, k, g ], target);
-		
-		// d c g a k
-		this.setExpectedOutput();
-		source.set(a, 3);
-		this.assertTarget([ d, c, a, k, g ], target);
-		
-		this.setExpectedOutput();
-		source.move(2, 1);
-		this.assertTarget([ d, c, a, k, g ], target);
-		
-		// d g c a k
-		this.setExpectedOutput();
-		source.move(0, 4);
-		this.assertTarget([ d, c, a, k, g ], target);
-		
-		// g c a k d
-		this.setExpectedOutput();
-		source.move(1, 1);
-		this.assertTarget([ d, c, a, k, g ], target);
-		
-		this.setExpectedOutput();
-		var items = source.getItems().concat();
-		JW.Array.sort(items, JW.byField("value"));
-		source.performReorder(items);
-		this.assertTarget([ d, c, a, k, g ], target);
-		
-		// a c d g k
-		source.performSplice([ a, d, g, k ]);
-		this.assertTarget([ d, a, k, g ], target);
-		
-		// a d g k
-		source.performSplice([ k ]);
-		this.assertTarget([ k ], target);
-		
-		// k
-		var u = new JW.Proxy("u");
-		var t = new JW.Proxy("t");
-		var c = new JW.Proxy("c");
-		source.performSplice([ u, t, c ]);
-		this.assertTarget([ u, t, c ], target);
-		
-		// u t c
 		source.clear();
 		this.assertTarget([], target);
 		
-		// (empty)
-		var h = new JW.Proxy("h");
-		source.add(h);
-		this.assertTarget([ h ], target);
+		source.add(this.c);
+		this.assertTarget([this.c], target);
 		
-		// h
 		orderer.destroy();
 		this.assertTarget([], target);
 		
@@ -207,89 +138,73 @@ JW.Tests.Collection.ObservableArray.OrdererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testMultiSource: function() {
-		var a = new JW.Proxy("a");
-		var source1 = new JW.ObservableArray([ a ]);
-		var b = new JW.Proxy("b");
-		var c = new JW.Proxy("c");
-		var source2 = new JW.ObservableArray([ b, c ]);
-		var x = new JW.Proxy("x");
+		var source1 = new JW.ObservableArray([this.a, this.b]);
+		var source2 = new JW.ObservableArray([this.c, this.d]);
 		var target = this.createTarget();
-		this.setExpectedOutput(
-			"Spliced -[] +[x]",
-			"Changed",
-			"Changed size from 0 to 1"
-		);
-		target.add(x);
-		this.assertTarget([ x ], target);
 		
 		this.setExpectedOutput(
-			"Spliced -[] +[a]",
+			"Spliced -[] +[0:[x]] to []",
 			"Changed",
-			"Changed size from 1 to 2"
+			"Changed length from 0 to 1"
+		);
+		target.add(this.x);
+		this.assertTarget([this.x], target);
+		
+		this.setExpectedOutput(
+			"Spliced -[] +[1:[a,b]] to [x]",
+			"Changed",
+			"Changed length from 1 to 3"
 		);
 		var orderer1 = this.createOrderer(source1, target);
-		this.assertTarget([ x, a ], target);
+		this.assertTarget([this.x, this.a, this.b], target);
 		
 		this.setExpectedOutput(
-			"Spliced -[] +[b,c]",
+			"Spliced -[] +[3:[c,d]] to [x,a,b]",
 			"Changed",
-			"Changed size from 2 to 4"
+			"Changed length from 3 to 5"
 		);
 		var orderer2 = this.createOrderer(source2, target);
-		this.assertTarget([ x, a, b, c ], target);
+		this.assertTarget([this.x, this.a, this.b, this.c, this.d], target);
 		
-		var d = new JW.Proxy("d");
 		this.setExpectedOutput(
-			"Spliced -[] +[d]",
+			"Spliced -[1:[a]] +[4:[e,f]] to [x,a,b,c,d]",
 			"Changed",
-			"Changed size from 4 to 5"
+			"Changed length from 5 to 6"
 		);
-		source1.add(d);
-		this.assertTarget([ x, a, b, c, d ], target);
+		source1.splice(
+			[new JW.AbstractArray.IndexCount(0, 1)],
+			[new JW.AbstractArray.IndexItems(1, [this.e, this.f])]
+		); // b,e,f
+		this.assertTarget([this.x, this.b, this.c, this.d, this.e, this.f], target);
 		
-		var e = new JW.Proxy("e");
 		this.setExpectedOutput(
-			"Spliced -[b] +[e]",
+			"Spliced -[3:[d]] +[5:[a]] to [x,b,c,d,e,f]",
 			"Changed"
 		);
-		source2.set(e, 0);
-		this.assertTarget([ x, a, c, d, e ], target);
+		source2.splice(
+			[new JW.AbstractArray.IndexCount(1, 1)],
+			[new JW.AbstractArray.IndexItems(0, [this.a])]
+		); // a,c
+		this.assertTarget([this.x, this.b, this.c, this.e, this.f, this.a], target);
 		
 		this.setExpectedOutput(
-			"Spliced -[a,d] +[]",
+			"Spliced -[1:[b],3:[e,f]] +[] to [x,b,c,e,f,a]",
 			"Changed",
-			"Changed size from 5 to 3"
-		);
-		source1.clear();
-		this.assertTarget([ x, c, e ], target);
-		
-		this.setExpectedOutput(
-			"Spliced -[] +[d]",
-			"Changed",
-			"Changed size from 3 to 4"
-		);
-		source1.performSplice([ d ]);
-		this.assertTarget([ x, c, e, d ], target);
-		
-		this.setExpectedOutput(
-			"Spliced -[c,e] +[]",
-			"Changed",
-			"Changed size from 4 to 2"
-		);
-		orderer2.destroy();
-		this.assertTarget([ x, d ], target);
-		
-		this.setExpectedOutput(
-			"Spliced -[d] +[]",
-			"Changed",
-			"Changed size from 2 to 1"
+			"Changed length from 6 to 3"
 		);
 		orderer1.destroy();
-		this.assertTarget([ x ], target);
+		this.assertTarget([this.x, this.c, this.a], target);
+		
+		this.setExpectedOutput(
+			"Spliced -[1:[c,a]] +[] to [x,c,a]",
+			"Changed",
+			"Changed length from 3 to 1"
+		);
+		orderer2.destroy();
+		this.assertTarget([this.x], target);
 		
 		this.setExpectedOutput();
 		target.destroy();
-		this.assertTarget([], target);
 		
 		this.setExpectedOutput();
 		source1.destroy();
@@ -307,15 +222,14 @@ JW.Tests.Collection.ObservableArray.OrdererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testAutoTarget: function() {
-		var d = new JW.Proxy("d");
-		var source = new JW.ObservableArray([ d ]);
+		var source = new JW.ObservableArray([this.d]);
 		var orderer = this.createOrderer(source);
-		this.assertTrue(orderer.target instanceof JW.ObservableSet);
-		this.assertTarget([ d ], orderer.target);
+		this.assertTrue(orderer.target instanceof JW.ObservableArray);
+		this.assertTarget([this.d], orderer.target);
 		orderer.destroy();
 		source.destroy();
 	},
-	*/
+	
 	createTarget: function() {
 		var target = new JW.ObservableArray();
 		JW.Tests.Collection.subscribeToArray(this, target, function(x) { return x.value; });
