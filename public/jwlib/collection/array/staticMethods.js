@@ -391,7 +391,7 @@ JW.apply(JW.Array, {
 	performFilter: function(target, newItems) {
 		var params = JW.Array.detectFilter(target, newItems);
 		if (params !== undefined) {
-			JW.Array.trySplice(target, params.removeParamsList, params.addParamsList);
+			JW.Array.trySplice(target, params, []);
 		}
 	},
 	
