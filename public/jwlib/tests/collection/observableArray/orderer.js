@@ -98,7 +98,7 @@ JW.Tests.Collection.ObservableArray.OrdererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	
-	testObservableTarget: function() {
+	testUnobservableTarget: function() {
 		var source = new JW.ObservableArray([this.a, this.b, this.c, this.d]);
 		var target = new JW.Array();
 		
