@@ -61,6 +61,7 @@
 		"jwlib/tests/collection/observableSet/mapper.js",
 		"jwlib/tests/collection/observableSet/observer.js",*/
 		"jwlib/tests/collection/observableSet/orderer.js",
+		"jwlib/tests/collection/observableSet/sorterComparing.js",
 		/*"jwlib/tests/collection/set.js",
 		"jwlib/tests/collection/set/staticMethods.js",
 		
