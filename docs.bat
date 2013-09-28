@@ -1,4 +1,6 @@
 @echo off
+call release.bat
+echo Building documentation
 set version=0.6
 rd /S /Q ..\docs\%version%\extjs
 rd /S /Q ..\docs\%version%\member-icons
