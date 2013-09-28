@@ -63,6 +63,7 @@
  * - {@link #keyOf} - Возвращает индекс элемента. Если элемент не найден, вернет undefined.
  * - **{@link #indexOf} - Возвращает индекс элемента. Если элемент не найден, вернет -1.**
  * - **{@link #getItems} - Возвращает внутреннее представление массива.**
+ * - **{@link #binarySearch} - Ищет позицию бинарным поиском.**
  *
  * Алгоритмы перебора:
  *
@@ -111,6 +112,7 @@
  * - **{@link #reorder}, #tryReorder - Переупорядочивает элементы.**
  * - **{@link #sort}, #sortComparing - Сортирует массив.**
  * - **{@link #performSplice} - Приводит содержимое методом #splice.**
+ * - **{@link #performFilter} - Фильтрует содержимое методом #splice.**
  * - **{@link #performReorder} - Приводит содержимое методом #reorder.**
  *
  * Создание синхронизаторов:
@@ -133,6 +135,7 @@
  * Другие методы:
  *
  * - **{@link #detectSplice} - Определяет параметры метода #splice для приведения содержимого.**
+ * - **{@link #detectFilter} - Определяет параметр removeParamsList метода #splice для фильтрации содержимого.**
  * - **{@link #detectReorder} - Определяет параметры метода #reorder для приведения содержимого.**
  * - **{@link #detectSort} - Определяет параметры метода #reorder для сортировки по индексу.**
  * - **{@link #detectSortComparing} - Определяет параметры метода #reorder для сортировки по компаратору.**
@@ -343,11 +346,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -360,11 +363,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -377,12 +380,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -395,12 +398,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -414,11 +417,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска функции f на каждом
 	 * элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -432,11 +435,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска функции f на каждом
 	 * элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -449,12 +452,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * Строит массив из индексов элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -467,12 +470,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * Строит массив из индексов элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -583,10 +586,6 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	toArray: function() {
 		return this.items.concat();
-	},
-	
-	toSet: function() {
-		return new JW.Set(this.items);
 	},
 	
 	asArray: function() {
@@ -719,8 +718,8 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	removeItems: function(items) {
 		var itemSet = new JW.Set(items);
-		var newItems = this.filter(function(v) { return !itemSet.contains(item); });
-		this.performSplice(newItems);
+		var newItems = this.filter(function(item) { return !itemSet.contains(item); });
+		this.performFilter(newItems);
 	},
 	
 <span id='JW-AbstractArray-method-move'>	/**
@@ -814,15 +813,31 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 <span id='JW-AbstractArray-method-detectSplice'>	/**
 </span>	 * Определяет параметры метода #splice, с которыми содержимое массива станет равно newItems.
-	 * Т.е. определяет, какие элементы нужно удалить, какие вставить, и в какое место.
+	 * Т.е. определяет, какие элементы нужно удалить, какие вставить, и в какое место. Все элементы должны быть
+	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод #detectFilter.
 	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое массива.
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {JW.AbstractArray.SpliceParams} `&lt;T&gt;` Параметры метода #splice.
+	 * @returns {JW.AbstractArray.SpliceParams}
+	 * `&lt;T&gt;` Параметры метода #splice.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSplice: function(newItems, getKey, scope) {
 		return JW.Array.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
+	},
+	
+<span id='JW-AbstractArray-method-detectFilter'>	/**
+</span>	 * Определяет параметр removeParamsList метода #splice, с которыми содержимое массива станет равно newItems.
+	 * Определяет, какие элементы нужно удалить. Не предусматривает вставку новых элементов. В отличие от
+	 * метода #detectSplice, не требует уникальности элементов массива.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое массива.
+	 * @returns {Array}
+	 * `&lt;JW.AbstractArray.IndexCount&gt;` Параметр removeParamsList метода #splice.
+	 * Если вызова метода не требуется - undefined.
+	 */
+	detectFilter: function(newItems) {
+		return JW.Array.detectFilter(this.items, newItems);
 	},
 	
 <span id='JW-AbstractArray-method-detectReorder'>	/**
@@ -833,7 +848,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {Array} `&lt;number&gt;` Параметр indexArray метода #reorder.
+	 * @returns {Array}
+	 * `&lt;number&gt;` Параметр indexArray метода #reorder.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectReorder: function(newItems, getKey, scope) {
 		return JW.Array.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
@@ -843,15 +860,17 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 </span>	 * Определяет параметр метода #reorder, с которым содержимое массива отсортируется по результату вызова
 	 * функции f на всех элементах.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `&lt;number&gt;` Параметр indexArray метода #reorder.
+	 * @returns {Array}
+	 * `&lt;number&gt;` Параметр indexArray метода #reorder.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSort: function(callback, scope, order) {
 		return JW.Array.detectSort(this.items, callback, scope || this, order);
@@ -860,16 +879,18 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 <span id='JW-AbstractArray-method-detectSortComparing'>	/**
 </span>	 * Определяет параметр метода #reorder, с которым содержимое массива отсортируется по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `&lt;number&gt;` Параметр indexArray метода #reorder.
+	 * @returns {Array}
+	 * `&lt;number&gt;` Параметр indexArray метода #reorder.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSortComparing: function(compare, scope, order) {
 		return JW.Array.detectSortComparing(this.items, compare, scope || this, order);
@@ -877,6 +898,8 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 <span id='JW-AbstractArray-method-performSplice'>	/**
 </span>	 * Преобразует содержимое массива к newItems комбинацией методов #detectSplice и #splice.
+	 * Все элементы должны быть
+	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод #performFilter.
 	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое массива.
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
@@ -887,6 +910,20 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		var params = this.detectSplice(newItems, getKey || this.getKey, scope || this);
 		if (params !== undefined) {
 			this.trySplice(params.removeParamsList, params.addParamsList);
+		}
+	},
+	
+<span id='JW-AbstractArray-method-performFilter'>	/**
+</span>	 * Преобразует содержимое массива к newItems комбинацией методов #detectFilter и #splice.
+	 * Только удаляет элементы. Не предусматривает вставку новых элементов. В отличие от
+	 * метода #performSplice, не требует уникальности элементов массива.
+	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое массива.
+	 * @returns {void}
+	 */
+	performFilter: function(newItems) {
+		var params = this.detectFilter(newItems);
+		if (params !== undefined) {
+			this.trySplice(params, []);
 		}
 	},
 	
@@ -908,36 +945,42 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 <span id='JW-AbstractArray-method-sort'>	/**
 </span>	 * Сортирует массив по результату запуска функции f на элементах.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {void}
 	 */
 	sort: function(callback, scope, order) {
-		this.tryReorder(this.detectSort(callback, scope, order));
+		var indexArray = this.detectSort(callback, scope, order);
+		if (indexArray !== undefined) {
+			this.tryReorder(indexArray);
+		}
 	},
 	
 <span id='JW-AbstractArray-method-sortComparing'>	/**
 </span>	 * Сортирует массив по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {void}
 	 */
 	sortComparing: function(compare, scope, order) {
-		this.tryReorder(this.detectSortComparing(compare, scope, order));
+		var indexArray = this.detectSortComparing(compare, scope, order);
+		if (indexArray !== undefined) {
+			this.tryReorder(indexArray);
+		}
 	},
 	
 <span id='JW-AbstractArray-method-createMapper'>	/**
@@ -1084,6 +1127,25 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		}
 	},
 	
+<span id='JW-AbstractArray-method-binarySearch'>	/**
+</span>	 * Ищет индекс первого элемента, который больше указанного значения относительно функции compare,
+	 * используя бинарный поиск. Массив должен быть отсортирован по функции compare.
+	 * @param {T} value Значение.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T): number`
+	 *
+	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 *
+	 * @param {Object} [scope]
+	 * Контекст вызова compare. По умолчанию, вызывается в контексте массива.
+	 * @returns {number} Индекс элемента.
+	 */
+	binarySearch: function(value, compare, scope) {
+		return JW.Array.binarySearch(this.items, value, compare, scope);
+	},
+	
 	_callStatic: function(algorithm, args) {
 		return JW.Array[algorithm].apply(JW.Array, [this.items].concat(args || []));
 	}
@@ -1118,6 +1180,14 @@ JW.extend(JW.AbstractArray.IndexCount, JW.Class, {
 <span id='JW-AbstractArray-IndexCount-property-count'>	/**
 </span>	 * @property {number} count Количество.
 	 */
+	
+<span id='JW-AbstractArray-IndexCount-method-clone'>	/**
+</span>	 * Клонирует пару.
+	 * @returns JW.AbstractArray.IndexCount
+	 */
+	clone: function() {
+		return new JW.AbstractArray.IndexCount(this.index, this.count);
+	}
 });
 
 <span id='JW-AbstractArray-IndexItems-method-constructor'><span id='JW-AbstractArray-IndexItems'>/**
@@ -1150,6 +1220,14 @@ JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
 	 */
 	toIndexCount: function() {
 		return new JW.AbstractArray.IndexCount(this.index, this.items.length);
+	},
+	
+<span id='JW-AbstractArray-IndexItems-method-clone'>	/**
+</span>	 * Клонирует пару.
+	 * @returns JW.AbstractArray.IndexItems
+	 */
+	clone: function() {
+		return new JW.AbstractArray.IndexItems(this.index, this.items.concat());
 	}
 });
 

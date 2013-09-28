@@ -37,7 +37,7 @@
 <span id='JW-AbstractCollection-Orderer-method-constructor'><span id='JW-AbstractCollection-Orderer'>/**
 </span></span> * @class
  *
- * `&lt;T, C extends JW.AbstractCollection&lt;T&gt;&gt;`
+ * `&lt;T extends JW.Class, C extends JW.AbstractCollection&lt;T&gt;&gt;`
  *
  * Конвертер в массив (упорядочитель). Преобразует исходную коллекцию в массив. Новые элементы добавляются в конец
  * массива.
@@ -81,7 +81,7 @@ JW.AbstractCollection.Orderer = function(source, config) {
 	JW.AbstractCollection.Orderer._super.call(this);
 	config = config || {};
 	this.source = source;
-	this._targetCreated = config.target === undefined;
+	this._targetCreated = !config.target;
 	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
 	this.target.tryAddAll(source.asArray());
 };
@@ -107,12 +107,17 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
 		this._super();
 	},
 	
-	_splice: function(removedItemsSet, addedItemsArray) {
-		var newItems = this.target.filter(function(item) {
+	_splice: function(removedItemsSet, addedItemsSet) {
+		var filteredItems = this.target.filter(function(item) {
+			return !JW.Set.contains(removedItemsSet, item) || JW.Set.contains(addedItemsSet, item);
+		}, this);
+		var addedItems = JW.Set.$toArray(addedItemsSet).filter(function(item) {
 			return !JW.Set.contains(removedItemsSet, item);
 		}, this);
-		JW.Array.tryAddAll(newItems, addedItemsArray);
-		this.target.performSplice(newItems);
+		this.target.trySplice(
+			this.target.detectFilter(filteredItems) || [],
+			[new JW.AbstractArray.IndexItems(filteredItems.length, addedItems)]
+		);
 	}
 });
 </pre>

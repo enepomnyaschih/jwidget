@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*
-	JW ordered collection tests.
+	JW tests.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -34,223 +34,65 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.Tests.Collection.ObservableSetTestCase = function(config) {
-	JW.Tests.Collection.ObservableSetTestCase._super.call(this, config);
-	this.a = new JW.Proxy(&quot;a&quot;);
-	this.b = new JW.Proxy(&quot;b&quot;);
-	this.c = new JW.Proxy(&quot;c&quot;);
-	this.d = new JW.Proxy(&quot;d&quot;);
-	this.e = new JW.Proxy(&quot;e&quot;);
-};
-
-JW.extend(JW.Tests.Collection.ObservableSetTestCase, JW.Unit.TestCase, {
-	testObservableSet: function() {
-		var set = new JW.ObservableSet();
-		this.subscribe(set);
-		
-		var d = new JW.Proxy(&quot;d&quot;);
-		var e = new JW.Proxy(&quot;e&quot;);
-		var c = new JW.Proxy(&quot;c&quot;);
-		var a = new JW.Proxy(&quot;a&quot;);
-		var b = new JW.Proxy(&quot;b&quot;);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[] +[d]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 0 to 1&quot;
-		);
-		this.assertTrue(set.add(d));
-		this.assertSet([ d ], [ a, b, c, e ], set);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[] +[e]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 1 to 2&quot;
-		);
-		this.assertTrue(JW.Array.equal([ e ], set.addAll([ e ])));
-		this.assertSet([ d, e ], [ a, b, c ], set);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[] +[a,c]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 2 to 4&quot;
-		);
-		this.assertTrue(JW.Array.equal([ c, a ], set.addAll([ c, a ])));
-		this.assertSet([ d, e, c, a ], [ b ], set);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[e] +[]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 4 to 3&quot;
-		);
-		this.assertTrue(set.remove(e));
-		this.assertSet([ d, c, a ], [ b, e ], set);
-		
-		this.setExpectedOutput();
-		this.assertTrue(JW.Array.equal([], set.addAll([])));
-		this.assertSet([ d, c, a ], [ b, e ], set);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[] +[b]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 3 to 4&quot;
-		);
-		this.assertTrue(JW.Array.equal([ b ], set.addAll([ b, c ])));
-		this.assertSet([ d, c, a, b ], [ e ], set);
-		
-		this.setExpectedOutput();
-		this.assertTrue(JW.Array.equal([], set.addAll([ b, c ])));
-		this.assertSet([ d, c, a, b ], [ e ], set);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[a,d] +[]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 4 to 2&quot;
-		);
-		this.assertTrue(JW.Array.equal([ a, d ], set.removeAll([ a, d ])));
-		this.assertSet([ c, b ], [ a, d, e ], set);
-		
-		this.setExpectedOutput();
-		this.assertTrue(JW.Array.equal([], set.removeAll([ a, d ])));
-		this.assertSet([ c, b ], [ a, d, e ], set);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[c] +[a,e]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 2 to 3&quot;
-		);
-		var spliceResult = set.splice([ d, c ], [ b, a, e ]);
-		JW.Tests.Collection.assertSetSpliceResult(this, new JW.AbstractSet.SpliceResult([ c ], [ a, e ]), spliceResult);
-		this.assertSet([ b, a, e ], [ c, d ], set);
-		
-		this.setExpectedOutput();
-		spliceResult = set.splice([ d ], [ a ]);
-		JW.Tests.Collection.assertSetSpliceResult(this, new JW.AbstractSet.SpliceResult([], []), spliceResult);
-		this.assertSet([ b, a, e ], [ c, d ], set);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[b] +[c]&quot;,
-			&quot;Changed&quot;
-		);
-		set.performSplice([ a, c, e ]);
-		this.assertSet([ a, c, e ], [ b, d ], set);
-		
-		// The clearing order differs in Chrome and Firefox:
-		// Chrome optimizes integer-based maps and sorts the items, Firefox doesn't.
-		// That's why we created items in straight order to make sure that
-		// their _iid's will be sorted.
-		this.setExpectedOutput(
-			&quot;Cleared [a,c,e]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 3 to 0&quot;
-		);
-		this.assertTrue(new JW.Set(set.clear()).equal([ a, c, e ]));
-		this.assertSet([], [ a, b, c, d, e ], set);
-		
-		this.setExpectedOutput();
-		this.assertTrue(JW.Array.equal(set.clear(), []));
-		this.assertSet([], [ a, b, c, d, e ], set);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[] +[a]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 0 to 1&quot;
-		);
-		this.assertTrue(set.add(a));
-		this.assertSet([ a ], [ b, c, d, e ], set);
-		
-		set.destroy();
+JW.Tests.Collection.ObservableSetTestCase = JW.Tests.Collection.AbstractSetBase.extend({
+	// override
+	createSet: function(items, formatter) {
+		var set = new JW.ObservableSet(items);
+		JW.Tests.Collection.subscribeToSet(this, set, formatter);
+		return set;
 	},
 	
-	testEvery: function() {
-		var set = new JW.ObservableSet([ new JW.Proxy(&quot;a&quot;), new JW.Proxy(&quot;A&quot;), new JW.Proxy(&quot;b&quot;) ]);
-		
-		this.assertFalse(set.every(this.isUpperCase));
-		this.assertFalse(set.every(this.isA));
-		this.assertTrue (set.every(this.isString));
-		this.assertFalse(set.every(this.isNumber));
+	// override
+	invoke: function(set, method, args) {
+		return set[method].apply(set, args || []);
 	},
 	
-	testSome: function() {
-		var set = new JW.ObservableSet([ new JW.Proxy(&quot;a&quot;), new JW.Proxy(&quot;A&quot;), new JW.Proxy(&quot;b&quot;) ]);
-		
-		this.assertTrue (set.some(this.isUpperCase));
-		this.assertTrue (set.some(this.isA));
-		this.assertTrue (set.some(this.isString));
-		this.assertFalse(set.some(this.isNumber));
+	// override
+	setObservableOutput: function() {
+		this.setExpectedOutput.apply(this, arguments);
 	},
 	
-	testFilter: function() {
-		var a = new JW.Proxy(&quot;a&quot;);
-		var A = new JW.Proxy(&quot;A&quot;);
-		var b = new JW.Proxy(&quot;b&quot;);
-		var set = new JW.ObservableSet([ a, A, b ]);
-		var filtered = set.$filter(this.isA);
-		this.assertTrue(filtered instanceof JW.Set);
-		this.assertEqual(3, set.getLength());
-		this.assertEqual(2, filtered.getLength());
-		this.assertTrue(filtered.contains(a));
-		this.assertTrue(filtered.contains(A));
-		this.assertFalse(filtered.contains(b));
+	testNotAdapter: function() {
+		var items = [this.b, this.d];
+		var set = new JW.ObservableSet(items);
+		this.assertStrictEqual(2, set.getLength());
+		this.assertFalse(set.isEmpty());
+		this.assertTrue(set.contains(this.b));
+		this.assertTrue(set.contains(this.d));
+		set.add(this.c);
+		this.assertTrue(set.contains(this.c));
+		this.assertTrue(JW.Array.equal(items, [this.b, this.d]));
 	},
 	
-	testMap: function() {
-		var a = new JW.Proxy(&quot;a&quot;);
-		var b = new JW.Proxy(&quot;b&quot;);
-		var c = new JW.Proxy(&quot;c&quot;);
-		var results = {
-			a: new JW.Proxy(&quot;A&quot;),
-			b: new JW.Proxy(&quot;B&quot;),
-			c: new JW.Proxy(&quot;C&quot;)
-		};
-		var set = new JW.ObservableSet([ a, b, c ]);
-		var mapped = set.$map(function(x) { return results[x.value]; });
-		this.assertTrue(mapped instanceof JW.Set);
-		this.assertStrictEqual(3, mapped.getLength());
-		this.assertTrue(mapped.contains(results.a));
-		this.assertTrue(mapped.contains(results.b));
-		this.assertTrue(mapped.contains(results.c));
+	testAdapter: function() {
+		var items = {};
+		JW.Set.addAll(items, [this.b, this.d]);
+		var set = new JW.ObservableSet(items, this);
+		this.assertStrictEqual(2, set.getLength());
+		this.assertFalse(set.isEmpty());
+		this.assertTrue(set.contains(this.b));
+		this.assertTrue(set.contains(this.d));
+		this.assertFalse(set.contains(this.c));
+		this.assertFalse(JW.Set.contains(items, this.c));
+		set.add(this.c);
+		this.assertTrue(set.contains(this.c));
+		this.assertTrue(JW.Set.contains(items, this.c));
 	},
 	
-	testRemoveItem: function() {
-		var set = new JW.ObservableSet([ this.a, this.b, this.c, this.d ]);
-		this.subscribe(set);
-		
-		this.setExpectedOutput(
-			&quot;Spliced -[b] +[]&quot;,
-			&quot;Changed&quot;,
-			&quot;Changed size from 4 to 3&quot;
-		);
-		set.removeItem(this.b);
-		
-		this.setExpectedOutput();
-		set.removeItem(this.e);
-		
-		this.assertTrue(set.equal([ this.a, this.c, this.d ]));
+	testToSet: function() {
+		var set = new JW.ObservableSet([this.b, this.d]);
+		this.assertTrue(JW.Set.equal(set.toSet(), [this.b, this.d]));
+		this.assertTrue(set.$toSet().equal([this.b, this.d]));
+		this.assertFalse(set.toSet() === set.getJson());
+		this.assertFalse(set.$toSet() === set);
+		this.assertTrue(set.equal([this.b, this.d]));
 	},
 	
-	subscribe: function(set) {
-		JW.Tests.Collection.subscribeToSet(this, set);
-	},
-	
-	assertSet: function(expected, unexpected, set) {
-		JW.Tests.Collection.assertSet(this, expected, unexpected, set);
-	},
-	
-	isUpperCase: function(value) {
-		return value.value.toUpperCase() === value.value;
-	},
-	
-	isA: function(value) {
-		return value.value.toUpperCase() === &quot;A&quot;;
-	},
-	
-	isString: function(value) {
-		return typeof value.value === &quot;string&quot;;
-	},
-	
-	isNumber: function(value) {
-		return typeof value.value === &quot;number&quot;;
+	testAsSet: function() {
+		var set = new JW.ObservableSet([this.b, this.d]);
+		this.assertTrue(set.asSet() === set.getJson());
+		this.assertTrue(set.$asSet() === set);
+		this.assertTrue(set.equal([this.b, this.d]));
 	}
 });
 

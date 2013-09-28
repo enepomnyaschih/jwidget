@@ -91,12 +91,11 @@ JW.AbstractCollection.SorterComparing = function(source, config) {
 	JW.AbstractCollection.SorterComparing._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.compare = config.compare;
+	this.compare = config.compare || JW.cmp;
 	this.scope = config.scope || this;
 	var scope = this.scope;
 	var compare = this.compare;
-	this._compare = function(x, y) { return compare.call(scope, x, y); };
-	this._targetCreated = config.target === undefined;
+	this._targetCreated = !config.target;
 	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
 	this._splice([], source.asArray());
 };
@@ -106,11 +105,11 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 </span>	 * @cfg {JW.AbstractArray} target `&lt;T&gt;` Целевой массив.
 	 */
 <span id='JW-AbstractCollection-SorterComparing-cfg-compare'>	/**
-</span>	 * @cfg {Function} compare (required)
+</span>	 * @cfg {Function} compare
 	 *
 	 * `compare(t1: T, t2: T): number`
 	 *
-	 * Функция-компаратор.
+	 * Функция-компаратор. По умолчанию равна JW.cmp.
 	 */
 <span id='JW-AbstractCollection-SorterComparing-cfg-scope'>	/**
 </span>	 * @cfg {Object} scope Контекст вызова compare.
@@ -122,11 +121,10 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 </span>	 * @property {JW.AbstractArray} target `&lt;T&gt;` Целевой массив.
 	 */
 	// boolean _targetCreated;
-	// number _compare(T x, T y);
 	
 	// override
 	destroy: function() {
-		this._splice(this.source.asArray());
+		this._splice(this.source.asArray(), []);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -138,32 +136,68 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	 * @returns {void}
 	 */
 	resort: function() {
-		this.target.sortComparing(this._compare);
+		this.target.sortComparing(this.compare, this.scope);
 	},
 	
 	_splice: function(removedItems, addedItems) {
-		var removes = JW.Array.toSet(removedItems);
-		var adds = addedItems.concat();
-		adds.sort(this._compare);
-		var iTarget = 0;
-		var iAdds = 0;
-		var i = 0;
-		var result = new Array(this.target.length + addedItems.length - removedItems.length);
-		while (iTarget &lt; this.target.length) {
-			var value = this.target[iTarget];
-			if (JW.Set.contains(removes, value)) {
-				++iTarget;
+		var removedItemsSorted = JW.Array.toSortedComparing(removedItems, this.compare, this.scope);
+		var addedItemsSorted = JW.Array.toSortedComparing(addedItems, this.compare, this.scope);
+		removedItems = new Array(removedItems.length);
+		addedItems = new Array(addedItems.length);
+		var iRemoved = 0;
+		var iAdded = 0;
+		var jRemoved = 0;
+		var jAdded = 0;
+		// ignore out the items which are removed and added at the same time
+		while ((iRemoved &lt; removedItemsSorted.length) || (iAdded &lt; addedItemsSorted.length)) {
+			var removedItem = removedItemsSorted[iRemoved];
+			var addedItem = addedItemsSorted[iAdded];
+			var c = JW.cmp(removedItem === undefined, addedItem === undefined) ||
+				this.compare.call(this.scope, removedItem, addedItem);
+			if (c &lt; 0) {
+				removedItems[jRemoved++] = removedItem;
+				++iRemoved;
+			} else if (c &gt; 0) {
+				addedItems[jAdded++] = addedItem;
+				++iAdded;
 			} else {
-				while ((iAdds &lt; adds.length) &amp;&amp; (this._compare(adds[iAdds], value) &lt; 0)) {
-					result[i++] = adds[iAdds++];
-				}
-				result[i++] = this.target[iTarget++];
+				++iRemoved;
+				++iAdded;
 			}
 		}
-		while (i &lt; result.length) {
-			result[i++] = adds[iAdds++];
+		removedItems.splice(jRemoved, removedItems.length - jRemoved);
+		addedItems.splice(jAdded, addedItems.length - jAdded);
+		
+		var iAdds = 0;
+		var addShift = 0;
+		var removeParamsList = [];
+		var addParamsList = [];
+		var removeParams = null;
+		for (iTarget = 0, lTarget = this.target.getLength(); iTarget &lt; lTarget; ++iTarget) {
+			var value = this.target.get(iTarget);
+			if (removedItems[JW.Array.binarySearch(removedItems, value, this.compare, this.scope) - 1] === value) {
+				if (!removeParams) {
+					removeParams = new JW.AbstractArray.IndexCount(iTarget, 0);
+					removeParamsList.push(removeParams);
+				}
+				++removeParams.count;
+				--addShift;
+			} else {
+				removeParams = null;
+				var addParams = new JW.AbstractArray.IndexItems(iTarget + addShift, []);
+				while ((iAdds &lt; addedItems.length) &amp;&amp; (this.compare.call(this.scope, addedItems[iAdds], value) &lt; 0)) {
+					addParams.items.push(addedItems[iAdds++]);
+					++addShift;
+				}
+				if (addParams.items.length !== 0) {
+					addParamsList.push(addParams);
+				}
+			}
 		}
-		this.target.performSplice(result);
+		if (iAdds &lt; addedItems.length) {
+			addParamsList.push(new JW.AbstractArray.IndexItems(iTarget + addShift, addedItems.slice(iAdds)));
+		}
+		this.target.splice(removeParamsList, addParamsList);
 	}
 });
 </pre>

@@ -87,7 +87,7 @@ JW.AbstractCollection.Indexer = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.getKey = config.getKey;
-	this._targetCreated = config.target === undefined;
+	this._targetCreated = !config.target;
 	this.target = this._targetCreated ? source.createEmptyMap() : config.target;
 	this.scope = config.scope || this;
 	this.target.trySetAll(this._index(source.asArray()));

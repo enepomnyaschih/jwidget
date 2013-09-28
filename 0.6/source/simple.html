@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*
-	JW simple collection methods tests.
+	JW Schema simple-value validation class.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -34,149 +34,12 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-JW.Tests.Alg.SimpleTestCase = function(config) {
-	JW.Tests.Alg.SimpleTestCase._super.call(this, config);
-	this.obj = null;
-	this.objj = null;
-	this.arr = null;
-};
-
-JW.extend(JW.Tests.Alg.SimpleTestCase, JW.Unit.TestCase, {
-	setup: function()
-	{
-		this.obj = {
-			a: 10,
-			b: null,
-			c: &quot;lala&quot;
-		};
-		
-		this.objj = {
-			a: 10,
-			c: &quot;lala&quot;
-		};
-		
-		this.arr = [ 10, null, &quot;lala&quot; ];
-	},
+JW.Schema.Class.Simple = JW.Schema.Class.extend({
+	type: &quot;Simple&quot;,
 	
-	testEveryObject: function()
+	_validateData: function(data, validation)
 	{
-		this.assertTrue (JW.Map.every(this.obj, JW.isDefined));
-		this.assertFalse(JW.Map.every(this.obj, JW.isSet));
-		this.assertTrue (JW.Map.every(this.objj, JW.emptyFn));
-	},
-	
-	testEveryObjectScope: function()
-	{
-		this.assertTrue(JW.Map.every(this.obj, function(item, key) {
-			return this.obj[key] === item;
-		}, this));
-		
-		this.assertFalse(JW.Map.every(this.obj, function(item, key) {
-			return JW.isSet(this.obj[key]);
-		}, this));
-	},
-	
-	testEveryObjectSequence: function()
-	{
-		this.addExpectedOutput(
-			&quot;a: 10&quot;,
-			&quot;b: null&quot;
-		);
-		
-		JW.Map.every(this.obj, function(item, key) {
-			this.output(key + &quot;: &quot; + item);
-			return JW.isSet(item);
-		}, this);
-	},
-	
-	testEachObject: function()
-	{
-		this.addExpectedOutput(
-			&quot;a: 10&quot;,
-			&quot;b: null&quot;,
-			&quot;c: lala&quot;
-		);
-		
-		JW.Map.each(this.obj, function(item, key) {
-			this.output(key + &quot;: &quot; + item);
-		}, this);
-	},
-	
-	testSomeObject: function()
-	{
-		this.assertTrue (JW.Map.some(this.objj, JW.isDefined));
-		this.assertTrue (JW.Map.some(this.objj, JW.isSet));
-		this.assertFalse(JW.Map.some(this.objj, JW.isBlank));
-		this.assertTrue (JW.Map.some(this.objj, JW.emptyFn));
-	},
-	
-	testGetKeysArrayObject: function()
-	{
-		this.assertTrue(JW.Array.equal([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ], JW.Map.getKeys(this.obj)));
-	},
-	
-	testGetValuesArrayObject: function()
-	{
-		this.assertTrue(JW.Array.equal([ 10, null, &quot;lala&quot; ], JW.Map.toArray(this.obj)));
-	},
-	
-	testIndex: function()
-	{
-		var array = [
-			{
-				id : 10
-			}, {
-				id : 5
-			}, {
-				id : 20
-			}
-		];
-		
-		var expected = {
-			&quot;10&quot; : array[0],
-			&quot;5&quot;  : array[1],
-			&quot;20&quot; : array[2]
-		};
-		
-		this.assertEqual(JSON.stringify(expected), JSON.stringify(JW.Array.index(array, function(item) { return item.id; })));
-	},
-	
-	testIndexBy: function()
-	{
-		var array = [
-			{
-				id : 10
-			}, {
-				id : 5
-			}, {
-				id : 20
-			}
-		];
-		
-		var expected = {
-			&quot;10&quot; : array[0],
-			&quot;5&quot;  : array[1],
-			&quot;20&quot; : array[2]
-		};
-		
-		this.assertEqual(JSON.stringify(expected), JSON.stringify(JW.Array.index(array, JW.byField(&quot;id&quot;))));
-	},
-	
-	testIndexByMethod: function()
-	{
-		var array = [
-			{ getId : function(a) { return a + 5; } },
-			{ getId : function(a) { return a + 0; } },
-			{ getId : function(a) { return a + 15; } }
-		];
-		
-		var expected = {
-			&quot;10&quot; : array[0],
-			&quot;5&quot;  : array[1],
-			&quot;20&quot; : array[2]
-		};
-		
-		this.assertTrue(JW.Array.equal(expected, JW.Array.index(array, JW.byMethod(&quot;getId&quot;, [ 5 ]))));
+		typeof data === &quot;object&quot; &amp;&amp; validation.addError(&quot;simple value expected&quot;);
 	}
 });
 </pre>

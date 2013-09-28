@@ -37,7 +37,7 @@
 <span id='JW-ObservableMap-Orderer-method-constructor'><span id='JW-ObservableMap-Orderer'>/**
 </span></span> * @class
  *
- * `&lt;T&gt; extends JW.AbstractMap.Orderer&lt;T&gt;`
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractMap.Orderer&lt;T&gt;`
  *
  * Конвертер оповещающего словаря в массив (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
  *
@@ -71,7 +71,7 @@ JW.extend(JW.ObservableMap.Orderer, JW.AbstractMap.Orderer, {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			JW.Map.toSet(spliceResult.removedItems),
-			JW.Map.toArray(spliceResult.addedItems));
+			JW.Map.toSet(spliceResult.addedItems));
 	},
 	
 	_onClear: function(params) {

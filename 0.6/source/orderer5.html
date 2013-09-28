@@ -37,7 +37,7 @@
 <span id='JW-ObservableArray-Orderer-method-constructor'><span id='JW-ObservableArray-Orderer'>/**
 </span></span> * @class
  *
- * `&lt;T&gt; extends JW.AbstractArray.Orderer&lt;T&gt;`
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractArray.Orderer&lt;T&gt;`
  *
  * Конвертер оповещающего массива в массив (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
  *
@@ -74,7 +74,7 @@ JW.extend(JW.ObservableArray.Orderer, JW.AbstractArray.Orderer, {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			JW.Array.toSet(spliceResult.getRemovedItems()),
-			spliceResult.getAddedItems());
+			JW.Array.toSet(spliceResult.getAddedItems()));
 	},
 	
 	_onReplace: function(params) {

@@ -171,7 +171,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 */
 <span id='JW-Map-static-method-removeItems'>	/**
 </span>	 * @method removeItems
-	 * `&lt;T&gt;` Удаляет все вхождения указанных элементов из коллекции.
+	 * `&lt;T extends JW.Class&gt;` Удаляет все вхождения указанных элементов из коллекции.
 	 * @static
 	 * @param {Object} map `&lt;T&gt;` Словарь.
 	 * @param {Array} items `&lt;T&gt;` Элементы.
@@ -307,11 +307,11 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `&lt;T&gt;` Словарь.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -326,11 +326,11 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `&lt;T&gt;` Словарь.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -343,15 +343,15 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
-	 * @static
-	 * @param {Object} map `&lt;T&gt;` Словарь.
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {Array} `&lt;T&gt;` Отсортированный массив.
@@ -363,15 +363,15 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Словарь.
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
-	 * @static
-	 * @param {Object} map `&lt;T&gt;` Словарь.
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
 	 * @returns {JW.Array} `&lt;T&gt;` Отсортированный массив.
@@ -385,11 +385,11 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `&lt;T&gt;` Словарь.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -404,11 +404,11 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `&lt;T&gt;` Словарь.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -423,12 +423,12 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `&lt;T&gt;` Словарь.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -443,12 +443,12 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 *
 	 * @static
 	 * @param {Object} map `&lt;T&gt;` Словарь.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -843,7 +843,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @static
 	 * @param {Object} map `&lt;T&gt;` Словарь.
 	 * @param {Object} newItems Новое содержимое словаря.
-	 * @returns {JW.AbstractMap.SpliceParams} `&lt;T&gt;` Параметры метода {@link #static-method-splice}.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `&lt;T&gt;` Параметры метода {@link #static-method-splice}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 <span id='JW-Map-static-method-detectReindex'>	/**
 </span>	 * @method detectReindex
@@ -856,7 +858,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {Object} Параметр keyMap метода {@link #static-method-reindex}.
+	 * @returns {Object}
+	 * Параметр keyMap метода {@link #static-method-reindex}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 <span id='JW-Map-static-method-performSplice'>	/**
 </span>	 * @method performSplice

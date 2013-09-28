@@ -14,7 +14,7 @@
 который берет данные из модели для своего отображения.
 
 Для начала скачаем [jQuery](http://jquery.com), два модуля
-[jWidget](https://github.com/enepomnyaschih/jwidget/wiki/Скачать-jWidget) и
+[jWidget](guides/download/jwidget.zip) и
 [файл сброса стилей](https://raw.github.com/enepomnyaschih/mt1/master/public/thirdparty/reset.css).
 Поместим их в папку thirdparty. Весь публичный контент, включая thirdparty, будем помещать в папку public.
 
@@ -25,8 +25,7 @@
 
     var mt = {};
 
-Добавим иконку [public/mt/favicon.png](https://raw.github.com/enepomnyaschih/mt/master/public/mt/favicon.png)
-для нашей страницы и файлы с аватаром профиля
+Добавим файлы с аватаром профиля
 [public/backend/avatar-32.png](https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-32.png) и
 [public/backend/avatar-48.png](https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-48.png).
 
@@ -37,7 +36,6 @@
             avatar-32.png
             avatar-48.png
         mt/
-            favicon.png
             mt.js
         thirdparty/
             jquery/

@@ -109,7 +109,7 @@ JW.AbstractCollection.Mapper = function(source, config) {
 	this.source = source;
 	this.createItem = config.createItem;
 	this.destroyItem = config.destroyItem;
-	this._targetCreated = config.target === undefined;
+	this._targetCreated = !config.target;
 	this.target = this._targetCreated ? this.source.createEmpty() : config.target;
 	this.scope = config.scope || this;
 };

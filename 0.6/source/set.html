@@ -140,7 +140,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 */
 <span id='JW-Set-static-method-removeItems'>	/**
 </span>	 * @method removeItems
-	 * `&lt;T&gt;` Удаляет все вхождения указанных элементов из коллекции.
+	 * `&lt;T extends JW.Class&gt;` Удаляет все вхождения указанных элементов из коллекции.
 	 * @static
 	 * @param {Object} set `&lt;T&gt;` Множество.
 	 * @param {Array} items `&lt;T&gt;` Элементы.
@@ -253,11 +253,11 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 *
 	 * @static
 	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -272,11 +272,11 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 *
 	 * @static
 	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -291,12 +291,12 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 *
 	 * @static
 	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -311,12 +311,12 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 *
 	 * @static
 	 * @param {Object} set `&lt;T&gt;` Множество.
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -633,7 +633,9 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @static
 	 * @param {Object} set `&lt;T&gt;` Множество.
 	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое множества.
-	 * @returns {JW.AbstractSet.SpliceParams} `&lt;T&gt;` Параметры метода {@link #static-method-splice}.
+	 * @returns {JW.AbstractSet.SpliceParams}
+	 * `&lt;T&gt;` Параметры метода {@link #static-method-splice}.
+	 * Если вызова метода не требуется - undefined.
 	 */
 <span id='JW-Set-static-method-performSplice'>	/**
 </span>	 * @method performSplice

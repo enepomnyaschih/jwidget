@@ -130,10 +130,11 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 	namespace.$getSortingKeys = JW.AbstractCollection._createStatic$Array(namespace, &quot;getSortingKeys&quot;);
 	
 	namespace.getSortingKeysComparing = function(target, compare, scope, order) {
+		compare = compare || JW.cmp;
 		order = order || 1;
 		var pairs = [];
 		namespace.every(target, function(item, key) {
-			pairs.push([key, value]);
+			pairs.push([key, item]);
 		}, scope);
 		pairs.sort(function(x, y) {
 			return order * compare(x[1], y[1], x[0], y[0]);
@@ -146,7 +147,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 	namespace.$getSortingKeysComparing = JW.AbstractCollection._createStatic$Array(namespace, &quot;getSortingKeysComparing&quot;);
 	
 	namespace.toSorted = function(target, callback, scope, order) {
-		return namespace.map(namespace.getSortingKeys(target, callback, scope, order), function(key) {
+		return JW.Array.map(namespace.getSortingKeys(target, callback, scope, order), function(key) {
 			return namespace.get(target, key);
 		});
 	};
@@ -154,7 +155,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 	namespace.$toSorted = JW.AbstractCollection._createStatic$Array(namespace, &quot;toSorted&quot;);
 	
 	namespace.toSortedComparing = function(target, compare, scope, order) {
-		return namespace.map(namespace.getSortingKeysComparing(target, compare, scope, order), function(key) {
+		return JW.Array.map(namespace.getSortingKeysComparing(target, compare, scope, order), function(key) {
 			return namespace.get(target, key);
 		});
 	};

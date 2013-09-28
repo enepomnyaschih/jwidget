@@ -220,6 +220,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 <span id='JW-AbstractCollection-method-removeItems'>	/**
 </span>	 * @method removeItems
 	 * Удаляет все вхождения указанных элементов из коллекции.
+	 * Доступно только для `&lt;T extends JW.Class&gt;`.
 	 * @param {Array} items `&lt;T&gt;` Элементы.
 	 * @returns {void}
 	 */
@@ -339,11 +340,11 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -358,11 +359,11 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -375,12 +376,12 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -395,12 +396,12 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.

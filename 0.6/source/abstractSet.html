@@ -54,7 +54,7 @@
  * - {@link #getLength} - Возвращает количество элементов в коллекции.
  * - {@link #isEmpty} - Проверяет коллекцию на пустоту.
  * - {@link #getFirst} - Возвращает первый элемент коллекции.
- * - {@link #containsItem} - Содержит ли коллекция элемент.
+ * - {@link #containsItem}, **{@link #contains}** - Содержит ли коллекция элемент.
  * - **{@link #getJson} - Возвращает внутреннее представление множества.**
  *
  * Алгоритмы перебора:
@@ -397,7 +397,9 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 </span>	 * Определяет параметры метода #splice, с которыми содержимое множества станет равно newItems.
 	 * Т.е. определяет, какие элементы нужно удалить, какие добавить.
 	 * @param {Array} newItems `&lt;T&gt;` Новое содержимое множества.
-	 * @returns {JW.AbstractSet.SpliceParams} `&lt;T&gt;` Параметры метода #splice.
+	 * @returns {JW.AbstractSet.SpliceParams}
+	 * `&lt;T&gt;` Параметры метода #splice.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSplice: function(newItems) {
 		return JW.Set.detectSplice(this.json, newItems);

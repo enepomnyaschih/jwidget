@@ -309,11 +309,11 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -326,11 +326,11 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -343,12 +343,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -361,12 +361,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 *
 	 * Строит массив из элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -379,11 +379,11 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -396,11 +396,11 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
 	 *
-	 * @param {Function} f
+	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: string): number/string`
 	 *
-	 * Функция-сортировщик для элемента.
+	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
 	 *
 	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -413,12 +413,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -431,12 +431,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 *
 	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
 	 *
-	 * @param {Function} compare
+	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, k1: string, k2: string): Number`
 	 *
 	 * Функция-компаратор. Возвращает положительное значение, если t1 &gt; t2; отрицательное значение, если t1 &lt; t2;
-	 * 0, если t1 == t2.
+	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
 	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
 	 * @param {1/-1} [order] Порядок сортировки.
@@ -746,7 +746,9 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 </span>	 * Определяет параметры метода #splice, с которыми содержимое словаря станет равно newItems.
 	 * Т.е. определяет, какие элементы нужно удалить, какие добавить, и с каким ключом.
 	 * @param {Object} newItems Новое содержимое словаря.
-	 * @returns {JW.AbstractMap.SpliceParams} `&lt;T&gt;` Параметры метода #splice.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `&lt;T&gt;` Параметры метода #splice.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectSplice: function(newItems) {
 		return JW.Map.detectSplice(this.json, newItems);
@@ -760,7 +762,9 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
 	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
 	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
-	 * @returns {Object} Параметр keyMap метода #reindex.
+	 * @returns {Object}
+	 * Параметр keyMap метода #reindex.
+	 * Если вызова метода не требуется - undefined.
 	 */
 	detectReindex: function(newItems, getKey, scope) {
 		return JW.Map.detectReindex(this.json, newItems, getKey || this.getKey, scope || this);
