@@ -1,8 +1,6 @@
 ﻿/*!
 	jWidget UI 0.6
 	
-	https://github.com/enepomnyaschih/jwidget/wiki
-	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
@@ -40,7 +38,7 @@ JW.UI = {
 	 * 
 	 * Функция JW.UI.template вызывается автоматически при подключении `jw.html`-файлов через
 	 * [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru). Для подробностей, смотрите
-	 * [пример](https://github.com/enepomnyaschih/jwidget/wiki/Пример-3.-Интеграция-с-jWidget-SDK).
+	 * [Учебник. Часть 6. Инфраструктура проекта](#!/guide/sample6).
 	 *
 	 * @static
 	 * @param {Function} cls Класс, унаследованный от JW.UI.Component.

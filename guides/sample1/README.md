@@ -14,7 +14,7 @@
 который берет данные из модели для своего отображения.
 
 Для начала скачаем [jQuery](http://jquery.com), два модуля
-[jWidget](https://github.com/enepomnyaschih/jwidget/wiki/Скачать-jWidget) и
+[jWidget](guides/download/jwidget.zip) и
 [файл сброса стилей](https://raw.github.com/enepomnyaschih/mt1/master/public/thirdparty/reset.css).
 Поместим их в папку thirdparty. Весь публичный контент, включая thirdparty, будем помещать в папку public.
 
