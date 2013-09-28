@@ -1121,7 +1121,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
 	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
 	 *
-	 * @param {Object} scope
+	 * @param {Object} [scope]
 	 * Контекст вызова compare. По умолчанию, вызывается в контексте массива.
 	 * @returns {number} Индекс элемента.
 	 */
