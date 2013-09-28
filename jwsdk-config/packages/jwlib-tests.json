@@ -55,6 +55,7 @@
 		"jwlib/tests/collection/observableMap/mapper.js",
 		"jwlib/tests/collection/observableMap/observer.js",*/
 		"jwlib/tests/collection/observableMap/orderer.js",
+		"jwlib/tests/collection/observableMap/sorterComparing.js",
 		"jwlib/tests/collection/observableSet.js",
 		/*"jwlib/tests/collection/observableSet/indexer.js",
 		"jwlib/tests/collection/observableSet/mapper.js",
