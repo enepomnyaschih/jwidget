@@ -29,11 +29,12 @@
 		"jwlib/tests/collection/abstractMap/mapper.js",
 		"jwlib/tests/collection/abstractMap/observer.js",*/
 		"jwlib/tests/collection/abstractMap/orderer.js",
-		/*"jwlib/tests/collection/abstractSet.js",
-		"jwlib/tests/collection/abstractSet/indexer.js",
+		"jwlib/tests/collection/abstractSet.js",
+		/*"jwlib/tests/collection/abstractSet/indexer.js",
 		"jwlib/tests/collection/abstractSet/mapper.js",
-		"jwlib/tests/collection/abstractSet/observer.js",
-		"jwlib/tests/collection/array.js",
+		"jwlib/tests/collection/abstractSet/observer.js",*/
+		"jwlib/tests/collection/abstractSet/orderer.js",
+		/*"jwlib/tests/collection/array.js",
 		"jwlib/tests/collection/array/staticMethods.js",
 		"jwlib/tests/collection/map.js",
 		"jwlib/tests/collection/map/staticMethods.js",*/
@@ -52,11 +53,12 @@
 		"jwlib/tests/collection/observableMap/mapper.js",
 		"jwlib/tests/collection/observableMap/observer.js",*/
 		"jwlib/tests/collection/observableMap/orderer.js",
-		/*"jwlib/tests/collection/observableSet.js",
-		"jwlib/tests/collection/observableSet/indexer.js",
+		"jwlib/tests/collection/observableSet.js",
+		/*"jwlib/tests/collection/observableSet/indexer.js",
 		"jwlib/tests/collection/observableSet/mapper.js",
-		"jwlib/tests/collection/observableSet/observer.js",
-		"jwlib/tests/collection/set.js",
+		"jwlib/tests/collection/observableSet/observer.js",*/
+		"jwlib/tests/collection/observableSet/orderer.js",
+		/*"jwlib/tests/collection/set.js",
 		"jwlib/tests/collection/set/staticMethods.js",
 		
 		"jwlib/tests/util.js",
