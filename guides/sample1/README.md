@@ -25,8 +25,7 @@
 
     var mt = {};
 
-Добавим иконку [public/mt/favicon.png](https://raw.github.com/enepomnyaschih/mt/master/public/mt/favicon.png)
-для нашей страницы и файлы с аватаром профиля
+Добавим файлы с аватаром профиля
 [public/backend/avatar-32.png](https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-32.png) и
 [public/backend/avatar-48.png](https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-48.png).
 
@@ -37,7 +36,6 @@
             avatar-32.png
             avatar-48.png
         mt/
-            favicon.png
             mt.js
         thirdparty/
             jquery/

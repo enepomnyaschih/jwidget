@@ -1,6 +1,23 @@
 ﻿[
 	{
-		"title": "С чего начать",
+		"title": "Описание",
+		"items": [
+			{
+				"name": "home",
+				"title": "Что такое jWidget?"
+			},
+			{
+				"name": "pros",
+				"title": "Преимущества jWidget"
+			},
+			{
+				"name": "philosophy",
+				"title": "Философия jWidget"
+			}
+		]
+	},
+	{
+		"title": "Учебник",
 		"items": [
 			{
 				"name": "sample1",
@@ -25,15 +42,6 @@
 			{
 				"name": "sample6",
 				"title": "Часть 6. Инфраструктура проекта"
-			}
-		]
-	},
-	{
-		"title": "Статьи",
-		"items": [
-			{
-				"name": "philosophy",
-				"title": "Философия jWidget"
 			}
 		]
 	}
