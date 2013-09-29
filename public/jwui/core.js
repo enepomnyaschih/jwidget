@@ -1,5 +1,7 @@
 ﻿/*!
-	jWidget UI 0.6
+	jWidget UI 0.7
+	
+	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
