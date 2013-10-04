@@ -107,6 +107,7 @@
  * - {@link #createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
  * - {@link #createObserver} - Создает наблюдатель.
  * - **{@link #createInserter} - Создает синхронизатор представления с массивом.**
+ * - **{@link #createMerger} - Создает объединитель массивов.**
  *
  * Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
  *
@@ -1041,6 +1042,21 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 */
 	createInserter: function(config) {
 		return new JW.AbstractArray.Inserter(this, config);
+	},
+	
+	/**
+	 * Конструирует объединитель массивов.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Merger}
+	 * `<T>` Синхронизатор.
+	 */
+	createMerger: function(config) {
+		return new JW.AbstractArray.Merger(this, config);
+	},
+	
+	createMergerBunch: function(merger) {
+		return new JW.AbstractArray.Merger.Bunch(merger, this);
 	},
 	
 	createSplitter: function(config) {

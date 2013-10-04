@@ -46,6 +46,7 @@
  * - Конвертер в массив (сортировщик по компаратору): JW.AbstractCollection.SorterComparing
  * - Наблюдатель: JW.AbstractCollection.Observer
  * - Синхронизаторы представления: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
+ * - Объединитель массивов: JW.AbstractArray.Merger
  *
  * Простые коллекции введены прежде всего для совместимости. Они имеют общий интерфейс с оповещающими коллекциями,
  * но работают немного быстрее.

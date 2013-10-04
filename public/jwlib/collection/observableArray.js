@@ -262,6 +262,21 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		return new JW.ObservableArray.Inserter(this, config);
 	},
 	
+	/**
+	 * Конструирует объединитель массивов.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableArray.Merger}
+	 * `<T>` Синхронизатор.
+	 */
+	createMerger: function(config) {
+		return new JW.ObservableArray.Merger(this, config);
+	},
+	
+	createMergerBunch: function(merger) {
+		return new JW.ObservableArray.Merger.Bunch(merger, this);
+	},
+	
 	createSplitter: function(config) {
 		return new JW.ObservableArray.Splitter(this, config);
 	},
@@ -391,13 +406,13 @@ JW.extend(JW.ObservableArray.ReplaceEventParams, JW.ObservableArray.EventParams,
  *
  * `<T> extends JW.ObservableArray.EventParams<T>`
  *
- * Параметры события JW.ObservableArray с элементами.
+ * Параметры события JW.ObservableArray, несущие его бывшее содержимое.
  *
  * @extends JW.ObservableArray.EventParams
  *
  * @constructor
  * @param {JW.ObservableArray} sender `<T>` Отправитель события.
- * @param {Array} items `<T>` Набор элементов.
+ * @param {Array} items `<T>` Бывшее содержимое массива.
  */
 JW.ObservableArray.ItemsEventParams = function(sender, items) {
 	JW.ObservableArray.ItemsEventParams._super.call(this, sender);
@@ -406,7 +421,7 @@ JW.ObservableArray.ItemsEventParams = function(sender, items) {
 
 JW.extend(JW.ObservableArray.ItemsEventParams, JW.ObservableArray.EventParams, {
 	/**
-	 * @property {Array} items `<T>` Набор элементов.
+	 * @property {Array} items `<T>` Бывшее содержимое массива.
 	 */
 });
 
