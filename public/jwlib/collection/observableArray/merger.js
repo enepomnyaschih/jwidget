@@ -59,14 +59,30 @@ JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
 		this._super();
 	},
 	
+	// override
+	_createTarget: function() {
+		return new JW.ObservableArray();
+	},
+	
 	_getIndexes: function(bunches) {
 		var currentIndex = 0;
-		return JW.Array.map(bunches, function(bunch) {
+		var indexes = JW.Array.map(bunches, function(bunch) {
 			var index = currentIndex;
 			currentIndex += bunch.getLength();
 			return index;
 		}, this);
+		indexes.push(currentIndex);
+		return indexes;
 	},
+	
+	// 0 x,x
+	// 2 x,x,x delete
+	// 5 x,x,x,x
+	// 9 x,x
+	
+	// 0 x,x
+	// 2 x,x,x,x
+	// 6 x,x
 	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
@@ -74,7 +90,13 @@ JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
 		var removeParamsList = JW.Array.map(spliceResult.removedItemsList, function(indexItems) {
 			return new JW.AbstractArray.IndexCount(indexes[indexItems.index], this._count(indexItems.items));
 		}, this);
-		JW.Array.trySplice(indexes, spliceResult.getRemoveParamsList(), []);
+		JW.Array.backEvery(spliceResult.removedItemsList, function(indexItems) {
+			indexes.splice(indexItems.index, indexItems.items.length);
+			var count = this._count(indexItems.items);
+			for (var i = indexItems.index; i < indexes.length; ++i) {
+				indexes[i] -= count;
+			}
+		}, this);
 		var addParamsList = JW.Array.map(spliceResult.addedItemsList, function(indexItems) {
 			return new JW.AbstractArray.IndexItems(indexes[indexItems.index], this._merge(indexItems.items));
 		}, this);
@@ -107,13 +129,13 @@ JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
 			// [1], [2], [3], [4], [5]        [2] move to 3
 			// [1], [3], [4], [2], [5]
 			shiftBunch(count, this._count(this.source.getItems(), params.fromIndex, params.toIndex - params.fromIndex));
-			for (var i = params.fromIndex + 1; i <= params.toIndex; ++i) {
+			for (var i = params.fromIndex; i < params.toIndex; ++i) {
 				shiftBunch(this.source.get(i).getLength(), -count);
 			}
 		} else {
 			// [1], [2], [3], [4], [5]        [4] move to 1
 			// [1], [4], [2], [3], [5]
-			for (var i = params.toIndex; i < params.fromIndex; ++i) {
+			for (var i = params.toIndex + 1; i <= params.fromIndex; ++i) {
 				shiftBunch(this.source.get(i).getLength(), count);
 			}
 			shiftBunch(count, -this._count(this.source.getItems(), params.toIndex + 1, params.fromIndex - params.toIndex));
@@ -133,7 +155,7 @@ JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
 		var oldIndexes = this._getIndexes(params.items);
 		var newIndexes = this._getIndexes(this.source.getItems());
 		var indexes = new Array(this.target.getLength());
-		for (var i = 0, l = oldIndexes.length; i < l; ++i) {
+		for (var i = 0, l = params.items.length; i < l; ++i) {
 			var bunch = params.items[i];
 			var oldIndex = oldIndexes[i];
 			var newIndex = newIndexes[params.indexArray[i]];
