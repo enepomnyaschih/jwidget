@@ -444,6 +444,14 @@ JW.apply(JW.Array, {
 		return new JW.AbstractArray.Inserter(new JW.Array(source, true), config);
 	},
 	
+	createMerger: function(source, config) {
+		return new JW.AbstractArray.Merger(new JW.Array(source, true), config);
+	},
+	
+	createReverser: function(source, config) {
+		return new JW.AbstractArray.Reverser(new JW.Array(source, true), config);
+	},
+	
 	createSplitter: function(source, config) {
 		return new JW.AbstractArray.Splitter(new JW.Array(source, true), config);
 	},

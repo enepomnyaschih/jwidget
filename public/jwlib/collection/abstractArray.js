@@ -108,6 +108,7 @@
  * - {@link #createObserver} - Создает наблюдатель.
  * - **{@link #createInserter} - Создает синхронизатор представления с массивом.**
  * - **{@link #createMerger} - Создает объединитель массивов.**
+ * - **{@link #createReverser} - Создает обратитель массива.**
  *
  * Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
  *
@@ -1057,6 +1058,17 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	createMergerBunch: function(merger) {
 		return new JW.AbstractArray.Merger.Bunch(merger, this);
+	},
+	
+	/**
+	 * Конструирует обратитель массива.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Reverser}
+	 * `<T>` Синхронизатор.
+	 */
+	createReverser: function(config) {
+		return new JW.AbstractArray.Reverser(this, config);
 	},
 	
 	createSplitter: function(config) {

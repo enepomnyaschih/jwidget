@@ -38,7 +38,7 @@
  *     source.{@link JW.AbstractArray#get get}(1).{@link JW.AbstractArray#addAll addAll}([7, 8, 9]);
  *     assert(merger.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
  * 
- * Создавайте конвертер с помощью метода JW.AbstractArray#createMerger:
+ * Создавайте синхронизатор с помощью метода JW.AbstractArray#createMerger:
  *
  *     var merger = array.{@link JW.AbstractArray#createMerger createMerger}();
  *     var array = merger.{@link #property-target target};

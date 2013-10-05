@@ -277,6 +277,17 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		return new JW.ObservableArray.Merger.Bunch(merger, this);
 	},
 	
+	/**
+	 * Конструирует обратитель массива.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Reverser}
+	 * `<T>` Синхронизатор.
+	 */
+	createReverser: function(config) {
+		return new JW.ObservableArray.Reverser(this, config);
+	},
+	
 	createSplitter: function(config) {
 		return new JW.ObservableArray.Splitter(this, config);
 	},

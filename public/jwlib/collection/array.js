@@ -1087,6 +1087,26 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * `<T>` Синхронизатор.
 	 */
 	/**
+	 * @method createMerger
+	 * `<T>` Конструирует объединитель массивов.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `<T>` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Merger}
+	 * `<T>` Синхронизатор.
+	 */
+	/**
+	 * @method createReverser
+	 * `<T>` Конструирует обратитель массива.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `<T>` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Reverser}
+	 * `<T>` Синхронизатор.
+	 */
+	/**
 	 * @method equal
 	 * `<T>` Поэлементно сравнивает два массива.
 	 * @static
