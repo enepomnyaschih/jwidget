@@ -83,6 +83,24 @@ JW.extend(JW.Schema.Tests.ClassTestCase, JW.Unit.TestCase, {
 			this.schema.validate([null, 1, .5], "MyArray", true).toString());
 	},
 	
+	testArrayLength: function() {
+		this.schema.registerClass({
+			"provider": "Array",
+			"item": "Int",
+			"length": 4
+		}, "MyArray");
+		
+		this.assertStrictEqual("Data is valid", this.schema.validate([2, 1, 0, 3], "MyArray").toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): array length of 4 expected, 5 got",
+			this.schema.validate([2, 1, 0, 3, 1], "MyArray", true).toString());
+		this.assertStrictEqual(
+			"Data is invalid. Full errors list:\n" +
+			"(root): array length of 4 expected, 3 got",
+			this.schema.validate([2, 1, 0], "MyArray", true).toString());
+	},
+	
 	testBoolean: function() {
 		this.assertStrictEqual("Data is valid", this.schema.validate(true, "Boolean").toString());
 		this.assertStrictEqual("Data is valid", this.schema.validate(false, "Boolean").toString());

@@ -29,16 +29,19 @@ JW.extend(JW.Schema.Class.Dictionary, JW.Schema.Class, {
 	*/
 	
 	item: "Any",
+	key: "Any",
 	
 	_validateData: function(data, validation) {
 		if (!JW.isObject(data)) {
 			return validation.addError("object expected");
 		}
 		var schema = validation.schema;
-		var item = schema.compileClass(this.item);
-		this.item = item;
+		var keyCls = schema.compileClass(this.key);
+		this.key = keyCls;
+		var itemCls = schema.compileClass(this.item);
+		this.item = itemCls;
 		for (var key in data) {
-			if (schema._validate(item, data[key], validation, key)) {
+			if (schema._validate(keyCls, key, validation) || schema._validate(itemCls, data[key], validation, key)) {
 				return;
 			}
 		}

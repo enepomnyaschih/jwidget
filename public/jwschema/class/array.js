@@ -21,18 +21,26 @@ JW.Schema.Class.Array = function(config) {
 	JW.Schema.Class.Array._super.call(this, config);
 	config = config || {};
 	this.item = JW.defn(config.item, this.item);
+	this.length = JW.defn(config.length, this.length);
 };
 
 JW.extend(JW.Schema.Class.Array, JW.Schema.Class, {
 	/*
 	dynamic item; // optional
+	Integer length;
 	*/
 	
 	item: "Any",
+	length: null,
 	
 	_validateData: function(data, validation) {
 		if (!JW.isArray(data)) {
 			return validation.addError("array expected");
+		}
+		if (JW.isSet(this.length) && (data.length !== this.length)) {
+			if (validation.addError("array length of " + this.length + " expected, " + data.length + " got")) {
+				return;
+			}
 		}
 		var schema = validation.schema;
 		var item = schema.compileClass(this.item);
