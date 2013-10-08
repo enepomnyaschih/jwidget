@@ -5,23 +5,24 @@
 	
 	"resources" : [
 		"jwlib/tests/index.js",
-		/*
+		
 		"jwlib/tests/core.js",
 		"jwlib/tests/core/apply.js",
 		"jwlib/tests/core/callback.js",
 		"jwlib/tests/core/core.js",
 		"jwlib/tests/core/class.js",
 		"jwlib/tests/core/observable.js",
-		*/
+		
 		"jwlib/tests/collection.js",
 		"jwlib/tests/collection/abstractArray.js",
-		/*"jwlib/tests/collection/abstractArray/indexer.js",
+		"jwlib/tests/collection/abstractArray/indexer.js",
 		"jwlib/tests/collection/abstractArray/observer.js",
 		"jwlib/tests/collection/abstractArray/inserter.js",
 		"jwlib/tests/collection/abstractArray/lister.js",
 		"jwlib/tests/collection/abstractArray/mapper.js",
 		"jwlib/tests/collection/abstractArray/merger.js",
 		"jwlib/tests/collection/abstractArray/orderer.js",
+		"jwlib/tests/collection/abstractArray/reverser.js",
 		"jwlib/tests/collection/abstractArray/sorterComparing.js",
 		"jwlib/tests/collection/abstractArray/splitter.js",
 		"jwlib/tests/collection/abstractMap.js",
@@ -41,16 +42,16 @@
 		"jwlib/tests/collection/array/staticMethods.js",
 		"jwlib/tests/collection/map.js",
 		"jwlib/tests/collection/map/staticMethods.js",
-		*/"jwlib/tests/collection/observableArray.js",
-		/*"jwlib/tests/collection/observableArray/indexer.js",
+		"jwlib/tests/collection/observableArray.js",
+		"jwlib/tests/collection/observableArray/indexer.js",
 		"jwlib/tests/collection/observableArray/observer.js",
 		"jwlib/tests/collection/observableArray/inserter.js",
 		"jwlib/tests/collection/observableArray/lister.js",
 		"jwlib/tests/collection/observableArray/mapper.js",
 		"jwlib/tests/collection/observableArray/merger.js",
 		"jwlib/tests/collection/observableArray/orderer.js",
-		*/"jwlib/tests/collection/observableArray/reverser.js",
-		/*"jwlib/tests/collection/observableArray/sorterComparing.js",
+		"jwlib/tests/collection/observableArray/reverser.js",
+		"jwlib/tests/collection/observableArray/sorterComparing.js",
 		"jwlib/tests/collection/observableArray/splitter.js",
 		"jwlib/tests/collection/observableMap.js",
 		"jwlib/tests/collection/observableMap/inserter.js",
@@ -71,7 +72,7 @@
 		"jwlib/tests/util.js",
 		"jwlib/tests/util/timer.js",
 		"jwlib/tests/util/string.js",
-		*/
+		
 		"jwlib/tests/boot.js"
 	]
 }

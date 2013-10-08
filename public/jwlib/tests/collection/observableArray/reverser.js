@@ -18,6 +18,52 @@
 */
 
 JW.Tests.Collection.ObservableArray.ReverserTestCase = JW.Unit.TestCase.extend({
+	testUnobservableTarget: function() {
+		var source = new JW.ObservableArray([1, 2, 3, 4, 5]);
+		var target = new JW.Array();
+		
+		var reverser = this.createReverser(source, target);
+		this.assertTarget([5, 4, 3, 2, 1], target);
+		
+		source.splice( // 6,7,3,8,9,1,10,11
+			[new JW.AbstractArray.IndexCount(0, 2),
+			 new JW.AbstractArray.IndexCount(3, 1)],
+			[new JW.AbstractArray.IndexItems(0, [6, 7]),
+			 new JW.AbstractArray.IndexItems(3, [8, 9]),
+			 new JW.AbstractArray.IndexItems(6, [10, 11])]);
+		this.assertTarget([11, 10, 5, 9, 8, 3, 7, 6], target);
+		
+		source.set(7, 6); // 6,7,3,8,9,5,7,11
+		this.assertTarget([11, 7, 5, 9, 8, 3, 7, 6], target);
+		
+		source.move(4, 6); // 6,7,3,8,5,7,9,11
+		this.assertTarget([11, 9, 7, 5, 8, 3, 7, 6], target);
+		
+		source.reorder([2, 3, 1, 5, 0, 4, 6, 7]); // 5,3,6,7,7,8,9,11
+		this.assertTarget([11, 9, 8, 7, 7, 6, 3, 5], target);
+		
+		source.splice(
+			[new JW.AbstractArray.IndexCount(3, 3),
+			 new JW.AbstractArray.IndexCount(7, 1)],
+			[new JW.AbstractArray.IndexItems(0, [1, 2]),
+			 new JW.AbstractArray.IndexItems(4, [4]),
+			 new JW.AbstractArray.IndexItems(7, [7, 8, 9])]); // 1,2,5,3,4,6,9,7,8,9
+		this.assertTarget([9, 8, 7, 9, 6, 4, 3, 5, 2, 1], target);
+		
+		source.clear();
+		this.assertTarget([], target);
+		
+		source.addAll([1, 2, 3]);
+		this.assertTarget([3, 2, 1], target);
+		
+		reverser.destroy()
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
 	testObservableTarget: function() {
 		var source = new JW.ObservableArray([1, 2, 3, 4, 5]);
 		var target = this.createTarget();
