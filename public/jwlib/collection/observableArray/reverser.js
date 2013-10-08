@@ -60,19 +60,32 @@ JW.extend(JW.ObservableArray.Reverser, JW.AbstractArray.Reverser, {
 	},
 	
 	_onSplice: function(params) {
-		var spliceResult = param.spliceResult;
+		var spliceResult = params.spliceResult;
+		var oldLength = this.target.getLength();
+		var newLength = oldLength;
+		
 		var removeParamsList = JW.Array.map(spliceResult.removedItemsList, function(indexItems) {
 			var length = indexItems.items.length;
-			var index = this.target.getLength() - indexItems.index - length;
+			var index = oldLength - indexItems.index - length;
+			newLength -= length;
 			return new JW.AbstractArray.IndexCount(index, length);
 		}, this);
 		removeParamsList.reverse();
-		var addParamsList = JW.Array.map(spliceResult.addedItemsList, function(indexItems) {
-			var items = indexItems.items;
-			var index = this.target.getLength() - indexItems.index - items.length;
-			return new JW.AbstractArray.IndexItems(index, items);
+		
+		var addedItemsList = spliceResult.addedItemsList.concat();
+		addedItemsList.reverse();
+		
+		JW.Array.each(addedItemsList, function(indexItems) {
+			newLength += indexItems.items.length;
 		}, this);
-		addParamsList.reverse();
+		
+		var addParamsList = JW.Array.map(addedItemsList, function(indexItems) {
+			var items = indexItems.items;
+			var length = items.length;
+			var index = newLength - indexItems.index - length;
+			return new JW.AbstractArray.IndexItems(index, this._reverse(items));
+		}, this);
+		
 		this.target.trySplice(removeParamsList, addParamsList);
 	},
 	
