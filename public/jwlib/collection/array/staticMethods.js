@@ -420,6 +420,10 @@ JW.apply(JW.Array, {
 		return new JW.AbstractArray.Mapper(new JW.Array(source, true), config);
 	},
 	
+	createFilterer: function(source, config) {
+		return new JW.AbstractArray.Filterer(new JW.Array(source, true), config);
+	},
+	
 	createObserver: function(source, config) {
 		return new JW.AbstractArray.Observer(new JW.Array(source, true), config);
 	},

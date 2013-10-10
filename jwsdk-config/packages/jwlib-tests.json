@@ -5,16 +5,17 @@
 	
 	"resources" : [
 		"jwlib/tests/index.js",
-		
+		/*
 		"jwlib/tests/core.js",
 		"jwlib/tests/core/apply.js",
 		"jwlib/tests/core/callback.js",
 		"jwlib/tests/core/core.js",
 		"jwlib/tests/core/class.js",
 		"jwlib/tests/core/observable.js",
-		
+		*/
 		"jwlib/tests/collection.js",
 		"jwlib/tests/collection/abstractArray.js",
+		/*"jwlib/tests/collection/abstractArray/filterer.js",
 		"jwlib/tests/collection/abstractArray/indexer.js",
 		"jwlib/tests/collection/abstractArray/observer.js",
 		"jwlib/tests/collection/abstractArray/inserter.js",
@@ -42,8 +43,9 @@
 		"jwlib/tests/collection/array/staticMethods.js",
 		"jwlib/tests/collection/map.js",
 		"jwlib/tests/collection/map/staticMethods.js",
-		"jwlib/tests/collection/observableArray.js",
-		"jwlib/tests/collection/observableArray/indexer.js",
+		*/"jwlib/tests/collection/observableArray.js",
+		"jwlib/tests/collection/observableArray/filterer.js",
+		/*"jwlib/tests/collection/observableArray/indexer.js",
 		"jwlib/tests/collection/observableArray/observer.js",
 		"jwlib/tests/collection/observableArray/inserter.js",
 		"jwlib/tests/collection/observableArray/lister.js",
@@ -72,7 +74,7 @@
 		"jwlib/tests/util.js",
 		"jwlib/tests/util/timer.js",
 		"jwlib/tests/util/string.js",
-		
+		*/
 		"jwlib/tests/boot.js"
 	]
 }

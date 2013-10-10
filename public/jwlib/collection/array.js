@@ -1027,6 +1027,16 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * `<T, U>` Синхронизатор.
 	 */
 	/**
+	 * @method createFilterer
+	 * `<T>` Конструирует фильтровщик коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @static
+	 * @param {Array} array `<T>` Массив.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Filterer}
+	 * `<T>` Синхронизатор.
+	 */
+	/**
 	 * @method createObserver
 	 * `<T>` Конструирует наблюдатель коллекции.
 	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.

@@ -101,6 +101,7 @@
  * Создание синхронизаторов:
  *
  * - {@link #createMapper} - Создает конвертер элементов.
+ * - {@link #createFilterer} - Создает фильтровщик.
  * - {@link #createLister} - Создает конвертер в множество.
  * - {@link #createIndexer} - Создает индексатор.
  * - {@link #createOrderer} - Создает конвертер в массив (упорядочитель).
@@ -977,6 +978,17 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 */
 	createMapper: function(config) {
 		return new JW.AbstractArray.Mapper(this, config);
+	},
+	
+	/**
+	 * Конструирует фильтровщик коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.AbstractArray.Filterer}
+	 * `<T>` Синхронизатор.
+	 */
+	createFilterer: function(config) {
+		return new JW.AbstractArray.Filterer(this, config);
 	},
 	
 	/**

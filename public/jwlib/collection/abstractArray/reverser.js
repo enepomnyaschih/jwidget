@@ -34,11 +34,7 @@
  *     source.{@link JW.AbstractArray#remove remove}(2);
  *     assert(reverser.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([4, 2, 1]));
  * 
- * Создавайте синхронизатор с помощью метода JW.AbstractArray#createReverser:
- *
- *     var reverser = array.{@link JW.AbstractArray#createReverser createReverser}();
- *     var array = reverser.{@link #property-target target};
- *
+ * Создавайте синхронизатор с помощью метода JW.AbstractArray#createReverser.
  * Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
  *
  * Целевой массив можно передать в качестве конфигурационной опции:

@@ -197,6 +197,17 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	},
 	
 	/**
+	 * Конструирует фильтровщик коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableArray.Filterer}
+	 * `<T>` Синхронизатор.
+	 */
+	createFilterer: function(config) {
+		return new JW.ObservableArray.Filterer(this, config);
+	},
+	
+	/**
 	 * Конструирует наблюдатель коллекции.
 	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
 	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
