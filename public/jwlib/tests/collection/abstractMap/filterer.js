@@ -17,25 +17,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
+JW.Tests.Collection.AbstractMap.FiltererTestCase = JW.Unit.TestCase.extend({
 	testUnobservableTarget: function() {
-		var source = new JW.ObservableMap({a: 1, b: 2, c: 3, d: 4, e: 5});
+		var source = new JW.Map({a: 1, b: 2, c: 3, d: 4, e: 5});
 		var target = new JW.Map();
 		
 		var filterer = this.createFilterer(source, target);
 		this.assertTarget({a: 1, c: 3, e: 5}, target);
-		
-		source.splice(["d"], {f: 6, a: 7, g: 8, b: 9, h: 10, i: 11}); // {a: 7, b: 9, c: 3, e: 5, f: 6, g: 8, h: 10, i: 11}
-		this.assertTarget({a: 7, c: 3, e: 5, b: 9, i: 11}, target);
-		
-		source.reindex({a: "c", b: "a", c: "k", e: "l", f: "b", g: "e", h: "m", i: "n"}); // {a: 9, b: 6, c: 7, e: 8, k: 3, l: 5, m: 10, n: 11}
-		this.assertTarget({a: 9, c: 7, k: 3, l: 5, n: 11}, target);
-		
-		source.clear();
-		this.assertTarget({}, target);
-		
-		source.setAll({q: 1, w: 2, e: 3});
-		this.assertTarget({e: 3, q: 1}, target);
 		
 		filterer.destroy();
 		this.assertTarget({}, target);
@@ -46,7 +34,7 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testObservableTarget: function() {
-		var source = new JW.ObservableMap({a: 1, b: 2, c: 3, d: 4, e: 5});
+		var source = new JW.Map({a: 1, b: 2, c: 3, d: 4, e: 5});
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
@@ -58,40 +46,9 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({a: 1, c: 3, e: 5}, target);
 		
 		this.setExpectedOutput(
-			"Spliced -{a:1} +{a:7,b:9,i:11}",
+			"Spliced -{a:1,c:3,e:5} +{}",
 			"Changed",
-			"Changed size from 3 to 5"
-		);
-		source.splice(["d"], {f: 6, a: 7, g: 8, b: 9, h: 10, i: 11}); // {a: 7, b: 9, c: 3, e: 5, f: 6, g: 8, h: 10, i: 11}
-		this.assertTarget({a: 7, c: 3, e: 5, b: 9, i: 11}, target);
-		
-		this.setExpectedOutput(
-			"Reindexed by {a:c,b:a,c:k,e:l,i:n}",
-			"Changed"
-		);
-		source.reindex({a: "c", b: "a", c: "k", e: "l", f: "b", g: "e", h: "m", i: "n"}); // {a: 9, b: 6, c: 7, e: 8, k: 3, l: 5, m: 10, n: 11}
-		this.assertTarget({a: 9, c: 7, k: 3, l: 5, n: 11}, target);
-		
-		this.setExpectedOutput(
-			"Spliced -{a:9,c:7,k:3,l:5,n:11} +{}",
-			"Changed",
-			"Changed size from 5 to 0"
-		);
-		source.clear();
-		this.assertTarget({}, target);
-		
-		this.setExpectedOutput(
-			"Spliced -{} +{e:3,q:1}",
-			"Changed",
-			"Changed size from 0 to 2"
-		);
-		source.setAll({q: 1, w: 2, e: 3});
-		this.assertTarget({e: 3, q: 1}, target);
-		
-		this.setExpectedOutput(
-			"Spliced -{e:3,q:1} +{}",
-			"Changed",
-			"Changed size from 2 to 0"
+			"Changed size from 3 to 0"
 		);
 		filterer.destroy();
 		this.assertTarget({}, target);
@@ -102,8 +59,8 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testMultiSource: function() {
-		var source1 = new JW.ObservableMap({"a": 1, "b": 2});
-		var source2 = new JW.ObservableMap({"c": 4, "d": 5});
+		var source1 = new JW.Map({"a": 1, "b": 2});
+		var source2 = new JW.Map({"c": 4, "d": 5});
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
@@ -135,42 +92,15 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 			"Changed",
 			"Changed size from 3 to 2"
 		);
-		source1.set(4, "a");
+		filterer1.destroy();
 		this.assertTarget({e: 7, d: 5}, target);
 		
 		this.setExpectedOutput(
-			"Spliced -{} +{f:5}",
-			"Changed",
-			"Changed size from 2 to 3"
-		);
-		source1.set(5, "f");
-		this.assertTarget({e: 7, d: 5, f: 5}, target);
-		
-		this.setExpectedOutput(
-			"Spliced -{d:5} +{d:1}",
-			"Changed"
-		);
-		source2.set(1, "d");
-		this.assertTarget({e: 7, d: 1, f: 5}, target);
-		
-		this.setExpectedOutput(
-			"Spliced -{f:5} +{}",
-			"Changed",
-			"Changed size from 3 to 2"
-		);
-		source1.clear();
-		this.assertTarget({e: 7, d: 1}, target);
-		
-		this.setExpectedOutput(
-			"Spliced -{d:1} +{}",
+			"Spliced -{d:5} +{}",
 			"Changed",
 			"Changed size from 2 to 1"
 		);
 		filterer2.destroy();
-		this.assertTarget({e: 7}, target);
-		
-		this.setExpectedOutput();
-		filterer1.destroy();
 		this.assertTarget({e: 7}, target);
 		
 		this.setExpectedOutput();
@@ -182,7 +112,7 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 	
 	// tests that empty source doesn't cause target to trigger "change" on synchronizer initialization
 	testEmptyChange: function() {
-		var source = new JW.ObservableMap();
+		var source = new JW.Map();
 		var target = this.createTarget();
 		var filterer = this.createFilterer(source, target);
 		filterer.destroy();
@@ -191,9 +121,9 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testAutoTarget: function() {
-		var source = new JW.ObservableMap({a: 1, b: 2, c: 3});
+		var source = new JW.Map({a: 1, b: 2, c: 3});
 		var filterer = this.createFilterer(source);
-		this.assertTrue(filterer.target instanceof JW.ObservableMap);
+		this.assertTrue(filterer.target instanceof JW.Map);
 		this.assertTarget({a: 1, c: 3}, filterer.target);
 		filterer.destroy();
 		source.destroy();
