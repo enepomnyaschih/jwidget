@@ -17,7 +17,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.ObservableSet.FiltererTestCase = JW.Unit.TestCase.extend({
+JW.Tests.Collection.AbstractSet.FiltererTestCase = JW.Unit.TestCase.extend({
 	setup: function() {
 		this.a = new JW.Proxy(1);
 		this.b = new JW.Proxy(2);
@@ -29,20 +29,11 @@ JW.Tests.Collection.ObservableSet.FiltererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testUnobservableTarget: function() {
-		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d, this.e]);
+		var source = new JW.Set([this.a, this.b, this.c, this.d, this.e]);
 		var target = new JW.Set();
 		
 		var filterer = this.createFilterer(source, target);
 		this.assertTarget([this.a, this.c, this.e], target);
-		
-		source.splice([this.a, this.b, this.d], [this.f, this.g]);
-		this.assertTarget([this.c, this.e, this.g], target);
-		
-		source.clear();
-		this.assertTarget([], target);
-		
-		source.addAll([this.a, this.b, this.c]);
-		this.assertTarget([this.a, this.c], target);
 		
 		filterer.destroy();
 		this.assertTarget([], target);
@@ -52,7 +43,7 @@ JW.Tests.Collection.ObservableSet.FiltererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testObservableTarget: function() {
-		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d, this.e]);
+		var source = new JW.Set([this.a, this.b, this.c, this.d, this.e]);
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
@@ -64,32 +55,9 @@ JW.Tests.Collection.ObservableSet.FiltererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([this.a, this.c, this.e], target);
 		
 		this.setExpectedOutput(
-			"Spliced -[1] +[7]",
-			"Changed"
-		);
-		source.splice([this.a, this.b, this.d], [this.f, this.g]);
-		this.assertTarget([this.c, this.e, this.g], target);
-		
-		this.setExpectedOutput(
-			"Spliced -[3,5,7] +[]",
+			"Spliced -[1,3,5] +[]",
 			"Changed",
 			"Changed size from 3 to 0"
-		);
-		source.clear();
-		this.assertTarget([], target);
-		
-		this.setExpectedOutput(
-			"Spliced -[] +[1,3]",
-			"Changed",
-			"Changed size from 0 to 2"
-		);
-		source.addAll([this.a, this.b, this.c]);
-		this.assertTarget([this.a, this.c], target);
-		
-		this.setExpectedOutput(
-			"Spliced -[1,3] +[]",
-			"Changed",
-			"Changed size from 2 to 0"
 		);
 		filterer.destroy();
 		this.assertTarget([], target);
@@ -100,8 +68,8 @@ JW.Tests.Collection.ObservableSet.FiltererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testMultiSource: function() {
-		var source1 = new JW.ObservableSet([this.a, this.b]);
-		var source2 = new JW.ObservableSet([this.c, this.d]);
+		var source1 = new JW.Set([this.a, this.b]);
+		var source2 = new JW.Set([this.c, this.d]);
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
@@ -129,29 +97,18 @@ JW.Tests.Collection.ObservableSet.FiltererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([this.a, this.c, this.e], target);
 		
 		this.setExpectedOutput(
-			"Spliced -[1] +[7]",
-			"Changed"
+			"Spliced -[1] +[]",
+			"Changed",
+			"Changed size from 3 to 2"
 		);
-		source1.splice([this.a], [this.f, this.g]);
-		this.assertTarget([this.c, this.e, this.g], target);
+		filterer1.destroy();
+		this.assertTarget([this.c, this.e], target);
 		
 		this.setExpectedOutput(
 			"Spliced -[3] +[]",
 			"Changed",
-			"Changed size from 3 to 2"
-		);
-		source2.splice([this.c], [this.b]);
-		this.assertTarget([this.e, this.g], target);
-		
-		this.setExpectedOutput(
-			"Spliced -[7] +[]",
-			"Changed",
 			"Changed size from 2 to 1"
 		);
-		filterer1.destroy();
-		this.assertTarget([this.e], target);
-		
-		this.setExpectedOutput();
 		filterer2.destroy();
 		this.assertTarget([this.e], target);
 		
@@ -165,7 +122,7 @@ JW.Tests.Collection.ObservableSet.FiltererTestCase = JW.Unit.TestCase.extend({
 	
 	// tests that empty array doesn't trigger "change" on initialization
 	testEmptyChange: function() {
-		var source = new JW.ObservableSet();
+		var source = new JW.Set();
 		var target = this.createTarget();
 		var filterer = this.createFilterer(source, target);
 		filterer.destroy();
@@ -174,9 +131,9 @@ JW.Tests.Collection.ObservableSet.FiltererTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testAutoTarget: function() {
-		var source = new JW.ObservableSet([this.a, this.b, this.c]);
+		var source = new JW.Set([this.a, this.b, this.c]);
 		var filterer = this.createFilterer(source);
-		this.assertTrue(filterer.target instanceof JW.ObservableSet);
+		this.assertTrue(filterer.target instanceof JW.Set);
 		this.assertTarget([this.a, this.c], filterer.target);
 		filterer.destroy();
 		source.destroy();

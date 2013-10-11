@@ -40,7 +40,6 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 		filterer.destroy();
 		this.assertTarget({}, target);
 		
-		this.setExpectedOutput();
 		target.destroy();
 		source.destroy();
 	},
