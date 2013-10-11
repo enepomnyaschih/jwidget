@@ -5,16 +5,16 @@
 	
 	"resources" : [
 		"jwlib/tests/index.js",
-		/*
+		
 		"jwlib/tests/core.js",
 		"jwlib/tests/core/apply.js",
 		"jwlib/tests/core/callback.js",
 		"jwlib/tests/core/core.js",
 		"jwlib/tests/core/class.js",
 		"jwlib/tests/core/observable.js",
-		*/
+		
 		"jwlib/tests/collection.js",
-		/*"jwlib/tests/collection/abstractArray.js",
+		"jwlib/tests/collection/abstractArray.js",
 		"jwlib/tests/collection/abstractArray/filterer.js",
 		"jwlib/tests/collection/abstractArray/indexer.js",
 		"jwlib/tests/collection/abstractArray/observer.js",
@@ -34,9 +34,9 @@
 		"jwlib/tests/collection/abstractMap/observer.js",
 		"jwlib/tests/collection/abstractMap/orderer.js",
 		"jwlib/tests/collection/abstractMap/sorterComparing.js",
-		*/"jwlib/tests/collection/abstractSet.js",
+		"jwlib/tests/collection/abstractSet.js",
 		"jwlib/tests/collection/abstractSet/filterer.js",
-		/*"jwlib/tests/collection/abstractSet/indexer.js",
+		"jwlib/tests/collection/abstractSet/indexer.js",
 		"jwlib/tests/collection/abstractSet/mapper.js",
 		"jwlib/tests/collection/abstractSet/observer.js",
 		"jwlib/tests/collection/abstractSet/orderer.js",
@@ -65,9 +65,9 @@
 		"jwlib/tests/collection/observableMap/observer.js",
 		"jwlib/tests/collection/observableMap/orderer.js",
 		"jwlib/tests/collection/observableMap/sorterComparing.js",
-		*/"jwlib/tests/collection/observableSet.js",
+		"jwlib/tests/collection/observableSet.js",
 		"jwlib/tests/collection/observableSet/filterer.js",
-		/*"jwlib/tests/collection/observableSet/indexer.js",
+		"jwlib/tests/collection/observableSet/indexer.js",
 		"jwlib/tests/collection/observableSet/mapper.js",
 		"jwlib/tests/collection/observableSet/observer.js",
 		"jwlib/tests/collection/observableSet/orderer.js",
@@ -78,7 +78,7 @@
 		"jwlib/tests/util.js",
 		"jwlib/tests/util/timer.js",
 		"jwlib/tests/util/string.js",
-		*/
+		
 		"jwlib/tests/boot.js"
 	]
 }
