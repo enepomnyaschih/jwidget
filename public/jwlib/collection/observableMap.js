@@ -161,6 +161,17 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	},
 	
 	/**
+	 * Конструирует фильтровщик коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Filterer}
+	 * `<T>` Синхронизатор.
+	 */
+	createFilterer: function(config) {
+		return new JW.ObservableMap.Filterer(this, config);
+	},
+	
+	/**
 	 * Конструирует наблюдатель коллекции.
 	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
 	 * @param {Object} config Конфигурация (см. Config options синхронизатора).

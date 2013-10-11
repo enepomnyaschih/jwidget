@@ -1,0 +1,70 @@
+﻿/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractMap.Filterer<T>`
+ *
+ * Фильтровщик оповещающего словаря. Подробнее читайте JW.AbstractCollection.Filterer.
+ *
+ * @extends JW.AbstractMap.Filterer
+ *
+ * @constructor
+ * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createFilterer.
+ * @param {JW.ObservableMap} source `<T>` Исходная коллекция.
+ * @param {Object} config Конфигурация (см. Config options).
+ */
+JW.ObservableMap.Filterer = function(source, config) {
+	JW.ObservableMap.Filterer._super.call(this, source, config);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._reindexEventAttachment = source.reindexEvent.bind(this._onReindex, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+};
+
+JW.extend(JW.ObservableMap.Filterer, JW.AbstractMap.Filterer, {
+	/*
+	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _reindexEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
+	*/
+	
+	// override
+	destroy: function() {
+		this._clearEventAttachment.destroy();
+		this._reindexEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
+		this._super();
+	},
+	
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(
+			JW.Map.getKeys(spliceResult.removedItems),
+			JW.Map.filter(spliceResult.addedItems, this.filterItem, this.scope));
+	},
+	
+	_onReindex: function(params) {
+		this.target.tryReindex(params.keyMap);
+	},
+	
+	_onClear: function(params) {
+		this.target.tryRemoveAll(JW.Map.getKeys(params.items));
+	}
+});

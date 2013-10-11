@@ -318,6 +318,10 @@ JW.apply(JW.Map, {
 		return new JW.AbstractMap.Mapper(new JW.Map(source, true), config);
 	},
 	
+	createFilterer: function(source, config) {
+		return new JW.AbstractMap.Filterer(new JW.Map(source, true), config);
+	},
+	
 	createObserver: function(source, config) {
 		return new JW.AbstractMap.Observer(new JW.Map(source, true), config);
 	},
