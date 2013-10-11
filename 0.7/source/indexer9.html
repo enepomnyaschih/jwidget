@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractSet.IndexerTestCase = JW.Unit.TestCase.extend({
+	testUnobservableTarget: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var source = new JW.Set([ a, b, c ]);
+		var target = new JW.Map();
+		
+		var indexer = this.createIndexer(source, target);
+		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c }, target);
+		
+		indexer.destroy();
+		this.assertTarget({}, target);
+		
+		target.destroy();
+		source.destroy();
+	},
+	
+	testObservableTarget: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var source = new JW.Set([ a, b, c ]);
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{a:a,b:b,c:c}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 0 to 3&quot;
+		);
+		var indexer = this.createIndexer(source, target);
+		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{a:a,b:b,c:c} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 0&quot;
+		);
+		indexer.destroy();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testMultiSource: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var d = new JW.Proxy(&quot;d&quot;);
+		var x = new JW.Proxy(&quot;x&quot;);
+		
+		var source1 = new JW.Set([ a, b ]);
+		var source2 = new JW.Set([ c, d ]);
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{x:x}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 0 to 1&quot;
+		);
+		target.set(x, &quot;x&quot;);
+		this.assertTarget({ &quot;x&quot;: x }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{a:a,b:b}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 1 to 3&quot;
+		);
+		var indexer1 = this.createIndexer(source1, target);
+		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;x&quot;: x }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{c:c,d:d}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 5&quot;
+		);
+		var indexer2 = this.createIndexer(source2, target);
+		this.assertTarget({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c, &quot;d&quot;: d, &quot;x&quot;: x }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{a:a,b:b} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 5 to 3&quot;
+		);
+		indexer1.destroy();
+		this.assertTarget({ &quot;c&quot;: c, &quot;d&quot;: d, &quot;x&quot;: x }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{c:c,d:d} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 1&quot;
+		);
+		indexer2.destroy();
+		this.assertTarget({ &quot;x&quot;: x }, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		
+		this.setExpectedOutput();
+		source1.destroy();
+		source2.destroy();
+	},
+	
+	// tests that empty source doesn't caused target to trigger &quot;change&quot; on synchronizer initialization
+	testEmptyChange: function() {
+		var source = new JW.Set();
+		var target = this.createTarget();
+		var indexer = this.createIndexer(source, target);
+		indexer.destroy();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testAutoTarget: function() {
+		var d = new JW.Proxy(&quot;d&quot;);
+		var source = new JW.Set([ d ]);
+		var indexer = this.createIndexer(source);
+		this.assertTrue(indexer.target instanceof JW.Map);
+		this.assertTarget({ &quot;d&quot;: d }, indexer.target);
+		indexer.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function() {
+		var target = new JW.ObservableMap();
+		JW.Tests.Collection.subscribeToMap(this, target, function(x) { return x.value; });
+		return target;
+	},
+	
+	createIndexer: function(source, target) {
+		return source.createIndexer({
+			target : target,
+			scope  : this,
+			
+			getKey: function(item) {
+				return item.value;
+			}
+		});
+	},
+	
+	assertTarget: function(expected, target) {
+		this.assertTrue(JW.Map.equal(expected, target.getJson()));
+	}
+});
+</pre>
+</body>
+</html>

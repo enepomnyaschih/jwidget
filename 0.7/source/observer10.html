@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractSet.ObserverTestCase = JW.Unit.TestCase.extend({
+	testObserver: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var source = new JW.Set([ a, b, c ]);
+		
+		this.setExpectedOutput(
+			&quot;Added a&quot;,
+			&quot;Added b&quot;,
+			&quot;Added c&quot;
+		);
+		var syncher = source.createObserver({
+			addItem    : function(item) { this.output(&quot;Added &quot; + item.value); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item.value); },
+			clearItems : function(items) { this.output(&quot;Cleared &quot; + JW.Array.map(items, JW.byField(&quot;value&quot;)).join(&quot;, &quot;)); },
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Cleared a, b, c&quot;
+		);
+		syncher.destroy();
+	},
+	
+	testAutoClear: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var source = new JW.Set([ a, b, c ]);
+		
+		this.setExpectedOutput(
+			&quot;Added a&quot;,
+			&quot;Added b&quot;,
+			&quot;Added c&quot;
+		);
+		var syncher = source.createObserver({
+			addItem    : function(item) { this.output(&quot;Added &quot; + item.value); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item.value); },
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Removed c&quot;,
+			&quot;Removed b&quot;,
+			&quot;Removed a&quot;
+		);
+		syncher.destroy();
+	}
+});
+</pre>
+</body>
+</html>

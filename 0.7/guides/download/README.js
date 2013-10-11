@@ -1,0 +1,1 @@
+Ext.data.JsonP.download({"guide":"<p><font size=\"5\"><a href=\"guides/download/jwidget.zip\">Скачать jWidget</a></font></p>\n","title":"Скачать jWidget"});

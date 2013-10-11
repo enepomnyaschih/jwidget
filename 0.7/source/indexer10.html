@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
+	testUnobservableTarget: function() {
+		var d = new JW.Proxy(&quot;d&quot;);
+		var source = new JW.ObservableArray([ d ]);
+		var target = new JW.Map();
+		var indexer = this.createIndexer(source, target);
+		this.assertTarget({ &quot;d&quot;: d }, target);
+		
+		// d
+		var f = new JW.Proxy(&quot;f&quot;);
+		source.addAll([ f ]);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f }, target);
+		
+		// d f
+		var c = new JW.Proxy(&quot;c&quot;);
+		source.add(c, 1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c }, target);
+		
+		// d c f
+		var b = new JW.Proxy(&quot;b&quot;);
+		var m = new JW.Proxy(&quot;m&quot;);
+		source.addAll([ b, m ], 0);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m }, target);
+		
+		// b m d c f
+		this.setExpectedOutput();
+		source.addAll([], 1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m }, target);
+		
+		var a = new JW.Proxy(&quot;a&quot;);
+		source.add(a, 5);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m, &quot;a&quot;: a }, target);
+		
+		// b m d c f a
+		source.remove(1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;a&quot;: a }, target);
+		
+		// b d c f a
+		source.remove(0);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;a&quot;: a }, target);
+		
+		// d c f a
+		var k = new JW.Proxy(&quot;k&quot;);
+		source.add(k);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k }, target);
+		
+		// d c f a k
+		var g = new JW.Proxy(&quot;g&quot;);
+		source.set(g, 2);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// d c g a k
+		this.setExpectedOutput();
+		source.set(a, 3);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		this.setExpectedOutput();
+		source.move(2, 1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// d g c a k
+		this.setExpectedOutput();
+		source.move(0, 4);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// g c a k d
+		this.setExpectedOutput();
+		source.move(1, 1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		this.setExpectedOutput();
+		var items = source.getItems().concat();
+		JW.Array.sort(items, JW.byField(&quot;value&quot;));
+		source.performReorder(items);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// a c d g k
+		source.performSplice([ a, d, g, k ]);
+		this.assertTarget({ &quot;d&quot;: d, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// a d g k
+		source.performSplice([ k ]);
+		this.assertTarget({ &quot;k&quot;: k }, target);
+		
+		// k
+		var u = new JW.Proxy(&quot;u&quot;);
+		var t = new JW.Proxy(&quot;t&quot;);
+		source.performSplice([ u, t, c ]);
+		this.assertTarget({ &quot;u&quot;: u, &quot;t&quot;: t, &quot;c&quot;: c }, target);
+		
+		// u t c
+		source.clear();
+		this.assertTarget({}, target);
+		
+		// (empty)
+		var h = new JW.Proxy(&quot;h&quot;);
+		source.add(h);
+		this.assertTarget({ &quot;h&quot;: h }, target);
+		
+		// h
+		indexer.destroy();
+		this.assertTarget({}, target);
+		
+		target.destroy();
+		source.destroy();
+	},
+	
+	testObservableTarget: function() {
+		var d = new JW.Proxy(&quot;d&quot;);
+		var source = new JW.ObservableArray([ d ]);
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{d:d}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 0 to 1&quot;
+		);
+		var indexer = this.createIndexer(source, target);
+		this.assertTarget({ &quot;d&quot;: d }, target);
+		
+		// d
+		var f = new JW.Proxy(&quot;f&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{f:f}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 1 to 2&quot;
+		);
+		source.addAll([ f ]);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f }, target);
+		
+		// d f
+		var c = new JW.Proxy(&quot;c&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{c:c}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 3&quot;
+		);
+		source.add(c, 1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c }, target);
+		
+		// d c f
+		var b = new JW.Proxy(&quot;b&quot;);
+		var m = new JW.Proxy(&quot;m&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{b:b,m:m}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 5&quot;
+		);
+		source.addAll([ b, m ], 0);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m }, target);
+		
+		// b m d c f
+		this.setExpectedOutput();
+		source.addAll([], 1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m }, target);
+		
+		var a = new JW.Proxy(&quot;a&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{a:a}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 5 to 6&quot;
+		);
+		source.add(a, 5);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;m&quot;: m, &quot;a&quot;: a }, target);
+		
+		// b m d c f a
+		this.setExpectedOutput(
+			&quot;Spliced -{m:m} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 6 to 5&quot;
+		);
+		source.remove(1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;b&quot;: b, &quot;a&quot;: a }, target);
+		
+		// b d c f a
+		this.setExpectedOutput(
+			&quot;Spliced -{b:b} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 5 to 4&quot;
+		);
+		source.remove(0);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;a&quot;: a }, target);
+		
+		// d c f a
+		var k = new JW.Proxy(&quot;k&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{k:k}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 4 to 5&quot;
+		);
+		source.add(k);
+		this.assertTarget({ &quot;d&quot;: d, &quot;f&quot;: f, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k }, target);
+		
+		// d c f a k
+		var g = new JW.Proxy(&quot;g&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{f:f} +{g:g}&quot;,
+			&quot;Changed&quot;
+		);
+		source.set(g, 2);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// d c g a k
+		this.setExpectedOutput();
+		source.set(a, 3);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		this.setExpectedOutput();
+		source.move(2, 1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// d g c a k
+		this.setExpectedOutput();
+		source.move(0, 4);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// g c a k d
+		this.setExpectedOutput();
+		source.move(1, 1);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		this.setExpectedOutput();
+		var items = source.getItems().concat();
+		JW.Array.sort(items, JW.byField(&quot;value&quot;));
+		source.performReorder(items);
+		this.assertTarget({ &quot;d&quot;: d, &quot;c&quot;: c, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// a c d g k
+		this.setExpectedOutput(
+			&quot;Spliced -{c:c} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 5 to 4&quot;
+		);
+		source.performSplice([ a, d, g, k ]);
+		this.assertTarget({ &quot;d&quot;: d, &quot;a&quot;: a, &quot;k&quot;: k, &quot;g&quot;: g }, target);
+		
+		// a d g k
+		this.setExpectedOutput(
+			&quot;Spliced -{a:a,d:d,g:g} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 4 to 1&quot;
+		);
+		source.performSplice([ k ]);
+		this.assertTarget({ &quot;k&quot;: k }, target);
+		
+		// k
+		var u = new JW.Proxy(&quot;u&quot;);
+		var t = new JW.Proxy(&quot;t&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{k:k} +{c:c,t:t,u:u}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 1 to 3&quot;
+		);
+		source.performSplice([ u, t, c ]);
+		this.assertTarget({ &quot;u&quot;: u, &quot;t&quot;: t, &quot;c&quot;: c }, target);
+		
+		// u t c
+		this.setExpectedOutput(
+			&quot;Spliced -{c:c,t:t,u:u} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 0&quot;
+		);
+		source.clear();
+		this.assertTarget({}, target);
+		
+		// (empty)
+		var h = new JW.Proxy(&quot;h&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{h:h}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 0 to 1&quot;
+		);
+		source.add(h);
+		this.assertTarget({ &quot;h&quot;: h }, target);
+		
+		// h
+		this.setExpectedOutput(
+			&quot;Spliced -{h:h} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 1 to 0&quot;
+		);
+		
+		indexer.destroy();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testMultiSource: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var source1 = new JW.ObservableArray([ a ]);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var source2 = new JW.ObservableArray([ b, c ]);
+		var x = new JW.Proxy(&quot;x&quot;);
+		var target = this.createTarget();
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{x:x}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 0 to 1&quot;
+		);
+		target.set(x, &quot;x&quot;);
+		this.assertTarget({ &quot;x&quot;: x }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{a:a}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 1 to 2&quot;
+		);
+		var indexer1 = this.createIndexer(source1, target);
+		this.assertTarget({ &quot;x&quot;: x, &quot;a&quot;: a }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{b:b,c:c}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 4&quot;
+		);
+		var indexer2 = this.createIndexer(source2, target);
+		this.assertTarget({ &quot;x&quot;: x, &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c }, target);
+		
+		var d = new JW.Proxy(&quot;d&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{d:d}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 4 to 5&quot;
+		);
+		source1.add(d);
+		this.assertTarget({ &quot;x&quot;: x, &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c, &quot;d&quot;: d }, target);
+		
+		var e = new JW.Proxy(&quot;e&quot;);
+		this.setExpectedOutput(
+			&quot;Spliced -{b:b} +{e:e}&quot;,
+			&quot;Changed&quot;
+		);
+		source2.set(e, 0);
+		this.assertTarget({ &quot;x&quot;: x, &quot;a&quot;: a, &quot;c&quot;: c, &quot;d&quot;: d, &quot;e&quot;: e }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{a:a,d:d} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 5 to 3&quot;
+		);
+		source1.clear();
+		this.assertTarget({ &quot;x&quot;: x, &quot;c&quot;: c, &quot;e&quot;: e }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{} +{d:d}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 4&quot;
+		);
+		source1.performSplice([ d ]);
+		this.assertTarget({ &quot;x&quot;: x, &quot;c&quot;: c, &quot;e&quot;: e, &quot;d&quot;: d }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{c:c,e:e} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 4 to 2&quot;
+		);
+		indexer2.destroy();
+		this.assertTarget({ &quot;x&quot;: x, &quot;d&quot;: d }, target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -{d:d} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 1&quot;
+		);
+		indexer1.destroy();
+		this.assertTarget({ &quot;x&quot;: x }, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput();
+		source1.destroy();
+		source2.destroy();
+	},
+	
+	// tests that empty array doesn't trigger &quot;change&quot; on initialization
+	testEmptyChange: function() {
+		var source = new JW.ObservableArray();
+		var target = this.createTarget();
+		var indexer = this.createIndexer(source, target);
+		indexer.destroy();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testAutoTarget: function() {
+		var d = new JW.Proxy(&quot;d&quot;);
+		var source = new JW.ObservableArray([ d ]);
+		var indexer = this.createIndexer(source);
+		this.assertTrue(indexer.target instanceof JW.ObservableMap);
+		this.assertTarget({ &quot;d&quot;: d }, indexer.target);
+		indexer.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function() {
+		var target = new JW.ObservableMap();
+		JW.Tests.Collection.subscribeToMap(this, target, function(x) { return x.value; });
+		return target;
+	},
+	
+	createIndexer: function(source, target) {
+		return source.createIndexer({
+			target : target,
+			getKey : function(item) { return item.value; },
+			scope  : this
+		});
+	},
+	
+	assertTarget: function(expected, target) {
+		this.assertTrue(JW.Map.equal(expected, target.getJson()));
+	}
+});
+</pre>
+</body>
+</html>

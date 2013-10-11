@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-ObservableMap-method-constructor'><span id='JW-ObservableMap'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractMap&lt;T&gt;`
+ *
+ * Оповещающий словарь. Структурированный список методов смотрите в JW.AbstractMap.
+ *
+ * @extends JW.AbstractMap
+ *
+ * @constructor
+ * @param {Object} [items] Изначальное содержимое словаря. По умолчанию, создается пустой словарь.
+ * @param {boolean} [adapter] Создать словарь как адаптер над items. По умолчанию, равен false, т.е. создается
+ * копия словаря items.
+ */
+JW.ObservableMap = function(json, adapter) {
+	JW.ObservableMap._super.call(this, json, adapter);
+	this.spliceEvent = new JW.Event();
+	this.reindexEvent = new JW.Event();
+	this.clearEvent = new JW.Event();
+	this.changeEvent = new JW.Event();
+	this.lengthChangeEvent = new JW.Event();
+	this._lastLength = this.getLength();
+};
+
+JW.extend(JW.ObservableMap, JW.AbstractMap, {
+<span id='JW-ObservableMap-event-spliceEvent'>	/**
+</span>	 * @event spliceEvent
+	 * Элементы удалены/добавлены в словарь. Возникает в результате запуска
+	 * метода #set, #trySet, #setAll, #trySetAll, #remove, #tryRemove, #removeItem, #removeAll, #tryRemoveAll,
+	 * {@link #removeItems}, #splice, #trySplice, #performSplice.
+	 * @param {JW.ObservableMap.SpliceEventParams} params `&lt;T&gt;` Параметры.
+	 */
+<span id='JW-ObservableMap-event-reindexEvent'>	/**
+</span>	 * @event reindexEvent
+	 * Изменены ключи элементов в словаре. Возникает в результате запуска
+	 * метода #setKey, #trySetKey, #reindex, #tryReindex, #performReindex.
+	 * @param {JW.ObservableMap.ReindexEventParams} params `&lt;T&gt;` Параметры.
+	 */
+<span id='JW-ObservableMap-event-clearEvent'>	/**
+</span>	 * @event clearEvent
+	 * Словарь очищен. Возникает в результате запуска
+	 * метода #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableMap.ItemsEventParams} params
+	 * `&lt;T&gt;` Параметры. JW.ObservableMap.ItemsEventParams#items обозначает бывшее содержимое коллекции.
+	 */
+<span id='JW-ObservableMap-event-changeEvent'>	/**
+</span>	 * @event changeEvent
+	 * Словарь изменен. Возникает после одного из
+	 * событий #spliceEvent, #reindexEvent, #clearEvent.
+	 * @param {JW.ObservableMap.EventParams} params `&lt;T&gt;` Параметры.
+	 */
+<span id='JW-ObservableMap-event-lengthChangeEvent'>	/**
+</span>	 * @event lengthChangeEvent
+	 * Изменен размер словаря. Возникает после события #changeEvent в случае изменения размера.
+	 * @param {JW.ObservableMap.LengthChangeEventParams} params `&lt;T&gt;` Параметры.
+	 */
+	
+	// override
+	destroy: function() {
+		this.lengthChangeEvent.destroy();
+		this.changeEvent.destroy();
+		this.clearEvent.destroy();
+		this.reindexEvent.destroy();
+		this.spliceEvent.destroy();
+		this._super();
+	},
+	
+	// override
+	trySplice: function(removedKeys, updatedItems) {
+		var spliceResult = this._super(removedKeys, updatedItems);
+		if (spliceResult === undefined) {
+			return;
+		}
+		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
+		this._triggerChange();
+		return spliceResult;
+	},
+	
+	// override
+	tryClear: function() {
+		var items = this._super();
+		if (items === undefined) {
+			return;
+		}
+		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this, items));
+		this._triggerChange();
+		return items;
+	},
+	
+	// override
+	tryReindex: function(keyMap) {
+		var result = this._super(keyMap);
+		if (result === undefined) {
+			return;
+		}
+		this.reindexEvent.trigger(new JW.ObservableMap.ReindexEventParams(this, result));
+		this._triggerChange();
+		return result;
+	},
+	
+<span id='JW-ObservableMap-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустую коллекцию того же типа.
+	 * @returns {JW.ObservableMap} `&lt;U&gt;` Коллекция.
+	 */
+	createEmpty: function() {
+		return new JW.ObservableMap();
+	},
+	
+<span id='JW-ObservableMap-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой массив того же типа (простой или оповещающий).
+	 * @returns {JW.ObservableArray} `&lt;U&gt;` Массив.
+	 */
+	createEmptyArray: function() {
+		return new JW.ObservableArray();
+	},
+	
+<span id='JW-ObservableMap-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустой словарь того же типа (простой или оповещающий).
+	 * @returns {JW.ObservableMap} `&lt;U&gt;` Словарь.
+	 */
+	createEmptyMap: function() {
+		return new JW.ObservableMap();
+	},
+	
+<span id='JW-ObservableMap-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Конструирует пустое множество того же типа (простое или оповещающее).
+	 * @returns {JW.ObservableSet} `&lt;U&gt;` Множество.
+	 */
+	createEmptySet: function() {
+		return new JW.ObservableSet();
+	},
+	
+<span id='JW-ObservableMap-method-createMapper'>	/**
+</span>	 * `&lt;U&gt;` Конструирует конвертер элементов коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Mapper}
+	 * `&lt;T, U&gt;` Синхронизатор.
+	 */
+	createMapper: function(config) {
+		return new JW.ObservableMap.Mapper(this, config);
+	},
+	
+<span id='JW-ObservableMap-method-createFilterer'>	/**
+</span>	 * Конструирует фильтровщик коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Filterer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+	createFilterer: function(config) {
+		return new JW.ObservableMap.Filterer(this, config);
+	},
+	
+<span id='JW-ObservableMap-method-createObserver'>	/**
+</span>	 * Конструирует наблюдатель коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Observer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+	createObserver: function(config) {
+		return new JW.ObservableMap.Observer(this, config);
+	},
+	
+<span id='JW-ObservableMap-method-createOrderer'>	/**
+</span>	 * Конструирует конвертер коллекции в массив (упорядочитель).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Orderer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+	createOrderer: function(config) {
+		return new JW.ObservableMap.Orderer(this, config);
+	},
+	
+<span id='JW-ObservableMap-method-createSorterComparing'>	/**
+</span>	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.SorterComparing}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.ObservableMap.SorterComparing(this, config);
+	},
+	
+<span id='JW-ObservableMap-method-createIndexer'>	/**
+</span>	 * Конструирует индексатор коллекции.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Indexer}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+	createIndexer: function(config) {
+		return new JW.ObservableMap.Indexer(this, config);
+	},
+	
+<span id='JW-ObservableMap-method-createLister'>	/**
+</span>	 * Конструирует конвертер коллекции в множество.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Lister}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+	createLister: function(config) {
+		return new JW.ObservableMap.Lister(this, config);
+	},
+	
+<span id='JW-ObservableMap-method-createInserter'>	/**
+</span>	 * Конструирует синхронизатор представления с массивом.
+	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @returns {JW.ObservableMap.Inserter}
+	 * `&lt;T&gt;` Синхронизатор.
+	 */
+	createInserter: function(config) {
+		return new JW.ObservableMap.Inserter(this, config);
+	},
+	
+	_triggerChange: function() {
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		var newLength = this.getLength();
+		if (this._lastLength !== newLength) {
+			this.lengthChangeEvent.trigger(new JW.ObservableMap.LengthChangeEventParams(this, this._lastLength, newLength));
+			this._lastLength = newLength;
+		}
+	}
+});
+
+<span id='JW-ObservableMap-EventParams-method-constructor'><span id='JW-ObservableMap-EventParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` Параметры события JW.ObservableMap.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `&lt;T&gt;` Отправитель события.
+ */
+JW.ObservableMap.EventParams = function(sender) {
+	JW.ObservableMap.EventParams._super.call(this, sender);
+};
+
+JW.extend(JW.ObservableMap.EventParams, JW.EventParams, {
+<span id='JW-ObservableMap-EventParams-property-sender'>	/**
+</span>	 * @property {JW.ObservableMap} sender `&lt;T&gt;` Отправитель события.
+	 */
+});
+
+<span id='JW-ObservableMap-SpliceEventParams-method-constructor'><span id='JW-ObservableMap-SpliceEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableMap.EventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableMap#spliceEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `&lt;T&gt;` Отправитель события.
+ * @param {JW.AbstractMap.SpliceResult} spliceResult `&lt;T&gt;` Результат метода JW.AbstractMap#splice.
+ */
+JW.ObservableMap.SpliceEventParams = function(sender, spliceResult) {
+	JW.ObservableMap.SpliceEventParams._super.call(this, sender);
+	this.spliceResult = spliceResult;
+};
+
+JW.extend(JW.ObservableMap.SpliceEventParams, JW.ObservableMap.EventParams, {
+<span id='JW-ObservableMap-SpliceEventParams-property-spliceResult'>	/**
+</span>	 * @property {JW.AbstractMap.SpliceResult} spliceResult `&lt;T&gt;` Результат метода JW.AbstractMap#splice.
+	 */
+});
+
+<span id='JW-ObservableMap-ReindexEventParams-method-constructor'><span id='JW-ObservableMap-ReindexEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableMap.EventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableMap#reindexEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `&lt;T&gt;` Отправитель события.
+ * @param {Object} keyMap Ключи элементов в измененном словаре.
+ */
+JW.ObservableMap.ReindexEventParams = function(sender, keyMap) {
+	JW.ObservableMap.ReindexEventParams._super.call(this, sender);
+	this.keyMap = keyMap;
+};
+
+JW.extend(JW.ObservableMap.ReindexEventParams/*&lt;T&gt;*/, JW.ObservableMap.EventParams/*&lt;T&gt;*/, {
+<span id='JW-ObservableMap-ReindexEventParams-property-keyMap'>	/**
+</span>	 * @property {Object} keyMap Ключи элементов в измененном словаре.
+	 */
+});
+
+<span id='JW-ObservableMap-ItemsEventParams-method-constructor'><span id='JW-ObservableMap-ItemsEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableMap.EventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableMap с элементами.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `&lt;T&gt;` Отправитель события.
+ * @param {Object} items Набор элементов.
+ */
+JW.ObservableMap.ItemsEventParams = function(sender, items) {
+	JW.ObservableMap.ItemsEventParams._super.call(this, sender);
+	this.items = items;
+};
+
+JW.extend(JW.ObservableMap.ItemsEventParams, JW.ObservableMap.EventParams, {
+<span id='JW-ObservableMap-ItemsEventParams-property-items'>	/**
+</span>	 * @property {Object} items Набор элементов.
+	 */
+});
+
+<span id='JW-ObservableMap-LengthChangeEventParams-method-constructor'><span id='JW-ObservableMap-LengthChangeEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableMap.EventParams&lt;T&gt;`
+ *
+ * Параметры события JW.ObservableMap#lengthChangeEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `&lt;T&gt;` Отправитель события.
+ * @param {number} oldLength Старый размер коллекции.
+ * @param {number} newLength Новый размер коллекции.
+ */
+JW.ObservableMap.LengthChangeEventParams = function(sender, oldLength, newLength) {
+	JW.ObservableMap.LengthChangeEventParams._super.call(this, sender);
+	this.oldLength = oldLength;
+	this.newLength = newLength;
+};
+
+JW.extend(JW.ObservableMap.LengthChangeEventParams/*&lt;T&gt;*/, JW.ObservableMap.EventParams/*&lt;T&gt;*/, {
+<span id='JW-ObservableMap-LengthChangeEventParams-property-oldLength'>	/**
+</span>	 * @property {number} oldLength Старый размер коллекции.
+	 */
+<span id='JW-ObservableMap-LengthChangeEventParams-property-newLength'>	/**
+</span>	 * @property {number} newLength Новый размер коллекции.
+	 */
+});
+</pre>
+</body>
+</html>
