@@ -20,36 +20,36 @@
 /**
  * @class
  *
- * `<T> extends JW.AbstractCollection.Filterer<T, JW.AbstractMap<T>>`
+ * `<T extends JW.Class> extends JW.AbstractCollection.Filterer<T, JW.AbstractSet<T>>`
  *
- * Фильтровщик словаря. Подробнее читайте JW.AbstractCollection.Filterer.
+ * Фильтровщик множества. Подробнее читайте JW.AbstractCollection.Filterer.
  *
  * @extends JW.AbstractCollection.Filterer
  *
  * @constructor
  * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createFilterer.
- * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
+ * @param {JW.AbstractSet} source `<T>` Исходная коллекция.
  * @param {Object} config Конфигурация (см. Config options).
  */
-JW.AbstractMap.Filterer = function(source, config) {
-	JW.AbstractMap.Filterer._super.call(this, source, config);
-	this.target.trySetAll(source.filter(this.filterItem, this.scope));
+JW.AbstractSet.Filterer = function(source, config) {
+	JW.AbstractSet.Filterer._super.call(this, source, config);
+	this.target.tryAddAll(source.$toArray().filter(this.filterItem, this.scope));
 };
 
-JW.extend(JW.AbstractMap.Filterer, JW.AbstractCollection.Filterer, {
+JW.extend(JW.AbstractSet.Filterer, JW.AbstractCollection.Filterer, {
 	/**
-	 * @cfg {JW.AbstractMap} target `<T>` Целевая коллекция.
+	 * @cfg {JW.AbstractSet} target `<T>` Целевая коллекция.
 	 */
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractSet} source `<T>` Исходная коллекция.
 	 */
 	/**
-	 * @property {JW.AbstractMap} target `<T>` Целевая коллекция.
+	 * @property {JW.AbstractSet} target `<T>` Целевая коллекция.
 	 */
 	
 	// override
 	destroy: function() {
-		this.target.tryRemoveAll(this.source.getKeys());
+		this.target.tryRemoveAll(this.source.toArray());
 		this._super();
 	}
 });

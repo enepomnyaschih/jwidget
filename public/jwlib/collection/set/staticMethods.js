@@ -221,6 +221,10 @@ JW.apply(JW.Set, {
 		return new JW.AbstractSet.Mapper(new JW.Set(source, true), config);
 	},
 	
+	createFilterer: function(source, config) {
+		return new JW.AbstractSet.Filterer(new JW.Set(source, true), config);
+	},
+	
 	createObserver: function(source, config) {
 		return new JW.AbstractSet.Observer(new JW.Set(source, true), config);
 	},
