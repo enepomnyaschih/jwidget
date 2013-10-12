@@ -204,7 +204,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * @method get
-	 * Returns item by index. If items with such index doesn't exist, returns `undefined`.
+	 * Returns item by index. If item with such index doesn't exist, returns `undefined`.
 	 * @param {number} index Index.
 	 * @returns {T} Item.
 	 */
@@ -829,7 +829,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Detects #reorder method arguments to sort array cotnents by result of `f` call for each item.
+	 * Detects #reorder method arguments to sort array contents by result of `f` call for each item.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
@@ -847,7 +847,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Detects #reorder method arguments to sort array cotnents by comparer.
+	 * Detects #reorder method arguments to sort array contents by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *

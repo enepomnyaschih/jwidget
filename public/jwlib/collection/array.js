@@ -22,16 +22,14 @@
  *
  * `<T> extends JW.AbstractArray<T>`
  *
- * Простой массив. Структурированный список методов смотрите в JW.AbstractArray.
- * Статические методы повторяют интерфейс JW.AbstractArray, только принимают нативный Array в качестве
- * первого аргумента.
+ * See structurized list of methods in JW.AbstractArray.
+ * Static methods duplicate API of JW.AbstractArray, but take native Array as first argument.
  *
  * @extends JW.AbstractArray
  *
  * @constructor
- * @param {Array} [items] `<T>` Изначальное содержимое массива. По умолчанию, создается пустой массив.
- * @param {boolean} [adapter] Создать массив как адаптер над items. По умолчанию, равен false, т.е. создается
- * копия массива items.
+ * @param {Array} [items] `<T>` Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create array as adapter of `items`. Defaults to false, so `items` is copied.
  */
 JW.Array = function(items, adapter) {
 	JW.Array._super.call(this, items, adapter);
@@ -39,32 +37,32 @@ JW.Array = function(items, adapter) {
 
 JW.extend(JW.Array, JW.AbstractArray, {
 	/**
-	 * `<U>` Конструирует пустую коллекцию того же типа.
-	 * @returns {JW.Array} `<U>` Коллекция.
+	 * `<U>` Creates empty collection of the same type.
+	 * @returns {JW.Array} `<U>` Collection.
 	 */
 	createEmpty: function() {
 		return new JW.Array();
 	},
 	
 	/**
-	 * `<U>` Конструирует пустой массив того же типа (простой или оповещающий).
-	 * @returns {JW.Array} `<U>` Массив.
+	 * `<U>` Creates empty array of the same observability level.
+	 * @returns {JW.Array} `<U>` Array.
 	 */
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
 	
 	/**
-	 * `<U>` Конструирует пустой словарь того же типа (простой или оповещающий).
-	 * @returns {JW.Map} `<U>` Словарь.
+	 * `<U>` Creates empty map of the same observability level.
+	 * @returns {JW.Map} `<U>` Map.
 	 */
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
 	
 	/**
-	 * `<U>` Конструирует пустое множество того же типа (простое или оповещающее).
-	 * @returns {JW.Set} `<U>` Множество.
+	 * `<U>` Creates empty set of the same observability level.
+	 * @returns {JW.Set} `<U>` Set.
 	 */
 	createEmptySet: function() {
 		return new JW.Set();
@@ -72,1116 +70,1106 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	
 	/**
 	 * @method getLength
-	 * `<T>` Возвращает количество элементов в коллекции.
+	 * `<T>` Returns count of items in collection.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {number} Количество элементов в коллекции.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {number} Count of items in collection.
 	 */
 	/**
 	 * @method isEmpty
-	 * `<T>` Проверяет коллекцию на пустоту.
+	 * `<T>` Checks collection for emptiness.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {boolean} Коллекция не содержит ни одного элемента.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {boolean} Collection doesn't contain any items.
 	 */
 	/**
 	 * @method getFirst
-	 * `<T>` Возвращает первый элемент коллекции. Если коллекция пуста, вернет undefined.
+	 * `<T>` Returns first item in collection. If collection is empty, returns `undefined`.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {T} Элемент.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {T} Item.
 	 */
 	/**
 	 * @method getFirstKey
-	 * `<T>` Возвращает индекс первого элемента коллекции. Если коллекция пуста, вернет undefined.
+	 * `<T>` Returns index of first collection item. If collection is empty, returns `undefined`.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {number} Индекс.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {number} Index.
 	 */
 	/**
 	 * @method getLast
-	 * `<T>` Возвращает последний элемент коллекции. Если коллекция пуста, вернет undefined.
+	 * `<T>` Returns the last collection item. If collection is empty, returns `undefined`.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {T} Элемент.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {T} Item.
 	 */
 	/**
 	 * @method getLastKey
-	 * `<T>` Возвращает индекс последнего элемента коллекции. Если коллекция пуста, вернет undefined.
+	 * `<T>` Returns index of last collection item. If collection is empty, returns `undefined`.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {number} Индекс.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {number} Index.
 	 */
 	/**
 	 * @method get
-	 * `<T>` Возвращает элемент по индексу. В случае, если элемента с таким индексом нет, вернет undefined.
+	 * `<T>` Returns item by index. If item with such index doesn't exist, returns `undefined`.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} index Индекс.
-	 * @returns {T} Элемент.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} index Index.
+	 * @returns {T} Item.
 	 */
 	/**
 	 * @method containsKey
-	 * `<T>` Проверяет наличие элемента с заданным индексом в коллекции.
+	 * `<T>` Checks an existance of item with specified index in collection.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} index Индекс.
-	 * @returns {boolean} Коллекция содержит элемент с указанным индексом.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} index Index.
+	 * @returns {boolean} Collection contains item with specified index.
 	 */
 	/**
 	 * @method containsItem
-	 * `<T>` Проверяет наличие элемента в коллекции.
+	 * `<T>` Checks item existance in collection.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 * @param {Array} array `<T>` Array.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
 	 */
 	/**
 	 * @method keyOf
-	 * `<T>` Определяет индекс элемента в данной коллекции. Если такого элемента в коллекции нет, вернет undefined.
+	 * `<T>` Returns index of item in collection. If such item doesn't exist, returns `undefined`.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {T} item Элемент.
-	 * @returns {number} Индекс элемента.
+	 * @param {Array} array `<T>` Array.
+	 * @param {T} item Item.
+	 * @returns {number} Item index.
 	 */
 	/**
 	 * @method getKeys
-	 * `<T>` Возвращает массив индексов всех элементов коллекции, т.е. массив `[0, 1, ... , length - 1]`.
+	 * `<T>` Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {Array} Массив индексов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {Array} `<number>` Indexes array.
 	 */
 	/**
 	 * @method $getKeys
-	 * `<T>` Возвращает массив индексов всех элементов коллекции, т.е. массив `[0, 1, ... , length - 1]`.
+	 * `<T>` Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {JW.Array} `<number>` Массив ключей.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {JW.Array} `<number>` Indexes array.
 	 */
 	/**
 	 * @method removeItem
-	 * `<T>` Удаляет первое вхождение указанного элемента из коллекции.
+	 * `<T>` Removes first occurency of an item in collection.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {T} item Элемент.
+	 * @param {Array} array `<T>` Array.
+	 * @param {T} item Item.
 	 * @returns {void}
 	 */
 	/**
 	 * @method removeItems
-	 * `<T extends JW.Class>` Удаляет все вхождения указанных элементов из коллекции.
+	 * `<T extends JW.Class>` Removes all occurencies of items in collection.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} items `<T>` Элементы.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} items `<T>` Items.
 	 * @returns {void}
 	 */
 	/**
 	 * @method tryClear
-	 * `<T>` Очищает коллекцию.
+	 * `<T>` Clears collection.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {Array} Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	/**
 	 * @method clear
-	 * `<T>` Очищает коллекцию.
+	 * `<T>` Clears collection.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {Array} Бывшее содержимое коллекции.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {Array} `<T>` Old collection contents.
 	 */
 	/**
 	 * @method $clear
-	 * `<T>` Очищает коллекцию.
+	 * `<T>` Clears collection.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {JW.Array} `<T>` Бывшее содержимое коллекции.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {JW.Array} `<T>` Old collection contents.
 	 */
 	/**
 	 * @method every
 	 *
-	 * `<T>` Проверяет все элементы по критерию.
+	 * `<T>` Checks all items by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * Returns true if function `f` returns !== `false` for all collection items.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	/**
 	 * @method some
 	 *
-	 * `<T>` Проверяет каждый элемент по критерию.
+	 * `<T>` Checks each item by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false хотя бы на одном элементе коллекции.
+	 * Returns true if function `f` returns !== `false` for some collection item.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	/**
 	 * @method each
-	 * `<T>` Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
-	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * `<T>` Iterates collection items. Calls specified function for all items.
 	 *
+	 * @static
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): void`
 	 *
-	 * Функция.
+	 * Function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {void}
 	 */
 	/**
 	 * @method find
 	 *
-	 * `<T>` Ищет элемент по критерию.
+	 * `<T>` Finds item by criteria.
 	 * 
-	 * Возвращает индекс первого элемента, функция f на котором возвращает !== false.
+	 * Returns index of first item for which `f` returns !== `false`.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {number} Индекс найденного элемента или undefined.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Found item index or `undefined`.
 	 */
 	/**
 	 * @method search
 	 *
-	 * `<T>` Ищет элемент по критерию.
+	 * `<T>` Finds item by criteria.
 	 * 
-	 * Возвращает первый элемент, функция f на котором возвращает !== false.
+	 * Returns first item for which `f` returns !== `false`.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 *
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {T} Найденный элемент или undefined.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
 	 */
 	/**
 	 * @method toSorted
 	 *
-	 * `<T>` Преобразует коллекцию в отсортированный массив.
+	 * `<T>` Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 *
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method $toSorted
 	 *
-	 * `<T>` Преобразует коллекцию в отсортированный массив.
+	 * `<T>` Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 *
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method toSortedComparing
 	 *
-	 * `<T>` Преобразует коллекцию в отсортированный массив.
+	 * `<T>` Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method $toSortedComparing
 	 *
-	 * `<T>` Преобразует коллекцию в отсортированный массив.
+	 * `<T>` Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method getSortingKeys
 	 *
-	 * `<T>` Возвращает массив индексов отсортированных элементов.
+	 * `<T>` Returns indexes of sorted items.
 	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска функции f на каждом
-	 * элементе.
+	 * Builds array of item indexes, sorted by result of `f` call for each item.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<number>` Массив индексов отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<number>` Sorted item indexes array.
 	 */
 	/**
 	 * @method $getSortingKeys
 	 *
-	 * `<T>` Возвращает массив индексов отсортированных элементов.
+	 * `<T>` Returns indexes of sorted items.
 	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска функции f на каждом
-	 * элементе.
+	 * Builds array of item indexes, sorted by result of `f` call for each item.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<number>` Массив индексов отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<number>` Sorted item indexes array.
 	 */
 	/**
 	 * @method getSortingKeysComparing
 	 *
-	 * `<T>` Возвращает массив индексов отсортированных элементов.
+	 * `<T>` Returns indexes of sorted items.
 	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по компаратору.
+	 * Builds array of item indexes, sorted by comparer.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<number>` Массив индексов отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<number>` Sorted item indexes array.
 	 */
 	/**
 	 * @method $getSortingKeysComparing
 	 *
-	 * `<T>` Возвращает массив индексов отсортированных элементов.
+	 * `<T>` Returns indexes of sorted items.
 	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по компаратору.
+	 * Builds array of item indexes, sorted by comparer.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<number>` Массив индексов отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<number>` Sorted item indexes array.
 	 */
 	/**
 	 * @method index
 	 *
-	 * `<T>` Индексирует коллекцию.
+	 * `<T>` Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Object} Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `<T>` Collection index.
 	 */
 	/**
 	 * @method $index
 	 *
-	 * `<T>` Индексирует коллекцию.
+	 * `<T>` Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Map} `<T>` Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `<T>` Collection index.
 	 */
 	/**
 	 * @method toArray
 	 *
-	 * `<T>` Преобразует коллекцию в массив.
+	 * `<T>` Converts collection to array.
 	 *
-	 * Строит новый массив, включающий все элементы коллекции.
+	 * Builds new array consisting of collection items.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {Array} `<T>` Массив элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {Array} `<T>` Items array.
 	 */
 	/**
 	 * @method $toArray
 	 *
-	 * `<T>` Преобразует коллекцию в массив.
+	 * `<T>` Converts collection to array.
 	 *
-	 * Строит новый массив, включающий все элементы коллекции.
+	 * Builds new array consisting of collection items.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {JW.Array} `<T>` Массив элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {JW.Array} `<T>` Items array.
 	 */
 	/**
 	 * @method toMap
 	 *
-	 * Преобразует коллекцию в словарь.
+	 * Converts collection to map.
 	 *
-	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 * Builds new map consisting of collection items.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {Object} Словарь элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {Object} `<T>` Items map.
 	 */
 	/**
 	 * @method $toMap
 	 *
-	 * Преобразует коллекцию в словарь.
+	 * Converts collection to map.
 	 *
-	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 * Builds new map consisting of collection items.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {JW.Map} `<T>` Словарь элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {JW.Map} `<T>` Items map.
 	 */
 	/**
 	 * @method toSet
 	 *
-	 * `<T>` Преобразует коллекцию в множество.
+	 * `<T>` Converts collection to set.
 	 *
-	 * Строит новое множество, включающее все элементы коллекции.
+	 * Builds new set consisting of collection items.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {Object} Множество элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {Object} `<T>` Items set.
 	 */
 	/**
 	 * @method $toSet
 	 *
-	 * `<T>` Преобразует коллекцию в множество.
+	 * `<T>` Converts collection to set.
 	 *
-	 * Строит новое множество, включающее все элементы коллекции.
+	 * Builds new set consisting of collection items.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {JW.Set} `<T>` Множество элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	/**
 	 * @method asArray
 	 *
-	 * `<T>` Представляет коллекцию в виде массива.
+	 * `<T>` Represents collection as array.
 	 *
-	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {Array} `<T>` Массив элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {Array} `<T>` Items array.
 	 */
 	/**
 	 * @method $asArray
 	 *
-	 * `<T>` Представляет коллекцию в виде массива.
+	 * `<T>` Represents collection as array.
 	 *
-	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {JW.Array} `<T>` Массив элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {JW.Array} `<T>` Items array.
 	 */
 	/**
 	 * @method asMap
 	 *
-	 * Представляет коллекцию в виде словаря.
+	 * `<T>` Represents collection as map.
 	 *
-	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод {@link #static-method-toMap}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toMap}, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is map, returns it immediately. Else, executes {@link #static-method-toMap} method.
+	 * This method works probably faster than {@link #static-method-toMap}, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {Object} Словарь элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {Object} `<T>` Items map.
 	 */
 	/**
 	 * @method $asMap
 	 *
-	 * Представляет коллекцию в виде словаря.
+	 * `<T>` Represents collection as map.
 	 *
-	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод {@link #static-method-toMap}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toMap}, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is map, returns it immediately. Else, executes {@link #static-method-toMap} method.
+	 * This method works probably faster than {@link #static-method-toMap}, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {JW.Map} `<T>` Словарь элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {JW.Map} `<T>` Items map.
 	 */
 	/**
 	 * @method asSet
 	 *
-	 * `<T>` Представляет коллекцию в виде множества.
+	 * `<T>` Represents collection as set.
 	 *
-	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet} method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {Object} Множество элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {Object} `<T>` Items set.
 	 */
 	/**
 	 * @method $asSet
 	 *
-	 * `<T>` Представляет коллекцию в виде множества.
+	 * `<T>` Represents collection as set.
 	 *
-	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet} method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {JW.Set} `<T>` Множество элементов.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	/**
 	 * @method filter
 	 *
-	 * `<T>` Фильтрует коллекцию по критерию.
+	 * `<T>` Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(T item, index: number): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Array} `<T>` Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array} `<T>` Filtered collection.
 	 */
 	/**
 	 * @method $filter
 	 *
-	 * `<T>` Фильтрует коллекцию по критерию.
+	 * `<T>` Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(T item, index: number): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Array} `<T>` Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Array} `<T>` Filtered collection.
 	 */
 	/**
 	 * @method map
 	 *
-	 * `<T, U>` Отображает элементы коллекции.
+	 * `<T, U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(T item, index: number): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Array} `<U>` Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array} `<U>` Mapped collection.
 	 */
 	/**
 	 * @method $map
 	 *
-	 * `<T, U>` Отображает элементы коллекции.
+	 * `<T, U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(T item, index: number): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Array} `<U>` Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Array} `<U>` Mapped collection.
 	 */
 	/**
 	 * @method add
-	 * `<T>` Добавляет элемент в массив.
+	 * `<T>` Inserts an item to array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {T} item Элемент.
-	 * @param {number} [index] Индекс элемента, перед которым вставить новый элемент. По умолчанию, добавляет элемент
-	 * в конец массива.
+	 * @param {Array} array `<T>` Array.
+	 * @param {T} item Item.
+	 * @param {number} [index] Index of an item before which to insert new one. By default, appends the item.
 	 * @returns {void}
 	 */
 	/**
 	 * @method tryAdd
-	 * `<T>` Добавляет элемент в массив.
+	 * `<T>` Inserts an item to array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {T} item Элемент.
-	 * @param {number} [index] Индекс элемента, перед которым вставить новый элемент. По умолчанию, добавляет элемент
-	 * в конец массива.
+	 * @param {Array} array `<T>` Array.
+	 * @param {T} item Item.
+	 * @param {number} [index] Index of an item before which to insert new one. By default, appends the item.
 	 * @returns {boolean} true.
 	 */
 	/**
 	 * @method addAll
-	 * `<T>` Добавляет набор элементов в массив.
+	 * `<T>` Inserts item range to array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} items `<T>` Элементы.
-	 * @param {number} [index] Индекс элемента, перед которым вставить новые элементы. По умолчанию, добавляет элементы
-	 * в конец массива.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} items `<T>` Items.
+	 * @param {number} [index] Index of an item before which to insert new ones. By default, appends the items.
 	 * @returns {void}
 	 */
 	/**
 	 * @method tryAddAll
-	 * `<T>` Добавляет набор элементов в массив.
+	 * `<T>` Inserts item range to array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} items `<T>` Элементы.
-	 * @param {number} [index] Индекс элемента, перед которым вставить новые элементы. По умолчанию, добавляет элементы
-	 * в конец массива.
-	 * @returns {boolean} true. Если нет изменений - undefined.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} items `<T>` Items.
+	 * @param {number} [index] Index of an item before which to insert new ones. By default, appends the items.
+	 * @returns {boolean} true. If not modified - `undefined`.
 	 */
 	/**
 	 * @method set
-	 * `<T>` Заменяет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
-	 * (не надо так).
+	 * `<T>` Replaces item with specified index. If array doesn't contain such index, it will break the application.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {T} item Элемент.
-	 * @param {number} index Индекс.
-	 * @returns {T} Бывший элемент коллекции.
+	 * @param {Array} array `<T>` Array.
+	 * @param {T} item Item.
+	 * @param {number} index Index.
+	 * @returns {T} The replaced item.
 	 */
 	/**
 	 * @method trySet
-	 * `<T>` Заменяет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
-	 * (не надо так).
+	 * `<T>` Replaces item with specified index. If array doesn't contain such index, it will break the application.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {T} item Элемент.
-	 * @param {number} index Индекс.
-	 * @returns {JW.Proxy} `<T>` Обертка над бывшим элементом коллекции. Если нет изменений - undefined.
+	 * @param {Array} array `<T>` Array.
+	 * @param {T} item Item.
+	 * @param {number} index Index.
+	 * @returns {JW.Proxy} `<T>` Proxy of the replaced item. If not modified - `undefined`.
 	 */
 	/**
 	 * @method remove
-	 * `<T>` Удаляет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
-	 * (не надо так).
+	 * `<T>` Removes item with specified index. If array doesn't contain such index, it will break the application.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} index Индекс.
-	 * @returns {T} Бывший элемент коллекции.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} index Index.
+	 * @returns {T} The removed item.
 	 */
 	/**
 	 * @method tryRemove
-	 * `<T>` Удаляет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
-	 * (не надо так).
+	 * `<T>` Removes item with specified index. If array doesn't contain such index, it will break the application.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} index Индекс.
-	 * @returns {T} Бывший элемент коллекции. Если нет изменений - undefined.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} index Index.
+	 * @returns {T} The removed item. If not modified - `undefined`.
 	 */
 	/**
 	 * @method removeAll
-	 * `<T>` Удаляет набор элементов из массива.
+	 * `<T>` Removes item range from array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} index Индекс элемента, начиная с которого удалять.
-	 * @param {number} count Количество удаленных элементов.
-	 * @returns {Array} `<T>` Удаленные элементы.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {Array} `<T>` The removed items.
 	 */
 	/**
 	 * @method $removeAll
-	 * `<T>` Удаляет набор элементов из массива.
+	 * `<T>` Removes item range from array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} index Индекс элемента, начиная с которого удалять.
-	 * @param {number} count Количество удаленных элементов.
-	 * @returns {JW.Array} `<T>` Удаленные элементы.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {JW.Array} `<T>` The removed items.
 	 */
 	/**
 	 * @method tryRemoveAll
-	 * `<T>` Удаляет набор элементов из массива.
+	 * `<T>` Removes item range from array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} index Индекс элемента, начиная с которого удалять.
-	 * @param {number} count Количество удаленных элементов.
-	 * @returns {Array} `<T>` Удаленные элементы. Если нет изменений - undefined.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {Array} `<T>` The removed items. If not modified - `undefined`.
 	 */
 	/**
 	 * @method move
-	 * `<T>` Перемещает элемент в массиве.
+	 * `<T>` Moves an item inside array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} fromIndex Индекс элемента, который переместить.
-	 * @param {number} toIndex Куда переместить.
-	 * @returns {T} Перемещенный элемент.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} fromIndex Item index to move.
+	 * @param {number} toIndex Index to move to.
+	 * @returns {T} The moved item.
 	 */
 	/**
 	 * @method tryMove
-	 * `<T>` Перемещает элемент в массиве.
+	 * `<T>` Moves an item inside array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} fromIndex Индекс элемента, который переместить.
-	 * @param {number} toIndex Куда переместить.
-	 * @returns {T} Перемещенный элемент. Если нет изменений - undefined.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} fromIndex Item index to move.
+	 * @param {number} toIndex Index to move to.
+	 * @returns {T} The moved item. If not modified - `undefined`.
 	 */
 	/**
 	 * @method splice
-	 * `<T>` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * `<T>` Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Список отрезков для удаления по возрастанию
-	 * индекса. Отрезки удаляются от конца к началу массива.
-	 * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Список наборов для вставки по возрастанию
-	 * индекса. Наборы вставляются от начала к концу массива.
-	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Результат.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>`
+	 * Array of segments to remove sorted by index asc. Segments are removed in backward order.
+	 * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>`
+	 * Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Result.
 	 */
 	/**
 	 * @method trySplice
-	 * `<T>` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * `<T>` Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Список отрезков для удаления по возрастанию
-	 * индекса. Отрезки удаляются от конца к началу массива.
-	 * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Список наборов для вставки по возрастанию
-	 * индекса. Наборы вставляются от начала к концу массива.
-	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Результат. Если нет изменений - undefined.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>`
+	 * Array of segments to remove sorted by index asc. Segments are removed in backward order.
+	 * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>`
+	 * Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	/**
 	 * @method reorder
-	 * `<T>` Переупорядочивает элементы массива.
+	 * `<T>` Reorders array items.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} indexArray `<number>` Массив индексов. Элемент с индексом i будет перемещен в
-	 * индекс indexArray[i]. Должен содержать все индексы от 0 до (length - 1).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} indexArray `<number>` Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * Must contain all indexes from 0 to (length - 1).
 	 * @returns {void}
 	 */
 	/**
 	 * @method tryReorder
-	 * `<T>` Переупорядочивает элементы массива.
+	 * `<T>` Reorders array items.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} indexArray `<number>` Массив индексов. Элемент с индексом i будет перемещен в
-	 * индекс indexArray[i]. Должен содержать все индексы от 0 до (length - 1).
-	 * @returns {Array} `<T>` Бывшее содержимое массива. Если нет изменений - undefined.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} indexArray `<number>` Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * Must contain all indexes from 0 to (length - 1).
+	 * @returns {Array} `<T>` Old array contents. If not modified - undefined.
 	 */
 	/**
 	 * @method detectSplice
-	 * `<T>` Определяет параметры метода {@link #static-method-splice}, с которыми содержимое массива станет равно newItems.
-	 * Т.е. определяет, какие элементы нужно удалить, какие вставить, и в какое место. Все элементы должны быть
-	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод
-	 * {@link #static-method-detectFilter}.
+	 * `<T>` Detects {@link #static-method-splice} method arguments to adjust array contents to `newItems`.
+	 * Determines which item ranges should be removed and which ones should be inserted.
+	 * All items must have unique `getKey` function result.
+	 * If items don't have unique key, probably {@link #static-method-detectFilter} method will help.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
-	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
-	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} newItems `<T>` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {JW.AbstractArray.SpliceParams}
-	 * `<T>` Параметры метода {@link #static-method-splice}.
-	 * Если вызова метода не требуется - undefined.
+	 * `<T>` {@link #static-method-splice} method arguments. If no method call required - `undefined`.
 	 */
 	/**
 	 * @method detectFilter
-	 * Определяет параметр removeParamsList метода {@link #static-method-splice}, с которыми содержимое массива станет равно newItems.
-	 * Определяет, какие элементы нужно удалить. Не предусматривает вставку новых элементов. В отличие от
-	 * метода {@link #static-method-detectSplice}, не требует уникальности элементов массива.
+	 * Detects `removeParamsList` arguments of {@link #static-method-splice} to adjust array contents to `newItems`.
+	 * Determines which item ranges should be removed.
+	 * Doesn't assume items insertion - try {@link #static-method-detectSplice} if that's the case.
+	 * In advantage to {@link #static-method-detectSplice}, doesn't require item uniquiness.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} newItems `<T>` New array contents.
 	 * @returns {Array}
-	 * `<JW.AbstractArray.IndexCount>` Параметр removeParamsList метода {@link #static-method-splice}.
-	 * Если вызова метода не требуется - undefined.
+	 * `<JW.AbstractArray.IndexCount>` `removeParamsList` argument of {@link #static-method-splice} method.
+	 * If no method call required - `undefined`.
 	 */
 	/**
 	 * @method detectReorder
-	 * `<T>` Определяет параметр метода {@link #static-method-reorder}, с которым содержимое массива станет равно newItems.
-	 * Т.е. определяет, какие элементы куда нужно переместить.
-	 * Если содержимое newItems отличается от содержимого массива, массив сломается.
+	 * `<T>` Detects {@link #static-method-reorder} method arguments to adjust array contents to `newItems`.
+	 * Determines where to move all items.
+	 * If `newItems` contents differ from `this` contents, the array will be broken.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
-	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
-	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} newItems `<T>` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {Array}
-	 * `<number>` Параметр indexArray метода {@link #static-method-reorder}.
-	 * Если вызова метода не требуется - undefined.
+	 * `<number>` `indexArray` argument of {@link #static-method-reorder} method.
+	 * If no method call required - `undefined`.
 	 */
 	/**
 	 * @method detectSort
-	 * `<T>` Определяет параметр метода {@link #static-method-reorder}, с которым содержимое массива отсортируется по результату вызова
-	 * функции f на всех элементах.
+	 * `<T>` Detects {@link #static-method-reorder} method arguments to sort array contents by result of `f` call for each item.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {Array}
-	 * `<number>` Параметр indexArray метода {@link #static-method-reorder}.
-	 * Если вызова метода не требуется - undefined.
+	 * `<number>` `indexArray` argument of {@link #static-method-reorder} method.
+	 * If no method call required - `undefined`.
 	 */
 	/**
 	 * @method detectSortComparing
-	 * `<T>` Определяет параметр метода {@link #static-method-reorder}, с которым содержимое массива отсортируется по компаратору.
+	 * `<T>` Detects {@link #static-method-reorder} method arguments to sort array contents by comparer.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {Array}
-	 * `<number>` Параметр indexArray метода {@link #static-method-reorder}.
-	 * Если вызова метода не требуется - undefined.
+	 * `<number>` `indexArray` argument of {@link #static-method-reorder} method.
+	 * If no method call required - `undefined`.
 	 */
 	/**
 	 * @method performSplice
-	 * `<T>` Преобразует содержимое массива к newItems комбинацией методов {@link #static-method-detectSplice} и {@link #static-method-splice}.
-	 * Все элементы должны быть
-	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод {@link #static-method-performFilter}.
+	 * `<T>` Adjusts array contents to `newItems` using {@link #static-method-detectSplice} and {@link #static-method-splice} methods.
+	 * All items must have unique `getKey` function result.
+	 * If items don't have unique key, probably {@link #static-method-detectFilter} method will help.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
-	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
-	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} newItems `<T>` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {void}
 	 */
 	/**
 	 * @method performFilter
-	 * `<T>` Преобразует содержимое массива к newItems комбинацией методов {@link #static-method-detectFilter} и {@link #static-method-splice}.
-	 * Только удаляет элементы. Не предусматривает вставку новых элементов. В отличие от
-	 * метода {@link #static-method-performSplice}, не требует уникальности элементов массива.
+	 * `<T>` Adjusts array contents to `newItems` using {@link #static-method-detectFilter} and {@link #static-method-splice} methods.
+	 * Only removes items. Doesn't assume items insertion - try {@link #static-method-detectSplice} if that's the case.
+	 * In advantage to {@link #static-method-detectSplice}, doesn't require item uniquiness.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} newItems `<T>` New array contents.
 	 * @returns {void}
 	 */
 	/**
 	 * @method performReorder
-	 * `<T>` Преобразует содержимое массива к newItems комбинацией методов {@link #static-method-detectReorder} и {@link #static-method-reorder}.
+	 * `<T>` Adjusts array contents to `newItems` using {@link #static-method-detectReorder} and {@link #static-method-reorder} methods.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
-	 * равна JW.iid. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
-	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} newItems `<T>` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {void}
 	 */
 	/**
 	 * @method sort
-	 * `<T>` Сортирует массив по результату запуска функции f на элементах.
+	 * `<T>` Sorts array by result of `f` function call for each item.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {void}
 	 */
 	/**
 	 * @method sortComparing
-	 * `<T>` Сортирует массив по компаратору.
+	 * `<T>` Sorts array by comparer.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {void}
 	 */
 	/**
 	 * @method createMapper
-	 * `<T, U>` Конструирует конвертер элементов коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T, U>` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Mapper}
-	 * `<T, U>` Синхронизатор.
+	 * `<T, U>` Synchronizer.
 	 */
 	/**
 	 * @method createFilterer
-	 * `<T>` Конструирует фильтровщик коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T>` Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Filterer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createObserver
-	 * `<T>` Конструирует наблюдатель коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T>` Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Observer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createOrderer
-	 * `<T>` Конструирует конвертер коллекции в массив (упорядочитель).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T>` Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Orderer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createSorterComparing
-	 * `<T>` Конструирует конвертер коллекции в массив (сортировщик по компаратору).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T>` Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.SorterComparing}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createIndexer
-	 * `<T>` Конструирует индексатор коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T>` Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Indexer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createLister
-	 * `<T>` Конструирует конвертер коллекции в множество.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T>` Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Lister}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createInserter
-	 * `<T>` Конструирует синхронизатор представления с массивом.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T>` Creates view synchronizer with array.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Inserter}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createMerger
-	 * `<T>` Конструирует объединитель массивов.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T>` Creates arrays merger.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Merger}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createReverser
-	 * `<T>` Конструирует обратитель массива.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T>` Creates array reverser.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Array} array `<T>` Array.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Reverser}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method equal
-	 * `<T>` Поэлементно сравнивает два массива.
+	 * `<T>` Checks 2 arrays for equality (===), item by item.
 	 * @static
-	 * @param {Array} array1 `<T>` Массив.
-	 * @param {Array} array2 `<T>` Другой массив.
-	 * @returns {boolean} Массивы поэлементно равны.
+	 * @param {Array} array `<T>` Array.
+	 * @param {Array} arr `<T>` Another array.
+	 * @returns {boolean} Arrays are equal.
 	 */
 	/**
 	 * @method collapse
-	 * `<T>` Сплющивает массив массивов массивов... в один массив.
+	 * `<T>` Collapses multi-dimentional array.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {number} depth Глубина сплющивания.
-	 * @returns {Array} Сплющенный массив.
+	 * @param {Array} array `<T>` Array.
+	 * @param {number} depth Dimentions to collapse.
+	 * @returns {Array} Collapsed array.
 	 */
 	/**
 	 * @method indexOf
-	 * `<T>` Определяет индекс элемента в данной коллекции. Если такого элемента в коллекции нет, вернет -1.
+	 * `<T>` Returns item index in this collection. If item doesn't exist, returns -1.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @param {T} item Элемент.
-	 * @returns {number} Индекс элемента.
+	 * @param {Array} array `<T>` Array.
+	 * @param {T} item Item.
+	 * @returns {number} Item index or -1.
 	 */
 	/**
 	 * @method backEvery
 	 *
-	 * `<T>` Проверяет все элементы по критерию в обратном порядке.
+	 * `<T>` Checks all items by criteria in backward order.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * Returns true if function `f` returns !== `false` for all collection items.
 	 * 
-	 * Алгоритм перебирает все элементы с конца в начало, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @static
-	 * @param {Array} array `<T>` Массив.
+	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	/**
 	 * @method pop
-	 * `<T>` Удаляет последний элемент массива. Ничего не делает, если массив пуст.
+	 * `<T>` Removes last array item. Does nothing if array is empty.
 	 * @static
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {T} Удаленный элемент или undefined.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {T} The removed item or `undefined`.
 	 */
 	/**
 	 * @method binarySearch
-	 * Ищет индекс первого элемента, который больше указанного значения относительно функции compare,
-	 * используя бинарный поиск. Массив должен быть отсортирован по функции compare.
-	 * @param {T} value Значение.
+	 * `<T>` Determines index of first item which is more than specified value by `compare` function,
+	 * using binary search. Array must be sorted by `compare` function.
+	 * Can be used for item insertion easily.
+	 * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
+	 * @static
+	 * @param {Array} array `<T>` Array.
+	 * @param {T} value Value.
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope]
-	 * Контекст вызова compare. По умолчанию, вызывается в контексте массива.
-	 * @returns {number} Индекс элемента.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Item index.
 	 */
 });

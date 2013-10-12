@@ -116,7 +116,7 @@ JW.IndexedCollection = function() {
 JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	/**
 	 * @method get
-	 * Returns item by key. If items with such key doesn't exist, returns `undefined`.
+	 * Returns item by key. If item with such key doesn't exist, returns `undefined`.
 	 * @param {K} key Key.
 	 * @returns {T} Item.
 	 */
