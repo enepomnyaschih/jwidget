@@ -165,11 +165,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 */
 	
 	/**
-	 * Returns items array - internal collection representation.
+	 * Returns item array - internal collection representation.
 	 *
 	 * **Caution: doesn't make a copy.**
 	 *
-	 * @returns {Array} `<T>` Items array.
+	 * @returns {Array} `<T>` Item array.
 	 */
 	getItems: function() {
 		return this.items;
@@ -1243,7 +1243,7 @@ JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
 
 /**
  * @class
- * `<T>` JW.AbstractArray#splice method arguments. Returned by #detectSplice method.
+ * `<T>` JW.AbstractArray#splice method arguments. Returned by JW.AbstractArray#detectSplice method.
  * @extends JW.Class
  *
  * @constructor

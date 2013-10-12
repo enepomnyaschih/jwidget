@@ -208,7 +208,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * Removes item with specified key. If collection doesn't contain such key:
 	 *
 	 * - Array will break.
-	 * - Map will add a new item.
+	 * - Map will do nothing.
 	 *
 	 * @param {K} key Key.
 	 * @returns {T} The removed item.
