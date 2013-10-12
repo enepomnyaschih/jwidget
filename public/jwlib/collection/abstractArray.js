@@ -110,9 +110,9 @@
  * Similar collection creation (for algorithms and synchronizers implementation):
  *
  * - {@link #createEmpty} - Creates empty collection of the same type.
- * - {@link #createEmptyArray} - Creates empty array of the same observability type.
- * - {@link #createEmptyMap} - Creates empty map of the same observability type.
- * - {@link #createEmptySet} - Creates empty set of the same observability type.
+ * - {@link #createEmptyArray} - Creates empty array of the same observability level.
+ * - {@link #createEmptyMap} - Creates empty map of the same observability level.
+ * - {@link #createEmptySet} - Creates empty set of the same observability level.
  *
  * Other methods:
  *
@@ -537,7 +537,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * Mapping function.
 	 *
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
-	 * @returns {Array} `<T>` Filtered collection.
+	 * @returns {Array} `<U>` Mapped collection.
 	 */
 	map: function(callback, scope) {
 		return JW.Array.map(this.items, callback, scope || this);
@@ -555,7 +555,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * Mapping function.
 	 *
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
-	 * @returns {JW.Array} `<T>` Filtered collection.
+	 * @returns {JW.Array} `<U>` Mapped collection.
 	 */
 	$map: JW.AbstractCollection._create$Array("map"),
 	

@@ -20,131 +20,134 @@
 /**
  * @class
  *
- * `<T>` Абстрактная коллекция элементов типа T.
+ * `<T>` Abstract collection of items of type T.
  *
- * Существует 3 типа коллекций:
+ * There are 3 collection types:
  *
- * - JW.AbstractArray (массив), наследуется от JW.IndexedCollection
- * - JW.AbstractMap (словарь), наследуется от JW.IndexedCollection
- * - JW.AbstractSet (множество)
+ * - JW.AbstractArray, extends JW.IndexedCollection
+ * - JW.AbstractMap, extends JW.IndexedCollection
+ * - JW.AbstractSet
  *
- * Коллекции можно преобразовывать друг в друга с помощью алгоритмов.
+ * You can convert collections to each other using algorithms.
  *
- * Каждая коллекция предоставляется в двух вариантах:
+ * Each collection has 2 implementations:
  *
- * - Простая коллекция: JW.Array, JW.Map, JW.Set
- * - Оповещающая коллекция: JW.ObservableArray, JW.ObservableMap, JW.ObservableSet
+ * - Simple collections: JW.Array, JW.Map, JW.Set
+ * - Observable collection: JW.ObservableArray, JW.ObservableMap, JW.ObservableSet
  *
- * Отличие оповещающей коллекции от простой состоит в том, что она выбрасывает события о своем изменении. Это позволяет
- * синхронизировать данные с представлением налету в соответствии с архитектурой Model-View. Для связи оповещающих
- * коллекций между собой существуют синхронизаторы:
+ * The difference is that observable collection triggers the events about its modifications.
+ * It lets you to synchronize view with data on fly in accordance to Model-View architecture.
+ * The next synchronizers exist to connect observable collections to each other:
  *
- * - Конвертер элементов: JW.AbstractCollection.Mapper
- * - Конвертер в множество: JW.AbstractCollection.Lister
- * - Конвертер в словарь (индексатор): JW.AbstractCollection.Indexer
- * - Конвертер в массив (упорядочитель): JW.AbstractCollection.Orderer
- * - Конвертер в массив (сортировщик по компаратору): JW.AbstractCollection.SorterComparing
- * - Наблюдатель: JW.AbstractCollection.Observer
- * - Синхронизаторы представления: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
- * - Объединитель массивов: JW.AbstractArray.Merger
+ * - Item mapper: JW.AbstractCollection.Mapper
+ * - Filterer: JW.AbstractCollection.Filterer
+ * - Converter to set: JW.AbstractCollection.Lister
+ * - Converter to map (indexer): JW.AbstractCollection.Indexer
+ * - Converter to array (orderer): JW.AbstractCollection.Orderer
+ * - Converter to array (sorter by comparer): JW.AbstractCollection.SorterComparing
+ * - Observer: JW.AbstractCollection.Observer
+ * - View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
+ * - Arrays merger: JW.AbstractArray.Merger
+ * - Array reverser: JW.AbstractArray.Reverser
  *
- * Простые коллекции введены прежде всего для совместимости. Они имеют общий интерфейс с оповещающими коллекциями,
- * но работают немного быстрее.
+ * Simple collections are very similar to native JavaScript collections.
+ * The main aim of them is compatibility: they have the same API as observable collections, but work a bit faster.
  *
- * При работе с коллекциями jWidget следует помнить несколько важных правил.
+ * Please keep in mind the next rules whenever you work with jWidget collections.
  *
- * 1) В коллекции jWidget запрещено добавлять null и undefined. При необходимости воспользуйтесь паттерном Null Object.
+ * 1) `null` and `undefined` are denied to be added into jWidget collection.
+ * Use "Null Object" pattern if it is neccessary.
  *
- * 2) Большинство методов для изменения коллекции предоставлены в двух вариантах: tryMethod и method. Эти методы
- * выполняют одно и то же действие, но возвращают разный результат. Первый вариант, в основном, введен для внутреннего
- * использования и <em>всегда возвращает undefined, если коллекция не была изменена</em>. Например, #tryClear вернет
- * undefined, если вы пытаетесь очистить пустую коллекцию, в противном случае он вернет бывшее содержимое коллекции.
- * Второй вариант возвращает результат в более дружественном формате. Например, #clear всегда возвращает бывшее
- * содержимое коллекции. Так, если вы хотите очистить массив и уничтожить все элементы, следует воспользоваться
- * методом #clear:
+ * 2) The majority of collection modification methods have 2 implementations: `tryMethod` и `method`.
+ * These methods perform the same modification but return different result.
+ * First implementation is introduced for internal use mainly,
+ * and <em>it always returns `undefined` if collection has not been modified</em>.
+ * For example, #tryClear will return `undefined` if collection is empty,
+ * else it will return old collection contents.
+ * Second implementation returns result in more friendly format.
+ * For example, #clear always returns old collection contents.
+ * So, if you want to clear collection and destroy all items, #clear method will fit better:
  *
- *     JW.Array.each(array.clear(), JW.destroy);
+ *     JW.Array.each(array.{@link JW.AbstractArray#clear clear}(), JW.destroy); // correct
+ *     JW.Array.each(array.{@link JW.AbstractArray#clear tryClear}(), JW.destroy); // incorrect: 'undefined' exception if array is empty
  *
- * Так вы можете быть уверены в том, что функция JW.Array.each всегда получит на вход корректный массив, тогда как
- * метод #tryClear мог дать на выходе undefined.
+ * 3) All methods which return collection have 2 implementations: `method` and `$method`.
+ * These methods perform the same modification but return the result in different format.
+ * First implementation returns native JavaScript collection: Array or Object.
+ * Second implementation returns jWidget adapter: JW.Array, JW.Map or JW.Set.
+ * Use one method that's more convenient in your specific situation.
+ * For example, `$method` is convenient for chaining algorithm method calls.
+ * So, previous example can be changed next way:
  *
- * 3) Все методы, возвращающие коллекцию, предоставлены в двух вариантах: method и $method. Эти методы выполняют одно и
- * то же действие, но возвращают результат в разном формате. Первый метод вернет нативную коллекцию JavaScript: Array
- * или Object. Второй метод вернет обертку jWidget: JW.Array, JW.Map или JW.Set. Используйте тот метод, который
- * удобнее в данной конкретной ситуации. Например, $method удобен для цепочечных вызовов алгоритмов. Так, предыдущий
- * пример можно переписать следующим образом:
+ *     array.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy);
  *
- *     array.$clear().each(JW.destroy);
+ * But in next example `method` is more appropriate:
  *
- * А в следующем примере гораздо удобнее воспользоваться реализацией method:
+ *     set.{@link JW.AbstractArray#addAll addAll}(array.{@link JW.AbstractArray#clear clear}());
  *
- *     set.addAll(array.clear());
+ * 4) It is better if all items in collection are unique. Some methods like
+ * JW.AbstractArray#performReorder require each item to have an unique key.
+ * If 2 items of collection are equal, then their keys are equal as well, so this method won't work correctly.
  *
- * 4) Желательно, чтобы все элементы коллекции были различны. Некоторые методы, такие как
- * JW.AbstractArray#performReorder, требуют, чтобы у каждого элемента коллекции был свой уникальный ключ. Если 2
- * элемента коллекции совпадают, то совпадают и их ключи, поэтому такой метод работать не будет.
+ * # Collection methods
  *
- * # Методы коллекции
+ * Content retrieving:
  *
- * Получение содержимого:
+ * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #isEmpty} - Checks collection for emptiness.
+ * - {@link #getFirst} - Returns first item in collection.
+ * - {@link #containsItem} - Does collection contain the item?
  *
- * - {@link #getLength} - Возвращает количество элементов в коллекции.
- * - {@link #isEmpty} - Проверяет коллекцию на пустоту.
- * - {@link #getFirst} - Возвращает первый элемент коллекции.
- * - {@link #containsItem} - Содержит ли коллекция элемент.
+ * Iteration algorhitms:
  *
- * Алгоритмы перебора:
- *
- * - {@link #every} - Проверяет все элементы по критерию.
- * Возвращает true тогда и только тогда, когда все элементы удовлетворяют критерию.
- * - {@link #some} - Проверяет каждый элемент по критерию.
- * Возвращает true тогда и только тогда, когда хотя бы один элемент удовлетворяет критерию.
- * - {@link #each} - Перебирает элементы.
- * - {@link #search} - Ищет элемент по критерию.
- * Возвращает первый элемент, удовлетворяющий критерию.
- * - {@link #filter}, #$filter - Фильтрует коллекцию по критерию.
- * Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
- * - {@link #map}, #$map - Отображает элементы коллекции.
- * Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
- * коллекции.
+ * - {@link #every} - Checks all items by criteria.
+ * Returns `true` if all items match the criteria.
+ * - {@link #some} - Checks each item by criteria.
+ * Returns `true` if some items matches the criteria.
+ * - {@link #each} - Iterates items.
+ * - {@link #search} - Finds item by criteria.
+ * Returns first item matching the criteria.
+ * - {@link #filter}, #$filter - Filters collection by criteria.
+ * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #map}, #$map - Maps collection items.
+ * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
- * Строит массив из элементов коллекции, отсортированный по индексу
- * или компаратору.
- * - {@link #index}, #$index - Индексирует коллекцию.
- * Строит словарь, в ключах которого находятся индексы элементов, а в значениях - соответствующие элементы.
- * - {@link #toArray}, #$toArray - Строит новый массив из элементов коллекции.
- * - {@link #toSet}, #$toSet - Строит новое множество из элементов коллекции.
- * - {@link #asArray}, #$asArray - Представляет коллекцию в виде массива.
- * - {@link #asSet}, #$asSet - Представляет коллекцию в виде множества.
+ * Builds array consisting of collection items sorted by indexer or comparer.
+ * - {@link #index}, #$index - Indexes collection.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #asArray}, #$asArray - Represents collection as array.
+ * - {@link #asSet}, #$asSet - Represents collection as set.
  *
- * Изменение коллекции:
+ * Collection modification:
  *
- * - {@link #removeItem} - Удаляет первое вхождение элемента из коллекции.
- * - {@link #removeItems} - Удаляет все вхождения элементов из коллекции.
- * - {@link #clear}, #$clear, #tryClear - Очищает коллекцию.
+ * - {@link #removeItem} - Removes first occurency of an item in collection.
+ * - {@link #removeItems} - Removes all occurencies of items in collection.
+ * - {@link #clear}, #$clear, #tryClear - Clears collection.
  *
- * Создание синхронизаторов:
+ * Synchronizers creation:
  *
- * - {@link #createMapper} - Создает конвертер элементов.
- * - {@link #createFilterer} - Создает фильтровщик.
- * - {@link #createLister} - Создает конвертер в множество.
- * - {@link #createIndexer} - Создает индексатор.
- * - {@link #createOrderer} - Создает конвертер в массив (упорядочитель).
- * - {@link #createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
- * - {@link #createObserver} - Создает наблюдатель.
+ * - {@link #createMapper} - Creates item mapper.
+ * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createLister} - Creates converter to set.
+ * - {@link #createIndexer} - Creates converter to map (indexer).
+ * - {@link #createOrderer} - Creates converter to array (orderer).
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createObserver} - Creates observer.
  *
- * Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
+ * Similar collection creation (for algorithms and synchronizers implementation):
  *
- * - {@link #createEmpty} - Создает пустую коллекцию того же типа.
- * - {@link #createEmptyArray} - Создает пустой массив того же типа.
- * - {@link #createEmptyMap} - Создает пустой словарь того же типа.
- * - {@link #createEmptySet} - Создает пустое множество того же типа.
+ * - {@link #createEmpty} - Creates empty collection of the same type.
+ * - {@link #createEmptyArray} - Creates empty array of the same observability type.
+ * - {@link #createEmptyMap} - Creates empty map of the same observability type.
+ * - {@link #createEmptySet} - Creates empty set of the same observability type.
  *
- * Все те же самые методы доступны и для нативных коллекций JavaScript:
+ * All the same algorithms are also available for native JavaScript collections:
  *
- * - Array, смотрите статические методы JW.Array
- * - Object как словарь, смотрите статические методы JW.Map
- * - Object как множество, смотрите статические методы JW.Set
+ * - Array, see JW.Array static methods.
+ * - Object as map, see JW.Map static methods.
+ * - Object as set, see JW.Set static methods.
  *
  * @extends JW.Class
  * @abstract
@@ -174,17 +177,17 @@ JW.AbstractCollection._create$Set = function(algorithm) {
 JW.extend(JW.AbstractCollection, JW.Class, {
 	/**
 	 * @method getLength
-	 * Возвращает количество элементов в коллекции.
-	 * @returns {number} Количество элементов в коллекции.
+	 * Returns count of items in collection.
+	 * @returns {number} Count of items in collection.
 	 */
 	/**
 	 * @method isEmpty
-	 * Проверяет коллекцию на пустоту.
-	 * @returns {boolean} Коллекция не содержит ни одного элемента.
+	 * Checks collection for emptiness.
+	 * @returns {boolean} Collection doesn't contain any items.
 	 */
 	/**
-	 * Возвращает первый элемент коллекции. Если коллекция пуста, вернет undefined.
-	 * @returns {T} Элемент.
+	 * Returns first item in collection. If collection is empty, returns `undefined`.
+	 * @returns {T} Item.
 	 */
 	getFirst: function() {
 		return this._callStatic("getFirst");
@@ -192,37 +195,37 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	
 	/**
 	 * @method containsItem
-	 * Проверяет наличие элемента в коллекции.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 * Checks item existance in collection.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
 	 */
 	/**
 	 * @method removeItem
-	 * Удаляет первое вхождение указанного элемента из коллекции.
-	 * @param {T} item Элемент.
+	 * Removes first occurency of an item in collection.
+	 * @param {T} item Item.
 	 * @returns {void}
 	 */
 	/**
 	 * @method removeItems
-	 * Удаляет все вхождения указанных элементов из коллекции.
-	 * Доступно только для `<T extends JW.Class>`.
-	 * @param {Array} items `<T>` Элементы.
+	 * Removes all occurencies of items in collection.
+	 * Works for `<T extends JW.Class>` only.
+	 * @param {Array} items `<T>` Item.
 	 * @returns {void}
 	 */
 	/**
 	 * @method tryClear
-	 * Очищает коллекцию.
-	 * @returns {Array/Object} Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 * Clears collection.
+	 * @returns {Array/Object} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	/**
 	 * @method clear
-	 * Очищает коллекцию.
-	 * @returns {Array/Object} Бывшее содержимое коллекции.
+	 * Clears collection.
+	 * @returns {Array/Object} `<T>` Old collection contents.
 	 */
 	/**
 	 * @method $clear
-	 * Очищает коллекцию.
-	 * @returns {JW.AbstractCollection} `<T>` Бывшее содержимое коллекции.
+	 * Clears collection.
+	 * @returns {JW.AbstractCollection} `<T>` Old collection contents.
 	 */
 	
 	destroy: function() {
@@ -233,39 +236,37 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	/**
 	 * @method every
 	 *
-	 * Проверяет все элементы по критерию.
+	 * Checks all items by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * Returns true if function `f` returns !== `false` for all collection items.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	
 	/**
-	 * Проверяет каждый элемент по критерию.
+	 * Checks each item by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false хотя бы на одном элементе коллекции.
+	 * Returns true if function `f` returns !== `false` for some collection item.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	some: function(callback, scope) {
 		return !this.every(function(item) {
@@ -274,14 +275,15 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	},
 	
 	/**
-	 * Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
+	 * Iterates collection items. Calls specified function for all items.
+	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T): void`
 	 *
-	 * Функция.
+	 * Function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {void}
 	 */
 	each: function(callback, scope) {
@@ -292,21 +294,20 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	},
 	
 	/**
-	 * Ищет элемент по критерию.
+	 * Finds item by criteria.
 	 * 
-	 * Возвращает первый элемент, функция f на котором возвращает !== false.
+	 * Returns first item for which `f` returns !== `false`.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {T} Найденный элемент или undefined.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
 	 */
 	search: function(callback, scope) {
 		var result;
@@ -321,93 +322,92 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	},
 	
 	/**
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	toSorted: function(callback, scope, order) {
 		return this._callStatic("toSorted", [callback, scope || this, order]);
 	},
 	
 	/**
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	$toSorted: JW.AbstractCollection._create$Array("toSorted"),
 	
 	/**
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): Number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	toSortedComparing: function(compare, scope, order) {
 		return this._callStatic("toSortedComparing", [compare, scope || this, order]);
 	},
 	
 	/**
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): Number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	$toSortedComparing: JW.AbstractCollection._create$Array("toSortedComparing"),
 	
 	/**
-	 * Индексирует коллекцию.
+	 * Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Object} Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `<T>` Collection index.
 	 */
 	index: function(callback, scope) {
 		var result = {};
@@ -422,28 +422,27 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	},
 	
 	/**
-	 * Индексирует коллекцию.
+	 * Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Map} `<T>` Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `<T>` Collection index.
 	 */
 	$index: JW.AbstractCollection._create$Map("index"),
 	
 	/**
-	 * Преобразует коллекцию в массив.
+	 * Converts collection to array.
 	 *
-	 * Строит новый массив, включающий все элементы коллекции.
+	 * Builds new array consisting of collection items.
 	 *
-	 * @returns {Array} `<T>` Массив элементов.
+	 * @returns {Array} `<T>` Items array.
 	 */
 	toArray: function() {
 		var result = new Array(this.getLength());
@@ -455,20 +454,20 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	},
 	
 	/**
-	 * Преобразует коллекцию в массив.
+	 * Converts collection to array.
 	 *
-	 * Строит новый массив, включающий все элементы коллекции.
+	 * Builds new array consisting of collection items.
 	 *
-	 * @returns {JW.Array} `<T>` Массив элементов.
+	 * @returns {JW.Array} `<T>` Items array.
 	 */
 	$toArray: JW.AbstractCollection._create$Array("toArray"),
 	
 	/**
-	 * Преобразует коллекцию в множество.
+	 * Converts collection to set.
 	 *
-	 * Строит новое множество, включающее все элементы коллекции.
+	 * Builds new set consisting of collection items.
 	 *
-	 * @returns {Object} Множество элементов.
+	 * @returns {Object} `<T>` Items set.
 	 */
 	toSet: function() {
 		var result = {};
@@ -479,202 +478,202 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	},
 	
 	/**
-	 * Преобразует коллекцию в множество.
+	 * Converts collection to set.
 	 *
-	 * Строит новое множество, включающее все элементы коллекции.
+	 * Builds new set consisting of collection items.
 	 *
-	 * @returns {JW.Set} `<T>` Множество элементов.
+	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	$toSet: JW.AbstractCollection._create$Set("toSet"),
 	
 	/**
-	 * Представляет коллекцию в виде массива.
+	 * Represents collection as array.
 	 *
-	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод #toArray.
-	 * Данная функция работает как правило быстрее #toArray, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is array, returns it immediately. Else, executes #toArray method.
+	 * This method works probably faster than #toArray, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
-	 * @returns {Array} `<T>` Массив элементов.
+	 * @returns {Array} `<T>` Items array.
 	 */
 	asArray: function() {
 		return this.toArray();
 	},
 	
 	/**
-	 * Представляет коллекцию в виде массива.
+	 * Represents collection as array.
 	 *
-	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод #toArray.
-	 * Данная функция работает как правило быстрее #toArray, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is array, returns it immediately. Else, executes #toArray method.
+	 * This method works probably faster than #toArray, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
-	 * @returns {JW.Array} `<T>` Массив элементов.
+	 * @returns {JW.Array} `<T>` Items array
 	 */
 	$asArray: JW.AbstractCollection._create$Array("asArray"),
 	
 	/**
-	 * Представляет коллекцию в виде множества.
+	 * Represents collection as set.
 	 *
-	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод #toSet.
-	 * Данная функция работает как правило быстрее #toSet, но сначала убедитесь, что возвращенное множество
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is set, returns it immediately. Else, executes #toSet method.
+	 * This method works probably faster than #toSet, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
-	 * @returns {Object} Множество элементов.
+	 * @returns {Object} `<T>` Items set.
 	 */
 	asSet: function() {
 		return this.toSet();
 	},
 	
 	/**
-	 * Представляет коллекцию в виде множества.
+	 * Represents collection as set.
 	 *
-	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод #toSet.
-	 * Данная функция работает как правило быстрее #toSet, но сначала убедитесь, что возвращенное множество
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is set, returns it immediately. Else, executes #toSet method.
+	 * This method works probably faster than #toSet, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
-	 * @returns {JW.Set} `<T>` Множество элементов.
+	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	$asSet: JW.AbstractCollection._create$Set("asSet")
 	
 	/**
 	 * @method filter
 	 *
-	 * Фильтрует коллекцию по критерию.
+	 * Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(item: T): boolean`
+	 * `f(T item): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Array/Object} Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array/Object} `<T>` Filtered collection.
 	 */
 	/**
 	 * @method $filter
 	 *
-	 * Фильтрует коллекцию по критерию.
+	 * Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(item: T): boolean`
+	 * `f(T item): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.AbstractCollection} `<T>` Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.AbstractCollection} `<T>` Filtered collection.
 	 */
 	
 	/**
 	 * @method map
 	 *
-	 * `<U>` Отображает элементы коллекции.
+	 * `<U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(item: T): U`
+	 * `f(T item): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Array/Object} Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array/Object} `<U>` Mapped collection.
 	 */
 	/**
 	 * @method $map
 	 *
-	 * `<U>` Отображает элементы коллекции.
+	 * `<U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(item: T): U`
+	 * `f(T item): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.AbstractCollection} `<U>` Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.AbstractCollection} `<U>` Mapped collection.
 	 */
 	
 	/**
 	 * @method createEmpty
-	 * `<U>` Конструирует пустую коллекцию того же типа.
-	 * @returns {JW.AbstractCollection} `<U>` Коллекция.
+	 * `<U>` Creates empty collection of the same type.
+	 * @returns {JW.AbstractCollection} `<U>` Collection.
 	 */
 	/**
 	 * @method createEmptyArray
-	 * `<U>` Конструирует пустой массив того же типа (простой или оповещающий).
-	 * @returns {JW.AbstractArray} `<U>` Массив.
+	 * `<U>` Creates empty array of the same observability level.
+	 * @returns {JW.AbstractArray} `<U>` Array.
 	 */
 	/**
 	 * @method createEmptyMap
-	 * `<U>` Конструирует пустой словарь того же типа (простой или оповещающий).
-	 * @returns {JW.AbstractMap} `<U>` Словарь.
+	 * `<U>` Creates empty map of the same observability level.
+	 * @returns {JW.AbstractMap} `<U>` Map.
 	 */
 	/**
 	 * @method createEmptySet
-	 * `<U>` Конструирует пустое множество того же типа (простое или оповещающее).
-	 * @returns {JW.AbstractSet} `<U>` Множество.
+	 * `<U>` Creates empty set of the same observability level.
+	 * @returns {JW.AbstractSet} `<U>` Set.
 	 */
 	/**
 	 * @method createMapper
-	 * `<U>` Конструирует конвертер элементов коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * `<U>` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Mapper}
-	 * `<T, U, JW.AbstractCollection<T>, JW.AbstractCollection<U>>` Синхронизатор.
+	 * `<T, U, JW.AbstractCollection<T>, JW.AbstractCollection<U>>` Synchronizer.
 	 */
 	/**
 	 * @method createFilterer
-	 * Конструирует фильтровщик коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Filterer}
-	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
 	/**
 	 * @method createObserver
-	 * Конструирует наблюдатель коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Observer}
-	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
 	/**
 	 * @method createOrderer
-	 * Конструирует конвертер коллекции в массив (упорядочитель).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Orderer}
-	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
 	/**
 	 * @method createSorterComparing
-	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.SorterComparing}
-	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
 	/**
 	 * @method createIndexer
-	 * Конструирует индексатор коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Indexer}
-	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
 	/**
 	 * @method createLister
-	 * Конструирует конвертер коллекции в множество.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Lister}
-	 * `<T, JW.AbstractCollection<T>>` Синхронизатор.
+	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
 });
