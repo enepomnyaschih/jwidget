@@ -22,92 +22,89 @@
  *
  * `<K, T> extends JW.AbstractCollection<T>`
  *
- * Абстрактная коллекция элементов типа T с ключами типа K (индексированная коллекция).
+ * Abstract collection of items of type T with keys of type K.
  *
- * Существует 2 типа индексированных коллекций:
+ * There are 2 indexed collection types:
  *
- * - JW.AbstractArray (массив, ключ - number)
- * - JW.AbstractMap (словарь, ключ - string)
+ * - JW.AbstractArray (key is number)
+ * - JW.AbstractMap (key is string)
  *
- * При работе с индексированными коллекциями следует помнить одно простое правило: во всех методах и коллбеках,
- * принимающих на вход элемент и его ключ, элемент всегда идет первым параметром, а ключ - вторым.
+ * Please keep in mind the next rule whenever you work with jWidget indexed collections:
+ * in all methods and callbacks which take item and key arguments, item goes first and key goes last.
  *
- * # Методы индексированной коллекции
+ * # Indexed collection methods
  *
- * **Жирным шрифтом выделены изменения по сравнению с JW.AbstractCollection.**
+ * **Difference compared to JW.AbstractCollection is in bold.**
  *
- * Получение содержимого:
+ * Content retrieving:
  *
- * - {@link #getLength} - Возвращает количество элементов в коллекции.
- * - {@link #isEmpty} - Проверяет коллекцию на пустоту.
- * - **{@link #get} - Возвращает элемент коллекции по ключу.**
- * - {@link #getFirst} - Возвращает первый элемент коллекции.
- * - **{@link #getFirstKey} - Возвращает ключ первого элемента коллекции.**
- * - **{@link #getKeys}, #$getKeys - Возвращает массив ключей всех элементов.**
- * - {@link #containsItem} - Содержит ли коллекция элемент.
- * - **{@link #containsKey} - Содержит ли коллекция ключ.**
- * - **{@link #keyOf} - Возвращает ключ элемента.**
+ * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #isEmpty} - Checks collection for emptiness.
+ * - **{@link #get} - Returns collection item by key.**
+ * - {@link #getFirst} - Returns first item in collection
+ * - **{@link #getFirstKey} - Returns key of first item in collection.**
+ * - **{@link #getKeys}, #$getKeys - Returns array of all item keys.**
+ * - {@link #containsItem} - Does collection contain the item?
+ * - **{@link #containsKey} - Does collection contain the key?**
+ * - **{@link #keyOf} - Returns item key. If item is not found, returns `undefined`.**
  *
- * Алгоритмы перебора (**функции-коллбеки алгоритмов переопределены и принимают дополнительные параметры -
- * ключи элементов**):
+ * Iteration algorhitms (**callback functions are overridden and take extra arguments - item keys**):
  *
- * - {@link #every} - Проверяет все элементы по критерию.
- * Возвращает true тогда и только тогда, когда все элементы удовлетворяют критерию.
- * - {@link #some} - Проверяет каждый элемент по критерию.
- * Возвращает true тогда и только тогда, когда хотя бы один элемент удовлетворяет критерию.
- * - {@link #each} - Перебирает элементы.
- * - {@link #search} - Ищет элемент по критерию.
- * Возвращает первый элемент, удовлетворяющий критерию.
- * - **{@link #find} - Ищет элемент по критерию.
- * Возвращает ключ первого элемента, удовлетворяющего критерию.**
- * - {@link #filter}, #$filter - Фильтрует коллекцию по критерию.
- * Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
- * - {@link #map}, #$map - Отображает элементы коллекции.
- * Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
- * коллекции.
+ * - {@link #every} - Checks all items by criteria.
+ * Returns `true` if all items match the criteria.
+ * - {@link #some} - Checks each item by criteria.
+ * Returns `true` if some items matches the criteria.
+ * - {@link #each} - Iterates items.
+ * - {@link #search} - Finds item by criteria.
+ * Returns first item matching the criteria.
+ * - **{@link #find} - Finds item by criteria.
+ * Returns index of first item matching the criteria.**
+ * - {@link #filter}, #$filter - Filters collection by criteria.
+ * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #map}, #$map - Maps collection items.
+ * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
- * Строит массив из элементов коллекции, отсортированный по индексу
- * или компаратору.
+ * Builds array consisting of collection items sorted by indexer or comparer.
  * - **{@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
- * Возвращает ключи элементов, отсортированных по индексу или компаратору.**
- * - {@link #index}, #$index - Индексирует коллекцию.
- * Строит словарь, в ключах которого находятся индексы элементов, а в значениях - соответствующие элементы.
- * - {@link #toArray}, #$toArray - Строит новый массив из элементов коллекции.
- * - **{@link #toMap}, #$toMap - Строит новый словарь из элементов коллекции.**
- * - {@link #toSet}, #$toSet - Строит новое множество из элементов коллекции.
- * - {@link #asArray}, #$asArray - Представляет коллекцию в виде массива.
- * - **{@link #asMap}, #$asMap - Представляет коллекцию в виде словаря.**
- * - {@link #asSet}, #$asSet - Представляет коллекцию в виде множества.
+ * Returns indexes of collection items sorted by indexer or comparer.**
+ * - {@link #index}, #$index - Indexes collection.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - **{@link #toMap}, #$toMap - Builds new map consisting of collection items.**
+ * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #asArray}, #$asArray - Represents collection as array.
+ * - **{@link #asMap}, #$asMap - Represents collection as map.**
+ * - {@link #asSet}, #$asSet - Represents collection as set.
  *
- * Изменение коллекции:
+ * Collection modification:
  *
- * - **{@link #set}, #trySet - Заменяет элемент по ключу.**
- * - **{@link #remove}, #tryRemove - Удаляет элемент по ключу.**
- * - {@link #removeItem} - Удаляет первое вхождение элемента из коллекции.
- * - {@link #removeItems} - Удаляет все вхождения элементов из коллекции.
- * - {@link #clear}, #$clear, #tryClear - Очищает коллекцию.
+ * - **{@link #set}, #trySet - Replaces an item by key.**
+ * - **{@link #remove}, #tryRemove - Removes an item by key.**
+ * - {@link #removeItem} - Removes first occurency of an item in collection.
+ * - {@link #removeItems} - Removes all occurencies of items in collection.
+ * - {@link #clear}, #$clear, #tryClear - Clears collection.
  *
- * Создание синхронизаторов:
+ * Synchronizers creation:
  *
- * - {@link #createMapper} - Создает конвертер элементов.
- * - {@link #createFilterer} - Создает фильтровщик.
- * - {@link #createLister} - Создает конвертер в множество.
- * - {@link #createIndexer} - Создает индексатор.
- * - {@link #createOrderer} - Создает конвертер в массив (упорядочитель).
- * - {@link #createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
- * - {@link #createObserver} - Создает наблюдатель.
+ * - {@link #createMapper} - Creates item mapper.
+ * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createLister} - Creates converter to set.
+ * - {@link #createIndexer} - Creates converter to map (indexer).
+ * - {@link #createOrderer} - Creates converter to array (orderer).
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createObserver} - Creates observer.
  *
- * Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
+ * Similar collection creation (for algorithms and synchronizers implementation):
  *
- * - {@link #createEmpty} - Создает пустую коллекцию того же типа.
- * - {@link #createEmptyArray} - Создает пустой массив того же типа.
- * - {@link #createEmptyMap} - Создает пустой словарь того же типа.
- * - {@link #createEmptySet} - Создает пустое множество того же типа.
+ * - {@link #createEmpty} - Creates empty collection of the same type.
+ * - {@link #createEmptyArray} - Creates empty array of the same observability type.
+ * - {@link #createEmptyMap} - Creates empty map of the same observability type.
+ * - {@link #createEmptySet} - Creates empty set of the same observability type.
  *
- * Все те же самые алгоритмы доступны и для нативных коллекций JavaScript:
+ * All the same algorithms are also available for native JavaScript collections:
  *
- * - Array, смотрите статические методы JW.Array
- * - Object как словарь, смотрите статические методы JW.Map
+ * - Array, see JW.Array static methods.
+ * - Object as map, see JW.Map static methods.
  *
  * @extends JW.AbstractCollection
  * @abstract
@@ -119,19 +116,19 @@ JW.IndexedCollection = function() {
 JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	/**
 	 * @method get
-	 * Возвращает элемент по ключу. В случае, если элемента с таким ключом нет, вернет undefined.
-	 * @param {K} key Ключ.
-	 * @returns {T} Элемент.
+	 * Returns item by key. If items with such key doesn't exist, returns `undefined`.
+	 * @param {K} key Key.
+	 * @returns {T} Item.
 	 */
 	/**
 	 * @method $clear
-	 * Очищает коллекцию.
-	 * @returns {JW.IndexedCollection} `<K, T>` Бывшее содержимое коллекции.
+	 * Clears collection.
+	 * @returns {JW.IndexedCollection} `<K, T>` Old collection contents.
 	 */
 	
 	/**
-	 * Возвращает ключ первого элемента коллекции. Если коллекция пуста, вернет undefined.
-	 * @returns {K} Ключ.
+	 * Returns key of first collection item. If collection is empty, returns `undefined`.
+	 * @returns {K} Key.
 	 */
 	getFirstKey: function() {
 		return this._callStatic("getFirstKey");
@@ -139,19 +136,19 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	
 	/**
 	 * @method getKeys
-	 * Возвращает массив ключей всех элементов коллекции.
-	 * @returns {Array} `<K>` Массив ключей.
+	 * Returns array of keys of all collection items.
+	 * @returns {Array} `<K>` Keys array.
 	 */
 	/**
-	 * Возвращает массив ключей всех элементов коллекции.
-	 * @returns {JW.Array} `<K>` Массив ключей.
+	 * Returns array of keys of all collection items.
+	 * @returns {JW.Array} `<K>` Keys array.
 	 */
 	$getKeys: JW.AbstractCollection._create$Array("getKeys"),
 	
 	/**
-	 * Проверяет наличие элемента с заданным ключом в коллекции.
-	 * @param {K} key Ключ.
-	 * @returns {boolean} Коллекция содержит элемент с указанным ключом.
+	 * Checks an existance of item with specified index in collection.
+	 * @param {K} key Key.
+	 * @returns {boolean} Collection contains item with specified key.
 	 */
 	containsKey: function(key) {
 		return this.get(key) !== undefined;
@@ -162,9 +159,9 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Определяет ключ элемента в данной коллекции. Если такого элемента в коллекции нет, вернет undefined.
-	 * @param {T} item Элемент.
-	 * @returns {K} Ключ элемента.
+	 * Returns index of item in collection. If such item doesn't exist, returns `undefined`.
+	 * @param {T} item Item.
+	 * @returns {K} Item key.
 	 */
 	keyOf: function(item) {
 		return this.find(function(v) { return item === v; });
@@ -173,24 +170,24 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	/**
 	 * @method trySet
 	 *
-	 * Заменяет элемент по ключу. В случае если элемента с таким ключом нет:
+	 * Replaces item with specified key. If collection doesn't contain such key:
 	 *
-	 * - Массив сломается
-	 * - Словарь добавит новый элемент
+	 * - Array will break.
+	 * - Map will add a new item.
 	 *
-	 * @param {T} item Элемент.
-	 * @param {K} key Ключ.
-	 * @returns {JW.Proxy} `<T>` Обертка над бывшим элементом коллекции. Если нет изменений - undefined.
+	 * @param {T} item Item.
+	 * @param {K} key Key.
+	 * @returns {JW.Proxy} `<T>` Proxy of the replaced item. If not modified - `undefined`.
 	 */
 	/**
-	 * Заменяет элемент по ключу. В случае если элемента с таким ключом нет:
+	 * Replaces item with specified key. If collection doesn't contain such key:
 	 *
-	 * - Массив сломается
-	 * - Словарь добавит новый элемент
+	 * - Array will break.
+	 * - Map will add a new item.
 	 *
-	 * @param {T} item Элемент.
-	 * @param {K} key Ключ.
-	 * @returns {T} Бывший элемент коллекции.
+	 * @param {T} item Item.
+	 * @param {K} key Key.
+	 * @returns {T} The replaced item.
 	 */
 	set: function(item, key) {
 		var result = this.trySet(item, key);
@@ -199,23 +196,22 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	
 	/**
 	 * @method tryRemove
+	 * Removes item with specified key. If collection doesn't contain such key:
 	 *
-	 * Удаляет элемент по ключу. В случае если элемента с таким ключом нет:
+	 * - Array will break.
+	 * - Map will add a new item.
 	 *
-	 * - Массив сломается
-	 * - Словарь вернет undefined
-	 *
-	 * @param {K} key Ключ.
-	 * @returns {T} Бывший элемент коллекции. Если нет изменений - undefined.
+	 * @param {K} key Key.
+	 * @returns {T} The removed item. If not modified - `undefined`.
 	 */
 	/**
-	 * Удаляет элемент по ключу. В случае если элемента с таким ключом нет:
+	 * Removes item with specified key. If collection doesn't contain such key:
 	 *
-	 * - Массив сломается
-	 * - Словарь вернет undefined
+	 * - Array will break.
+	 * - Map will add a new item.
 	 *
-	 * @param {K} key Ключ.
-	 * @returns {T} Бывший элемент коллекции.
+	 * @param {K} key Key.
+	 * @returns {T} The removed item.
 	 */
 	remove: function(key) {
 		return this.tryRemove(key);
@@ -232,38 +228,36 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	/**
 	 * @method every
 	 *
-	 * Проверяет все элементы по критерию.
+	 * Checks all items by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * Returns true if function `f` returns !== `false` for all collection items.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, key: K): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	/**
-	 * Проверяет каждый элемент по критерию.
+	 * Checks each item by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false хотя бы на одном элементе коллекции.
+	 * Returns true if function `f` returns !== `false` for some collection item.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, key: K): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	some: function(callback, scope) {
 		return !this.every(function(item, key) {
@@ -272,15 +266,15 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
+	 * Iterates collection items. Calls specified function for all items.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, key: K): void`
 	 *
-	 * Функция.
+	 * Function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {void}
 	 */
 	each: function(callback, scope) {
@@ -291,21 +285,20 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Ищет элемент по критерию.
+	 * Finds item by criteria.
 	 * 
-	 * Возвращает ключ первого элемента, функция f на котором возвращает !== false.
+	 * Returns key of first item for which `f` returns !== `false`.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, key: K): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {K} Ключ найденного элемента или undefined.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {K} Found item key or `undefined`.
 	 */
 	find: function(callback, scope) {
 		var result;
@@ -320,21 +313,20 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Ищет элемент по критерию.
+	 * Finds item by criteria.
 	 * 
-	 * Возвращает первый элемент, функция f на котором возвращает !== false.
+	 * Returns first item for which `f` returns !== `false`.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, key: K): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {T} Найденный элемент или undefined.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
 	 */
 	search: function(callback, scope) {
 		var result;
@@ -351,179 +343,177 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	/**
 	 * @method toSorted
 	 *
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: K): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method $toSorted
 	 *
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: K): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method toSortedComparing
 	 *
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, k1: K, k2: K): Number`
+	 * `f(t1: T, t2: T, k1: K, k2: K): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method $toSortedComparing
 	 *
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, k1: K, k2: K): Number`
+	 * `f(t1: T, t2: T, k1: K, k2: K): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	 
 	/**
-	 * Возвращает массив ключей отсортированных элементов.
+	 * Returns keys of sorted items.
 	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array of item keys, sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: K): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<K>` Массив ключей отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<K>` Sorted item keys array.
 	 */
 	getSortingKeys: function(callback, scope, order) {
 		return this._callStatic("getSortingKeys", [callback, scope || this, order]);
 	},
 	
 	/**
-	 * Возвращает массив ключей отсортированных элементов.
+	 * Returns keys of sorted items.
 	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array of item keys, sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, key: K): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<K>` Массив ключей отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<K>` Sorted item keys array.
 	 */
 	$getSortingKeys: JW.AbstractCollection._create$Array("getSortingKeys"),
 	
 	/**
-	 * Возвращает массив ключей отсортированных элементов.
+	 * Returns keys of sorted items.
 	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
+	 * Builds array of item keys, sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, k1: K, k2: K): Number`
+	 * `f(t1: T, t2: T, k1: K, k2: K): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<K>` Массив ключей отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<K>` Sorted item keys array.
 	 */
 	getSortingKeysComparing: function(compare, scope, order) {
 		return this._callStatic("getSortingKeysComparing", [compare, scope || this, order]);
 	},
 	
 	/**
-	 * Возвращает массив ключей отсортированных элементов.
+	 * Returns keys of sorted items.
 	 *
-	 * Строит массив из ключей элементов коллекции, отсортированный по компаратору.
+	 * Builds array of item keys, sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, k1: K, k2: K): Number`
+	 * `f(t1: T, t2: T, k1: K, k2: K): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<K>` Массив ключей отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<K>` Sorted item keys array.
 	 */
 	$getSortingKeysComparing: JW.AbstractCollection._create$Array("getSortingKeysComparing"),
 	
 	/**
 	 * @method $index
 	 *
-	 * Индексирует коллекцию.
+	 * Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, key: K): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Map} `<T>` Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `<T>` Collection index.
 	 */
 	/**
-	 * Индексирует коллекцию.
+	 * Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, key: K): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Object} Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `<T>` Collection index.
 	 */
 	index: function(callback, scope) {
 		var result = {};
@@ -538,11 +528,11 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Преобразует коллекцию в словарь.
+	 * Converts collection to map.
 	 *
-	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 * Builds new map consisting of collection items.
 	 *
-	 * @returns {Object} Словарь элементов.
+	 * @returns {Object} `<T>` Items map.
 	 */
 	toMap: function() {
 		var result = {};
@@ -553,106 +543,106 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Преобразует коллекцию в словарь.
+	 * Converts collection to map.
 	 *
-	 * Строит новый словарь, включающий все элементы коллекции с их ключами в данной коллекции.
+	 * Builds new map consisting of collection items.
 	 *
-	 * @returns {JW.Map} `<T>` Словарь элементов.
+	 * @returns {JW.Map} `<T>` Items map.
 	 */
 	$toMap: JW.AbstractCollection._create$Map("toMap"),
 	
 	/**
-	 * Представляет коллекцию в виде словаря.
+	 * Represents collection as map.
 	 *
-	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод #toMap.
-	 * Данная функция работает как правило быстрее #toMap, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is map, returns it immediately. Else, executes #toMap method.
+	 * This method works probably faster than #toMap, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
-	 * @returns {Object} Словарь элементов.
+	 * @returns {Object} `<T>` Items map.
 	 */
 	asMap: function() {
 		return this.toMap();
 	},
 	
 	/**
-	 * Представляет коллекцию в виде словаря.
+	 * Represents collection as map.
 	 *
-	 * Если данная коллекция - словарь, сразу возвращает его. В противном случае запускает метод #toMap.
-	 * Данная функция работает как правило быстрее #toMap, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is map, returns it immediately. Else, executes #toMap method.
+	 * This method works probably faster than #toMap, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
-	 * @returns {JW.Map} `<K, T>` Словарь элементов.
+	 * @returns {JW.Map} `<T>` Items map.
 	 */
 	$asMap: JW.AbstractCollection._create$Map("asMap")
 	
 	/**
 	 * @method filter
 	 *
-	 * Фильтрует коллекцию по критерию.
+	 * Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(T item, key: K): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Array/Object} Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array/Object} `<T>` Filtered collection.
 	 */
 	/**
 	 * @method $filter
 	 *
-	 * Фильтрует коллекцию по критерию.
+	 * Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(T item, key: K): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.IndexedCollection} `<K, T>` Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.IndexedCollection} `<K, T>` Filtered collection.
 	 */
 	/**
 	 * @method map
 	 *
-	 * `<U>` Отображает элементы коллекции.
+	 * `<U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(T item, key: K): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Array/Object} Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array/Object} `<U>` Mapped collection.
 	 */
 	/**
 	 * @method $map
 	 *
-	 * `<U>` Отображает элементы коллекции.
+	 * `<U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(T item, key: K): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.IndexedCollection} `<K, U>` Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.IndexedCollection} `<K, U>` Mapped collection.
 	 */
 	
 	/**
 	 * @method createEmpty
-	 * `<U>` Конструирует пустую коллекцию того же типа.
-	 * @returns {JW.IndexedCollection} `<K, U>` Коллекция.
+	 * `<U>` Creates empty collection of the same type.
+	 * @returns {JW.IndexedCollection} `<K, U>` Collection.
 	 */
 });

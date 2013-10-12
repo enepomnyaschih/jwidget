@@ -361,7 +361,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
 	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to `JW.cmp(t1, t2)`.
@@ -379,7 +379,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
 	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to `JW.cmp(t1, t2)`.
@@ -431,7 +431,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
 	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to `JW.cmp(t1, t2)`.
@@ -449,7 +449,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
 	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to `JW.cmp(t1, t2)`.
@@ -635,12 +635,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * @method remove
-	 * Removed item with specified item. If array doesn't contain such index, it will break the application.
+	 * Removes item with specified index. If array doesn't contain such index, it will break the application.
 	 * @param {number} index Index.
 	 * @returns {T} The removed item.
 	 */
 	/**
-	 * Removed item with specified item. If array doesn't contain such index, it will break the application.
+	 * Removes item with specified index. If array doesn't contain such index, it will break the application.
 	 * @param {number} index Index.
 	 * @returns {T} The removed item. If not modified - `undefined`.
 	 */
@@ -851,7 +851,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
 	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to `JW.cmp(t1, t2)`.

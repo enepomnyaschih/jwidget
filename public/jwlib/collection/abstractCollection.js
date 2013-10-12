@@ -364,7 +364,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T): Number`
+	 * `f(t1: T, t2: T): number`
 	 *
 	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to `JW.cmp(t1, t2)`.
@@ -384,7 +384,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T): Number`
+	 * `f(t1: T, t2: T): number`
 	 *
 	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to `JW.cmp(t1, t2)`.
