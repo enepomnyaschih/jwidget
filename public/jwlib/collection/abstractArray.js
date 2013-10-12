@@ -22,113 +22,109 @@
  *
  * `<T> extends JW.IndexedCollection<number, T>`
  *
- * Абстрактный массив.
+ * Array is ordered collection. Each item of array has an index. Index of first item is 0,
+ * index of each next one is higher by 1.
  *
- * Массив - это упорядоченная коллекция, в которой каждый элемент имеет свой индекс. Индекс первого элемента равен 0,
- * индекс каждого следующего элемента на единицу больше.
+ * # Array methods
  *
- * # Методы массива
+ * **Difference compared to JW.IndexedCollection is in bold.**
  *
- * **Жирным шрифтом выделены изменения по сравнению с JW.IndexedCollection.**
+ * Content retrieving:
  *
- * Получение содержимого:
+ * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #isEmpty} - Checks collection for emptiness.
+ * - {@link #get} - Returns collection item by index.
+ * - {@link #getFirst} - Returns first item in collection.
+ * - **{@link #getLast} - Returns last item in collection.**
+ * - {@link #getFirstKey} - Returns index of first item in collection.
+ * - **{@link #getLastKey} - Returns index of last item in collection.**
+ * - {@link #getKeys}, #$getKeys - Returns array of all item indexes.
+ * - {@link #containsItem} - Does collection contain the item?
+ * - {@link #containsKey} - Does collection contain the index?
+ * - {@link #keyOf} - Returns item index. If item is not found, returns `undefined`.
+ * - **{@link #indexOf} - Returns item index. If item is not found, return -1.**
+ * - **{@link #getItems} - Returns internal representation of array.**
+ * - **{@link #binarySearch} - Finds the index by binary search.**
  *
- * - {@link #getLength} - Возвращает количество элементов в коллекции.
- * - {@link #isEmpty} - Проверяет коллекцию на пустоту.
- * - {@link #get} - Возвращает элемент коллекции по индексу.
- * - {@link #getFirst} - Возвращает первый элемент коллекции.
- * - **{@link #getLast} - Возвращает последний элемент коллекции.**
- * - {@link #getFirstKey} - Возвращает индекс первого элемента коллекции.
- * - **{@link #getLastKey} - Возвращает индекс последнего элемента коллекции.**
- * - {@link #getKeys}, #$getKeys - Возвращает массив индексов всех элементов.
- * - {@link #containsItem} - Содержит ли коллекция элемент.
- * - {@link #containsKey} - Содержит ли коллекция индекс.
- * - {@link #keyOf} - Возвращает индекс элемента. Если элемент не найден, вернет undefined.
- * - **{@link #indexOf} - Возвращает индекс элемента. Если элемент не найден, вернет -1.**
- * - **{@link #getItems} - Возвращает внутреннее представление массива.**
- * - **{@link #binarySearch} - Ищет позицию бинарным поиском.**
+ * Iteration algorhitms:
  *
- * Алгоритмы перебора:
- *
- * - {@link #every} - Проверяет все элементы по критерию.
- * Возвращает true тогда и только тогда, когда все элементы удовлетворяют критерию.
- * - {@link #some} - Проверяет каждый элемент по критерию.
- * Возвращает true тогда и только тогда, когда хотя бы один элемент удовлетворяет критерию.
- * - {@link #each} - Перебирает элементы.
- * - {@link #search} - Ищет элемент по критерию.
- * Возвращает первый элемент, удовлетворяющий критерию.
- * - {@link #find} - Ищет элемент по критерию.
- * Возвращает индекс первого элемента, удовлетворяющего критерию.
- * - {@link #filter}, #$filter - Фильтрует коллекцию по критерию.
- * Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
- * - {@link #map}, #$map - Отображает элементы коллекции.
- * Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
- * коллекции.
+ * - {@link #every} - Checks all items by criteria.
+ * Returns `true` if all items match the criteria.
+ * - {@link #some} - Checks each item by criteria.
+ * Returns `true` if some items matches the criteria.
+ * - {@link #each} - Iterates items.
+ * - {@link #search} - Finds item by criteria.
+ * Returns first item matching the criteria.
+ * - {@link #find} - Finds item by criteria.
+ * Returns index of first item matching the criteria.
+ * - {@link #filter}, #$filter - Filters collection by criteria.
+ * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #map}, #$map - Maps collection items.
+ * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
- * Строит массив из элементов коллекции, отсортированный по индексу
- * или компаратору.
+ * Builds array consisting of collection items sorted by indexer or comparer.
  * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
- * Возвращает индексы элементов, отсортированных по индексу или компаратору.
- * - {@link #index}, #$index - Индексирует коллекцию.
- * Строит словарь, в индексах которого находятся индексы элементов, а в значениях - соответствующие элементы.
- * - {@link #toArray}, #$toArray - Строит новый массив из элементов коллекции.
- * - {@link #toMap}, #$toMap - Строит новый словарь из элементов коллекции.
- * - {@link #toSet}, #$toSet - Строит новое множество из элементов коллекции.
- * - {@link #asArray}, #$asArray - Представляет коллекцию в виде массива.
- * - {@link #asMap}, #$asMap - Представляет коллекцию в виде словаря.
- * - {@link #asSet}, #$asSet - Представляет коллекцию в виде множества.
- * - **{@link #backEvery} - Проверяет все элементы по критерию в обратном порядке.**
+ * Returns indexes of collection items sorted by indexer or comparer.
+ * - {@link #index}, #$index - Indexes collection.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toMap}, #$toMap - Builds new map consisting of collection items.
+ * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #asArray}, #$asArray - Represents collection as array.
+ * - {@link #asMap}, #$asMap - Represents collection as map.
+ * - {@link #asSet}, #$asSet - Represents collection as set.
+ * - **{@link #backEvery} - Checks all items by criteria in backward order.**
  *
- * Изменение коллекции:
+ * Collection modification:
  *
- * - **{@link #add}, #tryAdd - Вставляет элемент.**
- * - **{@link #addAll}, #tryAddAll - Вставляет набор элементов.**
- * - {@link #set}, #trySet - Заменяет элемент по индексу.
- * - {@link #remove}, #tryRemove - Удаляет элемент по индексу.
- * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Удаляет набор элементов.**
- * - {@link #removeItem} - Удаляет первое вхождение элемента из коллекции.
- * - {@link #removeItems} - Удаляет все вхождения элементов из коллекции.
- * - **{@link #pop} - Удаляет последний элемент.**
- * - **{@link #move}, #tryMove - Перемещает элемент.**
- * - {@link #clear}, #$clear, #tryClear - Очищает коллекцию.
- * - **{@link #splice}, #trySplice - Удаляет/вставляет элементы.**
- * - **{@link #reorder}, #tryReorder - Переупорядочивает элементы.**
- * - **{@link #sort}, #sortComparing - Сортирует массив.**
- * - **{@link #performSplice} - Приводит содержимое методом #splice.**
- * - **{@link #performFilter} - Фильтрует содержимое методом #splice.**
- * - **{@link #performReorder} - Приводит содержимое методом #reorder.**
+ * - **{@link #add}, #tryAdd - Inserts an item.**
+ * - **{@link #addAll}, #tryAddAll - Inserts item range.**
+ * - {@link #set}, #trySet - Replaces an item by index.
+ * - {@link #remove}, #tryRemove - Removes an item by index.
+ * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Removes item range.**
+ * - {@link #removeItem} - Removes first occurency of an item in collection.
+ * - {@link #removeItems} - Removes all occurencies of items in collection.
+ * - **{@link #pop} - Removes last item.**
+ * - **{@link #move}, #tryMove - Moves item.**
+ * - {@link #clear}, #$clear, #tryClear - Clears collection.
+ * - **{@link #splice}, #trySplice - Removes/inserts item ranges.**
+ * - **{@link #reorder}, #tryReorder - Reorders items.**
+ * - **{@link #sort}, #sortComparing - Sorts array.**
+ * - **{@link #performSplice} - Adjusts contents using #splice method.**
+ * - **{@link #performFilter} - Filters contents using #splice method.**
+ * - **{@link #performReorder} - Adjusts contents using #reorder method.**
  *
- * Создание синхронизаторов:
+ * Synchronizers creation:
  *
- * - {@link #createMapper} - Создает конвертер элементов.
- * - {@link #createFilterer} - Создает фильтровщик.
- * - {@link #createLister} - Создает конвертер в множество.
- * - {@link #createIndexer} - Создает индексатор.
- * - {@link #createOrderer} - Создает конвертер в массив (упорядочитель).
- * - {@link #createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
- * - {@link #createObserver} - Создает наблюдатель.
- * - **{@link #createInserter} - Создает синхронизатор представления с массивом.**
- * - **{@link #createMerger} - Создает объединитель массивов.**
- * - **{@link #createReverser} - Создает обратитель массива.**
+ * - {@link #createMapper} - Creates item mapper.
+ * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createLister} - Creates converter to set.
+ * - {@link #createIndexer} - Creates converter to map (indexer).
+ * - {@link #createOrderer} - Creates converter to array (orderer).
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createObserver} - Creates observer.
+ * - **{@link #createInserter} - Creates view synchronizer with array.**
+ * - **{@link #createMerger} - Creates arrays merger.**
+ * - **{@link #createReverser} - Creates array reverser.**
  *
- * Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
+ * Similar collection creation (for algorithms and synchronizers implementation):
  *
- * - {@link #createEmpty} - Создает пустую коллекцию того же типа.
- * - {@link #createEmptyArray} - Создает пустой массив того же типа.
- * - {@link #createEmptyMap} - Создает пустой словарь того же типа.
- * - {@link #createEmptySet} - Создает пустое множество того же типа.
+ * - {@link #createEmpty} - Creates empty collection of the same type.
+ * - {@link #createEmptyArray} - Creates empty array of the same observability type.
+ * - {@link #createEmptyMap} - Creates empty map of the same observability type.
+ * - {@link #createEmptySet} - Creates empty set of the same observability type.
  *
- * Другие методы:
+ * Other methods:
  *
- * - **{@link #detectSplice} - Определяет параметры метода #splice для приведения содержимого.**
- * - **{@link #detectFilter} - Определяет параметр removeParamsList метода #splice для фильтрации содержимого.**
- * - **{@link #detectReorder} - Определяет параметры метода #reorder для приведения содержимого.**
- * - **{@link #detectSort} - Определяет параметры метода #reorder для сортировки по индексу.**
- * - **{@link #detectSortComparing} - Определяет параметры метода #reorder для сортировки по компаратору.**
- * - **{@link #collapse} - Сплющивает многомерный массив.**
- * - **{@link #equal} - Сравнивает с другим массивом.**
+ * - **{@link #detectSplice} - Detects #splice method arguments to adjust contents.**
+ * - **{@link #detectFilter} - Detects `removeParamsList` argument of #splice method to filter contents.**
+ * - **{@link #detectReorder} - Detects #reorder method arguments to adjust contents.**
+ * - **{@link #detectSort} - Detects #reorder method arguments to sort by indexer.**
+ * - **{@link #detectSortComparing} - Detects #reorder method arguments to sort by comparer.**
+ * - **{@link #collapse} - Collapses multi-dimensional array.**
+ * - **{@link #equal} - Checks for equality to another array.**
  *
- * Все те же самые алгоритмы доступны и для нативного массива JavaScript Array, смотрите статические методы JW.Array.
+ * All the same algorithms are also available for native JavaScript Array, see JW.Array static methods.
  *
  * @extends JW.IndexedCollection
  * @abstract
@@ -145,49 +141,50 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 *
 	 * `getKey(item: T): number/string`
 	 *
-	 * Функция, возвращающая уникальный ключ элемента в данной коллекции. Функция используется
-	 * алгоритмами #detectSplice, #performSplice, #detectReorder, #performReorder. По умолчанию равна JW.iid.
-	 * Если коллекция содержит экземпляры JW.Class, то все тип-топ.
+	 * Function which returns unique key of an item in this collection.
+	 * Function is used by #detectSplice, #performSplice, #detectReorder, #performReorder algorithms.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
 	 */
 	/**
 	 * @method getFirstKey
-	 * Возвращает индекс первого элемента коллекции. Если коллекция пуста, вернет undefined.
-	 * @returns {number} Индекс.
+	 * Returns index of first collection item. If collection is empty, returns `undefined`.
+	 * @returns {number} Index.
 	 */
 	/**
 	 * @method containsKey
-	 * Проверяет наличие элемента с заданным индексом в коллекции.
-	 * @param {number} index Индекс.
-	 * @returns {boolean} Коллекция содержит элемент с указанным индексом.
+	 * Checks an existance of item with specified index in collection.
+	 * @param {number} index Index.
+	 * @returns {boolean} Collection contains item with specified index.
 	 */
 	/**
 	 * @method keyOf
-	 * Определяет индекс элемента в данной коллекции. Если такого элемента в коллекции нет, вернет undefined.
-	 * @param {T} item Элемент.
-	 * @returns {number} Индекс элемента.
+	 * Returns index of item in collection. If such item doesn't exist, returns `undefined`.
+	 * @param {T} item Item.
+	 * @returns {number} Item index.
 	 */
 	
 	/**
-	 * Возвращает массив элементов - внутреннее представление коллекции.
+	 * Returns items array - internal collection representation.
 	 *
-	 * **Метод не копирует коллекцию, будьте осторожны.**
+	 * **Caution: doesn't make a copy.**
 	 *
-	 * @returns {Array} Массив элементов.
+	 * @returns {Array} `<T>` Items array.
 	 */
 	getItems: function() {
 		return this.items;
 	},
 	
 	/**
-	 * Возвращает последний элемент коллекции. Если коллекция пуста, вернет undefined.
-	 * @returns {T} Элемент.
+	 * Returns the last collection item. If collection is empty, returns `undefined`.
+	 * @returns {T} Item.
 	 */
 	getLast: function() {
 		return this.items[this.items.length - 1];
 	},
 	
 	/**
-	 * Возвращает индекс последнего элемента коллекции. Если коллекция пуста, вернет undefined.
+	 * Returns index of last collection item. If collection is empty, returns `undefined`.
 	 * @returns {number} индекс.
 	 */
 	getLastKey: function() {
@@ -207,9 +204,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * @method get
-	 * Возвращает элемент по индексу. В случае, если элемента с таким индексом нет, вернет undefined.
-	 * @param {number} index Индекс.
-	 * @returns {T} Элемент.
+	 * Returns item by index. If items with such index doesn't exist, returns `undefined`.
+	 * @param {number} index Index.
+	 * @returns {T} Item.
 	 */
 	get: function(index) {
 		return this.items[index];
@@ -217,12 +214,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * @method $getKeys
-	 * Возвращает массив индексов всех элементов коллекции, т.е. массив `[0, 1, ... , length - 1]`.
-	 * @returns {JW.Array} `<number>` Массив ключей.
+	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
+	 * @returns {JW.Array} `<number>` Indexes array.
 	 */
 	/**
-	 * Возвращает массив индексов всех элементов коллекции, т.е. массив `[0, 1, ... , length - 1]`.
-	 * @returns {Array} Массив индексов.
+	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
+	 * @returns {Array} `<number>` Indexes array.
 	 */
 	getKeys: function() {
 		var items = this.items;
@@ -234,21 +231,20 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Проверяет все элементы по критерию.
+	 * Checks all items by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * Returns true if function `f` returns !== `false` for all collection items.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	every: function(callback, scope) {
 		return JW.Array.every(this.items, callback, scope || this);
@@ -257,316 +253,309 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * @method some
 	 *
-	 * Проверяет каждый элемент по критерию.
+	 * Checks each item by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false хотя бы на одном элементе коллекции.
+	 * Returns true if function `f` returns !== `false` for some collection item.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	/**
 	 * @method each
 	 *
-	 * Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
+	 * Iterates collection items. Calls specified function for all items.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): void`
 	 *
-	 * Функция.
+	 * Function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {void}
 	 */
 	/**
 	 * @method find
 	 *
-	 * Ищет элемент по критерию.
+	 * Finds item by criteria.
 	 * 
-	 * Возвращает индекс первого элемента, функция f на котором возвращает !== false.
+	 * Returns index of first item for which `f` returns !== `false`.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {number} Индекс найденного элемента или undefined.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Found item index or `undefined`.
 	 */
 	/**
 	 * @method search
 	 *
-	 * Ищет элемент по критерию.
+	 * Finds item by criteria.
 	 * 
-	 * Возвращает первый элемент, функция f на котором возвращает !== false.
+	 * Returns first item for which `f` returns !== `false`.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {T} Найденный элемент или undefined.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
 	 */
 	/**
 	 * @method toSorted
 	 *
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method $toSorted
 	 *
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method toSortedComparing
 	 *
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method $toSortedComparing
 	 *
-	 * Преобразует коллекцию в отсортированный массив.
+	 * Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method getSortingKeys
 	 *
-	 * Возвращает массив индексов отсортированных элементов.
+	 * Returns indexes of sorted items.
 	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска функции f на каждом
-	 * элементе.
+	 * Builds array of item indexes, sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<number>` Массив индексов отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<number>` Sorted item indexes array.
 	 */
 	/**
 	 * @method $getSortingKeys
 	 *
-	 * Возвращает массив индексов отсортированных элементов.
+	 * Returns indexes of sorted items.
 	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по результату запуска функции f на каждом
-	 * элементе.
+	 * Builds array of item indexes, sorted by result of `f` call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<number>` Массив индексов отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<number>` Sorted item indexes array.
 	 */
 	/**
 	 * @method getSortingKeysComparing
 	 *
-	 * Возвращает массив индексов отсортированных элементов.
+	 * Returns indexes of sorted items.
 	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по компаратору.
+	 * Builds array of item indexes, sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<number>` Массив индексов отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<number>` Sorted item indexes array.
 	 */
 	/**
 	 * @method $getSortingKeysComparing
 	 *
-	 * Возвращает массив индексов отсортированных элементов.
+	 * Returns indexes of sorted items.
 	 *
-	 * Строит массив из индексов элементов коллекции, отсортированный по компаратору.
+	 * Builds array of item indexes, sorted by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<number>` Массив индексов отсортированных элементов.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<number>` Sorted item indexes array.
 	 */
 	/**
 	 * @method index
 	 *
-	 * Индексирует коллекцию.
+	 * Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Object} Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `<T>` Collection index.
 	 */
 	/**
 	 * @method $index
 	 *
-	 * Индексирует коллекцию.
+	 * Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Map} `<T>` Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `<T>` Collection index.
 	 */
 	
 	/**
-	 * Фильтрует коллекцию по критерию.
+	 * Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(T item, index: number): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Array} Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array} `<T>` Filtered collection.
 	 */
 	filter: function(callback, scope) {
 		return JW.Array.filter(this.items, callback, scope || this);
 	},
 	
 	/**
-	 * Фильтрует коллекцию по критерию.
+	 * Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(T item, index: number): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Array} `<T>` Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Array} `<T>` Filtered collection.
 	 */
 	$filter: JW.AbstractCollection._create$Array("filter"),
 	
 	/**
-	 * `<U>` Отображает элементы коллекции.
+	 * `<U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(T item, index: number): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Array} Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array} `<T>` Filtered collection.
 	 */
 	map: function(callback, scope) {
 		return JW.Array.map(this.items, callback, scope || this);
 	},
 	
 	/**
-	 * `<U>` Отображает элементы коллекции.
+	 * `<U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(T item, index: number): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Array} `<U>` Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Array} `<T>` Filtered collection.
 	 */
 	$map: JW.AbstractCollection._create$Array("map"),
 	
@@ -583,10 +572,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Добавляет элемент в массив.
-	 * @param {T} item Элемент.
-	 * @param {number} [index] Индекс элемента, перед которым вставить новый элемент. По умолчанию, добавляет элемент
-	 * в конец массива.
+	 * Inserts an item to array.
+	 * @param {T} item Item.
+	 * @param {number} [index] Index of an item before which to insert new one. By default, appends the item.
 	 * @returns {void}
 	 */
 	add: function(item, index) {
@@ -594,10 +582,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Добавляет элемент в массив.
-	 * @param {T} item Элемент.
-	 * @param {number} [index] Индекс элемента, перед которым вставить новый элемент. По умолчанию, добавляет элемент
-	 * в конец массива.
+	 * Inserts an item to array.
+	 * @param {T} item Item.
+	 * @param {number} [index] Index of an item before which to insert new one. By default, appends the item.
 	 * @returns {boolean} true.
 	 */
 	tryAdd: function(item, index) {
@@ -605,10 +592,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Добавляет набор элементов в массив.
-	 * @param {Array} items `<T>` Элементы.
-	 * @param {number} [index] Индекс элемента, перед которым вставить новые элементы. По умолчанию, добавляет элементы
-	 * в конец массива.
+	 * Inserts item range to array.
+	 * @param {Array} items `<T>` Items.
+	 * @param {number} [index] Index of an item before which to insert new ones. By default, appends the items.
 	 * @returns {void}
 	 */
 	addAll: function(items, index) {
@@ -616,11 +602,10 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Добавляет набор элементов в массив.
-	 * @param {Array} items `<T>` Элементы.
-	 * @param {number} [index] Индекс элемента, перед которым вставить новые элементы. По умолчанию, добавляет элементы
-	 * в конец массива.
-	 * @returns {boolean} true. Если нет изменений - undefined.
+	 * Inserts item range to array.
+	 * @param {Array} items `<T>` Items.
+	 * @param {number} [index] Index of an item before which to insert new ones. By default, appends the items.
+	 * @returns {boolean} true. If not modified - `undefined`.
 	 */
 	tryAddAll: function(items, index) {
 		if (index === undefined) {
@@ -633,18 +618,16 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * @method set
-	 * Заменяет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
-	 * (не надо так).
-	 * @param {T} item Элемент.
-	 * @param {number} index Индекс.
-	 * @returns {T} Бывший элемент коллекции.
+	 * Replaces item with specified index. If array doesn't contain such index, it will break the application.
+	 * @param {T} item Item.
+	 * @param {number} index Index.
+	 * @returns {T} The replaced item.
 	 */
 	/**
-	 * Заменяет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
-	 * (не надо так).
-	 * @param {T} item Элемент.
-	 * @param {number} index Индекс.
-	 * @returns {JW.Proxy} `<T>` Обертка над бывшим элементом коллекции. Если нет изменений - undefined.
+	 * Replaces item with specified index. If array doesn't contain such index, it will break the application.
+	 * @param {T} item Item.
+	 * @param {number} index Index.
+	 * @returns {JW.Proxy} `<T>` Proxy of the replaced item. If not modified - `undefined`.
 	 */
 	trySet: function(item, index) {
 		return JW.Array.trySet(this.items, item, index);
@@ -652,16 +635,14 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * @method remove
-	 * Удаляет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
-	 * (не надо так).
-	 * @param {number} index Индекс.
-	 * @returns {T} Бывший элемент коллекции.
+	 * Removed item with specified item. If array doesn't contain such index, it will break the application.
+	 * @param {number} index Index.
+	 * @returns {T} The removed item.
 	 */
 	/**
-	 * Удаляет элемент с указанным индексом. В случае если элемента с таким индексом нет, массив сломается
-	 * (не надо так).
-	 * @param {number} index Индекс.
-	 * @returns {T} Бывший элемент коллекции. Если нет изменений - undefined.
+	 * Removed item with specified item. If array doesn't contain such index, it will break the application.
+	 * @param {number} index Index.
+	 * @returns {T} The removed item. If not modified - `undefined`.
 	 */
 	tryRemove: function(index) {
 		var result = this.tryRemoveAll(index, 1);
@@ -671,10 +652,10 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Удаляет набор элементов из массива.
-	 * @param {number} index Индекс элемента, начиная с которого удалять.
-	 * @param {number} count Количество удаленных элементов.
-	 * @returns {Array} `<T>` Удаленные элементы.
+	 * Removes item range from array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {Array} `<T>` The removed items.
 	 */
 	removeAll: function(index, count) {
 		var result = this.tryRemoveAll(index, count);
@@ -682,18 +663,18 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Удаляет набор элементов из массива.
-	 * @param {number} index Индекс элемента, начиная с которого удалять.
-	 * @param {number} count Количество удаленных элементов.
-	 * @returns {JW.Array} `<T>` Удаленные элементы.
+	 * Removes item range from array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {JW.Array} `<T>` The removed items.
 	 */
 	$removeAll: JW.AbstractCollection._create$Array("removeAll"),
 	
 	/**
-	 * Удаляет набор элементов из массива.
-	 * @param {number} index Индекс элемента, начиная с которого удалять.
-	 * @param {number} count Количество удаленных элементов.
-	 * @returns {Array} `<T>` Удаленные элементы. Если нет изменений - undefined.
+	 * Removes item range from array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {Array} `<T>` The removed items. If not modified - `undefined`.
 	 */
 	tryRemoveAll: function(index, count) {
 		var result = this.trySplice([new JW.AbstractArray.IndexCount(index, count)], []);
@@ -709,10 +690,10 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Перемещает элемент в массиве.
-	 * @param {number} fromIndex Индекс элемента, который переместить.
-	 * @param {number} toIndex Куда переместить.
-	 * @returns {T} Перемещенный элемент.
+	 * Moves an item inside array.
+	 * @param {number} fromIndex Item index to move.
+	 * @param {number} toIndex Index to move to.
+	 * @returns {T} The moved item.
 	 */
 	move: function(fromIndex, toIndex) {
 		this.tryMove(fromIndex, toIndex);
@@ -720,18 +701,18 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Перемещает элемент в массиве.
-	 * @param {number} fromIndex Индекс элемента, который переместить.
-	 * @param {number} toIndex Куда переместить.
-	 * @returns {T} Перемещенный элемент. Если нет изменений - undefined.
+	 * Moves an item inside array.
+	 * @param {number} fromIndex Item index to move.
+	 * @param {number} toIndex Index to move to.
+	 * @returns {T} The moved item. If not modified - `undefined`.
 	 */
 	tryMove: function(fromIndex, toIndex) {
 		return JW.Array.tryMove(this.items, fromIndex, toIndex);
 	},
 	
 	/**
-	 * Очищает коллекцию.
-	 * @returns {Array} `<T>` Бывшее содержимое коллекции.
+	 * Clears collection.
+	 * @returns {Array} `<T>` Old collection contents.
 	 */
 	clear: function() {
 		var result = this.tryClear();
@@ -739,26 +720,26 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Очищает коллекцию.
-	 * @returns {JW.Array} `<T>` Бывшее содержимое коллекции.
+	 * Clears collection.
+	 * @returns {JW.Array} `<T>` Old collection contents.
 	 */
 	$clear: JW.AbstractCollection._create$Array("clear"),
 	
 	/**
-	 * Очищает коллекцию.
-	 * @returns {Array} `<T>` Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 * Clears collection.
+	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
 		return JW.Array.tryClear(this.items);
 	},
 	
 	/**
-	 * Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
-	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Список отрезков для удаления по возрастанию
-	 * индекса. Отрезки удаляются от конца к началу массива.
-	 * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Список наборов для вставки по возрастанию
-	 * индекса. Наборы вставляются от начала к концу массива.
-	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Результат.
+	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>`
+	 * Array of segments to remove sorted by index asc. Segments are removed in backward order.
+	 * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>`
+	 * Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Result.
 	 */
 	splice: function(removeParamsList, addParamsList) {
 		var result = this.trySplice(removeParamsList, addParamsList);
@@ -766,21 +747,21 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
-	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Список отрезков для удаления по возрастанию
-	 * индекса. Отрезки удаляются от конца к началу массива.
-	 * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Список наборов для вставки по возрастанию
-	 * индекса. Наборы вставляются от начала к концу массива.
-	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Результат. Если нет изменений - undefined.
+	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>`
+	 * Array of segments to remove sorted by index asc. Segments are removed in backward order.
+	 * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>`
+	 * Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	trySplice: function(removeParamsList, addParamsList) {
 		return JW.Array.trySplice(this.items, removeParamsList, addParamsList);
 	},
 	
 	/**
-	 * Переупорядочивает элементы массива.
-	 * @param {Array} indexArray `<number>` Массив индексов. Элемент с индексом i будет перемещен в
-	 * индекс indexArray[i]. Должен содержать все индексы от 0 до (length - 1).
+	 * Reorders array items.
+	 * @param {Array} indexArray `<number>` Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * Must contain all indexes from 0 to (length - 1).
 	 * @returns {void}
 	 */
 	reorder: function(indexArray) {
@@ -788,108 +769,113 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Переупорядочивает элементы массива.
-	 * @param {Array} indexArray `<number>` Массив индексов. Элемент с индексом i будет перемещен в
-	 * индекс indexArray[i]. Должен содержать все индексы от 0 до (length - 1).
-	 * @returns {Array} `<T>` Бывшее содержимое массива. Если нет изменений - undefined.
+	 * Reorders array items.
+	 * @param {Array} indexArray `<number>` Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * Must contain all indexes from 0 to (length - 1).
+	 * @returns {Array} `<T>` Old array contents. If not modified - undefined.
 	 */
 	tryReorder: function(indexArray) {
 		return JW.Array.tryReorder(this.items, indexArray);
 	},
 	
 	/**
-	 * Определяет параметры метода #splice, с которыми содержимое массива станет равно newItems.
-	 * Т.е. определяет, какие элементы нужно удалить, какие вставить, и в какое место. Все элементы должны быть
-	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод #detectFilter.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
-	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
-	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * Detects #splice method arguments to adjust array contents to `newItems`.
+	 * Determines which item ranges should be removed and which ones should be inserted.
+	 * All items must have unique `getKey` function result.
+	 * If items don't have unique key, probably #detectFilter method will help.
+	 * @param {Array} newItems `<T>` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {JW.AbstractArray.SpliceParams}
-	 * `<T>` Параметры метода #splice.
-	 * Если вызова метода не требуется - undefined.
+	 * `<T>` #splice method arguments. If no method call required - `undefined`.
 	 */
 	detectSplice: function(newItems, getKey, scope) {
 		return JW.Array.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
 	},
 	
 	/**
-	 * Определяет параметр removeParamsList метода #splice, с которыми содержимое массива станет равно newItems.
-	 * Определяет, какие элементы нужно удалить. Не предусматривает вставку новых элементов. В отличие от
-	 * метода #detectSplice, не требует уникальности элементов массива.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
+	 * Detects `removeParamsList` arguments of #splice to adjust array contents to `newItems`.
+	 * Determines which item ranges should be removed.
+	 * Doesn't assume items insertion - try #detectSplice if that's the case.
+	 * In advantage to #detectSplice, doesn't require item uniquiness.
+	 * @param {Array} newItems `<T>` New array contents.
 	 * @returns {Array}
-	 * `<JW.AbstractArray.IndexCount>` Параметр removeParamsList метода #splice.
-	 * Если вызова метода не требуется - undefined.
+	 * `<JW.AbstractArray.IndexCount>` `removeParamsList` argument of #splice method.
+	 * If no method call required - `undefined`.
 	 */
 	detectFilter: function(newItems) {
 		return JW.Array.detectFilter(this.items, newItems);
 	},
 	
 	/**
-	 * Определяет параметр метода #reorder, с которым содержимое массива станет равно newItems.
-	 * Т.е. определяет, какие элементы куда нужно переместить.
-	 * Если содержимое newItems отличается от содержимого массива, массив сломается.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
-	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
-	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * Detects #reorder method arguments to adjust array contents to `newItems`.
+	 * Determines where to move all items.
+	 * If `newItems` contents differ from `this` contents, the array will be broken.
+	 * @param {Array} newItems `<T>` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {Array}
-	 * `<number>` Параметр indexArray метода #reorder.
-	 * Если вызова метода не требуется - undefined.
+	 * `<number>` `indexArray` argument of #reorder method.
+	 * If no method call required - `undefined`.
 	 */
 	detectReorder: function(newItems, getKey, scope) {
 		return JW.Array.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
 	},
 	
 	/**
-	 * Определяет параметр метода #reorder, с которым содержимое массива отсортируется по результату вызова
-	 * функции f на всех элементах.
-	 *
+	 * Detects #reorder method arguments to sort array cotnents by result of `f` call for each item.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {Array}
-	 * `<number>` Параметр indexArray метода #reorder.
-	 * Если вызова метода не требуется - undefined.
+	 * `<number>` `indexArray` argument of #reorder method.
+	 * If no method call required - `undefined`.
 	 */
 	detectSort: function(callback, scope, order) {
 		return JW.Array.detectSort(this.items, callback, scope || this, order);
 	},
 	
 	/**
-	 * Определяет параметр метода #reorder, с которым содержимое массива отсортируется по компаратору.
+	 * Detects #reorder method arguments to sort array cotnents by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): Number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {Array}
-	 * `<number>` Параметр indexArray метода #reorder.
-	 * Если вызова метода не требуется - undefined.
+	 * `<number>` `indexArray` argument of #reorder method.
+	 * If no method call required - `undefined`.
 	 */
 	detectSortComparing: function(compare, scope, order) {
 		return JW.Array.detectSortComparing(this.items, compare, scope || this, order);
 	},
 	
 	/**
-	 * Преобразует содержимое массива к newItems комбинацией методов #detectSplice и #splice.
-	 * Все элементы должны быть
-	 * уникальны относительно функции getKey. Если элементы не уникальны, попробуйте метод #performFilter.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
-	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
-	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * Adjusts array contents to `newItems` using #detectSplice and #splice methods.
+	 * All items must have unique `getKey` function result.
+	 * If items don't have unique key, probably #detectFilter method will help.
+	 * @param {Array} newItems `<T>` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {void}
 	 */
 	performSplice: function(newItems, getKey, scope) {
@@ -900,10 +886,10 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Преобразует содержимое массива к newItems комбинацией методов #detectFilter и #splice.
-	 * Только удаляет элементы. Не предусматривает вставку новых элементов. В отличие от
-	 * метода #performSplice, не требует уникальности элементов массива.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
+	 * Adjusts array contents to `newItems` using #detectFilter and #splice methods.
+	 * Only removes items. Doesn't assume items insertion - try #detectSplice if that's the case.
+	 * In advantage to #detectSplice, doesn't require item uniquiness.
+	 * @param {Array} newItems `<T>` New array contents.
 	 * @returns {void}
 	 */
 	performFilter: function(newItems) {
@@ -914,11 +900,13 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Преобразует содержимое массива к newItems комбинацией методов #detectReorder и #reorder.
-	 * @param {Array} newItems `<T>` Новое содержимое массива.
-	 * @param {Function} [getKey] Функция, возвращающая уникальный ключ элемента в коллекции. По умолчанию
-	 * равна #getKey. Если коллекция содержит экземпляры JW.Class, то все тип-топ.
-	 * @param {Object} [scope] Контекст вызова getKey. По умолчанию, функция вызывается в контексте коллекции.
+	 * Adjusts array contents to `newItems` using #detectReorder and #reorder methods.
+	 * @param {Array} newItems `<T>` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {void}
 	 */
 	performReorder: function(newItems, getKey, scope) {
@@ -929,16 +917,16 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Сортирует массив по результату запуска функции f на элементах.
+	 * Sorts array by result of `f` function call for each item.
 	 *
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T, index: number): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {void}
 	 */
 	sort: function(callback, scope, order) {
@@ -949,17 +937,17 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Сортирует массив по компаратору.
+	 * Sorts array by comparer.
 	 *
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T, i1: number, i2: number): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {void}
 	 */
 	sortComparing: function(compare, scope, order) {
@@ -970,99 +958,99 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * `<U>` Конструирует конвертер элементов коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * `<U>` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Mapper}
-	 * `<T, U>` Синхронизатор.
+	 * `<T, U>` Synchronizer.
 	 */
 	createMapper: function(config) {
 		return new JW.AbstractArray.Mapper(this, config);
 	},
 	
 	/**
-	 * Конструирует фильтровщик коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Filterer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createFilterer: function(config) {
 		return new JW.AbstractArray.Filterer(this, config);
 	},
 	
 	/**
-	 * Конструирует наблюдатель коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Observer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createObserver: function(config) {
 		return new JW.AbstractArray.Observer(this, config);
 	},
 	
 	/**
-	 * Конструирует конвертер коллекции в массив (упорядочитель).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Orderer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createOrderer: function(config) {
 		return new JW.AbstractArray.Orderer(this, config);
 	},
 	
 	/**
-	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.SorterComparing}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createSorterComparing: function(config) {
 		return new JW.AbstractArray.SorterComparing(this, config);
 	},
 	
 	/**
-	 * Конструирует индексатор коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Indexer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createIndexer: function(config) {
 		return new JW.AbstractArray.Indexer(this, config);
 	},
 	
 	/**
-	 * Конструирует конвертер коллекции в множество.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Lister}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createLister: function(config) {
 		return new JW.AbstractArray.Lister(this, config);
 	},
 	
 	/**
-	 * Конструирует синхронизатор представления с массивом.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates view synchronizer with array.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Inserter}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createInserter: function(config) {
 		return new JW.AbstractArray.Inserter(this, config);
 	},
 	
 	/**
-	 * Конструирует объединитель массивов.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates arrays merger.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Merger}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createMerger: function(config) {
 		return new JW.AbstractArray.Merger(this, config);
@@ -1073,11 +1061,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Конструирует обратитель массива.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates array reverser.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Reverser}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createReverser: function(config) {
 		return new JW.AbstractArray.Reverser(this, config);
@@ -1088,48 +1076,47 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Поэлементно сравнивает с другим массивом.
-	 * @param {Array} arr `<T>` Другой массив.
-	 * @returns {boolean} Массивы поэлементно равны.
+	 * Checks for equality (===) to another array, item by item.
+	 * @param {Array} arr `<T>` Another array.
+	 * @returns {boolean} Arrays are equal.
 	 */
 	equal: function(arr) {
 		return JW.Array.equal(this.items, arr);
 	},
 	
 	/**
-	 * Сплющивает массив массивов массивов... в один массив.
-	 * @param {number} depth Глубина сплющивания.
-	 * @returns {Array} Сплющенный массив.
+	 * Collapses multi-dimentional array.
+	 * @param {number} depth Dimentions to collapse.
+	 * @returns {Array} Collapsed array.
 	 */
 	collapse: function(depth) {
 		return JW.Array.collapse(this.items, depth);
 	},
 	
 	/**
-	 * Определяет индекс элемента в данной коллекции. Если такого элемента в коллекции нет, вернет -1.
-	 * @param {T} item Элемент.
-	 * @returns {number} Индекс элемента.
+	 * Returns item index in this collection. If item doesn't exist, returns -1.
+	 * @param {T} item Item.
+	 * @returns {number} Item index or -1.
 	 */
 	indexOf: function(item) {
 		return JW.Array.indexOf(this.items, item);
 	},
 	
 	/**
-	 * Проверяет все элементы по критерию в обратном порядке.
+	 * Checks all items by criteria in backward order.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * Returns true if function `f` returns !== `false` for all collection items.
 	 * 
-	 * Алгоритм перебирает все элементы с конца в начало, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
 	 *
 	 * `f(item: T, index: number): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	backEvery: function(callback, scope) {
 		return JW.Array.backEvery(this.items, callback, scope);
@@ -1141,8 +1128,8 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Удаляет последний элемент массива. Ничего не делает, если массив пуст.
-	 * @returns {T} Удаленный элемент или undefined.
+	 * Removes last array item. Does nothing if array is empty.
+	 * @returns {T} The removed item or `undefined`.
 	 */
 	pop: function() {
 		if (this.items.length !== 0) {
@@ -1151,19 +1138,20 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 	
 	/**
-	 * Ищет индекс первого элемента, который больше указанного значения относительно функции compare,
-	 * используя бинарный поиск. Массив должен быть отсортирован по функции compare.
-	 * @param {T} value Значение.
+	 * Determines index of first item which is more than specified value by `compare` function,
+	 * using binary search. Array must be sorted by `compare` function.
+	 * Can be used for item insertion easily.
+	 * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
+	 * @param {T} value Value.
 	 * @param {Function} [compare]
 	 *
 	 * `f(t1: T, t2: T): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope]
-	 * Контекст вызова compare. По умолчанию, вызывается в контексте массива.
-	 * @returns {number} Индекс элемента.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Item index.
 	 */
 	binarySearch: function(value, compare, scope) {
 		return JW.Array.binarySearch(this.items, value, compare, scope);
@@ -1175,20 +1163,19 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * @method createEmpty
-	 * `<U>` Конструирует пустую коллекцию того же типа.
-	 * @returns {JW.AbstractArray} `<U>` Коллекция.
+	 * `<U>` Creates empty collection of the same type.
+	 * @returns {JW.AbstractArray} `<U>` Collection.
 	 */
 });
 
 /**
  * @class
- * Пара "индекс-количество". Используется в параметрах метода JW.AbstractArray#splice чтобы указать, какие
- * элементы нужно удалить из массива.
+ * "Index-count" pair. Used in JW.AbstractArray#splice method arguments to specify item segments to remove.
  * @extends JW.Class
  *
  * @constructor
- * @param {number} index Индекс.
- * @param {number} count Количество.
+ * @param {number} index Index.
+ * @param {number} count Count.
  */
 JW.AbstractArray.IndexCount = function(index, count) {
 	JW.AbstractArray.IndexCount._super.call(this);
@@ -1198,15 +1185,15 @@ JW.AbstractArray.IndexCount = function(index, count) {
 
 JW.extend(JW.AbstractArray.IndexCount, JW.Class, {
 	/**
-	 * @property {number} index Индекс.
+	 * @property {number} index Index.
 	 */
 	/**
-	 * @property {number} count Количество.
+	 * @property {number} count Count.
 	 */
 	
 	/**
-	 * Клонирует пару.
-	 * @returns JW.AbstractArray.IndexCount
+	 * Clones pair.
+	 * @returns {JW.AbstractArray.IndexCount}
 	 */
 	clone: function() {
 		return new JW.AbstractArray.IndexCount(this.index, this.count);
@@ -1215,13 +1202,13 @@ JW.extend(JW.AbstractArray.IndexCount, JW.Class, {
 
 /**
  * @class
- * `<T>` Пара "индекс-элементы". Используется в параметрах метода JW.AbstractArray#splice чтобы указать, какие
- * элементы нужно вставить в массив.
+ * `<T>` "Index-items" pair. Used in JW.AbstractArray#splice method arguments to specify item segments to insert,
+ * and in JW.AbstractArray.SpliceResult class to specify removed and added item segments.
  * @extends JW.Class
  *
  * @constructor
- * @param {number} index Индекс.
- * @param {Array} items `<T>` Элементы.
+ * @param {number} index Index.
+ * @param {Array} items `<T>` Items.
  */
 JW.AbstractArray.IndexItems = function(index, items) {
 	JW.AbstractArray.IndexItems._super.call(this);
@@ -1231,23 +1218,23 @@ JW.AbstractArray.IndexItems = function(index, items) {
 
 JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
 	/**
-	 * @property {number} index Индекс.
+	 * @property {number} index Index.
 	 */
 	/**
-	 * @property {Array} items `<T>` Элементы.
+	 * @property {Array} items `<T>` Items.
 	 */
 	
 	/**
-	 * Преобразует в пару "индекс-количество".
-	 * @returns {JW.AbstractArray.IndexCount} Пара "индекс-количество".
+	 * Converts to "index-count" pair.
+	 * @returns {JW.AbstractArray.IndexCount} "Index-count" pair.
 	 */
 	toIndexCount: function() {
 		return new JW.AbstractArray.IndexCount(this.index, this.items.length);
 	},
 	
 	/**
-	 * Клонирует пару.
-	 * @returns JW.AbstractArray.IndexItems
+	 * Clones pair.
+	 * @returns {JW.AbstractArray.IndexItems}
 	 */
 	clone: function() {
 		return new JW.AbstractArray.IndexItems(this.index, this.items.concat());
@@ -1256,12 +1243,12 @@ JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
 
 /**
  * @class
- * `<T>` Параметры метода JW.AbstractArray#splice.
+ * `<T>` JW.AbstractArray#splice method arguments. Returned by #detectSplice method.
  * @extends JW.Class
  *
  * @constructor
- * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Сегменты для удаления.
- * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Наборы для вставки.
+ * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Segments to remove.
+ * @param {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Segments to add.
  */
 JW.AbstractArray.SpliceParams = function(removeParamsList, addParamsList) {
 	JW.AbstractArray.SpliceParams._super.call(this);
@@ -1271,22 +1258,22 @@ JW.AbstractArray.SpliceParams = function(removeParamsList, addParamsList) {
 
 JW.extend(JW.AbstractArray.SpliceParams/*<T>*/, JW.Class, {
 	/**
-	 * @property {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Сегменты для удаления.
+	 * @property {Array} removeParamsList `<JW.AbstractArray.IndexCount>` Segments to remove.
 	 */
 	/**
-	 * @property {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Наборы для вставки.
+	 * @property {Array} addParamsList `<JW.AbstractArray.IndexItems<T>>` Segments to add.
 	 */
 });
 
 /**
  * @class
- * `<T>` Результат метода JW.AbstractArray#splice.
+ * `<T>` JW.AbstractArray#splice method result.
  * @extends JW.Class
  *
  * @constructor
- * @param {Array} oldItems `<T>` Бывшее содержимое массива.
- * @param {Array} removedItemsList `<JW.AbstractArray.IndexItems<T>>` Наборы удаленных элементов.
- * @param {Array} addedItemsList `<JW.AbstractArray.IndexItems<T>>` Наборы вставленных элементов.
+ * @param {Array} oldItems `<T>` Old array contents.
+ * @param {Array} removedItemsList `<JW.AbstractArray.IndexItems<T>>` Removed item segments.
+ * @param {Array} addedItemsList `<JW.AbstractArray.IndexItems<T>>` Added item segments.
  */
 JW.AbstractArray.SpliceResult = function(oldItems, removedItemsList, addedItemsList) {
 	JW.AbstractArray.SpliceResult._super.call(this);
@@ -1298,15 +1285,15 @@ JW.AbstractArray.SpliceResult = function(oldItems, removedItemsList, addedItemsL
 	this.removeParamsList = null;
 };
 
-JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
+JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 	/**
-	 * @property {Array} oldItems `<T>` Бывшее содержимое массива.
+	 * @property {Array} oldItems `<T>` Old array contents.
 	 */
 	/**
-	 * @property {Array} removedItemsList `<JW.AbstractArray.IndexItems<T>>` Наборы удаленных элементов.
+	 * @property {Array} removedItemsList `<JW.AbstractArray.IndexItems<T>>` Removed item segments.
 	 */
 	/**
-	 * @property {Array} addedItemsList `<JW.AbstractArray.IndexItems<T>>` Наборы вставленных элементов.
+	 * @property {Array} addedItemsList `<JW.AbstractArray.IndexItems<T>>` Added item segments.
 	 */
 	/*
 	Array<T> removedItems;
@@ -1315,8 +1302,8 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 	*/
 	
 	/**
-	 * Возвращает общий массив удаленных элементов.
-	 * @returns {Array} `<T>` Массив удаленных элементов.
+	 * Returns plain array of removed items.
+	 * @returns {Array} `<T>` Removed items array.
 	 */
 	getRemovedItems: function() {
 		if (!this.removedItems) {
@@ -1326,8 +1313,8 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 	},
 	
 	/**
-	 * Возвращает общий массив добавленных элементов.
-	 * @returns {Array} `<T>` Массив добавленных элементов.
+	 * Returns plain array of added items.
+	 * @returns {Array} `<T>` Added items array.
 	 */
 	getAddedItems: function() {
 		if (!this.addedItems) {
@@ -1337,8 +1324,8 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 	},
 	
 	/**
-	 * Преобразует наборы удаленных элементов в сегменты для удаления.
-	 * @returns {Array} `<JW.AbstractArray.IndexCount<T>>` Сегменты для удаления.
+	 * Converts removed item segments to "index-count" pairs.
+	 * @returns {Array} `<JW.AbstractArray.IndexCount<T>>` Segments to remove.
 	 */
 	getRemoveParamsList: function() {
 		if (!this.removeParamsList) {
@@ -1348,8 +1335,8 @@ JW.extend(JW.AbstractArray.SpliceResult/*<T>*/, JW.Class, {
 	},
 	
 	/**
-	 * Проверяет, что массив не изменился в результате вызова JW.AbstractArray#splice.
-	 * @returns {boolean} Массив не изменился.
+	 * Checks that JW.AbstractArray#splice method call didn't change the array.
+	 * @returns {boolean} Array hasn't been changed.
 	 */
 	isEmpty: function() {
 		return (this.removedItemsList.length === 0) && (this.addedItemsList.length === 0);
