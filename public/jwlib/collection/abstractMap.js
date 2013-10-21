@@ -138,7 +138,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 */
 	/**
 	 * @method containsKey
-	 * Checks an existance of item with specified index in collection.
+	 * Checks existance of item with specified index in collection.
 	 * @param {string} key Key.
 	 * @returns {boolean} Collection contains item with specified key.
 	 */

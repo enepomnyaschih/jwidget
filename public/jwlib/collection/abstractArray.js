@@ -153,7 +153,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 */
 	/**
 	 * @method containsKey
-	 * Checks an existance of item with specified index in collection.
+	 * Checks existance of item with specified index in collection.
 	 * @param {number} index Index.
 	 * @returns {boolean} Collection contains item with specified index.
 	 */

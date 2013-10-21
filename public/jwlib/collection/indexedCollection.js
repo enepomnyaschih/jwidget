@@ -146,7 +146,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	$getKeys: JW.AbstractCollection._create$Array("getKeys"),
 	
 	/**
-	 * Checks an existance of item with specified index in collection.
+	 * Checks existance of item with specified index in collection.
 	 * @param {K} key Key.
 	 * @returns {boolean} Collection contains item with specified key.
 	 */

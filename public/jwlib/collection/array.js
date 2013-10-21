@@ -120,7 +120,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 */
 	/**
 	 * @method containsKey
-	 * `<T>` Checks an existance of item with specified index in collection.
+	 * `<T>` Checks existance of item with specified index in collection.
 	 * @static
 	 * @param {Array} array `<T>` Array.
 	 * @param {number} index Index.
