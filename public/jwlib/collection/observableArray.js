@@ -480,8 +480,8 @@ JW.extend(JW.ObservableArray.ReorderEventParams, JW.ObservableArray.ItemsEventPa
  *
  * @constructor
  * @param {JW.ObservableArray} sender `<T>` Event sender.
- * @param {number} oldLength Old array length.
- * @param {number} newLength New array length.
+ * @param {number} oldLength Old collection length.
+ * @param {number} newLength New collection length.
  */
 JW.ObservableArray.LengthChangeEventParams = function(sender, oldLength, newLength) {
 	JW.ObservableArray.LengthChangeEventParams._super.call(this, sender);
