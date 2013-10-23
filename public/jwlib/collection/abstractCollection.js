@@ -543,7 +543,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): boolean`
+	 * `f(item: T): boolean`
 	 *
 	 * Criteria.
 	 *
@@ -559,7 +559,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): boolean`
+	 * `f(item: T): boolean`
 	 *
 	 * Criteria.
 	 *
@@ -576,7 +576,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): U`
+	 * `f(item: T): U`
 	 *
 	 * Mapping function.
 	 *
@@ -592,7 +592,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): U`
+	 * `f(item: T): U`
 	 *
 	 * Mapping function.
 	 *

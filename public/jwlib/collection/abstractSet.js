@@ -22,83 +22,79 @@
  *
  * `<T extends JW.Class> extends JW.AbstractCollection<T>`
  *
- * Абстрактное множество.
+ * Set is unordered collection optimized for items adding, removal and search. Unlike
+ * array and map, set can contain only JW.Class instances. Internal set representation is
+ * map from item {@link JW.Class#_iid iid} to this item.
  *
- * Множество - это неупорядоченная коллекция, оптимизированная под добавление/удаление/поиск элемента. В отличие от
- * массива и словаря, множество может содержать только экземпляры JW.Class. Внутреннее представление множества - это
- * словарь из {@link JW.Class#_iid iid} элемента в сам элемент.
+ * # Set methods
  *
- * # Методы множества
+ * **Difference compared to JW.AbstractCollection is in bold.**
  *
- * **Жирным шрифтом выделены изменения по сравнению с JW.AbstractCollection.**
+ * Content retrieving:
  *
- * Получение содержимого:
+ * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #isEmpty} - Checks collection for emptiness.
+ * - {@link #getFirst} - Returns first item in collection.
+ * - {@link #containsItem}, **{@link #contains}** - Does collection contain the item?
+ * - **{@link #getJson} - Returns internal representation of set.**
  *
- * - {@link #getLength} - Возвращает количество элементов в коллекции.
- * - {@link #isEmpty} - Проверяет коллекцию на пустоту.
- * - {@link #getFirst} - Возвращает первый элемент коллекции.
- * - {@link #containsItem}, **{@link #contains}** - Содержит ли коллекция элемент.
- * - **{@link #getJson} - Возвращает внутреннее представление множества.**
+ * Iteration algorhitms:
  *
- * Алгоритмы перебора:
- *
- * - {@link #every} - Проверяет все элементы по критерию.
- * Возвращает true тогда и только тогда, когда все элементы удовлетворяют критерию.
- * - {@link #some} - Проверяет каждый элемент по критерию.
- * Возвращает true тогда и только тогда, когда хотя бы один элемент удовлетворяет критерию.
- * - {@link #each} - Перебирает элементы.
- * - {@link #search} - Ищет элемент по критерию.
- * Возвращает первый элемент, удовлетворяющий критерию.
- * - {@link #filter}, #$filter - Фильтрует коллекцию по критерию.
- * Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
- * - {@link #map}, #$map - Отображает элементы коллекции.
- * Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
- * коллекции.
+ * - {@link #every} - Checks all items by criteria.
+ * Returns `true` if all items match the criteria.
+ * - {@link #some} - Checks each item by criteria.
+ * Returns `true` if some items matches the criteria.
+ * - {@link #each} - Iterates items.
+ * - {@link #search} - Finds item by criteria.
+ * Returns first item matching the criteria.
+ * - {@link #filter}, #$filter - Filters collection by criteria.
+ * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #map}, #$map - Maps collection items.
+ * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
- * Строит массив из элементов коллекции, отсортированный по индексу
- * или компаратору.
- * - {@link #index}, #$index - Индексирует коллекцию.
- * Строит словарь, в ключах которого находятся индексы элементов, а в значениях - соответствующие элементы.
- * - {@link #toArray}, #$toArray - Строит новый массив из элементов коллекции.
- * - {@link #toSet}, #$toSet - Строит новое множество из элементов коллекции.
- * - {@link #asArray}, #$asArray - Представляет коллекцию в виде массива.
- * - {@link #asSet}, #$asSet - Представляет коллекцию в виде множества.
+ * Builds array consisting of collection items sorted by indexer or comparer.
+ * - {@link #index}, #$index - Indexes collection.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #asArray}, #$asArray - Represents collection as array.
+ * - {@link #asSet}, #$asSet - Represents collection as set.
  *
- * Изменение коллекции:
+ * Collection modification:
  *
- * - **{@link #add}, #tryAdd - Добавляет элемент в множество.**
- * - **{@link #addAll}, #$addAll, #tryAddAll - Добавляет набор элементов в множество.**
- * - **{@link #remove}, #tryRemove - Удаляет элемент из множества.**
- * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Удаляет набор элементов из множества.**
- * - {@link #removeItem} - Удаляет первое вхождение элемента из коллекции.
- * - {@link #removeItems} - Удаляет все вхождения элементов из коллекции.
- * - {@link #clear}, #$clear, #tryClear - Очищает коллекцию.
- * - **{@link #splice}, #trySplice - Удаляет/вставляет элементы.**
- * - **{@link #performSplice} - Приводит содержимое методом #splice.**
+ * - **{@link #add}, #tryAdd - Adds item to set.**
+ * - **{@link #addAll}, #$addAll, #tryAddAll - Adds multiple items to set.**
+ * - **{@link #remove}, #tryRemove - Removes item from set.**
+ * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Removes multiple items from set.**
+ * - {@link #removeItem} - Removes first occurency of an item in collection.
+ * - {@link #removeItems} - Removes all occurencies of items in collection.
+ * - {@link #clear}, #$clear, #tryClear - Clears collection.
+ * - **{@link #splice}, #trySplice - Removes and adds multiple items.**
+ * - **{@link #performSplice} - Adjusts contents using #splice method.**
  *
- * Создание синхронизаторов:
+ * Synchronizers creation:
  *
- * - {@link #createMapper} - Создает конвертер элементов.
- * - {@link #createFilterer} - Создает фильтровщик.
- * - {@link #createLister} - Создает конвертер в множество.
- * - {@link #createIndexer} - Создает индексатор.
- * - {@link #createOrderer} - Создает конвертер в массив (упорядочитель).
- * - {@link #createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
- * - {@link #createObserver} - Создает наблюдатель.
+ * - {@link #createMapper} - Creates item mapper.
+ * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createLister} - Creates converter to set.
+ * - {@link #createIndexer} - Creates converter to map (indexer).
+ * - {@link #createOrderer} - Creates converter to array (orderer).
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createObserver} - Creates observer.
  *
- * Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
+ * Similar collection creation (for algorithms and synchronizers implementation):
  *
- * - {@link #createEmpty} - Создает пустую коллекцию того же типа.
- * - {@link #createEmptyArray} - Создает пустой массив того же типа.
- * - {@link #createEmptyMap} - Создает пустой словарь того же типа.
- * - {@link #createEmptySet} - Создает пустое множество того же типа.
+ * - {@link #createEmpty} - Creates empty collection of the same type.
+ * - {@link #createEmptyArray} - Creates empty array of the same observability type.
+ * - {@link #createEmptyMap} - Creates empty map of the same observability type.
+ * - {@link #createEmptySet} - Creates empty set of the same observability type.
  *
- * Другие методы:
+ * Other methods:
  *
- * - **{@link #detectSplice} - Определяет параметры метода #splice для приведения содержимого.**
- * - **{@link #equal} - Сравнивает с массивом.**
+ * - **{@link #detectSplice} - Detects #splice method arguments to adjust contents.**
+ * - **{@link #equal} - Checks for equality to array.**
  *
- * Все те же самые методы доступны и для нативного JavaScript Object как множества, смотрите статические методы JW.Set.
+ * All the same algorithms are also available for native JavaScript Object as set, see JW.Set static methods.
  *
  * @extends JW.AbstractCollection
  * @abstract
@@ -111,11 +107,11 @@ JW.AbstractSet = function(items, adapter) {
 
 JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	/**
-	 * Возвращает внутреннее представление множества.
+	 * Returns item map - internal collection representation.
 	 *
-	 * **Метод не копирует коллекцию, будьте осторожны.**
+	 * **Caution: doesn't make a copy.**
 	 *
-	 * @returns {Object} Внутреннее представление множества.
+	 * @returns {Object} `<T>` Item map.
 	 */
 	getJson: function() {
 		return this.json;
@@ -134,9 +130,9 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Проверяет наличие элемента в коллекции. Сокращение #containsItem.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 * Checks item existance in collection. Shortcut for #containsItem.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
 	 */
 	contains: function(item) {
 		return this.json.hasOwnProperty(item._iid);
@@ -147,70 +143,70 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Фильтрует коллекцию по критерию.
+	 * Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): boolean`
+	 * `f(item: T): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Object} Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `<T>` Filtered collection.
 	 */
 	filter: function(callback, scope) {
 		return JW.Set.filter(this.json, callback, scope);
 	},
 	
 	/**
-	 * Фильтрует коллекцию по критерию.
+	 * Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): boolean`
+	 * `f(item: T): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Set} `<T>` Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Set} `<T>` Filtered collection.
 	 */
 	$filter: JW.AbstractCollection._create$Set("filter"),
 	
 	/**
-	 * `<U>` Отображает элементы коллекции.
+	 * `<U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): U`
+	 * `f(item: T): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Object} Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `<U>` Mapped collection.
 	 */
 	map: function(callback, scope) {
 		return JW.Set.map(this.json, callback, scope);
 	},
 	
 	/**
-	 * `<U>` Отображает элементы коллекции.
+	 * `<U>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item): U`
+	 * `f(item: T): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Set} `<U>` Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Set} `<U>` Mapped collection.
 	 */
 	$map: JW.AbstractCollection._create$Set("map"),
 	
@@ -223,18 +219,18 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Добавляет элемент в множество, если его еще нет.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Элемент добавлен.
+	 * Adds item to set if one is absent.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is added successfully.
 	 */
 	add: function(item) {
 		return this.tryAdd(item) !== undefined;
 	},
 	
 	/**
-	 * Добавляет элемент в множество, если его еще нет.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Элемент добавлен. Если нет изменений - undefined.
+	 * Adds item to set if one is absent.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is added successfully. If not modified - `undefined`.
 	 */
 	tryAdd: function(item) {
 		if (this.trySplice([], [item]) !== undefined) {
@@ -243,9 +239,9 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Добавляет набор элементов в множество, если их еще нет.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {Array} `<T>` Добавленные элементы.
+	 * Adds multiple items to set, ones that are absent.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {Array} `<T>` Added items.
 	 */
 	addAll: function(items) {
 		var result = this.tryAddAll(items);
@@ -253,16 +249,16 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Добавляет набор элементов в множество, если их еще нет.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {JW.Array} `<T>` Добавленные элементы.
+	 * Adds multiple items to set, ones that are absent.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {JW.Array} `<T>` Added items.
 	 */
 	$addAll: JW.AbstractCollection._create$Array("addAll"),
 	
 	/**
-	 * Добавляет набор элементов в множество, если их еще нет.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {Array} `<T>` Добавленные элементы. Если нет изменений - undefined.
+	 * Adds multiple items to set, ones that are absent.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {Array} `<T>` Added items. If not modified - `undefined`.
 	 */
 	tryAddAll: function(items) {
 		var spliceResult = this.trySplice([], items);
@@ -272,18 +268,18 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Удаляет элемент из множества, если он там есть.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Элемент удален.
+	 * Removes item from set if one is present.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is removed successfully.
 	 */
 	remove: function(item) {
 		return this.tryRemove(item) !== undefined;
 	},
 	
 	/**
-	 * Удаляет элемент из множества, если он там есть.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Элемент удален. Если нет изменений - undefined.
+	 * Removes item from set if one is present.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is removed successfully. If not modified - `undefined`.
 	 */
 	tryRemove: function(item) {
 		if (this.trySplice([item], []) !== undefined) {
@@ -296,9 +292,9 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Удаляет набор элементов из множества, если они там есть.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {Array} `<T>` Удаленные элементы.
+	 * Removes multiple items from set, ones that are present.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {Array} `<T>` Removed items.
 	 */
 	removeAll: function(items) {
 		var result = this.tryRemoveAll(items);
@@ -306,16 +302,16 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Удаляет набор элементов из множества, если они там есть.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {JW.Array} `<T>` Удаленные элементы.
+	 * Removes multiple items from set, ones that are present.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {JW.Array} `<T>` Removed items.
 	 */
 	$removeAll: JW.AbstractCollection._create$Array("removeAll"),
 	
 	/**
-	 * Удаляет набор элементов из множества, если они там есть.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {Array} `<T>` Удаленные элементы. Если нет изменений - undefined.
+	 * Removes multiple items from set, ones that are present.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {Array} `<T>` Removes items. If not modified - `undefined`.
 	 */
 	tryRemoveAll: function(items) {
 		var spliceResult = this.trySplice(items, []);
@@ -329,8 +325,8 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Очищает коллекцию.
-	 * @returns {Array} `<T>` Бывшее содержимое коллекции.
+	 * Clears collection.
+	 * @returns {Array} `<T>` Old collection contents.
 	 */
 	clear: function() {
 		var items = this.tryClear();
@@ -338,14 +334,14 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Очищает коллекцию.
-	 * @returns {JW.Array} `<T>` Бывшее содержимое коллекции.
+	 * Clears collection.
+	 * @returns {JW.Array} `<T>` Old collection contents.
 	 */
 	$clear: JW.AbstractCollection._create$Array("clear"),
 	
 	/**
-	 * Очищает коллекцию.
-	 * @returns {Array} `<T>`. Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 * Clears collection.
+	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
 		this.length = 0;
@@ -353,10 +349,10 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
-	 * @param {Array} removedItems `<T>` Список элементов для удаления.
-	 * @param {Array} addedItems `<T>` Список элементов для добавления.
-	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Результат.
+	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removedItems `<T>` Items to remove.
+	 * @param {Array} addedItems `<T>` Items to add.
+	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Result.
 	 */
 	splice: function(removedItems, addedItems) {
 		var spliceResult = this.trySplice(removedItems, addedItems);
@@ -364,10 +360,10 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
-	 * @param {Array} removedItems `<T>` Список элементов для удаления.
-	 * @param {Array} addedItems `<T>` Список элементов для добавления.
-	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Результат. Если нет изменений - undefined.
+	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removedItems `<T>` Items to remove.
+	 * @param {Array} addedItems `<T>` Items to add.
+	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	trySplice: function(removedItems, addedItems) {
 		var spliceResult = JW.Set.trySplice(this.json, removedItems, addedItems);
@@ -378,20 +374,19 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * Определяет параметры метода #splice, с которыми содержимое множества станет равно newItems.
-	 * Т.е. определяет, какие элементы нужно удалить, какие добавить.
-	 * @param {Array} newItems `<T>` Новое содержимое множества.
-	 * @returns {JW.AbstractSet.SpliceParams}
-	 * `<T>` Параметры метода #splice.
-	 * Если вызова метода не требуется - undefined.
+	 * Detects #splice method arguments to adjust set contents to `newItems`.
+	 * Determines which items should be removed and which ones should be added.
+	 * @param {Object} newItems `<T>` New map contents.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `<T>` #splice method arguments. If no method call required - `undefined`.
 	 */
 	detectSplice: function(newItems) {
 		return JW.Set.detectSplice(this.json, newItems);
 	},
 	
 	/**
-	 * Преобразует содержимое множества к newItems комбинацией методов #detectSplice и #splice.
-	 * @param {Array} newItems `<T>` Новое содержимое множества.
+	 * Adjusts map contents to `newItems` using #detectSplice and #splice methods.
+	 * @param {Object} newItems `<T>` New map contents.
 	 * @returns {void}
 	 */
 	performSplice: function(newItems) {
@@ -402,86 +397,86 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	/**
-	 * `<U>` Конструирует конвертер элементов коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * `<U>` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Mapper}
-	 * `<T, U>` Синхронизатор.
+	 * `<T, U>` Synchronizer.
 	 */
 	createMapper: function(config) {
 		return new JW.AbstractSet.Mapper(this, config);
 	},
 	
 	/**
-	 * Конструирует фильтровщик коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Filterer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createFilterer: function(config) {
 		return new JW.AbstractSet.Filterer(this, config);
 	},
 	
 	/**
-	 * Конструирует наблюдатель коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Observer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createObserver: function(config) {
 		return new JW.AbstractSet.Observer(this, config);
 	},
 	
 	/**
-	 * Конструирует конвертер коллекции в массив (упорядочитель).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Orderer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createOrderer: function(config) {
 		return new JW.AbstractSet.Orderer(this, config);
 	},
 	
 	/**
-	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.SorterComparing}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createSorterComparing: function(config) {
 		return new JW.AbstractSet.SorterComparing(this, config);
 	},
 	
 	/**
-	 * Конструирует индексатор коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Indexer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createIndexer: function(config) {
 		return new JW.AbstractSet.Indexer(this, config);
 	},
 	
 	/**
-	 * Конструирует конвертер коллекции в множество.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Lister}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createLister: function(config) {
 		return new JW.AbstractSet.Lister(this, config);
 	},
 	
 	/**
-	 * Поэлементно сравнивает с массивом.
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {boolean} Множество равно массиву.
+	 * Checks for equality (===) to array, item by item.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {boolean} Set is equal to array.
 	 */
 	equal: function(array) {
 		return JW.Set.equal(this.json, array);
@@ -493,19 +488,19 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	
 	/**
 	 * @method createEmpty
-	 * `<U>` Конструирует пустую коллекцию того же типа.
-	 * @returns {JW.AbstractSet} `<U>` Коллекция.
+	 * `<U>` Creates empty collection of the same type.
+	 * @returns {JW.AbstractSet} `<U>` Collection.
 	 */
 });
 
 /**
  * @class
- * `<T>` Параметры метода JW.AbstractSet#splice.
+ * `<T>` JW.AbstractSet#splice method arguments. Returned by JW.AbstractSet#detectSplice method.
  * @extends JW.Class
  *
  * @constructor
- * @param {Array} removedItems `<T>` Элементы для удаления.
- * @param {Array} addedItems `<T>` Элементы для добавления.
+ * @param {Array} removedItems `<T>` Items to remove.
+ * @param {Array} addedItems `<T>` Items to add.
  */
 JW.AbstractSet.SpliceParams = function(removedItems, addedItems) {
 	JW.AbstractSet.SpliceParams._super.call(this);
@@ -515,21 +510,21 @@ JW.AbstractSet.SpliceParams = function(removedItems, addedItems) {
 
 JW.extend(JW.AbstractSet.SpliceParams, JW.Class, {
 	/**
-	 * @property {Array} removedItems `<T>` Элементы для удаления.
+	 * @property {Array} removedItems `<T>` Items to remove.
 	 */
 	/**
-	 * @property {Array} addedItems `<T>` Элементы для добавления.
+	 * @property {Array} addedItems `<T>` Items to add.
 	 */
 });
 
 /**
  * @class
- * `<T>` Результат метода JW.AbstractSet#splice.
+ * `<T>` JW.AbstractSet#splice method result.
  * @extends JW.Class
  *
  * @constructor
- * @param {Array} removedItems `<T>` Удаленные элементы.
- * @param {Array} addedItems `<T>` Добавленные элементы.
+ * @param {Array} removedItems `<T>` Removed items.
+ * @param {Array} addedItems `<T>` Added items.
  */
 JW.AbstractSet.SpliceResult = function(removedItems, addedItems) {
 	JW.AbstractSet.SpliceResult._super.call(this);
@@ -539,9 +534,9 @@ JW.AbstractSet.SpliceResult = function(removedItems, addedItems) {
 
 JW.extend(JW.AbstractSet.SpliceResult, JW.Class, {
 	/**
-	 * @property {Array} removedItems `<T>` Удаленные элементы.
+	 * @property {Array} removedItems `<T>` Removed items.
 	 */
 	/**
-	 * @property {Array} addedItems `<T>` Добавленные элементы.
+	 * @property {Array} addedItems `<T>` Added items.
 	 */
 });

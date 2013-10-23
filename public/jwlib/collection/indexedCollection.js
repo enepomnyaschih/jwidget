@@ -584,7 +584,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item, key: K): boolean`
+	 * `f(item: T, key: K): boolean`
 	 *
 	 * Criteria.
 	 *
@@ -600,7 +600,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item, key: K): boolean`
+	 * `f(item: T, key: K): boolean`
 	 *
 	 * Criteria.
 	 *
@@ -616,7 +616,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item, key: K): U`
+	 * `f(item: T, key: K): U`
 	 *
 	 * Mapping function.
 	 *
@@ -632,7 +632,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 *
 	 * @param {Function} f
 	 *
-	 * `f(T item, key: K): U`
+	 * `f(item: T, key: K): U`
 	 *
 	 * Mapping function.
 	 *

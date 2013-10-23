@@ -635,7 +635,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
-	 * `f(T item, index: number): boolean`
+	 * `f(item: T, index: number): boolean`
 	 *
 	 * Criteria.
 	 *
@@ -653,7 +653,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
-	 * `f(T item, index: number): boolean`
+	 * `f(item: T, index: number): boolean`
 	 *
 	 * Criteria.
 	 *
@@ -671,7 +671,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
-	 * `f(T item, index: number): U`
+	 * `f(item: T, index: number): U`
 	 *
 	 * Mapping function.
 	 *
@@ -689,7 +689,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @param {Array} array `<T>` Array.
 	 * @param {Function} f
 	 *
-	 * `f(T item, index: number): U`
+	 * `f(item: T, index: number): U`
 	 *
 	 * Mapping function.
 	 *
