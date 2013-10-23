@@ -20,16 +20,16 @@
 /**
  * @class
  *
- * `<T> extends JW.AbstractSet<T>`
+ * `<T extends JW.Class> extends JW.AbstractSet<T>`
  *
- * Оповещающее множество. Структурированный список методов смотрите в JW.AbstractSet.
+ * See structurized list of methods in JW.AbstractSet.
  *
  * @extends JW.AbstractSet
  *
  * @constructor
- * @param {Array} [items] `<T>` Изначальное содержимое множества. По умолчанию, создается пустое множество.
- * @param {boolean} [adapter] Создать множество как адаптер над items (тогда это должен быть Object, а не Array).
- * По умолчанию, равен false.
+ * @param {Array} [items] `<T>` Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create set as adapter of `items` (`items` should be Object for this, not Array).
+ * Defaults to false, so `items` is copied.
  */
 JW.ObservableSet = function(json, adapter) {
 	JW.ObservableSet._super.call(this, json, adapter);
@@ -43,28 +43,26 @@ JW.ObservableSet = function(json, adapter) {
 JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	/**
 	 * @event spliceEvent
-	 * Элементы удалены/добавлены в множество. Возникает в результате запуска
-	 * метода #add, #tryAdd, #addAll, #$addAll, #tryAddAll, #remove, #tryRemove, #removeItem, #removeAll, #$removeAll,
+	 * Items are removed from set, items are added to set. Triggered in result
+	 * of calling #add, #tryAdd, #addAll, #$addAll, #tryAddAll, #remove, #tryRemove, #removeItem, #removeAll, #$removeAll,
 	 * {@link #tryRemoveAll}, #removeItems, #splice, #trySplice, #performSplice.
-	 * @param {JW.ObservableSet.SpliceEventParams} params `<T>` Параметры.
+	 * @param {JW.ObservableSet.SpliceEventParams} params `<T>` Parameters.
 	 */
 	/**
 	 * @event clearEvent
-	 * Множество очищено. Возникает в результате запуска
-	 * метода #clear, #$clear, #tryClear.
-	 * @param {JW.ObservableSet.ItemsEventParams} params
-	 * `<T>` Параметры. JW.ObservableSet.ItemsEventParams#items обозначает бывшее содержимое коллекции.
+	 * Set is cleared. Triggered in result of calling #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableSet.ItemsEventParams} params `<T>` Parameters.
 	 */
 	/**
 	 * @event changeEvent
-	 * Множество изменено. Возникает после одного из
-	 * событий #spliceEvent, #clearEvent.
-	 * @param {JW.ObservableSet.EventParams} params `<T>` Параметры.
+	 * Set is changed. Triggered right after one
+	 * of events #spliceEvent, #clearEvent.
+	 * @param {JW.ObservableSet.EventParams} params `<T>` Parameters.
 	 */
 	/**
 	 * @event lengthChangeEvent
-	 * Изменен размер множества. Возникает после события #changeEvent в случае изменения размера.
-	 * @param {JW.ObservableSet.LengthChangeEventParams} params `<T>` Параметры.
+	 * Set length is changed. Triggered right after #changeEvent if set length has changed.
+	 * @param {JW.ObservableSet.LengthChangeEventParams} params `<T>` Parameters.
 	 */
 	
 	// override
@@ -99,109 +97,109 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	},
 	
 	/**
-	 * `<U>` Конструирует пустую коллекцию того же типа.
-	 * @returns {JW.ObservableSet} `<U>` Коллекция.
+	 * `<U>` Creates empty collection of the same type.
+	 * @returns {JW.ObservableSet} `<U>` Collection.
 	 */
 	createEmpty: function() {
 		return new JW.ObservableSet();
 	},
 	
 	/**
-	 * `<U>` Конструирует пустой массив того же типа (простой или оповещающий).
-	 * @returns {JW.ObservableArray} `<U>` Массив.
+	 * `<U>` Creates empty array of the same observability level.
+	 * @returns {JW.ObservableArray} `<U>` Array.
 	 */
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
 	
 	/**
-	 * `<U>` Конструирует пустой словарь того же типа (простой или оповещающий).
-	 * @returns {JW.ObservableMap} `<U>` Словарь.
+	 * `<U>` Creates empty map of the same observability level.
+	 * @returns {JW.ObservableMap} `<U>` Map.
 	 */
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
 	
 	/**
-	 * `<U>` Конструирует пустое множество того же типа (простое или оповещающее).
-	 * @returns {JW.ObservableSet} `<U>` Множество.
+	 * `<U>` Creates empty set of the same observability level.
+	 * @returns {JW.ObservableSet} `<U>` Set.
 	 */
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
 	
 	/**
-	 * `<U>` Конструирует конвертер элементов коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * `<U>` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Mapper}
-	 * `<T, U>` Синхронизатор.
+	 * `<T, U>` Synchronizer.
 	 */
 	createMapper: function(config) {
 		return new JW.ObservableSet.Mapper(this, config);
 	},
 	
 	/**
-	 * Конструирует фильтровщик коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Filterer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createFilterer: function(config) {
 		return new JW.ObservableSet.Filterer(this, config);
 	},
 	
 	/**
-	 * Конструирует наблюдатель коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Observer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createObserver: function(config) {
 		return new JW.ObservableSet.Observer(this, config);
 	},
 	
 	/**
-	 * Конструирует конвертер коллекции в массив (упорядочитель).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Orderer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createOrderer: function(config) {
 		return new JW.ObservableSet.Orderer(this, config);
 	},
 	
 	/**
-	 * Конструирует конвертер коллекции в массив (сортировщик по компаратору).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.SorterComparing}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createSorterComparing: function(config) {
 		return new JW.ObservableSet.SorterComparing(this, config);
 	},
 	
 	/**
-	 * Конструирует индексатор коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Indexer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createIndexer: function(config) {
 		return new JW.ObservableSet.Indexer(this, config);
 	},
 	
 	/**
-	 * Конструирует конвертер коллекции в множество.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Lister}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	createLister: function(config) {
 		return new JW.ObservableSet.Lister(this, config);
@@ -219,11 +217,11 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 
 /**
  * @class
- * `<T>` Параметры события JW.ObservableSet.
+ * `<T>` JW.ObservableSet event parameters.
  * @extends JW.EventParams
  *
  * @constructor
- * @param {JW.ObservableSet} sender `<T>` Отправитель события.
+ * @param {JW.ObservableSet} sender `<T>` Event sender.
  */
 JW.ObservableSet.EventParams = function(sender) {
 	JW.ObservableSet.EventParams._super.call(this, sender);
@@ -231,7 +229,7 @@ JW.ObservableSet.EventParams = function(sender) {
 
 JW.extend(JW.ObservableSet.EventParams, JW.EventParams, {
 	/**
-	 * @property {JW.ObservableSet} sender `<T>` Отправитель события.
+	 * @property {JW.ObservableSet} sender `<T>` Event sender.
 	 */
 });
 
@@ -240,13 +238,13 @@ JW.extend(JW.ObservableSet.EventParams, JW.EventParams, {
  *
  * `<T> extends JW.ObservableSet.EventParams<T>`
  *
- * Параметры события JW.ObservableSet#spliceEvent.
+ * Parameters of JW.ObservableSet#spliceEvent.
  *
  * @extends JW.ObservableSet.EventParams
  *
  * @constructor
- * @param {JW.ObservableSet} sender `<T>` Отправитель события.
- * @param {JW.AbstractSet.SpliceResult} spliceResult `<T>` Результат метода JW.AbstractSet#splice.
+ * @param {JW.ObservableSet} sender `<T>` Event sender.
+ * @param {JW.AbstractSet.SpliceResult} spliceResult `<T>` Result of JW.AbstractSet#splice method.
  */
 JW.ObservableSet.SpliceEventParams = function(sender, spliceResult) {
 	JW.ObservableSet.SpliceEventParams._super.call(this, sender);
@@ -255,7 +253,7 @@ JW.ObservableSet.SpliceEventParams = function(sender, spliceResult) {
 
 JW.extend(JW.ObservableSet.SpliceEventParams, JW.ObservableSet.EventParams, {
 	/**
-	 * @property {JW.AbstractSet.SpliceResult} spliceResult `<T>` Результат метода JW.AbstractSet#splice.
+	 * @property {JW.AbstractSet.SpliceResult} spliceResult `<T>` Result of JW.AbstractSet#splice method.
 	 */
 });
 
@@ -264,13 +262,13 @@ JW.extend(JW.ObservableSet.SpliceEventParams, JW.ObservableSet.EventParams, {
  *
  * `<T> extends JW.ObservableSet.EventParams<T>`
  *
- * Параметры события JW.ObservableSet с элементами.
+ * Parameters of JW.ObservableSet event which bring its old contents.
  *
  * @extends JW.ObservableSet.EventParams
  *
  * @constructor
- * @param {JW.ObservableSet} sender `<T>` Отправитель события.
- * @param {Array} items `<T>` Набор элементов.
+ * @param {JW.ObservableSet} sender `<T>` Event sender.
+ * @param {Array} items `<T>` Old set contents.
  */
 JW.ObservableSet.ItemsEventParams = function(sender, items) {
 	JW.ObservableSet.ItemsEventParams._super.call(this, sender);
@@ -279,7 +277,7 @@ JW.ObservableSet.ItemsEventParams = function(sender, items) {
 
 JW.extend(JW.ObservableSet.ItemsEventParams, JW.ObservableSet.EventParams, {
 	/**
-	 * @property {Array} items `<T>` Набор элементов.
+	 * @property {Array} items `<T>` Old set contents.
 	 */
 });
 
@@ -288,14 +286,14 @@ JW.extend(JW.ObservableSet.ItemsEventParams, JW.ObservableSet.EventParams, {
  *
  * `<T> extends JW.ObservableSet.EventParams<T>`
  *
- * Параметры события JW.ObservableSet#lengthChangeEvent.
+ * Parameters of JW.ObservableSet#lengthChangeEvent.
  *
  * @extends JW.ObservableSet.EventParams
  *
  * @constructor
- * @param {JW.ObservableSet} sender `<T>` Отправитель события.
- * @param {number} oldLength Старый размер коллекции.
- * @param {number} newLength Новый размер коллекции.
+ * @param {JW.ObservableSet} sender `<T>` Event sender.
+ * @param {number} oldLength Old collection length.
+ * @param {number} newLength New collection length.
  */
 JW.ObservableSet.LengthChangeEventParams = function(sender, oldLength, newLength) {
 	JW.ObservableSet.LengthChangeEventParams._super.call(this, sender);
@@ -305,9 +303,9 @@ JW.ObservableSet.LengthChangeEventParams = function(sender, oldLength, newLength
 
 JW.extend(JW.ObservableSet.LengthChangeEventParams, JW.ObservableSet.EventParams, {
 	/**
-	 * @property {number} oldLength Старый размер коллекции.
+	 * @property {number} oldLength Old collection length.
 	 */
 	/**
-	 * @property {number} newLength Новый размер коллекции.
+	 * @property {number} newLength New collection length.
 	 */
 });

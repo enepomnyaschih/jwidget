@@ -26,7 +26,7 @@
 /**
  * @class
  *
- * `<T> extends JW.AbstractSet<T>`
+ * `<T extends JW.Class> extends JW.AbstractSet<T>`
  *
  * See structurized list of methods in JW.AbstractSet.
  * Static methods duplicate API of JW.AbstractSet, but take native Object as first argument.
@@ -34,8 +34,8 @@
  * @extends JW.AbstractSet
  *
  * @constructor
- * @param {Array} [items] `<T>` ИзначалInitial contents. By default, created collection is empty.
- * @param {boolean} [adapter] Create map as adapter of `items` (`items` should be Object for this, not Array).
+ * @param {Array} [items] `<T>` Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create set as adapter of `items` (`items` should be Object for this, not Array).
  * Defaults to false, so `items` is copied.
  */
 JW.Set = function(json, adapter) {
