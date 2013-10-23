@@ -28,16 +28,15 @@
  *
  * `<T> extends JW.AbstractSet<T>`
  *
- * Простое множество. Структурированный список методов смотрите в JW.AbstractSet.
- * Статические методы повторяют интерфейс JW.AbstractSet, только принимают нативный Object в качестве
- * первого аргумента.
+ * See structurized list of methods in JW.AbstractSet.
+ * Static methods duplicate API of JW.AbstractSet, but take native Object as first argument.
  *
  * @extends JW.AbstractSet
  *
  * @constructor
- * @param {Array} [items] `<T>` Изначальное содержимое множества. По умолчанию, создается пустое множество.
- * @param {boolean} [adapter] Создать множество как адаптер над items (тогда это должен быть Object, а не Array).
- * По умолчанию, равен false.
+ * @param {Array} [items] `<T>` ИзначалInitial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create map as adapter of `items` (`items` should be Object for this, not Array).
+ * Defaults to false, so `items` is copied.
  */
 JW.Set = function(json, adapter) {
 	JW.Set._super.call(this, json, adapter);
@@ -45,32 +44,32 @@ JW.Set = function(json, adapter) {
 
 JW.extend(JW.Set, JW.AbstractSet, {
 	/**
-	 * `<U>` Конструирует пустую коллекцию того же типа.
-	 * @returns {JW.Set} `<U>` Коллекция.
+	 * `<U>` Creates empty collection of the same type.
+	 * @returns {JW.Set} `<U>` Collection.
 	 */
 	createEmpty: function() {
 		return new JW.Set();
 	},
 	
 	/**
-	 * `<U>` Конструирует пустой массив того же типа (простой или оповещающий).
-	 * @returns {JW.Array} `<U>` Массив.
+	 * `<U>` Creates empty array of the same observability level.
+	 * @returns {JW.Array} `<U>` Array.
 	 */
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
 	
 	/**
-	 * `<U>` Конструирует пустой словарь того же типа (простой или оповещающий).
-	 * @returns {JW.Map} `<U>` Словарь.
+	 * `<U>` Creates empty map of the same observability level.
+	 * @returns {JW.Map} `<U>` Map.
 	 */
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
 	
 	/**
-	 * `<U>` Конструирует пустое множество того же типа (простое или оповещающее).
-	 * @returns {JW.Set} `<U>` Множество.
+	 * `<U>` Creates empty set of the same observability level.
+	 * @returns {JW.Set} `<U>` Set.
 	 */
 	createEmptySet: function() {
 		return new JW.Set();
@@ -78,632 +77,627 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	
 	/**
 	 * @method getLength
-	 * `<T>` Возвращает количество элементов в коллекции.
+	 * `<T extends JW.Class>` Returns count of items in collection.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {number} Количество элементов в коллекции.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {number} Count of items in collection.
 	 */
 	/**
 	 * @method isEmpty
-	 * `<T>` Проверяет коллекцию на пустоту.
+	 * `<T extends JW.Class>` Checks collection for emptiness.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {boolean} Коллекция не содержит ни одного элемента.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {boolean} Collection doesn't contain any items.
 	 */
 	/**
 	 * @method getFirst
-	 * `<T>` Возвращает первый элемент коллекции. Если коллекция пуста, вернет undefined.
+	 * `<T extends JW.Class>` Returns first item in collection. If collection is empty, returns `undefined`.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {T} Элемент.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {T} Item.
 	 */
 	/**
 	 * @method containsItem
-	 * `<T>` Проверяет наличие элемента в коллекции.
+	 * `<T extends JW.Class>` Checks item existance in collection.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 * @param {Object} set `<T>` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
 	 */
 	/**
 	 * @method contains
-	 * `<T>` Проверяет наличие элемента в коллекции. Сокращение {@link #static-method-containsItem}.
+	 * `<T extends JW.Class>` Checks item existance in collection. Shortcut for {@link #static-method-containsItem}.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Коллекция содержит указанный элемент.
+	 * @param {Object} set `<T>` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
 	 */
 	/**
 	 * @method removeItem
-	 * `<T>` Удаляет первое вхождение указанного элемента из коллекции.
+	 * `<T extends JW.Class>` Removes first occurency of an item in collection.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {T} item Элемент.
+	 * @param {Object} set `<T>` Set.
+	 * @param {T} item Item.
 	 * @returns {void}
 	 */
 	/**
 	 * @method removeItems
-	 * `<T extends JW.Class>` Удаляет все вхождения указанных элементов из коллекции.
+	 * `<T extends JW.Class>` Removes all occurencies of items in collection.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} items `<T>` Элементы.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} items `<T>` Items.
 	 * @returns {void}
 	 */
 	/**
 	 * @method tryClear
-	 * `<T>` Очищает коллекцию.
+	 * `<T extends JW.Class>` Clears collection.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {Array} `<T>` Бывшее содержимое коллекции. Если нет изменений - undefined.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	/**
 	 * @method clear
-	 * `<T>` Очищает коллекцию.
+	 * `<T extends JW.Class>` Clears collection.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {Array} `<T>` Бывшее содержимое коллекции.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {Array} `<T>` Old collection contents.
 	 */
 	/**
 	 * @method $clear
-	 * `<T>` Очищает коллекцию.
+	 * `<T extends JW.Class>` Clears collection.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {JW.Array} `<T>` Бывшее содержимое коллекции.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {JW.Array} `<T>` Old collection contents.
 	 */
 	/**
 	 * @method every
 	 *
-	 * `<T>` Проверяет все элементы по критерию.
+	 * `<T extends JW.Class>` Checks all items by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false на всех элементах коллекции.
+	 * Returns true if function `f` returns !== `false` for all collection items.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, не удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	/**
 	 * @method some
 	 *
-	 * `<T>` Проверяет каждый элемент по критерию.
+	 * `<T extends JW.Class>` Checks each item by criteria.
 	 * 
-	 * Возвращает true тогда и только тогда, когда функция f возвращает !== false хотя бы на одном элементе коллекции.
+	 * Returns true if function `f` returns !== `false` for some collection item.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {boolean} Результат проверки.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
 	 */
 	/**
 	 * @method each
-	 * `<T>` Перебирает элементы коллекции. Запускает указанную функцию на всех элементах.
+	 * `<T extends JW.Class>` Iterates collection items. Calls specified function for all items.
+	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): void`
 	 *
-	 * Функция.
+	 * Function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {void}
 	 */
 	/**
 	 * @method search
 	 *
-	 * `<T>` Ищет элемент по критерию.
+	 * `<T extends JW.Class>` Finds item by criteria.
 	 * 
-	 * Возвращает первый элемент, функция f на котором возвращает !== false.
+	 * Returns first item for which `f` returns !== `false`.
 	 * 
-	 * Алгоритм последовательно перебирает все элементы, и останавливается после первого элемента, удовлетворяющего
-	 * критерию.
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): boolean`
 	 *
-	 * Критерий проверки элементов.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {T} Найденный элемент или undefined.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
 	 */
 	/**
 	 * @method toSorted
 	 *
-	 * `<T>` Преобразует коллекцию в отсортированный массив.
+	 * `<T extends JW.Class>` Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method $toSorted
 	 *
-	 * `<T>` Преобразует коллекцию в отсортированный массив.
+	 * `<T extends JW.Class>` Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по результату запуска функции f на каждом элементе.
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} [f]
 	 *
 	 * `f(item: T): number/string`
 	 *
-	 * Функция-сортировщик для элемента. По умолчанию возвращает item.
+	 * Indexer function. Returns `item` by default.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method toSortedComparing
 	 *
-	 * `<T>` Преобразует коллекцию в отсортированный массив.
+	 * `<T extends JW.Class>` Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T): Number`
+	 * `f(t1: T, t2: T): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method $toSortedComparing
 	 *
-	 * `<T>` Преобразует коллекцию в отсортированный массив.
+	 * `<T extends JW.Class>` Converts collection to sorted array.
 	 *
-	 * Строит массив из элементов коллекции, отсортированный по компаратору.
+	 * Builds array consisting of collection items sorted by comparer.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} [compare]
 	 *
-	 * `f(t1: T, t2: T): Number`
+	 * `f(t1: T, t2: T): number`
 	 *
-	 * Функция-компаратор. Возвращает положительное значение, если t1 > t2; отрицательное значение, если t1 < t2;
-	 * 0, если t1 == t2. По умолчанию возвращает JW.cmp(t1, t2).
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
-	 * @param {Object} [scope] Контекст вызова compare. По умолчанию compare вызывается в контексте коллекции.
-	 * @param {1/-1} [order] Порядок сортировки.
-	 * @returns {JW.Array} `<T>` Отсортированный массив.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	/**
 	 * @method index
 	 *
-	 * `<T>` Индексирует коллекцию.
+	 * `<T extends JW.Class>` Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Object} Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `<T>` Collection index.
 	 */
 	/**
 	 * @method $index
 	 *
-	 * `<T>` Индексирует коллекцию.
+	 * `<T extends JW.Class>` Indexes collection.
 	 *
-	 * Строит словарь, в ключах которого находятся результаты запуска функции f на всех элементах,
-	 * а в значениях - соответствующие элементы.
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): string`
 	 *
-	 * Функция-индексатор для элемента.
+	 * Indexer function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Map} `<T>` Индекс коллекции.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `<T>` Collection index.
 	 */
 	/**
 	 * @method toArray
 	 *
-	 * `<T>` Преобразует коллекцию в массив.
+	 * `<T extends JW.Class>` Converts collection to array.
 	 *
-	 * Строит новый массив, включающий все элементы коллекции.
+	 * Builds new array consisting of collection items.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {Array} `<T>` Массив элементов.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {Array} `<T>` Items array.
 	 */
 	/**
 	 * @method $toArray
 	 *
-	 * `<T>` Преобразует коллекцию в массив.
+	 * `<T extends JW.Class>` Converts collection to array.
 	 *
-	 * Строит новый массив, включающий все элементы коллекции.
+	 * Builds new array consisting of collection items.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {JW.Array} `<T>` Массив элементов.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {JW.Array} `<T>` Items array.
 	 */
 	/**
 	 * @method toSet
 	 *
-	 * `<T>` Преобразует коллекцию в множество.
+	 * `<T extends JW.Class>` Converts collection to set.
 	 *
-	 * Строит новое множество, включающее все элементы коллекции.
+	 * Builds new set consisting of collection items.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {Object} Множество элементов.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {Object} `<T>` Items set.
 	 */
 	/**
 	 * @method $toSet
 	 *
-	 * `<T>` Преобразует коллекцию в множество.
+	 * `<T extends JW.Class>` Converts collection to set.
 	 *
-	 * Строит новое множество, включающее все элементы коллекции.
+	 * Builds new set consisting of collection items.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {JW.Set} `<T>` Множество элементов.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	/**
 	 * @method asArray
 	 *
-	 * `<T>` Представляет коллекцию в виде массива.
+	 * `<T extends JW.Class>` Represents collection as array.
 	 *
-	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {Array} `<T>` Массив элементов.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {Array} `<T>` Items array.
 	 */
 	/**
 	 * @method $asArray
 	 *
-	 * `<T>` Представляет коллекцию в виде массива.
+	 * `<T extends JW.Class>` Represents collection as array.
 	 *
-	 * Если данная коллекция - массив, сразу возвращает его. В противном случае запускает метод {@link #static-method-toArray}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toArray}, но сначала убедитесь, что возвращенный массив
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {JW.Array} `<T>` Массив элементов.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {JW.Array} `<T>` Items array.
 	 */
 	/**
 	 * @method asSet
 	 *
-	 * `<T>` Представляет коллекцию в виде множества.
+	 * `<T extends JW.Class>` Represents collection as set.
 	 *
-	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet}method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {Object} Множество элементов.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {Object} `<T>` Items set.
 	 */
 	/**
 	 * @method $asSet
 	 *
-	 * `<T>` Представляет коллекцию в виде множества.
+	 * `<T extends JW.Class>` Represents collection as set.
 	 *
-	 * Если данная коллекция - множество, сразу возвращает его. В противном случае запускает метод {@link #static-method-toSet}.
-	 * Данная функция работает как правило быстрее {@link #static-method-toSet}, но сначала убедитесь, что возвращенное множество
-	 * никто не меняет, иначе могут возникнуть странные непредвиденные баги.
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet}method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @returns {JW.Set} `<T>` Множество элементов.
+	 * @param {Object} set `<T>` Set.
+	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	/**
 	 * @method filter
 	 *
-	 * `<T>` Фильтрует коллекцию по критерию.
+	 * `<T extends JW.Class>` Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Object} Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `<T>` Filtered collection.
 	 */
 	/**
 	 * @method $filter
 	 *
-	 * `<T>` Фильтрует коллекцию по критерию.
+	 * `<T extends JW.Class>` Filters collection by criteria.
 	 *
-	 * Строит новую коллекцию того же типа, включающую только те элементы, функция f на которых вернула !== false.
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): boolean`
 	 *
-	 * Фильтрующая функция.
+	 * Criteria.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Set} `<T>` Отфильтрованная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Set} `<T>` Filtered collection.
 	 */
 	/**
 	 * @method map
 	 *
-	 * `<T, U>` Отображает элементы коллекции.
+	 * `<T extends JW.Class, U extends JW.Class>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {Object} Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `<U>` Mapped collection.
 	 */
 	/**
 	 * @method $map
 	 *
-	 * `<T, U>` Отображает элементы коллекции.
+	 * `<T extends JW.Class, U extends JW.Class>` Maps collection items.
 	 * 
-	 * Строит новую коллекцию того же типа, состояющую из результатов запуска функции f на каждом элементе коллекции.
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
-	 * @param {Object} set `<T>` Множество.
+	 * @param {Object} set `<T>` Set.
 	 * @param {Function} f
 	 *
 	 * `f(item: T): U`
 	 *
-	 * Отображающая функция.
+	 * Mapping function.
 	 *
-	 * @param {Object} [scope] Контекст вызова f. По умолчанию f вызывается в контексте коллекции.
-	 * @returns {JW.Set} `<U>` Отображенная коллекция.
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Set} `<U>` Mapped collection.
 	 */
 	/**
 	 * @method add
-	 * `<T>` Добавляет элемент в множество, если его еще нет.
+	 * `<T extends JW.Class>` Adds item to set if one is absent.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Элемент добавлен.
+	 * @param {Object} set `<T>` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is added successfully.
 	 */
 	/**
 	 * @method tryAdd
-	 * `<T>` Добавляет элемент в множество, если его еще нет.
+	 * `<T extends JW.Class>` Adds item to set if one is absent.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Элемент добавлен. Если нет изменений - undefined.
+	 * @param {Object} set `<T>` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is added successfully. If not modified - `undefined`.
 	 */
 	/**
 	 * @method addAll
-	 * `<T>` Добавляет набор элементов в множество, если их еще нет.
+	 * `<T extends JW.Class>` Adds multiple items to set, ones that are absent.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {Array} `<T>` Добавленные элементы.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {Array} `<T>` Added items.
 	 */
 	/**
 	 * @method $addAll
-	 * `<T>` Добавляет набор элементов в множество, если их еще нет.
+	 * `<T extends JW.Class>` Adds multiple items to set, ones that are absent.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {JW.Array} `<T>` Добавленные элементы.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {JW.Array} `<T>` Added items.
 	 */
 	/**
 	 * @method tryAddAll
-	 * `<T>` Добавляет набор элементов в множество, если их еще нет.
+	 * `<T extends JW.Class>` Adds multiple items to set, ones that are absent.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {Array} `<T>` Добавленные элементы. Если нет изменений - undefined.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {Array} `<T>` Added items. If not modified - `undefined`.
 	 */
 	/**
 	 * @method remove
-	 * `<T>` Удаляет элемент из множества, если он там есть.
+	 * `<T extends JW.Class>` Removes item from set if one is present.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Элемент удален.
+	 * @param {Object} set `<T>` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is removed successfully.
 	 */
 	/**
 	 * @method tryRemove
-	 * `<T>` Удаляет элемент из множества, если он там есть.
+	 * `<T extends JW.Class>` Removes item from set if one is present.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {T} item Элемент.
-	 * @returns {boolean} Элемент удален. Если нет изменений - undefined.
+	 * @param {Object} set `<T>` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is removed successfully. If not modified - `undefined`.
 	 */
 	/**
 	 * @method removeAll
-	 * `<T>` Удаляет набор элементов из множества, если они там есть.
+	 * `<T extends JW.Class>` Removes multiple items from set, ones that are present.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {Array} `<T>` Удаленные элементы.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {Array} `<T>` Removed items.
 	 */
 	/**
 	 * @method $removeAll
-	 * `<T>` Удаляет набор элементов из множества, если они там есть.
+	 * `<T extends JW.Class>` Removes multiple items from set, ones that are present.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {JW.Array} `<T>` Удаленные элементы.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {JW.Array} `<T>` Removed items.
 	 */
 	/**
 	 * @method tryRemoveAll
-	 * `<T>` Удаляет набор элементов из множества, если они там есть.
+	 * `<T extends JW.Class>` Removes multiple items from set, ones that are present.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} items `<T>` Элементы.
-	 * @returns {Array} `<T>` Удаленные элементы. Если нет изменений - undefined.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} items `<T>` Items.
+	 * @returns {Array} `<T>` Removes items. If not modified - `undefined`.
 	 */
 	/**
 	 * @method splice
-	 * `<T>` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * `<T extends JW.Class>` Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} removedItems `<T>` Список элементов для удаления.
-	 * @param {Array} addedItems `<T>` Список элементов для добавления.
-	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Результат.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} removedItems `<T>` Items to remove.
+	 * @param {Array} addedItems `<T>` Items to add.
+	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Result.
 	 */
 	/**
 	 * @method trySplice
-	 * `<T>` Добавляет и удаляет элементы коллекции. Универсальная оптимизированная атомарная операция удаления/вставки.
+	 * `<T extends JW.Class>` Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} removedItems `<T>` Список элементов для удаления.
-	 * @param {Array} addedItems `<T>` Список элементов для добавления.
-	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Результат. Если нет изменений - undefined.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} removedItems `<T>` Items to remove.
+	 * @param {Array} addedItems `<T>` Items to add.
+	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	/**
 	 * @method detectSplice
-	 * `<T>` Определяет параметры метода {@link #static-method-splice}, с которыми содержимое множества станет равно newItems.
-	 * Т.е. определяет, какие элементы нужно удалить, какие добавить.
+	 * `<T extends JW.Class>` Detects {@link #static-method-splice} method arguments to adjust set contents to `newItems`.
+	 * Determines which items should be removed and which ones should be added.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} newItems `<T>` Новое содержимое множества.
-	 * @returns {JW.AbstractSet.SpliceParams}
-	 * `<T>` Параметры метода {@link #static-method-splice}.
-	 * Если вызова метода не требуется - undefined.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Object} newItems `<T>` New map contents.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `<T>` #splice method arguments. If no method call required - `undefined`.
 	 */
 	/**
 	 * @method performSplice
-	 * `<T>` Преобразует содержимое множества к newItems комбинацией методов {@link #static-method-detectSplice} и {@link #static-method-splice}.
+	 * `<T extends JW.Class>` Adjusts map contents to `newItems` using {@link #static-method-detectSplice} and {@link #static-method-splice} methods.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} newItems `<T>` Новое содержимое множества.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Object} newItems `<T>` New map contents.
 	 * @returns {void}
 	 */
 	/**
 	 * @method createMapper
-	 * `<T, U>` Конструирует конвертер элементов коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T extends JW.Class, U extends JW.Class>` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Object} set `<T>` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Mapper}
-	 * `<T, U>` Синхронизатор.
+	 * `<T, U>` Synchronizer.
 	 */
 	/**
 	 * @method createFilterer
-	 * `<T>` Конструирует фильтровщик коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T extends JW.Class>` Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Object} set `<T>` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Filterer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createObserver
-	 * `<T>` Конструирует наблюдатель коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T extends JW.Class>` Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Object} set `<T>` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Observer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createOrderer
-	 * `<T>` Конструирует конвертер коллекции в массив (упорядочитель).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T extends JW.Class>` Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Object} set `<T>` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Orderer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createSorterComparing
-	 * `<T>` Конструирует конвертер коллекции в массив (сортировщик по компаратору).
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T extends JW.Class>` Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Object} set `<T>` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.SorterComparing}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createIndexer
-	 * `<T>` Конструирует индексатор коллекции.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T extends JW.Class>` Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Object} set `<T>` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Indexer}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createLister
-	 * `<T>` Конструирует конвертер коллекции в множество.
-	 * Автоматически подбирает наиболее подходящую реализацию синхронизатора.
+	 * `<T extends JW.Class>` Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Object} config Конфигурация (см. Config options синхронизатора).
+	 * @param {Object} set `<T>` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Lister}
-	 * `<T>` Синхронизатор.
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method equal
-	 * `<T>` Поэлементно сравнивает множество с массивом.
+	 * `<T extends JW.Class>` Checks for set equality (===) to array, item by item.
 	 * @static
-	 * @param {Object} set `<T>` Множество.
-	 * @param {Array} array `<T>` Массив.
-	 * @returns {boolean} Множество равно массиву.
+	 * @param {Object} set `<T>` Set.
+	 * @param {Array} array `<T>` Array.
+	 * @returns {boolean} Set is equal to array.
 	 */
 });
