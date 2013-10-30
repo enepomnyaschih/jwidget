@@ -22,15 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractSet.SorterComparing<T>`
  *
- * Конвертер оповещающего множества в массив (сортировщик по компаратору).
- * Подробнее читайте JW.AbstractCollection.SorterComparing.
+ * See JW.AbstractCollection.SorterComparing for details.
  *
  * @extends JW.AbstractSet.SorterComparing
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createSorterComparing.
- * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createSorterComparing method is preferrable instead.
+ * @param {JW.ObservableSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableSet.SorterComparing = function(source, config) {
 	JW.ObservableSet.SorterComparing._super.call(this, source, config);

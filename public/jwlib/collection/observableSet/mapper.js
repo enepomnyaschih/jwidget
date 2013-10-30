@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class, U extends JW.Class> extends JW.AbstractSet.Mapper<T, U>`
  *
- * Конвертер элементов оповещающего множества. Подробнее читайте JW.AbstractCollection.Mapper.
+ * See JW.AbstractCollection.Mapper for details.
  *
  * @extends JW.AbstractSet.Mapper
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
- * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.ObservableSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableSet.Mapper = function(source, config) {
 	JW.ObservableSet.Mapper._super.call(this, source, config);

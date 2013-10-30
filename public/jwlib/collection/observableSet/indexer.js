@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractSet.Indexer<T>`
  *
- * Индексатор оповещающего множества. Подробнее читайте JW.AbstractCollection.Indexer.
+ * See JW.AbstractCollection.Indexer for details.
  *
  * @extends JW.AbstractSet.Indexer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.ObservableSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableSet.Indexer = function(source, config) {
 	JW.ObservableSet.Indexer._super.call(this, source, config);

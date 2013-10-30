@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractSet.Observer<T>`
  *
- * Наблюдатель оповещающего множества. Подробнее читайте JW.AbstractCollection.Observer.
+ * See JW.AbstractCollection.Observer for details.
  *
  * @extends JW.AbstractSet.Observer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
- * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createObserver method is preferrable instead.
+ * @param {JW.ObservableSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableSet.Observer = function(source, config) {
 	JW.ObservableSet.Observer._super.call(this, source, config);

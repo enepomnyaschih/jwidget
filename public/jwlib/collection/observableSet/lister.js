@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractSet.Lister<T>`
  *
- * Конвертер оповещающего множества в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ * See JW.AbstractCollection.Lister for details.
  *
  * @extends JW.AbstractSet.Lister
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.ObservableSet} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
+ * @param {JW.ObservableSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableSet.Lister = function(source, config) {
 	JW.ObservableSet.Lister._super.call(this, source, config);
