@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractCollection.Filterer<T, JW.AbstractSet<T>>`
  *
- * Фильтровщик множества. Подробнее читайте JW.AbstractCollection.Filterer.
+ * See JW.AbstractCollection.Filterer for details.
  *
  * @extends JW.AbstractCollection.Filterer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createFilterer.
- * @param {JW.AbstractSet} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createFilterer method is preferrable instead.
+ * @param {JW.AbstractSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractSet.Filterer = function(source, config) {
 	JW.AbstractSet.Filterer._super.call(this, source, config);
@@ -38,13 +38,13 @@ JW.AbstractSet.Filterer = function(source, config) {
 
 JW.extend(JW.AbstractSet.Filterer, JW.AbstractCollection.Filterer, {
 	/**
-	 * @cfg {JW.AbstractSet} target `<T>` Целевая коллекция.
+	 * @cfg {JW.AbstractSet} target `<T>` Target collection.
 	 */
 	/**
-	 * @property {JW.AbstractSet} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 	/**
-	 * @property {JW.AbstractSet} target `<T>` Целевая коллекция.
+	 * @property {JW.AbstractSet} target `<T>` Target collection.
 	 */
 	
 	// override

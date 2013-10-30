@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractCollection.Lister<T, JW.AbstractSet<T>>`
  *
- * Конвертер множества в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ * See JW.AbstractCollection.Lister for details.
  *
  * @extends JW.AbstractCollection.Lister
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.AbstractSet} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
+ * @param {JW.AbstractSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractSet.Lister = function(source, config) {
 	JW.AbstractSet.Lister._super.call(this, source, config);
@@ -37,6 +37,6 @@ JW.AbstractSet.Lister = function(source, config) {
 
 JW.extend(JW.AbstractSet.Lister, JW.AbstractCollection.Lister, {
 	/**
-	 * @property {JW.AbstractSet} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 });

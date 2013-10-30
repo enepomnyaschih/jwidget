@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class, U extends JW.Class> extends JW.AbstractCollection.Mapper<T, U, JW.AbstractSet<T>, JW.AbstractSet<U>>`
  *
- * Конвертер элементов множества. Подробнее читайте JW.AbstractCollection.Mapper.
+ * See JW.AbstractCollection.Mapper for details.
  *
  * @extends JW.AbstractCollection.Mapper
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
- * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.AbstractSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractSet.Mapper = function(source, config) {
 	JW.AbstractSet.Mapper._super.call(this, source, config);
@@ -39,13 +39,13 @@ JW.AbstractSet.Mapper = function(source, config) {
 
 JW.extend(JW.AbstractSet.Mapper, JW.AbstractCollection.Mapper, {
 	/**
-	 * @cfg {JW.AbstractSet} target `<U>` Целевая коллекция.
+	 * @cfg {JW.AbstractSet} target `<U>` Target collection.
 	 */
 	/**
-	 * @property {JW.AbstractSet} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 	/**
-	 * @property {JW.AbstractSet} target `<U>` Целевая коллекция.
+	 * @property {JW.AbstractSet} target `<U>` Target collection.
 	 */
 	/*
 	Map<T> _items;
