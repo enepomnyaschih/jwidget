@@ -57,7 +57,7 @@
  * @extends JW.Class
  *
  * @constructor
- * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.AbstractCollection} source `<T>` Source collection.
  * @param {Object} config Configuration (see Config options).
  */

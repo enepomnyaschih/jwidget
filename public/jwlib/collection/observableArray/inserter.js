@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractArray.Inserter<T>`
  *
- * Синхронизатор представления оповещающего массива. Подробнее читайте JW.AbstractArray.Inserter.
+ * See JW.AbstractArray.Inserter for details.
  *
  * @extends JW.AbstractArray.Inserter
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractArray#createInserter.
- * @param {JW.ObservableArray} source `<T>` Исходный массив.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractArray#createInserter method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableArray.Inserter = function(source, config) {
 	JW.ObservableArray.Inserter._super.call(this, source, config);

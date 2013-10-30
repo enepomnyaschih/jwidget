@@ -22,14 +22,14 @@
  *
  * `<T, U> extends JW.AbstractArray.Mapper<T, U>`
  *
- * Конвертер элементов оповещающего массива. Подробнее читайте JW.AbstractCollection.Mapper.
+ * See JW.AbstractCollection.Mapper for details.
  *
  * @extends JW.AbstractArray.Mapper
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
- * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableArray.Mapper = function(source, config) {
 	JW.ObservableArray.Mapper._super.call(this, source, config);

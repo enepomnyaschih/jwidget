@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractArray.Merger<T>`
  *
- * Объединитель массивов. Подробнее читайте JW.AbstractArray.Merger.
+ * See JW.AbstractArray.Merger for details.
  *
  * @extends JW.AbstractArray.Merger
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractArray#createMerger.
- * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractArray#createMerger method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableArray.Merger = function(source, config) {
 	JW.ObservableArray.Merger._super.call(this, source, config);

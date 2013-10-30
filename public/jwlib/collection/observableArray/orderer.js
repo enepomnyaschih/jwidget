@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractArray.Orderer<T>`
  *
- * Конвертер оповещающего массива в массив (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
+ * See JW.AbstractCollection.Orderer for details.
  *
  * @extends JW.AbstractArray.Orderer
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createOrderer.
- * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableArray.Orderer = function(source, config) {
 	JW.ObservableArray.Orderer._super.call(this, source, config);

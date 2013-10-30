@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractArray.Lister<T>`
  *
- * Конвертер оповещающего массива в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ * See JW.AbstractCollection.Lister for details.
  *
  * @extends JW.AbstractArray.Lister
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableArray.Lister = function(source, config) {
 	JW.ObservableArray.Lister._super.call(this, source, config);

@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractArray.Filterer<T>`
  *
- * Фильтровщик оповещающего массива. Подробнее читайте JW.AbstractCollection.Filterer.
+ * See JW.AbstractCollection.Filterer for details.
  *
  * @extends JW.AbstractArray.Filterer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createFilterer.
- * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createFilterer method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableArray.Filterer = function(source, config) {
 	JW.ObservableArray.Filterer._super.call(this, source, config);

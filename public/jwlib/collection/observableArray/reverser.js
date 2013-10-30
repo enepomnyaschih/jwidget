@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractArray.Reverser<T>`
  *
- * Объединитель массивов. Подробнее читайте JW.AbstractArray.Reverser.
+ * See JW.AbstractArray.Reverser for details.
  *
  * @extends JW.AbstractArray.Reverser
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractArray#createReverser.
- * @param {JW.ObservableArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractArray#createReverser method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableArray.Reverser = function(source, config) {
 	JW.ObservableArray.Reverser._super.call(this, source, config);
