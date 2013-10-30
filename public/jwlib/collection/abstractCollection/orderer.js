@@ -22,43 +22,44 @@
  *
  * `<T extends JW.Class, C extends JW.AbstractCollection<T>>`
  *
- * Конвертер в массив (упорядочитель). Преобразует исходную коллекцию в массив. Новые элементы добавляются в конец
- * массива.
- * 
- * **Замечание:** Элементы исходной коллекции не должны повторяться.
- * 
- * Создавайте конвертер с помощью метода JW.AbstractCollection#createOrderer:
+ * Converter to array (orderer).
+ * Converts source collection to array. Adds new items to the end of array.
  *
- *     var orderer = collection.createOrderer();
- *     var array = orderer.target;
+ *     var orderer = collection.{@link JW.AbstractCollection#createOrderer createOrderer}();
+ *     var array = orderer.{@link #property-target target};
  *
- * Метод сам определит, какая реализация конвертера лучше подойдет (простая или observable).
+ * **Notice:** All items of source collection must be different.
  *
- * Массив можно передать в качестве конфигурационной опции:
+ * Use JW.AbstractCollection#createOrderer method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
+ *
+ * You can pass target array in config option:
  *
  *     var array = new JW.Array();
- *     var orderer = collection.createOrderer({
- *         target: array
+ *     var orderer = collection.{@link JW.AbstractCollection#createOrderer createOrderer}({
+ *         {@link #cfg-target target}: array
  *     });
  *
- * Правила работы конвертера:
+ * Synchronizer rules:
  *
- * - Целевой массив находится в поле {@link #property-target}.
- * - При конструировании конвертера все элементы исходной коллекции сразу добавляются в {@link #property-target}.
- * - При уничтожении конвертера все элементы исходной коллекции удаляются из {@link #property-target}.
- * - Массив можно передать в качестве конфигурационной опции {@link #cfg-target}.
- * В этом случае, вся забота о его уничтожении ложится на вас.
- * - Если {@link #cfg-target} не передан, то он будет создан автоматически. Конвертер подберет наиболее подходящую
- * реализацию {@link #property-target} (простая или observable). В этом
- * случае, {@link #property-target} будет уничтожен автоматически при уничтожении конвертера.
- * - Можно конвертировать несколько коллекций в один и тот же массив, если все элементы различны.
+ * - Target array is stored in {@link #property-target} property.
+ * - All items of source collection are added to {@link #property-target}
+ * immediately on synchronizer initialization.
+ * - All items are removed from {@link #property-target} on synchronizer destruction.
+ * - You can pass target array in {@link #cfg-target} config option.
+ * In this case, you are responsible for its destruction (though items will be removed
+ * automatically on synchronizer destruction anyway).
+ * - If {@link #cfg-target} is not passed, it will be created automatically. Synchronizer will select
+ * appropriate {@link #property-target} implementation (simple or observable). In this
+ * case, {@link #property-target} will be destroyed automatically on synchronizer destruction.
+ * - You can convert multiple collections into one array, if all items are different.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createOrderer.
- * @param {JW.AbstractCollection} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.AbstractCollection} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractCollection.Orderer = function(source, config) {
 	JW.AbstractCollection.Orderer._super.call(this);
@@ -71,13 +72,13 @@ JW.AbstractCollection.Orderer = function(source, config) {
 
 JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
 	/**
-	 * @property {C} source Исходная коллекция.
+	 * @cfg {JW.AbstractArray} target `<T>` Target array.
 	 */
 	/**
-	 * @cfg {JW.AbstractArray} target `<T>` Целевой массив.
+	 * @property {C} source Source collection.
 	 */
 	/**
-	 * @property {JW.AbstractArray} target `<T>` Целевой массив.
+	 * @property {JW.AbstractArray} target `<T>` Target array.
 	 */
 	// boolean _targetCreated;
 	

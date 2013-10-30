@@ -22,69 +22,69 @@
  *
  * `<T, U, TC extends JW.AbstractCollection<T>, UC extends JW.AbstractCollection<U>>`
  *
- * Конвертер элементов коллекции. Создает новую коллекцию того же типа, состоящую из элементов,
- * равных результату запуска функции, указанной пользователем, на каждом элементе.
- * Используется, прежде всего, для превращения данных в представление.
+ * Collection item converter.
+ * Builds new collection of the same type, consisting of results of callback function
+ * call for each collection item.
+ * Can be used for data convertion into view.
  *
- * Создавайте синхронизатор с помощью метода JW.AbstractCollection#createMapper:
- *
- *     var mapper = dataCollection.createMapper({
- *         createItem: function(data) { return new View(this, data); },
- *         destroyItem: JW.destroy,
- *         scope: this
+ *     var mapper = dataCollection.{@link JW.AbstractCollection#createMapper createMapper}({
+ *         {@link #cfg-createItem createItem}: function(data) { return new View(this, data); },
+ *         {@link #cfg-destroyItem destroyItem}: JW.destroy,
+ *         {@link #cfg-scope scope}: this
  *     });
- *     var viewCollection = mapper.target;
+ *     var viewCollection = mapper.{@link #property-target target};
  *
- * Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
+ * Use JW.AbstractCollection#createMapper method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
  *
- * Целевую коллекцию можно передать в качестве конфигурационной опции:
+ * You can pass target collection in config option:
  *
  *     var viewCollection = new JW.Array();
- *     var mapper = dataCollection.createMapper({
- *         target: viewCollection,
- *         createItem: function(data) { return new View(this, data); },
- *         destroyItem: JW.destroy,
- *         scope: this
+ *     var mapper = dataCollection.{@link JW.AbstractCollection#createMapper createMapper}({
+ *         {@link #cfg-target target}: viewCollection,
+ *         {@link #cfg-createItem createItem}: function(data) { return new View(this, data); },
+ *         {@link #cfg-destroyItem destroyItem}: JW.destroy,
+ *         {@link #cfg-scope scope}: this
  *     });
  *
- * Правила работы синхронизатора:
+ * Synchronizer rules:
  *
- * - Целевая коллекция находится в поле {@link #property-target}.
- * - При конструировании синхронизатора все элементы исходной коллекции сразу конвертируются и добавляются в
- * {@link #property-target}.
- * - При уничтожении синхронизатора все элементы удаляются из {@link #property-target} и уничтожаются.
- * - Целевую коллекцию можно передать в качестве конфигурационной опции {@link #cfg-target}.
- * В этом случае, вся забота о ее уничтожении ложится на вас (хотя элементы будут из нее удалены автоматически
- * при уничтожении синхронизатора).
- * - Если {@link #cfg-target} не передан, то он будет создан автоматически. Синхронизатор подберет наиболее подходящую
- * реализацию {@link #property-target} (простая или observable). В этом
- * случае, {@link #property-target} будет уничтожен автоматически при уничтожении синхронизатора.
- * - При перемещении/переупорядочении элементов исходной коллекции элементы целевой коллекции не пересоздаются,
- * но перемещаются в полном соответствии с исходной коллекцией.
+ * - Target collection is stored in {@link #property-target} property.
+ * - All items of source collection are converted and added to {@link #property-target}
+ * immediately on synchronizer initialization.
+ * - All items are removed from {@link #property-target} and destroyed on synchronizer destruction.
+ * - You can pass target map in {@link #cfg-target} config option.
+ * In this case, you are responsible for its destruction (though items will be removed and destroyed
+ * automatically on synchronizer destruction anyway).
+ * - If {@link #cfg-target} is not passed, it will be created automatically. Synchronizer will select
+ * appropriate {@link #property-target} implementation (simple or observable). In this
+ * case, {@link #property-target} will be destroyed automatically on synchronizer destruction.
+ * - The items are not recreated in target collection on source items reordering/reindexing,
+ * but they are reordered/reindexed according to source collection modification.
  *
- * **Дополнительные правила для различных типов коллекций**
+ * **Additional rules for different collection types**
  *
  * JW.AbstractArray:
  *
- * - При конструировании синхронизатора целевая коллекция должна быть пуста.
- * - Целевую коллекцию можно синхронизировать только с одной исходной коллекцией.
+ * - Target collection must be empty before initialization.
+ * - A target collection can be synchronized with one source collection only.
  *
  * JW.AbstractMap:
  *
- * - Целевую коллекцию можно синхронизировать с несколькими исходными коллекциями, если ключи всех элементов различны.
- * - В целевую коллекцию можно добавлять элементы вручную, если их ключи не пересекаются с ключами других элементов.
+ * - A target collection can be synchronized with multiple source collections, if keys of all items are different.
+ * - You can add items to target collection manually, if their keys differ from other collection keys.
  *
  * JW.AbstractSet:
  *
- * - Целевую коллекцию можно синхронизировать с несколькими исходными коллекциями, если все элементы различны.
- * - В целевую коллекцию можно добавлять элементы вручную, если они не пересекаются с другими элементами.
+ * - A target collection can be synchronized with multiple source collections, if all items are different.
+ * - You can add items to target collection manually, if they differ from other collection items.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
- * @param {JW.AbstractCollection} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.AbstractCollection} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractCollection.Mapper = function(source, config) {
 	JW.AbstractCollection.Mapper._super.call(this);
@@ -99,30 +99,30 @@ JW.AbstractCollection.Mapper = function(source, config) {
 
 JW.extend(JW.AbstractCollection.Mapper, JW.Class, {
 	/**
-	 * @cfg {UC} target Целевая коллекция.
+	 * @cfg {UC} target Target collection.
 	 */
 	/**
 	 * @cfg {Function} createItem (required)
 	 *
 	 * `createItem(data: T): U`
 	 *
-	 * Отображающая функция. Создает элемент целевой коллекции по элементу исходной коллекции.
+	 * Mapping function. Creates an item of target collection by item of source collection.
 	 */
 	/**
 	 * @cfg {Function} destroyItem
 	 *
-	 * `destroyItem(item:U, data: T): void`
+	 * `destroyItem(item: U, data: T): void`
 	 *
-	 * Деструктор элемента. Уничтожает элемент целевой коллекции.
+	 * Item destructor. Destroys an item of target collection.
 	 */
 	/**
-	 * @cfg {Object} scope Контекст вызова createItem и destroyItem.
+	 * @cfg {Object} scope {@link #cfg-createItem} and {@link #cfg-destroyItem} call scope.
 	 */
 	/**
-	 * @property {TC} source Исходная коллекция.
+	 * @property {TC} source Source collection.
 	 */
 	/**
-	 * @property {UC} target Целевая коллекция.
+	 * @property {UC} target Target collection.
 	 */
 	// boolean _targetCreated;
 	

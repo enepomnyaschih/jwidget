@@ -22,48 +22,52 @@
  *
  * `<T, C extends JW.AbstractCollection<T>>`
  *
- * Индексатор коллекции. Преобразует исходную коллекцию в словарь, присваивая каждому элементу определенный ключ,
- * используя функцию, указанную пользователем. Используется для быстрого поиска элементов по ключу (например, по ID).
- * 
- * **Замечание:** Все элементы должны иметь разные ключи.
+ * Collection indexer.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * Can be used for fast item search by key (for example, by ID).
  *
- * Создавайте синхронизатор с помощью метода JW.AbstractCollection#createIndexer:
- *
- *     var indexer = collection.createIndexer({
- *         getKey: function(item) { return item.id; },
- *         scope: this
+ *     var indexer = collection.{@link JW.AbstractCollection#createIndexer createIndexer}({
+ *         {@link #cfg-getKey getKey}: function(item) { return item.id; },
+ *         {@link #cfg-scope scope}: this
  *     });
- *     var map = indexer.target;
+ *     var map = indexer.{@link #property-target target};
+ *     
+ *     // Get an item with ID = 9
+ *     var item = map.{@link JW.AbstractMap#get get}(9);
  *
- * Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
+ * **Notice:** All items of source collection must have different keys.
  *
- * Словарь можно передать в качестве конфигурационной опции:
+ * Use JW.AbstractCollection#createIndexer method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
+ *
+ * You can pass target collection in config option:
  *
  *     var map = new JW.Map();
- *     var indexer = collection.createIndexer({
- *         target: map,
- *         getKey: function(item) { return item.id; },
- *         scope: this
+ *     var indexer = collection.{@link JW.AbstractCollection#createIndexer createIndexer}({
+ *         {@link #cfg-target target}: map,
+ *         {@link #cfg-getKey getKey}: function(item) { return item.id; },
+ *         {@link #cfg-scope scope}: this
  *     });
  *
- * Правила работы синхронизатора:
+ * Synchronizer rules:
  *
- * - Целевой словарь находится в поле {@link #property-target}.
- * - При конструировании синхронизатора все элементы исходной коллекции сразу добавляются в {@link #property-target}.
- * - При уничтожении синхронизатора все элементы исходной коллекции удаляются из {@link #property-target}.
- * - Словарь можно передать в качестве конфигурационной опции {@link #cfg-target}.
- * В этом случае, вся забота о его уничтожении ложится на вас.
- * - Если {@link #cfg-target} не передан, то он будет создан автоматически. Синхронизатор подберет наиболее подходящую
- * реализацию {@link #property-target} (простая или observable). В этом
- * случае, {@link #property-target} будет уничтожен автоматически при уничтожении синхронизатора.
- * - Можно индексировать несколько коллекций в один и тот же словарь, если ключи всех элементов различны.
+ * - Target map is stored in {@link #property-target} property.
+ * - All items of source collection are added to {@link #property-target} immediately on synchronizer initialization.
+ * - All items are removed from {@link #property-target} on synchronizer destruction.
+ * - You can pass target map in {@link #cfg-target} config option.
+ * In this case, you are responsible for its destruction (though items will be removed
+ * automatically on synchronizer destruction anyway).
+ * - If {@link #cfg-target} is not passed, it will be created automatically. Synchronizer will select
+ * appropriate {@link #property-target} implementation (simple or observable). In this
+ * case, {@link #property-target} will be destroyed automatically on synchronizer destruction.
+ * - You can index multiple collections into one map, if keys of all items are different.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.AbstractCollection} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.AbstractCollection} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractCollection.Indexer = function(source, config) {
 	JW.AbstractCollection.Indexer._super.call(this);
@@ -78,23 +82,23 @@ JW.AbstractCollection.Indexer = function(source, config) {
 
 JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
 	/**
-	 * @cfg {JW.AbstractMap} target `<T>` Целевой словарь.
+	 * @cfg {JW.AbstractMap} target `<T>` Target map.
 	 */
 	/**
 	 * @cfg {Function} getKey (required)
 	 *
 	 * `getKey(item: T): string`
 	 *
-	 * Индексирующая функция. Определяет ключ элемента в целевом словаре.
+	 * Indexing function. Determines item key in map.
 	 */
 	/**
-	 * @cfg {Object} scope Контекст вызова getKey.
+	 * @cfg {Object} scope {@link #cfg-getKey} call scope.
 	 */
 	/**
-	 * @property {C} source Исходная коллекция.
+	 * @property {C} source Source collection.
 	 */
 	/**
-	 * @property {JW.AbstractMap} target `<T>` Целевой словарь.
+	 * @property {JW.AbstractMap} target `<T>` Target map.
 	 */
 	// boolean _targetCreated;
 	

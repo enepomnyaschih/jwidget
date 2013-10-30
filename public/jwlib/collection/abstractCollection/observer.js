@@ -22,45 +22,43 @@
  *
  * `<T, C extends JW.AbstractCollection<T>>`
  *
- * Наблюдатель коллекции. Прослушивает все события коллекции и сводит их к 2 элементарным функциям:
- * элемент добавлен и элемент удален. В целях оптимизации, можно определить третью функцию: коллекция очищена
- * (в случае, если есть более эффективный алгоритм очистки, чем удаление всех элементов простым перебором).
- * Также, можно определить функцию, которая вызывается при любом изменении коллекции.
- * Синхронизатор можно использовать, например, для оповещения элементов о том, что их добавили в коллекцию.
+ * Collection observer. Listens all collection events and reduces them to 2 granular functions:
+ * item is added and item is removed. In optimization purposes, you can define a third function: collection is cleared
+ * (in case if there is more effective clearing algorithm than iterative items deletion).
+ * Also, you can define a function which is called on each collection modification.
+ * As example, this synchronizer can be used to notify the items that they are added into collection.
  *
- * Создавайте синхронизатор с помощью метода JW.AbstractCollection#createObserver:
- *
- *     var observer = collection.createObserver({
- *         addItem: function(item) { item.setInCollection(true); },
- *         removeItem: function(item) { item.setInCollection(false); },
- *         scope: this
+ *     var observer = collection.{@link JW.AbstractCollection#createObserver createObserver}({
+ *         {@link #cfg-addItem addItem}: function(item) { item.setInCollection(true); },
+ *         {@link #cfg-removeItem removeItem}: function(item) { item.setInCollection(false); },
+ *         {@link #cfg-scope scope}: this
  *     });
  *
- * Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
+ * Use JW.AbstractCollection#createObserver method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
  *
- * Другой вариант использования синхронизатора: если у вас на входе есть абстрактная коллекция (не известно,
- * простая или оповещающая), но вы хотите прослушивать событие изменения коллекции в случае, если она все же
- * оповещающая, то вы можете это сделать без нарушения принципов ООП:
+ * Just another synchronizer use case: if you have an abstract collection on input (and you don't know whether it is
+ * simple or observable), but you want to listen collection change event in case, only if it is observable,
+ * then you can do it meeting OOD principles:
  *
- *     var observer = collection.createObserver({
- *         change: function() { console.log("Коллекция изменилась"); }
+ *     var observer = collection.{@link JW.AbstractCollection#createObserver createObserver}({
+ *         {@link #cfg-change change}: function() { console.log("Коллекция изменилась"); }
  *     });
  *
- * Правила работы синхронизатора:
+ * Synchronizer rules:
  *
- * - При конструировании синхронизатора для всех элементов исходной коллекции вызывается функция
- * {@link #cfg-addItem}.
- * - При уничтожении синхронизатора вызывается функция {@link #cfg-clearItems}, либо для всех элементов
- * вызывается функция {@link #cfg-removeItem}.
- * - При перемещении/переупорядочении элементов исходной коллекции функции {@link #cfg-addItem},
- * {@link #cfg-removeItem} и {@link #cfg-clearItems} не вызываются.
+ * - Function {@link #cfg-addItem} is called for all items of source collection on synchronizer initialization.
+ * - Function {@link #cfg-clearItems} is called for collection, or function {@link #cfg-removeItem} is called for
+ * all items of source collection on synchronizer destruction.
+ * - Functions {@link #cfg-addItem}, {@link #cfg-removeItem} and {@link #cfg-clearItems} are not called on
+ * source collection reordering/reindexing.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
- * @param {JW.AbstractCollection} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createObserver method is preferrable instead.
+ * @param {JW.AbstractCollection} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractCollection.Observer = function(source, config) {
 	JW.AbstractCollection.Observer._super.call(this);
@@ -80,34 +78,34 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
 	 *
 	 * `addItem(item: T): void`
 	 *
-	 * Элемент добавлен в коллекцию.
+	 * Item is added to collection.
 	 */
 	/**
 	 * @cfg {Function} removeItem
 	 *
 	 * `removeItem(item: T): void`
 	 *
-	 * Элемент удален из коллекции.
+	 * Item is removed from collection.
 	 */
 	/**
 	 * @cfg {Function} clearItems
 	 *
 	 * `clearItems(items: Array<T>): void`
 	 *
-	 * Коллекция очищена. По умолчанию, вызывает removeItem для всех элементов коллекции.
+	 * Collection is cleared. By default, calls {@link #removeItem} for all collection items.
 	 */
 	/**
 	 * @cfg {Function} change
 	 *
 	 * `change(): void`
 	 *
-	 * Коллекция произвольно изменилась.
+	 * Collection is changed arbitrarily.
 	 */
 	/**
-	 * @cfg {Object} scope Контекст вызова addItem, removeItem, clearItems, change.
+	 * @cfg {Object} scope {@link #addItem}, {@link #removeItem}, {@link #clearItems}, {@link #change} call scope.
 	 */
 	/**
-	 * @property {C} source Исходная коллекция.
+	 * @property {C} source Source collection.
 	 */
 	
 	// override

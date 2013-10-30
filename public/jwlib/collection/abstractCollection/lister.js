@@ -22,42 +22,46 @@
  *
  * `<T extends JW.Class, C extends JW.AbstractCollection<T>>`
  *
- * Конвертер в множество. Преобразует исходную коллекцию в множество.
- * 
- * **Замечание:** Элементы исходной коллекции не должны повторяться.
+ * Converter to set.
+ * Can be used for fast item existance detection.
  *
- * Создавайте конвертер с помощью метода JW.AbstractCollection#createLister:
+ *     var lister = collection.{@link JW.AbstractCollection#createLister createLister}();
+ *     var set = lister.{@link #property-target target};
+ *     
+ *     // Assert that some item x exists in source collection
+ *     assert(set.contains(x));
  *
- *     var lister = collection.createLister();
- *     var set = lister.target;
+ * **Notice:** All items of source collection must be different.
  *
- * Метод сам определит, какая реализация конвертера лучше подойдет (простая или observable).
+ * Use JW.AbstractCollection#createLister method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
  *
- * Множество можно передать в качестве конфигурационной опции:
+ * You can pass target collection in config option:
  *
  *     var set = new JW.Set();
- *     var lister = collection.createLister({
- *         target: set
+ *     var lister = collection.{@link JW.AbstractCollection#createLister createLister}({
+ *         {@link #cfg-target target}: set
  *     });
  *
- * Правила работы конвертера:
+ * Synchronizer rules:
  *
- * - Целевое множество находится в поле {@link #property-target}.
- * - При конструировании конвертера все элементы исходной коллекции сразу добавляются в {@link #property-target}.
- * - При уничтожении конвертера все элементы исходной коллекции удаляются из {@link #property-target}.
- * - Множество можно передать в качестве конфигурационной опции {@link #cfg-target}.
- * В этом случае, вся забота о его уничтожении ложится на вас.
- * - Если {@link #cfg-target} не передан, то он будет создан автоматически. Конвертер подберет наиболее подходящую
- * реализацию {@link #property-target} (простая или observable). В этом
- * случае, {@link #property-target} будет уничтожен автоматически при уничтожении конвертера.
- * - Можно конвертировать несколько коллекций в одно и то же множество, если все элементы различны.
+ * - Target set is stored in {@link #property-target} property.
+ * - All items of source collection are added to {@link #property-target} immediately on synchronizer initialization.
+ * - All items are removed from {@link #property-target} on synchronizer destruction.
+ * - You can pass target set in {@link #cfg-target} config option.
+ * In this case, you are responsible for its destruction (though items will be removed
+ * automatically on synchronizer destruction anyway).
+ * - If {@link #cfg-target} is not passed, it will be created automatically. Synchronizer will select
+ * appropriate {@link #property-target} implementation (simple or observable). In this
+ * case, {@link #property-target} will be destroyed automatically on synchronizer destruction.
+ * - You can convert multiple collections into one set, if all items are different.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.AbstractCollection} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
+ * @param {JW.AbstractCollection} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractCollection.Lister = function(source, config) {
 	JW.AbstractCollection.Lister._super.call(this);
@@ -70,13 +74,13 @@ JW.AbstractCollection.Lister = function(source, config) {
 
 JW.extend(JW.AbstractCollection.Lister, JW.Class, {
 	/**
-	 * @property {C} source Исходная коллекция.
+	 * @cfg {JW.AbstractSet} target `<T>` Target set.
 	 */
 	/**
-	 * @cfg {JW.AbstractSet} target `<T>` Целевое множество.
+	 * @property {C} source Source collection.
 	 */
 	/**
-	 * @property {JW.AbstractSet} target `<T>` Целевое множество.
+	 * @property {JW.AbstractSet} target `<T>` Target set.
 	 */
 	// boolean _targetCreated;
 	

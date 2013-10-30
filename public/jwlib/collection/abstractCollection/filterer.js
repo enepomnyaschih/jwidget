@@ -22,9 +22,10 @@
  *
  * `<T, C extends JW.AbstractCollection<T>>`
  *
- * Фильтровщик коллекции. Создает новую коллекцию того же типа, включающую только те
- * элементы исходной коллекции, для которых указанная функция возвращает значение !== false.
- * Для массива синхронизатор сохранит порядок элементов.
+ * Collection filterer. 
+ * Builds new collection of the same type, consisting of items for which callback
+ * function returns !== `false`.
+ * Keeps item order in array.
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
  *     var filterer = source.{@link JW.AbstractCollection#createFilterer createFilterer}({
@@ -38,10 +39,10 @@
  *     source.{@link JW.AbstractArray#move move}(2, 6); // move "3" item to the end
  *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
  *
- * Создавайте синхронизатор с помощью метода JW.AbstractCollection#createFilterer.
- * Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
+ * Use JW.AbstractCollection#createFilterer method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
  *
- * Целевую коллекцию можно передать в качестве конфигурационной опции:
+ * You can pass target collection in config option:
  *
  *     var source = new JW.Set();
  *     var target = new JW.Set();
@@ -51,42 +52,41 @@
  *         {@link #cfg-scope scope}: this
  *     });
  *
- * Правила работы синхронизатора:
+ * Synchronizer rules:
  *
- * - Целевая коллекция находится в поле {@link #property-target}.
- * - При конструировании синхронизатора отфильтрованные элементы исходной коллекции сразу добавляются в
- * {@link #property-target}.
- * - При уничтожении синхронизатора все элементы удаляются из {@link #property-target}.
- * - Целевую коллекцию можно передать в качестве конфигурационной опции {@link #cfg-target}.
- * В этом случае, вся забота о ее уничтожении ложится на вас (хотя элементы будут из нее удалены автоматически
- * при уничтожении синхронизатора).
- * - Если {@link #cfg-target} не передан, то он будет создан автоматически. Синхронизатор подберет наиболее подходящую
- * реализацию {@link #property-target} (простая или observable). В этом
- * случае, {@link #property-target} будет уничтожен автоматически при уничтожении синхронизатора.
+ * - Target collection is stored in {@link #property-target} property.
+ * - Filtered items are added to {@link #property-target} immediately on synchronizer initialization.
+ * - All items are removed from {@link #property-target} on synchronizer destruction.
+ * - You can pass target collection in {@link #cfg-target} config option.
+ * In this case, you are responsible for its destruction (though items will be removed
+ * automatically on synchronizer destruction anyway).
+ * - If {@link #cfg-target} is not passed, it will be created automatically. Synchronizer will select
+ * appropriate {@link #property-target} implementation (simple or observable). In this
+ * case, {@link #property-target} will be destroyed automatically on synchronizer destruction.
  *
- * **Дополнительные правила для различных типов коллекций**
+ * **Additional rules for different collection types**
  *
  * JW.AbstractArray:
  *
- * - При конструировании синхронизатора целевая коллекция должна быть пуста.
- * - Целевую коллекцию можно синхронизировать только с одной исходной коллекцией.
+ * - Target collection must be empty before initialization.
+ * - A target collection can be synchronized with one source collection only.
  *
  * JW.AbstractMap:
  *
- * - Целевую коллекцию можно синхронизировать с несколькими исходными коллекциями, если ключи всех элементов различны.
- * - В целевую коллекцию можно добавлять элементы вручную, если их ключи не пересекаются с ключами других элементов.
+ * - A target collection can be synchronized with multiple source collections, if keys of all items are different.
+ * - You can add items to target collection manually, if their keys differ from source collection keys.
  *
  * JW.AbstractSet:
  *
- * - Целевую коллекцию можно синхронизировать с несколькими исходными коллекциями, если все элементы различны.
- * - В целевую коллекцию можно добавлять элементы вручную, если они не пересекаются с другими элементами.
+ * - A target collection can be synchronized with multiple source collections, if all items are different.
+ * - You can add items to target collection manually, if they differ from source collection items.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createFilterer.
- * @param {JW.AbstractCollection} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createFilterer method is preferrable instead.
+ * @param {JW.AbstractCollection} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractCollection.Filterer = function(source, config) {
 	JW.AbstractCollection.Filterer._super.call(this);
@@ -100,24 +100,24 @@ JW.AbstractCollection.Filterer = function(source, config) {
 
 JW.extend(JW.AbstractCollection.Filterer, JW.Class, {
 	/**
-	 * @cfg {C} target Целевая коллекция.
+	 * @cfg {C} target Target collection.
 	 */
 	/**
 	 * @cfg {Function} filterItem (required)
 	 *
 	 * `filterItem(item: T): boolean`
 	 *
-	 * Фильтрующая функция. Элемент появится в целевой коллекции, если результат запуска фильтрующей функции на этом
-	 * элементе !== false.
+	 * Filtering function. Target collection will contain an item if filtering function
+	 * returns !== `false` for this item.
 	 */
 	/**
-	 * @cfg {Object} scope Контекст вызова filterItem.
+	 * @cfg {Object} scope {@link #cfg-filterItem} call scope.
 	 */
 	/**
-	 * @property {C} source Исходная коллекция.
+	 * @property {C} source Source collection.
 	 */
 	/**
-	 * @property {C} target Целевая коллекция.
+	 * @property {C} target Target collection.
 	 */
 	// boolean _targetCreated;
 	

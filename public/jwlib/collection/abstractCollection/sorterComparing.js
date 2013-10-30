@@ -22,53 +22,52 @@
  *
  * `<T, C extends JW.AbstractCollection<T>>`
  *
- * Конвертер в массив (сортировщик по компаратору). Преобразует исходную коллекцию в массив. Новые элементы
- * добавляются в такое место массива, что массив всегда остается в отсортированном состоянии.
- * Сортировка осуществляется по функции-компаратору, указанной пользователем.
- * 
- * **Замечание:** Элементы исходной коллекции не должны повторяться.
- * 
- * Создавайте конвертер с помощью метода JW.AbstractCollection#createSorterComparing:
+ * Converter to array (sorter by comparer).
+ * Converts source collection to array. Adds new items into such locations that target array is always kept in sorted
+ * state. Sorting is performed by comparing function defined by user.
  *
- *     var sorter = collection.createSorterComparing({
- *         compare: function(x, y) {
+ *     var sorter = collection.{@link JW.AbstractCollection#createSorterComparing createSorterComparing}({
+ *         {@link #cfg-compare compare}: function(x, y) {
  *             return JW.cmp(x.title, y.title, true) || JW.cmp(x.id, y.id);
  *         },
- *         scope: this
+ *         {@link #cfg-scope scope}: this
  *     });
- *     var array = sorter.target;
+ *     var array = sorter.{@link #property-target target};
  *
- * Метод сам определит, какая реализация конвертера лучше подойдет (простая или observable).
+ * Use JW.AbstractCollection#createOrderer method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
  *
- * Массив можно передать в качестве конфигурационной опции:
+ * You can pass target array in config option:
  *
  *     var array = new JW.Array();
- *     var sorter = collection.createSorterComparing({
- *         target: array,
- *         compare: function(x, y) {
+ *     var sorter = collection.{@link JW.AbstractCollection#createSorterComparing createSorterComparing}({
+ *         {@link #cfg-target target}: array,
+ *         {@link #cfg-compare compare}: function(x, y) {
  *             return JW.cmp(x.title, y.title, true) || JW.cmp(x.id, y.id);
  *         },
- *         scope: this
+ *         {@link #cfg-scope scope}: this
  *     });
  *
- * Правила работы конвертера:
+ * Synchronizer rules:
  *
- * - Целевой массив находится в поле {@link #property-target}.
- * - При конструировании конвертера все элементы исходной коллекции сразу добавляются в {@link #property-target}.
- * - При уничтожении конвертера все элементы исходной коллекции удаляются из {@link #property-target}.
- * - Массив можно передать в качестве конфигурационной опции {@link #cfg-target}.
- * В этом случае, вся забота о его уничтожении ложится на вас.
- * - Если {@link #cfg-target} не передан, то он будет создан автоматически. Конвертер подберет наиболее подходящую
- * реализацию {@link #property-target} (простая или observable). В этом
- * случае, {@link #property-target} будет уничтожен автоматически при уничтожении конвертера.
- * - Можно конвертировать несколько коллекций в один и тот же массив, если все элементы различны.
+ * - Target array is stored in {@link #property-target} property.
+ * - All items of source collection are added to {@link #property-target}
+ * immediately on synchronizer initialization.
+ * - All items are removed from {@link #property-target} on synchronizer destruction.
+ * - You can pass target array in {@link #cfg-target} config option.
+ * In this case, you are responsible for its destruction (though items will be removed
+ * automatically on synchronizer destruction anyway).
+ * - If {@link #cfg-target} is not passed, it will be created automatically. Synchronizer will select
+ * appropriate {@link #property-target} implementation (simple or observable). In this
+ * case, {@link #property-target} will be destroyed automatically on synchronizer destruction.
+ * - You can sort multiple collections into one array.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createSorterComparing.
- * @param {JW.AbstractCollection} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createSorterComparing method is preferrable instead.
+ * @param {JW.AbstractCollection} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractCollection.SorterComparing = function(source, config) {
 	JW.AbstractCollection.SorterComparing._super.call(this);
@@ -85,23 +84,23 @@ JW.AbstractCollection.SorterComparing = function(source, config) {
 
 JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	/**
-	 * @cfg {JW.AbstractArray} target `<T>` Целевой массив.
+	 * @cfg {JW.AbstractArray} target `<T>` Target array.
 	 */
 	/**
 	 * @cfg {Function} compare
 	 *
 	 * `compare(t1: T, t2: T): number`
 	 *
-	 * Функция-компаратор. По умолчанию равна JW.cmp.
+	 * Comparing function. Defaults to JW.cmp.
 	 */
 	/**
-	 * @cfg {Object} scope Контекст вызова compare.
+	 * @cfg {Object} scope {@link #compare} call scope.
 	 */
 	/**
-	 * @property {C} source Исходная коллекция.
+	 * @property {C} source Source collection.
 	 */
 	/**
-	 * @property {JW.AbstractArray} target `<T>` Целевой массив.
+	 * @property {JW.AbstractArray} target `<T>` Target array.
 	 */
 	// boolean _targetCreated;
 	
@@ -115,7 +114,7 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	},
 	
 	/**
-	 * Пересортирует целевой массив. Этот метод следует вызывать после смены факторов, влияющих на порядок элементов.
+	 * Resorts target array. Call this method after sorting factors modification.
 	 * @returns {void}
 	 */
 	resort: function() {
