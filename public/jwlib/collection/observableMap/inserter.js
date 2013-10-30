@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractMap.Inserter<T>`
  *
- * Синхронизатор представления оповещающего словаря. Подробнее читайте JW.AbstractMap.Inserter.
+ * See JW.AbstractMap.Inserter for details.
  *
  * @extends JW.AbstractMap.Inserter
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractMap#createInserter.
- * @param {JW.ObservableMap} source `<T>` Исходный словарь.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractMap#createInserter method is preferrable instead.
+ * @param {JW.ObservableMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableMap.Inserter = function(source, config) {
 	JW.ObservableMap.Inserter._super.call(this, source, config);

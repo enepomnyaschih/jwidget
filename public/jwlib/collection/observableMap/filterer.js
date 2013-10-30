@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractMap.Filterer<T>`
  *
- * Фильтровщик оповещающего словаря. Подробнее читайте JW.AbstractCollection.Filterer.
+ * See JW.AbstractCollection.Filterer for details.
  *
  * @extends JW.AbstractMap.Filterer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createFilterer.
- * @param {JW.ObservableMap} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createFilterer method is preferrable instead.
+ * @param {JW.ObservableMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableMap.Filterer = function(source, config) {
 	JW.ObservableMap.Filterer._super.call(this, source, config);

@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractMap.Orderer<T>`
  *
- * Конвертер оповещающего словаря в массив (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
+ * See JW.AbstractCollection.Orderer for details.
  *
  * @extends JW.AbstractMap.Orderer
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createOrderer.
- * @param {JW.ObservableMap} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
+ * @param {JW.ObservableMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableMap.Orderer = function(source, config) {
 	JW.ObservableMap.Orderer._super.call(this, source, config);

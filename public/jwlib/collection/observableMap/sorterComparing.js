@@ -22,15 +22,14 @@
  *
  * `<T> extends JW.AbstractMap.SorterComparing<T>`
  *
- * Конвертер оповещающего словаря в массив (сортировщик по компаратору).
- * Подробнее читайте JW.AbstractCollection.SorterComparing.
+ * See JW.AbstractCollection.SorterComparing for details.
  *
  * @extends JW.AbstractMap.SorterComparing
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createSorterComparing.
- * @param {JW.ObservableMap} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createSorterComparing method is preferrable instead.
+ * @param {JW.ObservableMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableMap.SorterComparing = function(source, config) {
 	JW.ObservableMap.SorterComparing._super.call(this, source, config);

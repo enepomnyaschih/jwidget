@@ -22,14 +22,14 @@
  *
  * `<T, U> extends JW.AbstractMap.Mapper<T, U>`
  *
- * Конвертер элементов оповещающего словаря. Подробнее читайте JW.AbstractCollection.Mapper.
+ * See JW.AbstractCollection.Mapper for details.
  *
  * @extends JW.AbstractMap.Mapper
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
- * @param {JW.ObservableMap} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.ObservableMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.ObservableMap.Mapper = function(source, config) {
 	JW.ObservableMap.Mapper._super.call(this, source, config);
