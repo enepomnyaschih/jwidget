@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractCollection.Indexer<T, JW.AbstractArray<T>>`
  *
- * Индексатор массива. Подробнее читайте JW.AbstractCollection.Indexer.
+ * See JW.AbstractCollection.Indexer for details.
  *
  * @extends JW.AbstractCollection.Indexer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractArray.Indexer = function(source, config) {
 	JW.AbstractArray.Indexer._super.call(this, source, config);
@@ -37,6 +37,6 @@ JW.AbstractArray.Indexer = function(source, config) {
 
 JW.extend(JW.AbstractArray.Indexer, JW.AbstractCollection.Indexer, {
 	/**
-	 * @property {JW.AbstractArray} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });

@@ -22,15 +22,14 @@
  *
  * `<T> extends JW.AbstractCollection.SorterComparing<T, JW.AbstractArray<T>>`
  *
- * Конвертер массива в массив lol (сортировщик по компаратору).
- * Подробнее читайте JW.AbstractCollection.SorterComparing.
+ * See JW.AbstractCollection.SorterComparing for details.
  *
  * @extends JW.AbstractCollection.SorterComparing
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createSorterComparing.
- * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createSorterComparing method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractArray.SorterComparing = function(source, config) {
 	JW.AbstractArray.SorterComparing._super.call(this, source, config);
@@ -38,6 +37,6 @@ JW.AbstractArray.SorterComparing = function(source, config) {
 
 JW.extend(JW.AbstractArray.SorterComparing, JW.AbstractCollection.SorterComparing, {
 	/**
-	 * @property {JW.AbstractArray} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });

@@ -22,14 +22,14 @@
  *
  * `<T, U> extends JW.AbstractCollection.Mapper<T, U, JW.AbstractArray<T>, JW.AbstractArray<U>>`
  *
- * Конвертер элементов массива. Подробнее читайте JW.AbstractCollection.Mapper.
+ * See JW.AbstractCollection.Mapper for details.
  *
  * @extends JW.AbstractCollection.Mapper
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
- * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractArray.Mapper = function(source, config) {
 	JW.AbstractArray.Mapper._super.call(this, source, config);
@@ -38,13 +38,13 @@ JW.AbstractArray.Mapper = function(source, config) {
 
 JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
 	/**
-	 * @cfg {JW.AbstractArray} target `<U>` Целевая коллекция.
+	 * @cfg {JW.AbstractArray} target `<U>` Target array.
 	 */
 	/**
-	 * @property {JW.AbstractArray} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractArray} source `<T>` Source array.
 	 */
 	/**
-	 * @property {JW.AbstractArray} target `<U>` Целевая коллекция.
+	 * @property {JW.AbstractArray} target `<U>` Target array.
 	 */
 	
 	// override

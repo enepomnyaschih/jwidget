@@ -67,7 +67,7 @@
  * JW.AbstractArray:
  *
  * - Target collection must be empty before initialization.
- * - A target collection can be synchronized with one source collection only.
+ * - You can't modify target collection manually and/or create other synchronizers with the same target collection.
  *
  * JW.AbstractMap:
  *

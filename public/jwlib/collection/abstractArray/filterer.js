@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractCollection.Filterer<T, JW.AbstractArray<T>>`
  *
- * Фильтровщик массива. Подробнее читайте JW.AbstractCollection.Filterer.
+ * See JW.AbstractCollection.Filterer for details.
  *
  * @extends JW.AbstractCollection.Filterer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createFilterer.
- * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createFilterer method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractArray.Filterer = function(source, config) {
 	JW.AbstractArray.Filterer._super.call(this, source, config);
@@ -39,13 +39,13 @@ JW.AbstractArray.Filterer = function(source, config) {
 
 JW.extend(JW.AbstractArray.Filterer, JW.AbstractCollection.Filterer, {
 	/**
-	 * @cfg {JW.AbstractArray} target `<T>` Целевая коллекция.
+	 * @cfg {JW.AbstractArray} target `<T>` Target array.
 	 */
 	/**
-	 * @property {JW.AbstractArray} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 	/**
-	 * @property {JW.AbstractArray} target `<T>` Целевая коллекция.
+	 * @property {JW.AbstractArray} target `<T>` Target array.
 	 */
 	// Array<number> _filtered; // 0 - false, 1 - true
 	

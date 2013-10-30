@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractCollection.Observer<T, JW.AbstractArray<T>>`
  *
- * Наблюдатель массива. Подробнее читайте JW.AbstractCollection.Observer.
+ * See JW.AbstractCollection.Observer for details.
  *
  * @extends JW.AbstractCollection.Observer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
- * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createObserver method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractArray.Observer = function(source, config) {
 	JW.AbstractArray.Observer._super.call(this, source, config);
@@ -37,6 +37,6 @@ JW.AbstractArray.Observer = function(source, config) {
 
 JW.extend(JW.AbstractArray.Observer, JW.AbstractCollection.Observer, {
 	/**
-	 * @property {JW.AbstractArray} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });

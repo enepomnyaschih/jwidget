@@ -22,7 +22,7 @@
  *
  * `<T>`
  *
- * Обратитель массива. Создает массив, содержащий все элементы исходного массива в обратном порядке.
+ * Array reverser. Builds array containing all items of source array in reversed order.
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
  *     var reverser = source.{@link JW.AbstractArray#createReverser createReverser}();
@@ -34,10 +34,10 @@
  *     source.{@link JW.AbstractArray#remove remove}(2);
  *     assert(reverser.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([4, 2, 1]));
  * 
- * Создавайте синхронизатор с помощью метода JW.AbstractArray#createReverser.
- * Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
+ * Use JW.AbstractArray#createReverser method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
  *
- * Целевой массив можно передать в качестве конфигурационной опции:
+ * You can pass target array in config option:
  *
  *     var source = new JW.Array();
  *     var target = new JW.Array();
@@ -45,25 +45,27 @@
  *         {@link #cfg-target target}: target
  *     });
  *
- * Правила работы синхронизатора:
+ * Synchronizer rules:
  *
- * - Целевой массив находится в поле {@link #property-target}.
- * - Перед конструированием синхронизатора целевой массив должен быть пуст, в целевой массив нельзя добавлять элементы
- * вручную, нельзя создавать другие синхронизаторы с тем же целевым массивом.
- * - При конструировании синхронизатора все элементы исходной коллекции сразу добавляются в {@link #property-target}.
- * - При уничтожении синхронизатора все элементы исходной коллекции удаляются из {@link #property-target}.
- * - Целевой массив можно передать в качестве конфигурационной опции {@link #cfg-target}.
- * В этом случае, вся забота о его уничтожении ложится на вас.
- * - Если {@link #cfg-target} не передан, то он будет создан автоматически. Синхронизатор подберет наиболее подходящую
- * реализацию {@link #property-target} (простая или observable). В этом
- * случае, {@link #property-target} будет уничтожен автоматически при уничтожении синхронизатора.
+ * - Target array is stored in {@link #property-target} property.
+ * - Target array must be empty before initialization.
+ * - You can't modify target array manually and/or create other synchronizers with the same target array.
+ * - All items of source array are added to {@link #property-target}
+ * immediately on synchronizer initialization.
+ * - All items are removed from {@link #property-target} on synchronizer destruction.
+ * - You can pass target array in {@link #cfg-target} config option.
+ * In this case, you are responsible for its destruction (though items will be removed
+ * automatically on synchronizer destruction anyway).
+ * - If {@link #cfg-target} is not passed, it will be created automatically. Synchronizer will select
+ * appropriate {@link #property-target} implementation (simple or observable). In this
+ * case, {@link #property-target} will be destroyed automatically on synchronizer destruction.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractArray#createReverser.
- * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractArray#createReverser method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source array.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractArray.Reverser = function(source, config) {
 	JW.AbstractArray.Reverser._super.call(this);
@@ -76,13 +78,13 @@ JW.AbstractArray.Reverser = function(source, config) {
 
 JW.extend(JW.AbstractArray.Reverser, JW.Class, {
 	/**
-	 * @cfg {JW.AbstractArray} target `<T>` Целевая коллекция.
+	 * @cfg {JW.AbstractArray} target `<T>` Target array.
 	 */
 	/**
-	 * @property {JW.AbstractArray} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractArray} source `<T>` Source array.
 	 */
 	/**
-	 * @property {JW.AbstractArray} target `<T>` Целевая коллекция.
+	 * @property {JW.AbstractArray} target `<T>` Target array.
 	 */
 	// boolean _targetCreated;
 	

@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractCollection.Lister<T, JW.AbstractArray<T>>`
  *
- * Конвертер массива в множество. Подробнее читайте JW.AbstractCollection.Lister.
+ * See JW.AbstractCollection.Lister for details.
  *
  * @extends JW.AbstractCollection.Lister
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createLister.
- * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractArray.Lister = function(source, config) {
 	JW.AbstractArray.Lister._super.call(this, source, config);
@@ -37,6 +37,6 @@ JW.AbstractArray.Lister = function(source, config) {
 
 JW.extend(JW.AbstractArray.Lister, JW.AbstractCollection.Lister, {
 	/**
-	 * @property {JW.AbstractArray} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });

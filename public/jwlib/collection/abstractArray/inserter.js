@@ -22,38 +22,36 @@
  *
  * `<T>`
  *
- * Синхронизатор представления массива. Прослушивает все события массива и сводит их к 2 элементарным функциям:
- * элемент добавлен в указанное место и элемент удален из указанного места. В целях оптимизации, можно определить
- * третью функцию: коллекция очищена (в случае, если есть более эффективный алгоритм очистки, чем удаление всех
- * элементов простым перебором). В отличие от JW.AbstractCollection.Observer, следит за порядком элементов.
- * Синхронизатор используется, прежде всего, для синхронизации DOM-элемента с массивом дочерних элементов.
+ * View synchronizer with array. Listens all array events and reduces them to 2 granular functions:
+ * item is added into specific position and item is removed from specific position. In optimization purposes,
+ * you can define a third function: array is cleared
+ * (in case if there is more effective clearing algorithm than iterative items deletion).
+ * Unlike JW.AbstractCollection.Observer, tracks items order.
+ * Can be used mainly for DOM-element synchronization with array of child elements.
  *
- * Создавайте синхронизатор с помощью метода JW.AbstractArray#createInserter:
+ * Use JW.AbstractArray#createInserter method to create the synchronizer.
  *
- *     var inserter = array.createInserter({
- *         addItem: function(el, index) { this.el.insert(el, index); },
- *         removeItem: function(el, index) { el.detach(); },
- *         scope: this
+ *     var inserter = array.{@link JW.AbstractArray#createInserter createInserter}({
+ *         {@link #cfg-addItem addItem}: function(el, index) { this.el.{@link jQuery#insert insert}(el, index); },
+ *         {@link #cfg-removeItem removeItem}: function(el, index) { el.detach(); },
+ *         {@link #cfg-scope scope}: this
  *     });
  *
- * Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
+ * The method will select which synchronizer implementation fits better (simple or observable).
  *
- * Справка: jQuery.insert
+ * Synchronizer rules:
  *
- * Правила работы синхронизатора:
- *
- * - При конструировании синхронизатора для всех элементов исходной коллекции вызывается функция
- * {@link #cfg-addItem}.
- * - При уничтожении синхронизатора вызывается функция {@link #cfg-clearItems}, либо для всех элементов
- * вызывается функция {@link #cfg-removeItem}.
- * - При перемещении/переупорядочении элементов вызовами функций синхронизируется порядок элементов.
+ * - Function {@link #cfg-addItem} is called for all items of source array on synchronizer initialization.
+ * - Function {@link #cfg-clearItems} is called for array, or function {@link #cfg-removeItem} is called for
+ * all items of source array on synchronizer destruction.
+ * - On source array reordering, items order is synchorinized by callback functions calls.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractArray#createInserter.
- * @param {JW.AbstractArray} source `<T>` Исходный массив.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractArray#createInserter method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source array.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractArray.Inserter = function(source, config) {
 	JW.AbstractArray.Inserter._super.call(this);
@@ -72,27 +70,27 @@ JW.extend(JW.AbstractArray.Inserter, JW.Class, {
 	 *
 	 * `addItem(item: T, index: number): void`
 	 *
-	 * Элемент добавлен в указанное место массива.
+	 * Item is added to specific position in array.
 	 */
 	/**
 	 * @cfg {Function} removeItem
 	 *
 	 * `removeItem(item: T, index: number): void`
 	 *
-	 * Элемент удален из указанного места массива.
+	 * Item is removed from specific position in array.
 	 */
 	/**
 	 * @cfg {Function} clearItems
 	 *
 	 * `clearItems(items: Array<T>): void`
 	 *
-	 * Массив очищен. По умолчанию, вызывает removeItem для всех элементов массива.
+	 * Array is cleared. By default, calls {@link #removeItem} for all array items.
 	 */
 	/**
-	 * @cfg {Object} scope Контекст вызова addItem, removeItem, clearItems.
+	 * @cfg {Object} scope {@link #addItem}, {@link #removeItem}, {@link #clearItems} call scope.
 	 */
 	/**
-	 * @property {JW.AbstractArray} source `<T>` Исходный массив.
+	 * @property {JW.AbstractArray} source `<T>` Source array.
 	 */
 	
 	destroy: function() {

@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractCollection.Orderer<T, JW.AbstractArray<T>>`
  *
- * Конвертер массива в массив lol (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
+ * See JW.AbstractCollection.Orderer for details.
  *
  * @extends JW.AbstractCollection.Orderer
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createOrderer.
- * @param {JW.AbstractArray} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractArray.Orderer = function(source, config) {
 	JW.AbstractArray.Orderer._super.call(this, source, config);
@@ -37,6 +37,6 @@ JW.AbstractArray.Orderer = function(source, config) {
 
 JW.extend(JW.AbstractArray.Orderer, JW.AbstractCollection.Orderer, {
 	/**
-	 * @property {JW.AbstractArray} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });
