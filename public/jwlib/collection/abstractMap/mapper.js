@@ -22,14 +22,14 @@
  *
  * `<T, U> extends JW.AbstractCollection.Mapper<T, U, JW.AbstractMap<T>, JW.AbstractMap<U>>`
  *
- * Конвертер элементов словаря. Подробнее читайте JW.AbstractCollection.Mapper.
+ * See JW.AbstractCollection.Mapper for details.
  *
  * @extends JW.AbstractCollection.Mapper
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createMapper.
- * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.AbstractMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractMap.Mapper = function(source, config) {
 	JW.AbstractMap.Mapper._super.call(this, source, config);
@@ -38,13 +38,13 @@ JW.AbstractMap.Mapper = function(source, config) {
 
 JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
 	/**
-	 * @cfg {JW.AbstractMap} target `<U>` Целевая коллекция.
+	 * @cfg {JW.AbstractMap} target `<U>` Target collection.
 	 */
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 	/**
-	 * @property {JW.AbstractMap} target `<U>` Целевая коллекция.
+	 * @property {JW.AbstractMap} target `<U>` Target collection.
 	 */
 	
 	// override

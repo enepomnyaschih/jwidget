@@ -22,14 +22,14 @@
  *
  * `<T extends JW.Class> extends JW.AbstractCollection.Orderer<T, JW.AbstractMap<T>>`
  *
- * Конвертер словаря в массив (упорядочитель). Подробнее читайте JW.AbstractCollection.Orderer.
+ * See JW.AbstractCollection.Orderer for details.
  *
  * @extends JW.AbstractCollection.Orderer
  *
  * @constructor
- * Конструирует конвертер. Предпочтительнее использовать метод JW.AbstractCollection#createOrderer.
- * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.AbstractMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractMap.Orderer = function(source, config) {
 	JW.AbstractMap.Orderer._super.call(this, source, config);
@@ -37,6 +37,6 @@ JW.AbstractMap.Orderer = function(source, config) {
 
 JW.extend(JW.AbstractMap.Orderer, JW.AbstractCollection.Orderer, {
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });

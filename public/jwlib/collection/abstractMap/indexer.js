@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractCollection.Indexer<T, JW.AbstractMap<T>>`
  *
- * Индексатор словаря. Подробнее читайте JW.AbstractCollection.Indexer.
+ * See JW.AbstractCollection.Indexer for details.
  *
  * @extends JW.AbstractCollection.Indexer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createIndexer.
- * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.AbstractMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractMap.Indexer = function(source, config) {
 	JW.AbstractMap.Indexer._super.call(this, source, config);
@@ -37,6 +37,6 @@ JW.AbstractMap.Indexer = function(source, config) {
 
 JW.extend(JW.AbstractMap.Indexer, JW.AbstractCollection.Indexer, {
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });

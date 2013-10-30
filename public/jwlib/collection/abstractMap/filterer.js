@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractCollection.Filterer<T, JW.AbstractMap<T>>`
  *
- * Фильтровщик словаря. Подробнее читайте JW.AbstractCollection.Filterer.
+ * See JW.AbstractCollection.Filterer for details.
  *
  * @extends JW.AbstractCollection.Filterer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createFilterer.
- * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createFilterer method is preferrable instead.
+ * @param {JW.AbstractMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractMap.Filterer = function(source, config) {
 	JW.AbstractMap.Filterer._super.call(this, source, config);
@@ -38,13 +38,13 @@ JW.AbstractMap.Filterer = function(source, config) {
 
 JW.extend(JW.AbstractMap.Filterer, JW.AbstractCollection.Filterer, {
 	/**
-	 * @cfg {JW.AbstractMap} target `<T>` Целевая коллекция.
+	 * @cfg {JW.AbstractMap} target `<T>` Target collection.
 	 */
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 	/**
-	 * @property {JW.AbstractMap} target `<T>` Целевая коллекция.
+	 * @property {JW.AbstractMap} target `<T>` Target collection.
 	 */
 	
 	// override

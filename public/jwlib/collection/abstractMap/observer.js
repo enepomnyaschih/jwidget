@@ -22,14 +22,14 @@
  *
  * `<T> extends JW.AbstractCollection.Observer<T, JW.AbstractMap<T>>`
  *
- * Наблюдатель словаря. Подробнее читайте JW.AbstractCollection.Observer.
+ * See JW.AbstractCollection.Observer for details.
  *
  * @extends JW.AbstractCollection.Observer
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractCollection#createObserver.
- * @param {JW.AbstractMap} source `<T>` Исходная коллекция.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractCollection#createObserver method is preferrable instead.
+ * @param {JW.AbstractMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractMap.Observer = function(source, config) {
 	JW.AbstractMap.Observer._super.call(this, source, config);
@@ -37,6 +37,6 @@ JW.AbstractMap.Observer = function(source, config) {
 
 JW.extend(JW.AbstractMap.Observer, JW.AbstractCollection.Observer, {
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Исходная коллекция.
+	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });

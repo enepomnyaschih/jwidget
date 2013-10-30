@@ -22,36 +22,36 @@
  *
  * `<T>`
  *
- * Синхронизатор представления словаря. Прослушивает все события словаря и сводит их к 2 элементарным функциям:
- * элемент добавлен с указанным ключом и элемент удален с указанным ключом. В целях оптимизации, можно определить
- * третью функцию: коллекция очищена (в случае, если есть более эффективный алгоритм очистки, чем удаление всех
- * элементов простым перебором). В отличие от JW.AbstractCollection.Observer, следит за ключами элементов.
- * Синхронизатор используется, прежде всего, для синхронизации DOM-элемента со словарем дочерних элементов.
+ * View synchronizer with map. Listens all map events and reduces them to 2 granular functions:
+ * item is added with specific key and item is removed with specific key. In optimization purposes,
+ * you can define a third function: map is cleared
+ * (in case if there is more effective clearing algorithm than iterative items deletion).
+ * Unlike JW.AbstractCollection.Observer, tracks items keys.
+ * Can be used mainly for DOM-element synchronization with map of child elements.
  *
- * Создавайте синхронизатор с помощью метода JW.AbstractMap#createInserter:
+ * Use JW.AbstractMap#createInserter method to create the synchronizer.
  *
- *     var inserter = map.createInserter({
- *         addItem: function(el, key) { this.el.find("[elkey=" + key + "]").append(el); },
- *         removeItem: function(el, key) { el.detach(); },
- *         scope: this
+ *     var inserter = map.{@link JW.AbstractMap#createInserter createInserter}({
+ *         {@link #cfg-addItem addItem}: function(el, key) { this.el.find("[elkey=" + key + "]").append(el); },
+ *         {@link #cfg-removeItem removeItem}: function(el, key) { el.detach(); },
+ *         {@link #cfg-scope scope}: this
  *     });
  *
- * Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
+ * The method will select which synchronizer implementation fits better (simple or observable).
  *
- * Правила работы синхронизатора:
+ * Synchronizer rules:
  *
- * - При конструировании синхронизатора для всех элементов исходной коллекции вызывается функция
- * {@link #cfg-addItem}.
- * - При уничтожении синхронизатора вызывается функция {@link #cfg-clearItems}, либо для всех элементов
- * вызывается функция {@link #cfg-removeItem}.
- * - При изменении ключей/переиндексации элементов вызовами функций синхронизируется порядок элементов.
+ * - Function {@link #cfg-addItem} is called for all items of source map on synchronizer initialization.
+ * - Function {@link #cfg-clearItems} is called for map, or function {@link #cfg-removeItem} is called for
+ * all items of source map on synchronizer destruction.
+ * - On source map reindexing, items keys are synchorinized by callback functions calls.
  *
  * @extends JW.Class
  *
  * @constructor
- * Конструирует синхронизатор. Предпочтительнее использовать метод JW.AbstractMap#createInserter.
- * @param {JW.AbstractMap} source `<T>` Исходный словарь.
- * @param {Object} config Конфигурация (см. Config options).
+ * Creates synchronizer. JW.AbstractMap#createInserter method is preferrable instead.
+ * @param {JW.AbstractMap} source `<T>` Source map.
+ * @param {Object} config Configuration (see Config options).
  */
 JW.AbstractMap.Inserter = function(source, config) {
 	JW.AbstractMap.Inserter._super.call(this);
@@ -70,27 +70,27 @@ JW.extend(JW.AbstractMap.Inserter, JW.Class, {
 	 *
 	 * `addItem(item: T, key: string): void`
 	 *
-	 * Элемент добавлен в словарь с указанным ключом.
+	 * Item is added to map with specific key.
 	 */
 	/**
 	 * @cfg {Function} removeItem
 	 *
 	 * `removeItem(item: T, key: string): void`
 	 *
-	 * Элемент удален из словаря с указанным ключом.
+	 * Item is removed from map with specific key.
 	 */
 	/**
 	 * @cfg {Function} clearItems
 	 *
 	 * `clearItems(items: Object): void`
 	 *
-	 * Словарь очищен. По умолчанию, вызывает removeItem для всех элементов словаря.
+	 * Map is cleared. By default, calls {@link #removeItem} for all map items.
 	 */
 	/**
-	 * @cfg {Object} scope Контекст вызова addItem, removeItem, clearItems.
+	 * @cfg {Object} scope {@link #addItem}, {@link #removeItem}, {@link #clearItems} call scope.
 	 */
 	/**
-	 * @property {JW.AbstractMap} source `<T>` Исходный словарь.
+	 * @property {JW.AbstractMap} source `<T>` Source map.
 	 */
 	
 	destroy: function() {
