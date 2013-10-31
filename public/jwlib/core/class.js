@@ -23,19 +23,20 @@ JW.ClassUtil = {
 	_fnTest: /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/,
 	
 	/**
-	 * Наследует один класс от другого. Тело класса передается в аргументе body - все поля и методы body станут полями
-	 * и методами подкласса. Содержимое body в несколько преобразованном виде переходит в прототип подкласса.
+	 * Extends one class from another. Pass class members in "body" argument - all fields and methods of "body"
+	 * will become fields and methods of subclass. "body" contents move into subclass prorotype in
+	 * slightly modified state.
 	 * 
-	 * Перед использованием этой функции необходимо объявить конструктор подкласса.
+	 * You must define subclass constructor before using this function.
 	 * 
-	 * Для примера наследования класса смотрите JW.Class.
+	 * See JW.Class for example.
 	 *
 	 * @static
 	 * @member JW
-	 * @param {Function} subclass Подкласс.
-	 * @param {Function} superclass Базовый класс.
-	 * @param {Object} body Тело класса.
-	 * @returns {Function} Возвращает subclass.
+	 * @param {Function} subclass Subclass.
+	 * @param {Function} superclass Superclass.
+	 * @param {Object} body Subclass body.
+	 * @returns {Function} Returns subclass.
 	 */
 	extend: function(subc, supc, body) {
 		body = body || {};
@@ -81,61 +82,59 @@ JW.extend = JW.ClassUtil.extend;
 /**
  * @class
  * 
- * Самый базовый класс всех классов. От JW.Class и всех его потомков можно наследовать новые классы.
+ * The base class of all jWidget classes. You can inherit your classes from JW.Class and its subclasses.
  * 
- * Пример наследования класса:
+ * Class inheritance sample:
  * 
- *     // Конструктор
+ *     // Constructor
  *     var Shape = function(name) {
- *         // Вызываем конструктор базового класса
- *         Shape._super.call(this);
- *         // Объявляем поля
+ *         // Call superclass constructor
+ *         Shape.{@link JW.Class#static-property-_super _super}.call(this);
+ *         // Define fields
  *         this.name = name;
  *     };
  *     
- *     // Наследуем Shape от JW.Class
+ *     // Inherit Shape from JW.Class
  *     JW.extend(Shape, JW.Class, {
- *         // Для удобства рекомендуется дать спецификацию класса в комментарии
- *         // String name;
- *         // abstract Number getArea();
+ *         // string name;
+ *         // abstract number getArea();
  *     });
  *     
  *     // --------
  *     
  *     var Rectangle = function(name, width, height) {
- *         Rectangle._super.call(this, name);
+ *         Rectangle.{@link JW.Class#static-property-_super _super}.call(this, name);
  *         this.width = width;
  *         this.height = height;
- *         // Для оптимизации рекомендуется объявлять даже те поля,
- *         // которые не имеют значения по умолчанию
+ *         // For optimization, you should define all class fields (even null) in constructor
  *         this.el = null;
  *     };
  *     
  *     JW.extend(Rectangle, Shape, {
- *         // Number width;
- *         // Number height;
+ *         // number width;
+ *         // number height;
  *         // Element el;
  *         
- *         // Деструктор
- *         destroy: function() {
- *             // Освобождаем ресурсы
+ *         // Destructor
+ *         {@link JW.Class#method-destroy destroy}: function() {
+ *             // Release resources
  *             if (this.el) {
  *                 this.el.remove();
  *             }
- *             // Вызываем деструктор базового класса
- *             this._super();
+ *             // Call superclass destructor
+ *             this.{@link JW.Class#method-_super _super}();
  *         },
  *         
- *         // override
+ *         // Override method
  *         getArea: function() {
  *             return this.width * this.height;
  *         },
  *         
  *         getElement: function() {
  *             if (!this.el) {
- *                 this.el = jQuery('&lt;div /&gt;');
- *                 this.el.width(width);
- *                 this.el.height(height);
+ *                 this.el = jQuery('<div />');
+ *                 this.el.width(this.width);
+ *                 this.el.height(this.height);
  *             }
  *             return this.el;
  *         }
@@ -149,29 +148,28 @@ JW.Class = function() {
 /**
  * @property {Function} constructor
  *
- * Конструктор как класс. Если в вашем распоряжении есть некоторый объект, то вы с легкостью можете узнать его класс
- * воспользовавшись полем #constructor.
+ * Constructor as class. If you have an object, you can get its class using this field.
  */
 /**
  * @property {number} _iid
  *
  * Instance ID.
  *
- * Автоинкрементный уникальный идентификатор объекта. Каждый экземпляр JW.Class получает такой идентификатор.
- * Используется в множестве JW.AbstractSet в качестве ключа словаря для быстрого поиска.
+ * Auto-incremental object unique ID. Each JW.Class instance gets such identifier.
+ * Used in JW.AbstractSet as map key for quick item access.
  */
 /**
  * @method destroy
  *
- * Деструктор класса. Сюда рекомендуется помещать всю логику уничтожения экземпляра класса. Этот метод нужно явно
- * вызывать снаружи, поскольку JavaScript не поддерживает автоматические деструкторы классов. Этот метод можно
- * перегружать, не забывая вызывать деструктор базового класса:
- * 
+ * Class destructor. The logic of class instance destruction should be implemented here. You must call this method
+ * explicitly from outside, because JavaScript doesn't support automatic class destructor calling. Don't forget to
+ * call superclass destructor at the end of the method:
+ *
  *     destroy: function() {
- *         // Освобождаем ресурсы
+ *         // Release resources
  *         ...
- *         // Вызываем деструктор базового класса
- *         this._super();
+ *         // Call superclass destructor
+ *         this.{@link #method-_super _super}();
  *     }
  *
  * @returns {void}
@@ -179,22 +177,22 @@ JW.Class = function() {
 /**
  * @method _super
  *
- * Этот метод доступен только внутри методов класса, переданных в функцию JW.extend при создании данного класса. Метод
- * {@link #method-_super} - это простой способ вызова того же метода базового класса:
- * 
- *     ...
- *     // Метод класса
- *     myMethod: function(a, b, c) {
- *         return this._super(a, b) + c;
- *     }
- *     ...
- * 
- * Эквивалентный вариант:
+ * This method is available only inside class methods that were passed into JW.extend method.
+ * This method is an easy way of the same superclass method calling:
  *
  *     ...
- *     // Метод класса
+ *     // Class method
  *     myMethod: function(a, b, c) {
- *         return MyClass.superclass.myMethod.call(this, a, b) + c;
+ *         return this.{@link #method-_super}(a, b) + c;
+ *     }
+ *     ...
+ *
+ * Equivalent code without {@link #method-_super} usage:
+ *
+ *     ...
+ *     // Class method
+ *     myMethod: function(a, b, c) {
+ *         return MyClass.{@link #static-property-superclass}.myMethod.call(this, a, b) + c;
  *     }
  *     ...
  *
@@ -203,66 +201,55 @@ JW.Class = function() {
 /**
  * @property {Function} _super
  *
- * Базовый класс. Благодаря этому полю, можно вызывать конструктор базового класса:
- * 
+ * Superclass. Thanks to this static field, you can call superclass constructor:
+ *
  *     var MyClass = function() {
- *         MyClass._super.call(this);
+ *         MyClass.{@link #static-property-_super}.call(this);
  *     };
  *     
  *     JW.extend(MyClass, JW.Class);
- * 
- * Это статическое поле есть у JW.Class и всех классов, унаследованных от него.
+ *
+ * All classes inherited from JW.Class gain this field automatically.
  *
  * @static
  */
 /**
  * @property {Object} prototype
  *
- * Прототип класса.
+ * Class prototype.
  *
  * @static
  */
 /**
  * @property {Object} superclass
  *
- * Прототип базового класса. Благодаря этому полю, можно подниматься вверх по иерархии классов:
- * 
- *     this.constructor.superclass.constructor.superclass....
- * 
- * Это статическое поле есть у JW.Class и всех классов, унаследованных от него.
+ * Superclass prototype.
+ *
+ * All classes inherited from JW.Class gain this field automatically.
  *
  * @static
  */
 /**
  * @method extend
  *
- * Создает новый класс и наследует его от текущего класса. Тело класса передается в аргументе body - все поля и методы
- * body станут полями и методами нового класса. Содержимое body в несколько преобразованном виде переходит в прототип
- * нового класса.
- * 
- * Конструктор остается таким же, как и у базового класса.
- * 
- * В случае, если конструктор нужно изменить, следует воспользоваться методом JW.extend.
- * 
- * Пример наследования класса:
- * 
- *     var MyClass = JW.Class.extend({
- *         // Метод
- *         myMethod: function(x) {
- *             return this._super(x + 10);
- *         }
- *     });
- * 
- * Этот статический метод есть у JW.Class и всех классов, унаследованных от него.
+ * Shortcut of empty constructor definition and JW.extend calling. Example:
+ *
+ *     var MyClass = BaseClass.{@link #static-method-extend}({ ... });
+ *
+ * Equivalent code:
+ *
+ *     var MyClass = function() {
+ *         MyClass.{@link #static-property-_super}.apply(this, arguments);
+ *     };
+ *     
+ *     JW.extend(MyClass, BaseClass, { ... });
+ *
+ * Though this method is not recommended because it messes up stack traces a bit.
  *
  * @static
  *
- * @param {Object} body
- * Тело класса. По умолчанию - пустой объект (создает новый класс и наследует от текущего класса, без добавления полей
- * и методов).
- *
- * @returns {Function}
- * Новый унаследованный класс
+ * @param {Object} body Subclass body.
+ * @returns {Function} Subclass.
  */
 
 JW.extend(JW.Class, Object, {
