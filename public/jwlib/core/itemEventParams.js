@@ -19,12 +19,12 @@
 
 /**
  * @class
- * `<T>` Параметры события с элементом. Обычно используется в событии изменения значения какого-либо элемента коллекции.
+ * `<T>` Event params with item. Usually used in event of some collection item change.
  * @extends JW.EventParams
  *
  * @constructor
- * @param {Object} sender Отправитель события.
- * @param {T} item Элемент.
+ * @param {Object} sender Event sender.
+ * @param {T} item Item.
  */
 JW.ItemEventParams = function(sender, item) {
 	JW.ItemEventParams._super.call(this, sender);
@@ -33,6 +33,6 @@ JW.ItemEventParams = function(sender, item) {
 
 JW.extend(JW.ItemEventParams, JW.EventParams, {
 	/**
-	 * @property {T} item Элемент.
+	 * @property {T} item Item.
 	 */
 });

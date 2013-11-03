@@ -58,7 +58,7 @@
  * 1) `null` and `undefined` are denied to be added into jWidget collection.
  * Use "Null Object" pattern if it is neccessary.
  *
- * 2) The majority of collection modification methods have 2 implementations: `tryMethod` и `method`.
+ * 2) The majority of collection modification methods have 2 implementations: `tryMethod` and `method`.
  * These methods perform the same modification but return different result.
  * First implementation is introduced for internal use mainly,
  * and <em>it always returns `undefined` if collection has not been modified</em>.

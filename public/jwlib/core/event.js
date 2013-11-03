@@ -22,15 +22,14 @@
  *
  * `<P extends JW.EventParams>`
  *
- * Класс события. Используется для того, чтобы оповещать какие-то объекты (клиенты) о каких-то событиях (например, об
- * изменении значения какой-то переменной).
+ * Used to notify some objects (clients) about some events (for example, about some field value change).
  * 
- * **Замечание:** Уничтожение событий объекта и отписка от сторонних событий, как правило, осуществляется в деструкторе.
+ * **Notice:** You must destroy the events and event listeners in class destructor.
  * 
- * Полный пример класса, выбрасывающего события:
+ * Full example of class that triggers the events:
  * 
  *     var Dispatcher = function() {
- *         Dispatcher._super.call(this);
+ *         Dispatcher.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.items = [];
  *         this.addEvent = new JW.Event();
  *         this.removeEvent = new JW.Event();
@@ -43,25 +42,25 @@
  *         // JW.Event<Dispatcher.EventParams<T>> removeEvent;
  *         
  *         // override
- *         destroy: function() {
- *             this.removeEvent.destroy();
- *             this.addEvent.destroy();
+ *         {@link JW.Class#destroy destroy}: function() {
+ *             this.removeEvent.{@link JW.Class#destroy destroy}();
+ *             this.addEvent.{@link JW.Class#destroy destroy}();
  *             this._super();
  *         },
  *         
  *         addItem: function(item, index) {
  *             this.items.splice(index, 0, item);
- *             this.addEvent.trigger(new Dispatcher.EventParams(this, item, index));
+ *             this.addEvent.{@link JW.Event#trigger trigger}(new Dispatcher.EventParams(this, item, index));
  *         },
  *         
  *         removeItem: function(index) {
  *             var item = this.items.splice(index, 1)[0];
- *             this.removeEvent.trigger(new Dispatcher.EventParams(this, item, index));
+ *             this.removeEvent.{@link JW.Event#trigger trigger}(new Dispatcher.EventParams(this, item, index));
  *         }
  *     });
  *     
  *     Dispatcher.EventParams = function(sender, item, index) {
- *         Dispatcher.EventParams._super.call(this, sender);
+ *         Dispatcher.EventParams.{@link JW.Class#static-property-_super _super}.call(this, sender);
  *         this.item = item;
  *         this.index = index;
  *     };
@@ -73,13 +72,13 @@
  *         // Integer index;
  *     });
  * 
- * Пример использования этих событий:
+ * Full example of these events listening:
  * 
  *     var Client = function(dispatcher) {
- *         Client._super.call(this);
+ *         Client.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.dispatcher = dispatcher;
- *         this._addAttachment = this.dispatcher.addEvent.bind(this._onAdd, this);
- *         this._removeAttachment = this.dispatcher.removeEvent.bind(this._onRemove, this);
+ *         this._addAttachment = this.dispatcher.addEvent.{@link JW.Event#bind bind}(this._onAdd, this);
+ *         this._removeAttachment = this.dispatcher.removeEvent.{@link JW.Event#bind bind}(this._onRemove, this);
  *     };
  *     
  *     JW.extend(Client, JW.Class, {
@@ -88,9 +87,9 @@
  *         // JW.EventAttachment _removeAttachment;
  *         
  *         // override
- *         destroy: function() {
- *             this._removeAttachment.destroy();
- *             this._addAttachment.destroy();
+ *         {@link JW.Class#destroy destroy}: function() {
+ *             this._removeAttachment.{@link JW.Class#destroy destroy}();
+ *             this._addAttachment.{@link JW.Class#destroy destroy}();
  *             this._super();
  *         },
  *         
@@ -121,21 +120,22 @@ JW.extend(JW.Event, JW.Class, {
 	},
 	
 	/**
-	 * Подписаться на событие.
+	 * Starts listening the event.
 	 * 
-	 * Всякий раз, когда методом #trigger будет выброшено событие, будет вызван обработчик callback в контексте scope.
+	 * Whenever the event will be triggered with #trigger method, specified handler function
+	 * will be called in specified scope.
 	 * 
-	 * Обработчик можно отписать путем уничтожения возвращенного экземпляра JW.EventAttachment.
+	 * You can stop listening the event by destroying the returned JW.EventAttachment instance.
 	 *
 	 * @param {Function} callback
 	 *
 	 * `callback(params: P): void`
 	 *
-	 * Функция-обработчик события.
+	 * Event handler function.
 	 *
-	 * @param {Object} scope Контекст вызова callback.
+	 * @param {Object} scope `callback` call scope.
 	 *
-	 * @returns {JW.EventAttachment} `<P>` Подписка на событие.
+	 * @returns {JW.EventAttachment} `<P>` Event attachment object.
 	 */
 	bind: function(callback, scope) {
 		var attachment = new JW.EventAttachment(this, callback, scope);
@@ -144,11 +144,11 @@ JW.extend(JW.Event, JW.Class, {
 	},
 	
 	/**
-	 * Отписывает обработчик, подписанный методом #bind.
+	 * Stops listening the event with specific handler.
 	 * 
-	 * Эквивалентен вызову `attachment.destroy()`.
+	 * Equivalent to `attachment.destroy()`.
 	 *
-	 * @param {JW.EventAttachment} attachment `<P>` Подписка на событие.
+	 * @param {JW.EventAttachment} attachment `<P>` Event attachment.
 	 * @returns {void}
 	 */
 	unbind: function(attachment) {
@@ -156,7 +156,7 @@ JW.extend(JW.Event, JW.Class, {
 	},
 	
 	/**
-	 * Отписывает все обработчики событий. Автоматически вызывается в деструкторе события.
+	 * Unbinds all event handlers. Called automatically in event destructor.
 	 * @returns {void}
 	 */
 	purge: function() {
@@ -164,14 +164,13 @@ JW.extend(JW.Event, JW.Class, {
 	},
 	
 	/**
-	 * Выбрасывает событие, оповещает клиенты.
+	 * Triggers event, i.e. calls all bound handlers.
 	 * 
-	 *     this.myEvent.trigger(new JW.EventParams(this));
+	 *     this.myEvent.{@link JW.Event#trigger trigger}(new JW.EventParams(this));
 	 * 
-	 * Тем самым мы вызвали все обработчики, подписанные методом #bind на событие myEvent, с параметрами
-	 * `new JW.EventParams(this)`.
+	 * This way, we've called all handlers of `myEvent` with argument `new JW.EventParams(this)`.
 	 *
-	 * @param {P} params Параметры события.
+	 * @param {P} params Event params.
 	 * @returns {void}
 	 */
 	trigger: function(params) {

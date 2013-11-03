@@ -19,11 +19,11 @@
 
 /**
  * @class
- * Параметры события.
+ * Event params.
  * @extends JW.Class
  *
  * @constructor
- * @param {Object} sender Отправитель события.
+ * @param {Object} sender Event sender.
  */
 JW.EventParams = function(sender) {
 	JW.EventParams._super.call(this);
@@ -32,6 +32,6 @@ JW.EventParams = function(sender) {
 
 JW.extend(JW.EventParams, JW.Class, {
 	/**
-	 * @property {Object} sender Отправитель события.
+	 * @property {Object} sender Event sender.
 	 */
 });

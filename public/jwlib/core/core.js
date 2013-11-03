@@ -28,29 +28,29 @@ if (typeof JW !== "undefined") {
 /**
  * @class JW
  *
- * Основное пространство имен библиотеки jWidget.
+ * Main jWidget library namespace.
  */
 
 /**
  * @property {Object}
  *
- * Корневое пространство имен. Введено для обеспечения совместимости между JavaScript и NodeJS. Равно window в
- * браузерной среде и global в среде NodeJS.
+ * Root environment namespace. Involved for JavaScript and NodeJS compatibility. Equals to `window` in
+ * browser environment and `global` in NodeJS environment.
  *
  * @static
  */
 JW.global = (typeof window === "undefined" ? global : window);
 
 /**
- * По очереди перебирает объекты, переданные после первого аргумента, и копирует все их элементы (поля/методы) в объект
- * target, после чего возвращает объект target. Элементы объектов-источников, значения которых равны undefined, будут
- * проигнорированы. Пустые объекты-источники (undefined, null) будут проигнорированы.
+ * Iterates through objects passed after first argument and copies all their fields into
+ * `target` object. Returns `target`. Fields of source objects which are undefined will be ignored.
+ * Empty source objects (undefined, null) will be ignored.
  *
- * Функция меняет объект target!
+ * Function modifies `target` object!
  * 
- * Пример 1:
+ * Example 1:
  * 
- *     var x = {         var y = {         // Результат = {
+ *     var x = {         var y = {         // Result = {
  *         a: 10,                          //     a: 10,
  *         b: 20,            b: 30,        //     b: 30,
  *         c: null,          c: 40,        //     c: 40,
@@ -62,9 +62,9 @@ JW.global = (typeof window === "undefined" ? global : window);
  *     
  *     JW.applyIf(x, y);
  * 
- * Пример 2 (построение данных формы):
+ * Example 2 (form data preparing):
  * 
- *     My.Form = JW.Class.extend({
+ *     My.Form = JW.Class.{@link JW.Class#static-method-extend}({
  *         // Object data;
  *         
  *         composeData: function(extraData) {
@@ -79,14 +79,9 @@ JW.global = (typeof window === "undefined" ? global : window);
  *
  * @static
  *
- * @param {Object} target
- * Целевой объект.
- *
- * @param {Object} [sources]
- * Объекты-источники.
- *
- * @returns {Object}
- * Возвращает target.
+ * @param {Object} target Target object.
+ * @param {Object} [sources] Source objects.
+ * @returns {Object} Returns target object.
  */
 JW.apply = function(target /*, sources */) {
 	for (var i = 1; i < arguments.length; ++i) {
@@ -105,204 +100,203 @@ JW.apply = function(target /*, sources */) {
 
 JW.apply(JW, {
 	/**
-	 * Проверяет, является ли переменная undefined.
+	 * Checks whether x is undefined.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является undefined.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is undefined.
 	 */
 	isUndefined: function(v) {
 		return v === undefined;
 	},
 	
 	/**
-	 * Проверяет, что переменная не undefined.
+	 * Checks whether x is not undefined.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная не является undefined.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is not undefined.
 	 */
 	isDefined: function(v) {
 		return v !== undefined;
 	},
 	
 	/**
-	 * Проверяет, является ли переменная null.
+	 * Checks whether x is null.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является null.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is null.
 	 */
 	isNull: function(v) {
 		return v === null;
 	},
 	
 	/**
-	 * Проверяет, что переменная не null.
+	 * Checks whether x is not null.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная не является null.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is not null.
 	 */
 	isNotNull: function(v) {
 		return v !== null;
 	},
 	
 	/**
-	 * Проверяет, что переменная не undefined и не null.
+	 * Checks whether x is not undefined and null.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная не undefined и не null.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is not undefined and null.
 	 */
 	isSet: function(v) {
 		return (v !== undefined) && (v !== null);
 	},
 	
 	/**
-	 * Проверяет, что переменная undefined или null.
+	 * Checkes whether x is undefined or null.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная undefined или null.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is undefined or null.
 	 */
 	isNotSet: function(v) {
 		return (v === undefined) || (v === null);
 	},
 	
 	/**
-	 * Проверяет, что переменная пуста (`null`, `undefined`, `false`, 0 или пустая строка).
+	 * Checks whether x is blank (`null`, `undefined`, `false`, 0 or blank string).
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная пуста.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is blank.
 	 */
 	isBlank: function(v) {
 		return !v;
 	},
 	
 	/**
-	 * Проверяет, что переменная не пуста (`null`, `undefined`, `false`, 0 или пустая строка).
+	 * Checks whether x is not blank (`null`, `undefined`, `false`, 0 or blank string).
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная не пуста.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is not blank.
 	 */
 	isNotBlank: function(v) {
 		return Boolean(v);
 	},
 	
 	/**
-	 * Проверяет, что переменная является целым числом.
+	 * Checks whether x is an integer.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является целым числом.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is an integer.
 	 */
 	isInt: function(v) {
 		return (typeof v === "number") && Math.round(v) === v;
 	},
 	
 	/**
-	 * Проверяет, что переменная является числом.
+	 * Checks whether x is a number.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является числом.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a number.
 	 */
 	isNumber: function(v) {
 		return typeof v === "number";
 	},
 	
 	/**
-	 * Проверяет, что переменная является строкой.
+	 * Checks whether x is a string.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является строкой.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a string.
 	 */
 	isString: function(v) {
 		return typeof v === "string";
 	},
 	
 	/**
-	 * Проверяет, что переменная булевая.
+	 * Checks whether x is a boolean.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная булевая.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a boolean.
 	 */
 	isBoolean: function(v) {
 		return typeof v === "boolean";
 	},
 	
 	/**
-	 * Проверяет, что переменная является функцией.
+	 * Checks whether x is a function.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является функцией.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a function.
 	 */
 	isFunction: function(v) {
 		return typeof v === "function";
 	},
 	
 	/**
-	 * Проверяет, что переменная является нативным массивом (Array).
+	 * Checks whether x is a native JavaScript Array.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является нативным массивом.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is an Array.
 	 */
 	isArray: function(v) {
 		return Object.prototype.toString.apply(v) === '[object Array]';
 	},
 	
 	/**
-	 * Проверяет, что переменная является объектом (Object или экземпляр пользовательского класса).
+	 * Checks whether x is a native JavaScript Object or class instance.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является объектом.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is an Object.
 	 */
 	isObject: function(v) {
 		return Object.prototype.toString.apply(v) === '[object Object]';
 	},
 	
 	/**
-	 * Проверяет, что переменная является регулярным выражением.
+	 * Checks whether x is a regular expression.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является регулярным выражением.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a regular expression.
 	 */
 	isRegExp: function(v) {
 		return Object.prototype.toString.apply(v) === '[object RegExp]';
 	},
 	
 	/**
-	 * Проверяет, что переменная является датой.
+	 * Checks whether x is a date.
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является датой.
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a date.
 	 */
 	isDate: function(v) {
 		return Object.prototype.toString.apply(v) === '[object Date]';
 	},
 	
 	/**
-	 * Задает значение по умолчанию. Возвращает value, если оно не undefined, в противном случае возвращает default.
+	 * Defines default value. Returns `value`, if it is not undefined, else returns `default`.
 	 * @static
-	 * @param {Mixed} value Значение.
-	 * @param {Mixed} default Значение по умолчанию.
-	 * @returns {Mixed} Результат.
+	 * @param {Mixed} value
+	 * @param {Mixed} default
+	 * @returns {Mixed}
 	 */
 	def: function(v, d) {
 		return JW.isDefined(v) ? v : d;
 	},
 	
 	/**
-	 * Задает значение по умолчанию. Возвращает value, если оно не undefined и не null, в противном случае возвращает
-	 * default.
+	 * Defines default value. Returns `value`, if it is not undefined and null, else returns `default`.
 	 * @static
-	 * @param {Mixed} value Значение.
-	 * @param {Mixed} default Значение по умолчанию.
-	 * @returns {Mixed} Результат.
+	 * @param {Mixed} value
+	 * @param {Mixed} default
+	 * @returns {Mixed}
 	 */
 	defn: function(v, d) {
 		return JW.isSet(v) ? v : d;
 	},
 	
 	/**
-	 * То же самое, что и JW.apply, только игнорирует поля, которые уже определены в target (не undefined).
+	 * The same as JW.apply, but ignores fields which are defined in `target`.
 	 *
-	 * Пример
+	 * **Example**
 	 * 
-	 *     var x = {         var y = {         // Результат = {
+	 *     var x = {         var y = {         // Result = {
 	 *         a: 10,                          //     a: 10,
 	 *         b: 20,            b: 30,        //     b: 20,
 	 *         c: null,          c: 40,        //     c: null,
@@ -315,14 +309,9 @@ JW.apply(JW, {
 	 *
 	 * @static
 	 *
-	 * @param {Object} target
-	 * Целевой объект.
-	 *
-	 * @param {Object} [sources]
-	 * Объекты-источники.
-	 *
-	 * @returns {Object}
-	 * Возвращает target.
+	 * @param {Object} target Target object.
+	 * @param {Object} [sources] Source objects.
+	 * @returns {Object} Returns target object.
 	 */
 	applyIf: function(target /*, sources */) {
 		for (var i = 1; i < arguments.length; ++i) {
@@ -340,11 +329,11 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * То же самое, что и JW.apply, только игнорирует поля, которые уже присвоены в target (не undefined или null).
+	 * The same as JW.apply, but ignores fields which are not undefined and null in `target`.
 	 *
-	 * **Пример**
+	 * **Example**
 	 * 
-	 *     var x = {         var y = {         // Результат = {
+	 *     var x = {         var y = {         // Result = {
 	 *         a: 10,                          //     a: 10,
 	 *         b: 20,            b: 30,        //     b: 20,
 	 *         c: null,          c: 40,        //     c: 40,
@@ -357,14 +346,9 @@ JW.apply(JW, {
 	 *
 	 * @static
 	 *
-	 * @param {Object} target
-	 * Целевой объект.
-	 *
-	 * @param {Object} [sources]
-	 * Объекты-источники.
-	 *
-	 * @returns {Object}
-	 * Возвращает target.
+	 * @param {Object} target Target object.
+	 * @param {Object} [sources] Source objects.
+	 * @returns {Object} Returns target object.
 	 */
 	applyIfn: function(target /*, sources */) {
 		for (var i = 1; i < arguments.length; ++i) {
@@ -382,16 +366,15 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Очищает словарь от значений undefined. Возвращает новый словарь, в котором есть все поля словаря target, кроме
-	 * тех, что равны undefined.
+	 * Clears object from `undefined` values. Returns new object, containing all `target` fields except `undefined`.
 	 * 
-	 * Функция не меняет объект target.
+	 * Doesn't modify `target` object.
 	 * 
-	 * Если вы хотите удалить еще и все значения равные null, воспользуйтесь функцией JW.cleann.
+	 * If you want to remove `null` values as well, try JW.cleann function.
 	 * 
-	 * Пример:
+	 * Example:
 	 * 
-	 *     var x = {          // Результат: y = {
+	 *     var x = {          // Result: y = {
 	 *         a : 10,        //     a: 10,
 	 *         b : 20,        //     b: 20,
 	 *         c : null,      //     c: null
@@ -402,11 +385,8 @@ JW.apply(JW, {
 	 *
 	 * @static
 	 *
-	 * @param {Object} target
-	 * Словарь.
-	 *
-	 * @returns {Object}
-	 * Очищенный словарь.
+	 * @param {Object} target Object.
+	 * @returns {Object} Cleared object.
 	 */
 	clean: function(source) {
 		var result = {};
@@ -419,16 +399,16 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Очищает словарь от значений null и undefined. Возвращает новый словарь, в котором есть все поля словаря target,
-	 * кроме тех, что равны null или undefined.
+	 * Clears object from `null` and `undefined` values.
+	 * Returns new object, containing all `target` fields except `null` and `undefined`.
 	 * 
-	 * Функция не меняет объект target.
+	 * Doesn't modify `target` object.
 	 * 
-	 * Если вы хотите удалить только undefined, воспользуйтесь функцией JW.clean.
+	 * If you want to remove `undefined` values only, try JW.clean function.
 	 * 
-	 * Пример:
+	 * Example:
 	 * 
-	 *     var x = {          // Результат: y = {
+	 *     var x = {          // Result: y = {
 	 *         a : 10,        //     a: 10,
 	 *         b : 20,        //     b: 20
 	 *         c : null,      //
@@ -439,11 +419,8 @@ JW.apply(JW, {
 	 *
 	 * @static
 	 *
-	 * @param {Object} target
-	 * Словарь.
-	 *
-	 * @returns {Object}
-	 * Очищенный словарь.
+	 * @param {Object} target Object.
+	 * @returns {Object} Cleared object.
 	 */
 	cleann: function(source) {
 		var result = {};
@@ -458,45 +435,34 @@ JW.apply(JW, {
 	/**
 	 * @method toArray
 	 *
-	 * Преобразует объект в массив. Объект должен иметь свойство length и элементы, пронумерованные от 0 до
-	 * (length - 1).
+	 * Converts object to array. Object must have `length` property and keys from 0 to (`length` - 1).
 	 * 
-	 * Примером такого объекта является список аргументов функции. Это позволяет применять произвольные методы массива
-	 * к списку аргументов.
+	 * Example of such object is function `arguments` list. You can use this method to apply arbitrary
+	 * array methods to `arguments` list.
 	 * 
-	 * Пример
+	 * Example:
 	 * 
-	 *     function applyOperations(
-	 *         value
-	 *         // operations
-	 *         ) {
+	 *     function applyOperations(value) {
 	 *         var operations = JW.toArray(arguments, 1);
-	 *         // ...
+	 *         JW.Array.{@link JW.Array#static-method-each each}(operations, function(operation) {
+	 *             operation(value);
+	 *         });
 	 *     }
 	 *
 	 * @static
 	 *
-	 * @param {Mixed} a
-	 * Исходный объект.
-	 *
-	 * @param {number} [index]
-	 * Номер аргумента, начиная с которого выполнить преобразование. По умолчанию, преобразует все аргументы.
-	 *
-	 * @param {number} [count]
-	 * Количество аргументов для преобразования. По умолчанию, преобразует все аргументы, начиная с index.
-	 *
-	 * @returns {Array}
-	 * Массив.
+	 * @param {Mixed} a Source object.
+	 * @param {number} [index] Index of first item to convert. Defaults to 0.
+	 * @param {number} [count] Count of items to convert. Defaults to (`length` - `index`).
+	 * @returns {Array} Array.
 	 */
 	/**
-	 * Эквивалент метода JW.toArray.
+	 * JW.toArray shortcut.
 	 * @static
-	 * @param {Mixed} a Исходный объект.
-	 * @param {number} [index]
-	 * Номер аргумента, начиная с которого выполнить преобразование. По умолчанию, преобразует все аргументы.
-	 * @param {number} [count]
-	 * Количество аргументов для преобразования. По умолчанию, преобразует все аргументы, начиная с index.
-	 * @returns {Array} Массив.
+	 * @param {Mixed} a Source object.
+	 * @param {number} [index] Index of first item to convert. Defaults to 0.
+	 * @param {number} [count] Count of items to convert. Defaults to (`length` - `index`).
+	 * @returns {Array} Array.
 	 */
 	args: function(a, index, count) {
 		index = index || 0;
@@ -509,26 +475,26 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Пустая функция.
+	 * Empty function.
 	 * @static
 	 * @returns {void}
 	 */
 	emptyFn: function() {},
 	
 	/**
-	 * Универсальная функция сравнения значений для сортировки массива.
+	 * Universal native types comparer for array sorting.
 	 * 
-	 * - Возвращает 1, если x > y
-	 * - Возвращает -1, если x < y
-	 * - Возвращает 0, если x == y
+	 * - Returns 1, if x > y
+	 * - Returns -1, if x < y
+	 * - Returns 0, if x == y
 	 * 
-	 * Функция умеет сравнивать: boolean, number, string, Array.
+	 * You can compare next types: boolean, number, string, Array.
 	 *
 	 * @static
-	 * @param {Mixed} x Первое значение.
-	 * @param {Mixed} y Второе значение.
-	 * @param {boolean} caseInsensitive Не учитывать регистр.
-	 * @returns {number} Результат сравнения.
+	 * @param {Mixed} x First value.
+	 * @param {Mixed} y Second value.
+	 * @param {boolean} caseInsensitive Compare strings ignoring letters case. Defaults to false.
+	 * @returns {number} Comparing result.
 	 */
 	cmp: function(x, y, caseInsensitive) {
 		if (typeof x === "boolean" && typeof y === "boolean") {
@@ -551,21 +517,21 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Эквивалент JW.cmp(x, y, true). Сравнивает значения без учета регистра.
+	 * Equivalent for `JW.cmp(x, y, true)`. Compares two values ignoring letters case in strings.
 	 * @static
-	 * @param {Mixed} x Первое значение.
-	 * @param {Mixed} y Второе значение.
-	 * @returns {number} Результат сравнения.
+	 * @param {Mixed} x First value.
+	 * @param {Mixed} y Second value.
+	 * @returns {number} Comparing result.
 	 */
 	cmpCaseInsensitive: function(x, y) {
 		return JW.cmp(x, y, true);
 	},
 	
 	/**
-	 * Возвращает элемент объекта по выражению. Выражение представляет собой несколько слов, записанных в массиве или в
-	 * строке через точку. Если field равен null, undefined или пустой строке, то функция вернет obj.
+	 * Returns object item by expression. Expression is several words, passed in array of string joined by periods.
+	 * If `field` is `null`, `undefined` or blank string, function will return `obj`.
 	 * 
-	 * Пример 1
+	 * Example 1:
 	 * 
 	 *     var obj = {
 	 *         abc : [
@@ -577,12 +543,12 @@ JW.apply(JW, {
 	 *     
 	 *     return JW.get(obj, "abc.0.qwe"); // "xyz"
 	 *     
-	 *     // эквивалентный вариант
+	 *     // Equivalent code
 	 *     return JW.get(obj, [ "abc", 0, "qwe" ]); // "xyz"
 	 * 
-	 * Функция используется коллбеками JW.byField и JW.byValue.
+	 * Function represents logic of JW.byField and JW.byValue callbacks.
 	 * 
-	 * Пример 2
+	 * Example 2:
 	 * 
 	 *     var arr = [
 	 *         {
@@ -594,15 +560,15 @@ JW.apply(JW, {
 	 *         }
 	 *     ];
 	 *     
-	 *     return JW.Array.search(arr, JW.byValue("id", 2)).name; // "Second item"
+	 *     return JW.Array.{@link JW.Array#static-method-search search}(arr, JW.byValue("id", 2)).name; // "Second item"
 	 * 
-	 * В данном примере функция JW.get неявно вызывается внутри метода JW.byValue с аргументом field === "id".
+	 * In this example, function JW.get is called inside JW.byValue function implicitly with argument `field` === "id".
 	 *
 	 * @static
-	 * @param {Object} obj Объект.
-	 * @param {string/Array} field Название элемента объекта. Набор слов массивом или строкой через точку.
-	 * @param {Mixed} def Значение, которое вернется, если элемент не найден. По умолчанию undefined.
-	 * @returns {Mixed} Элемент объекта.
+	 * @param {Object} obj Object.
+	 * @param {string/Array} expression Expression.
+	 * @param {Mixed} def Value to return if item with such expression doesn't exist in object. Defaults to `undefined`.
+	 * @returns {Mixed} Object item.
 	 */
 	get: function(obj, field, def) {
 		if (!field) {
@@ -624,10 +590,9 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Присваивает элемент объекта по выражению. Выражение представляет собой несколько слов, записанных в массиве или
-	 * в строке через точку.
+	 * Assigns object item by expression. Expression is several words, passed in array of string joined by periods.
 	 * 
-	 * Пример:
+	 * Example:
 	 * 
 	 *     var obj = {
 	 *         abc : [
@@ -637,15 +602,15 @@ JW.apply(JW, {
 	 *         ]
 	 *     };
 	 *     
-	 *     return JW.set(obj, "def", "abc.0.qwe"); // заменит значение "xyz" на "def"
+	 *     JW.set(obj, "def", "abc.0.qwe"); // replace "xyz" with "def"
 	 *     
-	 *     // эквивалентный вариант
-	 *     return JW.set(obj, "def", [ "abc", 0, "qwe" ]); // заменит значение "xyz" на "def"
+	 *     // equivalent code
+	 *     JW.set(obj, "def", [ "abc", 0, "qwe" ]); // replace "xyz" with "def"
 	 *
 	 * @static
-	 * @param {Object} obj Объект.
-	 * @param {Mixed} value Значение.
-	 * @param {string/Array} field Название элемента объекта. Набор слов массивом или строкой через точку.
+	 * @param {Object} obj Object.
+	 * @param {Mixed} value Value.
+	 * @param {string/Array} field Expression.
 	 * @returns {void}
 	 */
 	set: function(obj, value, field) {
@@ -667,18 +632,18 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Возвращает уникальный идентификатор объекта. Вернет {@link JW.Class#_iid iid} объекта, если он является
-	 * экземпляром JW.Class, в противном случае вернет сам объект.
+	 * Returns object unique ID. Returns {@link JW.Class#_iid iid} of object if it is instance of JW.Class,
+	 * else returns the object itself.
 	 *
-	 * Эта функция является значением о умолчанию для полей JW.AbstractArray#getKey и JW.AbstractMap#getKey, а также
-	 * для параметра getKey статических методов JW.Array#static-method-detectSplice,
+	 * This function is used as default result for JW.AbstractArray#getKey and JW.AbstractMap#getKey, and also for
+	 * getKey parameter of static methods JW.Array#static-method-detectSplice,
 	 * JW.Array#static-method-performSplice, JW.Array#static-method-detectReorder,
 	 * JW.Array#static-method-performReorder, JW.Map#static-method-detectReindex,
 	 * JW.Map#static-method-performReindex.
 	 *
 	 * @static
-	 * @param {Object} obj Объект.
-	 * @returns {Mixed} Уникальный идентификатор объекта.
+	 * @param {Object} obj Object.
+	 * @returns {Mixed} Unique object ID.
 	 */
 	iid: function(obj) {
 		return (typeof obj === "object") ? obj._iid : obj;
@@ -686,16 +651,16 @@ JW.apply(JW, {
 	
 	
 	/**
-	 * Уничтожает объект, вызвав его метод {@link JW.Class#destroy destroy}. Удобно использовать в конфигурации конвертеров:
+	 * Calls object method {@link JW.Class#destroy destroy}. Can be used in mappers configuration:
 	 * 
 	 *     var mapper = collection.createMapper({
 	 *         createItem  : function(data) { return new View(data); },
-	 *         destroyItem : JW.destroy, // вместо function(view) { view.destroy(); }
+	 *         destroyItem : JW.destroy, // shorthand for function(view) { view.destroy(); }
 	 *         scope       : this
 	 *     });
 	 *
 	 * @static
-	 * @param {Object} obj Объект.
+	 * @param {Object} obj Object.
 	 * @returns {void}
 	 */
 	destroy: function(obj) {
@@ -703,64 +668,62 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Берет значение value по модулю mod. Функция работает корректно для любого вещественного value и положительного
-	 * вещественного mod. Возвращает значение в полуинтервале [0, mod).
+	 * Returns the remainder of `value` / `mod`. Unlike % operation, work correctly even for decimal `value` and `mod`.
+	 * Returns result in semi-interval [0, `mod`).
 	 * @static
-	 * @param {number} value Значение.
-	 * @param {number} mod Модуль.
-	 * @returns {number} value по модулю mod.
+	 * @param {number} value Value.
+	 * @param {number} mod Divider.
+	 * @returns {number} Remainder.
 	 */
 	mod: function(value, mod) {
 		return value - mod * Math.floor(value / mod);
 	},
 	
 	/**
-	 * Берет значение value по модулю mod. Функция работает корректно для любого вещественного value и положительного
-	 * вещественного mod. Возвращает значение в полуинтервале [-mod/2, mod/2).
+	 * Returns the remainder of `value` / `mod`. Unlike % operation, work correctly even for decimal `value` and `mod`.
+	 * Returns result in semi-interval [-`mod` / 2, `mod` / 2).
 	 * @static
-	 * @param {number} value Значение.
-	 * @param {number} mod Модуль.
-	 * @returns {number} value по модулю mod.
+	 * @param {number} value Value.
+	 * @param {number} mod Divider.
+	 * @returns {number} Remainder.
 	 */
 	smod: function(value, mod) {
 		return value - mod * Math.round(value / mod);
 	},
 	
 	/**
-	 * Возвращает знак числа `value`: 0, 1 или -1.
+	 * Returns `value` number sign: 0, 1 or -1.
 	 * @static
-	 * @param {number} value Значение.
-	 * @returns {number} Знак.
+	 * @param {number} value Value.
+	 * @returns {number} Sign.
 	 */
 	sgn: function(value) {
 		return !value ? 0 : value > 0 ? 1 : -1;
 	},
 	
 	/**
-	 * Возвращает ненулевой знак числа `value`: 1 или -1. Для нуля вернет 1.
+	 * Returns non-zero `value` number sign: 1 or -1. Returns 1 for 0.
 	 * @static
-	 * @param {number} value Значение.
-	 * @returns {number} Знак.
+	 * @param {number} value Value.
+	 * @returns {number} Sign.
 	 */
 	sgnnz: function(value) {
 		return value >= 0 ? 1 : -1;
 	},
 	
 	/**
-	 * Закрепляет контекст вызова функции.
+	 * Specifies function call scope.
 	 * 
-	 * **Пример**
+	 * **Example**
 	 * 
 	 *     setTimeout(JW.inScope(this.onTimeout, this), 1000);
 	 * 
-	 * **Эквивалентная реализация**
+	 * is the same as
 	 * 
 	 *     var self = this;
-	 *     setTimeout(function() {
-	 *         self.onTimeout();
-	 *     }, 1000);
+	 *     setTimeout(function() { self.onTimeout(); }, 1000);
 	 * 
-	 * Контекст методов класса удобно закреплять в конструкторе до вызова конструктора базового класса:
+	 * It is convenient to specify class methods' call scope in constructor before superclass constructor call:
 	 * 
 	 *     var MyClass = function(el, message) {
 	 *         this._onClick = JW.inScope(this._onClick, this);
@@ -785,9 +748,9 @@ JW.apply(JW, {
 	 *     });
 	 *
 	 * @static
-	 * @param {Function} fn Функция.
-	 * @param {Object} scope Контекст вызова функции.
-	 * @returns {Function} Функция с закрепленным контекстом.
+	 * @param {Function} fn Function.
+	 * @param {Object} scope Call scope.
+	 * @returns {Function} Function with specified call scope.
 	 */
 	inScope: function(func, scope) {
 		return function() {
@@ -796,16 +759,16 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Возвращает коллбек-функцию для алгоритмов коллекций. Функция возвращает значение указанного поля
-	 * элемента коллекции. Поле элемента извлекается с помощью функции JW.get.
+	 * Returns callback function for collection algorithms. Function returns value of specified field
+	 * of collection item. Item field is retrieved using JW.get function.
 	 *
-	 * Пример (получить имена всех элементов коллекции):
+	 * **Example (get titles of all collection items):**
 	 *
-	 *     var titles = collection.$map(JW.byField("title"));
+	 *     var titles = collection.{@link JW.AbstractCollection#map map}(JW.byField("title"));
 	 *
 	 * @static
-	 * @param {string} field Имя поля элемента коллекции.
-	 * @returns {Function} Коллбек-функция.
+	 * @param {string} field Expression for JW.get function that specifies item field.
+	 * @returns {Function} Callback function.
 	 */
 	byField: function(field) {
 		return function(item) {
@@ -814,17 +777,17 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Возвращает коллбек-функцию для алгоритмов коллекций. Функция проверяет, равно ли (===) указанное поле элемента
-	 * коллекции указанному значению. Поле элемента извлекается с помощью функции JW.get.
+	 * Returns callback function for collection algorithms. Function checks whether specified field of collection item
+	 * is equal (===) to specified value. Item field is retrieved using JW.get function.
 	 *
-	 * Пример (найти элемент по id):
+	 * **Example (find item by ID):**
 	 *
-	 *     var item = collection.$search(JW.byValue("id", id));
+	 *     var item = collection.{@link JW.AbstractCollection#search search}(JW.byValue("id", id));
 	 *
 	 * @static
-	 * @param {string} field Имя поля элемента коллекции.
-	 * @param {Mixed} value Значение поля.
-	 * @returns {Function} Коллбек-функция.
+	 * @param {string} field Expression for JW.get function that specifies item field.
+	 * @param {Mixed} value Value.
+	 * @returns {Function} Callback function.
 	 */
 	byValue: function(field, value) {
 		return function(item) {
@@ -833,17 +796,17 @@ JW.apply(JW, {
 	},
 	
 	/**
-	 * Возвращает коллбек-функцию для алгоритмов коллекций. Функция вызывает указанный метод элемента коллекции
-	 * с указанными аргументами и возвращает результат запуска этого метода.
+	 * Returns callback function for collection algorithms. Function calls specified method of collection item
+	 * with specified arguments and returns the result of this call.
 	 *
-	 * Пример (отфильтровать задачи, относящиеся к указанной задаче):
+	 * **Example (filter tasks that relate to specified on):**
 	 *
-	 *     var tasks = collection.$filter(JW.byMethod("relatesTo", [task]));
+	 *     var tasks = collection.{@link JW.AbstractCollection#filter filter}(JW.byMethod("relatesTo", [task]));
 	 *
 	 * @static
-	 * @param {string} method Имя метода элемента коллекции.
-	 * @param {Array} [args] Аргументы метода.
-	 * @returns {Function} Коллбек-функция.
+	 * @param {string} method Collection item method name.
+	 * @param {Array} [args] Method arguments.
+	 * @returns {Function} Callback function.
 	 */
 	byMethod: function(method, args) {
 		args = args || [];

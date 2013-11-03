@@ -19,8 +19,8 @@
 
 /**
  * @class
- * Подписка на событие. Когда клиент подписывается на какое-то событие, ему следует сохранить объект-подписку, чтобы
- * впоследствии он мог отписаться от этого события путем уничтожения подписки.
+ * When client binds a handler to some event, it should store the attachment object to be able to
+ * unbind from this event by attachment destruction.
  * @extends JW.Class
  * @constructor
  */

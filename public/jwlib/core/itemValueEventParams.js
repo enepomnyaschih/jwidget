@@ -19,14 +19,14 @@
 
 /**
  * @class
- * `<T, V> extends JW.ValueEventParams<V>` Параметры события с элементом и значением. Обычно используется в событии изменения значения какого-либо
- * поля какого-либо элемента коллекции.
+ * `<T, V> extends JW.ValueEventParams<V>` Event params with item and value. Usually used in
+ * some item's field change event.
  * @extends JW.ValueEventParams
  *
  * @constructor
- * @param {Object} sender Отправитель события.
- * @param {T} item Элемент.
- * @param {V} value Значение.
+ * @param {Object} sender Event sender.
+ * @param {T} item Item.
+ * @param {V} value Value.
  */
 JW.ItemValueEventParams = function(sender, item, value) {
 	JW.ItemValueEventParams._super.call(this, sender, value);
@@ -35,6 +35,6 @@ JW.ItemValueEventParams = function(sender, item, value) {
 
 JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
 	/**
-	 * @property {T} item Элемент.
+	 * @property {T} item Item.
 	 */
 });

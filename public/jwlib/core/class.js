@@ -23,8 +23,8 @@ JW.ClassUtil = {
 	_fnTest: /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/,
 	
 	/**
-	 * Extends one class from another. Pass class members in "body" argument - all fields and methods of "body"
-	 * will become fields and methods of subclass. "body" contents move into subclass prorotype in
+	 * Extends one class from another. Pass class members in `body` argument - all fields and methods of `body`
+	 * will become fields and methods of subclass. `body` contents move into subclass prorotype in
 	 * slightly modified state.
 	 * 
 	 * You must define subclass constructor before using this function.

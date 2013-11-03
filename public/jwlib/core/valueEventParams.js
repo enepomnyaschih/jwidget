@@ -19,13 +19,12 @@
 
 /**
  * @class
- * `<V>` Параметры события со значением. Обычно используются в событии изменения значения какой-либо переменной или
- * поля.
+ * `<V>` Event params with value. Usually used in some variable or field change event.
  * @extends JW.EventParams
  *
  * @constructor
- * @param {Object} sender Отправитель события.
- * @param {V} value Значение.
+ * @param {Object} sender Event sender.
+ * @param {V} value Value.
  */
 JW.ValueEventParams = function(sender, value) {
 	JW.ValueEventParams._super.call(this, sender);
@@ -34,6 +33,6 @@ JW.ValueEventParams = function(sender, value) {
 
 JW.extend(JW.ValueEventParams, JW.EventParams, {
 	/**
-	 * @property {V} value Значение.
+	 * @property {V} value Value.
 	 */
 });

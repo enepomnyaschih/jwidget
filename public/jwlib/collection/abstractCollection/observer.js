@@ -42,7 +42,7 @@
  * then you can do it meeting OOD principles:
  *
  *     var observer = collection.{@link JW.AbstractCollection#createObserver createObserver}({
- *         {@link #cfg-change change}: function() { console.log("Коллекция изменилась"); }
+ *         {@link #cfg-change change}: function() { console.log("Collection is changed"); }
  *     });
  *
  * Synchronizer rules:

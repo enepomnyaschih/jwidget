@@ -20,14 +20,14 @@
 /**
  * @class
  *
- * Набор утилитарных функций для строк.
+ * String utility functions.
  */
 JW.String = {
 	/**
-	 * Экранирует специальные символы HTML в строке.
-	 * Преобразует символы &amp;, &gt;, &lt;, &quot; в `&amp;` `&gt;` `&lt;` `&quot;` соответственно.
-	 * @param {string} str Строка.
-	 * @returns {string} Результат.
+	 * Escapes special HTML symbols.
+	 * Converts symbols &amp;, &gt;, &lt;, &quot; to `&amp;` `&gt;` `&lt;` `&quot;` correspondingly.
+	 * @param {string} str String.
+	 * @returns {string} Result.
 	 */
 	htmlEncode: function(target) {
 		return String(target).
@@ -38,10 +38,10 @@ JW.String = {
 	},
 	
 	/**
-	 * Деэкранирует специальные символы HTML в строке.
-	 * Преобразует символы `&amp;` `&gt;` `&lt;` `&quot;` в &amp;, &gt;, &lt;, &quot; соответственно.
-	 * @param {string} str Строка.
-	 * @returns {string} Результат.
+	 * Unescapes special HTML symbols.
+	 * Converts sequences `&amp;` `&gt;` `&lt;` `&quot;` to &amp;, &gt;, &lt;, &quot; correspondingly.
+	 * @param {string} str String.
+	 * @returns {string} Result.
 	 */
 	htmlDecode: function(target) {
 		return String(target).
@@ -71,13 +71,13 @@ JW.String = {
 	},
 	
 	/**
-	 * Сокращает строку до указанного количества символов. Если строка укладывается в указанную длину, она не меняется.
-	 * В противном случае, она обрезается, и в конце добавляется подстрока ellipsis, так что итоговая строка
-	 * получается длины length.
-	 * @param {string} str Строка.
-	 * @param {number} length Максимальная длина искомой строки.
-	 * @param {string} [ellipsis] Конец строки при сокращении. По умолчанию равен многоточию `...`
-	 * @returns {string} Результат.
+	 * Shortens the string to specified length. If string is short enough, it doesn't change.
+	 * Otherwise, it is cutted, and `ellipsis` substring is appended so the resulting string length
+	 * equals to `length`.
+	 * @param {string} str String.
+	 * @param {number} length Maximum length of resulting string.
+	 * @param {string} [ellipsis] String tail for shortening. Defaults to `...`
+	 * @returns {string} Result.
 	 */
 	ellipsis: function(target, length, ellipsis) {
 		target = String(target);
@@ -89,15 +89,15 @@ JW.String = {
 	},
 	
 	/**
-	 * Дополняет строку в начале указанным символом до фиксированной длины.
-	 * Если строка длиннее указанной длины, она не меняется.
+	 * Prepends string with specified symbol at the beginning to adjust to specified length.
+	 * If string is long enough, it doesn't change.
 	 * 
-	 *     JW.String.prepend("123", 5, "0")  // "00123"
+	 *     JW.String.{@link #prepend prepend}("123", 5, "0")  // "00123"
 	 * 
-	 * @param {string} str Строка.
-	 * @param {number} length Длина искомой строки.
-	 * @param {string} ch Символ, которым дополнить строку.
-	 * @returns {string} Результат.
+	 * @param {string} str String.
+	 * @param {number} length Minimum length of resulting string.
+	 * @param {string} ch Symbol to prepend.
+	 * @returns {string} Result.
 	 */
 	prepend: function(target, length, ch) {
 		target = String(target);
@@ -111,12 +111,12 @@ JW.String = {
 	},
 	
 	/**
-	 * Переводит первый символ в верхний регистр.
+	 * Capitalizes first symbol.
 	 * 
-	 *     JW.String.capitalize("vasya")  // "Vasya"
+	 *     JW.String.{@link #capitalize capitalize}("vasya")  // "Vasya"
 	 * 
-	 * @param {string} str Строка.
-	 * @returns {string} Результат.
+	 * @param {string} str String.
+	 * @returns {string} Result.
 	 */
 	capitalize: function(target) {
 		target = String(target);
@@ -124,36 +124,36 @@ JW.String = {
 	},
 	
 	/**
-	 * Преобразует hyphen-style в camelStyle.
+	 * Converts hyphen-style to camelStyle.
 	 * 
-	 *     JW.String.camel("i-love-js")  // "iLoveJs"
+	 *     JW.String.{@link #camel camel}("i-love-js")  // "iLoveJs"
 	 *
-	 * @param {string} str Строка.
-	 * @returns {string} Результат.
+	 * @param {string} str String.
+	 * @returns {string} result.
 	 */
 	camel: function(target) {
 		return String(target).replace(/-([a-z])/ig, JW.String._fcamel);
 	},
 	
 	/**
-	 * Преобразует camelStyle в hyphen-style.
+	 * Converts camelStyle to hyphen-style.
 	 * 
-	 *     JW.String.hyphen("iLoveJs")  // "i-love-js"
+	 *     JW.String.{@link #hyphen hyphen}("iLoveJs")  // "i-love-js"
 	 *
-	 * @param {string} str Строка.
-	 * @returns {string} Результат.
+	 * @param {string} str String.
+	 * @returns {string} Result.
 	 */
 	hyphen: function(target) {
 		return String(target).replace(/([A-Z])/g, JW.String._fhyphen);
 	},
 	
 	/**
-	 * Удаляет пробельные символы в начале и в конце строки.
+	 * Removed whitespace symbols at begin and end of string.
 	 * 
-	 *     JW.String.trim("\t\tI love JS!    ")  // "I love JS!"
+	 *     JW.String.{@link #trim trim}("\t\tI love JS!    ")  // "I love JS!"
 	 *
-	 * @param {string} str Строка.
-	 * @returns {string} Результат.
+	 * @param {string} str String.
+	 * @returns {string} Result.
 	 */
 	trim: function(target) {
 		return String(target).replace(/^\s*/, "").replace(/\s*$/, "");

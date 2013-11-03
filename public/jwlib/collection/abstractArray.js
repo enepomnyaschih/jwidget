@@ -185,7 +185,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	
 	/**
 	 * Returns index of last collection item. If collection is empty, returns `undefined`.
-	 * @returns {number} индекс.
+	 * @returns {number} Index.
 	 */
 	getLastKey: function() {
 		var l = this.items.length;

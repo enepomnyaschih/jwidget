@@ -29,7 +29,6 @@
  * @constructor
  * @param {Object} [items] Initial contents. By default, created collection is empty.
  * @param {boolean} [adapter] Create map as adapter of `items`. Defaults to false, so `items` is copied.
- * копия словаря items.
  */
 JW.ObservableMap = function(json, adapter) {
 	JW.ObservableMap._super.call(this, json, adapter);

@@ -28,7 +28,7 @@
  * @extends JW.AbstractMap
  *
  * @constructor
- * @param {Map} [items] `<T>` Initial contents. By default, created collection is empty.
+ * @param {Object} [items] `<T>` Initial contents. By default, created collection is empty.
  * @param {boolean} [adapter] Create map as adapter of `items`. Defaults to false, so `items` is copied.
  */
 JW.Map = function(json, adapter) {
@@ -831,7 +831,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @param {Object} newItems `<T>` New map contents.
 	 * @param {Function} [getKey]
 	 * Function which returns unique key of an item in this collection.
-	 * Defaults to {@link #static-method-getKey}.
+	 * Defaults to JW.iid.
 	 * If collection consists of instances of JW.Class, then it's all right.
 	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {Object}
@@ -854,7 +854,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @param {Object} newItems `<T>` New map contents.
 	 * @param {Function} [getKey]
 	 * Function which returns unique key of an item in this collection.
-	 * Defaults to {@link #static-method-getKey}.
+	 * Defaults to JW.iid.
 	 * If collection consists of instances of JW.Class, then it's all right.
 	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {void}

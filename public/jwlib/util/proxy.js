@@ -20,15 +20,15 @@
 /**
  * @class
  *
- * `<T>` Адаптер объекта jWidget. Обертка JW.Class над произвольным значением типа T.
+ * `<T>` jWidget object adapter. JW.Class wrapper of arbitrary value.
  *
- * Поскольку некоторые классы jWidget работают исключительно с экземплярами JW.Class (например, JW.AbstractSet),
- * библиотека предлагает простой адаптер для приведения любых объектов и значений к классу JW.Class.
+ * Since some jWidget classes work with JW.Class instances only (for example, JW.AbstractSet),
+ * the library provides a simple adapter for any objects and values conversion to JW.Class.
  *
  * @extends JW.Class
  *
  * @constructor
- * @param {T} value Объект.
+ * @param {T} value Object.
  */
 JW.Proxy = function(value) {
 	JW.Proxy._super.call(this);
@@ -37,6 +37,6 @@ JW.Proxy = function(value) {
 
 JW.extend(JW.Proxy, JW.Class, {
 	/**
-	 * @property {T} value Объект.
+	 * @property {T} value Object.
 	 */
 });
