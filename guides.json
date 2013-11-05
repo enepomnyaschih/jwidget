@@ -63,6 +63,14 @@
 					{
 						"name": "jwclass",
 						"title": "JW.Class"
+					},
+					{
+						"name": "jwevent",
+						"title": "JW.Event"
+					},
+					{
+						"name": "jwabstractcollection",
+						"title": "JW.AbstractCollection"
 					}
 				]
 			}
