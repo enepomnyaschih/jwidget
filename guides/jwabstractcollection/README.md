@@ -69,57 +69,57 @@ JW.AbstractArray#performReorder, требуют, чтобы у каждого э
 
 Получение содержимого:
 
-- {@link JW.AbstractCollection#getLength} - Возвращает количество элементов в коллекции.
-- {@link JW.AbstractCollection#isEmpty} - Проверяет коллекцию на пустоту.
-- {@link JW.AbstractCollection#getFirst} - Возвращает первый элемент коллекции.
-- {@link JW.AbstractCollection#containsItem} - Содержит ли коллекция элемент.
+- {@link JW.AbstractCollection#getLength getLength} - Возвращает количество элементов в коллекции.
+- {@link JW.AbstractCollection#isEmpty isEmpty} - Проверяет коллекцию на пустоту.
+- {@link JW.AbstractCollection#getFirst getFirst} - Возвращает первый элемент коллекции.
+- {@link JW.AbstractCollection#containsItem containsItem} - Содержит ли коллекция элемент.
 
 Алгоритмы перебора:
 
-- {@link JW.AbstractCollection#every} - Проверяет все элементы по критерию.
+- {@link JW.AbstractCollection#every every} - Проверяет все элементы по критерию.
 Возвращает true тогда и только тогда, когда все элементы удовлетворяют критерию.
-- {@link JW.AbstractCollection#some} - Проверяет каждый элемент по критерию.
+- {@link JW.AbstractCollection#some some} - Проверяет каждый элемент по критерию.
 Возвращает true тогда и только тогда, когда хотя бы один элемент удовлетворяет критерию.
-- {@link JW.AbstractCollection#each} - Перебирает элементы.
-- {@link JW.AbstractCollection#search} - Ищет элемент по критерию.
+- {@link JW.AbstractCollection#each each} - Перебирает элементы.
+- {@link JW.AbstractCollection#search search} - Ищет элемент по критерию.
 Возвращает первый элемент, удовлетворяющий критерию.
-- {@link JW.AbstractCollection#filter}, JW.AbstractCollection#$filter - Фильтрует коллекцию по критерию.
+- {@link JW.AbstractCollection#filter filter}, {@link JW.AbstractCollection#$filter $filter} - Фильтрует коллекцию по критерию.
 Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
-- {@link JW.AbstractCollection#map}, JW.AbstractCollection#$map - Отображает элементы коллекции.
+- {@link JW.AbstractCollection#map map}, {@link JW.AbstractCollection#$map $map} - Отображает элементы коллекции.
 Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
 коллекции.
-- {@link JW.AbstractCollection#toSorted}, JW.AbstractCollection#$toSorted, JW.AbstractCollection#toSortedComparing, JW.AbstractCollection#$toSortedComparing -
+- {@link JW.AbstractCollection#toSorted toSorted}, {@link JW.AbstractCollection#$toSorted $toSorted}, {@link JW.AbstractCollection#toSortedComparing toSortedComparing}, {@link JW.AbstractCollection#$toSortedComparing $toSortedComparing} -
 Строит массив из элементов коллекции, отсортированный по индексу
 или компаратору.
-- {@link JW.AbstractCollection#index}, JW.AbstractCollection#$index - Индексирует коллекцию.
+- {@link JW.AbstractCollection#index index}, {@link JW.AbstractCollection#$index $index} - Индексирует коллекцию.
 Строит словарь, в ключах которого находятся индексы элементов, а в значениях - соответствующие элементы.
-- {@link JW.AbstractCollection#toArray}, JW.AbstractCollection#$toArray - Строит новый массив из элементов коллекции.
-- {@link JW.AbstractCollection#toSet}, JW.AbstractCollection#$toSet - Строит новое множество из элементов коллекции.
-- {@link JW.AbstractCollection#asArray}, JW.AbstractCollection#$asArray - Представляет коллекцию в виде массива.
-- {@link JW.AbstractCollection#asSet}, JW.AbstractCollection#$asSet - Представляет коллекцию в виде множества.
+- {@link JW.AbstractCollection#toArray toArray}, {@link JW.AbstractCollection#$toArray $toArray} - Строит новый массив из элементов коллекции.
+- {@link JW.AbstractCollection#toSet toSet}, {@link JW.AbstractCollection#$toSet $toSet} - Строит новое множество из элементов коллекции.
+- {@link JW.AbstractCollection#asArray asArray}, {@link JW.AbstractCollection#$asArray $asArray} - Представляет коллекцию в виде массива.
+- {@link JW.AbstractCollection#asSet asSet}, {@link JW.AbstractCollection#$asSet $asSet} - Представляет коллекцию в виде множества.
 
 Изменение коллекции:
 
-- {@link JW.AbstractCollection#removeItem} - Удаляет первое вхождение элемента из коллекции.
-- {@link JW.AbstractCollection#removeItems} - Удаляет все вхождения элементов из коллекции.
-- {@link JW.AbstractCollection#clear}, JW.AbstractCollection#$clear, JW.AbstractCollection#tryClear - Очищает коллекцию.
+- {@link JW.AbstractCollection#removeItem removeItem} - Удаляет первое вхождение элемента из коллекции.
+- {@link JW.AbstractCollection#removeItems removeItems} - Удаляет все вхождения элементов из коллекции.
+- {@link JW.AbstractCollection#clear clear}, {@link JW.AbstractCollection#$clear $clear}, {@link JW.AbstractCollection#tryClear tryClear} - Очищает коллекцию.
 
 Создание синхронизаторов:
 
-- {@link JW.AbstractCollection#createMapper} - Создает конвертер элементов.
-- {@link JW.AbstractCollection#createFilterer} - Создает фильтровщик.
-- {@link JW.AbstractCollection#createLister} - Создает конвертер в множество.
-- {@link JW.AbstractCollection#createIndexer} - Создает индексатор.
-- {@link JW.AbstractCollection#createOrderer} - Создает конвертер в массив (упорядочитель).
-- {@link JW.AbstractCollection#createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
-- {@link JW.AbstractCollection#createObserver} - Создает наблюдатель.
+- {@link JW.AbstractCollection#createMapper createMapper} - Создает конвертер элементов.
+- {@link JW.AbstractCollection#createFilterer createFilterer} - Создает фильтровщик.
+- {@link JW.AbstractCollection#createLister createLister} - Создает конвертер в множество.
+- {@link JW.AbstractCollection#createIndexer createIndexer} - Создает индексатор.
+- {@link JW.AbstractCollection#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель).
+- {@link JW.AbstractCollection#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
+- {@link JW.AbstractCollection#createObserver createObserver} - Создает наблюдатель.
 
 Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
 
-- {@link JW.AbstractCollection#createEmpty} - Создает пустую коллекцию того же типа.
-- {@link JW.AbstractCollection#createEmptyArray} - Создает пустой массив того же типа.
-- {@link JW.AbstractCollection#createEmptyMap} - Создает пустой словарь того же типа.
-- {@link JW.AbstractCollection#createEmptySet} - Создает пустое множество того же типа.
+- {@link JW.AbstractCollection#createEmpty createEmpty} - Создает пустую коллекцию того же типа.
+- {@link JW.AbstractCollection#createEmptyArray createEmptyArray} - Создает пустой массив того же типа.
+- {@link JW.AbstractCollection#createEmptyMap createEmptyMap} - Создает пустой словарь того же типа.
+- {@link JW.AbstractCollection#createEmptySet createEmptySet} - Создает пустое множество того же типа.
 
 Все те же самые методы доступны и для нативных коллекций JavaScript:
 

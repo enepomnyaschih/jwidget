@@ -71,6 +71,10 @@
 					{
 						"name": "jwabstractcollection",
 						"title": "JW.AbstractCollection"
+					},
+					{
+						"name": "jwabstractarray",
+						"title": "JW.AbstractArray"
 					}
 				]
 			}
