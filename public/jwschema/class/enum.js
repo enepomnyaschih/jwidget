@@ -30,7 +30,7 @@ JW.extend(JW.Schema.Class.Enum, JW.Schema.Class, {
 	
 	// override
 	_validateData: function(data, validation) {
-		!JW.isSet(JW.Array.indexOf(this.values, data)) && validation.addError("value is not an element of enumeration");
+		(JW.Array.indexOf(this.values, data) === -1) && validation.addError("value is not an element of enumeration");
 	},
 	
 	// override

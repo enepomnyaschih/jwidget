@@ -21,6 +21,7 @@ JW.Schema.Class.Dictionary = function(config) {
 	JW.Schema.Class.Dictionary._super.call(this, config);
 	config = config || {};
 	this.item = JW.defn(config.item, this.item);
+	this.key = JW.defn(config.key, this.key);
 };
 
 JW.extend(JW.Schema.Class.Dictionary, JW.Schema.Class, {
