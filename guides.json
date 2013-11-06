@@ -75,6 +75,10 @@
 					{
 						"name": "jwabstractarray",
 						"title": "JW.AbstractArray"
+					},
+					{
+						"name": "jwabstractmap",
+						"title": "JW.AbstractMap"
 					}
 				]
 			}
