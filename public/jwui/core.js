@@ -22,29 +22,29 @@
 /**
  * @class JW.UI
  *
- * Пространство имен для View-части библиотеки jWidget.
+ * Main jWidget UI library namespace.
  */
 JW.UI = {
 	/**
-	 * Задает HTML-шаблоны для подкласса JW.UI.Component.
+	 * Defines HTML templates for specified JW.UI.Component subclass.
 	 * 
-	 * Для каждого подкласса JW.UI.Component можно задать ряд шаблонов. Каждый шаблон имеет свое имя.
-	 * Получить шаблон компонента можно через словарь JW.UI.Component.templates.
+	 * You can define multiple templates for any subclass of JW.UI.Component. Each template has a name.
+	 * You can get component template via JW.UI.Component.templates dictionary.
 	 * 
-	 * При наследовании компонентов их шаблоны тоже наследуются.
+	 * Templates are inherited together with component classes.
 	 * 
-	 * Для любого подкласса JW.UI.Component определен по крайней мере один шаблон, который именуется `main`.
-	 * Это главный шаблон, по которому рендерятся все компоненты данного класса. По умолчанию, `main` равен `<div />`.
-	 * Как правило, шаблона `main` достаточно для большинства компонентов. Этот шаблон применяется автоматически,
-	 * тогда как остальные шаблоны нужно использовать вручную.
+	 * Each component class has at least one template, its name is `main`. This is the main template which is
+	 * used to render the component. By default, `main` equals to `<div />`.
+	 * Usually, `main` template is enough for the majority of components. This template is applied automatically,
+	 * unlike other templates which should be applied manually.
 	 * 
-	 * Функция JW.UI.template вызывается автоматически при подключении `jw.html`-файлов через
-	 * [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru). Для подробностей, смотрите
-	 * [Учебник. Часть 6. Инфраструктура проекта](#!/guide/sample6).
+	 * JW.UI.template function is called automatically if you attach `jw.html` files via
+	 * [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en). See
+	 * [Getting started. Part 6. Project infrastructure](#!/guide/sample6) for details.
 	 *
 	 * @static
-	 * @param {Function} cls Класс, унаследованный от JW.UI.Component.
-	 * @param {Object} tpls Шаблоны для добавления/переопределения.
+	 * @param {Function} cls JW.UI.Component subclass.
+	 * @param {Object} tpls Templates to add or override.
 	 */
 	template: function(cls, tpls) {
 		if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls) {
@@ -57,24 +57,32 @@ JW.UI = {
 	},
 	
 	/**
-	 * Проверяет, является ли переменная [элементом jQuery](http://api.jquery.com/).
+	 * Checks whether x is [jQuery element](http://api.jquery.com/).
 	 * @static
-	 * @param {Mixed} x Переменная.
-	 * @returns {boolean} Переменная является элементом jQuery.
+	 * @param {Mixed} x
+	 * @returns {boolean} Result.
 	 */
 	isElement: function(v) {
 		return v instanceof jQuery.fn.init;
 	},
 	
 	/**
-	 * Запускает метод `preventDefault` для [события jQuery](http://api.jquery.com/category/events/event-object/).
-	 *
-	 * Используется для отмены поведения по умолчанию некоторого события:
-	 *
+	 * Calls `preventDefault` method for [jQuery event](http://api.jquery.com/category/events/event-object/).
+	 * 
+	 * Use this way:
+	 * 
 	 *     el.click(JW.UI.preventDefault);
-	 *
+	 * 
+	 * Shorthand for
+	 * 
+	 *     el.click(JW.byMethod("preventDefault"));
+	 * 
+	 * and
+	 * 
+	 *     el.click(function(e) { e.preventDefault(); });
+	 * 
 	 * @static
-	 * @param {Object} event Событие jQuery.
+	 * @param {Object} event jQuery event.
 	 */
 	preventDefault: function(event) {
 		event.preventDefault();

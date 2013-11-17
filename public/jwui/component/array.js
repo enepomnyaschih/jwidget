@@ -20,9 +20,10 @@
 /**
  * @class
  *
- * Список дочерних компонентов JW.UI.Component.
+ * Child component array wrapper in JW.UI.Component.
  * 
- * Возвращается методом JW.UI.Component.addArray. Если его уничтожить, дочерние компоненты будут удалены из родителя.
+ * Returned by JW.UI.Component#addArray method. If you'll destroy this object, child components will be removed
+ * from parent.
  *
  * @extends JW.Class
  */

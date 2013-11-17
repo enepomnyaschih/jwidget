@@ -20,13 +20,13 @@
 /**
  * @class jQuery
  *
- * Элемент jQuery. Расширен дополнительным набором методов.
+ * jQuery element is extended with several methods.
  */
 JW.apply(jQuery.fn, {
 	/**
-	 * Вставить элемент в качестве дочернего элемента текущего элемента в указанное место.
-	 * @param {jQuery} el Элемент.
-	 * @param {number} index Индекс дочернего элемента, перед которым вставить el.
+	 * Insert element to position with specified index inside current component.
+	 * @param {jQuery} el Element to insert.
+	 * @param {number} [index] Index of position to insert to. By default, appends the element.
 	 * @returns {jQuery} this.
 	 */
 	insert: function(item, index) {
@@ -41,11 +41,10 @@ JW.apply(jQuery.fn, {
 	},
 	
 	/**
-	 * Заменить элемент другим элементом в DOM. В отличие от стандартного replaceWith, не убивает
-	 * обработчики событий, а только убирает элемент из DOM.
-	 * @param {jQuery} el Элемент.
-	 * @param {boolean} [attrs=false] Присвоить аттрибут id (если определен) и добавить все классы текущего элемента
-	 * в el.
+	 * Replace element with another element in DOM. Unlike standard replaceWith, doesn't kill the event listeners.
+	 * @param {jQuery} el Element.
+	 * @param {boolean} [attrs=false] Assign "id" attribute (if defined) and add all classes of current element
+	 * to el.
 	 * @returns {jQuery} this.
 	 */
 	replaceBy: function(el, attrs) {
