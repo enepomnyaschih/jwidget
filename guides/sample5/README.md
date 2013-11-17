@@ -53,11 +53,11 @@
         
         renderTweets: function() {
             this._mapper = this.data.tweets.{@link JW.AbstractArray#createMapper createMapper}({
-                createItem: function(tweetData) {
+                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
                     return new mt.TweetView(tweetData);
                 },
-                destroyItem: JW.destroy,
-                scope: this
+                {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
+                {@link JW.AbstractCollection.Mapper#scope scope}: this
             });
             return this._mapper.{@link JW.AbstractArray.Mapper#property-target target};
         },

@@ -26,6 +26,7 @@ JW.String = {
 	/**
 	 * Escapes special HTML symbols.
 	 * Converts symbols &amp;, &gt;, &lt;, &quot; to `&amp;` `&gt;` `&lt;` `&quot;` correspondingly.
+	 * @static
 	 * @param {string} str String.
 	 * @returns {string} Result.
 	 */
@@ -40,6 +41,7 @@ JW.String = {
 	/**
 	 * Unescapes special HTML symbols.
 	 * Converts sequences `&amp;` `&gt;` `&lt;` `&quot;` to &amp;, &gt;, &lt;, &quot; correspondingly.
+	 * @static
 	 * @param {string} str String.
 	 * @returns {string} Result.
 	 */
@@ -74,6 +76,7 @@ JW.String = {
 	 * Shortens the string to specified length. If string is short enough, it doesn't change.
 	 * Otherwise, it is cutted, and `ellipsis` substring is appended so the resulting string length
 	 * equals to `length`.
+	 * @static
 	 * @param {string} str String.
 	 * @param {number} length Maximum length of resulting string.
 	 * @param {string} [ellipsis] String tail for shortening. Defaults to `...`
@@ -92,8 +95,9 @@ JW.String = {
 	 * Prepends string with specified symbol at the beginning to adjust to specified length.
 	 * If string is long enough, it doesn't change.
 	 * 
-	 *     JW.String.{@link #prepend prepend}("123", 5, "0")  // "00123"
+	 *     JW.String.prepend("123", 5, "0")  // "00123"
 	 * 
+	 * @static
 	 * @param {string} str String.
 	 * @param {number} length Minimum length of resulting string.
 	 * @param {string} ch Symbol to prepend.
@@ -113,8 +117,9 @@ JW.String = {
 	/**
 	 * Capitalizes first symbol.
 	 * 
-	 *     JW.String.{@link #capitalize capitalize}("vasya")  // "Vasya"
+	 *     JW.String.capitalize("vasya")  // "Vasya"
 	 * 
+	 * @static
 	 * @param {string} str String.
 	 * @returns {string} Result.
 	 */
@@ -126,8 +131,9 @@ JW.String = {
 	/**
 	 * Converts hyphen-style to camelStyle.
 	 * 
-	 *     JW.String.{@link #camel camel}("i-love-js")  // "iLoveJs"
+	 *     JW.String.camel("i-love-js")  // "iLoveJs"
 	 *
+	 * @static
 	 * @param {string} str String.
 	 * @returns {string} result.
 	 */
@@ -138,8 +144,9 @@ JW.String = {
 	/**
 	 * Converts camelStyle to hyphen-style.
 	 * 
-	 *     JW.String.{@link #hyphen hyphen}("iLoveJs")  // "i-love-js"
+	 *     JW.String.hyphen("iLoveJs")  // "i-love-js"
 	 *
+	 * @static
 	 * @param {string} str String.
 	 * @returns {string} Result.
 	 */
@@ -148,10 +155,11 @@ JW.String = {
 	},
 	
 	/**
-	 * Removed whitespace symbols at begin and end of string.
+	 * Removes whitespace symbols at begin and end of string.
 	 * 
-	 *     JW.String.{@link #trim trim}("\t\tI love JS!    ")  // "I love JS!"
+	 *     JW.String.trim("\t\tI love JS!    ")  // "I love JS!"
 	 *
+	 * @static
 	 * @param {string} str String.
 	 * @returns {string} Result.
 	 */
