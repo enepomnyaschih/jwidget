@@ -1,7 +1,7 @@
 ﻿/*!
 	jWidget Lib 0.7
 	
-	http://enepomnyaschih.github.io/jwidget/#!/guide/home
+	http://enepomnyaschih.github.io/jwidget/#!/guide/enhome
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	

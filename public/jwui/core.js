@@ -1,7 +1,7 @@
 ﻿/*!
 	jWidget UI 0.7
 	
-	http://enepomnyaschih.github.io/jwidget/#!/guide/home
+	http://enepomnyaschih.github.io/jwidget/#!/guide/enhome
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -40,7 +40,7 @@ JW.UI = {
 	 * 
 	 * JW.UI.template function is called automatically if you attach `jw.html` files via
 	 * [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en). See
-	 * [Getting started. Part 6. Project infrastructure](#!/guide/sample6) for details.
+	 * [Getting started. Part 6. Project infrastructure](#!/guide/ensample6) for details.
 	 *
 	 * @static
 	 * @param {Function} cls JW.UI.Component subclass.

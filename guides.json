@@ -2,6 +2,60 @@
 	{
 		"title": "English",
 		"items": [
+			{
+				"title": "General",
+				"items": [
+					{
+						"name": "enhome",
+						"title": "What is jWidget?"
+					},
+					{
+						"name": "enpros",
+						"title": "jWidget advantages"
+					},
+					{
+						"name": "enphilosophy",
+						"title": "jWidget philosophy"
+					},
+					{
+						"name": "endownload",
+						"title": "Download jWidget"
+					}
+				]
+			},
+			{
+				"title": "Getting started",
+				"items": [
+					{
+						"name": "ensample1",
+						"title": "Part 1. Model and view"
+					},
+					{
+						"name": "ensample2",
+						"title": "Part 2. Arrays of child components"
+					},
+					{
+						"name": "ensample3",
+						"title": "Part 3. Named child components"
+					},
+					{
+						"name": "ensample4",
+						"title": "Part 4. Events"
+					},
+					{
+						"name": "ensample5",
+						"title": "Part 5. Collection synchronizers"
+					},
+					{
+						"name": "ensample6",
+						"title": "Part 6. Project infrastructure"
+					},
+					{
+						"name": "enkeyclasses",
+						"title": "List of key classes"
+					}
+				]
+			}
 		]
 	},
 	{
@@ -11,19 +65,19 @@
 				"title": "Описание",
 				"items": [
 					{
-						"name": "home",
+						"name": "ruhome",
 						"title": "Что такое jWidget?"
 					},
 					{
-						"name": "pros",
+						"name": "rupros",
 						"title": "Преимущества jWidget"
 					},
 					{
-						"name": "philosophy",
+						"name": "ruphilosophy",
 						"title": "Философия jWidget"
 					},
 					{
-						"name": "download",
+						"name": "rudownload",
 						"title": "Скачать jWidget"
 					}
 				]
@@ -32,52 +86,52 @@
 				"title": "Учебник",
 				"items": [
 					{
-						"name": "sample1",
+						"name": "rusample1",
 						"title": "Часть 1. Модель и представление"
 					},
 					{
-						"name": "sample2",
+						"name": "rusample2",
 						"title": "Часть 2. Дочерние компоненты, массивы"
 					},
 					{
-						"name": "sample3",
+						"name": "rusample3",
 						"title": "Часть 3. Именованные дочерние компоненты"
 					},
 					{
-						"name": "sample4",
+						"name": "rusample4",
 						"title": "Часть 4. События"
 					},
 					{
-						"name": "sample5",
+						"name": "rusample5",
 						"title": "Часть 5. Синхронизаторы коллекций"
 					},
 					{
-						"name": "sample6",
+						"name": "rusample6",
 						"title": "Часть 6. Инфраструктура проекта"
 					}
 				]
 			},
 			{
-				"title": "Описание ключевых классов",
+				"title": "Ключевые классы",
 				"items": [
 					{
-						"name": "jwclass",
+						"name": "rujwclass",
 						"title": "JW.Class"
 					},
 					{
-						"name": "jwevent",
+						"name": "rujwevent",
 						"title": "JW.Event"
 					},
 					{
-						"name": "jwabstractcollection",
+						"name": "rujwabstractcollection",
 						"title": "JW.AbstractCollection"
 					},
 					{
-						"name": "jwabstractarray",
+						"name": "rujwabstractarray",
 						"title": "JW.AbstractArray"
 					},
 					{
-						"name": "jwabstractmap",
+						"name": "rujwabstractmap",
 						"title": "JW.AbstractMap"
 					}
 				]

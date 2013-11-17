@@ -113,7 +113,7 @@
  * Such interface provides simplicity, at one hand, and flexibility in Model-View architecture following regard,
  * at another hand.
  * 
- * [Getting started. Part 1. Model and view](#!/guide/sample1)
+ * [Getting started. Part 1. Model and view](#!/guide/ensample1)
  * 
  * ### More about child component arrays
  * 
@@ -123,7 +123,7 @@
  * That's the reason why we recommend to use jWidget JW.AbstractCollection in data model instead of native JavaScript
  * Array and Object: these collections have Observable-implementations and can be synchronized with each other.
  * 
- * [Getting started. Part 5. Collection synchronizers](#!/guide/sample5)
+ * [Getting started. Part 5. Collection synchronizers](#!/guide/ensample5)
  * 
  * ### More about render&lt;ChildId&gt; method
  * 
@@ -422,7 +422,7 @@
  * 
  * See more complicated example in article:
  * 
- * [Getting started. Part 6. Project infrastructure](#!/guide/sample6)
+ * [Getting started. Part 6. Project infrastructure](#!/guide/ensample6)
  * 
  * @extends JW.Class
  * @constructor
