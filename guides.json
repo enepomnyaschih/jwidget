@@ -1,51 +1,86 @@
 ﻿[
 	{
-		"title": "Описание",
+		"title": "English",
 		"items": [
-			{
-				"name": "home",
-				"title": "Что такое jWidget?"
-			},
-			{
-				"name": "pros",
-				"title": "Преимущества jWidget"
-			},
-			{
-				"name": "philosophy",
-				"title": "Философия jWidget"
-			},
-			{
-				"name": "download",
-				"title": "Скачать jWidget"
-			}
 		]
 	},
 	{
-		"title": "Учебник",
+		"title": "Русский",
 		"items": [
 			{
-				"name": "sample1",
-				"title": "Часть 1. Модель и представление"
+				"title": "Описание",
+				"items": [
+					{
+						"name": "home",
+						"title": "Что такое jWidget?"
+					},
+					{
+						"name": "pros",
+						"title": "Преимущества jWidget"
+					},
+					{
+						"name": "philosophy",
+						"title": "Философия jWidget"
+					},
+					{
+						"name": "download",
+						"title": "Скачать jWidget"
+					}
+				]
 			},
 			{
-				"name": "sample2",
-				"title": "Часть 2. Дочерние компоненты, массивы"
+				"title": "Учебник",
+				"items": [
+					{
+						"name": "sample1",
+						"title": "Часть 1. Модель и представление"
+					},
+					{
+						"name": "sample2",
+						"title": "Часть 2. Дочерние компоненты, массивы"
+					},
+					{
+						"name": "sample3",
+						"title": "Часть 3. Именованные дочерние компоненты"
+					},
+					{
+						"name": "sample4",
+						"title": "Часть 4. События"
+					},
+					{
+						"name": "sample5",
+						"title": "Часть 5. Синхронизаторы коллекций"
+					},
+					{
+						"name": "sample6",
+						"title": "Часть 6. Инфраструктура проекта"
+					}
+				]
 			},
 			{
-				"name": "sample3",
-				"title": "Часть 3. Именованные дочерние компоненты"
-			},
-			{
-				"name": "sample4",
-				"title": "Часть 4. События"
-			},
-			{
-				"name": "sample5",
-				"title": "Часть 5. Синхронизаторы коллекций"
-			},
-			{
-				"name": "sample6",
-				"title": "Часть 6. Инфраструктура проекта"
+				"title": "Описание ключевых классов",
+				"items": [
+					{
+						"name": "jwclass",
+						"title": "JW.Class"
+					},
+					{
+						"name": "jwevent",
+						"title": "JW.Event"
+					},
+					{
+						"name": "jwabstractcollection",
+						"title": "JW.AbstractCollection"
+					},
+					{
+						"name": "jwabstractarray",
+						"title": "JW.AbstractArray"
+					},
+					{
+						"name": "jwabstractmap",
+						"title": "JW.AbstractMap"
+					}
+				]
 			}
 		]
 	}
