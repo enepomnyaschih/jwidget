@@ -1,35 +1,34 @@
-﻿# Часть 1. Модель и представление
+﻿# Part 1. Model and view
 
-Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/1/](http://enepomnyaschih.github.io/mt/1/)
+Demo: [http://enepomnyaschih.github.io/mt/1/](http://enepomnyaschih.github.io/mt/1/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1](https://github.com/enepomnyaschih/mt/tree/mt-1) (ветка)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1](https://github.com/enepomnyaschih/mt/tree/mt-1) (Git branch)
 
-Серия примеров jWidget покажет, как разработать свой собственный Twitter за несколько шагов с помощью jWidget.
-Если вы хотите научиться разрабатывать мощные Model-View-приложения на jWidget, просим вас проделать все те же
-самые шаги в строгом соответствии, не отклоняясь в сторону. Если мотивация какого-либо действия вам непонятна, то,
-возможно, мы объясним ее на следующих шагах, но, в любом случае, не стоит сейчас делать что-либо по-своему.
+This jWidget samples series will show, how you can develop your own Twitter in several steps using jWidget.
+If you want to learn how to develop powerful Model-View-applications with jWidget, please follow all these steps
+carefully in the same order. If motivation of some action is unclear for you, then probably we'll explain it
+on next steps, but anyway don't involve any differences now.
 
-В этом примере мы впервые познакомимся с моделью и представлением, напишем простой визуальный компонент,
-который берет данные из модели для своего отображения.
+In the first sample we'll meet model and view and will develop a simple UI component which takes data from model
+to render itself.
 
-Для начала скачаем [jQuery](http://jquery.com), два модуля
-[jWidget](guides/download/jwidget.zip) и
-[файл сброса стилей](https://raw.github.com/enepomnyaschih/mt1/master/public/thirdparty/reset.css).
-Поместим их в папку thirdparty. Весь публичный контент, включая thirdparty, будем помещать в папку public.
+First, download [jQuery](http://jquery.com), two units of
+[jWidget](guides/download/jwidget.zip) and
+[style resetting file](https://raw.github.com/enepomnyaschih/mt1/master/public/thirdparty/reset.css).
+Drop it to "thirdparty" folder. All public content, including "thirdparty", will be located in folder "public".
 
-Создадим папку public/mt (Mini-Twitter) и договоримся, что все файлы проекта будем помещать туда. Соответственно, заведем
-пространство имен.
+Create folder "public/mt" (Mini-Twitter) and agree that all project-specific files will be located there.
+Let's define a namespace.
 
 **public/mt/mt.js**
 
     var mt = {};
 
-Добавим файлы с аватаром профиля
-[public/backend/avatar-32.png](https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-32.png) и
+Add files with profile avatar
+[public/backend/avatar-32.png](https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-32.png) and
 [public/backend/avatar-48.png](https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-48.png).
 
-Получится примерно такая структура файлов/папок:
+We'll get next file/folder structure:
 
     public/
         backend/
@@ -48,7 +47,7 @@
                 jwui.min.js
             reset.css
 
-Создадим файл public/index.html со следующим содержимым:
+Create file public/index.html with next content:
 
 **public/index.html**
 
@@ -70,23 +69,23 @@
         </body>
     </html>
 
-Каркас проекта завершен, начнем разработку.
+Project carcasus is prepared, so let's start development.
 
-Наша задача - разработать компонент для отображения твита:
+Our goal is to implement a component for tweet representation:
 
 {@img tweet-view.png}
 
-Определим, где здесь данные, т.е. то, что может быть различным для разных твитов:
+Determine, what is the data here, so what can be different for different tweets:
 
 {@img tweet-view-comments.png}
 
-Заведем классы, которые хранят все эти данные. Заведем пространство имен mt.data для всех классов модели.
+Create classes, which store this data. Define namespace mt.data for all model classes.
 
 **public/mt/data/data.js**
 
     mt.data = {};
 
-Теперь определим класс mt.data.Tweet, который будет моделью твита.
+Let's implement class mt.data.Tweet, which will be tweet model.
 
 **public/mt/data/tweet.js**
 
@@ -119,14 +118,14 @@
         }));
     };
 
-Для чего мы копируем каждое поле в конструкторе по отдельности? Почему мы просто не напишем
+Why do we copy each field one by one in constructor? Why we don't just write
 
     JW.apply(this, config);
 
-Дело в том, что таким образом мы явно даем интерпретатору информацию о том, какие поля есть в данном классе,
-что позволяет ему эффективно оптимизировать работу с этим классом (низкоуровневая оптимизация).
+The reason is that this way we tell interpreter, what fields does our class have, and it lets it
+to optimize work with this class effectively (low-level optimization).
 
-Разработка модели завершена. Перейдем к представлению. Определим компонент для твита.
+Model development is finished. Let's start view. Define tweet component.
 
 **public/mt/tweetview/tweetview.js**
 
@@ -141,7 +140,7 @@
         */
     });
 
-Далее, компоненту необходимо задать HTML-шаблон. Это делается следующим образом.
+Next, we need to bind an HTML template to this component. It can be done next way.
 
     JW.UI.template(mt.TweetView, {
         main:
@@ -165,10 +164,10 @@
             '</div>'
     });
 
-Это самый обычный HTML, единственной особенностью которого является наличие специальных атрибутов jwclass и jwid.
-jwclass - это корневой CSS-класс компонента, а также префикс для всех элементов, для которых задан jwid.
-CSS-класс каждого элемента, для которого вы определите jwid, будет равен `<jwclass>-<jwid>`. Так,
-приведенный выше шаблон раскроется в следующий фрагмент HTML:
+This is usual HTML, which has one difference: special attributes "jwclass" and "jwid".
+"jwclass" is a root CSS-class of the component, and the prefix for all elements which have "jwid" defined.
+CSS-class of each element with "jwid" will be `<jwclass>-<jwid>`. So,
+the template above will expand to next HTML:
 
     <div class="mt-tweet">
         <div class="mt-tweet-avatar"></div>
@@ -189,13 +188,12 @@ CSS-класс каждого элемента, для которого вы о�
         <div class="clear"></div>
     </div>
 
-Наличие общего префикса `mt-tweet-` у всех элементов компонента значительно упрощает верстку этого
-компонента с использованием таких CSS-препроцессоров, как [LESS](http://lesscss.org/) и
-[Stylus](http://learnboost.github.io/stylus/) (только не Sass - он не поддерживает нотацию `&-suffix`),
-но подробнее об этом в следующих разделах.
+Presence of common prefix `mt-tweet-` in all elements simplifies component slicing via various CSS-preprocessors
+like [LESS](http://lesscss.org/) and [Stylus](http://learnboost.github.io/stylus/)
+(but not Sass - it doesn't support `&-suffix` notation), but we'll explain it in details later.
 
-Настало время впервые запустить наше приложение. Для приложения нужны тестовые данные и точка входа.
-Определим их в файле boot.js.
+It is time to execute our application. To do it, we need testing data and main entry point.
+Let's define them in boot.js file.
 
 **public/boot.js**
 
@@ -217,10 +215,10 @@ CSS-класс каждого элемента, для которого вы о�
         tweetView.{@link JW.UI.Component#renderTo renderTo}("#container");
     });
 
-Как вы видите, мы сделали глобальные точки доступа к модели (tweetData) и представлению (tweetView). Это делать
-не обязательно, но это сильно упрощает отладку, если что-то пойдет не так.
+As you can see, we've provided global access points to model (tweetData) and view (tweetView). This is optional step
+which will simplify application debugging a lot if error will happen.
 
-Добавим все созданные файлы в index.html:
+Add all created files into index.html:
 
 **public/index.html**
 
@@ -246,16 +244,16 @@ CSS-класс каждого элемента, для которого вы о�
         </body>
     </html>
 
-И запустим приложение в браузере. Мы увидим нечто такое:
+And execute the application in browser. We'll see something like this:
 
 {@img result-1.png}
 
-Как видите, структура компонента уже прослеживается, но не видно данных.
-Нужно привязать данные к элементам компонента. Библиотека jWidget
-не дает для этого никакого магического HTML-синтаксиса. Шаблон остается таким, как прежде, меняется лишь код.
-Что реально дает нам jWidget, так это прямой и быстрый доступ к [jQuery-оберткам](http://api.jquery.com) над
-HTML-элементами, для которых мы определили атрибут jwid. Этот доступ предоставляется в
-методе {@link JW.UI.Component#renderComponent} через метод {@link JW.UI.Component#getElement}:
+As you can see, our component has a structure but doesn't have any data.
+Let's bind component elements to data. jWidget library doesn't provide any magic HTML syntax for this.
+So, template won't be changed, but we'll add some code in JS. The real tool that jWidget provides for us
+is direct and fast access to [jQuery-wrappers](http://api.jquery.com) of all HTML elements, which have
+"jwid" attribute defined. You can access these elements inside method {@link JW.UI.Component#renderComponent}
+via method {@link JW.UI.Component#getElement}:
 
 **public/mt/tweetview/tweetview.js**
 
@@ -307,13 +305,13 @@ HTML-элементами, для которых мы определили ат�
         }
     });
     
-    // ... здесь шаблон
+    // ... template
 
-Получим:
+Result:
 
 {@img result-2.png}
 
-В целом, работает, но выглядит ужасно. Покажем чудеса верстки.
+Works well, but looks poor. Let's demonstrate magic of slicing.
 
 **public/mt/tweetview/tweetview.css**
 
@@ -388,15 +386,15 @@ HTML-элементами, для которых мы определили ат�
       color: #609928;
     }
 
-Добавим CSS-файл в index.html:
+Add CSS-file into index.html:
 
     <link rel="stylesheet" type="text/css" href="mt/tweetview/tweetview.css" />
 
-В результате запуска приложения мы увидим то, что мы и хотели увидеть:
+As result, we'll see what we wanted to:
 
 {@img tweet-view.png}
 
-Рассмотрим еще кое-что. Попробуем оформить код компонента по-другому:
+Let's review one more thing. We can write JS code of component next way:
 
 **public/mt/tweetview/tweetview.js**
 
@@ -462,10 +460,9 @@ HTML-элементами, для которых мы определили ат�
         }
     });
     
-    // ... здесь шаблон
+    // ... template
 
-Этот код эквивалентен предыдущему. Количество строк увеличилось в 4 раза, но зато увеличилась и его читаемость.
-Каждый отдельный элемент рендерится через свой отдельный метод `render<ChildId>`, где `<ChildId>` равен jwid,
-записанному в CamelCase. Можете использовать тот или иной вариант, на ваш вкус. Лично я, автор библиотеки,
-предпочитаю использовать второй вариант. Он более гибкий: при наследовании компонента можно легко переопределить
-рендеринг того или иного элемента простой перегрузкой соответствующего метода.
+This code is equivalent to the first one. There is 4 times more code, but it became more readable. Each specific
+element is rendered via its own method `render<ChildId>`, where `<ChildId>` is its "jwid" written in capitalized
+CamelCase. You can use one way or another. I prefer second way because it is more flexible: you can override any
+element rendering in an inherited component class. Let's stick to this way in future samples.
