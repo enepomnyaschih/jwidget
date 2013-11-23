@@ -1,35 +1,35 @@
-﻿# Что такое jWidget?
+﻿# What is jWidget?
 
-jWidget - это объектно-ориентированная библиотека JavaScript для реализации приложений по архитектуре Model-View
-(Модель-Представление).
+jWidget is object-oriented JavaScript library for applications development based on Model-View architecture.
 
-За модель приложения отвечает модуль jWidget Lib, а за представление - jWidget UI.
+jWidget Lib unit is responsible for Model implementation, jWidget UI - for View implementation.
 
-**jWidget Lib** предоставляет ряд утилитарных классов и функций. jWidget Lib не зависит ни от каких сторонних библиотек и
-фреймворков. jWidget Lib одинаково хорошо подходит для разработки как JavaScript-приложений, так и NodeJS-приложений.
+**jWidget Lib** provides a number of utility classes and functions. jWidget Lib doesn't depend on any third-party
+libraries and frameworks. jWidget Lib is equally good for JavaScript and NodeJS applications development.
 
-Возможности jWidget Lib:
+jWidget Lib features:
 
-* Базовый класс JW.Class для создания и наследования классов
-* Класс JW.Event для работы с пользовательскими событиями
-* Классы коллекций, алгоритмы, **синхронизаторы** (см. JW.AbstractCollection)
+* Base class JW.Class for classes creation and inheritance
+* Class JW.Event for user events management
+* Collection classes, algorithms, **synchronizers** (see JW.AbstractCollection)
 
-**jWidget UI** - это небольшой объектно-ориентированный модуль для создания произвольных визуальных компонентов JavaScript
-на основе HTML-шаблонов. jWidget UI работает на основе [jQuery](http://jquery.com) и jWidget UI и идеально подходит
-для разработки сайтов с произвольным визуальным интерфейсом.
+**jWidget UI** is a small object-oriented unit for arbitrary UI components creation in JavaScript based on
+HTML templates. jWidget UI is based on [jQuery](http://jquery.com) and it is the perfect solution for applications
+development with custom UI.
 
-Возможности jWidget UI:
+jWidget UI features:
 
-* Базовый класс JW.UI.Component для создания и наследования визуальных компонентов по HTML-шаблону
-* Древесная структура приложения (наличие родительских и дочерних компонентов)
-* Интеграция с коллекциями jWidget Lib, позволяющая автоматически синхронизировать представление с моделью
-* Интеграция с [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/), позволяющая отделить HTML-шаблон от JS-кода
+* Base class JW.UI.Component for UI components creation and inheritance with HTML templates
+* Application tree structure (parent and child components management)
+* Integration with collections of jWidget Lib which automatically synchronizes view with model
+* Integration with [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/) which lets you to extract
+HTML templates into separate files
 
-Лицензия проекта - LGPL.
+Project license is LGPL.
 
-Текущая версия: 0.7
+Current version: 0.7
 
-<font size="5">[Скачать jWidget](guides/download/jwidget.zip)</font>
+<font size="5">[Download jWidget](guides/endownload/jwidget.zip)</font>
 
-Все замечания, предложения, отчеты об ошибках в программе и документации присылайте по адресу
-[enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com)
+Feel free to contact me by email [enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com) if you have any questions
+or bug reports.
