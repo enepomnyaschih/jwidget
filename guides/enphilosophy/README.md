@@ -1,54 +1,55 @@
-﻿# Философия jWidget
+﻿# jWidget philosophy
 
-Фреймворк jWidget сильно отличается от всех известных автору библиотеки UI-фреймворков на всех языках программирования
-своей философией. Ниже приведены общие правила для всех Model-View фреймворков, которые верны и для jWidget:
+jWidget framework differs from other well-known UI-frameworks (regardless of programming language) by its philosophy.
+Here are common rules for all Model-View frameworks:
 
-1. Все основные классы приложения делятся на модель (model) и представление (view).
-1. Классы модели хранят данные. Все данные хранятся в модели. Все классы модели нужно наследовать от JW.Class.
-1. Классы представления (компоненты) выводят информацию на экран. Все компоненты нужно наследовать от
-JW.UI.Component.
-1. Компонент имеет прямую ссылку на соответствующую модель. При действии пользователя компонент вызывает
-соответствующий метод модели, чтобы изменить ее.
-1. Модель не имеет прямых ссылок на представление, но выбрасывает события о своем изменении.
-1. Представление прослушивает события модели для того, чтобы вовремя обновляться.
+1. All main application classes are classified to model and view.
+1. Model classes store the data. All data is stored in model. All model classes should be inherited from JW.Class.
+1. View classes (components) render data to the screen. All components should be inherited from JW.UI.Component.
+1. Component has a direct reference to corresponding model. On user action, component calls corresponding
+method of model in order to modify it.
+1. Model doesn't have direct references to any views, but it triggers events about its modification.
+1. View listens model events to make neccessary updates on the screen in time.
 
-Но самый изюм фреймворка jWidget - это подход к работе с коллекциями. Это очень похоже на основы теории баз данных,
-но только на уровне UI. Ниже приведены правила работы с коллекциями jWidget:
+But the difference of jWidget compared to other frameworks is the approach to collection manupulations.
+It is very similar to database theory generals, but at the UI level. Collection manipulation rules in jWidget
+are listed below:
 
-1. Данные и компоненты структурированы на базе трех классов коллекций: массивов (JW.AbstractArray),
-словарей (JW.AbstractMap) и множеств (JW.AbstractSet). Все коллекции имеют общие интерфейсы
-(JW.AbstractCollection, JW.IndexedCollection). О сфере использования, преимуществах и недостатках каждой
-коллекции читайте общую теорию алгоритмов и структур данных.
-1. Каждая коллекция имеет две реализации: простая (JW.Array, JW.Map, JW.Set) и оповещающая
-(JW.ObservableArray, JW.ObservableMap, JW.ObservableSet). Оповещающие коллекции выбрасывают события о своем изменении.
-1. Не нужно прослушивать все события оповещающих коллекций вручную. Вместо этого предлагается использовать
-стандартные синхронизаторы jWidget. Синхронизаторы позволяют наладить связь между коллекциями:
-    - Конвертер элементов: JW.AbstractCollection.Mapper
-    - Конвертер в множество: JW.AbstractCollection.Lister
-    - Конвертер в словарь (индексатор): JW.AbstractCollection.Indexer
-    - Конвертер в массив (упорядочитель): JW.AbstractCollection.Orderer
-    - Конвертер в массив (сортировщик по компаратору): JW.AbstractCollection.SorterComparing
-    - Наблюдатель: JW.AbstractCollection.Observer
-    - Синхронизаторы представления: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
-    - Объединитель массивов: JW.AbstractArray.Merger
-1. Коллекции замкнуты относительно синхронизаторов. Всякое изменение одной коллекции влечет не более одного
-изменения  другой коллекции, связанной с первой с помощью стандартного синхронизатора.
-1. Почти на всякое действие пользователя должно производиться одно ручное изменение некоторой коллекции.
-Все остальные коллекции (включая коллекции компонентов представления) должны синхронизироваться автоматически
-с помощью синхронизаторов.
-1. Для правильной и быстрой работы приложения достаточно один раз правильно сконфигурировать синхронизаторы по
-аналогии с тем, как конфигурируются индексы и внешние ключи таблиц баз данных.
-1. Не должно быть разницы в подходах между простой и оповещающей коллекцией. Несмотря на то, что для
-корректного преобразования простых коллекций друг в друга достаточно просто запустить некоторый алгоритм
+1. Data and components are structured based on three collection types: JW.AbstractArray, JW.AbstractMap and
+JW.AbstractSet. All collections have common interfaces: JW.AbstractCollection, JW.IndexedCollection.
+Read common theory of algorithms and data structures to understand each collection type area of usage, pros and cons.
+1. Each collection has two implementations: simple (JW.Array, JW.Map, JW.Set) and observable
+(JW.ObservableArray, JW.ObservableMap, JW.ObservableSet). Observable collections trigger events about their
+modification.
+1. You don't need to listen all collection events manually. Instead, we recommend you to use standard jWidget
+synchronizers. Synchronizers provide a simple way to connect collections to each other:
+    - Item mapper: JW.AbstractCollection.Mapper
+    - Filterer: JW.AbstractCollection.Filterer
+    - Converter to set: JW.AbstractCollection.Lister
+    - Converter to map (indexer): JW.AbstractCollection.Indexer
+    - Converter to array (orderer): JW.AbstractCollection.Orderer
+    - Converter to array (sorter by comparer): JW.AbstractCollection.SorterComparing
+    - Observer: JW.AbstractCollection.Observer
+    - View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
+    - Arrays merger: JW.AbstractArray.Merger
+    - Array reverser: JW.AbstractArray.Reverser
+1. Collections are closed inside synchronizer methods. In other words, any modification of one collection triggers
+at most one modification of another collection, which is connected to the first one using standard synchronizer.
+1. Almost any user action can be handled by a single manual collection modification in model. All other collections
+(including component collections in the view) must be synchronized automatically via synchronizers.
+1. For proper and fast application running, it is enough to configure all synchronizers only once, similarly to
+indexes and foreign keys configuration in data bases.
+1. There should be no difference between simple and observable collection manipulations. Although it is enough to
+call some algorithm to convert one simple collection to another
 ({@link JW.AbstractCollection#method-index index},
 {@link JW.AbstractCollection#method-toSortedComparing toSortedComparing},
-{@link JW.AbstractCollection#method-toSet toSet} и т.п.), все равно рекомендуется вместо этого создать синхронизатор
+{@link JW.AbstractCollection#method-toSet toSet} etc.), it is recommended to instantiate a synchronizer instead
 ({@link JW.AbstractCollection#method-createIndexer createIndexer},
 {@link JW.AbstractCollection#method-createSorterComparing createSorterComparing},
-{@link JW.AbstractCollection#method-createLister createLister} соответственно). Качество, скорость и размер кода
-при этом пострадают не сильно. Зато взамен вы получаете возможность простой сменой базового класса коллекции начать
-прослушивать изменения в этой коллекции. (Хотя в некоторых запутанных случаях конфигурация синхронизаторов может
-обойтись слишком дорого: соблюдайте баланс)
-1. Объекты и DOM-элементы никогда не пересоздаются, а только обновляются
-1. Уничтожает объект тот, кто его создал. Единственное исключение: элементы JW.UI.Component.children (для удобства
-уничтожаются автоматически).
+{@link JW.AbstractCollection#method-createLister createLister} correspondingly). Code quality, performance and size
+won't be damaged too much. But the bonus is you'll be able to replace simple implementation with
+observable one by a simple base class change. But in some complicated cases sycnhronizers configuration can be way too
+expensive: keep the balance.
+1. Objects and DOM-elements should be never recreated: only updated.
+1. The one who has created an object must destroy it. The only exception is JW.UI.Component.children, which contents
+are destroyed automatically for convenience.
