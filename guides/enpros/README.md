@@ -1,42 +1,40 @@
-﻿# Преимущества jWidget
+﻿# jWidget advantages
 
-У jWidget есть одно главное преимущество, что отличает его от всех других Model-View фреймворков - это
-**синхронизаторы коллекций** (см. JW.AbstractCollection).
-Это моя личная идея как автора библиотеки, которую я не встречал ни в одном
-фреймворке и ни в одном языке программирования. На мой взгляд, это инновация. Но это не все. Давайте
-все же детально сравним jWidget с другими аналогичными JS-фреймворками.
+jWidget has one main advantage compared to other Model-View frameworks - it is **collection synchronizers**
+(see JW.AbstractCollection). This is framework author's own idea which he never met in any other framework
+regardless of programming language. It is innovation. But that's not all. Let's compare jWidget with other
+similar JS-frameworks in details.
 
 ## Backbone.js
 
-[Backbone.js](http://backbonejs.org) - Наиболее похожий на jWidget популярный Model-View фреймворк.
+[Backbone.js](http://backbonejs.org) - popular Model-View framework, which is the most similar to jWidget.
 
-Преимущества jWidget перед Backbone.js:
+jWidget advantages compared to Backbone.js:
 
-- Более богатая библиотека коллекций, более широкий набор алгоритмов и событий
-- Синхронизаторы
-- jWidget не предполагает полную перерисовку представления при каждом обновлении модели
-- Работает гораздо быстрее (жертвой красоты кода)
+- Richer collection library, wider range of algorithms and events
+- Synchronizers
+- Doesn't suppose components to be redrawn totally on each model update
+- Works way faster (though code is a bit more dirty)
 
-Backbone хорошо подходит для маленьких приложений, где не сильно важна скорость работы. Для более крупных и
-динамичных приложений jWidget подойдет гораздо лучше.
+Backbone fits well for small applications development, where performance is not critical. For larger and more dynamic
+applications jWidget will be a better choice.
 
 ## ExtJS
 
-[ExtJS](http://www.sencha.com/products/extjs) тоже предоставляет Model-View архитектуру,
-но она имеет совершенно иную философию. Всю логику приложения берет
-на себя контроллер, что выносит UI-события за пределы представления. Этот подход
-очень сильно завязан на DOM Query (аналог CSS-селекторов). На мой взгляд, для крупных приложений это
-тоже не годится, т.к. из большого количества селекторов получается каша, в которой тяжело что-то найти.
+[ExtJS](http://www.sencha.com/products/extjs) provides Model-View architecture too, but it has a completely
+different philosophy. Entire application logic is focused in controller classes, and it brings UI events handling
+out of view. This approach is bound to DOM Query a lot (CSS-selector analogue). In my opinion, it is not really
+scalable, because a big number of CSS selectors look like a mess.
 
-Преимущества jWidget перед ExtJS:
+jWidget advantages compared to ExtJS:
 
-- Более богатая библиотека коллекций (словарь и множество, которых нет в ExtJS)
-- Синхронизаторы
-- Гораздо проще разрабатывать визуальные компоненты с нуля
-- Меньше по объему
-- Лицензия LGPL
+- Richer collection library (ExtJS doesn't have set and observable map)
+- Synchronizers
+- Easier to develop new UI components from scratch (though jWidget doesn't provide any components out of the box)
+- Lighter by size
+- LGPL license
 
-Конечно, ничто не сравнится с ExtJS по количеству и качеству визуальных компонентов, поданных из коробки. Если вам подходит
-лицензия ExtJS и для реализации приложения достаточно предоставленных визуальных компонентов, то это будет
-наилучший выбор. Для более гибкой верстки jWidget или Backbone подойдут лучше. В целом, на мой взгляд,
-подход jWidget к Model-View архитектуре гораздо удобнее и эффективнее по сравнению с ExtJS.
+Sure, nothing can compete with ExtJS by amount and quality of UI components, given out of the box. If you are happy
+with ExtJS license and ExtJS components are enough to implement your application without any tricks, then it will be
+the best choice. But for flexible slicing jWidget or Backbone will fit better. In general, I think that jWidget's
+approach to Model-View architecture is way more convenient and effective compared to ExtJS.
