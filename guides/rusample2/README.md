@@ -137,9 +137,9 @@ JavaScript или другие значения.**
 В нашем примере метод {@link JW.AbstractArray#method-$map $map} принимает функцию-коллбек в качестве первого аргумента,
 которая превращает объект типа mt.data.Tweet в объект типа mt.TweetView:
 
-            function(tweetData) {
+            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }
+            }, this);
 
 Вторым аргументом метод принимает контекст вызова функции-коллбека (this). Правило здесь простое:
 **всегда, когда вы передаете функцию в качестве аргумента функции, следующим аргументом передается контекст

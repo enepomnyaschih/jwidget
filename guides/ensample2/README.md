@@ -1,22 +1,21 @@
-﻿# Часть 2. Дочерние компоненты, массивы
+﻿# Part 2. Arrays of child components
 
-Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/2/](http://enepomnyaschih.github.io/mt/2/)
+Demo: [http://enepomnyaschih.github.io/mt/2/](http://enepomnyaschih.github.io/mt/2/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-2](https://github.com/enepomnyaschih/mt/tree/mt-2) (ветка)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-2](https://github.com/enepomnyaschih/mt/tree/mt-2) (Git branch)
 
-Этот пример является продолжением предыдущей части.
+This part is continuation of previous part.
 
-В этом примере мы познакомимся с JW.AbstractArray, воспользуемся его алгоритмами
-{@link JW.AbstractArray#method-map map} и {@link JW.AbstractArray#method-$map $map}
-и научимся добавлять списки дочерних компонентов.
+In thi spart, we'll meet JW.AbstractArray, will try its algorithms
+{@link JW.AbstractArray#method-map map} and {@link JW.AbstractArray#method-$map $map}
+and will learn how to add child UI component arrays.
 
-Наша задача - отрендерить массив твитов, которые мы реализовали в предыдущей части.
+Our goal is to render an array of tweets, which we've developed in previous part.
 
 {@img tweet-feed.png}
 
-Как и в первый раз, начнем с модели. Твиты необходимо разместить в массиве. Для этого, определим класс mt.Data,
-который будет содержать этот массив.
+Like in the first sample, let's start with model. We must put several tweets into array. Let's define class mt.Data
+for this. It will contain an array of tweets.
 
 **public/mt/data/data.js**
 
@@ -45,13 +44,13 @@
     
     mt.data = {};
 
-Как вы видите, массив мы сконструировали как экземпляр JW.Array, но в списке полей объявили как JW.AbstractArray.
-Это мы сделали для гибкости. Возможно, в будущем мы заменим реализацию массива на JW.ObservableArray.
+You can see that we've defined JW.AbstractArray, but instantiated it as JW.Array. It is done for flexibility.
+Probably in future we'll replace the implementation of array with JW.ObservableArray.
 
-Десериализация осуществляется с помощью статического метода {@link JW.Array#static-method-map JW.Array.map}.
-Метод принимает нативный массив (Array) в качестве первого аргумента и функцию-коллбек в качестве второго аргумента.
-Функция-коллбек mt.data.Tweet.createByJson превращает объект типа Object (JSON) в объект типа mt.data.Tweet,
-мы реализовали ее в предыдущей части:
+Deserialization is performed via static method {@link JW.Array#static-method-map JW.Array.map}.
+Method takes native Array as first argument and callback function as second argument.
+Callback function mt.data.Tweet.createByJson converts Object (JSON) into mt.data.Tweet instance,
+and we've implemented it in previous part:
 
     mt.data.Tweet.createByJson = function(json) {
         return new mt.data.Tweet(JW.apply({}, json, {
@@ -59,15 +58,14 @@
         }));
     };
 
-В результате вызова метода {@link JW.Array#static-method-map JW.Array.map} мы получим нативный массив (Array)
-объектов типа mt.data.Tweet. Передавая его в метод {@link JW.AbstractArray#addAll addAll} массива data.tweets,
-мы заполняем этот массив:
+As result of {@link JW.Array#static-method-map JW.Array.map} method call we've got a native JS Array of mt.data.Tweet
+instances. We pass it into {@link JW.AbstractArray#addAll addAll} method of data.tweets array in order to fill it in:
 
         data.tweets.{@link JW.AbstractArray#addAll addAll}({@link JW.Array#static-method-map JW.Array.map}(json, mt.data.Tweet.createByJson));
 
-Поскольку мы конструируем объект this.tweets в конструкторе mt.Data, мы **обязаны** уничтожить его в деструкторе.
-Это часть философии jWidget. Все объекты должен уничтожать тот, кто их создает. Так, если мы уничтожим объект
-mt.Data методом destroy, все вложенные объекты также гарантированно будут уничтожены.
+Since we construct this.tweets object in constructor of mt.Data, we **must** destroy it in destructor.
+This is a part of jWidget philosophy. Object creator must destroy it. So, if we'll destroy mt.Data instance by
+{@link JW.Class#destroy destroy} method, all included objects will be destroyed as well.
 
         // override
         {@link JW.Class#destroy destroy}: function() {
@@ -75,7 +73,7 @@ mt.Data методом destroy, все вложенные объекты так�
             this.{@link JW.Class#method-_super _super}();
         }
 
-Теперь перейдем к представлению. Определим класс mt.TweetFeed для представления ленты твитов.
+Let's continue with view. Define class mt.TweetFeed for tweet feed view.
 
 **public/mt/tweetfeed/tweetfeed.js**
 
@@ -114,45 +112,43 @@ mt.Data методом destroy, все вложенные объекты так�
             '</div>'
     });
 
-Остановимся подробнее на методе renderTweets. По аналогии с компонентом mt.TweetView, мы определили метод
-`render<ChildId>` для элемента с jwid="tweets". Но теперь этот метод не просто наполняет элемент данными,
-а рендерит внутрь него массив дочерних компонентов.
+Let's review renderTweets method in details. Similarly to mt.TweetView component, we've defined method
+`render<ChildId>` for element with jwid="tweets". But now this method not just fills the element with data,
+but renders an array of child components into it.
 
-Этот массив создается из данных с помощью метода конвертирования элементов коллекции
-{@link JW.AbstractArray#method-$map $map}. Мы уже рассматривали статический метод
-{@link JW.Array#static-method-map JW.Array.map}. Рассмотрим их отличия:
+This array is created from data via collection item convertion method
+{@link JW.AbstractArray#method-$map $map}. We already used
+{@link JW.Array#static-method-map JW.Array.map} before. Let's review their difference:
 
-- Во-первых, один из этих методов динамический (instance method), второй - статический (static method). **Все
-коллекции jWidget имеют общий набор статических методов для нативных коллекций JavaScript (Array, Object) и
-динамических методов для коллекций jWidget (JW.AbstractArray, JW.AbstractMap, JW.AbstractSet). Статические методы
-находятся в классах JW.Array, JW.Map, JW.Set и принимают нативную коллекцию в качестве первого аргумента.**
-- Во-вторых, метод {@link JW.Array#static-method-map JW.Array.map} возвращает нативный массив JavaScript (Array), а
-метод {@link JW.AbstractArray#method-$map $map} возвращает массив jWidget (JW.Array). **Все методы, названия которых
-начинаются со знака доллара $, возвращают коллекции jWidget. Все остальные методы возвращают нативные коллекции
-JavaScript или другие значения.**
+- First, one method is instance method, second one is static method. **All collection of jWidget have common
+set of static methods for native JavaScript collections (Array, Object) and instance methods for jWidget
+collections (JW.AbstractArray, JW.AbstractMap, JW.AbstractSet). Static methods are defined in
+JW.Array, JW.Map, JW.Set and take native collection as first argument.**
+- Second, {@link JW.Array#static-method-map JW.Array.map} method returns a native JavaScript Array, when
+{@link JW.AbstractArray#method-$map $map} method returns JW.Array. **All methods which names start from $ symbol
+return jWidget collections. All other methods return native JavaScript collections or other values.**
 
-Оба правила введены для удобства. Каждый алгоритм имеет множество реализаций, на которые наложены строгие стандарты
-именования методов. Используйте ту реализацию, которая удобнее в данной конкретной ситуации.
+Both rules are introduced for convenience. Each algorithm has multiple implementations, which are constrained by
+fixed naming convention. Use one implementation which is more convenient in this particular situation.
 
-В нашем примере метод {@link JW.AbstractArray#method-$map $map} принимает функцию-коллбек в качестве первого аргумента,
-которая превращает объект типа mt.data.Tweet в объект типа mt.TweetView:
+In our sample, {@link JW.AbstractArray#method-$map $map} method takes callback function as first argument,
+and this function converts mt.data.Tweet instance into mt.TweetView instance:
 
-            function(tweetData) {
+            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }
+            }, this);
 
-Вторым аргументом метод принимает контекст вызова функции-коллбека (this). Правило здесь простое:
-**всегда, когда вы передаете функцию в качестве аргумента функции, следующим аргументом передается контекст
-вызова этой функции.**
+In second argument, method takes callback function call context (this). The rule is simple:
+**whenever you pass a function as function argument, you can optionally pass its call context as next argument.**
 
-В результате мы получаем JW.Array, содержщащий объекты типа mt.TweetView, который мы возвращаем на выходе из
-метода renderTweets:
+As result we'll get JW.Array instance, which contains mt.TweetView instances. We return this array as
+renderTweets method result:
 
             return this.tweetViews;
 
-Тем самым мы просим фреймворк отрендерить компоненты this.tweetViews внутрь элемента с jwid="tweets".
+As result, we ask the framework to render this.tweetViews components into element with jwid="tweets".
 
-Далее, добавим CSS-файл.
+Next, let's create CSS file.
 
 **public/mt/tweetfeed/tweetfeed.css**
 
@@ -183,12 +179,12 @@ JavaScript или другие значения.**
       text-align: center;
     }
 
-Добавим новые файлы в index.html:
+Add new files into index.html:
 
     <link rel="stylesheet" type="text/css" href="mt/tweetfeed/tweetfeed.css" />
     <script type="text/javascript" charset="utf-8" src="mt/tweetfeed/tweetfeed.js"></script>
 
-Остается только подставить новые тестовые данные.
+And prepare new test data.
 
 **public/boot.js**
 
@@ -219,10 +215,10 @@ JavaScript или другие значения.**
         tweetFeed.{@link JW.UI.Component#renderTo renderTo}("#container");
     });
 
-Запустив приложение в браузере, мы увидим то, что от нас и требовалось.
+If we'll execute the application in browser, we'll see what was required.
 
-Рассмотрим еще один способ добавления списка дочерних компонентов, без использования метода `render<ChildId>`.
-Удалим метод renderTweets и перегрузим метод {@link JW.UI.Component#renderComponent renderComponent}:
+Let's review one more way of child components adding, without `render<ChildId>` method definition.
+let's remove renderTweets method and override {@link JW.UI.Component#renderComponent renderComponent} method instead:
 
         // override
         {@link JW.UI.Component#renderComponent renderComponent}: function() {
@@ -233,10 +229,10 @@ JavaScript или другие значения.**
             this.{@link JW.UI.Component#addArray addArray}(this.tweetViews, "tweets");
         },
 
-Этот код эквивалентен предыдущему, только список дочерних компонентов добавляется методом
-{@link JW.UI.Component#addArray addArray}. Вторым аргументом этот метод принимает jwid элемента, внутрь которого
-отрендерить массив компонентов, переданный первым аргументом. Если второй аргумент не передать, массив отрендерится
-внутрь корневого элемента. Используйте тот вариант, который вам больше нравится.
+This code is equivalent to previous one, but child component list is added dynamically by
+{@link JW.UI.Component#addArray addArray} method. This method takes element "jwid" as second argument, which should be
+used as container for child components, passed in first argument. If we won't pass second argument, the array will be
+rendered into root element. Use the way you like more. I'll stick to first way, using `render<ChildId>` method.
 
-Недостаток всего примера заключается в том, что массив твитов фиксирован. Мы не сможем добавлять и удалять твиты
-динамически. Мы научимся этому в следующих примерах.
+Disadvantage of this entire sample is that tweet array is fixed. We are unable to add or remove specific tweets
+dynamically. We'll learn it in future.
