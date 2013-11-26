@@ -1,20 +1,16 @@
-﻿# Часть 3. Именованные дочерние компоненты
+﻿# Part 3. Named child components
 
-Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/3/](http://enepomnyaschih.github.io/mt/3/)
+Demo: [http://enepomnyaschih.github.io/mt/3/](http://enepomnyaschih.github.io/mt/3/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-3](https://github.com/enepomnyaschih/mt/tree/mt-3) (ветка)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-3](https://github.com/enepomnyaschih/mt/tree/mt-3) (ветка)
 
-Этот пример является продолжением предыдущей части.
+In this sample we'll learn how to render child components, which don't belong to arrays.
 
-В этом примере мы научимся рендерить дочерние компоненты, которые не находятся в массивах.
-
-Примерами таких компонентов могут служить панель профиля пользователя и лента твитов - дочерние компоненты приложения:
+Examples of such components are user profile panel and tweet feed - child components of application:
 
 {@img application.png}
 
-Для начала реализуем класс mt.Application, который будем корневым представлением
-нашего приложения.
+First, let's implement mt.Application class, which will be root view of our application.
 
 **public/mt/application/application.js**
 
@@ -51,19 +47,18 @@
             '</div>'
     });
 
-И вновь мы встретили метод `render<ChildId>` (renderTweets), и вновь он делает что-то новое. На этот раз он
-конструирует и возвращает экземпляр класса mt.TweetFeed.
-Это означает, что новый компонент mt.TweetFeed будет отрендерен на место элемента с jwid="tweets".
-Этот элемент будет полностью замещен компонентом, а все его CSS-классы (здесь: mt-application-tweets) будут
-скопированы в корневой элемент компонента.
+Once again, we see method `render<ChildId>` (renderTweets), and once again it does something new. This time, it
+creates and returns an instance of mt.TweetFeed class. It means that a new component mt.TweetFeed will be
+rendered at the place of element with jwid="tweets". This element will be completely replaced with new component,
+and all its CSS classes (here: mt-application-tweets) will be copied into root element of component.
 
-Теперь рассмотрим некоторые вариации этой возможности.
+Let's review some details of this feature.
 
-Во-первых, важно понимать, что после конструирования
-экземпляра mt.TweetFeed этот компонент еще не отрендерен. Это значит, что у него нет HTML-элемента и возможности
-добавлять дочерние компоненты. Компонент будет отрендерен автоматически лишь где-то внутри фреймворка. Но если
-вам все же нужно проделать какие-то дополнительные действия с отрендеренным компонентом (например, добавить
-CSS-класс), можно сделать это явно с помощью метода {@link JW.UI.Component#render render}:
+**First**, it is important to understand that after instantiation of mt.TweetFeed class object this component
+is not rendered yet. It means that it doesn't have HTML elements and capability to add child components.
+Component will be rendered automatically somewhere inside framework, later. But if you really need to perform
+some additional actions with the rendered component (for example, add CSS-class),
+you can render it explicitly using {@link JW.UI.Component#render render} method:
 
         renderTweets: function(el) {
             var tweetFeed = new mt.TweetFeed(this.data);
@@ -72,12 +67,11 @@ CSS-класс), можно сделать это явно с помощью м�
             return tweetFeed;
         },
 
-Аргумент el передавать не обязательно, но рекомендовано. Некоторые компоненты могут использовать поле
-{@link JW.UI.Component#replacedEl replacedEl} для рендеринга своего содержимого - аргумент el как раз и определяет
-значение этого поля.
+Argument "el" is optional to pass, but recommended. Some components may use
+{@link JW.UI.Component#replacedEl replacedEl} field to render its content - "el" argument determines its value.
 
-Во-вторых, как и в предыдущих частях, мы должны найти способ добавлять дочерние компоненты, не привязываясь к
-методу `render<ChildId>`. Делается это с помощью оповещающего словаря {@link JW.UI.Component#children children}:
+**Second**, like in previous parts, we must find a way to add a child component without
+`render<ChildId>` method definition. You can do it using {@link JW.UI.Component#children children} observable map:
 
         // override
         {@link JW.UI.Component#renderComponent renderComponent}: function() {
@@ -85,9 +79,9 @@ CSS-класс), можно сделать это явно с помощью м�
             this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#set set}(new mt.TweetFeed(this.data), "tweets");
         },
 
-Выбирайте тот способ, какой вам больше нравится.
+Select the way you like more.
 
-Добавим CSS.
+Add CSS.
 
 **public/mt/application/application.css**
 
@@ -113,12 +107,12 @@ CSS-класс), можно сделать это явно с помощью м�
       margin-left: 13px;
     }
 
-Обновим index.html:
+Update index.html:
 
             <link rel="stylesheet" type="text/css" href="mt/application/application.css" />
             <script type="text/javascript" charset="utf-8" src="mt/application/application.js"></script>
 
-Обновим boot.js:
+Update boot.js:
 
     var data;
     var application;
@@ -147,13 +141,13 @@ CSS-класс), можно сделать это явно с помощью м�
         application.{@link JW.UI.Component#renderTo renderTo}("body");
     });
 
-В результате запуска приложения мы увидим следующее:
+We'll see the next result:
 
 {@img result-1.png}
 
-Осталось реализовать панель профиля.
+Profile panel is remaining to implement.
 
-И вновь начнем с модели. Нам нужны данные о профиле текущего пользователя. Расширим класс mt.Data:
+Let's start with model once again. We need data about current user profile. Let's extend mt.Data class:
 
 **public/mt/data/data.js**
 
@@ -185,7 +179,7 @@ CSS-класс), можно сделать это явно с помощью м�
     
     mt.data = {};
 
-Теперь реализуем класс mt.data.Profile.
+Now, implement mt.data.Profile class.
 
 **public/mt/data/profile.js**
 
@@ -216,13 +210,13 @@ CSS-класс), можно сделать это явно с помощью м�
         return new mt.data.Profile(json);
     };
 
-Перейдем к представлению. Добавим в mt.Application метод рендеринга панели профиля:
+Switch to view. Add profile panel rendering method to mt.Application:
 
         renderProfileBox: function() {
             return new mt.ProfileBox(this.data);
         },
 
-Реализуем этот компонент.
+Implement this component.
 
 **public/mt/profilebox/profilebox.js**
 
@@ -302,7 +296,7 @@ CSS-класс), можно сделать это явно с помощью м�
             '</div>'
     });
 
-Сразу добавим CSS:
+Add CSS:
 
 **public/mt/profilebox/profilebox.css**
 
@@ -400,12 +394,12 @@ CSS-класс), можно сделать это явно с помощью м�
       background: #09a0d7;
     }
 
-Обновим index.html:
+Update index.html:
 
             <link rel="stylesheet" type="text/css" href="mt/profilebox/profilebox.css" />
             <script type="text/javascript" charset="utf-8" src="mt/profilebox/profilebox.js"></script>
 
-Обновим boot.js:
+Update boot.js:
 
     var data;
     var application;
@@ -445,9 +439,9 @@ CSS-класс), можно сделать это явно с помощью м�
         application.{@link JW.UI.Component#renderTo renderTo}("body");
     });
 
-В результате запуска мы увидим то, что от нас и требовалось:
+Here is the result, which represents original requirements:
 
 {@img application.png}
 
-Мы научились рендерить компоненты и добавлять их друг в друга. Настало время добавить в наше приложение немного
-динамики. Рассмотрим это в следующей части.
+We've learned how to render components and add them into each other. Now it's the time to add a bit of dynamics into
+our application. We'll describe this in next part.
