@@ -2,7 +2,7 @@
 
 Demo: [http://enepomnyaschih.github.io/mt/3/](http://enepomnyaschih.github.io/mt/3/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-3](https://github.com/enepomnyaschih/mt/tree/mt-3) (ветка)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-3](https://github.com/enepomnyaschih/mt/tree/mt-3) (Git branch)
 
 In this sample we'll learn how to render child components, which don't belong to arrays.
 

@@ -1,18 +1,15 @@
-﻿# Часть 5. Синхронизаторы коллекций
+﻿# Part 5. Collection synchronizers
 
-Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/5/](http://enepomnyaschih.github.io/mt/5/)
+Demo: [http://enepomnyaschih.github.io/mt/5/](http://enepomnyaschih.github.io/mt/5/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-5](https://github.com/enepomnyaschih/mt/tree/mt-5) (ветка)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-5](https://github.com/enepomnyaschih/mt/tree/mt-5) (Git plugin)
 
-Этот пример является продолжением предыдущей части.
+Now we'll switch to the most wonderful and important part of jWidget which makes jWidget special -
+collection synchronizers.
 
-Теперь переходим к самому интересному и самому важному, ради чего только одного стоит использовать фреймворк jWidget -
-к синхронизаторам коллекций.
+In this example, we'll add a feature of new tweets posting and existing tweets removal.
 
-В данном примере мы добавим возможность постить новые твиты и удалять существующие.
-
-Для начала проведем небольшой рефакторинг. Сейчас у нас есть следующий код в классе mt.TweetFeed:
+Let's start with a bit of refactoring. We have a next code snippet in mt.TweetFeed class:
 
         renderTweets: function() {
             this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
@@ -21,21 +18,20 @@
             return this.tweetViews;
         },
 
-Напомню, что этот код конвертирует массив данных mt.data.Tweet в массив представлений mt.TweetView и
-рендерит их внутрь элемента с jwid="tweets".
+Just to remind, this code converts data array of mt.data.Tweet instances to view array of mt.TweetView instances,
+and renders them into element with jwid="tweets".
 
-Надо понимать, что такой код не позволит нам легко наладить постоянную синхронизацию массива представлений с
-массивом данных: конвертирование данных в представления осуществляется только один раз, в момент рендеринга
-ленты твитов. Можно, конечно, вручную подписаться на все события JW.ObservableArray и вручную их обрабатывать
-(в других фреймворках вам так и пришлось бы поступить), но jWidget предлагает более легкое решение -
-воспользоваться синхронизатором.
+You must understand that this code won't let us to install continuous synchronization of view array with data array:
+data convertion is performed only once, at the moment of tweet feed rendering. Sure, you may bind listeners
+to data array modification events manually (that's what you've got to do in other frameworks), but jWidget
+offers much easier solution - use synchronizer for this.
 
-Более того, философия jWidget гласит, что
-**не должно быть разницы в подходах между простой и оповещающей коллекцией. Несмотря на то, что для
-корректного преобразования простых коллекций друг в друга достаточно просто запустить некоторый алгоритм
-(здесь: {@link JW.AbstractArray#$map $map}), все равно рекомендуется вместо этого создать синхронизатор.**
+Moreover, jWidget philosophy claims that
+**there should be no difference between simple and observable collection manipulations. Although it is enough to
+call some algorithm to convert one simple collection to another (here: {@link JW.AbstractArray#$map $map}),
+it is recommended to instantiate a synchronizer instead.**
 
-Итак, перейдем к делу. Заменим код mt.TweetFeed следующим.
+So, let's replace code of mt.TweetFeed with the next:
 
 **public/mt/tweetfeed/tweetfeed.js**
 
@@ -69,9 +65,9 @@
         }
     });
 
-Поскольку наш массив this.data.tweets пока простой (JW.Array), этот код эквивалентен предыдущему - запустите
-приложение в браузере, и вы не заметите разницы. Зато теперь мы получили возможность заменить реализацию массива
-в mt.Data на JW.ObservableArray, и, не меняя кода представления, синхронизировать его с моделью:
+Since our array of this.data.tweets is still simple (JW.Array), this code is completely equal to original one -
+run the application in browser and you won't see any difference. But now we are able to replace simple array
+in mt.Data with JW.ObservableArray, and synchronize view with model without view modification this way:
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
@@ -79,7 +75,7 @@
         this.tweets = new JW.ObservableArray();
     };
 
-Попробуйте открыть приложение в браузере и выполнить следующую команду в консоли:
+Try to open application in browser and run next command in console:
 
     data.tweets.{@link JW.AbstractArray#add add}(new mt.data.Tweet({
         fullName: "Road Runner",
@@ -91,15 +87,15 @@
         retweet: false
     }));
 
-Вы увидите, как в конце ленты твитов появится новый твит:
+You'll see that a new tweet will appear at the end of tweet feed:
 
 {@img result-1.png}
 
-Заметьте, что своей командой мы никак не затронули
-представление: мы просто добавили объект в массив данных, но представление все равно корректно обновилось.
+Notice that we didn't touch view by this command: we've just added an object into data array, but view has
+updated correctly.
 
-Остается только добавить код, который будет добавлять новый объект в data.tweets по сабмиту формы
-Compose tweet. Подпишемся на событие jQuery.submit в mt.ProfileBox:
+The only remaining part is to add code which will add a new object into data.tweets array on "Compose tweet" form
+submit. Bind to jQuery.submit event in mt.ProfileBox:
 
     mt.ProfileBox = function(data) {
         this._onComposeSubmit = JW.inScope(this._onComposeSubmit, this);
@@ -108,7 +104,7 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
     };
     
     JW.extend(mt.ProfileBox, JW.UI.Component, {
-        // ... код
+        // ... code
         
         renderComposeForm: function(el) {
             el.submit(this._onComposeSubmit);
@@ -133,14 +129,14 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
         }
     });
 
-И запустим наше приложение. После ввода текста и нажатия кнопки "Tweet" мы увидим новый твит в начале ленты твитов:
+And run our application. After text input and "Tweet" button click, we'll see a new tweet in tweet feed:
 
 {@img result-2.png}
 
 {@img result-3.png}
 
-Наша следующая задача - активировать кнопки Remove у твитов, чтобы корректно удалять их из ленты. Откроем
-класс mt.TweetView и подпишемся на клик по кнопке:
+Our next goal is to activate Remove button in tweets to remove them from feed. Open mt.TweetView class and bind
+to button click:
 
     mt.TweetView = function(tweetData) {
         // ...
@@ -165,7 +161,7 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
         // ...
     });
 
-Для удаления твита нам понадобится доступ к объекту mt.Data. Предоставим его:
+We'll need access to mt.Data object to remove the tweet. Let's provide it:
 
     mt.TweetView = function(data, tweetData) {
         // ...
@@ -183,32 +179,32 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
         // ...
     });
 
-Обновим код создания объектов mt.TweetView в mt.TweetFeed:
+Update code for mt.TweetView object creation in mt.TweetFeed:
 
                 createItem: function(tweetData) {
                     return new mt.TweetView(this.data, tweetData);
                 },
 
-И завершим реализацию метода _onRemoveClick класса mt.TweetView:
+And finish _onRemoveClick method implementation in mt.TweetView class:
 
         _onRemoveClick: function(event) {
             event.preventDefault();
             this.data.tweets.{@link JW.AbstractArray#removeItem removeItem}(this.tweetData);
         },
 
-Запустите приложение и попробуйте кликнуть по кнопке Remove у твита:
+Run application and try to click Remove button in tweet:
 
 {@img result-4.png}
 
-В данном примере мы рассмотрели типичный сценарий использования конвертера элементов JW.AbstractCollection.Mapper,
-но не стоит на этом останавливаться. Познакомьтесь с другими синхронизаторами самостоятельно, и, я уверен, вы
-найдете разумное применение для большинства из них. Ищите их в описании класса JW.AbstractCollection.
+In this example we've reviewed a typical scenario of array item converter (JW.AbstractCollection.Mapper) usage,
+but don't stop at this. You should try other synchronizers by your own, and I'm sure you'll find reasonable
+use cases for majority of them. Find them in JW.AbstractCollection class description.
 
-Замечу, что использование синхронизаторов не ограничивается представлением. В моей практике, синхронизаторы чаще
-всего, наоборот, используются в модели. Так, индексатор ускорит доступ к элементу массива по ключу. А сортировщик,
-например, сможет отсортировать множество твитов по дате публикации, и нам больше не надо будет думать, в какое место
-ленты твитов вставить очередной твит. Сценариев использования множество, рекомендую вам опробовать их на практике.
+Notice that synchronizers usage is not constrained by view only. In my practice, synchronizers are used in model
+more often than in view. For example, indexer will speed-up access to the items by key. Sorter can sort a set of
+tweets by their publication date, and you won't need to think at what position to insert a new tweet in tweet feed.
+There is a lot of scenarios, and I recommend you to try them in practice.
 
-В следующей части мы улучшим инфраструктуру нашего проекта: вынесем HTML-шаблоны в отдельные HTML-файлы с
-помощью [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) и научимся использовать CSS-препроцессор
-[Stylus](http://learnboost.github.io/stylus/), чтобы сделать верстку более удобной и приятной.
+In next part, we'll improve infrastructure of our project: extract HTML templates into separate HTML files using
+[jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) and will learn how to use CSS-preprocessor
+[Stylus](http://learnboost.github.io/stylus/) to make slicing easier and more convenient.
