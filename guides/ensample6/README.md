@@ -1,20 +1,17 @@
-﻿# Часть 6. Инфраструктура проекта
+﻿# Part 6. Project infrastructure
 
-Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/6/](http://enepomnyaschih.github.io/mt/6/)
+Demo: [http://enepomnyaschih.github.io/mt/6/](http://enepomnyaschih.github.io/mt/6/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-6](https://github.com/enepomnyaschih/mt/tree/mt-6) (ветка)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-6](https://github.com/enepomnyaschih/mt/tree/mt-6) (Git branch)
 
-Этот пример является продолжением предыдущей части.
+In this part, we'll improve project infrastructure: extract HTML templates into separate HTML file using
+[jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) and will learn how to use
+[Stylus](http://learnboost.github.io/stylus/) CSS-preprocessor to make slicing easier and more convenient.
 
-В этой части мы улучшим инфраструктуру нашего проекта: вынесем HTML-шаблоны в отдельные HTML-файлы с
-помощью [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) и научимся использовать CSS-препроцессор
-[Stylus](http://learnboost.github.io/stylus/), чтобы сделать верстку более удобной и приятной.
+Let's start with
+[jWidget SDK installing by instruction](https://github.com/enepomnyaschih/jwsdk/wiki/jWidget-SDK-setup) (steps 1-4).
 
-Начнем с того, что
-[установим jWidget SDK по инструкции](https://github.com/enepomnyaschih/jwsdk/wiki/Установка-jWidget-SDK) (шаги 1-4).
-
-Далее, создадим пакет mt для нашего проекта.
+Next, create "mt" package for our project.
 
 **jwsdk-config/packages/mt.json**
 
@@ -42,7 +39,7 @@
         ]
     }
 
-Создадим страницу index.
+Create "index" page.
 
 **jwsdk-config/pages/index.json**
 
@@ -52,20 +49,21 @@
         "title"    : "Mini-Twitter"
     }
 
-Еще мне хочется, чтобы проект работал на [GitHub Pages](http://pages.github.com/), а они не поддерживают .htaccess.
-Поэтому немного подшаманим глобальную конфигурацию проекта, чтобы страница index компилировалась прямо в корень
-проекта и все пути в ней были относительными. Изменим следующие опции в файле jwsdk-config/config.json:
+Also we want to make sure that our project will work on [GitHub Pages](http://pages.github.com/), but they don't
+support ".htaccess" file. So let's transform global project configuration a little bit, to make sure that out
+output HTML files will be generated in document root and all URLs will be relative.
+Change next options in jwsdk-config/config.json file:
 
         "pagesUrl"      : "",
         "urlPrefix"     : "",
 
-И удалим файл public/.htaccess.
+And delete public/.htaccess file.
 
-Откомпилируем проект запуском скрипта debug в корне проекта.
+Compile project using "debug" script in project root.
 
 {@img debug.png}
 
-Откроем файл public/index.html и увидим, что его содержимое изменилось.
+Open public/index.html and see that its content has been changed.
 
 **public/index.html**
 
@@ -102,23 +100,23 @@
         </body>
     </html>
 
-Запустите приложение в браузере и обнаружите, что работа приложения не изменилась.
+Run application in browser and you'll see that it works as before.
 
 {@img application.png}
 
-Теперь правило простое: **после каждого изменения кода или конфигурации проекта рекомендуется перекомпилировать
-проект.** Хотя бы для того, чтобы обновлялись timestamp'ы измененных файлов и перезатирался их кэш в браузере.
-Другие причины, зачем нужна постоянная пересборка, будут описаны позже. Сейчас просто возьмите это за правило,
-и очень скоро привыкнете держать наготове консоль с открытой папкой проекта и командой debug в истории.
+Now, the rule is simple: **it is recommended to re-compile the project after each code or project configuration
+modification.** At least, to update timestamps of modified files to make sure that they won't be taken from
+browser cache. Other reasons why you must re-compile project before run, will be described later. Now, just
+keep this rule in your mind, and you'll get used to have an opened console with "debug" command in history ready to go.
 
-jWidget SDK не просто сделал разработку проекта простой и приятной: с его помощью мы теперь можем легко минимизировать
-код, добавить динамическую загрузку скриптов и выполнить прочие улучшения/оптимизации. Кому интересно, можете
-попробовать откомпилировать проект скриптом release:
+jWidget SDK not just makes project development easy and fun: you'll be able to minify your code easily,
+add dynamic script loading and perform other improvements/optimizations. For whoever is interested, you can
+try to compile the project via "release" script:
 
 {@img release.png}
 
-Релизная компиляция выполняется немного дольше, зато она значительно оптимизирует загрузку проекта. Откройте полученный
-файл index.html и убедитесь в этом:
+Release compilation is performed quite longer, but it optimizes project loading drastically. Open an output
+"index.html" and you'll see that:
 
 **public/index.html**
 
@@ -148,14 +146,13 @@ jWidget SDK не просто сделал разработку проекта �
         </body>
     </html>
 
-Как видите, наш пакет mt утрамбован в два минимизированных файла: mt.min.css и mt.min.js. Используйте релизную
-сборку перед выкатыванием проекта в продакшен. Если вы запустите приложение в браузере, вы сможете убедиться в том,
-что все работает так, как и прежде.
+As you can see, "mt" package is merged into 2 minified files: mt.min.css and mt.min.js. Use release compilation
+before project push to production. If you'll run the application in browser, you'll see that it works as before.
 
 {@img application.png}
 
-Начнем наш рефакторинг. Для начала вынесем HTML-шаблоны в отдельные файлы. У нас есть блоки JW.UI.template в каждом
-из следующих файлов:
+Let's start our refactoring. First, let's extract HTML templates into separate files. We have JW.UI.template code
+blocks into each of next files:
 
     public/
         mt/
@@ -164,7 +161,7 @@ jWidget SDK не просто сделал разработку проекта �
             tweetfeed/tweetfeed.js
             tweetview/tweetview.js
 
-Просто перенесем HTML этих шаблонов в отдельные файлы с расширением jw.html.
+Just move HTML of these templates into separate files with jw.html extension.
 
 **public/mt/application/application.jw.html**
 
@@ -241,10 +238,10 @@ jWidget SDK не просто сделал разработку проекта �
         <div class="clear"></div>
     </div>
 
-Далее, удалим все вызовы JW.UI.template из исходных js-файлов.
+Next, remove all JW.UI.template calls from source js files.
 
-Добавим новые файлы в конфигурацию пакета jwsdk-config/packages/mt.json, привязав их к классам наших
-визуальных компонентов:
+Add new files into jwsdk-config/packages/mt.json package configuration and bind them to corresponding
+JW.UI.Component subclasses:
 
             // ...
             "mt/application/application.js",
@@ -260,25 +257,25 @@ jWidget SDK не просто сделал разработку проекта �
             "mt/tweetview/tweetview.jw.html : mt.TweetView",
             // ...
 
-Соберем проект скриптом debug и откроем в браузере. С удовлетворением обнаружим, что все работает так, как и прежде.
+Compile project with "debug" script and open it in browser. You'll see that it works as before.
 
 {@img application.png}
 
-Зачем мы это сделали? Затем, что это удобнее. Мы отвязали HTML от кода. Теперь не надо писать вечные
-апострофы/кавычки вокруг строчек шаблона и соединять их плюсами. Еще, в текстовом редакторе работает подсветка HTML.
-Сравните:
+What is the purpose of doing so? The answer is: it is convenient. We've unbound HTML from code. Now, you don't need
+to write infinite apostrophes/quotes around template rows and concatenate them. Also, HTML is highlighted very well
+in text editors. Compare:
 
 {@img editor.png} {@img editor-2.png}
 
-Кому интересно, как это работает, откройте index.html и посмотрите сами.
+If you wonder how it works, open index.html and see by yourself.
 
-Следующим шагом мы прикрутим CSS-препроцессор [Stylus](http://learnboost.github.io/stylus/) к нашему проекту,
-чтобы проще было писать CSS. Установите [NodeJS](http://nodejs.org/) по инструкции на сайте и Stylus через
+At next step, we'll introduce [Stylus](http://learnboost.github.io/stylus/) CSS-preprocessor to our project to
+make CSS development easier. Setup [NodeJS](http://nodejs.org/) by instruction on the site and Stylus via
 NodeJS Package Manager:
 
     npm install -g stylus
 
-Давайте сразу создадим файлы с утилитарными стилями и константами Stylus.
+Let's create files with utility styles and constants of Stylus right away.
 
 **public/thirdparty/imports.styl**
 
@@ -330,8 +327,8 @@ NodeJS Package Manager:
         border 1px solid rgba(0, 0, 0, 45%)
         border-radius 6px
 
-Теперь перепишем стили всех компонентов на Stylus. Красота спасет проект! Посмотрите, какую пользу дает наш
-стандарт именования CSS-классов.
+Now, let's re-write styles of all components to Stylus. Beauty will save the project! Look, how useful can be
+our CSS-class naming standard in this situation.
 
 **public/mt/application/application.styl**
 
@@ -515,7 +512,7 @@ NodeJS Package Manager:
         &-retweet.active
             color #609928
 
-Теперь смело удаляем исходные CSS-файлы и меняем конфигурацию пакета jwsdk-config/packages/mt.json:
+Now let's remove source CSS-files and change jwsdk-config/packages/mt.json package configuration:
 
             // ...
             "mt/application/application.jw.html : mt.Application",
@@ -531,11 +528,11 @@ NodeJS Package Manager:
             "mt/tweetview/tweetview.styl",
             // ...
 
-Снова собираем проект скриптом debug и убеждаемся в том, что функциональность не изменилась.
+Compile project and make sure that it works as before.
 
 {@img application.png}
 
-Последним шагом мы вынесем тестовые JSON-данные в отдельный JSON-файл.
+At last step, let's extract testing JSON data into separate JSON file.
 
 **public/data.json**
 
@@ -581,7 +578,7 @@ NodeJS Package Manager:
         application.renderTo("body");
     });
 
-Добавим следующую строку в конфигурацию пакета jwsdk-config/packages/mt.json:
+Add next line into jwsdk-config/packages/mt.json package configuration:
 
             // ...
             "data.json : dataJson",
@@ -589,13 +586,13 @@ NodeJS Package Manager:
         ]
     }
 
-Запустим скрипт debug и убедимся в том, что все работает так же.
+Compile project and make sure that it works as before.
 
 {@img application.png}
 
-Мы получили проект, написанный по всем стандартам jWidget. Теперь вы владеете всеми навыками, необходимыми для
-разработки полноценных Model-View приложений на базе jWidget.
+We've got a project, developed by all jWidget standards. Now you have all skills neccessary to develop fully-capable
+Model-View applications based on jWidget.
 
-Надеюсь, что это руководство оказалось для вас хотя бы чуточку полезным. Я счастлив, если вы выберете
-jWidget в качестве фреймворка для вашего следующего проекта. Пожалуйста, присылайте все замечания и
-предложения мне на почту [enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com).
+I hope that this guide was a bit useful for you. I'm happy if you'll select jWidget as a framework for your
+next project. Please, send all remarks and offers to me by
+email [enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com).
