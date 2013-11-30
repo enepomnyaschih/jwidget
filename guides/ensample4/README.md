@@ -26,7 +26,7 @@ or may be "like" will be added to some tweets by some other user actions? Anyway
 feel safe about that view will always be up-to-date.
 
 One more notice: in other Model-View frameworks (I mean, MVC frameworks) like ExtJS, Controller is responsible for
-event listening and handling. jWidget doesn't provide and features for such controllers implementation.
+event listening and handling. jWidget doesn't provide any features for such controllers implementation.
 Moreover, ExtJS implementation suffers in performance because of often CSS query calls, when it is unneccessary in
 jWidget where everything works by direct references to elements.
 

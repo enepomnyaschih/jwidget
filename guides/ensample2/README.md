@@ -4,7 +4,7 @@ Demo: [http://enepomnyaschih.github.io/mt/2/](http://enepomnyaschih.github.io/mt
 
 Source: [https://github.com/enepomnyaschih/mt/tree/mt-2](https://github.com/enepomnyaschih/mt/tree/mt-2) (Git branch)
 
-In thi spart, we'll meet JW.AbstractArray, will try its algorithms
+In this part, we'll meet JW.AbstractArray, will try its algorithms
 {@link JW.AbstractArray#method-map map} and {@link JW.AbstractArray#method-$map $map}
 and will learn how to add child UI component arrays.
 
