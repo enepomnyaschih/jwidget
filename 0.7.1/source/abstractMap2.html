@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
+	/*
+	JW.AbstractMap createMap(items, formatter);
+	Mixed invoke(target, method, args);
+	*/
+	
+	setObservableOutput: function() {},
+	
+	testEmpty: function() {
+		var map = this.createMap();
+		this.assertStrictEqual(0, this.invoke(map, &quot;getLength&quot;));
+		this.assertTrue(this.invoke(map, &quot;isEmpty&quot;));
+		this.assertUndefined(this.invoke(map, &quot;get&quot;, [0]));
+		this.assertUndefined(this.invoke(map, &quot;getFirst&quot;));
+		this.assertUndefined(this.invoke(map, &quot;getFirstKey&quot;));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getKeys&quot;), []));
+		this.assertTrue(this.invoke(map, &quot;$getKeys&quot;).equal([]));
+		this.assertFalse(this.invoke(map, &quot;containsItem&quot;, [0]));
+		this.assertFalse(this.invoke(map, &quot;containsKey&quot;, [0]));
+		this.assertUndefined(this.invoke(map, &quot;keyOf&quot;, [0]));
+		this.assertTrue(this.invoke(map, &quot;every&quot;, [JW.isInt]));
+		this.assertFalse(this.invoke(map, &quot;some&quot;, [JW.isInt]));
+		this.assertUndefined(this.invoke(map, &quot;search&quot;, [JW.isInt]));
+		this.assertUndefined(this.invoke(map, &quot;find&quot;, [JW.isInt]));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;filter&quot;, [JW.isInt]), {}));
+		this.assertTrue(this.invoke(map, &quot;$filter&quot;, [JW.isInt]).equal({}));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;map&quot;, [function(x) { return x + 1; }]), {}));
+		this.assertTrue(this.invoke(map, &quot;$map&quot;, [function(x) { return x + 1; }]).equal({}));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSorted&quot;), []));
+		this.assertTrue(this.invoke(map, &quot;$toSorted&quot;).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSortedComparing&quot;), []));
+		this.assertTrue(this.invoke(map, &quot;$toSortedComparing&quot;).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeys&quot;), []));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeys&quot;).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeysComparing&quot;), []));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeysComparing&quot;).equal([]));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;index&quot;, [function(x) { return x; }]), {}));
+		this.assertTrue(this.invoke(map, &quot;$index&quot;, [function(x) { return x; }]).equal({}));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toArray&quot;), []));
+		this.assertTrue(this.invoke(map, &quot;$toArray&quot;).equal([]));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;toMap&quot;), {}));
+		this.assertTrue(this.invoke(map, &quot;$toMap&quot;).equal({}));
+		this.assertTrue(JW.Set.equal(this.invoke(map, &quot;toSet&quot;), []));
+		this.assertTrue(this.invoke(map, &quot;$toSet&quot;).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;asArray&quot;), []));
+		this.assertTrue(this.invoke(map, &quot;$asArray&quot;).equal([]));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;asMap&quot;), {}));
+		this.assertTrue(this.invoke(map, &quot;$asMap&quot;).equal({}));
+		this.assertTrue(JW.Set.equal(this.invoke(map, &quot;asSet&quot;), []));
+		this.assertTrue(this.invoke(map, &quot;$asSet&quot;).equal([]));
+	},
+	
+	testItems: function() {
+		var map = this.createMap({&quot;a&quot;: 2, &quot;b&quot;: 4});
+		this.assertStrictEqual(2, this.invoke(map, &quot;getLength&quot;));
+		this.assertFalse(this.invoke(map, &quot;isEmpty&quot;));
+		this.assertStrictEqual(2, this.invoke(map, &quot;get&quot;, [&quot;a&quot;]));
+		this.assertStrictEqual(4, this.invoke(map, &quot;get&quot;, [&quot;b&quot;]));
+		this.assertStrictEqual(2, this.invoke(map, &quot;getFirst&quot;));
+		this.assertStrictEqual(&quot;a&quot;, this.invoke(map, &quot;getFirstKey&quot;));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getKeys&quot;), [&quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getKeys&quot;).equal([&quot;a&quot;, &quot;b&quot;]));
+		this.assertFalse(this.invoke(map, &quot;containsItem&quot;, [0]));
+		this.assertTrue(this.invoke(map, &quot;containsItem&quot;, [2]));
+		this.assertFalse(this.invoke(map, &quot;containsKey&quot;, [&quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;containsKey&quot;, [&quot;a&quot;]));
+		this.assertUndefined(this.invoke(map, &quot;keyOf&quot;, [0]));
+		this.assertStrictEqual(&quot;a&quot;, this.invoke(map, &quot;keyOf&quot;, [2]));
+		this.assertTrue(this.invoke(map, &quot;every&quot;, [JW.isInt]));
+		this.assertTrue(this.invoke(map, &quot;some&quot;, [JW.isInt]));
+		this.assertStrictEqual(2, this.invoke(map, &quot;search&quot;, [JW.isInt]));
+		this.assertStrictEqual(&quot;a&quot;, this.invoke(map, &quot;find&quot;, [JW.isInt]));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;filter&quot;, [JW.isInt]), {&quot;a&quot;: 2, &quot;b&quot;: 4}));
+		this.assertTrue(this.invoke(map, &quot;$filter&quot;, [JW.isInt]).equal({&quot;a&quot;: 2, &quot;b&quot;: 4}));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;map&quot;, [function(x) { return x + 1; }]), {&quot;a&quot;: 3, &quot;b&quot;: 5}));
+		this.assertTrue(this.invoke(map, &quot;$map&quot;, [function(x) { return x + 1; }]).equal({&quot;a&quot;: 3, &quot;b&quot;: 5}));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSorted&quot;), [2, 4]));
+		this.assertTrue(this.invoke(map, &quot;$toSorted&quot;).equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSortedComparing&quot;), [2, 4]));
+		this.assertTrue(this.invoke(map, &quot;$toSortedComparing&quot;).equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeys&quot;), [&quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeys&quot;).equal([&quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeysComparing&quot;), [&quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeysComparing&quot;).equal([&quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;index&quot;, [function(x) { return x; }]), {&quot;2&quot;: 2, &quot;4&quot;: 4}));
+		this.assertTrue(this.invoke(map, &quot;$index&quot;, [function(x) { return x; }]).equal({&quot;2&quot;: 2, &quot;4&quot;: 4}));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toArray&quot;), [2, 4]));
+		this.assertTrue(this.invoke(map, &quot;$toArray&quot;).equal([2, 4]));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;toMap&quot;), {&quot;a&quot;: 2, &quot;b&quot;: 4}));
+		this.assertTrue(this.invoke(map, &quot;$toMap&quot;).equal({&quot;a&quot;: 2, &quot;b&quot;: 4}));
+		//this.assertTrue(JW.Set.equal(map.toSet(), [2, 4]));
+		//this.assertTrue(map.$toSet().equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;asArray&quot;), [2, 4]));
+		this.assertTrue(this.invoke(map, &quot;$asArray&quot;).equal([2, 4]));
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;asMap&quot;), {&quot;a&quot;: 2, &quot;b&quot;: 4}));
+		this.assertTrue(this.invoke(map, &quot;$asMap&quot;).equal({&quot;a&quot;: 2, &quot;b&quot;: 4}));
+		//this.assertTrue(JW.Set.equal(map.asSet(), [2, 4]));
+		//this.assertTrue(map.$asSet().equal([2, 4]));
+	},
+	
+	testEvery: function() {
+		var map = this.createMap({a: 2, b: 3.5, c: 4});
+		this.assertTrue(this.invoke(map, &quot;every&quot;, [JW.isNumber]));
+		this.assertFalse(this.invoke(map, &quot;every&quot;, [JW.isInt]));
+		this.assertFalse(this.invoke(map, &quot;every&quot;, [JW.isString]));
+		
+		this.setExpectedOutput(
+			&quot;2 at a&quot;,
+			&quot;3.5 at b&quot;,
+			&quot;4 at c&quot;
+		);
+		this.invoke(map, &quot;every&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+		}, this]);
+		
+		this.setExpectedOutput(
+			&quot;2 at a&quot;,
+			&quot;3.5 at b&quot;
+		);
+		this.invoke(map, &quot;every&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+			return JW.isInt(item);
+		}, this]);
+	},
+	
+	testSome: function() {
+		var map = this.createMap({a: 2, b: 3.5, c: 4});
+		this.assertTrue(this.invoke(map, &quot;some&quot;, [JW.isNumber]));
+		this.assertTrue(this.invoke(map, &quot;some&quot;, [JW.isInt]));
+		this.assertFalse(this.invoke(map, &quot;some&quot;, [JW.isString]));
+		
+		this.setExpectedOutput(
+			&quot;2 at a&quot;
+		);
+		this.invoke(map, &quot;some&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+		}, this]);
+		
+		this.setExpectedOutput(
+			&quot;2 at a&quot;,
+			&quot;3.5 at b&quot;
+		);
+		this.invoke(map, &quot;some&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+			return !JW.isInt(item);
+		}, this]);
+	},
+	
+	testEach: function() {
+		var map = this.createMap({a: 2, b: 3.5, c: 4});
+		this.setExpectedOutput(
+			&quot;2 at a&quot;,
+			&quot;3.5 at b&quot;,
+			&quot;4 at c&quot;
+		);
+		this.invoke(map, &quot;each&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+			return false;
+		}, this]);
+	},
+	
+	testSearch: function() {
+		var map = this.createMap({a: 2.5, b: 3.5, c: 4});
+		this.assertStrictEqual(4, this.invoke(map, &quot;search&quot;, [JW.isInt]));
+	},
+	
+	testFind: function() {
+		var map = this.createMap({a: 2.5, b: 3.5, c: 4});
+		this.assertStrictEqual(&quot;c&quot;, this.invoke(map, &quot;find&quot;, [JW.isInt]));
+	},
+	
+	testFilter: function() {
+		var map = this.createMap({a: 2, b: 3.5, c: 4});
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;filter&quot;, [JW.isInt]), {a: 2, c: 4}));
+		this.assertTrue(this.invoke(map, &quot;$filter&quot;, [JW.isInt]).equal({a: 2, c: 4}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 3.5, c: 4}]));
+	},
+	
+	testMap: function() {
+		var map = this.createMap({a: 2, b: 4});
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;map&quot;, [function(x) { return x + 1; }]), {a: 3, b: 5}));
+		this.assertTrue(this.invoke(map, &quot;$map&quot;, [function(x) { return x + 1; }]).equal({a: 3, b: 5}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4}]));
+	},
+	
+	testToSorted: function() {
+		var map = this.createMap({a: 3, b: 2, c: 4});
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSorted&quot;), [2, 3, 4]));
+		this.assertTrue(this.invoke(map, &quot;$toSorted&quot;).equal([2, 3, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSorted&quot;, [null, null, -1]), [4, 3, 2]));
+		this.assertTrue(this.invoke(map, &quot;$toSorted&quot;, [null, null, -1]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSorted&quot;, [function(x) { return -x; }]), [4, 3, 2]));
+		this.assertTrue(this.invoke(map, &quot;$toSorted&quot;, [function(x) { return -x; }]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSorted&quot;, [function(x) { return -x; }, null, -1]), [2, 3, 4]));
+		this.assertTrue(this.invoke(map, &quot;$toSorted&quot;, [function(x) { return -x; }, null, -1]).equal([2, 3, 4]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 3, b: 2, c: 4}]));
+	},
+	
+	testToSortedComparing: function() {
+		var map = this.createMap({a: 3, b: 2, c: 4});
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSortedComparing&quot;), [2, 3, 4]));
+		this.assertTrue(this.invoke(map, &quot;$toSortedComparing&quot;).equal([2, 3, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSortedComparing&quot;, [null, null, -1]), [4, 3, 2]));
+		this.assertTrue(this.invoke(map, &quot;$toSortedComparing&quot;, [null, null, -1]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSortedComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]), [4, 3, 2]));
+		this.assertTrue(this.invoke(map, &quot;$toSortedComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;toSortedComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, null, -1]), [2, 3, 4]));
+		this.assertTrue(this.invoke(map, &quot;$toSortedComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, null, -1]).equal([2, 3, 4]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 3, b: 2, c: 4}]));
+	},
+	
+	testGetSortingKeys: function() {
+		var map = this.createMap({a: 3, b: 2, c: 4});
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeys&quot;), [&quot;b&quot;, &quot;a&quot;, &quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeys&quot;).equal([&quot;b&quot;, &quot;a&quot;, &quot;c&quot;]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeys&quot;, [null, null, -1]), [&quot;c&quot;, &quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeys&quot;, [null, null, -1]).equal([&quot;c&quot;, &quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeys&quot;, [function(x) { return -x; }]), [&quot;c&quot;, &quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeys&quot;, [function(x) { return -x; }]).equal([&quot;c&quot;, &quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeys&quot;, [function(x) { return -x; }, null, -1]), [&quot;b&quot;, &quot;a&quot;, &quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeys&quot;, [function(x) { return -x; }, null, -1]).equal([&quot;b&quot;, &quot;a&quot;, &quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 3, b: 2, c: 4}]));
+	},
+	
+	testGetSortingKeysComparing: function() {
+		var map = this.createMap({a: 3, b: 2, c: 4});
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeysComparing&quot;), [&quot;b&quot;, &quot;a&quot;, &quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeysComparing&quot;).equal([&quot;b&quot;, &quot;a&quot;, &quot;c&quot;]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeysComparing&quot;, [null, null, -1]), [&quot;c&quot;, &quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeysComparing&quot;, [null, null, -1]).equal([&quot;c&quot;, &quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeysComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]), [&quot;c&quot;, &quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeysComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]).equal([&quot;c&quot;, &quot;a&quot;, &quot;b&quot;]));
+		this.assertTrue(JW.Array.equal(this.invoke(map, &quot;getSortingKeysComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, null, -1]), [&quot;b&quot;, &quot;a&quot;, &quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;$getSortingKeysComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, null, -1]).equal([&quot;b&quot;, &quot;a&quot;, &quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 3, b: 2, c: 4}]));
+	},
+	
+	testIndex: function() {
+		var map = this.createMap({a: 2, b: 4});
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;index&quot;, [function(x) { return x + 1; }]), {&quot;3&quot;: 2, &quot;5&quot;: 4}));
+		this.assertTrue(this.invoke(map, &quot;$index&quot;, [function(x) { return x + 1; }]).equal({&quot;3&quot;: 2, &quot;5&quot;: 4}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4}]));
+	},
+	
+	testToSet: function() {
+		var items = [new JW.Proxy(), new JW.Proxy()];
+		var map = this.createMap({a: items[0], b: items[1]});
+		this.assertTrue(JW.Set.equal(this.invoke(map, &quot;toSet&quot;), items));
+		this.assertTrue(this.invoke(map, &quot;$toSet&quot;).equal(items));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: items[0], b: items[1]}]));
+	},
+	
+	testAsSet: function() {
+		var items = [new JW.Proxy(), new JW.Proxy()];
+		var map = this.createMap({a: items[0], b: items[1]});
+		this.assertTrue(JW.Set.equal(this.invoke(map, &quot;asSet&quot;), items));
+		this.assertTrue(this.invoke(map, &quot;$asSet&quot;).equal(items));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: items[0], b: items[1]}]));
+	},
+	
+	testSet: function() {
+		var map = this.createMap({a: 2, b: 4});
+		
+		this.setObservableOutput();
+		this.assertStrictEqual(4, this.invoke(map, &quot;set&quot;, [4, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4} +{b:3}&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(map, &quot;set&quot;, [3, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 3}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{} +{c:5}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 3&quot;
+		);
+		this.assertUndefined(this.invoke(map, &quot;set&quot;, [5, &quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 3, c: 5}]));
+	},
+	
+	testTrySet: function() {
+		var map = this.createMap({a: 2, b: 4});
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;trySet&quot;, [4, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4} +{b:3}&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(map, &quot;trySet&quot;, [3, &quot;b&quot;]).value);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 3}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{} +{c:5}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 3&quot;
+		);
+		this.assertUndefined(this.invoke(map, &quot;trySet&quot;, [5, &quot;c&quot;]).value);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 3, c: 5}]));
+	},
+	
+	testSetAll: function() {
+		var map = this.createMap({a: 2, b: 4, c: 5});
+		var empty = new JW.AbstractMap.SpliceResult({}, {});
+		
+		this.setObservableOutput();
+		JW.Tests.Collection.assertMapSpliceResult(this, empty, this.invoke(map, &quot;setAll&quot;, [{}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 5}]));
+		
+		this.setObservableOutput();
+		JW.Tests.Collection.assertMapSpliceResult(this, empty, this.invoke(map, &quot;setAll&quot;, [{a: 2, b: 4}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 5}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4} +{b:3,d:6}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 4&quot;
+		);
+		var expected = new JW.AbstractMap.SpliceResult({b: 4}, {b: 3, d: 6});
+		JW.Tests.Collection.assertMapSpliceResult(this, expected, this.invoke(map, &quot;setAll&quot;, [{b: 3, c: 5, d: 6}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 3, c: 5, d: 6}]));
+	},
+	
+	testTrySetAll: function() {
+		var map = this.createMap({a: 2, b: 4, c: 5});
+		var empty = new JW.AbstractMap.SpliceResult({}, {});
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;trySetAll&quot;, [{}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 5}]));
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;trySetAll&quot;, [{a: 2, b: 4}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 5}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4} +{b:3,d:6}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 4&quot;
+		);
+		var expected = new JW.AbstractMap.SpliceResult({b: 4}, {b: 3, d: 6});
+		JW.Tests.Collection.assertMapSpliceResult(this, expected, this.invoke(map, &quot;trySetAll&quot;, [{b: 3, c: 5, d: 6}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 3, c: 5, d: 6}]));
+	},
+	
+	testRemove: function() {
+		var map = this.createMap({a: 2, b: 4});
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;remove&quot;, [&quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 1&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(map, &quot;remove&quot;, [&quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2}]));
+	},
+	
+	testTryRemove: function() {
+		var map = this.createMap({a: 2, b: 4});
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;tryRemove&quot;, [&quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 1&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(map, &quot;tryRemove&quot;, [&quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2}]));
+	},
+	
+	testRemoveAll: function() {
+		var map = this.createMap({a: 2, b: 4, c: 3});
+		
+		this.setObservableOutput();
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;removeAll&quot;, [[]]), {}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 3}]));
+		
+		this.setObservableOutput();
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;removeAll&quot;, [[&quot;d&quot;, &quot;e&quot;]]), {}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 3}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4,c:3} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 1&quot;
+		);
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;removeAll&quot;, [[&quot;b&quot;, &quot;c&quot;, &quot;d&quot;]]), {b: 4, c: 3}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2}]));
+	},
+	
+	test$RemoveAll: function() {
+		var map = this.createMap({a: 2, b: 4, c: 3});
+		
+		this.setObservableOutput();
+		this.assertTrue(this.invoke(map, &quot;$removeAll&quot;, [[]]).equal({}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 3}]));
+		
+		this.setObservableOutput();
+		this.assertTrue(this.invoke(map, &quot;$removeAll&quot;, [[&quot;d&quot;, &quot;e&quot;]]).equal({}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 3}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4,c:3} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 1&quot;
+		);
+		this.assertTrue(this.invoke(map, &quot;$removeAll&quot;, [[&quot;b&quot;, &quot;c&quot;, &quot;d&quot;]]).equal({b: 4, c: 3}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2}]));
+	},
+	
+	testTryRemoveAll: function() {
+		var map = this.createMap({a: 2, b: 4, c: 3});
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;tryRemoveAll&quot;, [[]]), {});
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 3}]));
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;tryRemoveAll&quot;, [[&quot;d&quot;, &quot;e&quot;]]), {});
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 3}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4,c:3} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 1&quot;
+		);
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;tryRemoveAll&quot;, [[&quot;b&quot;, &quot;c&quot;, &quot;d&quot;]]), {b: 4, c: 3}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2}]));
+	},
+	
+	testRemoveItem: function() {
+		var map = this.createMap({a: 2, b: 4, c: 3, d: 4});
+		
+		this.setObservableOutput();
+		this.invoke(map, &quot;removeItem&quot;, [1]);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4, c: 3, d: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:4} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 4 to 3&quot;
+		);
+		this.invoke(map, &quot;removeItem&quot;, [4]);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, c: 3, d: 4}]));
+	},
+	
+	testRemoveItems: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var d = new JW.Proxy(&quot;d&quot;);
+		var map = this.createMap({a: a, b: b, c: a, d: c}, function(x) { return x.value; });
+		
+		this.setObservableOutput();
+		this.invoke(map, &quot;removeItems&quot;, [[]]);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: a, b: b, c: a, d: c}]));
+		
+		this.setObservableOutput();
+		this.invoke(map, &quot;removeItems&quot;, [[d]]);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: a, b: b, c: a, d: c}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{a:a,c:a,d:c} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 4 to 1&quot;
+		);
+		this.invoke(map, &quot;removeItems&quot;, [[a, c]]);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{b: b}]));
+	},
+	
+	testSetKey: function() {
+		var map = this.createMap({a: 2, b: 4});
+		
+		this.setObservableOutput();
+		this.assertStrictEqual(4, this.invoke(map, &quot;setKey&quot;, [&quot;b&quot;, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Reindexed by {b:c}&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(map, &quot;setKey&quot;, [&quot;b&quot;, &quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, c: 4}]));
+	},
+	
+	testTrySetKey: function() {
+		var map = this.createMap({a: 2, b: 4});
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;trySetKey&quot;, [&quot;b&quot;, &quot;b&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Reindexed by {b:c}&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(map, &quot;trySetKey&quot;, [&quot;b&quot;, &quot;c&quot;]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, c: 4}]));
+	},
+	
+	testClear: function() {
+		var map = this.createMap();
+		
+		this.setObservableOutput();
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;clear&quot;), {}));
+		this.assertTrue(this.invoke(map, &quot;$clear&quot;).equal({}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{}]));
+		
+		var map = this.createMap({a: 2, b: 4});
+		this.setObservableOutput(
+			&quot;Cleared {a:2,b:4}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 0&quot;
+		);
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;clear&quot;), {a: 2, b: 4}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{}]));
+		
+		var map = this.createMap({a: 2, b: 4});
+		this.setObservableOutput(
+			&quot;Cleared {a:2,b:4}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 0&quot;
+		);
+		this.assertTrue(this.invoke(map, &quot;$clear&quot;).equal({a: 2, b: 4}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{}]));
+	},
+	
+	testTryClear: function() {
+		var map = this.createMap();
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;tryClear&quot;));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{}]));
+		
+		var map = this.createMap({a: 2, b: 4});
+		this.setObservableOutput(
+			&quot;Cleared {a:2,b:4}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 2 to 0&quot;
+		);
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;tryClear&quot;), {a: 2, b: 4}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{}]));
+	},
+	
+	testSplice: function() {
+		var map = this.createMap({a: 1, b: 2, c: 3, d: 4});
+		var empty = new JW.AbstractMap.SpliceResult({}, {});
+		
+		this.setObservableOutput();
+		var got = this.invoke(map, &quot;splice&quot;, [[&quot;e&quot;], {c: 3}]);
+		JW.Tests.Collection.assertMapSpliceResult(this, empty, got);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{a:1,b:2,d:4} +{b:3,d:6,e:5,f:7}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 4 to 5&quot;
+		);
+		var expected = new JW.AbstractMap.SpliceResult({a: 1, b: 2, d: 4}, {b: 3, d: 6, e: 5, f: 7});
+		var got = this.invoke(map, &quot;splice&quot;, [[&quot;a&quot;, &quot;b&quot;, &quot;e&quot;, &quot;g&quot;], {b: 3, d: 6, e: 5, f: 7}]);
+		JW.Tests.Collection.assertMapSpliceResult(this, expected, got);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{b: 3, c: 3, d: 6, e: 5, f: 7}]));
+	},
+	
+	testTrySplice: function() {
+		var map = this.createMap({a: 1, b: 2, c: 3, d: 4});
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;trySplice&quot;, [[&quot;e&quot;], {c: 3}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{a:1,b:2,d:4} +{b:3,d:6,e:5,f:7}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 4 to 5&quot;
+		);
+		var expected = new JW.AbstractMap.SpliceResult({a: 1, b: 2, d: 4}, {b: 3, d: 6, e: 5, f: 7});
+		var got = this.invoke(map, &quot;trySplice&quot;, [[&quot;a&quot;, &quot;b&quot;, &quot;e&quot;, &quot;g&quot;], {b: 3, d: 6, e: 5, f: 7}]);
+		JW.Tests.Collection.assertMapSpliceResult(this, expected, got);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{b: 3, c: 3, d: 6, e: 5, f: 7}]));
+	},
+	
+	testReindex: function() {
+		var map = this.createMap({a: 1, b: 2, c: 3, d: 4, e: 5});
+		
+		this.setObservableOutput();
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;reindex&quot;, [{}]), {}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4, e: 5}]));
+		
+		this.setObservableOutput();
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;reindex&quot;, [{b: &quot;b&quot;, c: &quot;c&quot;}]), {}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4, e: 5}]));
+		
+		this.setObservableOutput(
+			&quot;Reindexed by {a:d,c:f,d:a}&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;reindex&quot;, [{a: &quot;d&quot;, b: &quot;b&quot;, c: &quot;f&quot;, d: &quot;a&quot;}]), {a: &quot;d&quot;, c: &quot;f&quot;, d: &quot;a&quot;}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 4, b: 2, d: 1, e: 5, f: 3}]));
+	},
+	
+	testTryReindex: function() {
+		var map = this.createMap({a: 1, b: 2, c: 3, d: 4, e: 5});
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;tryReindex&quot;, [{}]), {});
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4, e: 5}]));
+		
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(map, &quot;tryReindex&quot;, [{b: &quot;b&quot;, c: &quot;c&quot;}]), {});
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4, e: 5}]));
+		
+		this.setObservableOutput(
+			&quot;Reindexed by {a:d,c:f,d:a}&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(JW.Map.equal(this.invoke(map, &quot;tryReindex&quot;, [{a: &quot;d&quot;, b: &quot;b&quot;, c: &quot;f&quot;, d: &quot;a&quot;}]), {a: &quot;d&quot;, c: &quot;f&quot;, d: &quot;a&quot;}));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 4, b: 2, d: 1, e: 5, f: 3}]));
+	},
+	
+	testPerformSplice: function() {
+		var map = this.createMap({a: 1, b: 2, c: 3, d: 4});
+		
+		this.setObservableOutput();
+		this.invoke(map, &quot;performSplice&quot;, [{a: 1, b: 2, c: 3, d: 4}]);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4}]));
+		
+		this.setObservableOutput(
+			&quot;Spliced -{b:2,c:3} +{b:3,e:5,f:6}&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 4 to 5&quot;
+		);
+		this.invoke(map, &quot;performSplice&quot;, [{a: 1, b: 3, d: 4, e: 5, f: 6}]);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 3, d: 4, e: 5, f: 6}]));
+	},
+	
+	testPerformReindex: function() {
+		var map = this.createMap({a: 1, b: 2, c: 3, d: 4, e: 5});
+		
+		this.setObservableOutput();
+		this.invoke(map, &quot;performReindex&quot;, [{a: 1, b: 2, c: 3, d: 4, e: 5}]);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4, e: 5}]));
+		
+		this.setObservableOutput(
+			&quot;Reindexed by {a:d,c:f,d:a}&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(map, &quot;performReindex&quot;, [{a: 4, b: 2, d: 1, e: 5, f: 3}]);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 4, b: 2, d: 1, e: 5, f: 3}]));
+	},
+	
+	testDetectSplice: function() {
+		var map = this.createMap({a: 1, b: 2, c: 3, d: 4});
+		
+		this.assertUndefined(this.invoke(map, &quot;detectSplice&quot;, [{a: 1, b: 2, c: 3, d: 4}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4}]));
+		
+		var expected = new JW.AbstractMap.SpliceParams([&quot;c&quot;], {b: 3, e: 5, f: 6});
+		var got = this.invoke(map, &quot;detectSplice&quot;, [{a: 1, b: 3, d: 4, e: 5, f: 6}]);
+		JW.Tests.Collection.assertMapSpliceParams(this, expected, got);
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4}]));
+	},
+	
+	testDetectReindex: function() {
+		var map = this.createMap({a: 1, b: 2, c: 3, d: 4, e: 5});
+		
+		this.assertUndefined(this.invoke(map, &quot;detectReindex&quot;, [{a: 1, b: 2, c: 3, d: 4, e: 5}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4, e: 5}]));
+		
+		var expected = {a: &quot;d&quot;, c: &quot;f&quot;, d: &quot;a&quot;};
+		var got = this.invoke(map, &quot;detectReindex&quot;, [{a: 4, b: 2, d: 1, e: 5, f: 3}]);
+		this.assertTrue(JW.Map.equal(expected, got));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 2, c: 3, d: 4, e: 5}]));
+	},
+	
+	testEqual: function() {
+		var map = this.createMap({a: 2, b: 3});
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 3}]));
+		this.assertTrue(this.invoke(map, &quot;equal&quot;, [{b: 3, a: 2}]));
+		this.assertFalse(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 3, c: 4}]));
+		this.assertFalse(this.invoke(map, &quot;equal&quot;, [{a: 2}]));
+		this.assertFalse(this.invoke(map, &quot;equal&quot;, [{a: 3, b: 2}]));
+		this.assertFalse(this.invoke(map, &quot;equal&quot;, [{a: 2, b: 4}]));
+		this.assertFalse(this.invoke(map, &quot;equal&quot;, [{a: 1, b: 3}]));
+	}
+});
+
+JW.Tests.Collection.AbstractMap = {};
+</pre>
+</body>
+</html>

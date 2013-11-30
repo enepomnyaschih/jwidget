@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*!
+	jWidget Lib 0.7.1
+	
+	http://enepomnyaschih.github.io/jwidget/#!/guide/home
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+if (typeof JW !== &quot;undefined&quot;) {
+	throw new Error(&quot;Can't initialize jWidget Lib: JW namespace already defined&quot;);
+}
+
+(typeof window === &quot;undefined&quot; ? global : window).JW = {};
+
+<span id='JW'>/**
+</span> * @class JW
+ *
+ * Main jWidget library namespace.
+ */
+
+<span id='JW-static-property-global'>/**
+</span> * @property {Object}
+ *
+ * Root environment namespace. Involved for JavaScript and NodeJS compatibility. Equals to `window` in
+ * browser environment and `global` in NodeJS environment.
+ *
+ * @static
+ */
+JW.global = (typeof window === &quot;undefined&quot; ? global : window);
+
+<span id='JW-static-method-apply'>/**
+</span> * Iterates through objects passed after first argument and copies all their fields into
+ * `target` object. Returns `target`. Fields of source objects which are undefined will be ignored.
+ * Empty source objects (undefined, null) will be ignored.
+ *
+ * Function modifies `target` object!
+ * 
+ * Example 1:
+ * 
+ *     var x = {         var y = {         // Result = {
+ *         a: 10,                          //     a: 10,
+ *         b: 20,            b: 30,        //     b: 30,
+ *         c: null,          c: 40,        //     c: 40,
+ *         d: undefined,     d: 50,        //     d: 50,
+ *         e: null                         //     e: null,
+ *                           f: 60,        //     f: 60
+ *                           g: undefined  // 
+ *     };                };                // };
+ *     
+ *     JW.applyIf(x, y);
+ * 
+ * Example 2 (form data preparing):
+ * 
+ *     My.Form = JW.Class.{@link JW.Class#static-method-extend}({
+ *         // Object data;
+ *         
+ *         composeData: function(extraData) {
+ *             return JW.apply({}, this.getDefaultData(), this.data, extraData);
+ *         },
+ *         
+ *         // virtual
+ *         getDefaultData: function() {
+ *             return null;
+ *         }
+ *     });
+ *
+ * @static
+ *
+ * @param {Object} target Target object.
+ * @param {Object} [sources] Source objects.
+ * @returns {Object} Returns target object.
+ */
+JW.apply = function(target /*, sources */) {
+	for (var i = 1; i &lt; arguments.length; ++i) {
+		var source = arguments[i];
+		if (!source) {
+			continue;
+		}
+		for (var key in source) {
+			if (typeof source[key] !== &quot;undefined&quot;) {
+				target[key] = source[key];
+			}
+		}
+	}
+	return target;
+};
+
+JW.apply(JW, {
+<span id='JW-static-method-isUndefined'>	/**
+</span>	 * Checks whether x is undefined.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is undefined.
+	 */
+	isUndefined: function(v) {
+		return v === undefined;
+	},
+	
+<span id='JW-static-method-isDefined'>	/**
+</span>	 * Checks whether x is not undefined.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is not undefined.
+	 */
+	isDefined: function(v) {
+		return v !== undefined;
+	},
+	
+<span id='JW-static-method-isNull'>	/**
+</span>	 * Checks whether x is null.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is null.
+	 */
+	isNull: function(v) {
+		return v === null;
+	},
+	
+<span id='JW-static-method-isNotNull'>	/**
+</span>	 * Checks whether x is not null.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is not null.
+	 */
+	isNotNull: function(v) {
+		return v !== null;
+	},
+	
+<span id='JW-static-method-isSet'>	/**
+</span>	 * Checks whether x is not undefined and null.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is not undefined and null.
+	 */
+	isSet: function(v) {
+		return (v !== undefined) &amp;&amp; (v !== null);
+	},
+	
+<span id='JW-static-method-isNotSet'>	/**
+</span>	 * Checkes whether x is undefined or null.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is undefined or null.
+	 */
+	isNotSet: function(v) {
+		return (v === undefined) || (v === null);
+	},
+	
+<span id='JW-static-method-isBlank'>	/**
+</span>	 * Checks whether x is blank (`null`, `undefined`, `false`, 0 or blank string).
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is blank.
+	 */
+	isBlank: function(v) {
+		return !v;
+	},
+	
+<span id='JW-static-method-isNotBlank'>	/**
+</span>	 * Checks whether x is not blank (`null`, `undefined`, `false`, 0 or blank string).
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is not blank.
+	 */
+	isNotBlank: function(v) {
+		return Boolean(v);
+	},
+	
+<span id='JW-static-method-isInt'>	/**
+</span>	 * Checks whether x is an integer.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is an integer.
+	 */
+	isInt: function(v) {
+		return (typeof v === &quot;number&quot;) &amp;&amp; Math.round(v) === v;
+	},
+	
+<span id='JW-static-method-isNumber'>	/**
+</span>	 * Checks whether x is a number.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a number.
+	 */
+	isNumber: function(v) {
+		return typeof v === &quot;number&quot;;
+	},
+	
+<span id='JW-static-method-isString'>	/**
+</span>	 * Checks whether x is a string.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a string.
+	 */
+	isString: function(v) {
+		return typeof v === &quot;string&quot;;
+	},
+	
+<span id='JW-static-method-isBoolean'>	/**
+</span>	 * Checks whether x is a boolean.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a boolean.
+	 */
+	isBoolean: function(v) {
+		return typeof v === &quot;boolean&quot;;
+	},
+	
+<span id='JW-static-method-isFunction'>	/**
+</span>	 * Checks whether x is a function.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a function.
+	 */
+	isFunction: function(v) {
+		return typeof v === &quot;function&quot;;
+	},
+	
+<span id='JW-static-method-isArray'>	/**
+</span>	 * Checks whether x is a native JavaScript Array.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is an Array.
+	 */
+	isArray: function(v) {
+		return Object.prototype.toString.apply(v) === '[object Array]';
+	},
+	
+<span id='JW-static-method-isObject'>	/**
+</span>	 * Checks whether x is a native JavaScript Object or class instance.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is an Object.
+	 */
+	isObject: function(v) {
+		return Object.prototype.toString.apply(v) === '[object Object]';
+	},
+	
+<span id='JW-static-method-isRegExp'>	/**
+</span>	 * Checks whether x is a regular expression.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a regular expression.
+	 */
+	isRegExp: function(v) {
+		return Object.prototype.toString.apply(v) === '[object RegExp]';
+	},
+	
+<span id='JW-static-method-isDate'>	/**
+</span>	 * Checks whether x is a date.
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} x is a date.
+	 */
+	isDate: function(v) {
+		return Object.prototype.toString.apply(v) === '[object Date]';
+	},
+	
+<span id='JW-static-method-def'>	/**
+</span>	 * Defines default value. Returns `value`, if it is not undefined, else returns `default`.
+	 * @static
+	 * @param {Mixed} value
+	 * @param {Mixed} default
+	 * @returns {Mixed}
+	 */
+	def: function(v, d) {
+		return JW.isDefined(v) ? v : d;
+	},
+	
+<span id='JW-static-method-defn'>	/**
+</span>	 * Defines default value. Returns `value`, if it is not undefined and null, else returns `default`.
+	 * @static
+	 * @param {Mixed} value
+	 * @param {Mixed} default
+	 * @returns {Mixed}
+	 */
+	defn: function(v, d) {
+		return JW.isSet(v) ? v : d;
+	},
+	
+<span id='JW-static-method-applyIf'>	/**
+</span>	 * The same as JW.apply, but ignores fields which are defined in `target`.
+	 *
+	 * **Example**
+	 * 
+	 *     var x = {         var y = {         // Result = {
+	 *         a: 10,                          //     a: 10,
+	 *         b: 20,            b: 30,        //     b: 20,
+	 *         c: null,          c: 40,        //     c: null,
+	 *         d: undefined      d: 50,        //     d: 50,
+	 *                           e: 60,        //     e: 60
+	 *                           f: undefined  // 
+	 *     };                };                // };
+	 *     
+	 *     JW.applyIf(x, y);
+	 *
+	 * @static
+	 *
+	 * @param {Object} target Target object.
+	 * @param {Object} [sources] Source objects.
+	 * @returns {Object} Returns target object.
+	 */
+	applyIf: function(target /*, sources */) {
+		for (var i = 1; i &lt; arguments.length; ++i) {
+			var source = arguments[i];
+			if (!source) {
+				continue;
+			}
+			for (var key in source) {
+				if (JW.isDefined(source[key]) &amp;&amp; !JW.isDefined(target[key])) {
+					target[key] = source[key];
+				}
+			}
+		}
+		return target;
+	},
+	
+<span id='JW-static-method-applyIfn'>	/**
+</span>	 * The same as JW.apply, but ignores fields which are not undefined and null in `target`.
+	 *
+	 * **Example**
+	 * 
+	 *     var x = {         var y = {         // Result = {
+	 *         a: 10,                          //     a: 10,
+	 *         b: 20,            b: 30,        //     b: 20,
+	 *         c: null,          c: 40,        //     c: 40,
+	 *         d: undefined      d: 50,        //     d: 50,
+	 *                           e: 60,        //     e: 60
+	 *                           f: undefined  // 
+	 *     };                };                // };
+	 *     
+	 *     JW.applyIf(x, y);
+	 *
+	 * @static
+	 *
+	 * @param {Object} target Target object.
+	 * @param {Object} [sources] Source objects.
+	 * @returns {Object} Returns target object.
+	 */
+	applyIfn: function(target /*, sources */) {
+		for (var i = 1; i &lt; arguments.length; ++i) {
+			var source = arguments[i];
+			if (!source) {
+				continue;
+			}
+			for (var key in source) {
+				if (JW.isDefined(source[key]) &amp;&amp; !JW.isSet(target[key])) {
+					target[key] = source[key];
+				}
+			}
+		}
+		return target;
+	},
+	
+<span id='JW-static-method-clean'>	/**
+</span>	 * Clears object from `undefined` values. Returns new object, containing all `target` fields except `undefined`.
+	 * 
+	 * Doesn't modify `target` object.
+	 * 
+	 * If you want to remove `null` values as well, try JW.cleann function.
+	 * 
+	 * Example:
+	 * 
+	 *     var x = {          // Result: y = {
+	 *         a : 10,        //     a: 10,
+	 *         b : 20,        //     b: 20,
+	 *         c : null,      //     c: null
+	 *         d : undefined  //
+	 *     };                 // };
+	 *     
+	 *     var y = JW.clean(x);
+	 *
+	 * @static
+	 *
+	 * @param {Object} target Object.
+	 * @returns {Object} Cleared object.
+	 */
+	clean: function(source) {
+		var result = {};
+		for (var i in source) {
+			if (JW.isDefined(source[i])) {
+				result[i] = source[i];
+			}
+		}
+		return result;
+	},
+	
+<span id='JW-static-method-cleann'>	/**
+</span>	 * Clears object from `null` and `undefined` values.
+	 * Returns new object, containing all `target` fields except `null` and `undefined`.
+	 * 
+	 * Doesn't modify `target` object.
+	 * 
+	 * If you want to remove `undefined` values only, try JW.clean function.
+	 * 
+	 * Example:
+	 * 
+	 *     var x = {          // Result: y = {
+	 *         a : 10,        //     a: 10,
+	 *         b : 20,        //     b: 20
+	 *         c : null,      //
+	 *         d : undefined  //
+	 *     };                 // };
+	 *     
+	 *     var y = JW.clean(x);
+	 *
+	 * @static
+	 *
+	 * @param {Object} target Object.
+	 * @returns {Object} Cleared object.
+	 */
+	cleann: function(source) {
+		var result = {};
+		for (var i in source) {
+			if (JW.isSet(source[i])) {
+				result[i] = source[i];
+			}
+		}
+		return result;
+	},
+	
+<span id='JW-static-method-toArray'>	/**
+</span>	 * @method toArray
+	 *
+	 * Converts object to array. Object must have `length` property and keys from 0 to (`length` - 1).
+	 * 
+	 * Example of such object is function `arguments` list. You can use this method to apply arbitrary
+	 * array methods to `arguments` list.
+	 * 
+	 * Example:
+	 * 
+	 *     function applyOperations(value) {
+	 *         var operations = JW.toArray(arguments, 1);
+	 *         JW.Array.{@link JW.Array#static-method-each each}(operations, function(operation) {
+	 *             operation(value);
+	 *         });
+	 *     }
+	 *
+	 * @static
+	 *
+	 * @param {Mixed} a Source object.
+	 * @param {number} [index] Index of first item to convert. Defaults to 0.
+	 * @param {number} [count] Count of items to convert. Defaults to (`length` - `index`).
+	 * @returns {Array} Array.
+	 */
+<span id='JW-static-method-args'>	/**
+</span>	 * JW.toArray shortcut.
+	 * @static
+	 * @param {Mixed} a Source object.
+	 * @param {number} [index] Index of first item to convert. Defaults to 0.
+	 * @param {number} [count] Count of items to convert. Defaults to (`length` - `index`).
+	 * @returns {Array} Array.
+	 */
+	args: function(a, index, count) {
+		index = index || 0;
+		count = count || (a.length - index);
+		var r = [];
+		for (var i = 0; i &lt; count; ++i) {
+			r.push(a[index + i]);
+		}
+		return r;
+	},
+	
+<span id='JW-static-method-emptyFn'>	/**
+</span>	 * Empty function.
+	 * @static
+	 * @returns {void}
+	 */
+	emptyFn: function() {},
+	
+<span id='JW-static-method-cmp'>	/**
+</span>	 * Universal native types comparer for array sorting.
+	 * 
+	 * - Returns 1, if x &gt; y
+	 * - Returns -1, if x &lt; y
+	 * - Returns 0, if x == y
+	 * 
+	 * You can compare next types: boolean, number, string, Array.
+	 *
+	 * @static
+	 * @param {Mixed} x First value.
+	 * @param {Mixed} y Second value.
+	 * @param {boolean} caseInsensitive Compare strings ignoring letters case. Defaults to false.
+	 * @returns {number} Comparing result.
+	 */
+	cmp: function(x, y, caseInsensitive) {
+		if (typeof x === &quot;boolean&quot; &amp;&amp; typeof y === &quot;boolean&quot;) {
+			return x ? (y ? 0 : 1) : (y ? -1 : 0);
+		}
+		if (JW.isArray(x) &amp;&amp; JW.isArray(y)) {
+			return JW.Array.cmp(x, y, caseInsensitive);
+		}
+		if (caseInsensitive) {
+			if (typeof x === &quot;string&quot;) {
+				x = x.toLowerCase();
+			}
+			if (typeof y === &quot;string&quot;) {
+				y = y.toLowerCase();
+			}
+		}
+		if (x &gt; y) return 1;
+		if (x &lt; y) return -1;
+		return 0;
+	},
+	
+<span id='JW-static-method-cmpCaseInsensitive'>	/**
+</span>	 * Equivalent for `JW.cmp(x, y, true)`. Compares two values ignoring letters case in strings.
+	 * @static
+	 * @param {Mixed} x First value.
+	 * @param {Mixed} y Second value.
+	 * @returns {number} Comparing result.
+	 */
+	cmpCaseInsensitive: function(x, y) {
+		return JW.cmp(x, y, true);
+	},
+	
+<span id='JW-static-method-get'>	/**
+</span>	 * Returns object item by expression. Expression is several words, passed in array of string joined by periods.
+	 * If `field` is `null`, `undefined` or blank string, function will return `obj`.
+	 * 
+	 * Example 1:
+	 * 
+	 *     var obj = {
+	 *         abc : [
+	 *             {
+	 *                 qwe : &quot;xyz&quot;
+	 *             }
+	 *         ]
+	 *     };
+	 *     
+	 *     return JW.get(obj, &quot;abc.0.qwe&quot;); // &quot;xyz&quot;
+	 *     
+	 *     // Equivalent code
+	 *     return JW.get(obj, [ &quot;abc&quot;, 0, &quot;qwe&quot; ]); // &quot;xyz&quot;
+	 * 
+	 * Function represents logic of JW.byField and JW.byValue callbacks.
+	 * 
+	 * Example 2:
+	 * 
+	 *     var arr = [
+	 *         {
+	 *             id   : 1,
+	 *             name : &quot;First item&quot;
+	 *         }, {
+	 *             id   : 2,
+	 *             name : &quot;Second item&quot;
+	 *         }
+	 *     ];
+	 *     
+	 *     return JW.Array.{@link JW.Array#static-method-search search}(arr, JW.byValue(&quot;id&quot;, 2)).name; // &quot;Second item&quot;
+	 * 
+	 * In this example, function JW.get is called inside JW.byValue function implicitly with argument `field` === &quot;id&quot;.
+	 *
+	 * @static
+	 * @param {Object} obj Object.
+	 * @param {string/Array} expression Expression.
+	 * @param {Mixed} def Value to return if item with such expression doesn't exist in object. Defaults to `undefined`.
+	 * @returns {Mixed} Object item.
+	 */
+	get: function(obj, field, def) {
+		if (!field) {
+			return JW.def(obj, def);
+		}
+		if (typeof field === &quot;string&quot;) {
+			field = field.split(&quot;.&quot;);
+		}
+		field = JW.Array.filter(field, function(token) {
+			return JW.isSet(token) &amp;&amp; (token !== &quot;&quot;);
+		});
+		for (var i = 0, l = field.length; i &lt; l; ++i) {
+			if (!obj) {
+				return def;
+			}
+			obj = obj[field[i]];
+		}
+		return JW.def(obj, def);
+	},
+	
+<span id='JW-static-method-set'>	/**
+</span>	 * Assigns object item by expression. Expression is several words, passed in array of string joined by periods.
+	 * 
+	 * Example:
+	 * 
+	 *     var obj = {
+	 *         abc : [
+	 *             {
+	 *                 qwe : &quot;xyz&quot;
+	 *             }
+	 *         ]
+	 *     };
+	 *     
+	 *     JW.set(obj, &quot;def&quot;, &quot;abc.0.qwe&quot;); // replace &quot;xyz&quot; with &quot;def&quot;
+	 *     
+	 *     // equivalent code
+	 *     JW.set(obj, &quot;def&quot;, [ &quot;abc&quot;, 0, &quot;qwe&quot; ]); // replace &quot;xyz&quot; with &quot;def&quot;
+	 *
+	 * @static
+	 * @param {Object} obj Object.
+	 * @param {Mixed} value Value.
+	 * @param {string/Array} field Expression.
+	 * @returns {void}
+	 */
+	set: function(obj, value, field) {
+		if (!field) {
+			return;
+		}
+		if (typeof field === &quot;string&quot;) {
+			field = field.split(&quot;.&quot;);
+		}
+		field = JW.Array.filter(field, function(token) {
+			return JW.isSet(token) &amp;&amp; (token !== &quot;&quot;);
+		});
+		for (var i = 0, l = field.length - 1; i &lt; l; ++i) {
+			token = field[i];
+			obj[token] = obj[token] || {};
+			obj = obj[token];
+		}
+		obj[JW.Array.getLast(field)] = value;
+	},
+	
+<span id='JW-static-method-iid'>	/**
+</span>	 * Returns object unique ID. Returns {@link JW.Class#_iid iid} of object if it is instance of JW.Class,
+	 * else returns the object itself.
+	 *
+	 * This function is used as default result for JW.AbstractArray#getKey and JW.AbstractMap#getKey, and also for
+	 * getKey parameter of static methods JW.Array#static-method-detectSplice,
+	 * JW.Array#static-method-performSplice, JW.Array#static-method-detectReorder,
+	 * JW.Array#static-method-performReorder, JW.Map#static-method-detectReindex,
+	 * JW.Map#static-method-performReindex.
+	 *
+	 * @static
+	 * @param {Object} obj Object.
+	 * @returns {Mixed} Unique object ID.
+	 */
+	iid: function(obj) {
+		return (typeof obj === &quot;object&quot;) ? obj._iid : obj;
+	},
+	
+	
+<span id='JW-static-method-destroy'>	/**
+</span>	 * Calls object method {@link JW.Class#destroy destroy}. Can be used in mappers configuration:
+	 * 
+	 *     var mapper = collection.createMapper({
+	 *         createItem  : function(data) { return new View(data); },
+	 *         destroyItem : JW.destroy, // shorthand for function(view) { view.destroy(); }
+	 *         scope       : this
+	 *     });
+	 *
+	 * @static
+	 * @param {Object} obj Object.
+	 * @returns {void}
+	 */
+	destroy: function(obj) {
+		obj.destroy();
+	},
+	
+<span id='JW-static-method-mod'>	/**
+</span>	 * Returns the remainder of `value` / `mod`. Unlike % operation, work correctly even for decimal `value` and `mod`.
+	 * Returns result in semi-interval [0, `mod`).
+	 * @static
+	 * @param {number} value Value.
+	 * @param {number} mod Divider.
+	 * @returns {number} Remainder.
+	 */
+	mod: function(value, mod) {
+		return value - mod * Math.floor(value / mod);
+	},
+	
+<span id='JW-static-method-smod'>	/**
+</span>	 * Returns the remainder of `value` / `mod`. Unlike % operation, work correctly even for decimal `value` and `mod`.
+	 * Returns result in semi-interval [-`mod` / 2, `mod` / 2).
+	 * @static
+	 * @param {number} value Value.
+	 * @param {number} mod Divider.
+	 * @returns {number} Remainder.
+	 */
+	smod: function(value, mod) {
+		return value - mod * Math.round(value / mod);
+	},
+	
+<span id='JW-static-method-sgn'>	/**
+</span>	 * Returns `value` number sign: 0, 1 or -1.
+	 * @static
+	 * @param {number} value Value.
+	 * @returns {number} Sign.
+	 */
+	sgn: function(value) {
+		return !value ? 0 : value &gt; 0 ? 1 : -1;
+	},
+	
+<span id='JW-static-method-sgnnz'>	/**
+</span>	 * Returns non-zero `value` number sign: 1 or -1. Returns 1 for 0.
+	 * @static
+	 * @param {number} value Value.
+	 * @returns {number} Sign.
+	 */
+	sgnnz: function(value) {
+		return value &gt;= 0 ? 1 : -1;
+	},
+	
+<span id='JW-static-method-inScope'>	/**
+</span>	 * Specifies function call scope.
+	 * 
+	 * **Example**
+	 * 
+	 *     setTimeout(JW.inScope(this.onTimeout, this), 1000);
+	 * 
+	 * is the same as
+	 * 
+	 *     var self = this;
+	 *     setTimeout(function() { self.onTimeout(); }, 1000);
+	 * 
+	 * It is convenient to specify class methods' call scope in constructor before superclass constructor call:
+	 * 
+	 *     var MyClass = function(el, message) {
+	 *         this._onClick = JW.inScope(this._onClick, this);
+	 *         MyClass._super.call(this);
+	 *         this.el = el;
+	 *         this.message = message;
+	 *         this.el.bind(&quot;click&quot;, this._onClick);
+	 *     };
+	 *     
+	 *     JW.extend(MyClass, JW.Class, {
+	 *         // Element el;
+	 *         // String message;
+	 *         
+	 *         // override
+	 *         destroy: function() {
+	 *             this.el.unbind(&quot;click&quot;, this._onClick);
+	 *         },
+	 *         
+	 *         _onClick: function() {
+	 *             alert(this.message);
+	 *         }
+	 *     });
+	 *
+	 * @static
+	 * @param {Function} fn Function.
+	 * @param {Object} scope Call scope.
+	 * @returns {Function} Function with specified call scope.
+	 */
+	inScope: function(func, scope) {
+		return function() {
+			return func.apply(scope, arguments);
+		};
+	},
+	
+<span id='JW-static-method-byField'>	/**
+</span>	 * Returns callback function for collection algorithms. Function returns value of specified field
+	 * of collection item. Item field is retrieved using JW.get function.
+	 *
+	 * **Example (get titles of all collection items):**
+	 *
+	 *     var titles = collection.{@link JW.AbstractCollection#map map}(JW.byField(&quot;title&quot;));
+	 *
+	 * @static
+	 * @param {string} field Expression for JW.get function that specifies item field.
+	 * @returns {Function} Callback function.
+	 */
+	byField: function(field) {
+		return function(item) {
+			return JW.get(item, field);
+		};
+	},
+	
+<span id='JW-static-method-byValue'>	/**
+</span>	 * Returns callback function for collection algorithms. Function checks whether specified field of collection item
+	 * is equal (===) to specified value. Item field is retrieved using JW.get function.
+	 *
+	 * **Example (find item by ID):**
+	 *
+	 *     var item = collection.{@link JW.AbstractCollection#search search}(JW.byValue(&quot;id&quot;, id));
+	 *
+	 * @static
+	 * @param {string} field Expression for JW.get function that specifies item field.
+	 * @param {Mixed} value Value.
+	 * @returns {Function} Callback function.
+	 */
+	byValue: function(field, value) {
+		return function(item) {
+			return JW.get(item, field) === value;
+		};
+	},
+	
+<span id='JW-static-method-byMethod'>	/**
+</span>	 * Returns callback function for collection algorithms. Function calls specified method of collection item
+	 * with specified arguments and returns the result of this call.
+	 *
+	 * **Example (filter tasks that relate to specified on):**
+	 *
+	 *     var tasks = collection.{@link JW.AbstractCollection#filter filter}(JW.byMethod(&quot;relatesTo&quot;, [task]));
+	 *
+	 * @static
+	 * @param {string} method Collection item method name.
+	 * @param {Array} [args] Method arguments.
+	 * @returns {Function} Callback function.
+	 */
+	byMethod: function(method, args) {
+		args = args || [];
+		return function(item) {
+			return item[method].apply(item, args);
+		};
+	}
+});
+
+JW.toArray = JW.args;
+</pre>
+</body>
+</html>

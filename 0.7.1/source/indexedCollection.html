@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-IndexedCollection'>/**
+</span> * @class
+ *
+ * `&lt;K, T&gt; extends JW.AbstractCollection&lt;T&gt;`
+ *
+ * Abstract collection of items of type T with keys of type K.
+ *
+ * There are 2 indexed collection types:
+ *
+ * - JW.AbstractArray (key is number)
+ * - JW.AbstractMap (key is string)
+ *
+ * Please keep in mind the next rule whenever you work with jWidget indexed collections:
+ * in all methods and callbacks which take item and key arguments, item goes first and key goes last.
+ *
+ * # Indexed collection methods
+ *
+ * **Difference compared to JW.AbstractCollection is in bold.**
+ *
+ * Content retrieving:
+ *
+ * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #isEmpty} - Checks collection for emptiness.
+ * - **{@link #get} - Returns collection item by key.**
+ * - {@link #getFirst} - Returns first item in collection
+ * - **{@link #getFirstKey} - Returns key of first item in collection.**
+ * - **{@link #getKeys}, #$getKeys - Returns array of all item keys.**
+ * - {@link #containsItem} - Does collection contain the item?
+ * - **{@link #containsKey} - Does collection contain the key?**
+ * - **{@link #keyOf} - Returns item key. If item is not found, returns `undefined`.**
+ *
+ * Iteration algorhitms (**callback functions are overridden and take extra arguments - item keys**):
+ *
+ * - {@link #every} - Checks all items by criteria.
+ * Returns `true` if all items match the criteria.
+ * - {@link #some} - Checks each item by criteria.
+ * Returns `true` if some items matches the criteria.
+ * - {@link #each} - Iterates items.
+ * - {@link #search} - Finds item by criteria.
+ * Returns first item matching the criteria.
+ * - **{@link #find} - Finds item by criteria.
+ * Returns index of first item matching the criteria.**
+ * - {@link #filter}, #$filter - Filters collection by criteria.
+ * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #map}, #$map - Maps collection items.
+ * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * Builds array consisting of collection items sorted by indexer or comparer.
+ * - **{@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
+ * Returns indexes of collection items sorted by indexer or comparer.**
+ * - {@link #index}, #$index - Indexes collection.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - **{@link #toMap}, #$toMap - Builds new map consisting of collection items.**
+ * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #asArray}, #$asArray - Represents collection as array.
+ * - **{@link #asMap}, #$asMap - Represents collection as map.**
+ * - {@link #asSet}, #$asSet - Represents collection as set.
+ *
+ * Collection modification:
+ *
+ * - **{@link #set}, #trySet - Replaces an item by key.**
+ * - **{@link #remove}, #tryRemove - Removes an item by key.**
+ * - {@link #removeItem} - Removes first occurency of an item in collection.
+ * - {@link #removeItems} - Removes all occurencies of items in collection.
+ * - {@link #clear}, #$clear, #tryClear - Clears collection.
+ *
+ * Synchronizers creation:
+ *
+ * - {@link #createMapper} - Creates item mapper.
+ * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createLister} - Creates converter to set.
+ * - {@link #createIndexer} - Creates converter to map (indexer).
+ * - {@link #createOrderer} - Creates converter to array (orderer).
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createObserver} - Creates observer.
+ *
+ * Similar collection creation (for algorithms and synchronizers implementation):
+ *
+ * - {@link #createEmpty} - Creates empty collection of the same type.
+ * - {@link #createEmptyArray} - Creates empty array of the same observability type.
+ * - {@link #createEmptyMap} - Creates empty map of the same observability type.
+ * - {@link #createEmptySet} - Creates empty set of the same observability type.
+ *
+ * All the same algorithms are also available for native JavaScript collections:
+ *
+ * - Array, see JW.Array static methods.
+ * - Object as map, see JW.Map static methods.
+ *
+ * @extends JW.AbstractCollection
+ * @abstract
+ */
+JW.IndexedCollection = function() {
+	JW.IndexedCollection._super.call(this);
+};
+
+JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
+<span id='JW-IndexedCollection-method-get'>	/**
+</span>	 * @method get
+	 * Returns item by key. If item with such key doesn't exist, returns `undefined`.
+	 * @param {K} key Key.
+	 * @returns {T} Item.
+	 */
+<span id='JW-IndexedCollection-method-S-clear'>	/**
+</span>	 * @method $clear
+	 * Clears collection.
+	 * @returns {JW.IndexedCollection} `&lt;K, T&gt;` Old collection contents.
+	 */
+	
+<span id='JW-IndexedCollection-method-getFirstKey'>	/**
+</span>	 * Returns key of first collection item. If collection is empty, returns `undefined`.
+	 * @returns {K} Key.
+	 */
+	getFirstKey: function() {
+		return this._callStatic(&quot;getFirstKey&quot;);
+	},
+	
+<span id='JW-IndexedCollection-method-getKeys'>	/**
+</span>	 * @method getKeys
+	 * Returns array of keys of all collection items.
+	 * @returns {Array} `&lt;K&gt;` Keys array.
+	 */
+<span id='JW-IndexedCollection-method-S-getKeys'>	/**
+</span>	 * Returns array of keys of all collection items.
+	 * @returns {JW.Array} `&lt;K&gt;` Keys array.
+	 */
+	$getKeys: JW.AbstractCollection._create$Array(&quot;getKeys&quot;),
+	
+<span id='JW-IndexedCollection-method-containsKey'>	/**
+</span>	 * Checks existance of item with specified index in collection.
+	 * @param {K} key Key.
+	 * @returns {boolean} Collection contains item with specified key.
+	 */
+	containsKey: function(key) {
+		return this.get(key) !== undefined;
+	},
+	
+	containsItem: function(item) {
+		return !this.every(function(v) { return item !== v; });
+	},
+	
+<span id='JW-IndexedCollection-method-keyOf'>	/**
+</span>	 * Returns index of item in collection. If such item doesn't exist, returns `undefined`.
+	 * @param {T} item Item.
+	 * @returns {K} Item key.
+	 */
+	keyOf: function(item) {
+		return this.find(function(v) { return item === v; });
+	},
+	
+<span id='JW-IndexedCollection-method-trySet'>	/**
+</span>	 * @method trySet
+	 *
+	 * Replaces item with specified key. If collection doesn't contain such key:
+	 *
+	 * - Array will break.
+	 * - Map will add a new item.
+	 *
+	 * @param {T} item Item.
+	 * @param {K} key Key.
+	 * @returns {JW.Proxy} `&lt;T&gt;` Proxy of the replaced item. If not modified - `undefined`.
+	 */
+<span id='JW-IndexedCollection-method-set'>	/**
+</span>	 * Replaces item with specified key. If collection doesn't contain such key:
+	 *
+	 * - Array will break.
+	 * - Map will add a new item.
+	 *
+	 * @param {T} item Item.
+	 * @param {K} key Key.
+	 * @returns {T} The replaced item.
+	 */
+	set: function(item, key) {
+		var result = this.trySet(item, key);
+		return (result !== undefined) ? result.value : this.get(key);
+	},
+	
+<span id='JW-IndexedCollection-method-tryRemove'>	/**
+</span>	 * @method tryRemove
+	 * Removes item with specified key. If collection doesn't contain such key:
+	 *
+	 * - Array will break.
+	 * - Map will add a new item.
+	 *
+	 * @param {K} key Key.
+	 * @returns {T} The removed item. If not modified - `undefined`.
+	 */
+<span id='JW-IndexedCollection-method-remove'>	/**
+</span>	 * Removes item with specified key. If collection doesn't contain such key:
+	 *
+	 * - Array will break.
+	 * - Map will do nothing.
+	 *
+	 * @param {K} key Key.
+	 * @returns {T} The removed item.
+	 */
+	remove: function(key) {
+		return this.tryRemove(key);
+	},
+	
+	removeItem: function(item) {
+		var key = this.keyOf(item);
+		if (key !== undefined) {
+			this.tryRemove(key);
+		}
+		return key;
+	},
+	
+<span id='JW-IndexedCollection-method-every'>	/**
+</span>	 * @method every
+	 *
+	 * Checks all items by criteria.
+	 * 
+	 * Returns true if function `f` returns !== `false` for all collection items.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-IndexedCollection-method-some'>	/**
+</span>	 * Checks each item by criteria.
+	 * 
+	 * Returns true if function `f` returns !== `false` for some collection item.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+	some: function(callback, scope) {
+		return !this.every(function(item, key) {
+			return callback.call(this, item, key) === false;
+		}, scope);
+	},
+	
+<span id='JW-IndexedCollection-method-each'>	/**
+</span>	 * Iterates collection items. Calls specified function for all items.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): void`
+	 *
+	 * Function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+	each: function(callback, scope) {
+		this.every(function(item, key) {
+			callback.call(this, item, key);
+			return true;
+		}, scope);
+	},
+	
+<span id='JW-IndexedCollection-method-find'>	/**
+</span>	 * Finds item by criteria.
+	 * 
+	 * Returns key of first item for which `f` returns !== `false`.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {K} Found item key or `undefined`.
+	 */
+	find: function(callback, scope) {
+		var result;
+		this.every(function(item, key) {
+			if (callback.call(this, item, key) !== false) {
+				result = key;
+				return false;
+			}
+			return true;
+		}, scope);
+		return result;
+	},
+	
+<span id='JW-IndexedCollection-method-search'>	/**
+</span>	 * Finds item by criteria.
+	 * 
+	 * Returns first item for which `f` returns !== `false`.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
+	 */
+	search: function(callback, scope) {
+		var result;
+		this.every(function(item, key) {
+			if (callback.call(this, item, key) !== false) {
+				result = item;
+				return false;
+			}
+			return true;
+		}, scope);
+		return result;
+	},
+	
+<span id='JW-IndexedCollection-method-toSorted'>	/**
+</span>	 * @method toSorted
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: K): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-IndexedCollection-method-S-toSorted'>	/**
+</span>	 * @method $toSorted
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: K): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-IndexedCollection-method-toSortedComparing'>	/**
+</span>	 * @method toSortedComparing
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: K, k2: K): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-IndexedCollection-method-S-toSortedComparing'>	/**
+</span>	 * @method $toSortedComparing
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: K, k2: K): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+	 
+<span id='JW-IndexedCollection-method-getSortingKeys'>	/**
+</span>	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: K): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;K&gt;` Sorted item keys array.
+	 */
+	getSortingKeys: function(callback, scope, order) {
+		return this._callStatic(&quot;getSortingKeys&quot;, [callback, scope || this, order]);
+	},
+	
+<span id='JW-IndexedCollection-method-S-getSortingKeys'>	/**
+</span>	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: K): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;K&gt;` Sorted item keys array.
+	 */
+	$getSortingKeys: JW.AbstractCollection._create$Array(&quot;getSortingKeys&quot;),
+	
+<span id='JW-IndexedCollection-method-getSortingKeysComparing'>	/**
+</span>	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: K, k2: K): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;K&gt;` Sorted item keys array.
+	 */
+	getSortingKeysComparing: function(compare, scope, order) {
+		return this._callStatic(&quot;getSortingKeysComparing&quot;, [compare, scope || this, order]);
+	},
+	
+<span id='JW-IndexedCollection-method-S-getSortingKeysComparing'>	/**
+</span>	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: K, k2: K): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;K&gt;` Sorted item keys array.
+	 */
+	$getSortingKeysComparing: JW.AbstractCollection._create$Array(&quot;getSortingKeysComparing&quot;),
+	
+<span id='JW-IndexedCollection-method-S-index'>	/**
+</span>	 * @method $index
+	 *
+	 * Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;T&gt;` Collection index.
+	 */
+<span id='JW-IndexedCollection-method-index'>	/**
+</span>	 * Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Collection index.
+	 */
+	index: function(callback, scope) {
+		var result = {};
+		this.every(function(item, k) {
+			var key = callback.call(this, item, k);
+			if (JW.isSet(key)) {
+				result[key] = item;
+			}
+			return true;
+		}, scope);
+		return result;
+	},
+	
+<span id='JW-IndexedCollection-method-toMap'>	/**
+</span>	 * Converts collection to map.
+	 *
+	 * Builds new map consisting of collection items.
+	 *
+	 * @returns {Object} `&lt;T&gt;` Items map.
+	 */
+	toMap: function() {
+		var result = {};
+		this.every(function(v, k) {
+			result[k] = v;
+		});
+		return result;
+	},
+	
+<span id='JW-IndexedCollection-method-S-toMap'>	/**
+</span>	 * Converts collection to map.
+	 *
+	 * Builds new map consisting of collection items.
+	 *
+	 * @returns {JW.Map} `&lt;T&gt;` Items map.
+	 */
+	$toMap: JW.AbstractCollection._create$Map(&quot;toMap&quot;),
+	
+<span id='JW-IndexedCollection-method-asMap'>	/**
+</span>	 * Represents collection as map.
+	 *
+	 * If this collection is map, returns it immediately. Else, executes #toMap method.
+	 * This method works probably faster than #toMap, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @returns {Object} `&lt;T&gt;` Items map.
+	 */
+	asMap: function() {
+		return this.toMap();
+	},
+	
+<span id='JW-IndexedCollection-method-S-asMap'>	/**
+</span>	 * Represents collection as map.
+	 *
+	 * If this collection is map, returns it immediately. Else, executes #toMap method.
+	 * This method works probably faster than #toMap, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @returns {JW.Map} `&lt;T&gt;` Items map.
+	 */
+	$asMap: JW.AbstractCollection._create$Map(&quot;asMap&quot;)
+	
+<span id='JW-IndexedCollection-method-filter'>	/**
+</span>	 * @method filter
+	 *
+	 * Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array/Object} `&lt;T&gt;` Filtered collection.
+	 */
+<span id='JW-IndexedCollection-method-S-filter'>	/**
+</span>	 * @method $filter
+	 *
+	 * Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.IndexedCollection} `&lt;K, T&gt;` Filtered collection.
+	 */
+<span id='JW-IndexedCollection-method-map'>	/**
+</span>	 * @method map
+	 *
+	 * `&lt;U&gt;` Maps collection items.
+	 * 
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array/Object} `&lt;U&gt;` Mapped collection.
+	 */
+<span id='JW-IndexedCollection-method-S-map'>	/**
+</span>	 * @method $map
+	 *
+	 * `&lt;U&gt;` Maps collection items.
+	 * 
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: K): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.IndexedCollection} `&lt;K, U&gt;` Mapped collection.
+	 */
+	
+<span id='JW-IndexedCollection-method-createEmpty'>	/**
+</span>	 * @method createEmpty
+	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.IndexedCollection} `&lt;K, U&gt;` Collection.
+	 */
+});
+</pre>
+</body>
+</html>

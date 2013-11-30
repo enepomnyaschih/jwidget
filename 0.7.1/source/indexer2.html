@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-AbstractCollection-Indexer-method-constructor'><span id='JW-AbstractCollection-Indexer'>/**
+</span></span> * @class
+ *
+ * `&lt;T, C extends JW.AbstractCollection&lt;T&gt;&gt;`
+ *
+ * Collection indexer.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * Can be used for fast item search by key (for example, by ID).
+ *
+ *     var indexer = collection.{@link JW.AbstractCollection#createIndexer createIndexer}({
+ *         {@link #cfg-getKey getKey}: function(item) { return item.id; },
+ *         {@link #cfg-scope scope}: this
+ *     });
+ *     var map = indexer.{@link #property-target target};
+ *     
+ *     // Get an item with ID = 9
+ *     var item = map.{@link JW.AbstractMap#get get}(9);
+ *
+ * **Notice:** All items of source collection must have different keys.
+ *
+ * Use JW.AbstractCollection#createIndexer method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
+ *
+ * You can pass target collection in config option:
+ *
+ *     var map = new JW.Map();
+ *     var indexer = collection.{@link JW.AbstractCollection#createIndexer createIndexer}({
+ *         {@link #cfg-target target}: map,
+ *         {@link #cfg-getKey getKey}: function(item) { return item.id; },
+ *         {@link #cfg-scope scope}: this
+ *     });
+ *
+ * Synchronizer rules:
+ *
+ * - Target map is stored in {@link #property-target} property.
+ * - All items of source collection are added to {@link #property-target} immediately on synchronizer initialization.
+ * - All items are removed from {@link #property-target} on synchronizer destruction.
+ * - You can pass target map in {@link #cfg-target} config option.
+ * In this case, you are responsible for its destruction (though items will be removed
+ * automatically on synchronizer destruction anyway).
+ * - If {@link #cfg-target} is not passed, it will be created automatically. Synchronizer will select
+ * appropriate {@link #property-target} implementation (simple or observable). In this
+ * case, {@link #property-target} will be destroyed automatically on synchronizer destruction.
+ * - You can index multiple collections into one map, if keys of all items are different.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.AbstractCollection} source `&lt;T&gt;` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.AbstractCollection.Indexer = function(source, config) {
+	JW.AbstractCollection.Indexer._super.call(this);
+	config = config || {};
+	this.source = source;
+	this.getKey = config.getKey;
+	this._targetCreated = !config.target;
+	this.target = this._targetCreated ? source.createEmptyMap() : config.target;
+	this.scope = config.scope || this;
+	this.target.trySetAll(this._index(source.asArray()));
+};
+
+JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
+<span id='JW-AbstractCollection-Indexer-cfg-target'>	/**
+</span>	 * @cfg {JW.AbstractMap} target `&lt;T&gt;` Target map.
+	 */
+<span id='JW-AbstractCollection-Indexer-cfg-getKey'>	/**
+</span>	 * @cfg {Function} getKey (required)
+	 *
+	 * `getKey(item: T): string`
+	 *
+	 * Indexing function. Determines item key in map.
+	 */
+<span id='JW-AbstractCollection-Indexer-cfg-scope'>	/**
+</span>	 * @cfg {Object} scope {@link #cfg-getKey} call scope.
+	 */
+<span id='JW-AbstractCollection-Indexer-property-source'>	/**
+</span>	 * @property {C} source Source collection.
+	 */
+<span id='JW-AbstractCollection-Indexer-property-target'>	/**
+</span>	 * @property {JW.AbstractMap} target `&lt;T&gt;` Target map.
+	 */
+	// boolean _targetCreated;
+	
+	// override
+	destroy: function() {
+		this.target.tryRemoveAll(this._keys(this.source.asArray()));
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this._super();
+	},
+	
+	_index: function(items) {
+		var index = {};
+		for (var i = 0, l = items.length; i &lt; l; ++i) {
+			var item = items[i];
+			index[this.getKey.call(this.scope, item)] = item;
+		}
+		return index;
+	},
+	
+	_keys: function(items) {
+		var keys = [];
+		for (var i = 0, l = items.length; i &lt; l; ++i) {
+			keys.push(this.getKey.call(this.scope, items[i]));
+		}
+		return keys;
+	}
+});
+</pre>
+</body>
+</html>

@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+	
+	----
+	
+	This is an adapter of array that triggers events about modifications.
+	Events are taken from ActionScript's CollectionEventKind (with small
+	reasonable changes).
+*/
+
+<span id='JW-Set-method-constructor'><span id='JW-Set'>/**
+</span></span> * @class
+ *
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractSet&lt;T&gt;`
+ *
+ * See structurized list of methods in JW.AbstractSet.
+ * Static methods duplicate API of JW.AbstractSet, but take native Object as first argument.
+ *
+ * @extends JW.AbstractSet
+ *
+ * @constructor
+ * @param {Array} [items] `&lt;T&gt;` Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create set as adapter of `items` (`items` should be Object for this, not Array).
+ * Defaults to false, so `items` is copied.
+ */
+JW.Set = function(json, adapter) {
+	JW.Set._super.call(this, json, adapter);
+};
+
+JW.extend(JW.Set, JW.AbstractSet, {
+<span id='JW-Set-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.Set} `&lt;U&gt;` Collection.
+	 */
+	createEmpty: function() {
+		return new JW.Set();
+	},
+	
+<span id='JW-Set-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Creates empty array of the same observability level.
+	 * @returns {JW.Array} `&lt;U&gt;` Array.
+	 */
+	createEmptyArray: function() {
+		return new JW.Array();
+	},
+	
+<span id='JW-Set-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Creates empty map of the same observability level.
+	 * @returns {JW.Map} `&lt;U&gt;` Map.
+	 */
+	createEmptyMap: function() {
+		return new JW.Map();
+	},
+	
+<span id='JW-Set-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Creates empty set of the same observability level.
+	 * @returns {JW.Set} `&lt;U&gt;` Set.
+	 */
+	createEmptySet: function() {
+		return new JW.Set();
+	}
+	
+<span id='JW-Set-static-method-getLength'>	/**
+</span>	 * @method getLength
+	 * `&lt;T extends JW.Class&gt;` Returns count of items in collection.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {number} Count of items in collection.
+	 */
+<span id='JW-Set-static-method-isEmpty'>	/**
+</span>	 * @method isEmpty
+	 * `&lt;T extends JW.Class&gt;` Checks collection for emptiness.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {boolean} Collection doesn't contain any items.
+	 */
+<span id='JW-Set-static-method-getFirst'>	/**
+</span>	 * @method getFirst
+	 * `&lt;T extends JW.Class&gt;` Returns first item in collection. If collection is empty, returns `undefined`.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {T} Item.
+	 */
+<span id='JW-Set-static-method-containsItem'>	/**
+</span>	 * @method containsItem
+	 * `&lt;T extends JW.Class&gt;` Checks item existance in collection.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
+	 */
+<span id='JW-Set-static-method-contains'>	/**
+</span>	 * @method contains
+	 * `&lt;T extends JW.Class&gt;` Checks item existance in collection. Shortcut for {@link #static-method-containsItem}.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
+	 */
+<span id='JW-Set-static-method-removeItem'>	/**
+</span>	 * @method removeItem
+	 * `&lt;T extends JW.Class&gt;` Removes first occurency of an item in collection.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {T} item Item.
+	 * @returns {void}
+	 */
+<span id='JW-Set-static-method-removeItems'>	/**
+</span>	 * @method removeItems
+	 * `&lt;T extends JW.Class&gt;` Removes all occurencies of items in collection.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {void}
+	 */
+<span id='JW-Set-static-method-tryClear'>	/**
+</span>	 * @method tryClear
+	 * `&lt;T extends JW.Class&gt;` Clears collection.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {Array} `&lt;T&gt;` Old collection contents. If not modified - `undefined`.
+	 */
+<span id='JW-Set-static-method-clear'>	/**
+</span>	 * @method clear
+	 * `&lt;T extends JW.Class&gt;` Clears collection.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {Array} `&lt;T&gt;` Old collection contents.
+	 */
+<span id='JW-Set-static-method-S-clear'>	/**
+</span>	 * @method $clear
+	 * `&lt;T extends JW.Class&gt;` Clears collection.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {JW.Array} `&lt;T&gt;` Old collection contents.
+	 */
+<span id='JW-Set-static-method-every'>	/**
+</span>	 * @method every
+	 *
+	 * `&lt;T extends JW.Class&gt;` Checks all items by criteria.
+	 * 
+	 * Returns true if function `f` returns !== `false` for all collection items.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-Set-static-method-some'>	/**
+</span>	 * @method some
+	 *
+	 * `&lt;T extends JW.Class&gt;` Checks each item by criteria.
+	 * 
+	 * Returns true if function `f` returns !== `false` for some collection item.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-Set-static-method-each'>	/**
+</span>	 * @method each
+	 * `&lt;T extends JW.Class&gt;` Iterates collection items. Calls specified function for all items.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): void`
+	 *
+	 * Function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+<span id='JW-Set-static-method-search'>	/**
+</span>	 * @method search
+	 *
+	 * `&lt;T extends JW.Class&gt;` Finds item by criteria.
+	 * 
+	 * Returns first item for which `f` returns !== `false`.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
+	 */
+<span id='JW-Set-static-method-toSorted'>	/**
+</span>	 * @method toSorted
+	 *
+	 * `&lt;T extends JW.Class&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Set-static-method-S-toSorted'>	/**
+</span>	 * @method $toSorted
+	 *
+	 * `&lt;T extends JW.Class&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Set-static-method-toSortedComparing'>	/**
+</span>	 * @method toSortedComparing
+	 *
+	 * `&lt;T extends JW.Class&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Set-static-method-S-toSortedComparing'>	/**
+</span>	 * @method $toSortedComparing
+	 *
+	 * `&lt;T extends JW.Class&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Set-static-method-index'>	/**
+</span>	 * @method index
+	 *
+	 * `&lt;T extends JW.Class&gt;` Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Collection index.
+	 */
+<span id='JW-Set-static-method-S-index'>	/**
+</span>	 * @method $index
+	 *
+	 * `&lt;T extends JW.Class&gt;` Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;T&gt;` Collection index.
+	 */
+<span id='JW-Set-static-method-toArray'>	/**
+</span>	 * @method toArray
+	 *
+	 * `&lt;T extends JW.Class&gt;` Converts collection to array.
+	 *
+	 * Builds new array consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Set-static-method-S-toArray'>	/**
+</span>	 * @method $toArray
+	 *
+	 * `&lt;T extends JW.Class&gt;` Converts collection to array.
+	 *
+	 * Builds new array consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {JW.Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Set-static-method-toSet'>	/**
+</span>	 * @method toSet
+	 *
+	 * `&lt;T extends JW.Class&gt;` Converts collection to set.
+	 *
+	 * Builds new set consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {Object} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Set-static-method-S-toSet'>	/**
+</span>	 * @method $toSet
+	 *
+	 * `&lt;T extends JW.Class&gt;` Converts collection to set.
+	 *
+	 * Builds new set consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {JW.Set} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Set-static-method-asArray'>	/**
+</span>	 * @method asArray
+	 *
+	 * `&lt;T extends JW.Class&gt;` Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Set-static-method-S-asArray'>	/**
+</span>	 * @method $asArray
+	 *
+	 * `&lt;T extends JW.Class&gt;` Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {JW.Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Set-static-method-asSet'>	/**
+</span>	 * @method asSet
+	 *
+	 * `&lt;T extends JW.Class&gt;` Represents collection as set.
+	 *
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet}method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {Object} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Set-static-method-S-asSet'>	/**
+</span>	 * @method $asSet
+	 *
+	 * `&lt;T extends JW.Class&gt;` Represents collection as set.
+	 *
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet}method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @returns {JW.Set} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Set-static-method-filter'>	/**
+</span>	 * @method filter
+	 *
+	 * `&lt;T extends JW.Class&gt;` Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Filtered collection.
+	 */
+<span id='JW-Set-static-method-S-filter'>	/**
+</span>	 * @method $filter
+	 *
+	 * `&lt;T extends JW.Class&gt;` Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Set} `&lt;T&gt;` Filtered collection.
+	 */
+<span id='JW-Set-static-method-map'>	/**
+</span>	 * @method map
+	 *
+	 * `&lt;T extends JW.Class, U extends JW.Class&gt;` Maps collection items.
+	 * 
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;U&gt;` Mapped collection.
+	 */
+<span id='JW-Set-static-method-S-map'>	/**
+</span>	 * @method $map
+	 *
+	 * `&lt;T extends JW.Class, U extends JW.Class&gt;` Maps collection items.
+	 * 
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Set} `&lt;U&gt;` Mapped collection.
+	 */
+<span id='JW-Set-static-method-add'>	/**
+</span>	 * @method add
+	 * `&lt;T extends JW.Class&gt;` Adds item to set if one is absent.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is added successfully.
+	 */
+<span id='JW-Set-static-method-tryAdd'>	/**
+</span>	 * @method tryAdd
+	 * `&lt;T extends JW.Class&gt;` Adds item to set if one is absent.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is added successfully. If not modified - `undefined`.
+	 */
+<span id='JW-Set-static-method-addAll'>	/**
+</span>	 * @method addAll
+	 * `&lt;T extends JW.Class&gt;` Adds multiple items to set, ones that are absent.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {Array} `&lt;T&gt;` Added items.
+	 */
+<span id='JW-Set-static-method-S-addAll'>	/**
+</span>	 * @method $addAll
+	 * `&lt;T extends JW.Class&gt;` Adds multiple items to set, ones that are absent.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {JW.Array} `&lt;T&gt;` Added items.
+	 */
+<span id='JW-Set-static-method-tryAddAll'>	/**
+</span>	 * @method tryAddAll
+	 * `&lt;T extends JW.Class&gt;` Adds multiple items to set, ones that are absent.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {Array} `&lt;T&gt;` Added items. If not modified - `undefined`.
+	 */
+<span id='JW-Set-static-method-remove'>	/**
+</span>	 * @method remove
+	 * `&lt;T extends JW.Class&gt;` Removes item from set if one is present.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is removed successfully.
+	 */
+<span id='JW-Set-static-method-tryRemove'>	/**
+</span>	 * @method tryRemove
+	 * `&lt;T extends JW.Class&gt;` Removes item from set if one is present.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is removed successfully. If not modified - `undefined`.
+	 */
+<span id='JW-Set-static-method-removeAll'>	/**
+</span>	 * @method removeAll
+	 * `&lt;T extends JW.Class&gt;` Removes multiple items from set, ones that are present.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {Array} `&lt;T&gt;` Removed items.
+	 */
+<span id='JW-Set-static-method-S-removeAll'>	/**
+</span>	 * @method $removeAll
+	 * `&lt;T extends JW.Class&gt;` Removes multiple items from set, ones that are present.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {JW.Array} `&lt;T&gt;` Removed items.
+	 */
+<span id='JW-Set-static-method-tryRemoveAll'>	/**
+</span>	 * @method tryRemoveAll
+	 * `&lt;T extends JW.Class&gt;` Removes multiple items from set, ones that are present.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {Array} `&lt;T&gt;` Removes items. If not modified - `undefined`.
+	 */
+<span id='JW-Set-static-method-splice'>	/**
+</span>	 * @method splice
+	 * `&lt;T extends JW.Class&gt;` Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} removedItems `&lt;T&gt;` Items to remove.
+	 * @param {Array} addedItems `&lt;T&gt;` Items to add.
+	 * @returns {JW.AbstractSet.SpliceResult} `&lt;T&gt;` Result.
+	 */
+<span id='JW-Set-static-method-trySplice'>	/**
+</span>	 * @method trySplice
+	 * `&lt;T extends JW.Class&gt;` Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} removedItems `&lt;T&gt;` Items to remove.
+	 * @param {Array} addedItems `&lt;T&gt;` Items to add.
+	 * @returns {JW.AbstractSet.SpliceResult} `&lt;T&gt;` Result. If not modified - `undefined`.
+	 */
+<span id='JW-Set-static-method-detectSplice'>	/**
+</span>	 * @method detectSplice
+	 * `&lt;T extends JW.Class&gt;` Detects {@link #static-method-splice} method arguments to adjust set contents to `newItems`.
+	 * Determines which items should be removed and which ones should be added.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `&lt;T&gt;` #splice method arguments. If no method call required - `undefined`.
+	 */
+<span id='JW-Set-static-method-performSplice'>	/**
+</span>	 * @method performSplice
+	 * `&lt;T extends JW.Class&gt;` Adjusts map contents to `newItems` using {@link #static-method-detectSplice} and {@link #static-method-splice} methods.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @returns {void}
+	 */
+<span id='JW-Set-static-method-createMapper'>	/**
+</span>	 * @method createMapper
+	 * `&lt;T extends JW.Class, U extends JW.Class&gt;` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Mapper}
+	 * `&lt;T, U&gt;` Synchronizer.
+	 */
+<span id='JW-Set-static-method-createFilterer'>	/**
+</span>	 * @method createFilterer
+	 * `&lt;T extends JW.Class&gt;` Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Filterer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+<span id='JW-Set-static-method-createObserver'>	/**
+</span>	 * @method createObserver
+	 * `&lt;T extends JW.Class&gt;` Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Observer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+<span id='JW-Set-static-method-createOrderer'>	/**
+</span>	 * @method createOrderer
+	 * `&lt;T extends JW.Class&gt;` Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Orderer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+<span id='JW-Set-static-method-createSorterComparing'>	/**
+</span>	 * @method createSorterComparing
+	 * `&lt;T extends JW.Class&gt;` Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.SorterComparing}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+<span id='JW-Set-static-method-createIndexer'>	/**
+</span>	 * @method createIndexer
+	 * `&lt;T extends JW.Class&gt;` Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Indexer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+<span id='JW-Set-static-method-createLister'>	/**
+</span>	 * @method createLister
+	 * `&lt;T extends JW.Class&gt;` Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Lister}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+<span id='JW-Set-static-method-equal'>	/**
+</span>	 * @method equal
+	 * `&lt;T extends JW.Class&gt;` Checks for set equality (===) to array, item by item.
+	 * @static
+	 * @param {Object} set `&lt;T&gt;` Set.
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {boolean} Set is equal to array.
+	 */
+});
+</pre>
+</body>
+</html>

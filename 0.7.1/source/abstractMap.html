@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-AbstractMap'>/**
+</span> * @class
+ *
+ * `&lt;T&gt; extends JW.IndexedCollection&lt;string, T&gt;`
+ *
+ * Map is unordered collection. Each item has its own string key.
+ *
+ * # Map methods
+ *
+ * **Difference compared to JW.IndexedCollection is in bold.**
+ *
+ * Content retrieving:
+ *
+ * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #isEmpty} - Checks collection for emptiness.
+ * - {@link #get} - Returns collection item by key.
+ * - {@link #getFirst} - Returns first item in collection.
+ * - {@link #getFirstKey} - Returns key of first item in collection.
+ * - {@link #getKeys}, #$getKeys - Returns array of all item keys.
+ * - {@link #containsItem} - Does collection contain the item?
+ * - {@link #containsKey} - Does collection contain the key?
+ * - {@link #keyOf} - Returns item key. If item is not found, returns `undefined`.
+ * - **{@link #getJson} - Returns internal representation of map.**
+ *
+ * Iteration algorhitms:
+ *
+ * - {@link #every} - Checks all items by criteria.
+ * Returns `true` if all items match the criteria.
+ * - {@link #some} - Checks each item by criteria.
+ * Returns `true` if some items matches the criteria.
+ * - {@link #each} - Iterates items.
+ * - {@link #search} - Finds item by criteria.
+ * Returns first item matching the criteria.
+ * - {@link #find} - Finds item by criteria.
+ * Returns index of first item matching the criteria.
+ * - {@link #filter}, #$filter - Filters collection by criteria.
+ * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #map}, #$map - Maps collection items.
+ * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * Builds array consisting of collection items sorted by indexer or comparer.
+ * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
+ * Returns indexes of collection items sorted by indexer or comparer.
+ * - {@link #index}, #$index - Indexes collection.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toMap}, #$toMap - Builds new map consisting of collection items.
+ * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #asArray}, #$asArray - Represents collection as array.
+ * - {@link #asMap}, #$asMap - Represents collection as map.
+ * - {@link #asSet}, #$asSet - Represents collection as set.
+ *
+ * Collection modification:
+ *
+ * - {@link #set}, #trySet - Adds or replaces an item by key.
+ * - **{@link #setAll}, #trySetAll - Adds or replaces a bunch of items.**
+ * - {@link #remove}, #tryRemove - Removes an item by key.
+ * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Removes a bunch of items.**
+ * - {@link #removeItem} - Removes first occurency of an item in collection.
+ * - {@link #removeItems} - Removes all occurencies of items in collection.
+ * - **{@link #setKey}, #trySetKey - Changes item key.**
+ * - {@link #clear}, #$clear, #tryClear - Clears collection.
+ * - **{@link #splice}, #trySplice - Removes and adds bunches of items.**
+ * - **{@link #reindex}, #tryReindex - Changes item keys.**
+ * - **{@link #performSplice} - Adjusts contents using #splice method.**
+ * - **{@link #performReindex} - Adjusts contents using #reindex method.**
+ *
+ * Synchronizers creation:
+ *
+ * - {@link #createMapper} - Creates item mapper.
+ * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createLister} - Creates converter to set.
+ * - {@link #createIndexer} - Creates converter to map (indexer).
+ * - {@link #createOrderer} - Creates converter to array (orderer).
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createObserver} - Creates observer.
+ * - **{@link #createInserter} - Creates view synchronizer with map.**
+ *
+ * Similar collection creation (for algorithms and synchronizers implementation):
+ *
+ * - {@link #createEmpty} - Creates empty collection of the same type.
+ * - {@link #createEmptyArray} - Creates empty array of the same observability level.
+ * - {@link #createEmptyMap} - Creates empty map of the same observability level.
+ * - {@link #createEmptySet} - Creates empty set of the same observability level.
+ *
+ * Other methods:
+ *
+ * - **{@link #detectSplice} - Detects #splice method arguments to adjust contents.**
+ * - **{@link #detectReindex} - Detects #reindex method arguments to adjust contents.**
+ * - **{@link #equal} - Checks for equality to another map.**
+ *
+ * All the same algorithms are also available for native JavaScript Object as map, see JW.Map static methods.
+ *
+ * @extends JW.IndexedCollection
+ * @abstract
+ */
+JW.AbstractMap = function(json, adapter) {
+	JW.AbstractMap._super.call(this);
+	this.json = adapter ? json : json ? JW.apply({}, json) : {};
+	this.length = JW.Map.getLength(this.json);
+	this.getKey = null;
+};
+
+JW.extend(JW.AbstractMap, JW.IndexedCollection, {
+<span id='JW-AbstractMap-property-getKey'>	/**
+</span>	 * @property {Function} getKey
+	 *
+	 * `getKey(item: T): number/string`
+	 *
+	 * Function which returns unique key of an item in this collection.
+	 * Function is used by #detectReindex, #performReindex algorithms.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 */
+<span id='JW-AbstractMap-method-getFirstKey'>	/**
+</span>	 * @method getFirstKey
+	 * Returns key of first collection item. If collection is empty, returns `undefined`.
+	 * @returns {string} Key.
+	 */
+<span id='JW-AbstractMap-method-containsKey'>	/**
+</span>	 * @method containsKey
+	 * Checks existance of item with specified index in collection.
+	 * @param {string} key Key.
+	 * @returns {boolean} Collection contains item with specified key.
+	 */
+<span id='JW-AbstractMap-method-keyOf'>	/**
+</span>	 * @method keyOf
+	 * Returns index of item in collection. If such item doesn't exist, returns `undefined`.
+	 * @param {T} item Item.
+	 * @returns {string} Item key.
+	 */
+	
+<span id='JW-AbstractMap-method-getJson'>	/**
+</span>	 * Returns item map - internal collection representation.
+	 *
+	 * **Caution: doesn't make a copy.**
+	 *
+	 * @returns {Object} `&lt;T&gt;` Item map.
+	 */
+	getJson: function() {
+		return this.json;
+	},
+	
+	getLength: function() {
+		return this.length;
+	},
+	
+	isEmpty: function() {
+		return this.length === 0;
+	},
+	
+<span id='JW-AbstractMap-method-get'>	/**
+</span>	 * @method get
+	 * Returns item by key. If item with such key doesn't exist, returns `undefined`.
+	 * @param {string} key Key.
+	 * @returns {T} Item.
+	 */
+	get: function(key) {
+		return this.json[key];
+	},
+	
+<span id='JW-AbstractMap-method-S-getKeys'>	/**
+</span>	 * @method $getKeys
+	 * Returns array of keys of all collection items.
+	 * @returns {JW.Array} `&lt;string&gt;` Keys array.
+	 */
+<span id='JW-AbstractMap-method-getKeys'>	/**
+</span>	 * Returns array of keys of all collection items.
+	 * @returns {Array} `&lt;string&gt;` Keys array.
+	 */
+	getKeys: function() {
+		return JW.Map.getKeys(this.json);
+	},
+	
+<span id='JW-AbstractMap-method-every'>	/**
+</span>	 * Checks all items by criteria.
+	 * 
+	 * Returns true if function `f` returns !== `false` for all collection items.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+	every: function(callback, scope) {
+		return JW.Map.every(this.json, callback, scope);
+	},
+	
+<span id='JW-AbstractMap-method-some'>	/**
+</span>	 * @method some
+	 *
+	 * Checks each item by criteria.
+	 * 
+	 * Returns true if function `f` returns !== `false` for some collection item.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-AbstractMap-method-each'>	/**
+</span>	 * @method each
+	 *
+	 * Iterates collection items. Calls specified function for all items.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): void`
+	 *
+	 * Function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+<span id='JW-AbstractMap-method-find'>	/**
+</span>	 * @method find
+	 *
+	 * Finds item by criteria.
+	 * 
+	 * Returns key of first item for which `f` returns !== `false`.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {string} Found item key or `undefined`.
+	 */
+<span id='JW-AbstractMap-method-search'>	/**
+</span>	 * @method search
+	 *
+	 * Finds item by criteria.
+	 * 
+	 * Returns first item for which `f` returns !== `false`.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
+	 */
+<span id='JW-AbstractMap-method-toSorted'>	/**
+</span>	 * @method toSorted
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-AbstractMap-method-S-toSorted'>	/**
+</span>	 * @method $toSorted
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-AbstractMap-method-toSortedComparing'>	/**
+</span>	 * @method toSortedComparing
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-AbstractMap-method-S-toSortedComparing'>	/**
+</span>	 * @method $toSortedComparing
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-AbstractMap-method-getSortingKeys'>	/**
+</span>	 * @method getSortingKeys
+	 *
+	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;string&gt;` Sorted item keys array.
+	 */
+<span id='JW-AbstractMap-method-S-getSortingKeys'>	/**
+</span>	 * @method $getSortingKeys
+	 *
+	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;string&gt;` Sorted item keys array.
+	 */
+<span id='JW-AbstractMap-method-getSortingKeysComparing'>	/**
+</span>	 * @method getSortingKeysComparing
+	 *
+	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;string&gt;` Sorted item keys array.
+	 */
+<span id='JW-AbstractMap-method-S-getSortingKeysComparing'>	/**
+</span>	 * @method $getSortingKeysComparing
+	 *
+	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;string&gt;` Sorted item keys array.
+	 */
+	
+<span id='JW-AbstractMap-method-index'>	/**
+</span>	 * @method index
+	 *
+	 * Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Collection index.
+	 */
+<span id='JW-AbstractMap-method-S-index'>	/**
+</span>	 * @method $index
+	 *
+	 * Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;T&gt;` Collection index.
+	 */
+	
+<span id='JW-AbstractMap-method-filter'>	/**
+</span>	 * Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Filtered collection.
+	 */
+	filter: function(callback, scope) {
+		return JW.Map.filter(this.json, callback, scope);
+	},
+	
+<span id='JW-AbstractMap-method-S-filter'>	/**
+</span>	 * Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;T&gt;` Filtered collection.
+	 */
+	$filter: JW.AbstractCollection._create$Map(&quot;filter&quot;),
+	
+<span id='JW-AbstractMap-method-map'>	/**
+</span>	 * `&lt;U&gt;` Maps collection items.
+	 * 
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;U&gt;` Mapped collection.
+	 */
+	map: function(callback, scope) {
+		return JW.Map.map(this.json, callback, scope);
+	},
+	
+<span id='JW-AbstractMap-method-S-map'>	/**
+</span>	 * `&lt;U&gt;` Maps collection items.
+	 * 
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;U&gt;` Mapped collection.
+	 */
+	$map: JW.AbstractCollection._create$Map(&quot;map&quot;),
+	
+	asMap: function() {
+		return this.json;
+	},
+	
+	$asMap: function() {
+		return this;
+	},
+	
+<span id='JW-AbstractMap-method-set'>	/**
+</span>	 * @method set
+	 * Replaces item with specified key. If map doesn't contain such key, it will be added.
+	 * @param {T} item Item.
+	 * @param {string} key Key.
+	 * @returns {T} The replaced item.
+	 */
+<span id='JW-AbstractMap-method-trySet'>	/**
+</span>	 * Replaces item with specified key. If map doesn't contain such key, it will be added.
+	 * @param {T} item Item.
+	 * @param {string} key Key.
+	 * @returns {JW.Proxy} `&lt;T&gt;` Proxy of the replaced item. If not modified - `undefined`.
+	 */
+	trySet: function(item, key) {
+		var spliceResult = this.trySplice([], JW.Map.single(key, item));
+		if (spliceResult !== undefined) {
+			return new JW.Proxy(spliceResult.removedItems[key]);
+		}
+	},
+	
+<span id='JW-AbstractMap-method-setAll'>	/**
+</span>	 * Adds or replaces a bunch of items.
+	 * @param {Object} items Items.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Result of #splice method.
+	 */
+	setAll: function(items) {
+		var spliceResult = this.trySetAll(items);
+		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
+	},
+	
+<span id='JW-AbstractMap-method-trySetAll'>	/**
+</span>	 * Adds or replaces a bunch of items.
+	 * @param {Object} items Items.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Result of #splice method. If not modified - `undefined`.
+	 */
+	trySetAll: function(items) {
+		return this.trySplice([], items);
+	},
+	
+<span id='JW-AbstractMap-method-setKey'>	/**
+</span>	 * Changes item key in map. If collection doesn't contain `oldKey` or contains `newKey`, it will cause an error.
+	 * @param {string} oldKey Old key of item.
+	 * @param {string} newKey New key of item.
+	 * @returns {T} Item.
+	 */
+	setKey: function(oldKey, newKey) {
+		this.trySetKey(oldKey, newKey);
+		return this.json[newKey];
+	},
+	
+<span id='JW-AbstractMap-method-trySetKey'>	/**
+</span>	 * Changes item key in map. If collection doesn't contain `oldKey` or contains `newKey`, it will cause an error.
+	 * @param {string} oldKey Old key of item.
+	 * @param {string} newKey New key of item.
+	 * @returns {T} Item. If not modified - `undefined`.
+	 */
+	trySetKey: function(oldKey, newKey) {
+		var keyMap = this.tryReindex(JW.Map.single(oldKey, newKey));
+		if (keyMap !== undefined) {
+			return this.json[newKey];
+		}
+	},
+	
+<span id='JW-AbstractMap-method-remove'>	/**
+</span>	 * @method remove
+	 * Removes item with specified key if it exists in map.
+	 * @param {K} key Key.
+	 * @returns {T} Old collection item or `undefined`.
+	 */
+<span id='JW-AbstractMap-method-tryRemove'>	/**
+</span>	 * Removes item with specified key if it exists in map.
+	 * @param {K} key Key.
+	 * @returns {T} Old collection item. If not modified - `undefined`.
+	 */
+	tryRemove: function(key) {
+		var spliceResult = this.trySplice([key], {});
+		if (spliceResult !== undefined) {
+			return spliceResult.removedItems[key];
+		}
+	},
+	
+<span id='JW-AbstractMap-method-removeAll'>	/**
+</span>	 * Removes a bunch of items from map.
+	 * @param {Array} keys `&lt;string&gt;` Item keys.
+	 * @returns {Object} `&lt;T&gt;` The removed items.
+	 */
+	removeAll: function(keys) {
+		var items = this.tryRemoveAll(keys);
+		return (items !== undefined) ? items : {};
+	},
+	
+<span id='JW-AbstractMap-method-S-removeAll'>	/**
+</span>	 * Removes a bunch of items from map.
+	 * @param {Array} keys `&lt;string&gt;` Item keys.
+	 * @returns {JW.Map} `&lt;T&gt;` The removed items.
+	 */
+	$removeAll: JW.AbstractCollection._create$Map(&quot;removeAll&quot;),
+	
+<span id='JW-AbstractMap-method-tryRemoveAll'>	/**
+</span>	 * Removes a bunch of items from map.
+	 * @param {Array} keys `&lt;string&gt;` Item keys.
+	 * @returns {Object} `&lt;T&gt;` The removed items. If not modified - `undefined`.
+	 */
+	tryRemoveAll: function(keys) {
+		var spliceResult = this.trySplice(keys, {});
+		if (spliceResult !== undefined) {
+			return spliceResult.removedItems;
+		}
+	},
+	
+	removeItems: function(items) {
+		var itemSet = new JW.Set(items);
+		var newItems = this.filter(function(item) {
+			return !itemSet.contains(item);
+		});
+		this.performSplice(newItems);
+	},
+	
+<span id='JW-AbstractMap-method-clear'>	/**
+</span>	 * Clears collection.
+	 * @returns {Object} `&lt;T&gt;` Old collection contents.
+	 */
+	clear: function() {
+		var result = this.tryClear();
+		return (result !== undefined) ? result : {};
+	},
+	
+<span id='JW-AbstractMap-method-S-clear'>	/**
+</span>	 * Clears collection.
+	 * @returns {JW.Map} `&lt;T&gt;` Old collection contents.
+	 */
+	$clear: JW.AbstractCollection._create$Map(&quot;clear&quot;),
+	
+<span id='JW-AbstractMap-method-tryClear'>	/**
+</span>	 * Clears collection.
+	 * @returns {Object} `&lt;T&gt;` Old collection contents. If not modified - `undefined`.
+	 */
+	tryClear: function() {
+		this.length = 0;
+		return JW.Map.tryClear(this.json);
+	},
+	
+<span id='JW-AbstractMap-method-splice'>	/**
+</span>	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removedKeys `&lt;string&gt;` Keys of items to remove.
+	 * @param {Object} updatedItems `&lt;T&gt;` Items to add/replace.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Result.
+	 */
+	splice: function(removedKeys, updatedItems) {
+		var spliceResult = this.trySplice(removedKeys, updatedItems);
+		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
+	},
+	
+<span id='JW-AbstractMap-method-trySplice'>	/**
+</span>	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removedKeys `&lt;string&gt;` Keys of items to remove.
+	 * @param {Object} updatedItems `&lt;T&gt;` Items to add/replace.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Result. If not modified - `undefined`.
+	 */
+	trySplice: function(removedKeys, updatedItems) {
+		var spliceResult = JW.Map.trySplice(this.json, removedKeys, updatedItems);
+		if (spliceResult) {
+			this.length += JW.Map.getLength(spliceResult.addedItems) - JW.Map.getLength(spliceResult.removedItems);
+			return spliceResult;
+		}
+	},
+	
+<span id='JW-AbstractMap-method-reindex'>	/**
+</span>	 * Changes item keys in map.
+	 * @param {Object} keyMap `&lt;string&gt;` Key map. Item with key `k` will gain key `keyMap[k]`.
+	 * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
+	 * @returns {Object} `&lt;T&gt;` Map of changed keys.
+	 */
+	reindex: function(keyMap) {
+		var result = this.tryReindex(keyMap);
+		return (result !== undefined) ? result : {};
+	},
+	
+<span id='JW-AbstractMap-method-tryReindex'>	/**
+</span>	 * Changes item keys in map.
+	 * @param {Object} keyMap `&lt;string&gt;` Key map. Item with key `k` will gain key `keyMap[k]`.
+	 * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
+	 * @returns {Object} `&lt;T&gt;` Map of changed keys. If not modified - `undefined`.
+	 */
+	tryReindex: function(keyMap) {
+		return JW.Map.tryReindex(this.json, keyMap);
+	},
+	
+<span id='JW-AbstractMap-method-detectSplice'>	/**
+</span>	 * Detects #splice method arguments to adjust map contents to `newItems`.
+	 * Determines which item bunches should be removed and which ones should be inserted/replaced, and their keys.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `&lt;T&gt;` #splice method arguments. If no method call required - `undefined`.
+	 */
+	detectSplice: function(newItems) {
+		return JW.Map.detectSplice(this.json, newItems);
+	},
+	
+<span id='JW-AbstractMap-method-detectReindex'>	/**
+</span>	 * Detects #reindex method arguments to adjust map contents to `newItems`.
+	 * Determines which keys should be assigned to all items.
+	 * If `newItems` contents differ from `this` contents, the map will be broken.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {Object}
+	 * `&lt;string&gt;` `keyMap` argument of #reindex method.
+	 * If no method call required - `undefined`.
+	 */
+	detectReindex: function(newItems, getKey, scope) {
+		return JW.Map.detectReindex(this.json, newItems, getKey || this.getKey, scope || this);
+	},
+	
+<span id='JW-AbstractMap-method-performSplice'>	/**
+</span>	 * Adjusts map contents to `newItems` using #detectSplice and #splice methods.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @returns {void}
+	 */
+	performSplice: function(newItems) {
+		var params = this.detectSplice(newItems);
+		if (params !== undefined) {
+			this.trySplice(params.removedKeys, params.updatedItems);
+		}
+	},
+	
+<span id='JW-AbstractMap-method-performReindex'>	/**
+</span>	 * Adjusts map contents to `newItems` using #detectReindex and #reindex methods.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+	performReindex: function(newItems, getKey, scope) {
+		var keyMap = this.detectReindex(newItems, getKey, scope);
+		if (keyMap !== undefined) {
+			this.tryReindex(keyMap);
+		}
+	},
+	
+<span id='JW-AbstractMap-method-createMapper'>	/**
+</span>	 * `&lt;U&gt;` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.Mapper}
+	 * `&lt;T, U&gt;` Synchronizer.
+	 */
+	createMapper: function(config) {
+		return new JW.AbstractMap.Mapper(this, config);
+	},
+	
+<span id='JW-AbstractMap-method-createFilterer'>	/**
+</span>	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.Filterer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createFilterer: function(config) {
+		return new JW.AbstractMap.Filterer(this, config);
+	},
+	
+<span id='JW-AbstractMap-method-createObserver'>	/**
+</span>	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.Observer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createObserver: function(config) {
+		return new JW.AbstractMap.Observer(this, config);
+	},
+	
+<span id='JW-AbstractMap-method-createOrderer'>	/**
+</span>	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.Orderer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createOrderer: function(config) {
+		return new JW.AbstractMap.Orderer(this, config);
+	},
+	
+<span id='JW-AbstractMap-method-createSorterComparing'>	/**
+</span>	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.SorterComparing}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.AbstractMap.SorterComparing(this, config);
+	},
+	
+<span id='JW-AbstractMap-method-createIndexer'>	/**
+</span>	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.Indexer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createIndexer: function(config) {
+		return new JW.AbstractMap.Indexer(this, config);
+	},
+	
+<span id='JW-AbstractMap-method-createLister'>	/**
+</span>	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.Lister}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createLister: function(config) {
+		return new JW.AbstractMap.Lister(this, config);
+	},
+	
+<span id='JW-AbstractMap-method-createInserter'>	/**
+</span>	 * Creates view synchronizer with map.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.Inserter}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createInserter: function(config) {
+		return new JW.AbstractMap.Inserter(this, config);
+	},
+	
+<span id='JW-AbstractMap-method-equal'>	/**
+</span>	 * Checks for equality (===) to another map, item by item.
+	 * @param {Object} map `&lt;T&gt;` Another map.
+	 * @returns {boolean} Maps are equal.
+	 */
+	equal: function(map) {
+		return JW.Map.equal(this.json, map);
+	},
+	
+	_callStatic: function(algorithm, args) {
+		return JW.Map[algorithm].apply(JW.Map, [this.json].concat(JW.args(args || [])));
+	}
+	
+<span id='JW-AbstractMap-method-createEmpty'>	/**
+</span>	 * @method createEmpty
+	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.AbstractMap} `&lt;U&gt;` Collection.
+	 */
+});
+
+<span id='JW-AbstractMap-SpliceParams-method-constructor'><span id='JW-AbstractMap-SpliceParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` JW.AbstractMap#splice method arguments. Returned by JW.AbstractMap#detectSplice method.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} removedKeys `&lt;string&gt;` Keys to remove.
+ * @param {Object} updatedItems `&lt;T&gt;` Items to add/replace.
+ */
+JW.AbstractMap.SpliceParams = function(removedKeys, updatedItems) {
+	JW.AbstractMap.SpliceParams._super.call(this);
+	this.removedKeys = removedKeys;
+	this.updatedItems = updatedItems;
+};
+
+JW.extend(JW.AbstractMap.SpliceParams, JW.Class, {
+<span id='JW-AbstractMap-SpliceParams-property-removedKeys'>	/**
+</span>	 * @property {Array} removedKeys `&lt;string&gt;` Keys to remove.
+	 */
+<span id='JW-AbstractMap-SpliceParams-property-updatedItems'>	/**
+</span>	 * @property {Object} updatedItems `&lt;T&gt;` Items to add/replace.
+	 */
+});
+
+<span id='JW-AbstractMap-SpliceResult-method-constructor'><span id='JW-AbstractMap-SpliceResult'>/**
+</span></span> * @class
+ * `&lt;T&gt;` JW.AbstractMap#splice method result.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Object} removedItems `&lt;T&gt;` Removed items.
+ * @param {Object} addedItems `&lt;T&gt;` Added items.
+ */
+JW.AbstractMap.SpliceResult = function(removedItems, addedItems) {
+	JW.AbstractMap.SpliceResult._super.call(this);
+	this.removedItems = removedItems;
+	this.addedItems = addedItems;
+};
+
+JW.extend(JW.AbstractMap.SpliceResult, JW.Class, {
+<span id='JW-AbstractMap-SpliceResult-property-removedItems'>	/**
+</span>	 * @property {Object} removedItems `&lt;T&gt;` Removed items.
+	 */
+<span id='JW-AbstractMap-SpliceResult-property-addedItems'>	/**
+</span>	 * @property {Object} addedItems `&lt;T&gt;` Added items.
+	 */
+});
+</pre>
+</body>
+</html>

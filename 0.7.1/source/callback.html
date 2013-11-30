@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	JW utility methods tests.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Core.CallbackTestCase = JW.Unit.TestCase.extend({
+	testByField: function() {
+		var obj = {
+			p: {
+				q: 2
+			}
+		};
+		this.assertStrictEqual(2, JW.byField(&quot;p.q&quot;)(obj));
+	},
+	
+	testByFieldUndefined: function() {
+		this.assertUndefined(JW.byField(&quot;p.q&quot;)({}));
+	},
+	
+	testByValue: function() {
+		var obj = {
+			p: {
+				q: 2
+			}
+		};
+		this.assertTrue(JW.byValue(&quot;p.q&quot;, 2)(obj));
+	},
+	
+	testByValueTypeCast: function() {
+		var obj = {
+			p: {
+				q: &quot;2&quot;
+			}
+		};
+		this.assertFalse(JW.byValue(&quot;p.q&quot;, 2)(obj));
+	},
+	
+	testByValueUndefined: function() {
+		this.assertFalse(JW.byValue(&quot;p.q&quot;, 2)({}));
+	},
+	
+	testByMethod: function() {
+		var obj = {
+			z: 2,
+			m: function(x, y) { return x + y + this.z; }
+		};
+		this.assertStrictEqual(9, JW.byMethod(&quot;m&quot;, [3, 4])(obj));
+	},
+	
+	testByMethodNoArgs: function() {
+		var obj = {
+			m: function() { return 2; }
+		};
+		this.assertStrictEqual(2, JW.byMethod(&quot;m&quot;)(obj));
+	}
+});
+</pre>
+</body>
+</html>

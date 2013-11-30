@@ -1,0 +1,1 @@
+Ext.data.JsonP.rudownload({"guide":"<p><font size=\"5\"><a href=\"guides/endownload/jwidget.zip\">Скачать jWidget</a></font></p>\n","title":"Скачать jWidget"});

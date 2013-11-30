@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*!
+    jWidget SDK dynamic loader.
+    
+    Copyright (C) 2013 Egor Nepomnyaschih
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+var JWSDK=(function(){var g={},m={},e=[],d=false,b=0,k=1,a=2,c=3;function j(n){return g[n]=g[n]||{name:n,status:b}}function l(q,r,o){var n=false;document.getElementsByTagName(&quot;body&quot;)[0].appendChild(q);function s(){n=true;r()}function p(){n=true;o()}q.onreadystatechange=function(){if(n){return}if(this.readyState!==&quot;complete&quot;&amp;&amp;this.readyState!==&quot;loaded&quot;){return}s()};q.onload=s;q.onerror=p}function f(o,q,n){var p=document.createElement(&quot;link&quot;);p.rel=&quot;stylesheet&quot;;p.type=&quot;text/css&quot;;p.href=o;l(p,q,n)}function i(o,q,n){var p=document.createElement(&quot;script&quot;);p.charset=&quot;utf-8&quot;;p.type=&quot;text/javascript&quot;;p.src=o;l(p,q,n)}function h(){if(!e.length||d){return}var r=e[0];d=true;e.shift();var q=r[0],o=r[1],t=r[2],n=r[3];function s(){t();d=false;h()}function p(){n();d=false;h()}q(o,s,p)}return{packageHeader:function(o){var t=j(o.name);if(t.status===c){throw new Error('Package &quot;'+o.name+'&quot; is loaded twice')}t.status=c;var v=o.requires||[];for(var q=0,p=v.length;q&lt;p;++q){j(v[q]).status=c}var s=o.loaders||[];for(var q=0,p=s.length;q&lt;p;++q){var u=s[q],r=j(u.name);if(r.loadInfo){continue}r.loadInfo={requires:u.requires,js:u.js,css:u.css}}var n=o.timestamps||{};for(var q in n){m[q]=n[q]}},loadPackage:function(n,A,x,B){var u=false;var z=function(){var D=u?x:A;if(D){D.apply(B||this,arguments)}};var y=j(n);if(y.status===k){throw new Error('Dependency loop detected while loading &quot;'+n+'&quot; package')}if(y.status===a){y.callbacks.push(z);return}if(y.status===c){setTimeout(z,1);return}var q=y.loadInfo;if(!q){throw new Error('Package &quot;'+n+'&quot; does not have loading info. Add it to &quot;loaders&quot; list of dependent package configuration')}y.status=k;var C=q.requires||[];for(var r=0,p=C.length;r&lt;p;++r){JWSDK.loadPackage(C[r])}y.status=a;y.callbacks=[];y.callbacks.push(z);var s=q.css||[];var o=q.js||[];var t=s.length+o.length;function w(){if(--t){return}var F=y.callbacks.concat();for(var E=0,D=F.length;E&lt;D;++E){F[E]()}}function v(){u=true;w()}for(var r=0,p=s.length;r&lt;p;++r){e.push([f,s[r],w,v])}for(var r=0,p=o.length;r&lt;p;++r){e.push([i,o[r],w,v])}h()},getTimestamp:function(n){return m[n]}}})();</pre>
+</body>
+</html>
