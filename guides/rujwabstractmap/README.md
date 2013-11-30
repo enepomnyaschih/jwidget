@@ -1,5 +1,9 @@
 ﻿# JW.AbstractMap
 
+Это краткое описание класса на русском языке.
+
+Полная документация на английском: JW.AbstractMap
+
 `<T> extends JW.IndexedCollection<string, T>`
 
 Абстрактный словарь.

@@ -29,7 +29,7 @@
  *     var set = lister.{@link #property-target target};
  *     
  *     // Assert that some item x exists in source collection
- *     assert(set.contains(x));
+ *     assert(set.{@link JW.AbstractSet#contains contains}(x));
  *
  * **Notice:** All items of source collection must be different.
  *

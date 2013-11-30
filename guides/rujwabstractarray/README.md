@@ -1,5 +1,9 @@
 ﻿# JW.AbstractArray
 
+Это краткое описание класса на русском языке.
+
+Полная документация на английском: JW.AbstractArray
+
 `<T> extends JW.IndexedCollection<number, T>`
 
 Абстрактный массив.
