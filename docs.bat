@@ -1,7 +1,7 @@
 @echo off
 call release.bat
 echo Building documentation
-set version=0.7
+set version=0.7.1
 rd /S /Q ..\docs\%version%\extjs
 rd /S /Q ..\docs\%version%\member-icons
 rd /S /Q ..\docs\%version%\output
