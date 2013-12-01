@@ -813,6 +813,10 @@ JW.apply(JW, {
 		return function(item) {
 			return item[method].apply(item, args);
 		};
+	},
+	
+	makeArray: function(v) {
+		return JW.isArray(v) ? v : JW.isSet(v) ? [v] : [];
 	}
 });
 
