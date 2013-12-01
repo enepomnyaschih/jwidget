@@ -100,7 +100,7 @@ JW.extend(JW.Schema.Validation, JW.Class, {
 	},
 	
 	getStack: function() {
-		return this.isValid() ? null : JW.Array.mapByMethod(this.errors, "toString");
+		return this.isValid() ? null : JW.Array.map(JW.byMethod(this.errors, "toString"));
 	},
 	
 	getFirstError: function() {
