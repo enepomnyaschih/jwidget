@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*!
-	jWidget Lib 0.7.1
+	jWidget Lib 0.7.1a
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
@@ -830,6 +830,10 @@ JW.apply(JW, {
 		return function(item) {
 			return item[method].apply(item, args);
 		};
+	},
+	
+	makeArray: function(v) {
+		return JW.isArray(v) ? v : JW.isSet(v) ? [v] : [];
 	}
 });
 
