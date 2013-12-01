@@ -17,56 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: Introduce addAll, setAll, removeAll to fix "change" event hacks
-
+/**
+ * @class
+ *
+ * `<T extends JW.Class> extends JW.AbstractCollection.Indexer<T, JW.AbstractSet<T>>`
+ *
+ * See JW.AbstractCollection.Indexer for details.
+ *
+ * @extends JW.AbstractCollection.Indexer
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.AbstractSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.AbstractSet.Indexer = function(source, config) {
-	JW.AbstractSet.Indexer._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.getKey = config.getKey;
-	this._targetCreated = !config.target;
-	this.target = config.target || source.createEmptyMap();
-	this.scope = config.scope;
-	if (!this.source.isEmpty()) {
-		this.source.every(this._add, this);
-		this._change();
-	}
+	JW.AbstractSet.Indexer._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractSet.Indexer/*<T extends JW.Class>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractSet<T> source;
-	String getKey(T item);
-	
-	Optional
-	JW.AbstractMap<T> target;
-	Object scope;
-	
-	Fields
-	Boolean _targetCreated;
-	*/
-	
-	destroy: function() {
-		if (!this.source.isEmpty()) {
-			this.source.every(this._remove, this);
-			this._change();
-		}
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		this._super();
-	},
-	
-	_add: function(item) {
-		this.target._set(item, this.getKey.call(this.scope || this, item));
-	},
-	
-	_remove: function(item) {
-		this.target._remove(this.getKey.call(this.scope || this, item));
-	},
-	
-	_change: function() {
-		this.target._triggerChange();
-	}
+JW.extend(JW.AbstractSet.Indexer, JW.AbstractCollection.Indexer, {
+	/**
+	 * @property {JW.AbstractSet} source `<T>` Source collection.
+	 */
 });

@@ -67,32 +67,32 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 	
 	_addItem: function(item, index) {
 		if (this._length % this.capacity === 0) {
-			this.rows.add(this.createRow.call(this.scope || this));
+			this.rows.tryAdd(this.createRow.call(this.scope || this));
 		}
 		var firstRow = Math.floor(index / this.capacity);
 		for (var i = this.rows.getLength() - 1; i > firstRow; --i) {
-			var broughtItem = this.rows.get(i - 1).remove(this.capacity - 1);
-			this.rows.get(i).add(broughtItem, 0);
+			var broughtItem = this.rows.get(i - 1).tryRemove(this.capacity - 1);
+			this.rows.get(i).tryAdd(broughtItem, 0);
 		}
-		this.rows.get(firstRow).add(item, index % this.capacity);
+		this.rows.get(firstRow).tryAdd(item, index % this.capacity);
 		++this._length;
 	},
 	
-	_removeItem: function(index) {
+	_removeItem: function(item, index) {
 		var firstRow = Math.floor(index / this.capacity);
-		this.rows.get(firstRow).remove(index % this.capacity);
+		this.rows.get(firstRow).tryRemove(index % this.capacity);
 		for (var i = firstRow + 1; i < this.rows.getLength(); ++i) {
-			var broughtItem = this.rows.get(i).remove(0);
-			this.rows.get(i - 1).add(broughtItem, this.capacity - 1);
+			var broughtItem = this.rows.get(i).tryRemove(0);
+			this.rows.get(i - 1).tryAdd(broughtItem, this.capacity - 1);
 		}
 		--this._length;
 		if (this._length % this.capacity === 0) {
-			this.destroyRow.call(this.scope || this, this.rows.remove(this.rows.getLength() - 1));
+			this.destroyRow.call(this.scope || this, this.rows.tryRemove(this.rows.getLength() - 1));
 		}
 	},
 	
 	_clearItems: function() {
-		var rows = this.rows.clear();
+		var rows = this.rows.tryClear();
 		this._length = 0;
 		JW.Array.each(rows, this.destroyRow, this.scope || this);
 	}

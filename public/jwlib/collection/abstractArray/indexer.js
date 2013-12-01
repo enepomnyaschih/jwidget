@@ -17,44 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractCollection.Indexer<T, JW.AbstractArray<T>>`
+ *
+ * See JW.AbstractCollection.Indexer for details.
+ *
+ * @extends JW.AbstractCollection.Indexer
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.AbstractArray.Indexer = function(source, config) {
-	JW.AbstractArray.Indexer._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.getKey = config.getKey;
-	this._targetCreated = !config.target;
-	this.target = config.target || this.source.createEmptyMap();
-	this.scope = config.scope;
-	this.target.setAll(this._index(this.source.getItems()));
+	JW.AbstractArray.Indexer._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractArray.Indexer/*<T extends Any>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractArray<T> source;
-	String getKey(T item);
-	
-	Optional
-	JW.AbstractMap<T> target;
-	Object scope;
-	
-	Fields
-	Boolean _targetCreated;
-	*/
-	
-	destroy: function() {
-		this.target.removeAll(this._keys(this.source.getItems()));
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		this._super();
-	},
-	
-	_index: function(items) {
-		return JW.Array.index(items, this.getKey, this.scope || this);
-	},
-	
-	_keys: function(items) {
-		return JW.Array.map(items, this.getKey, this.scope || this);
-	}
+JW.extend(JW.AbstractArray.Indexer, JW.AbstractCollection.Indexer, {
+	/**
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
+	 */
 });

@@ -17,231 +17,283 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: tests and document bulk changes
-
-JW.ObservableArray = function(items) {
-	JW.ObservableArray._super.call(this);
-	this.array = [];
-	this.addEvent = new JW.Event();
-	this.removeEvent = new JW.Event();
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractArray<T>`
+ *
+ * See structurized list of methods in JW.AbstractArray.
+ *
+ * @extends JW.AbstractArray
+ *
+ * @constructor
+ * @param {Array} [items] `<T>` Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create array as adapter of `items`. Defaults to false, so `items` is copied.
+ */
+JW.ObservableArray = function(items, adapter) {
+	JW.ObservableArray._super.call(this, items, adapter);
+	this.spliceEvent = new JW.Event();
 	this.replaceEvent = new JW.Event();
 	this.moveEvent = new JW.Event();
 	this.clearEvent = new JW.Event();
 	this.reorderEvent = new JW.Event();
-	this.filterEvent = new JW.Event();
-	this.resetEvent = new JW.Event();
 	this.changeEvent = new JW.Event();
 	this.lengthChangeEvent = new JW.Event();
-	this.bulkCount = 0;
-	this.bulkDirty = false;
-	this.bulkLength = 0;
-	if (items) {
-		this.addAll(items);
-	}
+	this._lastLength = this.items.length;
 };
 
-JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
-	/*
-	Fields
-	Array<T> array;
-	JW.Event<JW.ObservableArray.ItemRangeEventParams<T>> addEvent;
-	JW.Event<JW.ObservableArray.ItemRangeEventParams<T>> removeEvent;
-	JW.Event<JW.ObservableArray.ReplaceEventParams<T>> replaceEvent;
-	JW.Event<JW.ObservableArray.MoveEventParams<T>> moveEvent;
-	JW.Event<JW.ObservableArray.ItemsEventParams<T>> clearEvent;
-	JW.Event<JW.ObservableArray.ItemsEventParams<T>> reorderEvent;
-	JW.Event<JW.ObservableArray.ItemsEventParams<T>> filterEvent;
-	JW.Event<JW.ObservableArray.ItemsEventParams<T>> resetEvent;
-	JW.Event<JW.ObservableArray.EventParams<T>> changeEvent;
-	JW.Event<JW.ObservableArray.LengthChangeEventParams<T>> lengthChangeEvent;
-	Integer bulkCount;
-	Boolean bulkDirty;
-	Integer bulkLength;
-	*/
+JW.extend(JW.ObservableArray, JW.AbstractArray, {
+	/**
+	 * @event spliceEvent
+	 * Items are removed from array and items are added to array. Triggered in result
+	 * of calling #add, #tryAdd, #addAll, #tryAddAll, #remove, #tryRemove, #removeItem, #pop, #removeAll, #tryRemoveAll,
+	 * {@link #removeItems}, #splice, #trySplice, #performSplice.
+	 * @param {JW.ObservableArray.SpliceEventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event replaceEvent
+	 * Item is replaced in array. Triggered in result of calling #set, #trySet.
+	 * @param {JW.ObservableArray.ReplaceEventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event moveEvent
+	 * Item is moved in array. Triggered in result of calling #move, #tryMove.
+	 * @param {JW.ObservableArray.MoveEventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event clearEvent
+	 * Array is cleared. Triggered in result of calling #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableArray.ItemsEventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event reorderEvent
+	 * Items are reordered in array. Triggered in result
+	 * of calling #reorder, #tryReorder, #performReorder, #sort, #sortComparing.
+	 * @param {JW.ObservableArray.ReorderEventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event changeEvent
+	 * Array is changed. Triggered right after one
+	 * of events #spliceEvent, #replaceEvent, #moveEvent, #clearEvent, #reorderEvent.
+	 * @param {JW.ObservableArray.EventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event lengthChangeEvent
+	 * Array length is changed. Triggered right after #changeEvent if array length has changed.
+	 * @param {JW.ObservableArray.LengthChangeEventParams} params `<T>` Parameters.
+	 */
 	
+	// override
 	destroy: function() {
-		this.clear();
 		this.lengthChangeEvent.destroy();
 		this.changeEvent.destroy();
-		this.resetEvent.destroy();
-		this.filterEvent.destroy();
 		this.reorderEvent.destroy();
 		this.clearEvent.destroy();
 		this.moveEvent.destroy();
 		this.replaceEvent.destroy();
-		this.removeEvent.destroy();
-		this.addEvent.destroy();
+		this.spliceEvent.destroy();
 		this._super();
 	},
 	
-	getSize: function() {
-		return this.array.length;
-	},
-	
-	isEmpty: function() {
-		return this.array.length === 0;
-	},
-	
-	get: function(index) {
-		return this.array[index];
-	},
-	
-	add: function(item, index) {
-		if (index === undefined) {
-			index = this.getLength();
-		}
-		this.array.splice(index, 0, item);
-		this.addEvent.trigger(new JW.ObservableArray.ItemRangeEventParams(this, [ item ], index));
-		this._triggerChange();
-	},
-	
-	addAll: function(items, index) {
-		if (items.length === 0) {
+	// override
+	trySet: function(item, index) {
+		var oldItem = this._super(item, index);
+		if (oldItem === undefined) {
 			return;
 		}
-		if (index === undefined) {
-			index = this.getLength();
-		}
-		JW.Array.addAll(this.array, items, index);
-		this.addEvent.trigger(new JW.ObservableArray.ItemRangeEventParams(this, items, index));
-		this._triggerChange();
-	},
-	
-	remove: function(index, count) {
-		var items = this.array.splice(index, JW.def(count, 1));
-		this.removeEvent.trigger(new JW.ObservableArray.ItemRangeEventParams(this, items, index));
-		this._triggerChange();
-		return (count === undefined) ? items[0] : items;
-	},
-	
-	removeItem: function(item) {
-		var index = this.indexOf(item);
-		if (index !== undefined) {
-			this.remove(index);
-		}
-		return index;
-	},
-	
-	set: function(item, index) {
-		var oldItem = this.array[index];
-		if (oldItem === item) {
-			return oldItem;
-		}
-		this.array[index] = item;
-		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem, item));
+		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem.value, item));
 		this._triggerChange();
 		return oldItem;
 	},
 	
-	move: function(fromIndex, toIndex) {
-		var item = this.array[fromIndex];
-		if (fromIndex === toIndex) {
-			return item;
-		};
-		JW.Array.move(this.array, fromIndex, toIndex);
+	// override
+	tryMove: function(fromIndex, toIndex) {
+		var item = this._super(fromIndex, toIndex);
+		if (item === undefined) {
+			return;
+		}
 		this.moveEvent.trigger(new JW.ObservableArray.MoveEventParams(this, fromIndex, toIndex, item));
 		this._triggerChange();
 		return item;
 	},
 	
-	clear: function() {
-		if (this.isEmpty()) {
-			return [];
+	// override
+	tryClear: function() {
+		var oldItems = this._super();
+		if (oldItems === undefined) {
+			return;
 		}
-		var items = JW.Array.clear(this.array);
-		this.clearEvent.trigger(new JW.ObservableArray.ItemsEventParams(this, items));
+		this.clearEvent.trigger(new JW.ObservableArray.ItemsEventParams(this, oldItems));
+		this._triggerChange();
+		return oldItems;
+	},
+	
+	// override
+	trySplice: function(removeParamsList, addParamsList) {
+		var result = this._super(removeParamsList, addParamsList);
+		if (result === undefined) {
+			return;
+		}
+		this.spliceEvent.trigger(new JW.ObservableArray.SpliceEventParams(this, result));
+		this._triggerChange();
+		return result;
+	},
+	
+	// override
+	tryReorder: function(indexArray) {
+		var items = this._super(indexArray);
+		if (items === undefined) {
+			return;
+		}
+		this.reorderEvent.trigger(new JW.ObservableArray.ReorderEventParams(this, indexArray, items));
 		this._triggerChange();
 		return items;
 	},
 	
-	performReorder: function(callback, scope) {
-		this._perform(this.reorderEvent, callback, scope);
-	},
-	
-	performFilter: function(callback, scope) {
-		this._perform(this.filterEvent, callback, scope);
-	},
-	
-	performReset: function(callback, scope) {
-		this._perform(this.resetEvent, callback, scope);
-	},
-	
-	startBulkChange: function() {
-		if (this.bulkCount === 0) {
-			this.bulkDirty = false;
-		}
-		++this.bulkCount;
-	},
-	
-	stopBulkChange: function() {
-		if (this.bulkCount === 0) {
-			return;
-		}
-		--this.bulkCount;
-		if (this.bulkDirty) {
-			this._triggerChange();
-		}
-	},
-	
-	every: function(callback, scope) {
-		return JW.Array.every(this.array, callback, scope);
-	},
-	
-	backEvery: function(target, callback, scope) {
-		return JW.Array.backEvery(this.array, callback, scope);
-	},
-	
-	top: function() {
-		return JW.Array.top(this.array);
-	},
-	
-	pop: function() {
-		var length = this.getLength();
-		return (length === 0) ? undefined : this.remove(length - 1);
-	},
-	
+	/**
+	 * `<U>` Creates empty collection of the same type.
+	 * @returns {JW.ObservableArray} `<U>` Collection.
+	 */
 	createEmpty: function() {
 		return new JW.ObservableArray();
 	},
 	
-	createEmptyUnobservable: function() {
-		return new JW.Array();
-	},
-	
+	/**
+	 * `<U>` Creates empty array of the same observability level.
+	 * @returns {JW.ObservableArray} `<U>` Array.
+	 */
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
 	
+	/**
+	 * `<U>` Creates empty map of the same observability level.
+	 * @returns {JW.ObservableMap} `<U>` Map.
+	 */
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
 	
+	/**
+	 * `<U>` Creates empty set of the same observability level.
+	 * @returns {JW.ObservableSet} `<U>` Set.
+	 */
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
 	
-	getItems: function() {
-		return this.array;
+	/**
+	 * `<U>` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Mapper}
+	 * `<T, U>` Synchronizer.
+	 */
+	createMapper: function(config) {
+		return new JW.ObservableArray.Mapper(this, config);
 	},
 	
-	createIndexer: function(config) {
-		return new JW.ObservableArray.Indexer(this, config);
+	/**
+	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Filterer}
+	 * `<T>` Synchronizer.
+	 */
+	createFilterer: function(config) {
+		return new JW.ObservableArray.Filterer(this, config);
 	},
 	
+	/**
+	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Observer}
+	 * `<T>` Synchronizer.
+	 */
 	createObserver: function(config) {
 		return new JW.ObservableArray.Observer(this, config);
 	},
 	
-	createInserter: function(config) {
-		return new JW.ObservableArray.Inserter(this, config);
+	/**
+	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Orderer}
+	 * `<T>` Synchronizer.
+	 */
+	createOrderer: function(config) {
+		return new JW.ObservableArray.Orderer(this, config);
 	},
 	
+	/**
+	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.SorterComparing}
+	 * `<T>` Synchronizer.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.ObservableArray.SorterComparing(this, config);
+	},
+	
+	/**
+	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Indexer}
+	 * `<T>` Synchronizer.
+	 */
+	createIndexer: function(config) {
+		return new JW.ObservableArray.Indexer(this, config);
+	},
+	
+	/**
+	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Lister}
+	 * `<T>` Synchronizer.
+	 */
 	createLister: function(config) {
 		return new JW.ObservableArray.Lister(this, config);
 	},
 	
-	createMapper: function(config) {
-		return new JW.ObservableArray.Mapper(this, config);
+	/**
+	 * Creates view synchronizer with array.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Inserter}
+	 * `<T>` Synchronizer.
+	 */
+	createInserter: function(config) {
+		return new JW.ObservableArray.Inserter(this, config);
+	},
+	
+	/**
+	 * Creates arrays merger.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Merger}
+	 * `<T>` Synchronizer.
+	 */
+	createMerger: function(config) {
+		return new JW.ObservableArray.Merger(this, config);
+	},
+	
+	createMergerBunch: function(merger) {
+		return new JW.ObservableArray.Merger.Bunch(merger, this);
+	},
+	
+	/**
+	 * Creates array reverser.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Reverser}
+	 * `<T>` Synchronizer.
+	 */
+	createReverser: function(config) {
+		return new JW.ObservableArray.Reverser(this, config);
 	},
 	
 	createSplitter: function(config) {
@@ -249,86 +301,72 @@ JW.extend(JW.ObservableArray/*<T extends Any>*/, JW.Class, {
 	},
 	
 	_triggerChange: function() {
-		if (this.bulkCount !== 0) {
-			this.bulkDirty = true;
-			return;
-		}
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		var length = this.getLength();
-		if (this.bulkLength !== length) {
-			this.lengthChangeEvent.trigger(new JW.ObservableArray.LengthChangeEventParams(this, this.bulkLength, length));
-			this.bulkLength = length;
+		if (this._lastLength !== length) {
+			this.lengthChangeEvent.trigger(new JW.ObservableArray.LengthChangeEventParams(this, this._lastLength, length));
+			this._lastLength = length;
 		}
-	},
-	
-	_perform: function(event, callback, scope) {
-		var params = new JW.ObservableArray.ItemsEventParams(this, this.array.concat());
-		var items = callback.call(scope || this, this.array);
-		if (items && (items !== this.array)) {
-			JW.Array.clear(this.array);
-			JW.Array.addAll(this.array, items);
-		}
-		event.trigger(params);
-		this._triggerChange();
 	}
 });
 
-JW.ObservableArray.prototype.getLength = JW.ObservableArray.prototype.getSize;
-JW.ObservableArray.prototype.pushItem = JW.ObservableArray.prototype.add;
-
-JW.apply(JW.ObservableArray.prototype, JW.Alg.BuildMethods);
-
+/**
+ * @class
+ * `<T>` JW.ObservableArray event parameters.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `<T>` Event sender.
+ */
 JW.ObservableArray.EventParams = function(sender) {
 	JW.ObservableArray.EventParams._super.call(this, sender);
 };
 
-JW.extend(JW.ObservableArray.EventParams/*<T extends Any>*/, JW.EventParams, {
-	/*
-	Fields
-	JW.ObservableArray<T> sender;
-	*/
+JW.extend(JW.ObservableArray.EventParams, JW.EventParams, {
+	/**
+	 * @property {JW.ObservableArray} sender `<T>` Event sender.
+	 */
 });
 
-JW.ObservableArray.ItemRangeEventParams = function(sender, items, index) {
-	JW.ObservableArray.ItemRangeEventParams._super.call(this, sender);
-	this.items = items;
-	this.index = index;
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableArray.EventParams<T>`
+ *
+ * Parameters of JW.ObservableArray#spliceEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `<T>` Event sender.
+ * @param {JW.AbstractArray.SpliceResult} spliceResult `<T>` Result of JW.AbstractArray#splice method.
+ */
+JW.ObservableArray.SpliceEventParams = function(sender, spliceResult) {
+	JW.ObservableArray.SpliceEventParams._super.call(this, sender);
+	this.spliceResult = spliceResult;
 };
 
-JW.extend(JW.ObservableArray.ItemRangeEventParams/*<T extends Any>*/, JW.ObservableArray.EventParams/*<T>*/, {
-	/*
-	Fields
-	Array<T> items;
-	Integer index;
-	*/
+JW.extend(JW.ObservableArray.SpliceEventParams/*<T>*/, JW.ObservableArray.EventParams/*<T>*/, {
+	/**
+	 * @property {JW.AbstractArray.SpliceResult} spliceResult `<T>` Result of JW.AbstractArray#splice method.
+	 */
 });
 
-JW.ObservableArray.ItemsEventParams = function(sender, items) {
-	JW.ObservableArray.ItemsEventParams._super.call(this, sender);
-	this.items = items;
-};
-
-JW.extend(JW.ObservableArray.ItemsEventParams/*<T extends Any>*/, JW.ObservableArray.EventParams/*<T>*/, {
-	/*
-	Fields
-	Array<T> items;
-	*/
-});
-
-JW.ObservableArray.LengthChangeEventParams = function(sender, oldLength, newLength) {
-	JW.ObservableArray.LengthChangeEventParams._super.call(this, sender);
-	this.oldLength = oldLength;
-	this.newLength = newLength;
-};
-
-JW.extend(JW.ObservableArray.LengthChangeEventParams/*<T extends Any>*/, JW.ObservableArray.EventParams/*<T>*/, {
-	/*
-	Fields
-	Integer oldLength;
-	Integer newLength;
-	*/
-});
-
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableArray.EventParams<T>`
+ *
+ * Parameters of JW.ObservableArray#moveEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `<T>` Event sender.
+ * @param {number} fromIndex Where item is moved from.
+ * @param {number} toIndex Where item is moved to.
+ * @param {T} item Item.
+ */
 JW.ObservableArray.MoveEventParams = function(sender, fromIndex, toIndex, item) {
 	JW.ObservableArray.MoveEventParams._super.call(this, sender);
 	this.fromIndex = fromIndex;
@@ -336,15 +374,33 @@ JW.ObservableArray.MoveEventParams = function(sender, fromIndex, toIndex, item) 
 	this.item = item;
 };
 
-JW.extend(JW.ObservableArray.MoveEventParams/*<T extends Any>*/, JW.ObservableArray.EventParams/*<T>*/, {
-	/*
-	Fields
-	Integer fromIndex;
-	Integer toIndex;
-	T item;
-	*/
+JW.extend(JW.ObservableArray.MoveEventParams, JW.ObservableArray.EventParams, {
+	/**
+	 * @property {number} fromIndex Where item is moved from.
+	 */
+	/**
+	 * @property {number} toIndex Where item is moved to.
+	 */
+	/**
+	 * @property {T} item Item.
+	 */
 });
 
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableArray.EventParams<T>`
+ *
+ * Parameters of JW.ObservableArray#replaceEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `<T>` Event sender.
+ * @param {number} index Item index.
+ * @param {T} oldItem Old value.
+ * @param {T} newItem New value.
+ */
 JW.ObservableArray.ReplaceEventParams = function(sender, index, oldItem, newItem) {
 	JW.ObservableArray.ReplaceEventParams._super.call(this, sender);
 	this.index = index;
@@ -352,11 +408,92 @@ JW.ObservableArray.ReplaceEventParams = function(sender, index, oldItem, newItem
 	this.newItem = newItem;
 };
 
-JW.extend(JW.ObservableArray.ReplaceEventParams/*<T extends Any>*/, JW.ObservableArray.EventParams/*<T>*/, {
-	/*
-	Fields
-	Integer index;
-	T oldItem;
-	T newItem;
-	*/
+JW.extend(JW.ObservableArray.ReplaceEventParams, JW.ObservableArray.EventParams, {
+	/**
+	 * @property {number} index Item index.
+	 */
+	/**
+	 * @property {T} oldItem Old value.
+	 */
+	/**
+	 * @property {T} newItem New value.
+	 */
+});
+
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableArray.EventParams<T>`
+ *
+ * Parameters of JW.ObservableArray event which bring its old contents.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `<T>` Event sender.
+ * @param {Array} items `<T>` Old array contents.
+ */
+JW.ObservableArray.ItemsEventParams = function(sender, items) {
+	JW.ObservableArray.ItemsEventParams._super.call(this, sender);
+	this.items = items;
+};
+
+JW.extend(JW.ObservableArray.ItemsEventParams, JW.ObservableArray.EventParams, {
+	/**
+	 * @property {Array} items `<T>` Old array contents.
+	 */
+});
+
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableArray.ItemsEventParams<T>`
+ *
+ * Parameters of JW.ObservableArray#reorderEvent.
+ *
+ * @extends JW.ObservableArray.ItemsEventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `<T>` Event sender.
+ * @param {Array} indexArray `<number>` Indexes of items in reordered array.
+ * @param {Array} items `<T>` Old array contents.
+ */
+JW.ObservableArray.ReorderEventParams = function(sender, indexArray, items) {
+	JW.ObservableArray.ReorderEventParams._super.call(this, sender, items);
+	this.indexArray = indexArray;
+};
+
+JW.extend(JW.ObservableArray.ReorderEventParams, JW.ObservableArray.ItemsEventParams, {
+	/**
+	 * @property {Array} indexArray `<number>` Indexes of items in reordered array.
+	 */
+});
+
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableArray.EventParams<T>`
+ *
+ * Parameters of JW.ObservableArray#lengthChangeEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `<T>` Event sender.
+ * @param {number} oldLength Old collection length.
+ * @param {number} newLength New collection length.
+ */
+JW.ObservableArray.LengthChangeEventParams = function(sender, oldLength, newLength) {
+	JW.ObservableArray.LengthChangeEventParams._super.call(this, sender);
+	this.oldLength = oldLength;
+	this.newLength = newLength;
+};
+
+JW.extend(JW.ObservableArray.LengthChangeEventParams, JW.ObservableArray.EventParams, {
+	/**
+	 * @property {number} oldLength Old array length.
+	 */
+	/**
+	 * @property {number} newLength New array length.
+	 */
 });

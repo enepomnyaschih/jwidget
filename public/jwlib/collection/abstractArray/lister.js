@@ -17,32 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class> extends JW.AbstractCollection.Lister<T, JW.AbstractArray<T>>`
+ *
+ * See JW.AbstractCollection.Lister for details.
+ *
+ * @extends JW.AbstractCollection.Lister
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.AbstractArray.Lister = function(source, config) {
-	JW.AbstractArray.Lister._super.call(this);
-	config = config || {};
-	this.source = source;
-	this._targetCreated = !config.target;
-	this.target = config.target || this.source.createEmptySet();
-	this.target.addAll(this.source.getItems());
+	JW.AbstractArray.Lister._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractArray.Lister/*<T extends JW.Class>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractArray<T> source;
-	
-	Optional
-	JW.Set<T> target;
-	
-	Fields
-	Boolean _targetCreated;
-	*/
-	
-	destroy: function() {
-		this.target.removeAll(this.source.getItems());
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		this._super();
-	}
+JW.extend(JW.AbstractArray.Lister, JW.AbstractCollection.Lister, {
+	/**
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
+	 */
 });

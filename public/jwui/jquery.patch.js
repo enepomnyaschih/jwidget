@@ -17,7 +17,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class jQuery
+ *
+ * jQuery element is extended with several methods.
+ */
 JW.apply(jQuery.fn, {
+	/**
+	 * Insert element to position with specified index inside current component.
+	 * @param {jQuery} el Element to insert.
+	 * @param {number} [index] Index of position to insert to. By default, appends the element.
+	 * @returns {jQuery} this.
+	 */
 	insert: function(item, index) {
 		if (!JW.isSet(index)) {
 			this.append(item);
@@ -26,8 +37,16 @@ JW.apply(jQuery.fn, {
 		} else {
 			jQuery(this.children()[index - 1]).after(item);
 		}
+		return this;
 	},
 	
+	/**
+	 * Replace element with another element in DOM. Unlike standard replaceWith, doesn't kill the event listeners.
+	 * @param {jQuery} el Element.
+	 * @param {boolean} [attrs=false] Assign "id" attribute (if defined) and add all classes of current element
+	 * to el.
+	 * @returns {jQuery} this.
+	 */
 	replaceBy: function(el, attrs) {
 		var id = attrs ? this.attr("id") : null,
 			cls = attrs ? this.attr("class") : null;
@@ -42,5 +61,6 @@ JW.apply(jQuery.fn, {
 		if (cls) {
 			el.addClass(cls);
 		}
+		return this;
 	}
 });

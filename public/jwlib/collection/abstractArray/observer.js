@@ -17,59 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractCollection.Observer<T, JW.AbstractArray<T>>`
+ *
+ * See JW.AbstractCollection.Observer for details.
+ *
+ * @extends JW.AbstractCollection.Observer
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createObserver method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.AbstractArray.Observer = function(source, config) {
-	JW.AbstractArray.Observer._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.addItem = config.addItem;
-	this.removeItem = config.removeItem;
-	this.clearItems = config.clearItems;
-	this.scope = config.scope || this;
-	this._fill();
+	JW.AbstractArray.Observer._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractArray.Observer/*<T>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractArray<T> source;
-	void addItem(T item);
-	void removeItem(T item);
-	
-	Optional
-	void clearItems(Array<T> items);
-	Object scope;
-	*/
-	
-	// override
-	destroy: function() {
-		this._clear(this.source.getItems());
-		this._super();
-	},
-	
-	_addItem: function(item) {
-		if (this.addItem) {
-			this.addItem.call(this.scope || this, item);
-		}
-	},
-	
-	_removeItem: function(item) {
-		if (this.removeItem) {
-			this.removeItem.call(this.scope || this, item);
-		}
-	},
-	
-	_fill: function() {
-		this.source.every(this._addItem, this);
-	},
-	
-	_clear: function(items) {
-		if (items.length === 0) {
-			return;
-		}
-		if (this.clearItems) {
-			this.clearItems.call(this.scope || this, items);
-		} else {
-			JW.Array.backEvery(items, this._removeItem, this);
-		}
-	}
+JW.extend(JW.AbstractArray.Observer, JW.AbstractCollection.Observer, {
+	/**
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
+	 */
 });

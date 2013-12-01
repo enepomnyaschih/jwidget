@@ -17,56 +17,56 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T, U> extends JW.AbstractCollection.Mapper<T, U, JW.AbstractMap<T>, JW.AbstractMap<U>>`
+ *
+ * See JW.AbstractCollection.Mapper for details.
+ *
+ * @extends JW.AbstractCollection.Mapper
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.AbstractMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.AbstractMap.Mapper = function(source, config) {
-	JW.AbstractMap.Mapper._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.createItem = config.createItem;
-	this.destroyItem = config.destroyItem;
-	this._targetCreated = !config.target;
-	this.target = config.target || source.createEmpty();
-	this.scope = config.scope;
-	this._destructionQueue = [];
-	this.target.setAll(JW.Map.map(this.source.getJson(), this.createItem, this.scope || this));
+	JW.AbstractMap.Mapper._super.call(this, source, config);
+	this.target.trySetAll(this._createItems(source.getJson()));
 };
 
-JW.extend(JW.AbstractMap.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractMap<S> source;
-	T createItem(S data, String key);
-	void destroyItem(T item, S data, String key);
+JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
+	/**
+	 * @cfg {JW.AbstractMap} target `<U>` Target collection.
+	 */
+	/**
+	 * @property {JW.AbstractMap} source `<T>` Source collection.
+	 */
+	/**
+	 * @property {JW.AbstractMap} target `<U>` Target collection.
+	 */
 	
-	Optional
-	JW.AbstractMap<T> target;
-	Object scope; // defaults to this
-	
-	Fields
-	Boolean _targetCreated;
-	Array<Array> _destructionQueue;
-	*/
-	
+	// override
 	destroy: function() {
-		if (!this.source.isEmpty()) {
-			this.source.every(this._remove, this);
-			this._change();
-		}
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
+		this._destroyItems(this.target.removeAll(this.source.getKeys()), this.source.getJson());
 		this._super();
 	},
 	
-	_remove: function(data, key) {
-		this._destructionQueue.push([ this.target._remove(key), data, key ]);
+	_createItems: function(datas) {
+		var items = {};
+		for (var key in datas) {
+			items[key] = this.createItem.call(this.scope, datas[key]);
+		}
+		return items;
 	},
 	
-	_change: function() {
-		this.target._triggerChange();
-		for (var i = 0; i < this._destructionQueue.length; ++i) {
-			var params = this._destructionQueue[i];
-			this.destroyItem.call(this.scope || this, params[0], params[1], params[2]);
+	_destroyItems: function(items, datas) {
+		if (this.destroyItem === undefined) {
+			return;
 		}
-		this._destructionQueue = [];
+		for (var key in items) {
+			this.destroyItem.call(this.scope, items[key], datas[key]);
+		}
 	}
 });

@@ -1,4 +1,4 @@
-/*
+﻿/*
 	jWidget Lib source file.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
@@ -17,13 +17,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T>` jWidget object adapter. JW.Class wrapper of arbitrary value.
+ *
+ * Since some jWidget classes work with JW.Class instances only (for example, JW.AbstractSet),
+ * the library provides a simple adapter for any objects and values conversion to JW.Class.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {T} value Object.
+ */
 JW.Proxy = function(value) {
 	JW.Proxy._super.call(this);
 	this.value = value;
 };
 
-JW.extend(JW.Proxy/*<T extends Any>*/, JW.Class, {
-	/*
-	T value;
-	*/
+JW.extend(JW.Proxy, JW.Class, {
+	/**
+	 * @property {T} value Object.
+	 */
 });

@@ -44,10 +44,7 @@ JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
-			"Added a at a",
-			"Added d at d",
-			"Added c at c",
-			"Added b at b",
+			"Spliced -{} +{a:a,b:b,c:c,d:d}",
 			"Changed",
 			"Changed size from 0 to 4"
 		);
@@ -55,10 +52,7 @@ JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({ "a": a, "b": b, "c": c, "d": d }, target);
 		
 		this.setExpectedOutput(
-			"Removed a at a",
-			"Removed d at d",
-			"Removed c at c",
-			"Removed b at b",
+			"Spliced -{a:a,b:b,c:c,d:d} +{}",
 			"Changed",
 			"Changed size from 4 to 0"
 		);
@@ -82,7 +76,7 @@ JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		
 		var target = this.createTarget();
 		this.setExpectedOutput(
-			"Added x at x",
+			"Spliced -{} +{x:x}",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
@@ -90,8 +84,7 @@ JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({ "x": x }, target);
 		
 		this.setExpectedOutput(
-			"Added a at a",
-			"Added b at b",
+			"Spliced -{} +{a:a,b:b}",
 			"Changed",
 			"Changed size from 1 to 3"
 		);
@@ -99,8 +92,7 @@ JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({ "x": x, "a": a, "b": b }, target);
 		
 		this.setExpectedOutput(
-			"Added c at c",
-			"Added d at d",
+			"Spliced -{} +{c:c,d:d}",
 			"Changed",
 			"Changed size from 3 to 5"
 		);
@@ -108,8 +100,7 @@ JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({ "x": x, "a": a, "b": b, "c": c, "d": d }, target);
 		
 		this.setExpectedOutput(
-			"Removed c at c",
-			"Removed d at d",
+			"Spliced -{c:c,d:d} +{}",
 			"Changed",
 			"Changed size from 5 to 3"
 		);
@@ -117,19 +108,14 @@ JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({ "x": x, "a": a, "b": b }, target);
 		
 		this.setExpectedOutput(
-			"Removed a at a",
-			"Removed b at b",
+			"Spliced -{a:a,b:b} +{}",
 			"Changed",
 			"Changed size from 3 to 1"
 		);
 		indexer1.destroy();
 		this.assertTarget({ "x": x }, target);
 		
-		this.setExpectedOutput(
-			"Removed x at x",
-			"Changed",
-			"Changed size from 1 to 0"
-		);
+		this.setExpectedOutput();
 		target.destroy();
 		this.assertTarget({}, target);
 		
@@ -160,23 +146,7 @@ JW.Tests.Collection.AbstractArray.IndexerTestCase = JW.Unit.TestCase.extend({
 	
 	createTarget: function() {
 		var target = new JW.ObservableMap();
-		
-		target.addEvent.bind(function(params) {
-			this.output("Added " + params.item.value + " at " + params.key);
-		}, this);
-		
-		target.removeEvent.bind(function(params) {
-			this.output("Removed " + params.item.value + " at " + params.key);
-		}, this);
-		
-		target.changeEvent.bind(function(params) {
-			this.output("Changed");
-		}, this);
-		
-		target.sizeChangeEvent.bind(function(params) {
-			this.output("Changed size from " + params.oldSize + " to " + params.newSize);
-		}, this);
-		
+		JW.Tests.Collection.subscribeToMap(this, target, function(x) { return x.value; });
 		return target;
 	},
 	

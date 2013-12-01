@@ -17,37 +17,50 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class, U extends JW.Class> extends JW.AbstractSet.Mapper<T, U>`
+ *
+ * See JW.AbstractCollection.Mapper for details.
+ *
+ * @extends JW.AbstractSet.Mapper
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.ObservableSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.ObservableSet.Mapper = function(source, config) {
 	JW.ObservableSet.Mapper._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this._changeEventAttachment = this.source.changeEvent.bind(this._onChange, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.AbstractSet.Mapper/*<S, T>*/, {
+JW.extend(JW.ObservableSet.Mapper, JW.AbstractSet.Mapper, {
 	/*
-	Fields
-	EventAttachment _addEventAttachment;
-	EventAttachment _removeEventAttachment;
-	EventAttachment _changeEventAttachment;
+	EventAttachment _spliceEventAttachment;
+	EventAttachment _clearEventAttachment;
 	*/
 	
+	// override
 	destroy: function() {
-		this._changeEventAttachment.destroy();
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		this._clearEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this._add(params.item);
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		var removedDatas = spliceResult.removedItems;
+		var addedDatas = spliceResult.addedItems;
+		this.target.trySplice(this._getItems(removedDatas), this._createItems(addedDatas));
+		this._destroyItems(removedDatas);
 	},
 	
-	_onRemove: function(params) {
-		this._remove(params.item);
-	},
-	
-	_onChange: function(params) {
-		this._change();
+	_onClear: function(params) {
+		var datas = params.items;
+		this.target.tryRemoveAll(this._getItems(datas));
+		this._destroyItems(datas);
 	}
 });

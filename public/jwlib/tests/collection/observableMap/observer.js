@@ -27,7 +27,11 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		var syncher = source.createObserver({
 			addItem    : function(item) { this.output("Added " + item); },
 			removeItem : function(item) { this.output("Removed " + item); },
-			clearItems : function(items) { this.output("Cleared " + items.join(", ")); },
+			clearItems : function(items) {
+				items = items.concat();
+				items.sort();
+				this.output("Cleared " + items.join(", "));
+			},
 			scope      : this
 		});
 		
@@ -64,11 +68,33 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		);
 		source.set("T", "f");
 		
+		this.setExpectedOutput();
+		source.setKey("c", "a");
+		
 		this.setExpectedOutput(
-			"Removed D",
+			"Removed T",
 			"Removed C",
-			"Removed B",
-			"Removed T"
+			"Added M"
+		);
+		source.splice([ "a", "f" ], { "m": "M" });
+		
+		this.setExpectedOutput();
+		source.performReindex({ "a": "D", "b": "B", "d": "M" });
+		
+		this.setExpectedOutput(
+			"Removed M",
+			"Added C"
+		);
+		source.performSplice({ "a": "D", "b": "B", "c": "C" });
+		
+		this.setExpectedOutput(
+			"Removed C",
+			"Removed B"
+		);
+		source.removeAll([ "b", "c" ]);
+		
+		this.setExpectedOutput(
+			"Cleared D"
 		);
 		source.clear();
 		
@@ -98,9 +124,9 @@ JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
 		});
 		
 		this.setExpectedOutput(
-			"Removed A",
+			"Removed C",
 			"Removed B",
-			"Removed C"
+			"Removed A"
 		);
 		syncher.destroy();
 	}

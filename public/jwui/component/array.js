@@ -17,6 +17,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * Child component array wrapper in JW.UI.Component.
+ * 
+ * Returned by JW.UI.Component#addArray method. If you'll destroy this object, child components will be removed
+ * from parent.
+ *
+ * @extends JW.Class
+ */
 JW.UI.Component.Array = function(parent, source, el) {
 	JW.UI.Component.Array._super.call(this);
 	this.parent = parent;
@@ -33,7 +43,6 @@ JW.UI.Component.Array = function(parent, source, el) {
 
 JW.extend(JW.UI.Component.Array, JW.Class, {
 	/*
-	Fields
 	JW.UI.Component parent;
 	JW.AbstractArray.Mapper<JW.UI.Component, JW.UI.Component> _mapper;
 	JW.AbstractArray.Inserter _inserter;

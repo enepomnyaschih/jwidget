@@ -17,49 +17,56 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T, U> extends JW.AbstractCollection.Mapper<T, U, JW.AbstractArray<T>, JW.AbstractArray<U>>`
+ *
+ * See JW.AbstractCollection.Mapper for details.
+ *
+ * @extends JW.AbstractCollection.Mapper
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.AbstractArray.Mapper = function(source, config) {
-	JW.AbstractArray.Mapper._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.createItem = config.createItem;
-	this.destroyItem = config.destroyItem;
-	this._targetCreated = !config.target;
-	this.target = config.target || this.source.createEmpty();
-	this.scope = config.scope;
-	this.target.addAll(this._fill());
+	JW.AbstractArray.Mapper._super.call(this, source, config);
+	this.target.tryAddAll(this._createItems(this.source.getItems()));
 };
 
-JW.extend(JW.AbstractArray.Mapper/*<S extends Any, T extends Any>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractArray<S> source;
-	T createItem(S data);
-	void destroyItem(T item, S data);
+JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
+	/**
+	 * @cfg {JW.AbstractArray} target `<U>` Target array.
+	 */
+	/**
+	 * @property {JW.AbstractArray} source `<T>` Source array.
+	 */
+	/**
+	 * @property {JW.AbstractArray} target `<U>` Target array.
+	 */
 	
-	Optional
-	JW.AbstractArray<T> target;
-	Object scope; // defaults to this
-	
-	Fields
-	Boolean _targetCreated;
-	*/
-	
+	// override
 	destroy: function() {
-		this._clear(this.source.getItems());
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
+		this._destroyItems(this.target.clear(), this.source.getItems());
 		this._super();
 	},
 	
-	_clear: function(datas) {
-		var items = this.target.clear();
-		for (var i = items.length - 1; i >= 0; --i) {
-			this.destroyItem.call(this.scope || this, items[i], datas[i]);
+	_createItems: function(datas) {
+		var items = [];
+		for (var i = 0, l = datas.length; i < l; ++i) {
+			items.push(this.createItem.call(this.scope, datas[i]));
 		}
+		return items;
 	},
 	
-	_fill: function() {
-		return JW.Array.map(this.source.getItems(), this.createItem, this.scope || this);
+	_destroyItems: function(items, datas) {
+		if (this.destroyItem === undefined) {
+			return;
+		}
+		for (var i = items.length - 1; i >= 0; --i) {
+			this.destroyItem.call(this.scope, items[i], datas[i]);
+		}
 	}
 });

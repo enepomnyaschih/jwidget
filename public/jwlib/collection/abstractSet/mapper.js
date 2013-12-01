@@ -17,71 +17,75 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class, U extends JW.Class> extends JW.AbstractCollection.Mapper<T, U, JW.AbstractSet<T>, JW.AbstractSet<U>>`
+ *
+ * See JW.AbstractCollection.Mapper for details.
+ *
+ * @extends JW.AbstractCollection.Mapper
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.AbstractSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.AbstractSet.Mapper = function(source, config) {
-	JW.AbstractSet.Mapper._super.call(this);
-	config = config || {};
-	this.source = source;
-	this.createItem = config.createItem;
-	this.destroyItem = config.destroyItem;
-	this._targetCreated = !config.target;
-	this.target = config.target || source.createEmpty();
-	this.scope = config.scope;
+	JW.AbstractSet.Mapper._super.call(this, source, config);
 	this._items = {};
-	this._destructionQueue = [];
-	this.target.addAll(JW.Array.map(this.source.getValuesArray(), this._createItem, this))
+	this.target.tryAddAll(this._createItems(source.toArray()));
 };
 
-JW.extend(JW.AbstractSet.Mapper/*<S extends JW.Class, T extends JW.Class>*/, JW.Class, {
+JW.extend(JW.AbstractSet.Mapper, JW.AbstractCollection.Mapper, {
+	/**
+	 * @cfg {JW.AbstractSet} target `<U>` Target collection.
+	 */
+	/**
+	 * @property {JW.AbstractSet} source `<T>` Source collection.
+	 */
+	/**
+	 * @property {JW.AbstractSet} target `<U>` Target collection.
+	 */
 	/*
-	Required
-	JW.AbstractSet<S> source;
-	T createItem(S data);
-	void destroyItem(T item, S data);
-	
-	Optional
-	JW.AbstractSet<T> target;
-	Object scope; // defaults to this
-	
-	Fields
-	Boolean _targetCreated;
 	Map<T> _items;
-	Array<Array> _destructionQueue;
 	*/
 	
+	// override
 	destroy: function() {
-		if (!this.source.isEmpty()) {
-			this.source.every(this._remove, this);
-			this._change();
-		}
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
+		var datas = this.source.toArray();
+		this.target.tryRemoveAll(this._getItems(datas));
+		this._destroyItems(datas);
 		this._super();
 	},
 	
-	_createItem: function(data) {
-		var item = this.createItem.call(this.scope || this, data);
-		this._items[data._iid] = item;
-		return item;
+	_getItems: function(datas) {
+		return JW.Array.map(datas, function(data) {
+			return this._items[data._iid];
+		}, this);
 	},
 	
-	_add: function(data) {
-		this.target._add(this._createItem(data));
-	},
-	
-	_remove: function(data) {
-		var item = this._items[data._iid];
-		delete this._items[data._iid];
-		this.target._remove(item);
-		this._destructionQueue.push([ item, data ]);
-	},
-	
-	_change: function() {
-		this.target._triggerChange();
-		for (var i = 0; i < this._destructionQueue.length; ++i) {
-			var params = this._destructionQueue[i];
-			this.destroyItem.call(this.scope || this, params[0], params[1]);
+	_createItems: function(datas) {
+		var items = [];
+		for (var i = 0, l = datas.length; i < l; ++i) {
+			var data = datas[i];
+			var item = this.createItem.call(this.scope || this, data);
+			items.push(item);
+			this._items[data._iid] = item;
 		}
-		this._destructionQueue = [];
+		return items;
+	},
+	
+	_destroyItems: function(datas) {
+		if (this.destroyItem === undefined) {
+			return
+		}
+		for (var i = datas.length - 1; i >= 0; --i) {
+			var data = datas[i];
+			var iid = data._iid;
+			var item = this._items[iid];
+			delete this._items[iid];
+			this.destroyItem.call(this.scope || this, item, data);
+		}
 	}
 });

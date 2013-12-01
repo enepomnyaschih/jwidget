@@ -17,14 +17,22 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * `<V>` Event params with value. Usually used in some variable or field change event.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {Object} sender Event sender.
+ * @param {V} value Value.
+ */
 JW.ValueEventParams = function(sender, value) {
 	JW.ValueEventParams._super.call(this, sender);
 	this.value = value;
 };
 
-JW.extend(JW.ValueEventParams/*<T extends Any>*/, JW.EventParams, {
-	/*
-	Fields
-	T value;
-	*/
+JW.extend(JW.ValueEventParams, JW.EventParams, {
+	/**
+	 * @property {V} value Value.
+	 */
 });

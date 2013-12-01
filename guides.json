@@ -1,0 +1,193 @@
+﻿[
+	{
+		"title": "English",
+		"items": [
+			{
+				"title": "General",
+				"items": [
+					{
+						"name": "home",
+						"title": "What is jWidget?"
+					},
+					{
+						"name": "enpros",
+						"title": "jWidget advantages"
+					},
+					{
+						"name": "enphilosophy",
+						"title": "jWidget philosophy"
+					},
+					{
+						"name": "endownload",
+						"title": "Download jWidget"
+					}
+				]
+			},
+			{
+				"title": "Getting started",
+				"items": [
+					{
+						"name": "ensample1",
+						"title": "Part 1. Model and view"
+					},
+					{
+						"name": "ensample2",
+						"title": "Part 2. Arrays of child components"
+					},
+					{
+						"name": "ensample3",
+						"title": "Part 3. Named child components"
+					},
+					{
+						"name": "ensample4",
+						"title": "Part 4. Events"
+					},
+					{
+						"name": "ensample5",
+						"title": "Part 5. Collection synchronizers"
+					},
+					{
+						"name": "ensample6",
+						"title": "Part 6. Project infrastructure"
+					},
+					{
+						"name": "enkeyclasses",
+						"title": "List of key classes"
+					}
+				]
+			}
+		]
+	},
+	{
+		"title": "Русский",
+		"items": [
+			{
+				"title": "Описание",
+				"items": [
+					{
+						"name": "ruhome",
+						"title": "Что такое jWidget?"
+					},
+					{
+						"name": "rupros",
+						"title": "Преимущества jWidget"
+					},
+					{
+						"name": "ruphilosophy",
+						"title": "Философия jWidget"
+					},
+					{
+						"name": "rudownload",
+						"title": "Скачать jWidget"
+					}
+				]
+			},
+			{
+				"title": "Учебник",
+				"items": [
+					{
+						"name": "rusample1",
+						"title": "Часть 1. Модель и представление"
+					},
+					{
+						"name": "rusample2",
+						"title": "Часть 2. Дочерние компоненты, массивы"
+					},
+					{
+						"name": "rusample3",
+						"title": "Часть 3. Именованные дочерние компоненты"
+					},
+					{
+						"name": "rusample4",
+						"title": "Часть 4. События"
+					},
+					{
+						"name": "rusample5",
+						"title": "Часть 5. Синхронизаторы коллекций"
+					},
+					{
+						"name": "rusample6",
+						"title": "Часть 6. Инфраструктура проекта"
+					}
+				]
+			},
+			{
+				"title": "Ключевые классы",
+				"items": [
+					{
+						"name": "rujwclass",
+						"title": "JW.Class"
+					},
+					{
+						"name": "rujwevent",
+						"title": "JW.Event"
+					},
+					{
+						"name": "rujwabstractcollection",
+						"title": "JW.AbstractCollection"
+					},
+					{
+						"name": "rujwindexedcollection",
+						"title": "JW.IndexedCollection"
+					},
+					{
+						"name": "rujwabstractarray",
+						"title": "JW.AbstractArray"
+					},
+					{
+						"name": "rujwabstractmap",
+						"title": "JW.AbstractMap"
+					},
+					{
+						"name": "rujwabstractset",
+						"title": "JW.AbstractSet"
+					},
+					{
+						"name": "rujwabstractcollectionmapper",
+						"title": "JW.AbstractCollection.Mapper"
+					},
+					{
+						"name": "rujwabstractcollectionfilterer",
+						"title": "JW.AbstractCollection.Filterer"
+					},
+					{
+						"name": "rujwabstractcollectionlister",
+						"title": "JW.AbstractCollection.Lister"
+					},
+					{
+						"name": "rujwabstractcollectionindexer",
+						"title": "JW.AbstractCollection.Indexer"
+					},
+					{
+						"name": "rujwabstractcollectionorderer",
+						"title": "JW.AbstractCollection.Orderer"
+					},
+					{
+						"name": "rujwabstractcollectionsortercomparing",
+						"title": "JW.AbstractCollection.SorterComparing"
+					},
+					{
+						"name": "rujwabstractcollectionobserver",
+						"title": "JW.AbstractCollection.Observer"
+					},
+					{
+						"name": "rujwabstractarrayinserter",
+						"title": "JW.AbstractArray.Inserter"
+					},
+					{
+						"name": "rujwabstractmapinserter",
+						"title": "JW.AbstractMap.Inserter"
+					},
+					{
+						"name": "rujwabstractarraymerger",
+						"title": "JW.AbstractArray.Merger"
+					},
+					{
+						"name": "rujwabstractarrayreverser",
+						"title": "JW.AbstractArray.Reverser"
+					}
+				]
+			}
+		]
+	}
+]

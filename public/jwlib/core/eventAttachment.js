@@ -17,6 +17,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * When client binds a handler to some event, it should store the attachment object to be able to
+ * unbind from this event by attachment destruction.
+ * @extends JW.Class
+ * @constructor
+ */
 JW.EventAttachment = function(event, callback, scope) {
 	JW.EventAttachment._super.call(this);
 	this.event = event;
@@ -26,7 +33,6 @@ JW.EventAttachment = function(event, callback, scope) {
 
 JW.extend(JW.EventAttachment, JW.Class, {
 	/*
-	Fields
 	JW.Event<? extends JW.EventParams> event;
 	Function callback;
 	Object scope;

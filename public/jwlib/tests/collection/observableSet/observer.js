@@ -28,7 +28,11 @@ JW.Tests.Collection.ObservableSet.ObserverTestCase = JW.Unit.TestCase.extend({
 		var syncher = source.createObserver({
 			addItem    : function(item) { this.output("Added " + item.value); },
 			removeItem : function(item) { this.output("Removed " + item.value); },
-			clearItems : function(items) { this.output("Cleared " + JW.Array.mapBy(items, "value").join(", ")); },
+			clearItems : function(items) {
+				items = items.concat();
+				JW.Array.sort(items, JW.byField("value"));
+				this.output("Cleared " + JW.Array.map(items, JW.byField("value")).join(", "));
+			},
 			scope      : this
 		});
 		
@@ -64,10 +68,20 @@ JW.Tests.Collection.ObservableSet.ObserverTestCase = JW.Unit.TestCase.extend({
 		source.remove(m);
 		
 		this.setExpectedOutput(
+			"Removed b",
+			"Removed f"
+		);
+		source.removeAll([ f, b ]);
+		
+		this.setExpectedOutput(
 			"Removed d",
-			"Removed f",
-			"Removed c",
-			"Removed b"
+			"Added f",
+			"Added b"
+		);
+		source.splice([ d ], [ f, b ]);
+		
+		this.setExpectedOutput(
+			"Cleared b, c, f"
 		);
 		source.clear();
 		
@@ -101,9 +115,9 @@ JW.Tests.Collection.ObservableSet.ObserverTestCase = JW.Unit.TestCase.extend({
 		});
 		
 		this.setExpectedOutput(
-			"Removed a",
+			"Removed c",
 			"Removed b",
-			"Removed c"
+			"Removed a"
 		);
 		syncher.destroy();
 	}

@@ -17,14 +17,24 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * `<T, V> extends JW.ValueEventParams<V>` Event params with item and value. Usually used in
+ * some item's field change event.
+ * @extends JW.ValueEventParams
+ *
+ * @constructor
+ * @param {Object} sender Event sender.
+ * @param {T} item Item.
+ * @param {V} value Value.
+ */
 JW.ItemValueEventParams = function(sender, item, value) {
 	JW.ItemValueEventParams._super.call(this, sender, value);
 	this.item = item;
 };
 
-JW.extend(JW.ItemValueEventParams/*<I extends Any, V extends Any>*/, JW.ValueEventParams/*<V>*/, {
-	/*
-	Fields
-	I item;
-	*/
+JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
+	/**
+	 * @property {T} item Item.
+	 */
 });

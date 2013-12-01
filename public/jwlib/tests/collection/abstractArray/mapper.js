@@ -19,7 +19,7 @@
 
 JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
 	testUnobservableTarget: function() {
-		var source = new JW.Array([ new JW.Proxy("a"), new JW.Proxy("b"), new JW.Proxy("c") ]);
+		var source = new JW.Array([ "a", "b", "c" ]);
 		var target = new JW.Array();
 		
 		this.setExpectedOutput(
@@ -44,14 +44,14 @@ JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testObservableTarget: function() {
-		var source = new JW.Array([ new JW.Proxy("a"), new JW.Proxy("b"), new JW.Proxy("c") ]);
+		var source = new JW.Array([ "a", "b", "c" ]);
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
 			"Created by a",
 			"Created by b",
 			"Created by c",
-			"Added A, B, C at 0",
+			"Spliced -[] +[0:[A,B,C]] to []",
 			"Changed",
 			"Changed length from 0 to 3"
 		);
@@ -59,7 +59,7 @@ JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ "A", "B", "C" ], target);
 		
 		this.setExpectedOutput(
-			"Cleared",
+			"Cleared [A,B,C]",
 			"Changed",
 			"Changed length from 3 to 0",
 			"Destroyed C by c",
@@ -85,8 +85,7 @@ JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	testAutoTarget: function() {
-		var d = new JW.Proxy("d");
-		var source = new JW.Array([ d ]);
+		var source = new JW.Array([ "d" ]);
 		this.setExpectedOutput("Created by d");
 		var mapper = this.createMapper(source);
 		this.assertTrue(mapper.target instanceof JW.Array);
@@ -98,47 +97,7 @@ JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
 	
 	createTarget: function(target) {
 		var target = new JW.ObservableArray();
-		
-		target.addEvent.bind(function(params) {
-			this.output("Added " + JW.Array.mapBy(params.items, "value").join(", ") + " at " + params.index);
-		}, this);
-		
-		target.removeEvent.bind(function(params) {
-			this.output("Removed " + JW.Array.mapBy(params.items, "value").join(", ") + " at " + params.index);
-		}, this);
-		
-		target.replaceEvent.bind(function(params) {
-			this.output("Replaced " + params.oldItem.value + " with " + params.newItem.value + " at " + params.index);
-		}, this);
-		
-		target.moveEvent.bind(function(params) {
-			this.output("Moved " + params.item.value + " from " + params.fromIndex + " to " + params.toIndex);
-		}, this);
-		
-		target.clearEvent.bind(function(params) {
-			this.output("Cleared");
-		}, this);
-		
-		target.reorderEvent.bind(function(params) {
-			this.output("Reordered");
-		}, this);
-		
-		target.filterEvent.bind(function(params) {
-			this.output("Filtered");
-		}, this);
-		
-		target.resetEvent.bind(function(params) {
-			this.output("Resetted");
-		}, this);
-		
-		target.changeEvent.bind(function(params) {
-			this.output("Changed");
-		}, this);
-		
-		target.lengthChangeEvent.bind(function(params) {
-			this.output("Changed length from " + params.oldLength + " to " + params.newLength);
-		}, this);
-		
+		JW.Tests.Collection.subscribeToArray(this, target);
 		return target;
 	},
 	
@@ -148,12 +107,12 @@ JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
 			scope  : this,
 			
 			createItem: function(data) {
-				this.output("Created by " + data.value);
-				return new JW.Proxy(data.value.toUpperCase());
+				this.output("Created by " + data);
+				return data.toUpperCase();
 			},
 			
 			destroyItem: function(item, data) {
-				this.output("Destroyed " + item.value + " by " + data.value);
+				this.output("Destroyed " + item + " by " + data);
 			}
 		});
 	},
@@ -161,7 +120,7 @@ JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
 	assertTarget: function(values, target) {
 		this.assertStrictEqual(values.length, target.getLength());
 		for (var i = 0; i < target.getLength(); ++i) {
-			this.assertStrictEqual(values[i], target.get(i).value);
+			this.assertStrictEqual(values[i], target.get(i));
 		}
 	}
 });

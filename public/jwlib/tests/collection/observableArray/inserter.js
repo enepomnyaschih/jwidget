@@ -26,7 +26,7 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 		);
 		var inserter = collection.createInserter({
 			addItem    : function(item, index) { this.output("Added " + item + " at " + index); },
-			removeItem : function(index, item) { this.output("Removed " + item + " at " + index); },
+			removeItem : function(item, index) { this.output("Removed " + item + " at " + index); },
 			clearItems : function(items) { this.output("Cleared " + items.join(", ")); },
 			scope      : this
 		});
@@ -102,25 +102,21 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 			"Added g at 3",
 			"Added k at 4"
 		);
-		collection.performReorder(function(items) {
-			items.sort();
-		}, this);
+		var items = collection.getItems().concat();
+		items.sort();
+		collection.performReorder(items);
 		
 		// If length has decreased more than 3 times, clear+add is used, remove specific items instead
 		this.setExpectedOutput(
 			"Removed c at 1"
 		);
-		collection.performFilter(function(items) {
-			items.splice(1, 1);
-		}, this);
+		collection.performSplice([ "a", "d", "g", "k" ]);
 		
 		this.setExpectedOutput(
 			"Cleared a, d, g, k",
 			"Added k at 0"
 		);
-		collection.performFilter(function(items) {
-			items.splice(0, 3);
-		}, this);
+		collection.performSplice([ "k" ]);
 		
 		this.setExpectedOutput(
 			"Cleared k",
@@ -128,9 +124,7 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 			"Added t at 1",
 			"Added c at 2"
 		);
-		collection.performReset(function() {
-			return [ "u", "t", "c" ];
-		}, this);
+		collection.performSplice([ "u", "t", "c" ]);
 		
 		this.setExpectedOutput(
 			"Cleared u, t, c"
@@ -163,7 +157,7 @@ JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
 		);
 		var inserter = collection.createInserter({
 			addItem    : function(item, index) { this.output("Added " + item + " at " + index); },
-			removeItem : function(index, item) { this.output("Removed " + item + " at " + index); },
+			removeItem : function(item, index) { this.output("Removed " + item + " at " + index); },
 			scope      : this
 		});
 		

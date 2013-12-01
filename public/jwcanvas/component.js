@@ -91,7 +91,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this._super();
 	},
 	
-	/**
+	/*
 	 * Component initialization.
 	 * Override this to specify initial values for component properties.
 	 * You can build plugins array here, these plugins will prepend ones from config object.
@@ -101,7 +101,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 	{
 	},
 	
-	/**
+	/*
 	 * Component rendering.
 	 * Override this to render component's HTML/Graphics.
 	 * Template is applied here and all elements are defined.
@@ -112,7 +112,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 	{
 	},
 	
-	/**
+	/*
 	 * After append to DOM.
 	 * Override this to specify any initialization actions that require element
 	 * to be inserted into DOM.
@@ -123,7 +123,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 	{
 	},
 	
-	/**
+	/*
 	 * Layout the component.
 	 * Use renderParent or addChild EVERYWHERE to get this work.
 	 * Prepend superclass method call.
@@ -132,7 +132,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 	{
 	},
 	
-	/**
+	/*
 	 * Layout component totally.
 	 */
 	doLayoutAll: function()
@@ -145,14 +145,14 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		JW.eachByMethod(this.children, "doLayoutAll");
 	},
 	
-	/**
+	/*
 	 * Component destructor.
 	 */
 	destroyComponent: function()
 	{
 	},
 	
-	/**
+	/*
 	 * Hit testing function. Tests rectangle (0, 0) - (w, h) by default.
 	 * Override to specify custom hit testing.
 	 */
@@ -162,7 +162,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		return this.mouseClip ? this._inRect(point) : true;
 	},
 	
-	/**
+	/*
 	 * Get plugin instance by its xtype.
 	 */
 	getPlugin: function(xtype)
@@ -170,7 +170,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		return JW.searchBy(this.plugins, "xtype", xtype);
 	},
 	
-	/**
+	/*
 	 * Add child. Opposite to appendTo.
 	 */
 	addChild: function(
@@ -199,7 +199,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		cmp._afterAppend();
 	},
 	
-	/**
+	/*
 	 * Remove component from the parent and DOM.
 	 */
 	remove: function()
@@ -212,7 +212,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		}
 	},
 	
-	/**
+	/*
 	 * Remove all children.
 	 */
 	removeChildren: function()
@@ -228,7 +228,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		return children;
 	},
 	
-	/**
+	/*
 	 * Removes child at specified position and returns one.
 	 */
 	removeChild: function(index)
@@ -238,7 +238,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		return cmp;
 	},
 	
-	/**
+	/*
 	 * Get all children.
 	 */
 	getChildren: function()
@@ -246,7 +246,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		return this.children.concat();
 	},
 	
-	/**
+	/*
 	 * Get DOM branch (from body to this).
 	 */
 	getBranch: function()
@@ -265,7 +265,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		return result;
 	},
 	
-	/**
+	/*
 	 * Set component coordinates.
 	 */
 	setX: function(x)
@@ -274,7 +274,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this._invalidateTransform();
 	},
 	
-	/**
+	/*
 	 * Set component coordinates.
 	 */
 	setY: function(y)
@@ -283,7 +283,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this._invalidateTransform();
 	},
 	
-	/**
+	/*
 	 * Set component coordinates.
 	 */
 	setXY: function(x, y)
@@ -293,7 +293,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this._invalidateTransform();
 	},
 	
-	/**
+	/*
 	 * Set component rotation.
 	 */
 	setRotate: function(value)
@@ -302,7 +302,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this._invalidateTransform();
 	},
 	
-	/**
+	/*
 	 * Set component scale.
 	 */
 	setScaleX: function(x)
@@ -311,7 +311,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this._invalidateTransform();
 	},
 	
-	/**
+	/*
 	 * Set component scale.
 	 */
 	setScaleY: function(y)
@@ -320,7 +320,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this._invalidateTransform();
 	},
 	
-	/**
+	/*
 	 * Set component scale.
 	 */
 	setScale: function(x, y)
@@ -331,7 +331,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this._invalidateTransform();
 	},
 	
-	/**
+	/*
 	 * Set component size.
 	 */
 	setWidth: function(w)
@@ -339,7 +339,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this.width = w;
 	},
 	
-	/**
+	/*
 	 * Set component size.
 	 */
 	setHeight: function(h)
@@ -347,7 +347,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this.height = h;
 	},
 	
-	/**
+	/*
 	 * Set component size.
 	 */
 	setSize: function(w, h)
@@ -357,7 +357,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this.height = h;
 	},
 	
-	/**
+	/*
 	 * Set component visibility.
 	 */
 	setVisible: function(value)
@@ -365,7 +365,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this.visible = value;
 	},
 	
-	/**
+	/*
 	 * Set component clipping.
 	 */
 	setClip: function(value)
@@ -373,7 +373,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this.clip = value;
 	},
 	
-	/**
+	/*
 	 * Set component mouse clipping.
 	 */
 	setMouseClip: function(value)
@@ -381,7 +381,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this.mouseClip = value;
 	},
 	
-	/**
+	/*
 	 * Set component mouse events enabled.
 	 */
 	setMouseEnabled: function(value)
@@ -389,7 +389,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this.mouseEnabled = value;
 	},
 	
-	/**
+	/*
 	 * Set component children mouse events enabled.
 	 */
 	setMouseChildren: function(value)
@@ -397,7 +397,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		this.mouseChildren = value;
 	},
 	
-	/**
+	/*
 	 * Get transformation matrix from global to local.
 	 */
 	getTransform: function()
@@ -410,7 +410,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		return this.transform;
 	},
 	
-	/**
+	/*
 	 * Get transformation matrix from local to global.
 	 */
 	getBackTransform: function()
@@ -422,7 +422,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		return this.backTransform;
 	},
 	
-	/**
+	/*
 	 * Convert coordinates from global to local.
 	 */
 	globalToLocal: function(point)
@@ -430,7 +430,7 @@ JW.Canvas.Component = JW.ObservableConfig.extend({
 		return this.getBackTransform().convert(point);
 	},
 	
-	/**
+	/*
 	 * Convert coordinates from local to global.
 	 */
 	localToGlobal: function(point)

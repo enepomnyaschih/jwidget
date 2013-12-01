@@ -1,5 +1,5 @@
 ﻿/*
-	JW ordered collection tests.
+	JW tests.
 	
 	Copyright (C) 2013 Egor Nepomnyaschih
 	
@@ -17,282 +17,65 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-JW.Tests.Collection.ObservableSetTestCase = function(config) {
-	JW.Tests.Collection.ObservableSetTestCase._super.call(this, config);
-	this.a = new JW.Proxy("a");
-	this.b = new JW.Proxy("b");
-	this.c = new JW.Proxy("c");
-	this.d = new JW.Proxy("d");
-	this.e = new JW.Proxy("e");
-};
-
-JW.extend(JW.Tests.Collection.ObservableSetTestCase, JW.Unit.TestCase, {
-	testSet: function() {
-		var set = new JW.ObservableSet();
-		this.subscribe(set);
-		
-		var d = new JW.Proxy("d");
-		var e = new JW.Proxy("e");
-		var c = new JW.Proxy("c");
-		var a = new JW.Proxy("a");
-		var b = new JW.Proxy("b");
-		
-		this.setExpectedOutput(
-			"Added d",
-			"Changed",
-			"Changed size from 0 to 1"
-		);
-		this.assertTrue(set.add(d));
-		this.assertSet([ d ], [ a, b, c, e ], set);
-		
-		this.setExpectedOutput(
-			"Added e",
-			"Changed",
-			"Changed size from 1 to 2"
-		);
-		this.assertTrue(set.addAll([ e ]));
-		this.assertSet([ d, e ], [ a, b, c ], set);
-		
-		this.setExpectedOutput(
-			"Added c",
-			"Added a",
-			"Changed",
-			"Changed size from 2 to 4"
-		);
-		this.assertTrue(set.addAll([ c, a ]));
-		this.assertSet([ d, e, c, a ], [ b ], set);
-		
-		this.setExpectedOutput(
-			"Removed e",
-			"Changed",
-			"Changed size from 4 to 3"
-		);
-		this.assertTrue(set.remove(e));
-		this.assertSet([ d, c, a ], [ b, e ], set);
-		
-		this.setExpectedOutput();
-		this.assertFalse(set.addAll([]));
-		this.assertSet([ d, c, a ], [ b, e ], set);
-		
-		this.setExpectedOutput(
-			"Added b",
-			"Changed",
-			"Changed size from 3 to 4"
-		);
-		this.assertTrue(set.addAll([ b, c ]));
-		this.assertSet([ d, c, a, b ], [ e ], set);
-		
-		this.setExpectedOutput();
-		this.assertFalse(set.addAll([ b, c ]));
-		this.assertSet([ d, c, a, b ], [ e ], set);
-		
-		this.setExpectedOutput(
-			"Removed a",
-			"Removed d",
-			"Changed",
-			"Changed size from 4 to 2"
-		);
-		this.assertTrue(set.removeAll([ a, d ]));
-		this.assertSet([ c, b ], [ a, d, e ], set);
-		
-		this.setExpectedOutput();
-		this.assertFalse(set.removeAll([ a, d ]));
-		this.assertSet([ c, b ], [ a, d, e ], set);
-		
-		// The clearing order differs in Chrome and Firefox:
-		// Chrome optimizes integer-based maps and sorts the items, Firefox doesn't.
-		// That's why we created items in straight order to make sure that
-		// their _iid's will be sorted.
-		this.setExpectedOutput(
-			"Removed c",
-			"Removed b",
-			"Changed",
-			"Changed size from 2 to 0"
-		);
-		this.assertTrue(set.clear());
-		this.assertSet([], [ a, b, c, d, e ], set);
-		
-		this.setExpectedOutput();
-		this.assertFalse(set.clear());
-		this.assertSet([], [ a, b, c, d, e ], set);
-		
-		this.setExpectedOutput(
-			"Added a",
-			"Changed",
-			"Changed size from 0 to 1"
-		);
-		set.add(a);
-		this.assertSet([ a ], [ b, c, d, e ], set);
-		
-		this.setExpectedOutput(
-			"Removed a",
-			"Changed",
-			"Changed size from 1 to 0"
-		);
-		set.destroy();
+JW.Tests.Collection.ObservableSetTestCase = JW.Tests.Collection.AbstractSetBase.extend({
+	// override
+	createSet: function(items, formatter) {
+		var set = new JW.ObservableSet(items);
+		JW.Tests.Collection.subscribeToSet(this, set, formatter);
+		return set;
 	},
 	
-	testEvery: function() {
-		var set = new JW.ObservableSet([ new JW.Proxy("a"), new JW.Proxy("A"), new JW.Proxy("b") ]);
-		
-		this.assertFalse(set.every(this.isUpperCase));
-		this.assertFalse(set.every(this.isA));
-		this.assertTrue (set.every(this.isString));
-		this.assertFalse(set.every(this.isNumber));
+	// override
+	invoke: function(set, method, args) {
+		return set[method].apply(set, args || []);
 	},
 	
-	testSome: function() {
-		var set = new JW.ObservableSet([ new JW.Proxy("a"), new JW.Proxy("A"), new JW.Proxy("b") ]);
-		
-		this.assertTrue (set.some(this.isUpperCase));
-		this.assertTrue (set.some(this.isA));
-		this.assertTrue (set.some(this.isString));
-		this.assertFalse(set.some(this.isNumber));
+	// override
+	setObservableOutput: function() {
+		this.setExpectedOutput.apply(this, arguments);
 	},
 	
-	testFilter: function() {
-		var a = new JW.Proxy("a");
-		var A = new JW.Proxy("A");
-		var b = new JW.Proxy("b");
-		var set = new JW.ObservableSet([ a, A, b ]);
-		var filtered = set.filter(this.isA);
-		this.assertTrue(filtered instanceof JW.Set);
-		this.assertEqual(3, set.getSize());
-		this.assertEqual(2, filtered.getSize());
-		this.assertTrue(filtered.contains(a));
-		this.assertTrue(filtered.contains(A));
-		this.assertFalse(filtered.contains(b));
+	testNotAdapter: function() {
+		var items = [this.b, this.d];
+		var set = new JW.ObservableSet(items);
+		this.assertStrictEqual(2, set.getLength());
+		this.assertFalse(set.isEmpty());
+		this.assertTrue(set.contains(this.b));
+		this.assertTrue(set.contains(this.d));
+		set.add(this.c);
+		this.assertTrue(set.contains(this.c));
+		this.assertTrue(JW.Array.equal(items, [this.b, this.d]));
 	},
 	
-	testMap: function() {
-		var a = new JW.Proxy("a");
-		var b = new JW.Proxy("b");
-		var c = new JW.Proxy("c");
-		var results = {
-			a: new JW.Proxy("A"),
-			b: new JW.Proxy("B"),
-			c: new JW.Proxy("C")
-		};
-		var set = new JW.ObservableSet([ a, b, c ]);
-		var mapped = set.map(function(x) { return results[x.value]; });
-		this.assertTrue(mapped instanceof JW.Set);
-		this.assertStrictEqual(3, mapped.getSize());
-		this.assertTrue(mapped.contains(results.a));
-		this.assertTrue(mapped.contains(results.b));
-		this.assertTrue(mapped.contains(results.c));
+	testAdapter: function() {
+		var items = {};
+		JW.Set.addAll(items, [this.b, this.d]);
+		var set = new JW.ObservableSet(items, this);
+		this.assertStrictEqual(2, set.getLength());
+		this.assertFalse(set.isEmpty());
+		this.assertTrue(set.contains(this.b));
+		this.assertTrue(set.contains(this.d));
+		this.assertFalse(set.contains(this.c));
+		this.assertFalse(JW.Set.contains(items, this.c));
+		set.add(this.c);
+		this.assertTrue(set.contains(this.c));
+		this.assertTrue(JW.Set.contains(items, this.c));
 	},
 	
-	testClone: function() {
-		var a = new JW.Proxy("a");
-		var b = new JW.Proxy("b");
-		var c = new JW.Proxy("c");
-		var set = new JW.ObservableSet([ a, b, c ]);
-		var cloned = set.clone();
-		this.assertTrue(cloned instanceof JW.ObservableSet);
-		this.assertStrictNotEqual(set, cloned);
-		this.assertStrictEqual(3, cloned.getSize());
-		this.assertTrue(cloned.contains(a));
-		this.assertTrue(cloned.contains(b));
-		this.assertTrue(cloned.contains(c));
+	testToSet: function() {
+		var set = new JW.ObservableSet([this.b, this.d]);
+		this.assertTrue(JW.Set.equal(set.toSet(), [this.b, this.d]));
+		this.assertTrue(set.$toSet().equal([this.b, this.d]));
+		this.assertFalse(set.toSet() === set.getJson());
+		this.assertFalse(set.$toSet() === set);
+		this.assertTrue(set.equal([this.b, this.d]));
 	},
 	
-	testCloneUnobservable: function() {
-		var a = new JW.Proxy("a");
-		var b = new JW.Proxy("b");
-		var c = new JW.Proxy("c");
-		var set = new JW.ObservableSet([ a, b, c ]);
-		var cloned = set.cloneUnobservable();
-		this.assertTrue(cloned instanceof JW.Set);
-		this.assertStrictEqual(3, cloned.getSize());
-		this.assertTrue(cloned.contains(a));
-		this.assertTrue(cloned.contains(b));
-		this.assertTrue(cloned.contains(c));
-	},
-	
-	testRemoveItem: function() {
-		var set = new JW.ObservableSet([ this.a, this.b, this.c, this.d ]);
-		this.subscribe(set);
-		
-		this.setExpectedOutput(
-			"Removed b",
-			"Changed",
-			"Changed size from 4 to 3"
-		);
-		this.assertUndefined(set.removeItem(this.b));
-		this.setExpectedOutput();
-		this.assertUndefined(set.removeItem(this.e));
-		
-		var expected = {};
-		JW.Set.addAll(expected, [ this.a, this.c, this.d ]);
-		this.assertTrue(JW.Set.equal(expected, set.getJson()));
-	},
-	
-	testMapFields: function() {
-		var array = new JW.ObservableArray([
-			{ x: "a", y: "d" },
-			{ x: "b", y: "e" },
-			{ x: "c", y: "f" }
-		]);
-		var mapped = array.mapFields();
-		this.assertTrue(mapped.x instanceof JW.Array);
-		this.assertTrue(mapped.y instanceof JW.Array);
-		this.assertStrictEqual(3, mapped.x.getSize());
-		this.assertStrictEqual(3, mapped.y.getSize());
-		this.assertStrictEqual("a", mapped.x.get(0));
-		this.assertStrictEqual("b", mapped.x.get(1));
-		this.assertStrictEqual("c", mapped.x.get(2));
-		this.assertStrictEqual("d", mapped.y.get(0));
-		this.assertStrictEqual("e", mapped.y.get(1));
-		this.assertStrictEqual("f", mapped.y.get(2));
-	},
-	
-	subscribe: function(set) {
-		set.addEvent.bind(this.onAdd, this);
-		set.removeEvent.bind(this.onRemove, this);
-		set.changeEvent.bind(this.onChange, this);
-		set.sizeChangeEvent.bind(this.onSizeChange, this);
-	},
-	
-	assertSet: function(expected, unexpected, set) {
-		this.assertStrictEqual(expected.length, set.getSize());
-		for (var i = 0; i < expected.length; ++i) {
-			this.assertTrue(set.contains(expected[i]));
-		}
-		for (var i = 0; i < unexpected.length; ++i) {
-			this.assertFalse(set.contains(unexpected[i]));
-		}
-	},
-	
-	onAdd: function(params) {
-		this.output("Added " + params.item.value);
-	},
-	
-	onRemove: function(params) {
-		this.output("Removed " + params.item.value);
-	},
-	
-	onChange: function(params) {
-		this.output("Changed");
-	},
-	
-	onSizeChange: function(params) {
-		this.output("Changed size from " + params.oldSize + " to " + params.newSize);
-	},
-	
-	isUpperCase: function(value) {
-		return value.value.toUpperCase() === value.value;
-	},
-	
-	isA: function(value) {
-		return value.value.toUpperCase() === "A";
-	},
-	
-	isString: function(value) {
-		return typeof value.value === "string";
-	},
-	
-	isNumber: function(value) {
-		return typeof value.value === "number";
+	testAsSet: function() {
+		var set = new JW.ObservableSet([this.b, this.d]);
+		this.assertTrue(set.asSet() === set.getJson());
+		this.assertTrue(set.$asSet() === set);
+		this.assertTrue(set.equal([this.b, this.d]));
 	}
 });
 

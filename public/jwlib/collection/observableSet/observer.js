@@ -17,31 +17,53 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T extends JW.Class> extends JW.AbstractSet.Observer<T>`
+ *
+ * See JW.AbstractCollection.Observer for details.
+ *
+ * @extends JW.AbstractSet.Observer
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createObserver method is preferrable instead.
+ * @param {JW.ObservableSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.ObservableSet.Observer = function(source, config) {
 	JW.ObservableSet.Observer._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	if (this.change) {
+		this._changeAttachment = source.changeEvent.bind(this._onChange, this);
+	}
 };
 
-JW.extend(JW.ObservableSet.Observer/*<S extends Any, T extends Any>*/, JW.AbstractSet.Observer/*<S, T>*/, {
+JW.extend(JW.ObservableSet.Observer, JW.AbstractSet.Observer, {
 	/*
-	Fields
-	EventAttachment _addEventAttachment;
-	EventAttachment _removeEventAttachment;
+	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
+	JW.EventAttachment _changeAttachment;
 	*/
 	
 	// override
 	destroy: function() {
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		if (this._changeAttachment) {
+			this._changeAttachment.destroy();
+		}
+		this._clearEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this._addItem(params.item);
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		this._removeItems(spliceResult.removedItems);
+		this._addItems(spliceResult.addedItems);
 	},
 	
-	_onRemove: function(params) {
-		this._removeItem(params.item);
+	_onClear: function(params) {
+		this._clearItems(params.items);
 	}
 });

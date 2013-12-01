@@ -23,9 +23,9 @@ JW.Tests.Collection.AbstractArray.SplitterTestCase = JW.Unit.TestCase.extend({
 		var rowId = 0;
 		
 		var source = new JW.Array([
-			new JW.Proxy("a"), new JW.Proxy("b"), new JW.Proxy("c"),
-			new JW.Proxy("d"), new JW.Proxy("e"), new JW.Proxy("f"),
-			new JW.Proxy("g")
+			"a", "b", "c",
+			"d", "e", "f",
+			"g"
 		]);
 		
 		var splitter = source.createSplitter({
@@ -48,7 +48,7 @@ JW.Tests.Collection.AbstractArray.SplitterTestCase = JW.Unit.TestCase.extend({
 	assertTarget: function(values, target) {
 		this.assertStrictEqual(values.length, target.getLength());
 		for (var i = 0; i < target.getLength(); ++i) {
-			this.assertStrictEqual(values[i], target.get(i).value);
+			this.assertStrictEqual(values[i], target.get(i));
 		}
 	}
 });

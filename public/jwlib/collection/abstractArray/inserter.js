@@ -17,59 +17,106 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T>`
+ *
+ * View synchronizer with array. Listens all array events and reduces them to 2 granular functions:
+ * item is added into specific position and item is removed from specific position. In optimization purposes,
+ * you can define a third function: array is cleared
+ * (in case if there is more effective clearing algorithm than iterative items deletion).
+ * Unlike JW.AbstractCollection.Observer, tracks items order.
+ * Can be used mainly for DOM-element synchronization with array of child elements.
+ *
+ * Use JW.AbstractArray#createInserter method to create the synchronizer.
+ *
+ *     var inserter = array.{@link JW.AbstractArray#createInserter createInserter}({
+ *         {@link #cfg-addItem addItem}: function(el, index) { this.el.{@link jQuery#insert insert}(el, index); },
+ *         {@link #cfg-removeItem removeItem}: function(el, index) { el.detach(); },
+ *         {@link #cfg-scope scope}: this
+ *     });
+ *
+ * The method will select which synchronizer implementation fits better (simple or observable).
+ *
+ * Synchronizer rules:
+ *
+ * - Function {@link #cfg-addItem} is called for all items of source array on synchronizer initialization.
+ * - Function {@link #cfg-clearItems} is called for array, or function {@link #cfg-removeItem} is called for
+ * all items of source array on synchronizer destruction.
+ * - On source array reordering, items order is synchorinized by callback functions calls.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractArray#createInserter method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source array.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.AbstractArray.Inserter = function(source, config) {
 	JW.AbstractArray.Inserter._super.call(this);
 	config = config || {};
 	this.source = source;
 	this.addItem = config.addItem;
 	this.removeItem = config.removeItem;
-	this.scope = config.scope;
 	this.clearItems = config.clearItems;
-	this._fill();
+	this.scope = config.scope || this;
+	this._addItems(this.source.getItems(), 0);
 };
 
-JW.extend(JW.AbstractArray.Inserter/*<T extends Any>*/, JW.Class, {
-	/*
-	Required
-	JW.AbstractArray<T> source;
-	void addItem(T item, Integer index);
-	void removeItem(Integer index, T item);
-	
-	Optional
-	Object scope; // defaults to this
-	void clearItems(Array<T> items);
-	*/
+JW.extend(JW.AbstractArray.Inserter, JW.Class, {
+	/**
+	 * @cfg {Function} addItem
+	 *
+	 * `addItem(item: T, index: number): void`
+	 *
+	 * Item is added to specific position in array.
+	 */
+	/**
+	 * @cfg {Function} removeItem
+	 *
+	 * `removeItem(item: T, index: number): void`
+	 *
+	 * Item is removed from specific position in array.
+	 */
+	/**
+	 * @cfg {Function} clearItems
+	 *
+	 * `clearItems(items: Array<T>): void`
+	 *
+	 * Array is cleared. By default, calls {@link #removeItem} for all array items.
+	 */
+	/**
+	 * @cfg {Object} scope {@link #addItem}, {@link #removeItem}, {@link #clearItems} call scope.
+	 */
+	/**
+	 * @property {JW.AbstractArray} source `<T>` Source array.
+	 */
 	
 	destroy: function() {
-		this._clear(this.source.getItems());
+		this._clearItems(this.source.getItems());
 		this._super();
 	},
 	
-	_addItem: function(item, index) {
-		this.addItem.call(this.scope || this, item, index);
-	},
-	
 	_addItems: function(items, index) {
-		for (var i = 0; i < items.length; ++i) {
-			this._addItem(items[i], i + index);
+		if (!this.addItem) {
+			return;
 		}
-	},
-	
-	_removeItem: function(item, index) {
-		this.removeItem.call(this.scope || this, index, item);
+		for (var i = 0; i < items.length; ++i) {
+			this.addItem.call(this.scope, items[i], i + index);
+		}
 	},
 	
 	_removeItems: function(items, index) {
+		if (!this.removeItem) {
+			return;
+		}
 		for (var i = items.length - 1; i >= 0; --i) {
-			this._removeItem(items[i], i + index);
+			this.removeItem.call(this.scope, items[i], i + index);
 		}
 	},
 	
-	_fill: function() {
-		this._addItems(this.source.getItems().concat(), 0);
-	},
-	
-	_clear: function(items) {
+	_clearItems: function(items) {
 		if (items.length === 0) {
 			return;
 		}

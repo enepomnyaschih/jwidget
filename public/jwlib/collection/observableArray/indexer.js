@@ -17,72 +17,57 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractArray.Indexer<T>`
+ *
+ * See JW.AbstractCollection.Indexer for details.
+ *
+ * @extends JW.AbstractArray.Indexer
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createIndexer method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.ObservableArray.Indexer = function(source, config) {
 	JW.ObservableArray.Indexer._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
-	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
-	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
 };
 
-JW.extend(JW.ObservableArray.Indexer/*<T extends Any>*/, JW.AbstractArray.Indexer/*<T>*/, {
+JW.extend(JW.ObservableArray.Indexer, JW.AbstractArray.Indexer, {
 	/*
-	Required
-	JW.ObservableArray<T> source;
-	
-	Optional
-	JW.ObservableMap<T> target;
-	
-	Fields
-	EventAttachment _addEventAttachment;
-	EventAttachment _removeEventAttachment;
-	EventAttachment _replaceEventAttachment;
-	EventAttachment _clearEventAttachment;
-	EventAttachment _filterEventAttachment;
-	EventAttachment _resetEventAttachment;
+	JW.EventAttachment _spliceEventAttachment;
+	JW.EventAttachment _replaceEventAttachment;
+	JW.EventAttachment _clearEventAttachment;
 	*/
 	
+	// override
 	destroy: function() {
-		this._resetEventAttachment.destroy();
-		this._filterEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
 		this._replaceEventAttachment.destroy();
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this.target.setAll(this._index(params.items));
-	},
-	
-	_onRemove: function(params) {
-		this.target.removeAll(this._keys(params.items));
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(
+			this._keys(spliceResult.getRemovedItems()),
+			this._index(spliceResult.getAddedItems()));
 	},
 	
 	_onReplace: function(params) {
-		this.target._remove(this.getKey.call(this.scope || this, params.oldItem));
-		this.target._set(params.newItem, this.getKey.call(this.scope || this, params.newItem));
-		this.target._triggerChange();
+		this.target.trySplice(
+			this._keys([params.oldItem]),
+			this._index([params.newItem]));
 	},
 	
 	_onClear: function(params) {
-		this.target.removeAll(this._keys(params.items));
-	},
-	
-	_onFilter: function(params) {
-		var map = this._index(this.source.array);
-		var keys = this._keys(params.items);
-		this.target.removeAll(JW.Array.filter(keys, function(key) {
-			return !map.hasOwnProperty(key);
-		}, this));
-	},
-	
-	_onReset: function(params) {
-		this.target._removeAll(this._keys(params.items));
-		this.target._setAll(this._index(this.source.array));
-		this.target._triggerChange();
+		this.target.tryRemoveAll(
+			this._keys(params.items));
 	}
 });

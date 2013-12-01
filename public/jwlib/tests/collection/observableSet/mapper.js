@@ -67,10 +67,24 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ d, f, c, b ], target);
 		
 		this.setExpectedOutput(
-			"Destroyed D by d",
-			"Destroyed F by f",
+			"Destroyed B by b",
+			"Destroyed F by f"
+		);
+		source.removeAll([ f, b ]);
+		this.assertTarget([ d, c ], target);
+		
+		this.setExpectedOutput(
+			"Created F by f",
+			"Created B by b",
+			"Destroyed D by d"
+		);
+		source.splice([ d ], [ f, b ]);
+		this.assertTarget([ c, b, f ], target);
+		
+		this.setExpectedOutput(
+			"Destroyed B by b",
 			"Destroyed C by c",
-			"Destroyed B by b"
+			"Destroyed F by f"
 		);
 		source.clear();
 		this.assertTarget([], target);
@@ -100,7 +114,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput(
 			"Created D by d",
-			"Added D",
+			"Spliced -[] +[D]",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
@@ -110,7 +124,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var f = new JW.Proxy("f");
 		this.setExpectedOutput(
 			"Created F by f",
-			"Added F",
+			"Spliced -[] +[F]",
 			"Changed",
 			"Changed size from 1 to 2"
 		);
@@ -120,7 +134,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var c = new JW.Proxy("c");
 		this.setExpectedOutput(
 			"Created C by c",
-			"Added C",
+			"Spliced -[] +[C]",
 			"Changed",
 			"Changed size from 2 to 3"
 		);
@@ -131,9 +145,8 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var m = new JW.Proxy("m");
 		this.setExpectedOutput(
 			"Created B by b",
-			"Added B",
 			"Created M by m",
-			"Added M",
+			"Spliced -[] +[B,M]",
 			"Changed",
 			"Changed size from 3 to 5"
 		);
@@ -145,7 +158,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ d, f, c, b, m ], target);
 		
 		this.setExpectedOutput(
-			"Removed M",
+			"Spliced -[M] +[]",
 			"Changed",
 			"Changed size from 5 to 4",
 			"Destroyed M by m"
@@ -158,16 +171,33 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ d, f, c, b ], target);
 		
 		this.setExpectedOutput(
-			"Removed D",
-			"Removed F",
-			"Removed C",
-			"Removed B",
+			"Spliced -[B,F] +[]",
 			"Changed",
-			"Changed size from 4 to 0",
-			"Destroyed D by d",
-			"Destroyed F by f",
+			"Changed size from 4 to 2",
+			"Destroyed B by b",
+			"Destroyed F by f"
+		);
+		source.removeAll([ f, b ]);
+		this.assertTarget([ d, c ], target);
+		
+		this.setExpectedOutput(
+			"Created F by f",
+			"Created B by b",
+			"Spliced -[D] +[B,F]",
+			"Changed",
+			"Changed size from 2 to 3",
+			"Destroyed D by d"
+		);
+		source.splice([ d ], [ f, b ]);
+		this.assertTarget([ c, b, f ], target);
+		
+		this.setExpectedOutput(
+			"Spliced -[B,C,F] +[]",
+			"Changed",
+			"Changed size from 3 to 0",
+			"Destroyed B by b",
 			"Destroyed C by c",
-			"Destroyed B by b"
+			"Destroyed F by f"
 		);
 		source.clear();
 		this.assertTarget([], target);
@@ -175,7 +205,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var h = new JW.Proxy("h");
 		this.setExpectedOutput(
 			"Created H by h",
-			"Added H",
+			"Spliced -[] +[H]",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
@@ -183,7 +213,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ h ], target);
 		
 		this.setExpectedOutput(
-			"Removed H",
+			"Spliced -[H] +[]",
 			"Changed",
 			"Changed size from 1 to 0",
 			"Destroyed H by h"
@@ -209,7 +239,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
-			"Added X",
+			"Spliced -[] +[X]",
 			"Changed",
 			"Changed size from 0 to 1"
 		);
@@ -219,8 +249,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created A by a",
 			"Created B by b",
-			"Added A",
-			"Added B",
+			"Spliced -[] +[A,B]",
 			"Changed",
 			"Changed size from 1 to 3"
 		);
@@ -230,8 +259,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created C by c",
 			"Created D by d",
-			"Added C",
-			"Added D",
+			"Spliced -[] +[C,D]",
 			"Changed",
 			"Changed size from 3 to 5"
 		);
@@ -241,7 +269,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var e = new JW.Proxy("e");
 		this.setExpectedOutput(
 			"Created E by e",
-			"Added E",
+			"Spliced -[] +[E]",
 			"Changed",
 			"Changed size from 5 to 6"
 		);
@@ -249,7 +277,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ a, b, c, d, e, x ], target);
 		
 		this.setExpectedOutput(
-			"Removed D",
+			"Spliced -[D] +[]",
 			"Changed",
 			"Changed size from 6 to 5",
 			"Destroyed D by d"
@@ -258,20 +286,18 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ a, b, c, e, x ], target);
 		
 		this.setExpectedOutput(
-			"Removed A",
-			"Removed B",
-			"Removed E",
+			"Spliced -[A,B,E] +[]",
 			"Changed",
 			"Changed size from 5 to 2",
-			"Destroyed A by a",
+			"Destroyed E by e",
 			"Destroyed B by b",
-			"Destroyed E by e"
+			"Destroyed A by a"
 		);
 		source1.clear();
 		this.assertTarget([ c, x ], target);
 		
 		this.setExpectedOutput(
-			"Removed C",
+			"Spliced -[C] +[]",
 			"Changed",
 			"Changed size from 2 to 1",
 			"Destroyed C by c"
@@ -283,11 +309,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		mapper1.destroy();
 		this.assertTarget([ x ], target);
 		
-		this.setExpectedOutput(
-			"Removed X",
-			"Changed",
-			"Changed size from 1 to 0"
-		);
+		this.setExpectedOutput();
 		target.destroy();
 		
 		this.setExpectedOutput();
@@ -319,23 +341,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 	
 	createTarget: function() {
 		var target = new JW.ObservableSet();
-		
-		target.addEvent.bind(function(params) {
-			this.output("Added " + params.item.value);
-		}, this);
-		
-		target.removeEvent.bind(function(params) {
-			this.output("Removed " + params.item.value);
-		}, this);
-		
-		target.changeEvent.bind(function(params) {
-			this.output("Changed");
-		}, this);
-		
-		target.sizeChangeEvent.bind(function(params) {
-			this.output("Changed size from " + params.oldSize + " to " + params.newSize);
-		}, this);
-		
+		JW.Tests.Collection.subscribeToSet(this, target);
 		return target;
 	},
 	
@@ -358,7 +364,7 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 	},
 	
 	assertTarget: function(expected, target) {
-		this.assertStrictEqual(expected.length, target.getSize());
+		this.assertStrictEqual(expected.length, target.getLength());
 		for (var i = 0; i < expected.length; ++i) {
 			this.assertTrue(target.contains(expected[i].result));
 		}

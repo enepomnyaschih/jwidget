@@ -15,277 +15,350 @@
 	
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	
-	----
-	
-	This is an adapter of array that triggers events about modifications.
-	Events are taken from ActionScript's CollectionEventKind (with small
-	reasonable changes).
 */
 
-JW.ObservableMap = function(json) {
-	JW.ObservableMap._super.call(this);
-	this._map = new JW.Map();
-	this.addEvent = new JW.Event();
-	this.removeEvent = new JW.Event();
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractMap<T>`
+ *
+ * See structurized list of methods in JW.AbstractMap.
+ *
+ * @extends JW.AbstractMap
+ *
+ * @constructor
+ * @param {Object} [items] Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create map as adapter of `items`. Defaults to false, so `items` is copied.
+ */
+JW.ObservableMap = function(json, adapter) {
+	JW.ObservableMap._super.call(this, json, adapter);
+	this.spliceEvent = new JW.Event();
+	this.reindexEvent = new JW.Event();
+	this.clearEvent = new JW.Event();
 	this.changeEvent = new JW.Event();
-	this.sizeChangeEvent = new JW.Event();
-	this.bulkCount = 0;
-	this.bulkDirty = false;
-	if (json) {
-		this._setAll(json);
-	}
-	this.bulkSize = this._map.size;
+	this.lengthChangeEvent = new JW.Event();
+	this._lastLength = this.getLength();
 };
 
-JW.extend(JW.ObservableMap/*<T extends Any>*/, JW.Class, {
-	/*
-	Fields
-	JW.Map<T> _map;
-	JW.Event<JW.ObservableMap.ItemEventParams<T>> addEvent;
-	JW.Event<JW.ObservableMap.ItemEventParams<T>> removeEvent;
-	JW.Event<JW.ObservableMap.EventParams<T>> changeEvent;
-	JW.Event<JW.ObservableMap.SizeChangeEventParams<T>> sizeChangeEvent;
-	Integer bulkCount;
-	Boolean bulkDirty;
-	Integer bulkSize;
-	*/
+JW.extend(JW.ObservableMap, JW.AbstractMap, {
+	/**
+	 * @event spliceEvent
+	 * Items are removed from map, items are added to map and items are updated in map. Triggered in result
+	 * of calling #set, #trySet, #setAll, #trySetAll, #remove, #tryRemove, #removeItem, #removeAll, #tryRemoveAll,
+	 * {@link #removeItems}, #splice, #trySplice, #performSplice.
+	 * @param {JW.ObservableMap.SpliceEventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event reindexEvent
+	 * Keys of items are changed in map. Triggered in result
+	 * of calling #setKey, #trySetKey, #reindex, #tryReindex, #performReindex.
+	 * @param {JW.ObservableMap.ReindexEventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event clearEvent
+	 * Map is cleared. Triggered in result of calling #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableMap.ItemsEventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event changeEvent
+	 * Map is changed. Triggered right after one
+	 * of events #spliceEvent, #reindexEvent, #clearEvent.
+	 * @param {JW.ObservableMap.EventParams} params `<T>` Parameters.
+	 */
+	/**
+	 * @event lengthChangeEvent
+	 * Map length is changed. Triggered right after #changeEvent if map length has changed.
+	 * @param {JW.ObservableMap.LengthChangeEventParams} params `<T>` Parameters.
+	 */
 	
+	// override
 	destroy: function() {
-		this.clear();
-		this.sizeChangeEvent.destroy();
+		this.lengthChangeEvent.destroy();
 		this.changeEvent.destroy();
-		this.removeEvent.destroy();
-		this.addEvent.destroy();
+		this.clearEvent.destroy();
+		this.reindexEvent.destroy();
+		this.spliceEvent.destroy();
 		this._super();
 	},
 	
-	getJson: function() {
-		return this._map.getJson();
-	},
-	
-	getSize: function() {
-		return this._map.size;
-	},
-	
-	isEmpty: function() {
-		return this._map.size === 0;
-	},
-	
-	contains: function(key) {
-		return this._map.json.hasOwnProperty(key);
-	},
-	
-	get: function(key) {
-		return this._map.json[key];
-	},
-	
-	set: function(item, key) {
-		if (this._set(item, key)) {
-			this._triggerChange();
-			return true;
-		}
-		return false;
-	},
-	
-	setAll: function(map) {
-		if (this._setAll(map)) {
-			this._triggerChange();
-			return true;
-		}
-		return false;
-	},
-	
-	remove: function(key) {
-		var item = this._remove(key);
-		if (item !== undefined) {
-			this._triggerChange();
-		}
-		return item;
-	},
-	
-	removeItem: function(item) {
-		var key = this.indexOf(item);
-		if (key !== undefined) {
-			this.remove(key);
-		}
-		return key;
-	},
-	
-	removeAll: function(keys) {
-		if (this._removeAll(keys)) {
-			this._triggerChange();
-			return true;
-		}
-		return false;
-	},
-	
-	clear: function() {
-		if (this._clear()) {
-			this._triggerChange();
-			return true;
-		}
-		return false;
-	},
-	
-	startBulkChange: function() {
-		++this.bulkCount;
-		if (this.bulkCount !== 1) {
+	// override
+	trySplice: function(removedKeys, updatedItems) {
+		var spliceResult = this._super(removedKeys, updatedItems);
+		if (spliceResult === undefined) {
 			return;
 		}
-		this.bulkDirty = false;
+		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
+		this._triggerChange();
+		return spliceResult;
 	},
 	
-	stopBulkChange: function() {
-		if (this.bulkCount === 0) {
+	// override
+	tryClear: function() {
+		var items = this._super();
+		if (items === undefined) {
 			return;
 		}
-		--this.bulkCount;
-		if (this.bulkDirty) {
-			this._triggerChange();
+		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this, items));
+		this._triggerChange();
+		return items;
+	},
+	
+	// override
+	tryReindex: function(keyMap) {
+		var result = this._super(keyMap);
+		if (result === undefined) {
+			return;
 		}
+		this.reindexEvent.trigger(new JW.ObservableMap.ReindexEventParams(this, result));
+		this._triggerChange();
+		return result;
 	},
 	
-	every: function(callback, scope) {
-		return JW.Map.every(this._map.json, callback, scope);
-	},
-	
+	/**
+	 * `<U>` Creates empty collection of the same type.
+	 * @returns {JW.ObservableMap} `<U>` Collection.
+	 */
 	createEmpty: function() {
 		return new JW.ObservableMap();
 	},
 	
-	createEmptyUnobservable: function() {
-		return new JW.Map();
-	},
-	
+	/**
+	 * `<U>` Creates empty array of the same observability level.
+	 * @returns {JW.ObservableArray} `<U>` Array.
+	 */
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
 	
+	/**
+	 * `<U>` Creates empty map of the same observability level.
+	 * @returns {JW.ObservableMap} `<U>` Map.
+	 */
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
 	
+	/**
+	 * `<U>` Creates empty set of the same observability level.
+	 * @returns {JW.ObservableSet} `<U>` Set.
+	 */
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
 	
-	createLister: function(config) {
-		return new JW.ObservableMap.Lister(this, config);
-	},
-	
+	/**
+	 * `<U>` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Mapper}
+	 * `<T, U>` Synchronizer.
+	 */
 	createMapper: function(config) {
 		return new JW.ObservableMap.Mapper(this, config);
 	},
 	
+	/**
+	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Filterer}
+	 * `<T>` Synchronizer.
+	 */
+	createFilterer: function(config) {
+		return new JW.ObservableMap.Filterer(this, config);
+	},
+	
+	/**
+	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Observer}
+	 * `<T>` Synchronizer.
+	 */
 	createObserver: function(config) {
 		return new JW.ObservableMap.Observer(this, config);
 	},
 	
-	_set: function(item, key) {
-		if (item === undefined) {
-			return false;
-		}
-		var oldItem = this._map.json[key];
-		if (oldItem === item) {
-			return false;
-		}
-		this._remove(key);
-		this._map.set(item, key);
-		this.addEvent.trigger(new JW.ObservableMap.ItemEventParams(this, item, key));
-		return true;
+	/**
+	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Orderer}
+	 * `<T>` Synchronizer.
+	 */
+	createOrderer: function(config) {
+		return new JW.ObservableMap.Orderer(this, config);
 	},
 	
-	_setAll: function(map) {
-		var changed = false;
-		for (var key in map) {
-			changed = this._set(map[key], key) || changed;
-		}
-		return changed;
+	/**
+	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.SorterComparing}
+	 * `<T>` Synchronizer.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.ObservableMap.SorterComparing(this, config);
 	},
 	
-	_remove: function(key) {
-		var item = this._map.json[key];
-		if (item === undefined) {
-			return undefined;
-		}
-		this._map.remove(key);
-		this.removeEvent.trigger(new JW.ObservableMap.ItemEventParams(this, item, key));
-		return item;
+	/**
+	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Indexer}
+	 * `<T>` Synchronizer.
+	 */
+	createIndexer: function(config) {
+		return new JW.ObservableMap.Indexer(this, config);
 	},
 	
-	_removeAll: function(keys) {
-		var changed = false;
-		for (var i = 0, l = keys.length; i < l; ++i) {
-			changed = (this._remove(keys[i]) === undefined) ? changed : true;
-		}
-		return changed;
+	/**
+	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Lister}
+	 * `<T>` Synchronizer.
+	 */
+	createLister: function(config) {
+		return new JW.ObservableMap.Lister(this, config);
 	},
 	
-	_clear: function() {
-		if (this._map.size === 0) {
-			return false;
-		}
-		var json = JW.Map.clone(this._map.json);
-		for (var key in json) {
-			this._remove(key);
-		}
-		return true;
+	/**
+	 * Creates view synchronizer with map.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Inserter}
+	 * `<T>` Synchronizer.
+	 */
+	createInserter: function(config) {
+		return new JW.ObservableMap.Inserter(this, config);
 	},
 	
 	_triggerChange: function() {
-		if (this.bulkCount !== 0) {
-			this.bulkDirty = true;
-			return;
-		}
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
-		if (this.bulkSize !== this._map.size) {
-			this.sizeChangeEvent.trigger(new JW.ObservableMap.SizeChangeEventParams(this, this.bulkSize, this._map.size));
-			this.bulkSize = this._map.size;
+		var newLength = this.getLength();
+		if (this._lastLength !== newLength) {
+			this.lengthChangeEvent.trigger(new JW.ObservableMap.LengthChangeEventParams(this, this._lastLength, newLength));
+			this._lastLength = newLength;
 		}
 	}
 });
 
-JW.ObservableMap.prototype.getLength = JW.ObservableMap.prototype.getSize;
-JW.ObservableMap.prototype.pushItem = JW.ObservableMap.prototype.set;
-
-JW.applyIf(JW.ObservableMap.prototype, JW.Alg.BuildMethods);
-
+/**
+ * @class
+ * `<T>` JW.ObservableMap event parameters.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Event sender.
+ */
 JW.ObservableMap.EventParams = function(sender) {
 	JW.ObservableMap.EventParams._super.call(this, sender);
 };
 
-JW.extend(JW.ObservableMap.EventParams/*<T extends Any>*/, JW.EventParams, {
-	/*
-	Fields
-	JW.ObservableMap<T> sender;
-	*/
+JW.extend(JW.ObservableMap.EventParams, JW.EventParams, {
+	/**
+	 * @property {JW.ObservableMap} sender `<T>` Event sender.
+	 */
 });
 
-JW.ObservableMap.ItemEventParams = function(sender, item, key) {
-	JW.ObservableMap.ItemEventParams._super.call(this, sender);
-	this.item = item;
-	this.key = key;
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableMap.EventParams<T>`
+ *
+ * Parameters of JW.ObservableMap#spliceEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Event sender.
+ * @param {JW.AbstractMap.SpliceResult} spliceResult `<T>` Result of JW.AbstractMap#splice method.
+ */
+JW.ObservableMap.SpliceEventParams = function(sender, spliceResult) {
+	JW.ObservableMap.SpliceEventParams._super.call(this, sender);
+	this.spliceResult = spliceResult;
 };
 
-JW.extend(JW.ObservableMap.ItemEventParams/*<T extends Any>*/, JW.ObservableMap.EventParams/*<T>*/, {
-	/*
-	Fields
-	T item;
-	String key;
-	*/
+JW.extend(JW.ObservableMap.SpliceEventParams, JW.ObservableMap.EventParams, {
+	/**
+	 * @property {JW.AbstractMap.SpliceResult} spliceResult `<T>` Result of JW.AbstractMap#splice method.
+	 */
 });
 
-JW.ObservableMap.SizeChangeEventParams = function(sender, oldSize, newSize) {
-	JW.ObservableMap.SizeChangeEventParams._super.call(this, sender);
-	this.oldSize = oldSize;
-	this.newSize = newSize;
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableMap.EventParams<T>`
+ *
+ * Parameters of JW.ObservableMap#reindexEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Event sender.
+ * @param {Object} keyMap Map of changed keys.
+ */
+JW.ObservableMap.ReindexEventParams = function(sender, keyMap) {
+	JW.ObservableMap.ReindexEventParams._super.call(this, sender);
+	this.keyMap = keyMap;
 };
 
-JW.extend(JW.ObservableMap.SizeChangeEventParams/*<T extends Any>*/, JW.ObservableMap.EventParams/*<T>*/, {
-	/*
-	Fields
-	Integer oldSize;
-	Integer newSize;
-	*/
+JW.extend(JW.ObservableMap.ReindexEventParams, JW.ObservableMap.EventParams, {
+	/**
+	 * @property {Object} keyMap Map of changed keys.
+	 */
+});
+
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableMap.EventParams<T>`
+ *
+ * Parameters of JW.ObservableMap event which bring its old contents.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Event sender.
+ * @param {Object} items Old map contents.
+ */
+JW.ObservableMap.ItemsEventParams = function(sender, items) {
+	JW.ObservableMap.ItemsEventParams._super.call(this, sender);
+	this.items = items;
+};
+
+JW.extend(JW.ObservableMap.ItemsEventParams, JW.ObservableMap.EventParams, {
+	/**
+	 * @property {Object} items Old map contents.
+	 */
+});
+
+/**
+ * @class
+ *
+ * `<T> extends JW.ObservableMap.EventParams<T>`
+ *
+ * Parameters of JW.ObservableMap#lengthChangeEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `<T>` Event sender.
+ * @param {number} oldLength Old collection length.
+ * @param {number} newLength New collection length.
+ */
+JW.ObservableMap.LengthChangeEventParams = function(sender, oldLength, newLength) {
+	JW.ObservableMap.LengthChangeEventParams._super.call(this, sender);
+	this.oldLength = oldLength;
+	this.newLength = newLength;
+};
+
+JW.extend(JW.ObservableMap.LengthChangeEventParams, JW.ObservableMap.EventParams, {
+	/**
+	 * @property {number} oldLength Old collection length.
+	 */
+	/**
+	 * @property {number} newLength New collection length.
+	 */
 });

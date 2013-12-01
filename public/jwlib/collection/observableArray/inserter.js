@@ -17,100 +17,97 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: Filter from end to begin
-
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractArray.Inserter<T>`
+ *
+ * See JW.AbstractArray.Inserter for details.
+ *
+ * @extends JW.AbstractArray.Inserter
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractArray#createInserter method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
 JW.ObservableArray.Inserter = function(source, config) {
 	JW.ObservableArray.Inserter._super.call(this, source, config);
-	this._addEventAttachment = this.source.addEvent.bind(this._onAdd, this);
-	this._removeEventAttachment = this.source.removeEvent.bind(this._onRemove, this);
-	this._replaceEventAttachment = this.source.replaceEvent.bind(this._onReplace, this);
-	this._moveEventAttachment = this.source.moveEvent.bind(this._onMove, this);
-	this._clearEventAttachment = this.source.clearEvent.bind(this._onClear, this);
-	this._reorderEventAttachment = this.source.reorderEvent.bind(this._onReorder, this);
-	this._filterEventAttachment = this.source.filterEvent.bind(this._onFilter, this);
-	this._resetEventAttachment = this.source.resetEvent.bind(this._onReset, this);
+	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
+	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
+	this._moveEventAttachment = source.moveEvent.bind(this._onMove, this);
+	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	this._reorderEventAttachment = source.reorderEvent.bind(this._onReorder, this);
 };
 
-JW.extend(JW.ObservableArray.Inserter/*<T extends Any>*/, JW.AbstractArray.Inserter/*<T>*/, {
+JW.extend(JW.ObservableArray.Inserter, JW.AbstractArray.Inserter, {
 	/*
-	Required
-	JW.ObservableArray<T> source;
-	
-	Fields
-	JW.EventAttachment _addEventAttachment;
-	JW.EventAttachment _removeEventAttachment;
+	JW.EventAttachment _spliceEventAttachment;
 	JW.EventAttachment _replaceEventAttachment;
 	JW.EventAttachment _moveEventAttachment;
 	JW.EventAttachment _clearEventAttachment;
 	JW.EventAttachment _reorderEventAttachment;
-	JW.EventAttachment _filterEventAttachment;
-	JW.EventAttachment _resetEventAttachment;
 	*/
 	
+	// override
 	destroy: function() {
-		this._resetEventAttachment.destroy();
-		this._filterEventAttachment.destroy();
 		this._reorderEventAttachment.destroy();
 		this._clearEventAttachment.destroy();
 		this._moveEventAttachment.destroy();
 		this._replaceEventAttachment.destroy();
-		this._removeEventAttachment.destroy();
-		this._addEventAttachment.destroy();
+		this._spliceEventAttachment.destroy();
 		this._super();
 	},
 	
-	_onAdd: function(params) {
-		this._addItems(params.items, params.index);
-	},
-	
-	_onRemove: function(params) {
-		this._removeItems(params.items, params.index);
-	},
-	
-	_onReplace: function(params) {
-		this._removeItem(params.oldItem, params.index);
-		this._addItem(params.newItem, params.index);
-	},
-	
-	_onMove: function(params) {
-		this._removeItem(params.item, params.fromIndex);
-		this._addItem(params.item, params.toIndex);
-	},
-	
-	_onClear: function(params) {
-		this._clear(params.items);
-	},
-	
-	_onReorder: function(params) {
-		this._clear(params.items);
-		this._fill();
-	},
-	
-	_onFilter: function(params) {
-		var array = this.source.array;
-		var items = params.items;
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		var oldItems = spliceResult.oldItems;
+		var removedItems = spliceResult.getRemovedItems();
 		
 		// if there is an effective clearing function, just reset the controller
-		if (this.clearItems && (3 * array.length < items.length)) {
-			this._clear(items);
-			this._fill();
+		if (this.clearItems && (3 * removedItems.length > 2 * oldItems.length)) {
+			this.clearItems.call(this.scope, oldItems);
+			this._addItems(this.source.getItems(), 0);
 			return;
 		}
 		
-		// else, remove specific elements
-		var arrayIndex = 0;
-		for (var itemsIndex = 0, l = items.length; itemsIndex < l; ++itemsIndex) {
-			var item = items[itemsIndex];
-			if (item === array[arrayIndex]) {
-				++arrayIndex;
-			} else {
-				this._removeItem(item, arrayIndex);
-			}
+		// else, splice the elements
+		var removedItemsList = spliceResult.removedItemsList;
+		var addedItemsList = spliceResult.addedItemsList;
+		for (var i = removedItemsList.length - 1; i >= 0; --i) {
+			var removeRarams = removedItemsList[i];
+			this._removeItems(removeRarams.items, removeRarams.index);
+		}
+		for (var i = 0, l = addedItemsList.length; i < l; ++i) {
+			var addParams = addedItemsList[i];
+			this._addItems(addParams.items, addParams.index);
 		}
 	},
 	
-	_onReset: function(params) {
-		this._clear(params.items);
-		this._fill();
+	_onReplace: function(params) {
+		if (this.removeItem) {
+			this.removeItem.call(this.scope, params.oldItem, params.index);
+		}
+		if (this.addItem) {
+			this.addItem.call(this.scope, params.newItem, params.index);
+		}
+	},
+	
+	_onMove: function(params) {
+		if (this.removeItem) {
+			this.removeItem.call(this.scope, params.item, params.fromIndex);
+		}
+		if (this.addItem) {
+			this.addItem.call(this.scope, params.item, params.toIndex);
+		}
+	},
+	
+	_onClear: function(params) {
+		this._clearItems(params.items);
+	},
+	
+	_onReorder: function(params) {
+		this._clearItems(params.items);
+		this._addItems(this.source.getItems(), 0);
 	}
 });
