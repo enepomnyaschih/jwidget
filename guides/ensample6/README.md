@@ -4,12 +4,12 @@ Demo: [http://enepomnyaschih.github.io/mt/6/](http://enepomnyaschih.github.io/mt
 
 Source: [https://github.com/enepomnyaschih/mt/tree/mt-6](https://github.com/enepomnyaschih/mt/tree/mt-6) (Git branch)
 
-In this part, we'll improve project infrastructure: extract HTML templates into separate HTML file using
+In this part, we'll improve project infrastructure: extract HTML templates into separate HTML files using
 [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) and will learn how to use
 [Stylus](http://learnboost.github.io/stylus/) CSS-preprocessor to make slicing easier and more convenient.
 
-Let's start with
-[jWidget SDK installing by instruction](https://github.com/enepomnyaschih/jwsdk/wiki/jWidget-SDK-setup) (steps 1-4).
+First, please install
+[jWidget SDK by instruction](https://github.com/enepomnyaschih/jwsdk/wiki/jWidget-SDK-setup) (steps 1-4).
 
 Next, create "mt" package for our project.
 
@@ -152,7 +152,7 @@ before project push to production. If you'll run the application in browser, you
 {@img application.png}
 
 Let's start our refactoring. First, let's extract HTML templates into separate files. We have JW.UI.template code
-blocks into each of next files:
+blocks in each of next files:
 
     public/
         mt/
@@ -270,8 +270,8 @@ in text editors. Compare:
 If you wonder how it works, open index.html and see by yourself.
 
 At next step, we'll introduce [Stylus](http://learnboost.github.io/stylus/) CSS-preprocessor to our project to
-make CSS development easier. Setup [NodeJS](http://nodejs.org/) by instruction on the site and Stylus via
-NodeJS Package Manager:
+make CSS development easier. Please setup [NodeJS](http://nodejs.org/) by instruction on the site. Next, run this
+command to setup Stylus via NodeJS Package Manager:
 
     npm install -g stylus
 
@@ -593,6 +593,6 @@ Compile project and make sure that it works as before.
 We've got a project, developed by all jWidget standards. Now you have all skills neccessary to develop fully-capable
 Model-View applications based on jWidget.
 
-I hope that this guide was a bit useful for you. I'm happy if you'll select jWidget as a framework for your
+I hope that this guide was useful for you. I'm happy if you'll select jWidget as a framework for your
 next project. Please, send all remarks and offers to me by
 email [enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com).
