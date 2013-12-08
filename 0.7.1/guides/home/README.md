@@ -31,5 +31,7 @@ Current version: 0.7.1
 
 <font size="5">[Download jWidget](guides/endownload/jwidget.zip)</font>
 
+<font size="5">[Source code and bug tracker on GitHub](https://github.com/enepomnyaschih/jwidget)</font>
+
 Feel free to contact me by email [enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com) if you have any questions
 or bug reports.

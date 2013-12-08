@@ -31,5 +31,7 @@ jWidget - это объектно-ориентированная библиот�
 
 <font size="5">[Скачать jWidget](guides/endownload/jwidget.zip)</font>
 
+<font size="5">[Исходный код и баг-трекер на GitHub](https://github.com/enepomnyaschih/jwidget)</font>
+
 Все замечания, предложения, отчеты об ошибках в программе и документации присылайте по адресу
 [enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com)
