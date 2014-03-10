@@ -75,15 +75,14 @@ JW.AbstractArray.Merger = function(source, config) {
 	JW.AbstractArray.Merger._super.call(this);
 	config = config || {};
 	this.source = source;
-	this._targetCreated = !config.target;
-	this.target = this._targetCreated ? this._createTarget() : config.target;
-	this._mapper = source.createMapper({
+	this.target = config.target || this.own(this._createTarget());
+	this.own(source.createMapper({
 		createItem: function(bunch) {
 			return bunch.createMergerBunch(this);
 		},
 		destroyItem: JW.destroy,
 		scope: this
-	});
+	}));
 	this.target.addAll(this._getAllItems());
 };
 
@@ -97,16 +96,10 @@ JW.extend(JW.AbstractArray.Merger, JW.Class, {
 	/**
 	 * @property {JW.AbstractArray} target `<T>` Target array.
 	 */
-	// boolean _targetCreated;
-	// JW.AbstractArray.Mapper<JW.AbstractArray<? extends JW.AbstractArray<T>>, JW.AbstractArray.Merger.Bunch<T>> _mapper;
 	
 	// override
 	destroy: function() {
 		this.target.tryClear();
-		this._mapper.destroy();
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
 	},
 	

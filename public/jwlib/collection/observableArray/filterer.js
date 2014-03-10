@@ -33,32 +33,14 @@
  */
 JW.ObservableArray.Filterer = function(source, config) {
 	JW.ObservableArray.Filterer._super.call(this, source, config);
-	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
-	this._replaceEventAttachment = source.replaceEvent.bind(this._onReplace, this);
-	this._moveEventAttachment = source.moveEvent.bind(this._onMove, this);
-	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
-	this._reorderEventAttachment = source.reorderEvent.bind(this._onReorder, this);
+	this.own(source.spliceEvent.bind(this._onSplice, this));
+	this.own(source.replaceEvent.bind(this._onReplace, this));
+	this.own(source.moveEvent.bind(this._onMove, this));
+	this.own(source.clearEvent.bind(this._onClear, this));
+	this.own(source.reorderEvent.bind(this._onReorder, this));
 };
 
 JW.extend(JW.ObservableArray.Filterer, JW.AbstractArray.Filterer, {
-	/*
-	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _replaceEventAttachment;
-	JW.EventAttachment _moveEventAttachment;
-	JW.EventAttachment _clearEventAttachment;
-	JW.EventAttachment _reorderEventAttachment;
-	*/
-	
-	// override
-	destroy: function() {
-		this._reorderEventAttachment.destroy();
-		this._clearEventAttachment.destroy();
-		this._moveEventAttachment.destroy();
-		this._replaceEventAttachment.destroy();
-		this._spliceEventAttachment.destroy();
-		this._super();
-	},
-	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.removedItemsList, spliceResult.addedItemsList);

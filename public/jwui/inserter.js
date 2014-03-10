@@ -20,24 +20,15 @@
 JW.UI.Inserter = function(source, el) {
 	JW.UI.Inserter._super.call(this);
 	this.el = el;
-	this._inserter = source.createInserter({
+	this.own(source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
 		scope      : this
-	});
+	}));
 };
 
 JW.extend(JW.UI.Inserter, JW.Class, {
-	/*
-	Fields
-	Element el;
-	JW.ObservableArray.Inserter<JW.UI.Component> _inserter;
-	*/
-	
-	destroy: function() {
-		this._inserter.destroy();
-		this._super();
-	},
+	// Element el;
 	
 	_addItem: function(item, index) {
 		this.el.insert(item.el, index);

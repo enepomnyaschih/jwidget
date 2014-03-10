@@ -33,10 +33,18 @@
 JW.Proxy = function(value) {
 	JW.Proxy._super.call(this);
 	this.value = value;
+	this.ownsValue = false;
 };
 
 JW.extend(JW.Proxy, JW.Class, {
 	/**
 	 * @property {T} value Object.
 	 */
+	
+	destroy: function() {
+		if (this.ownsValue && this.value) {
+			this.value.destroy();
+		}
+		this._super();
+	}
 });

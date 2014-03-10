@@ -154,6 +154,7 @@
  */
 JW.AbstractCollection = function() {
 	JW.AbstractCollection._super.call(this);
+	this.own(new JW.AbstractCollection.Content(this));
 };
 
 JW.AbstractCollection._create$Array = function(algorithm) {
@@ -175,6 +176,11 @@ JW.AbstractCollection._create$Set = function(algorithm) {
 };
 
 JW.extend(JW.AbstractCollection, JW.Class, {
+	ownItems: function() {
+		this.own(new JW.AbstractCollection.ItemOwner(this));
+		return this;
+	},
+	
 	/**
 	 * @method getLength
 	 * Returns count of items in collection.
@@ -227,12 +233,6 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Clears collection.
 	 * @returns {JW.AbstractCollection} `<T>` Old collection contents.
 	 */
-	
-	destroy: function() {
-		this.tryClear();
-		this._super();
-	},
-	
 	/**
 	 * @method every
 	 *
@@ -676,4 +676,16 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.AbstractCollection.Lister}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
+});
+
+JW.AbstractCollection.Content = function(collection) {
+	JW.AbstractCollection.Content._super.call(this);
+	this.collection = collection;
+};
+
+JW.extend(JW.AbstractCollection.Content, JW.Class, {
+	destroy: function() {
+		this.collection.tryClear();
+		this._super();
+	}
 });

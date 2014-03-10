@@ -92,8 +92,7 @@ JW.AbstractCollection.Mapper = function(source, config) {
 	this.source = source;
 	this.createItem = config.createItem;
 	this.destroyItem = config.destroyItem;
-	this._targetCreated = !config.target;
-	this.target = this._targetCreated ? this.source.createEmpty() : config.target;
+	this.target = config.target || this.own(this.source.createEmpty());
 	this.scope = config.scope || this;
 };
 
@@ -124,13 +123,4 @@ JW.extend(JW.AbstractCollection.Mapper, JW.Class, {
 	/**
 	 * @property {UC} target Target collection.
 	 */
-	// boolean _targetCreated;
-	
-	// override
-	destroy: function() {
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		this._super();
-	}
 });

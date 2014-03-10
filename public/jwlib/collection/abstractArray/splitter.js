@@ -21,17 +21,16 @@ JW.AbstractArray.Splitter = function(source, config) {
 	JW.AbstractArray.Splitter._super.call(this);
 	config = config || {};
 	this.source = source;
-	this._rowsCreated = !config.rows;
-	this.rows = config.rows || this.source.createEmpty();
+	this.rows = config.rows || this.own(this.source.createEmpty());
 	this.capacity = config.capacity || 1;
 	this._length = 0;
 	
-	this._inserter = this.source.createInserter({
+	this.own(this.source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
 		clearItems : this._clearItems,
 		scope      : this
-	});
+	}));
 };
 
 JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<T>>*/, JW.Class, {
@@ -44,18 +43,8 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 	Integer capacity;
 	
 	Fields
-	Boolean _rowsCreated;
 	Integer _length;
-	JW.AbstractArray.Inserter<T> _inserter;
 	*/
-	
-	destroy: function() {
-		this._inserter.destroy();
-		if (this._rowsCreated) {
-			this.rows.destroy();
-		}
-		this._super();
-	},
 	
 	createRow: function() {
 		return this.source.createEmpty();

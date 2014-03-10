@@ -28,7 +28,8 @@
 JW.Property = function(value) {
 	JW.Property._super.call(this);
 	this.value = JW.defn(value, null);
-	this.changeEvent = new JW.Event();
+	this.ownsValue = false;
+	this.changeEvent = this.own(new JW.Event());
 };
 
 JW.extend(JW.Property, JW.Class, {
@@ -40,11 +41,12 @@ JW.extend(JW.Property, JW.Class, {
 	
 	/*
 	V value;
-	JW.Class _binding;
 	*/
 	
 	destroy: function() {
-		this.changeEvent.destroy();
+		if (this.ownsValue && this.value) {
+			this.value.destroy();
+		}
 		this._super();
 	},
 	
@@ -67,5 +69,8 @@ JW.extend(JW.Property, JW.Class, {
 		}
 		this.value = value;
 		this.changeEvent.trigger(new JW.ValueChangeEventParams(this, value, oldValue));
+		if (this.ownsValue && oldValue) {
+			oldValue.destroy();
+		}
 	}
 });

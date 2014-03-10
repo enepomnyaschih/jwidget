@@ -77,8 +77,7 @@ JW.AbstractCollection.SorterComparing = function(source, config) {
 	this.scope = config.scope || this;
 	var scope = this.scope;
 	var compare = this.compare;
-	this._targetCreated = !config.target;
-	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
+	this.target = config.target || this.own(source.createEmptyArray());
 	this._splice([], source.asArray());
 };
 
@@ -102,14 +101,10 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	/**
 	 * @property {JW.AbstractArray} target `<T>` Target array.
 	 */
-	// boolean _targetCreated;
 	
 	// override
 	destroy: function() {
 		this._splice(this.source.asArray(), []);
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
 	},
 	

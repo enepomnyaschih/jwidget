@@ -4,7 +4,7 @@ JW.UI.CssUpdater = function(el, style, property) {
 	this.style = style;
 	this.property = property;
 	this._update();
-	this._attachment = property.changeEvent.bind(this._update, this);
+	this.own(property.changeEvent.bind(this._update, this));
 };
 
 JW.extend(JW.UI.CssUpdater, JW.Class, {
@@ -12,13 +12,7 @@ JW.extend(JW.UI.CssUpdater, JW.Class, {
 	Element el;
 	String style;
 	JW.Property property;
-	JW.EventAttachment _attachment;
 	*/
-	
-	destroy: function() {
-		this._attachment.destroy();
-		this._super();
-	},
 	
 	_update: function() {
 		this.el.css(this.style, this.property.get());

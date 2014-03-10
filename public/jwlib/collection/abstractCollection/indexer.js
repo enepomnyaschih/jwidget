@@ -74,8 +74,7 @@ JW.AbstractCollection.Indexer = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.getKey = config.getKey;
-	this._targetCreated = !config.target;
-	this.target = this._targetCreated ? source.createEmptyMap() : config.target;
+	this.target = config.target || this.own(source.createEmptyMap());
 	this.scope = config.scope || this;
 	this.target.trySetAll(this._index(source.asArray()));
 };
@@ -100,14 +99,10 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
 	/**
 	 * @property {JW.AbstractMap} target `<T>` Target map.
 	 */
-	// boolean _targetCreated;
 	
 	// override
 	destroy: function() {
 		this.target.tryRemoveAll(this._keys(this.source.asArray()));
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
 	},
 	

@@ -506,13 +506,14 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this._childInserter = null;
 			this._childMapper.destroy();
 			this._childMapper = null;
-			this.children.each(JW.byMethod("destroy"));
+			this.children.each(JW.destroy);
 			this.children.destroy();
 			this.children = null;
 		}
 		this.allChildren = null;
 		this._elements = null;
 		this.el = null;
+		this.destroyObject();
 		this._super();
 	},
 	
@@ -557,6 +558,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @returns {void}
 	 */
 	destroyComponent: function() {},
+	
+	destroyObject: function() {},
 	
 	/**
 	 * Renders component. Call this method to initialize references to all elements of component and create

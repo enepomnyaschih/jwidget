@@ -33,23 +33,11 @@
  */
 JW.ObservableMap.SorterComparing = function(source, config) {
 	JW.ObservableMap.SorterComparing._super.call(this, source, config);
-	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
-	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	this.own(source.spliceEvent.bind(this._onSplice, this));
+	this.own(source.clearEvent.bind(this._onClear, this));
 };
 
 JW.extend(JW.ObservableMap.SorterComparing, JW.AbstractMap.SorterComparing, {
-	/*
-	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _clearEventAttachment;
-	*/
-	
-	// override
-	destroy: function() {
-		this._clearEventAttachment.destroy();
-		this._spliceEventAttachment.destroy();
-		this._super();
-	},
-	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
 		this._splice(

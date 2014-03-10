@@ -32,13 +32,13 @@
  */
 JW.ObservableArray = function(items, adapter) {
 	JW.ObservableArray._super.call(this, items, adapter);
-	this.spliceEvent = new JW.Event();
-	this.replaceEvent = new JW.Event();
-	this.moveEvent = new JW.Event();
-	this.clearEvent = new JW.Event();
-	this.reorderEvent = new JW.Event();
-	this.changeEvent = new JW.Event();
-	this.lengthChangeEvent = new JW.Event();
+	this.spliceEvent = this.own(new JW.Event());
+	this.replaceEvent = this.own(new JW.Event());
+	this.moveEvent = this.own(new JW.Event());
+	this.clearEvent = this.own(new JW.Event());
+	this.reorderEvent = this.own(new JW.Event());
+	this.changeEvent = this.own(new JW.Event());
+	this.lengthChangeEvent = this.own(new JW.Event());
 	this._lastLength = this.items.length;
 };
 
@@ -82,18 +82,6 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	 * Array length is changed. Triggered right after #changeEvent if array length has changed.
 	 * @param {JW.ObservableArray.LengthChangeEventParams} params `<T>` Parameters.
 	 */
-	
-	// override
-	destroy: function() {
-		this.lengthChangeEvent.destroy();
-		this.changeEvent.destroy();
-		this.reorderEvent.destroy();
-		this.clearEvent.destroy();
-		this.moveEvent.destroy();
-		this.replaceEvent.destroy();
-		this.spliceEvent.destroy();
-		this._super();
-	},
 	
 	// override
 	trySet: function(item, index) {

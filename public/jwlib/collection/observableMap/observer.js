@@ -33,30 +33,14 @@
  */
 JW.ObservableMap.Observer = function(source, config) {
 	JW.ObservableMap.Observer._super.call(this, source, config);
-	this._spliceEventAttachment = source.spliceEvent.bind(this._onSplice, this);
-	this._clearEventAttachment = source.clearEvent.bind(this._onClear, this);
+	this.own(source.spliceEvent.bind(this._onSplice, this));
+	this.own(source.clearEvent.bind(this._onClear, this));
 	if (this.change) {
-		this._changeAttachment = source.changeEvent.bind(this._onChange, this);
+		this.own(source.changeEvent.bind(this._onChange, this));
 	}
 };
 
 JW.extend(JW.ObservableMap.Observer, JW.AbstractMap.Observer, {
-	/*
-	JW.EventAttachment _spliceEventAttachment;
-	JW.EventAttachment _clearEventAttachment;
-	JW.EventAttachment _changeAttachment;
-	*/
-	
-	// override
-	destroy: function() {
-		if (this._changeAttachment) {
-			this._changeAttachment.destroy();
-		}
-		this._clearEventAttachment.destroy();
-		this._spliceEventAttachment.destroy();
-		this._super();
-	},
-	
 	_onSplice: function(params) {
 		var spliceResult = params.spliceResult;
 		this._removeItems(JW.Map.toArray(spliceResult.removedItems));

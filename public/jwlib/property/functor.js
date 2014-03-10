@@ -4,12 +4,9 @@ JW.Functor = function(sources, func, scope, config) {
 	this.sources = sources;
 	this.func = func;
 	this.scope = scope || this;
-	this._targetCreated = !config.target;
-	this.target = this._targetCreated ? new JW.Property() : config.target;
+	this.target = config.target || this.own(new JW.Property());
 	this._update();
-	this._attachments = JW.Array.map(sources, function(property) {
-		return property.changeEvent.bind(this._update, this);
-	}, this);
+	JW.Array.every(sources, this.watch, this);
 };
 
 JW.extend(JW.Functor, JW.Class, {
@@ -18,20 +15,10 @@ JW.extend(JW.Functor, JW.Class, {
 	JW.Property<T> target;
 	T func(Any... values);
 	Object scope;
-	Boolean _targetCreated;
-	Array<JW.EventAttachment> _attachments;
 	*/
 	
-	destroy: function() {
-		JW.Array.each(this._attachments, JW.destroy);
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		this._super();
-	},
-	
 	bind: function(event) {
-		this._attachments.push(event.bind(this._update, this));
+		this.own(event.bind(this._update, this));
 		return this;
 	},
 	

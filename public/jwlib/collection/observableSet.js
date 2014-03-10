@@ -33,10 +33,10 @@
  */
 JW.ObservableSet = function(json, adapter) {
 	JW.ObservableSet._super.call(this, json, adapter);
-	this.spliceEvent = new JW.Event();
-	this.clearEvent = new JW.Event();
-	this.changeEvent = new JW.Event();
-	this.lengthChangeEvent = new JW.Event();
+	this.spliceEvent = this.own(new JW.Event());
+	this.clearEvent = this.own(new JW.Event());
+	this.changeEvent = this.own(new JW.Event());
+	this.lengthChangeEvent = this.own(new JW.Event());
 	this._lastLength = this.getLength();
 };
 
@@ -64,15 +64,6 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	 * Set length is changed. Triggered right after #changeEvent if set length has changed.
 	 * @param {JW.ObservableSet.LengthChangeEventParams} params `<T>` Parameters.
 	 */
-	
-	// override
-	destroy: function() {
-		this.lengthChangeEvent.destroy();
-		this.changeEvent.destroy();
-		this.clearEvent.destroy();
-		this.spliceEvent.destroy();
-		this._super();
-	},
 	
 	// override
 	tryClear: function() {

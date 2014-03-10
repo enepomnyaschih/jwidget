@@ -3,11 +3,11 @@
 	this.source = merger.source;
 	this.target = merger.target;
 	this.bunch = bunch;
-	this._spliceAttachment = bunch.spliceEvent.bind(this._onSplice, this);
-	this._replaceAttachment = bunch.replaceEvent.bind(this._onReplace, this);
-	this._moveAttachment = bunch.moveEvent.bind(this._onMove, this);
-	this._clearAttachment = bunch.clearEvent.bind(this._onClear, this);
-	this._reorderAttachment = bunch.reorderEvent.bind(this._onReorder, this);
+	this.own(bunch.spliceEvent.bind(this._onSplice, this));
+	this.own(bunch.replaceEvent.bind(this._onReplace, this));
+	this.own(bunch.moveEvent.bind(this._onMove, this));
+	this.own(bunch.clearEvent.bind(this._onClear, this));
+	this.own(bunch.reorderEvent.bind(this._onReorder, this));
 };
 
 JW.extend(JW.ObservableArray.Merger.Bunch, JW.AbstractArray.Merger.Bunch, {
@@ -16,22 +16,7 @@ JW.extend(JW.ObservableArray.Merger.Bunch, JW.AbstractArray.Merger.Bunch, {
 	JW.AbstractArray<? extends JW.ObservableArray<T>> source;
 	JW.AbstractArray<T> target;
 	JW.AbstractArray<T> bunch;
-	JW.EventAttachment _spliceAttachment;
-	JW.EventAttachment _replaceAttachment;
-	JW.EventAttachment _moveAttachment;
-	JW.EventAttachment _clearAttachment;
-	JW.EventAttachment _reorderAttachment;
 	*/
-	
-	// override
-	destroy: function() {
-		this._reorderAttachment.destroy();
-		this._clearAttachment.destroy();
-		this._moveAttachment.destroy();
-		this._replaceAttachment.destroy();
-		this._spliceAttachment.destroy();
-		this._super();
-	},
 	
 	_getIndex: function() {
 		var bunches = this.source.getItems();

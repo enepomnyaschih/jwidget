@@ -67,8 +67,7 @@ JW.AbstractCollection.Lister = function(source, config) {
 	JW.AbstractCollection.Lister._super.call(this);
 	config = config || {};
 	this.source = source;
-	this._targetCreated = !config.target;
-	this.target = this._targetCreated ? source.createEmptySet() : config.target;
+	this.target = config.target || this.own(source.createEmptySet());
 	this.target.tryAddAll(source.asArray());
 };
 
@@ -82,14 +81,10 @@ JW.extend(JW.AbstractCollection.Lister, JW.Class, {
 	/**
 	 * @property {JW.AbstractSet} target `<T>` Target set.
 	 */
-	// boolean _targetCreated;
 	
 	// override
 	destroy: function() {
 		this.target.tryRemoveAll(this.source.asArray());
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this._super();
 	}
 });

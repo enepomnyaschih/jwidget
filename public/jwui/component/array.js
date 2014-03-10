@@ -32,26 +32,20 @@ JW.UI.Component.Array = function(parent, source, el) {
 	this.parent = parent;
 	JW.Set.add(parent._arrays, this);
 	
-	this._mapper = source.createMapper({
+	var mapper = this.own(source.createMapper({
 		createItem  : function(child) { this.parent._initChild(child); return child; },
 		destroyItem : function(child) { this.parent._doneChild(child); },
 		scope       : this
-	});
+	}));
 	
-	this._inserter = new JW.UI.Inserter(this._mapper.target, el);
+	this.own(new JW.UI.Inserter(mapper.target, el));
 };
 
 JW.extend(JW.UI.Component.Array, JW.Class, {
-	/*
-	JW.UI.Component parent;
-	JW.AbstractArray.Mapper<JW.UI.Component, JW.UI.Component> _mapper;
-	JW.AbstractArray.Inserter _inserter;
-	*/
+	// JW.UI.Component parent;
 	
 	// override
 	destroy: function() {
-		this._inserter.destroy();
-		this._mapper.destroy();
 		JW.Set.remove(this.parent._arrays, this);
 		this._super();
 	}

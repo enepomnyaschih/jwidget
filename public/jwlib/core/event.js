@@ -117,6 +117,7 @@ JW.extend(JW.Event, JW.Class, {
 	
 	destroy: function() {
 		this.purge();
+		this._super();
 	},
 	
 	/**

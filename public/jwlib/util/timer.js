@@ -19,7 +19,7 @@
 
 JW.Timer = function(delay, repeat, sensitive) {
 	JW.Timer._super.call(this);
-	this.tickEvent = new JW.Event();
+	this.tickEvent = this.own(new JW.Event());
 	this.delay = delay || 0;
 	this.repeat = repeat || false;
 	this.sensitive = sensitive || false;
@@ -39,7 +39,6 @@ JW.extend(JW.Timer, JW.Class, {
 	
 	destroy: function() {
 		this.stop();
-		this.tickEvent.destroy();
 		this._super();
 	},
 	

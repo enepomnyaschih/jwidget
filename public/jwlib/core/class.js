@@ -142,6 +142,7 @@ JW.extend = JW.ClassUtil.extend;
  */
 JW.Class = function() {
 	this._iid = ++JW.ClassUtil._iid;
+	this._ownagePool = [];
 	this._super = null;
 };
 
@@ -253,5 +254,15 @@ JW.Class = function() {
  */
 
 JW.extend(JW.Class, Object, {
-	destroy: function() {}
+	own: function(obj) {
+		this._ownagePool.push(obj);
+		return obj;
+	},
+	
+	destroy: function() {
+		var pool = this._ownagePool;
+		for (var i = pool.length - 1; i >= 0; --i) {
+			pool[i].destroy();
+		}
+	}
 });
