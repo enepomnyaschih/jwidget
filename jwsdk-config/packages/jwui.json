@@ -14,6 +14,15 @@
 		"jwui/component/child.js",
 		"jwui/inserter.js",
 		"jwui/params.js",
-		"jwui/preloadImage.js"
+		"jwui/preloadImage.js",
+		
+		"jwui/property/attrUpdater.js",
+		"jwui/property/classUpdater.js",
+		"jwui/property/cssUpdater.js",
+		"jwui/property/htmlUpdater.js",
+		"jwui/property/propUpdater.js",
+		"jwui/property/textUpdater.js",
+		"jwui/property/valueListener.js",
+		"jwui/property/valueUpdater.js"
 	]
 }

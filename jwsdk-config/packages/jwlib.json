@@ -7,6 +7,7 @@
 		"jwlib/core/eventParams.js",
 		"jwlib/core/itemEventParams.js",
 		"jwlib/core/valueEventParams.js",
+		"jwlib/core/valueChangeEventParams.js",
 		"jwlib/core/itemValueEventParams.js",
 		
 		"jwlib/collection/abstractCollection.js",
@@ -86,6 +87,11 @@
 		"jwlib/collection/observableSet/observer.js",
 		"jwlib/collection/observableSet/orderer.js",
 		"jwlib/collection/observableSet/sorterComparing.js",
+		
+		"jwlib/property/copier.js",
+		"jwlib/property/functor.js",
+		"jwlib/property/property.js",
+		"jwlib/property/updater.js",
 		
 		"jwlib/util/factory.js",
 		"jwlib/util/proxy.js",
