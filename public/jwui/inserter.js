@@ -1,5 +1,5 @@
 ﻿/*
-	JW ordered collection syncher with UI component.
+	jWidget UI source file.
 	
 	Copyright (C) 2014 Egor Nepomnyaschih
 	

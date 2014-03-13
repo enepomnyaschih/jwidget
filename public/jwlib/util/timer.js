@@ -1,5 +1,5 @@
 ﻿/*
-	JW timer.
+	jWidget Lib source file.
 	
 	Copyright (C) 2014 Egor Nepomnyaschih
 	

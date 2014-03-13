@@ -1,5 +1,5 @@
 ﻿/*
-	JW query string params object.
+	jWidget UI source file.
 	
 	Copyright (C) 2014 Egor Nepomnyaschih
 	

@@ -15,12 +15,6 @@
 	
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	
-	----
-	
-	This is an adapter of array that triggers events about modifications.
-	Events are taken from ActionScript's CollectionEventKind (with small
-	reasonable changes).
 */
 
 /**

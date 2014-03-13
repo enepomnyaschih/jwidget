@@ -1,5 +1,5 @@
 ﻿/*
-	JW array prototype extension tests.
+	jWidget Lib tests.
 	
 	Copyright (C) 2014 Egor Nepomnyaschih
 	

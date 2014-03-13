@@ -1,5 +1,5 @@
 ﻿/*
-	jWidget library tests boot loader.
+	jWidget Lib tests.
 	
 	Copyright (C) 2014 Egor Nepomnyaschih
 	

@@ -1,5 +1,5 @@
 ﻿/*
-	JW observer pattern implementation tests.
+	jWidget Lib tests.
 	
 	Copyright (C) 2014 Egor Nepomnyaschih
 	

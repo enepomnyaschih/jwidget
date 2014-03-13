@@ -1,5 +1,5 @@
 ﻿/*
-	JW image preloader.
+	jWidget UI source file.
 	
 	Copyright (C) 2014 Egor Nepomnyaschih
 	

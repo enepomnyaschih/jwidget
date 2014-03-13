@@ -1,5 +1,5 @@
 ﻿/*
-	JW utility methods tests.
+	jWidget UI tests.
 	
 	Copyright (C) 2014 Egor Nepomnyaschih
 	
