@@ -19,7 +19,56 @@
 
 /**
  * @class
- * `<V>` The observable property.
+ * `<V>` The observable property. A convenient way to keep one object in sync
+ * with another object. Use next helpers:
+ *
+ * - JW.Copier - keeps one property equal to another property
+ * - JW.Updater - watches several properties in order to update something by
+ * a callback
+ * - JW.Functor - watches several properties in order to reassign target
+ * property value to a callback result
+ * - JW.UI.TextUpdater - watches a string property and updates the text in a
+ * DOM element
+ * - JW.UI.HtmlUpdater - watches a string property and updates the HTML in a
+ * DOM element
+ * - JW.UI.ValueUpdater - watches a string property and updates the value in a
+ * DOM element
+ * - JW.UI.AttrUpdater - watches a string property and updates the specified
+ * attribute in a DOM element
+ * - JW.UI.PropUpdater - watches a boolean property and updates the specified
+ * DOM property in a DOM element
+ * - JW.UI.CssUpdater - watches a string property and updates the specified
+ * CSS style in a DOM element
+ * - JW.UI.ClassUpdater - watches a boolean property and updates the specified
+ * CSS class presence in a DOM element
+ * - JW.UI.ValueListener - watches the value in a DOM element and updates a
+ * string property
+ *
+ * For example, you can use the next algorithm to change localization on fly
+ * in your Web application:
+ *
+ *     var locale = {
+ *         en: {
+ *             hi: "Hi",
+ *             bye: "Bye"
+ *         },
+ *         ru: {
+ *             hi: "Привет",
+ *             bye: "Пока"
+ *         }
+ *     };
+ *     var language = new JW.Property("en");
+ *     var hiFunctor = new JW.Functor([ language ], function(language) {
+ *         return locale[language].hi;
+ *     });
+ *     var byeFunctor = new JW.Functor([ language ], function(language) {
+ *         return locale[language].bye;
+ *     });
+ *     new JW.UI.TextUpdater($("#hi"), hiFunctor.{@link JW.Functor#target target});
+ *     new JW.UI.TextUpdater($("#bye"), byeFunctor.{@link JW.Functor#target target});
+ *     // Now you can change localization easily
+ *     language.{@link #set}("ru");
+ *
  * @extends JW.Class
  *
  * @constructor
@@ -38,10 +87,12 @@ JW.extend(JW.Property, JW.Class, {
 	 * Property value is changed. Triggered in result of calling #set method.
 	 * @param {JW.ValueChangeEventParams} params `<V>` Parameters.
 	 */
-	
-	/*
-	V value;
-	*/
+	/**
+	 * @property {boolean} [ownsValue=false]
+	 * Set to true to destroy the old value on value change or property
+	 * destruction.
+	 */
+	// V value;
 	
 	destroy: function() {
 		if (this.ownsValue && this.value) {
@@ -60,7 +111,7 @@ JW.extend(JW.Property, JW.Class, {
 	
 	/**
 	 * Changes property value and triggers event #changeEvent.
-	 * @param {V} Value.
+	 * @param {V} value
 	 */
 	set: function(value) {
 		var oldValue = this.value;

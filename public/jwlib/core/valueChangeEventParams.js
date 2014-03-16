@@ -17,13 +17,24 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * `<V> extends JW.ValueEventParams<V>` Value change event params. Provides
+ * old value along with new value.
+ * @extends JW.ValueEventParams
+ *
+ * @constructor
+ * @param {Object} sender Event sender.
+ * @param {V} value New value.
+ * @param {V} oldValue Old value.
+ */
 JW.ValueChangeEventParams = function(sender, value, oldValue) {
 	JW.ValueChangeEventParams._super.call(this, sender, value);
 	this.oldValue = oldValue;
 };
 
-JW.extend(JW.ValueChangeEventParams/*<T>*/, JW.ValueEventParams/*<T>*/, {
-	/*
-	T oldValue;
-	*/
+JW.extend(JW.ValueChangeEventParams, JW.ValueEventParams, {
+	/**
+	 * @property {V} oldValue Old value.
+	 */
 });
