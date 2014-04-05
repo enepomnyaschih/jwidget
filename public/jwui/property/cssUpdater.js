@@ -19,7 +19,7 @@
 
 JW.UI.CssUpdater = function(el, style, property) {
 	JW.UI.CssUpdater._super.call(this);
-	this.el = el;
+	this.el = $(el);
 	this.style = style;
 	this.property = property;
 	this._update();

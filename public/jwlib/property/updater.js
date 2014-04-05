@@ -19,7 +19,7 @@
 
 /**
  * @class
- * `<T>` Watches source {@link JW.Property properties} modification and calls
+ * Watches source {@link JW.Property properties} modification and calls
  * the specified function passing property values as arguments. Also, the
  * function is called on updater initialization.
  *
@@ -61,6 +61,7 @@ JW.extend(JW.Updater, JW.Class, {
 	 * Watches specified event and triggers updater's function call on
 	 * the event triggering.
 	 * @param {JW.Event} event Event.
+	 * @returns this
 	 */
 	bind: function(event) {
 		this.own(event.bind(this.update, this));
@@ -71,6 +72,7 @@ JW.extend(JW.Updater, JW.Class, {
 	 * Watches specified property and triggers updater's function call on
 	 * the property change.
 	 * @param {JW.Property} property Property.
+	 * @returns this
 	 */
 	watch: function(property) {
 		return this.bind(property.changeEvent);

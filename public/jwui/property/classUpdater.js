@@ -19,7 +19,7 @@
 
 JW.UI.ClassUpdater = function(el, cls, property) {
 	JW.UI.ClassUpdater._super.call(this);
-	this.el = el;
+	this.el = $(el);
 	this.cls = cls;
 	this.property = property;
 	this._update();

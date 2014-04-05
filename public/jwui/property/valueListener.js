@@ -20,7 +20,7 @@
 JW.UI.ValueListener = function(el, property) {
 	this._update = JW.inScope(this._update, this);
 	JW.UI.ValueListener._super.call(this);
-	this.el = el;
+	this.el = $(el);
 	this.property = property;
 	this._update();
 	this.el.bind("change", this._update);

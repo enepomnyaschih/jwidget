@@ -86,6 +86,7 @@ JW.extend(JW.Functor, JW.Class, {
 	 * Watches specified event and triggers target value recalculation on
 	 * the event triggering.
 	 * @param {JW.Event} event Event.
+	 * @returns this
 	 */
 	bind: function(event) {
 		this.own(event.bind(this.update, this));
@@ -96,6 +97,7 @@ JW.extend(JW.Functor, JW.Class, {
 	 * Watches specified property and triggers target value recalculation on
 	 * the property change.
 	 * @param {JW.Property} property Property.
+	 * @returns this
 	 */
 	watch: function(property) {
 		return this.bind(property.changeEvent);

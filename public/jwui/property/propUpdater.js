@@ -19,7 +19,7 @@
 
 JW.UI.PropUpdater = function(el, prop, property) {
 	JW.UI.PropUpdater._super.call(this);
-	this.el = el;
+	this.el = $(el);
 	this.prop = prop;
 	this.property = property;
 	this._update();

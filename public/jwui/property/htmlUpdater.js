@@ -19,7 +19,7 @@
 
 JW.UI.HtmlUpdater = function(el, property) {
 	JW.UI.HtmlUpdater._super.call(this);
-	this.el = el;
+	this.el = $(el);
 	this.property = property;
 	this._update();
 	this.own(property.changeEvent.bind(this._update, this));

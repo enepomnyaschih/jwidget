@@ -92,6 +92,7 @@
 		"jwlib/property/copier.js",
 		"jwlib/property/functor.js",
 		"jwlib/property/property.js",
+		"jwlib/property/switcher.js",
 		"jwlib/property/updater.js",
 		
 		"jwlib/util/factory.js",
