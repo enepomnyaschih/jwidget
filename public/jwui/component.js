@@ -368,6 +368,9 @@
  * Unlike arrays, named child component will be destroyed automatically after #destroyComponent method, so you must
  * remove them from #children map if you want to keep them alive. <code>this._super()</code> method call is performed
  * at last line of method.
+ * 1. Method #destroyObject is called during component destruction. Everything that was performed during component
+ * construction, i.e. on step 1, should be reverted here. <code>this._super()</code> method call is performed
+ * at last line of method.
  * 
  * ### Intergration with jWidget SDK
  * 
@@ -548,7 +551,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 	afterAppend: function() {},
 	
 	/**
-	 * Component life stage method. Called during component destruction. Everything that was performed during component
+	 * Component life stage method. Called during component destruction before {@link #destroyObject} method call.
+	 * Everything that was performed during component
 	 * rendering should be reverted here. All child component arrays are already removed by framework
 	 * before this method call, but the components themselves are not destroyed. You must destroy them explicitly.
 	 * Unlike arrays, named child component will be destroyed automatically after #destroyComponent method, so you must
@@ -559,6 +563,13 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	destroyComponent: function() {},
 	
+	/**
+	 * Component life stage method. Called during component destruction after {@link #destroyComponent} method call.
+	 * Everything that was performed during component construction should be reverted here.
+	 * <code>this._super()</code> method call is performed at last line of method.
+	 *
+	 * @returns {void}
+	 */
 	destroyObject: function() {},
 	
 	/**
