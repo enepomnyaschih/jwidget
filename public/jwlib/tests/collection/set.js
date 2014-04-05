@@ -69,6 +69,31 @@ JW.Tests.Collection.SetTestCase = JW.Tests.Collection.AbstractSetBase.extend({
 		this.assertTrue(set.asSet() === set.getJson());
 		this.assertTrue(set.$asSet() === set);
 		this.assertTrue(set.equal([this.b, this.d]));
+	},
+	
+	testOwnItems: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
+		
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output("destroy " + this.value);
+				this._super();
+			}
+		});
+		
+		var set1 = new JW.Set([new cls(this, "a"), new cls(this, "b")]);
+		set1.destroy();
+		
+		var set2 = new JW.Set([new cls(this, "c"), new cls(this, "d")]).ownItems();
+		this.setExpectedOutput(
+			"destroy d",
+			"destroy c"
+		);
+		set2.destroy();
 	}
 });
 

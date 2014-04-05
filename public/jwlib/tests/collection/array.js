@@ -66,6 +66,31 @@ JW.Tests.Collection.ArrayTestCase = JW.Tests.Collection.AbstractArrayBase.extend
 		this.assertTrue(array.asArray() === array.getItems());
 		this.assertTrue(array.$asArray() === array);
 		this.assertTrue(array.equal([2, 4]));
+	},
+	
+	testOwnItems: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
+		
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output("destroy " + this.value);
+				this._super();
+			}
+		});
+		
+		var array1 = new JW.Array([new cls(this, "a"), new cls(this, "b")]);
+		array1.destroy();
+		
+		var array2 = new JW.Array([new cls(this, "c"), new cls(this, "d")]).ownItems();
+		this.setExpectedOutput(
+			"destroy d",
+			"destroy c"
+		);
+		array2.destroy();
 	}
 });
 

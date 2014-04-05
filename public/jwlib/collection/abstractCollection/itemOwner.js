@@ -25,7 +25,7 @@ JW.AbstractCollection.ItemOwner = function(collection) {
 JW.extend(JW.AbstractCollection.ItemOwner, JW.Class, {
 	// override
 	destroy: function() {
-		this.collection.$clear().each(JW.destroy);
+		this.collection.$clear().$asArray().backEvery(JW.destroy);
 		this._super();
 	}
 });

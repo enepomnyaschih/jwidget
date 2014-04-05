@@ -66,6 +66,31 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 		this.assertTrue(map.asMap() === map.getJson());
 		this.assertTrue(map.$asMap() === map);
 		this.assertTrue(map.equal({a: 2, b: 4}));
+	},
+	
+	testOwnItems: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
+		
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output("destroy " + this.value);
+				this._super();
+			}
+		});
+		
+		var map1 = new JW.Map({A: new cls(this, "a"), B: new cls(this, "b")});
+		map1.destroy();
+		
+		var map2 = new JW.Map({C: new cls(this, "c"), D: new cls(this, "d")}).ownItems();
+		this.setExpectedOutput(
+			"destroy d",
+			"destroy c"
+		);
+		map2.destroy();
 	}
 });
 
