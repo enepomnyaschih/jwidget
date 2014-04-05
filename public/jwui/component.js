@@ -594,7 +594,9 @@ JW.extend(JW.UI.Component, JW.Class, {
 			var jwId = anchorEl.attr("jwid");
 			this._elements[jwId] = anchorEl;
 			anchorEl.removeAttr("jwid");
-			anchorEl.addClass(this.getElementClass(jwId));
+			if (this.rootClass) {
+				anchorEl.addClass(this.rootClass + "-" + jwId);
+			}
 		}
 		this._childMapper = this.children.createMapper({
 			createItem  : function(child) { return new JW.UI.Component.Child(this, child); },
@@ -687,10 +689,6 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	setElement: function(el, id) {
 		this._elements[id] = el;
-	},
-	
-	getElementClass: function(id) {
-		return JW.Array.map(JW.Array.filter([ this.rootClass, id ], JW.isSet), JW.String.hyphen).join("-");
 	},
 	
 	/**
