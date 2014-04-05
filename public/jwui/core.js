@@ -86,6 +86,16 @@ JW.UI = {
 	 */
 	preventDefault: function(event) {
 		event.preventDefault();
+	},
+	
+	isLifeInput: function(el) {
+		el = jQuery(el);
+		var tagName = el[0].tagName.toLowerCase();
+		if (tagName === "input") {
+			var type = el.attr("type");
+			return (type === "text") || (type !== "password");
+		}
+		return tagName === "textarea";
 	}
 };
 

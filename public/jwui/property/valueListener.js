@@ -35,14 +35,21 @@
  * @constructor
  * @param {jQuery} el DOM element.
  * @param {JW.Property} property `<String>` Target property.
+ * @param {Boolean} [simple=false]
+ * If true, listens "change" event only. Defaults to false which enables
+ * reaction to any real-time field modification.
  */
-JW.UI.ValueListener = function(el, property) {
+JW.UI.ValueListener = function(el, property, simple) {
 	this._update = JW.inScope(this._update, this);
 	JW.UI.ValueListener._super.call(this);
-	this.el = $(el);
+	this.el = jQuery(el);
 	this.property = property;
+	this.simple = simple || !JW.UI.isLifeInput(el);
 	this._update();
 	this.el.bind("change", this._update);
+	if (!this.simple) {
+		this._timer = this.own(setInterval(this._update, 100));
+	}
 };
 
 JW.extend(JW.UI.ValueListener, JW.Class, {
@@ -54,6 +61,9 @@ JW.extend(JW.UI.ValueListener, JW.Class, {
 	 */
 	
 	destroy: function() {
+		if (!this.simple) {
+			clearInterval(this._timer);
+		}
 		this.el.unbind("change", this._update);
 		this._super();
 	},

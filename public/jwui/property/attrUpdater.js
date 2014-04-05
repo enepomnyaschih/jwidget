@@ -38,7 +38,7 @@
  */
 JW.UI.AttrUpdater = function(el, attr, property) {
 	JW.UI.AttrUpdater._super.call(this);
-	this.el = $(el);
+	this.el = jQuery(el);
 	this.attr = attr;
 	this.property = property;
 	this._update();

@@ -37,7 +37,7 @@
  */
 JW.UI.TextUpdater = function(el, property) {
 	JW.UI.TextUpdater._super.call(this);
-	this.el = $(el);
+	this.el = jQuery(el);
 	this.property = property;
 	this._update();
 	this.own(property.changeEvent.bind(this._update, this));
