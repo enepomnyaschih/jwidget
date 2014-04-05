@@ -48,27 +48,38 @@ JW.Updater = function(sources, func, scope) {
 	this.sources = sources;
 	this.func = func;
 	this.scope = scope || this;
-	this._update();
+	this.update();
 	JW.Array.every(sources, this.watch, this);
 };
 
 JW.extend(JW.Updater, JW.Class, {
-	/*
-	Array<JW.Property> sources;
-	void func(Any... values);
-	Object scope;
-	*/
+	/**
+	 * @property {Array} sources `<JW.Property>` Source properties.
+	 */
 	
+	/**
+	 * Watches specified event and triggers updater's function call on
+	 * the event triggering.
+	 * @param {JW.Event} event Event.
+	 */
 	bind: function(event) {
-		this.own(event.bind(this._update, this));
+		this.own(event.bind(this.update, this));
 		return this;
 	},
 	
+	/**
+	 * Watches specified property and triggers updater's function call on
+	 * the property change.
+	 * @param {JW.Property} property Property.
+	 */
 	watch: function(property) {
 		return this.bind(property.changeEvent);
 	},
 	
-	_update: function() {
+	/**
+	 * Calls updater's function focibly.
+	 */
+	update: function() {
 		var values = JW.Array.map(this.sources, JW.byMethod("get"));
 		this.func.apply(this.scope, values);
 	}

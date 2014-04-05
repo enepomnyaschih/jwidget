@@ -66,7 +66,7 @@ JW.Functor = function(sources, func, scope, config) {
 	this.func = func;
 	this.scope = scope || this;
 	this.target = config.target || this.own(new JW.Property());
-	this._update();
+	this.update();
 	JW.Array.every(sources, this.watch, this);
 };
 
@@ -88,7 +88,7 @@ JW.extend(JW.Functor, JW.Class, {
 	 * @param {JW.Event} event Event.
 	 */
 	bind: function(event) {
-		this.own(event.bind(this._update, this));
+		this.own(event.bind(this.update, this));
 		return this;
 	},
 	
@@ -101,7 +101,10 @@ JW.extend(JW.Functor, JW.Class, {
 		return this.bind(property.changeEvent);
 	},
 	
-	_update: function() {
+	/**
+	 * Updates target property focibly.
+	 */
+	update: function() {
 		var values = JW.Array.map(this.sources, JW.byMethod("get"));
 		this.target.set(this.func.apply(this.scope, values));
 	}
