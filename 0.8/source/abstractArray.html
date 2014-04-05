@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2014 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-AbstractArray'>/**
+</span> * @class
+ *
+ * `&lt;T&gt; extends JW.IndexedCollection&lt;number, T&gt;`
+ *
+ * Array is ordered collection. Each item of array has an index. Index of first item is 0,
+ * index of each next one is higher by 1.
+ *
+ * # Array methods
+ *
+ * **Difference compared to JW.IndexedCollection is in bold.**
+ *
+ * Content retrieving:
+ *
+ * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #isEmpty} - Checks collection for emptiness.
+ * - {@link #get} - Returns collection item by index.
+ * - {@link #getFirst} - Returns first item in collection.
+ * - **{@link #getLast} - Returns last item in collection.**
+ * - {@link #getFirstKey} - Returns index of first item in collection.
+ * - **{@link #getLastKey} - Returns index of last item in collection.**
+ * - {@link #getKeys}, #$getKeys - Returns array of all item indexes.
+ * - {@link #containsItem} - Does collection contain the item?
+ * - {@link #containsKey} - Does collection contain the index?
+ * - {@link #keyOf} - Returns item index. If item is not found, returns `undefined`.
+ * - **{@link #indexOf} - Returns item index. If item is not found, return -1.**
+ * - **{@link #getItems} - Returns internal representation of array.**
+ * - **{@link #binarySearch} - Finds the index by binary search.**
+ *
+ * Iteration algorhitms:
+ *
+ * - {@link #every} - Checks all items by criteria.
+ * Returns `true` if all items match the criteria.
+ * - {@link #some} - Checks each item by criteria.
+ * Returns `true` if some items matches the criteria.
+ * - {@link #each} - Iterates items.
+ * - {@link #search} - Finds item by criteria.
+ * Returns first item matching the criteria.
+ * - {@link #find} - Finds item by criteria.
+ * Returns index of first item matching the criteria.
+ * - {@link #filter}, #$filter - Filters collection by criteria.
+ * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #map}, #$map - Maps collection items.
+ * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * Builds array consisting of collection items sorted by indexer or comparer.
+ * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
+ * Returns indexes of collection items sorted by indexer or comparer.
+ * - {@link #index}, #$index - Indexes collection.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toMap}, #$toMap - Builds new map consisting of collection items.
+ * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #asArray}, #$asArray - Represents collection as array.
+ * - {@link #asMap}, #$asMap - Represents collection as map.
+ * - {@link #asSet}, #$asSet - Represents collection as set.
+ * - **{@link #backEvery} - Checks all items by criteria in backward order.**
+ *
+ * Collection modification:
+ *
+ * - **{@link #add}, #tryAdd - Inserts an item.**
+ * - **{@link #addAll}, #tryAddAll - Inserts item range.**
+ * - {@link #set}, #trySet - Replaces an item by index.
+ * - {@link #remove}, #tryRemove - Removes an item by index.
+ * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Removes item range.**
+ * - {@link #removeItem} - Removes first occurency of an item in collection.
+ * - {@link #removeItems} - Removes all occurencies of items in collection.
+ * - **{@link #pop} - Removes last item.**
+ * - **{@link #move}, #tryMove - Moves item.**
+ * - {@link #clear}, #$clear, #tryClear - Clears collection.
+ * - **{@link #splice}, #trySplice - Removes/inserts item ranges.**
+ * - **{@link #reorder}, #tryReorder - Reorders items.**
+ * - **{@link #sort}, #sortComparing - Sorts array.**
+ * - **{@link #performSplice} - Adjusts contents using #splice method.**
+ * - **{@link #performFilter} - Filters contents using #splice method.**
+ * - **{@link #performReorder} - Adjusts contents using #reorder method.**
+ *
+ * Synchronizers creation:
+ *
+ * - {@link #createMapper} - Creates item mapper.
+ * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createLister} - Creates converter to set.
+ * - {@link #createIndexer} - Creates converter to map (indexer).
+ * - {@link #createOrderer} - Creates converter to array (orderer).
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createObserver} - Creates observer.
+ * - **{@link #createInserter} - Creates view synchronizer with array.**
+ * - **{@link #createMerger} - Creates arrays merger.**
+ * - **{@link #createReverser} - Creates array reverser.**
+ *
+ * Similar collection creation (for algorithms and synchronizers implementation):
+ *
+ * - {@link #createEmpty} - Creates empty collection of the same type.
+ * - {@link #createEmptyArray} - Creates empty array of the same observability level.
+ * - {@link #createEmptyMap} - Creates empty map of the same observability level.
+ * - {@link #createEmptySet} - Creates empty set of the same observability level.
+ *
+ * Other methods:
+ *
+ * - **{@link #detectSplice} - Detects #splice method arguments to adjust contents.**
+ * - **{@link #detectFilter} - Detects `removeParamsList` argument of #splice method to filter contents.**
+ * - **{@link #detectReorder} - Detects #reorder method arguments to adjust contents.**
+ * - **{@link #detectSort} - Detects #reorder method arguments to sort by indexer.**
+ * - **{@link #detectSortComparing} - Detects #reorder method arguments to sort by comparer.**
+ * - **{@link #collapse} - Collapses multi-dimensional array.**
+ * - **{@link #equal} - Checks for equality to another array.**
+ *
+ * All the same algorithms are also available for native JavaScript Array, see JW.Array static methods.
+ *
+ * @extends JW.IndexedCollection
+ * @abstract
+ */
+JW.AbstractArray = function(items, adapter) {
+	JW.AbstractArray._super.call(this);
+	this.items = adapter ? items : !items ? [] : (typeof items === &quot;number&quot;) ? new Array(items) : items.concat();
+	this.getKey = null;
+};
+
+JW.extend(JW.AbstractArray, JW.IndexedCollection, {
+<span id='JW-AbstractArray-property-getKey'>	/**
+</span>	 * @property {Function} getKey
+	 *
+	 * `getKey(item: T): number/string`
+	 *
+	 * Function which returns unique key of an item in this collection.
+	 * Function is used by #detectSplice, #performSplice, #detectReorder, #performReorder algorithms.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 */
+<span id='JW-AbstractArray-method-getFirstKey'>	/**
+</span>	 * @method getFirstKey
+	 * Returns index of first collection item. If collection is empty, returns `undefined`.
+	 * @returns {number} Index.
+	 */
+<span id='JW-AbstractArray-method-containsKey'>	/**
+</span>	 * @method containsKey
+	 * Checks existance of item with specified index in collection.
+	 * @param {number} index Index.
+	 * @returns {boolean} Collection contains item with specified index.
+	 */
+<span id='JW-AbstractArray-method-keyOf'>	/**
+</span>	 * @method keyOf
+	 * Returns index of item in collection. If such item doesn't exist, returns `undefined`.
+	 * @param {T} item Item.
+	 * @returns {number} Item index.
+	 */
+	
+<span id='JW-AbstractArray-method-getItems'>	/**
+</span>	 * Returns item array - internal collection representation.
+	 *
+	 * **Caution: doesn't make a copy.**
+	 *
+	 * @returns {Array} `&lt;T&gt;` Item array.
+	 */
+	getItems: function() {
+		return this.items;
+	},
+	
+<span id='JW-AbstractArray-method-getLast'>	/**
+</span>	 * Returns the last collection item. If collection is empty, returns `undefined`.
+	 * @returns {T} Item.
+	 */
+	getLast: function() {
+		return this.items[this.items.length - 1];
+	},
+	
+<span id='JW-AbstractArray-method-getLastKey'>	/**
+</span>	 * Returns index of last collection item. If collection is empty, returns `undefined`.
+	 * @returns {number} Index.
+	 */
+	getLastKey: function() {
+		var l = this.items.length;
+		if (l !== 0) {
+			return l - 1;
+		}
+	},
+	
+	getLength: function() {
+		return this.items.length;
+	},
+	
+	isEmpty: function() {
+		return this.items.length === 0;
+	},
+	
+<span id='JW-AbstractArray-method-get'>	/**
+</span>	 * @method get
+	 * Returns item by index. If item with such index doesn't exist, returns `undefined`.
+	 * @param {number} index Index.
+	 * @returns {T} Item.
+	 */
+	get: function(index) {
+		return this.items[index];
+	},
+	
+<span id='JW-AbstractArray-method-S-getKeys'>	/**
+</span>	 * @method $getKeys
+	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
+	 * @returns {JW.Array} `&lt;number&gt;` Indexes array.
+	 */
+<span id='JW-AbstractArray-method-getKeys'>	/**
+</span>	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
+	 * @returns {Array} `&lt;number&gt;` Indexes array.
+	 */
+	getKeys: function() {
+		var items = this.items;
+		var result = new Array(items.length);
+		for (var i = 0, l = items.length; i &lt; l; ++i) {
+			result[i] = i;
+		}
+		return result;
+	},
+	
+<span id='JW-AbstractArray-method-every'>	/**
+</span>	 * Checks all items by criteria.
+	 * 
+	 * Returns true if function `f` returns !== `false` for all collection items.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+	every: function(callback, scope) {
+		return JW.Array.every(this.items, callback, scope || this);
+	},
+	
+<span id='JW-AbstractArray-method-some'>	/**
+</span>	 * @method some
+	 *
+	 * Checks each item by criteria.
+	 * 
+	 * Returns true if function `f` returns !== `false` for some collection item.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-AbstractArray-method-each'>	/**
+</span>	 * @method each
+	 *
+	 * Iterates collection items. Calls specified function for all items.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): void`
+	 *
+	 * Function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+<span id='JW-AbstractArray-method-find'>	/**
+</span>	 * @method find
+	 *
+	 * Finds item by criteria.
+	 * 
+	 * Returns index of first item for which `f` returns !== `false`.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Found item index or `undefined`.
+	 */
+<span id='JW-AbstractArray-method-search'>	/**
+</span>	 * @method search
+	 *
+	 * Finds item by criteria.
+	 * 
+	 * Returns first item for which `f` returns !== `false`.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
+	 */
+<span id='JW-AbstractArray-method-toSorted'>	/**
+</span>	 * @method toSorted
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-AbstractArray-method-S-toSorted'>	/**
+</span>	 * @method $toSorted
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-AbstractArray-method-toSortedComparing'>	/**
+</span>	 * @method toSortedComparing
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-AbstractArray-method-S-toSortedComparing'>	/**
+</span>	 * @method $toSortedComparing
+	 *
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-AbstractArray-method-getSortingKeys'>	/**
+</span>	 * @method getSortingKeys
+	 *
+	 * Returns indexes of sorted items.
+	 *
+	 * Builds array of item indexes, sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;number&gt;` Sorted item indexes array.
+	 */
+<span id='JW-AbstractArray-method-S-getSortingKeys'>	/**
+</span>	 * @method $getSortingKeys
+	 *
+	 * Returns indexes of sorted items.
+	 *
+	 * Builds array of item indexes, sorted by result of `f` call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;number&gt;` Sorted item indexes array.
+	 */
+<span id='JW-AbstractArray-method-getSortingKeysComparing'>	/**
+</span>	 * @method getSortingKeysComparing
+	 *
+	 * Returns indexes of sorted items.
+	 *
+	 * Builds array of item indexes, sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;number&gt;` Sorted item indexes array.
+	 */
+<span id='JW-AbstractArray-method-S-getSortingKeysComparing'>	/**
+</span>	 * @method $getSortingKeysComparing
+	 *
+	 * Returns indexes of sorted items.
+	 *
+	 * Builds array of item indexes, sorted by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;number&gt;` Sorted item indexes array.
+	 */
+<span id='JW-AbstractArray-method-index'>	/**
+</span>	 * @method index
+	 *
+	 * Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Collection index.
+	 */
+<span id='JW-AbstractArray-method-S-index'>	/**
+</span>	 * @method $index
+	 *
+	 * Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;T&gt;` Collection index.
+	 */
+	
+<span id='JW-AbstractArray-method-filter'>	/**
+</span>	 * Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array} `&lt;T&gt;` Filtered collection.
+	 */
+	filter: function(callback, scope) {
+		return JW.Array.filter(this.items, callback, scope || this);
+	},
+	
+<span id='JW-AbstractArray-method-S-filter'>	/**
+</span>	 * Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Array} `&lt;T&gt;` Filtered collection.
+	 */
+	$filter: JW.AbstractCollection._create$Array(&quot;filter&quot;),
+	
+<span id='JW-AbstractArray-method-map'>	/**
+</span>	 * `&lt;U&gt;` Maps collection items.
+	 * 
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array} `&lt;U&gt;` Mapped collection.
+	 */
+	map: function(callback, scope) {
+		return JW.Array.map(this.items, callback, scope || this);
+	},
+	
+<span id='JW-AbstractArray-method-S-map'>	/**
+</span>	 * `&lt;U&gt;` Maps collection items.
+	 * 
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Array} `&lt;U&gt;` Mapped collection.
+	 */
+	$map: JW.AbstractCollection._create$Array(&quot;map&quot;),
+	
+	toArray: function() {
+		return this.items.concat();
+	},
+	
+	asArray: function() {
+		return this.items;
+	},
+	
+	$asArray: function() {
+		return this;
+	},
+	
+<span id='JW-AbstractArray-method-add'>	/**
+</span>	 * Inserts an item to array.
+	 * @param {T} item Item.
+	 * @param {number} [index] Index of an item before which to insert new one. By default, appends the item.
+	 * @returns {void}
+	 */
+	add: function(item, index) {
+		this.tryAdd(item, index);
+	},
+	
+<span id='JW-AbstractArray-method-tryAdd'>	/**
+</span>	 * Inserts an item to array.
+	 * @param {T} item Item.
+	 * @param {number} [index] Index of an item before which to insert new one. By default, appends the item.
+	 * @returns {boolean} true.
+	 */
+	tryAdd: function(item, index) {
+		return this.tryAddAll([item], index);
+	},
+	
+<span id='JW-AbstractArray-method-addAll'>	/**
+</span>	 * Inserts item range to array.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @param {number} [index] Index of an item before which to insert new ones. By default, appends the items.
+	 * @returns {void}
+	 */
+	addAll: function(items, index) {
+		this.tryAddAll(items, index);
+	},
+	
+<span id='JW-AbstractArray-method-tryAddAll'>	/**
+</span>	 * Inserts item range to array.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @param {number} [index] Index of an item before which to insert new ones. By default, appends the items.
+	 * @returns {boolean} true. If not modified - `undefined`.
+	 */
+	tryAddAll: function(items, index) {
+		if (index === undefined) {
+			index = this.items.length;
+		}
+		if (this.trySplice([], [new JW.AbstractArray.IndexItems(index, items)])) {
+			return true;
+		}
+	},
+	
+<span id='JW-AbstractArray-method-set'>	/**
+</span>	 * @method set
+	 * Replaces item with specified index. If array doesn't contain such index, it will break the application.
+	 * @param {T} item Item.
+	 * @param {number} index Index.
+	 * @returns {T} The replaced item.
+	 */
+<span id='JW-AbstractArray-method-trySet'>	/**
+</span>	 * Replaces item with specified index. If array doesn't contain such index, it will break the application.
+	 * @param {T} item Item.
+	 * @param {number} index Index.
+	 * @returns {JW.Proxy} `&lt;T&gt;` Proxy of the replaced item. If not modified - `undefined`.
+	 */
+	trySet: function(item, index) {
+		return JW.Array.trySet(this.items, item, index);
+	},
+	
+<span id='JW-AbstractArray-method-remove'>	/**
+</span>	 * @method remove
+	 * Removes item with specified index. If array doesn't contain such index, it will break the application.
+	 * @param {number} index Index.
+	 * @returns {T} The removed item.
+	 */
+<span id='JW-AbstractArray-method-tryRemove'>	/**
+</span>	 * Removes item with specified index. If array doesn't contain such index, it will break the application.
+	 * @param {number} index Index.
+	 * @returns {T} The removed item. If not modified - `undefined`.
+	 */
+	tryRemove: function(index) {
+		var result = this.tryRemoveAll(index, 1);
+		if (result !== undefined) {
+			return result[0];
+		}
+	},
+	
+<span id='JW-AbstractArray-method-removeAll'>	/**
+</span>	 * Removes item range from array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {Array} `&lt;T&gt;` The removed items.
+	 */
+	removeAll: function(index, count) {
+		var result = this.tryRemoveAll(index, count);
+		return result || [];
+	},
+	
+<span id='JW-AbstractArray-method-S-removeAll'>	/**
+</span>	 * Removes item range from array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {JW.Array} `&lt;T&gt;` The removed items.
+	 */
+	$removeAll: JW.AbstractCollection._create$Array(&quot;removeAll&quot;),
+	
+<span id='JW-AbstractArray-method-tryRemoveAll'>	/**
+</span>	 * Removes item range from array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {Array} `&lt;T&gt;` The removed items. If not modified - `undefined`.
+	 */
+	tryRemoveAll: function(index, count) {
+		var result = this.trySplice([new JW.AbstractArray.IndexCount(index, count)], []);
+		if (result !== undefined) {
+			return result.removedItemsList[0].items;
+		}
+	},
+	
+	removeItems: function(items) {
+		var itemSet = new JW.Set(items);
+		var newItems = this.filter(function(item) { return !itemSet.contains(item); });
+		this.performFilter(newItems);
+	},
+	
+<span id='JW-AbstractArray-method-move'>	/**
+</span>	 * Moves an item inside array.
+	 * @param {number} fromIndex Item index to move.
+	 * @param {number} toIndex Index to move to.
+	 * @returns {T} The moved item.
+	 */
+	move: function(fromIndex, toIndex) {
+		this.tryMove(fromIndex, toIndex);
+		return this.get(toIndex);
+	},
+	
+<span id='JW-AbstractArray-method-tryMove'>	/**
+</span>	 * Moves an item inside array.
+	 * @param {number} fromIndex Item index to move.
+	 * @param {number} toIndex Index to move to.
+	 * @returns {T} The moved item. If not modified - `undefined`.
+	 */
+	tryMove: function(fromIndex, toIndex) {
+		return JW.Array.tryMove(this.items, fromIndex, toIndex);
+	},
+	
+<span id='JW-AbstractArray-method-clear'>	/**
+</span>	 * Clears collection.
+	 * @returns {Array} `&lt;T&gt;` Old collection contents.
+	 */
+	clear: function() {
+		var result = this.tryClear();
+		return (result !== undefined) ? result : [];
+	},
+	
+<span id='JW-AbstractArray-method-S-clear'>	/**
+</span>	 * Clears collection.
+	 * @returns {JW.Array} `&lt;T&gt;` Old collection contents.
+	 */
+	$clear: JW.AbstractCollection._create$Array(&quot;clear&quot;),
+	
+<span id='JW-AbstractArray-method-tryClear'>	/**
+</span>	 * Clears collection.
+	 * @returns {Array} `&lt;T&gt;` Old collection contents. If not modified - `undefined`.
+	 */
+	tryClear: function() {
+		return JW.Array.tryClear(this.items);
+	},
+	
+<span id='JW-AbstractArray-method-splice'>	/**
+</span>	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removeParamsList `&lt;JW.AbstractArray.IndexCount&gt;`
+	 * Array of segments to remove sorted by index asc. Segments are removed in backward order.
+	 * @param {Array} addParamsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;`
+	 * Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+	 * @returns {JW.AbstractArray.SpliceResult} `&lt;T&gt;` Result.
+	 */
+	splice: function(removeParamsList, addParamsList) {
+		var result = this.trySplice(removeParamsList, addParamsList);
+		return (result !== undefined) ? result : new JW.AbstractArray.SpliceResult(this.items.concat(), [], []);
+	},
+	
+<span id='JW-AbstractArray-method-trySplice'>	/**
+</span>	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removeParamsList `&lt;JW.AbstractArray.IndexCount&gt;`
+	 * Array of segments to remove sorted by index asc. Segments are removed in backward order.
+	 * @param {Array} addParamsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;`
+	 * Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+	 * @returns {JW.AbstractArray.SpliceResult} `&lt;T&gt;` Result. If not modified - `undefined`.
+	 */
+	trySplice: function(removeParamsList, addParamsList) {
+		return JW.Array.trySplice(this.items, removeParamsList, addParamsList);
+	},
+	
+<span id='JW-AbstractArray-method-reorder'>	/**
+</span>	 * Reorders array items.
+	 * @param {Array} indexArray `&lt;number&gt;` Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * Must contain all indexes from 0 to (length - 1).
+	 * @returns {void}
+	 */
+	reorder: function(indexArray) {
+		this.tryReorder(indexArray);
+	},
+	
+<span id='JW-AbstractArray-method-tryReorder'>	/**
+</span>	 * Reorders array items.
+	 * @param {Array} indexArray `&lt;number&gt;` Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * Must contain all indexes from 0 to (length - 1).
+	 * @returns {Array} `&lt;T&gt;` Old array contents. If not modified - undefined.
+	 */
+	tryReorder: function(indexArray) {
+		return JW.Array.tryReorder(this.items, indexArray);
+	},
+	
+<span id='JW-AbstractArray-method-detectSplice'>	/**
+</span>	 * Detects #splice method arguments to adjust array contents to `newItems`.
+	 * Determines which item ranges should be removed and which ones should be inserted.
+	 * All items must have unique `getKey` function result.
+	 * If items don't have unique key, probably #detectFilter method will help.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {JW.AbstractArray.SpliceParams}
+	 * `&lt;T&gt;` #splice method arguments. If no method call required - `undefined`.
+	 */
+	detectSplice: function(newItems, getKey, scope) {
+		return JW.Array.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
+	},
+	
+<span id='JW-AbstractArray-method-detectFilter'>	/**
+</span>	 * Detects `removeParamsList` arguments of #splice to adjust array contents to `newItems`.
+	 * Determines which item ranges should be removed.
+	 * Doesn't assume items insertion - try #detectSplice if that's the case.
+	 * In advantage to #detectSplice, doesn't require item uniquiness.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @returns {Array}
+	 * `&lt;JW.AbstractArray.IndexCount&gt;` `removeParamsList` argument of #splice method.
+	 * If no method call required - `undefined`.
+	 */
+	detectFilter: function(newItems) {
+		return JW.Array.detectFilter(this.items, newItems);
+	},
+	
+<span id='JW-AbstractArray-method-detectReorder'>	/**
+</span>	 * Detects #reorder method arguments to adjust array contents to `newItems`.
+	 * Determines where to move all items.
+	 * If `newItems` contents differ from `this` contents, the array will be broken.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {Array}
+	 * `&lt;number&gt;` `indexArray` argument of #reorder method.
+	 * If no method call required - `undefined`.
+	 */
+	detectReorder: function(newItems, getKey, scope) {
+		return JW.Array.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
+	},
+	
+<span id='JW-AbstractArray-method-detectSort'>	/**
+</span>	 * Detects #reorder method arguments to sort array contents by result of `f` call for each item.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array}
+	 * `&lt;number&gt;` `indexArray` argument of #reorder method.
+	 * If no method call required - `undefined`.
+	 */
+	detectSort: function(callback, scope, order) {
+		return JW.Array.detectSort(this.items, callback, scope || this, order);
+	},
+	
+<span id='JW-AbstractArray-method-detectSortComparing'>	/**
+</span>	 * Detects #reorder method arguments to sort array contents by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array}
+	 * `&lt;number&gt;` `indexArray` argument of #reorder method.
+	 * If no method call required - `undefined`.
+	 */
+	detectSortComparing: function(compare, scope, order) {
+		return JW.Array.detectSortComparing(this.items, compare, scope || this, order);
+	},
+	
+<span id='JW-AbstractArray-method-performSplice'>	/**
+</span>	 * Adjusts array contents to `newItems` using #detectSplice and #splice methods.
+	 * All items must have unique `getKey` function result.
+	 * If items don't have unique key, probably #detectFilter method will help.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+	performSplice: function(newItems, getKey, scope) {
+		var params = this.detectSplice(newItems, getKey || this.getKey, scope || this);
+		if (params !== undefined) {
+			this.trySplice(params.removeParamsList, params.addParamsList);
+		}
+	},
+	
+<span id='JW-AbstractArray-method-performFilter'>	/**
+</span>	 * Adjusts array contents to `newItems` using #detectFilter and #splice methods.
+	 * Only removes items. Doesn't assume items insertion - try #detectSplice if that's the case.
+	 * In advantage to #detectSplice, doesn't require item uniquiness.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @returns {void}
+	 */
+	performFilter: function(newItems) {
+		var params = this.detectFilter(newItems);
+		if (params !== undefined) {
+			this.trySplice(params, []);
+		}
+	},
+	
+<span id='JW-AbstractArray-method-performReorder'>	/**
+</span>	 * Adjusts array contents to `newItems` using #detectReorder and #reorder methods.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to #getKey.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+	performReorder: function(newItems, getKey, scope) {
+		var indexArray = this.detectReorder(newItems, getKey || this.getKey, scope || this);
+		if (indexArray !== undefined) {
+			this.tryReorder(indexArray);
+		}
+	},
+	
+<span id='JW-AbstractArray-method-sort'>	/**
+</span>	 * Sorts array by result of `f` function call for each item.
+	 *
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {void}
+	 */
+	sort: function(callback, scope, order) {
+		var indexArray = this.detectSort(callback, scope, order);
+		if (indexArray !== undefined) {
+			this.tryReorder(indexArray);
+		}
+	},
+	
+<span id='JW-AbstractArray-method-sortComparing'>	/**
+</span>	 * Sorts array by comparer.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {void}
+	 */
+	sortComparing: function(compare, scope, order) {
+		var indexArray = this.detectSortComparing(compare, scope, order);
+		if (indexArray !== undefined) {
+			this.tryReorder(indexArray);
+		}
+	},
+	
+<span id='JW-AbstractArray-method-createMapper'>	/**
+</span>	 * `&lt;U&gt;` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Mapper}
+	 * `&lt;T, U&gt;` Synchronizer.
+	 */
+	createMapper: function(config) {
+		return new JW.AbstractArray.Mapper(this, config);
+	},
+	
+<span id='JW-AbstractArray-method-createFilterer'>	/**
+</span>	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Filterer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createFilterer: function(config) {
+		return new JW.AbstractArray.Filterer(this, config);
+	},
+	
+<span id='JW-AbstractArray-method-createObserver'>	/**
+</span>	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Observer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createObserver: function(config) {
+		return new JW.AbstractArray.Observer(this, config);
+	},
+	
+<span id='JW-AbstractArray-method-createOrderer'>	/**
+</span>	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Orderer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createOrderer: function(config) {
+		return new JW.AbstractArray.Orderer(this, config);
+	},
+	
+<span id='JW-AbstractArray-method-createSorterComparing'>	/**
+</span>	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.SorterComparing}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.AbstractArray.SorterComparing(this, config);
+	},
+	
+<span id='JW-AbstractArray-method-createIndexer'>	/**
+</span>	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Indexer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createIndexer: function(config) {
+		return new JW.AbstractArray.Indexer(this, config);
+	},
+	
+<span id='JW-AbstractArray-method-createLister'>	/**
+</span>	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Lister}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createLister: function(config) {
+		return new JW.AbstractArray.Lister(this, config);
+	},
+	
+<span id='JW-AbstractArray-method-createInserter'>	/**
+</span>	 * Creates view synchronizer with array.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Inserter}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createInserter: function(config) {
+		return new JW.AbstractArray.Inserter(this, config);
+	},
+	
+<span id='JW-AbstractArray-method-createMerger'>	/**
+</span>	 * Creates arrays merger.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Merger}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createMerger: function(config) {
+		return new JW.AbstractArray.Merger(this, config);
+	},
+	
+	createMergerBunch: function(merger) {
+		return new JW.AbstractArray.Merger.Bunch(merger, this);
+	},
+	
+<span id='JW-AbstractArray-method-createReverser'>	/**
+</span>	 * Creates array reverser.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Reverser}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createReverser: function(config) {
+		return new JW.AbstractArray.Reverser(this, config);
+	},
+	
+	createSplitter: function(config) {
+		return new JW.AbstractArray.Splitter(this, config);
+	},
+	
+<span id='JW-AbstractArray-method-equal'>	/**
+</span>	 * Checks for equality (===) to another array, item by item.
+	 * @param {Array} arr `&lt;T&gt;` Another array.
+	 * @returns {boolean} Arrays are equal.
+	 */
+	equal: function(arr) {
+		return JW.Array.equal(this.items, arr);
+	},
+	
+<span id='JW-AbstractArray-method-collapse'>	/**
+</span>	 * Collapses multi-dimentional array.
+	 * @param {number} depth Dimentions to collapse.
+	 * @returns {Array} Collapsed array.
+	 */
+	collapse: function(depth) {
+		return JW.Array.collapse(this.items, depth);
+	},
+	
+<span id='JW-AbstractArray-method-indexOf'>	/**
+</span>	 * Returns item index in this collection. If item doesn't exist, returns -1.
+	 * @param {T} item Item.
+	 * @returns {number} Item index or -1.
+	 */
+	indexOf: function(item) {
+		return JW.Array.indexOf(this.items, item);
+	},
+	
+<span id='JW-AbstractArray-method-backEvery'>	/**
+</span>	 * Checks all items by criteria in backward order.
+	 * 
+	 * Returns true if function `f` returns !== `false` for all collection items.
+	 * 
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+	backEvery: function(callback, scope) {
+		return JW.Array.backEvery(this.items, callback, scope);
+	},
+	
+	// deprecated
+	top: function() {
+		return JW.Array.top(this.items);
+	},
+	
+<span id='JW-AbstractArray-method-pop'>	/**
+</span>	 * Removes last array item. Does nothing if array is empty.
+	 * @returns {T} The removed item or `undefined`.
+	 */
+	pop: function() {
+		if (this.items.length !== 0) {
+			return this.tryRemove(this.items.length - 1);
+		}
+	},
+	
+<span id='JW-AbstractArray-method-binarySearch'>	/**
+</span>	 * Determines index of first item which is more than specified value by `compare` function,
+	 * using binary search. Array must be sorted by `compare` function.
+	 * Can be used for item insertion easily.
+	 * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
+	 * @param {T} value Value.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Item index.
+	 */
+	binarySearch: function(value, compare, scope) {
+		return JW.Array.binarySearch(this.items, value, compare, scope);
+	},
+	
+	_callStatic: function(algorithm, args) {
+		return JW.Array[algorithm].apply(JW.Array, [this.items].concat(args || []));
+	}
+	
+<span id='JW-AbstractArray-method-createEmpty'>	/**
+</span>	 * @method createEmpty
+	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.AbstractArray} `&lt;U&gt;` Collection.
+	 */
+});
+
+<span id='JW-AbstractArray-IndexCount-method-constructor'><span id='JW-AbstractArray-IndexCount'>/**
+</span></span> * @class
+ * &quot;Index-count&quot; pair. Used in JW.AbstractArray#splice method arguments to specify item segments to remove.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {number} index Index.
+ * @param {number} count Count.
+ */
+JW.AbstractArray.IndexCount = function(index, count) {
+	JW.AbstractArray.IndexCount._super.call(this);
+	this.index = index;
+	this.count = count;
+};
+
+JW.extend(JW.AbstractArray.IndexCount, JW.Class, {
+<span id='JW-AbstractArray-IndexCount-property-index'>	/**
+</span>	 * @property {number} index Index.
+	 */
+<span id='JW-AbstractArray-IndexCount-property-count'>	/**
+</span>	 * @property {number} count Count.
+	 */
+	
+<span id='JW-AbstractArray-IndexCount-method-clone'>	/**
+</span>	 * Clones pair.
+	 * @returns {JW.AbstractArray.IndexCount}
+	 */
+	clone: function() {
+		return new JW.AbstractArray.IndexCount(this.index, this.count);
+	}
+});
+
+<span id='JW-AbstractArray-IndexItems-method-constructor'><span id='JW-AbstractArray-IndexItems'>/**
+</span></span> * @class
+ * `&lt;T&gt;` &quot;Index-items&quot; pair. Used in JW.AbstractArray#splice method arguments to specify item segments to insert,
+ * and in JW.AbstractArray.SpliceResult class to specify removed and added item segments.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {number} index Index.
+ * @param {Array} items `&lt;T&gt;` Items.
+ */
+JW.AbstractArray.IndexItems = function(index, items) {
+	JW.AbstractArray.IndexItems._super.call(this);
+	this.index = index;
+	this.items = items;
+};
+
+JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
+<span id='JW-AbstractArray-IndexItems-property-index'>	/**
+</span>	 * @property {number} index Index.
+	 */
+<span id='JW-AbstractArray-IndexItems-property-items'>	/**
+</span>	 * @property {Array} items `&lt;T&gt;` Items.
+	 */
+	
+<span id='JW-AbstractArray-IndexItems-method-toIndexCount'>	/**
+</span>	 * Converts to &quot;index-count&quot; pair.
+	 * @returns {JW.AbstractArray.IndexCount} &quot;Index-count&quot; pair.
+	 */
+	toIndexCount: function() {
+		return new JW.AbstractArray.IndexCount(this.index, this.items.length);
+	},
+	
+<span id='JW-AbstractArray-IndexItems-method-clone'>	/**
+</span>	 * Clones pair.
+	 * @returns {JW.AbstractArray.IndexItems}
+	 */
+	clone: function() {
+		return new JW.AbstractArray.IndexItems(this.index, this.items.concat());
+	}
+});
+
+<span id='JW-AbstractArray-SpliceParams-method-constructor'><span id='JW-AbstractArray-SpliceParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` JW.AbstractArray#splice method arguments. Returned by JW.AbstractArray#detectSplice method.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} removeParamsList `&lt;JW.AbstractArray.IndexCount&gt;` Segments to remove.
+ * @param {Array} addParamsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;` Segments to add.
+ */
+JW.AbstractArray.SpliceParams = function(removeParamsList, addParamsList) {
+	JW.AbstractArray.SpliceParams._super.call(this);
+	this.removeParamsList = removeParamsList;
+	this.addParamsList = addParamsList;
+};
+
+JW.extend(JW.AbstractArray.SpliceParams/*&lt;T&gt;*/, JW.Class, {
+<span id='JW-AbstractArray-SpliceParams-property-removeParamsList'>	/**
+</span>	 * @property {Array} removeParamsList `&lt;JW.AbstractArray.IndexCount&gt;` Segments to remove.
+	 */
+<span id='JW-AbstractArray-SpliceParams-property-addParamsList'>	/**
+</span>	 * @property {Array} addParamsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;` Segments to add.
+	 */
+});
+
+<span id='JW-AbstractArray-SpliceResult-method-constructor'><span id='JW-AbstractArray-SpliceResult'>/**
+</span></span> * @class
+ * `&lt;T&gt;` JW.AbstractArray#splice method result.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} oldItems `&lt;T&gt;` Old array contents.
+ * @param {Array} removedItemsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;` Removed item segments.
+ * @param {Array} addedItemsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;` Added item segments.
+ */
+JW.AbstractArray.SpliceResult = function(oldItems, removedItemsList, addedItemsList) {
+	JW.AbstractArray.SpliceResult._super.call(this);
+	this.oldItems = oldItems;
+	this.removedItemsList = removedItemsList;
+	this.addedItemsList = addedItemsList;
+	this.removedItems = null;
+	this.addedItems = null;
+	this.removeParamsList = null;
+};
+
+JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
+<span id='JW-AbstractArray-SpliceResult-property-oldItems'>	/**
+</span>	 * @property {Array} oldItems `&lt;T&gt;` Old array contents.
+	 */
+<span id='JW-AbstractArray-SpliceResult-property-removedItemsList'>	/**
+</span>	 * @property {Array} removedItemsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;` Removed item segments.
+	 */
+<span id='JW-AbstractArray-SpliceResult-property-addedItemsList'>	/**
+</span>	 * @property {Array} addedItemsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;` Added item segments.
+	 */
+	/*
+	Array&lt;T&gt; removedItems;
+	Array&lt;T&gt; addedItems;
+	Array&lt;JW.AbstractArray.IndexCount&lt;T&gt;&gt; removeParamsList;
+	*/
+	
+<span id='JW-AbstractArray-SpliceResult-method-getRemovedItems'>	/**
+</span>	 * Returns plain array of removed items.
+	 * @returns {Array} `&lt;T&gt;` Removed items array.
+	 */
+	getRemovedItems: function() {
+		if (!this.removedItems) {
+			this.removedItems = JW.Array.merge(JW.Array.map(this.removedItemsList, JW.byField(&quot;items&quot;)));
+		}
+		return this.removedItems;
+	},
+	
+<span id='JW-AbstractArray-SpliceResult-method-getAddedItems'>	/**
+</span>	 * Returns plain array of added items.
+	 * @returns {Array} `&lt;T&gt;` Added items array.
+	 */
+	getAddedItems: function() {
+		if (!this.addedItems) {
+			this.addedItems = JW.Array.merge(JW.Array.map(this.addedItemsList, JW.byField(&quot;items&quot;)));
+		}
+		return this.addedItems;
+	},
+	
+<span id='JW-AbstractArray-SpliceResult-method-getRemoveParamsList'>	/**
+</span>	 * Converts removed item segments to &quot;index-count&quot; pairs.
+	 * @returns {Array} `&lt;JW.AbstractArray.IndexCount&lt;T&gt;&gt;` Segments to remove.
+	 */
+	getRemoveParamsList: function() {
+		if (!this.removeParamsList) {
+			this.removeParamsList = JW.Array.map(this.removedItemsList, JW.byMethod(&quot;toIndexCount&quot;));
+		}
+		return this.removeParamsList;
+	},
+	
+<span id='JW-AbstractArray-SpliceResult-method-isEmpty'>	/**
+</span>	 * Checks that JW.AbstractArray#splice method call didn't change the array.
+	 * @returns {boolean} Array hasn't been changed.
+	 */
+	isEmpty: function() {
+		return (this.removedItemsList.length === 0) &amp;&amp; (this.addedItemsList.length === 0);
+	}
+});
+</pre>
+</body>
+</html>

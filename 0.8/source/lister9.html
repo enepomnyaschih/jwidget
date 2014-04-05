@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2014 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractMap.ListerTestCase = JW.Unit.TestCase.extend({
+	testUnobservableTarget: function() {
+		var testCase = this;
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var source = new JW.Map({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c });
+		var target = new JW.Set();
+		
+		var lister = this.createLister(source, target);
+		this.assertTarget([ a, b, c ], target);
+		
+		lister.destroy();
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testObservableTarget: function() {
+		var testCase = this;
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var source = new JW.Map({ &quot;a&quot;: a, &quot;b&quot;: b, &quot;c&quot;: c });
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[] +[a,b,c]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 0 to 3&quot;
+		);
+		var lister = this.createLister(source, target);
+		this.assertTarget([ a, b, c ], target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[a,b,c] +[]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 0&quot;
+		);
+		lister.destroy();
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testMultiSource: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var d = new JW.Proxy(&quot;d&quot;);
+		var x = new JW.Proxy(&quot;x&quot;);
+		
+		var source1 = new JW.Map({ &quot;a&quot;: a, &quot;b&quot;: b });
+		var source2 = new JW.Map({ &quot;c&quot;: c, &quot;d&quot;: d });
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[] +[x]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 0 to 1&quot;
+		);
+		target.add(x);
+		this.assertTarget([ x ], target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[] +[a,b]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 1 to 3&quot;
+		);
+		var lister1 = this.createLister(source1, target);
+		this.assertTarget([ a, b, x ], target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[] +[c,d]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 5&quot;
+		);
+		var lister2 = this.createLister(source2, target);
+		this.assertTarget([ a, b, c, d, x ], target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[a,b] +[]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 5 to 3&quot;
+		);
+		lister1.destroy();
+		this.assertTarget([ c, d, x ], target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[c,d] +[]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed size from 3 to 1&quot;
+		);
+		lister2.destroy();
+		this.assertTarget([ x ], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		
+		this.setExpectedOutput();
+		source1.destroy();
+		source2.destroy();
+	},
+	
+	// tests that empty source doesn't caused target to trigger &quot;change&quot; on synchronizer initialization
+	testEmptyChange: function() {
+		var source = new JW.Map();
+		var target = this.createTarget();
+		var lister = this.createLister(source, target);
+		lister.destroy();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testAutoTarget: function() {
+		var d = new JW.Proxy(&quot;d&quot;);
+		var source = new JW.Map({ &quot;d&quot;: d });
+		var lister = this.createLister(source);
+		this.assertTrue(lister.target instanceof JW.Set);
+		this.assertTarget([ d ], lister.target);
+		lister.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function() {
+		var target = new JW.ObservableSet();
+		JW.Tests.Collection.subscribeToSet(this, target);
+		return target;
+	},
+	
+	createLister: function(source, target) {
+		return source.createLister({
+			target : target
+		});
+	},
+	
+	assertTarget: function(values, target) {
+		this.assertStrictEqual(values.length, target.getLength());
+		for (var i = 0; i &lt; values.length; ++i) {
+			this.assertTrue(target.contains(values[i]));
+		}
+	}
+});
+</pre>
+</body>
+</html>

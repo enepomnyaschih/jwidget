@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2014 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Util.StringTestCase = JW.Unit.TestCase.extend({
+	testHtmlEncode: function()
+	{
+		var html = '&lt;div width=&quot;100&quot; height=&quot;100&quot; style=&quot;background-color: red;&quot;&gt;&amp;nbsp;&lt;script type=&quot;text/javascript&quot;&gt;while(1)alert();&lt;/script&gt;&lt;/div&gt;';
+		var expected = '&amp;lt;div width=&amp;quot;100&amp;quot; height=&amp;quot;100&amp;quot; style=&amp;quot;background-color: red;&amp;quot;&amp;gt;&amp;amp;nbsp;&amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;while(1)alert();&amp;lt;/script&amp;gt;&amp;lt;/div&amp;gt;';
+		this.assertStrictEqual(expected, JW.String.htmlEncode(html));
+		
+		this.assertStrictEqual(&quot;undefined&quot;, JW.String.htmlEncode(undefined));
+	},
+	
+	testHtmlDecode: function()
+	{
+		var html = '&amp;lt;div width=&amp;quot;100&amp;quot; height=&amp;quot;100&amp;quot; style=&amp;quot;background-color: red;&amp;quot;&amp;gt;&amp;amp;nbsp;&amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;while(1)alert();&amp;lt;/script&amp;gt;&amp;lt;/div&amp;gt;';
+		var expected = '&lt;div width=&quot;100&quot; height=&quot;100&quot; style=&quot;background-color: red;&quot;&gt;&amp;nbsp;&lt;script type=&quot;text/javascript&quot;&gt;while(1)alert();&lt;/script&gt;&lt;/div&gt;';
+		this.assertStrictEqual(expected, JW.String.htmlDecode(html));
+		
+		this.assertStrictEqual(&quot;undefined&quot;, JW.String.htmlDecode(undefined));
+	},
+	
+	testEllipsis: function()
+	{
+		this.assertStrictEqual(&quot;  abcde...&quot;, JW.String.ellipsis(&quot;  abcdefghijklmno&quot;, 10));
+		this.assertStrictEqual(&quot;  abc!!111&quot;, JW.String.ellipsis(&quot;  abcdefghijklmno&quot;, 10, &quot;!!111&quot;));
+	},
+	
+	testPrepend: function()
+	{
+		this.assertStrictEqual(&quot;0000054&quot;, JW.String.prepend(&quot;54&quot;, 7, &quot;0&quot;));
+	},
+	
+	testCapitalize: function()
+	{
+		this.assertStrictEqual(&quot;Abcde&quot;, JW.String.capitalize(&quot;abcde&quot;));
+		this.assertStrictEqual(&quot;ABCDE&quot;, JW.String.capitalize(&quot;ABCDE&quot;));
+		this.assertStrictEqual(&quot; abcd&quot;, JW.String.capitalize(&quot; abcd&quot;));
+		this.assertStrictEqual(&quot;Ab-de&quot;, JW.String.capitalize(&quot;ab-de&quot;));
+	},
+	
+	testCamel: function()
+	{
+		this.assertStrictEqual(&quot;abcde&quot;, JW.String.camel(&quot;abcde&quot;));
+		this.assertStrictEqual(&quot;ABCDE&quot;, JW.String.camel(&quot;ABCDE&quot;));
+		this.assertStrictEqual(&quot; abcd&quot;, JW.String.camel(&quot; abcd&quot;));
+		this.assertStrictEqual(&quot;abDe&quot;,  JW.String.camel(&quot;ab-de&quot;));
+		this.assertStrictEqual(&quot;abDe&quot;,  JW.String.camel(&quot;abDe&quot;));
+		this.assertStrictEqual(&quot;abCDe&quot;, JW.String.camel(&quot;ab-c-de&quot;));
+		this.assertStrictEqual(&quot;abCDe&quot;, JW.String.camel(&quot;abCDe&quot;));
+	},
+	
+	testHyphen: function()
+	{
+		this.assertStrictEqual(&quot;abcde&quot;,      JW.String.hyphen(&quot;abcde&quot;));
+		this.assertStrictEqual(&quot;-a-b-c-d-e&quot;, JW.String.hyphen(&quot;ABCDE&quot;));
+		this.assertStrictEqual(&quot; abcd&quot;,      JW.String.hyphen(&quot; abcd&quot;));
+		this.assertStrictEqual(&quot;ab-de&quot;,      JW.String.hyphen(&quot;ab-de&quot;));
+		this.assertStrictEqual(&quot;ab-de&quot;,      JW.String.hyphen(&quot;abDe&quot;));
+		this.assertStrictEqual(&quot;ab-c-de&quot;,    JW.String.hyphen(&quot;ab-c-de&quot;));
+		this.assertStrictEqual(&quot;ab-c-de&quot;,    JW.String.hyphen(&quot;abCDe&quot;));
+	},
+	
+	testTrim: function()
+	{
+		this.assertStrictEqual(&quot;lala&quot;,    JW.String.trim(&quot;   lala  &quot;));
+		this.assertStrictEqual(&quot;la   la&quot;, JW.String.trim(&quot;   la   la  &quot;));
+		this.assertStrictEqual(&quot;lala&quot;,    JW.String.trim(&quot;   lala&quot;));
+		this.assertStrictEqual(&quot;lala&quot;,    JW.String.trim(&quot;lala  &quot;));
+		this.assertStrictEqual(&quot;lala&quot;,    JW.String.trim(&quot;lala&quot;));
+		this.assertStrictEqual(&quot;la   la&quot;, JW.String.trim(&quot;la   la&quot;));
+		this.assertStrictEqual(&quot;&quot;,        JW.String.trim(&quot;    &quot;));
+		this.assertStrictEqual(&quot;&quot;,        JW.String.trim(&quot;&quot;));
+		this.assertStrictEqual(&quot;lala&quot;,    JW.String.trim(&quot;  \r\t lala  \n&quot;));
+	}
+});
+</pre>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget UI source file.
+	
+	Copyright (C) 2014 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-UI-ValueListener-method-constructor'><span id='JW-UI-ValueListener'>/**
+</span></span> * @class
+ * Watches DOM element value modification and updates the value of the target
+ * {@link JW.Property property}.
+ * Applied on initialization as well.
+ *
+ *     var value = new JW.Property();
+ *     var listener = new JW.UI.ValueListener($(&quot;#myelem&quot;), value);
+ *     // Assume that the element is a blank field initially
+ *     assertEquals(&quot;&quot;, value.{@link JW.Property#get get}());
+ *     // Later on, user entered &quot;foo&quot; in the field
+ *     assertEquals(&quot;foo&quot;, value.{@link JW.Property#get get}());
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {JW.Property} property `&lt;String&gt;` Target property.
+ */
+JW.UI.ValueListener = function(el, property) {
+	this._update = JW.inScope(this._update, this);
+	JW.UI.ValueListener._super.call(this);
+	this.el = $(el);
+	this.property = property;
+	this._update();
+	this.el.bind(&quot;change&quot;, this._update);
+};
+
+JW.extend(JW.UI.ValueListener, JW.Class, {
+<span id='JW-UI-ValueListener-property-el'>	/**
+</span>	 * @property {jQuery} el DOM element.
+	 */
+<span id='JW-UI-ValueListener-property-property'>	/**
+</span>	 * @property {JW.Property} property `&lt;String&gt;` Target property.
+	 */
+	
+	destroy: function() {
+		this.el.unbind(&quot;change&quot;, this._update);
+		this._super();
+	},
+	
+	_update: function() {
+		this.property.set(this.el.val());
+	}
+});
+</pre>
+</body>
+</html>

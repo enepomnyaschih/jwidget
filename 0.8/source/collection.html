@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2014 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection = {
+	subscribeToArray: function(testCase, array, formatter) {
+		formatter = formatter || function(x) { return x; };
+		
+		function formatItems(items) {
+			return &quot;[&quot; + JW.Array.map(items, formatter).join(&quot;,&quot;) + &quot;]&quot;;
+		}
+		
+		function formatParams(params) {
+			return params.index + &quot;:&quot; + formatItems(params.items);
+		}
+		
+		function formatItemsList(itemsList) {
+			return &quot;[&quot; + JW.Array.map(itemsList, formatParams).join(&quot;,&quot;) + &quot;]&quot;;
+		}
+		
+		array.spliceEvent.bind(function(params) {
+			var spliceResult = params.spliceResult;
+			testCase.output(
+				&quot;Spliced -&quot; + formatItemsList(spliceResult.removedItemsList) +
+				&quot; +&quot; + formatItemsList(spliceResult.addedItemsList) +
+				&quot; to &quot; + formatItems(spliceResult.oldItems));
+		});
+		
+		array.replaceEvent.bind(function(params) {
+			testCase.output(&quot;Replaced &quot; + formatter(params.oldItem) + &quot; with &quot; + formatter(params.newItem) +
+				&quot; at &quot; + params.index);
+		});
+		
+		array.moveEvent.bind(function(params) {
+			testCase.output(&quot;Moved &quot; + formatter(params.item) + &quot; from &quot; + params.fromIndex + &quot; to &quot; + params.toIndex);
+		});
+		
+		array.clearEvent.bind(function(params) {
+			testCase.output(&quot;Cleared &quot; + formatItems(params.items));
+		});
+		
+		array.reorderEvent.bind(function(params) {
+			testCase.output(&quot;Reordered &quot; + formatItems(params.items) + &quot; by [&quot; + params.indexArray.join(&quot;,&quot;) + &quot;]&quot;);
+		});
+		
+		array.changeEvent.bind(function(params) {
+			testCase.output(&quot;Changed&quot;);
+		});
+		
+		array.lengthChangeEvent.bind(function(params) {
+			testCase.output(&quot;Changed length from &quot; + params.oldLength + &quot; to &quot; + params.newLength);
+		});
+	},
+	
+	subscribeToMap: function(testCase, map, formatter) {
+		formatter = formatter || function(x) { return x; };
+		
+		function formatItems(items) {
+			return JW.Tests.Collection.formatMap(JW.Map.map(items, formatter))
+		}
+		
+		map.spliceEvent.bind(function(params) {
+			var spliceResult = params.spliceResult;
+			testCase.output(
+				&quot;Spliced -&quot; + formatItems(spliceResult.removedItems) +
+				&quot; +&quot; + formatItems(spliceResult.addedItems));
+		});
+		
+		map.reindexEvent.bind(function(params) {
+			testCase.output(&quot;Reindexed by &quot; + JW.Tests.Collection.formatMap(params.keyMap));
+		});
+		
+		map.clearEvent.bind(function(params) {
+			testCase.output(&quot;Cleared &quot; + formatItems(params.items));
+		});
+		
+		map.changeEvent.bind(function(params) {
+			testCase.output(&quot;Changed&quot;);
+		});
+		
+		map.lengthChangeEvent.bind(function(params) {
+			testCase.output(&quot;Changed size from &quot; + params.oldLength + &quot; to &quot; + params.newLength);
+		});
+	},
+	
+	subscribeToSet: function(testCase, set, formatter) {
+		formatter = formatter || function(x) { return x.value; };
+		
+		function formatItems(items) {
+			items = items.concat();
+			items.sort(compareItems);
+			return &quot;[&quot; + JW.Array.map(items, formatter).join(&quot;,&quot;) + &quot;]&quot;;
+		}
+		
+		function compareItems(x, y) {
+			return JW.cmp(formatter(x), formatter(y));
+		}
+		
+		set.spliceEvent.bind(function(params) {
+			var spliceResult = params.spliceResult;
+			testCase.output(
+				&quot;Spliced -&quot; + formatItems(spliceResult.removedItems) +
+				&quot; +&quot; + formatItems(spliceResult.addedItems));
+		});
+		
+		set.clearEvent.bind(function(params) {
+			testCase.output(&quot;Cleared &quot; + formatItems(params.items));
+		});
+		
+		set.changeEvent.bind(function(params) {
+			testCase.output(&quot;Changed&quot;);
+		});
+		
+		set.lengthChangeEvent.bind(function(params) {
+			testCase.output(&quot;Changed size from &quot; + params.oldLength + &quot; to &quot; + params.newLength);
+		});
+	},
+	
+	assertArray: function(testCase, values, array) {
+		testCase.assertStrictEqual(values.length, array.getLength());
+		for (var i = 0; i &lt; array.getLength(); ++i) {
+			testCase.assertStrictEqual(values[i], array.get(i));
+		}
+	},
+	
+	assertMap: function(testCase, expected, map) {
+		testCase.assertStrictEqual(JW.Map.getLength(expected), map.getLength());
+		for (var key in expected) {
+			testCase.assertStrictEqual(expected[key], map.get(key));
+		}
+	},
+	
+	assertSet: function(testCase, expected, unexpected, set) {
+		testCase.assertStrictEqual(expected.length, set.getLength());
+		for (var i = 0; i &lt; expected.length; ++i) {
+			testCase.assertTrue(set.contains(expected[i]));
+		}
+		for (var i = 0; i &lt; unexpected.length; ++i) {
+			testCase.assertFalse(set.contains(unexpected[i]));
+		}
+	},
+	
+	assertArraySpliceParams: function(testCase, expected, spliceParams) {
+		testCase.assertTrue(spliceParams instanceof JW.AbstractArray.SpliceParams);
+		
+		testCase.assertStrictEqual(expected.removeParamsList.length, spliceParams.removeParamsList.length);
+		for (var i = 0; i &lt; spliceParams.removeParamsList.length; ++i) {
+			var expectedParams = expected.removeParamsList[i];
+			var params = spliceParams.removeParamsList[i];
+			testCase.assertTrue(params instanceof JW.AbstractArray.IndexCount);
+			testCase.assertStrictEqual(expectedParams.index, params.index);
+			testCase.assertStrictEqual(expectedParams.count, params.count);
+		}
+		
+		testCase.assertStrictEqual(expected.addParamsList.length, spliceParams.addParamsList.length);
+		for (var i = 0; i &lt; spliceParams.addParamsList.length; ++i) {
+			var expectedParams = expected.addParamsList[i];
+			var params = spliceParams.addParamsList[i];
+			testCase.assertTrue(params instanceof JW.AbstractArray.IndexItems);
+			testCase.assertStrictEqual(expectedParams.index, params.index);
+			testCase.assertTrue(JW.Array.equal(expectedParams.items, params.items));
+		}
+	},
+	
+	assertArraySpliceResult: function(testCase, expected, spliceResult) {
+		testCase.assertTrue(spliceResult instanceof JW.AbstractArray.SpliceResult);
+		testCase.assertTrue(JW.Array.equal(expected.oldItems, spliceResult.oldItems));
+		
+		testCase.assertStrictEqual(expected.removedItemsList.length, spliceResult.removedItemsList.length);
+		for (var i = 0; i &lt; spliceResult.removedItemsList.length; ++i) {
+			var expectedParams = expected.removedItemsList[i];
+			var params = spliceResult.removedItemsList[i];
+			testCase.assertTrue(params instanceof JW.AbstractArray.IndexItems);
+			testCase.assertStrictEqual(expectedParams.index, params.index);
+			testCase.assertTrue(JW.Array.equal(expectedParams.items, params.items));
+		}
+		
+		testCase.assertStrictEqual(expected.addedItemsList.length, spliceResult.addedItemsList.length);
+		for (var i = 0; i &lt; spliceResult.addedItemsList.length; ++i) {
+			var expectedParams = expected.addedItemsList[i];
+			var params = spliceResult.addedItemsList[i];
+			testCase.assertTrue(params instanceof JW.AbstractArray.IndexItems);
+			testCase.assertStrictEqual(expectedParams.index, params.index);
+			testCase.assertTrue(JW.Array.equal(expectedParams.items, params.items));
+		}
+	},
+	
+	assertMapSpliceParams: function(testCase, expected, spliceParams) {
+		testCase.assertTrue(spliceParams instanceof JW.AbstractMap.SpliceParams);
+		testCase.assertTrue(JW.Array.equal(expected.removedKeys, spliceParams.removedKeys));
+		testCase.assertTrue(JW.Map.equal(expected.updatedItems, spliceParams.updatedItems));
+	},
+	
+	assertMapSpliceResult: function(testCase, expected, spliceResult) {
+		testCase.assertTrue(spliceResult instanceof JW.AbstractMap.SpliceResult);
+		testCase.assertTrue(JW.Map.equal(expected.removedItems, spliceResult.removedItems));
+		testCase.assertTrue(JW.Map.equal(expected.addedItems, spliceResult.addedItems));
+	},
+	
+	assertSetSpliceParams: function(testCase, expected, spliceParams) {
+		testCase.assertTrue(spliceParams instanceof JW.AbstractSet.SpliceParams);
+		testCase.assertTrue(new JW.Set(expected.removedItems).equal(spliceParams.removedItems));
+		testCase.assertTrue(new JW.Set(expected.addedItems).equal(spliceParams.addedItems));
+	},
+	
+	assertSetSpliceResult: function(testCase, expected, spliceResult) {
+		testCase.assertTrue(spliceResult instanceof JW.AbstractSet.SpliceResult);
+		testCase.assertTrue(new JW.Set(expected.removedItems).equal(spliceResult.removedItems));
+		testCase.assertTrue(new JW.Set(expected.addedItems).equal(spliceResult.addedItems));
+	},
+	
+	formatMap: function(items) {
+		var pairs = [];
+		for (var key in items) {
+			pairs.push([ key, items[key] ]);
+		}
+		pairs.sort(function(x, y) {
+			return JW.cmp(x[0], y[0]);
+		});
+		var strs = JW.Array.map(pairs, function(pair) {
+			return pair[0] + &quot;:&quot; + pair[1];
+		});
+		return &quot;{&quot; + strs.join(&quot;,&quot;) + &quot;}&quot;;
+	}
+};
+</pre>
+</body>
+</html>

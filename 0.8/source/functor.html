@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2014 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-Functor-method-constructor'><span id='JW-Functor'>/**
+</span></span> * @class
+ * `&lt;T&gt;` Watches source {@link JW.Property properties} modification and updates
+ * a target property based on their values.
+ *
+ *     var value = new JW.Property(1000);
+ *     var unit = new JW.Property(&quot;MW&quot;);
+ *     var target = new JW.Property();
+ *     var functor = new JW.Functor([ value, unit ], function(value, unit) {
+ *         return value + &quot; &quot; + unit;
+ *     }, this, { {@link #cfg-target target}: target });
+ *     assert(&quot;1000 MW&quot;, target.{@link JW.Property#get get}());
+ *     value.{@link JW.Property#set set}(1500);
+ *     assert(&quot;1500 MW&quot;, target.{@link JW.Property#get get}());
+ *     unit.{@link JW.Property#set set}(&quot;МВт&quot;); // change localization to Russian
+ *     assert(&quot;1500 МВт&quot;, target.{@link JW.Property#get get}());
+ *
+ * If target is omitted in constructor, it is created automatically. Notice
+ * that functor owns it in this case.
+ *
+ *     var value = new JW.Property(1000);
+ *     var unit = new JW.Property(&quot;MW&quot;);
+ *     var functor = new JW.Functor([ value, unit ], function(value, unit) {
+ *         return value + &quot; &quot; + unit;
+ *     }, this);
+ *     var target = functor.{@link #property-target target};
+ *     assert(&quot;1000 MW&quot;, target.{@link JW.Property#get get}());
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} source `&lt;JW.Property&gt;` Source properties.
+ *
+ * @param {Function} func
+ *
+ * `func(... sourceValues): T`
+ *
+ * Calculates target property value based on source property values.
+ *
+ * @param {Object} scope Function call scope.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.Functor = function(sources, func, scope, config) {
+	JW.Functor._super.call(this);
+	config = config || {};
+	this.sources = sources;
+	this.func = func;
+	this.scope = scope || this;
+	this.target = config.target || this.own(new JW.Property());
+	this.update();
+	JW.Array.every(sources, this.watch, this);
+};
+
+JW.extend(JW.Functor, JW.Class, {
+<span id='JW-Functor-property-sources'>	/**
+</span>	 * @property {Array} sources `&lt;JW.Property&gt;` Source properties.
+	 */
+<span id='JW-Functor-cfg-target'>	/**
+</span>	 * @cfg {JW.Property} target
+	 * `&lt;T&gt;` Target property. By default, created automatically.
+	 */
+<span id='JW-Functor-property-target'>	/**
+</span>	 * @property {JW.Property} target `&lt;T&gt;` Target property.
+	 */
+	
+<span id='JW-Functor-method-bind'>	/**
+</span>	 * Watches specified event and triggers target value recalculation on
+	 * the event triggering.
+	 * @param {JW.Event} event Event.
+	 * @returns {JW.Functor} this
+	 */
+	bind: function(event) {
+		this.own(event.bind(this.update, this));
+		return this;
+	},
+	
+<span id='JW-Functor-method-watch'>	/**
+</span>	 * Watches specified property and triggers target value recalculation on
+	 * the property change.
+	 * @param {JW.Property} property Property.
+	 * @returns {JW.Functor} this
+	 */
+	watch: function(property) {
+		this.bind(property.changeEvent);
+		return this;
+	},
+	
+<span id='JW-Functor-method-update'>	/**
+</span>	 * Updates target property focibly.
+	 */
+	update: function() {
+		var values = JW.Array.map(this.sources, JW.byMethod(&quot;get&quot;));
+		this.target.set(this.func.apply(this.scope, values));
+	}
+});
+</pre>
+</body>
+</html>

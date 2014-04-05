@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2014 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractArray.MergerTestCase = JW.Unit.TestCase.extend({
+	testUnobservableTarget: function() {
+		var source = new JW.Array([
+			new JW.Array([&quot;a&quot;, &quot;b&quot;]),
+			new JW.ObservableArray([&quot;c&quot;, &quot;d&quot;, &quot;e&quot;]),
+			new JW.Array(),
+			new JW.ObservableArray([&quot;f&quot;])
+		]);
+		var target = new JW.Array();
+		
+		var merger = this.createMerger(source, target);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;], target);
+		
+		source.get(1).splice(
+			[new JW.AbstractArray.IndexCount(1, 2)],
+			[new JW.AbstractArray.IndexItems(0, [&quot;g&quot;, &quot;h&quot;]),
+			 new JW.AbstractArray.IndexItems(3, [&quot;i&quot;])]);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;g&quot;, &quot;h&quot;, &quot;c&quot;, &quot;i&quot;, &quot;f&quot;], target);
+		
+		source.get(1).set(&quot;j&quot;, 1);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;g&quot;, &quot;j&quot;, &quot;c&quot;, &quot;i&quot;, &quot;f&quot;], target);
+		
+		source.get(1).move(2, 0);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;g&quot;, &quot;j&quot;, &quot;i&quot;, &quot;f&quot;], target);
+		
+		source.get(1).move(1, 3);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;j&quot;, &quot;i&quot;, &quot;g&quot;, &quot;f&quot;], target);
+		
+		source.get(1).reorder([3, 0, 2, 1]);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;j&quot;, &quot;g&quot;, &quot;i&quot;, &quot;c&quot;, &quot;f&quot;], target);
+		
+		source.get(1).clear();
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;f&quot;], target);
+		
+		merger.destroy();
+		this.assertTarget([], target);
+		
+		target.destroy();
+		source.destroy();
+	},
+	
+	testObservableTarget: function() {
+		var source = new JW.Array([
+			new JW.Array([&quot;a&quot;, &quot;b&quot;]),
+			new JW.ObservableArray([&quot;c&quot;, &quot;d&quot;, &quot;e&quot;]),
+			new JW.Array(),
+			new JW.ObservableArray([&quot;f&quot;])
+		]);
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[] +[0:[a,b,c,d,e,f]] to []&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed length from 0 to 6&quot;
+		);
+		var merger = this.createMerger(source, target);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;], target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[3:[d,e]] +[2:[g,h],5:[i]] to [a,b,c,d,e,f]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed length from 6 to 7&quot;
+		);
+		source.get(1).splice(
+			[new JW.AbstractArray.IndexCount(1, 2)],
+			[new JW.AbstractArray.IndexItems(0, [&quot;g&quot;, &quot;h&quot;]),
+			 new JW.AbstractArray.IndexItems(3, [&quot;i&quot;])]);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;g&quot;, &quot;h&quot;, &quot;c&quot;, &quot;i&quot;, &quot;f&quot;], target);
+		
+		this.setExpectedOutput(
+			&quot;Replaced h with j at 3&quot;,
+			&quot;Changed&quot;
+		);
+		source.get(1).set(&quot;j&quot;, 1);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;g&quot;, &quot;j&quot;, &quot;c&quot;, &quot;i&quot;, &quot;f&quot;], target);
+		
+		this.setExpectedOutput(
+			&quot;Moved c from 4 to 2&quot;,
+			&quot;Changed&quot;
+		);
+		source.get(1).move(2, 0);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;g&quot;, &quot;j&quot;, &quot;i&quot;, &quot;f&quot;], target);
+		
+		this.setExpectedOutput(
+			&quot;Moved g from 3 to 5&quot;,
+			&quot;Changed&quot;
+		);
+		source.get(1).move(1, 3);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;j&quot;, &quot;i&quot;, &quot;g&quot;, &quot;f&quot;], target);
+		
+		this.setExpectedOutput(
+			&quot;Reordered [a,b,c,j,i,g,f] by [0,1,5,2,4,3,6]&quot;,
+			&quot;Changed&quot;
+		);
+		source.get(1).reorder([3, 0, 2, 1]);
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;j&quot;, &quot;g&quot;, &quot;i&quot;, &quot;c&quot;, &quot;f&quot;], target);
+		
+		this.setExpectedOutput(
+			&quot;Spliced -[2:[j,g,i,c]] +[] to [a,b,j,g,i,c,f]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed length from 7 to 3&quot;
+		);
+		source.get(1).clear();
+		this.assertTarget([&quot;a&quot;, &quot;b&quot;, &quot;f&quot;], target);
+		
+		this.setExpectedOutput(
+			&quot;Cleared [a,b,f]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed length from 3 to 0&quot;
+		);
+		merger.destroy();
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	// tests that empty source doesn't caused target to trigger &quot;change&quot; on synchronizer initialization
+	testEmptyChange: function() {
+		var source = new JW.Array([
+			new JW.Array()
+		]);
+		var target = this.createTarget();
+		var merger = this.createMerger(source, target);
+		merger.destroy();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testAutoTargetUnobservable: function() {
+		var source = new JW.Array([
+			new JW.Array([&quot;d&quot;])
+		]);
+		var mapper = this.createMerger(source);
+		this.assertTrue(mapper.target instanceof JW.Array);
+		this.assertTarget([&quot;d&quot;], mapper.target);
+		mapper.destroy();
+		source.destroy();
+	},
+	
+	testAutoTargetObservable: function() {
+		var source = new JW.Array([
+			new JW.ObservableArray([&quot;d&quot;])
+		]);
+		var mapper = this.createMerger(source);
+		this.assertTrue(mapper.target instanceof JW.ObservableArray);
+		this.assertTarget([&quot;d&quot;], mapper.target);
+		mapper.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function(target) {
+		var target = new JW.ObservableArray();
+		JW.Tests.Collection.subscribeToArray(this, target);
+		return target;
+	},
+	
+	createMerger: function(source, target) {
+		return source.createMerger({target: target});
+	},
+	
+	assertTarget: function(values, target) {
+		this.assertTrue(target.equal(values));
+	}
+});
+</pre>
+</body>
+</html>
