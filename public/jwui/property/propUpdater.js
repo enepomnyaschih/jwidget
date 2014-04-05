@@ -17,6 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * Watches source {@link JW.Property property} modification and updates the
+ * specified property of the DOM element.
+ * Applied on initialization as well.
+ *
+ *     var checked = new JW.Property(true);
+ *     // Next command checks the checkbox
+ *     var updater = new JW.UI.PropUpdater($("#myelem"), "checked", checked);
+ *     // Next command unchecks the checkbox
+ *     checked.set(false);
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {String} prop Element's property name.
+ * @param {JW.Property} property `<String>` Source property.
+ */
 JW.UI.PropUpdater = function(el, prop, property) {
 	JW.UI.PropUpdater._super.call(this);
 	this.el = $(el);
@@ -27,11 +46,15 @@ JW.UI.PropUpdater = function(el, prop, property) {
 };
 
 JW.extend(JW.UI.PropUpdater, JW.Class, {
-	/*
-	Element el;
-	String prop;
-	JW.Property<Boolean> property;
-	*/
+	/**
+	 * @property {jQuery} el DOM element.
+	 */
+	/**
+	 * @property {String} prop Element's property name.
+	 */
+	/**
+	 * @property {JW.Property} property `<String>` Source property.
+	 */
 	
 	_update: function() {
 		this.el.prop(this.prop, this.property.get());

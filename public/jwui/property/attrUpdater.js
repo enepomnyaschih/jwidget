@@ -20,8 +20,8 @@
 /**
  * @class
  * Watches source {@link JW.Property property} modification and updates the
- * specified attribute of the DOM element. Also, sets the attribute value on
- * initialization.
+ * specified attribute of the DOM element.
+ * Applied on initialization as well.
  *
  *     var title = new JW.Property("This is a tooltip");
  *     // Next command sets "title" attribute value to "This is a tooltip"

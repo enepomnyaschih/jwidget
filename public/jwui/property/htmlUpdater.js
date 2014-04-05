@@ -17,6 +17,24 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * Watches source {@link JW.Property property} modification and updates the
+ * inner HTML of the DOM element.
+ * Applied on initialization as well.
+ *
+ *     var html = new JW.Property('<img src="loading.gif"> Loading...');
+ *     // Next command sets element HTML to loading stuff
+ *     var updater = new JW.UI.HtmlUpdater($("#myelem"), html);
+ *     // Next command changes element HTML to loaded stuff
+ *     html.set('<img src="loaded.png"> Loaded!');
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {JW.Property} property `<String>` Source property.
+ */
 JW.UI.HtmlUpdater = function(el, property) {
 	JW.UI.HtmlUpdater._super.call(this);
 	this.el = $(el);
@@ -26,10 +44,12 @@ JW.UI.HtmlUpdater = function(el, property) {
 };
 
 JW.extend(JW.UI.HtmlUpdater, JW.Class, {
-	/*
-	Element el;
-	JW.Property<String> property;
-	*/
+	/**
+	 * @property {jQuery} el DOM element.
+	 */
+	/**
+	 * @property {JW.Property} property `<String>` Source property.
+	 */
 	
 	_update: function() {
 		this.el.html(this.property.get());

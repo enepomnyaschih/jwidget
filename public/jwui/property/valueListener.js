@@ -17,6 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * Watches DOM element value modification and updates the value of the target
+ * {@link JW.Property property}.
+ * Applied on initialization as well.
+ *
+ *     var value = new JW.Property();
+ *     var listener = new JW.UI.ValueListener($("#myelem"), value);
+ *     // Assume that the element is a blank field initially
+ *     assertEquals("", value.get());
+ *     // Later on, user entered "foo" in the field
+ *     assertEquals("foo", value.get());
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {JW.Property} property `<String>` Target property.
+ */
 JW.UI.ValueListener = function(el, property) {
 	this._update = JW.inScope(this._update, this);
 	JW.UI.ValueListener._super.call(this);
@@ -27,10 +46,12 @@ JW.UI.ValueListener = function(el, property) {
 };
 
 JW.extend(JW.UI.ValueListener, JW.Class, {
-	/*
-	Element el;
-	JW.Property<String> property;
-	*/
+	/**
+	 * @property {jQuery} el DOM element.
+	 */
+	/**
+	 * @property {JW.Property} property `<String>` Target property.
+	 */
 	
 	destroy: function() {
 		this.el.unbind("change", this._update);

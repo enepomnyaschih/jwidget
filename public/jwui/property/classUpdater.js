@@ -17,6 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * Watches source {@link JW.Property property} modification and updates the
+ * specified CSS class presence in the DOM element.
+ * Applied on initialization as well.
+ *
+ *     var selected = new JW.Property(true);
+ *     // Next command adds "selected" CSS class to element
+ *     var updater = new JW.UI.ClassUpdater($("#myelem"), "selected", selected);
+ *     // Next command removes "selected" CSS class from element
+ *     selected.set(false);
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {String} cls CSS class name.
+ * @param {JW.Property} property `<Boolean>` Source property.
+ */
 JW.UI.ClassUpdater = function(el, cls, property) {
 	JW.UI.ClassUpdater._super.call(this);
 	this.el = $(el);
@@ -27,11 +46,15 @@ JW.UI.ClassUpdater = function(el, cls, property) {
 };
 
 JW.extend(JW.UI.ClassUpdater, JW.Class, {
-	/*
-	Element el;
-	String cls;
-	JW.Property<Boolean> property;
-	*/
+	/**
+	 * @property {jQuery} el DOM element.
+	 */
+	/**
+	 * @property {String} cls CSS class name.
+	 */
+	/**
+	 * @property {JW.Property} property `<Boolean>` Source property.
+	 */
 	
 	_update: function() {
 		this.el.toggleClass(this.cls, this.property.get());

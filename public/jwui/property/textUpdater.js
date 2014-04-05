@@ -17,6 +17,24 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * Watches source {@link JW.Property property} modification and updates the
+ * inner text of the DOM element.
+ * Applied on initialization as well.
+ *
+ *     var text = new JW.Property("I like cats");
+ *     // Next command sets element text to "I like cats"
+ *     var updater = new JW.UI.TextUpdater($("#myelem"), text);
+ *     // Next command changes element text to "Everyone likes cats"
+ *     text.set("Everyone likes cats");
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {JW.Property} property `<String>` Source property.
+ */
 JW.UI.TextUpdater = function(el, property) {
 	JW.UI.TextUpdater._super.call(this);
 	this.el = $(el);
@@ -26,10 +44,12 @@ JW.UI.TextUpdater = function(el, property) {
 };
 
 JW.extend(JW.UI.TextUpdater, JW.Class, {
-	/*
-	Element el;
-	JW.Property<String> property;
-	*/
+	/**
+	 * @property {jQuery} el DOM element.
+	 */
+	/**
+	 * @property {JW.Property} property `<String>` Source property.
+	 */
 	
 	_update: function() {
 		this.el.text(this.property.get());

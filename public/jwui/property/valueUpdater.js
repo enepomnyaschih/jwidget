@@ -17,6 +17,24 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * Watches source {@link JW.Property property} modification and updates the
+ * value of the DOM element.
+ * Applied on initialization as well.
+ *
+ *     var value = new JW.Property("Submit");
+ *     // Next command sets element value to "Submit"
+ *     var updater = new JW.UI.ValueUpdater($("#myelem"), value);
+ *     // Next command changes element value to "Отправить"
+ *     value.set("Отправить");
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {JW.Property} property `<String>` Source property.
+ */
 JW.UI.ValueUpdater = function(el, property) {
 	JW.UI.ValueUpdater._super.call(this);
 	this.el = $(el);
@@ -26,10 +44,12 @@ JW.UI.ValueUpdater = function(el, property) {
 };
 
 JW.extend(JW.UI.ValueUpdater, JW.Class, {
-	/*
-	Element el;
-	JW.Property<String> property;
-	*/
+	/**
+	 * @property {jQuery} el DOM element.
+	 */
+	/**
+	 * @property {JW.Property} property `<String>` Source property.
+	 */
 	
 	_update: function() {
 		this.el.val(this.property.get());

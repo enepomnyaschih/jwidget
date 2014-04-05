@@ -17,6 +17,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ * Watches source {@link JW.Property property} modification and updates the
+ * specified CSS style of the DOM element.
+ * Applied on initialization as well.
+ *
+ *     var color = new JW.Property("red");
+ *     // Next command sets "color" style value to "red"
+ *     var updater = new JW.UI.CssUpdater($("#myelem"), "color", color);
+ *     // Next command changes "color" style value to "blue"
+ *     color.set("blue");
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {String} style CSS style name.
+ * @param {JW.Property} property `<String>` Source property.
+ */
 JW.UI.CssUpdater = function(el, style, property) {
 	JW.UI.CssUpdater._super.call(this);
 	this.el = $(el);
@@ -27,11 +46,15 @@ JW.UI.CssUpdater = function(el, style, property) {
 };
 
 JW.extend(JW.UI.CssUpdater, JW.Class, {
-	/*
-	Element el;
-	String style;
-	JW.Property property;
-	*/
+	/**
+	 * @property {jQuery} el DOM element.
+	 */
+	/**
+	 * @property {String} style CSS style name.
+	 */
+	/**
+	 * @property {JW.Property} property `<String>` Source property.
+	 */
 	
 	_update: function() {
 		this.el.css(this.style, this.property.get());
