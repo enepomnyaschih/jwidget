@@ -27,7 +27,7 @@
  *     // Next command sets element text to "I like cats"
  *     var updater = new JW.UI.TextUpdater($("#myelem"), text);
  *     // Next command changes element text to "Everyone likes cats"
- *     text.set("Everyone likes cats");
+ *     text.{@link JW.Property#set set}("Everyone likes cats");
  *
  * @extends JW.Class
  *

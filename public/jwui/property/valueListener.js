@@ -26,9 +26,9 @@
  *     var value = new JW.Property();
  *     var listener = new JW.UI.ValueListener($("#myelem"), value);
  *     // Assume that the element is a blank field initially
- *     assertEquals("", value.get());
+ *     assertEquals("", value.{@link JW.Property#get get}());
  *     // Later on, user entered "foo" in the field
- *     assertEquals("foo", value.get());
+ *     assertEquals("foo", value.{@link JW.Property#get get}());
  *
  * @extends JW.Class
  *

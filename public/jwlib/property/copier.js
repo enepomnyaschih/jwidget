@@ -24,7 +24,7 @@
  *
  *     var source = new JW.Property(1);
  *     var target = new JW.Property();
- *     var copier = new JW.Copier(source, { {@link #target}: target });
+ *     var copier = new JW.Copier(source, { {@link #cfg-target target}: target });
  *     assert(1, target.{@link JW.Property#get get}());
  *     source.{@link JW.Property#set set}(2);
  *     assert(2, target.{@link JW.Property#get get}());
@@ -33,7 +33,7 @@
  * that copier owns it in this case.
  *
  *     var source = new JW.Property(1);
- *     var target = new JW.Copier(this.source).{@link #target};
+ *     var target = new JW.Copier(this.source).{@link #property-target target};
  *     assert(1, target.{@link JW.Property#get get}());
  *
  * JW.Property has a shorthand method {@link JW.Property#bindTo bindTo}:

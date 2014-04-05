@@ -27,7 +27,7 @@
  *     // Next command checks the checkbox
  *     var updater = new JW.UI.PropUpdater($("#myelem"), "checked", checked);
  *     // Next command unchecks the checkbox
- *     checked.set(false);
+ *     checked.{@link JW.Property#set set}(false);
  *
  * @extends JW.Class
  *

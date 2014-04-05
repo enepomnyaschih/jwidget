@@ -26,8 +26,10 @@
  *     var frequency = new JW.Property(106.2);
  *     var wave = new JW.Property("FM");
  *     var updater = new JW.Updater([ frequency, wave ], function(frequency, wave) {
- *         console.log("Running radio player on wave " + frequency + " " + wave);
- *     }, this);
+ *         console.log("Running radio on wave " + frequency + " " + wave);
+ *     }, this); // output: Running radio on wave 106.2 FM
+ *     frequency.{@link JW.Property#set set}(105); // output: Running radio on wave 105 FM
+ *     wave.{@link JW.Property#set set}("USW"); // output: Running radio on wave 105 USW
  *
  * @extends JW.Class
  *
@@ -61,7 +63,7 @@ JW.extend(JW.Updater, JW.Class, {
 	 * Watches specified event and triggers updater's function call on
 	 * the event triggering.
 	 * @param {JW.Event} event Event.
-	 * @returns this
+	 * @returns {JW.Updater} this
 	 */
 	bind: function(event) {
 		this.own(event.bind(this.update, this));
@@ -72,10 +74,11 @@ JW.extend(JW.Updater, JW.Class, {
 	 * Watches specified property and triggers updater's function call on
 	 * the property change.
 	 * @param {JW.Property} property Property.
-	 * @returns this
+	 * @returns {JW.Updater} this
 	 */
 	watch: function(property) {
-		return this.bind(property.changeEvent);
+		this.bind(property.changeEvent);
+		return this;
 	},
 	
 	/**

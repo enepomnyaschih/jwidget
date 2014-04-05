@@ -27,7 +27,7 @@
  *     var target = new JW.Property();
  *     var functor = new JW.Functor([ value, unit ], function(value, unit) {
  *         return value + " " + unit;
- *     }, this, { {@link #target}: target });
+ *     }, this, { {@link #cfg-target target}: target });
  *     assert("1000 MW", target.{@link JW.Property#get get}());
  *     value.{@link JW.Property#set set}(1500);
  *     assert("1500 MW", target.{@link JW.Property#get get}());
@@ -42,7 +42,7 @@
  *     var functor = new JW.Functor([ value, unit ], function(value, unit) {
  *         return value + " " + unit;
  *     }, this);
- *     var target = functor.{@link #target};
+ *     var target = functor.{@link #property-target target};
  *     assert("1000 MW", target.{@link JW.Property#get get}());
  *
  * @extends JW.Class
@@ -86,7 +86,7 @@ JW.extend(JW.Functor, JW.Class, {
 	 * Watches specified event and triggers target value recalculation on
 	 * the event triggering.
 	 * @param {JW.Event} event Event.
-	 * @returns this
+	 * @returns {JW.Functor} this
 	 */
 	bind: function(event) {
 		this.own(event.bind(this.update, this));
@@ -97,10 +97,11 @@ JW.extend(JW.Functor, JW.Class, {
 	 * Watches specified property and triggers target value recalculation on
 	 * the property change.
 	 * @param {JW.Property} property Property.
-	 * @returns this
+	 * @returns {JW.Functor} this
 	 */
 	watch: function(property) {
-		return this.bind(property.changeEvent);
+		this.bind(property.changeEvent);
+		return this;
 	},
 	
 	/**

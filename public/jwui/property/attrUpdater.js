@@ -27,7 +27,7 @@
  *     // Next command sets "title" attribute value to "This is a tooltip"
  *     var updater = new JW.UI.AttrUpdater($("#myelem"), "title", title);
  *     // Next command changes "title" attribute value to "Это подсказка"
- *     title.set("Это подсказка");
+ *     title.{@link JW.Property#set set}("Это подсказка");
  *
  * @extends JW.Class
  *

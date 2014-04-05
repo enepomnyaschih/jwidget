@@ -27,7 +27,7 @@
  *     // Next command adds "selected" CSS class to element
  *     var updater = new JW.UI.ClassUpdater($("#myelem"), "selected", selected);
  *     // Next command removes "selected" CSS class from element
- *     selected.set(false);
+ *     selected.{@link JW.Property#set set}(false);
  *
  * @extends JW.Class
  *

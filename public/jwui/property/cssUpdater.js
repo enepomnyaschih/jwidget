@@ -27,7 +27,7 @@
  *     // Next command sets "color" style value to "red"
  *     var updater = new JW.UI.CssUpdater($("#myelem"), "color", color);
  *     // Next command changes "color" style value to "blue"
- *     color.set("blue");
+ *     color.{@link JW.Property#set set}("blue");
  *
  * @extends JW.Class
  *

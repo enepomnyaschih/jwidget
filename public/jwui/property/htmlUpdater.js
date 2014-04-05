@@ -27,7 +27,7 @@
  *     // Next command sets element HTML to loading stuff
  *     var updater = new JW.UI.HtmlUpdater($("#myelem"), html);
  *     // Next command changes element HTML to loaded stuff
- *     html.set('<img src="loaded.png"> Loaded!');
+ *     html.{@link JW.Property#set set}('<img src="loaded.png"> Loaded!');
  *
  * @extends JW.Class
  *

@@ -27,6 +27,7 @@
  * a callback
  * - JW.Functor - watches several properties in order to reassign target
  * property value to a callback result
+ * - JW.Switcher - watches a property to initialize and release its value
  * - JW.UI.TextUpdater - watches a string property and updates the text in a
  * DOM element
  * - JW.UI.HtmlUpdater - watches a string property and updates the HTML in a
@@ -64,8 +65,8 @@
  *     var byeFunctor = new JW.Functor([ language ], function(language) {
  *         return locale[language].bye;
  *     });
- *     new JW.UI.TextUpdater($("#hi"), hiFunctor.{@link JW.Functor#target target});
- *     new JW.UI.TextUpdater($("#bye"), byeFunctor.{@link JW.Functor#target target});
+ *     new JW.UI.TextUpdater($("#hi"), hiFunctor.{@link JW.Functor#property-target target});
+ *     new JW.UI.TextUpdater($("#bye"), byeFunctor.{@link JW.Functor#property-target target});
  *     // Now you can change localization easily
  *     language.{@link #set}("ru");
  *
@@ -135,7 +136,7 @@ JW.extend(JW.Property, JW.Class, {
 	
 	/**
 	 * Binds this property to another property using a JW.Copier.
-	 * @params {JW.Property} source `<V>` Source property to bind to.
+	 * @param {JW.Property} source `<V>` Source property to bind to.
 	 */
 	bindTo: function(source) {
 		if (this._copier) {

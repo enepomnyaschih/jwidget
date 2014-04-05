@@ -27,7 +27,7 @@
  *     // Next command sets element value to "Submit"
  *     var updater = new JW.UI.ValueUpdater($("#myelem"), value);
  *     // Next command changes element value to "Отправить"
- *     value.set("Отправить");
+ *     value.{@link JW.Property#set set}("Отправить");
  *
  * @extends JW.Class
  *
