@@ -75,6 +75,9 @@
 		"jwlib/tests/collection/set.js",
 		"jwlib/tests/collection/set/staticMethods.js",
 		
+		"jwlib/tests/property.js",
+		"jwlib/tests/property/property.js",
+		
 		"jwlib/tests/util.js",
 		"jwlib/tests/util/timer.js",
 		"jwlib/tests/util/string.js",

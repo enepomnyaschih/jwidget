@@ -27,7 +27,7 @@ HTML templates into separate files
 
 Project license is LGPL.
 
-Current version: 0.7.1
+Current version: 0.8
 
 <font size="5">[Download jWidget](guides/endownload/jwidget.zip)</font>
 
