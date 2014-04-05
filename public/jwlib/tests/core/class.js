@@ -157,5 +157,36 @@ JW.Tests.Core.ClassTestCase = JW.Unit.TestCase.extend({
 		this.assertEqual("diff", diff.name);
 		this.assertEqual("7.434", diff.perimeter().toFixed(3));
 		this.assertEqual("12.434", diff.area().toFixed(3));
+	},
+	
+	testOwn: function()
+	{
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
+		
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output("destroy " + this.value);
+				this._super();
+			}
+		});
+		
+		var a = new cls(this, "a");
+		var b = new cls(this, "b");
+		var c = new cls(this, "c");
+		var d = new cls(this, "d");
+		a.own(b);
+		a.own(c);
+		b.own(d);
+		this.setExpectedOutput(
+			"destroy a",
+			"destroy c",
+			"destroy b",
+			"destroy d"
+		);
+		a.destroy();
 	}
 });
