@@ -60,11 +60,14 @@ JW.Copier = function(source, config) {
 
 JW.extend(JW.Copier, JW.Class, {
 	/**
-	 * @property {JW.Property} source Source property.
+	 * @property {JW.Property} source `<V>` Source property.
 	 */
 	/**
 	 * @cfg {JW.Property} target
-	 * Target property. By default, created automatically.
+	 * `<V>` Target property. By default, created automatically.
+	 */
+	/**
+	 * @property {JW.Property} target `<V>` Target property.
 	 */
 	
 	_update: function() {
