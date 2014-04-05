@@ -46,7 +46,7 @@ JW.extend(JW.Proxy, JW.Class, {
 	// boolean _ownsValue;
 	
 	destroy: function() {
-		if (this._ownsValue && this.value) {
+		if (this._ownsValue && JW.isSet(this.value)) {
 			this.value.destroy();
 		}
 		this._super();
@@ -65,12 +65,12 @@ JW.extend(JW.Proxy, JW.Class, {
 	 * @param {V} value
 	 */
 	set: function(value) {
-		var oldValue = this._value;
+		var oldValue = this.value;
 		if (oldValue === value) {
 			return;
 		}
-		this._value = value;
-		if (this._ownsValue && oldValue) {
+		this.value = value;
+		if (this._ownsValue && JW.isSet(oldValue)) {
 			oldValue.destroy();
 		}
 	},

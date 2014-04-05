@@ -95,7 +95,7 @@ JW.extend(JW.Property, JW.Class, {
 	
 	destroy: function() {
 		this.bindTo();
-		if (this._ownsValue && this._value) {
+		if (this._ownsValue && JW.isSet(this._value)) {
 			this._value.destroy();
 		}
 		this._super();
@@ -120,7 +120,7 @@ JW.extend(JW.Property, JW.Class, {
 		}
 		this._value = value;
 		this.changeEvent.trigger(new JW.ValueChangeEventParams(this, value, oldValue));
-		if (this._ownsValue && oldValue) {
+		if (this._ownsValue && JW.isSet(oldValue)) {
 			oldValue.destroy();
 		}
 	},

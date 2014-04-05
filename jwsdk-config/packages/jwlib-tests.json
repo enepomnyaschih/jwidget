@@ -11,6 +11,7 @@
 		"jwlib/tests/core/callback.js",
 		"jwlib/tests/core/core.js",
 		"jwlib/tests/core/class.js",
+		"jwlib/tests/core/proxy.js",
 		"jwlib/tests/core/observable.js",
 		
 		"jwlib/tests/collection.js",
