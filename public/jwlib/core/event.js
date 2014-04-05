@@ -31,22 +31,14 @@
  *     var Dispatcher = function() {
  *         Dispatcher.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.items = [];
- *         this.addEvent = new JW.Event();
- *         this.removeEvent = new JW.Event();
+ *         this.addEvent = this.{@link JW.Class#own own}(new JW.Event());
+ *         this.removeEvent = this.{@link JW.Class#own own}(new JW.Event());
  *     };
  *     
- *     JW.extend(Dispatcher, // <T>
- *               JW.Class, {
- *         // Array<T> items;
- *         // JW.Event<Dispatcher.EventParams<T>> addEvent;
- *         // JW.Event<Dispatcher.EventParams<T>> removeEvent;
- *         
- *         // override
- *         {@link JW.Class#destroy destroy}: function() {
- *             this.removeEvent.{@link JW.Class#destroy destroy}();
- *             this.addEvent.{@link JW.Class#destroy destroy}();
- *             this._super();
- *         },
+ *     JW.extend(Dispatcher, JW.Class, {
+ *         // Array items;
+ *         // JW.Event<Dispatcher.EventParams> addEvent;
+ *         // JW.Event<Dispatcher.EventParams> removeEvent;
  *         
  *         addItem: function(item, index) {
  *             this.items.splice(index, 0, item);
@@ -77,21 +69,12 @@
  *     var Client = function(dispatcher) {
  *         Client.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.dispatcher = dispatcher;
- *         this._addAttachment = this.dispatcher.addEvent.{@link JW.Event#bind bind}(this._onAdd, this);
- *         this._removeAttachment = this.dispatcher.removeEvent.{@link JW.Event#bind bind}(this._onRemove, this);
+ *         this.{@link JW.Class#own own}(this.dispatcher.addEvent.{@link JW.Event#bind bind}(this._onAdd, this));
+ *         this.{@link JW.Class#own own}(this.dispatcher.removeEvent.{@link JW.Event#bind bind}(this._onRemove, this));
  *     };
  *     
  *     JW.extend(Client, JW.Class, {
  *         // Dispatcher dispatcher;
- *         // JW.EventAttachment _addAttachment;
- *         // JW.EventAttachment _removeAttachment;
- *         
- *         // override
- *         {@link JW.Class#destroy destroy}: function() {
- *             this._removeAttachment.{@link JW.Class#destroy destroy}();
- *             this._addAttachment.{@link JW.Class#destroy destroy}();
- *             this._super();
- *         },
  *         
  *         _onAdd: function(params) {
  *             console.log(params.item, " item is added at ", params.index);

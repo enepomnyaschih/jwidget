@@ -25,6 +25,8 @@
  * Since some jWidget classes work with JW.Class instances only (for example, JW.AbstractSet),
  * the library provides a simple adapter for any objects and values conversion to JW.Class.
  *
+ * If you want to track the value and react on its modification, use JW.Property instead.
+ *
  * @extends JW.Class
  *
  * @constructor
@@ -33,18 +35,51 @@
 JW.Proxy = function(value) {
 	JW.Proxy._super.call(this);
 	this.value = value;
-	this.ownsValue = false;
+	this._ownsValue = false;
 };
 
 JW.extend(JW.Proxy, JW.Class, {
 	/**
 	 * @property {T} value Object.
+	 * @deprecated
 	 */
+	// boolean _ownsValue;
 	
 	destroy: function() {
-		if (this.ownsValue && this.value) {
+		if (this._ownsValue && this.value) {
 			this.value.destroy();
 		}
 		this._super();
+	},
+	
+	/**
+	 * Returns object.
+	 * @returns {V} Object.
+	 */
+	get: function() {
+		return this.value;
+	},
+	
+	/**
+	 * Changes object.
+	 * @param {V} value
+	 */
+	set: function(value) {
+		var oldValue = this._value;
+		if (oldValue === value) {
+			return;
+		}
+		this._value = value;
+		if (this._ownsValue && oldValue) {
+			oldValue.destroy();
+		}
+	},
+	
+	/**
+	 * Makes this proxy an owner of its value. It means that the value will
+	 * be destroyed automatically on destruction of the proxy.
+	 */
+	ownValue: function() {
+		this._ownsValue = true;
 	}
 });

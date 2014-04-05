@@ -139,6 +139,19 @@ JW.extend = JW.ClassUtil.extend;
  *             return this.el;
  *         }
  *     });
+ *
+ * jWidget classes support object aggregation feature. If you register object A
+ * as aggregated by object B using method {@link #own own}, it means that
+ * object A will be destroyed automatically on object B destruction.
+ *
+ *     var Door = function() {
+ *         Door.{@link JW.Class#static-property-_super _super}.call(this);
+ *         this.knockEvent = this.{@link #own own}(new JW.Event());
+ *     };
+ *
+ *     JW.extend(Door, JW.Class);
+ *
+ * Aggregated objects are destroyed in reversive order.
  */
 JW.Class = function() {
 	this._iid = ++JW.ClassUtil._iid;
@@ -174,6 +187,15 @@ JW.Class = function() {
  *     }
  *
  * @returns {void}
+ */
+/**
+ * @method own
+ *
+ * Aggregate a specified object in a current one. It means that the specified object will be destroyed automatically
+ * on this object destruction. The aggregated objects are destroyed in a reversive order.
+ *
+ * @param {JW.Class} obj An aggregated object.
+ * @returns {JW.Class} An aggregated object (obj).
  */
 /**
  * @method _super
@@ -261,6 +283,7 @@ JW.extend(JW.Class, Object, {
 	
 	destroy: function() {
 		var pool = this._ownagePool;
+		this._ownagePool = [];
 		for (var i = pool.length - 1; i >= 0; --i) {
 			pool[i].destroy();
 		}

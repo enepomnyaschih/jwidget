@@ -76,8 +76,9 @@
  */
 JW.Property = function(value) {
 	JW.Property._super.call(this);
-	this.value = JW.defn(value, null);
-	this.ownsValue = false;
+	this._value = JW.defn(value, null);
+	this._ownsValue = false;
+	this._copier = null;
 	this.changeEvent = this.own(new JW.Event());
 };
 
@@ -87,16 +88,14 @@ JW.extend(JW.Property, JW.Class, {
 	 * Property value is changed. Triggered in result of calling #set method.
 	 * @param {JW.ValueChangeEventParams} params `<V>` Parameters.
 	 */
-	/**
-	 * @property {boolean} [ownsValue=false]
-	 * Set to true to destroy the old value on value change or property
-	 * destruction.
-	 */
-	// V value;
+	// V _value;
+	// boolean _ownsValue;
+	// JW.Copier<V> _copier;
 	
 	destroy: function() {
-		if (this.ownsValue && this.value) {
-			this.value.destroy();
+		this.bindTo();
+		if (this._ownsValue && this._value) {
+			this._value.destroy();
 		}
 		this._super();
 	},
@@ -106,7 +105,7 @@ JW.extend(JW.Property, JW.Class, {
 	 * @returns {V} Property value.
 	 */
 	get: function() {
-		return this.value;
+		return this._value;
 	},
 	
 	/**
@@ -114,14 +113,37 @@ JW.extend(JW.Property, JW.Class, {
 	 * @param {V} value
 	 */
 	set: function(value) {
-		var oldValue = this.value;
+		var oldValue = this._value;
 		if (oldValue === value) {
 			return;
 		}
-		this.value = value;
+		this._value = value;
 		this.changeEvent.trigger(new JW.ValueChangeEventParams(this, value, oldValue));
-		if (this.ownsValue && oldValue) {
+		if (this._ownsValue && oldValue) {
 			oldValue.destroy();
+		}
+	},
+	
+	/**
+	 * Makes this property an owner of its value. It means that the value will
+	 * be destroyed automatically on reassignment and on destruction of the
+	 * property.
+	 */
+	ownValue: function() {
+		this._ownsValue = true;
+	},
+	
+	/**
+	 * Binds this property to another property using a JW.Copier.
+	 * @params {JW.Property} source `<V>` Source property to bind to.
+	 */
+	bindTo: function(source) {
+		if (this._copier) {
+			this._copier.destroy();
+			this._copier = null;
+		}
+		if (source) {
+			this._copier = new JW.Copier(source, { target: this });
 		}
 	}
 });
