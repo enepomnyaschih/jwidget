@@ -77,6 +77,7 @@
 		"jwlib/tests/collection/set/staticMethods.js",
 		
 		"jwlib/tests/property.js",
+		"jwlib/tests/property/copier.js",
 		"jwlib/tests/property/property.js",
 		
 		"jwlib/tests/util.js",
