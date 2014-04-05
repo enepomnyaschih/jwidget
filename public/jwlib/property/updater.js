@@ -46,7 +46,6 @@
  */
 JW.Updater = function(sources, func, scope) {
 	JW.Updater._super.call(this);
-	config = config || {};
 	this.sources = sources;
 	this.func = func;
 	this.scope = scope || this;

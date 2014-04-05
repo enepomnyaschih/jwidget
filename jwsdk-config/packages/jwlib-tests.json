@@ -79,6 +79,7 @@
 		"jwlib/tests/property.js",
 		"jwlib/tests/property/copier.js",
 		"jwlib/tests/property/property.js",
+		"jwlib/tests/property/updater.js",
 		
 		"jwlib/tests/util.js",
 		"jwlib/tests/util/timer.js",
