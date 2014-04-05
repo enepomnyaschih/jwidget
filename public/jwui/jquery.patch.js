@@ -29,13 +29,15 @@ JW.apply(jQuery.fn, {
 	 * @param {number} [index] Index of position to insert to. By default, appends the element.
 	 * @returns {jQuery} this.
 	 */
-	insert: function(item, index) {
+	insert: function(el, index) {
+		var ths = this.eq(0);
+		el = jQuery(el).eq(0);
 		if (!JW.isSet(index)) {
-			this.append(item);
+			ths.append(el);
 		} else if (index == 0) {
-			this.prepend(item);
+			ths.prepend(el);
 		} else {
-			jQuery(this.children()[index - 1]).after(item);
+			jQuery(ths.children()[index - 1]).after(el);
 		}
 		return this;
 	},
@@ -48,12 +50,13 @@ JW.apply(jQuery.fn, {
 	 * @returns {jQuery} this.
 	 */
 	replaceBy: function(el, attrs) {
-		var id = attrs ? this.attr("id") : null,
-			cls = attrs ? this.attr("class") : null;
+		var ths = this.eq(0);
+		var id = attrs ? ths.attr("id") : null,
+			cls = attrs ? ths.attr("class") : null;
 		
-		el = jQuery(el);
-		this.after(el);
-		this.detach();
+		el = jQuery(el).eq(0);
+		ths.after(el);
+		ths.detach();
 		
 		if (id) {
 			el.attr("id", id);

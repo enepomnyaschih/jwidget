@@ -583,19 +583,20 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.allChildren = {};
 		this.children = new JW.ObservableMap();
 		this._arrays = {};
-		this.rootClass = this.rootClass || this.el.attr("jwclass");
-		if (this.rootClass) {
-			this.el.removeAttr("jwclass");
-			this.el.addClass(this.rootClass);
-		}
+		this.rootClass = JW.String.parseClass(this.rootClass || this.el.attr("jwclass"));
+		this.el.removeAttr("jwclass");
+		this.el.addClass(this.rootClass.join(" "));
 		var anchorEls = this.el.find("[jwid]");
 		for (var i = 0; i < anchorEls.length; ++i) {
 			var anchorEl = jQuery(anchorEls[i]);
-			var jwId = anchorEl.attr("jwid");
-			this._elements[jwId] = anchorEl;
+			var jwIds = JW.String.trim(anchorEl.attr("jwid")).split(/\s+/);
 			anchorEl.removeAttr("jwid");
-			if (this.rootClass) {
-				anchorEl.addClass(this.rootClass + "-" + jwId);
+			for (var j = 0; j < jwIds.length; ++j) {
+				var jwId = jwIds[j];
+				this._elements[jwId] = this._elements[jwId] ? this._elements[jwId].add(anchorEl) : anchorEl;
+				for (var k = 0; k < this.rootClass.length; ++k) {
+					anchorEl.addClass(this.rootClass[k] + "-" + jwId);
+				}
 			}
 		}
 		this._childMapper = this.children.createMapper({

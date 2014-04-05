@@ -167,6 +167,35 @@ JW.String = {
 		return String(target).replace(/^\s*/, "").replace(/\s*$/, "");
 	},
 	
+	/**
+	 * Parses CSS class string and returns array of CSS class names.
+	 * Supports strings, untrimmed strings, space-separated strings, arrays
+	 * and subarrays.
+	 * 
+	 *     JW.String.parseClass(["  a    b ", "c", [], [["d", "e"]]]); // ["a", "b", "c", "d", "e"]
+	 *
+	 * @static
+	 * @param {String/Array} str String.
+	 * @returns {Array} `<String>` Result.
+	 */
+	parseClass: function(str) {
+		if (JW.isArray(str)) {
+			var result = [];
+			for (var i = 0; i < str.length; ++i) {
+				result.push.apply(result, JW.String.parseClass(str[i]));
+			}
+			return result;
+		}
+		if (typeof str === "string") {
+			str = JW.String.trim(str);
+			if (str === "") {
+				return [];
+			}
+			return str.split(/\s+/);
+		}
+		return [];
+	},
+	
 	_fcamel: function(a, b) {
 		return b.toUpperCase();
 	},
