@@ -20,7 +20,7 @@
 /**
  * @class
  * `<V>` The observable property. A convenient way to keep one object in sync
- * with another object. Use next helpers:
+ * with another object. Has next helpers:
  *
  * - JW.Copier - keeps one property equal to another property
  * - JW.Updater - watches several properties in order to update something by

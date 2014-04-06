@@ -7,7 +7,7 @@ Core:
 - JW.Class
 - JW.Event
 
-Property and its friends:
+Property and its helpers:
 
 - JW.Property
 - JW.Functor
