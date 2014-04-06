@@ -499,19 +499,20 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		this.destroyed = true;
 		if (this.el) {
-			this.el.remove();
+			this.el.detach();
 			JW.Set.each(this._arrays, JW.byMethod("destroy"));
 			this._arrays = null;
-			
-			this.destroyComponent();
 			
 			this._childInserter.destroy();
 			this._childInserter = null;
 			this._childMapper.destroy();
 			this._childMapper = null;
-			this.children.each(JW.destroy);
+			
+			this.destroyComponent();
+			
 			this.children.destroy();
 			this.children = null;
+			this.el.remove();
 		}
 		this.allChildren = null;
 		this._elements = null;
