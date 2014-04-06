@@ -123,7 +123,7 @@
  * That's the reason why we recommend to use jWidget JW.AbstractCollection in data model instead of native JavaScript
  * Array and Object: these collections have Observable-implementations and can be synchronized with each other.
  * 
- * [Getting started. Part 5. Collection synchronizers](#!/guide/ensample5)
+ * [Getting started. Part 6. Collection synchronizers](#!/guide/ensample6)
  * 
  * ### More about render&lt;ChildId&gt; method
  * 
@@ -407,7 +407,7 @@
  * 
  * See more complicated example in article:
  * 
- * [Getting started. Part 6. Project infrastructure](#!/guide/ensample6)
+ * [Getting started. Part 7. Project infrastructure](#!/guide/ensample7)
  * 
  * @extends JW.Class
  * @constructor
