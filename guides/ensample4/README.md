@@ -23,7 +23,7 @@ Notice that view can update by its own before step 2. But it is unneccessary, if
 And it must listen it by Model-View architecture because who knows, what client will want to change "like"
 field in model by some another event? May be asynchronous data loader from server will want to do this,
 or may be "like" will be added to some tweets by some other user actions? Anyway, event presence makes us
-feel safe about that view will always be up-to-date.
+feel safe about the fact that the view will always be up-to-date.
 
 One more notice: in other Model-View frameworks (I mean, MVC frameworks) like ExtJS, Controller is responsible for
 event listening and handling. jWidget doesn't provide any features for such controllers implementation.
@@ -35,7 +35,7 @@ That's the reason why events API is very different in jWidget and jQuery.
 jWidget event is implemented by class JW.Event. There are 2 adjacent classes: JW.EventParams and
 JW.EventAttachment. Let's look how to use them.
 
-So, let's start listening Like and Retweet button clicks. Let's follow steps described above. First, bind to
+So, let's start listening Like and Retweet button clicks. Let's follow the steps described above. First, bind to
 click event using jQuery in mt.TweetView class:
 
         renderLike: function(el) {
@@ -60,8 +60,8 @@ click event using jQuery in mt.TweetView class:
 
 If you already worked with JavaScript classes before, then you know why this code won't work.
 The reason is that event handler doesn't know its call scope (this). This is a problem of JavaScript, which
-we must live with. We must bind call scope to these handlers using JW.inScope function to make them work.
-By standard, you should do this in constructor, before superclass constructor call:
+we must live with. We must bind the call scope to these handlers using JW.inScope function to make them work.
+By standard, you should do this in the constructor, before superclass constructor call:
 
     mt.TweetView = function(tweetData) {
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
@@ -70,8 +70,8 @@ By standard, you should do this in constructor, before superclass constructor ca
         this.tweetData = tweetData;
     };
 
-At next step, we'll add methods setLike and setRetweet to model. To implement them, we'll need likeChangeEvent and
-retweetChangeEvent, which we'll create in constructor and will destroy (important!) in destructor of mt.data.Tweet:
+At the next step, we'll add methods setLike and setRetweet to the model. To implement them, we'll need likeChangeEvent and
+retweetChangeEvent, which we'll create and aggregate in the constructor:
 
 **public/mt/data/tweet.js**
 
@@ -84,8 +84,8 @@ retweetChangeEvent, which we'll create in constructor and will destroy (importan
         this.time = config.time;
         this.like = config.like;
         this.retweet = config.retweet;
-        this.likeChangeEvent = new JW.Event();
-        this.retweetChangeEvent = new JW.Event();
+        this.likeChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
+        this.retweetChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
     };
     
     JW.extend(mt.data.Tweet, JW.Class, {
@@ -100,13 +100,6 @@ retweetChangeEvent, which we'll create in constructor and will destroy (importan
         JW.Event<JW.ValueEventParams<boolean>> likeChangeEvent;
         JW.Event<JW.ValueEventParams<boolean>> retweetChangeEvent;
         */
-        
-        // override
-        {@link JW.Class#destroy destroy}: function() {
-            this.retweetChangeEvent.{@link JW.Class#destroy destroy}();
-            this.likeChangeEvent.{@link JW.Class#destroy destroy}();
-            this.{@link JW.Class#method-_super _super}();
-        },
         
         setLike: function(value) {
             if (this.like === value) {
@@ -136,7 +129,7 @@ In this case it is JW.ValueEventParams, which takes 2 parameters: event sender (
 You can extend your own subclasses of JW.EventParams for your event, but standard JW.ValueEventParams,
 JW.ItemEventParams and JW.ItemValueEventParams are enough in the majority of cases.
 
-jWidget event is essentially simple: all listeners and iterated and called one by one.
+jWidget event is essentially simple: all listeners are iterated and called one by one.
 There are no any special features like bubbling, "preventDefault" or "stopPropagation". If you want to introduce
 something like this, implement it by yourself or find somewhere else.
 jWidget is modest in this regard, but fast.
@@ -166,44 +159,33 @@ extract element updating code of mt.TweetView into separate methods "updateLike"
                 text(this.tweetData.retweet ? "Unretweet" : "Retweet");
         },
 
-Let's bind handlers to "likeChangeEvent" and "retweetChangeEvent". We'll get event attachment objects which we must
-save in class fields and destroy them (important!) in destructor:
+Let's bind the handlers to "likeChangeEvent" and "retweetChangeEvent". We'll get event attachment objects which we must
+aggregate:
 
     mt.TweetView = function(tweetData) {
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
         this.tweetData = tweetData;
-        this._likeChangeAttachment = null;
-        this._retweetChangeAttachment = null;
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
         /*
         mt.data.Tweet tweetData;
-        JW.EventAttachment _likeChangeAttachment;
-        JW.EventAttachment _retweetChangeAttachment;
         */
         
         // ... some code here
         
         renderLike: function(el) {
             this._updateLike();
-            this._likeChangeAttachment = this.tweetData.likeChangeEvent.{@link JW.Event#bind bind}(this._updateLike, this);
+            this.{@link JW.Class#own own}(this.tweetData.likeChangeEvent.{@link JW.Event#bind bind}(this._updateLike, this));
             el.click(this._onLikeClick);
         },
         
         renderRetweet: function(el) {
             this._updateRetweet();
-            this._retweetChangeAttachment = this.tweetData.retweetChangeEvent.{@link JW.Event#bind bind}(this._updateRetweet, this);
+            this.{@link JW.Class#own own}(this.tweetData.retweetChangeEvent.{@link JW.Event#bind bind}(this._updateRetweet, this));
             el.click(this._onRetweetClick);
-        },
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            this._retweetChangeAttachment.{@link JW.Class#destroy destroy}();
-            this._likeChangeAttachment.{@link JW.Class#destroy destroy}();
-            this._super();
         },
         
         // ...

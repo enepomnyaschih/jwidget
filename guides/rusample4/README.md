@@ -5,8 +5,6 @@
 
 Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-4](https://github.com/enepomnyaschih/mt/tree/mt-0.8-4) (ветка)
 
-Этот пример является продолжением предыдущей части.
-
 В этом примере мы научимся подписываться на события элементов jQuery в рамках фреймворка jWidget, а также
 научимся создавать события модели, прослушивать их и выбрасывать.
 
@@ -76,8 +74,7 @@ API для работы с событиями в jWidget максимально 
     };
 
 Следующим шагом добавим методы setLike и setRetweet в модель. Для реализации методов необходимы события
-likeChangeEvent и retweetChangeEvent, которые мы создадим в конструкторе и уничтожим (не забываем!) в деструкторе
-mt.data.Tweet:
+likeChangeEvent и retweetChangeEvent, которые мы создадим и заагрегируем в конструкторе mt.data.Tweet:
 
 **public/mt/data/tweet.js**
 
@@ -90,8 +87,8 @@ mt.data.Tweet:
         this.time = config.time;
         this.like = config.like;
         this.retweet = config.retweet;
-        this.likeChangeEvent = new JW.Event();
-        this.retweetChangeEvent = new JW.Event();
+        this.likeChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
+        this.retweetChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
     };
     
     JW.extend(mt.data.Tweet, JW.Class, {
@@ -106,13 +103,6 @@ mt.data.Tweet:
         JW.Event<JW.ValueEventParams<boolean>> likeChangeEvent;
         JW.Event<JW.ValueEventParams<boolean>> retweetChangeEvent;
         */
-        
-        // override
-        {@link JW.Class#destroy destroy}: function() {
-            this.retweetChangeEvent.{@link JW.Class#destroy destroy}();
-            this.likeChangeEvent.{@link JW.Class#destroy destroy}();
-            this.{@link JW.Class#method-_super _super}();
-        },
         
         setLike: function(value) {
             if (this.like === value) {
@@ -173,43 +163,32 @@ JW.ItemValueEventParams в большинстве случаев вполне д
         },
 
 Подпишемся на события likeChangeEvent и retweetChangeEvent. На выходе мы получим объекты подписки, которые
-необходимо сохранить в полях класса и уничтожить (не забываем!) в деструкторе:
+необходимо заагрегировать:
 
     mt.TweetView = function(tweetData) {
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
         this.tweetData = tweetData;
-        this._likeChangeAttachment = null;
-        this._retweetChangeAttachment = null;
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
         /*
         mt.data.Tweet tweetData;
-        JW.EventAttachment _likeChangeAttachment;
-        JW.EventAttachment _retweetChangeAttachment;
         */
         
         // ... какой-то код
         
         renderLike: function(el) {
             this._updateLike();
-            this._likeChangeAttachment = this.tweetData.likeChangeEvent.{@link JW.Event#bind bind}(this._updateLike, this);
+            this.{@link JW.Class#own own}(this.tweetData.likeChangeEvent.{@link JW.Event#bind bind}(this._updateLike, this));
             el.click(this._onLikeClick);
         },
         
         renderRetweet: function(el) {
             this._updateRetweet();
-            this._retweetChangeAttachment = this.tweetData.retweetChangeEvent.{@link JW.Event#bind bind}(this._updateRetweet, this);
+            this.{@link JW.Class#own own}(this.tweetData.retweetChangeEvent.{@link JW.Event#bind bind}(this._updateRetweet, this));
             el.click(this._onRetweetClick);
-        },
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            this._retweetChangeAttachment.{@link JW.Class#destroy destroy}();
-            this._likeChangeAttachment.{@link JW.Class#destroy destroy}();
-            this._super();
         },
         
         // ...
