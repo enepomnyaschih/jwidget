@@ -141,6 +141,50 @@
 							{
 								"name": "rujwproperty",
 								"title": "JW.Property"
+							},
+							{
+								"name": "rujwupdater",
+								"title": "JW.Updater"
+							},
+							{
+								"name": "rujwfunctor",
+								"title": "JW.Functor"
+							},
+							{
+								"name": "rujwswitcher",
+								"title": "JW.Switcher"
+							},
+							{
+								"name": "rujwuitextupdater",
+								"title": "JW.UI.TextUpdater"
+							},
+							{
+								"name": "rujwuihtmlupdater",
+								"title": "JW.UI.HtmlUpdater"
+							},
+							{
+								"name": "rujwuivalueupdater",
+								"title": "JW.UI.ValueUpdater"
+							},
+							{
+								"name": "rujwuiattrupdater",
+								"title": "JW.UI.AttrUpdater"
+							},
+							{
+								"name": "rujwuipropupdater",
+								"title": "JW.UI.PropUpdater"
+							},
+							{
+								"name": "rujwuicssupdater",
+								"title": "JW.UI.CssUpdater"
+							},
+							{
+								"name": "rujwuiclassupdater",
+								"title": "JW.UI.ClassUpdater"
+							},
+							{
+								"name": "rujwuivaluelistener",
+								"title": "JW.UI.ValueListener"
 							}
 						]
 					},
