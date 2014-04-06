@@ -12,9 +12,10 @@
 [Stylus](http://learnboost.github.io/stylus/), чтобы сделать верстку более удобной и приятной.
 
 Начнем с того, что
-[установим jWidget SDK по инструкции](https://github.com/enepomnyaschih/jwsdk/wiki/Установка-jWidget-SDK) (шаги 1-4).
+[установим jWidget SDK по инструкции](https://github.com/enepomnyaschih/jwsdk/wiki/Установка-jWidget-SDK).
+Используйте шаблон `empty_project_html` на шаге 4.
 
-Далее, создадим пакет mt для нашего проекта.
+Далее, создаем пакет mt для нашего проекта.
 
 **jwsdk-config/packages/mt.json**
 
@@ -42,7 +43,7 @@
         ]
     }
 
-Создадим страницу index.
+Создаем страницу index.
 
 **jwsdk-config/pages/index.json**
 
@@ -61,7 +62,9 @@
 
 И удалим файл public/.htaccess.
 
-Откомпилируем проект запуском скрипта debug в корне проекта.
+Откомпилируем проект из командной строки в корневой папке проекта:
+
+    jwsdk debug jwsdk-config
 
 {@img debug.png}
 
@@ -76,14 +79,15 @@
             <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=9" />
             
-            
-            
             <title>Mini-Twitter</title>
             <link rel="stylesheet" type="text/css" href="thirdparty/reset.css?timestamp=1379314418" />
             <link rel="stylesheet" type="text/css" href="mt/application/application.css?timestamp=1379409267" />
             <link rel="stylesheet" type="text/css" href="mt/profilebox/profilebox.css?timestamp=1379409410" />
             <link rel="stylesheet" type="text/css" href="mt/tweetfeed/tweetfeed.css?timestamp=1379402158" />
             <link rel="stylesheet" type="text/css" href="mt/tweetview/tweetview.css?timestamp=1379401729" />
+        </head>
+        <body>
+            
             <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.js?timestamp=1379314418"></script>
             <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.js?timestamp=1379402641"></script>
             <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.js?timestamp=1379402641"></script>
@@ -96,9 +100,6 @@
             <script type="text/javascript" charset="utf-8" src="mt/tweetfeed/tweetfeed.js?timestamp=1379424016"></script>
             <script type="text/javascript" charset="utf-8" src="mt/tweetview/tweetview.js?timestamp=1379424018"></script>
             <script type="text/javascript" charset="utf-8" src="boot.js?timestamp=1379414626"></script>
-        </head>
-        <body>
-            
         </body>
     </html>
 
@@ -109,11 +110,12 @@
 Теперь правило простое: **после каждого изменения кода или конфигурации проекта рекомендуется перекомпилировать
 проект.** Хотя бы для того, чтобы обновлялись timestamp'ы измененных файлов и перезатирался их кэш в браузере.
 Другие причины, зачем нужна постоянная пересборка, будут описаны позже. Сейчас просто возьмите это за правило,
-и очень скоро привыкнете держать наготове консоль с открытой папкой проекта и командой debug в истории.
+и очень скоро привыкнете держать наготове консоль с открытой папкой проекта и командой "jwsdk debug jwsdk-config" в
+истории.
 
 jWidget SDK не просто сделал разработку проекта простой и приятной: с его помощью мы теперь можем легко минимизировать
 код, добавить динамическую загрузку скриптов и выполнить прочие улучшения/оптимизации. Кому интересно, можете
-попробовать откомпилировать проект скриптом release:
+попробовать откомпилировать проект командой "jwsdk release jwsdk-config":
 
 {@img release.png}
 
@@ -129,22 +131,20 @@ jWidget SDK не просто сделал разработку проекта �
             <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=9" />
             
-            
             <!-- Insert production meta tags here -->
-            
             
             <title>Mini-Twitter</title>
             <link rel="stylesheet" type="text/css" href="thirdparty/reset.css?timestamp=1379314418" />
             <link rel="stylesheet" type="text/css" href="build/packages/mt.min.css?timestamp=1379490399" />
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.min.js?timestamp=1379314418"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.min.js?timestamp=1379402641"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.min.js?timestamp=1379402641"></script>
-            <script type="text/javascript" charset="utf-8" src="build/packages/mt.min.js?timestamp=1379490400"></script>
         </head>
         <body>
             
             <!-- Insert external services here -->
             
+            <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.min.js?timestamp=1379314418"></script>
+            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.min.js?timestamp=1379402641"></script>
+            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.min.js?timestamp=1379402641"></script>
+            <script type="text/javascript" charset="utf-8" src="build/packages/mt.min.js?timestamp=1379490400"></script>
         </body>
     </html>
 
@@ -186,17 +186,17 @@ jWidget SDK не просто сделал разработку проекта �
             <div class="clear"></div>
         </a>
         <div jwid="middle">
-            <a jwid="tweets" class="blocklink mt-profile-box-count" href="#" target="_blank">
-                <div jwid="tweets-value" class="mt-profile-box-count-value"></div>
-                <div class="mt-profile-box-count-label">TWEETS</div>
+            <a jwid="count tweets" class="blocklink" href="#" target="_blank">
+                <div jwid="count-value tweets-value"></div>
+                <div jwid="count-label">TWEETS</div>
             </a>
-            <a jwid="following" class="blocklink mt-profile-box-count mt-profile-box-count-border" href="https://twitter.com/following" target="_blank">
-                <div jwid="following-value" class="mt-profile-box-count-value"></div>
-                <div class="mt-profile-box-count-label">FOLLOWING</div>
+            <a jwid="count count-border following" class="blocklink" href="https://twitter.com/following" target="_blank">
+                <div jwid="count-value following-value"></div>
+                <div jwid="count-label">FOLLOWING</div>
             </a>
-            <a jwid="followers" class="blocklink mt-profile-box-count mt-profile-box-count-border" href="https://twitter.com/followers" target="_blank">
-                <div jwid="followers-value" class="mt-profile-box-count-value"></div>
-                <div class="mt-profile-box-count-label">FOLLOWERS</div>
+            <a jwid="count count-border followers" class="blocklink" href="https://twitter.com/followers" target="_blank">
+                <div jwid="count-value followers-value"></div>
+                <div jwid="count-label">FOLLOWERS</div>
             </a>
             <div class="clear"></div>
         </div>
@@ -233,9 +233,9 @@ jWidget SDK не просто сделал разработку проекта �
             </div>
             <div jwid="text"></div>
             <div jwid="buttons">
-                <a jwid="like" class="mt-tweet-button" href="#"></a>
-                <a jwid="retweet" class="mt-tweet-button" href="#"></a>
-                <a jwid="remove" class="mt-tweet-button" href="#">Remove</a>
+                <a jwid="button like" href="#"></a>
+                <a jwid="button retweet" href="#"></a>
+                <a jwid="button remove" href="#">Remove</a>
             </div>
         </div>
         <div class="clear"></div>
@@ -260,7 +260,7 @@ jWidget SDK не просто сделал разработку проекта �
             "mt/tweetview/tweetview.jw.html : mt.TweetView",
             // ...
 
-Соберем проект скриптом debug и откроем в браузере. С удовлетворением обнаружим, что все работает так, как и прежде.
+Соберем проект командой "jwsdk debug jwsdk-config" и откроем в браузере. С удовлетворением обнаружим, что все работает так, как и прежде.
 
 {@img application.png}
 
@@ -531,7 +531,7 @@ NodeJS Package Manager:
             "mt/tweetview/tweetview.styl",
             // ...
 
-Снова собираем проект скриптом debug и убеждаемся в том, что функциональность не изменилась.
+Снова собираем проект и убеждаемся в том, что функциональность не изменилась.
 
 {@img application.png}
 
@@ -589,7 +589,7 @@ NodeJS Package Manager:
         ]
     }
 
-Запустим скрипт debug и убедимся в том, что все работает так же.
+Соберем проект и убедимся в том, что все работает так же.
 
 {@img application.png}
 

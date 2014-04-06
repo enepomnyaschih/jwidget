@@ -5,11 +5,12 @@ Demo: [http://enepomnyaschih.github.io/mt/0.8-7/](http://enepomnyaschih.github.i
 Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.8-7](https://github.com/enepomnyaschih/mt/tree/mt-0.8-7) (Git branch)
 
 In this part, we'll improve project infrastructure: extract HTML templates into separate HTML files using
-[jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) and will learn how to use
+[jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en) and will learn how to use
 [Stylus](http://learnboost.github.io/stylus/) CSS-preprocessor to make slicing easier and more convenient.
 
 First, please install
-[jWidget SDK by instruction](https://github.com/enepomnyaschih/jwsdk/wiki/jWidget-SDK-setup) (steps 1-4).
+[jWidget SDK by instruction](https://github.com/enepomnyaschih/jwsdk/wiki/jWidget-SDK-setup). Use `empty_project_html`
+as a template on step 4.
 
 Next, create "mt" package for our project.
 
@@ -50,7 +51,7 @@ Create "index" page.
     }
 
 Also we want to make sure that our project will work on [GitHub Pages](http://pages.github.com/), but they don't
-support ".htaccess" file. So let's transform global project configuration a little bit, to make sure that out
+support ".htaccess" file. So let's transform global project configuration a little bit, to make sure that our
 output HTML files will be generated in document root and all URLs will be relative.
 Change next options in jwsdk-config/config.json file:
 
@@ -59,7 +60,9 @@ Change next options in jwsdk-config/config.json file:
 
 And delete public/.htaccess file.
 
-Compile project using "debug" script in project root.
+Compile project from command line in your project root directory:
+
+    jwsdk debug jwsdk-config
 
 {@img debug.png}
 
@@ -74,14 +77,15 @@ Open public/index.html and see that its content has been changed.
             <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=9" />
             
-            
-            
             <title>Mini-Twitter</title>
             <link rel="stylesheet" type="text/css" href="thirdparty/reset.css?timestamp=1379314418" />
             <link rel="stylesheet" type="text/css" href="mt/application/application.css?timestamp=1379409267" />
             <link rel="stylesheet" type="text/css" href="mt/profilebox/profilebox.css?timestamp=1379409410" />
             <link rel="stylesheet" type="text/css" href="mt/tweetfeed/tweetfeed.css?timestamp=1379402158" />
             <link rel="stylesheet" type="text/css" href="mt/tweetview/tweetview.css?timestamp=1379401729" />
+        </head>
+        <body>
+            
             <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.js?timestamp=1379314418"></script>
             <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.js?timestamp=1379402641"></script>
             <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.js?timestamp=1379402641"></script>
@@ -94,9 +98,6 @@ Open public/index.html and see that its content has been changed.
             <script type="text/javascript" charset="utf-8" src="mt/tweetfeed/tweetfeed.js?timestamp=1379424016"></script>
             <script type="text/javascript" charset="utf-8" src="mt/tweetview/tweetview.js?timestamp=1379424018"></script>
             <script type="text/javascript" charset="utf-8" src="boot.js?timestamp=1379414626"></script>
-        </head>
-        <body>
-            
         </body>
     </html>
 
@@ -107,11 +108,12 @@ Run application in browser and you'll see that it works as before.
 Now, the rule is simple: **it is recommended to re-compile the project after each code or project configuration
 modification.** At least, to update timestamps of modified files to make sure that they won't be taken from
 browser cache. Other reasons why you must re-compile project before run, will be described later. Now, just
-keep this rule in your mind, and you'll get used to have an opened console with "debug" command in history ready to go.
+keep this rule in your mind, and you'll get used to have an opened console with "jwsdk debug jwsdk-config" command
+in history ready to go.
 
 jWidget SDK not just makes project development easy and fun: you'll be able to minify your code easily,
 add dynamic script loading and perform other improvements/optimizations. For whoever is interested, you can
-try to compile the project via "release" script:
+try to compile the project via "jwsdk release jwsdk-config" command:
 
 {@img release.png}
 
@@ -127,22 +129,20 @@ Release compilation is performed quite longer, but it optimizes project loading 
             <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=9" />
             
-            
             <!-- Insert production meta tags here -->
-            
             
             <title>Mini-Twitter</title>
             <link rel="stylesheet" type="text/css" href="thirdparty/reset.css?timestamp=1379314418" />
             <link rel="stylesheet" type="text/css" href="build/packages/mt.min.css?timestamp=1379490399" />
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.min.js?timestamp=1379314418"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.min.js?timestamp=1379402641"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.min.js?timestamp=1379402641"></script>
-            <script type="text/javascript" charset="utf-8" src="build/packages/mt.min.js?timestamp=1379490400"></script>
         </head>
         <body>
             
             <!-- Insert external services here -->
             
+            <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.min.js?timestamp=1379314418"></script>
+            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.min.js?timestamp=1379402641"></script>
+            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.min.js?timestamp=1379402641"></script>
+            <script type="text/javascript" charset="utf-8" src="build/packages/mt.min.js?timestamp=1379490400"></script>
         </body>
     </html>
 
@@ -183,17 +183,17 @@ Just move HTML of these templates into separate files with jw.html extension.
             <div class="clear"></div>
         </a>
         <div jwid="middle">
-            <a jwid="tweets" class="blocklink mt-profile-box-count" href="#" target="_blank">
-                <div jwid="tweets-value" class="mt-profile-box-count-value"></div>
-                <div class="mt-profile-box-count-label">TWEETS</div>
+            <a jwid="count tweets" class="blocklink" href="#" target="_blank">
+                <div jwid="count-value tweets-value"></div>
+                <div jwid="count-label">TWEETS</div>
             </a>
-            <a jwid="following" class="blocklink mt-profile-box-count mt-profile-box-count-border" href="https://twitter.com/following" target="_blank">
-                <div jwid="following-value" class="mt-profile-box-count-value"></div>
-                <div class="mt-profile-box-count-label">FOLLOWING</div>
+            <a jwid="count count-border following" class="blocklink" href="https://twitter.com/following" target="_blank">
+                <div jwid="count-value following-value"></div>
+                <div jwid="count-label">FOLLOWING</div>
             </a>
-            <a jwid="followers" class="blocklink mt-profile-box-count mt-profile-box-count-border" href="https://twitter.com/followers" target="_blank">
-                <div jwid="followers-value" class="mt-profile-box-count-value"></div>
-                <div class="mt-profile-box-count-label">FOLLOWERS</div>
+            <a jwid="count count-border followers" class="blocklink" href="https://twitter.com/followers" target="_blank">
+                <div jwid="count-value followers-value"></div>
+                <div jwid="count-label">FOLLOWERS</div>
             </a>
             <div class="clear"></div>
         </div>
@@ -230,15 +230,15 @@ Just move HTML of these templates into separate files with jw.html extension.
             </div>
             <div jwid="text"></div>
             <div jwid="buttons">
-                <a jwid="like" class="mt-tweet-button" href="#"></a>
-                <a jwid="retweet" class="mt-tweet-button" href="#"></a>
-                <a jwid="remove" class="mt-tweet-button" href="#">Remove</a>
+                <a jwid="button like" href="#"></a>
+                <a jwid="button retweet" href="#"></a>
+                <a jwid="button remove" href="#">Remove</a>
             </div>
         </div>
         <div class="clear"></div>
     </div>
 
-Next, remove all JW.UI.template calls from source js files.
+Please remove all JW.UI.template calls from source js files.
 
 Add new files into jwsdk-config/packages/mt.json package configuration and bind them to corresponding
 JW.UI.Component subclasses:
@@ -257,7 +257,7 @@ JW.UI.Component subclasses:
             "mt/tweetview/tweetview.jw.html : mt.TweetView",
             // ...
 
-Compile project with "debug" script and open it in browser. You'll see that it works as before.
+Compile project with "jwsdk debug jwsdk-config" command and open it in browser. You'll see that it works as before.
 
 {@img application.png}
 
