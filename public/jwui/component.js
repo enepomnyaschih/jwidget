@@ -153,10 +153,12 @@
  * 
  * In this case, the element of HTML template with such `jwid` will return back to its original state.
  *
- * **Notice:** All child components in #children map are destroyed automatically on parent component destruction,
- * so you usually don't need to destroy them explicitly.
+ * You can destroy child components freely in {@link #destroyComponent} method of parent component. In this method,
+ * child components are already removed from the parent and are ready to be destroyed.
  *
- * Child arrays are a bit more complicated. First way to remove a child which is added to parent via array is to
+ * Also, you can use aggregation method {@link JW.Class#own} to destroy the child component.
+ *
+ * Child arrays are a bit more complicated. First way to remove a child which is added to the parent via array is to
  * remove this child from this array. Second way: #addArray method returns an instance of
  * JW.UI.Component.Array. If you destroy it, the array will be removed from parent component:
  * 
@@ -193,12 +195,14 @@
  *
  * This example describes how to create and destroy the child component with `jwid="title-box"`.
  *
- *     var MyComponent = JW.UI.Component.{@link JW.Class#static-method-extend}({
+ *     var MyComponent = function() {
+ *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
+ *     };
+ *     
+ *     JW.extend(MyComponent, JW.UI.Component, {
  *         renderTitleBox: function() {
- *             return new TitleBox();
+ *             return this.{@link JW.Class#own own}(new TitleBox());
  *         }
- *         
- *         // title box will be destroyed automatically
  *     });
  *     
  *     JW.UI.template(MyComponent, {
@@ -223,11 +227,6 @@
  *         
  *         renderTitleBox: function() {
  *             return this.titleBox;
- *         },
- *         
- *         {@link #destroyComponent destroyComponent}: function() {
- *             this.{@link #children children}.{@link JW.AbstractMap#remove remove}("title-box"); // prevent title box destruction
- *             this.{@link JW.Class#method-_super _super}();
  *         }
  *     });
  *     
@@ -238,7 +237,34 @@
  *             '</div>'
  *     });
  *
- * **Internal child array**
+ * **Internal immutable child array**
+ *
+ * This example describes how to create and destroy child components by data array, and insert them into
+ * element with `jwid="labels"`.
+ *
+ *     var MyComponent = function(labels) {
+ *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
+ *         this.labels = labels;
+ *     };
+ *     
+ *     JW.extend(MyComponent, JW.UI.Component, {
+ *         // JW.AbstractArray<Label> labels;
+ *         
+ *         renderLabels: function() {
+ *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$map $map}(function(label) {
+ *                 return new LabelView(label);
+ *             }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
+ *         }
+ *     });
+ *     
+ *     JW.UI.template(MyComponent, {
+ *         main:
+ *             '<div jwclass="my-component">' +
+ *                 '<div jwid="labels" />' +
+ *             '</div>'
+ *     });
+ *
+ * **Internal mutable child array**
  *
  * This example describes how to create and destroy child components by data array, and insert them into
  * element with `jwid="labels"`. Child array will be being synchronized with data on fly.
@@ -246,25 +272,17 @@
  *     var MyComponent = function(labels) {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.labels = labels;
- *         this._mapper = null;
  *     };
  *     
  *     JW.extend(MyComponent, JW.UI.Component, {
  *         // JW.AbstractArray<Label> labels;
- *         // JW.AbstractArray.Mapper<Label, LabelView> _mapper;
  *         
  *         renderLabels: function() {
- *             this._mapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
+ *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
  *                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
  *                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
  *                 {@link JW.AbstractCollection.Mapper#scope scope}: this
- *             });
- *             return this._mapper.{@link JW.AbstractCollection.Mapper#property-target target};
- *         },
- *         
- *         {@link #destroyComponent destroyComponent}: function() {
- *             this._mapper.{@link JW.Class#destroy destroy}(); // destroys all label views
- *             this.{@link JW.Class#method-_super _super}();
+ *             })).{@link JW.AbstractCollection.Mapper#property-target target};
  *         }
  *     });
  *     
@@ -291,41 +309,6 @@
  *         
  *         renderLabels: function() {
  *             return this.labelViews;
- *         }
- *     });
- *     
- *     JW.UI.template(MyComponent, {
- *         main:
- *             '<div jwclass="my-component">' +
- *                 '<div jwid="labels" />' +
- *             '</div>'
- *     });
- *
- * **Internal child array without synchronizer**
- *
- * Sometimes you can't use JW.AbstractArray.Mapper to create child component arrays for some reason. Let's look how
- * these components should be created and destroyed.
- *
- *     var MyComponent = function(labels) {
- *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
- *         this.labels = labels;
- *         this._labelViews = null;
- *     };
- *     
- *     JW.extend(MyComponent, JW.UI.Component, {
- *         // JW.AbstractArray<Label> labels;
- *         // JW.AbstractArray<LabelView> _labelViews;
- *         
- *         renderLabels: function() {
- *             this._labelViews = this.labels.{@link JW.AbstractArray#$map $map}(function(label) {
- *                 return new LabelView(label);
- *             }, this);
- *             return this._labelViews;
- *         },
- *         
- *         {@link #destroyComponent destroyComponent}: function() {
- *             this._labelViews.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // destroy all label views
- *             this.{@link JW.Class#method-_super _super}();
  *         }
  *     });
  *     
@@ -363,11 +346,10 @@
  * Component layouting should be performed here (calculate element sizes).
  * Component rendering is finished here. <code>this._super()</code> call is performed at first line of method.
  * 1. Method #destroyComponent is called during component destruction. Everything that was performed during component
- * rendering, i.e. on steps 2-5, should be reverted here. All child component arrays are already removed by framework
- * before this method call, but the components themselves are not destroyed. You must destroy them explicitly.
- * Unlike arrays, named child component will be destroyed automatically after #destroyComponent method, so you must
- * remove them from #children map if you want to keep them alive. <code>this._super()</code> method call is performed
- * at last line of method.
+ * rendering, i.e. on steps 2-5, should be reverted here. All child components are already removed by framework
+ * before this method call, but the components themselves are not destroyed. You must destroy them explicitly unless
+ * you used {@link JW.Class#own own} method to aggregate them.
+ * <code>this._super()</code> method call is performed at last line of method.
  * 1. Method #destroyObject is called during component destruction. Everything that was performed during component
  * construction, i.e. on step 1, should be reverted here. <code>this._super()</code> method call is performed
  * at last line of method.

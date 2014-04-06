@@ -176,6 +176,11 @@ JW.AbstractCollection._create$Set = function(algorithm) {
 };
 
 JW.extend(JW.AbstractCollection, JW.Class, {
+	/**
+	 * Makes this collection an owner of its items, which means that all the items will be destroyed on
+	 * the collection destruction. Will be reworked in [#66](https://github.com/enepomnyaschih/jwidget/issues/66).
+	 * @returns {JW.AbstractCollection} this
+	 */
 	ownItems: function() {
 		this.own(new JW.AbstractCollection.ItemOwner(this));
 		return this;
