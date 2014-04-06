@@ -14,12 +14,13 @@
 
 Для начала проведем небольшой рефакторинг. Сейчас у нас есть следующий код в классе mt.TweetFeed:
 
+**public/mt/tweetfeed/tweetfeed.js**
+
         renderTweets: function() {
-            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }, this);
-            return this.tweetViews;
-        },
+            }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
+        }
 
 Напомню, что этот код конвертирует массив данных mt.data.Tweet в массив представлений mt.TweetView и
 рендерит их внутрь элемента с jwid="tweets".
@@ -39,39 +40,21 @@
 
 **public/mt/tweetfeed/tweetfeed.js**
 
-    mt.TweetFeed = function(data) {
-        mt.TweetFeed.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
-        this._mapper = null;
-    };
-    
-    JW.extend(mt.TweetFeed, JW.UI.Component, {
-        /*
-        mt.Data data;
-        JW.AbstractArray.Mapper<mt.data.Tweet, mt.TweetView> _mapper;
-        */
-        
         renderTweets: function() {
-            this._mapper = this.data.tweets.{@link JW.AbstractArray#createMapper createMapper}({
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#createMapper createMapper}({
                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
                     return new mt.TweetView(tweetData);
                 },
                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
                 {@link JW.AbstractCollection.Mapper#scope scope}: this
-            });
-            return this._mapper.{@link JW.AbstractArray.Mapper#property-target target};
-        },
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            this._mapper.{@link JW.Class#destroy destroy}();
-            this.{@link JW.Class#method-_super _super}();
+            })).{@link JW.AbstractArray.Mapper#property-target target};
         }
-    });
 
 Поскольку наш массив this.data.tweets пока простой (JW.Array), этот код эквивалентен предыдущему - запустите
 приложение в браузере, и вы не заметите разницы. Зато теперь мы получили возможность заменить реализацию массива
 в mt.Data на JW.ObservableArray, и, не меняя кода представления, синхронизировать его с моделью:
+
+**public/mt/data/data.js**
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
@@ -100,6 +83,8 @@
 
 Остается только добавить код, который будет добавлять новый объект в data.tweets по сабмиту формы
 Compose tweet. Подпишемся на событие jQuery.submit в mt.ProfileBox:
+
+**public/mt/profilebox/profilebox.js**
 
     mt.ProfileBox = function(data) {
         this._onComposeSubmit = JW.inScope(this._onComposeSubmit, this);
@@ -139,18 +124,26 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
 
 {@img result-3.png}
 
-Наша следующая задача - активировать кнопки Remove у твитов, чтобы корректно удалять их из ленты. Откроем
-класс mt.TweetView и подпишемся на клик по кнопке:
+Наша следующая задача - активировать кнопки Remove у твитов, чтобы корректно удалять их из ленты. Подпишемся на клик
+по кнопке. Для удаления твита нам понадобится доступ к объекту mt.Data:
 
-    mt.TweetView = function(tweetData) {
-        // ...
+**public/mt/tweetview/tweetview.js**
+
+    mt.TweetView = function(data, tweetData) {
+        this._updateTime = JW.inScope(this._updateTime, this);
+        this._onLikeClick = JW.inScope(this._onLikeClick, this);
+        this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         this._onRemoveClick = JW.inScope(this._onRemoveClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        // ...
+        this.data = data;
+        this.tweetData = tweetData;
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        // ...
+        /*
+        mt.Data data;
+        mt.data.Tweet tweetData;
+        */
         
         renderRemove: function(el) {
             el.click(this._onRemoveClick);
@@ -160,41 +153,19 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
         
         _onRemoveClick: function(event) {
             event.preventDefault();
-        },
-        
-        // ...
-    });
-
-Для удаления твита нам понадобится доступ к объекту mt.Data. Предоставим его:
-
-    mt.TweetView = function(data, tweetData) {
-        // ...
-        mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
-        this.tweetData = tweetData;
-    };
-    
-    JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.Data data;
-        ...
-        */
-        
-        // ...
-    });
-
-Обновим код создания объектов mt.TweetView в mt.TweetFeed:
-
-                createItem: function(tweetData) {
-                    return new mt.TweetView(this.data, tweetData);
-                },
-
-И завершим реализацию метода _onRemoveClick класса mt.TweetView:
-
-        _onRemoveClick: function(event) {
-            event.preventDefault();
             this.data.tweets.{@link JW.AbstractArray#removeItem removeItem}(this.tweetData);
         },
+        
+        // ...
+    });
+
+Обновите аргументы конструирования объекта mt.TweetView в mt.TweetFeed:
+
+**public/mt/tweetfeed/tweetfeed.js**
+
+                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
+                    return new mt.TweetView(this.data, tweetData);
+                },
 
 Запустите приложение и попробуйте кликнуть по кнопке Remove у твита:
 

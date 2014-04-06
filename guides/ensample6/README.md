@@ -11,12 +11,13 @@ In this example, we'll add a feature of new tweets posting and existing tweets r
 
 Let's start with a bit of refactoring. We have a next code snippet in mt.TweetFeed class:
 
+**public/mt/tweetfeed/tweetfeed.js**
+
         renderTweets: function() {
-            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }, this);
-            return this.tweetViews;
-        },
+            }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
+        }
 
 Just to remind, this code converts data array of mt.data.Tweet instances to view array of mt.TweetView instances,
 and renders them into element with jwid="tweets".
@@ -35,39 +36,21 @@ So, let's replace code of mt.TweetFeed with the next:
 
 **public/mt/tweetfeed/tweetfeed.js**
 
-    mt.TweetFeed = function(data) {
-        mt.TweetFeed.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
-        this._mapper = null;
-    };
-    
-    JW.extend(mt.TweetFeed, JW.UI.Component, {
-        /*
-        mt.Data data;
-        JW.AbstractArray.Mapper<mt.data.Tweet, mt.TweetView> _mapper;
-        */
-        
         renderTweets: function() {
-            this._mapper = this.data.tweets.{@link JW.AbstractArray#createMapper createMapper}({
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#createMapper createMapper}({
                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
                     return new mt.TweetView(tweetData);
                 },
                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
                 {@link JW.AbstractCollection.Mapper#scope scope}: this
-            });
-            return this._mapper.{@link JW.AbstractArray.Mapper#property-target target};
-        },
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            this._mapper.{@link JW.Class#destroy destroy}();
-            this.{@link JW.Class#method-_super _super}();
+            })).{@link JW.AbstractArray.Mapper#property-target target};
         }
-    });
 
-Since our array of this.data.tweets is still simple (JW.Array), this code is completely equal to original one -
+Since our array of this.data.tweets is still simple (JW.Array), this code is completely equal to the original one -
 run the application in browser and you won't see any difference. But now we are able to replace simple array
 in mt.Data with JW.ObservableArray, and synchronize view with model without view modification this way:
+
+**public/mt/data/data.js**
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
@@ -75,7 +58,7 @@ in mt.Data with JW.ObservableArray, and synchronize view with model without view
         this.tweets = new JW.ObservableArray();
     };
 
-Try to open application in browser and run next command in console:
+Try to open application in browser and run the next command in console:
 
     data.tweets.{@link JW.AbstractArray#add add}(new mt.data.Tweet({
         fullName: "Road Runner",
@@ -95,7 +78,9 @@ Notice that we didn't touch view by this command: we've just added an object int
 updated correctly.
 
 The only remaining part is to add code which will add a new object into data.tweets array on "Compose tweet" form
-submit. Bind to jQuery.submit event in mt.ProfileBox:
+submit. Bind mt.ProfileBox to jQuery.submit event:
+
+**public/mt/profilebox/profilebox.js**
 
     mt.ProfileBox = function(data) {
         this._onComposeSubmit = JW.inScope(this._onComposeSubmit, this);
@@ -135,18 +120,26 @@ And run our application. After text input and "Tweet" button click, we'll see a 
 
 {@img result-3.png}
 
-Our next goal is to activate Remove button in tweets to remove them from feed. Open mt.TweetView class and bind
-to button click:
+Our next goal is to activate Remove button in tweets to remove them from feed. Let's bind a handler to button click.
+We'll need the access to mt.Data object to remove the tweet:
 
-    mt.TweetView = function(tweetData) {
-        // ...
+**public/mt/tweetview/tweetview.js**
+
+    mt.TweetView = function(data, tweetData) {
+        this._updateTime = JW.inScope(this._updateTime, this);
+        this._onLikeClick = JW.inScope(this._onLikeClick, this);
+        this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         this._onRemoveClick = JW.inScope(this._onRemoveClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        // ...
+        this.data = data;
+        this.tweetData = tweetData;
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        // ...
+        /*
+        mt.Data data;
+        mt.data.Tweet tweetData;
+        */
         
         renderRemove: function(el) {
             el.click(this._onRemoveClick);
@@ -156,41 +149,19 @@ to button click:
         
         _onRemoveClick: function(event) {
             event.preventDefault();
-        },
-        
-        // ...
-    });
-
-We'll need access to mt.Data object to remove the tweet. Let's provide it:
-
-    mt.TweetView = function(data, tweetData) {
-        // ...
-        mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
-        this.tweetData = tweetData;
-    };
-    
-    JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.Data data;
-        ...
-        */
-        
-        // ...
-    });
-
-Update code for mt.TweetView object creation in mt.TweetFeed:
-
-                createItem: function(tweetData) {
-                    return new mt.TweetView(this.data, tweetData);
-                },
-
-And finish _onRemoveClick method implementation in mt.TweetView class:
-
-        _onRemoveClick: function(event) {
-            event.preventDefault();
             this.data.tweets.{@link JW.AbstractArray#removeItem removeItem}(this.tweetData);
         },
+        
+        // ...
+    });
+
+Update mt.TweetView object construction arguments in mt.TweetFeed:
+
+**public/mt/tweetfeed/tweetfeed.js**
+
+                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
+                    return new mt.TweetView(this.data, tweetData);
+                },
 
 Run application and try to click Remove button in tweet:
 
