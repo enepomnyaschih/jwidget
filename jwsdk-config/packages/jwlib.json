@@ -96,9 +96,11 @@
 		"jwlib/property/updater.js",
 		
 		"jwlib/util/factory.js",
+		"jwlib/util/interval.js",
 		"jwlib/util/proxy.js",
 		"jwlib/util/setInterval.js",
 		"jwlib/util/string.js",
+		"jwlib/util/timeout.js",
 		"jwlib/util/timer.js"
 	]
 }

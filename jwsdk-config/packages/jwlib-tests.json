@@ -84,6 +84,8 @@
 		"jwlib/tests/property/updater.js",
 		
 		"jwlib/tests/util.js",
+		"jwlib/tests/util/interval.js",
+		"jwlib/tests/util/timeout.js",
 		"jwlib/tests/util/timer.js",
 		"jwlib/tests/util/string.js",
 		
