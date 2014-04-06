@@ -25,7 +25,7 @@ First, let's implement mt.Application class, which will be root view of our appl
         */
         
         renderTweets: function() {
-            return new mt.TweetFeed(this.data);
+            return this.{@link JW.Class#own own}(new mt.TweetFeed(this.data));
         },
         
         // override
@@ -50,33 +50,33 @@ First, let's implement mt.Application class, which will be root view of our appl
 Once again, we see method `render<ChildId>` (renderTweets), and once again it does something new. This time, it
 creates and returns an instance of mt.TweetFeed class. It means that a new component mt.TweetFeed will be
 rendered at the place of element with jwid="tweets". This element will be completely replaced with new component,
-and all its CSS classes (here: mt-application-tweets) will be copied into root element of component.
+and all its CSS classes (here: mt-application-tweets) will be copied into root element of the component.
 
 Let's review some details of this feature.
 
 **First**, it is important to understand that after instantiation of mt.TweetFeed class object this component
 is not rendered yet. It means that it doesn't have HTML elements and capability to add child components.
 Component will be rendered automatically somewhere inside framework, later. But if you really need to perform
-some additional actions with the rendered component (for example, add CSS-class),
+some additional actions with the rendered component (for example, add a CSS-class),
 you can render it explicitly using {@link JW.UI.Component#render render} method:
 
         renderTweets: function(el) {
-            var tweetFeed = new mt.TweetFeed(this.data);
+            var tweetFeed = this.{@link JW.Class#own own}(new mt.TweetFeed(this.data));
             tweetFeed.{@link JW.UI.Component#render render}(el);
             tweetFeed.{@link JW.UI.Component#el el}.addClass("my-extra-class");
             return tweetFeed;
         },
 
 Argument "el" is optional to pass, but recommended. Some components may use
-{@link JW.UI.Component#replacedEl replacedEl} field to render its content - "el" argument determines its value.
+{@link JW.UI.Component#replacedEl replacedEl} field to render their content - "el" argument determines its value.
 
-**Second**, like in previous parts, we must find a way to add a child component without
+**Second**, like in the previous parts, we must find a way to add a child component without
 `render<ChildId>` method definition. You can do it using {@link JW.UI.Component#children children} observable map:
 
         // override
         {@link JW.UI.Component#renderComponent renderComponent}: function() {
             this.{@link JW.Class#method-_super _super}();
-            this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#set set}(new mt.TweetFeed(this.data), "tweets");
+            this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#set set}(this.{@link JW.Class#own own}(new mt.TweetFeed(this.data)), "tweets");
         },
 
 Select the way you like more.
@@ -154,7 +154,7 @@ Let's start with model once again. We need data about current user profile. Let'
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
         this.profile = null;
-        this.tweets = new JW.Array();
+        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}();
     };
     
     JW.extend(mt.Data, JW.Class, {
@@ -162,17 +162,11 @@ Let's start with model once again. We need data about current user profile. Let'
         mt.data.Profile profile;
         JW.AbstractArray<mt.data.Tweet> tweets;
         */
-        
-        // override
-        {@link JW.Class#destroy destroy}: function() {
-            this.tweets.{@link JW.AbstractArray#destroy destroy}();
-            this.{@link JW.Class#method-_super _super}();
-        }
     });
     
     mt.Data.createByJson = function(json) {
         var data = new mt.Data();
-        data.profile = mt.data.Profile.createByJson(json.profile);
+        data.profile = data.{@link JW.Class#own own}(mt.data.Profile.createByJson(json.profile));
         data.tweets.{@link JW.AbstractArray#addAll addAll}({@link JW.Array#static-method-map JW.Array.map}(json.tweets, mt.data.Tweet.createByJson));
         return data;
     };
@@ -213,7 +207,7 @@ Now, implement mt.data.Profile class.
 Switch to view. Add profile panel rendering method to mt.Application:
 
         renderProfileBox: function() {
-            return new mt.ProfileBox(this.data);
+            return this.{@link JW.Class#own own}(new mt.ProfileBox(this.data));
         },
 
 Implement this component.
@@ -269,17 +263,17 @@ Implement this component.
                     '<div class="clear"></div>' +
                 '</a>' +
                 '<div jwid="middle">' +
-                    '<a jwid="tweets" class="blocklink mt-profile-box-count" href="#" target="_blank">' +
-                        '<div jwid="tweets-value" class="mt-profile-box-count-value"></div>' +
-                        '<div class="mt-profile-box-count-label">TWEETS</div>' +
+                    '<a jwid="count tweets" class="blocklink" href="#" target="_blank">' +
+                        '<div jwid="count-value tweets-value"></div>' +
+                        '<div jwid="count-label">TWEETS</div>' +
                     '</a>' +
-                    '<a jwid="following" class="blocklink mt-profile-box-count mt-profile-box-count-border" href="https://twitter.com/following" target="_blank">' +
-                        '<div jwid="following-value" class="mt-profile-box-count-value"></div>' +
-                        '<div class="mt-profile-box-count-label">FOLLOWING</div>' +
+                    '<a jwid="count count-border following" class="blocklink" href="https://twitter.com/following" target="_blank">' +
+                        '<div jwid="count-value following-value"></div>' +
+                        '<div jwid="count-label">FOLLOWING</div>' +
                     '</a>' +
-                    '<a jwid="followers" class="blocklink mt-profile-box-count mt-profile-box-count-border" href="https://twitter.com/followers" target="_blank">' +
-                        '<div jwid="followers-value" class="mt-profile-box-count-value"></div>' +
-                        '<div class="mt-profile-box-count-label">FOLLOWERS</div>' +
+                    '<a jwid="count count-border followers" class="blocklink" href="https://twitter.com/followers" target="_blank">' +
+                        '<div jwid="count-value followers-value"></div>' +
+                        '<div jwid="count-label">FOLLOWERS</div>' +
                     '</a>' +
                     '<div class="clear"></div>' +
                 '</div>' +
