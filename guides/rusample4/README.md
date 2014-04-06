@@ -41,6 +41,8 @@ API для работы с событиями в jWidget максимально 
 Итак, начнем обработку клика по Like или Retweet. Пойдем по шагам, описанным выше. Сначала подпишемся на событие
 клика с помощью jQuery в классе mt.TweetView:
 
+**public/mt/tweetview/tweetview.js**
+
         renderLike: function(el) {
             el.toggleClass("active", this.tweetData.like).text(this.tweetData.like ? "Unlike" : "Like");
             el.click(this._onLikeClick);
@@ -65,6 +67,8 @@ API для работы с событиями в jWidget максимально 
 Связано это с тем, что у обработчика события не определен контекст вызова (this). Это особенность JavaScript,
 с которой мы вынуждены смириться. Чтобы заставить этот код работать, закрепим контекст вызова этих функций
 с помощью функции JW.inScope. По стандарту, это следует делать в конструкторе, до вызова конструктора базового класса:
+
+**public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(tweetData) {
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
@@ -140,6 +144,8 @@ JW.ItemValueEventParams в большинстве случаев вполне д
 Следующим шагом мы должны подписаться на эти события и обновлять представление. Чтобы не дублировать код, вынесем
 реализацию обновления элементов mt.TweetView в отдельные методы updateLike и updateRetweet:
 
+**public/mt/tweetview/tweetview.js**
+
         renderLike: function(el) {
             this._updateLike();
             el.click(this._onLikeClick);
@@ -164,6 +170,8 @@ JW.ItemValueEventParams в большинстве случаев вполне д
 
 Подпишемся на события likeChangeEvent и retweetChangeEvent. На выходе мы получим объекты подписки, которые
 необходимо заагрегировать:
+
+**public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(tweetData) {
         this._onLikeClick = JW.inScope(this._onLikeClick, this);

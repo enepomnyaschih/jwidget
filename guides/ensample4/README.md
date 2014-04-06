@@ -38,6 +38,8 @@ JW.EventAttachment. Let's look how to use them.
 So, let's start listening Like and Retweet button clicks. Let's follow the steps described above. First, bind to
 click event using jQuery in mt.TweetView class:
 
+**public/mt/tweetview/tweetview.js**
+
         renderLike: function(el) {
             el.toggleClass("active", this.tweetData.like).text(this.tweetData.like ? "Unlike" : "Like");
             el.click(this._onLikeClick);
@@ -62,6 +64,8 @@ If you already worked with JavaScript classes before, then you know why this cod
 The reason is that event handler doesn't know its call scope (this). This is a problem of JavaScript, which
 we must live with. We must bind the call scope to these handlers using JW.inScope function to make them work.
 By standard, you should do this in the constructor, before superclass constructor call:
+
+**public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(tweetData) {
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
@@ -137,6 +141,8 @@ jWidget is modest in this regard, but fast.
 Next, we must bind handlers to these events and update view in them. To prevent code duplication, let's
 extract element updating code of mt.TweetView into separate methods "updateLike" and "updateRetweet":
 
+**public/mt/tweetview/tweetview.js**
+
         renderLike: function(el) {
             this._updateLike();
             el.click(this._onLikeClick);
@@ -161,6 +167,8 @@ extract element updating code of mt.TweetView into separate methods "updateLike"
 
 Let's bind the handlers to "likeChangeEvent" and "retweetChangeEvent". We'll get event attachment objects which we must
 aggregate:
+
+**public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(tweetData) {
         this._onLikeClick = JW.inScope(this._onLikeClick, this);

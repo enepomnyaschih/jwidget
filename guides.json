@@ -44,11 +44,15 @@
 					},
 					{
 						"name": "ensample5",
-						"title": "Part 5. Collection synchronizers"
+						"title": "Part 5. Properties"
 					},
 					{
 						"name": "ensample6",
-						"title": "Part 6. Project infrastructure"
+						"title": "Part 6. Collection synchronizers"
+					},
+					{
+						"name": "ensample7",
+						"title": "Part 7. Project infrastructure"
 					},
 					{
 						"name": "enkeyclasses",
@@ -103,11 +107,15 @@
 					},
 					{
 						"name": "rusample5",
-						"title": "Часть 5. Синхронизаторы коллекций"
+						"title": "Часть 5. Свойства"
 					},
 					{
 						"name": "rusample6",
-						"title": "Часть 6. Инфраструктура проекта"
+						"title": "Часть 6. Синхронизаторы коллекций"
+					},
+					{
+						"name": "rusample7",
+						"title": "Часть 7. Инфраструктура проекта"
 					}
 				]
 			},
