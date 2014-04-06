@@ -1,11 +1,9 @@
 ﻿# Часть 3. Именованные дочерние компоненты
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/3/](http://enepomnyaschih.github.io/mt/3/)
+[http://enepomnyaschih.github.io/mt/0.8-3/](http://enepomnyaschih.github.io/mt/0.8-3/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-3](https://github.com/enepomnyaschih/mt/tree/mt-3) (ветка)
-
-Этот пример является продолжением предыдущей части.
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-3](https://github.com/enepomnyaschih/mt/tree/mt-0.8-3) (ветка)
 
 В этом примере мы научимся рендерить дочерние компоненты, которые не находятся в массивах.
 
@@ -29,7 +27,7 @@
         */
         
         renderTweets: function() {
-            return new mt.TweetFeed(this.data);
+            return this.{@link JW.Class#own own}(new mt.TweetFeed(this.data));
         },
         
         // override
@@ -66,7 +64,7 @@
 CSS-класс), можно сделать это явно с помощью метода {@link JW.UI.Component#render render}:
 
         renderTweets: function(el) {
-            var tweetFeed = new mt.TweetFeed(this.data);
+            var tweetFeed = this.{@link JW.Class#own own}(new mt.TweetFeed(this.data));
             tweetFeed.{@link JW.UI.Component#render render}(el);
             tweetFeed.{@link JW.UI.Component#el el}.addClass("my-extra-class");
             return tweetFeed;
@@ -82,7 +80,7 @@ CSS-класс), можно сделать это явно с помощью м�
         // override
         {@link JW.UI.Component#renderComponent renderComponent}: function() {
             this.{@link JW.Class#method-_super _super}();
-            this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#set set}(new mt.TweetFeed(this.data), "tweets");
+            this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#set set}(this.{@link JW.Class#own own}(new mt.TweetFeed(this.data)), "tweets");
         },
 
 Выбирайте тот способ, какой вам больше нравится.
@@ -160,7 +158,7 @@ CSS-класс), можно сделать это явно с помощью м�
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
         this.profile = null;
-        this.tweets = new JW.Array();
+        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}();
     };
     
     JW.extend(mt.Data, JW.Class, {
@@ -168,17 +166,11 @@ CSS-класс), можно сделать это явно с помощью м�
         mt.data.Profile profile;
         JW.AbstractArray<mt.data.Tweet> tweets;
         */
-        
-        // override
-        {@link JW.Class#destroy destroy}: function() {
-            this.tweets.{@link JW.AbstractArray#destroy destroy}();
-            this.{@link JW.Class#method-_super _super}();
-        }
     });
     
     mt.Data.createByJson = function(json) {
         var data = new mt.Data();
-        data.profile = mt.data.Profile.createByJson(json.profile);
+        data.profile = data.{@link JW.Class#own own}(mt.data.Profile.createByJson(json.profile));
         data.tweets.{@link JW.AbstractArray#addAll addAll}({@link JW.Array#static-method-map JW.Array.map}(json.tweets, mt.data.Tweet.createByJson));
         return data;
     };
@@ -219,7 +211,7 @@ CSS-класс), можно сделать это явно с помощью м�
 Перейдем к представлению. Добавим в mt.Application метод рендеринга панели профиля:
 
         renderProfileBox: function() {
-            return new mt.ProfileBox(this.data);
+            return this.{@link JW.Class#own own}(new mt.ProfileBox(this.data));
         },
 
 Реализуем этот компонент.
@@ -275,17 +267,17 @@ CSS-класс), можно сделать это явно с помощью м�
                     '<div class="clear"></div>' +
                 '</a>' +
                 '<div jwid="middle">' +
-                    '<a jwid="tweets" class="blocklink mt-profile-box-count" href="#" target="_blank">' +
-                        '<div jwid="tweets-value" class="mt-profile-box-count-value"></div>' +
-                        '<div class="mt-profile-box-count-label">TWEETS</div>' +
+                    '<a jwid="count tweets" class="blocklink" href="#" target="_blank">' +
+                        '<div jwid="count-value tweets-value"></div>' +
+                        '<div jwid="count-label">TWEETS</div>' +
                     '</a>' +
-                    '<a jwid="following" class="blocklink mt-profile-box-count mt-profile-box-count-border" href="https://twitter.com/following" target="_blank">' +
-                        '<div jwid="following-value" class="mt-profile-box-count-value"></div>' +
-                        '<div class="mt-profile-box-count-label">FOLLOWING</div>' +
+                    '<a jwid="count count-border following" class="blocklink" href="https://twitter.com/following" target="_blank">' +
+                        '<div jwid="count-value following-value"></div>' +
+                        '<div jwid="count-label">FOLLOWING</div>' +
                     '</a>' +
-                    '<a jwid="followers" class="blocklink mt-profile-box-count mt-profile-box-count-border" href="https://twitter.com/followers" target="_blank">' +
-                        '<div jwid="followers-value" class="mt-profile-box-count-value"></div>' +
-                        '<div class="mt-profile-box-count-label">FOLLOWERS</div>' +
+                    '<a jwid="count count-border followers" class="blocklink" href="https://twitter.com/followers" target="_blank">' +
+                        '<div jwid="count-value followers-value"></div>' +
+                        '<div jwid="count-label">FOLLOWERS</div>' +
                     '</a>' +
                     '<div class="clear"></div>' +
                 '</div>' +

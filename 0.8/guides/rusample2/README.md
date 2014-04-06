@@ -1,9 +1,9 @@
 ﻿# Часть 2. Дочерние компоненты, массивы
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/2/](http://enepomnyaschih.github.io/mt/2/)
+[http://enepomnyaschih.github.io/mt/0.8-2/](http://enepomnyaschih.github.io/mt/0.8-2/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-2](https://github.com/enepomnyaschih/mt/tree/mt-2) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-2](https://github.com/enepomnyaschih/mt/tree/mt-0.8-2) (ветка)
 
 Этот пример является продолжением предыдущей части.
 
@@ -32,7 +32,8 @@
         
         // override
         {@link JW.Class#destroy destroy}: function() {
-            this.tweets.{@link JW.AbstractArray#destroy destroy}();
+            this.tweets.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // очищаем массив и уничтожаем элементы
+            this.tweets.{@link JW.AbstractArray#destroy destroy}(); // уничтожаем массив
             this.{@link JW.Class#method-_super _super}();
         }
     });
@@ -51,13 +52,7 @@
 Десериализация осуществляется с помощью статического метода {@link JW.Array#static-method-map JW.Array.map}.
 Метод принимает нативный массив (Array) в качестве первого аргумента и функцию-коллбек в качестве второго аргумента.
 Функция-коллбек mt.data.Tweet.createByJson превращает объект типа Object (JSON) в объект типа mt.data.Tweet,
-мы реализовали ее в предыдущей части:
-
-    mt.data.Tweet.createByJson = function(json) {
-        return new mt.data.Tweet(JW.apply({}, json, {
-            time: new Date().getTime() - json.timeAgo
-        }));
-    };
+мы реализовали ее в предыдущей части.
 
 В результате вызова метода {@link JW.Array#static-method-map JW.Array.map} мы получим нативный массив (Array)
 объектов типа mt.data.Tweet. Передавая его в метод {@link JW.AbstractArray#addAll addAll} массива data.tweets,
@@ -71,9 +66,36 @@ mt.Data методом destroy, все вложенные объекты так�
 
         // override
         {@link JW.Class#destroy destroy}: function() {
-            this.tweets.{@link JW.AbstractArray#destroy destroy}();
+            this.tweets.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // очищаем массив и уничтожаем элементы
+            this.tweets.{@link JW.AbstractArray#destroy destroy}(); // уничтожаем массив
             this.{@link JW.Class#method-_super _super}();
         }
+
+Мы можем избавиться от метода "destroy", используя **механизм агрегирования объектов** в jWidget. Если объект A агрегирует
+объект B, то объект B будет уничтожен автоматически при уничтожении объекта A. Мы можем агрегировать объект с помощью
+метода {@link JW.Class#own}, и мы можем агрегировать элементы массива с помощью метода
+{@link JW.AbstractCollection#ownItems}:
+
+**public/mt/data/data.js**
+
+    mt.Data = function() {
+        mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
+        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}();
+    };
+    
+    JW.extend(mt.Data, JW.Class, {
+        /*
+        JW.AbstractArray<mt.data.Tweet> tweets;
+        */
+    });
+    
+    mt.Data.createByJson = function(json) {
+        var data = new mt.Data();
+        data.tweets.{@link JW.AbstractArray#addAll addAll}({@link JW.Array#static-method-map JW.Array.map}(json, mt.data.Tweet.createByJson));
+        return data;
+    };
+    
+    mt.data = {};
 
 Теперь перейдем к представлению. Определим класс mt.TweetFeed для представления ленты твитов.
 
@@ -82,26 +104,17 @@ mt.Data методом destroy, все вложенные объекты так�
     mt.TweetFeed = function(data) {
         mt.TweetFeed.{@link JW.Class#static-property-_super _super}.call(this);
         this.data = data;
-        this.tweetViews = null;
     };
     
     JW.extend(mt.TweetFeed, JW.UI.Component, {
         /*
         mt.Data data;
-        JW.AbstractArray<mt.TweetView> tweetViews;
         */
         
         renderTweets: function() {
-            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }, this);
-            return this.tweetViews;
-        },
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            this.tweetViews.{@link JW.AbstractArray#each each}(JW.destroy);
-            this.{@link JW.Class#method-_super _super}();
+            }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
         }
     });
     
@@ -137,20 +150,18 @@ JavaScript или другие значения.**
 В нашем примере метод {@link JW.AbstractArray#method-$map $map} принимает функцию-коллбек в качестве первого аргумента,
 которая превращает объект типа mt.data.Tweet в объект типа mt.TweetView:
 
-            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
+        renderTweets: function() {
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }, this);
+            }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
+        }
 
 Вторым аргументом метод принимает контекст вызова функции-коллбека (this). Правило здесь простое:
 **всегда, когда вы передаете функцию в качестве аргумента функции, следующим аргументом передается контекст
 вызова этой функции.**
 
 В результате мы получаем JW.Array, содержщащий объекты типа mt.TweetView, который мы возвращаем на выходе из
-метода renderTweets:
-
-            return this.tweetViews;
-
-Тем самым мы просим фреймворк отрендерить компоненты this.tweetViews внутрь элемента с jwid="tweets".
+метода renderTweets. Тем самым мы просим фреймворк отрендерить дочерние компоненты внутрь элемента с jwid="tweets".
 
 Далее, добавим CSS-файл.
 
@@ -227,10 +238,10 @@ JavaScript или другие значения.**
         // override
         {@link JW.UI.Component#renderComponent renderComponent}: function() {
             this.{@link JW.Class#method-_super _super}();
-            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
+            var tweetViews = this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }, this);
-            this.{@link JW.UI.Component#addArray addArray}(this.tweetViews, "tweets");
+            }, this).{@link JW.AbstractCollection#ownItems ownItems}();
+            this.{@link JW.UI.Component#addArray addArray}(tweetViews, "tweets");
         },
 
 Этот код эквивалентен предыдущему, только список дочерних компонентов добавляется методом

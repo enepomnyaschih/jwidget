@@ -140,7 +140,7 @@
  * That's the reason why we recommend to use jWidget JW.AbstractCollection in data model instead of native JavaScript
  * Array and Object: these collections have Observable-implementations and can be synchronized with each other.
  * 
- * [Getting started. Part 5. Collection synchronizers](#!/guide/ensample5)
+ * [Getting started. Part 6. Collection synchronizers](#!/guide/ensample6)
  * 
  * ### More about render&amp;lt;ChildId&amp;gt; method
  * 
@@ -170,10 +170,12 @@
  * 
  * In this case, the element of HTML template with such `jwid` will return back to its original state.
  *
- * **Notice:** All child components in #children map are destroyed automatically on parent component destruction,
- * so you usually don't need to destroy them explicitly.
+ * You can destroy child components freely in {@link #destroyComponent} method of parent component. In this method,
+ * child components are already removed from the parent and are ready to be destroyed.
  *
- * Child arrays are a bit more complicated. First way to remove a child which is added to parent via array is to
+ * Also, you can use aggregation method {@link JW.Class#own} to destroy the child component.
+ *
+ * Child arrays are a bit more complicated. First way to remove a child which is added to the parent via array is to
  * remove this child from this array. Second way: #addArray method returns an instance of
  * JW.UI.Component.Array. If you destroy it, the array will be removed from parent component:
  * 
@@ -210,12 +212,14 @@
  *
  * This example describes how to create and destroy the child component with `jwid=&quot;title-box&quot;`.
  *
- *     var MyComponent = JW.UI.Component.{@link JW.Class#static-method-extend}({
+ *     var MyComponent = function() {
+ *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
+ *     };
+ *     
+ *     JW.extend(MyComponent, JW.UI.Component, {
  *         renderTitleBox: function() {
- *             return new TitleBox();
+ *             return this.{@link JW.Class#own own}(new TitleBox());
  *         }
- *         
- *         // title box will be destroyed automatically
  *     });
  *     
  *     JW.UI.template(MyComponent, {
@@ -240,11 +244,6 @@
  *         
  *         renderTitleBox: function() {
  *             return this.titleBox;
- *         },
- *         
- *         {@link #destroyComponent destroyComponent}: function() {
- *             this.{@link #children children}.{@link JW.AbstractMap#remove remove}(&quot;title-box&quot;); // prevent title box destruction
- *             this.{@link JW.Class#method-_super _super}();
  *         }
  *     });
  *     
@@ -255,7 +254,34 @@
  *             '&lt;/div&gt;'
  *     });
  *
- * **Internal child array**
+ * **Internal immutable child array**
+ *
+ * This example describes how to create and destroy child components by data array, and insert them into
+ * element with `jwid=&quot;labels&quot;`.
+ *
+ *     var MyComponent = function(labels) {
+ *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
+ *         this.labels = labels;
+ *     };
+ *     
+ *     JW.extend(MyComponent, JW.UI.Component, {
+ *         // JW.AbstractArray&lt;Label&gt; labels;
+ *         
+ *         renderLabels: function() {
+ *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$map $map}(function(label) {
+ *                 return new LabelView(label);
+ *             }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
+ *         }
+ *     });
+ *     
+ *     JW.UI.template(MyComponent, {
+ *         main:
+ *             '&lt;div jwclass=&quot;my-component&quot;&gt;' +
+ *                 '&lt;div jwid=&quot;labels&quot; /&gt;' +
+ *             '&lt;/div&gt;'
+ *     });
+ *
+ * **Internal mutable child array**
  *
  * This example describes how to create and destroy child components by data array, and insert them into
  * element with `jwid=&quot;labels&quot;`. Child array will be being synchronized with data on fly.
@@ -263,25 +289,17 @@
  *     var MyComponent = function(labels) {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.labels = labels;
- *         this._mapper = null;
  *     };
  *     
  *     JW.extend(MyComponent, JW.UI.Component, {
  *         // JW.AbstractArray&lt;Label&gt; labels;
- *         // JW.AbstractArray.Mapper&lt;Label, LabelView&gt; _mapper;
  *         
  *         renderLabels: function() {
- *             this._mapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
+ *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
  *                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
  *                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
  *                 {@link JW.AbstractCollection.Mapper#scope scope}: this
- *             });
- *             return this._mapper.{@link JW.AbstractCollection.Mapper#property-target target};
- *         },
- *         
- *         {@link #destroyComponent destroyComponent}: function() {
- *             this._mapper.{@link JW.Class#destroy destroy}(); // destroys all label views
- *             this.{@link JW.Class#method-_super _super}();
+ *             })).{@link JW.AbstractCollection.Mapper#property-target target};
  *         }
  *     });
  *     
@@ -308,41 +326,6 @@
  *         
  *         renderLabels: function() {
  *             return this.labelViews;
- *         }
- *     });
- *     
- *     JW.UI.template(MyComponent, {
- *         main:
- *             '&lt;div jwclass=&quot;my-component&quot;&gt;' +
- *                 '&lt;div jwid=&quot;labels&quot; /&gt;' +
- *             '&lt;/div&gt;'
- *     });
- *
- * **Internal child array without synchronizer**
- *
- * Sometimes you can't use JW.AbstractArray.Mapper to create child component arrays for some reason. Let's look how
- * these components should be created and destroyed.
- *
- *     var MyComponent = function(labels) {
- *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
- *         this.labels = labels;
- *         this._labelViews = null;
- *     };
- *     
- *     JW.extend(MyComponent, JW.UI.Component, {
- *         // JW.AbstractArray&lt;Label&gt; labels;
- *         // JW.AbstractArray&lt;LabelView&gt; _labelViews;
- *         
- *         renderLabels: function() {
- *             this._labelViews = this.labels.{@link JW.AbstractArray#$map $map}(function(label) {
- *                 return new LabelView(label);
- *             }, this);
- *             return this._labelViews;
- *         },
- *         
- *         {@link #destroyComponent destroyComponent}: function() {
- *             this._labelViews.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // destroy all label views
- *             this.{@link JW.Class#method-_super _super}();
  *         }
  *     });
  *     
@@ -380,10 +363,12 @@
  * Component layouting should be performed here (calculate element sizes).
  * Component rendering is finished here. &lt;code&gt;this._super()&lt;/code&gt; call is performed at first line of method.
  * 1. Method #destroyComponent is called during component destruction. Everything that was performed during component
- * rendering, i.e. on steps 2-5, should be reverted here. All child component arrays are already removed by framework
- * before this method call, but the components themselves are not destroyed. You must destroy them explicitly.
- * Unlike arrays, named child component will be destroyed automatically after #destroyComponent method, so you must
- * remove them from #children map if you want to keep them alive. &lt;code&gt;this._super()&lt;/code&gt; method call is performed
+ * rendering, i.e. on steps 2-5, should be reverted here. All child components are already removed by framework
+ * before this method call, but the components themselves are not destroyed. You must destroy them explicitly unless
+ * you used {@link JW.Class#own own} method to aggregate them.
+ * &lt;code&gt;this._super()&lt;/code&gt; method call is performed at last line of method.
+ * 1. Method #destroyObject is called during component destruction. Everything that was performed during component
+ * construction, i.e. on step 1, should be reverted here. &lt;code&gt;this._super()&lt;/code&gt; method call is performed
  * at last line of method.
  * 
  * ### Intergration with jWidget SDK
@@ -439,7 +424,7 @@
  * 
  * See more complicated example in article:
  * 
- * [Getting started. Part 6. Project infrastructure](#!/guide/ensample6)
+ * [Getting started. Part 7. Project infrastructure](#!/guide/ensample7)
  * 
  * @extends JW.Class
  * @constructor
@@ -513,19 +498,20 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		this.destroyed = true;
 		if (this.el) {
-			this.el.remove();
+			this.el.detach();
 			JW.Set.each(this._arrays, JW.byMethod(&quot;destroy&quot;));
 			this._arrays = null;
-			
-			this.destroyComponent();
 			
 			this._childInserter.destroy();
 			this._childInserter = null;
 			this._childMapper.destroy();
 			this._childMapper = null;
-			this.children.each(JW.destroy);
+			
+			this.destroyComponent();
+			
 			this.children.destroy();
 			this.children = null;
+			this.el.remove();
 		}
 		this.allChildren = null;
 		this._elements = null;
@@ -565,7 +551,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 	afterAppend: function() {},
 	
 <span id='JW-UI-Component-method-destroyComponent'>	/**
-</span>	 * Component life stage method. Called during component destruction. Everything that was performed during component
+</span>	 * Component life stage method. Called during component destruction before {@link #destroyObject} method call.
+	 * Everything that was performed during component
 	 * rendering should be reverted here. All child component arrays are already removed by framework
 	 * before this method call, but the components themselves are not destroyed. You must destroy them explicitly.
 	 * Unlike arrays, named child component will be destroyed automatically after #destroyComponent method, so you must
@@ -576,6 +563,13 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	destroyComponent: function() {},
 	
+<span id='JW-UI-Component-method-destroyObject'>	/**
+</span>	 * Component life stage method. Called during component destruction after {@link #destroyComponent} method call.
+	 * Everything that was performed during component construction should be reverted here.
+	 * &lt;code&gt;this._super()&lt;/code&gt; method call is performed at last line of method.
+	 *
+	 * @returns {void}
+	 */
 	destroyObject: function() {},
 	
 <span id='JW-UI-Component-method-render'>	/**
@@ -600,18 +594,21 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.allChildren = {};
 		this.children = new JW.ObservableMap();
 		this._arrays = {};
-		this.rootClass = this.rootClass || this.el.attr(&quot;jwclass&quot;);
-		if (this.rootClass) {
-			this.el.removeAttr(&quot;jwclass&quot;);
-			this.el.addClass(this.rootClass);
-		}
+		this.rootClass = JW.String.parseClass(this.rootClass || this.el.attr(&quot;jwclass&quot;));
+		this.el.removeAttr(&quot;jwclass&quot;);
+		this.el.addClass(this.rootClass.join(&quot; &quot;));
 		var anchorEls = this.el.find(&quot;[jwid]&quot;);
 		for (var i = 0; i &lt; anchorEls.length; ++i) {
 			var anchorEl = jQuery(anchorEls[i]);
-			var jwId = anchorEl.attr(&quot;jwid&quot;);
-			this._elements[jwId] = anchorEl;
+			var jwIds = JW.String.trim(anchorEl.attr(&quot;jwid&quot;)).split(/\s+/);
 			anchorEl.removeAttr(&quot;jwid&quot;);
-			anchorEl.addClass(this.getElementClass(jwId));
+			for (var j = 0; j &lt; jwIds.length; ++j) {
+				var jwId = jwIds[j];
+				this._elements[jwId] = this._elements[jwId] ? this._elements[jwId].add(anchorEl) : anchorEl;
+				for (var k = 0; k &lt; this.rootClass.length; ++k) {
+					anchorEl.addClass(this.rootClass[k] + &quot;-&quot; + jwId);
+				}
+			}
 		}
 		this._childMapper = this.children.createMapper({
 			createItem  : function(child) { return new JW.UI.Component.Child(this, child); },
@@ -704,10 +701,6 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	setElement: function(el, id) {
 		this._elements[id] = el;
-	},
-	
-	getElementClass: function(id) {
-		return JW.Array.map(JW.Array.filter([ this.rootClass, id ], JW.isSet), JW.String.hyphen).join(&quot;-&quot;);
 	},
 	
 <span id='JW-UI-Component-method-removeElement'>	/**

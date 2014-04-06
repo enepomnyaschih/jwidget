@@ -105,6 +105,13 @@ JW.Tests.Util.StringTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual(&quot;&quot;,        JW.String.trim(&quot;    &quot;));
 		this.assertStrictEqual(&quot;&quot;,        JW.String.trim(&quot;&quot;));
 		this.assertStrictEqual(&quot;lala&quot;,    JW.String.trim(&quot;  \r\t lala  \n&quot;));
+	},
+	
+	testParseClass: function()
+	{
+		this.assertTrue(
+			JW.Array.equal([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;],
+			JW.String.parseClass([&quot;  a    b &quot;, &quot;c&quot;, [], &quot;&quot;, [[&quot;d&quot;, &quot;    &quot;, &quot;e&quot;]]])));
 	}
 });
 </pre>

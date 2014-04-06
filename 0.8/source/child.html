@@ -51,12 +51,6 @@ JW.extend(JW.UI.Component.Child, JW.Class, {
 	Element _el;
 	*/
 	
-	// override
-	destroy: function() {
-		this.parent._doneChild(this.child);
-		this._super();
-	},
-	
 	attach: function(name) {
 		// JW.assertNull(this.name);
 		this.name = name;

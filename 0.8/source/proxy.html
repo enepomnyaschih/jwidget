@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*
-	jWidget Lib source file.
+	jWidget Lib tests.
 	
 	Copyright (C) 2014 Egor Nepomnyaschih
 	
@@ -34,70 +34,37 @@
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
 
-<span id='JW-Proxy-method-constructor'><span id='JW-Proxy'>/**
-</span></span> * @class
- *
- * `&lt;T&gt;` jWidget object adapter. JW.Class wrapper of arbitrary value.
- *
- * Since some jWidget classes work with JW.Class instances only (for example, JW.AbstractSet),
- * the library provides a simple adapter for any objects and values conversion to JW.Class.
- *
- * If you want to track the value and react on its modification, use JW.Property instead.
- *
- * @extends JW.Class
- *
- * @constructor
- * @param {T} value Object.
- */
-JW.Proxy = function(value) {
-	JW.Proxy._super.call(this);
-	this.value = value;
-	this._ownsValue = false;
-};
-
-JW.extend(JW.Proxy, JW.Class, {
-<span id='JW-Proxy-property-value'>	/**
-</span>	 * @property {T} value Object.
-	 * @deprecated
-	 */
-	// boolean _ownsValue;
-	
-	destroy: function() {
-		if (this._ownsValue &amp;&amp; this.value) {
-			this.value.destroy();
-		}
-		this._super();
-	},
-	
-<span id='JW-Proxy-method-get'>	/**
-</span>	 * Returns object.
-	 * @returns {V} Object.
-	 */
-	get: function() {
-		return this.value;
-	},
-	
-<span id='JW-Proxy-method-set'>	/**
-</span>	 * Changes object.
-	 * @param {V} value
-	 */
-	set: function(value) {
-		var oldValue = this._value;
-		if (oldValue === value) {
-			return;
-		}
-		this._value = value;
-		if (this._ownsValue &amp;&amp; oldValue) {
-			oldValue.destroy();
-		}
-	},
-	
-<span id='JW-Proxy-method-ownValue'>	/**
-</span>	 * Makes this proxy an owner of its value. It means that the value will
-	 * be destroyed automatically on destruction of the proxy.
-	 */
-	ownValue: function() {
-		this._ownsValue = true;
+JW.Tests.Core.ProxyTestCase = JW.Unit.TestCase.extend({
+	testOwnValue: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
+		
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output(&quot;destroy &quot; + this.value);
+				this._super();
+			}
+		});
+		
+		var proxy = new JW.Proxy();
+		var a = new cls(this, &quot;a&quot;);
+		var b = new cls(this, &quot;b&quot;);
+		var c = new cls(this, &quot;c&quot;);
+		proxy.ownValue();
+		proxy.set(a);
+		this.setExpectedOutput(&quot;destroy a&quot;);
+		proxy.set(b);
+		this.setExpectedOutput();
+		proxy.set(b);
+		this.setExpectedOutput(&quot;destroy b&quot;);
+		proxy.set(null);
+		this.setExpectedOutput();
+		proxy.set(c);
+		this.setExpectedOutput(&quot;destroy c&quot;);
+		proxy.destroy();
 	}
 });
 </pre>

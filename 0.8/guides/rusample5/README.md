@@ -1,214 +1,95 @@
-﻿# Часть 5. Синхронизаторы коллекций
+﻿# Часть 5. Свойства
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/5/](http://enepomnyaschih.github.io/mt/5/)
+[http://enepomnyaschih.github.io/mt/0.8-5/](http://enepomnyaschih.github.io/mt/0.8-5/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-5](https://github.com/enepomnyaschih/mt/tree/mt-5) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-5](https://github.com/enepomnyaschih/mt/tree/mt-0.8-5) (Git branch)
 
-Этот пример является продолжением предыдущей части.
+Пришло время познакомиться с еще одним слоем jWidget: свойствами, которые предоставляются нам классом JW.Property.
+Свойство - это любое значение, которое может оповещать клиенты о своем изменении. Таким образом, JW.Property - это
+класс с 2 методами: {@link JW.Property#get get}, {@link JW.Property#set set} - и событием
+{@link JW.Property#changeEvent changeEvent}. Всякий раз, когда вы меняете значение свойства вызовом метода
+{@link JW.Property#set set}, выбрасывается событие {@link JW.Property#changeEvent changeEvent}. Событие не
+выбрасывается, если в результате вызова метода {@link JW.Property#set set} значение свойства не поменялось.
 
-Теперь переходим к самому интересному и самому важному, ради чего только одного стоит использовать фреймворк jWidget -
-к синхронизаторам коллекций.
+Итак, в нашем примере с Мини-Твиттером, мы можем упростить реализацию поведения Like/Unlike и Retweet/Unretweet
+путем введения 2 булевых свойств: like и retweet.
 
-В данном примере мы добавим возможность постить новые твиты и удалять существующие.
+Начнем с модели. Нам нужно заменить простые булевые поля свойствами, и удалить соответствующие события и методы
+изменения их значений:
 
-Для начала проведем небольшой рефакторинг. Сейчас у нас есть следующий код в классе mt.TweetFeed:
+**public/mt/data/tweet.js**
 
-        renderTweets: function() {
-            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
-                return new mt.TweetView(tweetData);
-            }, this);
-            return this.tweetViews;
-        },
-
-Напомню, что этот код конвертирует массив данных mt.data.Tweet в массив представлений mt.TweetView и
-рендерит их внутрь элемента с jwid="tweets".
-
-Надо понимать, что такой код не позволит нам легко наладить постоянную синхронизацию массива представлений с
-массивом данных: конвертирование данных в представления осуществляется только один раз, в момент рендеринга
-ленты твитов. Можно, конечно, вручную подписаться на все события JW.ObservableArray и вручную их обрабатывать
-(в других фреймворках вам так и пришлось бы поступить), но jWidget предлагает более легкое решение -
-воспользоваться синхронизатором.
-
-Более того, философия jWidget гласит, что
-**не должно быть разницы в подходах между простой и оповещающей коллекцией. Несмотря на то, что для
-корректного преобразования простых коллекций друг в друга достаточно просто запустить некоторый алгоритм
-(здесь: {@link JW.AbstractArray#$map $map}), все равно рекомендуется вместо этого создать синхронизатор.**
-
-Итак, перейдем к делу. Заменим код mt.TweetFeed следующим.
-
-**public/mt/tweetfeed/tweetfeed.js**
-
-    mt.TweetFeed = function(data) {
-        mt.TweetFeed.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
-        this._mapper = null;
+    mt.data.Tweet = function(config) {
+        mt.data.Tweet.{@link JW.Class#static-property-_super _super}.call(this);
+        this.fullName = config.fullName;
+        this.shortName = config.shortName;
+        this.avatarUrl48 = config.avatarUrl48;
+        this.contentHtml = config.contentHtml;
+        this.time = config.time;
+        this.like = this.{@link JW.Class#own own}(new JW.Property(config.like));
+        this.retweet = this.{@link JW.Class#own own}(new JW.Property(config.retweet));
     };
     
-    JW.extend(mt.TweetFeed, JW.UI.Component, {
+    JW.extend(mt.data.Tweet, JW.Class, {
         /*
-        mt.Data data;
-        JW.AbstractArray.Mapper<mt.data.Tweet, mt.TweetView> _mapper;
+        string fullName;
+        string shortName;
+        string contentHtml;
+        string avatarUrl48;
+        number time;
+        JW.Property<boolean> like;
+        JW.Property<boolean> retweet;
         */
-        
-        renderTweets: function() {
-            this._mapper = this.data.tweets.{@link JW.AbstractArray#createMapper createMapper}({
-                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
-                    return new mt.TweetView(tweetData);
-                },
-                {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
-                {@link JW.AbstractCollection.Mapper#scope scope}: this
-            });
-            return this._mapper.{@link JW.AbstractArray.Mapper#property-target target};
-        },
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            this._mapper.{@link JW.Class#destroy destroy}();
-            this.{@link JW.Class#method-_super _super}();
-        }
     });
-
-Поскольку наш массив this.data.tweets пока простой (JW.Array), этот код эквивалентен предыдущему - запустите
-приложение в браузере, и вы не заметите разницы. Зато теперь мы получили возможность заменить реализацию массива
-в mt.Data на JW.ObservableArray, и, не меняя кода представления, синхронизировать его с моделью:
-
-    mt.Data = function() {
-        mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
-        this.profile = null;
-        this.tweets = new JW.ObservableArray();
-    };
-
-Попробуйте открыть приложение в браузере и выполнить следующую команду в консоли:
-
-    data.tweets.{@link JW.AbstractArray#add add}(new mt.data.Tweet({
-        fullName: "Road Runner",
-        shortName: "roadrunner",
-        avatarUrl48: "backend/avatar-48.png",
-        contentHtml: "This is a new tweet!",
-        time: new Date().getTime(),
-        like: false,
-        retweet: false
-    }));
-
-Вы увидите, как в конце ленты твитов появится новый твит:
-
-{@img result-1.png}
-
-Заметьте, что своей командой мы никак не затронули
-представление: мы просто добавили объект в массив данных, но представление все равно корректно обновилось.
-
-Остается только добавить код, который будет добавлять новый объект в data.tweets по сабмиту формы
-Compose tweet. Подпишемся на событие jQuery.submit в mt.ProfileBox:
-
-    mt.ProfileBox = function(data) {
-        this._onComposeSubmit = JW.inScope(this._onComposeSubmit, this);
-        mt.ProfileBox.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
-    };
     
-    JW.extend(mt.ProfileBox, JW.UI.Component, {
-        // ... код
-        
-        renderComposeForm: function(el) {
-            el.submit(this._onComposeSubmit);
-        },
-        
-        _onComposeSubmit: function(event) {
-            event.preventDefault();
-            var text = JW.String.trim(this.{@link JW.UI.Component#getElement getElement}("compose-input").val());
-            if (!text) {
-                return;
-            }
-            this.data.tweets.{@link JW.AbstractArray#add add}(new mt.data.Tweet({
-                fullName: this.data.profile.fullName,
-                shortName: this.data.profile.shortName,
-                avatarUrl48: this.data.profile.avatarUrl48,
-                contentHtml: text,
-                time: new Date().getTime(),
-                like: false,
-                retweet: false
-            }), 0);
-            this.{@link JW.UI.Component#getElement getElement}("compose-input").val("")
-        }
-    });
-
-И запустим наше приложение. После ввода текста и нажатия кнопки "Tweet" мы увидим новый твит в начале ленты твитов:
-
-{@img result-2.png}
-
-{@img result-3.png}
-
-Наша следующая задача - активировать кнопки Remove у твитов, чтобы корректно удалять их из ленты. Откроем
-класс mt.TweetView и подпишемся на клик по кнопке:
-
-    mt.TweetView = function(tweetData) {
-        // ...
-        this._onRemoveClick = JW.inScope(this._onRemoveClick, this);
-        mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        // ...
+    mt.data.Tweet.createByJson = function(json) {
+        return new mt.data.Tweet(JW.apply({}, json, {
+            time: new Date().getTime() - json.timeAgo
+        }));
     };
-    
-    JW.extend(mt.TweetView, JW.UI.Component, {
-        // ...
-        
-        renderRemove: function(el) {
-            el.click(this._onRemoveClick);
+
+Мы избавились от весомого куска кода. Давайте перейдем к представлению, и посмотрим, что можно сделать там.
+Вместо того, чтобы прослушивать событие изменения свойства вручную, давайте воспользуемся специальными классами
+функтора и апдейтера.
+
+**Функтор** строит новое свойство на базе существующих. В нашем конкретном случае, мы планируем построить
+строковые свойства, содержащие значения "Like/Unlike" и "Retweet/Unretweet".
+
+**Апдейтер** прослушивает изменения свойства и обрабатывает их каким-то способом. В нашем случае, мы планируем
+обновлять текст внутри кнопок и менять набор их CSS классов.
+
+**public/mt/tweetview/tweetview.js**
+
+        renderLike: function(el) {
+            var text = this.{@link JW.Class#own own}(new JW.Functor([this.tweetData.like], function(like) {
+                return like ? "Unlike" : "Like";
+            }, this)).{@link JW.Functor#property-target target};
+            this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+            this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.like));
+            el.click(this._onLikeClick);
         },
         
-        // ...
+        renderRetweet: function(el) {
+            var text = this.{@link JW.Class#own own}(new JW.Functor([this.tweetData.retweet], function(retweet) {
+                return retweet ? "Unretweet" : "Retweet";
+            }, this)).{@link JW.Functor#property-target target};
+            this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+            this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.retweet));
+            el.click(this._onRetweetClick);
+        },
         
-        _onRemoveClick: function(event) {
+        _onLikeClick: function(event) {
             event.preventDefault();
+            this.tweetData.like.{@link JW.Property#set set}(!this.tweetData.like.{@link JW.Property#get get}());
         },
         
-        // ...
-    });
-
-Для удаления твита нам понадобится доступ к объекту mt.Data. Предоставим его:
-
-    mt.TweetView = function(data, tweetData) {
-        // ...
-        mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
-        this.tweetData = tweetData;
-    };
-    
-    JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.Data data;
-        ...
-        */
-        
-        // ...
-    });
-
-Обновим код создания объектов mt.TweetView в mt.TweetFeed:
-
-                createItem: function(tweetData) {
-                    return new mt.TweetView(this.data, tweetData);
-                },
-
-И завершим реализацию метода _onRemoveClick класса mt.TweetView:
-
-        _onRemoveClick: function(event) {
+        _onRetweetClick: function(event) {
             event.preventDefault();
-            this.data.tweets.{@link JW.AbstractArray#removeItem removeItem}(this.tweetData);
+            this.tweetData.retweet.{@link JW.Property#set set}(!this.tweetData.retweet.{@link JW.Property#get get}());
         },
 
-Запустите приложение и попробуйте кликнуть по кнопке Remove у твита:
+И теперь мы можем удалить методы `_updateLike` и `_updateRetweet` - они нам больше не нужны.
 
-{@img result-4.png}
-
-В данном примере мы рассмотрели типичный сценарий использования конвертера элементов JW.AbstractCollection.Mapper,
-но не стоит на этом останавливаться. Познакомьтесь с другими синхронизаторами самостоятельно, и, я уверен, вы
-найдете разумное применение для большинства из них. Ищите их в описании класса JW.AbstractCollection.
-
-Замечу, что использование синхронизаторов не ограничивается представлением. В моей практике, синхронизаторы чаще
-всего, наоборот, используются в модели. Так, индексатор ускорит доступ к элементу массива по ключу. А сортировщик,
-например, сможет отсортировать множество твитов по дате публикации, и нам больше не надо будет думать, в какое место
-ленты твитов вставить очередной твит. Сценариев использования множество, рекомендую вам опробовать их на практике.
-
-В следующей части мы улучшим инфраструктуру нашего проекта: вынесем HTML-шаблоны в отдельные HTML-файлы с
-помощью [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) и научимся использовать CSS-препроцессор
-[Stylus](http://learnboost.github.io/stylus/), чтобы сделать верстку более удобной и приятной.
+С точки зрения синтаксиса, свойства, функторы и апдейтеры очень понятны и просты. Они позволяют вам сделать код
+более коротким и читаемым. Посмотрите на документацию JW.Property для полного списка возможностей.

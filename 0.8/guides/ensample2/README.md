@@ -1,19 +1,19 @@
 ﻿# Part 2. Arrays of child components
 
-Demo: [http://enepomnyaschih.github.io/mt/2/](http://enepomnyaschih.github.io/mt/2/)
+Demo: [http://enepomnyaschih.github.io/mt/0.8-2/](http://enepomnyaschih.github.io/mt/0.8-2/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-2](https://github.com/enepomnyaschih/mt/tree/mt-2) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.8-2](https://github.com/enepomnyaschih/mt/tree/mt-0.8-2) (Git branch)
 
-In this part, we'll meet JW.AbstractArray, will try its algorithms
+In this part, we'll meet JW.AbstractArray. We will try its algorithms
 {@link JW.AbstractArray#method-map map} and {@link JW.AbstractArray#method-$map $map}
 and will learn how to add child UI component arrays.
 
-Our goal is to render an array of tweets, which we've developed in previous part.
+Our goal is to render an array of tweets, which we've developed in the previous part.
 
 {@img tweet-feed.png}
 
-Like in the first sample, let's start with model. We must put several tweets into array. Let's define class mt.Data
-for this. It will contain an array of tweets.
+Like in the first sample, let's start with the model. We must put several tweets into an array. Let's define a class mt.Data
+for this. It will contain an array of the tweets.
 
 **public/mt/data/data.js**
 
@@ -29,7 +29,8 @@ for this. It will contain an array of tweets.
         
         // override
         {@link JW.Class#destroy destroy}: function() {
-            this.tweets.{@link JW.AbstractArray#destroy destroy}();
+            this.tweets.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // clear array and destroy items
+            this.tweets.{@link JW.AbstractArray#destroy destroy}(); // destroy array
             this.{@link JW.Class#method-_super _super}();
         }
     });
@@ -46,58 +47,69 @@ You can see that we've defined JW.AbstractArray, but instantiated it as JW.Array
 Probably in future we'll replace the implementation of array with JW.ObservableArray.
 
 Deserialization is performed via static method {@link JW.Array#static-method-map JW.Array.map}.
-Method takes native Array as first argument and callback function as second argument.
-Callback function mt.data.Tweet.createByJson converts Object (JSON) into mt.data.Tweet instance,
-and we've implemented it in previous part:
+The method takes a native Array as a first argument and a callback function as a second argument.
+The callback function mt.data.Tweet.createByJson converts an Object (JSON) into a mt.data.Tweet instance,
+that we've implemented in the previous part.
 
-    mt.data.Tweet.createByJson = function(json) {
-        return new mt.data.Tweet(JW.apply({}, json, {
-            time: new Date().getTime() - json.timeAgo
-        }));
-    };
-
-As result of {@link JW.Array#static-method-map JW.Array.map} method call we've got a native JS Array of mt.data.Tweet
+As the result of {@link JW.Array#static-method-map JW.Array.map} method call we've got a native JS Array of mt.data.Tweet
 instances. We pass it into {@link JW.AbstractArray#addAll addAll} method of data.tweets array in order to fill it in:
 
         data.tweets.{@link JW.AbstractArray#addAll addAll}({@link JW.Array#static-method-map JW.Array.map}(json, mt.data.Tweet.createByJson));
 
 Since we construct this.tweets object in constructor of mt.Data, we **must** destroy it in destructor.
 This is a part of jWidget philosophy. Object creator must destroy it. So, if we'll destroy mt.Data instance by
-{@link JW.Class#destroy destroy} method, all included objects will be destroyed as well.
+{@link JW.Class#destroy destroy} method, all the included objects will be destroyed as well.
 
         // override
         {@link JW.Class#destroy destroy}: function() {
-            this.tweets.{@link JW.AbstractArray#destroy destroy}();
+            this.tweets.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // clear array and destroy items
+            this.tweets.{@link JW.AbstractArray#destroy destroy}(); // destroy array
             this.{@link JW.Class#method-_super _super}();
         }
 
-Let's continue with view. Define class mt.TweetFeed for tweet feed view.
+We can get rid of "destroy" method by using jWidget **object aggregation feature**. If object A aggregates object B, then object B
+will be destroyed automatically on object A destruction. We can aggregate an object using method
+{@link JW.Class#own} and we can aggregate the items of an array using method {@link JW.AbstractCollection#ownItems}:
+
+**public/mt/data/data.js**
+
+    mt.Data = function() {
+        mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
+        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}();
+    };
+    
+    JW.extend(mt.Data, JW.Class, {
+        /*
+        JW.AbstractArray<mt.data.Tweet> tweets;
+        */
+    });
+    
+    mt.Data.createByJson = function(json) {
+        var data = new mt.Data();
+        data.tweets.{@link JW.AbstractArray#addAll addAll}({@link JW.Array#static-method-map JW.Array.map}(json, mt.data.Tweet.createByJson));
+        return data;
+    };
+    
+    mt.data = {};
+
+Let's continue with the view. Define class mt.TweetFeed for tweet feed view.
 
 **public/mt/tweetfeed/tweetfeed.js**
 
     mt.TweetFeed = function(data) {
         mt.TweetFeed.{@link JW.Class#static-property-_super _super}.call(this);
         this.data = data;
-        this.tweetViews = null;
     };
     
     JW.extend(mt.TweetFeed, JW.UI.Component, {
         /*
         mt.Data data;
-        JW.AbstractArray<mt.TweetView> tweetViews;
         */
         
         renderTweets: function() {
-            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }, this);
-            return this.tweetViews;
-        },
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            this.tweetViews.{@link JW.AbstractArray#each each}(JW.destroy);
-            this.{@link JW.Class#method-_super _super}();
+            }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
         }
     });
     
@@ -118,10 +130,10 @@ This array is created from data via collection item convertion method
 {@link JW.AbstractArray#method-$map $map}. We already used
 {@link JW.Array#static-method-map JW.Array.map} before. Let's review their difference:
 
-- First, one method is instance method, second one is static method. **All collection of jWidget have common
+- First, the one method is an instance method, and the second one is a static method. **All collections of jWidget have a common
 set of static methods for native JavaScript collections (Array, Object) and instance methods for jWidget
 collections (JW.AbstractArray, JW.AbstractMap, JW.AbstractSet). Static methods are defined in
-JW.Array, JW.Map, JW.Set and take native collection as first argument.**
+JW.Array, JW.Map, JW.Set and take native collection as a first argument.**
 - Second, {@link JW.Array#static-method-map JW.Array.map} method returns a native JavaScript Array, when
 {@link JW.AbstractArray#method-$map $map} method returns JW.Array. **All methods which names start from $ symbol
 return jWidget collections. All other methods return native JavaScript collections or other values.**
@@ -129,24 +141,22 @@ return jWidget collections. All other methods return native JavaScript collectio
 Both rules are introduced for convenience. Each algorithm has multiple implementations, which are constrained by
 fixed naming convention. Use one implementation which is more convenient in this particular situation.
 
-In our sample, {@link JW.AbstractArray#method-$map $map} method takes callback function as first argument,
+In our sample, {@link JW.AbstractArray#method-$map $map} method takes callback function as a first argument,
 and this function converts mt.data.Tweet instance into mt.TweetView instance:
 
-            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
+        renderTweets: function() {
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }, this);
+            }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
+        }
 
 In second argument, method takes callback function call context (this). The rule is simple:
-**whenever you pass a function as function argument, you can optionally pass its call context as next argument.**
+**whenever you pass a function as a function argument, you can optionally pass its call context as a next argument.**
 
 As result we'll get JW.Array instance, which contains mt.TweetView instances. We return this array as
-renderTweets method result:
+renderTweets method result. By doing this, we ask the framework to render the child components into element with jwid="tweets".
 
-            return this.tweetViews;
-
-As result, we ask the framework to render this.tweetViews components into element with jwid="tweets".
-
-Next, let's create CSS file.
+Next, let's create a CSS file.
 
 **public/mt/tweetfeed/tweetfeed.css**
 
@@ -221,10 +231,10 @@ let's remove renderTweets method and override {@link JW.UI.Component#renderCompo
         // override
         {@link JW.UI.Component#renderComponent renderComponent}: function() {
             this.{@link JW.Class#method-_super _super}();
-            this.tweetViews = this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
+            var tweetViews = this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
-            }, this);
-            this.{@link JW.UI.Component#addArray addArray}(this.tweetViews, "tweets");
+            }, this).{@link JW.AbstractCollection#ownItems ownItems}();
+            this.{@link JW.UI.Component#addArray addArray}(tweetViews, "tweets");
         },
 
 This code is equivalent to previous one, but child component list is added dynamically by

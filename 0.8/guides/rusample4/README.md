@@ -1,11 +1,9 @@
 ﻿# Часть 4. События
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/4/](http://enepomnyaschih.github.io/mt/4/)
+[http://enepomnyaschih.github.io/mt/0.8-4/](http://enepomnyaschih.github.io/mt/0.8-4/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-4](https://github.com/enepomnyaschih/mt/tree/mt-4) (ветка)
-
-Этот пример является продолжением предыдущей части.
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-4](https://github.com/enepomnyaschih/mt/tree/mt-0.8-4) (ветка)
 
 В этом примере мы научимся подписываться на события элементов jQuery в рамках фреймворка jWidget, а также
 научимся создавать события модели, прослушивать их и выбрасывать.
@@ -43,6 +41,8 @@ API для работы с событиями в jWidget максимально 
 Итак, начнем обработку клика по Like или Retweet. Пойдем по шагам, описанным выше. Сначала подпишемся на событие
 клика с помощью jQuery в классе mt.TweetView:
 
+**public/mt/tweetview/tweetview.js**
+
         renderLike: function(el) {
             el.toggleClass("active", this.tweetData.like).text(this.tweetData.like ? "Unlike" : "Like");
             el.click(this._onLikeClick);
@@ -68,6 +68,8 @@ API для работы с событиями в jWidget максимально 
 с которой мы вынуждены смириться. Чтобы заставить этот код работать, закрепим контекст вызова этих функций
 с помощью функции JW.inScope. По стандарту, это следует делать в конструкторе, до вызова конструктора базового класса:
 
+**public/mt/tweetview/tweetview.js**
+
     mt.TweetView = function(tweetData) {
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
@@ -76,8 +78,7 @@ API для работы с событиями в jWidget максимально 
     };
 
 Следующим шагом добавим методы setLike и setRetweet в модель. Для реализации методов необходимы события
-likeChangeEvent и retweetChangeEvent, которые мы создадим в конструкторе и уничтожим (не забываем!) в деструкторе
-mt.data.Tweet:
+likeChangeEvent и retweetChangeEvent, которые мы создадим и заагрегируем в конструкторе mt.data.Tweet:
 
 **public/mt/data/tweet.js**
 
@@ -90,8 +91,8 @@ mt.data.Tweet:
         this.time = config.time;
         this.like = config.like;
         this.retweet = config.retweet;
-        this.likeChangeEvent = new JW.Event();
-        this.retweetChangeEvent = new JW.Event();
+        this.likeChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
+        this.retweetChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
     };
     
     JW.extend(mt.data.Tweet, JW.Class, {
@@ -106,13 +107,6 @@ mt.data.Tweet:
         JW.Event<JW.ValueEventParams<boolean>> likeChangeEvent;
         JW.Event<JW.ValueEventParams<boolean>> retweetChangeEvent;
         */
-        
-        // override
-        {@link JW.Class#destroy destroy}: function() {
-            this.retweetChangeEvent.{@link JW.Class#destroy destroy}();
-            this.likeChangeEvent.{@link JW.Class#destroy destroy}();
-            this.{@link JW.Class#method-_super _super}();
-        },
         
         setLike: function(value) {
             if (this.like === value) {
@@ -150,6 +144,8 @@ JW.ItemValueEventParams в большинстве случаев вполне д
 Следующим шагом мы должны подписаться на эти события и обновлять представление. Чтобы не дублировать код, вынесем
 реализацию обновления элементов mt.TweetView в отдельные методы updateLike и updateRetweet:
 
+**public/mt/tweetview/tweetview.js**
+
         renderLike: function(el) {
             this._updateLike();
             el.click(this._onLikeClick);
@@ -173,53 +169,44 @@ JW.ItemValueEventParams в большинстве случаев вполне д
         },
 
 Подпишемся на события likeChangeEvent и retweetChangeEvent. На выходе мы получим объекты подписки, которые
-необходимо сохранить в полях класса и уничтожить (не забываем!) в деструкторе:
+необходимо заагрегировать:
+
+**public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(tweetData) {
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
         this.tweetData = tweetData;
-        this._likeChangeAttachment = null;
-        this._retweetChangeAttachment = null;
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
         /*
         mt.data.Tweet tweetData;
-        JW.EventAttachment _likeChangeAttachment;
-        JW.EventAttachment _retweetChangeAttachment;
         */
         
         // ... какой-то код
         
         renderLike: function(el) {
             this._updateLike();
-            this._likeChangeAttachment = this.tweetData.likeChangeEvent.{@link JW.Event#bind bind}(this._updateLike, this);
+            this.{@link JW.Class#own own}(this.tweetData.likeChangeEvent.{@link JW.Event#bind bind}(this._updateLike, this));
             el.click(this._onLikeClick);
         },
         
         renderRetweet: function(el) {
             this._updateRetweet();
-            this._retweetChangeAttachment = this.tweetData.retweetChangeEvent.{@link JW.Event#bind bind}(this._updateRetweet, this);
+            this.{@link JW.Class#own own}(this.tweetData.retweetChangeEvent.{@link JW.Event#bind bind}(this._updateRetweet, this));
             el.click(this._onRetweetClick);
-        },
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            this._retweetChangeAttachment.{@link JW.Class#destroy destroy}();
-            this._likeChangeAttachment.{@link JW.Class#destroy destroy}();
-            this._super();
         },
         
         // ...
 
 Наш код должен работать! Попробуйте запустить его в браузере или откройте ссылку
-[http://enepomnyaschih.github.io/mt/4/](http://enepomnyaschih.github.io/mt/4/)
+[http://enepomnyaschih.github.io/mt/0.8-4/](http://enepomnyaschih.github.io/mt/0.8-4/)
 и покликайте по кнопкам Like/Unlike и Retweet/Unretweet. Более того, вы можете открыть консоль браузера и
 запустить такую команду:
 
-    data.tweets.get(0).setLike(true)
+    data.tweets.{@link JW.AbstractArray#get get}(0).setLike(true)
 
 Ваше приложение послушно обновится. Возможно, на таком простом примере еще не ощущаются все преимущества, которые
 вы получаете с архитектурой Model-View, но в более крупных приложениях эта тонна вспомогательного кода
@@ -240,32 +227,18 @@ JW.ItemValueEventParams в большинстве случаев вполне д
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
         this.tweetData = tweetData;
-        this._timer = null;
-        this._likeChangeAttachment = null;
-        this._retweetChangeAttachment = null;
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
         /*
         mt.data.Tweet tweetData;
-        number _timer;
-        JW.EventAttachment _likeChangeAttachment;
-        JW.EventAttachment _retweetChangeAttachment;
         */
         
         // ... код
         
         renderTime: function() {
             this._updateTime();
-            this._timer = setInterval(this._updateTime, 30000);
-        },
-        
-        // ... код
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            clearInterval(this._timer);
-            // ...
+            this.{@link JW.Class#own own}(new JW.Interval(this._updateTime, 30000));
         },
         
         _updateTime: function() {
