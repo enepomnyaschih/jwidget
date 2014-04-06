@@ -193,6 +193,10 @@
 					{
 						"name": "rujwabstractarrayreverser",
 						"title": "JW.AbstractArray.Reverser"
+					},
+					{
+						"name": "rujwuicomponent",
+						"title": "JW.UI.Component"
 					}
 				]
 			}
