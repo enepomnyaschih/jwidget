@@ -1,8 +1,8 @@
 ﻿# Part 6. Project infrastructure
 
-Demo: [http://enepomnyaschih.github.io/mt/6/](http://enepomnyaschih.github.io/mt/6/)
+Demo: [http://enepomnyaschih.github.io/mt/0.8-6/](http://enepomnyaschih.github.io/mt/0.8-6/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-6](https://github.com/enepomnyaschih/mt/tree/mt-6) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.8-6](https://github.com/enepomnyaschih/mt/tree/mt-0.8-6) (Git branch)
 
 In this part, we'll improve project infrastructure: extract HTML templates into separate HTML files using
 [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) and will learn how to use

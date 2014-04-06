@@ -1,9 +1,9 @@
 ﻿# Часть 4. События
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/4/](http://enepomnyaschih.github.io/mt/4/)
+[http://enepomnyaschih.github.io/mt/0.8-4/](http://enepomnyaschih.github.io/mt/0.8-4/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-4](https://github.com/enepomnyaschih/mt/tree/mt-4) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-4](https://github.com/enepomnyaschih/mt/tree/mt-0.8-4) (ветка)
 
 Этот пример является продолжением предыдущей части.
 

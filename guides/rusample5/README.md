@@ -1,9 +1,9 @@
 ﻿# Часть 5. Синхронизаторы коллекций
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/5/](http://enepomnyaschih.github.io/mt/5/)
+[http://enepomnyaschih.github.io/mt/0.8-5/](http://enepomnyaschih.github.io/mt/0.8-5/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-5](https://github.com/enepomnyaschih/mt/tree/mt-5) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-5](https://github.com/enepomnyaschih/mt/tree/mt-0.8-5) (ветка)
 
 Этот пример является продолжением предыдущей части.
 

@@ -1,8 +1,8 @@
 ﻿# Part 4. Events
 
-Demo: [http://enepomnyaschih.github.io/mt/4/](http://enepomnyaschih.github.io/mt/4/)
+Demo: [http://enepomnyaschih.github.io/mt/0.8-4/](http://enepomnyaschih.github.io/mt/0.8-4/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-4](https://github.com/enepomnyaschih/mt/tree/mt-4) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.8-4](https://github.com/enepomnyaschih/mt/tree/mt-0.8-4) (Git branch)
 
 We'll learn how to bind handlers to jQuery elements in scope of jWidget framework in this part.
 Also, we'll create some model events and will learn how to listen and trigger them.

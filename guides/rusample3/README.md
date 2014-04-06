@@ -1,9 +1,9 @@
 ﻿# Часть 3. Именованные дочерние компоненты
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/3/](http://enepomnyaschih.github.io/mt/3/)
+[http://enepomnyaschih.github.io/mt/0.8-3/](http://enepomnyaschih.github.io/mt/0.8-3/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-3](https://github.com/enepomnyaschih/mt/tree/mt-3) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-3](https://github.com/enepomnyaschih/mt/tree/mt-0.8-3) (ветка)
 
 Этот пример является продолжением предыдущей части.
 
