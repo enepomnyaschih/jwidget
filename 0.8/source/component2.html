@@ -98,7 +98,7 @@
  *     &lt;/div&gt;
  *
  * You can retrieve an element by its `jwid` using method #getElement. Result of this method is
- * a [jQuery-wrapper](http://api.jquery.com/) over this element. In addition, each component
+ * a [jQuery-wrapper](http://api.jquery.com/) over this element. In addition, the component
  * has field #el, which refers to root jQuery-element of the component.
  *
  * ### Component creation in code
@@ -160,23 +160,23 @@
  * 
  * ### Components removal and destruction
  * 
- * You can destroy the component via #destroy method. But you can not destroy child component (framework will
+ * You can destroy the component via #destroy method. But you can not destroy a component which is added into another one as a child (framework will
  * throw an exception in this case). You must remove child component from a parent first. To remove the component
  * from a parent, you must perform the operation opposite to adding operation. So, to remove a component
  * with `jwid=&quot;comments&quot;` you must call {@link JW.AbstractMap#method-remove} method of #children object.
  * You can destroy this component immediately:
  * 
- *     this.children.{@link JW.AbstractMap#method-remove remove}(&quot;comments&quot;).{@link JW.Class#destroy destroy}();
+ *     this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#method-remove remove}(&quot;comments&quot;).{@link JW.Class#destroy destroy}();
  * 
  * In this case, the element of HTML template with such `jwid` will return back to its original state.
  *
  * You can destroy child components freely in {@link #destroyComponent} method of parent component. In this method,
- * child components are already removed from the parent and are ready to be destroyed.
+ * child components are already removed from the parent by the framework and are ready to be destroyed.
  *
  * Also, you can use aggregation method {@link JW.Class#own} to destroy the child component.
  *
  * Child arrays are a bit more complicated. First way to remove a child which is added to the parent via array is to
- * remove this child from this array. Second way: #addArray method returns an instance of
+ * remove this child from this array (if it is JW.ObservableArray). Second way: #addArray method returns an instance of
  * JW.UI.Component.Array. If you destroy it, the array will be removed from parent component:
  * 
  *         // override
@@ -373,7 +373,7 @@
  * 
  * ### Intergration with jWidget SDK
  * 
- * jWidget UI library is integrated with [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) perfectly, and
+ * jWidget UI library is integrated with [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en) perfectly, and
  * it gives you nice code optimizations of JS-code out of the box and capability to extract HTML templates into
  * separate files. For example, you can simplify the very first example by splitting code into 2 files:
  * 

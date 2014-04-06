@@ -7,6 +7,21 @@ Core:
 - JW.Class
 - JW.Event
 
+Property and its helpers:
+
+- JW.Property
+- JW.Functor
+- JW.Updater
+- JW.Switcher
+- JW.UI.TextUpdater
+- JW.UI.HtmlUpdater
+- JW.UI.ValueUpdater
+- JW.UI.AttrUpdater
+- JW.UI.PropUpdater
+- JW.UI.CssUpdater
+- JW.UI.ClassUpdater
+- JW.UI.ValueListener
+
 Collections:
 
 - JW.AbstractCollection
@@ -27,3 +42,7 @@ Synchronizers:
 - View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
 - Arrays merger: JW.AbstractArray.Merger
 - Array reverser: JW.AbstractArray.Reverser
+
+UI component:
+
+- JW.UI.Component
