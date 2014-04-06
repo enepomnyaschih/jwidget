@@ -191,11 +191,11 @@ aggregate:
         // ...
 
 It must work! Try to execute it in browser or open link
-[http://enepomnyaschih.github.io/mt/4/](http://enepomnyaschih.github.io/mt/4/)
+[http://enepomnyaschih.github.io/mt/0.8-4/](http://enepomnyaschih.github.io/mt/0.8-4/)
 and click Like/Unlike and Retweet/Unretweet buttons. Moreover, you can open browser console and run
 next command:
 
-    data.tweets.get(0).setLike(true)
+    data.tweets.{@link JW.AbstractArray#get get}(0).setLike(true)
 
 Your application will obediently update. Perhaps you don't feel all advantages that you've got with Model-View
 architecture in this little application, but in bigger ones this ton of supporting code will pay off, you bet!
@@ -215,32 +215,18 @@ We don't need to change model, modifications will impact mt.TweetView only:
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
         this.tweetData = tweetData;
-        this._timer = null;
-        this._likeChangeAttachment = null;
-        this._retweetChangeAttachment = null;
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
         /*
         mt.data.Tweet tweetData;
-        number _timer;
-        JW.EventAttachment _likeChangeAttachment;
-        JW.EventAttachment _retweetChangeAttachment;
         */
         
         // ... code
         
         renderTime: function() {
             this._updateTime();
-            this._timer = setInterval(this._updateTime, 30000);
-        },
-        
-        // ... code
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            clearInterval(this._timer);
-            // ...
+            this.{@link JW.Class#own own}(new JW.Interval(this._updateTime, 30000));
         },
         
         _updateTime: function() {

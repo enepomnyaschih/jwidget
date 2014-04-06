@@ -194,11 +194,11 @@ JW.ItemValueEventParams в большинстве случаев вполне д
         // ...
 
 Наш код должен работать! Попробуйте запустить его в браузере или откройте ссылку
-[http://enepomnyaschih.github.io/mt/4/](http://enepomnyaschih.github.io/mt/4/)
+[http://enepomnyaschih.github.io/mt/0.8-4/](http://enepomnyaschih.github.io/mt/0.8-4/)
 и покликайте по кнопкам Like/Unlike и Retweet/Unretweet. Более того, вы можете открыть консоль браузера и
 запустить такую команду:
 
-    data.tweets.get(0).setLike(true)
+    data.tweets.{@link JW.AbstractArray#get get}(0).setLike(true)
 
 Ваше приложение послушно обновится. Возможно, на таком простом примере еще не ощущаются все преимущества, которые
 вы получаете с архитектурой Model-View, но в более крупных приложениях эта тонна вспомогательного кода
@@ -219,32 +219,18 @@ JW.ItemValueEventParams в большинстве случаев вполне д
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
         this.tweetData = tweetData;
-        this._timer = null;
-        this._likeChangeAttachment = null;
-        this._retweetChangeAttachment = null;
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
         /*
         mt.data.Tweet tweetData;
-        number _timer;
-        JW.EventAttachment _likeChangeAttachment;
-        JW.EventAttachment _retweetChangeAttachment;
         */
         
         // ... код
         
         renderTime: function() {
             this._updateTime();
-            this._timer = setInterval(this._updateTime, 30000);
-        },
-        
-        // ... код
-        
-        // override
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
-            clearInterval(this._timer);
-            // ...
+            this.{@link JW.Class#own own}(new JW.Interval(this._updateTime, 30000));
         },
         
         _updateTime: function() {

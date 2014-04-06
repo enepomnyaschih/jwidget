@@ -653,10 +653,10 @@ JW.apply(JW, {
 	/**
 	 * Calls object method {@link JW.Class#destroy destroy}. Can be used in mappers configuration:
 	 * 
-	 *     var mapper = collection.createMapper({
-	 *         createItem  : function(data) { return new View(data); },
-	 *         destroyItem : JW.destroy, // shorthand for function(view) { view.destroy(); }
-	 *         scope       : this
+	 *     var mapper = collection.{@link JW.AbstractCollection#createMapper createMapper}({
+	 *         {@link JW.AbstractCollection.Mapper#createItem createItem}  : function(data) { return new View(data); },
+	 *         {@link JW.AbstractCollection.Mapper#destroyItem destroyItem} : JW.destroy, // shorthand for function(view) { view.destroy(); }
+	 *         {@link JW.AbstractCollection.Mapper#scope scope}       : this
 	 *     });
 	 *
 	 * @static
@@ -727,7 +727,7 @@ JW.apply(JW, {
 	 * 
 	 *     var MyClass = function(el, message) {
 	 *         this._onClick = JW.inScope(this._onClick, this);
-	 *         MyClass._super.call(this);
+	 *         MyClass.{@link JW.Class#_super _super}.call(this);
 	 *         this.el = el;
 	 *         this.message = message;
 	 *         this.el.bind("click", this._onClick);
@@ -738,7 +738,7 @@ JW.apply(JW, {
 	 *         // String message;
 	 *         
 	 *         // override
-	 *         destroy: function() {
+	 *         {@link JW.Class#destroy destroy}: function() {
 	 *             this.el.unbind("click", this._onClick);
 	 *         },
 	 *         
