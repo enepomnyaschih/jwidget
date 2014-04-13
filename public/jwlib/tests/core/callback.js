@@ -25,10 +25,23 @@ JW.Tests.Core.CallbackTestCase = JW.Unit.TestCase.extend({
 			}
 		};
 		this.assertStrictEqual(2, JW.byField("p.q")(obj));
+		this.assertStrictEqual(2, JW.byField(["p", "q"])(obj));
+	},
+	
+	testByFieldBlank: function() {
+		var obj = {
+			p: {
+				q: 2
+			}
+		};
+		this.assertStrictEqual(obj, JW.byField()(obj));
+		this.assertStrictEqual(obj, JW.byField("")(obj));
+		this.assertStrictEqual(obj, JW.byField([])(obj));
 	},
 	
 	testByFieldUndefined: function() {
 		this.assertUndefined(JW.byField("p.q")({}));
+		this.assertUndefined(JW.byField(["p", "q"])({}));
 	},
 	
 	testByValue: function() {
@@ -38,6 +51,23 @@ JW.Tests.Core.CallbackTestCase = JW.Unit.TestCase.extend({
 			}
 		};
 		this.assertTrue(JW.byValue("p.q", 2)(obj));
+		this.assertTrue(JW.byValue(["p", "q"], 2)(obj));
+		this.assertFalse(JW.byValue("p.q", 3)(obj));
+		this.assertFalse(JW.byValue(["p", "q"], 3)(obj));
+	},
+	
+	testByValueBlank: function() {
+		var obj = {
+			p: {
+				q: 2
+			}
+		};
+		this.assertTrue(JW.byValue(null, obj)(obj));
+		this.assertTrue(JW.byValue("", obj)(obj));
+		this.assertTrue(JW.byValue([], obj)(obj));
+		this.assertFalse(JW.byValue(null, obj)(1));
+		this.assertFalse(JW.byValue("", obj)(1));
+		this.assertFalse(JW.byValue([], obj)(1));
 	},
 	
 	testByValueTypeCast: function() {
@@ -51,6 +81,7 @@ JW.Tests.Core.CallbackTestCase = JW.Unit.TestCase.extend({
 	
 	testByValueUndefined: function() {
 		this.assertFalse(JW.byValue("p.q", 2)({}));
+		this.assertFalse(JW.byValue(["p", "q"], 2)({}));
 	},
 	
 	testByMethod: function() {
