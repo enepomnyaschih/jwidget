@@ -115,6 +115,10 @@
 				"title": "Ключевые классы",
 				"items": [
 					{
+						"name": "rukeyclasses",
+						"title": "Ключевые классы"
+					},
+					{
 						"title": "Ядро",
 						"items": [
 							{
