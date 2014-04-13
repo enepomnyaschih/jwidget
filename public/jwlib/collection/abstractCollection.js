@@ -154,7 +154,7 @@
  */
 JW.AbstractCollection = function() {
 	JW.AbstractCollection._super.call(this);
-	this.own(new JW.AbstractCollection.Content(this));
+	this._ownsItems = false;
 };
 
 JW.AbstractCollection._create$Array = function(algorithm) {
@@ -177,13 +177,19 @@ JW.AbstractCollection._create$Set = function(algorithm) {
 
 JW.extend(JW.AbstractCollection, JW.Class, {
 	/**
-	 * Makes this collection an owner of its items, which means that all the items will be destroyed on
-	 * the collection destruction. Will be reworked in [#66](https://github.com/enepomnyaschih/jwidget/issues/66).
+	 * Makes this collection an owner of its items, which means that its items are alive while they are present in
+	 * this collection. The item is destroyed when it leaves the
+	 * collection, and all items are destroyed on the collection destruction.
 	 * @returns {JW.AbstractCollection} this
 	 */
 	ownItems: function() {
-		this.own(new JW.AbstractCollection.ItemOwner(this));
+		this._ownsItems = true;
 		return this;
+	},
+	
+	destroy: function() {
+		this.tryClear();
+		this._super();
 	},
 	
 	/**
@@ -681,16 +687,4 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.AbstractCollection.Lister}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
-});
-
-JW.AbstractCollection.Content = function(collection) {
-	JW.AbstractCollection.Content._super.call(this);
-	this.collection = collection;
-};
-
-JW.extend(JW.AbstractCollection.Content, JW.Class, {
-	destroy: function() {
-		this.collection.tryClear();
-		this._super();
-	}
 });

@@ -345,7 +345,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 */
 	tryClear: function() {
 		this._length = 0;
-		return JW.Set.tryClear(this.json);
+		var items = JW.Set.tryClear(this.json);
+		if ((items !== undefined) && this._ownsItems) {
+			JW.Array.backEvery(items, JW.destroy);
+		}
+		return items;
 	},
 	
 	/**
@@ -367,8 +371,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 */
 	trySplice: function(removedItems, addedItems) {
 		var spliceResult = JW.Set.trySplice(this.json, removedItems, addedItems);
-		if (spliceResult) {
+		if (spliceResult !== undefined) {
 			this._length += spliceResult.addedItems.length - spliceResult.removedItems.length;
+			if (this._ownsItems) {
+				JW.Array.backEvery(spliceResult.removedItems, JW.destroy);
+			}
 			return spliceResult;
 		}
 	},

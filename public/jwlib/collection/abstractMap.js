@@ -668,7 +668,11 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 */
 	tryClear: function() {
 		this._length = 0;
-		return JW.Map.tryClear(this.json);
+		var items = JW.Map.tryClear(this.json);
+		if ((items !== undefined) && this._ownsItems) {
+			JW.Array.backEvery(JW.Map.toArray(items), JW.destroy);
+		}
+		return items;
 	},
 	
 	/**
@@ -690,8 +694,11 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 */
 	trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = JW.Map.trySplice(this.json, removedKeys, updatedItems);
-		if (spliceResult) {
+		if (spliceResult !== undefined) {
 			this._length += JW.Map.getLength(spliceResult.addedItems) - JW.Map.getLength(spliceResult.removedItems);
+			if (this._ownsItems) {
+				JW.Array.backEvery(JW.Map.toArray(spliceResult.removedItems), JW.destroy);
+			}
 			return spliceResult;
 		}
 	},

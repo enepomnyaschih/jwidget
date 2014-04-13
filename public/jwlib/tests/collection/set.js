@@ -71,7 +71,7 @@ JW.Tests.Collection.SetTestCase = JW.Tests.Collection.AbstractSetBase.extend({
 		this.assertTrue(set.equal([this.b, this.d]));
 	},
 	
-	testOwnItems: function() {
+	testOwnItemsOff: function() {
 		var cls = function(testCase, value) {
 			cls._super.call(this);
 			this.testCase = testCase;
@@ -85,15 +85,64 @@ JW.Tests.Collection.SetTestCase = JW.Tests.Collection.AbstractSetBase.extend({
 			}
 		});
 		
-		var set1 = new JW.Set([new cls(this, "a"), new cls(this, "b")]);
-		set1.destroy();
+		var a = new cls(this, "a");
+		var b = new cls(this, "b");
+		var c = new cls(this, "c");
+		var d = new cls(this, "d");
+		var e = new cls(this, "e");
+		var f = new cls(this, "f");
+		var g = new cls(this, "g");
+		var set = new JW.Set([a, b, c, d, e]);
+		set.remove(a);
+		set.removeAll([b, c]);
+		set.clear();
+		set.addAll([f, g]);
+		set.destroy();
+	},
+	
+	testOwnItemsOn: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
 		
-		var set2 = new JW.Set([new cls(this, "c"), new cls(this, "d")]).ownItems();
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output("destroy " + this.value);
+				this._super();
+			}
+		});
+		
+		var a = new cls(this, "a");
+		var b = new cls(this, "b");
+		var c = new cls(this, "c");
+		var d = new cls(this, "d");
+		var e = new cls(this, "e");
+		var f = new cls(this, "f");
+		var g = new cls(this, "g");
+		var set = new JW.Set([a, b, c, d, e]).ownItems();
 		this.setExpectedOutput(
-			"destroy d",
-			"destroy c"
+			"destroy a"
 		);
-		set2.destroy();
+		set.remove(a);
+		this.setExpectedOutput(
+			"destroy c",
+			"destroy b"
+		);
+		set.removeAll([b, c]);
+		this.setExpectedOutput(
+			"destroy e",
+			"destroy d"
+		);
+		set.clear();
+		this.setExpectedOutput();
+		set.addAll([f, g]);
+		this.setExpectedOutput(
+			"destroy g",
+			"destroy f"
+		);
+		set.destroy();
 	}
 });
 

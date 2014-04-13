@@ -34,11 +34,11 @@
  */
 JW.ObservableMap = function(json, adapter) {
 	JW.ObservableMap._super.call(this, json, adapter);
-	this.length = this.own(new JW.Property(this.getLength()));
-	this.spliceEvent = this.own(new JW.Event());
-	this.reindexEvent = this.own(new JW.Event());
-	this.clearEvent = this.own(new JW.Event());
-	this.changeEvent = this.own(new JW.Event());
+	this.length = new JW.Property(this.getLength());
+	this.spliceEvent = new JW.Event();
+	this.reindexEvent = new JW.Event();
+	this.clearEvent = new JW.Event();
+	this.changeEvent = new JW.Event();
 };
 
 JW.extend(JW.ObservableMap, JW.AbstractMap, {
@@ -69,6 +69,16 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	 * of events #spliceEvent, #reindexEvent, #clearEvent.
 	 * @param {JW.ObservableMap.EventParams} params `<T>` Parameters.
 	 */
+	
+	// override
+	destroy: function() {
+		this.changeEvent.destroy();
+		this.clearEvent.destroy();
+		this.reindexEvent.destroy();
+		this.spliceEvent.destroy();
+		this.length.destroy();
+		this._super();
+	},
 	
 	// override
 	trySplice: function(removedKeys, updatedItems) {

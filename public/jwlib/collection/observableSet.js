@@ -35,10 +35,10 @@
  */
 JW.ObservableSet = function(json, adapter) {
 	JW.ObservableSet._super.call(this, json, adapter);
-	this.length = this.own(new JW.Property(this.getLength()));
-	this.spliceEvent = this.own(new JW.Event());
-	this.clearEvent = this.own(new JW.Event());
-	this.changeEvent = this.own(new JW.Event());
+	this.length = new JW.Property(this.getLength());
+	this.spliceEvent = new JW.Event();
+	this.clearEvent = new JW.Event();
+	this.changeEvent = new JW.Event();
 };
 
 JW.extend(JW.ObservableSet, JW.AbstractSet, {
@@ -63,6 +63,15 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	 * of events #spliceEvent, #clearEvent.
 	 * @param {JW.ObservableSet.EventParams} params `<T>` Parameters.
 	 */
+	
+	// override
+	destroy: function() {
+		this.changeEvent.destroy();
+		this.clearEvent.destroy();
+		this.spliceEvent.destroy();
+		this.length.destroy();
+		this._super();
+	},
 	
 	// override
 	tryClear: function() {

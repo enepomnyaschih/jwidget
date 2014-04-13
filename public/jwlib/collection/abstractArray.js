@@ -630,7 +630,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Proxy} `<T>` Proxy of the replaced item. If not modified - `undefined`.
 	 */
 	trySet: function(item, index) {
-		return JW.Array.trySet(this.items, item, index);
+		var oldProxy = JW.Array.trySet(this.items, item, index);
+		if ((oldProxy !== undefined) && this._ownsItems) {
+			oldProxy.get().destroy();
+		}
+		return oldProxy;
 	},
 	
 	/**
@@ -730,7 +734,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
-		return JW.Array.tryClear(this.items);
+		var items = JW.Array.tryClear(this.items);
+		if ((items !== undefined) && this._ownsItems) {
+			JW.Array.backEvery(items, JW.destroy);
+		}
+		return items;
 	},
 	
 	/**
@@ -755,7 +763,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	trySplice: function(removeParamsList, addParamsList) {
-		return JW.Array.trySplice(this.items, removeParamsList, addParamsList);
+		var spliceResult = JW.Array.trySplice(this.items, removeParamsList, addParamsList);
+		if ((spliceResult !== undefined) && this._ownsItems) {
+			JW.Array.backEvery(spliceResult.getRemovedItems(), JW.destroy);
+		}
+		return spliceResult;
 	},
 	
 	/**

@@ -68,7 +68,7 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 		this.assertTrue(map.equal({a: 2, b: 4}));
 	},
 	
-	testOwnItems: function() {
+	testOwnItemsOff: function() {
 		var cls = function(testCase, value) {
 			cls._super.call(this);
 			this.testCase = testCase;
@@ -82,15 +82,88 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 			}
 		});
 		
-		var map1 = new JW.Map({A: new cls(this, "a"), B: new cls(this, "b")});
-		map1.destroy();
+		var map = new JW.Map({
+			A: new cls(this, "a"),
+			B: new cls(this, "b"),
+			C: new cls(this, "c"),
+			D: new cls(this, "d"),
+			E: new cls(this, "e")
+		});
+		map.set(new cls(this, "k"), "A");
+		map.setAll({
+			B: new cls(this, "l"),
+			C: new cls(this, "m"),
+		});
+		map.remove("A");
+		map.removeAll(["B", "C"]);
+		map.setKey("D", "F");
+		map.clear();
+		map.setAll({
+			A: new cls(this, "a"),
+			B: new cls(this, "b")
+		});
+		map.destroy();
+	},
+	
+	testOwnItemsOn: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
 		
-		var map2 = new JW.Map({C: new cls(this, "c"), D: new cls(this, "d")}).ownItems();
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output("destroy " + this.value);
+				this._super();
+			}
+		});
+		
+		var map = new JW.Map({
+			A: new cls(this, "a"),
+			B: new cls(this, "b"),
+			C: new cls(this, "c"),
+			D: new cls(this, "d"),
+			E: new cls(this, "e")
+		}).ownItems();
 		this.setExpectedOutput(
-			"destroy d",
-			"destroy c"
+			"destroy a"
 		);
-		map2.destroy();
+		map.set(new cls(this, "k"), "A");
+		this.setExpectedOutput(
+			"destroy c",
+			"destroy b"
+		);
+		map.setAll({
+			B: new cls(this, "l"),
+			C: new cls(this, "m"),
+		});
+		this.setExpectedOutput(
+			"destroy k"
+		);
+		map.remove("A");
+		this.setExpectedOutput(
+			"destroy m",
+			"destroy l"
+		);
+		map.removeAll(["B", "C"]);
+		//this.setExpectedOutput();
+		//map.setKey("D", "F"); // browser-dependent behavior
+		this.setExpectedOutput(
+			"destroy e",
+			"destroy d"
+		);
+		map.clear();
+		this.setExpectedOutput();
+		map.setAll({
+			A: new cls(this, "a"),
+			B: new cls(this, "b")
+		});
+		this.setExpectedOutput(
+			"destroy b",
+			"destroy a"
+		);
+		map.destroy();
 	}
 });
 

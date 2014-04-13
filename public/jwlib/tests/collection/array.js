@@ -68,7 +68,7 @@ JW.Tests.Collection.ArrayTestCase = JW.Tests.Collection.AbstractArrayBase.extend
 		this.assertTrue(array.equal([2, 4]));
 	},
 	
-	testOwnItems: function() {
+	testOwnItemsOff: function() {
 		var cls = function(testCase, value) {
 			cls._super.call(this);
 			this.testCase = testCase;
@@ -82,15 +82,82 @@ JW.Tests.Collection.ArrayTestCase = JW.Tests.Collection.AbstractArrayBase.extend
 			}
 		});
 		
-		var array1 = new JW.Array([new cls(this, "a"), new cls(this, "b")]);
-		array1.destroy();
+		var array = new JW.Array([
+			new cls(this, "a"),
+			new cls(this, "b"),
+			new cls(this, "c"),
+			new cls(this, "d"),
+			new cls(this, "e"),
+			new cls(this, "f"),
+			new cls(this, "g")
+		]);
+		array.set(new cls(this, "k"), 0); // kbcdefg
+		array.remove(0); // bcdefg
+		array.removeAll(1, 2); // befg
+		array.move(1, 2);  // bfeg
+		array.clear();
+		array.addAll([
+			new cls(this, "a"),
+			new cls(this, "b")
+		]);
+		array.destroy();
+	},
+	
+	testOwnItemsOn: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
 		
-		var array2 = new JW.Array([new cls(this, "c"), new cls(this, "d")]).ownItems();
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output("destroy " + this.value);
+				this._super();
+			}
+		});
+		
+		var array = new JW.Array([
+			new cls(this, "a"),
+			new cls(this, "b"),
+			new cls(this, "c"),
+			new cls(this, "d"),
+			new cls(this, "e"),
+			new cls(this, "f"),
+			new cls(this, "g")
+		]).ownItems();
+		this.setExpectedOutput(
+			"destroy a"
+		);
+		array.set(new cls(this, "k"), 0); // kbcdefg
+		this.setExpectedOutput(
+			"destroy k"
+		);
+		array.remove(0); // bcdefg
 		this.setExpectedOutput(
 			"destroy d",
 			"destroy c"
 		);
-		array2.destroy();
+		array.removeAll(1, 2); // befg
+		this.setExpectedOutput();
+		array.move(1, 2);  // bfeg
+		this.setExpectedOutput(
+			"destroy g",
+			"destroy e",
+			"destroy f",
+			"destroy b"
+		);
+		array.clear();
+		this.setExpectedOutput();
+		array.addAll([
+			new cls(this, "a"),
+			new cls(this, "b")
+		]);
+		this.setExpectedOutput(
+			"destroy b",
+			"destroy a"
+		);
+		array.destroy();
 	}
 });
 
