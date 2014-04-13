@@ -66,6 +66,9 @@ Sure, in Angular and Ember this code would be much shorter, but in jWidget you s
 you confident in that you're able to implement as complicated and big MVC application as you would like to. Read the
 [tutorial](#!/guide/ensample1) for more examples.
 
+jWidget has an advantage compared to other Model-View frameworks - it is **collection synchronizers**
+(see JW.AbstractCollection). I never met this idea in any other framework regardless of programming language.
+
 Project license is LGPL.
 
 Current version: 0.8
