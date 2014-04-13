@@ -57,17 +57,17 @@ JW.Tests.Collection.AbstractSet.MapperTestCase = JW.Unit.TestCase.extend({
 			"Created A by a",
 			"Created B by b",
 			"Created C by c",
+			"Changed size from 0 to 3",
 			"Spliced -[] +[A,B,C]",
-			"Changed",
-			"Changed size from 0 to 3"
+			"Changed"
 		);
 		var mapper = this.createMapper(source, target);
 		this.assertTarget([ a, b, c ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 0",
 			"Spliced -[A,B,C] +[]",
 			"Changed",
-			"Changed size from 3 to 0",
 			"Destroyed C by c",
 			"Destroyed B by b",
 			"Destroyed A by a"
@@ -93,9 +93,9 @@ JW.Tests.Collection.AbstractSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 1",
 			"Spliced -[] +[X]",
-			"Changed",
-			"Changed size from 0 to 1"
+			"Changed"
 		);
 		target.add(x.result);
 		this.assertTarget([ x ], target);
@@ -103,9 +103,9 @@ JW.Tests.Collection.AbstractSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created A by a",
 			"Created B by b",
+			"Changed size from 1 to 3",
 			"Spliced -[] +[A,B]",
-			"Changed",
-			"Changed size from 1 to 3"
+			"Changed"
 		);
 		var mapper1 = this.createMapper(source1, target);
 		this.assertTarget([ a, b, x ], target);
@@ -113,17 +113,17 @@ JW.Tests.Collection.AbstractSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created C by c",
 			"Created D by d",
+			"Changed size from 3 to 5",
 			"Spliced -[] +[C,D]",
-			"Changed",
-			"Changed size from 3 to 5"
+			"Changed"
 		);
 		var mapper2 = this.createMapper(source2, target);
 		this.assertTarget([ a, b, c, d, x ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 5 to 3",
 			"Spliced -[A,B] +[]",
 			"Changed",
-			"Changed size from 5 to 3",
 			"Destroyed B by b",
 			"Destroyed A by a"
 		);
@@ -131,9 +131,9 @@ JW.Tests.Collection.AbstractSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ c, d, x ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 1",
 			"Spliced -[C,D] +[]",
 			"Changed",
-			"Changed size from 3 to 1",
 			"Destroyed D by d",
 			"Destroyed C by c"
 		);

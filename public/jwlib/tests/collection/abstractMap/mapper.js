@@ -51,17 +51,17 @@ JW.Tests.Collection.AbstractMap.MapperTestCase = JW.Unit.TestCase.extend({
 			"Created A! by A",
 			"Created B! by B",
 			"Created C! by C",
+			"Changed size from 0 to 3",
 			"Spliced -{} +{a:A!,b:B!,c:C!}",
-			"Changed",
-			"Changed size from 0 to 3"
+			"Changed"
 		);
 		var mapper = this.createMapper(source, target);
 		this.assertTarget({ "a": "A!", "b": "B!", "c": "C!" }, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 0",
 			"Spliced -{a:A!,b:B!,c:C!} +{}",
 			"Changed",
-			"Changed size from 3 to 0",
 			"Destroyed A! by A",
 			"Destroyed B! by B",
 			"Destroyed C! by C"
@@ -80,9 +80,9 @@ JW.Tests.Collection.AbstractMap.MapperTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 1",
 			"Spliced -{} +{x:X!}",
-			"Changed",
-			"Changed size from 0 to 1"
+			"Changed"
 		);
 		target.set("X!", "x");
 		this.assertTarget({ "x": "X!" }, target);
@@ -90,9 +90,9 @@ JW.Tests.Collection.AbstractMap.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created A! by A",
 			"Created B! by B",
+			"Changed size from 1 to 3",
 			"Spliced -{} +{a:A!,b:B!}",
-			"Changed",
-			"Changed size from 1 to 3"
+			"Changed"
 		);
 		var mapper1 = this.createMapper(source1, target);
 		this.assertTarget({ "a": "A!", "b": "B!", "x": "X!" }, target);
@@ -100,17 +100,17 @@ JW.Tests.Collection.AbstractMap.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created C! by C",
 			"Created D! by D",
+			"Changed size from 3 to 5",
 			"Spliced -{} +{c:C!,d:D!}",
-			"Changed",
-			"Changed size from 3 to 5"
+			"Changed"
 		);
 		var mapper2 = this.createMapper(source2, target);
 		this.assertTarget({ "a": "A!", "b": "B!", "c": "C!", "d": "D!", "x": "X!" }, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 5 to 3",
 			"Spliced -{a:A!,b:B!} +{}",
 			"Changed",
-			"Changed size from 5 to 3",
 			"Destroyed A! by A",
 			"Destroyed B! by B"
 		);
@@ -118,9 +118,9 @@ JW.Tests.Collection.AbstractMap.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({ "c": "C!", "d": "D!", "x": "X!" }, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 1",
 			"Spliced -{c:C!,d:D!} +{}",
 			"Changed",
-			"Changed size from 3 to 1",
 			"Destroyed C! by C",
 			"Destroyed D! by D"
 		);

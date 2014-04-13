@@ -22,6 +22,8 @@
  *
  * `<T> extends JW.AbstractMap<T>`
  *
+ * Has several events and an observable property #length.
+ *
  * See structurized list of methods in JW.AbstractMap.
  *
  * @extends JW.AbstractMap
@@ -32,15 +34,17 @@
  */
 JW.ObservableMap = function(json, adapter) {
 	JW.ObservableMap._super.call(this, json, adapter);
+	this.length = this.own(new JW.Property(this.getLength()));
 	this.spliceEvent = this.own(new JW.Event());
 	this.reindexEvent = this.own(new JW.Event());
 	this.clearEvent = this.own(new JW.Event());
 	this.changeEvent = this.own(new JW.Event());
-	this.lengthChangeEvent = this.own(new JW.Event());
-	this._lastLength = this.getLength();
 };
 
 JW.extend(JW.ObservableMap, JW.AbstractMap, {
+	/**
+	 * @property {JW.Property} length `<Number>` Collection length. **Don't modify manually!**
+	 */
 	/**
 	 * @event spliceEvent
 	 * Items are removed from map, items are added to map and items are updated in map. Triggered in result
@@ -65,11 +69,6 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	 * of events #spliceEvent, #reindexEvent, #clearEvent.
 	 * @param {JW.ObservableMap.EventParams} params `<T>` Parameters.
 	 */
-	/**
-	 * @event lengthChangeEvent
-	 * Map length is changed. Triggered right after #changeEvent if map length has changed.
-	 * @param {JW.ObservableMap.LengthChangeEventParams} params `<T>` Parameters.
-	 */
 	
 	// override
 	trySplice: function(removedKeys, updatedItems) {
@@ -77,8 +76,9 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		if (spliceResult === undefined) {
 			return;
 		}
+		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
 		return spliceResult;
 	},
 	
@@ -88,8 +88,9 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		if (items === undefined) {
 			return;
 		}
+		this.length.set(this.getLength());
 		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this, items));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
 		return items;
 	},
 	
@@ -100,7 +101,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 			return;
 		}
 		this.reindexEvent.trigger(new JW.ObservableMap.ReindexEventParams(this, result));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
 		return result;
 	},
 	
@@ -222,15 +223,6 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	 */
 	createInserter: function(config) {
 		return new JW.ObservableMap.Inserter(this, config);
-	},
-	
-	_triggerChange: function() {
-		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
-		var newLength = this.getLength();
-		if (this._lastLength !== newLength) {
-			this.lengthChangeEvent.trigger(new JW.ObservableMap.LengthChangeEventParams(this, this._lastLength, newLength));
-			this._lastLength = newLength;
-		}
 	}
 });
 
@@ -321,34 +313,5 @@ JW.ObservableMap.ItemsEventParams = function(sender, items) {
 JW.extend(JW.ObservableMap.ItemsEventParams, JW.ObservableMap.EventParams, {
 	/**
 	 * @property {Object} items Old map contents.
-	 */
-});
-
-/**
- * @class
- *
- * `<T> extends JW.ObservableMap.EventParams<T>`
- *
- * Parameters of JW.ObservableMap#lengthChangeEvent.
- *
- * @extends JW.ObservableMap.EventParams
- *
- * @constructor
- * @param {JW.ObservableMap} sender `<T>` Event sender.
- * @param {number} oldLength Old collection length.
- * @param {number} newLength New collection length.
- */
-JW.ObservableMap.LengthChangeEventParams = function(sender, oldLength, newLength) {
-	JW.ObservableMap.LengthChangeEventParams._super.call(this, sender);
-	this.oldLength = oldLength;
-	this.newLength = newLength;
-};
-
-JW.extend(JW.ObservableMap.LengthChangeEventParams, JW.ObservableMap.EventParams, {
-	/**
-	 * @property {number} oldLength Old collection length.
-	 */
-	/**
-	 * @property {number} newLength New collection length.
 	 */
 });

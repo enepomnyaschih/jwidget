@@ -116,7 +116,7 @@
 JW.AbstractMap = function(json, adapter) {
 	JW.AbstractMap._super.call(this);
 	this.json = adapter ? json : json ? JW.apply({}, json) : {};
-	this.length = JW.Map.getLength(this.json);
+	this._length = JW.Map.getLength(this.json);
 	this.getKey = null;
 };
 
@@ -161,11 +161,11 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	},
 	
 	getLength: function() {
-		return this.length;
+		return this._length;
 	},
 	
 	isEmpty: function() {
-		return this.length === 0;
+		return this._length === 0;
 	},
 	
 	/**
@@ -667,7 +667,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {Object} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
-		this.length = 0;
+		this._length = 0;
 		return JW.Map.tryClear(this.json);
 	},
 	
@@ -691,7 +691,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = JW.Map.trySplice(this.json, removedKeys, updatedItems);
 		if (spliceResult) {
-			this.length += JW.Map.getLength(spliceResult.addedItems) - JW.Map.getLength(spliceResult.removedItems);
+			this._length += JW.Map.getLength(spliceResult.addedItems) - JW.Map.getLength(spliceResult.removedItems);
 			return spliceResult;
 		}
 	},

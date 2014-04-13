@@ -102,7 +102,7 @@
 JW.AbstractSet = function(items, adapter) {
 	JW.AbstractSet._super.call(this);
 	this.json = adapter ? items : items ? JW.Array.index(items, JW.byField("_iid")) : {};
-	this.length = JW.Set.getLength(this.json);
+	this._length = JW.Set.getLength(this.json);
 };
 
 JW.extend(JW.AbstractSet, JW.AbstractCollection, {
@@ -118,11 +118,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 	
 	getLength: function() {
-		return this.length;
+		return this._length;
 	},
 	
 	isEmpty: function() {
-		return this.length === 0;
+		return this._length === 0;
 	},
 	
 	containsItem: function(item) {
@@ -344,7 +344,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
-		this.length = 0;
+		this._length = 0;
 		return JW.Set.tryClear(this.json);
 	},
 	
@@ -368,7 +368,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	trySplice: function(removedItems, addedItems) {
 		var spliceResult = JW.Set.trySplice(this.json, removedItems, addedItems);
 		if (spliceResult) {
-			this.length += spliceResult.addedItems.length - spliceResult.removedItems.length;
+			this._length += spliceResult.addedItems.length - spliceResult.removedItems.length;
 			return spliceResult;
 		}
 	},

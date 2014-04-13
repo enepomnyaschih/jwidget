@@ -114,9 +114,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput(
 			"Created D by d",
+			"Changed size from 0 to 1",
 			"Spliced -[] +[D]",
-			"Changed",
-			"Changed size from 0 to 1"
+			"Changed"
 		);
 		var mapper = this.createMapper(source, target);
 		this.assertTarget([ d ], target);
@@ -124,9 +124,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var f = new JW.Proxy("f");
 		this.setExpectedOutput(
 			"Created F by f",
+			"Changed size from 1 to 2",
 			"Spliced -[] +[F]",
-			"Changed",
-			"Changed size from 1 to 2"
+			"Changed"
 		);
 		source.addAll([ f ]);
 		this.assertTarget([ d, f ], target);
@@ -134,9 +134,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var c = new JW.Proxy("c");
 		this.setExpectedOutput(
 			"Created C by c",
+			"Changed size from 2 to 3",
 			"Spliced -[] +[C]",
-			"Changed",
-			"Changed size from 2 to 3"
+			"Changed"
 		);
 		source.add(c);
 		this.assertTarget([ d, f, c ], target);
@@ -146,9 +146,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created B by b",
 			"Created M by m",
+			"Changed size from 3 to 5",
 			"Spliced -[] +[B,M]",
-			"Changed",
-			"Changed size from 3 to 5"
+			"Changed"
 		);
 		source.addAll([ b, m ]);
 		this.assertTarget([ d, f, c, b, m ], target);
@@ -158,9 +158,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ d, f, c, b, m ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 5 to 4",
 			"Spliced -[M] +[]",
 			"Changed",
-			"Changed size from 5 to 4",
 			"Destroyed M by m"
 		);
 		source.remove(m);
@@ -171,9 +171,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ d, f, c, b ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 4 to 2",
 			"Spliced -[B,F] +[]",
 			"Changed",
-			"Changed size from 4 to 2",
 			"Destroyed B by b",
 			"Destroyed F by f"
 		);
@@ -183,18 +183,18 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created F by f",
 			"Created B by b",
+			"Changed size from 2 to 3",
 			"Spliced -[D] +[B,F]",
 			"Changed",
-			"Changed size from 2 to 3",
 			"Destroyed D by d"
 		);
 		source.splice([ d ], [ f, b ]);
 		this.assertTarget([ c, b, f ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 0",
 			"Spliced -[B,C,F] +[]",
 			"Changed",
-			"Changed size from 3 to 0",
 			"Destroyed B by b",
 			"Destroyed C by c",
 			"Destroyed F by f"
@@ -205,17 +205,17 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var h = new JW.Proxy("h");
 		this.setExpectedOutput(
 			"Created H by h",
+			"Changed size from 0 to 1",
 			"Spliced -[] +[H]",
-			"Changed",
-			"Changed size from 0 to 1"
+			"Changed"
 		);
 		source.add(h);
 		this.assertTarget([ h ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 1 to 0",
 			"Spliced -[H] +[]",
 			"Changed",
-			"Changed size from 1 to 0",
 			"Destroyed H by h"
 		);
 		mapper.destroy();
@@ -239,9 +239,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 1",
 			"Spliced -[] +[X]",
-			"Changed",
-			"Changed size from 0 to 1"
+			"Changed"
 		);
 		target.add(x.result);
 		this.assertTarget([ x ], target);
@@ -249,9 +249,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created A by a",
 			"Created B by b",
+			"Changed size from 1 to 3",
 			"Spliced -[] +[A,B]",
-			"Changed",
-			"Changed size from 1 to 3"
+			"Changed"
 		);
 		var mapper1 = this.createMapper(source1, target);
 		this.assertTarget([ a, b, x ], target);
@@ -259,9 +259,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created C by c",
 			"Created D by d",
+			"Changed size from 3 to 5",
 			"Spliced -[] +[C,D]",
-			"Changed",
-			"Changed size from 3 to 5"
+			"Changed"
 		);
 		var mapper2 = this.createMapper(source2, target);
 		this.assertTarget([ a, b, c, d, x ], target);
@@ -269,26 +269,26 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		var e = new JW.Proxy("e");
 		this.setExpectedOutput(
 			"Created E by e",
+			"Changed size from 5 to 6",
 			"Spliced -[] +[E]",
-			"Changed",
-			"Changed size from 5 to 6"
+			"Changed"
 		);
 		source1.add(e);
 		this.assertTarget([ a, b, c, d, e, x ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 6 to 5",
 			"Spliced -[D] +[]",
 			"Changed",
-			"Changed size from 6 to 5",
 			"Destroyed D by d"
 		);
 		source2.remove(d);
 		this.assertTarget([ a, b, c, e, x ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 5 to 2",
 			"Spliced -[A,B,E] +[]",
 			"Changed",
-			"Changed size from 5 to 2",
 			"Destroyed E by e",
 			"Destroyed B by b",
 			"Destroyed A by a"
@@ -297,9 +297,9 @@ JW.Tests.Collection.ObservableSet.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ c, x ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 2 to 1",
 			"Spliced -[C] +[]",
 			"Changed",
-			"Changed size from 2 to 1",
 			"Destroyed C by c"
 		);
 		mapper2.destroy();

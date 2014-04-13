@@ -43,17 +43,17 @@ JW.Tests.Collection.AbstractArray.ListerTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 2",
 			"Spliced -[] +[a,b]",
-			"Changed",
-			"Changed size from 0 to 2"
+			"Changed"
 		);
 		var lister = this.createLister(source, target);
 		this.assertTarget([ a, b ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 2 to 0",
 			"Spliced -[a,b] +[]",
-			"Changed",
-			"Changed size from 2 to 0"
+			"Changed"
 		);
 		lister.destroy();
 		this.assertTarget([], target);
@@ -75,41 +75,41 @@ JW.Tests.Collection.AbstractArray.ListerTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 1",
 			"Spliced -[] +[x]",
-			"Changed",
-			"Changed size from 0 to 1"
+			"Changed"
 		);
 		target.add(x);
 		this.assertTarget([ x ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 1 to 3",
 			"Spliced -[] +[a,b]",
-			"Changed",
-			"Changed size from 1 to 3"
+			"Changed"
 		);
 		var lister1 = this.createLister(source1, target);
 		this.assertTarget([ a, b, x ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 5",
 			"Spliced -[] +[c,d]",
-			"Changed",
-			"Changed size from 3 to 5"
+			"Changed"
 		);
 		var lister2 = this.createLister(source2, target);
 		this.assertTarget([ a, b, c, d, x ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 5 to 3",
 			"Spliced -[a,b] +[]",
-			"Changed",
-			"Changed size from 5 to 3"
+			"Changed"
 		);
 		lister1.destroy();
 		this.assertTarget([ c, d, x ], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 1",
 			"Spliced -[c,d] +[]",
-			"Changed",
-			"Changed size from 3 to 1"
+			"Changed"
 		);
 		lister2.destroy();
 		this.assertTarget([ x ], target);

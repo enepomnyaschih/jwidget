@@ -86,17 +86,17 @@ JW.Tests.Collection.ObservableArray.FiltererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 4",
 			"Spliced -[] +[0:[1,3,5,7]] to []",
-			"Changed",
-			"Changed length from 0 to 4"
+			"Changed"
 		);
 		var filterer = this.createFilterer(source, target);
 		this.assertTarget([1, 3, 5, 7], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 4 to 6",
 			"Spliced -[0:[1]] +[0:[7],2:[9],4:[11]] to [1,3,5,7]",
-			"Changed",
-			"Changed length from 4 to 6"
+			"Changed"
 		);
 		source.splice( // 6,7,3,8,9,5,10,11,7
 			[new JW.AbstractArray.IndexCount(0, 2),
@@ -107,17 +107,17 @@ JW.Tests.Collection.ObservableArray.FiltererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([7, 3, 9, 5, 11, 7], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 6 to 7",
 			"Spliced -[] +[4:[7]] to [7,3,9,5,11,7]",
-			"Changed",
-			"Changed length from 6 to 7"
+			"Changed"
 		);
 		source.set(7, 6); // 6,7,3,8,9,5,7,11,7
 		this.assertTarget([7, 3, 9, 5, 7, 11, 7], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 7 to 6",
 			"Spliced -[0:[7]] +[] to [7,3,9,5,7,11,7]",
-			"Changed",
-			"Changed length from 7 to 6"
+			"Changed"
 		);
 		source.set(2, 1); // 6,2,3,8,9,5,7,11,7
 		this.assertTarget([3, 9, 5, 7, 11, 7], target);
@@ -163,9 +163,9 @@ JW.Tests.Collection.ObservableArray.FiltererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([9, 11, 7, 3, 7, 1], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 6 to 5",
 			"Spliced -[0:[9,11,7,3]] +[0:[1],3:[7,9]] to [9,11,7,3,7,1]",
-			"Changed",
-			"Changed length from 6 to 5"
+			"Changed"
 		);
 		source.splice(
 			[new JW.AbstractArray.IndexCount(0, 2),
@@ -176,25 +176,25 @@ JW.Tests.Collection.ObservableArray.FiltererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([1, 7, 1, 7, 9], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 5 to 0",
 			"Cleared [1,7,1,7,9]",
-			"Changed",
-			"Changed length from 5 to 0"
+			"Changed"
 		);
 		source.clear();
 		this.assertTarget([], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 2",
 			"Spliced -[] +[0:[1,3]] to []",
-			"Changed",
-			"Changed length from 0 to 2"
+			"Changed"
 		);
 		source.addAll([1, 2, 3]);
 		this.assertTarget([1, 3], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 2 to 0",
 			"Cleared [1,3]",
-			"Changed",
-			"Changed length from 2 to 0"
+			"Changed"
 		);
 		filterer.destroy()
 		this.assertTarget([], target);

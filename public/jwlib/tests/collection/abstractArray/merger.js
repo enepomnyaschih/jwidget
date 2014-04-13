@@ -68,17 +68,17 @@ JW.Tests.Collection.AbstractArray.MergerTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 6",
 			"Spliced -[] +[0:[a,b,c,d,e,f]] to []",
-			"Changed",
-			"Changed length from 0 to 6"
+			"Changed"
 		);
 		var merger = this.createMerger(source, target);
 		this.assertTarget(["a", "b", "c", "d", "e", "f"], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 6 to 7",
 			"Spliced -[3:[d,e]] +[2:[g,h],5:[i]] to [a,b,c,d,e,f]",
-			"Changed",
-			"Changed length from 6 to 7"
+			"Changed"
 		);
 		source.get(1).splice(
 			[new JW.AbstractArray.IndexCount(1, 2)],
@@ -115,17 +115,17 @@ JW.Tests.Collection.AbstractArray.MergerTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget(["a", "b", "j", "g", "i", "c", "f"], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 7 to 3",
 			"Spliced -[2:[j,g,i,c]] +[] to [a,b,j,g,i,c,f]",
-			"Changed",
-			"Changed length from 7 to 3"
+			"Changed"
 		);
 		source.get(1).clear();
 		this.assertTarget(["a", "b", "f"], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 3 to 0",
 			"Cleared [a,b,f]",
-			"Changed",
-			"Changed length from 3 to 0"
+			"Changed"
 		);
 		merger.destroy();
 		this.assertTarget([], target);

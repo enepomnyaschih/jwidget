@@ -45,17 +45,17 @@ JW.Tests.Collection.AbstractArray.OrdererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 2",
 			"Spliced -[] +[0:[a,b]] to []",
-			"Changed",
-			"Changed length from 0 to 2"
+			"Changed"
 		);
 		var orderer = this.createOrderer(source, target);
 		this.assertTarget([this.a, this.b], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 2 to 0",
 			"Spliced -[0:[a,b]] +[] to [a,b]",
-			"Changed",
-			"Changed length from 2 to 0"
+			"Changed"
 		);
 		orderer.destroy();
 		this.assertTarget([], target);
@@ -71,41 +71,41 @@ JW.Tests.Collection.AbstractArray.OrdererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 1",
 			"Spliced -[] +[0:[x]] to []",
-			"Changed",
-			"Changed length from 0 to 1"
+			"Changed"
 		);
 		target.add(this.x);
 		this.assertTarget([this.x], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 1 to 3",
 			"Spliced -[] +[1:[a,b]] to [x]",
-			"Changed",
-			"Changed length from 1 to 3"
+			"Changed"
 		);
 		var orderer1 = this.createOrderer(source1, target);
 		this.assertTarget([this.x, this.a, this.b], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 3 to 5",
 			"Spliced -[] +[3:[c,d]] to [x,a,b]",
-			"Changed",
-			"Changed length from 3 to 5"
+			"Changed"
 		);
 		var orderer2 = this.createOrderer(source2, target);
 		this.assertTarget([this.x, this.a, this.b, this.c, this.d], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 5 to 3",
 			"Spliced -[1:[a,b]] +[] to [x,a,b,c,d]",
-			"Changed",
-			"Changed length from 5 to 3"
+			"Changed"
 		);
 		orderer1.destroy();
 		this.assertTarget([this.x, this.c, this.d], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 3 to 1",
 			"Spliced -[1:[c,d]] +[] to [x,c,d]",
-			"Changed",
-			"Changed length from 3 to 1"
+			"Changed"
 		);
 		orderer2.destroy();
 		this.assertTarget([this.x], target);

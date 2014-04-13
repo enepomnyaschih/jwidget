@@ -153,27 +153,27 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput(
 			"Created by d",
+			"Changed length from 0 to 1",
 			"Spliced -[] +[0:[D]] to []",
-			"Changed",
-			"Changed length from 0 to 1"
+			"Changed"
 		);
 		var mapper = this.createMapper(source, target);
 		this.assertTarget([ "D" ], target);
 		
 		this.setExpectedOutput(
 			"Created by f",
+			"Changed length from 1 to 2",
 			"Spliced -[] +[1:[F]] to [D]",
-			"Changed",
-			"Changed length from 1 to 2"
+			"Changed"
 		);
 		source.addAll([ "f" ]);
 		this.assertTarget([ "D", "F" ], target);
 		
 		this.setExpectedOutput(
 			"Created by c",
+			"Changed length from 2 to 3",
 			"Spliced -[] +[1:[C]] to [D,F]",
-			"Changed",
-			"Changed length from 2 to 3"
+			"Changed"
 		);
 		source.add("c", 1);
 		this.assertTarget([ "D", "C", "F" ], target);
@@ -181,9 +181,9 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(
 			"Created by b",
 			"Created by m",
+			"Changed length from 3 to 5",
 			"Spliced -[] +[0:[B,M]] to [D,C,F]",
-			"Changed",
-			"Changed length from 3 to 5"
+			"Changed"
 		);
 		source.addAll([ "b", "m" ], 0);
 		this.assertTarget([ "B", "M", "D", "C", "F" ], target);
@@ -194,26 +194,26 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput(
 			"Created by a",
+			"Changed length from 5 to 6",
 			"Spliced -[] +[5:[A]] to [B,M,D,C,F]",
-			"Changed",
-			"Changed length from 5 to 6"
+			"Changed"
 		);
 		source.add("a", 5);
 		this.assertTarget([ "B", "M", "D", "C", "F", "A" ], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 6 to 5",
 			"Spliced -[1:[M]] +[] to [B,M,D,C,F,A]",
 			"Changed",
-			"Changed length from 6 to 5",
 			"Destroyed M by m"
 		);
 		source.remove(1);
 		this.assertTarget([ "B", "D", "C", "F", "A" ], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 5 to 4",
 			"Spliced -[0:[B]] +[] to [B,D,C,F,A]",
 			"Changed",
-			"Changed length from 5 to 4",
 			"Destroyed B by b"
 		);
 		source.remove(0);
@@ -221,9 +221,9 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput(
 			"Created by k",
+			"Changed length from 4 to 5",
 			"Spliced -[] +[4:[K]] to [D,C,F,A]",
-			"Changed",
-			"Changed length from 4 to 5"
+			"Changed"
 		);
 		source.add("k");
 		this.assertTarget([ "D", "C", "F", "A", "K" ], target);
@@ -269,9 +269,9 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ "A", "C", "D", "G", "K" ], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 5 to 3",
 			"Spliced -[0:[A],2:[D]] +[] to [A,C,D,G,K]",
 			"Changed",
-			"Changed length from 5 to 3",
 			"Destroyed D by d",
 			"Destroyed A by a"
 		);
@@ -290,9 +290,9 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([ "U", "T", "C" ], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 3 to 0",
 			"Cleared [U,T,C]",
 			"Changed",
-			"Changed length from 3 to 0",
 			"Destroyed C by c",
 			"Destroyed T by t",
 			"Destroyed U by u"
@@ -302,17 +302,17 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput(
 			"Created by h",
+			"Changed length from 0 to 1",
 			"Spliced -[] +[0:[H]] to []",
-			"Changed",
-			"Changed length from 0 to 1"
+			"Changed"
 		);
 		source.add("h");
 		this.assertTarget([ "H" ], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 1 to 0",
 			"Cleared [H]",
 			"Changed",
-			"Changed length from 1 to 0",
 			"Destroyed H by h"
 		);
 		mapper.destroy();

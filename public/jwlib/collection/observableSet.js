@@ -22,6 +22,8 @@
  *
  * `<T extends JW.Class> extends JW.AbstractSet<T>`
  *
+ * Has several events and an observable property #length.
+ *
  * See structurized list of methods in JW.AbstractSet.
  *
  * @extends JW.AbstractSet
@@ -33,14 +35,16 @@
  */
 JW.ObservableSet = function(json, adapter) {
 	JW.ObservableSet._super.call(this, json, adapter);
+	this.length = this.own(new JW.Property(this.getLength()));
 	this.spliceEvent = this.own(new JW.Event());
 	this.clearEvent = this.own(new JW.Event());
 	this.changeEvent = this.own(new JW.Event());
-	this.lengthChangeEvent = this.own(new JW.Event());
-	this._lastLength = this.getLength();
 };
 
 JW.extend(JW.ObservableSet, JW.AbstractSet, {
+	/**
+	 * @property {JW.Property} length `<Number>` Collection length. **Don't modify manually!**
+	 */
 	/**
 	 * @event spliceEvent
 	 * Items are removed from set, items are added to set. Triggered in result
@@ -59,11 +63,6 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	 * of events #spliceEvent, #clearEvent.
 	 * @param {JW.ObservableSet.EventParams} params `<T>` Parameters.
 	 */
-	/**
-	 * @event lengthChangeEvent
-	 * Set length is changed. Triggered right after #changeEvent if set length has changed.
-	 * @param {JW.ObservableSet.LengthChangeEventParams} params `<T>` Parameters.
-	 */
 	
 	// override
 	tryClear: function() {
@@ -71,8 +70,9 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 		if (items === undefined) {
 			return;
 		}
+		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableSet.ItemsEventParams(this, items));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
 		return items;
 	},
 	
@@ -82,8 +82,9 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 		if (spliceResult === undefined) {
 			return;
 		}
+		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, spliceResult));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
 		return spliceResult;
 	},
 	
@@ -194,15 +195,6 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	 */
 	createLister: function(config) {
 		return new JW.ObservableSet.Lister(this, config);
-	},
-	
-	_triggerChange: function() {
-		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
-		var newLength = this.getLength();
-		if (this._lastLength !== newLength) {
-			this.lengthChangeEvent.trigger(new JW.ObservableSet.LengthChangeEventParams(this, this._lastLength, newLength));
-			this._lastLength = newLength;
-		}
 	}
 });
 
@@ -269,34 +261,5 @@ JW.ObservableSet.ItemsEventParams = function(sender, items) {
 JW.extend(JW.ObservableSet.ItemsEventParams, JW.ObservableSet.EventParams, {
 	/**
 	 * @property {Array} items `<T>` Old set contents.
-	 */
-});
-
-/**
- * @class
- *
- * `<T> extends JW.ObservableSet.EventParams<T>`
- *
- * Parameters of JW.ObservableSet#lengthChangeEvent.
- *
- * @extends JW.ObservableSet.EventParams
- *
- * @constructor
- * @param {JW.ObservableSet} sender `<T>` Event sender.
- * @param {number} oldLength Old collection length.
- * @param {number} newLength New collection length.
- */
-JW.ObservableSet.LengthChangeEventParams = function(sender, oldLength, newLength) {
-	JW.ObservableSet.LengthChangeEventParams._super.call(this, sender);
-	this.oldLength = oldLength;
-	this.newLength = newLength;
-};
-
-JW.extend(JW.ObservableSet.LengthChangeEventParams, JW.ObservableSet.EventParams, {
-	/**
-	 * @property {number} oldLength Old collection length.
-	 */
-	/**
-	 * @property {number} newLength New collection length.
 	 */
 });

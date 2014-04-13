@@ -33,9 +33,9 @@ JW.Tests.Collection.ObservableSet.OrdererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 4",
 			"Spliced -[] +[0:[a,b,c,d]] to []",
-			"Changed",
-			"Changed length from 0 to 4"
+			"Changed"
 		);
 		var orderer = this.createOrderer(source, target);
 		this.assertTarget([this.a, this.b, this.c, this.d], target);
@@ -48,33 +48,33 @@ JW.Tests.Collection.ObservableSet.OrdererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([this.a, this.c, this.e, this.f], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 4 to 5",
 			"Spliced -[] +[4:[b]] to [a,c,e,f]",
-			"Changed",
-			"Changed length from 4 to 5"
+			"Changed"
 		);
 		source.add(this.b);
 		this.assertTarget([this.a, this.c, this.e, this.f, this.b], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 5 to 0",
 			"Spliced -[0:[a,c,e,f,b]] +[] to [a,c,e,f,b]",
-			"Changed",
-			"Changed length from 5 to 0"
+			"Changed"
 		);
 		source.clear();
 		this.assertTarget([], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 1",
 			"Spliced -[] +[0:[c]] to []",
-			"Changed",
-			"Changed length from 0 to 1"
+			"Changed"
 		);
 		source.add(this.c);
 		this.assertTarget([this.c], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 1 to 0",
 			"Spliced -[0:[c]] +[] to [c]",
-			"Changed",
-			"Changed length from 1 to 0"
+			"Changed"
 		);
 		orderer.destroy();
 		this.assertTarget([], target);
@@ -116,33 +116,33 @@ JW.Tests.Collection.ObservableSet.OrdererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 1",
 			"Spliced -[] +[0:[x]] to []",
-			"Changed",
-			"Changed length from 0 to 1"
+			"Changed"
 		);
 		target.add(this.x);
 		this.assertTarget([this.x], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 1 to 3",
 			"Spliced -[] +[1:[a,b]] to [x]",
-			"Changed",
-			"Changed length from 1 to 3"
+			"Changed"
 		);
 		var orderer1 = this.createOrderer(source1, target);
 		this.assertTarget([this.x, this.a, this.b], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 3 to 5",
 			"Spliced -[] +[3:[c,d]] to [x,a,b]",
-			"Changed",
-			"Changed length from 3 to 5"
+			"Changed"
 		);
 		var orderer2 = this.createOrderer(source2, target);
 		this.assertTarget([this.x, this.a, this.b, this.c, this.d], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 5 to 6",
 			"Spliced -[1:[a]] +[4:[e,f]] to [x,a,b,c,d]",
-			"Changed",
-			"Changed length from 5 to 6"
+			"Changed"
 		);
 		source1.splice([this.a], [this.e, this.f]); // b,e,f
 		this.assertTarget([this.x, this.b, this.c, this.d, this.e, this.f], target);
@@ -155,17 +155,17 @@ JW.Tests.Collection.ObservableSet.OrdererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([this.x, this.b, this.c, this.e, this.f, this.a], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 6 to 3",
 			"Spliced -[1:[b],3:[e,f]] +[] to [x,b,c,e,f,a]",
-			"Changed",
-			"Changed length from 6 to 3"
+			"Changed"
 		);
 		orderer1.destroy();
 		this.assertTarget([this.x, this.c, this.a], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 3 to 1",
 			"Spliced -[1:[c,a]] +[] to [x,c,a]",
-			"Changed",
-			"Changed length from 3 to 1"
+			"Changed"
 		);
 		orderer2.destroy();
 		this.assertTarget([this.x], target);

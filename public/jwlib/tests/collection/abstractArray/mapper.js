@@ -51,17 +51,17 @@ JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
 			"Created by a",
 			"Created by b",
 			"Created by c",
+			"Changed length from 0 to 3",
 			"Spliced -[] +[0:[A,B,C]] to []",
-			"Changed",
-			"Changed length from 0 to 3"
+			"Changed"
 		);
 		var mapper = this.createMapper(source, target);
 		this.assertTarget([ "A", "B", "C" ], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 3 to 0",
 			"Cleared [A,B,C]",
 			"Changed",
-			"Changed length from 3 to 0",
 			"Destroyed C by c",
 			"Destroyed B by b",
 			"Destroyed A by a"

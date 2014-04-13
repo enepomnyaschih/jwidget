@@ -43,17 +43,17 @@ JW.Tests.Collection.AbstractSet.IndexerTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 3",
 			"Spliced -{} +{a:a,b:b,c:c}",
-			"Changed",
-			"Changed size from 0 to 3"
+			"Changed"
 		);
 		var indexer = this.createIndexer(source, target);
 		this.assertTarget({ "a": a, "b": b, "c": c }, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 0",
 			"Spliced -{a:a,b:b,c:c} +{}",
-			"Changed",
-			"Changed size from 3 to 0"
+			"Changed"
 		);
 		indexer.destroy();
 		this.assertTarget({}, target);
@@ -75,41 +75,41 @@ JW.Tests.Collection.AbstractSet.IndexerTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 1",
 			"Spliced -{} +{x:x}",
-			"Changed",
-			"Changed size from 0 to 1"
+			"Changed"
 		);
 		target.set(x, "x");
 		this.assertTarget({ "x": x }, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 1 to 3",
 			"Spliced -{} +{a:a,b:b}",
-			"Changed",
-			"Changed size from 1 to 3"
+			"Changed"
 		);
 		var indexer1 = this.createIndexer(source1, target);
 		this.assertTarget({ "a": a, "b": b, "x": x }, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 5",
 			"Spliced -{} +{c:c,d:d}",
-			"Changed",
-			"Changed size from 3 to 5"
+			"Changed"
 		);
 		var indexer2 = this.createIndexer(source2, target);
 		this.assertTarget({ "a": a, "b": b, "c": c, "d": d, "x": x }, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 5 to 3",
 			"Spliced -{a:a,b:b} +{}",
-			"Changed",
-			"Changed size from 5 to 3"
+			"Changed"
 		);
 		indexer1.destroy();
 		this.assertTarget({ "c": c, "d": d, "x": x }, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 1",
 			"Spliced -{c:c,d:d} +{}",
-			"Changed",
-			"Changed size from 3 to 1"
+			"Changed"
 		);
 		indexer2.destroy();
 		this.assertTarget({ "x": x }, target);

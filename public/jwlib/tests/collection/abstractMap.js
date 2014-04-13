@@ -292,9 +292,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 3}]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 3",
 			"Spliced -{} +{c:5}",
-			"Changed",
-			"Changed size from 2 to 3"
+			"Changed"
 		);
 		this.assertUndefined(this.invoke(map, "set", [5, "c"]));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 3, c: 5}]));
@@ -315,9 +315,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 3}]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 3",
 			"Spliced -{} +{c:5}",
-			"Changed",
-			"Changed size from 2 to 3"
+			"Changed"
 		);
 		this.assertUndefined(this.invoke(map, "trySet", [5, "c"]).value);
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 3, c: 5}]));
@@ -336,9 +336,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 5}]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 4",
 			"Spliced -{b:4} +{b:3,d:6}",
-			"Changed",
-			"Changed size from 3 to 4"
+			"Changed"
 		);
 		var expected = new JW.AbstractMap.SpliceResult({b: 4}, {b: 3, d: 6});
 		JW.Tests.Collection.assertMapSpliceResult(this, expected, this.invoke(map, "setAll", [{b: 3, c: 5, d: 6}]));
@@ -358,9 +358,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 5}]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 4",
 			"Spliced -{b:4} +{b:3,d:6}",
-			"Changed",
-			"Changed size from 3 to 4"
+			"Changed"
 		);
 		var expected = new JW.AbstractMap.SpliceResult({b: 4}, {b: 3, d: 6});
 		JW.Tests.Collection.assertMapSpliceResult(this, expected, this.invoke(map, "trySetAll", [{b: 3, c: 5, d: 6}]));
@@ -375,9 +375,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4}]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 1",
 			"Spliced -{b:4} +{}",
-			"Changed",
-			"Changed size from 2 to 1"
+			"Changed"
 		);
 		this.assertStrictEqual(4, this.invoke(map, "remove", ["b"]));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2}]));
@@ -391,9 +391,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4}]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 1",
 			"Spliced -{b:4} +{}",
-			"Changed",
-			"Changed size from 2 to 1"
+			"Changed"
 		);
 		this.assertStrictEqual(4, this.invoke(map, "tryRemove", ["b"]));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2}]));
@@ -411,9 +411,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3}]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 1",
 			"Spliced -{b:4,c:3} +{}",
-			"Changed",
-			"Changed size from 3 to 1"
+			"Changed"
 		);
 		this.assertTrue(JW.Map.equal(this.invoke(map, "removeAll", [["b", "c", "d"]]), {b: 4, c: 3}));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2}]));
@@ -431,9 +431,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3}]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 1",
 			"Spliced -{b:4,c:3} +{}",
-			"Changed",
-			"Changed size from 3 to 1"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(map, "$removeAll", [["b", "c", "d"]]).equal({b: 4, c: 3}));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2}]));
@@ -451,9 +451,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3}]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 1",
 			"Spliced -{b:4,c:3} +{}",
-			"Changed",
-			"Changed size from 3 to 1"
+			"Changed"
 		);
 		this.assertTrue(JW.Map.equal(this.invoke(map, "tryRemoveAll", [["b", "c", "d"]]), {b: 4, c: 3}));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2}]));
@@ -467,9 +467,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3, d: 4}]));
 		
 		this.setObservableOutput(
+			"Changed size from 4 to 3",
 			"Spliced -{b:4} +{}",
-			"Changed",
-			"Changed size from 4 to 3"
+			"Changed"
 		);
 		this.invoke(map, "removeItem", [4]);
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, c: 3, d: 4}]));
@@ -491,9 +491,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: a, b: b, c: a, d: c}]));
 		
 		this.setObservableOutput(
+			"Changed size from 4 to 1",
 			"Spliced -{a:a,c:a,d:c} +{}",
-			"Changed",
-			"Changed size from 4 to 1"
+			"Changed"
 		);
 		this.invoke(map, "removeItems", [[a, c]]);
 		this.assertTrue(this.invoke(map, "equal", [{b: b}]));
@@ -539,18 +539,18 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		
 		var map = this.createMap({a: 2, b: 4});
 		this.setObservableOutput(
+			"Changed size from 2 to 0",
 			"Cleared {a:2,b:4}",
-			"Changed",
-			"Changed size from 2 to 0"
+			"Changed"
 		);
 		this.assertTrue(JW.Map.equal(this.invoke(map, "clear"), {a: 2, b: 4}));
 		this.assertTrue(this.invoke(map, "equal", [{}]));
 		
 		var map = this.createMap({a: 2, b: 4});
 		this.setObservableOutput(
+			"Changed size from 2 to 0",
 			"Cleared {a:2,b:4}",
-			"Changed",
-			"Changed size from 2 to 0"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(map, "$clear").equal({a: 2, b: 4}));
 		this.assertTrue(this.invoke(map, "equal", [{}]));
@@ -565,9 +565,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		
 		var map = this.createMap({a: 2, b: 4});
 		this.setObservableOutput(
+			"Changed size from 2 to 0",
 			"Cleared {a:2,b:4}",
-			"Changed",
-			"Changed size from 2 to 0"
+			"Changed"
 		);
 		this.assertTrue(JW.Map.equal(this.invoke(map, "tryClear"), {a: 2, b: 4}));
 		this.assertTrue(this.invoke(map, "equal", [{}]));
@@ -583,9 +583,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 1, b: 2, c: 3, d: 4}]));
 		
 		this.setObservableOutput(
+			"Changed size from 4 to 5",
 			"Spliced -{a:1,b:2,d:4} +{b:3,d:6,e:5,f:7}",
-			"Changed",
-			"Changed size from 4 to 5"
+			"Changed"
 		);
 		var expected = new JW.AbstractMap.SpliceResult({a: 1, b: 2, d: 4}, {b: 3, d: 6, e: 5, f: 7});
 		var got = this.invoke(map, "splice", [["a", "b", "e", "g"], {b: 3, d: 6, e: 5, f: 7}]);
@@ -601,9 +601,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 1, b: 2, c: 3, d: 4}]));
 		
 		this.setObservableOutput(
+			"Changed size from 4 to 5",
 			"Spliced -{a:1,b:2,d:4} +{b:3,d:6,e:5,f:7}",
-			"Changed",
-			"Changed size from 4 to 5"
+			"Changed"
 		);
 		var expected = new JW.AbstractMap.SpliceResult({a: 1, b: 2, d: 4}, {b: 3, d: 6, e: 5, f: 7});
 		var got = this.invoke(map, "trySplice", [["a", "b", "e", "g"], {b: 3, d: 6, e: 5, f: 7}]);
@@ -657,9 +657,9 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(map, "equal", [{a: 1, b: 2, c: 3, d: 4}]));
 		
 		this.setObservableOutput(
+			"Changed size from 4 to 5",
 			"Spliced -{b:2,c:3} +{b:3,e:5,f:6}",
-			"Changed",
-			"Changed size from 4 to 5"
+			"Changed"
 		);
 		this.invoke(map, "performSplice", [{a: 1, b: 3, d: 4, e: 5, f: 6}]);
 		this.assertTrue(this.invoke(map, "equal", [{a: 1, b: 3, d: 4, e: 5, f: 6}]));

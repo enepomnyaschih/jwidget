@@ -47,17 +47,17 @@ JW.Tests.Collection.AbstractSet.FiltererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 3",
 			"Spliced -[] +[1,3,5]",
-			"Changed",
-			"Changed size from 0 to 3"
+			"Changed"
 		);
 		var filterer = this.createFilterer(source, target);
 		this.assertTarget([this.a, this.c, this.e], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 0",
 			"Spliced -[1,3,5] +[]",
-			"Changed",
-			"Changed size from 3 to 0"
+			"Changed"
 		);
 		filterer.destroy();
 		this.assertTarget([], target);
@@ -73,41 +73,41 @@ JW.Tests.Collection.AbstractSet.FiltererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 1",
 			"Spliced -[] +[5]",
-			"Changed",
-			"Changed size from 0 to 1"
+			"Changed"
 		);
 		target.add(this.e);
 		this.assertTarget([this.e], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 1 to 2",
 			"Spliced -[] +[1]",
-			"Changed",
-			"Changed size from 1 to 2"
+			"Changed"
 		);
 		var filterer1 = this.createFilterer(source1, target);
 		this.assertTarget([this.a, this.e], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 2 to 3",
 			"Spliced -[] +[3]",
-			"Changed",
-			"Changed size from 2 to 3"
+			"Changed"
 		);
 		var filterer2 = this.createFilterer(source2, target);
 		this.assertTarget([this.a, this.c, this.e], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 2",
 			"Spliced -[1] +[]",
-			"Changed",
-			"Changed size from 3 to 2"
+			"Changed"
 		);
 		filterer1.destroy();
 		this.assertTarget([this.c, this.e], target);
 		
 		this.setExpectedOutput(
+			"Changed size from 2 to 1",
 			"Spliced -[3] +[]",
-			"Changed",
-			"Changed size from 2 to 1"
+			"Changed"
 		);
 		filterer2.destroy();
 		this.assertTarget([this.e], target);

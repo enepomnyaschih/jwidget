@@ -22,6 +22,8 @@
  *
  * `<T> extends JW.AbstractArray<T>`
  *
+ * Has several events and an observable property #length.
+ *
  * See structurized list of methods in JW.AbstractArray.
  *
  * @extends JW.AbstractArray
@@ -32,17 +34,19 @@
  */
 JW.ObservableArray = function(items, adapter) {
 	JW.ObservableArray._super.call(this, items, adapter);
+	this.length = this.own(new JW.Property(this.getLength()));
 	this.spliceEvent = this.own(new JW.Event());
 	this.replaceEvent = this.own(new JW.Event());
 	this.moveEvent = this.own(new JW.Event());
 	this.clearEvent = this.own(new JW.Event());
 	this.reorderEvent = this.own(new JW.Event());
 	this.changeEvent = this.own(new JW.Event());
-	this.lengthChangeEvent = this.own(new JW.Event());
-	this._lastLength = this.items.length;
 };
 
 JW.extend(JW.ObservableArray, JW.AbstractArray, {
+	/**
+	 * @property {JW.Property} length `<Number>` Collection length. **Don't modify manually!**
+	 */
 	/**
 	 * @event spliceEvent
 	 * Items are removed from array and items are added to array. Triggered in result
@@ -77,11 +81,6 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	 * of events #spliceEvent, #replaceEvent, #moveEvent, #clearEvent, #reorderEvent.
 	 * @param {JW.ObservableArray.EventParams} params `<T>` Parameters.
 	 */
-	/**
-	 * @event lengthChangeEvent
-	 * Array length is changed. Triggered right after #changeEvent if array length has changed.
-	 * @param {JW.ObservableArray.LengthChangeEventParams} params `<T>` Parameters.
-	 */
 	
 	// override
 	trySet: function(item, index) {
@@ -90,7 +89,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 			return;
 		}
 		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem.value, item));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return oldItem;
 	},
 	
@@ -101,7 +100,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 			return;
 		}
 		this.moveEvent.trigger(new JW.ObservableArray.MoveEventParams(this, fromIndex, toIndex, item));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return item;
 	},
 	
@@ -111,8 +110,9 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		if (oldItems === undefined) {
 			return;
 		}
+		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableArray.ItemsEventParams(this, oldItems));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return oldItems;
 	},
 	
@@ -122,8 +122,9 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		if (result === undefined) {
 			return;
 		}
+		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableArray.SpliceEventParams(this, result));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return result;
 	},
 	
@@ -134,7 +135,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 			return;
 		}
 		this.reorderEvent.trigger(new JW.ObservableArray.ReorderEventParams(this, indexArray, items));
-		this._triggerChange();
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return items;
 	},
 	
@@ -286,15 +287,6 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	
 	createSplitter: function(config) {
 		return new JW.ObservableArray.Splitter(this, config);
-	},
-	
-	_triggerChange: function() {
-		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
-		var length = this.getLength();
-		if (this._lastLength !== length) {
-			this.lengthChangeEvent.trigger(new JW.ObservableArray.LengthChangeEventParams(this, this._lastLength, length));
-			this._lastLength = length;
-		}
 	}
 });
 
@@ -454,34 +446,5 @@ JW.ObservableArray.ReorderEventParams = function(sender, indexArray, items) {
 JW.extend(JW.ObservableArray.ReorderEventParams, JW.ObservableArray.ItemsEventParams, {
 	/**
 	 * @property {Array} indexArray `<number>` Indexes of items in reordered array.
-	 */
-});
-
-/**
- * @class
- *
- * `<T> extends JW.ObservableArray.EventParams<T>`
- *
- * Parameters of JW.ObservableArray#lengthChangeEvent.
- *
- * @extends JW.ObservableArray.EventParams
- *
- * @constructor
- * @param {JW.ObservableArray} sender `<T>` Event sender.
- * @param {number} oldLength Old collection length.
- * @param {number} newLength New collection length.
- */
-JW.ObservableArray.LengthChangeEventParams = function(sender, oldLength, newLength) {
-	JW.ObservableArray.LengthChangeEventParams._super.call(this, sender);
-	this.oldLength = oldLength;
-	this.newLength = newLength;
-};
-
-JW.extend(JW.ObservableArray.LengthChangeEventParams, JW.ObservableArray.EventParams, {
-	/**
-	 * @property {number} oldLength Old array length.
-	 */
-	/**
-	 * @property {number} newLength New array length.
 	 */
 });

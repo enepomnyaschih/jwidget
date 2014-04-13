@@ -62,8 +62,8 @@ JW.Tests.Collection = {
 			testCase.output("Changed");
 		});
 		
-		array.lengthChangeEvent.bind(function(params) {
-			testCase.output("Changed length from " + params.oldLength + " to " + params.newLength);
+		array.length.changeEvent.bind(function(params) {
+			testCase.output("Changed length from " + params.oldValue + " to " + params.value);
 		});
 	},
 	
@@ -93,8 +93,8 @@ JW.Tests.Collection = {
 			testCase.output("Changed");
 		});
 		
-		map.lengthChangeEvent.bind(function(params) {
-			testCase.output("Changed size from " + params.oldLength + " to " + params.newLength);
+		map.length.changeEvent.bind(function(params) {
+			testCase.output("Changed size from " + params.oldValue + " to " + params.value);
 		});
 	},
 	
@@ -126,8 +126,8 @@ JW.Tests.Collection = {
 			testCase.output("Changed");
 		});
 		
-		set.lengthChangeEvent.bind(function(params) {
-			testCase.output("Changed size from " + params.oldLength + " to " + params.newLength);
+		set.length.changeEvent.bind(function(params) {
+			testCase.output("Changed size from " + params.oldValue + " to " + params.value);
 		});
 	},
 	

@@ -49,17 +49,17 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 3",
 			"Spliced -{} +{a:1,c:3,e:5}",
-			"Changed",
-			"Changed size from 0 to 3"
+			"Changed"
 		);
 		var filterer = this.createFilterer(source, target);
 		this.assertTarget({a: 1, c: 3, e: 5}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 5",
 			"Spliced -{a:1} +{a:7,b:9,i:11}",
-			"Changed",
-			"Changed size from 3 to 5"
+			"Changed"
 		);
 		source.splice(["d"], {f: 6, a: 7, g: 8, b: 9, h: 10, i: 11}); // {a: 7, b: 9, c: 3, e: 5, f: 6, g: 8, h: 10, i: 11}
 		this.assertTarget({a: 7, c: 3, e: 5, b: 9, i: 11}, target);
@@ -72,25 +72,25 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({a: 9, c: 7, k: 3, l: 5, n: 11}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 5 to 0",
 			"Spliced -{a:9,c:7,k:3,l:5,n:11} +{}",
-			"Changed",
-			"Changed size from 5 to 0"
+			"Changed"
 		);
 		source.clear();
 		this.assertTarget({}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 2",
 			"Spliced -{} +{e:3,q:1}",
-			"Changed",
-			"Changed size from 0 to 2"
+			"Changed"
 		);
 		source.setAll({q: 1, w: 2, e: 3});
 		this.assertTarget({e: 3, q: 1}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 2 to 0",
 			"Spliced -{e:3,q:1} +{}",
-			"Changed",
-			"Changed size from 2 to 0"
+			"Changed"
 		);
 		filterer.destroy();
 		this.assertTarget({}, target);
@@ -106,41 +106,41 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed size from 0 to 1",
 			"Spliced -{} +{e:7}",
-			"Changed",
-			"Changed size from 0 to 1"
+			"Changed"
 		);
 		target.set(7, "e");
 		this.assertTarget({"e": 7}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 1 to 2",
 			"Spliced -{} +{a:1}",
-			"Changed",
-			"Changed size from 1 to 2"
+			"Changed"
 		);
 		var filterer1 = this.createFilterer(source1, target);
 		this.assertTarget({e: 7, a: 1}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 2 to 3",
 			"Spliced -{} +{d:5}",
-			"Changed",
-			"Changed size from 2 to 3"
+			"Changed"
 		);
 		var filterer2 = this.createFilterer(source2, target);
 		this.assertTarget({e: 7, a: 1, d: 5}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 2",
 			"Spliced -{a:1} +{}",
-			"Changed",
-			"Changed size from 3 to 2"
+			"Changed"
 		);
 		source1.set(4, "a");
 		this.assertTarget({e: 7, d: 5}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 2 to 3",
 			"Spliced -{} +{f:5}",
-			"Changed",
-			"Changed size from 2 to 3"
+			"Changed"
 		);
 		source1.set(5, "f");
 		this.assertTarget({e: 7, d: 5, f: 5}, target);
@@ -153,17 +153,17 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget({e: 7, d: 1, f: 5}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 3 to 2",
 			"Spliced -{f:5} +{}",
-			"Changed",
-			"Changed size from 3 to 2"
+			"Changed"
 		);
 		source1.clear();
 		this.assertTarget({e: 7, d: 1}, target);
 		
 		this.setExpectedOutput(
+			"Changed size from 2 to 1",
 			"Spliced -{d:1} +{}",
-			"Changed",
-			"Changed size from 2 to 1"
+			"Changed"
 		);
 		filterer2.destroy();
 		this.assertTarget({e: 7}, target);

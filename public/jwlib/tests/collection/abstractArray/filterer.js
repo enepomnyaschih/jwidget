@@ -37,17 +37,17 @@ JW.Tests.Collection.AbstractArray.FiltererTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 4",
 			"Spliced -[] +[0:[1,3,5,7]] to []",
-			"Changed",
-			"Changed length from 0 to 4"
+			"Changed"
 		);
 		var filterer = this.createFilterer(source, target);
 		this.assertTarget([1, 3, 5, 7], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 4 to 0",
 			"Cleared [1,3,5,7]",
-			"Changed",
-			"Changed length from 4 to 0"
+			"Changed"
 		);
 		filterer.destroy()
 		this.assertTarget([], target);

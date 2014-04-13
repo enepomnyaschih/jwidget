@@ -131,7 +131,7 @@
  */
 JW.AbstractArray = function(items, adapter) {
 	JW.AbstractArray._super.call(this);
-	this.items = adapter ? items : !items ? [] : (typeof items === "number") ? new Array(items) : items.concat();
+	this.items = adapter ? items : items ? items.concat() : [];
 	this.getKey = null;
 };
 

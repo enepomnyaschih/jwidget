@@ -196,9 +196,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 3",
 			"Spliced -[] +[3]",
-			"Changed",
-			"Changed size from 2 to 3"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(set, "add", [this.c]));
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
@@ -212,9 +212,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 3",
 			"Spliced -[] +[3]",
-			"Changed",
-			"Changed size from 2 to 3"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(set, "tryAdd", [this.c]));
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
@@ -232,9 +232,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 4",
 			"Spliced -[] +[3,4]",
-			"Changed",
-			"Changed size from 2 to 4"
+			"Changed"
 		);
 		this.assertTrue(new JW.Set([this.c, this.d]).equal(this.invoke(set, "addAll", [[this.b, this.c, this.d]])));
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c, this.d]]));
@@ -252,9 +252,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 4",
 			"Spliced -[] +[3,4]",
-			"Changed",
-			"Changed size from 2 to 4"
+			"Changed"
 		);
 		this.assertTrue(new JW.Set([this.c, this.d]).equal(this.invoke(set, "$addAll", [[this.b, this.c, this.d]]).getItems()));
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c, this.d]]));
@@ -272,9 +272,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 4",
 			"Spliced -[] +[3,4]",
-			"Changed",
-			"Changed size from 2 to 4"
+			"Changed"
 		);
 		this.assertTrue(new JW.Set([this.c, this.d]).equal(this.invoke(set, "tryAddAll", [[this.b, this.c, this.d]])));
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c, this.d]]));
@@ -288,9 +288,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 1",
 			"Spliced -[2] +[]",
-			"Changed",
-			"Changed size from 2 to 1"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(set, "remove", [this.b]));
 		this.assertTrue(this.invoke(set, "equal", [[this.a]]));
@@ -304,9 +304,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 1",
 			"Spliced -[2] +[]",
-			"Changed",
-			"Changed size from 2 to 1"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(set, "tryRemove", [this.b]));
 		this.assertTrue(this.invoke(set, "equal", [[this.a]]));
@@ -324,9 +324,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 1",
 			"Spliced -[1,3] +[]",
-			"Changed",
-			"Changed size from 3 to 1"
+			"Changed"
 		);
 		this.assertTrue(new JW.Set([this.a, this.c]).equal(this.invoke(set, "removeAll", [[this.a, this.d, this.c, this.e]])));
 		this.assertTrue(this.invoke(set, "equal", [[this.b]]));
@@ -344,9 +344,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 1",
 			"Spliced -[1,3] +[]",
-			"Changed",
-			"Changed size from 3 to 1"
+			"Changed"
 		);
 		this.assertTrue(new JW.Set([this.a, this.c]).equal(this.invoke(set, "$removeAll", [[this.a, this.d, this.c, this.e]]).getItems()));
 		this.assertTrue(this.invoke(set, "equal", [[this.b]]));
@@ -364,9 +364,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 1",
 			"Spliced -[1,3] +[]",
-			"Changed",
-			"Changed size from 3 to 1"
+			"Changed"
 		);
 		this.assertTrue(new JW.Set([this.a, this.c]).equal(this.invoke(set, "tryRemoveAll", [[this.a, this.d, this.c, this.e]])));
 		this.assertTrue(this.invoke(set, "equal", [[this.b]]));
@@ -380,9 +380,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b]]));
 		
 		this.setObservableOutput(
+			"Changed size from 2 to 1",
 			"Spliced -[2] +[]",
-			"Changed",
-			"Changed size from 2 to 1"
+			"Changed"
 		);
 		this.invoke(set, "removeItem", [this.b]);
 		this.assertTrue(this.invoke(set, "equal", [[this.a]]));
@@ -400,9 +400,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 1",
 			"Spliced -[1,3] +[]",
-			"Changed",
-			"Changed size from 3 to 1"
+			"Changed"
 		);
 		this.invoke(set, "removeItems", [[this.a, this.d, this.c, this.e]]);
 		this.assertTrue(this.invoke(set, "equal", [[this.b]]));
@@ -416,9 +416,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		
 		var set = this.createSet([this.a, this.b]);
 		this.setObservableOutput(
+			"Changed size from 2 to 0",
 			"Cleared [1,2]",
-			"Changed",
-			"Changed size from 2 to 0"
+			"Changed"
 		);
 		this.assertTrue(new JW.Set(this.invoke(set, "clear")).equal([this.a, this.b]));
 		this.assertTrue(this.invoke(set, "equal", [[]]));
@@ -432,9 +432,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		
 		var set = this.createSet([this.a, this.b]);
 		this.setObservableOutput(
+			"Changed size from 2 to 0",
 			"Cleared [1,2]",
-			"Changed",
-			"Changed size from 2 to 0"
+			"Changed"
 		);
 		this.assertTrue(new JW.Set(this.invoke(set, "$clear").getItems()).equal([this.a, this.b]));
 		this.assertTrue(this.invoke(set, "equal", [[]]));
@@ -448,9 +448,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		
 		var set = this.createSet([this.a, this.b]);
 		this.setObservableOutput(
+			"Changed size from 2 to 0",
 			"Cleared [1,2]",
-			"Changed",
-			"Changed size from 2 to 0"
+			"Changed"
 		);
 		this.assertTrue(new JW.Set(this.invoke(set, "tryClear")).equal([this.a, this.b]));
 		this.assertTrue(this.invoke(set, "equal", [[]]));
@@ -473,9 +473,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		
 		var set = this.createSet([this.a, this.b, this.c, this.g]);
 		this.setObservableOutput(
+			"Changed size from 4 to 5",
 			"Spliced -[1] +[5,6]",
-			"Changed",
-			"Changed size from 4 to 5"
+			"Changed"
 		);
 		var expected = new JW.AbstractSet.SpliceResult([this.a], [this.e, this.f]);
 		var got = this.invoke(set, "splice", [[this.a, this.c, this.d], [this.b, this.c, this.e, this.f]]);
@@ -496,9 +496,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		
 		var set = this.createSet([this.a, this.b, this.c, this.g]);
 		this.setObservableOutput(
+			"Changed size from 4 to 5",
 			"Spliced -[1] +[5,6]",
-			"Changed",
-			"Changed size from 4 to 5"
+			"Changed"
 		);
 		var expected = new JW.AbstractSet.SpliceResult([this.a], [this.e, this.f]);
 		var got = this.invoke(set, "trySplice", [[this.a, this.c, this.d], [this.b, this.c, this.e, this.f]]);
@@ -512,9 +512,9 @@ JW.Tests.Collection.AbstractSetBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(set, "equal", [[this.a, this.b, this.c]]));
 		
 		this.setObservableOutput(
+			"Changed size from 3 to 4",
 			"Spliced -[1] +[5,6]",
-			"Changed",
-			"Changed size from 3 to 4"
+			"Changed"
 		);
 		this.invoke(set, "performSplice", [[this.b, this.c, this.e, this.f]]);
 		this.assertTrue(this.invoke(set, "equal", [[this.b, this.c, this.e, this.f]]));

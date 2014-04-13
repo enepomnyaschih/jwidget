@@ -38,17 +38,17 @@ JW.Tests.Collection.AbstractArray.ReverserTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 5",
 			"Spliced -[] +[0:[5,4,3,2,1]] to []",
-			"Changed",
-			"Changed length from 0 to 5"
+			"Changed"
 		);
 		var reverser = this.createReverser(source, target);
 		this.assertTarget([5, 4, 3, 2, 1], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 5 to 0",
 			"Cleared [5,4,3,2,1]",
-			"Changed",
-			"Changed length from 5 to 0"
+			"Changed"
 		);
 		reverser.destroy();
 		this.assertTarget([], target);

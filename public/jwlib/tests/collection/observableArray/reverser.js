@@ -69,17 +69,17 @@ JW.Tests.Collection.ObservableArray.ReverserTestCase = JW.Unit.TestCase.extend({
 		var target = this.createTarget();
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 5",
 			"Spliced -[] +[0:[5,4,3,2,1]] to []",
-			"Changed",
-			"Changed length from 0 to 5"
+			"Changed"
 		);
 		var reverser = this.createReverser(source, target);
 		this.assertTarget([5, 4, 3, 2, 1], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 5 to 8",
 			"Spliced -[1:[4],3:[2,1]] +[0:[11,10],3:[9,8],6:[7,6]] to [5,4,3,2,1]",
-			"Changed",
-			"Changed length from 5 to 8"
+			"Changed"
 		);
 		source.splice( // 6,7,3,8,9,1,10,11
 			[new JW.AbstractArray.IndexCount(0, 2),
@@ -111,9 +111,9 @@ JW.Tests.Collection.ObservableArray.ReverserTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([11, 9, 8, 7, 7, 6, 3, 5], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 8 to 10",
 			"Spliced -[0:[11],2:[8,7,7]] +[0:[9,8,7],5:[4],8:[2,1]] to [11,9,8,7,7,6,3,5]",
-			"Changed",
-			"Changed length from 8 to 10"
+			"Changed"
 		);
 		source.splice(
 			[new JW.AbstractArray.IndexCount(3, 3),
@@ -124,25 +124,25 @@ JW.Tests.Collection.ObservableArray.ReverserTestCase = JW.Unit.TestCase.extend({
 		this.assertTarget([9, 8, 7, 9, 6, 4, 3, 5, 2, 1], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 10 to 0",
 			"Cleared [9,8,7,9,6,4,3,5,2,1]",
-			"Changed",
-			"Changed length from 10 to 0"
+			"Changed"
 		);
 		source.clear();
 		this.assertTarget([], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 0 to 3",
 			"Spliced -[] +[0:[3,2,1]] to []",
-			"Changed",
-			"Changed length from 0 to 3"
+			"Changed"
 		);
 		source.addAll([1, 2, 3]);
 		this.assertTarget([3, 2, 1], target);
 		
 		this.setExpectedOutput(
+			"Changed length from 3 to 0",
 			"Cleared [3,2,1]",
-			"Changed",
-			"Changed length from 3 to 0"
+			"Changed"
 		);
 		reverser.destroy()
 		this.assertTarget([], target);

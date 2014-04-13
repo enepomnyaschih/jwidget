@@ -315,9 +315,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4]);
 		
 		this.setObservableOutput(
+			"Changed length from 2 to 3",
 			"Spliced -[] +[2:[3]] to [2,4]",
-			"Changed",
-			"Changed length from 2 to 3"
+			"Changed"
 		);
 		this.invoke(array, "add", [3]);
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
@@ -327,9 +327,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4]);
 		
 		this.setObservableOutput(
+			"Changed length from 2 to 3",
 			"Spliced -[] +[2:[3]] to [2,4]",
-			"Changed",
-			"Changed length from 2 to 3"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(array, "tryAdd", [3]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
@@ -339,9 +339,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4]);
 		
 		this.setObservableOutput(
+			"Changed length from 2 to 4",
 			"Spliced -[] +[2:[3,5]] to [2,4]",
-			"Changed",
-			"Changed length from 2 to 4"
+			"Changed"
 		);
 		this.invoke(array, "addAll", [[3, 5]]);
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3, 5]]));
@@ -351,9 +351,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4]);
 		
 		this.setObservableOutput(
+			"Changed length from 2 to 4",
 			"Spliced -[] +[2:[3,5]] to [2,4]",
-			"Changed",
-			"Changed length from 2 to 4"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(array, "tryAddAll", [[3, 5]]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3, 5]]));
@@ -393,9 +393,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4, 3]);
 		
 		this.setObservableOutput(
+			"Changed length from 3 to 2",
 			"Spliced -[1:[4]] +[] to [2,4,3]",
-			"Changed",
-			"Changed length from 3 to 2"
+			"Changed"
 		);
 		this.assertStrictEqual(4, this.invoke(array, "remove", [1]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
@@ -405,9 +405,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4, 3]);
 		
 		this.setObservableOutput(
+			"Changed length from 3 to 2",
 			"Spliced -[1:[4]] +[] to [2,4,3]",
-			"Changed",
-			"Changed length from 3 to 2"
+			"Changed"
 		);
 		this.assertStrictEqual(4, this.invoke(array, "tryRemove", [1]));
 		this.assertTrue(this.invoke(array, "equal", [[2, 3]]));
@@ -421,9 +421,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
 		
 		this.setObservableOutput(
+			"Changed length from 3 to 1",
 			"Spliced -[1:[4,3]] +[] to [2,4,3]",
-			"Changed",
-			"Changed length from 3 to 1"
+			"Changed"
 		);
 		this.assertTrue(JW.Array.equal(this.invoke(array, "removeAll", [1, 2]), [4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[2]]));
@@ -435,9 +435,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
 		
 		this.setObservableOutput(
+			"Changed length from 3 to 1",
 			"Spliced -[1:[4,3]] +[] to [2,4,3]",
-			"Changed",
-			"Changed length from 3 to 1"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(array, "$removeAll", [1, 2]).equal([4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[2]]));
@@ -451,9 +451,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3]]));
 		
 		this.setObservableOutput(
+			"Changed length from 3 to 1",
 			"Spliced -[1:[4,3]] +[] to [2,4,3]",
-			"Changed",
-			"Changed length from 3 to 1"
+			"Changed"
 		);
 		this.assertTrue(JW.Array.equal(this.invoke(array, "tryRemoveAll", [1, 2]), [4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[2]]));
@@ -466,9 +466,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(array, "equal", [[2, 4, 3, 4]]));
 		
 		this.setObservableOutput(
+			"Changed length from 4 to 3",
 			"Spliced -[1:[4]] +[] to [2,4,3,4]",
-			"Changed",
-			"Changed length from 4 to 3"
+			"Changed"
 		);
 		this.invoke(array, "removeItem", [4]);
 		this.assertTrue(this.invoke(array, "equal", [[2, 3, 4]]));
@@ -490,9 +490,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(array, "equal", [[a, b, a, c]]));
 		
 		this.setObservableOutput(
+			"Changed length from 4 to 1",
 			"Spliced -[0:[a],2:[a,c]] +[] to [a,b,a,c]",
-			"Changed",
-			"Changed length from 4 to 1"
+			"Changed"
 		);
 		this.invoke(array, "removeItems", [[a, c]]);
 		this.assertTrue(this.invoke(array, "equal", [[b]]));
@@ -502,9 +502,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4, 3]);
 		
 		this.setObservableOutput(
+			"Changed length from 3 to 2",
 			"Spliced -[2:[3]] +[] to [2,4,3]",
-			"Changed",
-			"Changed length from 3 to 2"
+			"Changed"
 		);
 		this.assertStrictEqual(3, this.invoke(array, "pop"));
 		this.assertTrue(this.invoke(array, "equal", [[2, 4]]));
@@ -551,9 +551,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4, 3]);
 		
 		this.setObservableOutput(
+			"Changed length from 3 to 0",
 			"Cleared [2,4,3]",
-			"Changed",
-			"Changed length from 3 to 0"
+			"Changed"
 		);
 		this.assertTrue(JW.Array.equal(this.invoke(array, "clear"), [2, 4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[]]));
@@ -561,9 +561,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4, 3]);
 		
 		this.setObservableOutput(
+			"Changed length from 3 to 0",
 			"Cleared [2,4,3]",
-			"Changed",
-			"Changed length from 3 to 0"
+			"Changed"
 		);
 		this.assertTrue(this.invoke(array, "$clear").equal([2, 4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[]]));
@@ -579,9 +579,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		var array = this.createArray([2, 4, 3]);
 		
 		this.setObservableOutput(
+			"Changed length from 3 to 0",
 			"Cleared [2,4,3]",
-			"Changed",
-			"Changed length from 3 to 0"
+			"Changed"
 		);
 		this.assertTrue(JW.Array.equal(this.invoke(array, "tryClear"), [2, 4, 3]));
 		this.assertTrue(this.invoke(array, "equal", [[]]));
@@ -794,9 +794,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		this.setObservableOutput(
+			"Changed length from 6 to 7",
 			"Spliced -[1:[2],3:[4]] +[2:[7],4:[8],6:[9]] to [1,2,3,4,5,6]",
-			"Changed",
-			"Changed length from 6 to 7"
+			"Changed"
 		);
 		this.invoke(array, "performSplice", [[1, 3, 7, 5, 8, 6, 9]]);
 		this.assertTrue(this.invoke(array, "equal", [[1, 3, 7, 5, 8, 6, 9]]));
@@ -809,9 +809,9 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 		
 		this.setObservableOutput(
+			"Changed length from 6 to 4",
 			"Spliced -[1:[2],3:[4]] +[] to [1,2,3,4,5,6]",
-			"Changed",
-			"Changed length from 6 to 4"
+			"Changed"
 		);
 		this.invoke(array, "performFilter", [[1, 3, 5, 6]]);
 		this.assertTrue(this.invoke(array, "equal", [[1, 3, 5, 6]]));
