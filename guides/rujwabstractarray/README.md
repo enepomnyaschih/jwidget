@@ -13,7 +13,7 @@
 
 # Методы массива
 
-**Жирным шрифтом выделены изменения по сравнению с JW.IndexedCollection.**
+**Жирным шрифтом выделены изменения по сравнению с [JW.IndexedCollection](#!/guide/rujwindexedcollection).**
 
 Получение содержимого:
 
@@ -24,7 +24,7 @@
 - **{@link JW.AbstractArray#getLast getLast} - Возвращает последний элемент коллекции.**
 - {@link JW.AbstractArray#getFirstKey getFirstKey} - Возвращает индекс первого элемента коллекции.
 - **{@link JW.AbstractArray#getLastKey getLastKey} - Возвращает индекс последнего элемента коллекции.**
-- {@link JW.AbstractArray#getKeys getKeys}, #$getKeys - Возвращает массив индексов всех элементов.
+- {@link JW.AbstractArray#getKeys getKeys}, {@link JW.AbstractArray#$getKeys $getKeys} - Возвращает массив индексов всех элементов.
 - {@link JW.AbstractArray#containsItem containsItem} - Содержит ли коллекция элемент.
 - {@link JW.AbstractArray#containsKey containsKey} - Содержит ли коллекция индекс.
 - {@link JW.AbstractArray#keyOf keyOf} - Возвращает индекс элемента. Если элемент не найден, вернет undefined.

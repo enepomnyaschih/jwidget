@@ -176,8 +176,9 @@ JW.Class = function() {
  * @method destroy
  *
  * Class destructor. The logic of class instance destruction should be implemented here. You must call this method
- * explicitly from outside, because JavaScript doesn't support automatic class destructor calling. Don't forget to
- * call superclass destructor at the end of the method:
+ * explicitly from outside, because JavaScript doesn't support automatic class destructor calling. Alternatively
+ * (and optimally), you should use method #own to aggregate objects inside each other. If you override this method,
+ * don't forget to call superclass destructor at the end of the method:
  *
  *     destroy: function() {
  *         // Release resources

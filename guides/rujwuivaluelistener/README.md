@@ -5,7 +5,7 @@
 Полная документация на английском: JW.UI.ValueListener
 
 Наблюдает за изменением значения DOM элемента ввода текста и обновляет значение указанного строкового
-{@link JW.Property свойства}. Также, применяется при инициализации.
+[свойства](#!/guide/rujwproperty). Также, применяется при инициализации.
 
     var value = new JW.Property();
     var listener = new JW.UI.ValueListener($("#myelem"), value);
@@ -14,4 +14,4 @@
     // Позже, пользователь ввел в поле "foo"
     assertEquals("foo", value.{@link JW.Property#get get}());
 
-Для обратного биндинга используйте JW.UI.ValueUpdater.
+Для обратного биндинга используйте [JW.UI.ValueUpdater](#!/guide/rujwuivalueupdater).

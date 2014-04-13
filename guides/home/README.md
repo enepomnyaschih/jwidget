@@ -63,11 +63,19 @@ example:
 <iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/0.8/greeter.html"></iframe>
 
 Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes
-you confident in that you're able to implement as complicated and big MVC application as you would like to. Read the
+you confident in that you're able to implement as complicated and big MVC application as you would like to. You
+can be confident to use all well-known OOD patterns and follow OOD
+<a href="http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)">SOLID principles</a>. Read the
 [tutorial](#!/guide/ensample1) for more examples.
 
-jWidget has an advantage compared to other Model-View frameworks - it is **collection synchronizers**
-(see JW.AbstractCollection). I never met this idea in any other framework regardless of programming language.
+The difference between jWidget and other Model-View frameworks is the approach of working with properties and
+collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding
+is performed explicitly using JW.Property and its helpers. Instead of special tags-repeaters in HTML templates, you work with
+collections explicitly using {@link JW.AbstractCollection collection classes} and their synchronizers.
+This is very similar to database theory basics, but on UI level.
+
+This approach is more effective: data binding is not constrained by connection between model and view. All the same
+practices are used to bind model objects to each other and to bind view components to each other.
 
 Project license is LGPL.
 

@@ -107,14 +107,14 @@ JW.extend(JW.Switcher, JW.Class, {
 	/**
 	 * @cfg {Function} init
 	 *
-	 * `init(value: V)`
+	 * `init(value: V): Mixed`
 	 *
 	 * Value initialization function.
 	 */
 	/**
 	 * @cfg {Function} done
 	 *
-	 * `done(value: V)`
+	 * `done(tracker: Mixed, value: V)`
 	 *
 	 * Value releasing function.
 	 */

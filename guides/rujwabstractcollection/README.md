@@ -8,9 +8,9 @@
 
 Существует 3 типа коллекций:
 
-- JW.AbstractArray (массив), наследуется от JW.IndexedCollection
-- JW.AbstractMap (словарь), наследуется от JW.IndexedCollection
-- JW.AbstractSet (множество)
+- [JW.AbstractArray](#!/guide/rujwabstractarray) (массив), наследуется от [JW.IndexedCollection](#!/guide/rujwindexedcollection)
+- [JW.AbstractMap](#!/guide/rujwabstractmap) (словарь), наследуется от [JW.IndexedCollection](#!/guide/rujwindexedcollection)
+- [JW.AbstractSet](#!/guide/rujwabstractset) (множество)
 
 Коллекции можно преобразовывать друг в друга с помощью алгоритмов.
 
@@ -23,14 +23,16 @@
 синхронизировать данные с представлением налету в соответствии с архитектурой Model-View. Для связи оповещающих
 коллекций между собой существуют синхронизаторы:
 
-- Конвертер элементов: JW.AbstractCollection.Mapper
-- Конвертер в множество: JW.AbstractCollection.Lister
-- Конвертер в словарь (индексатор): JW.AbstractCollection.Indexer
-- Конвертер в массив (упорядочитель): JW.AbstractCollection.Orderer
-- Конвертер в массив (сортировщик по компаратору): JW.AbstractCollection.SorterComparing
-- Наблюдатель: JW.AbstractCollection.Observer
-- Синхронизаторы представления: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
-- Объединитель массивов: JW.AbstractArray.Merger
+- Конвертер элементов: [JW.AbstractCollection.Mapper](#!/guide/rujwabstractcollectionmapper)
+- Фильтровщик: [JW.AbstractCollection.Filterer](#!/guide/rujwabstractcollectionfilterer)
+- Конвертер в множество: [JW.AbstractCollection.Lister](#!/guide/rujwabstractcollectionlister)
+- Конвертер в словарь (индексатор): [JW.AbstractCollection.Indexer](#!/guide/rujwabstractcollectionindexer)
+- Конвертер в массив (упорядочитель): [JW.AbstractCollection.Orderer](#!/guide/rujwabstractcollectionorderer)
+- Конвертер в массив (сортировщик по компаратору): [JW.AbstractCollection.SorterComparing](#!/guide/rujwabstractcollectionsortercomparing)
+- Наблюдатель: [JW.AbstractCollection.Observer](#!/guide/rujwabstractcollectionobserver)
+- Синхронизаторы представления: [JW.AbstractArray.Inserter](#!/guide/rujwabstractarrayinserter), [JW.AbstractMap.Inserter](#!/guide/rujwabstractmapinserter)
+- Объединитель массивов: [JW.AbstractArray.Merger](#!/guide/rujwabstractarraymerger)
+- Обратитель массива: [JW.AbstractArray.Reverser](#!/guide/rujwabstractarrayreverser)
 
 Простые коллекции введены прежде всего для совместимости. Они имеют общий интерфейс с оповещающими коллекциями,
 но работают немного быстрее.
@@ -50,7 +52,7 @@ undefined, если вы пытаетесь очистить пустую кол
     JW.Array.each(array.{@link JW.AbstractArray#clear clear}(), JW.destroy); // правильно
     JW.Array.each(array.{@link JW.AbstractArray#clear tryClear}(), JW.destroy); // неправильно: вылетит исключение 'undefined', если коллекция пуста
 
-Так вы можете быть уверены в том, что функция JW.Array.each всегда получит на вход корректный массив, тогда как
+Так вы можете быть уверены в том, что функция JW.Array#each всегда получит на вход корректный массив, тогда как
 метод JW.AbstractCollection#tryClear мог дать на выходе undefined.
 
 3) Все методы, возвращающие коллекцию, предоставлены в двух вариантах: method и $method. Эти методы выполняют одно и

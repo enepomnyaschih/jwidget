@@ -20,7 +20,10 @@ Property and its helpers:
 - JW.UI.PropUpdater
 - JW.UI.CssUpdater
 - JW.UI.ClassUpdater
+- JW.UI.RadioUpdater
 - JW.UI.ValueListener
+- JW.UI.CheckedListener
+- JW.UI.RadioListener
 
 Collections:
 

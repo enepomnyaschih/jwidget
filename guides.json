@@ -135,6 +135,10 @@
 								"title": "JW.Property"
 							},
 							{
+								"name": "rujwcopier",
+								"title": "JW.Copier"
+							},
+							{
 								"name": "rujwupdater",
 								"title": "JW.Updater"
 							},

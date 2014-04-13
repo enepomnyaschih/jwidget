@@ -10,15 +10,15 @@
 
 Существует 2 типа индексированных коллекций:
 
-- JW.AbstractArray (массив, ключ - number)
-- JW.AbstractMap (словарь, ключ - string)
+- [JW.AbstractArray](#!/guide/rujwabstractarray) (массив, ключ - number)
+- [JW.AbstractMap](#!/guide/rujwabstractmap) (словарь, ключ - string)
 
 При работе с индексированными коллекциями следует помнить одно простое правило: во всех методах и коллбеках,
 принимающих на вход элемент и его ключ, элемент всегда идет первым параметром, а ключ - вторым.
 
 # Методы индексированной коллекции
 
-**Жирным шрифтом выделены изменения по сравнению с JW.AbstractCollection.**
+**Жирным шрифтом выделены изменения по сравнению с [JW.AbstractCollection](#!/guide/rujwabstractcollection).**
 
 Получение содержимого:
 
@@ -27,7 +27,7 @@
 - **{@link JW.IndexedCollection#get get} - Возвращает элемент коллекции по ключу.**
 - {@link JW.IndexedCollection#getFirst getFirst} - Возвращает первый элемент коллекции.
 - **{@link JW.IndexedCollection#getFirstKey getFirstKey} - Возвращает ключ первого элемента коллекции.**
-- **{@link JW.IndexedCollection#getKeys getKeys}, JW.IndexedCollection#$getKeys - Возвращает массив ключей всех элементов.**
+- **{@link JW.IndexedCollection#getKeys getKeys}, {@link JW.IndexedCollection#$getKeys $getKeys} - Возвращает массив ключей всех элементов.**
 - {@link JW.IndexedCollection#containsItem containsItem} - Содержит ли коллекция элемент.
 - **{@link JW.IndexedCollection#containsKey containsKey} - Содержит ли коллекция ключ.**
 - **{@link JW.IndexedCollection#keyOf keyOf} - Возвращает ключ элемента.**

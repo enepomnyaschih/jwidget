@@ -12,7 +12,7 @@
 
 # Методы словаря
 
-**Жирным шрифтом выделены изменения по сравнению с JW.IndexedCollection.**
+**Жирным шрифтом выделены изменения по сравнению с [JW.IndexedCollection](#!/guide/rujwindexedcollection).**
 
 Получение содержимого:
 
@@ -21,7 +21,7 @@
 - {@link JW.AbstractMap#get get} - Возвращает элемент коллекции по ключу.
 - {@link JW.AbstractMap#getFirst getFirst} - Возвращает первый элемент коллекции.
 - {@link JW.AbstractMap#getFirstKey getFirstKey} - Возвращает ключ первого элемента коллекции.
-- {@link JW.AbstractMap#getKeys getKeys}, #$getKeys - Возвращает массив ключей всех элементов.
+- {@link JW.AbstractMap#getKeys getKeys}, {@link JW.AbstractMap#$getKeys $getKeys} - Возвращает массив ключей всех элементов.
 - {@link JW.AbstractMap#containsItem containsItem} - Содержит ли коллекция элемент.
 - {@link JW.AbstractMap#containsKey containsKey} - Содержит ли коллекция ключ.
 - {@link JW.AbstractMap#keyOf keyOf} - Возвращает ключ элемента.

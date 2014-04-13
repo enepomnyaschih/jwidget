@@ -4,7 +4,7 @@
 
 Полная документация на английском: JW.UI.PropUpdater
 
-Наблюдает за изменением булевого {@link JW.Property свойства} и обновляет значение указанного свойства DOM элемента.
+Наблюдает за изменением булевого [свойства](#!/guide/rujwproperty) и обновляет значение указанного свойства DOM элемента.
 Также, применяется при инициализации.
 
     var checked = new JW.Property(true);
@@ -13,4 +13,5 @@
     // Следующая команда снимает выбор checkbox'а
     checked.{@link JW.Property#set set}(false);
 
-Для обратного биндинга, используйте JW.UI.CheckedListener для чекбоксов и JW.UI.RadioListener для радиокнопок.
+Для обратного биндинга, используйте [JW.UI.CheckedListener](#!/guide/rujwuicheckedlistener) для чекбоксов
+и [JW.UI.RadioListener](#!/guide/rujwuiradiolistener) для радиокнопок.

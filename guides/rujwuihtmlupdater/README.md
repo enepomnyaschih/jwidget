@@ -4,7 +4,7 @@
 
 Полная документация на английском: JW.UI.HtmlUpdater
 
-Наблюдает за изменением строкового {@link JW.Property свойства} и обновляет HTML внутри DOM элемента.
+Наблюдает за изменением строкового [свойства](#!/guide/rujwproperty) и обновляет HTML внутри DOM элемента.
 Также, применяется при инициализации.
 
     var html = new JW.Property('<img src="loading.gif"> Loading...');
