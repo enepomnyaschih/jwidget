@@ -24,21 +24,21 @@ JW.Tests.Property.SwitcherTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput("init 1");
 		var switcher = new JW.Switcher(property, {
-			init: function(x) { this.output("init " + x); },
-			done: function(x) { this.output("done " + x); },
+			init: function(x) { this.output("init " + x); return x + 1; },
+			done: function(y, x) { this.output("done " + x + " tracked by " + y); },
 			scope: this
 		});
 		
-		this.setExpectedOutput("done 1", "init 2");
+		this.setExpectedOutput("done 1 tracked by 2", "init 2");
 		property.set(2);
 		
-		this.setExpectedOutput("done 2");
+		this.setExpectedOutput("done 2 tracked by 3");
 		property.set(null);
 		
 		this.setExpectedOutput("init 3");
 		property.set(3);
 		
-		this.setExpectedOutput("done 3");
+		this.setExpectedOutput("done 3 tracked by 4");
 		switcher.destroy();
 	},
 	
@@ -47,5 +47,30 @@ JW.Tests.Property.SwitcherTestCase = JW.Unit.TestCase.extend({
 		var property = new JW.Property(1);
 		var switcher = new JW.Switcher(property);
 		switcher.destroy();
+	},
+	
+	testChaining: function()
+	{
+		var Folder = function() {
+			Folder._super.call(this);
+			this.selectedDocument = this.own(new JW.Property());
+		};
+		
+		JW.extend(Folder, JW.Class);
+		
+		var App = function() {
+			App._super.call(this);
+			this.selectedFolder = this.own(new JW.Property());
+			this.selectedDocument = this.own(new JW.Property());
+			this.own(new JW.Switcher(this.selectedFolder, {
+				init: function(folder) {
+					return new JW.Copier(folder.selectedDocument, {target: this.selectedDocument});
+				},
+				done: JW.destroy,
+				scope: this
+			}));
+		};
+		
+		JW.extend(App, JW.Class);
 	}
 });

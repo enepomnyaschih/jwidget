@@ -102,5 +102,12 @@ JW.Tests.Property.PropertyTestCase = JW.Unit.TestCase.extend({
 		property.set(c);
 		this.setExpectedOutput("destroy c");
 		property.destroy();
+	},
+	
+	testNull: function() {
+		var property = new JW.Property();
+		this.assertStrictEqual(null, property.get());
+		property.set();
+		this.assertStrictEqual(null, property.get());
 	}
 });

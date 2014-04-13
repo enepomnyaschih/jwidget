@@ -120,6 +120,9 @@ JW.extend(JW.Property, JW.Class, {
 	 * @param {V} value
 	 */
 	set: function(value) {
+		if (value === undefined) {
+			value = null;
+		}
 		var oldValue = this._value;
 		if (oldValue === value) {
 			return;
