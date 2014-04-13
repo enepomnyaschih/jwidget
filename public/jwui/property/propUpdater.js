@@ -29,6 +29,8 @@
  *     // Next command unchecks the checkbox
  *     checked.{@link JW.Property#set set}(false);
  *
+ * For backward binding, use JW.UI.CheckedListener for checkboxes and JW.UI.RadioListener for radios.
+ *
  * @extends JW.Class
  *
  * @constructor
@@ -58,5 +60,8 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
 	
 	_update: function() {
 		this.el.prop(this.prop, this.property.get());
+		if (this.prop === "checked") {
+			this.el.change();
+		}
 	}
 });

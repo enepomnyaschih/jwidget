@@ -17,10 +17,13 @@
 		"jwui/preloadImage.js",
 		
 		"jwui/property/attrUpdater.js",
+		"jwui/property/checkedListener.js",
 		"jwui/property/classUpdater.js",
 		"jwui/property/cssUpdater.js",
 		"jwui/property/htmlUpdater.js",
 		"jwui/property/propUpdater.js",
+		"jwui/property/radioListener.js",
+		"jwui/property/radioUpdater.js",
 		"jwui/property/textUpdater.js",
 		"jwui/property/valueListener.js",
 		"jwui/property/valueUpdater.js"

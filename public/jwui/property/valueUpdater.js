@@ -19,8 +19,8 @@
 
 /**
  * @class
- * Watches source {@link JW.Property property} modification and updates the
- * value of the DOM element.
+ * Watches source string {@link JW.Property property} modification and updates the
+ * value of the DOM text input.
  * Applied on initialization as well.
  *
  *     var value = new JW.Property("Submit");
@@ -28,6 +28,8 @@
  *     var updater = new JW.UI.ValueUpdater($("#myelem"), value);
  *     // Next command changes element value to "Отправить"
  *     value.{@link JW.Property#set set}("Отправить");
+ *
+ * For backward binding, use JW.UI.ValueListener.
  *
  * @extends JW.Class
  *

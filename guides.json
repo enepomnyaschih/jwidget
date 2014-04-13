@@ -175,8 +175,20 @@
 								"title": "JW.UI.ClassUpdater"
 							},
 							{
+								"name": "rujwuiradioupdater",
+								"title": "JW.UI.RadioUpdater"
+							},
+							{
 								"name": "rujwuivaluelistener",
 								"title": "JW.UI.ValueListener"
+							},
+							{
+								"name": "rujwuicheckedlistener",
+								"title": "JW.UI.CheckedListener"
+							},
+							{
+								"name": "rujwuiradiolistener",
+								"title": "JW.UI.RadioListener"
 							}
 						]
 					},

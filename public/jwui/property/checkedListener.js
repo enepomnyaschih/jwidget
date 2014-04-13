@@ -19,58 +19,48 @@
 
 /**
  * @class
- * Watches DOM text input value modification and updates the value of the target string
+ * Watches checkbox state modification and updates the value of the target boolean
  * {@link JW.Property property}.
  * Applied on initialization as well.
  *
- *     var value = new JW.Property();
- *     var listener = new JW.UI.ValueListener($("#myinput"), value);
- *     // Assume that the element is a blank field initially
- *     assertEquals("", value.{@link JW.Property#get get}());
- *     // Later on, user entered "foo" in the field
- *     assertEquals("foo", value.{@link JW.Property#get get}());
+ *     var checked = new JW.Property();
+ *     var listener = new JW.UI.CheckedListener($("#mycheckbox"), value);
+ *     // Assume that the checkbox is unchecked initially
+ *     assertEquals(false, value.{@link JW.Property#get get}());
+ *     // Later on, user checked the checkbox
+ *     assertEquals(true, value.{@link JW.Property#get get}());
  *
- * For backward binding, use JW.UI.ValueUpdater.
+ * For backward binding, use JW.UI.PropUpdater, passing "checked" as a prop argument value.
  *
  * @extends JW.Class
  *
  * @constructor
  * @param {jQuery} el DOM element.
- * @param {JW.Property} property `<String>` Target property.
- * @param {Boolean} [simple=false]
- * If true, listens "change" event only. Defaults to false which enables
- * reaction to any real-time field modification.
+ * @param {JW.Property} property `<Boolean>` Target property.
  */
-JW.UI.ValueListener = function(el, property, simple) {
+JW.UI.CheckedListener = function(el, property) {
 	this._update = JW.inScope(this._update, this);
-	JW.UI.ValueListener._super.call(this);
+	JW.UI.CheckedListener._super.call(this);
 	this.el = jQuery(el);
 	this.property = property;
-	this.simple = simple || !JW.UI.isLifeInput(el);
 	this._update();
 	this.el.bind("change", this._update);
-	if (!this.simple) {
-		this._timer = this.own(setInterval(this._update, 100));
-	}
 };
 
-JW.extend(JW.UI.ValueListener, JW.Class, {
+JW.extend(JW.UI.CheckedListener, JW.Class, {
 	/**
 	 * @property {jQuery} el DOM element.
 	 */
 	/**
-	 * @property {JW.Property} property `<String>` Target property.
+	 * @property {JW.Property} property `<Boolean>` Target property.
 	 */
 	
 	destroy: function() {
-		if (!this.simple) {
-			clearInterval(this._timer);
-		}
 		this.el.unbind("change", this._update);
 		this._super();
 	},
 	
 	_update: function() {
-		this.property.set(this.el.val());
+		this.property.set(this.el.prop("checked"));
 	}
 });

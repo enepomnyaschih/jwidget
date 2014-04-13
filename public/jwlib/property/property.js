@@ -42,8 +42,14 @@
  * CSS style in a DOM element
  * - JW.UI.ClassUpdater - watches a boolean property and updates the specified
  * CSS class presence in a DOM element
- * - JW.UI.ValueListener - watches the value in a DOM element and updates a
+ * - JW.UI.RadioUpdater - watches a string property and updates the selection
+ * of DOM radio elements
+ * - JW.UI.ValueListener - watches the value in a DOM text input and updates a
  * string property
+ * - JW.UI.CheckedListener - watches the value in a DOM checkbox element and
+ * updates a boolean property
+ * - JW.UI.RadioListener - watches the selection of DOM radio elements and
+ * updates a string property
  *
  * For example, you can use the next algorithm to change localization on fly
  * in your Web application:

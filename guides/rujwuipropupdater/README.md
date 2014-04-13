@@ -12,3 +12,5 @@
     var updater = new JW.UI.PropUpdater($("#myelem"), "checked", checked);
     // Следующая команда снимает выбор checkbox'а
     checked.{@link JW.Property#set set}(false);
+
+Для обратного биндинга, используйте JW.UI.CheckedListener для чекбоксов и JW.UI.RadioListener для радиокнопок.
