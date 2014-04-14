@@ -10,7 +10,9 @@
 Свойство и его хелперы:
 
 - [JW.Property](#!/guide/rujwproperty)
+- [JW.Copier](#!/guide/rujwcopier)
 - [JW.Functor](#!/guide/rujwfunctor)
+- [JW.Mapper](#!/guide/rujwmapper)
 - [JW.Updater](#!/guide/rujwupdater)
 - [JW.Switcher](#!/guide/rujwswitcher)
 - [JW.UI.TextUpdater](#!/guide/rujwuitextupdater)

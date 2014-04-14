@@ -27,6 +27,8 @@
  * a callback
  * - JW.Functor - watches several properties in order to reassign target
  * property value to a callback result
+ * - JW.Mapper - watches several properties in order to recreate and destroy
+ * target property value by callbacks
  * - JW.Switcher - watches a property to initialize and release its value
  * - JW.UI.TextUpdater - watches a string property and updates the text in a
  * DOM element

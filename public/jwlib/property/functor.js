@@ -45,91 +45,38 @@
  *     var target = functor.{@link #property-target target};
  *     assert("1000 MW", target.{@link JW.Property#get get}());
  *
- * Also, functor lets you destroy the previously created value. To do this,
- * construct a functor with next notation:
- *
- *     var document = new JW.Property();
- *     var documentView = new JW.Property();
- *     new JW.Functor([ document ], {
- *         {@link JW.Functor#cfg-target target}: documentView,
- *         {@link JW.Functor#cfg-createValue createValue}: function(document) {
- *             return new DocumentView(document);
- *         },
- *         {@link JW.Functor#cfg-destroyValue destroyValue}: function(documentView, document) {
- *             documentView.{@link JW.Class#destroy destroy}();
- *         },
- *         {@link JW.Functor#cfg-scope scope}: this
- *     });
- *
- * On source property change, next flow will have a place:
- * 1. New value is created
- * 1. Target property is set to new value
- * 1. Old value is destroyed
- *
- * In contrast, JW.Switcher's flow is opposite:
- * 1. {@link JW.Switcher#done done} method is called
- * 1. {@link JW.Switcher#init init} method is called
- *
- * Another difference is that functor accepts null source value when switcher ignores it.
- *
- * If #destroyValue is defined, then target property is resetted to null on functor destruction.
+ * Functor doesn't let you destroy a previously assigned value. Functor doesn't reset the value of target property
+ * on destruction. Use JW.Mapper if you need these features.
  *
  * @extends JW.Class
  *
  * @constructor
  * @param {Array} source `<JW.Property>` Source properties.
  *
- * @param {Function} [createValue]
+ * @param {Function} func
  *
- * `createValue(... sourceValues): T`
+ * `func(... sourceValues): T`
  *
  * Calculates target property value based on source property values.
  *
- * @param {Object} [scope] Function call scope.
- * @param {Object} [config] Configuration (see Config options).
+ * @param {Object} scope Function call scope.
+ * @param {Object} config Configuration (see Config options).
  */
-JW.Functor = function(sources, createValue, scope, config) {
+JW.Functor = function(sources, func, scope, config) {
 	JW.Functor._super.call(this);
-	if (typeof createValue === "function") {
-		config = JW.apply({}, config, {
-			createValue: createValue,
-			scope: scope
-		});
-	} else {
-		config = createValue || {};
-	}
+	config = config || {};
 	this.sources = sources;
-	this.createValue = config.createValue;
-	this.destroyValue = config.destroyValue;
-	this.scope = config.scope || this;
+	this.func = func;
+	this.scope = scope || this;
 	this.target = config.target || this.own(new JW.Property());
-	this._values = null;
 	this.update();
 	JW.Array.every(sources, this.watch, this);
 };
 
 JW.extend(JW.Functor, JW.Class, {
 	/**
-	 * @cfg {JW.Property} target
-	 * `<T>` Target property. By default, created automatically.
-	 */
-	/**
-	 * @cfg {Function} createValue
-	 *
-	 * `createValue(... sourceValues): T`
-	 *
-	 * Calculates target property value based on source property values.
-	 */
-	/**
-	 * @cfg {Function} [destroyValue]
-	 *
-	 * `destroyValue(targetValue: T, ... sourceValues)`
-	 *
-	 * Destroys target property value.
-	 */
-	/**
-	 * @cfg {Object} scope
-	 * Call scope of #createValue and #destroyValue.
+	 * @cfg {JW.Property} [target]
+	 * `<T>` Optional. Target property. By default, created automatically.
 	 */
 	/**
 	 * @property {Array} sources `<JW.Property>` Source properties.
@@ -137,17 +84,6 @@ JW.extend(JW.Functor, JW.Class, {
 	/**
 	 * @property {JW.Property} target `<T>` Target property.
 	 */
-	
-	// override
-	destroy: function() {
-		if (this.destroyValue && this._values) {
-			var oldValue = this.target.get();
-			this.target.set(null);
-			this.destroyValue.apply(this.scope, [oldValue].concat(this._values));
-		}
-		this._values = null;
-		this._super();
-	},
 	
 	/**
 	 * Watches specified event and triggers target value recalculation on
@@ -176,14 +112,6 @@ JW.extend(JW.Functor, JW.Class, {
 	 */
 	update: function() {
 		var values = JW.Array.map(this.sources, JW.byMethod("get"));
-		var oldValue = this.target.get();
-		var newValue = this.createValue.apply(this.scope, values);
-		if (oldValue !== newValue) {
-			this.target.set(newValue);
-			if (this.destroyValue && this._values) {
-				this.destroyValue.apply(this.scope, [oldValue].concat(this._values));
-			}
-			this._values = values;
-		}
+		this.target.set(this.func.apply(this.scope, values));
 	}
 });

@@ -79,6 +79,7 @@
 		"jwlib/tests/property.js",
 		"jwlib/tests/property/copier.js",
 		"jwlib/tests/property/functor.js",
+		"jwlib/tests/property/mapper.js",
 		"jwlib/tests/property/property.js",
 		"jwlib/tests/property/switcher.js",
 		"jwlib/tests/property/updater.js",

@@ -10,7 +10,9 @@ Core:
 Property and its helpers:
 
 - JW.Property
+- JW.Copier
 - JW.Functor
+- JW.Mapper
 - JW.Updater
 - JW.Switcher
 - JW.UI.TextUpdater

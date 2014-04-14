@@ -30,32 +30,5 @@
     var target = functor.{@link JW.Functor#property-target target};
     assert("1000 MW", target.{@link JW.Property#get get}());
 
-Также, функтор позволяет уничтожать предыдущее созданное значение. Чтобы это сделать,
-сконструируйте функтор со следующей нотацией:
-
-    var document = new JW.Property();
-    var documentView = new JW.Property();
-    new JW.Functor([ document ], {
-        {@link JW.Functor#cfg-target target}: documentView,
-        {@link JW.Functor#cfg-createValue createValue}: function(document) {
-            return new DocumentView(document);
-        },
-        {@link JW.Functor#cfg-destroyValue destroyValue}: function(documentView, document) {
-            documentView.{@link JW.Class#destroy destroy}();
-        },
-        {@link JW.Functor#cfg-scope scope}: this
-    });
-
-Когда меняется значение исходного свойства, запускается следующий алгоритм:
-1. Создается новое значение
-1. Целевому свойству присваивается новое значение
-1. Уничтожается старое значение
-
-[JW.Switcher](#!/guide/rujwswitcher) работает наоборот:
-1. Вызывается метод {@link JW.Switcher#done done}
-1. Вызывается метод {@link JW.Switcher#init init}
-
-Другое отличие между этими классами заключается в том, что функтор принимает null в качестве значения исходного
-свойства, когда Switcher его игнорирует.
-
-Если определен метод #destroyValue, то целевое свойство сбрасывается в null при уничтожении функтора.
+Функтор не уничтожает предыдущее присвоенное значение. Также, функтор не сбрасывает значение целевого свойства при
+своем уничтожении. Если вам нужны эти возможности, используйте [JW.Mapper](#!/guide/rujwmapper).

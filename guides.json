@@ -151,6 +151,10 @@
 								"title": "JW.Functor"
 							},
 							{
+								"name": "rujwmapper",
+								"title": "JW.Mapper"
+							},
+							{
 								"name": "rujwswitcher",
 								"title": "JW.Switcher"
 							},
