@@ -51,14 +51,14 @@
  *     var document = new JW.Property();
  *     var documentView = new JW.Property();
  *     new JW.Functor([ document ], {
- *         target: documentView,
- *         createValue: function(document) {
+ *         {@link JW.Functor#cfg-target target}: documentView,
+ *         {@link JW.Functor#cfg-createValue createValue}: function(document) {
  *             return new DocumentView(document);
  *         },
- *         destroyValue: function(documentView, document) {
- *             documentView.destroy();
+ *         {@link JW.Functor#cfg-destroyValue destroyValue}: function(documentView, document) {
+ *             documentView.{@link JW.Class#destroy destroy}();
  *         },
- *         scope: this
+ *         {@link JW.Functor#cfg-scope scope}: this
  *     });
  *
  * On source property change, next flow will have a place:
@@ -72,7 +72,7 @@
  *
  * Another difference is that functor accepts null source value when switcher ignores it.
  *
- * In #destroyValue is defined, then target property is reset to null on functor destruction.
+ * If #destroyValue is defined, then target property is resetted to null on functor destruction.
  *
  * @extends JW.Class
  *
