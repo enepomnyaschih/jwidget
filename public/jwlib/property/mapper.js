@@ -22,11 +22,11 @@
  * `<T>` Watches source {@link JW.Property properties} modification and recreates
  * a target property using specified functions. Unlike JW.Functor,
  * lets you destroy a previously created value. Also, mapper resets the target
- * property value to the original one on destruction.
+ * property value to null on destruction.
  *
  *     var count = new JW.Property(1);
  *     var units = new JW.Property("apples");
- *     var target = new JW.Property("default");
+ *     var target = new JW.Property();
  *     // Next command prints "Init 1 apples" to console
  *     var mapper = new JW.Mapper([ count, units ], {
  *         {@link #cfg-target target}: target,
@@ -46,7 +46,7 @@
  *     assert("2 apples", target.{@link JW.Property#get get}());
  *     // Next command prints "Done 2 apples"
  *     mapper.{@link JW.Mapper#destroy destroy}();
- *     assert("default", target.{@link JW.Property#get get}());
+ *     assert(null, target.{@link JW.Property#get get}());
  *
  * If target is omitted in constructor, it is created automatically. Notice
  * that mapper owns it in this case.
@@ -102,7 +102,7 @@
  *
  * Also, mapper allows you to chain property calculations. Assume that you have several folders and
  * several documents in each folder. One folder is selected, and each folder has a selected document there. You
- * want to know a currently selected document in a currently selected folder. Do this:
+ * want to create a document view by a currently selected folder and a currently selected document there. Do this:
  *
  *     var Folder = function() {
  *         Folder.{@link JW.Class#_super _super}.call(this);
@@ -114,10 +114,17 @@
  *     var App = function() {
  *         App.{@link JW.Class#_super _super}.call(this);
  *         this.selectedFolder = this.{@link JW.Class#own own}(new JW.Property());
- *         this.selectedDocument = this.{@link JW.Class#own own}(new JW.Property());
- *         this.{@link JW.Class#own own}(new JW.Mapper(this.selectedFolder, {
+ *         this.documentView = this.{@link JW.Class#own own}(new JW.Property());
+ *         this.{@link JW.Class#own own}(new JW.Mapper([this.selectedFolder], {
  *             {@link JW.Mapper#cfg-createValue createValue}: function(folder) {
- *                 return new JW.Copier(folder.selectedDocument, {{@link JW.Copier#cfg-target target}: this.selectedDocument});
+ *                 return new JW.Mapper([folder.selectedDocument], {
+ *                     {@link JW.Mapper#cfg-target target}: this.documentView,
+ *                     {@link JW.Mapper#cfg-createValue createValue}: function(document) {
+ *                         return new DocumentView(folder, document);
+ *                     },
+ *                     {@link JW.Mapper#cfg-destroyValue destroyValue}: JW.destroy,
+ *                     {@link JW.Mapper#cfg-scope scope}: this
+ *                 });
  *             },
  *             {@link JW.Mapper#cfg-destroyValue destroyValue}: JW.destroy,
  *             {@link JW.Mapper#cfg-scope scope}: this
@@ -139,8 +146,8 @@ JW.Mapper = function(sources, config) {
 	this.destroyValue = config.destroyValue;
 	this.scope = config.scope || this;
 	this.target = config.target || this.own(new JW.Property());
-	this._original = this.target.get();
-	this._values = null;
+	this._sourceValues = null;
+	this._targetValue = null;
 	this.update();
 	JW.Array.every(sources, this.watch, this);
 };
@@ -178,11 +185,13 @@ JW.extend(JW.Mapper, JW.Class, {
 	// override
 	destroy: function() {
 		var oldValue = this.target.get();
-		this.target.set(this._original);
-		if (this.destroyValue) {
-			this.destroyValue.apply(this.scope, [oldValue].concat(this._values));
+		if (oldValue === this._targetValue) {
+			this.target.set(null);
 		}
-		this._values = null;
+		if (this.destroyValue) {
+			this.destroyValue.apply(this.scope, [this._targetValue].concat(this._sourceValues));
+		}
+		this._sourceValues = null;
 		this._super();
 	},
 	
@@ -213,12 +222,12 @@ JW.extend(JW.Mapper, JW.Class, {
 	 */
 	update: function() {
 		var values = JW.Array.map(this.sources, JW.byMethod("get"));
-		var oldValue = this.target.get();
 		var newValue = this.createValue.apply(this.scope, values);
 		this.target.set(newValue);
-		if (this.destroyValue && this._values) {
-			this.destroyValue.apply(this.scope, [oldValue].concat(this._values));
+		if (this.destroyValue && this._sourceValues) {
+			this.destroyValue.apply(this.scope, [this._targetValue].concat(this._sourceValues));
 		}
-		this._values = values;
+		this._targetValue = newValue;
+		this._sourceValues = values;
 	}
 });

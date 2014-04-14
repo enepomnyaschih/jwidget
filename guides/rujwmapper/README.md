@@ -6,11 +6,11 @@
 
 `<T>` Наблюдает за изменением значений исходных [свойств](#!/guide/rujwproperty) и пересоздает значение целевого
 свойства с использованием указанных функций. В отличие от [JW.Functor](#!/guide/rujwfunctor), позволяет вам уничтожить
-предыдущее созданное значение. Кроме того, Mapper сбрасывает целевое свойство в исходное значение при своем уничтожении.
+предыдущее созданное значение. Кроме того, Mapper сбрасывает целевое свойство в null при своем уничтожении.
 
     var count = new JW.Property(1);
     var units = new JW.Property("apples");
-    var target = new JW.Property("default");
+    var target = new JW.Property();
     // Следующая команда напечатает в консоль "Init 1 apples"
     var mapper = new JW.Mapper([ count, units ], {
         {@link JW.Mapper#cfg-target target}: target,
@@ -30,7 +30,7 @@
     assert("2 apples", target.{@link JW.Property#get get}());
     // Следующая команда напечатает "Done 2 apples"
     mapper.{@link JW.Mapper#destroy destroy}();
-    assert("default", target.{@link JW.Property#get get}());
+    assert(null, target.{@link JW.Property#get get}());
 
 Если целевое свойство в конструктор не передано, то оно создается автоматически.
 Обратите внимание, что в таком случае Mapper агрегирует его.
@@ -86,7 +86,8 @@
 
 Также, Mapper позволяет вам выполнять цепочечные вычисления на базе свойств. Представьте, что у вас есть несколько
 папок и несколько документов в каждой папке. Одна из папок выбрана, и в каждой папке есть один выбранный документ
-Вы хотите знать текущий выбранный документ в текущей выбранной папке. Сделайте следующее:
+Вы хотите создавать представление документа по текущей выбранной папке и текущему выбранному документу в этой
+папке. Сделайте следующее:
 
     var Folder = function() {
         Folder.{@link JW.Class#_super _super}.call(this);
@@ -98,10 +99,17 @@
     var App = function() {
         App.{@link JW.Class#_super _super}.call(this);
         this.selectedFolder = this.{@link JW.Class#own own}(new JW.Property());
-        this.selectedDocument = this.{@link JW.Class#own own}(new JW.Property());
-        this.{@link JW.Class#own own}(new JW.Mapper(this.selectedFolder, {
+        this.documentView = this.{@link JW.Class#own own}(new JW.Property());
+        this.{@link JW.Class#own own}(new JW.Mapper([this.selectedFolder], {
             {@link JW.Mapper#cfg-createValue createValue}: function(folder) {
-                return new JW.Copier(folder.selectedDocument, {{@link JW.Copier#cfg-target target}: this.selectedDocument});
+                return new JW.Mapper([folder.selectedDocument], {
+                    {@link JW.Mapper#cfg-target target}: this.documentView,
+                    {@link JW.Mapper#cfg-createValue createValue}: function(document) {
+                        return new DocumentView(folder, document);
+                    },
+                    {@link JW.Mapper#cfg-destroyValue destroyValue}: JW.destroy,
+                    {@link JW.Mapper#cfg-scope scope}: this
+                });
             },
             {@link JW.Mapper#cfg-destroyValue destroyValue}: JW.destroy,
             {@link JW.Mapper#cfg-scope scope}: this

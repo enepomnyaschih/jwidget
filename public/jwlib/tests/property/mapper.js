@@ -22,7 +22,7 @@ JW.Tests.Property.MapperTestCase = JW.Unit.TestCase.extend({
 	{
 		var source1 = new JW.Property(1);
 		var source2 = new JW.Property("a");
-		var target = new JW.Property("default");
+		var target = new JW.Property();
 		
 		var mapper = new JW.Mapper([ source1, source2 ], {
 			target: target,
@@ -40,11 +40,11 @@ JW.Tests.Property.MapperTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual("2b", target.get());
 		
 		mapper.destroy();
-		this.assertStrictEqual("default", target.get());
+		this.assertStrictEqual(null, target.get());
 		
 		source1.set(3);
 		source2.set("c");
-		this.assertStrictEqual("default", target.get());
+		this.assertStrictEqual(null, target.get());
 	},
 	
 	testWatchAndScope: function()
@@ -54,7 +54,7 @@ JW.Tests.Property.MapperTestCase = JW.Unit.TestCase.extend({
 		var value = 1;
 		var event = new JW.Event();
 		var property = new JW.Property();
-		var target = new JW.Property("default");
+		var target = new JW.Property();
 		
 		var mapper = new JW.Mapper([ source1, source2 ], {
 			target: target,
@@ -86,13 +86,13 @@ JW.Tests.Property.MapperTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput();
 		mapper.destroy();
-		this.assertStrictEqual("default", target.get());
+		this.assertStrictEqual(null, target.get());
 		
 		source1.set(3);
 		source2.set("c");
 		event.trigger(new JW.EventParams(this));
 		property.set(true);
-		this.assertStrictEqual("default", target.get());
+		this.assertStrictEqual(null, target.get());
 	},
 	
 	testAutoTarget: function()
@@ -203,6 +203,60 @@ JW.Tests.Property.MapperTestCase = JW.Unit.TestCase.extend({
 		selectedFolder.set(folder2);
 		
 		this.setExpectedOutput();
+		mapper.destroy();
+		updater.destroy();
+	},
+	
+	testChaining2: function()
+	{
+		var Document = function(name) {
+			Document._super.call(this);
+			this.name = name;
+		};
+		
+		JW.extend(Document, JW.Class);
+		
+		var Folder = function(name, document) {
+			Folder._super.call(this);
+			this.name = name;
+			this.selectedDocument = this.own(new JW.Property(document));
+		};
+		
+		JW.extend(Folder, JW.Class);
+		
+		var document1 = new Document("d1");
+		var document2 = new Document("d2");
+		var folder1 = new Folder("f1", document1);
+		var folder2 = new Folder("f2", document2);
+		
+		var selectedFolder = new JW.Property(folder1);
+		var fullName = new JW.Property();
+		
+		this.setExpectedOutput(null);
+		var updater = new JW.Updater([fullName], this.output, this);
+		
+		this.setExpectedOutput("f1/d1");
+		var mapper = new JW.Mapper([selectedFolder], {
+			createValue: function(folder) {
+				return new JW.Mapper([folder.selectedDocument], {
+					target: fullName,
+					createValue: function(document) {
+						return folder.name + "/" + document.name;
+					},
+					scope: this
+				});
+			},
+			destroyValue: JW.destroy,
+			scope: this
+		});
+		
+		this.setExpectedOutput("f1/d2");
+		folder1.selectedDocument.set(document2);
+		
+		this.setExpectedOutput("f2/d2");
+		selectedFolder.set(folder2);
+		
+		this.setExpectedOutput(null);
 		mapper.destroy();
 		updater.destroy();
 	}
