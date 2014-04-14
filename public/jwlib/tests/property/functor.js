@@ -36,6 +36,8 @@ JW.Tests.Property.FunctorTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual("2b", target.get());
 		
 		functor.destroy();
+		this.assertStrictEqual("2b", target.get());
+		
 		source1.set(3);
 		source2.set("c");
 		this.assertStrictEqual("2b", target.get());
@@ -76,6 +78,8 @@ JW.Tests.Property.FunctorTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput();
 		functor.destroy();
+		this.assertStrictEqual("2b3", target.get());
+		
 		source1.set(3);
 		source2.set("c");
 		event.trigger(new JW.EventParams(this));
@@ -103,5 +107,76 @@ JW.Tests.Property.FunctorTestCase = JW.Unit.TestCase.extend({
 		functor.destroy();
 		source1.set(3);
 		source2.set("c");
+	},
+	
+	testDestroyValue: function()
+	{
+		var source = new JW.Property("a");
+		var target = new JW.Property();
+		
+		this.setExpectedOutput(
+			"Create by a"
+		);
+		var functor = new JW.Functor([ source ], function(source) {
+			this.output("Create by " + source);
+			return source.toUpperCase();
+		}, this, {
+			target: target,
+			destroyValue: function(target, source) {
+				this.output("Destroy " + target + " by " + source);
+			}
+		});
+		this.assertStrictEqual("A", target.get());
+		
+		this.setExpectedOutput(
+			"Create by b",
+			"Destroy A by a"
+		);
+		source.set("b");
+		this.assertStrictEqual("B", target.get());
+		
+		this.setExpectedOutput(
+			"Destroy B by b"
+		);
+		functor.destroy();
+		this.assertStrictEqual(null, target.get());
+		
+		source.set("c");
+		this.assertStrictEqual(null, target.get());
+	},
+	
+	testAlternativeConstructor: function()
+	{
+		var source = new JW.Property("a");
+		
+		this.setExpectedOutput(
+			"Create by a"
+		);
+		var functor = new JW.Functor([ source ], {
+			createValue: function(source) {
+				this.output("Create by " + source);
+				return source.toUpperCase();
+			},
+			destroyValue: function(target, source) {
+				this.output("Destroy " + target + " by " + source);
+			},
+			scope: this
+		});
+		
+		var target = functor.target;
+		this.assertStrictEqual("A", target.get());
+		
+		this.setExpectedOutput(
+			"Create by b",
+			"Destroy A by a"
+		);
+		source.set("b");
+		this.assertStrictEqual("B", target.get());;
+		
+		this.setExpectedOutput(
+			"Destroy B by b"
+		);
+		functor.destroy();
+		source.set("c");
 	}
 });
