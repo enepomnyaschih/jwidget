@@ -133,6 +133,9 @@
  *     
  *     JW.extend(App, JW.Class);
  *
+ * By default, mapper doesn't calls the callbacks if at least one of the source values is null. You can change it
+ * via {@link JW.Mapper#acceptNull acceptNull} option.
+ *
  * @extends JW.Class
  *
  * @constructor
@@ -146,6 +149,7 @@ JW.Mapper = function(sources, config) {
 	this.destroyValue = config.destroyValue;
 	this.scope = config.scope || this;
 	this.target = config.target || this.own(new JW.Property());
+	this.acceptNull = config.acceptNull || false;
 	this._sourceValues = null;
 	this._targetValue = null;
 	this.update();
@@ -176,6 +180,11 @@ JW.extend(JW.Mapper, JW.Class, {
 	 * Optional. Call scope of #createValue and #destroyValue.
 	 */
 	/**
+	 * @cfg {Boolean} [acceptNull=false]
+	 * Optional. If false, functions won't be called if at least one of the source values is null. Target value
+	 * is resetted to null in this case.
+	 */
+	/**
 	 * @property {Array} sources `<JW.Property>` Source properties.
 	 */
 	/**
@@ -188,9 +197,7 @@ JW.extend(JW.Mapper, JW.Class, {
 		if (oldValue === this._targetValue) {
 			this.target.set(null);
 		}
-		if (this.destroyValue) {
-			this.destroyValue.apply(this.scope, [this._targetValue].concat(this._sourceValues));
-		}
+		this._done();
 		this._sourceValues = null;
 		this._super();
 	},
@@ -222,12 +229,22 @@ JW.extend(JW.Mapper, JW.Class, {
 	 */
 	update: function() {
 		var values = JW.Array.map(this.sources, JW.byMethod("get"));
-		var newValue = this.createValue.apply(this.scope, values);
+		var newValue;
+		if (this.acceptNull || JW.Array.every(values, JW.isSet)) {
+			newValue = this.createValue.apply(this.scope, values);
+		} else {
+			newValue = null;
+			values = null;
+		}
 		this.target.set(newValue);
+		this._done();
+		this._targetValue = newValue;
+		this._sourceValues = values;
+	},
+	
+	_done: function() {
 		if (this.destroyValue && this._sourceValues) {
 			this.destroyValue.apply(this.scope, [this._targetValue].concat(this._sourceValues));
 		}
-		this._targetValue = newValue;
-		this._sourceValues = values;
 	}
 });

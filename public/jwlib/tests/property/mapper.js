@@ -24,21 +24,34 @@ JW.Tests.Property.MapperTestCase = JW.Unit.TestCase.extend({
 		var source2 = new JW.Property("a");
 		var target = new JW.Property();
 		
+		this.setExpectedOutput("Create 1a");
 		var mapper = new JW.Mapper([ source1, source2 ], {
 			target: target,
 			createValue: function(a, b) {
-				return a + b;
+				var result = "" + a + b;
+				this.output("Create " + result);
+				return result;
+			},
+			destroyValue: function(result) {
+				this.output("Destroy " + result);
 			},
 			scope: this
 		});
 		this.assertStrictEqual("1a", target.get());
 		
+		this.setExpectedOutput("Create 2a", "Destroy 1a");
 		source1.set(2);
 		this.assertStrictEqual("2a", target.get());
 		
+		this.setExpectedOutput("Destroy 2a");
+		source2.set(null)
+		this.assertStrictEqual(null, target.get());
+		
+		this.setExpectedOutput("Create 2b");
 		source2.set("b");
 		this.assertStrictEqual("2b", target.get());
 		
+		this.setExpectedOutput("Destroy 2b");
 		mapper.destroy();
 		this.assertStrictEqual(null, target.get());
 		
@@ -259,5 +272,65 @@ JW.Tests.Property.MapperTestCase = JW.Unit.TestCase.extend({
 		this.setExpectedOutput(null);
 		mapper.destroy();
 		updater.destroy();
+	},
+	
+	testAcceptNull: function()
+	{
+		var source1 = new JW.Property(1);
+		var source2 = new JW.Property("a");
+		var target = new JW.Property();
+		
+		this.setExpectedOutput("Create 1a");
+		var mapper = new JW.Mapper([ source1, source2 ], {
+			target: target,
+			acceptNull: true,
+			createValue: function(a, b) {
+				var result = "" + a + b;
+				this.output("Create " + result);
+				return result;
+			},
+			destroyValue: function(result) {
+				this.output("Destroy " + result);
+			},
+			scope: this
+		});
+		this.assertStrictEqual("1a", target.get());
+		
+		this.setExpectedOutput("Create 2a", "Destroy 1a");
+		source1.set(2);
+		this.assertStrictEqual("2a", target.get());
+		
+		this.setExpectedOutput("Create 2null", "Destroy 2a");
+		source2.set(null)
+		this.assertStrictEqual("2null", target.get());
+		
+		this.setExpectedOutput("Create 2b", "Destroy 2null");
+		source2.set("b");
+		this.assertStrictEqual("2b", target.get());
+		
+		this.setExpectedOutput("Destroy 2b");
+		mapper.destroy();
+		this.assertStrictEqual(null, target.get());
+		
+		source1.set(3);
+		source2.set("c");
+		this.assertStrictEqual(null, target.get());
+	},
+	
+	testNull: function()
+	{
+		var source = new JW.Property();
+		var target = new JW.Property();
+		var mapper = new JW.Mapper([ source ], {
+			target: target,
+			createValue: function() {
+				this.fail();
+			},
+			destroyValue: function() {
+				this.fail();
+			},
+			scope: this
+		});
+		mapper.destroy();
 	}
 });

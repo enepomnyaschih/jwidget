@@ -117,3 +117,6 @@
     };
     
     JW.extend(App, JW.Class);
+
+По умолчанию, Mapper не вызывает функции, если хотя бы одно из исходных значений равно null. Но вы можете изменить это,
+используя опцию {@link JW.Mapper#acceptNull acceptNull}.

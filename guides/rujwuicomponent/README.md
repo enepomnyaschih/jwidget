@@ -82,17 +82,19 @@ JW.UI.template с именем `main` и по умолчанию равен
 
 ### Дочерние компоненты
 
-Есть 3 способа добавить дочерний компонент:
+Есть 4 способа добавить дочерний компонент:
 
 - Добавить компонент в словарь {@link JW.UI.Component#children children} с ключом, равным `jwid` элемента, который вы хотите заменить дочерним
 компонентом. Обычно, это делается в методе {@link JW.UI.Component#renderComponent renderComponent}.
+- Добавить легко заменяемый дочерний компонент, используя метод {@link JW.UI.Component#addReplaceable addReplaceable}. Передайте туда [JW.Property](#!/guide/rujwproperty) и фреймворк
+обеспечит непрерывную синхронизацию с этим свойством во время работы приложения.
 - Добавить массив дочерних компонентов в один из элементов с помощью метода {@link JW.UI.Component#addArray addArray}. Если переданный массив
 является JW.ObservableArray, то фреймворк обеспечит непрерывную синхронизацию с этим массивом во время
 работы приложения.
 - Определить метод <code>render&lt;ChildId&gt;</code>, где <code>&lt;ChildId&gt;</code> - это `jwid` элемента,
 записанный в CamelCase с заглавной буквы. Пример: `renderArticle` (рендерит элемент `jwid="article"`).
-Если метод возвращает [JW.UI.Component](#!/guide/rujwuicomponent) или [JW.AbstractArray](#!/guide/rujwabstractarray), то результат будет трактоваться как дочерний компонент
-или массив дочерних компонентов соответственно. Смотрите параграф
+Если метод возвращает [JW.UI.Component](#!/guide/rujwuicomponent), [JW.Property](#!/guide/rujwproperty) или [JW.AbstractArray](#!/guide/rujwabstractarray), то результат будет трактоваться как дочерний компонент
+или массив дочерних компонентов. Смотрите параграф
 **Подробнее о методе render&lt;ChildId&gt;** для деталей.
 
 Такой интерфейс с одной стороны прост, с другой стороны гибок в плане следования архитектуре Model-View.
@@ -121,6 +123,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
 В зависимости от того, какой результат возвращает этот метод, есть следующие варианты:
 
 - Если метод возвращает [JW.UI.Component](#!/guide/rujwuicomponent), то он будет добавлен в словарь {@link JW.UI.Component#children children} и станет дочерним компонентом.
+- Если метод возвращает [JW.Property](#!/guide/rujwproperty), то он будет добавлен как легко заменяемый дочерний компонент методом {@link JW.UI.Component#addReplaceable addReplaceable}.
 - Если метод возвращает [JW.AbstractArray](#!/guide/rujwabstractarray), то он будет добавлен как массив дочерних компонентов методом {@link JW.UI.Component#addArray addArray}.
 - Если метод возвращает `false` (===), то элемент будет удален из HTML компонента.
 - В противном случае, фреймворк не выполнит никаких дополнительных действий по инициализации элемента.
@@ -197,28 +200,35 @@ JavaScript Array и Object: у наших коллекций есть Observable
             '</div>'
     });
 
-**Внешние именованные дочерние компоненты**
+**Внутренний заменяемый дочерний компонент**
 
-Этот пример описывает, как добавить дочерний компонент, который был сконструирован кем-то другим, и, следовательно,
-не должен быть уничтожен здесь автоматически.
+Этот пример описывает, как создается легко заменяемый дочерний компонент с `jwid="document"`.
+Предположим, что у вас есть свойство "document", и вы хотите заменять старое представление документа новым при смене
+значения этого свойства.
 
-    var MyComponent = function(titleBox) {
+    var MyComponent = function(document) {
         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
-        this.titleBox = titleBox;
+        this.document = document;
     };
     
     JW.extend(MyComponent, JW.UI.Component, {
-        // JW.UI.Component titleBox;
+        // JW.Property<Document> document;
         
-        renderTitleBox: function() {
-            return this.titleBox;
+        renderDocument: function() {
+            return this.{@link JW.Class#own own}(new JW.Mapper([this.document], {
+                {@link JW.Mapper#createValue createValue}: function(document) {
+                    return new DocumentView(document);
+                },
+                {@link JW.Mapper#destroyValue destroyValue}: JW.destroy,
+                {@link JW.Mapper#scope scope}: this
+            })).{@link JW.Mapper#property-target target};
         }
     });
     
     JW.UI.template(MyComponent, {
         main:
             '<div jwclass="my-component">' +
-                '<div jwid="title-box" />' +
+                '<div jwid="document" />' +
             '</div>'
     });
 
@@ -265,7 +275,9 @@ JavaScript Array и Object: у наших коллекций есть Observable
         
         renderLabels: function() {
             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
-                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
+                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) {
+                    return new LabelView(label);
+                },
                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
                 {@link JW.AbstractCollection.Mapper#scope scope}: this
             })).{@link JW.AbstractCollection.Mapper#property-target target};
@@ -279,29 +291,29 @@ JavaScript Array и Object: у наших коллекций есть Observable
             '</div>'
     });
 
-**Внешний массив дочерних компонентов**
+**Внешние дочерние компоненты**
 
-Этот пример описывает, как массив дочерних компонентов добавить внутрь элемента с `jwid="labels"`.
-Массив дочерних компонентов будет автоматически синхронизироваться с данными налету.
-Компоненты создаются кем-то другим, и, следовательно, не должны быть уничтожены здесь автоматически.
+Этот пример описывает, как добавить дочерние компоненты, которые созданы кеи-то другим и, следовательно,
+не должны быть уничтожены здесь автоматически. Здесь, "titleBox" может быть JW.UI.Component,
+[JW.Property](#!/guide/rujwproperty)<JW.UI.Component> или [JW.AbstractArray](#!/guide/rujwproperty)<JW.UI.Component>.
 
-    var MyComponent = function(labelViews) {
+    var MyComponent = function(titleBox) {
         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
-        this.labelViews = labelViews;
+        this.titleBox = titleBox;
     };
     
     JW.extend(MyComponent, JW.UI.Component, {
-        // JW.AbstractArray<LabelView> labelViews;
+        // Mixed titleBox;
         
-        renderLabels: function() {
-            return this.labelViews;
+        renderTitleBox: function() {
+            return this.titleBox;
         }
     });
     
     JW.UI.template(MyComponent, {
         main:
             '<div jwclass="my-component">' +
-                '<div jwid="labels" />' +
+                '<div jwid="title-box" />' +
             '</div>'
     });
 
