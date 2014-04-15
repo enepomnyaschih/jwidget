@@ -33,12 +33,9 @@ JW.UI.Component.Replaceable = function(parent, component, id) {
 	this.id = id;
 	JW.Set.add(parent._replaceables, this);
 	
-	this.own(new JW.Switcher(component, {
+	this.own(new JW.Switcher([component], {
 		init: function(child) {
-			if (child) {
-				this.parent.children.set(child, this.id);
-				return child;
-			}
+			this.parent.children.set(child, this.id);
 		},
 		done: function() {
 			this.parent.children.remove(this.id);

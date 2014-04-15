@@ -20,26 +20,75 @@
 JW.Tests.Property.SwitcherTestCase = JW.Unit.TestCase.extend({
 	testSwitcher: function()
 	{
-		var property = new JW.Property(1);
+		var source1 = new JW.Property(1);
+		var source2 = new JW.Property("a");
 		
-		this.setExpectedOutput("init 1");
-		var switcher = new JW.Switcher(property, {
-			init: function(x) { this.output("init " + x); return x + 1; },
-			done: function(y, x) { this.output("done " + x + " tracked by " + y); },
+		this.setExpectedOutput("init 1a");
+		var switcher = new JW.Switcher([source1, source2], {
+			init: function(x, y) { this.output("init " + x + y); },
+			done: function(x, y) { this.output("done " + x + y); },
 			scope: this
 		});
 		
-		this.setExpectedOutput("done 1 tracked by 2", "init 2");
-		property.set(2);
+		this.setExpectedOutput("done 1a", "init 2a");
+		source1.set(2);
 		
-		this.setExpectedOutput("done 2 tracked by 3");
-		property.set(null);
+		this.setExpectedOutput("done 2a");
+		source2.set(null);
+		
+		this.setExpectedOutput("init 2b");
+		source2.set("b");
+		
+		this.setExpectedOutput("done 2b");
+		switcher.destroy();
+		
+		source1.set(3);
+		source2.set("c");
+	},
+	
+	testWatch: function()
+	{
+		var source = new JW.Property(1);
+		var event = new JW.Event();
+		var property = new JW.Property("a");
+		
+		this.setExpectedOutput("init 1");
+		var switcher = new JW.Switcher([source], {
+			init: function(x) { this.output("init " + x); },
+			done: function(x) { this.output("done " + x); },
+			scope: this
+		});
+		
+		this.setExpectedOutput();
+		switcher.bind(event);
+		switcher.watch(property);
+		
+		this.setExpectedOutput("done 1", "init 2");
+		source.set(2);
+		
+		this.setExpectedOutput("done 2", "init 2");
+		event.trigger(new JW.EventParams(this));
+		
+		this.setExpectedOutput("done 2", "init 2");
+		property.set("b");
+		
+		this.setExpectedOutput("done 2");
+		source.set(null);
+		
+		this.setExpectedOutput();
+		event.trigger(new JW.EventParams(this));
+		property.set("c");
 		
 		this.setExpectedOutput("init 3");
-		property.set(3);
+		source.set(3);
 		
-		this.setExpectedOutput("done 3 tracked by 4");
+		this.setExpectedOutput("done 3");
 		switcher.destroy();
+		
+		this.setExpectedOutput();
+		source.set(4);
+		event.trigger(new JW.EventParams(this));
+		property.set("d");
 	},
 	
 	testOptional: function()
@@ -49,28 +98,68 @@ JW.Tests.Property.SwitcherTestCase = JW.Unit.TestCase.extend({
 		switcher.destroy();
 	},
 	
-	testChaining: function()
+	testAcceptNull: function()
 	{
-		var Folder = function() {
-			Folder._super.call(this);
-			this.selectedDocument = this.own(new JW.Property());
-		};
+		var source1 = new JW.Property(1);
+		var source2 = new JW.Property("a");
 		
-		JW.extend(Folder, JW.Class);
+		this.setExpectedOutput("Create 1a");
+		var switcher = new JW.Switcher([ source1, source2 ], {
+			acceptNull: true,
+			init: function(a, b) {
+				this.output("Create " + a + b);
+			},
+			done: function(a, b) {
+				this.output("Destroy " + a + b);
+			},
+			scope: this
+		});
 		
-		var App = function() {
-			App._super.call(this);
-			this.selectedFolder = this.own(new JW.Property());
-			this.selectedDocument = this.own(new JW.Property());
-			this.own(new JW.Switcher(this.selectedFolder, {
-				init: function(folder) {
-					return new JW.Copier(folder.selectedDocument, {target: this.selectedDocument});
-				},
-				done: JW.destroy,
-				scope: this
-			}));
-		};
+		this.setExpectedOutput("Destroy 1a", "Create 2a");
+		source1.set(2);
 		
-		JW.extend(App, JW.Class);
+		this.setExpectedOutput("Destroy 2a", "Create 2null");
+		source2.set(null)
+		
+		this.setExpectedOutput("Destroy 2null", "Create 2b");
+		source2.set("b");
+		
+		this.setExpectedOutput("Destroy 2b");
+		switcher.destroy();
+		
+		source1.set(3);
+		source2.set("c");
+	},
+	
+	testNull: function()
+	{
+		var source = new JW.Property();
+		var switcher = new JW.Switcher([ source ], {
+			init: function() {
+				this.fail();
+			},
+			done: function() {
+				this.fail();
+			},
+			scope: this
+		});
+		switcher.destroy();
+	},
+	
+	testBlank: function()
+	{
+		this.setExpectedOutput("Create");
+		var switcher = new JW.Switcher([], {
+			init: function() {
+				this.output("Create");
+			},
+			done: function() {
+				this.output("Destroy");
+			},
+			scope: this
+		});
+		
+		this.setExpectedOutput("Destroy");
+		switcher.destroy();
 	}
 });

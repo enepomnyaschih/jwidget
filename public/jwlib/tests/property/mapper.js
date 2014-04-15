@@ -332,5 +332,29 @@ JW.Tests.Property.MapperTestCase = JW.Unit.TestCase.extend({
 			scope: this
 		});
 		mapper.destroy();
+	},
+	
+	testBlank: function()
+	{
+		var target = new JW.Property();
+		
+		this.setExpectedOutput("Create");
+		var mapper = new JW.Mapper([], {
+			target: target,
+			createValue: function() {
+				this.output("Create");
+				return "a";
+			},
+			destroyValue: function(x) {
+				this.assertStrictEqual("a", x);
+				this.output("Destroy");
+			},
+			scope: this
+		});
+		this.assertStrictEqual("a", target.get());
+		
+		this.setExpectedOutput("Destroy");
+		mapper.destroy();
+		this.assertStrictEqual(null, target.get());
 	}
 });

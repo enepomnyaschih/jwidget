@@ -19,123 +19,140 @@
 
 /**
  * @class
- * `<V>` Watches source {@link JW.Property property} modification and calls
+ * Watches source {@link JW.Property properties} modification and calls
  * the specified functions.
  *
- * {@link #init} function is called on switcher initialization and on property change. The new value of the property
- * is passed as an argument, and the function can return an arbitrary object as a tracker for this value.
+ * {@link #init} function is called on switcher initialization and on property change. The new values of the properties
+ * are passed as arguments.
  *
- * {@link #done} function is called on property change and on switcher destruction. The tracker object returned by
- * {@link #init} function is passed as a first argument, and the old value of the property is passed as a second one.
- *
- * The functions are not called if the property value is null.
+ * {@link #done} function is called on property change and on switcher destruction. The old values of the properties
+ * are passed as arguments.
  *
  *     var property = new JW.Property(1);
- *     var switcher = new JW.Switcher(property, {
+ *     var switcher = new JW.Switcher([property], {
  *         {@link #init}: function(value) {
  *             console.log("Init " + value);
  *             return value + 1;
  *         },
- *         {@link #done}: function(tracker, value) {
- *             console.log("Done " + value + " tracked by " + tracker);
+ *         {@link #done}: function(value) {
+ *             console.log("Done " + value);
  *         },
  *         {@link #scope}: this
  *     }); // output: Init 1
- *     property.{@link JW.Property#set set}(2); // output: Done 1 tracked by 2, Init 2
- *     property.{@link JW.Property#set set}(null); // output: Done 2 tracked by 3
+ *     property.{@link JW.Property#set set}(2); // output: Done 1, Init 2
+ *     property.{@link JW.Property#set set}(null); // output: Done 2
  *     property.{@link JW.Property#set set}(3); // output: Init 3
- *     switcher.{@link #destroy}(); // output: Done 3 tracked by 4
+ *     switcher.{@link #destroy}(); // output: Done 3
+ *
+ * By default, switcher doesn't calls the callbacks if at least one of the source values is null. You can change it
+ * via {@link JW.Switcher#acceptNull acceptNull} option.
  *
  * Realistic use case for switcher is represented in next example:
  *
  *     this.selectedDocument = this.{@link JW.Class#own own}(new JW.Property());
- *     this.{@link JW.Class#own own}(new JW.Switcher(this.selectedDocument, {
- *         {@link #init}: function(document) { document.selected.{@link JW.Property#set set}(true); },
- *         {@link #done}: function(unused, document) { document.selected.{@link JW.Property#set set}(false); },
+ *     this.{@link JW.Class#own own}(new JW.Switcher([this.selectedDocument], {
+ *         {@link #init}: function(document) {
+ *             document.selected.{@link JW.Property#set set}(true);
+ *         },
+ *         {@link #done}: function(document) {
+ *             document.selected.{@link JW.Property#set set}(false);
+ *         },
  *         {@link #scope}: this
  *     }));
- *
- * Tracked value can be used to chain a switcher with a {@link JW.Functor functor} or {@link JW.Copier copier}.
- * For example, assume that you have
- * a number of folders and a number of documents in each folder. One of the folders is selected, and each folder has
- * one selected document. You want to track a currently selected document in a currently selected folder:
- *
- *     var Folder = function() {
- *         Folder.{@link JW.Class#_super _super}.call(this);
- *         this.selectedDocument = this.{@link JW.Class#own own}(new JW.Property());
- *     };
- *     
- *     JW.extend(Folder, JW.Class);
- *     
- *     var App = function() {
- *         App.{@link JW.Class#_super _super}.call(this);
- *         this.selectedFolder = this.{@link JW.Class#own own}(new JW.Property());
- *         this.selectedDocument = this.{@link JW.Class#own own}(new JW.Property());
- *         this.{@link JW.Class#own own}(new JW.Switcher(this.selectedFolder, {
- *             {@link JW.Switcher#cfg-init init}: function(folder) {
- *                 return new JW.Copier(folder.selectedDocument, {{@link JW.Copier#cfg-target target}: this.selectedDocument});
- *             },
- *             {@link JW.Switcher#cfg-done done}: JW.destroy,
- *             {@link JW.Switcher#cfg-scope scope}: this
- *         }));
- *     };
- *     
- *     JW.extend(App, JW.Class);
  *
  * @extends JW.Class
  *
  * @constructor
- * @param {JW.Property} property `V` Property.
+ * @param {Array} sources `<JW.Property>` Source properties.
  * @param {Object} config Configuration (see Config options).
  */
-JW.Switcher = function(property, config) {
+JW.Switcher = function(sources, config) {
 	JW.Switcher._super.call(this);
 	config = config || {};
-	this.property = property;
+	this.sources = sources;
 	this.init = config.init;
 	this.done = config.done;
 	this.scope = config.scope || this;
-	this._value = null;
-	this._tracker = null;
-	this.own(new JW.Updater([property], this._update, this));
+	this.acceptNull = config.acceptNull || false;
+	this._values = null;
+	this._init();
+	JW.Array.every(sources, this.watch, this);
 };
 
 JW.extend(JW.Switcher, JW.Class, {
 	/**
-	 * @property {JW.Property} property Property.
+	 * @property {Array} sources `<JW.Property>` Source properties.
 	 */
 	/**
-	 * @cfg {Function} init
+	 * @cfg {Function} [init]
 	 *
-	 * `init(value: V): Mixed`
+	 * `init(... sourceValues)`
 	 *
-	 * Value initialization function.
+	 * Optional. Value initialization function.
 	 */
 	/**
-	 * @cfg {Function} done
+	 * @cfg {Function} [done]
 	 *
-	 * `done(tracker: Mixed, value: V)`
+	 * `done(... sourceValues)`
 	 *
-	 * Value releasing function.
+	 * Optional. Value releasing function.
 	 */
 	/**
-	 * @cfg {Object} scope
-	 * {@link #init} and {@link #done} call scope.
+	 * @cfg {Object} [scope]
+	 * Optional. {@link #init} and {@link #done} call scope.
+	 */
+	/**
+	 * @cfg {Boolean} [acceptNull=false]
+	 * Optional. If false, functions won't be called if at least one of the source values is null.
 	 */
 	
 	destroy: function() {
-		this._update();
+		this._done();
 		this._super();
 	},
 	
-	_update: function(value) {
-		if (JW.isSet(this._value) && this.done) {
-			this.done.call(this.scope, this._tracker, this._value);
-			this._tracker = null;
+	/**
+	 * Watches specified event and triggers target value recalculation on
+	 * the event triggering.
+	 * @param {JW.Event} event Event.
+	 * @returns {JW.Functor} this
+	 */
+	bind: function(event) {
+		this.own(event.bind(this.update, this));
+		return this;
+	},
+	
+	/**
+	 * Watches specified property and triggers target value recalculation on
+	 * the property change.
+	 * @param {JW.Property} property Property.
+	 * @returns {JW.Functor} this
+	 */
+	watch: function(property) {
+		this.bind(property.changeEvent);
+		return this;
+	},
+	
+	/**
+	 * Updates switcher forcibly.
+	 */
+	update: function() {
+		this._done();
+		this._init();
+	},
+	
+	_init: function() {
+		var values = JW.Array.map(this.sources, JW.byMethod("get"));
+		this._values = (this.acceptNull || JW.Array.every(values, JW.isSet)) ? values : null;
+		if (this._values && this.init) {
+			this.init.apply(this.scope, this._values);
 		}
-		this._value = value;
-		if (JW.isSet(this._value) && this.init) {
-			this._tracker = this.init.call(this.scope, this._value);
+	},
+	
+	_done: function() {
+		if (this._values && this.done) {
+			this.done.apply(this.scope, this._values);
 		}
+		this._values = null;
 	}
 });
