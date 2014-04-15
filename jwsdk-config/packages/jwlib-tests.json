@@ -88,6 +88,7 @@
 		"jwlib/tests/ui/component.js",
 		
 		"jwlib/tests/util.js",
+		"jwlib/tests/util/factory.js",
 		"jwlib/tests/util/interval.js",
 		"jwlib/tests/util/timeout.js",
 		"jwlib/tests/util/timer.js",
