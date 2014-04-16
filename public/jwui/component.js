@@ -81,8 +81,8 @@
  *     </div>
  *
  * You can retrieve an element by its `jwid` using method #getElement. Result of this method is
- * a [jQuery-wrapper](http://api.jquery.com/) over this element. In addition, the component
- * has field #el, which refers to root jQuery-element of the component.
+ * a [jQuery-wrapper](http://api.jquery.com/) over this element. Root element always has jwid "root".
+ * In addition, root element of the component is stored in #el property.
  *
  * ### Component creation in code
  *
@@ -110,7 +110,9 @@
  * - Define method <code>render&lt;ChildId&gt;</code>, where <code>&lt;ChildId&gt;</code> is `jwid` of element,
  * written in CamelCase with capitalized first letter. Example: `renderArticle` (renders element `jwid="article"`).
  * If the method returns JW.UI.Component, JW.Property or JW.AbstractArray, then result will be treated as child component
- * or child component array. See **More about render&lt;ChildId&gt; method** paragraph for details.
+ * or child component array. Define method `renderRoot` to render root element, but you can return JW.AbstractArray
+ * only there.
+ * See **More about render&lt;ChildId&gt; method** paragraph for details.
  * 
  * Such interface provides simplicity, at one hand, and flexibility in Model-View architecture following regard,
  * at another hand.
@@ -139,10 +141,11 @@
  * Depending on the returned result of this method, there are next capabilities:
  * 
  * - If method returns JW.UI.Component, then it will be added into #children map and will become a child component.
+ * Doesn't work for root element.
  * - If method returns JW.Property, then it will be added as easily replaceable child component by
- * method #addReplaceable
+ * method #addReplaceable. Doesn't work for root element.
  * - If method returns JW.AbstractArray, then it will be added as child array by method #addArray.
- * - If method returns `false` (===), then element will be removed from component HTML.
+ * - If method returns `false` (===), then element will be removed from component HTML. Doesn't work for root element.
  * - In any other case, framework won't perform any additional action.
  * 
  * ### Components removal and destruction
@@ -591,6 +594,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.replacedEl = replacedEl;
 		this.el = jQuery(this.template || this.templates.main);
 		this._elements = {};
+		this._elements["root"] = this.el;
 		this.allChildren = {};
 		this.children = new JW.ObservableMap();
 		this._replaceables = {};
@@ -629,14 +633,20 @@ JW.extend(JW.UI.Component, JW.Class, {
 			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
 			if (typeof this[renderMethodName] === "function") {
 				var result = this[renderMethodName](anchorEl);
-				if (result instanceof JW.UI.Component) {
-					this.children.set(result, jwId);
-				} else if (result instanceof JW.Property) {
-					this.addReplaceable(result, jwId);
-				} else if (result instanceof JW.AbstractArray) {
-					this.addArray(result, jwId);
-				} else if (result === false) {
-					this.removeElement(jwId);
+				if (jwId === "root") {
+					if (result instanceof JW.AbstractArray) {
+						this.addArray(result, jwId);
+					}
+				} else {
+					if (result instanceof JW.UI.Component) {
+						this.children.set(result, jwId);
+					} else if (result instanceof JW.Property) {
+						this.addReplaceable(result, jwId);
+					} else if (result instanceof JW.AbstractArray) {
+						this.addArray(result, jwId);
+					} else if (result === false) {
+						this.removeElement(jwId);
+					}
 				}
 			}
 		}

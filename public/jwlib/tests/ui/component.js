@@ -100,5 +100,83 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		
 		this.setExpectedOutput("Destroy cytrus");
 		component.destroy();
+	},
+	
+	testRenderRoot: function()
+	{
+		var Component = function(text) {
+			Component._super.call(this);
+			this.text = text;
+		};
+		
+		JW.extend(Component, JW.UI.Component, {
+			renderRoot: function(el) {
+				el.text(this.text);
+			}
+		});
+		
+		var component = new Component("apple");
+		component.render();
+		this.assertStrictEqual("apple", component.el.text());
+		component.destroy();
+		
+		// JW.AbstractArray
+		var Container = function(values) {
+			Container._super.call(this);
+			this.values = values;
+		};
+		
+		JW.extend(Container, JW.UI.Component, {
+			renderRoot: function() {
+				return this.own(JW.Array.$map(this.values, function(text) {
+					return new Component(text);
+				}, this)).ownItems();
+			}
+		});
+		
+		var container = new Container(["apple", "banana"]);
+		container.render();
+		this.assertStrictEqual('<div>apple</div><div>banana</div>', container.el.html());
+		container.destroy();
+		
+		// JW.UI.Component (denied)
+		var DeniedComponent = function() {
+			DeniedComponent._super.call(this);
+		};
+		
+		JW.extend(DeniedComponent, JW.UI.Component, {
+			renderRoot: function() {
+				return this.own(new Component("apple"));
+			}
+		});
+		
+		JW.UI.template(DeniedComponent, {
+			main: '<div my-attr="banana"><span></span></div>'
+		});
+		
+		var deniedComponent = new DeniedComponent();
+		deniedComponent.render();
+		this.assertStrictEqual('<span></span>', deniedComponent.el.html());
+		this.assertStrictEqual("banana", deniedComponent.el.attr("my-attr"));
+		
+		// false (denied)
+		var DeniedFalse = function() {
+			DeniedFalse._super.call(this);
+		};
+		
+		JW.extend(DeniedFalse, JW.UI.Component, {
+			renderRoot: function() {
+				return false;
+			}
+		});
+		
+		JW.UI.template(DeniedFalse, {
+			main: '<div my-attr="banana"><span></span></div>'
+		});
+		
+		var deniedFalse = new DeniedFalse();
+		deniedFalse.render();
+		this.assertStrictEqual('<span></span>', deniedFalse.el.html());
+		this.assertStrictEqual("banana", deniedFalse.el.attr("my-attr"));
 	}
 });

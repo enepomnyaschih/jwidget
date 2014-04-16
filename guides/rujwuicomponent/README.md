@@ -65,8 +65,8 @@ JW.UI.template с именем `main` и по умолчанию равен
     </div>
 
 Вы можете получить элемент по его `jwid`, используя метод {@link JW.UI.Component#getElement getElement}. В результате вызова этого метода вы получите
-[jQuery-обертку](http://api.jquery.com/) над этим элементом. Кроме того, у компонента есть поле {@link JW.UI.Component#el el}, которое
-ссылается на корневой jQuery-элемент компонента.
+[jQuery-обертку](http://api.jquery.com/) над этим элементом. У корневого элемента `jwid` равен "root".
+Кроме того, у компонента есть поле {@link JW.UI.Component#el el}, которое ссылается на корневой jQuery-элемент компонента.
 
 ### Создание компонента в коде
 
@@ -94,8 +94,8 @@ JW.UI.template с именем `main` и по умолчанию равен
 - Определить метод <code>render&lt;ChildId&gt;</code>, где <code>&lt;ChildId&gt;</code> - это `jwid` элемента,
 записанный в CamelCase с заглавной буквы. Пример: `renderArticle` (рендерит элемент `jwid="article"`).
 Если метод возвращает [JW.UI.Component](#!/guide/rujwuicomponent), [JW.Property](#!/guide/rujwproperty) или [JW.AbstractArray](#!/guide/rujwabstractarray), то результат будет трактоваться как дочерний компонент
-или массив дочерних компонентов. Смотрите параграф
-**Подробнее о методе render&lt;ChildId&gt;** для деталей.
+или массив дочерних компонентов. Определите метод `renderRoot` для рендеринга корневого элемента, но вы сможете
+вернуть там только JW.AbstractArray. Смотрите параграф **Подробнее о методе render&lt;ChildId&gt;** для деталей.
 
 Такой интерфейс с одной стороны прост, с другой стороны гибок в плане следования архитектуре Model-View.
 
@@ -122,10 +122,10 @@ JavaScript Array и Object: у наших коллекций есть Observable
 
 В зависимости от того, какой результат возвращает этот метод, есть следующие варианты:
 
-- Если метод возвращает [JW.UI.Component](#!/guide/rujwuicomponent), то он будет добавлен в словарь {@link JW.UI.Component#children children} и станет дочерним компонентом.
-- Если метод возвращает [JW.Property](#!/guide/rujwproperty), то он будет добавлен как легко заменяемый дочерний компонент методом {@link JW.UI.Component#addReplaceable addReplaceable}.
+- Если метод возвращает [JW.UI.Component](#!/guide/rujwuicomponent), то он будет добавлен в словарь {@link JW.UI.Component#children children} и станет дочерним компонентом. Не работает для корневого элемента.
+- Если метод возвращает [JW.Property](#!/guide/rujwproperty), то он будет добавлен как легко заменяемый дочерний компонент методом {@link JW.UI.Component#addReplaceable addReplaceable}. Не работает для корневого элемента.
 - Если метод возвращает [JW.AbstractArray](#!/guide/rujwabstractarray), то он будет добавлен как массив дочерних компонентов методом {@link JW.UI.Component#addArray addArray}.
-- Если метод возвращает `false` (===), то элемент будет удален из HTML компонента.
+- Если метод возвращает `false` (===), то элемент будет удален из HTML компонента. Не работает для корневого элемента.
 - В противном случае, фреймворк не выполнит никаких дополнительных действий по инициализации элемента.
 
 ### Удаление и уничтожение компонентов
