@@ -96,5 +96,123 @@ JW.extend(JW.AbstractArray.Filterer, JW.AbstractCollection.Filterer, {
 		}, this);
 		
 		this.target.trySplice(removeParamsList, addParamsList);
+	},
+	
+	/**
+	 * Changes filterer configuration and refilters target collection. Accepts next
+	 * options: #filterItem, #scope.
+	 * @param {Object} config Configuration.
+	 */
+	reconfigure: function(config) {
+		this.filterItem = JW.def(config.filterItem, this.filterItem);
+		this.scope = JW.def(config.scope, this.scope);
+		this.refilter();
+	},
+	
+	/**
+	 * Refilters target collection item at specified position in source collection.
+	 * Call this method when collection item properties change the way that it must be refiltered.
+	 * @param {number} index Index of source collection item to refilter.
+	 */
+	refilterAt: function(sourceIndex) {
+		var item = this.source.get(sourceIndex);
+		var good = this.filterItem.call(this.scope, item) !== false;
+		var targetIndex = this._countFiltered(0, sourceIndex);
+		if (this._filtered[sourceIndex] === 0) {
+			if (good) {
+				this._filtered[sourceIndex] = 1;
+				this.target.add(item, targetIndex);
+			}
+		} else {
+			if (!good) {
+				this._filtered[sourceIndex] = 0;
+				this.target.remove(targetIndex);
+			}
+		}
+	},
+	
+	/**
+	 * Refilters target collection item. Call this method when collection item properties change the way that
+	 * it must be refiltered.
+	 * @param {T} item Item to refilter.
+	 */
+	refilterItem: function(item) {
+		var index = this.source.indexOf(item);
+		if (index !== -1) {
+			this.refilterAt(index);
+		}
+	},
+	
+	/**
+	 * Refilters target collection. Call this method when collection items properties change the way that
+	 * they must be refiltered.
+	 */
+	refilter: function() {
+		var newFiltered = this.source.map(function(item) {
+			return (this.filterItem.call(this.scope, item) !== false) ? 1 : 0;
+		}, this);
+		
+		var removeParams = null;
+		var removeParamsList = [];
+		
+		function flushRemove() {
+			if (removeParams !== null) {
+				removeParamsList.push(removeParams);
+				removeParams = null;
+			}
+		}
+		
+		var targetIndex = 0;
+		this.source.every(function(item, index) {
+			if (this._filtered[index] === 0) {
+				return;
+			}
+			if (newFiltered[index] === 0) {
+				if (removeParams === null) {
+					removeParams = new JW.AbstractArray.IndexCount(targetIndex, 0);
+				}
+				++removeParams.count;
+				this._filtered[index] = 0;
+			} else {
+				flushRemove();
+			}
+			++targetIndex;
+		}, this);
+		
+		flushRemove();
+		
+		var addParams = null;
+		var addParamsList = [];
+		
+		function flushAdd() {
+			if (addParams !== null) {
+				addParamsList.push(addParams);
+				addParams = null;
+			}
+		}
+		
+		var targetIndex = 0;
+		this.source.every(function(item, index) {
+			if (this._filtered[index] === 1) {
+				flushAdd();
+				++targetIndex;
+				return;
+			}
+			if (newFiltered[index] === 1) {
+				if (addParams === null) {
+					addParams = new JW.AbstractArray.IndexItems(targetIndex, []);
+				}
+				addParams.items.push(item);
+				this._filtered[index] = 1;
+				++targetIndex;
+			} else {
+				flushAdd();
+			}
+		}, this);
+		
+		flushAdd();
+		
+		this._filtered = newFiltered;
+		this.target.trySplice(removeParamsList, addParamsList);
 	}
 });

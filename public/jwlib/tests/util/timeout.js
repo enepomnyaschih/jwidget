@@ -46,6 +46,19 @@ JW.Tests.Util.TimeoutTestCase = JW.Unit.TestCase.extend({
 		this.sleep(1500, this._onWake, this);
 	},
 	
+	testTimeoutScope: function() {
+		this.addExpectedOutput(
+			"Success",
+			"Finish"
+		);
+		
+		this.timeout = new JW.Timeout(this.async("success", function() {
+			this.output("Success");
+		}, 600, 1), this, 500);
+		
+		this.sleep(1500, this._onWake, this);
+	},
+	
 	_onWake: function() {
 		this.output("Finish");
 	}

@@ -19,31 +19,32 @@
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * inner HTML of the DOM element.
+ * Watches source boolean {@link JW.Property property} modification and updates
+ * visibility of the DOM element. To make element invisible, sets "display: none" inline style. To make
+ * element visible, removes "display" inline style. Make sure that element is visible by your CSS rules.
  * Applied on initialization as well.
  *
- *     var html = new JW.Property('<img src="loading.gif"> Loading...');
- *     // Next command sets element HTML to loading stuff
- *     var updater = new JW.UI.HtmlUpdater($("#myelem"), html);
- *     // Next command changes element HTML to loaded stuff
- *     html.{@link JW.Property#set set}('<img src="loaded.png"> Loaded!');
+ *     var visible = new JW.Property(true);
+ *     // Next command makes element visible
+ *     var updater = new JW.UI.VisibleUpdater($("#myelem"), visible);
+ *     // Next command makes element invisible
+ *     visible.{@link JW.Property#set set}(false);
  *
  * @extends JW.Class
  *
  * @constructor
  * @param {jQuery} el DOM element.
- * @param {JW.Property} property `<String>` Source property.
+ * @param {JW.Property} property `<Boolean>` Source property.
  */
-JW.UI.HtmlUpdater = function(el, property) {
-	JW.UI.HtmlUpdater._super.call(this);
+JW.UI.VisibleUpdater = function(el, property) {
+	JW.UI.VisibleUpdater._super.call(this);
 	this.el = jQuery(el);
 	this.property = property;
 	this._update();
 	this.own(property.changeEvent.bind(this._update, this));
 };
 
-JW.extend(JW.UI.HtmlUpdater, JW.Class, {
+JW.extend(JW.UI.VisibleUpdater, JW.Class, {
 	/**
 	 * @property {jQuery} el DOM element.
 	 */
@@ -52,6 +53,6 @@ JW.extend(JW.UI.HtmlUpdater, JW.Class, {
 	 */
 	
 	_update: function() {
-		this.el.html(this.property.get());
+		this.el.css("display", this.property.get() ? "" : "none");
 	}
 });

@@ -19,7 +19,7 @@
 
 /**
  * @class
- * Watches source {@link JW.Property property} modification and updates the
+ * Watches source boolean {@link JW.Property property} modification and updates the
  * specified property of the DOM element.
  * Applied on initialization as well.
  *
@@ -36,7 +36,7 @@
  * @constructor
  * @param {jQuery} el DOM element.
  * @param {String} prop Element's property name.
- * @param {JW.Property} property `<String>` Source property.
+ * @param {JW.Property} property `<Boolean>` Source property.
  */
 JW.UI.PropUpdater = function(el, prop, property) {
 	JW.UI.PropUpdater._super.call(this);
@@ -55,7 +55,7 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
 	 * @property {String} prop Element's property name.
 	 */
 	/**
-	 * @property {JW.Property} property `<String>` Source property.
+	 * @property {JW.Property} property `<Boolean>` Source property.
 	 */
 	
 	_update: function() {

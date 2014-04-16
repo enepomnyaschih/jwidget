@@ -187,6 +187,10 @@
 								"title": "JW.UI.ClassUpdater"
 							},
 							{
+								"name": "rujwuivisibleupdater",
+								"title": "JW.UI.VisibleUpdater"
+							},
+							{
 								"name": "rujwuiradioupdater",
 								"title": "JW.UI.RadioUpdater"
 							},

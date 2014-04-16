@@ -27,6 +27,7 @@
 		"jwui/property/radioUpdater.js",
 		"jwui/property/textUpdater.js",
 		"jwui/property/valueListener.js",
-		"jwui/property/valueUpdater.js"
+		"jwui/property/valueUpdater.js",
+		"jwui/property/visibleUpdater.js"
 	]
 }

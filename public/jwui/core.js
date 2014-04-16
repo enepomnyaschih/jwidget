@@ -26,6 +26,12 @@
  */
 JW.UI = {
 	/**
+	 * @property {JW.Property} hash `<String>` Current page hash (without leading "#").
+	 * @static
+	 */
+	hash: new JW.Property(location.hash.substr(1)),
+	
+	/**
 	 * Defines HTML templates for specified JW.UI.Component subclass.
 	 * 
 	 * You can define multiple templates for any subclass of JW.UI.Component. Each template has a name.
@@ -102,4 +108,7 @@ JW.UI = {
 jQuery(function() {
 	JW.UI.windowEl = jQuery(window);
 	JW.UI.bodyEl   = jQuery(document.body);
+	jQuery(window).bind("hashchange", function() {
+		JW.UI.hash.set(location.hash.substr(1));
+	});
 });

@@ -36,6 +36,25 @@ JW.Tests.Util.IntervalTestCase = JW.Unit.TestCase.extend({
 		this.sleep(2500, this._onWake, this);
 	},
 	
+	testIntervalScope: function() {
+		this.addExpectedOutput(
+			"Success",
+			"Success",
+			"Finish"
+		);
+		
+		this.interval = new JW.Interval(this.async("success", function() {
+			this.output("Success");
+		}, 1100, 2), this, 500);
+		
+		var self = this;
+		setTimeout(function() {
+			self.interval.destroy();
+		}, 1100);
+		
+		this.sleep(2500, this._onWake, this);
+	},
+	
 	_onWake: function() {
 		this.output("Finish");
 	}

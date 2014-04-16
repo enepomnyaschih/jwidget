@@ -76,6 +76,96 @@ JW.Tests.Collection.AbstractArray.FiltererTestCase = JW.Unit.TestCase.extend({
 		source.destroy();
 	},
 	
+	testRefilterAt: function() {
+		var source = new JW.Array([1, 2, 3, 4, 5, 7]);
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			"Changed length from 0 to 4",
+			"Spliced -[] +[0:[1,3,5,7]] to []",
+			"Changed"
+		);
+		var filterer = this.createFilterer(source, target);
+		this.assertTarget([1, 3, 5, 7], target);
+		
+		this.setExpectedOutput(
+			"Changed length from 4 to 5",
+			"Spliced -[] +[2:[9]] to [1,3,5,7]",
+			"Changed"
+		);
+		source.set(9, 3);
+		filterer.refilterAt(3);
+		this.assertTarget([1, 3, 9, 5, 7], target);
+		
+		this.setExpectedOutput(
+			"Changed length from 5 to 4",
+			"Spliced -[4:[7]] +[] to [1,3,9,5,7]",
+			"Changed"
+		);
+		source.set(6, 5);
+		filterer.refilterAt(5);
+		this.assertTarget([1, 3, 9, 5], target);
+		
+		source.set(8, 1);
+		filterer.refilterAt(1);
+		this.assertTarget([1, 3, 9, 5], target);
+		
+		this.setExpectedOutput(
+			"Changed length from 4 to 0",
+			"Cleared [1,3,9,5]",
+			"Changed"
+		);
+		filterer.destroy()
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testRefilter: function() {
+		var source = new JW.Array([1, 3, 2, 4, 6, 5, 7, 9, 11, 8, 10, 12, 14, 16]); // 11000111100000
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			"Changed length from 0 to 6",
+			"Spliced -[] +[0:[1,3,5,7,9,11]] to []",
+			"Changed"
+		);
+		var filterer = this.createFilterer(source, target);
+		this.assertTarget([1, 3, 5, 7, 9, 11], filterer.target);
+		
+		source.clear();
+		source.addAll([1, 20, 2, 21, 23, 22, 24, 9, 11, 25, 10, 27, 14, 16]);
+		
+		this.setExpectedOutput(
+			"Changed length from 6 to 7",
+			"Spliced -[1:[3,5,7]] +[1:[21,23],5:[25,27]] to [1,3,5,7,9,11]",
+			"Changed"
+		);
+		filterer.refilter();
+		this.assertTarget([1, 21, 23, 9, 11, 25, 27], filterer.target);
+		
+		source.clear();
+		source.addAll([1, 20, 2, 21, 23, 22, 3, 9, 11, 25, 5, 27, 14, 16]);
+		
+		this.setExpectedOutput(
+			"Changed length from 7 to 9",
+			"Spliced -[] +[3:[3],7:[5]] to [1,21,23,9,11,25,27]",
+			"Changed"
+		);
+		filterer.refilter();
+		this.assertTarget([1, 21, 23, 3, 9, 11, 25, 5, 27], filterer.target);
+		
+		this.setExpectedOutput(
+			"Changed length from 9 to 0",
+			"Cleared [1,21,23,3,9,11,25,5,27]",
+			"Changed"
+		);
+		filterer.destroy();
+		source.destroy();
+	},
+	
 	createTarget: function(target) {
 		var target = new JW.ObservableArray();
 		JW.Tests.Collection.subscribeToArray(this, target);

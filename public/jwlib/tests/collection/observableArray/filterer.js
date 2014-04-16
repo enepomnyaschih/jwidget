@@ -223,6 +223,53 @@ JW.Tests.Collection.ObservableArray.FiltererTestCase = JW.Unit.TestCase.extend({
 		source.destroy();
 	},
 	
+	testReconfigure: function() {
+		var Cls = function() {
+			Cls._super.call(this);
+			this.completed = false;
+		};
+		
+		JW.extend(Cls, JW.Class);
+		
+		var source = new JW.ObservableArray();
+		var filterer = source.createFilterer({
+			filterItem: function(item) {
+				return true;
+			}
+		});
+		var target = filterer.target;
+		
+		source.add(new Cls());
+		source.add(new Cls());
+		source.add(new Cls());
+		this.assertStrictEqual(3, target.length.get());
+		
+		source.get(1).completed = true;
+		filterer.refilterAt(1);
+		this.assertStrictEqual(3, target.length.get());
+		
+		filterer.reconfigure({
+			filterItem: function(item) {
+				return item.completed;
+			}
+		});
+		this.assertStrictEqual(1, target.length.get());
+		this.assertTrue(target.get(0).completed);
+		
+		filterer.reconfigure({
+			filterItem: function(item) {
+				return true;
+			}
+		});
+		this.assertStrictEqual(3, target.length.get());
+		this.assertFalse(target.get(0).completed);
+		this.assertTrue(target.get(1).completed);
+		this.assertFalse(target.get(2).completed);
+		
+		filterer.destroy();
+		source.destroy();
+	},
+	
 	createTarget: function(target) {
 		var target = new JW.ObservableArray();
 		JW.Tests.Collection.subscribeToArray(this, target);

@@ -24,17 +24,23 @@
  * JW.Timeout destruction causes clearTimeout invocation.
  * Convenient to use in combination with {@link JW.Class#own} method:
  *
- *     this.{@link JW.Class#own own}(new JW.Timeout(JW.inScope(this._update, this), 1000));
+ *     this.{@link JW.Class#own own}(new JW.Timeout(this._update, this, 1000));
  *
  * @extends JW.Class
  *
  * @constructor
  * @param {Function} handler Timeout handler function.
- * @param {Number} delay Timeout delay.
+ * @param {Object} [scope] Call scope of handler.
+ * @param {Number} [delay] Timeout delay.
  */
-JW.Timeout = function(callback, delay) {
+JW.Timeout = function(handler, scope, delay) {
 	JW.Timeout._super.call(this);
-	this.timeout = setTimeout(callback, delay);
+	if (JW.isSet(scope) && (typeof scope === "object")) {
+		handler = JW.inScope(handler, scope);
+	} else if (typeof scope === "number") {
+		delay = scope;
+	}
+	this.timeout = setTimeout(handler, delay);
 };
 
 JW.extend(JW.Timeout, JW.Class, {

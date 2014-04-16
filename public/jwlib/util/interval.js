@@ -24,17 +24,23 @@
  * JW.Interval destruction causes clearInterval invocation.
  * Convenient to use in combination with {@link JW.Class#own} method:
  *
- *     this.{@link JW.Class#own own}(new JW.Interval(JW.inScope(this._update, this), 1000));
+ *     this.{@link JW.Class#own own}(new JW.Interval(this._update, this, 1000));
  *
  * @extends JW.Class
  *
  * @constructor
  * @param {Function} handler Interval handler function.
- * @param {Number} delay Interval delay.
+ * @param {Object} [scope] Call scope of handler.
+ * @param {Number} [delay] Interval delay.
  */
-JW.Interval = function(callback, delay) {
+JW.Interval = function(handler, scope, delay) {
 	JW.Interval._super.call(this);
-	this.interval = setInterval(callback, delay);
+	if (JW.isSet(scope) && (typeof scope === "object")) {
+		handler = JW.inScope(handler, scope);
+	} else if (typeof scope === "number") {
+		delay = scope;
+	}
+	this.interval = setInterval(handler, delay);
 };
 
 JW.extend(JW.Interval, JW.Class, {

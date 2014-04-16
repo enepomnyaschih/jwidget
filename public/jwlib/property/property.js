@@ -44,6 +44,8 @@
  * CSS style in a DOM element
  * - JW.UI.ClassUpdater - watches a boolean property and updates the specified
  * CSS class presence in a DOM element
+ * - JW.UI.VisibleUpdater - watches a boolean property and updates visibility
+ * of the specified DOM element
  * - JW.UI.RadioUpdater - watches a string property and updates the selection
  * of DOM radio elements
  * - JW.UI.ValueListener - watches the value in a DOM text input and updates a
@@ -140,9 +142,11 @@ JW.extend(JW.Property, JW.Class, {
 	 * Makes this property an owner of its value. It means that the value will
 	 * be destroyed automatically on reassignment and on destruction of the
 	 * property.
+	 * @returns {JW.Property} this
 	 */
 	ownValue: function() {
 		this._ownsValue = true;
+		return this;
 	},
 	
 	/**

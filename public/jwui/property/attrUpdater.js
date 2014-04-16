@@ -19,7 +19,7 @@
 
 /**
  * @class
- * Watches source {@link JW.Property property} modification and updates the
+ * Watches source string {@link JW.Property property} modification and updates the
  * specified attribute of the DOM element.
  * Applied on initialization as well.
  *

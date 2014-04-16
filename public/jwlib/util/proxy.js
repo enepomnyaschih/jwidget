@@ -78,8 +78,10 @@ JW.extend(JW.Proxy, JW.Class, {
 	/**
 	 * Makes this proxy an owner of its value. It means that the value will
 	 * be destroyed automatically on destruction of the proxy.
+	 * @returns {JW.Property} this
 	 */
 	ownValue: function() {
 		this._ownsValue = true;
+		return this;
 	}
 });
