@@ -1,8 +1,8 @@
 ﻿# Part 1. Model and view
 
-Demo: [http://enepomnyaschih.github.io/mt/0.9-1/](http://enepomnyaschih.github.io/mt/0.9-1/)
+Demo: [http://enepomnyaschih.github.io/mt/0.9.0-1/](http://enepomnyaschih.github.io/mt/0.9.0-1/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9-1](https://github.com/enepomnyaschih/mt/tree/mt-0.9-1) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-1](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-1) (Git branch)
 
 This jWidget samples series will show, how can you develop your own Twitter in several steps using jWidget.
 If you want to learn how to develop powerful Model-View-applications with jWidget, please follow all these steps
