@@ -7,13 +7,82 @@
 
 Этот пример является продолжением предыдущей части.
 
-В этой части мы улучшим инфраструктуру нашего проекта: вынесем HTML-шаблоны в отдельные HTML-файлы с
-помощью [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru) и научимся использовать CSS-препроцессор
-[Stylus](http://learnboost.github.io/stylus/), чтобы сделать верстку более удобной и приятной.
+В этой части мы улучшим инфраструктуру нашего проекта:
 
-Начнем с того, что
-[установим jWidget SDK по инструкции](https://github.com/enepomnyaschih/jwsdk/wiki/Установка-jWidget-SDK).
-Используйте шаблон `empty_project_html` на шаге 4.
+1. Разрешим зависимости от jQuery и jWidget через менеджер пакетов [Bower](http://bower.io/).
+1. Вынесем HTML-шаблоны в отдельные HTML-файлы с помощью [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru).
+1. Подключим CSS-препроцессор [Stylus](http://learnboost.github.io/stylus/), чтобы извлечь пользу из атрибута "jwclass".
+1. Вынесем тестовые JSON-данные в отдельной JSON-файл с помощью [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/ru).
+
+## Разрешаем зависимости проекта через Bower
+
+Выносить все зависимости из репозитория проекта - это хорошая практика. Так, репозиторий будет меньше по объему,
+и процесс обновления зависимостей будет проще. Менеджер пакетов [Bower](http://bower.io/) поможет нам в этом.
+
+Пожалуйста, установите [NodeJS](http://nodejs.org/) по инструкции на сайте. Далее, запустите следующую команду,
+чтобы установить Bower через NodeJS Package Manager:
+
+    npm install -g bower
+
+Создайте файл public/bower.json в папке репозитория.
+
+**public/bower.json**
+
+    {
+        "name": "minitwitter",
+        "version": "0.0.0",
+        "dependencies": {
+            "jquery": "~2.1.0",
+            "jwidget": "0.9.0"
+        }
+    }
+
+Откройте терминал bash (в Windows: Git Bash) в папке public и запустите следующую команду:
+
+    bower install
+
+Bower разрешит все зависимости проекта и положит файлы библиотек в папку public/bower_components. Отредактируйте
+файл public/index.html, чтобы исправить пути к библиотекам.
+
+**public/index.html**
+
+            ...
+            <link rel="stylesheet" type="text/css" href="mt/tweetview/tweetview.css" />
+            <script type="text/javascript" charset="utf-8" src="bower_components/jquery/dist/jquery.js"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwlib.js"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwui.js"></script>
+            <script type="text/javascript" charset="utf-8" src="mt/mt.js"></script>
+            ...
+
+Запустите приложение в браузере, и вы увидите, что приложение работает так же, как и раньше.
+
+{@img application.png}
+
+Давайте немного приберемся. Удалите папки public/thirdparty/jquery и public/thirdparty/jwidget, поскольку Bower
+теперь скачивает их автоматически. Добавьте public/bower_components в файл .gitignore.
+
+**.gitignore**
+
+    /public/bower_components
+
+Теперь вы можете закоммитить ваши изменения.
+
+## Извлекаем HTML шаблоны через jWidget SDK
+
+[Установите jWidget SDK по инструкции](https://github.com/enepomnyaschih/jwsdk/wiki/Установка-jWidget-SDK).
+Используйте шаблон `empty_project_html` на шаге 4. При копировании замените файл .gitignore, после чего добавьте туда
+строку "/public/bower_components".
+
+**.gitignore**
+
+    /*.log
+    /jwsdk-config/json
+    /jwsdk-config/snippets
+    /jwsdk-config/temp
+    /public/bower_components
+    /public/build
+    /public/pages
+    /.sass-cache
 
 Далее, создаем пакет mt для нашего проекта.
 
@@ -22,9 +91,9 @@
     {
         "requires": [
             "thirdparty/reset.css",
-            "thirdparty/jquery/jquery-1.9.0.js|auto",
-            "thirdparty/jwidget/jwlib.js|auto",
-            "thirdparty/jwidget/jwui.js|auto"
+            "bower_components/jquery/dist/jquery.js|auto",
+            "bower_components/jwidget/jwlib.js|auto",
+            "bower_components/jwidget/jwui.js|auto"
         ],
         "resources": [
             "mt/mt.js",
@@ -88,9 +157,9 @@
         </head>
         <body>
             
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.js?timestamp=1379314418"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.js?timestamp=1379402641"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.js?timestamp=1379402641"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jquery/dist/jquery.js?timestamp=1397723667"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwlib.js?timestamp=1397723667"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwui.js?timestamp=1397723667"></script>
             <script type="text/javascript" charset="utf-8" src="mt/mt.js?timestamp=1379314418"></script>
             <script type="text/javascript" charset="utf-8" src="mt/application/application.js?timestamp=1379414626"></script>
             <script type="text/javascript" charset="utf-8" src="mt/data/data.js?timestamp=1379424016"></script>
@@ -106,6 +175,22 @@
 Запустите приложение в браузере и обнаружите, что работа приложения не изменилась.
 
 {@img application.png}
+
+Поскольку файл public/index.html теперь строится автоматически, давайте удалим его и добавим в .gitignore, взамен
+строки "/public/pages".
+
+**.gitignore**
+
+    /*.log
+    /jwsdk-config/json
+    /jwsdk-config/snippets
+    /jwsdk-config/temp
+    /public/bower_components
+    /public/build
+    /public/*.html
+    /.sass-cache
+
+Закоммитим эти изменения, чтобы закрепить удаление файла public/index.html из репозитория.
 
 Теперь правило простое: **после каждого изменения кода или конфигурации проекта рекомендуется перекомпилировать
 проект.** Хотя бы для того, чтобы обновлялись timestamp'ы измененных файлов и перезатирался их кэш в браузере.
@@ -141,9 +226,9 @@ jWidget SDK не просто сделал разработку проекта �
             
             <!-- Insert external services here -->
             
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.min.js?timestamp=1379314418"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.min.js?timestamp=1379402641"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.min.js?timestamp=1379402641"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jquery/dist/jquery.min.js?timestamp=1397723667"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwlib.min.js?timestamp=1397723667"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwui.min.js?timestamp=1397723667"></script>
             <script type="text/javascript" charset="utf-8" src="build/packages/mt.min.js?timestamp=1379490400"></script>
         </body>
     </html>
@@ -272,9 +357,10 @@ jWidget SDK не просто сделал разработку проекта �
 
 Кому интересно, как это работает, откройте index.html и посмотрите сами.
 
+## Подключаем CSS-препроцессор Stylus
+
 Следующим шагом мы прикрутим CSS-препроцессор [Stylus](http://learnboost.github.io/stylus/) к нашему проекту,
-чтобы проще было писать CSS. Установите [NodeJS](http://nodejs.org/) по инструкции на сайте и Stylus через
-NodeJS Package Manager:
+чтобы проще было писать CSS. Установите Stylus через NodeJS Package Manager:
 
     npm install -g stylus
 
@@ -534,6 +620,8 @@ NodeJS Package Manager:
 Снова собираем проект и убеждаемся в том, что функциональность не изменилась.
 
 {@img application.png}
+
+## Выносим тестовые JSON данные
 
 Последним шагом мы вынесем тестовые JSON-данные в отдельный JSON-файл.
 

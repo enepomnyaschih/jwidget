@@ -85,5 +85,9 @@ Current version: 0.9.0
 
 <font size="5">[Source code and bug tracker on GitHub](https://github.com/enepomnyaschih/jwidget)</font>
 
+jWidget is available as [Bower](http://bower.io/) package:
+
+    bower install jwidget
+
 Feel free to contact me by email [enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com) if you have any questions
 or bug reports.

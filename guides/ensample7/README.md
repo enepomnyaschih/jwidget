@@ -4,13 +4,82 @@ Demo: [http://enepomnyaschih.github.io/mt/0.9.0-7/](http://enepomnyaschih.github
 
 Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-7](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-7) (Git branch)
 
-In this part, we'll improve project infrastructure: extract HTML templates into separate HTML files using
-[jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en) and will learn how to use
-[Stylus](http://learnboost.github.io/stylus/) CSS-preprocessor to make slicing easier and more convenient.
+In this part, we'll improve the project infrastructure:
 
-First, please install
-[jWidget SDK by instruction](https://github.com/enepomnyaschih/jwsdk/wiki/jWidget-SDK-setup). Use `empty_project_html`
-as a template on step 4.
+1. Resolve jQuery and jWidget project dependencies using [Bower](http://bower.io/) package manager.
+1. Extract HTML templates into separate HTML files using [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en).
+1. Utilize [Stylus](http://learnboost.github.io/stylus/) CSS-preprocessor to exploit "jwclass" attribute.
+1. Extract testing JSON data into separate JSON file using [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en).
+
+## Resolve project dependencies using Bower
+
+It is a good practice to keep all thirdparties outside of project repository. This way, repository will contain
+less files and it will simplify thirdparties updating process. [Bower](http://bower.io/) package manager
+helps us with this.
+
+Please setup [NodeJS](http://nodejs.org/) by instruction on the site. Next, run this
+command to setup Bower via NodeJS Package Manager:
+
+    npm install -g bower
+
+Create public/bower.json file in repository folder.
+
+**public/bower.json**
+
+    {
+        "name": "minitwitter",
+        "version": "0.0.0",
+        "dependencies": {
+            "jquery": "~2.1.0",
+            "jwidget": "0.9.0"
+        }
+    }
+
+Open bash terminal (in Windows: Git Bash) in public folder and execute command:
+
+    bower install
+
+Bower will resolve all project dependencies and put the libraries in public/bower_components folder. Edit
+public/index.html to adjust paths to the libraries.
+
+**public/index.html**
+
+            ...
+            <link rel="stylesheet" type="text/css" href="mt/tweetview/tweetview.css" />
+            <script type="text/javascript" charset="utf-8" src="bower_components/jquery/dist/jquery.js"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwlib.js"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwui.js"></script>
+            <script type="text/javascript" charset="utf-8" src="mt/mt.js"></script>
+            ...
+
+Run application in browser and you'll see that it works as before.
+
+{@img application.png}
+
+Let's do some cleanup. Delete folders public/thirdparty/jquery and public/thirdparty/jwidget since Bower downloads
+them automatically now. Add public/bower_components to .gitignore file.
+
+**.gitignore**
+
+    /public/bower_components
+
+Now you can commit your changes.
+
+## Extract HTML templates using jWidget SDK
+
+Install [jWidget SDK by instruction](https://github.com/enepomnyaschih/jwsdk/wiki/jWidget-SDK-setup). Use `empty_project_html`
+as a template on step 4. Replace the existing .gitignore file, and then add "/public/bower_components" to it.
+
+**.gitignore**
+
+    /*.log
+    /jwsdk-config/json
+    /jwsdk-config/snippets
+    /jwsdk-config/temp
+    /public/bower_components
+    /public/build
+    /public/pages
+    /.sass-cache
 
 Next, create "mt" package for our project.
 
@@ -19,9 +88,9 @@ Next, create "mt" package for our project.
     {
         "requires": [
             "thirdparty/reset.css",
-            "thirdparty/jquery/jquery-1.9.0.js|auto",
-            "thirdparty/jwidget/jwlib.js|auto",
-            "thirdparty/jwidget/jwui.js|auto"
+            "bower_components/jquery/dist/jquery.js|auto",
+            "bower_components/jwidget/jwlib.js|auto",
+            "bower_components/jwidget/jwui.js|auto"
         ],
         "resources": [
             "mt/mt.js",
@@ -86,9 +155,9 @@ Open public/index.html and see that its content has been changed.
         </head>
         <body>
             
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.js?timestamp=1379314418"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.js?timestamp=1379402641"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.js?timestamp=1379402641"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jquery/dist/jquery.js?timestamp=1397723667"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwlib.js?timestamp=1397723667"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwui.js?timestamp=1397723667"></script>
             <script type="text/javascript" charset="utf-8" src="mt/mt.js?timestamp=1379314418"></script>
             <script type="text/javascript" charset="utf-8" src="mt/application/application.js?timestamp=1379414626"></script>
             <script type="text/javascript" charset="utf-8" src="mt/data/data.js?timestamp=1379424016"></script>
@@ -104,6 +173,22 @@ Open public/index.html and see that its content has been changed.
 Run application in browser and you'll see that it works as before.
 
 {@img application.png}
+
+Since public/index.html file is built automatically now, let's delete it and add to .gitignore, in place of
+"/public/pages" line.
+
+**.gitignore**
+
+    /*.log
+    /jwsdk-config/json
+    /jwsdk-config/snippets
+    /jwsdk-config/temp
+    /public/bower_components
+    /public/build
+    /public/*.html
+    /.sass-cache
+
+Commit these changes to make sure that public/index.html is deleted from repository.
 
 Now, the rule is simple: **it is recommended to re-compile the project after each code or project configuration
 modification.** At least, to update timestamps of modified files to make sure that they won't be taken from
@@ -139,9 +224,9 @@ Release compilation is performed quite longer, but it optimizes project loading 
             
             <!-- Insert external services here -->
             
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jquery/jquery-1.9.0.min.js?timestamp=1379314418"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwlib.min.js?timestamp=1379402641"></script>
-            <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.min.js?timestamp=1379402641"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jquery/dist/jquery.min.js?timestamp=1397723667"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwlib.min.js?timestamp=1397723667"></script>
+            <script type="text/javascript" charset="utf-8" src="bower_components/jwidget/jwui.min.js?timestamp=1397723667"></script>
             <script type="text/javascript" charset="utf-8" src="build/packages/mt.min.js?timestamp=1379490400"></script>
         </body>
     </html>
@@ -269,9 +354,10 @@ in text editors. Compare:
 
 If you wonder how it works, open index.html and see by yourself.
 
+## Utilize Stylus CSS preprocessor
+
 At next step, we'll introduce [Stylus](http://learnboost.github.io/stylus/) CSS-preprocessor to our project to
-make CSS development easier. Please setup [NodeJS](http://nodejs.org/) by instruction on the site. Next, run this
-command to setup Stylus via NodeJS Package Manager:
+make CSS development easier. Run this command to setup Stylus via NodeJS Package Manager:
 
     npm install -g stylus
 
@@ -531,6 +617,8 @@ Now let's remove source CSS-files and change jwsdk-config/packages/mt.json packa
 Compile project and make sure that it works as before.
 
 {@img application.png}
+
+## Extract testing JSON data
 
 At last step, let's extract testing JSON data into separate JSON file.
 
