@@ -1,8 +1,8 @@
 ﻿# Part 2. Arrays of child components
 
-Demo: [http://enepomnyaschih.github.io/mt/0.8-2/](http://enepomnyaschih.github.io/mt/0.8-2/)
+Demo: [http://enepomnyaschih.github.io/mt/0.9-2/](http://enepomnyaschih.github.io/mt/0.9-2/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.8-2](https://github.com/enepomnyaschih/mt/tree/mt-0.8-2) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9-2](https://github.com/enepomnyaschih/mt/tree/mt-0.9-2) (Git branch)
 
 In this part, we'll meet JW.AbstractArray. We will try its algorithms
 {@link JW.AbstractArray#method-map map} and {@link JW.AbstractArray#method-$map $map}

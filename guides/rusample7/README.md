@@ -1,9 +1,9 @@
 ﻿# Часть 7. Инфраструктура проекта
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/0.8-7/](http://enepomnyaschih.github.io/mt/0.8-7/)
+[http://enepomnyaschih.github.io/mt/0.9-7/](http://enepomnyaschih.github.io/mt/0.9-7/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-7](https://github.com/enepomnyaschih/mt/tree/mt-0.8-7) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.9-7](https://github.com/enepomnyaschih/mt/tree/mt-0.9-7) (ветка)
 
 Этот пример является продолжением предыдущей части.
 

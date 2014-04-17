@@ -1,9 +1,9 @@
 ﻿# Часть 4. События
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/0.8-4/](http://enepomnyaschih.github.io/mt/0.8-4/)
+[http://enepomnyaschih.github.io/mt/0.9-4/](http://enepomnyaschih.github.io/mt/0.9-4/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.8-4](https://github.com/enepomnyaschih/mt/tree/mt-0.8-4) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.9-4](https://github.com/enepomnyaschih/mt/tree/mt-0.9-4) (ветка)
 
 В этом примере мы научимся подписываться на события элементов jQuery в рамках фреймворка jWidget, а также
 научимся создавать события модели, прослушивать их и выбрасывать.
@@ -202,7 +202,7 @@ JW.ItemValueEventParams в большинстве случаев вполне д
         // ...
 
 Наш код должен работать! Попробуйте запустить его в браузере или откройте ссылку
-[http://enepomnyaschih.github.io/mt/0.8-4/](http://enepomnyaschih.github.io/mt/0.8-4/)
+[http://enepomnyaschih.github.io/mt/0.9-4/](http://enepomnyaschih.github.io/mt/0.9-4/)
 и покликайте по кнопкам Like/Unlike и Retweet/Unretweet. Более того, вы можете открыть консоль браузера и
 запустить такую команду:
 

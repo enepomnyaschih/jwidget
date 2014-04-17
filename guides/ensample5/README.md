@@ -1,8 +1,8 @@
 ﻿# Part 5. Properties
 
-Demo: [http://enepomnyaschih.github.io/mt/0.8-5/](http://enepomnyaschih.github.io/mt/0.8-5/)
+Demo: [http://enepomnyaschih.github.io/mt/0.9-5/](http://enepomnyaschih.github.io/mt/0.9-5/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.8-5](https://github.com/enepomnyaschih/mt/tree/mt-0.8-5) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9-5](https://github.com/enepomnyaschih/mt/tree/mt-0.9-5) (Git branch)
 
 Now it's the time to learn a new layer of jWidget: the properties brought to us by class JW.Property. The **property**
 is any value which can notify the clients about its modification. So, JW.Property is a class which has 2 methods:
