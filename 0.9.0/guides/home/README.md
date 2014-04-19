@@ -33,7 +33,7 @@ example:
 
     var Greeter = function() {
         Greeter.{@link JW.Class#_super _super}.call(this);
-        this.name = this.{@link JW.Class#own own}(new JW.Property("guest"));
+        this.name = this.{@link JW.Class#own own}(new JW.Property("wanderer"));
     };
     
     JW.extend(Greeter, JW.UI.Component, {
