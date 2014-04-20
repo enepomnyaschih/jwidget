@@ -36,7 +36,7 @@ Model-View без больших усилий. Начнем с примеров.
         // override
         {@link JW.UI.Component#renderComponent renderComponent}: function() {
             this.{@link JW.Class#method-_super _super}();
-            this.{@link JW.UI.Component#getElement getElement}("hello-message").text(message);
+            this.{@link JW.UI.Component#getElement getElement}("hello-message").text(this.message);
             this.{@link JW.UI.Component#getElement getElement}("link").attr("href", this.link);
         }
     });
@@ -380,7 +380,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
         // override
         {@link JW.UI.Component#renderComponent renderComponent}: function() {
             this.{@link JW.Class#method-_super _super}();
-            this.{@link JW.UI.Component#getElement getElement}("hello-message").text(message);
+            this.{@link JW.UI.Component#getElement getElement}("hello-message").text(this.message);
             this.{@link JW.UI.Component#getElement getElement}("link").attr("href", this.link);
         }
     });
