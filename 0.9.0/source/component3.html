@@ -69,7 +69,7 @@
  *         // override
  *         {@link #renderComponent renderComponent}: function() {
  *             this.{@link JW.Class#method-_super _super}();
- *             this.{@link #getElement getElement}(&quot;hello-message&quot;).text(message);
+ *             this.{@link #getElement getElement}(&quot;hello-message&quot;).text(this.message);
  *             this.{@link #getElement getElement}(&quot;link&quot;).attr(&quot;href&quot;, this.link);
  *         }
  *     });
@@ -413,7 +413,7 @@
  *         // override
  *         {@link #renderComponent renderComponent}: function() {
  *             this.{@link JW.Class#method-_super _super}();
- *             this.{@link #getElement getElement}(&quot;hello-message&quot;).text(message);
+ *             this.{@link #getElement getElement}(&quot;hello-message&quot;).text(this.message);
  *             this.{@link #getElement getElement}(&quot;link&quot;).attr(&quot;href&quot;, this.link);
  *         }
  *     });
