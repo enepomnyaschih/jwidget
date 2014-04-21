@@ -1,33 +1,21 @@
 ﻿# What is jWidget?
 
-jWidget is object-oriented JavaScript library for applications development based on Model-View architecture.
-jWidget is more powerful than Backbone, but at the same time more transparent and clear than Angular and Ember.
+jWidget is object-oriented JavaScript Model-View framework.
+Being straight competitor to Backbone, AngularJS and EmberJS, jWidget is good for developers who respect the principles
+of object-oriented programming and appreciate good application performance.
 
-jWidget Lib unit is responsible for Model implementation, jWidget UI - for View implementation.
-
-**jWidget Lib** provides a number of utility classes and functions. jWidget Lib doesn't depend on any third-party
-libraries and frameworks. jWidget Lib is equally good for JavaScript and NodeJS applications development.
-
-jWidget Lib features:
+jWidget features:
 
 * Base class JW.Class for classes creation and inheritance
-* Class JW.Event for user events management
-* Class JW.Property for mutable values management
-* Collection classes, algorithms, **synchronizers** (see JW.AbstractCollection)
-
-**jWidget UI** is a small object-oriented unit for arbitrary UI components creation in JavaScript based on
-HTML templates. jWidget UI is based on [jQuery](http://jquery.com) and it is the perfect solution for applications
-development with custom UI.
-
-jWidget UI features:
-
+* Event class JW.Event
+* Observable property class JW.Property
+* Collection classes, algorithms, synchronizers (JW.AbstractCollection)
 * Base class JW.UI.Component for UI components creation and inheritance with HTML templates
 * Application tree structure (parent and child components management)
-* Integration with properties and collections of jWidget Lib which automatically synchronizes view with model
 * Integration with [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/) which lets you to extract
 HTML templates into separate files
 
-jWidget is a purely object-oriented solution which doesn't rely on mystic custom HTML templates and unclear
+jWidget is a pure object-oriented solution which doesn't rely on mystic custom HTML templates and unclear
 update cycles. Each object simply listens events and handles them in very straightforward fashion. Look at the next
 example:
 
@@ -89,5 +77,5 @@ jWidget is available as [Bower](http://bower.io/) package:
 
     bower install jwidget
 
-Feel free to contact me by email [enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com) if you have any questions
+Feel free to contact me by email [jwidgetproject@gmail.com](mailto:jwidgetproject@gmail.com) if you have any questions
 or bug reports.

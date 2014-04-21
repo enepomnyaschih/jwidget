@@ -1,29 +1,17 @@
 ﻿# Что такое jWidget?
 
-jWidget - это объектно-ориентированная библиотека JavaScript для реализации приложений по архитектуре Model-View
-(Модель-Представление). jWidget мощнее, чем Backbone, но в то же время прозрачнее и понятнее, чем Angular и Ember.
+jWidget - это объектно-ориентированный JavaScript Model-View фреймворк.
+Будучи прямым конкурентом Backbone, AngularJS и EmberJS, jWidget пригодится тем разработчикам,
+кто уважает принципы объектно-ориентированного программирования и ценит высокую скорость работы приложения.
 
-За модель приложения отвечает модуль jWidget Lib, а за представление - jWidget UI.
-
-**jWidget Lib** предоставляет ряд утилитарных классов и функций. jWidget Lib не зависит ни от каких сторонних библиотек и
-фреймворков. jWidget Lib одинаково хорошо подходит для разработки как JavaScript-приложений, так и NodeJS-приложений.
-
-Возможности jWidget Lib:
+Возможности jWidget:
 
 * Базовый класс [JW.Class](#!/guide/rujwclass) для создания и наследования классов
-* Класс [JW.Event](#!/guide/rujwevent) для работы с пользовательскими событиями
-* Класс [JW.Property](#!/guide/rujwproperty) для работы с изменяемыми значениями
-* Классы коллекций, алгоритмы, **синхронизаторы** (см. [JW.AbstractCollection](#!/guide/rujwabstractcollection))
-
-**jWidget UI** - это небольшой объектно-ориентированный модуль для создания произвольных визуальных компонентов JavaScript
-на основе HTML-шаблонов. jWidget UI работает на основе [jQuery](http://jquery.com) и jWidget UI и идеально подходит
-для разработки сайтов с произвольным визуальным интерфейсом.
-
-Возможности jWidget UI:
-
+* Класс события [JW.Event](#!/guide/rujwevent)
+* Класс оповещающего свойства [JW.Property](#!/guide/rujwproperty)
+* Классы коллекций, алгоритмы, синхронизаторы ([JW.AbstractCollection](#!/guide/rujwabstractcollection))
 * Базовый класс [JW.UI.Component](#!/guide/rujwuicomponent) для создания и наследования визуальных компонентов по HTML-шаблону
 * Древесная структура приложения (наличие родительских и дочерних компонентов)
-* Интеграция со свойствами и коллекциями jWidget Lib, позволяющая автоматически синхронизировать представление с моделью
 * Интеграция с [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/), позволяющая отделить HTML-шаблон от JS-кода
 
 jWidget - чисто объектно-ориентированное решение, не полагающееся на мистические необычные HTML-шаблоны и циклы
@@ -90,4 +78,4 @@ jWidget доступен как пакет [Bower](http://bower.io/):
     bower install jwidget
 
 Все замечания, предложения, отчеты об ошибках в программе и документации присылайте по адресу
-[enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com)
+[jwidgetproject@gmail.com](mailto:jwidgetproject@gmail.com)

@@ -683,4 +683,4 @@ Model-View applications based on jWidget.
 
 I hope that this guide was useful for you. I'm happy if you'll select jWidget as a framework for your
 next project. Please, send all remarks and offers to me by
-email [enepomnyaschih@gmail.com](mailto:enepomnyaschih@gmail.com).
+email [jwidgetproject@gmail.com](mailto:jwidgetproject@gmail.com).
