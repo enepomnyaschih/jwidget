@@ -1,5 +1,5 @@
 /*!
-	jWidget Lib 0.9.0
+	jWidget Lib 0.10.0
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
@@ -956,7 +956,7 @@ JW.extend = JW.ClassUtil.extend;
  *         
  *         getElement: function() {
  *             if (!this.el) {
- *                 this.el = jQuery('<div />');
+ *                 this.el = jQuery('<div></div>');
  *                 this.el.width(this.width);
  *                 this.el.height(this.height);
  *             }
@@ -5734,8 +5734,8 @@ JW.extend(JW.AbstractArray.Indexer, JW.AbstractCollection.Indexer, {
  * Use JW.AbstractArray#createInserter method to create the synchronizer.
  *
  *     var inserter = array.{@link JW.AbstractArray#createInserter createInserter}({
- *         {@link #cfg-addItem addItem}: function(el, index) { this.el.{@link jQuery#insert insert}(el, index); },
- *         {@link #cfg-removeItem removeItem}: function(el, index) { el.detach(); },
+ *         {@link #cfg-addItem addItem}: function(item, index) { this.store.insert(item, index); },
+ *         {@link #cfg-removeItem removeItem}: function(item, index) { this.store.remove(index); },
  *         {@link #cfg-scope scope}: this
  *     });
  *
@@ -15949,7 +15949,7 @@ JW.extend(JW.Functor, JW.Class, {
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="document" />' +
+ *                 '<div jwid="document"></div>' +
  *             '</div>'
  *     });
  *

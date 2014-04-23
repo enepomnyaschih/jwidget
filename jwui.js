@@ -1,5 +1,5 @@
 /*!
-	jWidget UI 0.9.0
+	jWidget UI 0.10.0
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
@@ -40,7 +40,7 @@ JW.UI = {
 	 * Templates are inherited together with component classes.
 	 * 
 	 * Each component class has at least one template, its name is `main`. This is the main template which is
-	 * used to render the component. By default, `main` equals to `<div />`.
+	 * used to render the component. By default, `main` equals to `<div></div>`.
 	 * Usually, `main` template is enough for the majority of components. This template is applied automatically,
 	 * unlike other templates which should be applied manually.
 	 * 
@@ -102,6 +102,25 @@ JW.UI = {
 			return (type === "text") || (type !== "password");
 		}
 		return tagName === "textarea";
+	},
+	
+	insert: function(parent, child, index) {
+		if (!JW.isSet(index) || (index >= parent.childNodes.length)) {
+			parent.appendChild(child);
+		} else {
+			parent.insertBefore(child, parent.childNodes.item(index));
+		}
+	},
+	
+	parseHtml: function(html) {
+		if (JW.UI._fragment) {
+			JW.UI._fragment.textContent = "";
+		} else {
+			JW.UI._fragment = document.createDocumentFragment();
+		}
+		var el = JW.UI._fragment.appendChild(document.createElement("div"));
+		el.innerHTML = html;
+		return el.firstChild;
 	}
 };
 
@@ -138,25 +157,6 @@ jQuery(function() {
  * jQuery element is extended with several methods.
  */
 JW.apply(jQuery.fn, {
-	/**
-	 * Insert element to position with specified index inside current component.
-	 * @param {jQuery} el Element to insert.
-	 * @param {number} [index] Index of position to insert to. By default, appends the element.
-	 * @returns {jQuery} this.
-	 */
-	insert: function(el, index) {
-		var ths = this.eq(0);
-		el = jQuery(el).eq(0);
-		if (!JW.isSet(index)) {
-			ths.append(el);
-		} else if (index == 0) {
-			ths.prepend(el);
-		} else {
-			jQuery(ths.children()[index - 1]).after(el);
-		}
-		return this;
-	},
-	
 	/**
 	 * Replace element with another element in DOM. Unlike standard replaceWith, doesn't kill the event listeners.
 	 * @param {jQuery} el Element.
@@ -333,7 +333,7 @@ JW.UI.Browsers = (function()
  *         // override
  *         {@link #renderComponent renderComponent}: function() {
  *             this.{@link JW.Class#method-_super _super}();
- *             this.{@link #getElement getElement}("hello-message").text(message);
+ *             this.{@link #getElement getElement}("hello-message").text(this.message);
  *             this.{@link #getElement getElement}("link").attr("href", this.link);
  *         }
  *     });
@@ -341,7 +341,7 @@ JW.UI.Browsers = (function()
  *     JW.UI.template(MyApp.Component, {
  *         main:
  *             '<div jwclass="myapp-component">' +
- *                 '<div jwid="hello-message" />' +
+ *                 '<div jwid="hello-message"></div>' +
  *                 '<a href="#" jwid="link">Click me!</a>' +
  *             '</div>'
  *     });
@@ -357,7 +357,7 @@ JW.UI.Browsers = (function()
  * of this component rendering:
  *
  *     <div class="myapp-component">
- *         <div class="myapp-component-hello-message" />
+ *         <div class="myapp-component-hello-message"></div>
  *         <a href="#" class="myapp-component-link">Click me!</a>
  *     </div>
  *
@@ -496,7 +496,7 @@ JW.UI.Browsers = (function()
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="title-box" />' +
+ *                 '<div jwid="title-box"></div>' +
  *             '</div>'
  *     });
  *
@@ -528,7 +528,7 @@ JW.UI.Browsers = (function()
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="document" />' +
+ *                 '<div jwid="document"></div>' +
  *             '</div>'
  *     });
  *
@@ -555,7 +555,7 @@ JW.UI.Browsers = (function()
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="labels" />' +
+ *                 '<div jwid="labels"></div>' +
  *             '</div>'
  *     });
  *
@@ -586,7 +586,7 @@ JW.UI.Browsers = (function()
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="labels" />' +
+ *                 '<div jwid="labels"></div>' +
  *             '</div>'
  *     });
  *
@@ -612,7 +612,7 @@ JW.UI.Browsers = (function()
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="title-box" />' +
+ *                 '<div jwid="title-box"></div>' +
  *             '</div>'
  *     });
  *
@@ -677,7 +677,7 @@ JW.UI.Browsers = (function()
  *         // override
  *         {@link #renderComponent renderComponent}: function() {
  *             this.{@link JW.Class#method-_super _super}();
- *             this.{@link #getElement getElement}("hello-message").text(message);
+ *             this.{@link #getElement getElement}("hello-message").text(this.message);
  *             this.{@link #getElement getElement}("link").attr("href", this.link);
  *         }
  *     });
@@ -685,7 +685,7 @@ JW.UI.Browsers = (function()
  * **component.jw.html**
  * 
  *     <div jwclass="myapp-component">
- *         <div jwid="hello-message" />
+ *         <div jwid="hello-message"></div>
  *         <a href="#" jwid="link">Click me!</a>
  *     </div>
  * 
@@ -873,29 +873,37 @@ JW.extend(JW.UI.Component, JW.Class, {
 			return;
 		}
 		this.replacedEl = replacedEl;
-		this.el = jQuery(this.template || this.templates.main);
-		this._elements = {};
-		this._elements["root"] = this.el;
+		var el = JW.UI.parseHtml(this.template || this.templates.main);
+		var els = {};
+		this._elements = els;
 		this.allChildren = {};
 		this.children = new JW.ObservableMap();
 		this._replaceables = {};
 		this._arrays = {};
-		this.rootClass = JW.String.parseClass(this.rootClass || this.el.attr("jwclass"));
-		this.el.removeAttr("jwclass");
-		this.el.addClass(this.rootClass.join(" "));
-		var anchorEls = this.el.find("[jwid]");
-		for (var i = 0; i < anchorEls.length; ++i) {
-			var anchorEl = jQuery(anchorEls[i]);
-			var jwIds = JW.String.trim(anchorEl.attr("jwid")).split(/\s+/);
-			anchorEl.removeAttr("jwid");
-			for (var j = 0; j < jwIds.length; ++j) {
+		var rootClass = JW.String.parseClass(this.rootClass || el.getAttribute("jwclass"));
+		this.rootClass = rootClass;
+		el.removeAttribute("jwclass");
+		var anchorEls = el.querySelectorAll("[jwid]");
+		for (var i = 0, l = anchorEls.length; i < l; ++i) {
+			var anchorEl = anchorEls.item(i);
+			var jwIds = JW.String.trim(anchorEl.getAttribute("jwid")).split(/\s+/);
+			anchorEl.removeAttribute("jwid");
+			for (var j = 0, n = jwIds.length; j < n; ++j) {
 				var jwId = jwIds[j];
-				this._elements[jwId] = this._elements[jwId] ? this._elements[jwId].add(anchorEl) : anchorEl;
-				for (var k = 0; k < this.rootClass.length; ++k) {
-					anchorEl.addClass(this.rootClass[k] + "-" + jwId);
-				}
+				els[jwId] = els[jwId] || [];
+				els[jwId].push(anchorEl);
 			}
 		}
+		for (var jwId in els) {
+			var anchorEl = jQuery(els[jwId]);
+			els[jwId] = anchorEl;
+			for (var j = 0, l = rootClass.length; j < l; ++j) {
+				anchorEl.addClass(rootClass[j] + "-" + jwId);
+			}
+		}
+		this.el = jQuery(el);
+		this.el.addClass(rootClass.join(" "));
+		els["root"] = this.el;
 		this._childMapper = this.children.createMapper({
 			createItem  : function(child) { return new JW.UI.Component.Child(this, child); },
 			destroyItem : function(componentChild) { componentChild.destroy(); },
@@ -907,7 +915,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			scope      : this
 		});
 		this.beforeRender();
-		var elements = JW.apply({}, this._elements);
+		var elements = JW.apply({}, els);
 		for (var jwId in elements) {
 			var anchorEl = elements[jwId];
 			var jwIdCamel = JW.String.camel(jwId);
@@ -943,7 +951,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	renderTo: function(el) {
 		this.render();
-		jQuery(el).insert(this.el);
+		JW.UI.insert(jQuery(el)[0], this.el[0]);
 		this._afterAppend();
 	},
 	
@@ -1092,7 +1100,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 });
 
 JW.UI.template(JW.UI.Component, {
-	main: '<div />'
+	main: '<div></div>'
 });
 
 JW.UI.Component.EventParams = function(sender) {
@@ -1295,6 +1303,7 @@ JW.extend(JW.UI.Component.Replaceable, JW.Class, {
 JW.UI.Inserter = function(source, el) {
 	JW.UI.Inserter._super.call(this);
 	this.el = el;
+	this.len = 0;
 	this.own(source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
@@ -1303,14 +1312,23 @@ JW.UI.Inserter = function(source, el) {
 };
 
 JW.extend(JW.UI.Inserter, JW.Class, {
+	// Number len;
 	// Element el;
 	
 	_addItem: function(item, index) {
-		this.el.insert(item.el, index);
+		var parent = this.el[0];
+		var child = item.el[0];
+		if (index === this.len) {
+			parent.appendChild(child);
+		} else {
+			parent.insertBefore(child, parent.childNodes.item(index));
+		}
+		++this.len;
 		item._afterAppend();
 	},
 	
 	_removeItem: function(item) {
+		--this.len;
 		item.el.detach();
 	}
 });
@@ -1973,7 +1991,7 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
 	 */
 	
 	_update: function() {
-		this.el.text(this.property.get());
+		this.el[0].textContent = this.property.get();
 	}
 });
 
