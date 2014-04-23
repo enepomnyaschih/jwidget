@@ -102,6 +102,17 @@ JW.UI = {
 			return (type === "text") || (type !== "password");
 		}
 		return tagName === "textarea";
+	},
+	
+	parseHtml: function(html) {
+		if (JW.UI._fragment) {
+			JW.UI._fragment.textContent = "";
+		} else {
+			JW.UI._fragment = document.createDocumentFragment();
+		}
+		var el = JW.UI._fragment.appendChild(document.createElement("div"));
+		el.innerHTML = html;
+		return jQuery(el.firstChild);
 	}
 };
 
