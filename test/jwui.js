@@ -1991,7 +1991,7 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
 	 */
 	
 	_update: function() {
-		this.el.textContent = this.property.get();
+		this.el[0].textContent = this.property.get();
 	}
 });
 
