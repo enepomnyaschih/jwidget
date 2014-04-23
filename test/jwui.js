@@ -881,19 +881,24 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this._replaceables = {};
 		this._arrays = {};
 		this.rootClass = JW.String.parseClass(this.rootClass || this.el.attr("jwclass"));
-		this.el.removeAttr("jwclass");
+		this.el[0].removeAttribute("jwclass");
 		this.el.addClass(this.rootClass.join(" "));
-		var anchorEls = this.el.find("[jwid]");
-		for (var i = 0; i < anchorEls.length; ++i) {
-			var anchorEl = jQuery(anchorEls[i]);
-			var jwIds = JW.String.trim(anchorEl.attr("jwid")).split(/\s+/);
-			anchorEl.removeAttr("jwid");
+		var anchorEls = this.el[0].querySelectorAll("[jwid]");
+		for (var i = 0, l = anchorEls.length; i < l; ++i) {
+			var anchorEl = anchorEls.item(i);
+			var jwIds = JW.String.trim(anchorEl.getAttribute("jwid")).split(/\s+/);
+			anchorEl.removeAttribute("jwid");
 			for (var j = 0; j < jwIds.length; ++j) {
 				var jwId = jwIds[j];
-				this._elements[jwId] = this._elements[jwId] ? this._elements[jwId].add(anchorEl) : anchorEl;
-				for (var k = 0; k < this.rootClass.length; ++k) {
-					anchorEl.addClass(this.rootClass[k] + "-" + jwId);
-				}
+				this._elements[jwId] = this._elements[jwId] || [];
+				this._elements[jwId].push(anchorEl);
+			}
+		}
+		for (var jwId in this._elements) {
+			var anchorEl = jQuery(this._elements[jwId]);
+			this._elements[jwId] = anchorEl;
+			for (var j = 0; j < this.rootClass.length; ++j) {
+				anchorEl.addClass(this.rootClass[j] + "-" + jwId);
 			}
 		}
 		this._childMapper = this.children.createMapper({
