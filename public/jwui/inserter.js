@@ -31,7 +31,7 @@ JW.extend(JW.UI.Inserter, JW.Class, {
 	// Element el;
 	
 	_addItem: function(item, index) {
-		this.el.insert(item.el, index);
+		JW.UI.insert(this.el[0], item.el[0], index);
 		item._afterAppend();
 	},
 	

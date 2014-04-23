@@ -592,7 +592,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			return;
 		}
 		this.replacedEl = replacedEl;
-		this.el = JW.UI.parseHtml(this.template || this.templates.main);
+		this.el = jQuery(JW.UI.parseHtml(this.template || this.templates.main));
 		this._elements = {};
 		this._elements["root"] = this.el;
 		this.allChildren = {};
@@ -662,7 +662,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	renderTo: function(el) {
 		this.render();
-		jQuery(el).insert(this.el);
+		JW.UI.insert(jQuery(el)[0], this.el[0]);
 		this._afterAppend();
 	},
 	

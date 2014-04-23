@@ -24,25 +24,6 @@
  */
 JW.apply(jQuery.fn, {
 	/**
-	 * Insert element to position with specified index inside current component.
-	 * @param {jQuery} el Element to insert.
-	 * @param {number} [index] Index of position to insert to. By default, appends the element.
-	 * @returns {jQuery} this.
-	 */
-	insert: function(el, index) {
-		var ths = this.eq(0);
-		el = jQuery(el).eq(0);
-		if (!JW.isSet(index)) {
-			ths.append(el);
-		} else if (index == 0) {
-			ths.prepend(el);
-		} else {
-			jQuery(ths.children()[index - 1]).after(el);
-		}
-		return this;
-	},
-	
-	/**
 	 * Replace element with another element in DOM. Unlike standard replaceWith, doesn't kill the event listeners.
 	 * @param {jQuery} el Element.
 	 * @param {boolean} [attrs=false] Assign "id" attribute (if defined) and add all classes of current element

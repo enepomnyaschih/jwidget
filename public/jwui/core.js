@@ -104,6 +104,14 @@ JW.UI = {
 		return tagName === "textarea";
 	},
 	
+	insert: function(parent, child, index) {
+		if (!JW.isSet(index) || (index >= parent.childNodes.length)) {
+			parent.appendChild(child);
+		} else {
+			parent.insertBefore(child, parent.childNodes.item(index));
+		}
+	},
+	
 	parseHtml: function(html) {
 		if (JW.UI._fragment) {
 			JW.UI._fragment.textContent = "";
@@ -112,7 +120,7 @@ JW.UI = {
 		}
 		var el = JW.UI._fragment.appendChild(document.createElement("div"));
 		el.innerHTML = html;
-		return jQuery(el.firstChild);
+		return el.firstChild;
 	}
 };
 
