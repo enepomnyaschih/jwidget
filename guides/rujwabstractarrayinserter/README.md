@@ -15,8 +15,8 @@
 Создавайте синхронизатор с помощью метода JW.AbstractArray#createInserter:
 
     var inserter = array.{@link JW.AbstractArray#createInserter createInserter}({
-        {@link JW.AbstractArray.Inserter#cfg-addItem addItem}: function(el, index) { this.el.{@link jQuery#insert insert}(el, index); },
-        {@link JW.AbstractArray.Inserter#cfg-removeItem removeItem}: function(el, index) { el.detach(); },
+        {@link JW.AbstractArray.Inserter#cfg-addItem addItem}: function(item, index) { this.store.insert(item, index); },
+        {@link JW.AbstractArray.Inserter#cfg-removeItem removeItem}: function(item, index) { this.store.remove(index); },
         {@link JW.AbstractArray.Inserter#cfg-scope scope}: this
     });
 

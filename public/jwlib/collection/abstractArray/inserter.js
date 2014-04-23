@@ -32,8 +32,8 @@
  * Use JW.AbstractArray#createInserter method to create the synchronizer.
  *
  *     var inserter = array.{@link JW.AbstractArray#createInserter createInserter}({
- *         {@link #cfg-addItem addItem}: function(el, index) { this.el.{@link jQuery#insert insert}(el, index); },
- *         {@link #cfg-removeItem removeItem}: function(el, index) { el.detach(); },
+ *         {@link #cfg-addItem addItem}: function(item, index) { this.store.insert(item, index); },
+ *         {@link #cfg-removeItem removeItem}: function(item, index) { this.store.remove(index); },
  *         {@link #cfg-scope scope}: this
  *     });
  *
