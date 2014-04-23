@@ -24,22 +24,22 @@ JW.Tests.UI.CoreTestCase = JW.Unit.TestCase.extend({
 	{
 		JW.Tests.UI.CoreTestCase.BaseComponent = JW.UI.Component.extend();
 		
-		JW.UI.template(JW.Tests.UI.CoreTestCase.BaseComponent, { main: '<a href="#" />', abc: '<div class="abc" />', def: '<div class="lalala" />' });
-		JW.UI.template(JW.Tests.UI.CoreTestCase.BaseComponent, { def: '<div class="def" />', ghi: '<div class="ghi" />' });
+		JW.UI.template(JW.Tests.UI.CoreTestCase.BaseComponent, { main: '<a href="#"></a>', abc: '<div class="abc"></div>', def: '<div class="lalala"></div>' });
+		JW.UI.template(JW.Tests.UI.CoreTestCase.BaseComponent, { def: '<div class="def"></div>', ghi: '<div class="ghi"></div>' });
 		
 		JW.Tests.UI.CoreTestCase.ChildComponent = JW.Tests.UI.CoreTestCase.BaseComponent.extend();
-		JW.UI.template(JW.Tests.UI.CoreTestCase.ChildComponent, { abc: '<div class="jjj" />', ttt: '<div class="ttt" />' });
+		JW.UI.template(JW.Tests.UI.CoreTestCase.ChildComponent, { abc: '<div class="jjj"></div>', ttt: '<div class="ttt"></div>' });
 		
-		this.assertStrictEqual('<a href="#" />',      JW.Tests.UI.CoreTestCase.BaseComponent.prototype.templates.main);
-		this.assertStrictEqual('<div class="abc" />', JW.Tests.UI.CoreTestCase.BaseComponent.prototype.templates.abc);
-		this.assertStrictEqual('<div class="def" />', JW.Tests.UI.CoreTestCase.BaseComponent.prototype.templates.def);
-		this.assertStrictEqual('<div class="ghi" />', JW.Tests.UI.CoreTestCase.BaseComponent.prototype.templates.ghi);
+		this.assertStrictEqual('<a href="#"></a>',      JW.Tests.UI.CoreTestCase.BaseComponent.prototype.templates.main);
+		this.assertStrictEqual('<div class="abc"></div>', JW.Tests.UI.CoreTestCase.BaseComponent.prototype.templates.abc);
+		this.assertStrictEqual('<div class="def"></div>', JW.Tests.UI.CoreTestCase.BaseComponent.prototype.templates.def);
+		this.assertStrictEqual('<div class="ghi"></div>', JW.Tests.UI.CoreTestCase.BaseComponent.prototype.templates.ghi);
 		this.assertUndefined  (JW.Tests.UI.CoreTestCase.BaseComponent.prototype.templates.ttt);
 		
-		this.assertStrictEqual('<a href="#" />',      JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.main);
-		this.assertStrictEqual('<div class="jjj" />', JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.abc);
-		this.assertStrictEqual('<div class="def" />', JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.def);
-		this.assertStrictEqual('<div class="ghi" />', JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.ghi);
-		this.assertStrictEqual('<div class="ttt" />', JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.ttt);
+		this.assertStrictEqual('<a href="#"></a>',      JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.main);
+		this.assertStrictEqual('<div class="jjj"></div>', JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.abc);
+		this.assertStrictEqual('<div class="def"></div>', JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.def);
+		this.assertStrictEqual('<div class="ghi"></div>', JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.ghi);
+		this.assertStrictEqual('<div class="ttt"></div>', JW.Tests.UI.CoreTestCase.ChildComponent.prototype.templates.ttt);
 	}
 });

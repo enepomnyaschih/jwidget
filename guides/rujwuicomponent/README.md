@@ -44,7 +44,7 @@ Model-View без больших усилий. Начнем с примеров.
     JW.UI.template(MyApp.Component, {
         main:
             '<div jwclass="myapp-component">' +
-                '<div jwid="hello-message" />' +
+                '<div jwid="hello-message"></div>' +
                 '<a href="#" jwid="link">Click me!</a>' +
             '</div>'
     });
@@ -60,7 +60,7 @@ JW.UI.template с именем `main` и по умолчанию равен
 следующий фрагмент HTML:
 
     <div class="myapp-component">
-        <div class="myapp-component-hello-message" />
+        <div class="myapp-component-hello-message"></div>
         <a href="#" class="myapp-component-link">Click me!</a>
     </div>
 
@@ -196,7 +196,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
     JW.UI.template(MyComponent, {
         main:
             '<div jwclass="my-component">' +
-                '<div jwid="title-box" />' +
+                '<div jwid="title-box"></div>' +
             '</div>'
     });
 
@@ -228,7 +228,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
     JW.UI.template(MyComponent, {
         main:
             '<div jwclass="my-component">' +
-                '<div jwid="document" />' +
+                '<div jwid="document"></div>' +
             '</div>'
     });
 
@@ -255,7 +255,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
     JW.UI.template(MyComponent, {
         main:
             '<div jwclass="my-component">' +
-                '<div jwid="labels" />' +
+                '<div jwid="labels"></div>' +
             '</div>'
     });
 
@@ -287,7 +287,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
     JW.UI.template(MyComponent, {
         main:
             '<div jwclass="my-component">' +
-                '<div jwid="labels" />' +
+                '<div jwid="labels"></div>' +
             '</div>'
     });
 
@@ -313,7 +313,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
     JW.UI.template(MyComponent, {
         main:
             '<div jwclass="my-component">' +
-                '<div jwid="title-box" />' +
+                '<div jwid="title-box"></div>' +
             '</div>'
     });
 
@@ -388,7 +388,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
 **component.jw.html**
 
     <div jwclass="myapp-component">
-        <div jwid="hello-message" />
+        <div jwid="hello-message"></div>
         <a href="#" jwid="link">Click me!</a>
     </div>
 

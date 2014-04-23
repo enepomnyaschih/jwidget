@@ -73,7 +73,7 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		JW.UI.template(MyComponent, {
 			main:
 				'<div jwclass="my-component">' +
-					'<div jwid="document" />' +
+					'<div jwid="document"></div>' +
 				'</div>'
 		});
 		

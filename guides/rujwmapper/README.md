@@ -80,7 +80,7 @@
     JW.UI.template(MyComponent, {
         main:
             '<div jwclass="my-component">' +
-                '<div jwid="document" />' +
+                '<div jwid="document"></div>' +
             '</div>'
     });
 

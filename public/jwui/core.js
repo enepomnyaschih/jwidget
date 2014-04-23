@@ -40,7 +40,7 @@ JW.UI = {
 	 * Templates are inherited together with component classes.
 	 * 
 	 * Each component class has at least one template, its name is `main`. This is the main template which is
-	 * used to render the component. By default, `main` equals to `<div />`.
+	 * used to render the component. By default, `main` equals to `<div></div>`.
 	 * Usually, `main` template is enough for the majority of components. This template is applied automatically,
 	 * unlike other templates which should be applied manually.
 	 * 

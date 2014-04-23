@@ -60,7 +60,7 @@
  *     JW.UI.template(MyApp.Component, {
  *         main:
  *             '<div jwclass="myapp-component">' +
- *                 '<div jwid="hello-message" />' +
+ *                 '<div jwid="hello-message"></div>' +
  *                 '<a href="#" jwid="link">Click me!</a>' +
  *             '</div>'
  *     });
@@ -76,7 +76,7 @@
  * of this component rendering:
  *
  *     <div class="myapp-component">
- *         <div class="myapp-component-hello-message" />
+ *         <div class="myapp-component-hello-message"></div>
  *         <a href="#" class="myapp-component-link">Click me!</a>
  *     </div>
  *
@@ -215,7 +215,7 @@
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="title-box" />' +
+ *                 '<div jwid="title-box"></div>' +
  *             '</div>'
  *     });
  *
@@ -247,7 +247,7 @@
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="document" />' +
+ *                 '<div jwid="document"></div>' +
  *             '</div>'
  *     });
  *
@@ -274,7 +274,7 @@
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="labels" />' +
+ *                 '<div jwid="labels"></div>' +
  *             '</div>'
  *     });
  *
@@ -305,7 +305,7 @@
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="labels" />' +
+ *                 '<div jwid="labels"></div>' +
  *             '</div>'
  *     });
  *
@@ -331,7 +331,7 @@
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
- *                 '<div jwid="title-box" />' +
+ *                 '<div jwid="title-box"></div>' +
  *             '</div>'
  *     });
  *
@@ -404,7 +404,7 @@
  * **component.jw.html**
  * 
  *     <div jwclass="myapp-component">
- *         <div jwid="hello-message" />
+ *         <div jwid="hello-message"></div>
  *         <a href="#" jwid="link">Click me!</a>
  *     </div>
  * 
@@ -819,7 +819,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 });
 
 JW.UI.template(JW.UI.Component, {
-	main: '<div />'
+	main: '<div></div>'
 });
 
 JW.UI.Component.EventParams = function(sender) {

@@ -132,7 +132,7 @@ JW.extend = JW.ClassUtil.extend;
  *         
  *         getElement: function() {
  *             if (!this.el) {
- *                 this.el = jQuery('<div />');
+ *                 this.el = jQuery('<div></div>');
  *                 this.el.width(this.width);
  *                 this.el.height(this.height);
  *             }
