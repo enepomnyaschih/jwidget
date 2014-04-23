@@ -14,6 +14,9 @@ xcopy /I /Y /E /Q public\build\packages\jwui.min.js jwidget-files
 del /Q guides\endownload\jwidget.zip
 7za a guides\endownload\jwidget.zip jwidget-files
 
+:Copy distributive files for absolute URL attachment
+xcopy /I /Y /E /Q jwidget-files\* guides\endownload
+
 :Copy distributive files into version folder
 xcopy /I /Y /E /Q jwidget-files\* ..\version
 
