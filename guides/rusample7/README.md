@@ -33,7 +33,7 @@
         "version": "0.0.0",
         "dependencies": {
             "jquery": "~2.1.0",
-            "jwidget": "0.9.0"
+            "jwidget": "0.10.0"
         }
     }
 
