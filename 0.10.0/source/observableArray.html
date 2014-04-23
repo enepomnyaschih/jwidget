@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2014 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-ObservableArray-method-constructor'><span id='JW-ObservableArray'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractArray&lt;T&gt;`
+ *
+ * Has several events and an observable property #length.
+ *
+ * See structurized list of methods in JW.AbstractArray.
+ *
+ * @extends JW.AbstractArray
+ *
+ * @constructor
+ * @param {Array} [items] `&lt;T&gt;` Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create array as adapter of `items`. Defaults to false, so `items` is copied.
+ */
+JW.ObservableArray = function(items, adapter) {
+	JW.ObservableArray._super.call(this, items, adapter);
+	this.length = new JW.Property(this.getLength());
+	this.spliceEvent = new JW.Event();
+	this.replaceEvent = new JW.Event();
+	this.moveEvent = new JW.Event();
+	this.clearEvent = new JW.Event();
+	this.reorderEvent = new JW.Event();
+	this.changeEvent = new JW.Event();
+};
+
+JW.extend(JW.ObservableArray, JW.AbstractArray, {
+<span id='JW-ObservableArray-property-length'>	/**
+</span>	 * @property {JW.Property} length `&lt;Number&gt;` Collection length. **Don't modify manually!**
+	 */
+<span id='JW-ObservableArray-event-spliceEvent'>	/**
+</span>	 * @event spliceEvent
+	 * Items are removed from array and items are added to array. Triggered in result
+	 * of calling #add, #tryAdd, #addAll, #tryAddAll, #remove, #tryRemove, #removeItem, #pop, #removeAll, #tryRemoveAll,
+	 * {@link #removeItems}, #splice, #trySplice, #performSplice.
+	 * @param {JW.ObservableArray.SpliceEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableArray-event-replaceEvent'>	/**
+</span>	 * @event replaceEvent
+	 * Item is replaced in array. Triggered in result of calling #set, #trySet.
+	 * @param {JW.ObservableArray.ReplaceEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableArray-event-moveEvent'>	/**
+</span>	 * @event moveEvent
+	 * Item is moved in array. Triggered in result of calling #move, #tryMove.
+	 * @param {JW.ObservableArray.MoveEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableArray-event-clearEvent'>	/**
+</span>	 * @event clearEvent
+	 * Array is cleared. Triggered in result of calling #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableArray.ItemsEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableArray-event-reorderEvent'>	/**
+</span>	 * @event reorderEvent
+	 * Items are reordered in array. Triggered in result
+	 * of calling #reorder, #tryReorder, #performReorder, #sort, #sortComparing.
+	 * @param {JW.ObservableArray.ReorderEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableArray-event-changeEvent'>	/**
+</span>	 * @event changeEvent
+	 * Array is changed. Triggered right after one
+	 * of events #spliceEvent, #replaceEvent, #moveEvent, #clearEvent, #reorderEvent.
+	 * @param {JW.ObservableArray.EventParams} params `&lt;T&gt;` Parameters.
+	 */
+	
+	// override
+	destroy: function() {
+		this.changeEvent.destroy();
+		this.reorderEvent.destroy();
+		this.clearEvent.destroy();
+		this.moveEvent.destroy();
+		this.replaceEvent.destroy();
+		this.spliceEvent.destroy();
+		this.length.destroy();
+		this._super();
+	},
+	
+	// override
+	trySet: function(item, index) {
+		var oldItem = this._super(item, index);
+		if (oldItem === undefined) {
+			return;
+		}
+		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem.value, item));
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		return oldItem;
+	},
+	
+	// override
+	tryMove: function(fromIndex, toIndex) {
+		var item = this._super(fromIndex, toIndex);
+		if (item === undefined) {
+			return;
+		}
+		this.moveEvent.trigger(new JW.ObservableArray.MoveEventParams(this, fromIndex, toIndex, item));
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		return item;
+	},
+	
+	// override
+	tryClear: function() {
+		var oldItems = this._super();
+		if (oldItems === undefined) {
+			return;
+		}
+		this.length.set(0);
+		this.clearEvent.trigger(new JW.ObservableArray.ItemsEventParams(this, oldItems));
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		return oldItems;
+	},
+	
+	// override
+	trySplice: function(removeParamsList, addParamsList) {
+		var result = this._super(removeParamsList, addParamsList);
+		if (result === undefined) {
+			return;
+		}
+		this.length.set(this.getLength());
+		this.spliceEvent.trigger(new JW.ObservableArray.SpliceEventParams(this, result));
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		return result;
+	},
+	
+	// override
+	tryReorder: function(indexArray) {
+		var items = this._super(indexArray);
+		if (items === undefined) {
+			return;
+		}
+		this.reorderEvent.trigger(new JW.ObservableArray.ReorderEventParams(this, indexArray, items));
+		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		return items;
+	},
+	
+<span id='JW-ObservableArray-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.ObservableArray} `&lt;U&gt;` Collection.
+	 */
+	createEmpty: function() {
+		return new JW.ObservableArray();
+	},
+	
+<span id='JW-ObservableArray-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Creates empty array of the same observability level.
+	 * @returns {JW.ObservableArray} `&lt;U&gt;` Array.
+	 */
+	createEmptyArray: function() {
+		return new JW.ObservableArray();
+	},
+	
+<span id='JW-ObservableArray-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Creates empty map of the same observability level.
+	 * @returns {JW.ObservableMap} `&lt;U&gt;` Map.
+	 */
+	createEmptyMap: function() {
+		return new JW.ObservableMap();
+	},
+	
+<span id='JW-ObservableArray-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Creates empty set of the same observability level.
+	 * @returns {JW.ObservableSet} `&lt;U&gt;` Set.
+	 */
+	createEmptySet: function() {
+		return new JW.ObservableSet();
+	},
+	
+<span id='JW-ObservableArray-method-createMapper'>	/**
+</span>	 * `&lt;U&gt;` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Mapper}
+	 * `&lt;T, U&gt;` Synchronizer.
+	 */
+	createMapper: function(config) {
+		return new JW.ObservableArray.Mapper(this, config);
+	},
+	
+<span id='JW-ObservableArray-method-createFilterer'>	/**
+</span>	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Filterer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createFilterer: function(config) {
+		return new JW.ObservableArray.Filterer(this, config);
+	},
+	
+<span id='JW-ObservableArray-method-createObserver'>	/**
+</span>	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Observer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createObserver: function(config) {
+		return new JW.ObservableArray.Observer(this, config);
+	},
+	
+<span id='JW-ObservableArray-method-createOrderer'>	/**
+</span>	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Orderer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createOrderer: function(config) {
+		return new JW.ObservableArray.Orderer(this, config);
+	},
+	
+<span id='JW-ObservableArray-method-createSorterComparing'>	/**
+</span>	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.SorterComparing}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.ObservableArray.SorterComparing(this, config);
+	},
+	
+<span id='JW-ObservableArray-method-createIndexer'>	/**
+</span>	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Indexer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createIndexer: function(config) {
+		return new JW.ObservableArray.Indexer(this, config);
+	},
+	
+<span id='JW-ObservableArray-method-createLister'>	/**
+</span>	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Lister}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createLister: function(config) {
+		return new JW.ObservableArray.Lister(this, config);
+	},
+	
+<span id='JW-ObservableArray-method-createInserter'>	/**
+</span>	 * Creates view synchronizer with array.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Inserter}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createInserter: function(config) {
+		return new JW.ObservableArray.Inserter(this, config);
+	},
+	
+<span id='JW-ObservableArray-method-createMerger'>	/**
+</span>	 * Creates arrays merger.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Merger}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createMerger: function(config) {
+		return new JW.ObservableArray.Merger(this, config);
+	},
+	
+	createMergerBunch: function(merger) {
+		return new JW.ObservableArray.Merger.Bunch(merger, this);
+	},
+	
+<span id='JW-ObservableArray-method-createReverser'>	/**
+</span>	 * Creates array reverser.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Reverser}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createReverser: function(config) {
+		return new JW.ObservableArray.Reverser(this, config);
+	},
+	
+	createSplitter: function(config) {
+		return new JW.ObservableArray.Splitter(this, config);
+	}
+});
+
+<span id='JW-ObservableArray-EventParams-method-constructor'><span id='JW-ObservableArray-EventParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` JW.ObservableArray event parameters.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Event sender.
+ */
+JW.ObservableArray.EventParams = function(sender) {
+	JW.ObservableArray.EventParams._super.call(this, sender);
+};
+
+JW.extend(JW.ObservableArray.EventParams, JW.EventParams, {
+<span id='JW-ObservableArray-EventParams-property-sender'>	/**
+</span>	 * @property {JW.ObservableArray} sender `&lt;T&gt;` Event sender.
+	 */
+});
+
+<span id='JW-ObservableArray-SpliceEventParams-method-constructor'><span id='JW-ObservableArray-SpliceEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.EventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableArray#spliceEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Event sender.
+ * @param {JW.AbstractArray.SpliceResult} spliceResult `&lt;T&gt;` Result of JW.AbstractArray#splice method.
+ */
+JW.ObservableArray.SpliceEventParams = function(sender, spliceResult) {
+	JW.ObservableArray.SpliceEventParams._super.call(this, sender);
+	this.spliceResult = spliceResult;
+};
+
+JW.extend(JW.ObservableArray.SpliceEventParams/*&lt;T&gt;*/, JW.ObservableArray.EventParams/*&lt;T&gt;*/, {
+<span id='JW-ObservableArray-SpliceEventParams-property-spliceResult'>	/**
+</span>	 * @property {JW.AbstractArray.SpliceResult} spliceResult `&lt;T&gt;` Result of JW.AbstractArray#splice method.
+	 */
+});
+
+<span id='JW-ObservableArray-MoveEventParams-method-constructor'><span id='JW-ObservableArray-MoveEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.EventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableArray#moveEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Event sender.
+ * @param {number} fromIndex Where item is moved from.
+ * @param {number} toIndex Where item is moved to.
+ * @param {T} item Item.
+ */
+JW.ObservableArray.MoveEventParams = function(sender, fromIndex, toIndex, item) {
+	JW.ObservableArray.MoveEventParams._super.call(this, sender);
+	this.fromIndex = fromIndex;
+	this.toIndex = toIndex;
+	this.item = item;
+};
+
+JW.extend(JW.ObservableArray.MoveEventParams, JW.ObservableArray.EventParams, {
+<span id='JW-ObservableArray-MoveEventParams-property-fromIndex'>	/**
+</span>	 * @property {number} fromIndex Where item is moved from.
+	 */
+<span id='JW-ObservableArray-MoveEventParams-property-toIndex'>	/**
+</span>	 * @property {number} toIndex Where item is moved to.
+	 */
+<span id='JW-ObservableArray-MoveEventParams-property-item'>	/**
+</span>	 * @property {T} item Item.
+	 */
+});
+
+<span id='JW-ObservableArray-ReplaceEventParams-method-constructor'><span id='JW-ObservableArray-ReplaceEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.EventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableArray#replaceEvent.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Event sender.
+ * @param {number} index Item index.
+ * @param {T} oldItem Old value.
+ * @param {T} newItem New value.
+ */
+JW.ObservableArray.ReplaceEventParams = function(sender, index, oldItem, newItem) {
+	JW.ObservableArray.ReplaceEventParams._super.call(this, sender);
+	this.index = index;
+	this.oldItem = oldItem;
+	this.newItem = newItem;
+};
+
+JW.extend(JW.ObservableArray.ReplaceEventParams, JW.ObservableArray.EventParams, {
+<span id='JW-ObservableArray-ReplaceEventParams-property-index'>	/**
+</span>	 * @property {number} index Item index.
+	 */
+<span id='JW-ObservableArray-ReplaceEventParams-property-oldItem'>	/**
+</span>	 * @property {T} oldItem Old value.
+	 */
+<span id='JW-ObservableArray-ReplaceEventParams-property-newItem'>	/**
+</span>	 * @property {T} newItem New value.
+	 */
+});
+
+<span id='JW-ObservableArray-ItemsEventParams-method-constructor'><span id='JW-ObservableArray-ItemsEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.EventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableArray event which bring its old contents.
+ *
+ * @extends JW.ObservableArray.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Event sender.
+ * @param {Array} items `&lt;T&gt;` Old array contents.
+ */
+JW.ObservableArray.ItemsEventParams = function(sender, items) {
+	JW.ObservableArray.ItemsEventParams._super.call(this, sender);
+	this.items = items;
+};
+
+JW.extend(JW.ObservableArray.ItemsEventParams, JW.ObservableArray.EventParams, {
+<span id='JW-ObservableArray-ItemsEventParams-property-items'>	/**
+</span>	 * @property {Array} items `&lt;T&gt;` Old array contents.
+	 */
+});
+
+<span id='JW-ObservableArray-ReorderEventParams-method-constructor'><span id='JW-ObservableArray-ReorderEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableArray.ItemsEventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableArray#reorderEvent.
+ *
+ * @extends JW.ObservableArray.ItemsEventParams
+ *
+ * @constructor
+ * @param {JW.ObservableArray} sender `&lt;T&gt;` Event sender.
+ * @param {Array} indexArray `&lt;number&gt;` Indexes of items in reordered array.
+ * @param {Array} items `&lt;T&gt;` Old array contents.
+ */
+JW.ObservableArray.ReorderEventParams = function(sender, indexArray, items) {
+	JW.ObservableArray.ReorderEventParams._super.call(this, sender, items);
+	this.indexArray = indexArray;
+};
+
+JW.extend(JW.ObservableArray.ReorderEventParams, JW.ObservableArray.ItemsEventParams, {
+<span id='JW-ObservableArray-ReorderEventParams-property-indexArray'>	/**
+</span>	 * @property {Array} indexArray `&lt;number&gt;` Indexes of items in reordered array.
+	 */
+});
+</pre>
+</body>
+</html>
