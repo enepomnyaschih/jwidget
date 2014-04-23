@@ -592,29 +592,37 @@ JW.extend(JW.UI.Component, JW.Class, {
 			return;
 		}
 		this.replacedEl = replacedEl;
-		this.el = jQuery(JW.UI.parseHtml(this.template || this.templates.main));
-		this._elements = {};
-		this._elements["root"] = this.el;
+		var el = JW.UI.parseHtml(this.template || this.templates.main);
+		var els = {};
+		this._elements = els;
 		this.allChildren = {};
 		this.children = new JW.ObservableMap();
 		this._replaceables = {};
 		this._arrays = {};
-		this.rootClass = JW.String.parseClass(this.rootClass || this.el.attr("jwclass"));
-		this.el.removeAttr("jwclass");
-		this.el.addClass(this.rootClass.join(" "));
-		var anchorEls = this.el.find("[jwid]");
-		for (var i = 0; i < anchorEls.length; ++i) {
-			var anchorEl = jQuery(anchorEls[i]);
-			var jwIds = JW.String.trim(anchorEl.attr("jwid")).split(/\s+/);
-			anchorEl.removeAttr("jwid");
-			for (var j = 0; j < jwIds.length; ++j) {
+		var rootClass = JW.String.parseClass(this.rootClass || el.getAttribute("jwclass"));
+		this.rootClass = rootClass;
+		el.removeAttribute("jwclass");
+		var anchorEls = el.querySelectorAll("[jwid]");
+		for (var i = 0, l = anchorEls.length; i < l; ++i) {
+			var anchorEl = anchorEls.item(i);
+			var jwIds = JW.String.trim(anchorEl.getAttribute("jwid")).split(/\s+/);
+			anchorEl.removeAttribute("jwid");
+			for (var j = 0, n = jwIds.length; j < n; ++j) {
 				var jwId = jwIds[j];
-				this._elements[jwId] = this._elements[jwId] ? this._elements[jwId].add(anchorEl) : anchorEl;
-				for (var k = 0; k < this.rootClass.length; ++k) {
-					anchorEl.addClass(this.rootClass[k] + "-" + jwId);
-				}
+				els[jwId] = els[jwId] || [];
+				els[jwId].push(anchorEl);
 			}
 		}
+		for (var jwId in els) {
+			var anchorEl = jQuery(els[jwId]);
+			els[jwId] = anchorEl;
+			for (var j = 0, l = rootClass.length; j < l; ++j) {
+				anchorEl.addClass(rootClass[j] + "-" + jwId);
+			}
+		}
+		this.el = jQuery(el);
+		this.el.addClass(rootClass.join(" "));
+		els["root"] = this.el;
 		this._childMapper = this.children.createMapper({
 			createItem  : function(child) { return new JW.UI.Component.Child(this, child); },
 			destroyItem : function(componentChild) { componentChild.destroy(); },
@@ -626,7 +634,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			scope      : this
 		});
 		this.beforeRender();
-		var elements = JW.apply({}, this._elements);
+		var elements = JW.apply({}, els);
 		for (var jwId in elements) {
 			var anchorEl = elements[jwId];
 			var jwIdCamel = JW.String.camel(jwId);

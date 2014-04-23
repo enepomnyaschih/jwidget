@@ -52,6 +52,6 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
 	 */
 	
 	_update: function() {
-		this.el.text(this.property.get());
+		this.el.textContent = this.property.get();
 	}
 });

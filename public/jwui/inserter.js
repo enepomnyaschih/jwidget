@@ -20,6 +20,7 @@
 JW.UI.Inserter = function(source, el) {
 	JW.UI.Inserter._super.call(this);
 	this.el = el;
+	this.len = 0;
 	this.own(source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
@@ -28,14 +29,23 @@ JW.UI.Inserter = function(source, el) {
 };
 
 JW.extend(JW.UI.Inserter, JW.Class, {
+	// Number len;
 	// Element el;
 	
 	_addItem: function(item, index) {
-		JW.UI.insert(this.el[0], item.el[0], index);
+		var parent = this.el[0];
+		var child = item.el[0];
+		if (index === this.len) {
+			parent.appendChild(child);
+		} else {
+			parent.insertBefore(child, parent.childNodes.item(index));
+		}
+		++this.len;
 		item._afterAppend();
 	},
 	
 	_removeItem: function(item) {
+		--this.len;
 		item.el.detach();
 	}
 });
