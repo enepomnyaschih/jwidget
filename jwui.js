@@ -1,5 +1,5 @@
 /*!
-	jWidget UI 0.10.0
+	jWidget UI 0.10.1
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
@@ -1594,7 +1594,7 @@ JW.extend(JW.UI.ClassUpdater, JW.Class, {
 	 */
 	
 	_update: function() {
-		this.el.toggleClass(this.cls, this.property.get());
+		this.el.toggleClass(this.cls, !!this.property.get());
 	}
 });
 
