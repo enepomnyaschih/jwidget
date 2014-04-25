@@ -57,6 +57,6 @@ JW.extend(JW.UI.ClassUpdater, JW.Class, {
 	 */
 	
 	_update: function() {
-		this.el.toggleClass(this.cls, this.property.get());
+		this.el.toggleClass(this.cls, !!this.property.get());
 	}
 });
