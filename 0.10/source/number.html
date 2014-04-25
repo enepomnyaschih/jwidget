@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	JW Schema number validation class.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Schema.Class.Number = JW.Schema.Class.extend({
+	type    : &quot;Number&quot;,
+	
+	integer : false,    // [optional] Boolean
+	min     : null,     // [optional] Number
+	max     : null,     // [optional] Number
+	minOut  : false,    // [optional] Boolean
+	maxOut  : false,    // [optional] Boolean
+	
+	_validateData: function(data, validation)
+	{
+		if (typeof data !== &quot;number&quot;)
+			return validation.addError(&quot;number expected&quot;);
+		
+		(this.integer &amp;&amp; data !== Math.round(data) &amp;&amp; validation.addError(&quot;integer expected&quot;)) ||
+		(JW.isSet(this.min) &amp;&amp; !this.minOut &amp;&amp; data &lt; this.min &amp;&amp; validation.addError(&quot;must be minimum of &quot; + this.min)) ||
+		(JW.isSet(this.max) &amp;&amp; !this.maxOut &amp;&amp; data &gt; this.max &amp;&amp; validation.addError(&quot;must be maximum of &quot; + this.max)) ||
+		(JW.isSet(this.min) &amp;&amp; this.minOut &amp;&amp; data &lt;= this.min &amp;&amp; validation.addError(&quot;must be more than &quot; + this.min)) ||
+		(JW.isSet(this.max) &amp;&amp; this.maxOut &amp;&amp; data &gt;= this.max &amp;&amp; validation.addError(&quot;must be less than &quot; + this.max));
+	}
+});
+</pre>
+</body>
+</html>

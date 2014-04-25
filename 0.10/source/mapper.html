@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2014 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-AbstractArray-Mapper-method-constructor'><span id='JW-AbstractArray-Mapper'>/**
+</span></span> * @class
+ *
+ * `&lt;T, U&gt; extends JW.AbstractCollection.Mapper&lt;T, U, JW.AbstractArray&lt;T&gt;, JW.AbstractArray&lt;U&gt;&gt;`
+ *
+ * See JW.AbstractCollection.Mapper for details.
+ *
+ * @extends JW.AbstractCollection.Mapper
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.AbstractArray} source `&lt;T&gt;` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.AbstractArray.Mapper = function(source, config) {
+	JW.AbstractArray.Mapper._super.call(this, source, config);
+	this.target.tryAddAll(this._createItems(this.source.getItems()));
+};
+
+JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
+<span id='JW-AbstractArray-Mapper-cfg-target'>	/**
+</span>	 * @cfg {JW.AbstractArray} target `&lt;U&gt;` Target array.
+	 */
+<span id='JW-AbstractArray-Mapper-property-source'>	/**
+</span>	 * @property {JW.AbstractArray} source `&lt;T&gt;` Source array.
+	 */
+<span id='JW-AbstractArray-Mapper-property-target'>	/**
+</span>	 * @property {JW.AbstractArray} target `&lt;U&gt;` Target array.
+	 */
+	
+	// override
+	destroy: function() {
+		this._destroyItems(this.target.clear(), this.source.getItems());
+		this._super();
+	},
+	
+	_createItems: function(datas) {
+		var items = [];
+		for (var i = 0, l = datas.length; i &lt; l; ++i) {
+			items.push(this.createItem.call(this.scope, datas[i]));
+		}
+		return items;
+	},
+	
+	_destroyItems: function(items, datas) {
+		if (this.destroyItem === undefined) {
+			return;
+		}
+		for (var i = items.length - 1; i &gt;= 0; --i) {
+			this.destroyItem.call(this.scope, items[i], datas[i]);
+		}
+	}
+});
+</pre>
+</body>
+</html>
