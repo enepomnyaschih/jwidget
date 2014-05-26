@@ -178,5 +178,45 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		deniedFalse.render();
 		this.assertStrictEqual('<span></span>', deniedFalse.el.html());
 		this.assertStrictEqual("banana", deniedFalse.el.attr("my-attr"));
+	},
+	
+	testWrapMap: function() {
+		var tags = [
+			"option",
+			"optgroup",
+			"thead",
+			"tbody",
+			"tfoot",
+			"colgroup",
+			"caption",
+			"col",
+			"tr",
+			"td",
+			"th",
+			"li"
+		];
+		
+		JW.Array.each(tags, this._testWrapMapTag, this);
+	},
+	
+	_testWrapMapTag: function(tag) {
+		try {
+			var Component = function() {
+				Component._super.call(this);
+			};
+			
+			JW.extend(Component, JW.UI.Component);
+			
+			JW.UI.template(Component, {
+				main: '<' + tag + '></' + tag + '>'
+			});
+			
+			var component = new Component();
+			component.render();
+			this.assertStrictEqual(tag, component.el[0].tagName.toLowerCase());
+			component.destroy();
+		} catch (e) {
+			throw new Error("Tag " + tag + " is not wrapped correctly: " + e);
+		}
 	}
 });

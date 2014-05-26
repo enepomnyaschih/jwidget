@@ -25,6 +25,19 @@
  * Main jWidget UI library namespace.
  */
 JW.UI = {
+	// Some code is taken from jQuery. We are not happy with standard jQuery.parseHtml, because it is slow.
+	// We implement an own JW.UI.parseHtml which omits a good bunch of useless manupulations.
+	wrapMap: {
+		option: [ 1, "<select multiple='multiple'>", "</select>" ],
+		thead: [ 1, "<table>", "</table>" ],
+		col: [ 2, "<table><colgroup>", "</colgroup></table>" ],
+		tr: [ 2, "<table><tbody>", "</tbody></table>" ],
+		td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
+		_default: [ 0, "", "" ]
+	},
+	
+	rtagName: /^<([\w:]+)/,
+	
 	/**
 	 * @property {JW.Property} hash `<String>` Current page hash (without leading "#").
 	 * @static
@@ -119,10 +132,21 @@ JW.UI = {
 			JW.UI._fragment = document.createDocumentFragment();
 		}
 		var el = JW.UI._fragment.appendChild(document.createElement("div"));
-		el.innerHTML = html;
+		var tagName = JW.UI.rtagName.exec(html)[1];
+		var wrap = JW.UI.wrapMap[tagName] || JW.UI.wrapMap._default;
+		el.innerHTML = wrap[1] + html + wrap[2];
+		for (var i = 0; i < wrap[0]; ++i) {
+			el = el.firstChild;
+		}
 		return el.firstChild;
 	}
 };
+
+(function(wrapMap) {
+	wrapMap.optgroup = wrapMap.option;
+	wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
+	wrapMap.th = wrapMap.td;
+})(JW.UI.wrapMap);
 
 jQuery(function() {
 	JW.UI.windowEl = jQuery(window);
