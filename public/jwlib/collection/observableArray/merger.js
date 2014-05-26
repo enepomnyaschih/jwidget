@@ -130,7 +130,7 @@ JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
 	},
 	
 	_onClear: function(params) {
-		this.target.clear();
+		this.target.tryClear();
 	},
 	
 	_onReorder: function(params) {

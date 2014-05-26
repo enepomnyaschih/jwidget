@@ -150,7 +150,7 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 		var removeParamsList = [];
 		var addParamsList = [];
 		var removeParams = null;
-		for (iTarget = 0, lTarget = this.target.getLength(); iTarget < lTarget; ++iTarget) {
+		for (var iTarget = 0, lTarget = this.target.getLength(); iTarget < lTarget; ++iTarget) {
 			var value = this.target.get(iTarget);
 			if (removedItems[JW.Array.binarySearch(removedItems, value, this.compare, this.scope) - 1] === value) {
 				if (!removeParams) {
@@ -174,6 +174,6 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 		if (iAdds < addedItems.length) {
 			addParamsList.push(new JW.AbstractArray.IndexItems(iTarget + addShift, addedItems.slice(iAdds)));
 		}
-		this.target.splice(removeParamsList, addParamsList);
+		this.target.trySplice(removeParamsList, addParamsList);
 	}
 });

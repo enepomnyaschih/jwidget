@@ -50,7 +50,7 @@ JW.UI.ValueListener = function(el, property, simple) {
 	this._update();
 	this.el.bind("change", this._update);
 	if (!this.simple) {
-		this._timer = this.own(setInterval(this._update, 100));
+		this._timer = setInterval(this._update, 100);
 	}
 };
 

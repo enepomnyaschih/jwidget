@@ -41,7 +41,7 @@
  * @constructor
  * @param {jQuery} el Container DOM element.
  * @param {String} name Radios "name" attribute.
- * @param {JW.Property} property `<Boolean>` Target property.
+ * @param {JW.Property} property `<String>` Target property.
  */
 JW.UI.RadioListener = function(el, name, property) {
 	this._update = JW.inScope(this._update, this);
@@ -62,7 +62,7 @@ JW.extend(JW.UI.RadioListener, JW.Class, {
 	 * @property {String} name Radios "name" attribute.
 	 */
 	/**
-	 * @property {JW.Property} property `<Boolean>` Target property.
+	 * @property {JW.Property} property `<String>` Target property.
 	 */
 	
 	destroy: function() {

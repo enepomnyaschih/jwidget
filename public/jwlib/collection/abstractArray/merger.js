@@ -83,7 +83,7 @@ JW.AbstractArray.Merger = function(source, config) {
 		destroyItem: JW.destroy,
 		scope: this
 	}));
-	this.target.addAll(this._getAllItems());
+	this.target.tryAddAll(this._getAllItems());
 };
 
 JW.extend(JW.AbstractArray.Merger, JW.Class, {
