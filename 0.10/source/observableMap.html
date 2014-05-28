@@ -115,7 +115,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		if (items === undefined) {
 			return;
 		}
-		this.length.set(this.getLength());
+		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this, items));
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
 		return items;

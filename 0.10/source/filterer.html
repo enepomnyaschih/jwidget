@@ -87,7 +87,7 @@ JW.extend(JW.AbstractArray.Filterer, JW.AbstractCollection.Filterer, {
 			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
 			var count = this._countFiltered(indexItems.index, indexItems.items.length);
 			var params = new JW.AbstractArray.IndexCount(targetIndex, count);
-			sourceIndex = indexItems.index + indexItems.length;
+			sourceIndex = indexItems.index + indexItems.items.length;
 			targetIndex += count;
 			return params;
 		}, this);

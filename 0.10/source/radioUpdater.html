@@ -80,10 +80,13 @@ JW.extend(JW.UI.RadioUpdater, JW.Class, {
 	_update: function() {
 		var value = this.property.get();
 		if (JW.isSet(value)) {
-			this.el.find(this._selector + &quot;[value='&quot; + value + &quot;']&quot;).prop(&quot;checked&quot;, true).change();
-		} else {
-			this.el.find(this._selector + &quot;:checked&quot;).prop(&quot;checked&quot;, false).change();
+			var els = this.el.find(this._selector + &quot;[value='&quot; + value + &quot;']&quot;);
+			if (els.length !== 0) {
+				els.prop(&quot;checked&quot;, true).change();
+				return;
+			}
 		}
+		this.el.find(this._selector + &quot;:checked&quot;).prop(&quot;checked&quot;, false).change();
 	}
 });
 </pre>

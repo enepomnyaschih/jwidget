@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*!
-	jWidget UI 0.10.1
+	jWidget UI 0.10.2
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
@@ -42,6 +42,19 @@
  * Main jWidget UI library namespace.
  */
 JW.UI = {
+<span id='JW-UI-property-wrapMap'>	// Some code is taken from jQuery. We are not happy with standard jQuery.parseHtml, because it is slow.
+</span>	// We implement an own JW.UI.parseHtml which omits a good bunch of useless manupulations.
+	wrapMap: {
+		option: [ 1, &quot;&lt;select multiple='multiple'&gt;&quot;, &quot;&lt;/select&gt;&quot; ],
+		thead: [ 1, &quot;&lt;table&gt;&quot;, &quot;&lt;/table&gt;&quot; ],
+		col: [ 2, &quot;&lt;table&gt;&lt;colgroup&gt;&quot;, &quot;&lt;/colgroup&gt;&lt;/table&gt;&quot; ],
+		tr: [ 2, &quot;&lt;table&gt;&lt;tbody&gt;&quot;, &quot;&lt;/tbody&gt;&lt;/table&gt;&quot; ],
+		td: [ 3, &quot;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&quot;, &quot;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&quot; ],
+		_default: [ 0, &quot;&quot;, &quot;&quot; ]
+	},
+	
+<span id='JW-UI-property-rtagName'>	rtagName: /^&lt;([\w:]+)/,
+</span>	
 <span id='JW-UI-static-property-hash'>	/**
 </span>	 * @property {JW.Property} hash `&lt;String&gt;` Current page hash (without leading &quot;#&quot;).
 	 * @static
@@ -136,10 +149,21 @@ JW.UI = {
 			JW.UI._fragment = document.createDocumentFragment();
 		}
 		var el = JW.UI._fragment.appendChild(document.createElement(&quot;div&quot;));
-		el.innerHTML = html;
+		var tagName = JW.UI.rtagName.exec(html)[1];
+		var wrap = JW.UI.wrapMap[tagName] || JW.UI.wrapMap._default;
+		el.innerHTML = wrap[1] + html + wrap[2];
+		for (var i = 0; i &lt; wrap[0]; ++i) {
+			el = el.firstChild;
+		}
 		return el.firstChild;
 	}
 };
+
+(function(wrapMap) {
+	wrapMap.optgroup = wrapMap.option;
+	wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
+	wrapMap.th = wrapMap.td;
+})(JW.UI.wrapMap);
 
 jQuery(function() {
 	JW.UI.windowEl = jQuery(window);
