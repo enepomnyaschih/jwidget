@@ -1,5 +1,5 @@
 /*!
-	jWidget Lib 0.10.1
+	jWidget Lib 0.10.2
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
@@ -3087,7 +3087,7 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 		var removeParamsList = [];
 		var addParamsList = [];
 		var removeParams = null;
-		for (iTarget = 0, lTarget = this.target.getLength(); iTarget < lTarget; ++iTarget) {
+		for (var iTarget = 0, lTarget = this.target.getLength(); iTarget < lTarget; ++iTarget) {
 			var value = this.target.get(iTarget);
 			if (removedItems[JW.Array.binarySearch(removedItems, value, this.compare, this.scope) - 1] === value) {
 				if (!removeParams) {
@@ -3111,7 +3111,7 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 		if (iAdds < addedItems.length) {
 			addParamsList.push(new JW.AbstractArray.IndexItems(iTarget + addShift, addedItems.slice(iAdds)));
 		}
-		this.target.splice(removeParamsList, addParamsList);
+		this.target.trySplice(removeParamsList, addParamsList);
 	}
 });
 
@@ -5510,7 +5510,7 @@ JW.extend(JW.AbstractArray.Filterer, JW.AbstractCollection.Filterer, {
 			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
 			var count = this._countFiltered(indexItems.index, indexItems.items.length);
 			var params = new JW.AbstractArray.IndexCount(targetIndex, count);
-			sourceIndex = indexItems.index + indexItems.length;
+			sourceIndex = indexItems.index + indexItems.items.length;
 			targetIndex += count;
 			return params;
 		}, this);
@@ -6031,7 +6031,7 @@ JW.AbstractArray.Merger = function(source, config) {
 		destroyItem: JW.destroy,
 		scope: this
 	}));
-	this.target.addAll(this._getAllItems());
+	this.target.tryAddAll(this._getAllItems());
 };
 
 JW.extend(JW.AbstractArray.Merger, JW.Class, {
@@ -6273,7 +6273,7 @@ JW.AbstractArray.Reverser = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.target = config.target || this.own(source.createEmpty());
-	this.target.addAll(this._reverse(source.getItems()));
+	this.target.tryAddAll(this._reverse(source.getItems()));
 };
 
 JW.extend(JW.AbstractArray.Reverser, JW.Class, {
@@ -13812,7 +13812,7 @@ JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
 	},
 	
 	_onClear: function(params) {
-		this.target.clear();
+		this.target.tryClear();
 	},
 	
 	_onReorder: function(params) {
@@ -14336,7 +14336,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		if (items === undefined) {
 			return;
 		}
-		this.length.set(this.getLength());
+		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this, items));
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
 		return items;

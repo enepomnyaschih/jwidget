@@ -1,5 +1,5 @@
 /*!
-	jWidget UI 0.10.1
+	jWidget UI 0.10.2
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
@@ -25,6 +25,19 @@
  * Main jWidget UI library namespace.
  */
 JW.UI = {
+	// Some code is taken from jQuery. We are not happy with standard jQuery.parseHtml, because it is slow.
+	// We implement an own JW.UI.parseHtml which omits a good bunch of useless manupulations.
+	wrapMap: {
+		option: [ 1, "<select multiple='multiple'>", "</select>" ],
+		thead: [ 1, "<table>", "</table>" ],
+		col: [ 2, "<table><colgroup>", "</colgroup></table>" ],
+		tr: [ 2, "<table><tbody>", "</tbody></table>" ],
+		td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
+		_default: [ 0, "", "" ]
+	},
+	
+	rtagName: /^<([\w:]+)/,
+	
 	/**
 	 * @property {JW.Property} hash `<String>` Current page hash (without leading "#").
 	 * @static
@@ -119,10 +132,21 @@ JW.UI = {
 			JW.UI._fragment = document.createDocumentFragment();
 		}
 		var el = JW.UI._fragment.appendChild(document.createElement("div"));
-		el.innerHTML = html;
+		var tagName = JW.UI.rtagName.exec(html)[1];
+		var wrap = JW.UI.wrapMap[tagName] || JW.UI.wrapMap._default;
+		el.innerHTML = wrap[1] + html + wrap[2];
+		for (var i = 0; i < wrap[0]; ++i) {
+			el = el.firstChild;
+		}
 		return el.firstChild;
 	}
 };
+
+(function(wrapMap) {
+	wrapMap.optgroup = wrapMap.option;
+	wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
+	wrapMap.th = wrapMap.td;
+})(JW.UI.wrapMap);
 
 jQuery(function() {
 	JW.UI.windowEl = jQuery(window);
@@ -1830,7 +1854,7 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
  * @constructor
  * @param {jQuery} el Container DOM element.
  * @param {String} name Radios "name" attribute.
- * @param {JW.Property} property `<Boolean>` Target property.
+ * @param {JW.Property} property `<String>` Target property.
  */
 JW.UI.RadioListener = function(el, name, property) {
 	this._update = JW.inScope(this._update, this);
@@ -1851,7 +1875,7 @@ JW.extend(JW.UI.RadioListener, JW.Class, {
 	 * @property {String} name Radios "name" attribute.
 	 */
 	/**
-	 * @property {JW.Property} property `<Boolean>` Target property.
+	 * @property {JW.Property} property `<String>` Target property.
 	 */
 	
 	destroy: function() {
@@ -1930,10 +1954,13 @@ JW.extend(JW.UI.RadioUpdater, JW.Class, {
 	_update: function() {
 		var value = this.property.get();
 		if (JW.isSet(value)) {
-			this.el.find(this._selector + "[value='" + value + "']").prop("checked", true).change();
-		} else {
-			this.el.find(this._selector + ":checked").prop("checked", false).change();
+			var els = this.el.find(this._selector + "[value='" + value + "']");
+			if (els.length !== 0) {
+				els.prop("checked", true).change();
+				return;
+			}
 		}
+		this.el.find(this._selector + ":checked").prop("checked", false).change();
 	}
 });
 
@@ -2047,7 +2074,7 @@ JW.UI.ValueListener = function(el, property, simple) {
 	this._update();
 	this.el.bind("change", this._update);
 	if (!this.simple) {
-		this._timer = this.own(setInterval(this._update, 100));
+		this._timer = setInterval(this._update, 100);
 	}
 };
 
