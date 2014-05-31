@@ -66,6 +66,9 @@ JW.UI = {
 	 * @param {Object} tpls Templates to add or override.
 	 */
 	template: function(cls, tpls) {
+		tpls = JW.Map.map(tpls, function(html) {
+			return new JW.UI.Component.Template(html);
+		});
 		if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls) {
 			JW.apply(cls.prototype.Templates.prototype, tpls);
 		} else {
@@ -139,6 +142,19 @@ JW.UI = {
 			el = el.firstChild;
 		}
 		return el.firstChild;
+	},
+	
+	hasClass: function(el, cls) {
+		return (" " + el.className + " ").indexOf(cls) !== -1;
+	},
+	
+	addClass: function(el, cls) {
+		if (!el.className) {
+			el.className = cls;
+		}
+		if (!JW.UI.hasClass(el, cls)) {
+			el.className += " " + cls;
+		}
 	}
 };
 

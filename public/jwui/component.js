@@ -592,37 +592,15 @@ JW.extend(JW.UI.Component, JW.Class, {
 			return;
 		}
 		this.replacedEl = replacedEl;
-		var el = JW.UI.parseHtml(this.template || this.templates.main);
-		var els = {};
-		this._elements = els;
+		var output = this.templates.main.createElement();
+		this.el = jQuery(output.root);
+		this._elements = JW.Map.map(output.groups, function(group) {
+			return jQuery(group);
+		}, this);
 		this.allChildren = {};
 		this.children = new JW.ObservableMap();
 		this._replaceables = {};
 		this._arrays = {};
-		var rootClass = JW.String.parseClass(this.rootClass || el.getAttribute("jwclass"));
-		this.rootClass = rootClass;
-		el.removeAttribute("jwclass");
-		var anchorEls = el.querySelectorAll("[jwid]");
-		for (var i = 0, l = anchorEls.length; i < l; ++i) {
-			var anchorEl = anchorEls.item(i);
-			var jwIds = JW.String.trim(anchorEl.getAttribute("jwid")).split(/\s+/);
-			anchorEl.removeAttribute("jwid");
-			for (var j = 0, n = jwIds.length; j < n; ++j) {
-				var jwId = jwIds[j];
-				els[jwId] = els[jwId] || [];
-				els[jwId].push(anchorEl);
-			}
-		}
-		for (var jwId in els) {
-			var anchorEl = jQuery(els[jwId]);
-			els[jwId] = anchorEl;
-			for (var j = 0, l = rootClass.length; j < l; ++j) {
-				anchorEl.addClass(rootClass[j] + "-" + jwId);
-			}
-		}
-		this.el = jQuery(el);
-		this.el.addClass(rootClass.join(" "));
-		els["root"] = this.el;
 		this._childMapper = this.children.createMapper({
 			createItem  : function(child) { return new JW.UI.Component.Child(this, child); },
 			destroyItem : function(componentChild) { componentChild.destroy(); },
@@ -634,7 +612,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			scope      : this
 		});
 		this.beforeRender();
-		var elements = JW.apply({}, els);
+		var elements = JW.apply({}, this._elements);
 		for (var jwId in elements) {
 			var anchorEl = elements[jwId];
 			var jwIdCamel = JW.String.camel(jwId);
@@ -816,10 +794,6 @@ JW.extend(JW.UI.Component, JW.Class, {
 	_getElement: function(el) {
 		return (typeof el === "string") ? this.getElement(el) : (el || this.el);
 	}
-});
-
-JW.UI.template(JW.UI.Component, {
-	main: '<div></div>'
 });
 
 JW.UI.Component.EventParams = function(sender) {

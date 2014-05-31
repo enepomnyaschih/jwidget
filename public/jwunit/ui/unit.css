@@ -3,6 +3,7 @@
 	display:inline-block;
 	height:450px;
 	overflow:auto;
+	vertical-align:top;
 	width:400px;
 }
 

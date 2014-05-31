@@ -13,6 +13,8 @@
 		"jwui/component/array.js",
 		"jwui/component/child.js",
 		"jwui/component/replaceable.js",
+		"jwui/component/template.js",
+		"jwui/component/templateOutput.js",
 		"jwui/inserter.js",
 		"jwui/params.js",
 		"jwui/preloadImage.js",
