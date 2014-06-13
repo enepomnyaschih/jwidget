@@ -19,7 +19,7 @@
 
 JW.UI.Inserter = function(source, el) {
 	JW.UI.Inserter._super.call(this);
-	this.el = el;
+	this.el = el; // jQuery
 	this.len = 0;
 	this.own(source.createInserter({
 		addItem    : this._addItem,
@@ -46,6 +46,6 @@ JW.extend(JW.UI.Inserter, JW.Class, {
 	
 	_removeItem: function(item) {
 		--this.len;
-		item.el.detach();
+		JW.UI.remove(item.el[0]);
 	}
 });

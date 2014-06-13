@@ -36,7 +36,7 @@ JW.extend(JW.Unit.UI.View, JW.UI.Component, {
 	JW.Unit.UI.Broadcaster __broadcaster;
 	*/
 	
-	renderComponent: function() {
+	afterRender: function() {
 		this._super();
 		this._initBroadcaster();
 		this._subscribe();

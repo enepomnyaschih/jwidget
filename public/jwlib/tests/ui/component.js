@@ -39,13 +39,13 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		JW.extend(DocumentView, JW.UI.Component, {
 			// Document document;
 			
-			renderComponent: function() {
+			afterRender: function() {
 				this._super();
 				testCase.output("Create " + this.document.name);
 				this.el.text(this.document.name);
 			},
 			
-			destroyComponent: function() {
+			unrender: function() {
 				testCase.output("Destroy " + this.document.name);
 				this._super();
 			}

@@ -47,7 +47,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 	
 	PADDING_PER_DEPTH : 20,
 	
-	renderComponent: function() {
+	afterRender: function() {
 		this._super();
 		//console.log("Rendering " + this.__unit.__name);
 		this._renderElements();
@@ -55,7 +55,7 @@ JW.extend(JW.Unit.UI.TestUnit, JW.UI.Component, {
 		this._subscribeUnit();
 	},
 	
-	destroyComponent: function() {
+	unrender: function() {
 		this.failEventAttachment.destroy();
 		this.successEventAttachment.destroy();
 		this.startEventAttachment.destroy();

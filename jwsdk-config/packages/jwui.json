@@ -6,7 +6,6 @@
 	
 	"resources" : [
 		"jwui/core.js",
-		"jwui/jquery.patch.js",
 		
 		"jwui/browsers.js",
 		"jwui/component.js",

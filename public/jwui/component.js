@@ -431,28 +431,22 @@
 JW.UI.Component = function(config) {
 	JW.UI.Component._super.call(this);
 	config = config || {};
-	this.rootClass = config.rootClass;
-	this.template = config.template;
+	this.rootClass = config.rootClass; // String
+	this.template = config.template; // String
 	this.parent = null;
 	this.wasAfterAppend = false;
-	this.destroyed = false;
 	this.el = null;
-	this.replacedEl = null;
 	this.children = null;
-	this.allChildren = null;
-	this._elements = null;
-	this._childMapper = null;
-	this._childInserter = null;
-	this._replaceables = null;
-	this._arrays = null;
+	this._elements = null; // Map<jQuery>
+	this._childMapper = null; // JW.ObservableMap.Mapper<JW.UI.Component, JW.UI.Component.Child>
+	this._childInserter = null; // JW.ObservableMap.Inserter<JW.UI.Component.Child>
+	this._replaceables = null; // Set<JW.UI.Component.Replaceable>
+	this._arrays = null; // Set<JW.UI.Component.Array>
 },
 
 JW.extend(JW.UI.Component, JW.Class, {
 	/**
 	 * @property {boolean} wasAfterAppend Was #afterAppend called?
-	 */
-	/**
-	 * @property {boolean} destroyed Was component destroyed?
 	 */
 	/**
 	 * @property {Object} templates Map from template ID to template string. Templates are defined by JW.UI.template method.
@@ -464,42 +458,20 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @property {jQuery} el Root element. Field is available from component rendering beginning.
 	 */
 	/**
-	 * @property {jQuery} replacedEl
-	 * Element in place of which was this component rendered. Assigned automatically at the moment of component
-	 * adding into #children map of parent component. Field is available from component rendering beginning.
-	 */
-	/**
 	 * @property {JW.ObservableMap} children
 	 * `<JW.UI.Component>` (mutable) Named child components. Use this map to add child components in place of
 	 * elements with corresponding `jwid`. Field is available from component rendering beginning.
 	 */
-	/**
-	 * @property {Object} allChildren
-	 * Set of all child components (both named and arrays). Field is available from component rendering beginning.
-	 */
-	/*
-	Optional
-	String rootClass;
-	String template;
-	
-	Fields
-	Map<Element> _elements;
-	JW.ObservableMap.Mapper<JW.UI.Component, JW.UI.Component.Child> _childMapper;
-	JW.ObservableMap.Inserter<JW.UI.Component.Child> _childInserter;
-	Set<JW.UI.Component.Replaceable> _replaceables;
-	Set<JW.UI.Component.Array> _arrays;
-	*/
 	
 	destroy: function() {
 		if (this.parent) {
 			throw new Error("JW.UI.Component.destroy must be used for root and detached components only");
 		}
-		if (this.destroyed) {
-			return;
+		if (this.wasAfterAppend) {
+			this.releaseDom();
 		}
-		this.destroyed = true;
 		if (this.el) {
-			this.el.detach();
+			JW.UI.remove(this.el[0]);
 			JW.Set.each(this._arrays, JW.destroy);
 			this._arrays = null;
 			JW.Set.each(this._replaceables, JW.destroy);
@@ -510,16 +482,15 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this._childMapper.destroy();
 			this._childMapper = null;
 			
-			this.destroyComponent();
+			this.unrender();
 			
 			this.children.destroy();
 			this.children = null;
 			this.el.remove();
 		}
-		this.allChildren = null;
 		this._elements = null;
 		this.el = null;
-		this.destroyObject();
+		this.afterDestroy();
 		this._super();
 	},
 	
@@ -542,7 +513,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 *
 	 * @returns {void}
 	 */
-	renderComponent: function() {},
+	afterRender: function() {},
 	
 	/**
 	 * Component life stage method. Called after first-time component appearing in HTML DOM and UI components tree.
@@ -553,27 +524,29 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	afterAppend: function() {},
 	
+	releaseDom: function() {},
+	
 	/**
 	 * Component life stage method. Called during component destruction before {@link #destroyObject} method call.
 	 * Everything that was performed during component
 	 * rendering should be reverted here. All child component arrays are already removed by framework
 	 * before this method call, but the components themselves are not destroyed. You must destroy them explicitly.
-	 * Unlike arrays, named child component will be destroyed automatically after #destroyComponent method, so you must
+	 * Unlike arrays, named child component will be destroyed automatically after #unrender method, so you must
 	 * remove them from #children map if you want to keep them alive. <code>this._super()</code> method call is performed
 	 * at last line of method.
 	 *
 	 * @returns {void}
 	 */
-	destroyComponent: function() {},
+	unrender: function() {},
 	
 	/**
-	 * Component life stage method. Called during component destruction after {@link #destroyComponent} method call.
+	 * Component life stage method. Called during component destruction after {@link #unrender} method call.
 	 * Everything that was performed during component construction should be reverted here.
 	 * <code>this._super()</code> method call is performed at last line of method.
 	 *
 	 * @returns {void}
 	 */
-	destroyObject: function() {},
+	afterDestroy: function() {},
 	
 	/**
 	 * Renders component. Call this method to initialize references to all elements of component and create
@@ -584,20 +557,15 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 *
 	 * Feel free to call component rendering multiple times: it will be rendered only once.
 	 *
-	 * @param {jQuery} [replacedEl] Element on the place of which render this component (if exists).
 	 * @returns {void}
 	 */
-	render: function(replacedEl) {
+	render: function() {
 		if (this.el) {
 			return;
 		}
-		this.replacedEl = replacedEl;
 		var output = this.templates.main.createElement();
 		this.el = jQuery(output.root);
-		this._elements = JW.Map.map(output.groups, function(group) {
-			return jQuery(group);
-		}, this);
-		this.allChildren = {};
+		this._elements = JW.Map.map(output.groups, jQuery);
 		this.children = new JW.ObservableMap();
 		this._replaceables = {};
 		this._arrays = {};
@@ -614,11 +582,10 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.beforeRender();
 		var elements = JW.apply({}, this._elements);
 		for (var jwId in elements) {
-			var anchorEl = elements[jwId];
 			var jwIdCamel = JW.String.camel(jwId);
 			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
 			if (typeof this[renderMethodName] === "function") {
-				var result = this[renderMethodName](anchorEl);
+				var result = this[renderMethodName](elements[jwId]);
 				if (jwId === "root") {
 					if (result instanceof JW.AbstractArray) {
 						this.addArray(result, jwId);
@@ -636,19 +603,19 @@ JW.extend(JW.UI.Component, JW.Class, {
 				}
 			}
 		}
-		this.renderComponent();
+		this.afterRender();
 	},
 	
 	/**
 	 * Render component into specified element. Use it to render root component only: its children must be rendered
 	 * using #children or #addArray stuff.
 	 *
-	 * @param {jQuery/string} [el] Element to render into, or its jQuery-selector.
+	 * @param {DOMElement} [el] Element to render into.
 	 * @returns {void}
 	 */
 	renderTo: function(el) {
 		this.render();
-		JW.UI.insert(jQuery(el)[0], this.el[0]);
+		jQuery(el)[0].appendChild(this.el[0]);
 		this._afterAppend();
 	},
 	
@@ -656,12 +623,12 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * Render component in place of specified element. Use it to render root component only: its children must be rendered
 	 * using #children or #addArray stuff.
 	 *
-	 * @param {jQuery/string} [el] Element to render in place of, or its jQuery-selector.
+	 * @param {DOMElement} [el] Element to render in place of.
 	 * @returns {void}
 	 */
 	renderAs: function(el) {
-		this.render(el);
-		jQuery(el).replaceBy(this.el, true);
+		this.render();
+		JW.UI.replace(jQuery(el)[0], this.el[0], true);
 		this._afterAppend();
 	},
 	
@@ -675,7 +642,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		if (this.parent) {
 			throw new Error("JW.UI.Component.remove must be used for root components only");
 		}
-		this.el.detach();
+		JW.UI.remove(this.el[0]);
 	},
 	
 	/**
@@ -685,21 +652,6 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	getElement: function(id) {
 		return this._elements[id];
-	},
-	
-	/**
-	 * Register a new element in component.
-	 * 
-	 * Method is used if HTML content of component is not fixed. For example, you can register a new element on
-	 * component inheritance if you don't want to override HTML template from scratch.
-	 * You can use an added element for various purposes, for example, to add child components.
-	 * 
-	 * @param {jQuery} el Element.
-	 * @param {string} jwid `jwid` to assign.
-	 * @returns {void}
-	 */
-	setElement: function(el, id) {
-		this._elements[id] = el;
 	},
 	
 	/**
@@ -762,7 +714,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @returns {JW.UI.Component.Array} Child component array wrapper.
 	 */
 	addArray: function(source, el) {
-		return new JW.UI.Component.Array(this, source, this._getElement(el));
+		return new JW.UI.Component.Array(this, source, (el === undefined) ? this.el :
+			(typeof el === "string") ? this._elements[el] : jQuery(el));
 	},
 	
 	_afterAppend: function() {
@@ -772,27 +725,26 @@ JW.extend(JW.UI.Component, JW.Class, {
 		if (this.parent && !this.parent.wasAfterAppend) {
 			return;
 		}
-		if (!this.parent && !this.el.parents("body").length) {
+		if (!this.parent && !JW.UI.inDom(this.el[0])) {
 			return;
 		}
 		this.wasAfterAppend = true;
 		this.afterAppend();
-		JW.Set.each(this.allChildren, JW.byMethod("_afterAppend"));
+		this.children.each(this._childAfterAppend);
+		JW.Array.each(this._arrays, this._childAfterAppend);
 	},
 	
-	_initChild: function(component, replacedEl) {
-		component.render(replacedEl);
+	_initChild: function(component) {
+		component.render();
 		component.parent = this;
-		JW.Set.add(this.allChildren, component);
 	},
 	
 	_doneChild: function(component) {
-		JW.Set.remove(this.allChildren, component);
 		component.parent = null;
 	},
 	
-	_getElement: function(el) {
-		return (typeof el === "string") ? this.getElement(el) : (el || this.el);
+	_childAfterAppend: function(child) {
+		child._afterAppend();
 	}
 });
 

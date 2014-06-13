@@ -128,6 +128,12 @@ JW.UI = {
 		}
 	},
 	
+	remove: function(el) {
+		if (el.parentNode) {
+			el.parentNode.removeChild(el);
+		}
+	},
+	
 	parseHtml: function(html) {
 		if (JW.UI._fragment) {
 			JW.UI._fragment.textContent = "";
@@ -154,6 +160,32 @@ JW.UI = {
 		}
 		if (!JW.UI.hasClass(el, cls)) {
 			el.className += " " + cls;
+		}
+	},
+	
+	inDom: function(el) {
+		while (el) {
+			if (el.tagName.toLowerCase() === "body") {
+				return true;
+			}
+			el = el.parentNode;
+		}
+		return false;
+	},
+	
+	replace: function(removeEl, insertEl, attrs) {
+		var parentEl = removeEl.parentNode;
+		if (!parentEl) {
+			return;
+		}
+		var id = attrs ? removeEl.getAttribute("id") : null,
+			cls = attrs ? removeEl.getAttribute("class") : null;
+		parentEl.replaceChild(insertEl, removeEl);
+		if (id) {
+			insertEl.setAttribute("id", id);
+		}
+		if (cls) {
+			JW.UI.addClass(insertEl, cls);
 		}
 	}
 };
