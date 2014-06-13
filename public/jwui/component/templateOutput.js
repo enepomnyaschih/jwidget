@@ -17,6 +17,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class JW.UI.Component.TemplateOutput
+ * 
+ * Result of JW.UI.Component.Template#createElement method. HTML template rendering output.
+ * 
+ * @extends JW.Class
+ * @constructor
+ * @param {DOMElement} root The rendered element.
+ * @param {Object} root `<Array<DOMElement>>` Map from `jwid` to the element.
+ */
 JW.UI.Component.TemplateOutput = function(root, groups) {
 	JW.UI.Component.TemplateOutput._super.call(this);
 	this.root = root;
@@ -24,8 +34,10 @@ JW.UI.Component.TemplateOutput = function(root, groups) {
 };
 
 JW.extend(JW.UI.Component.TemplateOutput, JW.Class, {
-	/*
-	DOMElement root;
-	Map<Array<DOMElement>> groups;
-	*/
+	/**
+	 * @property {DOMElement} root The rendered element.
+	 */
+	/**
+	 * @property {Object} root `<Array<DOMElement>>` Map from `jwid` to the element.
+	 */
 });

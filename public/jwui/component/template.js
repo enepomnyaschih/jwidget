@@ -17,22 +17,29 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class JW.UI.Component.Template
+ * 
+ * HTML template. This class compiles the input template only once, and uses element cloning further on to
+ * optimize rendering performance.
+ * 
+ * @extends JW.Class
+ * @constructor
+ * @param {String} html Input HTML.
+ */
 JW.UI.Component.Template = function(html) {
 	JW.UI.Component.Template._super.call(this);
-	this.html = html;
-	this.mirror = null;
-	this.prefixes = null;
-	this.groups = null;
+	this.html = html; // String
+	this.mirror = null; // DOMElement
+	this.prefixes = null; // Array<String>
+	this.groups = null; // Map<String, Array<Array<int>>>
 };
 
 JW.extend(JW.UI.Component.Template, JW.Class, {
-	/*
-	String html;
-	DOMElement mirror;
-	Array<String> prefixes;
-	Map<String, Array<Array<int>>> groups;
-	*/
-	
+	/**
+	 * Render the template.
+	 * @returns {JW.UI.Component.TemplateOutput} Template rendering output.
+	 */
 	createElement: function() {
 		this._compile();
 		var root = this.mirror.cloneNode(true);

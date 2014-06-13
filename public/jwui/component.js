@@ -449,7 +449,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @property {boolean} wasAfterAppend Was #afterAppend called?
 	 */
 	/**
-	 * @property {Object} templates Map from template ID to template string. Templates are defined by JW.UI.template method.
+	 * @property {Object} templates `<JW.UI.Component.Template>` Map from template ID to the template. Templates are defined by JW.UI.template method.
 	 */
 	/**
 	 * @property {JW.UI.Component} parent Parent component. Field is available from component rendering beginning.
