@@ -11,6 +11,8 @@
 		"jwui/component.js",
 		"jwui/component/array.js",
 		"jwui/component/child.js",
+		"jwui/component/childInserter.js",
+		"jwui/component/children.js",
 		"jwui/component/replaceable.js",
 		"jwui/component/template.js",
 		"jwui/component/templateOutput.js",

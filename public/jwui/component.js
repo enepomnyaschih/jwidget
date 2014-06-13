@@ -438,8 +438,6 @@ JW.UI.Component = function(config) {
 	this.el = null;
 	this.children = null;
 	this._elements = null; // Map<jQuery>
-	this._childMapper = null; // JW.ObservableMap.Mapper<JW.UI.Component, JW.UI.Component.Child>
-	this._childInserter = null; // JW.ObservableMap.Inserter<JW.UI.Component.Child>
 	this._replaceables = null; // Set<JW.UI.Component.Replaceable>
 	this._arrays = null; // Set<JW.UI.Component.Array>
 },
@@ -458,7 +456,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @property {jQuery} el Root element. Field is available from component rendering beginning.
 	 */
 	/**
-	 * @property {JW.ObservableMap} children
+	 * @property {JW.AbstractMap} children
 	 * `<JW.UI.Component>` (mutable) Named child components. Use this map to add child components in place of
 	 * elements with corresponding `jwid`. Field is available from component rendering beginning.
 	 */
@@ -477,11 +475,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 			JW.Set.each(this._replaceables, JW.destroy);
 			this._replaceables = null;
 			
-			this._childInserter.destroy();
-			this._childInserter = null;
-			this._childMapper.destroy();
-			this._childMapper = null;
-			
+			this.children.unrender();
 			this.unrender();
 			
 			this.children.destroy();
@@ -566,19 +560,9 @@ JW.extend(JW.UI.Component, JW.Class, {
 		var output = this.templates.main.createElement();
 		this.el = jQuery(output.root);
 		this._elements = JW.Map.map(output.groups, jQuery);
-		this.children = new JW.ObservableMap();
+		this.children = new JW.UI.Component.Children(this);
 		this._replaceables = {};
 		this._arrays = {};
-		this._childMapper = this.children.createMapper({
-			createItem  : function(child) { return new JW.UI.Component.Child(this, child); },
-			destroyItem : function(componentChild) { componentChild.destroy(); },
-			scope       : this
-		});
-		this._childInserter = this._childMapper.target.createInserter({
-			addItem    : function(componentChild, key) { componentChild.attach(key); },
-			removeItem : function(key, componentChild) { componentChild.detach(); },
-			scope      : this
-		});
 		this.beforeRender();
 		var elements = JW.apply({}, this._elements);
 		for (var jwId in elements) {
