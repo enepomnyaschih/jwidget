@@ -31,7 +31,7 @@
         },
         
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             $("html").addClass("mt-html");
             $("body").addClass("mt-body");
@@ -78,7 +78,7 @@ CSS-класс), можно сделать это явно с помощью м�
 методу `render<ChildId>`. Делается это с помощью оповещающего словаря {@link JW.UI.Component#children children}:
 
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#set set}(this.{@link JW.Class#own own}(new mt.TweetFeed(this.data)), "tweets");
         },

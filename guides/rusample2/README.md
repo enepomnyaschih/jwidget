@@ -234,10 +234,10 @@ JavaScript или другие значения.**
 Запустив приложение в браузере, мы увидим то, что от нас и требовалось.
 
 Рассмотрим еще один способ добавления списка дочерних компонентов, без использования метода `render<ChildId>`.
-Удалим метод renderTweets и перегрузим метод {@link JW.UI.Component#renderComponent renderComponent}:
+Удалим метод renderTweets и перегрузим метод {@link JW.UI.Component#afterRender afterRender}:
 
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             var tweetViews = this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);

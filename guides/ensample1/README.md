@@ -252,7 +252,7 @@ As you can see, our component has a structure but doesn't have any data.
 Let's bind the component elements to the data. jWidget library doesn't provide any magic HTML syntax for this.
 So, the template won't be changed, but we'll add some code in JS. The real tool that jWidget provides for us
 is the direct and fast access to [jQuery-wrappers](http://api.jquery.com) of all HTML elements, which have
-"jwid" attribute defined. You can access these elements inside method {@link JW.UI.Component#renderComponent}
+"jwid" attribute defined. You can access these elements inside method {@link JW.UI.Component#afterRender}
 via method {@link JW.UI.Component#getElement}:
 
 **public/mt/tweetview/tweetview.js**
@@ -268,7 +268,7 @@ via method {@link JW.UI.Component#getElement}:
         */
         
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#getElement getElement}("avatar").css("background-image", "url(" + this.tweetData.avatarUrl48 + ")");
             var timeAgo = new Date().getTime() - this.tweetData.time;

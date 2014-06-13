@@ -29,7 +29,7 @@ First, let's implement mt.Application class, which will be root view of our appl
         },
         
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             $("html").addClass("mt-html");
             $("body").addClass("mt-body");
@@ -74,7 +74,7 @@ Argument "el" is optional to pass, but recommended. Some components may use
 `render<ChildId>` method definition. You can do it using {@link JW.UI.Component#children children} observable map:
 
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#set set}(this.{@link JW.Class#own own}(new mt.TweetFeed(this.data)), "tweets");
         },

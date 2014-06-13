@@ -255,7 +255,7 @@ CSS-класс каждого элемента, для которого вы о�
 не дает для этого никакого магического HTML-синтаксиса. Шаблон остается таким, как прежде, меняется лишь код.
 Что реально дает нам jWidget, так это прямой и быстрый доступ к [jQuery-оберткам](http://api.jquery.com) над
 HTML-элементами, для которых мы определили атрибут jwid. Этот доступ предоставляется в
-методе {@link JW.UI.Component#renderComponent} через метод {@link JW.UI.Component#getElement}:
+методе {@link JW.UI.Component#afterRender} через метод {@link JW.UI.Component#getElement}:
 
 **public/mt/tweetview/tweetview.js**
 
@@ -270,7 +270,7 @@ HTML-элементами, для которых мы определили ат�
         */
         
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#getElement getElement}("avatar").css("background-image", "url(" + this.tweetData.avatarUrl48 + ")");
             var timeAgo = new Date().getTime() - this.tweetData.time;

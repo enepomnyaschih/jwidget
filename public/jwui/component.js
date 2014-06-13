@@ -50,7 +50,7 @@
  *         // String link;
  *         
  *         // override
- *         {@link #renderComponent renderComponent}: function() {
+ *         {@link #afterRender afterRender}: function() {
  *             this.{@link JW.Class#method-_super _super}();
  *             this.{@link #getElement getElement}("hello-message").text(this.message);
  *             this.{@link #getElement getElement}("link").attr("href", this.link);
@@ -101,7 +101,7 @@
  * There are 4 ways to add a child component:
  * 
  * - Add a child component into #children map with a key equal to `jwid` of element to replace with the child
- * component. Usually it is done in #renderComponent method.
+ * component. Usually it is done in #afterRender method.
  * - Add an easily replaceable child component using #addReplaceable method. Pass JW.Property there and
  * the framework will provide the continuous synchronization with this property during application running.
  * - Add an array of child components into some element using #addArray method. If the passed array
@@ -160,7 +160,7 @@
  * 
  * In this case, the element of HTML template with such `jwid` will return back to its original state.
  *
- * You can destroy child components freely in {@link #destroyComponent} method of parent component. In this method,
+ * You can destroy child components freely in {@link #unrender} method of parent component. In this method,
  * child components are already removed from the parent by the framework and are ready to be destroyed.
  *
  * Also, you can use aggregation method {@link JW.Class#own} to destroy the child component.
@@ -170,7 +170,7 @@
  * JW.UI.Component.Array. If you destroy it, the array will be removed from parent component:
  * 
  *         // override
- *         {@link #renderComponent renderComponent}: function() {
+ *         {@link #afterRender afterRender}: function() {
  *             this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
  *                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
  *                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
@@ -184,11 +184,11 @@
  *             this._labelArray.{@link JW.Class#destroy destroy}();
  *         }
  * 
- * **Notice:** All arrays are already destroyed before #destroyComponent method call, i.e. all such child components
+ * **Notice:** All arrays are already destroyed before #unrender method call, i.e. all such child components
  * are already removed from a parent. But the components themselves are still not destroyed. You must destroy a
  * corresponding sychronizer for this usually:
  * 
- *         {@link #destroyComponent destroyComponent}: function() {
+ *         {@link #unrender unrender}: function() {
  *             this._labelMapper.{@link JW.Class#destroy destroy}(); // destroys all label views
  *             this.{@link JW.Class#method-_super _super}();
  *         }
@@ -355,19 +355,21 @@
  * of method.
  * 1. All <code>render&lt;ChildId&gt;</code> methods are called for HTML template elements, i.e. child component
  * creation is performed.
- * 1. Method #renderComponent is called. You should assign all elements' attributes here, create child components,
+ * 1. Method #afterRender is called. You should assign all elements' attributes here, create child components,
  * bind to events and fill component with interactivity. <code>this._super()</code> call is performed at first line of
  * method.
  * 1. Method #afterAppend is called after first-time component appearing in HTML DOM and UI components tree.
  * Component layouting should be performed here (calculate element sizes).
  * Component rendering is finished here. <code>this._super()</code> call is performed at first line of method.
- * 1. Method #destroyComponent is called during component destruction. Everything that was performed during component
- * rendering, i.e. on steps 2-5, should be reverted here. All child components are already removed by framework
+ * 1. Method #releaseDom is called during component destruction. Everything that was performed in #afterAppend method,
+ * i.e. on step 5, should be reverted here. <code>this._super()</code> method call is performed at last line of method.
+ * 1. Method #unrender is called during component destruction. Everything that was performed during component
+ * rendering, i.e. on steps 2-4, should be reverted here. All child components are already removed by framework
  * before this method call, but the components themselves are not destroyed. You must destroy them explicitly unless
  * you used {@link JW.Class#own own} method to aggregate them.
  * <code>this._super()</code> method call is performed at last line of method.
- * 1. Method #destroyObject is called during component destruction. Everything that was performed during component
- * construction, i.e. on step 1, should be reverted here. <code>this._super()</code> method call is performed
+ * 1. Method #afterDestroy is called during component destruction. Everything that was performed in component
+ * constructor, i.e. on step 1, should be reverted here. <code>this._super()</code> method call is performed
  * at last line of method.
  * 
  * ### Intergration with jWidget SDK
@@ -394,7 +396,7 @@
  *         // String link;
  *         
  *         // override
- *         {@link #renderComponent renderComponent}: function() {
+ *         {@link #afterRender afterRender}: function() {
  *             this.{@link JW.Class#method-_super _super}();
  *             this.{@link #getElement getElement}("hello-message").text(this.message);
  *             this.{@link #getElement getElement}("link").attr("href", this.link);
@@ -491,7 +493,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	/**
 	 * Component life stage method. Called during component rendering after HTML template parsing and initialization
 	 * of references to all elements of the template. Called before `render<ChildId>` methods and
-	 * {@link #renderComponent} method. It is convenient to perform some preliminary action here before child
+	 * {@link #afterRender} method. It is convenient to perform some preliminary action here before child
 	 * components creation. But you are already able to create child components here. <code>this._super()</code>
 	 * call is performed at first line of method.
 	 *
@@ -521,7 +523,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	releaseDom: function() {},
 	
 	/**
-	 * Component life stage method. Called during component destruction before {@link #destroyObject} method call.
+	 * Component life stage method. Called during component destruction before {@link #afterDestroy} method call.
 	 * Everything that was performed during component
 	 * rendering should be reverted here. All child component arrays are already removed by framework
 	 * before this method call, but the components themselves are not destroyed. You must destroy them explicitly.
@@ -594,7 +596,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * Render component into specified element. Use it to render root component only: its children must be rendered
 	 * using #children or #addArray stuff.
 	 *
-	 * @param {DOMElement} [el] Element to render into.
+	 * @param {jQuery} [el] Element to render into.
 	 * @returns {void}
 	 */
 	renderTo: function(el) {
@@ -607,7 +609,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * Render component in place of specified element. Use it to render root component only: its children must be rendered
 	 * using #children or #addArray stuff.
 	 *
-	 * @param {DOMElement} [el] Element to render in place of.
+	 * @param {jQuery} [el] Element to render in place of.
 	 * @returns {void}
 	 */
 	renderAs: function(el) {
@@ -663,9 +665,9 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * Method returns an instance of JW.UI.Component.Replaceable. This object is purposed for replaceable child
 	 * removal from parent component. Use {@link JW.Class#destroy destroy} method to do this.
 	 * Also, the replaceable will be removed from parent component on parent component destruction right
-	 * before #destroyComponent method call.
+	 * before #unrender method call.
 	 * But notice that child component inside this property won't be destroyed automatically.
-	 * Usually it can be done by corresponding JW.Mapper destruction in #destroyComponent method.
+	 * Usually it can be done by corresponding JW.Mapper destruction in #unrender method.
 	 *
 	 * @param {JW.Property} component `<JW.UI.Component>` Child component property.
 	 * @param {String} id jwId of element to replace.
@@ -687,9 +689,9 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * Method returns an instance of JW.UI.Component.Array. This object is purposed for child component array
 	 * removal from parent component. Use {@link JW.Class#destroy destroy} method to do this.
 	 * Also, the array will be removed from parent component on parent component destruction right
-	 * before #destroyComponent method call.
+	 * before #unrender method call.
 	 * But notice that child components inside this array won't be destroyed automatically.
-	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper destruction in #destroyComponent method.
+	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper destruction in #unrender method.
 	 *
 	 * @param {JW.AbstractArray} components Child component array.
 	 * @param {jQuery/string} [el]

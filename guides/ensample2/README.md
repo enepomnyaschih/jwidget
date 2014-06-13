@@ -226,10 +226,10 @@ And prepare new test data.
 If we'll execute the application in browser, we'll see what was required.
 
 Let's review one more way of child components adding, without `render<ChildId>` method definition.
-let's remove renderTweets method and override {@link JW.UI.Component#renderComponent renderComponent} method instead:
+let's remove renderTweets method and override {@link JW.UI.Component#afterRender afterRender} method instead:
 
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             var tweetViews = this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
