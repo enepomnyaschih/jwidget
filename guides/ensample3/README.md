@@ -62,13 +62,10 @@ you can render it explicitly using {@link JW.UI.Component#render render} method:
 
         renderTweets: function(el) {
             var tweetFeed = this.{@link JW.Class#own own}(new mt.TweetFeed(this.data));
-            tweetFeed.{@link JW.UI.Component#render render}(el);
+            tweetFeed.{@link JW.UI.Component#render render}();
             tweetFeed.{@link JW.UI.Component#el el}.addClass("my-extra-class");
             return tweetFeed;
         },
-
-Argument "el" is optional to pass, but recommended. Some components may use
-{@link JW.UI.Component#replacedEl replacedEl} field to render their content - "el" argument determines its value.
 
 **Second**, like in the previous parts, we must find a way to add a child component without
 `render<ChildId>` method definition. You can do it using {@link JW.UI.Component#children children} observable map:

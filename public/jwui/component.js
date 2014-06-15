@@ -518,6 +518,12 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	afterAppend: function() {},
 	
+	/**
+	 * Component life stage method. Called during component destruction before {@link #unrender} method call.
+	 * Everything that was performed in #afterAppend method should be reverted here.
+	 *
+	 * @returns {void}
+	 */
 	releaseDom: function() {},
 	
 	/**

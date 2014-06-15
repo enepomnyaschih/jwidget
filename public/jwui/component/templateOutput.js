@@ -25,7 +25,7 @@
  * @extends JW.Class
  * @constructor
  * @param {DOMElement} root The rendered element.
- * @param {Object} root `<Array<DOMElement>>` Map from `jwid` to the element.
+ * @param {Object} groups `<Array<DOMElement>>` Map from jwid to the elements with this jwid.
  */
 JW.UI.Component.TemplateOutput = function(root, groups) {
 	JW.UI.Component.TemplateOutput._super.call(this);
@@ -38,6 +38,6 @@ JW.extend(JW.UI.Component.TemplateOutput, JW.Class, {
 	 * @property {DOMElement} root The rendered element.
 	 */
 	/**
-	 * @property {Object} root `<Array<DOMElement>>` Map from `jwid` to the element.
+	 * @property {Object} groups `<Array<DOMElement>>` Map from jwid to the elements with this jwid.
 	 */
 });
