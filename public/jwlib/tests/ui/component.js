@@ -218,5 +218,40 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		} catch (e) {
 			throw new Error("Tag " + tag + " is not wrapped correctly: " + e);
 		}
+	},
+	
+	testUsingElement: function() {
+		var testCase = this;
+		var root = JW.UI.parseHtml(
+			'<div jwclass="my-component">' +
+				'<div jwid="first">' +
+					'<div jwid="second"></div>' +
+				'</div>' +
+			'</div>');
+		document.body.appendChild(root);
+		var wasAfterAppend = false;
+		var Component = function() {
+			Component._super.call(this);
+		};
+		JW.extend(Component, JW.UI.Component, {
+			renderRoot: function(el) {
+				testCase.assertStrictEqual("my-component", JW.String.trim(el.attr("class")));
+			},
+			renderFirst: function(el) {
+				testCase.assertStrictEqual("my-component-first", JW.String.trim(el.attr("class")));
+			},
+			renderSecond: function(el) {
+				testCase.assertStrictEqual("my-component-second", JW.String.trim(el.attr("class")));
+			},
+			afterAppend: function() {
+				this._super();
+				wasAfterAppend = true;
+			}
+		});
+		var component = new Component().using(root).render();
+		this.assertStrictEqual(root, component.el[0]);
+		this.assertTrue(wasAfterAppend);
+		component.destroy();
+		this.assertStrictEqual(0, jQuery("#my-component").length);
 	}
 });

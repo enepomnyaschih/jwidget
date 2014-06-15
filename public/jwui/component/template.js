@@ -31,11 +31,12 @@ JW.UI.Component.Template = function(html) {
 	JW.UI.Component.Template._super.call(this);
 	this.html = html; // String
 	this.mirror = null; // DOMElement
-	this.prefixes = null; // Array<String>
 	this.groups = null; // Map<String, Array<Array<int>>>
 };
 
-JW.extend(JW.UI.Component.Template, JW.Class, {
+JW.extend(JW.UI.Component.Template, JW.UI.Component.AbstractTemplate, {
+	requiresAfterAppend: false,
+	
 	/**
 	 * Render the template.
 	 * @returns {JW.UI.Component.TemplateOutput} Template rendering output.
@@ -66,42 +67,13 @@ JW.extend(JW.UI.Component.Template, JW.Class, {
 			return;
 		}
 		this.mirror = JW.UI.parseHtml(this.html);
-		this.prefixes = JW.String.parseClass(this.mirror.getAttribute("jwclass"));
-		this.mirror.removeAttribute("jwclass");
-		for (var i = 0, l = this.prefixes.length; i < l; ++i) {
-			JW.UI.addClass(this.mirror, this.prefixes[i]);
-		}
 		this.groups = {};
-		var path = [];
-		this._walk(this.mirror, path, function(el, path) {
-			var ids = JW.String.parseClass(el.getAttribute("jwid"));
-			el.removeAttribute("jwid");
-			for (var i = 0, l = ids.length; i < l; ++i) {
-				var id = ids[i];
-				for (var j = 0, n = this.prefixes.length; j < n; ++j) {
-					JW.UI.addClass(el, this.prefixes[j] + "-" + id);
-				}
-				this.groups[id] = this.groups[id] || [];
-				this.groups[id].push(path.concat());
-			}
-		}, this);
-		this.groups["root"] = this.groups["root"] || [];
-		this.groups["root"].push([]);
+		this._compileAttributes(this.mirror);
 	},
 	
-	_walk: function(el, path, callback, scope) {
-		if (el.nodeType !== 1) { // ELEMENT
-			return;
-		}
-		callback.call(scope, el, path);
-		var index = path.length;
-		path.push(0);
-		var childNodes = el.childNodes;
-		for (var i = 0, l = childNodes.length; i < l; ++i) {
-			path[index] = i;
-			this._walk(childNodes[i], path, callback, scope);
-		}
-		path.pop();
+	_addElement: function(id, el, path) {
+		this.groups[id] = this.groups[id] || [];
+		this.groups[id].push(path.concat());
 	}
 });
 

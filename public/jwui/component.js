@@ -436,7 +436,7 @@ JW.UI.Component = function() {
 	this.wasAfterAppend = false;
 	this.el = null;
 	this.children = null;
-	this._template = this.templates.main; // JW.UI.Component.Template
+	this._template = this.templates.main;
 	this._elements = null; // Map<jQuery>
 	this._replaceables = null; // Set<JW.UI.Component.Replaceable>
 	this._arrays = null; // Set<JW.UI.Component.Array>
@@ -549,6 +549,29 @@ JW.extend(JW.UI.Component, JW.Class, {
 	afterDestroy: function() {},
 	
 	/**
+	 * Selects component rendering strategy. By default, component is rendered outside of DOM based on `main` HTML
+	 * template specified by JW.UI.template method. You can change this by passing one of the next values
+	 * into #using method of the component:
+	 *
+	 * - JW.UI.Component.Template or String - use this template explicitly for rendering
+	 * - DOMElement or jQuery - build component on top of existing DOM element. Special attributes `jwclass` and `jwid`
+	 * will be processed the usual way
+	 *
+	 * **Disclaimer:** We strongly encourage you to use standard rendering strategy via JW.UI.template, or at least
+	 * create JW.UI.Component.Template instances to store your HTML templates. They work 3 times faster compared to
+	 * raw HTML rendering thanks to preliminary compilation and node cloning method.
+	 *
+	 * @param {Object} value Template or element to use for component rendering.
+	 * @returns {JW.UI.Component} this
+	 */
+	using: function(value) {
+		this._template =
+			(typeof value === "string") ? new JW.UI.Component.Template(value) :
+			(value instanceof JW.UI.Component.Template) ? value : new JW.UI.Component.DomTemplate(value);
+		return this;
+	},
+	
+	/**
 	 * Renders component. Call this method to initialize references to all elements of component and create
 	 * child components. This method is called automatically in next cases:
 	 * 
@@ -557,7 +580,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 *
 	 * Feel free to call component rendering multiple times: it will be rendered only once.
 	 *
-	 * @returns {void}
+	 * @returns {JW.UI.Component} this
 	 */
 	render: function() {
 		if (this.el) {
@@ -594,6 +617,10 @@ JW.extend(JW.UI.Component, JW.Class, {
 			}
 		}
 		this.afterRender();
+		if (this._template.requiresAfterAppend) {
+			this._afterAppend();
+		}
+		return this;
 	},
 	
 	/**
@@ -601,12 +628,13 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * using #children or #addArray stuff.
 	 *
 	 * @param {jQuery} [el] Element to render into.
-	 * @returns {void}
+	 * @returns {JW.UI.Component} this
 	 */
 	renderTo: function(el) {
 		this.render();
 		jQuery(el)[0].appendChild(this.el[0]);
 		this._afterAppend();
+		return this;
 	},
 	
 	/**
@@ -614,25 +642,27 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * using #children or #addArray stuff.
 	 *
 	 * @param {jQuery} [el] Element to render in place of.
-	 * @returns {void}
+	 * @returns {JW.UI.Component} this
 	 */
 	renderAs: function(el) {
 		this.render();
 		JW.UI.replace(jQuery(el)[0], this.el[0], true);
 		this._afterAppend();
+		return this;
 	},
 	
 	/**
 	 * Remove component from DOM. Can be used for root component only (which was added via #renderTo or #renderAs
 	 * method. All child components should be removed using #children or JW.UI.Component.Array stuff.
 	 *
-	 * @returns {void}
+	 * @returns {JW.UI.Component} this
 	 */
 	remove: function() {
 		if (this.parent) {
 			throw new Error("JW.UI.Component.remove must be used for root components only");
 		}
 		JW.UI.remove(this.el[0]);
+		return this;
 	},
 	
 	/**
