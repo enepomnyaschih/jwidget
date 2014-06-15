@@ -279,6 +279,10 @@
 							{
 								"name": "rujwabstractarrayreverser",
 								"title": "JW.AbstractArray.Reverser"
+							},
+							{
+								"name": "rujwuiinserter",
+								"title": "JW.UI.Inserter"
 							}
 						]
 					},

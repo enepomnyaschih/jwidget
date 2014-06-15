@@ -45,7 +45,7 @@
 - Converter to array (orderer): [JW.AbstractCollection.Orderer](#!/guide/rujwabstractcollectionorderer)
 - Converter to array (sorter by comparer): [JW.AbstractCollection.SorterComparing](#!/guide/rujwabstractcollectionsortercomparing)
 - Observer: [JW.AbstractCollection.Observer](#!/guide/rujwabstractcollectionobserver)
-- View synchronizers: [JW.AbstractArray.Inserter](#!/guide/rujwabstractarrayinserter), [JW.AbstractMap.Inserter](#!/guide/rujwabstractmapinserter)
+- View synchronizers: [JW.AbstractArray.Inserter](#!/guide/rujwabstractarrayinserter), [JW.AbstractMap.Inserter](#!/guide/rujwabstractmapinserter), [JW.UI.Inserter](#!/guide/rujwuiinserter)
 - Arrays merger: [JW.AbstractArray.Merger](#!/guide/rujwabstractarraymerger)
 - Array reverser: [JW.AbstractArray.Reverser](#!/guide/rujwabstractarrayreverser)
 

@@ -430,15 +430,13 @@
  * @extends JW.Class
  * @constructor
  */
-JW.UI.Component = function(config) {
+JW.UI.Component = function() {
 	JW.UI.Component._super.call(this);
-	config = config || {};
-	this.rootClass = config.rootClass; // String
-	this.template = config.template; // String
 	this.parent = null;
 	this.wasAfterAppend = false;
 	this.el = null;
 	this.children = null;
+	this._template = this.templates.main; // JW.UI.Component.Template
 	this._elements = null; // Map<jQuery>
 	this._replaceables = null; // Set<JW.UI.Component.Replaceable>
 	this._arrays = null; // Set<JW.UI.Component.Array>
@@ -559,7 +557,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		if (this.el) {
 			return;
 		}
-		var output = this.templates.main.createElement();
+		var output = this._template.createElement();
 		this.el = jQuery(output.root);
 		this._elements = JW.Map.map(output.groups, jQuery);
 		this.children = new JW.UI.Component.Children(this);
@@ -680,7 +678,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	/**
 	 * Add child component array into specified element.
 	 * 
-	 * Based on JW.AbstractArray.Inserter synchronizer. Thanks to that, if you'll pass an instance of
+	 * Based on JW.UI.Inserter synchronizer. Thanks to that, if you'll pass an instance of
 	 * JW.ObservableArray as "components", then view will be synchronized with this array content of fly.
 	 * 
 	 * It is convenient to create "components" array from data array using JW.AbstractArray#createMapper method,
