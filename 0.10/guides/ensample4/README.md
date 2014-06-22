@@ -27,8 +27,6 @@ feel safe about the fact that the view will always be up-to-date.
 
 One more notice: in other Model-View frameworks (I mean, MVC frameworks) like ExtJS, Controller is responsible for
 event listening and handling. jWidget doesn't provide any features for such controllers implementation.
-Moreover, ExtJS implementation suffers in performance because of often CSS query calls, when it is unneccessary in
-jWidget where everything works by direct references to elements.
 
 Events API is maximally optimized in jWidget in performance regard and implemented by all OOD main principles.
 That's the reason why events API is very different in jWidget and jQuery.
