@@ -1,5 +1,5 @@
 /*!
-	jWidget Lib 0.10.2
+	jWidget Lib 1.0.0
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
@@ -1574,7 +1574,7 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  * - Converter to array (orderer): JW.AbstractCollection.Orderer
  * - Converter to array (sorter by comparer): JW.AbstractCollection.SorterComparing
  * - Observer: JW.AbstractCollection.Observer
- * - View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
+ * - View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter, JW.UI.Inserter
  * - Arrays merger: JW.AbstractArray.Merger
  * - Array reverser: JW.AbstractArray.Reverser
  *
@@ -5729,7 +5729,6 @@ JW.extend(JW.AbstractArray.Indexer, JW.AbstractCollection.Indexer, {
  * you can define a third function: array is cleared
  * (in case if there is more effective clearing algorithm than iterative items deletion).
  * Unlike JW.AbstractCollection.Observer, tracks items order.
- * Can be used mainly for DOM-element synchronization with array of child elements.
  *
  * Use JW.AbstractArray#createInserter method to create the synchronizer.
  *
