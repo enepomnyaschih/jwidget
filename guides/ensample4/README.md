@@ -71,7 +71,7 @@ By standard, you should do this in the constructor, before superclass constructo
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
 
 At the next step, we'll add methods setLike and setRetweet to the model. To implement them, we'll need likeChangeEvent and
@@ -81,30 +81,18 @@ retweetChangeEvent, which we'll create and aggregate in the constructor:
 
     mt.data.Tweet = function(config) {
         mt.data.Tweet.{@link JW.Class#static-property-_super _super}.call(this);
-        this.fullName = config.fullName;
-        this.shortName = config.shortName;
-        this.avatarUrl48 = config.avatarUrl48;
-        this.contentHtml = config.contentHtml;
-        this.time = config.time;
-        this.like = config.like;
-        this.retweet = config.retweet;
-        this.likeChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
-        this.retweetChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
+        this.fullName = config.fullName; // string
+        this.shortName = config.shortName; // string
+        this.avatarUrl48 = config.avatarUrl48; // string
+        this.contentHtml = config.contentHtml; // string
+        this.time = config.time; // number
+        this.like = config.like; // number
+        this.retweet = config.retweet; // number
+        this.likeChangeEvent = this.{@link JW.Class#own own}(new JW.Event()); // JW.Event<JW.ValueEventParams<boolean>>
+        this.retweetChangeEvent = this.{@link JW.Class#own own}(new JW.Event()); // JW.Event<JW.ValueEventParams<boolean>>
     };
     
     JW.extend(mt.data.Tweet, JW.Class, {
-        /*
-        string fullName;
-        string shortName;
-        string contentHtml;
-        string avatarUrl48;
-        number time;
-        boolean like;
-        boolean retweet;
-        JW.Event<JW.ValueEventParams<boolean>> likeChangeEvent;
-        JW.Event<JW.ValueEventParams<boolean>> retweetChangeEvent;
-        */
-        
         setLike: function(value) {
             if (this.like === value) {
                 return;
@@ -174,14 +162,10 @@ aggregate:
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
         // ... some code here
         
         renderLike: function(el) {
@@ -217,24 +201,13 @@ We'll fix this now.
 
 We don't need to change model, modifications will impact mt.TweetView only:
 
-    mt.TweetView = function(tweetData) {
-        this._updateTime = JW.inScope(this._updateTime, this);
-        this._onLikeClick = JW.inScope(this._onLikeClick, this);
-        this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
-        mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
-    };
-    
-    JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
+**public/mt/tweetview/tweetview.js**
+
         // ... code
         
         renderTime: function() {
             this._updateTime();
-            this.{@link JW.Class#own own}(new JW.Interval(this._updateTime, 30000));
+            this.{@link JW.Class#own own}(new JW.Interval(this._updateTime, this, 30000));
         },
         
         _updateTime: function() {
