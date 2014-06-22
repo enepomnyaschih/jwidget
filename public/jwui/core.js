@@ -157,8 +157,7 @@ JW.UI = {
 	addClass: function(el, cls) {
 		if (!el.className) {
 			el.className = cls;
-		}
-		if (!JW.UI.hasClass(el, cls)) {
+		} else if (!JW.UI.hasClass(el, cls)) {
 			el.className += " " + cls;
 		}
 	},
