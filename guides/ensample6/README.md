@@ -2,7 +2,7 @@
 
 Demo: [http://enepomnyaschih.github.io/mt/1.0.0-6/](http://enepomnyaschih.github.io/mt/1.0.0-6/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6) (Git plugin)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6) (Git branch)
 
 Now we'll switch to the most wonderful and important part of jWidget which makes jWidget special -
 collection synchronizers.
