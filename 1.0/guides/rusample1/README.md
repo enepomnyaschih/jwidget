@@ -92,26 +92,16 @@
 
     mt.data.Tweet = function(config) {
         mt.data.Tweet.{@link JW.Class#static-property-_super _super}.call(this);
-        this.fullName = config.fullName;
-        this.shortName = config.shortName;
-        this.avatarUrl48 = config.avatarUrl48;
-        this.contentHtml = config.contentHtml;
-        this.time = config.time;
-        this.like = config.like;
-        this.retweet = config.retweet;
+        this.fullName = config.fullName; // string
+        this.shortName = config.shortName; // string
+        this.avatarUrl48 = config.avatarUrl48; // string
+        this.contentHtml = config.contentHtml; // string
+        this.time = config.time; // number
+        this.like = config.like; // boolean
+        this.retweet = config.retweet; // boolean
     };
     
-    JW.extend(mt.data.Tweet, JW.Class, {
-        /*
-        string fullName;
-        string shortName;
-        string contentHtml;
-        string avatarUrl48;
-        number time;
-        boolean like;
-        boolean retweet;
-        */
-    });
+    JW.extend(mt.data.Tweet, JW.Class);
     
     mt.data.Tweet.createByJson = function(json) {
         return new mt.data.Tweet(JW.apply({}, json, {
@@ -132,14 +122,10 @@
 
     mt.TweetView = function(tweetData) {
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
-    JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-    });
+    JW.extend(mt.TweetView, JW.UI.Component);
 
 Далее, компоненту необходимо задать HTML-шаблон. Это делается следующим образом.
 
@@ -261,14 +247,10 @@ HTML-элементами, для которых мы определили ат�
 
     mt.TweetView = function(tweetData) {
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
         // override
         {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
@@ -404,14 +386,10 @@ HTML-элементами, для которых мы определили ат�
 
     mt.TweetView = function(tweetData) {
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
         renderAvatar: function(el) {
             el.css("background-image", "url(" + this.tweetData.avatarUrl48 + ")");
         },
