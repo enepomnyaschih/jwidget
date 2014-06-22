@@ -1,8 +1,8 @@
 ﻿# Part 3. Named child components
 
-Demo: [http://enepomnyaschih.github.io/mt/0.9.0-3/](http://enepomnyaschih.github.io/mt/0.9.0-3/)
+Demo: [http://enepomnyaschih.github.io/mt/1.0.0-3/](http://enepomnyaschih.github.io/mt/1.0.0-3/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-3](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-3) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-3](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-3) (Git branch)
 
 In this sample we'll learn how to render child components, which don't belong to arrays.
 

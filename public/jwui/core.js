@@ -1,5 +1,5 @@
 ﻿/*!
-	jWidget UI 0.10.2
+	jWidget UI 1.0.0
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	

@@ -25,7 +25,7 @@ rd /S /Q jwidget-files
 
 :Build documentation
 echo Building documentation
-set version=0.10
+set version=1.0
 rd /S /Q ..\docs\%version%\extjs
 rd /S /Q ..\docs\%version%\member-icons
 rd /S /Q ..\docs\%version%\output

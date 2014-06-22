@@ -1,9 +1,9 @@
 ﻿# Часть 5. Свойства
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/0.9.0-5/](http://enepomnyaschih.github.io/mt/0.9.0-5/)
+[http://enepomnyaschih.github.io/mt/1.0.0-5/](http://enepomnyaschih.github.io/mt/1.0.0-5/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-5](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-5) (Git branch)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5) (Git branch)
 
 Пришло время познакомиться с еще одним слоем jWidget: свойствами, которые предоставляются нам классом [JW.Property](#!/guide/rujwproperty).
 Свойство - это любое значение, которое может оповещать клиенты о своем изменении. Таким образом, [JW.Property](#!/guide/rujwproperty) - это

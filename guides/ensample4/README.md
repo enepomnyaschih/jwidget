@@ -1,8 +1,8 @@
 ﻿# Part 4. Events
 
-Demo: [http://enepomnyaschih.github.io/mt/0.9.0-4/](http://enepomnyaschih.github.io/mt/0.9.0-4/)
+Demo: [http://enepomnyaschih.github.io/mt/1.0.0-4/](http://enepomnyaschih.github.io/mt/1.0.0-4/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-4](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-4) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-4](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-4) (Git branch)
 
 We'll learn how to bind handlers to jQuery elements in scope of jWidget framework in this part.
 Also, we'll create some model events and will learn how to listen and trigger them.
@@ -199,7 +199,7 @@ aggregate:
         // ...
 
 It must work! Try to execute it in browser or open link
-[http://enepomnyaschih.github.io/mt/0.9.0-4/](http://enepomnyaschih.github.io/mt/0.9.0-4/)
+[http://enepomnyaschih.github.io/mt/1.0.0-4/](http://enepomnyaschih.github.io/mt/1.0.0-4/)
 and click Like/Unlike and Retweet/Unretweet buttons. Moreover, you can open browser console and run
 next command:
 
