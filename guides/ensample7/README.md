@@ -1,8 +1,8 @@
 ﻿# Part 7. Project infrastructure
 
-Demo: [http://enepomnyaschih.github.io/mt/0.9.0-7/](http://enepomnyaschih.github.io/mt/0.9.0-7/)
+Demo: [http://enepomnyaschih.github.io/mt/1.0.0-7/](http://enepomnyaschih.github.io/mt/1.0.0-7/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-7](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-7) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-7](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-7) (Git branch)
 
 In this part, we'll improve the project infrastructure:
 
@@ -31,7 +31,7 @@ Create public/bower.json file in repository folder.
         "version": "0.0.0",
         "dependencies": {
             "jquery": "~2.1.0",
-            "jwidget": "0.10"
+            "jwidget": "1.0"
         }
     }
 

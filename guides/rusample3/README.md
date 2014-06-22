@@ -1,9 +1,9 @@
 ﻿# Часть 3. Именованные дочерние компоненты
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/0.9.0-3/](http://enepomnyaschih.github.io/mt/0.9.0-3/)
+[http://enepomnyaschih.github.io/mt/1.0.0-3/](http://enepomnyaschih.github.io/mt/1.0.0-3/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-3](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-3) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-3](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-3) (ветка)
 
 В этом примере мы научимся рендерить дочерние компоненты, которые не находятся в массивах.
 
@@ -18,20 +18,16 @@
 
     mt.Application = function(data) {
         mt.Application.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
+        this.data = data; // mt.Data
     };
     
     JW.extend(mt.Application, JW.UI.Component, {
-        /*
-        mt.Data data;
-        */
-        
         renderTweets: function() {
             return this.{@link JW.Class#own own}(new mt.TweetFeed(this.data));
         },
         
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             $("html").addClass("mt-html");
             $("body").addClass("mt-body");
@@ -65,20 +61,16 @@ CSS-класс), можно сделать это явно с помощью м�
 
         renderTweets: function(el) {
             var tweetFeed = this.{@link JW.Class#own own}(new mt.TweetFeed(this.data));
-            tweetFeed.{@link JW.UI.Component#render render}(el);
+            tweetFeed.{@link JW.UI.Component#render render}();
             tweetFeed.{@link JW.UI.Component#el el}.addClass("my-extra-class");
             return tweetFeed;
         },
-
-Аргумент el передавать не обязательно, но рекомендовано. Некоторые компоненты могут использовать поле
-{@link JW.UI.Component#replacedEl replacedEl} для рендеринга своего содержимого - аргумент el как раз и определяет
-значение этого поля.
 
 **Во-вторых**, как и в предыдущих частях, мы должны найти способ добавлять дочерние компоненты, не привязываясь к
 методу `render<ChildId>`. Делается это с помощью оповещающего словаря {@link JW.UI.Component#children children}:
 
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#set set}(this.{@link JW.Class#own own}(new mt.TweetFeed(this.data)), "tweets");
         },
@@ -157,16 +149,11 @@ CSS-класс), можно сделать это явно с помощью м�
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
-        this.profile = null;
-        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}();
+        this.profile = null; // mt.data.Profile
+        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}(); // JW.AbstractArray<mt.data.Tweet>
     };
     
-    JW.extend(mt.Data, JW.Class, {
-        /*
-        mt.data.Profile profile;
-        JW.AbstractArray<mt.data.Tweet> tweets;
-        */
-    });
+    JW.extend(mt.Data, JW.Class);
     
     mt.Data.createByJson = function(json) {
         var data = new mt.Data();
@@ -183,26 +170,16 @@ CSS-класс), можно сделать это явно с помощью м�
 
     mt.data.Profile = function(config) {
         mt.data.Profile.{@link JW.Class#static-property-_super _super}.call(this);
-        this.fullName = config.fullName;
-        this.shortName = config.shortName;
-        this.avatarUrl32 = config.avatarUrl32;
-        this.avatarUrl48 = config.avatarUrl48;
-        this.tweets = config.tweets;
-        this.following = config.following;
-        this.followers = config.followers;
+        this.fullName = config.fullName; // string
+        this.shortName = config.shortName; // string
+        this.avatarUrl32 = config.avatarUrl32; // string
+        this.avatarUrl48 = config.avatarUrl48; // string
+        this.tweets = config.tweets; // number
+        this.following = config.following; // number
+        this.followers = config.followers; // number
     };
     
-    JW.extend(mt.data.Profile, JW.Class, {
-        /*
-        string fullName;
-        string shortName;
-        string avatarUrl32;
-        string avatarUrl48;
-        number tweets;
-        number following;
-        number followers;
-        */
-    });
+    JW.extend(mt.data.Profile, JW.Class);
     
     mt.data.Profile.createByJson = function(json) {
         return new mt.data.Profile(json);
@@ -220,14 +197,10 @@ CSS-класс), можно сделать это явно с помощью м�
 
     mt.ProfileBox = function(data) {
         mt.ProfileBox.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
+        this.data = data; // mt.Data
     };
     
     JW.extend(mt.ProfileBox, JW.UI.Component, {
-        /*
-        mt.Data data;
-        */
-        
         renderTop: function(el) {
             el.attr("href", "https://twitter.com/" + this.data.profile.shortName);
         },

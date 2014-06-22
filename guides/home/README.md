@@ -48,7 +48,7 @@ example:
     
     new Greeter().{@link JW.UI.Component#renderTo renderTo}("body");
 
-<iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/0.9.0/greeter.html"></iframe>
+<iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.0.0/greeter.html"></iframe>
 
 Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes
 you confident in that you're able to implement as complicated and big MVC application as you would like to. You
@@ -67,7 +67,7 @@ practices are used to bind model objects to each other and to bind view componen
 
 Project license is LGPL.
 
-Current version: 0.10.2
+Current version: 1.0.0
 
 <font size="5">[Download jWidget](guides/endownload/jwidget.zip)</font>
 

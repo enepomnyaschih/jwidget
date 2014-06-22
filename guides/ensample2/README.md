@@ -1,8 +1,8 @@
 ﻿# Part 2. Arrays of child components
 
-Demo: [http://enepomnyaschih.github.io/mt/0.9.0-2/](http://enepomnyaschih.github.io/mt/0.9.0-2/)
+Demo: [http://enepomnyaschih.github.io/mt/1.0.0-2/](http://enepomnyaschih.github.io/mt/1.0.0-2/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-2](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-2) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-2](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-2) (Git branch)
 
 In this part, we'll meet JW.AbstractArray. We will try its algorithms
 {@link JW.AbstractArray#method-map map} and {@link JW.AbstractArray#method-$map $map}
@@ -19,14 +19,10 @@ for this. It will contain an array of the tweets.
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweets = new JW.Array();
+        this.tweets = new JW.Array(); // JW.AbstractArray<mt.data.Tweet>
     };
     
     JW.extend(mt.Data, JW.Class, {
-        /*
-        JW.AbstractArray<mt.data.Tweet> tweets;
-        */
-        
         // override
         {@link JW.Class#destroy destroy}: function() {
             this.tweets.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // clear array and destroy items
@@ -75,14 +71,10 @@ will be destroyed automatically on object A destruction. We can aggregate an obj
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}();
+        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}(); // JW.AbstractArray<mt.data.Tweet>
     };
     
-    JW.extend(mt.Data, JW.Class, {
-        /*
-        JW.AbstractArray<mt.data.Tweet> tweets;
-        */
-    });
+    JW.extend(mt.Data, JW.Class);
     
     mt.Data.createByJson = function(json) {
         var data = new mt.Data();
@@ -98,14 +90,10 @@ Let's continue with the view. Define class mt.TweetFeed for tweet feed view.
 
     mt.TweetFeed = function(data) {
         mt.TweetFeed.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
+        this.data = data; // mt.Data
     };
     
     JW.extend(mt.TweetFeed, JW.UI.Component, {
-        /*
-        mt.Data data;
-        */
-        
         renderTweets: function() {
             return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
@@ -226,10 +214,10 @@ And prepare new test data.
 If we'll execute the application in browser, we'll see what was required.
 
 Let's review one more way of child components adding, without `render<ChildId>` method definition.
-let's remove renderTweets method and override {@link JW.UI.Component#renderComponent renderComponent} method instead:
+let's remove renderTweets method and override {@link JW.UI.Component#afterRender afterRender} method instead:
 
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             var tweetViews = this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);

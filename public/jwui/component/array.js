@@ -38,7 +38,7 @@ JW.UI.Component.Array = function(parent, source, el) {
 		scope       : this
 	}));
 	
-	this.own(new JW.UI.Inserter(mapper.target, el));
+	this.own(new JW.UI.Component.Inserter(mapper.target, el[0]));
 };
 
 JW.extend(JW.UI.Component.Array, JW.Class, {

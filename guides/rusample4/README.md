@@ -1,9 +1,9 @@
 ﻿# Часть 4. События
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/0.9.0-4/](http://enepomnyaschih.github.io/mt/0.9.0-4/)
+[http://enepomnyaschih.github.io/mt/1.0.0-4/](http://enepomnyaschih.github.io/mt/1.0.0-4/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-4](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-4) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-4](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-4) (ветка)
 
 В этом примере мы научимся подписываться на события элементов jQuery в рамках фреймворка jWidget, а также
 научимся создавать события модели, прослушивать их и выбрасывать.
@@ -72,7 +72,7 @@ API для работы с событиями в jWidget максимально 
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
 
 Следующим шагом добавим методы setLike и setRetweet в модель. Для реализации методов необходимы события
@@ -82,30 +82,18 @@ likeChangeEvent и retweetChangeEvent, которые мы создадим и �
 
     mt.data.Tweet = function(config) {
         mt.data.Tweet.{@link JW.Class#static-property-_super _super}.call(this);
-        this.fullName = config.fullName;
-        this.shortName = config.shortName;
-        this.avatarUrl48 = config.avatarUrl48;
-        this.contentHtml = config.contentHtml;
-        this.time = config.time;
-        this.like = config.like;
-        this.retweet = config.retweet;
-        this.likeChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
-        this.retweetChangeEvent = this.{@link JW.Class#own own}(new JW.Event());
+        this.fullName = config.fullName; // string
+        this.shortName = config.shortName; // string
+        this.avatarUrl48 = config.avatarUrl48; // string
+        this.contentHtml = config.contentHtml; // string
+        this.time = config.time; // number
+        this.like = config.like; // boolean
+        this.retweet = config.retweet; // boolean
+        this.likeChangeEvent = this.{@link JW.Class#own own}(new JW.Event()); // JW.Event<JW.ValueEventParams<boolean>>
+        this.retweetChangeEvent = this.{@link JW.Class#own own}(new JW.Event()); // JW.Event<JW.ValueEventParams<boolean>>
     };
     
     JW.extend(mt.data.Tweet, JW.Class, {
-        /*
-        string fullName;
-        string shortName;
-        string contentHtml;
-        string avatarUrl48;
-        number time;
-        boolean like;
-        boolean retweet;
-        JW.Event<JW.ValueEventParams<boolean>> likeChangeEvent;
-        JW.Event<JW.ValueEventParams<boolean>> retweetChangeEvent;
-        */
-        
         setLike: function(value) {
             if (this.like === value) {
                 return;
@@ -175,14 +163,10 @@ JW.ItemValueEventParams в большинстве случаев вполне д
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
         // ... какой-то код
         
         renderLike: function(el) {
@@ -200,7 +184,7 @@ JW.ItemValueEventParams в большинстве случаев вполне д
         // ...
 
 Наш код должен работать! Попробуйте запустить его в браузере или откройте ссылку
-[http://enepomnyaschih.github.io/mt/0.9.0-4/](http://enepomnyaschih.github.io/mt/0.9.0-4/)
+[http://enepomnyaschih.github.io/mt/1.0.0-4/](http://enepomnyaschih.github.io/mt/1.0.0-4/)
 и покликайте по кнопкам Like/Unlike и Retweet/Unretweet. Более того, вы можете открыть консоль браузера и
 запустить такую команду:
 
@@ -219,24 +203,13 @@ JW.ItemValueEventParams в большинстве случаев вполне д
 
 Менять модель не нужно, изменения затронут только представление mt.TweetView:
 
-    mt.TweetView = function(tweetData) {
-        this._updateTime = JW.inScope(this._updateTime, this);
-        this._onLikeClick = JW.inScope(this._onLikeClick, this);
-        this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
-        mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
-    };
-    
-    JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
+**public/mt/tweetview/tweetview.js**
+
         // ... код
         
         renderTime: function() {
             this._updateTime();
-            this.{@link JW.Class#own own}(new JW.Interval(this._updateTime, 30000));
+            this.{@link JW.Class#own own}(new JW.Interval(this._updateTime, this, 30000));
         },
         
         _updateTime: function() {

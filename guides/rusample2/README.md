@@ -1,9 +1,9 @@
 ﻿# Часть 2. Дочерние компоненты, массивы
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/0.9.0-2/](http://enepomnyaschih.github.io/mt/0.9.0-2/)
+[http://enepomnyaschih.github.io/mt/1.0.0-2/](http://enepomnyaschih.github.io/mt/1.0.0-2/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-2](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-2) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-2](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-2) (ветка)
 
 Этот пример является продолжением предыдущей части.
 
@@ -22,14 +22,10 @@
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweets = new JW.Array();
+        this.tweets = new JW.Array(); // JW.AbstractArray<mt.data.Tweet>
     };
     
     JW.extend(mt.Data, JW.Class, {
-        /*
-        JW.AbstractArray<mt.data.Tweet> tweets;
-        */
-        
         // override
         {@link JW.Class#destroy destroy}: function() {
             this.tweets.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // очищаем массив и уничтожаем элементы
@@ -80,14 +76,10 @@ mt.Data методом destroy, все вложенные объекты так�
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}();
+        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}(); // JW.AbstractArray<mt.data.Tweet>
     };
     
-    JW.extend(mt.Data, JW.Class, {
-        /*
-        JW.AbstractArray<mt.data.Tweet> tweets;
-        */
-    });
+    JW.extend(mt.Data, JW.Class);
     
     mt.Data.createByJson = function(json) {
         var data = new mt.Data();
@@ -103,14 +95,10 @@ mt.Data методом destroy, все вложенные объекты так�
 
     mt.TweetFeed = function(data) {
         mt.TweetFeed.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
+        this.data = data; // mt.Data
     };
     
     JW.extend(mt.TweetFeed, JW.UI.Component, {
-        /*
-        mt.Data data;
-        */
-        
         renderTweets: function() {
             return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);
@@ -234,10 +222,10 @@ JavaScript или другие значения.**
 Запустив приложение в браузере, мы увидим то, что от нас и требовалось.
 
 Рассмотрим еще один способ добавления списка дочерних компонентов, без использования метода `render<ChildId>`.
-Удалим метод renderTweets и перегрузим метод {@link JW.UI.Component#renderComponent renderComponent}:
+Удалим метод renderTweets и перегрузим метод {@link JW.UI.Component#afterRender afterRender}:
 
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             var tweetViews = this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$map $map}(function(tweetData) {
                 return new mt.TweetView(tweetData);

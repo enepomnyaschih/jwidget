@@ -6,14 +6,20 @@
 	
 	"resources" : [
 		"jwui/core.js",
-		"jwui/jquery.patch.js",
 		
 		"jwui/browsers.js",
+		"jwui/inserter.js",
 		"jwui/component.js",
+		"jwui/component/abstractTemplate.js",
 		"jwui/component/array.js",
 		"jwui/component/child.js",
+		"jwui/component/childInserter.js",
+		"jwui/component/children.js",
+		"jwui/component/domTemplate.js",
+		"jwui/component/inserter.js",
 		"jwui/component/replaceable.js",
-		"jwui/inserter.js",
+		"jwui/component/template.js",
+		"jwui/component/templateOutput.js",
 		"jwui/params.js",
 		"jwui/preloadImage.js",
 		

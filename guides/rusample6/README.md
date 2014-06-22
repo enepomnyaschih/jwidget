@@ -1,9 +1,9 @@
 ﻿# Часть 6. Синхронизаторы коллекций
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/0.9.0-6/](http://enepomnyaschih.github.io/mt/0.9.0-6/)
+[http://enepomnyaschih.github.io/mt/1.0.0-6/](http://enepomnyaschih.github.io/mt/1.0.0-6/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-6](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-6) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6) (ветка)
 
 Этот пример является продолжением предыдущей части.
 
@@ -58,8 +58,8 @@
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
-        this.profile = null;
-        this.tweets = new JW.ObservableArray();
+        this.profile = null; // mt.data.Profile
+        this.tweets = new JW.ObservableArray(); // JW.AbstractArray<mt.data.Tweet>
     };
 
 Попробуйте открыть приложение в браузере и выполнить следующую команду в консоли:
@@ -89,7 +89,7 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
     mt.ProfileBox = function(data) {
         this._onComposeSubmit = JW.inScope(this._onComposeSubmit, this);
         mt.ProfileBox.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
+        this.data = data; // mt.Data
     };
     
     JW.extend(mt.ProfileBox, JW.UI.Component, {
@@ -130,21 +130,15 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
 **public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(data, tweetData) {
-        this._updateTime = JW.inScope(this._updateTime, this);
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         this._onRemoveClick = JW.inScope(this._onRemoveClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
-        this.tweetData = tweetData;
+        this.data = data; // mt.Data
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.Data data;
-        mt.data.Tweet tweetData;
-        */
-        
         renderRemove: function(el) {
             el.click(this._onRemoveClick);
         },

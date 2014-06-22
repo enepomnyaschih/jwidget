@@ -1,8 +1,8 @@
 ﻿# Part 1. Model and view
 
-Demo: [http://enepomnyaschih.github.io/mt/0.9.0-1/](http://enepomnyaschih.github.io/mt/0.9.0-1/)
+Demo: [http://enepomnyaschih.github.io/mt/1.0.0-1/](http://enepomnyaschih.github.io/mt/1.0.0-1/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-1](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-1) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-1](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-1) (Git branch)
 
 This jWidget samples series will show, how can you develop your own Twitter in several steps using jWidget.
 If you want to learn how to develop powerful Model-View-applications with jWidget, please follow all these steps
@@ -91,26 +91,16 @@ Let's implement class mt.data.Tweet, which will be tweet model.
 
     mt.data.Tweet = function(config) {
         mt.data.Tweet.{@link JW.Class#static-property-_super _super}.call(this);
-        this.fullName = config.fullName;
-        this.shortName = config.shortName;
-        this.avatarUrl48 = config.avatarUrl48;
-        this.contentHtml = config.contentHtml;
-        this.time = config.time;
-        this.like = config.like;
-        this.retweet = config.retweet;
+        this.fullName = config.fullName; // string
+        this.shortName = config.shortName; // string
+        this.avatarUrl48 = config.avatarUrl48; // string
+        this.contentHtml = config.contentHtml; // string
+        this.time = config.time; // number
+        this.like = config.like; // boolean
+        this.retweet = config.retweet; // boolean
     };
     
-    JW.extend(mt.data.Tweet, JW.Class, {
-        /*
-        string fullName;
-        string shortName;
-        string contentHtml;
-        string avatarUrl48;
-        number time;
-        boolean like;
-        boolean retweet;
-        */
-    });
+    JW.extend(mt.data.Tweet, JW.Class);
     
     mt.data.Tweet.createByJson = function(json) {
         return new mt.data.Tweet(JW.apply({}, json, {
@@ -131,14 +121,10 @@ Model development is finished. Let's start view development. Define tweet compon
 
     mt.TweetView = function(tweetData) {
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
-    JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-    });
+    JW.extend(mt.TweetView, JW.UI.Component);
 
 Next, we need to bind an HTML template to this component. It can be done next way.
 
@@ -252,23 +238,19 @@ As you can see, our component has a structure but doesn't have any data.
 Let's bind the component elements to the data. jWidget library doesn't provide any magic HTML syntax for this.
 So, the template won't be changed, but we'll add some code in JS. The real tool that jWidget provides for us
 is the direct and fast access to [jQuery-wrappers](http://api.jquery.com) of all HTML elements, which have
-"jwid" attribute defined. You can access these elements inside method {@link JW.UI.Component#renderComponent}
+"jwid" attribute defined. You can access these elements inside method {@link JW.UI.Component#afterRender}
 via method {@link JW.UI.Component#getElement}:
 
 **public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(tweetData) {
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#getElement getElement}("avatar").css("background-image", "url(" + this.tweetData.avatarUrl48 + ")");
             var timeAgo = new Date().getTime() - this.tweetData.time;
@@ -402,14 +384,10 @@ using {@link JW.UI.Component#getElement getElement} method, let's just define me
 
     mt.TweetView = function(tweetData) {
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
         renderAvatar: function(el) {
             el.css("background-image", "url(" + this.tweetData.avatarUrl48 + ")");
         },

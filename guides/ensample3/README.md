@@ -1,8 +1,8 @@
 ﻿# Part 3. Named child components
 
-Demo: [http://enepomnyaschih.github.io/mt/0.9.0-3/](http://enepomnyaschih.github.io/mt/0.9.0-3/)
+Demo: [http://enepomnyaschih.github.io/mt/1.0.0-3/](http://enepomnyaschih.github.io/mt/1.0.0-3/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-3](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-3) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-3](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-3) (Git branch)
 
 In this sample we'll learn how to render child components, which don't belong to arrays.
 
@@ -16,20 +16,16 @@ First, let's implement mt.Application class, which will be root view of our appl
 
     mt.Application = function(data) {
         mt.Application.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
+        this.data = data; // mt.Data
     };
     
     JW.extend(mt.Application, JW.UI.Component, {
-        /*
-        mt.Data data;
-        */
-        
         renderTweets: function() {
             return this.{@link JW.Class#own own}(new mt.TweetFeed(this.data));
         },
         
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             $("html").addClass("mt-html");
             $("body").addClass("mt-body");
@@ -62,19 +58,16 @@ you can render it explicitly using {@link JW.UI.Component#render render} method:
 
         renderTweets: function(el) {
             var tweetFeed = this.{@link JW.Class#own own}(new mt.TweetFeed(this.data));
-            tweetFeed.{@link JW.UI.Component#render render}(el);
+            tweetFeed.{@link JW.UI.Component#render render}();
             tweetFeed.{@link JW.UI.Component#el el}.addClass("my-extra-class");
             return tweetFeed;
         },
-
-Argument "el" is optional to pass, but recommended. Some components may use
-{@link JW.UI.Component#replacedEl replacedEl} field to render their content - "el" argument determines its value.
 
 **Second**, like in the previous parts, we must find a way to add a child component without
 `render<ChildId>` method definition. You can do it using {@link JW.UI.Component#children children} observable map:
 
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#set set}(this.{@link JW.Class#own own}(new mt.TweetFeed(this.data)), "tweets");
         },
@@ -153,16 +146,11 @@ Let's start with model once again. We need data about current user profile. Let'
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
-        this.profile = null;
-        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}();
+        this.profile = null; // mt.data.Profile
+        this.tweets = this.{@link JW.Class#own own}(new JW.Array()).{@link JW.AbstractCollection#ownItems ownItems}(); // JW.AbstractArray<mt.data.Tweet>
     };
     
-    JW.extend(mt.Data, JW.Class, {
-        /*
-        mt.data.Profile profile;
-        JW.AbstractArray<mt.data.Tweet> tweets;
-        */
-    });
+    JW.extend(mt.Data, JW.Class);
     
     mt.Data.createByJson = function(json) {
         var data = new mt.Data();
@@ -179,26 +167,16 @@ Now, implement mt.data.Profile class.
 
     mt.data.Profile = function(config) {
         mt.data.Profile.{@link JW.Class#static-property-_super _super}.call(this);
-        this.fullName = config.fullName;
-        this.shortName = config.shortName;
-        this.avatarUrl32 = config.avatarUrl32;
-        this.avatarUrl48 = config.avatarUrl48;
-        this.tweets = config.tweets;
-        this.following = config.following;
-        this.followers = config.followers;
+        this.fullName = config.fullName; // string
+        this.shortName = config.shortName; // string
+        this.avatarUrl32 = config.avatarUrl32; // string
+        this.avatarUrl48 = config.avatarUrl48; // string
+        this.tweets = config.tweets; // number
+        this.following = config.following; // number
+        this.followers = config.followers; // number
     };
     
-    JW.extend(mt.data.Profile, JW.Class, {
-        /*
-        string fullName;
-        string shortName;
-        string avatarUrl32;
-        string avatarUrl48;
-        number tweets;
-        number following;
-        number followers;
-        */
-    });
+    JW.extend(mt.data.Profile, JW.Class);
     
     mt.data.Profile.createByJson = function(json) {
         return new mt.data.Profile(json);
@@ -216,14 +194,10 @@ Implement this component.
 
     mt.ProfileBox = function(data) {
         mt.ProfileBox.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
+        this.data = data; // mt.Data
     };
     
     JW.extend(mt.ProfileBox, JW.UI.Component, {
-        /*
-        mt.Data data;
-        */
-        
         renderTop: function(el) {
             el.attr("href", "https://twitter.com/" + this.data.profile.shortName);
         },

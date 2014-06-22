@@ -1,5 +1,5 @@
 ﻿/*!
-	jWidget UI 0.10.2
+	jWidget UI 1.0.0
 	
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 	
@@ -66,6 +66,9 @@ JW.UI = {
 	 * @param {Object} tpls Templates to add or override.
 	 */
 	template: function(cls, tpls) {
+		tpls = JW.Map.map(tpls, function(html) {
+			return new JW.UI.Component.Template(html);
+		});
 		if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls) {
 			JW.apply(cls.prototype.Templates.prototype, tpls);
 		} else {
@@ -125,6 +128,12 @@ JW.UI = {
 		}
 	},
 	
+	remove: function(el) {
+		if (el.parentNode) {
+			el.parentNode.removeChild(el);
+		}
+	},
+	
 	parseHtml: function(html) {
 		if (JW.UI._fragment) {
 			JW.UI._fragment.textContent = "";
@@ -139,6 +148,44 @@ JW.UI = {
 			el = el.firstChild;
 		}
 		return el.firstChild;
+	},
+	
+	hasClass: function(el, cls) {
+		return (" " + el.className + " ").indexOf(cls) !== -1;
+	},
+	
+	addClass: function(el, cls) {
+		if (!el.className) {
+			el.className = cls;
+		} else if (!JW.UI.hasClass(el, cls)) {
+			el.className += " " + cls;
+		}
+	},
+	
+	inDom: function(el) {
+		while (el) {
+			if (el.tagName.toLowerCase() === "body") {
+				return true;
+			}
+			el = el.parentNode;
+		}
+		return false;
+	},
+	
+	replace: function(removeEl, insertEl, attrs) {
+		var parentEl = removeEl.parentNode;
+		if (!parentEl) {
+			return;
+		}
+		var id = attrs ? removeEl.getAttribute("id") : null,
+			cls = attrs ? removeEl.getAttribute("class") : null;
+		parentEl.replaceChild(insertEl, removeEl);
+		if (id) {
+			insertEl.setAttribute("id", id);
+		}
+		if (cls) {
+			JW.UI.addClass(insertEl, cls);
+		}
 	}
 };
 

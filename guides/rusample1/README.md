@@ -1,9 +1,9 @@
 ﻿# Часть 1. Модель и представление
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/0.9.0-1/](http://enepomnyaschih.github.io/mt/0.9.0-1/)
+[http://enepomnyaschih.github.io/mt/1.0.0-1/](http://enepomnyaschih.github.io/mt/1.0.0-1/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-1](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-1) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-1](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-1) (ветка)
 
 Серия примеров jWidget покажет, как разработать свой собственный Twitter за несколько шагов с помощью jWidget.
 Если вы хотите научиться разрабатывать мощные Model-View-приложения на jWidget, просим вас проделать все те же
@@ -92,26 +92,16 @@
 
     mt.data.Tweet = function(config) {
         mt.data.Tweet.{@link JW.Class#static-property-_super _super}.call(this);
-        this.fullName = config.fullName;
-        this.shortName = config.shortName;
-        this.avatarUrl48 = config.avatarUrl48;
-        this.contentHtml = config.contentHtml;
-        this.time = config.time;
-        this.like = config.like;
-        this.retweet = config.retweet;
+        this.fullName = config.fullName; // string
+        this.shortName = config.shortName; // string
+        this.avatarUrl48 = config.avatarUrl48; // string
+        this.contentHtml = config.contentHtml; // string
+        this.time = config.time; // number
+        this.like = config.like; // boolean
+        this.retweet = config.retweet; // boolean
     };
     
-    JW.extend(mt.data.Tweet, JW.Class, {
-        /*
-        string fullName;
-        string shortName;
-        string contentHtml;
-        string avatarUrl48;
-        number time;
-        boolean like;
-        boolean retweet;
-        */
-    });
+    JW.extend(mt.data.Tweet, JW.Class);
     
     mt.data.Tweet.createByJson = function(json) {
         return new mt.data.Tweet(JW.apply({}, json, {
@@ -132,14 +122,10 @@
 
     mt.TweetView = function(tweetData) {
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
-    JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-    });
+    JW.extend(mt.TweetView, JW.UI.Component);
 
 Далее, компоненту необходимо задать HTML-шаблон. Это делается следующим образом.
 
@@ -255,22 +241,18 @@ CSS-класс каждого элемента, для которого вы о�
 не дает для этого никакого магического HTML-синтаксиса. Шаблон остается таким, как прежде, меняется лишь код.
 Что реально дает нам jWidget, так это прямой и быстрый доступ к [jQuery-оберткам](http://api.jquery.com) над
 HTML-элементами, для которых мы определили атрибут jwid. Этот доступ предоставляется в
-методе {@link JW.UI.Component#renderComponent} через метод {@link JW.UI.Component#getElement}:
+методе {@link JW.UI.Component#afterRender} через метод {@link JW.UI.Component#getElement}:
 
 **public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(tweetData) {
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#getElement getElement}("avatar").css("background-image", "url(" + this.tweetData.avatarUrl48 + ")");
             var timeAgo = new Date().getTime() - this.tweetData.time;
@@ -404,14 +386,10 @@ HTML-элементами, для которых мы определили ат�
 
     mt.TweetView = function(tweetData) {
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.tweetData = tweetData;
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.data.Tweet tweetData;
-        */
-        
         renderAvatar: function(el) {
             el.css("background-image", "url(" + this.tweetData.avatarUrl48 + ")");
         },

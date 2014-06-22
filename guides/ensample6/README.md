@@ -1,8 +1,8 @@
 ﻿# Part 6. Collection synchronizers
 
-Demo: [http://enepomnyaschih.github.io/mt/0.9.0-6/](http://enepomnyaschih.github.io/mt/0.9.0-6/)
+Demo: [http://enepomnyaschih.github.io/mt/1.0.0-6/](http://enepomnyaschih.github.io/mt/1.0.0-6/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-6](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-6) (Git plugin)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6) (Git plugin)
 
 Now we'll switch to the most wonderful and important part of jWidget which makes jWidget special -
 collection synchronizers.
@@ -54,8 +54,8 @@ in mt.Data with JW.ObservableArray, and synchronize view with model without view
 
     mt.Data = function() {
         mt.Data.{@link JW.Class#static-property-_super _super}.call(this);
-        this.profile = null;
-        this.tweets = new JW.ObservableArray();
+        this.profile = null; // mt.data.Profile
+        this.tweets = this.{@link JW.Class#own own}(new JW.ObservableArray()).{@link JW.AbstractCollection#ownItems ownItems}(); // JW.AbstractArray<mt.data.Tweet>
     };
 
 Try to open application in browser and run the next command in console:
@@ -85,7 +85,7 @@ submit. Bind mt.ProfileBox to jQuery.submit event:
     mt.ProfileBox = function(data) {
         this._onComposeSubmit = JW.inScope(this._onComposeSubmit, this);
         mt.ProfileBox.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
+        this.data = data; // mt.Data
     };
     
     JW.extend(mt.ProfileBox, JW.UI.Component, {
@@ -126,21 +126,15 @@ We'll need the access to mt.Data object to remove the tweet:
 **public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(data, tweetData) {
-        this._updateTime = JW.inScope(this._updateTime, this);
         this._onLikeClick = JW.inScope(this._onLikeClick, this);
         this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         this._onRemoveClick = JW.inScope(this._onRemoveClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data;
-        this.tweetData = tweetData;
+        this.data = data; // mt.Data
+        this.tweetData = tweetData; // mt.data.Tweet
     };
     
     JW.extend(mt.TweetView, JW.UI.Component, {
-        /*
-        mt.Data data;
-        mt.data.Tweet tweetData;
-        */
-        
         renderRemove: function(el) {
             el.click(this._onRemoveClick);
         },

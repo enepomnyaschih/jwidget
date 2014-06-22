@@ -1,8 +1,8 @@
 ﻿# Part 5. Properties
 
-Demo: [http://enepomnyaschih.github.io/mt/0.9.0-5/](http://enepomnyaschih.github.io/mt/0.9.0-5/)
+Demo: [http://enepomnyaschih.github.io/mt/1.0.0-5/](http://enepomnyaschih.github.io/mt/1.0.0-5/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-5](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-5) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5) (Git branch)
 
 Now it's the time to learn a new layer of jWidget: the properties brought to us by class JW.Property. The **property**
 is any value which can notify the clients about its modification. So, JW.Property is a class which has 2 methods:
@@ -21,26 +21,16 @@ events and setting methods:
 
     mt.data.Tweet = function(config) {
         mt.data.Tweet.{@link JW.Class#static-property-_super _super}.call(this);
-        this.fullName = config.fullName;
-        this.shortName = config.shortName;
-        this.avatarUrl48 = config.avatarUrl48;
-        this.contentHtml = config.contentHtml;
-        this.time = config.time;
-        this.like = this.{@link JW.Class#own own}(new JW.Property(config.like));
-        this.retweet = this.{@link JW.Class#own own}(new JW.Property(config.retweet));
+        this.fullName = config.fullName; // string
+        this.shortName = config.shortName; // string
+        this.avatarUrl48 = config.avatarUrl48; // string
+        this.contentHtml = config.contentHtml; // string
+        this.time = config.time; // number
+        this.like = this.{@link JW.Class#own own}(new JW.Property(config.like)); // JW.Property<boolean>
+        this.retweet = this.{@link JW.Class#own own}(new JW.Property(config.retweet)); // JW.Property<boolean>
     };
     
-    JW.extend(mt.data.Tweet, JW.Class, {
-        /*
-        string fullName;
-        string shortName;
-        string contentHtml;
-        string avatarUrl48;
-        number time;
-        JW.Property<boolean> like;
-        JW.Property<boolean> retweet;
-        */
-    });
+    JW.extend(mt.data.Tweet, JW.Class);
     
     mt.data.Tweet.createByJson = function(json) {
         return new mt.data.Tweet(JW.apply({}, json, {

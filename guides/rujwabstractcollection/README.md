@@ -30,7 +30,7 @@
 - Конвертер в массив (упорядочитель): [JW.AbstractCollection.Orderer](#!/guide/rujwabstractcollectionorderer)
 - Конвертер в массив (сортировщик по компаратору): [JW.AbstractCollection.SorterComparing](#!/guide/rujwabstractcollectionsortercomparing)
 - Наблюдатель: [JW.AbstractCollection.Observer](#!/guide/rujwabstractcollectionobserver)
-- Синхронизаторы представления: [JW.AbstractArray.Inserter](#!/guide/rujwabstractarrayinserter), [JW.AbstractMap.Inserter](#!/guide/rujwabstractmapinserter)
+- Синхронизаторы представления: [JW.AbstractArray.Inserter](#!/guide/rujwabstractarrayinserter), [JW.AbstractMap.Inserter](#!/guide/rujwabstractmapinserter), [JW.UI.Inserter](#!/guide/rujwuiinserter)
 - Объединитель массивов: [JW.AbstractArray.Merger](#!/guide/rujwabstractarraymerger)
 - Обратитель массива: [JW.AbstractArray.Reverser](#!/guide/rujwabstractarrayreverser)
 

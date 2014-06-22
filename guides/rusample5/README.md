@@ -1,9 +1,9 @@
 ﻿# Часть 5. Свойства
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/0.9.0-5/](http://enepomnyaschih.github.io/mt/0.9.0-5/)
+[http://enepomnyaschih.github.io/mt/1.0.0-5/](http://enepomnyaschih.github.io/mt/1.0.0-5/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-5](https://github.com/enepomnyaschih/mt/tree/mt-0.9.0-5) (Git branch)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5) (Git branch)
 
 Пришло время познакомиться с еще одним слоем jWidget: свойствами, которые предоставляются нам классом [JW.Property](#!/guide/rujwproperty).
 Свойство - это любое значение, которое может оповещать клиенты о своем изменении. Таким образом, [JW.Property](#!/guide/rujwproperty) - это
@@ -22,26 +22,16 @@
 
     mt.data.Tweet = function(config) {
         mt.data.Tweet.{@link JW.Class#static-property-_super _super}.call(this);
-        this.fullName = config.fullName;
-        this.shortName = config.shortName;
-        this.avatarUrl48 = config.avatarUrl48;
-        this.contentHtml = config.contentHtml;
-        this.time = config.time;
-        this.like = this.{@link JW.Class#own own}(new JW.Property(config.like));
-        this.retweet = this.{@link JW.Class#own own}(new JW.Property(config.retweet));
+        this.fullName = config.fullName; // string
+        this.shortName = config.shortName; // string
+        this.avatarUrl48 = config.avatarUrl48; // string
+        this.contentHtml = config.contentHtml; // string
+        this.time = config.time; // number
+        this.like = this.{@link JW.Class#own own}(new JW.Property(config.like)); // JW.Property<boolean>
+        this.retweet = this.{@link JW.Class#own own}(new JW.Property(config.retweet)); // JW.Property<boolean>
     };
     
-    JW.extend(mt.data.Tweet, JW.Class, {
-        /*
-        string fullName;
-        string shortName;
-        string contentHtml;
-        string avatarUrl48;
-        number time;
-        JW.Property<boolean> like;
-        JW.Property<boolean> retweet;
-        */
-    });
+    JW.extend(mt.data.Tweet, JW.Class);
     
     mt.data.Tweet.createByJson = function(json) {
         return new mt.data.Tweet(JW.apply({}, json, {

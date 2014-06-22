@@ -19,28 +19,20 @@
 
 JW.UI.Component.Child = function(parent, child) {
 	JW.UI.Component.Child._super.call(this);
-	this.parent = parent;
-	this.child = child;
-	this.name = null;
-	this._el = null;
+	this.parent = parent; // JW.UI.Component
+	this.child = child; // JW.UI.Component
+	this.name = null; // String
+	this._el = null; // jQuery
 };
 
 JW.extend(JW.UI.Component.Child, JW.Class, {
-	/*
-	Fields
-	JW.UI.Component parent;
-	JW.UI.Component child;
-	String name;
-	Element _el;
-	*/
-	
 	attach: function(name) {
 		// JW.assertNull(this.name);
 		this.name = name;
-		this._el = this.parent.getElement(name);
-		this.parent._initChild(this.child, this._el);
+		this._el = this.parent._elements[name];
+		this.parent._initChild(this.child);
 		this.parent._elements[name] = this.child.el;
-		this._el.replaceBy(this.child.el, true);
+		JW.UI.replace(this._el[0], this.child.el[0], true);
 		this.child._afterAppend();
 	},
 	
@@ -49,7 +41,7 @@ JW.extend(JW.UI.Component.Child, JW.Class, {
 		if (this.parent._elements[this.name] === this.child.el) {
 			this.parent._elements[this.name] = this._el;
 		}
-		this.child.el.replaceBy(this._el);
+		JW.UI.replace(this.child.el[0], this._el[0]);
 		this.parent._doneChild(this.child);
 		this._el = null;
 		this.name = null;

@@ -27,7 +27,6 @@
  * you can define a third function: array is cleared
  * (in case if there is more effective clearing algorithm than iterative items deletion).
  * Unlike JW.AbstractCollection.Observer, tracks items order.
- * Can be used mainly for DOM-element synchronization with array of child elements.
  *
  * Use JW.AbstractArray#createInserter method to create the synchronizer.
  *

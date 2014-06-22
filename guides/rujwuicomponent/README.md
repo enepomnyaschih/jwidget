@@ -34,7 +34,7 @@ Model-View без больших усилий. Начнем с примеров.
         // String link;
         
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#getElement getElement}("hello-message").text(this.message);
             this.{@link JW.UI.Component#getElement getElement}("link").attr("href", this.link);
@@ -85,7 +85,7 @@ JW.UI.template с именем `main` и по умолчанию равен
 Есть 4 способа добавить дочерний компонент:
 
 - Добавить компонент в словарь {@link JW.UI.Component#children children} с ключом, равным `jwid` элемента, который вы хотите заменить дочерним
-компонентом. Обычно, это делается в методе {@link JW.UI.Component#renderComponent renderComponent}.
+компонентом. Обычно, это делается в методе {@link JW.UI.Component#afterRender afterRender}.
 - Добавить легко заменяемый дочерний компонент, используя метод {@link JW.UI.Component#addReplaceable addReplaceable}. Передайте туда [JW.Property](#!/guide/rujwproperty) и фреймворк
 обеспечит непрерывную синхронизацию с этим свойством во время работы приложения.
 - Добавить массив дочерних компонентов в один из элементов с помощью метода {@link JW.UI.Component#addArray addArray}. Если переданный массив
@@ -140,7 +140,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
 
 В таком случае, элемент HTML шаблона с таким `jwid` вернется в свое изначальное состояние.
 
-Вы можете свободно уничтожать дочерние компоненты в методе {@link JW.UI.Component#destroyComponent destroyComponent} родительского компонента.
+Вы можете свободно уничтожать дочерние компоненты в методе {@link JW.UI.Component#unrender unrender} родительского компонента.
 В этом методе, дочерние компоненты уже удалены из родителя фреймворком и готовы к уничтожению.
 
 Кроме того, вы можете использовать метод агрегации {@link JW.Class#own own} для уничтожения дочерних компонентов.
@@ -151,7 +151,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
 удален из родительского компонента:
 
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
@@ -165,11 +165,11 @@ JavaScript Array и Object: у наших коллекций есть Observable
             this._labelArray.{@link JW.Class#destroy destroy}();
         }
 
-**Замечение:** Все массивы уже уничтожены перед вызовом метода {@link JW.UI.Component#destroyComponent destroyComponent}, т.е. такие дочерние компоненты
+**Замечение:** Все массивы уже уничтожены перед вызовом метода {@link JW.UI.Component#unrender unrender}, т.е. такие дочерние компоненты
 уже удалены из родителя. Но сами компоненты еще не уничтожены. Обычно это делается путем уничтожения соответствующего
 синхронизатора:
 
-        {@link JW.UI.Component#destroyComponent destroyComponent}: function() {
+        {@link JW.UI.Component#unrender unrender}: function() {
             this._labelMapper.{@link JW.Class#destroy destroy}(); // уничтожаем представления всех меток
             this.{@link JW.Class#method-_super _super}();
         }
@@ -339,18 +339,20 @@ JavaScript Array и Object: у наших коллекций есть Observable
 строке метода.
 1. Методы <code>render&lt;ChildId&gt;</code> вызываются для всех элементов HTML шаблона, т.е. выполняется
 создание дочерних компонентов.
-1. Вызывается метод {@link JW.UI.Component#renderComponent renderComponent}. Здесь следует присваивать атрибуты элементов, создавать дочерние компоненты,
+1. Вызывается метод {@link JW.UI.Component#afterRender afterRender}. Здесь следует присваивать атрибуты элементов, создавать дочерние компоненты,
 подписываться на события и наполнять компонент поведением, если вы не захотели этого делать на предыдущем шаге.
 Вызов <code>this._super()</code> выполняется в первой строке метода.
 1. Метод {@link JW.UI.Component#afterAppend afterAppend} вызывается после первого появления компонента в HTML DOM и дереве UI компонентов.
 Здесь следует выполнять лайаутинг компонента (вычислять размеры элементов). Здесь заканчивается рендеринг компонента.
 Вызов <code>this._super()</code> выполняется в первой строке метода.
-1. Метод {@link JW.UI.Component#destroyComponent destroyComponent} вызывается при уничтожении компонента. Здесь откатывается все, что было сделано во
-время рендеринга компонента, т.е. на шагах 2-5. Фреймворк уже удалил все дочерние компоненты перед вызовом этого
+1. Метод {@link JW.UI.Component#releaseDom releaseDom} вызывается при уничтожении компонента. Здесь откатывается все, что было сделано в методе {@link JW.UI.Component#afterAppend afterAppend},
+т.е. на шаге 5. Вызов <code>this._super()</code> выполняется в последней строке метода.
+1. Метод {@link JW.UI.Component#unrender unrender} вызывается при уничтожении компонента. Здесь откатывается все, что было сделано во
+время рендеринга компонента, т.е. на шагах 2-4. Фреймворк уже удалил все дочерние компоненты перед вызовом этого
 метода, но сами компоненты еще не уничтожены. Вы должны уничтожить их явно, если вы не заагрегировали их
 методом {@link JW.Class#own own}.
 Вызов <code>this._super()</code> выполняется в последней строке метода.
-1. Метод {@link JW.UI.Component#destroyObject destroyObject} вызывается при уничтожении компонента. Здесь откатывается все, что было сделано в
+1. Метод {@link JW.UI.Component#afterDestroy afterDestroy} вызывается при уничтожении компонента. Здесь откатывается все, что было сделано в
 конструкторе компонента, т.е. на первом шаге.
 Вызов <code>this._super()</code> выполняется в последней строке метода.
 
@@ -378,7 +380,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
         // String link;
         
         // override
-        {@link JW.UI.Component#renderComponent renderComponent}: function() {
+        {@link JW.UI.Component#afterRender afterRender}: function() {
             this.{@link JW.Class#method-_super _super}();
             this.{@link JW.UI.Component#getElement getElement}("hello-message").text(this.message);
             this.{@link JW.UI.Component#getElement getElement}("link").attr("href", this.link);

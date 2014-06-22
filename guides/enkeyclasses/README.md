@@ -45,7 +45,7 @@ Synchronizers:
 - Converter to array (orderer): JW.AbstractCollection.Orderer
 - Converter to array (sorter by comparer): JW.AbstractCollection.SorterComparing
 - Observer: JW.AbstractCollection.Observer
-- View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter
+- View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter, JW.UI.Inserter
 - Arrays merger: JW.AbstractArray.Merger
 - Array reverser: JW.AbstractArray.Reverser
 

@@ -18,33 +18,26 @@
 */
 
 /**
- * @class jQuery
- *
- * jQuery element is extended with several methods.
+ * @class JW.UI.Component.TemplateOutput
+ * 
+ * Result of JW.UI.Component.Template#createElement method. HTML template rendering output.
+ * 
+ * @extends JW.Class
+ * @constructor
+ * @param {DOMElement} root The rendered element.
+ * @param {Object} groups `<Array<DOMElement>>` Map from jwid to the elements with this jwid.
  */
-JW.apply(jQuery.fn, {
+JW.UI.Component.TemplateOutput = function(root, groups) {
+	JW.UI.Component.TemplateOutput._super.call(this);
+	this.root = root;
+	this.groups = groups;
+};
+
+JW.extend(JW.UI.Component.TemplateOutput, JW.Class, {
 	/**
-	 * Replace element with another element in DOM. Unlike standard replaceWith, doesn't kill the event listeners.
-	 * @param {jQuery} el Element.
-	 * @param {boolean} [attrs=false] Assign "id" attribute (if defined) and add all classes of current element
-	 * to el.
-	 * @returns {jQuery} this.
+	 * @property {DOMElement} root The rendered element.
 	 */
-	replaceBy: function(el, attrs) {
-		var ths = this.eq(0);
-		var id = attrs ? ths.attr("id") : null,
-			cls = attrs ? ths.attr("class") : null;
-		
-		el = jQuery(el).eq(0);
-		ths.after(el);
-		ths.detach();
-		
-		if (id) {
-			el.attr("id", id);
-		}
-		if (cls) {
-			el.addClass(cls);
-		}
-		return this;
-	}
+	/**
+	 * @property {Object} groups `<Array<DOMElement>>` Map from jwid to the elements with this jwid.
+	 */
 });

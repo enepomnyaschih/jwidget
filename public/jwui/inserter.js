@@ -17,10 +17,29 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @class
+ *
+ * View synchronizer. Synchronizes DOM element children with the source array. Usually used in conjunction with
+ * JW.AbstractArray.Mapper.
+ *
+ *     var data = new JW.ObservableArray(["apple", "banana", "cherry"]);
+ *     var elements = data.{@link JW.ObservableArray#createMapper createMapper}({
+ *         {@link JW.ObservableArray.Mapper#cfg-createItem createItem}: function(value) { return jQuery('<option />').text(value)[0]; }
+ *     }).{@link JW.ObservableArray.Mapper#property-target target};
+ *     var inserter = new JW.UI.Inserter(elements, document.getElementById("myselect"));
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * Creates synchronizer.
+ * @param {JW.AbstractArray} source `<DOMElement>` Source array.
+ * @param {DOMElement} el Parent element.
+ */
 JW.UI.Inserter = function(source, el) {
 	JW.UI.Inserter._super.call(this);
-	this.el = el;
-	this.len = 0;
+	this.el = el; // DOMElement
+	this.len = 0; // Number
 	this.own(source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
@@ -29,23 +48,23 @@ JW.UI.Inserter = function(source, el) {
 };
 
 JW.extend(JW.UI.Inserter, JW.Class, {
-	// Number len;
-	// Element el;
+	_getElement: function(item) {
+		return item;
+	},
 	
 	_addItem: function(item, index) {
-		var parent = this.el[0];
-		var child = item.el[0];
+		var parent = this.el;
+		var child = this._getElement(item);
 		if (index === this.len) {
 			parent.appendChild(child);
 		} else {
 			parent.insertBefore(child, parent.childNodes.item(index));
 		}
 		++this.len;
-		item._afterAppend();
 	},
 	
 	_removeItem: function(item) {
 		--this.len;
-		item.el.detach();
+		JW.UI.remove(this._getElement(item));
 	}
 });
