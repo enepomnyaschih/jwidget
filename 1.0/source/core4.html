@@ -16,22 +16,22 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*!
-	jWidget UI 1.0.0
-	
+	jWidget UI 1.0.1
+
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 */
@@ -52,28 +52,28 @@ JW.UI = {
 		td: [ 3, &quot;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&quot;, &quot;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&quot; ],
 		_default: [ 0, &quot;&quot;, &quot;&quot; ]
 	},
-	
+
 <span id='JW-UI-property-rtagName'>	rtagName: /^&lt;([\w:]+)/,
-</span>	
+</span>
 <span id='JW-UI-static-property-hash'>	/**
 </span>	 * @property {JW.Property} hash `&lt;String&gt;` Current page hash (without leading &quot;#&quot;).
 	 * @static
 	 */
 	hash: new JW.Property(location.hash.substr(1)),
-	
+
 <span id='JW-UI-static-method-template'>	/**
 </span>	 * Defines HTML templates for specified JW.UI.Component subclass.
-	 * 
+	 *
 	 * You can define multiple templates for any subclass of JW.UI.Component. Each template has a name.
 	 * You can get component template via JW.UI.Component.templates dictionary.
-	 * 
+	 *
 	 * Templates are inherited together with component classes.
-	 * 
+	 *
 	 * Each component class has at least one template, its name is `main`. This is the main template which is
 	 * used to render the component. By default, `main` equals to `&lt;div&gt;&lt;/div&gt;`.
 	 * Usually, `main` template is enough for the majority of components. This template is applied automatically,
 	 * unlike other templates which should be applied manually.
-	 * 
+	 *
 	 * JW.UI.template function is called automatically if you attach `jw.html` files via
 	 * [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en). See
 	 * [Getting started. Part 7. Project infrastructure](#!/guide/ensample7) for details.
@@ -94,7 +94,7 @@ JW.UI = {
 			cls.prototype.templates = new cls.prototype.Templates();
 		}
 	},
-	
+
 <span id='JW-UI-static-method-isElement'>	/**
 </span>	 * Checks whether x is [jQuery element](http://api.jquery.com/).
 	 * @static
@@ -104,29 +104,29 @@ JW.UI = {
 	isElement: function(v) {
 		return v instanceof jQuery.fn.init;
 	},
-	
+
 <span id='JW-UI-static-method-preventDefault'>	/**
 </span>	 * Calls `preventDefault` method for [jQuery event](http://api.jquery.com/category/events/event-object/).
-	 * 
+	 *
 	 * Use this way:
-	 * 
+	 *
 	 *     el.click(JW.UI.preventDefault);
-	 * 
+	 *
 	 * Shorthand for
-	 * 
+	 *
 	 *     el.click(JW.byMethod(&quot;preventDefault&quot;));
-	 * 
+	 *
 	 * and
-	 * 
+	 *
 	 *     el.click(function(e) { e.preventDefault(); });
-	 * 
+	 *
 	 * @static
 	 * @param {Object} event jQuery event.
 	 */
 	preventDefault: function(event) {
 		event.preventDefault();
 	},
-	
+
 <span id='JW-UI-method-isLifeInput'>	isLifeInput: function(el) {
 </span>		el = jQuery(el);
 		var tagName = el[0].tagName.toLowerCase();
@@ -136,7 +136,7 @@ JW.UI = {
 		}
 		return tagName === &quot;textarea&quot;;
 	},
-	
+
 <span id='JW-UI-method-insert'>	insert: function(parent, child, index) {
 </span>		if (!JW.isSet(index) || (index &gt;= parent.childNodes.length)) {
 			parent.appendChild(child);
@@ -144,13 +144,13 @@ JW.UI = {
 			parent.insertBefore(child, parent.childNodes.item(index));
 		}
 	},
-	
+
 <span id='JW-UI-method-remove'>	remove: function(el) {
 </span>		if (el.parentNode) {
 			el.parentNode.removeChild(el);
 		}
 	},
-	
+
 <span id='JW-UI-method-parseHtml'>	parseHtml: function(html) {
 </span>		if (JW.UI._fragment) {
 			JW.UI._fragment.textContent = &quot;&quot;;
@@ -166,11 +166,11 @@ JW.UI = {
 		}
 		return el.firstChild;
 	},
-	
+
 <span id='JW-UI-method-hasClass'>	hasClass: function(el, cls) {
 </span>		return (&quot; &quot; + el.className + &quot; &quot;).indexOf(cls) !== -1;
 	},
-	
+
 <span id='JW-UI-method-addClass'>	addClass: function(el, cls) {
 </span>		if (!el.className) {
 			el.className = cls;
@@ -178,7 +178,7 @@ JW.UI = {
 			el.className += &quot; &quot; + cls;
 		}
 	},
-	
+
 <span id='JW-UI-method-inDom'>	inDom: function(el) {
 </span>		while (el) {
 			if (el.tagName.toLowerCase() === &quot;body&quot;) {
@@ -188,7 +188,7 @@ JW.UI = {
 		}
 		return false;
 	},
-	
+
 <span id='JW-UI-method-replace'>	replace: function(removeEl, insertEl, attrs) {
 </span>		var parentEl = removeEl.parentNode;
 		if (!parentEl) {
@@ -203,6 +203,10 @@ JW.UI = {
 		if (cls) {
 			JW.UI.addClass(insertEl, cls);
 		}
+	},
+
+<span id='JW-UI-method-_afterAppend'>	_afterAppend: function(child) {
+</span>		child._afterAppend();
 	}
 };
 
