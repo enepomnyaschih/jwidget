@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget UI source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -36,19 +36,19 @@
  *
  *     // Define namespace
  *     var MyApp = {};
- *     
+ *
  *     // Define component constructor
  *     MyApp.Component = function(message, link) {
  *         MyApp.Component.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.message = message;
  *         this.link = link;
  *     };
- *     
+ *
  *     // Inherit from JW.UI.Component
  *     JW.extend(MyApp.Component, JW.UI.Component, {
  *         // String message;
  *         // String link;
- *         
+ *
  *         // override
  *         {@link #afterRender afterRender}: function() {
  *             this.{@link JW.Class#method-_super _super}();
@@ -56,7 +56,7 @@
  *             this.{@link #getElement getElement}("link").attr("href", this.link);
  *         }
  *     });
- *     
+ *
  *     JW.UI.template(MyApp.Component, {
  *         main:
  *             '<div jwclass="myapp-component">' +
@@ -90,7 +90,7 @@
  * or #renderAs in order to insert this component into DOM.
  *
  *     var component;
- *     
+ *
  *     jQuery(function() {
  *         component = new MyApp.Component("Hello world!", "http://google.com");
  *         component.{@link #renderTo renderTo}("body");
@@ -99,7 +99,7 @@
  * ### Child components
  *
  * There are 4 ways to add a child component:
- * 
+ *
  * - Add a child component into #children map with a key equal to `jwid` of element to replace with the child
  * component. Usually it is done in #afterRender method.
  * - Add an easily replaceable child component using #addReplaceable method. Pass JW.Property there and
@@ -113,33 +113,33 @@
  * or child component array. Define method `renderRoot` to render root element, but you can return JW.AbstractArray
  * only there.
  * See **More about render&lt;ChildId&gt; method** paragraph for details.
- * 
+ *
  * Such interface provides simplicity, at one hand, and flexibility in Model-View architecture following regard,
  * at another hand.
- * 
+ *
  * [Getting started. Part 1. Model and view](#!/guide/ensample1)
- * 
+ *
  * ### More about child component arrays
- * 
+ *
  * It is convenient to use JW.AbstractCollection.Mapper to convert data arrays into UI component arrays.
  * Thanks to it, view will be updated on data update automatically.
- * 
+ *
  * That's the reason why we recommend to use jWidget JW.AbstractCollection in data model instead of native JavaScript
  * Array and Object: these collections have Observable-implementations and can be synchronized with each other.
- * 
+ *
  * [Getting started. Part 6. Collection synchronizers](#!/guide/ensample6)
- * 
+ *
  * ### More about render&lt;ChildId&gt; method
- * 
+ *
  * You can define method `render<ChildId>` for every element in HTML template that has attribute `jwid`.
  * `<ChildId>` equals to this `jwid`, written in CamelCase with capitalized first letter. Method signature:
- * 
+ *
  * <code>renderChildId(el: [jQuery](http://api.jquery.com/)): Mixed</code>
- * 
+ *
  * `el` - element with corresponding `jwid`.
- * 
+ *
  * Depending on the returned result of this method, there are next capabilities:
- * 
+ *
  * - If method returns JW.UI.Component, then it will be added into #children map and will become a child component.
  * Doesn't work for root element.
  * - If method returns JW.Property, then it will be added as easily replaceable child component by
@@ -147,17 +147,17 @@
  * - If method returns JW.AbstractArray, then it will be added as child array by method #addArray.
  * - If method returns `false` (===), then element will be removed from component HTML. Doesn't work for root element.
  * - In any other case, framework won't perform any additional action.
- * 
+ *
  * ### Components removal and destruction
- * 
+ *
  * You can destroy the component via #destroy method. But you can not destroy a component which is added into another one as a child (framework will
  * throw an exception in this case). You must remove child component from a parent first. To remove the component
  * from a parent, you must perform the operation opposite to adding operation. So, to remove a component
  * with `jwid="comments"` you must call {@link JW.AbstractMap#method-remove} method of #children object.
  * You can destroy this component immediately:
- * 
+ *
  *     this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#method-remove remove}("comments").{@link JW.Class#destroy destroy}();
- * 
+ *
  * In this case, the element of HTML template with such `jwid` will return back to its original state.
  *
  * You can destroy child components freely in {@link #unrender} method of parent component. In this method,
@@ -168,7 +168,7 @@
  * Child arrays are a bit more complicated. First way to remove a child which is added to the parent via array is to
  * remove this child from this array (if it is JW.ObservableArray). Second way: #addArray method returns an instance of
  * JW.UI.Component.Array. If you destroy it, the array will be removed from parent component:
- * 
+ *
  *         // override
  *         {@link #afterRender afterRender}: function() {
  *             this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
@@ -179,23 +179,23 @@
  *             // Add labels into element with jwid="labels"
  *             this._labelArray = this.{@link #addArray addArray}(this._labelMapper.{@link JW.AbstractCollection.Mapper#property-target target}, "labels");
  *         },
- *         
+ *
  *         clearLabels: function() {
  *             this._labelArray.{@link JW.Class#destroy destroy}();
  *         }
- * 
+ *
  * **Notice:** All arrays are already destroyed before #unrender method call, i.e. all such child components
  * are already removed from a parent. But the components themselves are still not destroyed. You must destroy a
  * corresponding sychronizer for this usually:
- * 
+ *
  *         {@link #unrender unrender}: function() {
  *             this._labelMapper.{@link JW.Class#destroy destroy}(); // destroys all label views
  *             this.{@link JW.Class#method-_super _super}();
  *         }
- * 
+ *
  * Likely, the rules which were described in this paragraph seem too complicated for you, but their reasoning
  * will become clear in next paragraph.
- * 
+ *
  * ### Common practices of child component management
  *
  * **Internal named child component**
@@ -205,13 +205,13 @@
  *     var MyComponent = function() {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
  *     };
- *     
+ *
  *     JW.extend(MyComponent, JW.UI.Component, {
  *         renderTitleBox: function() {
  *             return this.{@link JW.Class#own own}(new TitleBox());
  *         }
  *     });
- *     
+ *
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
@@ -229,10 +229,10 @@
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.document = document;
  *     };
- *     
+ *
  *     JW.extend(MyComponent, JW.UI.Component, {
  *         // JW.Property<Document> document;
- *         
+ *
  *         renderDocument: function() {
  *             return this.{@link JW.Class#own own}(new JW.Mapper([this.document], {
  *                 {@link JW.Mapper#createValue createValue}: function(document) {
@@ -243,7 +243,7 @@
  *             })).{@link JW.Mapper#property-target target};
  *         }
  *     });
- *     
+ *
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
@@ -260,17 +260,17 @@
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.labels = labels;
  *     };
- *     
+ *
  *     JW.extend(MyComponent, JW.UI.Component, {
  *         // JW.AbstractArray<Label> labels;
- *         
+ *
  *         renderLabels: function() {
  *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$map $map}(function(label) {
  *                 return new LabelView(label);
  *             }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
  *         }
  *     });
- *     
+ *
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
@@ -287,10 +287,10 @@
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.labels = labels;
  *     };
- *     
+ *
  *     JW.extend(MyComponent, JW.UI.Component, {
  *         // JW.AbstractArray<Label> labels;
- *         
+ *
  *         renderLabels: function() {
  *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
  *                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) {
@@ -301,7 +301,7 @@
  *             })).{@link JW.AbstractCollection.Mapper#property-target target};
  *         }
  *     });
- *     
+ *
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
@@ -319,15 +319,15 @@
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.titleBox = titleBox;
  *     };
- *     
+ *
  *     JW.extend(MyComponent, JW.UI.Component, {
  *         // Mixed titleBox;
- *         
+ *
  *         renderTitleBox: function() {
  *             return this.titleBox;
  *         }
  *     });
- *     
+ *
  *     JW.UI.template(MyComponent, {
  *         main:
  *             '<div jwclass="my-component">' +
@@ -336,9 +336,9 @@
  *     });
  *
  * ### Component life stages
- * 
+ *
  * Each component has several stages of life.
- * 
+ *
  * 1. Like in all other classes, **constructor** is called first. Usually all fields are defined and assigned to
  * their initial values here, events are created etc. Only component model should be touched here, view is completely
  * ignored. Notice that component is not rendered after construction yet, so it doesn't have
@@ -371,30 +371,30 @@
  * 1. Method #afterDestroy is called during component destruction. Everything that was performed in component
  * constructor, i.e. on step 1, should be reverted here. <code>this._super()</code> method call is performed
  * at last line of method.
- * 
+ *
  * ### Intergration with jWidget SDK
- * 
+ *
  * jWidget UI library is integrated with [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en) perfectly, and
  * it gives you nice code optimizations of JS-code out of the box and capability to extract HTML templates into
  * separate files. For example, you can simplify the very first example by splitting code into 2 files:
- * 
+ *
  * **component.js**
- * 
+ *
  *     // Define namespace
  *     var MyApp = {};
- *     
+ *
  *     // Define component constructor
  *     MyApp.Component = function(message, link) {
  *         MyApp.Component.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.message = message;
  *         this.link = link;
  *     };
- *     
+ *
  *     // Inherit from JW.UI.Component
  *     JW.extend(MyApp.Component, JW.UI.Component, {
  *         // String message;
  *         // String link;
- *         
+ *
  *         // override
  *         {@link #afterRender afterRender}: function() {
  *             this.{@link JW.Class#method-_super _super}();
@@ -402,16 +402,16 @@
  *             this.{@link #getElement getElement}("link").attr("href", this.link);
  *         }
  *     });
- * 
+ *
  * **component.jw.html**
- * 
+ *
  *     <div jwclass="myapp-component">
  *         <div jwid="hello-message"></div>
  *         <a href="#" jwid="link">Click me!</a>
  *     </div>
- * 
+ *
  * To make this work, you just need to register the next resources in corresponding jWidget SDK package:
- * 
+ *
  *     {
  *         "resources" : [
  *             "component.js",
@@ -419,14 +419,14 @@
  *             ...
  *         ]
  *     }
- * 
+ *
  * Sure, you can use jWidget even without jWidget SDK, but in this case you'll need to either load HTML templates
  * dinamically or define them explicitly right in JavaScript code using JW.UI.template function.
- * 
+ *
  * See more complicated example in article:
- * 
+ *
  * [Getting started. Part 7. Project infrastructure](#!/guide/ensample7)
- * 
+ *
  * @extends JW.Class
  * @constructor
  */
@@ -460,7 +460,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * `<JW.UI.Component>` (mutable) Named child components. Use this map to add child components in place of
 	 * elements with corresponding `jwid`. Field is available from component rendering beginning.
 	 */
-	
+
 	destroy: function() {
 		if (this.parent) {
 			throw new Error("JW.UI.Component.destroy must be used for root and detached components only");
@@ -474,10 +474,10 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this._arrays = null;
 			JW.Set.each(this._replaceables, JW.destroy);
 			this._replaceables = null;
-			
+
 			this.children.unrender();
 			this.unrender();
-			
+
 			this.children.destroy();
 			this.children = null;
 			this.el.remove();
@@ -487,7 +487,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.afterDestroy();
 		this._super();
 	},
-	
+
 	/**
 	 * Component life stage method. Called during component rendering after HTML template parsing and initialization
 	 * of references to all elements of the template. Called before `render<ChildId>` methods and
@@ -498,7 +498,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @returns {void}
 	 */
 	beforeRender: function() {},
-	
+
 	/**
 	 * Component life stage method. Called after #beforeRender method and `render<ChildId>` methods.
 	 * You should assign all elements' attributes here, create child components,
@@ -508,7 +508,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @returns {void}
 	 */
 	afterRender: function() {},
-	
+
 	/**
 	 * Component life stage method. Called after first-time component appearing in HTML DOM and UI components tree.
 	 * Component layouting should be performed here (calculate element sizes).
@@ -517,7 +517,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @returns {void}
 	 */
 	afterAppend: function() {},
-	
+
 	/**
 	 * Component life stage method. Called during component destruction before {@link #unrender} method call.
 	 * Everything that was performed in #afterAppend method should be reverted here.
@@ -525,7 +525,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @returns {void}
 	 */
 	releaseDom: function() {},
-	
+
 	/**
 	 * Component life stage method. Called during component destruction before {@link #afterDestroy} method call.
 	 * Everything that was performed during component
@@ -538,7 +538,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @returns {void}
 	 */
 	unrender: function() {},
-	
+
 	/**
 	 * Component life stage method. Called during component destruction after {@link #unrender} method call.
 	 * Everything that was performed during component construction should be reverted here.
@@ -547,7 +547,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @returns {void}
 	 */
 	afterDestroy: function() {},
-	
+
 	/**
 	 * Selects component rendering strategy. By default, component is rendered outside of DOM based on `main` HTML
 	 * template specified by JW.UI.template method. You can change this by passing one of the next values
@@ -570,11 +570,11 @@ JW.extend(JW.UI.Component, JW.Class, {
 			(value instanceof JW.UI.Component.Template) ? value : new JW.UI.Component.DomTemplate(value);
 		return this;
 	},
-	
+
 	/**
 	 * Renders component. Call this method to initialize references to all elements of component and create
 	 * child components. This method is called automatically in next cases:
-	 * 
+	 *
 	 * - One of methods #renderTo, #renderAs is called
 	 * - The component is added into another component as a child
 	 *
@@ -622,7 +622,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		return this;
 	},
-	
+
 	/**
 	 * Render component into specified element. Use it to render root component only: its children must be rendered
 	 * using #children or #addArray stuff.
@@ -636,7 +636,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this._afterAppend();
 		return this;
 	},
-	
+
 	/**
 	 * Render component in place of specified element. Use it to render root component only: its children must be rendered
 	 * using #children or #addArray stuff.
@@ -650,7 +650,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this._afterAppend();
 		return this;
 	},
-	
+
 	/**
 	 * Remove component from DOM. Can be used for root component only (which was added via #renderTo or #renderAs
 	 * method. All child components should be removed using #children or JW.UI.Component.Array stuff.
@@ -664,7 +664,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		JW.UI.remove(this.el[0]);
 		return this;
 	},
-	
+
 	/**
 	 * Get element by its `jwid`.
 	 * @param {string} jwid
@@ -673,7 +673,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	getElement: function(id) {
 		return this._elements[id];
 	},
-	
+
 	/**
 	 * Remove element by `jwid`. Element will be removed from DOM and it will be impossible to get it
 	 * by #getElement method.
@@ -688,14 +688,14 @@ JW.extend(JW.UI.Component, JW.Class, {
 		el.remove();
 		delete this._elements[id];
 	},
-	
+
 	/**
 	 * Add an easily replaceable child component into specified element.
-	 * 
+	 *
 	 * Pass an instance of JW.Property<JW.UI.Component>, and view will be synchronized with this property of fly.
-	 * 
+	 *
 	 * It is convenient to create "component" property from data property using JW.Mapper class.
-	 * 
+	 *
 	 * Method returns an instance of JW.UI.Component.Replaceable. This object is purposed for replaceable child
 	 * removal from parent component. Use {@link JW.Class#destroy destroy} method to do this.
 	 * Also, the replaceable will be removed from parent component on parent component destruction right
@@ -710,16 +710,16 @@ JW.extend(JW.UI.Component, JW.Class, {
 	addReplaceable: function(component, id) {
 		return new JW.UI.Component.Replaceable(this, component, id);
 	},
-	
+
 	/**
 	 * Add child component array into specified element.
-	 * 
+	 *
 	 * Based on JW.UI.Inserter synchronizer. Thanks to that, if you'll pass an instance of
 	 * JW.ObservableArray as "components", then view will be synchronized with this array content of fly.
-	 * 
+	 *
 	 * It is convenient to create "components" array from data array using JW.AbstractArray#createMapper method,
 	 * i.e. by JW.AbstractCollection.Mapper instantiation.
-	 * 
+	 *
 	 * Method returns an instance of JW.UI.Component.Array. This object is purposed for child component array
 	 * removal from parent component. Use {@link JW.Class#destroy destroy} method to do this.
 	 * Also, the array will be removed from parent component on parent component destruction right
@@ -737,7 +737,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		return new JW.UI.Component.Array(this, source, (el === undefined) ? this.el :
 			(typeof el === "string") ? this._elements[el] : jQuery(el));
 	},
-	
+
 	_afterAppend: function() {
 		if (this.wasAfterAppend || !this.el) {
 			return;
@@ -750,21 +750,17 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		this.wasAfterAppend = true;
 		this.afterAppend();
-		this.children.each(this._childAfterAppend);
-		JW.Array.each(this._arrays, this._childAfterAppend);
+		this.children.each(JW.UI._afterAppend);
+		JW.Set.each(this._arrays, JW.UI._afterAppend);
 	},
-	
+
 	_initChild: function(component) {
 		component.render();
 		component.parent = this;
 	},
-	
+
 	_doneChild: function(component) {
 		component.parent = null;
-	},
-	
-	_childAfterAppend: function(child) {
-		child._afterAppend();
 	}
 });
 

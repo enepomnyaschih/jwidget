@@ -1,20 +1,20 @@
 ﻿/*!
-	jWidget UI 1.0.0
-	
+	jWidget UI 1.0.1
+
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -35,28 +35,28 @@ JW.UI = {
 		td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
 		_default: [ 0, "", "" ]
 	},
-	
+
 	rtagName: /^<([\w:]+)/,
-	
+
 	/**
 	 * @property {JW.Property} hash `<String>` Current page hash (without leading "#").
 	 * @static
 	 */
 	hash: new JW.Property(location.hash.substr(1)),
-	
+
 	/**
 	 * Defines HTML templates for specified JW.UI.Component subclass.
-	 * 
+	 *
 	 * You can define multiple templates for any subclass of JW.UI.Component. Each template has a name.
 	 * You can get component template via JW.UI.Component.templates dictionary.
-	 * 
+	 *
 	 * Templates are inherited together with component classes.
-	 * 
+	 *
 	 * Each component class has at least one template, its name is `main`. This is the main template which is
 	 * used to render the component. By default, `main` equals to `<div></div>`.
 	 * Usually, `main` template is enough for the majority of components. This template is applied automatically,
 	 * unlike other templates which should be applied manually.
-	 * 
+	 *
 	 * JW.UI.template function is called automatically if you attach `jw.html` files via
 	 * [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en). See
 	 * [Getting started. Part 7. Project infrastructure](#!/guide/ensample7) for details.
@@ -77,7 +77,7 @@ JW.UI = {
 			cls.prototype.templates = new cls.prototype.Templates();
 		}
 	},
-	
+
 	/**
 	 * Checks whether x is [jQuery element](http://api.jquery.com/).
 	 * @static
@@ -87,29 +87,29 @@ JW.UI = {
 	isElement: function(v) {
 		return v instanceof jQuery.fn.init;
 	},
-	
+
 	/**
 	 * Calls `preventDefault` method for [jQuery event](http://api.jquery.com/category/events/event-object/).
-	 * 
+	 *
 	 * Use this way:
-	 * 
+	 *
 	 *     el.click(JW.UI.preventDefault);
-	 * 
+	 *
 	 * Shorthand for
-	 * 
+	 *
 	 *     el.click(JW.byMethod("preventDefault"));
-	 * 
+	 *
 	 * and
-	 * 
+	 *
 	 *     el.click(function(e) { e.preventDefault(); });
-	 * 
+	 *
 	 * @static
 	 * @param {Object} event jQuery event.
 	 */
 	preventDefault: function(event) {
 		event.preventDefault();
 	},
-	
+
 	isLifeInput: function(el) {
 		el = jQuery(el);
 		var tagName = el[0].tagName.toLowerCase();
@@ -119,7 +119,7 @@ JW.UI = {
 		}
 		return tagName === "textarea";
 	},
-	
+
 	insert: function(parent, child, index) {
 		if (!JW.isSet(index) || (index >= parent.childNodes.length)) {
 			parent.appendChild(child);
@@ -127,13 +127,13 @@ JW.UI = {
 			parent.insertBefore(child, parent.childNodes.item(index));
 		}
 	},
-	
+
 	remove: function(el) {
 		if (el.parentNode) {
 			el.parentNode.removeChild(el);
 		}
 	},
-	
+
 	parseHtml: function(html) {
 		if (JW.UI._fragment) {
 			JW.UI._fragment.textContent = "";
@@ -149,11 +149,11 @@ JW.UI = {
 		}
 		return el.firstChild;
 	},
-	
+
 	hasClass: function(el, cls) {
 		return (" " + el.className + " ").indexOf(cls) !== -1;
 	},
-	
+
 	addClass: function(el, cls) {
 		if (!el.className) {
 			el.className = cls;
@@ -161,7 +161,7 @@ JW.UI = {
 			el.className += " " + cls;
 		}
 	},
-	
+
 	inDom: function(el) {
 		while (el) {
 			if (el.tagName.toLowerCase() === "body") {
@@ -171,7 +171,7 @@ JW.UI = {
 		}
 		return false;
 	},
-	
+
 	replace: function(removeEl, insertEl, attrs) {
 		var parentEl = removeEl.parentNode;
 		if (!parentEl) {
@@ -186,6 +186,10 @@ JW.UI = {
 		if (cls) {
 			JW.UI.addClass(insertEl, cls);
 		}
+	},
+
+	_afterAppend: function(child) {
+		child._afterAppend();
 	}
 };
 
