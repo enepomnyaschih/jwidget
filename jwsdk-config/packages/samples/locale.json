@@ -1,0 +1,13 @@
+{
+	"requires": [
+		"jwui",
+		"plugins/locale"
+	],
+	"resources": [
+		"samples/locale/equipmentSelector.js",
+		"samples/locale/form.js",
+		"samples/locale/localeSwitch.js",
+		"samples/locale/localeSwitchItem.js",
+		"samples/locale/boot.js"
+	]
+}

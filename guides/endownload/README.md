@@ -1,6 +1,8 @@
-<font size="5">[Download jWidget](guides/endownload/jwidget.zip)</font>
+# Download
 
-<font size="5">[Source code and bug tracker on GitHub](https://github.com/enepomnyaschih/jwidget)</font>
+[Download jWidget](guides/endownload/jwidget.zip)
+
+[Source code and bug tracker on GitHub](https://github.com/enepomnyaschih/jwidget)
 
 jWidget is available as [Bower](http://bower.io/) package:
 
