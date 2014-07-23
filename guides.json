@@ -296,6 +296,15 @@
 						]
 					}
 				]
+			},
+			{
+				"title": "Дополнения",
+				"items": [
+					{
+						"name": "rupluginslocale",
+						"title": "JW.Plugins.Locale"
+					}
+				]
 			}
 		]
 	}
