@@ -41,6 +41,9 @@ JW.Plugins = JW.Plugins || {};
  *
  * <iframe style="border: 1px solid green; padding: 10px;" width="400" height="140" src="http://enepomnyaschih.github.io/mt/1.0.0/locale.html"></iframe>
  *
+ * Source code of the example is not minified so you can review it using "View source code of the frame" context
+ * menu item in your browser.
+ *
  * ## getString method
  *
  * You can get a specified string in a current or specified locale using {@link JW.Plugins.Locale#getString getString} method.

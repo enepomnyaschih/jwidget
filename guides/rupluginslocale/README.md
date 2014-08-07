@@ -42,6 +42,9 @@
 
 <iframe style="border: 1px solid green; padding: 10px;" width="400" height="140" src="http://enepomnyaschih.github.io/mt/1.0.0/locale.html"></iframe>
 
+Исходный код примера не минимизирован, поэтому вы можете просмотреть его, используя опцию "Просмотр исходного кода
+фрейма" в вашем браузере.
+
 ## Метод getString
 
 С помощью метода {@link JW.Plugins.Locale#getString getString} вы можете получить указанную строку в текущей или указанной локализации.
