@@ -39,6 +39,8 @@ JW.Plugins = JW.Plugins || {};
  * You need to implement a component for dynamic switching of application localization without page refreshing.
  * It is easy thanks to JW.Plugins.Locale. It is based on JW.Property.
  *
+ * <iframe style="border: 1px solid green; padding: 10px;" width="400" height="120" src="http://enepomnyaschih.github.io/mt/1.0.0/locale.html"></iframe>
+ *
  * ## getString method
  *
  * You can get a specified string in a current or specified locale using {@link JW.Plugins.Locale#getString getString} method.
