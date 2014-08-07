@@ -22,13 +22,13 @@ jWidget - чисто объектно-ориентированное решен�
         Greeter.{@link JW.Class#_super _super}.call(this);
         this.name = this.{@link JW.Class#own own}(new JW.Property("wanderer"));
     };
-    
+
     JW.extend(Greeter, JW.UI.Component, {
         renderNameField: function(el) {
             this.{@link JW.Class#own own}(new JW.UI.ValueUpdater(el, this.name)); // привязываем значение элемента к свойству
             this.{@link JW.Class#own own}(new JW.UI.ValueListener(el, this.name)); // привязываем свойство к значению элемента
         },
-        
+
         renderGreeting: function(el) {
             var text = this.{@link JW.Class#own own}(new JW.Functor([this.name], function(name) {
                 return "Hello, " + name + "!";
@@ -36,7 +36,7 @@ jWidget - чисто объектно-ориентированное решен�
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text)); // привязываем текст элемента к сообщению
         }
     });
-    
+
     JW.UI.template(Greeter, {
         main:
             '<div class="greeter">' +
@@ -44,7 +44,7 @@ jWidget - чисто объектно-ориентированное решен�
                 '<div jwid="greeting"></div>' +
             '</div>'
     });
-    
+
     new Greeter().{@link JW.UI.Component#renderTo renderTo}("body");
 
 <iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.0.0/greeter.html"></iframe>
@@ -67,7 +67,7 @@ jWidget - чисто объектно-ориентированное решен�
 
 Лицензия проекта - LGPL.
 
-Текущая версия: 1.0.1
+Текущая версия: 1.0.2
 
 <font size="5">[Скачать jWidget](guides/endownload/jwidget.zip)</font>
 

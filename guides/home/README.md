@@ -23,13 +23,13 @@ example:
         Greeter.{@link JW.Class#_super _super}.call(this);
         this.name = this.{@link JW.Class#own own}(new JW.Property("wanderer"));
     };
-    
+
     JW.extend(Greeter, JW.UI.Component, {
         renderNameField: function(el) {
             this.{@link JW.Class#own own}(new JW.UI.ValueUpdater(el, this.name)); // bind element value to property
             this.{@link JW.Class#own own}(new JW.UI.ValueListener(el, this.name)); // bind property to element value
         },
-        
+
         renderGreeting: function(el) {
             var text = this.{@link JW.Class#own own}(new JW.Functor([this.name], function(name) {
                 return "Hello, " + name + "!";
@@ -37,7 +37,7 @@ example:
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text)); // bind element text to message
         }
     });
-    
+
     JW.UI.template(Greeter, {
         main:
             '<div class="greeter">' +
@@ -45,7 +45,7 @@ example:
                 '<div jwid="greeting"></div>' +
             '</div>'
     });
-    
+
     new Greeter().{@link JW.UI.Component#renderTo renderTo}("body");
 
 <iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.0.0/greeter.html"></iframe>
@@ -67,7 +67,7 @@ practices are used to bind model objects to each other and to bind view componen
 
 Project license is LGPL.
 
-Current version: 1.0.1
+Current version: 1.0.2
 
 <font size="5">[Download jWidget](guides/endownload/jwidget.zip)</font>
 

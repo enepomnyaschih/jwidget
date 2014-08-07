@@ -1,20 +1,20 @@
 ﻿/*!
-	jWidget Lib 1.0.1
-	
+	jWidget Lib 1.0.2
+
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -47,9 +47,9 @@ JW.global = (typeof window === "undefined" ? global : window);
  * Empty source objects (undefined, null) will be ignored.
  *
  * Function modifies `target` object!
- * 
+ *
  * Example 1:
- * 
+ *
  *     var x = {         var y = {         // Result = {
  *         a: 10,                          //     a: 10,
  *         b: 20,            b: 30,        //     b: 30,
@@ -57,20 +57,20 @@ JW.global = (typeof window === "undefined" ? global : window);
  *         d: undefined,     d: 50,        //     d: 50,
  *         e: null                         //     e: null,
  *                           f: 60,        //     f: 60
- *                           g: undefined  // 
+ *                           g: undefined  //
  *     };                };                // };
- *     
+ *
  *     JW.applyIf(x, y);
- * 
+ *
  * Example 2 (form data preparing):
- * 
+ *
  *     My.Form = JW.Class.{@link JW.Class#static-method-extend}({
  *         // Object data;
- *         
+ *
  *         composeData: function(extraData) {
  *             return JW.apply({}, this.getDefaultData(), this.data, extraData);
  *         },
- *         
+ *
  *         // virtual
  *         getDefaultData: function() {
  *             return null;
@@ -108,7 +108,7 @@ JW.apply(JW, {
 	isUndefined: function(v) {
 		return v === undefined;
 	},
-	
+
 	/**
 	 * Checks whether x is not undefined.
 	 * @static
@@ -118,7 +118,7 @@ JW.apply(JW, {
 	isDefined: function(v) {
 		return v !== undefined;
 	},
-	
+
 	/**
 	 * Checks whether x is null.
 	 * @static
@@ -128,7 +128,7 @@ JW.apply(JW, {
 	isNull: function(v) {
 		return v === null;
 	},
-	
+
 	/**
 	 * Checks whether x is not null.
 	 * @static
@@ -138,7 +138,7 @@ JW.apply(JW, {
 	isNotNull: function(v) {
 		return v !== null;
 	},
-	
+
 	/**
 	 * Checks whether x is not undefined and null.
 	 * @static
@@ -148,7 +148,7 @@ JW.apply(JW, {
 	isSet: function(v) {
 		return (v !== undefined) && (v !== null);
 	},
-	
+
 	/**
 	 * Checkes whether x is undefined or null.
 	 * @static
@@ -158,7 +158,7 @@ JW.apply(JW, {
 	isNotSet: function(v) {
 		return (v === undefined) || (v === null);
 	},
-	
+
 	/**
 	 * Checks whether x is blank (`null`, `undefined`, `false`, 0 or blank string).
 	 * @static
@@ -168,7 +168,7 @@ JW.apply(JW, {
 	isBlank: function(v) {
 		return !v;
 	},
-	
+
 	/**
 	 * Checks whether x is not blank (`null`, `undefined`, `false`, 0 or blank string).
 	 * @static
@@ -178,7 +178,7 @@ JW.apply(JW, {
 	isNotBlank: function(v) {
 		return Boolean(v);
 	},
-	
+
 	/**
 	 * Checks whether x is an integer.
 	 * @static
@@ -188,7 +188,7 @@ JW.apply(JW, {
 	isInt: function(v) {
 		return (typeof v === "number") && Math.round(v) === v;
 	},
-	
+
 	/**
 	 * Checks whether x is a number.
 	 * @static
@@ -198,7 +198,7 @@ JW.apply(JW, {
 	isNumber: function(v) {
 		return typeof v === "number";
 	},
-	
+
 	/**
 	 * Checks whether x is a string.
 	 * @static
@@ -208,7 +208,7 @@ JW.apply(JW, {
 	isString: function(v) {
 		return typeof v === "string";
 	},
-	
+
 	/**
 	 * Checks whether x is a boolean.
 	 * @static
@@ -218,7 +218,7 @@ JW.apply(JW, {
 	isBoolean: function(v) {
 		return typeof v === "boolean";
 	},
-	
+
 	/**
 	 * Checks whether x is a function.
 	 * @static
@@ -228,7 +228,7 @@ JW.apply(JW, {
 	isFunction: function(v) {
 		return typeof v === "function";
 	},
-	
+
 	/**
 	 * Checks whether x is a native JavaScript Array.
 	 * @static
@@ -238,7 +238,7 @@ JW.apply(JW, {
 	isArray: function(v) {
 		return Object.prototype.toString.apply(v) === '[object Array]';
 	},
-	
+
 	/**
 	 * Checks whether x is a native JavaScript Object or class instance.
 	 * @static
@@ -248,7 +248,7 @@ JW.apply(JW, {
 	isObject: function(v) {
 		return Object.prototype.toString.apply(v) === '[object Object]';
 	},
-	
+
 	/**
 	 * Checks whether x is a regular expression.
 	 * @static
@@ -258,7 +258,7 @@ JW.apply(JW, {
 	isRegExp: function(v) {
 		return Object.prototype.toString.apply(v) === '[object RegExp]';
 	},
-	
+
 	/**
 	 * Checks whether x is a date.
 	 * @static
@@ -268,7 +268,7 @@ JW.apply(JW, {
 	isDate: function(v) {
 		return Object.prototype.toString.apply(v) === '[object Date]';
 	},
-	
+
 	/**
 	 * Defines default value. Returns `value`, if it is not undefined, else returns `default`.
 	 * @static
@@ -279,7 +279,7 @@ JW.apply(JW, {
 	def: function(v, d) {
 		return JW.isDefined(v) ? v : d;
 	},
-	
+
 	/**
 	 * Defines default value. Returns `value`, if it is not undefined and null, else returns `default`.
 	 * @static
@@ -290,21 +290,21 @@ JW.apply(JW, {
 	defn: function(v, d) {
 		return JW.isSet(v) ? v : d;
 	},
-	
+
 	/**
 	 * The same as JW.apply, but ignores fields which are defined in `target`.
 	 *
 	 * **Example**
-	 * 
+	 *
 	 *     var x = {         var y = {         // Result = {
 	 *         a: 10,                          //     a: 10,
 	 *         b: 20,            b: 30,        //     b: 20,
 	 *         c: null,          c: 40,        //     c: null,
 	 *         d: undefined      d: 50,        //     d: 50,
 	 *                           e: 60,        //     e: 60
-	 *                           f: undefined  // 
+	 *                           f: undefined  //
 	 *     };                };                // };
-	 *     
+	 *
 	 *     JW.applyIf(x, y);
 	 *
 	 * @static
@@ -327,21 +327,21 @@ JW.apply(JW, {
 		}
 		return target;
 	},
-	
+
 	/**
 	 * The same as JW.apply, but ignores fields which are not undefined and null in `target`.
 	 *
 	 * **Example**
-	 * 
+	 *
 	 *     var x = {         var y = {         // Result = {
 	 *         a: 10,                          //     a: 10,
 	 *         b: 20,            b: 30,        //     b: 20,
 	 *         c: null,          c: 40,        //     c: 40,
 	 *         d: undefined      d: 50,        //     d: 50,
 	 *                           e: 60,        //     e: 60
-	 *                           f: undefined  // 
+	 *                           f: undefined  //
 	 *     };                };                // };
-	 *     
+	 *
 	 *     JW.applyIf(x, y);
 	 *
 	 * @static
@@ -364,23 +364,23 @@ JW.apply(JW, {
 		}
 		return target;
 	},
-	
+
 	/**
 	 * Clears object from `undefined` values. Returns new object, containing all `target` fields except `undefined`.
-	 * 
+	 *
 	 * Doesn't modify `target` object.
-	 * 
+	 *
 	 * If you want to remove `null` values as well, try JW.cleann function.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 *     var x = {          // Result: y = {
 	 *         a : 10,        //     a: 10,
 	 *         b : 20,        //     b: 20,
 	 *         c : null,      //     c: null
 	 *         d : undefined  //
 	 *     };                 // };
-	 *     
+	 *
 	 *     var y = JW.clean(x);
 	 *
 	 * @static
@@ -397,24 +397,24 @@ JW.apply(JW, {
 		}
 		return result;
 	},
-	
+
 	/**
 	 * Clears object from `null` and `undefined` values.
 	 * Returns new object, containing all `target` fields except `null` and `undefined`.
-	 * 
+	 *
 	 * Doesn't modify `target` object.
-	 * 
+	 *
 	 * If you want to remove `undefined` values only, try JW.clean function.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 *     var x = {          // Result: y = {
 	 *         a : 10,        //     a: 10,
 	 *         b : 20,        //     b: 20
 	 *         c : null,      //
 	 *         d : undefined  //
 	 *     };                 // };
-	 *     
+	 *
 	 *     var y = JW.clean(x);
 	 *
 	 * @static
@@ -431,17 +431,17 @@ JW.apply(JW, {
 		}
 		return result;
 	},
-	
+
 	/**
 	 * @method toArray
 	 *
 	 * Converts object to array. Object must have `length` property and keys from 0 to (`length` - 1).
-	 * 
+	 *
 	 * Example of such object is function `arguments` list. You can use this method to apply arbitrary
 	 * array methods to `arguments` list.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 *     function applyOperations(value) {
 	 *         var operations = JW.toArray(arguments, 1);
 	 *         JW.Array.{@link JW.Array#static-method-each each}(operations, function(operation) {
@@ -473,21 +473,21 @@ JW.apply(JW, {
 		}
 		return r;
 	},
-	
+
 	/**
 	 * Empty function.
 	 * @static
 	 * @returns {void}
 	 */
 	emptyFn: function() {},
-	
+
 	/**
 	 * Universal native types comparer for array sorting.
-	 * 
+	 *
 	 * - Returns 1, if x > y
 	 * - Returns -1, if x < y
 	 * - Returns 0, if x == y
-	 * 
+	 *
 	 * You can compare next types: boolean, number, string, Array.
 	 *
 	 * @static
@@ -515,7 +515,7 @@ JW.apply(JW, {
 		if (x < y) return -1;
 		return 0;
 	},
-	
+
 	/**
 	 * Equivalent for `JW.cmp(x, y, true)`. Compares two values ignoring letters case in strings.
 	 * @static
@@ -526,13 +526,13 @@ JW.apply(JW, {
 	cmpCaseInsensitive: function(x, y) {
 		return JW.cmp(x, y, true);
 	},
-	
+
 	/**
 	 * Returns object item by expression. Expression is several words, passed in array of string joined by periods.
 	 * If `field` is `null`, `undefined` or blank string, function will return `obj`.
-	 * 
+	 *
 	 * Example 1:
-	 * 
+	 *
 	 *     var obj = {
 	 *         abc : [
 	 *             {
@@ -540,16 +540,16 @@ JW.apply(JW, {
 	 *             }
 	 *         ]
 	 *     };
-	 *     
+	 *
 	 *     return JW.get(obj, "abc.0.qwe"); // "xyz"
-	 *     
+	 *
 	 *     // Equivalent code
 	 *     return JW.get(obj, [ "abc", 0, "qwe" ]); // "xyz"
-	 * 
+	 *
 	 * Function represents logic of JW.byField and JW.byValue callbacks.
-	 * 
+	 *
 	 * Example 2:
-	 * 
+	 *
 	 *     var arr = [
 	 *         {
 	 *             id   : 1,
@@ -559,9 +559,9 @@ JW.apply(JW, {
 	 *             name : "Second item"
 	 *         }
 	 *     ];
-	 *     
+	 *
 	 *     return JW.Array.{@link JW.Array#static-method-search search}(arr, JW.byValue("id", 2)).name; // "Second item"
-	 * 
+	 *
 	 * In this example, function JW.get is called inside JW.byValue function implicitly with argument `field` === "id".
 	 *
 	 * @static
@@ -588,12 +588,12 @@ JW.apply(JW, {
 		}
 		return JW.def(obj, def);
 	},
-	
+
 	/**
 	 * Assigns object item by expression. Expression is several words, passed in array of string joined by periods.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 *     var obj = {
 	 *         abc : [
 	 *             {
@@ -601,9 +601,9 @@ JW.apply(JW, {
 	 *             }
 	 *         ]
 	 *     };
-	 *     
+	 *
 	 *     JW.set(obj, "def", "abc.0.qwe"); // replace "xyz" with "def"
-	 *     
+	 *
 	 *     // equivalent code
 	 *     JW.set(obj, "def", [ "abc", 0, "qwe" ]); // replace "xyz" with "def"
 	 *
@@ -630,7 +630,7 @@ JW.apply(JW, {
 		}
 		obj[JW.Array.getLast(field)] = value;
 	},
-	
+
 	/**
 	 * Returns object unique ID. Returns {@link JW.Class#_iid iid} of object if it is instance of JW.Class,
 	 * else returns the object itself.
@@ -648,11 +648,11 @@ JW.apply(JW, {
 	iid: function(obj) {
 		return (typeof obj === "object") ? obj._iid : obj;
 	},
-	
-	
+
+
 	/**
 	 * Calls object method {@link JW.Class#destroy destroy}. Can be used in mappers configuration:
-	 * 
+	 *
 	 *     var mapper = collection.{@link JW.AbstractCollection#createMapper createMapper}({
 	 *         {@link JW.AbstractCollection.Mapper#createItem createItem}  : function(data) { return new View(data); },
 	 *         {@link JW.AbstractCollection.Mapper#destroyItem destroyItem} : JW.destroy, // shorthand for function(view) { view.destroy(); }
@@ -666,7 +666,7 @@ JW.apply(JW, {
 	destroy: function(obj) {
 		obj.destroy();
 	},
-	
+
 	/**
 	 * Returns the remainder of `value` / `mod`. Unlike % operation, work correctly even for decimal `value` and `mod`.
 	 * Returns result in semi-interval [0, `mod`).
@@ -678,7 +678,7 @@ JW.apply(JW, {
 	mod: function(value, mod) {
 		return value - mod * Math.floor(value / mod);
 	},
-	
+
 	/**
 	 * Returns the remainder of `value` / `mod`. Unlike % operation, work correctly even for decimal `value` and `mod`.
 	 * Returns result in semi-interval [-`mod` / 2, `mod` / 2).
@@ -690,7 +690,7 @@ JW.apply(JW, {
 	smod: function(value, mod) {
 		return value - mod * Math.round(value / mod);
 	},
-	
+
 	/**
 	 * Returns `value` number sign: 0, 1 or -1.
 	 * @static
@@ -700,7 +700,7 @@ JW.apply(JW, {
 	sgn: function(value) {
 		return !value ? 0 : value > 0 ? 1 : -1;
 	},
-	
+
 	/**
 	 * Returns non-zero `value` number sign: 1 or -1. Returns 1 for 0.
 	 * @static
@@ -710,21 +710,21 @@ JW.apply(JW, {
 	sgnnz: function(value) {
 		return value >= 0 ? 1 : -1;
 	},
-	
+
 	/**
 	 * Specifies function call scope.
-	 * 
+	 *
 	 * **Example**
-	 * 
+	 *
 	 *     setTimeout(JW.inScope(this.onTimeout, this), 1000);
-	 * 
+	 *
 	 * is the same as
-	 * 
+	 *
 	 *     var self = this;
 	 *     setTimeout(function() { self.onTimeout(); }, 1000);
-	 * 
+	 *
 	 * It is convenient to specify class methods' call scope in constructor before superclass constructor call:
-	 * 
+	 *
 	 *     var MyClass = function(el, message) {
 	 *         this._onClick = JW.inScope(this._onClick, this);
 	 *         MyClass.{@link JW.Class#_super _super}.call(this);
@@ -732,16 +732,16 @@ JW.apply(JW, {
 	 *         this.message = message;
 	 *         this.el.bind("click", this._onClick);
 	 *     };
-	 *     
+	 *
 	 *     JW.extend(MyClass, JW.Class, {
 	 *         // Element el;
 	 *         // String message;
-	 *         
+	 *
 	 *         // override
 	 *         {@link JW.Class#destroy destroy}: function() {
 	 *             this.el.unbind("click", this._onClick);
 	 *         },
-	 *         
+	 *
 	 *         _onClick: function() {
 	 *             alert(this.message);
 	 *         }
@@ -757,7 +757,7 @@ JW.apply(JW, {
 			return func.apply(scope, arguments);
 		};
 	},
-	
+
 	/**
 	 * Returns callback function for collection algorithms. Function returns value of specified field
 	 * of collection item. Item field is retrieved using JW.get function.
@@ -775,7 +775,7 @@ JW.apply(JW, {
 			return JW.get(item, field);
 		};
 	},
-	
+
 	/**
 	 * Returns callback function for collection algorithms. Function checks whether specified field of collection item
 	 * is equal (===) to specified value. Item field is retrieved using JW.get function.
@@ -794,7 +794,7 @@ JW.apply(JW, {
 			return JW.get(item, field) === value;
 		};
 	},
-	
+
 	/**
 	 * Returns callback function for collection algorithms. Function calls specified method of collection item
 	 * with specified arguments and returns the result of this call.
@@ -814,7 +814,7 @@ JW.apply(JW, {
 			return item[method].apply(item, args);
 		};
 	},
-	
+
 	makeArray: function(v) {
 		return JW.isArray(v) ? v : JW.isSet(v) ? [v] : [];
 	}
