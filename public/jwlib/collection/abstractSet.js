@@ -179,7 +179,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	$filter: JW.AbstractCollection._create$Set("filter"),
 
 	count: function(callback, scope) {
-		return JW.Set.count(this.items, callback, scope || this);
+		return JW.Set.count(this.json, callback, scope);
 	},
 
 	/**

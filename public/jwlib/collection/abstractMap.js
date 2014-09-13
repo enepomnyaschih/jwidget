@@ -490,7 +490,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	$filter: JW.AbstractCollection._create$Map("filter"),
 
 	count: function(callback, scope) {
-		return JW.Map.count(this.items, callback, scope || this);
+		return JW.Map.count(this.json, callback, scope);
 	},
 
 	/**

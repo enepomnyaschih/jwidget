@@ -31,11 +31,11 @@
  * @param {JW.AbstractSet} source `<T>` Source collection.
  * @param {Object} config Configuration (see Config options).
  */
-JW.AbstractSet.Filterer = function(source, config) {
-	JW.AbstractSet.Filterer._super.call(this, source, config);
+JW.AbstractSet.Counter = function(source, config) {
+	JW.AbstractSet.Counter._super.call(this, source, config);
 };
 
-JW.extend(JW.AbstractSet.Filterer, JW.AbstractCollection.Filterer, {
+JW.extend(JW.AbstractSet.Counter, JW.AbstractCollection.Counter, {
 	/**
 	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */

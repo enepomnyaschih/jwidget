@@ -2,10 +2,10 @@
 	"requires" : [
 		"jwunit"
 	],
-	
+
 	"resources" : [
 		"jwlib/tests/index.js",
-		
+
 		"jwlib/tests/core.js",
 		"jwlib/tests/core/apply.js",
 		"jwlib/tests/core/callback.js",
@@ -13,9 +13,10 @@
 		"jwlib/tests/core/class.js",
 		"jwlib/tests/core/proxy.js",
 		"jwlib/tests/core/observable.js",
-		
+
 		"jwlib/tests/collection.js",
 		"jwlib/tests/collection/abstractArray.js",
+		"jwlib/tests/collection/abstractArray/counter.js",
 		"jwlib/tests/collection/abstractArray/filterer.js",
 		"jwlib/tests/collection/abstractArray/indexer.js",
 		"jwlib/tests/collection/abstractArray/observer.js",
@@ -28,6 +29,7 @@
 		"jwlib/tests/collection/abstractArray/sorterComparing.js",
 		"jwlib/tests/collection/abstractArray/splitter.js",
 		"jwlib/tests/collection/abstractMap.js",
+		"jwlib/tests/collection/abstractMap/counter.js",
 		"jwlib/tests/collection/abstractMap/filterer.js",
 		"jwlib/tests/collection/abstractMap/inserter.js",
 		"jwlib/tests/collection/abstractMap/lister.js",
@@ -36,6 +38,7 @@
 		"jwlib/tests/collection/abstractMap/orderer.js",
 		"jwlib/tests/collection/abstractMap/sorterComparing.js",
 		"jwlib/tests/collection/abstractSet.js",
+		"jwlib/tests/collection/abstractSet/counter.js",
 		"jwlib/tests/collection/abstractSet/filterer.js",
 		"jwlib/tests/collection/abstractSet/indexer.js",
 		"jwlib/tests/collection/abstractSet/mapper.js",
@@ -75,7 +78,7 @@
 		"jwlib/tests/collection/observableSet/sorterComparing.js",
 		"jwlib/tests/collection/set.js",
 		"jwlib/tests/collection/set/staticMethods.js",
-		
+
 		"jwlib/tests/property.js",
 		"jwlib/tests/property/copier.js",
 		"jwlib/tests/property/functor.js",
@@ -83,17 +86,17 @@
 		"jwlib/tests/property/property.js",
 		"jwlib/tests/property/switcher.js",
 		"jwlib/tests/property/updater.js",
-		
+
 		"jwlib/tests/ui.js",
 		"jwlib/tests/ui/component.js",
-		
+
 		"jwlib/tests/util.js",
 		"jwlib/tests/util/factory.js",
 		"jwlib/tests/util/interval.js",
 		"jwlib/tests/util/timeout.js",
 		"jwlib/tests/util/timer.js",
 		"jwlib/tests/util/string.js",
-		
+
 		"jwlib/tests/boot.js"
 	]
 }

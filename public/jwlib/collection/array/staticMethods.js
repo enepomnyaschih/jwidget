@@ -534,7 +534,7 @@ JW.apply(JW.Array, {
 			result += arrays[i].length;
 		}
 		return result;
-	}
+	},
 
 	// deprecated
 	top: function(target) {
