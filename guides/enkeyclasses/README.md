@@ -40,6 +40,7 @@ Synchronizers:
 
 - Item mapper: JW.AbstractCollection.Mapper
 - Filterer: JW.AbstractCollection.Filterer
+- Matching item counter: JW.AbstractCollection.Counter
 - Converter to set: JW.AbstractCollection.Lister
 - Converter to map (indexer): JW.AbstractCollection.Indexer
 - Converter to array (orderer): JW.AbstractCollection.Orderer

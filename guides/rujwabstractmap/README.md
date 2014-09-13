@@ -40,6 +40,7 @@
 Возвращает ключ первого элемента, удовлетворяющего критерию.
 - {@link JW.AbstractMap#filter filter}, {@link JW.AbstractMap#$filter $filter} - Фильтрует коллекцию по критерию.
 Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
+- {@link JW.AbstractMap#count count} - Считает количество элементов, удовлетворяющих критерию.
 - {@link JW.AbstractMap#map map}, {@link JW.AbstractMap#$map $map} - Отображает элементы коллекции.
 Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
 коллекции.
@@ -76,6 +77,7 @@
 
 - {@link JW.AbstractMap#createMapper createMapper} - Создает конвертер элементов.
 - {@link JW.AbstractMap#createFilterer createFilterer} - Создает фильтровщик.
+- {@link JW.AbstractMap#createCounter createCounter} - Создает счетчик подходящих элементов.
 - {@link JW.AbstractMap#createLister createLister} - Создает конвертер в множество.
 - {@link JW.AbstractMap#createIndexer createIndexer} - Создает индексатор.
 - {@link JW.AbstractMap#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель).

@@ -35,6 +35,7 @@
 Возвращает первый элемент, удовлетворяющий критерию.
 - {@link JW.AbstractSet#filter filter}, {@link JW.AbstractSet#$filter $filter} - Фильтрует коллекцию по критерию.
 Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
+- {@link JW.AbstractSet#count count} - Считает количество элементов, удовлетворяющих критерию.
 - {@link JW.AbstractSet#map map}, {@link JW.AbstractSet#$map $map} - Отображает элементы коллекции.
 Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
 коллекции.
@@ -64,6 +65,7 @@
 
 - {@link JW.AbstractSet#createMapper createMapper} - Создает конвертер элементов.
 - {@link JW.AbstractSet#createFilterer createFilterer} - Создает фильтровщик.
+- {@link JW.AbstractSet#createCounter createCounter} - Создает счетчик подходящих элементов.
 - {@link JW.AbstractSet#createLister createLister} - Создает конвертер в множество.
 - {@link JW.AbstractSet#createIndexer createIndexer} - Создает индексатор.
 - {@link JW.AbstractSet#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель).

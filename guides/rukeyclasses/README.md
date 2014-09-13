@@ -38,16 +38,17 @@
 
 Синхронизаторы:
 
-- Item mapper: [JW.AbstractCollection.Mapper](#!/guide/rujwabstractcollectionmapper)
-- Filterer: [JW.AbstractCollection.Filterer](#!/guide/rujwabstractcollectionfilterer)
-- Converter to set: [JW.AbstractCollection.Lister](#!/guide/rujwabstractcollectionlister)
-- Converter to map (indexer): [JW.AbstractCollection.Indexer](#!/guide/rujwabstractcollectionindexer)
-- Converter to array (orderer): [JW.AbstractCollection.Orderer](#!/guide/rujwabstractcollectionorderer)
-- Converter to array (sorter by comparer): [JW.AbstractCollection.SorterComparing](#!/guide/rujwabstractcollectionsortercomparing)
-- Observer: [JW.AbstractCollection.Observer](#!/guide/rujwabstractcollectionobserver)
-- View synchronizers: [JW.AbstractArray.Inserter](#!/guide/rujwabstractarrayinserter), [JW.AbstractMap.Inserter](#!/guide/rujwabstractmapinserter), [JW.UI.Inserter](#!/guide/rujwuiinserter)
-- Arrays merger: [JW.AbstractArray.Merger](#!/guide/rujwabstractarraymerger)
-- Array reverser: [JW.AbstractArray.Reverser](#!/guide/rujwabstractarrayreverser)
+- Конвертер элементов: [JW.AbstractCollection.Mapper](#!/guide/rujwabstractcollectionmapper)
+- Фильтровщик: [JW.AbstractCollection.Filterer](#!/guide/rujwabstractcollectionfilterer)
+- Счетчик подходящих элементов: [JW.AbstractCollection.Counter](#!/guide/rujwabstractcollectioncounter)
+- Конвертер в множество: [JW.AbstractCollection.Lister](#!/guide/rujwabstractcollectionlister)
+- Конвертер в словарь (индексатор): [JW.AbstractCollection.Indexer](#!/guide/rujwabstractcollectionindexer)
+- Конвертер в массив (упорядочитель): [JW.AbstractCollection.Orderer](#!/guide/rujwabstractcollectionorderer)
+- Конвертер в массив (сортировщик по компаратору): [JW.AbstractCollection.SorterComparing](#!/guide/rujwabstractcollectionsortercomparing)
+- Наблюдатель: [JW.AbstractCollection.Observer](#!/guide/rujwabstractcollectionobserver)
+- Синхронизаторы представления: [JW.AbstractArray.Inserter](#!/guide/rujwabstractarrayinserter), [JW.AbstractMap.Inserter](#!/guide/rujwabstractmapinserter), [JW.UI.Inserter](#!/guide/rujwuiinserter)
+- Объединитель массивов: [JW.AbstractArray.Merger](#!/guide/rujwabstractarraymerger)
+- Обратитель массива: [JW.AbstractArray.Reverser](#!/guide/rujwabstractarrayreverser)
 
 UI компонент:
 

@@ -46,6 +46,7 @@
 Возвращает ключ первого элемента, удовлетворяющего критерию.**
 - {@link JW.IndexedCollection#filter filter}, {@link JW.IndexedCollection#$filter $filter} - Фильтрует коллекцию по критерию.
 Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
+- {@link JW.IndexedCollection#count count} - Считает количество элементов, удовлетворяющих критерию.
 - {@link JW.IndexedCollection#map map}, {@link JW.IndexedCollection#$map $map} - Отображает элементы коллекции.
 Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
 коллекции.
@@ -78,6 +79,7 @@
 
 - {@link JW.IndexedCollection#createMapper createMapper} - Создает конвертер элементов.
 - {@link JW.IndexedCollection#createFilterer createFilterer} - Создает фильтровщик.
+- {@link JW.IndexedCollection#createCounter createCounter} - Создает счетчик подходящих элементов.
 - {@link JW.IndexedCollection#createLister createLister} - Создает конвертер в множество.
 - {@link JW.IndexedCollection#createIndexer createIndexer} - Создает индексатор.
 - {@link JW.IndexedCollection#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель).

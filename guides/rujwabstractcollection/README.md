@@ -25,6 +25,7 @@
 
 - Конвертер элементов: [JW.AbstractCollection.Mapper](#!/guide/rujwabstractcollectionmapper)
 - Фильтровщик: [JW.AbstractCollection.Filterer](#!/guide/rujwabstractcollectionfilterer)
+- Счетчик подходящих элементов: [JW.AbstractCollection.Counter](#!/guide/rujwabstractcollectioncounter)
 - Конвертер в множество: [JW.AbstractCollection.Lister](#!/guide/rujwabstractcollectionlister)
 - Конвертер в словарь (индексатор): [JW.AbstractCollection.Indexer](#!/guide/rujwabstractcollectionindexer)
 - Конвертер в массив (упорядочитель): [JW.AbstractCollection.Orderer](#!/guide/rujwabstractcollectionorderer)
@@ -91,6 +92,7 @@ JW.AbstractArray#performReorder, требуют, чтобы у каждого э
 Возвращает первый элемент, удовлетворяющий критерию.
 - {@link JW.AbstractCollection#filter filter}, {@link JW.AbstractCollection#$filter $filter} - Фильтрует коллекцию по критерию.
 Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
+- {@link JW.AbstractCollection#count count} - Считает количество элементов, удовлетворяющих критерию.
 - {@link JW.AbstractCollection#map map}, {@link JW.AbstractCollection#$map $map} - Отображает элементы коллекции.
 Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
 коллекции.
@@ -114,6 +116,7 @@ JW.AbstractArray#performReorder, требуют, чтобы у каждого э
 
 - {@link JW.AbstractCollection#createMapper createMapper} - Создает конвертер элементов.
 - {@link JW.AbstractCollection#createFilterer createFilterer} - Создает фильтровщик.
+- {@link JW.AbstractCollection#createCounter createCounter} - Создает счетчик подходящих элементов.
 - {@link JW.AbstractCollection#createLister createLister} - Создает конвертер в множество.
 - {@link JW.AbstractCollection#createIndexer createIndexer} - Создает индексатор.
 - {@link JW.AbstractCollection#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель).
