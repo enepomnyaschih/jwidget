@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -43,7 +43,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	createEmpty: function() {
 		return new JW.Map();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.Array} `<U>` Array.
@@ -51,7 +51,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.Map} `<U>` Map.
@@ -59,7 +59,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.Set} `<U>` Set.
@@ -67,7 +67,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	createEmptySet: function() {
 		return new JW.Set();
 	}
-	
+
 	/**
 	 * @method getLength
 	 * `<T>` Returns count of items in collection.
@@ -183,9 +183,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method every
 	 *
 	 * `<T>` Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @static
@@ -203,9 +203,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method some
 	 *
 	 * `<T>` Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -239,9 +239,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method find
 	 *
 	 * `<T>` Finds item by criteria.
-	 * 
+	 *
 	 * Returns key of first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -259,9 +259,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method search
 	 *
 	 * `<T>` Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -648,10 +648,28 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @returns {JW.Map} `<T>` Filtered collection.
 	 */
 	/**
+	 * @method count
+	 *
+	 * `<T>` Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Object} map `<T>` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Integer} Number of items.
+	 */
+	/**
 	 * @method map
 	 *
 	 * `<T, U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -669,7 +687,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method $map
 	 *
 	 * `<T, U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -858,86 +876,6 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * If collection consists of instances of JW.Class, then it's all right.
 	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
 	 * @returns {void}
-	 */
-	/**
-	 * @method createMapper
-	 * `<T, U>` Creates collection item mapper.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Mapper}
-	 * `<T, U>` Synchronizer.
-	 */
-	/**
-	 * @method createFilterer
-	 * `<T>` Creates collection filterer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Filterer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createObserver
-	 * `<T>` Creates collection observer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Observer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createOrderer
-	 * `<T>` Creates collection converter to array (orderer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Orderer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createSorterComparing
-	 * `<T>` Creates collection converter to array (sorter by comparer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.SorterComparing}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createIndexer
-	 * `<T>` Creates collection converter to map (indexer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Indexer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createLister
-	 * `<T>` Creates collection converter to set.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Lister}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createInserter
-	 * `<T>` Creates view synchronizer with map.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Inserter}
-	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method equal

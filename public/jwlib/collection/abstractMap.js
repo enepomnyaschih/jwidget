@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -54,6 +54,7 @@
  * Returns index of first item matching the criteria.
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -88,6 +89,7 @@
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates matching item counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -148,7 +150,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {T} item Item.
 	 * @returns {string} Item key.
 	 */
-	
+
 	/**
 	 * Returns item map - internal collection representation.
 	 *
@@ -159,15 +161,15 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	getJson: function() {
 		return this.json;
 	},
-	
+
 	getLength: function() {
 		return this._length;
 	},
-	
+
 	isEmpty: function() {
 		return this._length === 0;
 	},
-	
+
 	/**
 	 * @method get
 	 * Returns item by key. If item with such key doesn't exist, returns `undefined`.
@@ -177,7 +179,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	get: function(key) {
 		return this.json[key];
 	},
-	
+
 	/**
 	 * @method $getKeys
 	 * Returns array of keys of all collection items.
@@ -190,12 +192,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	getKeys: function() {
 		return JW.Map.getKeys(this.json);
 	},
-	
+
 	/**
 	 * Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -210,14 +212,14 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	every: function(callback, scope) {
 		return JW.Map.every(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * @method some
 	 *
 	 * Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -247,9 +249,9 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @method find
 	 *
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns key of first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -265,9 +267,9 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @method search
 	 *
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -419,7 +421,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {1/-1} [order] Sorting order.
 	 * @returns {JW.Array} `<string>` Sorted item keys array.
 	 */
-	
+
 	/**
 	 * @method index
 	 *
@@ -452,7 +454,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.Map} `<T>` Collection index.
 	 */
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -470,7 +472,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	filter: function(callback, scope) {
 		return JW.Map.filter(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -486,10 +488,14 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.Map} `<T>` Filtered collection.
 	 */
 	$filter: JW.AbstractCollection._create$Map("filter"),
-	
+
+	count: function(callback, scope) {
+		return JW.Map.count(this.items, callback, scope || this);
+	},
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -504,10 +510,10 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	map: function(callback, scope) {
 		return JW.Map.map(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -520,15 +526,15 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.Map} `<U>` Mapped collection.
 	 */
 	$map: JW.AbstractCollection._create$Map("map"),
-	
+
 	asMap: function() {
 		return this.json;
 	},
-	
+
 	$asMap: function() {
 		return this;
 	},
-	
+
 	/**
 	 * @method set
 	 * Replaces item with specified key. If map doesn't contain such key, it will be added.
@@ -548,7 +554,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return new JW.Proxy(spliceResult.removedItems[key]);
 		}
 	},
-	
+
 	/**
 	 * Adds or replaces a bunch of items.
 	 * @param {Object} items Items.
@@ -558,7 +564,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var spliceResult = this.trySetAll(items);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
-	
+
 	/**
 	 * Adds or replaces a bunch of items.
 	 * @param {Object} items Items.
@@ -567,7 +573,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	trySetAll: function(items) {
 		return this.trySplice([], items);
 	},
-	
+
 	/**
 	 * Changes item key in map. If collection doesn't contain `oldKey` or contains `newKey`, it will cause an error.
 	 * @param {string} oldKey Old key of item.
@@ -578,7 +584,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		this.trySetKey(oldKey, newKey);
 		return this.json[newKey];
 	},
-	
+
 	/**
 	 * Changes item key in map. If collection doesn't contain `oldKey` or contains `newKey`, it will cause an error.
 	 * @param {string} oldKey Old key of item.
@@ -591,7 +597,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return this.json[newKey];
 		}
 	},
-	
+
 	/**
 	 * @method remove
 	 * Removes item with specified key if it exists in map.
@@ -609,7 +615,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return spliceResult.removedItems[key];
 		}
 	},
-	
+
 	/**
 	 * Removes a bunch of items from map.
 	 * @param {Array} keys `<string>` Item keys.
@@ -619,14 +625,14 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var items = this.tryRemoveAll(keys);
 		return (items !== undefined) ? items : {};
 	},
-	
+
 	/**
 	 * Removes a bunch of items from map.
 	 * @param {Array} keys `<string>` Item keys.
 	 * @returns {JW.Map} `<T>` The removed items.
 	 */
 	$removeAll: JW.AbstractCollection._create$Map("removeAll"),
-	
+
 	/**
 	 * Removes a bunch of items from map.
 	 * @param {Array} keys `<string>` Item keys.
@@ -638,7 +644,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return spliceResult.removedItems;
 		}
 	},
-	
+
 	removeItems: function(items) {
 		var itemSet = new JW.Set(items);
 		var newItems = this.filter(function(item) {
@@ -646,7 +652,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		});
 		this.performSplice(newItems);
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Object} `<T>` Old collection contents.
@@ -655,13 +661,13 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var result = this.tryClear();
 		return (result !== undefined) ? result : {};
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {JW.Map} `<T>` Old collection contents.
 	 */
 	$clear: JW.AbstractCollection._create$Map("clear"),
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Object} `<T>` Old collection contents. If not modified - `undefined`.
@@ -674,7 +680,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		}
 		return items;
 	},
-	
+
 	/**
 	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedKeys `<string>` Keys of items to remove.
@@ -685,7 +691,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var spliceResult = this.trySplice(removedKeys, updatedItems);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
-	
+
 	/**
 	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedKeys `<string>` Keys of items to remove.
@@ -702,7 +708,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return spliceResult;
 		}
 	},
-	
+
 	/**
 	 * Changes item keys in map.
 	 * @param {Object} keyMap `<string>` Key map. Item with key `k` will gain key `keyMap[k]`.
@@ -713,7 +719,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var result = this.tryReindex(keyMap);
 		return (result !== undefined) ? result : {};
 	},
-	
+
 	/**
 	 * Changes item keys in map.
 	 * @param {Object} keyMap `<string>` Key map. Item with key `k` will gain key `keyMap[k]`.
@@ -723,7 +729,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	tryReindex: function(keyMap) {
 		return JW.Map.tryReindex(this.json, keyMap);
 	},
-	
+
 	/**
 	 * Detects #splice method arguments to adjust map contents to `newItems`.
 	 * Determines which item bunches should be removed and which ones should be inserted/replaced, and their keys.
@@ -734,7 +740,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	detectSplice: function(newItems) {
 		return JW.Map.detectSplice(this.json, newItems);
 	},
-	
+
 	/**
 	 * Detects #reindex method arguments to adjust map contents to `newItems`.
 	 * Determines which keys should be assigned to all items.
@@ -752,7 +758,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	detectReindex: function(newItems, getKey, scope) {
 		return JW.Map.detectReindex(this.json, newItems, getKey || this.getKey, scope || this);
 	},
-	
+
 	/**
 	 * Adjusts map contents to `newItems` using #detectSplice and #splice methods.
 	 * @param {Object} newItems `<T>` New map contents.
@@ -764,7 +770,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			this.trySplice(params.removedKeys, params.updatedItems);
 		}
 	},
-	
+
 	/**
 	 * Adjusts map contents to `newItems` using #detectReindex and #reindex methods.
 	 * @param {Object} newItems `<T>` New map contents.
@@ -781,7 +787,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			this.tryReindex(keyMap);
 		}
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -792,7 +798,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createMapper: function(config) {
 		return new JW.AbstractMap.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -803,7 +809,18 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createFilterer: function(config) {
 		return new JW.AbstractMap.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.AbstractMap.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -814,7 +831,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createObserver: function(config) {
 		return new JW.AbstractMap.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -825,7 +842,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createOrderer: function(config) {
 		return new JW.AbstractMap.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -836,7 +853,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createSorterComparing: function(config) {
 		return new JW.AbstractMap.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -847,7 +864,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createIndexer: function(config) {
 		return new JW.AbstractMap.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -858,7 +875,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createLister: function(config) {
 		return new JW.AbstractMap.Lister(this, config);
 	},
-	
+
 	/**
 	 * Creates view synchronizer with map.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -869,7 +886,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createInserter: function(config) {
 		return new JW.AbstractMap.Inserter(this, config);
 	},
-	
+
 	/**
 	 * Checks for equality (===) to another map, item by item.
 	 * @param {Object} map `<T>` Another map.
@@ -878,11 +895,11 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	equal: function(map) {
 		return JW.Map.equal(this.json, map);
 	},
-	
+
 	_callStatic: function(algorithm, args) {
 		return JW.Map[algorithm].apply(JW.Map, [this.json].concat(JW.args(args || [])));
 	}
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.

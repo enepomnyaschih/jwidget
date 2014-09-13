@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -63,7 +63,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	 * of events #spliceEvent, #clearEvent.
 	 * @param {JW.ObservableSet.EventParams} params `<T>` Parameters.
 	 */
-	
+
 	// override
 	destroy: function() {
 		this.changeEvent.destroy();
@@ -72,7 +72,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 		this.length.destroy();
 		this._super();
 	},
-	
+
 	// override
 	tryClear: function() {
 		var items = this._super();
@@ -84,7 +84,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
 		return items;
 	},
-	
+
 	// override
 	trySplice: function(removedItems, addedItems) {
 		var spliceResult = this._super(removedItems, addedItems);
@@ -96,7 +96,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
 		return spliceResult;
 	},
-	
+
 	/**
 	 * `<U>` Creates empty collection of the same type.
 	 * @returns {JW.ObservableSet} `<U>` Collection.
@@ -104,7 +104,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createEmpty: function() {
 		return new JW.ObservableSet();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.ObservableArray} `<U>` Array.
@@ -112,7 +112,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.ObservableMap} `<U>` Map.
@@ -120,7 +120,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.ObservableSet} `<U>` Set.
@@ -128,7 +128,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -139,7 +139,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createMapper: function(config) {
 		return new JW.ObservableSet.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -150,7 +150,18 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createFilterer: function(config) {
 		return new JW.ObservableSet.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.ObservableSet.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -161,7 +172,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createObserver: function(config) {
 		return new JW.ObservableSet.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -172,7 +183,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createOrderer: function(config) {
 		return new JW.ObservableSet.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -183,7 +194,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createSorterComparing: function(config) {
 		return new JW.ObservableSet.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -194,7 +205,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createIndexer: function(config) {
 		return new JW.ObservableSet.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.

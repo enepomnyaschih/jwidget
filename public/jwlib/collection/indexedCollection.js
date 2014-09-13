@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -61,6 +61,7 @@
  * Returns index of first item matching the criteria.**
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -88,6 +89,7 @@
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -125,7 +127,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * Clears collection.
 	 * @returns {JW.IndexedCollection} `<K, T>` Old collection contents.
 	 */
-	
+
 	/**
 	 * Returns key of first collection item. If collection is empty, returns `undefined`.
 	 * @returns {K} Key.
@@ -133,7 +135,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	getFirstKey: function() {
 		return this._callStatic("getFirstKey");
 	},
-	
+
 	/**
 	 * @method getKeys
 	 * Returns array of keys of all collection items.
@@ -144,7 +146,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Array} `<K>` Keys array.
 	 */
 	$getKeys: JW.AbstractCollection._create$Array("getKeys"),
-	
+
 	/**
 	 * Checks existance of item with specified index in collection.
 	 * @param {K} key Key.
@@ -153,11 +155,11 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	containsKey: function(key) {
 		return this.get(key) !== undefined;
 	},
-	
+
 	containsItem: function(item) {
 		return !this.every(function(v) { return item !== v; });
 	},
-	
+
 	/**
 	 * Returns index of item in collection. If such item doesn't exist, returns `undefined`.
 	 * @param {T} item Item.
@@ -166,7 +168,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	keyOf: function(item) {
 		return this.find(function(v) { return item === v; });
 	},
-	
+
 	/**
 	 * @method trySet
 	 *
@@ -193,7 +195,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		var result = this.trySet(item, key);
 		return (result !== undefined) ? result.value : this.get(key);
 	},
-	
+
 	/**
 	 * @method tryRemove
 	 * Removes item with specified key. If collection doesn't contain such key:
@@ -216,7 +218,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	remove: function(key) {
 		return this.tryRemove(key);
 	},
-	
+
 	removeItem: function(item) {
 		var key = this.keyOf(item);
 		if (key !== undefined) {
@@ -224,14 +226,14 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		}
 		return key;
 	},
-	
+
 	/**
 	 * @method every
 	 *
 	 * Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -245,9 +247,9 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 */
 	/**
 	 * Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -264,7 +266,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 			return callback.call(this, item, key) === false;
 		}, scope);
 	},
-	
+
 	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
@@ -283,12 +285,12 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 			return true;
 		}, scope);
 	},
-	
+
 	/**
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns key of first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -311,12 +313,12 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -339,7 +341,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * @method toSorted
 	 *
@@ -410,7 +412,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @param {1/-1} [order] Sorting order.
 	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
-	 
+
 	/**
 	 * Returns keys of sorted items.
 	 *
@@ -429,7 +431,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	getSortingKeys: function(callback, scope, order) {
 		return this._callStatic("getSortingKeys", [callback, scope || this, order]);
 	},
-	
+
 	/**
 	 * Returns keys of sorted items.
 	 *
@@ -446,7 +448,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Array} `<K>` Sorted item keys array.
 	 */
 	$getSortingKeys: JW.AbstractCollection._create$Array("getSortingKeys"),
-	
+
 	/**
 	 * Returns keys of sorted items.
 	 *
@@ -466,7 +468,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	getSortingKeysComparing: function(compare, scope, order) {
 		return this._callStatic("getSortingKeysComparing", [compare, scope || this, order]);
 	},
-	
+
 	/**
 	 * Returns keys of sorted items.
 	 *
@@ -484,7 +486,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Array} `<K>` Sorted item keys array.
 	 */
 	$getSortingKeysComparing: JW.AbstractCollection._create$Array("getSortingKeysComparing"),
-	
+
 	/**
 	 * @method $index
 	 *
@@ -526,7 +528,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to map.
 	 *
@@ -541,7 +543,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		});
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to map.
 	 *
@@ -550,7 +552,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Map} `<T>` Items map.
 	 */
 	$toMap: JW.AbstractCollection._create$Map("toMap"),
-	
+
 	/**
 	 * Represents collection as map.
 	 *
@@ -563,7 +565,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	asMap: function() {
 		return this.toMap();
 	},
-	
+
 	/**
 	 * Represents collection as map.
 	 *
@@ -574,7 +576,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Map} `<T>` Items map.
 	 */
 	$asMap: JW.AbstractCollection._create$Map("asMap")
-	
+
 	/**
 	 * @method filter
 	 *
@@ -611,7 +613,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @method map
 	 *
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -627,7 +629,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @method $map
 	 *
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -639,7 +641,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.IndexedCollection} `<K, U>` Mapped collection.
 	 */
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.

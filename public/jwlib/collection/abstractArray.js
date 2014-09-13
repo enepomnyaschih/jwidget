@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -59,6 +59,7 @@
  * Returns index of first item matching the criteria.
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -98,6 +99,7 @@
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates matching item counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -163,7 +165,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @param {T} item Item.
 	 * @returns {number} Item index.
 	 */
-	
+
 	/**
 	 * Returns item array - internal collection representation.
 	 *
@@ -174,7 +176,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	getItems: function() {
 		return this.items;
 	},
-	
+
 	/**
 	 * Returns the last collection item. If collection is empty, returns `undefined`.
 	 * @returns {T} Item.
@@ -182,7 +184,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	getLast: function() {
 		return this.items[this.items.length - 1];
 	},
-	
+
 	/**
 	 * Returns index of last collection item. If collection is empty, returns `undefined`.
 	 * @returns {number} Index.
@@ -193,15 +195,15 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return l - 1;
 		}
 	},
-	
+
 	getLength: function() {
 		return this.items.length;
 	},
-	
+
 	isEmpty: function() {
 		return this.items.length === 0;
 	},
-	
+
 	/**
 	 * @method get
 	 * Returns item by index. If item with such index doesn't exist, returns `undefined`.
@@ -211,7 +213,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	get: function(index) {
 		return this.items[index];
 	},
-	
+
 	/**
 	 * @method $getKeys
 	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
@@ -229,12 +231,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		}
 		return result;
 	},
-	
+
 	/**
 	 * Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -249,14 +251,14 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	every: function(callback, scope) {
 		return JW.Array.every(this.items, callback, scope || this);
 	},
-	
+
 	/**
 	 * @method some
 	 *
 	 * Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -286,9 +288,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @method find
 	 *
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns index of first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -304,9 +306,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @method search
 	 *
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -490,7 +492,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.Map} `<T>` Collection index.
 	 */
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -508,7 +510,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	filter: function(callback, scope) {
 		return JW.Array.filter(this.items, callback, scope || this);
 	},
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -524,10 +526,14 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Array} `<T>` Filtered collection.
 	 */
 	$filter: JW.AbstractCollection._create$Array("filter"),
-	
+
+	count: function(callback, scope) {
+		return JW.Array.count(this.items, callback, scope || this);
+	},
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -542,10 +548,10 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	map: function(callback, scope) {
 		return JW.Array.map(this.items, callback, scope || this);
 	},
-	
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -558,19 +564,19 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Array} `<U>` Mapped collection.
 	 */
 	$map: JW.AbstractCollection._create$Array("map"),
-	
+
 	toArray: function() {
 		return this.items.concat();
 	},
-	
+
 	asArray: function() {
 		return this.items;
 	},
-	
+
 	$asArray: function() {
 		return this;
 	},
-	
+
 	/**
 	 * Inserts an item to array.
 	 * @param {T} item Item.
@@ -580,7 +586,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	add: function(item, index) {
 		this.tryAdd(item, index);
 	},
-	
+
 	/**
 	 * Inserts an item to array.
 	 * @param {T} item Item.
@@ -590,7 +596,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	tryAdd: function(item, index) {
 		return this.tryAddAll([item], index);
 	},
-	
+
 	/**
 	 * Inserts item range to array.
 	 * @param {Array} items `<T>` Items.
@@ -600,7 +606,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	addAll: function(items, index) {
 		this.tryAddAll(items, index);
 	},
-	
+
 	/**
 	 * Inserts item range to array.
 	 * @param {Array} items `<T>` Items.
@@ -615,7 +621,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return true;
 		}
 	},
-	
+
 	/**
 	 * @method set
 	 * Replaces item with specified index. If array doesn't contain such index, it will break the application.
@@ -636,7 +642,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		}
 		return oldProxy;
 	},
-	
+
 	/**
 	 * @method remove
 	 * Removes item with specified index. If array doesn't contain such index, it will break the application.
@@ -654,7 +660,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return result[0];
 		}
 	},
-	
+
 	/**
 	 * Removes item range from array.
 	 * @param {number} index Index of first item to remove.
@@ -665,7 +671,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		var result = this.tryRemoveAll(index, count);
 		return result || [];
 	},
-	
+
 	/**
 	 * Removes item range from array.
 	 * @param {number} index Index of first item to remove.
@@ -673,7 +679,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Array} `<T>` The removed items.
 	 */
 	$removeAll: JW.AbstractCollection._create$Array("removeAll"),
-	
+
 	/**
 	 * Removes item range from array.
 	 * @param {number} index Index of first item to remove.
@@ -686,13 +692,13 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return result.removedItemsList[0].items;
 		}
 	},
-	
+
 	removeItems: function(items) {
 		var itemSet = new JW.Set(items);
 		var newItems = this.filter(function(item) { return !itemSet.contains(item); });
 		this.performFilter(newItems);
 	},
-	
+
 	/**
 	 * Moves an item inside array.
 	 * @param {number} fromIndex Item index to move.
@@ -703,7 +709,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		this.tryMove(fromIndex, toIndex);
 		return this.get(toIndex);
 	},
-	
+
 	/**
 	 * Moves an item inside array.
 	 * @param {number} fromIndex Item index to move.
@@ -713,7 +719,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	tryMove: function(fromIndex, toIndex) {
 		return JW.Array.tryMove(this.items, fromIndex, toIndex);
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Array} `<T>` Old collection contents.
@@ -722,13 +728,13 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		var result = this.tryClear();
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {JW.Array} `<T>` Old collection contents.
 	 */
 	$clear: JW.AbstractCollection._create$Array("clear"),
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
@@ -740,7 +746,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		}
 		return items;
 	},
-	
+
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>`
@@ -753,7 +759,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		var result = this.trySplice(removeParamsList, addParamsList);
 		return (result !== undefined) ? result : new JW.AbstractArray.SpliceResult(this.items.concat(), [], []);
 	},
-	
+
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>`
@@ -769,7 +775,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		}
 		return spliceResult;
 	},
-	
+
 	/**
 	 * Reorders array items.
 	 * @param {Array} indexArray `<number>` Index array. Item with index `i` will be moved to index `indexArray[i]`.
@@ -779,7 +785,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	reorder: function(indexArray) {
 		this.tryReorder(indexArray);
 	},
-	
+
 	/**
 	 * Reorders array items.
 	 * @param {Array} indexArray `<number>` Index array. Item with index `i` will be moved to index `indexArray[i]`.
@@ -789,7 +795,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	tryReorder: function(indexArray) {
 		return JW.Array.tryReorder(this.items, indexArray);
 	},
-	
+
 	/**
 	 * Detects #splice method arguments to adjust array contents to `newItems`.
 	 * Determines which item ranges should be removed and which ones should be inserted.
@@ -807,7 +813,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectSplice: function(newItems, getKey, scope) {
 		return JW.Array.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
 	},
-	
+
 	/**
 	 * Detects `removeParamsList` arguments of #splice to adjust array contents to `newItems`.
 	 * Determines which item ranges should be removed.
@@ -821,7 +827,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectFilter: function(newItems) {
 		return JW.Array.detectFilter(this.items, newItems);
 	},
-	
+
 	/**
 	 * Detects #reorder method arguments to adjust array contents to `newItems`.
 	 * Determines where to move all items.
@@ -839,7 +845,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectReorder: function(newItems, getKey, scope) {
 		return JW.Array.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
 	},
-	
+
 	/**
 	 * Detects #reorder method arguments to sort array contents by result of `f` call for each item.
 	 * @param {Function} [f]
@@ -857,7 +863,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectSort: function(callback, scope, order) {
 		return JW.Array.detectSort(this.items, callback, scope || this, order);
 	},
-	
+
 	/**
 	 * Detects #reorder method arguments to sort array contents by comparer.
 	 *
@@ -877,7 +883,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectSortComparing: function(compare, scope, order) {
 		return JW.Array.detectSortComparing(this.items, compare, scope || this, order);
 	},
-	
+
 	/**
 	 * Adjusts array contents to `newItems` using #detectSplice and #splice methods.
 	 * All items must have unique `getKey` function result.
@@ -896,7 +902,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.trySplice(params.removeParamsList, params.addParamsList);
 		}
 	},
-	
+
 	/**
 	 * Adjusts array contents to `newItems` using #detectFilter and #splice methods.
 	 * Only removes items. Doesn't assume items insertion - try #detectSplice if that's the case.
@@ -910,7 +916,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.trySplice(params, []);
 		}
 	},
-	
+
 	/**
 	 * Adjusts array contents to `newItems` using #detectReorder and #reorder methods.
 	 * @param {Array} newItems `<T>` New array contents.
@@ -927,7 +933,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.tryReorder(indexArray);
 		}
 	},
-	
+
 	/**
 	 * Sorts array by result of `f` function call for each item.
 	 *
@@ -947,7 +953,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.tryReorder(indexArray);
 		}
 	},
-	
+
 	/**
 	 * Sorts array by comparer.
 	 *
@@ -968,7 +974,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.tryReorder(indexArray);
 		}
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -979,7 +985,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createMapper: function(config) {
 		return new JW.AbstractArray.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -990,7 +996,18 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createFilterer: function(config) {
 		return new JW.AbstractArray.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.AbstractArray.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -1001,7 +1018,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createObserver: function(config) {
 		return new JW.AbstractArray.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -1012,7 +1029,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createOrderer: function(config) {
 		return new JW.AbstractArray.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -1023,7 +1040,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createSorterComparing: function(config) {
 		return new JW.AbstractArray.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -1034,7 +1051,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createIndexer: function(config) {
 		return new JW.AbstractArray.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -1045,7 +1062,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createLister: function(config) {
 		return new JW.AbstractArray.Lister(this, config);
 	},
-	
+
 	/**
 	 * Creates view synchronizer with array.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -1056,7 +1073,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createInserter: function(config) {
 		return new JW.AbstractArray.Inserter(this, config);
 	},
-	
+
 	/**
 	 * Creates arrays merger.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -1067,11 +1084,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createMerger: function(config) {
 		return new JW.AbstractArray.Merger(this, config);
 	},
-	
+
 	createMergerBunch: function(merger) {
 		return new JW.AbstractArray.Merger.Bunch(merger, this);
 	},
-	
+
 	/**
 	 * Creates array reverser.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -1082,11 +1099,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createReverser: function(config) {
 		return new JW.AbstractArray.Reverser(this, config);
 	},
-	
+
 	createSplitter: function(config) {
 		return new JW.AbstractArray.Splitter(this, config);
 	},
-	
+
 	/**
 	 * Checks for equality (===) to another array, item by item.
 	 * @param {Array} arr `<T>` Another array.
@@ -1095,7 +1112,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	equal: function(arr) {
 		return JW.Array.equal(this.items, arr);
 	},
-	
+
 	/**
 	 * Collapses multi-dimentional array.
 	 * @param {number} depth Dimentions to collapse.
@@ -1104,7 +1121,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	collapse: function(depth) {
 		return JW.Array.collapse(this.items, depth);
 	},
-	
+
 	/**
 	 * Returns item index in this collection. If item doesn't exist, returns -1.
 	 * @param {T} item Item.
@@ -1113,12 +1130,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	indexOf: function(item) {
 		return JW.Array.indexOf(this.items, item);
 	},
-	
+
 	/**
 	 * Checks all items by criteria in backward order.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -1133,12 +1150,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	backEvery: function(callback, scope) {
 		return JW.Array.backEvery(this.items, callback, scope);
 	},
-	
+
 	// deprecated
 	top: function() {
 		return JW.Array.top(this.items);
 	},
-	
+
 	/**
 	 * Removes last array item. Does nothing if array is empty.
 	 * @returns {T} The removed item or `undefined`.
@@ -1148,7 +1165,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return this.tryRemove(this.items.length - 1);
 		}
 	},
-	
+
 	/**
 	 * Determines index of first item which is more than specified value by `compare` function,
 	 * using binary search. Array must be sorted by `compare` function.
@@ -1168,11 +1185,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	binarySearch: function(value, compare, scope) {
 		return JW.Array.binarySearch(this.items, value, compare, scope);
 	},
-	
+
 	_callStatic: function(algorithm, args) {
 		return JW.Array[algorithm].apply(JW.Array, [this.items].concat(args || []));
 	}
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.
@@ -1202,7 +1219,7 @@ JW.extend(JW.AbstractArray.IndexCount, JW.Class, {
 	/**
 	 * @property {number} count Count.
 	 */
-	
+
 	/**
 	 * Clones pair.
 	 * @returns {JW.AbstractArray.IndexCount}
@@ -1235,7 +1252,7 @@ JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
 	/**
 	 * @property {Array} items `<T>` Items.
 	 */
-	
+
 	/**
 	 * Converts to "index-count" pair.
 	 * @returns {JW.AbstractArray.IndexCount} "Index-count" pair.
@@ -1243,7 +1260,7 @@ JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
 	toIndexCount: function() {
 		return new JW.AbstractArray.IndexCount(this.index, this.items.length);
 	},
-	
+
 	/**
 	 * Clones pair.
 	 * @returns {JW.AbstractArray.IndexItems}
@@ -1312,7 +1329,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 	Array<T> addedItems;
 	Array<JW.AbstractArray.IndexCount<T>> removeParamsList;
 	*/
-	
+
 	/**
 	 * Returns plain array of removed items.
 	 * @returns {Array} `<T>` Removed items array.
@@ -1323,7 +1340,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 		}
 		return this.removedItems;
 	},
-	
+
 	/**
 	 * Returns plain array of added items.
 	 * @returns {Array} `<T>` Added items array.
@@ -1334,7 +1351,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 		}
 		return this.addedItems;
 	},
-	
+
 	/**
 	 * Converts removed item segments to "index-count" pairs.
 	 * @returns {Array} `<JW.AbstractArray.IndexCount<T>>` Segments to remove.
@@ -1345,7 +1362,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 		}
 		return this.removeParamsList;
 	},
-	
+
 	/**
 	 * Checks that JW.AbstractArray#splice method call didn't change the array.
 	 * @returns {boolean} Array hasn't been changed.

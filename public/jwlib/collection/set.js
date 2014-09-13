@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -44,7 +44,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	createEmpty: function() {
 		return new JW.Set();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.Array} `<U>` Array.
@@ -52,7 +52,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.Map} `<U>` Map.
@@ -60,7 +60,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.Set} `<U>` Set.
@@ -68,7 +68,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	createEmptySet: function() {
 		return new JW.Set();
 	}
-	
+
 	/**
 	 * @method getLength
 	 * `<T extends JW.Class>` Returns count of items in collection.
@@ -147,9 +147,9 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @method every
 	 *
 	 * `<T extends JW.Class>` Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @static
@@ -167,9 +167,9 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @method some
 	 *
 	 * `<T extends JW.Class>` Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -202,9 +202,9 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @method search
 	 *
 	 * `<T extends JW.Class>` Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -465,10 +465,28 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @returns {JW.Set} `<T>` Filtered collection.
 	 */
 	/**
+	 * @method count
+	 *
+	 * `<T extends JW.Class>` Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Object} set `<T>` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Integer} Number of items.
+	 */
+	/**
 	 * @method map
 	 *
 	 * `<T extends JW.Class, U extends JW.Class>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -486,7 +504,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @method $map
 	 *
 	 * `<T extends JW.Class, U extends JW.Class>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -615,76 +633,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @param {Object} set `<T>` Set.
 	 * @param {Object} newItems `<T>` New map contents.
 	 * @returns {void}
-	 */
-	/**
-	 * @method createMapper
-	 * `<T extends JW.Class, U extends JW.Class>` Creates collection item mapper.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Mapper}
-	 * `<T, U>` Synchronizer.
-	 */
-	/**
-	 * @method createFilterer
-	 * `<T extends JW.Class>` Creates collection filterer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Filterer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createObserver
-	 * `<T extends JW.Class>` Creates collection observer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Observer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createOrderer
-	 * `<T extends JW.Class>` Creates collection converter to array (orderer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Orderer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createSorterComparing
-	 * `<T extends JW.Class>` Creates collection converter to array (sorter by comparer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.SorterComparing}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createIndexer
-	 * `<T extends JW.Class>` Creates collection converter to map (indexer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Indexer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createLister
-	 * `<T extends JW.Class>` Creates collection converter to set.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Lister}
-	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method equal

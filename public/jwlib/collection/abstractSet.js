@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -49,6 +49,7 @@
  * Returns first item matching the criteria.
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -76,6 +77,7 @@
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates matching item counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -116,19 +118,19 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	getJson: function() {
 		return this.json;
 	},
-	
+
 	getLength: function() {
 		return this._length;
 	},
-	
+
 	isEmpty: function() {
 		return this._length === 0;
 	},
-	
+
 	containsItem: function(item) {
 		return this.json.hasOwnProperty(item._iid);
 	},
-	
+
 	/**
 	 * Checks item existance in collection. Shortcut for #containsItem.
 	 * @param {T} item Item.
@@ -137,11 +139,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	contains: function(item) {
 		return this.json.hasOwnProperty(item._iid);
 	},
-	
+
 	every: function(callback, scope) {
 		return JW.Set.every(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -159,7 +161,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	filter: function(callback, scope) {
 		return JW.Set.filter(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -175,10 +177,14 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {JW.Set} `<T>` Filtered collection.
 	 */
 	$filter: JW.AbstractCollection._create$Set("filter"),
-	
+
+	count: function(callback, scope) {
+		return JW.Set.count(this.items, callback, scope || this);
+	},
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -193,10 +199,10 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	map: function(callback, scope) {
 		return JW.Set.map(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -209,15 +215,15 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {JW.Set} `<U>` Mapped collection.
 	 */
 	$map: JW.AbstractCollection._create$Set("map"),
-	
+
 	asSet: function() {
 		return this.json;
 	},
-	
+
 	$asSet: function() {
 		return this;
 	},
-	
+
 	/**
 	 * Adds item to set if one is absent.
 	 * @param {T} item Item.
@@ -226,7 +232,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	add: function(item) {
 		return this.tryAdd(item) !== undefined;
 	},
-	
+
 	/**
 	 * Adds item to set if one is absent.
 	 * @param {T} item Item.
@@ -237,7 +243,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return true;
 		}
 	},
-	
+
 	/**
 	 * Adds multiple items to set, ones that are absent.
 	 * @param {Array} items `<T>` Items.
@@ -247,14 +253,14 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		var result = this.tryAddAll(items);
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	/**
 	 * Adds multiple items to set, ones that are absent.
 	 * @param {Array} items `<T>` Items.
 	 * @returns {JW.Array} `<T>` Added items.
 	 */
 	$addAll: JW.AbstractCollection._create$Array("addAll"),
-	
+
 	/**
 	 * Adds multiple items to set, ones that are absent.
 	 * @param {Array} items `<T>` Items.
@@ -266,7 +272,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return spliceResult.addedItems;
 		}
 	},
-	
+
 	/**
 	 * Removes item from set if one is present.
 	 * @param {T} item Item.
@@ -275,7 +281,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	remove: function(item) {
 		return this.tryRemove(item) !== undefined;
 	},
-	
+
 	/**
 	 * Removes item from set if one is present.
 	 * @param {T} item Item.
@@ -286,11 +292,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return true;
 		}
 	},
-	
+
 	removeItem: function(item) {
 		this.tryRemove(item);
 	},
-	
+
 	/**
 	 * Removes multiple items from set, ones that are present.
 	 * @param {Array} items `<T>` Items.
@@ -300,14 +306,14 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		var result = this.tryRemoveAll(items);
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	/**
 	 * Removes multiple items from set, ones that are present.
 	 * @param {Array} items `<T>` Items.
 	 * @returns {JW.Array} `<T>` Removed items.
 	 */
 	$removeAll: JW.AbstractCollection._create$Array("removeAll"),
-	
+
 	/**
 	 * Removes multiple items from set, ones that are present.
 	 * @param {Array} items `<T>` Items.
@@ -319,11 +325,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return spliceResult.removedItems;
 		}
 	},
-	
+
 	removeItems: function(items) {
 		this.tryRemoveAll(items);
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Array} `<T>` Old collection contents.
@@ -332,13 +338,13 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		var items = this.tryClear();
 		return (items !== undefined) ? items : [];
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {JW.Array} `<T>` Old collection contents.
 	 */
 	$clear: JW.AbstractCollection._create$Array("clear"),
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
@@ -351,7 +357,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		}
 		return items;
 	},
-	
+
 	/**
 	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedItems `<T>` Items to remove.
@@ -362,7 +368,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		var spliceResult = this.trySplice(removedItems, addedItems);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractSet.SpliceResult([], []);
 	},
-	
+
 	/**
 	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedItems `<T>` Items to remove.
@@ -379,7 +385,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return spliceResult;
 		}
 	},
-	
+
 	/**
 	 * Detects #splice method arguments to adjust set contents to `newItems`.
 	 * Determines which items should be removed and which ones should be added.
@@ -390,7 +396,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	detectSplice: function(newItems) {
 		return JW.Set.detectSplice(this.json, newItems);
 	},
-	
+
 	/**
 	 * Adjusts map contents to `newItems` using #detectSplice and #splice methods.
 	 * @param {Object} newItems `<T>` New map contents.
@@ -402,7 +408,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			this.trySplice(spliceParams.removedItems, spliceParams.addedItems);
 		}
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -413,7 +419,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createMapper: function(config) {
 		return new JW.AbstractSet.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -424,7 +430,18 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createFilterer: function(config) {
 		return new JW.AbstractSet.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.AbstractSet.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -435,7 +452,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createObserver: function(config) {
 		return new JW.AbstractSet.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -446,7 +463,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createOrderer: function(config) {
 		return new JW.AbstractSet.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -457,7 +474,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createSorterComparing: function(config) {
 		return new JW.AbstractSet.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -468,7 +485,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createIndexer: function(config) {
 		return new JW.AbstractSet.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -479,7 +496,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createLister: function(config) {
 		return new JW.AbstractSet.Lister(this, config);
 	},
-	
+
 	/**
 	 * Checks for equality (===) to array, item by item.
 	 * @param {Array} array `<T>` Array.
@@ -488,11 +505,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	equal: function(array) {
 		return JW.Set.equal(this.json, array);
 	},
-	
+
 	_callStatic: function(algorithm, args) {
 		return JW.Set[algorithm].apply(JW.Set, [this.json].concat(JW.args(args || [])));
 	}
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.

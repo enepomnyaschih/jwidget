@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -25,30 +25,30 @@ JW.apply(JW.Array, {
 			return 0;
 		}
 	},
-	
+
 	getLast: function(target) {
 		return target[target.length - 1];
 	},
-	
+
 	getLastKey: function(target) {
 		var l = target.length;
 		if (l !== 0) {
 			return l - 1;
 		}
 	},
-	
+
 	getLength: function(target) {
 		return target.length;
 	},
-	
+
 	isEmpty: function(target) {
 		return target.length === 0;
 	},
-	
+
 	get: function(target, index) {
 		return target[index];
 	},
-	
+
 	getKeys: function(target) {
 		var result = new Array(target.length);
 		for (var i = 0, l = target.length; i < l; ++i) {
@@ -56,7 +56,7 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
 	every: function(target, callback, scope) {
 		// JW.assertArray(target);
 		// JW.assertFunction(callback);
@@ -67,7 +67,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	filter: function(target, callback, scope) {
 		var result = [];
 		JW.Array.every(target, function(item, index) {
@@ -77,9 +77,19 @@ JW.apply(JW.Array, {
 		}, scope);
 		return result;
 	},
-	
+
 	$filter: JW.AbstractCollection._createStatic$Array(JW.Array, "filter"),
-	
+
+	count: function(target, callback, scope) {
+		var result = 0;
+		JW.Array.every(target, function(item, index) {
+			if (callback.call(this, item, index) !== false) {
+				++result;
+			}
+		}, scope);
+		return result;
+	},
+
 	map: function(target, callback, scope) {
 		var result = [];
 		JW.Array.every(target, function(item, index) {
@@ -87,34 +97,34 @@ JW.apply(JW.Array, {
 		}, scope);
 		return result;
 	},
-	
+
 	$map: JW.AbstractCollection._createStatic$Array(JW.Array, "map"),
-	
+
 	toArray: function(target) {
 		return target.concat();
 	},
-	
+
 	toSet: function(target) {
 		return JW.Array.index(target, JW.iid);
 	},
-	
+
 	asArray: function(target) {
 		return target;
 	},
-	
+
 	add: function(target, item, index) {
 		JW.Array.tryAdd(target, item, index);
 	},
-	
+
 	tryAdd: function(target, item, index) {
 		target.splice(JW.def(index, target.length), 0, item);
 		return true;
 	},
-	
+
 	addAll: function(target, items, index) {
 		JW.Array.tryAddAll(target, items, index);
 	},
-	
+
 	tryAddAll: function(target, items, index) {
 		if (items.length === 0) {
 			return;
@@ -126,7 +136,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	trySet: function(target, item, index) {
 		// JW.assertArray(target);
 		// JW.assertIsSet(item);
@@ -137,36 +147,36 @@ JW.apply(JW.Array, {
 			return new JW.Proxy(oldItem);
 		}
 	},
-	
+
 	tryRemove: function(target, index) {
 		return target.splice(index, 1)[0];
 	},
-	
+
 	removeAll: function(target, index, count) {
 		var result = JW.Array.tryRemoveAll(target, index, count);
 		return result || [];
 	},
-	
+
 	$removeAll: JW.AbstractCollection._createStatic$Array(JW.Array, "removeAll"),
-	
+
 	tryRemoveAll: function(target, index, count) {
 		if (count === 0) {
 			return;
 		}
 		return target.splice(index, count);
 	},
-	
+
 	removeItems: function(target, items) {
 		var itemSet = new JW.Set(items);
 		var newItems = JW.Array.filter(target, function(item) { return !itemSet.contains(item); });
 		JW.Array.performSplice(target, newItems);
 	},
-	
+
 	move: function(target, fromIndex, toIndex) {
 		JW.Array.tryMove(target, fromIndex, toIndex);
 		return JW.Array.get(target, toIndex);
 	},
-	
+
 	tryMove: function(target, fromIndex, toIndex) {
 		// JW.assertArray(target);
 		// JW.assertInt(fromIndex, 0, target.length);
@@ -179,33 +189,33 @@ JW.apply(JW.Array, {
 		target.splice(toIndex, 0, item);
 		return item;
 	},
-	
+
 	clear: function(target) {
 		var result = JW.Array.tryClear(target);
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	$clear: JW.AbstractCollection._createStatic$Array(JW.Array, "clear"),
-	
+
 	tryClear: function(target) {
 		// JW.assertArray(target);
 		if (target.length !== 0) {
 			return target.splice(0, target.length);
 		}
 	},
-	
+
 	splice: function(target, removeParamsList, addParamsList) {
 		var result = JW.Array.trySplice(target, removeParamsList, addParamsList);
 		return (result !== undefined) ? result : new JW.AbstractArray.SpliceResult(target.concat(), [], []);
 	},
-	
+
 	trySplice: function(target, removeParamsList, addParamsList) {
 		// JW.assertArray(target);
 		// JW.assertArray(removeParamsList, function(params) { return params instanceof JW.AbstractArray.IndexCount; }, this);
 		// JW.assertArray(addParamsList, function(params) { return params instanceof JW.AbstractArray.IndexItems; }, this);
 		// TODO: assert out of bounds stuff
 		var last;
-		
+
 		var optimizedRemoveParamsList = [];
 		last = null;
 		for (var i = 0, l = removeParamsList.length; i < l; ++i) {
@@ -217,7 +227,7 @@ JW.apply(JW.Array, {
 				optimizedRemoveParamsList.push(last);
 			}
 		}
-		
+
 		var optimizedAddParamsList = [];
 		last = null;
 		for (var i = 0, l = addParamsList.length; i < l; ++i) {
@@ -229,7 +239,7 @@ JW.apply(JW.Array, {
 				optimizedAddParamsList.push(last);
 			}
 		}
-		
+
 		var oldItems = target.concat();
 		var removedItemsList = [];
 		for (var i = optimizedRemoveParamsList.length - 1; i >= 0; --i) {
@@ -254,11 +264,11 @@ JW.apply(JW.Array, {
 			return new JW.AbstractArray.SpliceResult(oldItems, removedItemsList, addedItemsList);
 		}
 	},
-	
+
 	reorder: function(target, indexList) {
 		JW.Array.tryReorder(target, indexList);
 	},
-	
+
 	tryReorder: function(target, indexArray) {
 		// JW.assertArray(target);
 		// JW.assertArray(indexArray);
@@ -276,7 +286,7 @@ JW.apply(JW.Array, {
 		}
 		return oldItems;
 	},
-	
+
 	detectSplice: function(oldItems, newItems, getKey, scope) {
 		getKey = getKey || JW.iid;
 		scope = scope || oldItems;
@@ -289,11 +299,11 @@ JW.apply(JW.Array, {
 		var nextOldIndex = 0;
 		var offset = 0;
 		var newItemBuffer = [];
-		
+
 		function buffer(item) {
 			newItemBuffer.push(item);
 		}
-		
+
 		function flush() {
 			if (newItemBuffer.length === 0) {
 				return;
@@ -302,7 +312,7 @@ JW.apply(JW.Array, {
 			offset += newItemBuffer.length;
 			newItemBuffer = [];
 		}
-		
+
 		function testRemove(oldIndex) {
 			if (oldIndex > nextOldIndex) {
 				var count = oldIndex - nextOldIndex;
@@ -310,7 +320,7 @@ JW.apply(JW.Array, {
 				offset -= count;
 			}
 		}
-		
+
 		for (var newIndex = 0, l = newItems.length; newIndex < l; ++newIndex) {
 			var item = newItems[newIndex];
 			var key = getKey.call(scope, item);
@@ -329,7 +339,7 @@ JW.apply(JW.Array, {
 			return new JW.AbstractArray.SpliceParams(removeParamsList, addParamsList);
 		}
 	},
-	
+
 	detectFilter: function(oldItems, newItems) {
 		var removeParamsList = [];
 		var oldIndex = 0;
@@ -350,7 +360,7 @@ JW.apply(JW.Array, {
 			return removeParamsList;
 		}
 	},
-	
+
 	detectReorder: function(oldItems, newItems, getKey, scope) {
 		getKey = getKey || JW.iid;
 		scope = scope || oldItems;
@@ -366,100 +376,56 @@ JW.apply(JW.Array, {
 			return indexArray;
 		}
 	},
-	
+
 	detectSort: function(target, callback, scope, order) {
 		var keys = JW.Array.getSortingKeys(target, callback, scope, order);
 		if (!JW.Array.isIdentity(keys)) {
 			return JW.Array.invert(keys);
 		}
 	},
-	
+
 	detectSortComparing: function(target, compare, scope, order) {
 		var keys = JW.Array.getSortingKeysComparing(target, compare, scope, order);
 		if (!JW.Array.isIdentity(keys)) {
 			return JW.Array.invert(keys);
 		}
 	},
-	
+
 	performSplice: function(target, newItems, getKey, scope) {
 		var params = JW.Array.detectSplice(target, newItems, getKey, scope);
 		if (params !== undefined) {
 			JW.Array.trySplice(target, params.removeParamsList, params.addParamsList);
 		}
 	},
-	
+
 	performFilter: function(target, newItems) {
 		var params = JW.Array.detectFilter(target, newItems);
 		if (params !== undefined) {
 			JW.Array.trySplice(target, params, []);
 		}
 	},
-	
+
 	performReorder: function(target, newItems, getKey, scope) {
 		var indexArray = JW.Array.detectReorder(target, newItems, getKey, scope);
 		if (indexArray !== undefined) {
 			JW.Array.tryReorder(target, indexArray);
 		}
 	},
-	
+
 	sort: function(target, callback, scope, order) {
 		var indexArray = JW.Array.detectSort(target, callback, scope, order);
 		if (indexArray !== undefined) {
 			JW.Array.tryReorder(target, indexArray);
 		}
 	},
-	
+
 	sortComparing: function(target, compare, scope, order) {
 		var indexArray = JW.Array.detectSortComparing(target, compare, scope, order);
 		if (indexArray !== undefined) {
 			JW.Array.tryReorder(target, indexArray);
 		}
 	},
-	
-	createMapper: function(source, config) {
-		return new JW.AbstractArray.Mapper(new JW.Array(source, true), config);
-	},
-	
-	createFilterer: function(source, config) {
-		return new JW.AbstractArray.Filterer(new JW.Array(source, true), config);
-	},
-	
-	createObserver: function(source, config) {
-		return new JW.AbstractArray.Observer(new JW.Array(source, true), config);
-	},
-	
-	createOrderer: function(source, config) {
-		return new JW.AbstractArray.Orderer(new JW.Array(source, true), config);
-	},
-	
-	createSorterComparing: function(source, config) {
-		return new JW.AbstractArray.SorterComparing(new JW.Array(source, true), config);
-	},
-	
-	createIndexer: function(source, config) {
-		return new JW.AbstractArray.Indexer(new JW.Array(source, true), config);
-	},
-	
-	createLister: function(source, config) {
-		return new JW.AbstractArray.Lister(new JW.Array(source, true), config);
-	},
-	
-	createInserter: function(source, config) {
-		return new JW.AbstractArray.Inserter(new JW.Array(source, true), config);
-	},
-	
-	createMerger: function(source, config) {
-		return new JW.AbstractArray.Merger(new JW.Array(source, true), config);
-	},
-	
-	createReverser: function(source, config) {
-		return new JW.AbstractArray.Reverser(new JW.Array(source, true), config);
-	},
-	
-	createSplitter: function(source, config) {
-		return new JW.AbstractArray.Splitter(new JW.Array(source, true), config);
-	},
-	
+
 	equal: function(target, arr) {
 		if (target === arr) {
 			return true;
@@ -474,7 +440,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	collapse: function(target, depth) {
 		var result = [];
 		for (var i = 0, l = target.length; i < l; ++i) {
@@ -494,14 +460,14 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
 	indexOf: Array.prototype.indexOf ? function(target, item) {
 		return target.indexOf(item);
 	} : function(target, item) {
 		var key = JW.Array.keyOf(target, item);
 		return (key !== undefined) ? key : -1;
 	},
-	
+
 	backEvery: function(target, callback, scope) {
 		for (var i = target.length - 1; i >= 0; --i) {
 			if (callback.call(scope || target, target[i], i) === false) {
@@ -510,7 +476,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	cmp: function(x, y, caseInsensitive) {
 		var n = Math.min(x.length, y.length);
 		for (var i = 0; i < n; ++i) {
@@ -521,7 +487,7 @@ JW.apply(JW.Array, {
 		}
 		return JW.cmp(x.length, y.length);
 	},
-	
+
 	shuffle: function(n) {
 		var result = new Array(n);
 		for (var i = 0; i < n; ++i) {
@@ -535,7 +501,7 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
 	isIdentity: function(array) {
 		for (var i = 0, l = array.length; i < l; ++i) {
 			if (array[i] !== i) {
@@ -544,7 +510,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	invert: function(array) {
 		var l = array.length;
 		var result = new Array(l);
@@ -553,7 +519,7 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
 	merge: function(arrays) {
 		var result = [];
 		for (var i = 0, l = arrays.length; i < l; ++i) {
@@ -561,16 +527,24 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
+	countMerged: function(arrays) {
+		var result = 0;
+		for (var i = 0, l = arrays.length; i < l; ++i) {
+			result += arrays[i].length;
+		}
+		return result;
+	}
+
 	// deprecated
 	top: function(target) {
 		return JW.Array.getLast(target);
 	},
-	
+
 	pop: function(target) {
 		return target.pop();
 	},
-	
+
 	binarySearch: function(target, value, compare, scope) {
 		compare = compare || function(x, y) { return (x < y) ? -1 : (x > y) ? 1 : 0 };
 		scope = scope || target;

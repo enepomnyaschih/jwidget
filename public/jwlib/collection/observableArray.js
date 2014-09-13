@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -81,7 +81,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	 * of events #spliceEvent, #replaceEvent, #moveEvent, #clearEvent, #reorderEvent.
 	 * @param {JW.ObservableArray.EventParams} params `<T>` Parameters.
 	 */
-	
+
 	// override
 	destroy: function() {
 		this.changeEvent.destroy();
@@ -93,7 +93,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.length.destroy();
 		this._super();
 	},
-	
+
 	// override
 	trySet: function(item, index) {
 		var oldItem = this._super(item, index);
@@ -104,7 +104,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return oldItem;
 	},
-	
+
 	// override
 	tryMove: function(fromIndex, toIndex) {
 		var item = this._super(fromIndex, toIndex);
@@ -115,7 +115,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return item;
 	},
-	
+
 	// override
 	tryClear: function() {
 		var oldItems = this._super();
@@ -127,7 +127,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return oldItems;
 	},
-	
+
 	// override
 	trySplice: function(removeParamsList, addParamsList) {
 		var result = this._super(removeParamsList, addParamsList);
@@ -139,7 +139,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return result;
 	},
-	
+
 	// override
 	tryReorder: function(indexArray) {
 		var items = this._super(indexArray);
@@ -150,7 +150,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return items;
 	},
-	
+
 	/**
 	 * `<U>` Creates empty collection of the same type.
 	 * @returns {JW.ObservableArray} `<U>` Collection.
@@ -158,7 +158,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createEmpty: function() {
 		return new JW.ObservableArray();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.ObservableArray} `<U>` Array.
@@ -166,7 +166,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.ObservableMap} `<U>` Map.
@@ -174,7 +174,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.ObservableSet} `<U>` Set.
@@ -182,7 +182,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -193,7 +193,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createMapper: function(config) {
 		return new JW.ObservableArray.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -204,7 +204,18 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createFilterer: function(config) {
 		return new JW.ObservableArray.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.ObservableArray.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -215,7 +226,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createObserver: function(config) {
 		return new JW.ObservableArray.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -226,7 +237,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createOrderer: function(config) {
 		return new JW.ObservableArray.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -237,7 +248,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createSorterComparing: function(config) {
 		return new JW.ObservableArray.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -248,7 +259,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createIndexer: function(config) {
 		return new JW.ObservableArray.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -259,7 +270,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createLister: function(config) {
 		return new JW.ObservableArray.Lister(this, config);
 	},
-	
+
 	/**
 	 * Creates view synchronizer with array.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -270,7 +281,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createInserter: function(config) {
 		return new JW.ObservableArray.Inserter(this, config);
 	},
-	
+
 	/**
 	 * Creates arrays merger.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -281,11 +292,11 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createMerger: function(config) {
 		return new JW.ObservableArray.Merger(this, config);
 	},
-	
+
 	createMergerBunch: function(merger) {
 		return new JW.ObservableArray.Merger.Bunch(merger, this);
 	},
-	
+
 	/**
 	 * Creates array reverser.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -296,7 +307,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createReverser: function(config) {
 		return new JW.ObservableArray.Reverser(this, config);
 	},
-	
+
 	createSplitter: function(config) {
 		return new JW.ObservableArray.Splitter(this, config);
 	}

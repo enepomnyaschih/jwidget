@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -41,6 +41,7 @@
  *
  * - Item mapper: JW.AbstractCollection.Mapper
  * - Filterer: JW.AbstractCollection.Filterer
+ * - Matching item counter: JW.AbstractCollection.Counter
  * - Converter to set: JW.AbstractCollection.Lister
  * - Converter to map (indexer): JW.AbstractCollection.Indexer
  * - Converter to array (orderer): JW.AbstractCollection.Orderer
@@ -109,6 +110,7 @@
  * Returns first item matching the criteria.
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -130,6 +132,7 @@
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates matching item counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -186,12 +189,12 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		this._ownsItems = true;
 		return this;
 	},
-	
+
 	destroy: function() {
 		this.tryClear();
 		this._super();
 	},
-	
+
 	/**
 	 * @method getLength
 	 * Returns count of items in collection.
@@ -209,7 +212,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	getFirst: function() {
 		return this._callStatic("getFirst");
 	},
-	
+
 	/**
 	 * @method containsItem
 	 * Checks item existance in collection.
@@ -248,9 +251,9 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method every
 	 *
 	 * Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -262,12 +265,12 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {boolean} Result.
 	 */
-	
+
 	/**
 	 * Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -284,7 +287,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 			return callback.call(this, item) === false;
 		}, scope);
 	},
-	
+
 	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
@@ -303,12 +306,12 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 			return true;
 		}, scope);
 	},
-	
+
 	/**
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -331,7 +334,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to sorted array.
 	 *
@@ -350,7 +353,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	toSorted: function(callback, scope, order) {
 		return this._callStatic("toSorted", [callback, scope || this, order]);
 	},
-	
+
 	/**
 	 * Converts collection to sorted array.
 	 *
@@ -367,7 +370,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	$toSorted: JW.AbstractCollection._create$Array("toSorted"),
-	
+
 	/**
 	 * Converts collection to sorted array.
 	 *
@@ -387,7 +390,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	toSortedComparing: function(compare, scope, order) {
 		return this._callStatic("toSortedComparing", [compare, scope || this, order]);
 	},
-	
+
 	/**
 	 * Converts collection to sorted array.
 	 *
@@ -405,7 +408,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	$toSortedComparing: JW.AbstractCollection._create$Array("toSortedComparing"),
-	
+
 	/**
 	 * Indexes collection.
 	 *
@@ -431,7 +434,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * Indexes collection.
 	 *
@@ -447,7 +450,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Map} `<T>` Collection index.
 	 */
 	$index: JW.AbstractCollection._create$Map("index"),
-	
+
 	/**
 	 * Converts collection to array.
 	 *
@@ -463,7 +466,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		});
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to array.
 	 *
@@ -472,7 +475,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Array} `<T>` Items array.
 	 */
 	$toArray: JW.AbstractCollection._create$Array("toArray"),
-	
+
 	/**
 	 * Converts collection to set.
 	 *
@@ -487,7 +490,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		});
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to set.
 	 *
@@ -496,7 +499,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	$toSet: JW.AbstractCollection._create$Set("toSet"),
-	
+
 	/**
 	 * Represents collection as array.
 	 *
@@ -509,7 +512,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	asArray: function() {
 		return this.toArray();
 	},
-	
+
 	/**
 	 * Represents collection as array.
 	 *
@@ -520,7 +523,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Array} `<T>` Items array
 	 */
 	$asArray: JW.AbstractCollection._create$Array("asArray"),
-	
+
 	/**
 	 * Represents collection as set.
 	 *
@@ -533,7 +536,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	asSet: function() {
 		return this.toSet();
 	},
-	
+
 	/**
 	 * Represents collection as set.
 	 *
@@ -544,7 +547,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	$asSet: JW.AbstractCollection._create$Set("asSet")
-	
+
 	/**
 	 * @method filter
 	 *
@@ -577,12 +580,29 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.AbstractCollection} `<T>` Filtered collection.
 	 */
-	
+
+	/**
+	 * @method count
+	 *
+	 * Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Integer} Number of items.
+	 */
+
 	/**
 	 * @method map
 	 *
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -598,7 +618,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method $map
 	 *
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -610,7 +630,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.AbstractCollection} `<U>` Mapped collection.
 	 */
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.
@@ -646,6 +666,14 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Filterer}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
+	 */
+	/**
+	 * @method createCounter
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractCollection.Counter}
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createObserver

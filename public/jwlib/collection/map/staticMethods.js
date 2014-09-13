@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -27,25 +27,25 @@ JW.apply(JW.Map, {
 		}
 		return length;
 	},
-	
+
 	isEmpty: function(target) {
 		for (var key in target) {
 			return false;
 		}
 		return true;
 	},
-	
+
 	getFirstKey: function(target) {
 		for (var key in target) {
 			return key;
 		}
 		return undefined;
 	},
-	
+
 	get: function(target, key) {
 		return target[key];
 	},
-	
+
 	getKeys: function(target) {
 		var keys = [];
 		for (var key in target) {
@@ -53,7 +53,7 @@ JW.apply(JW.Map, {
 		}
 		return keys;
 	},
-	
+
 	every: function(target, callback, scope) {
 		scope = scope || target;
 		for (var key in target) {
@@ -63,7 +63,7 @@ JW.apply(JW.Map, {
 		}
 		return true;
 	},
-	
+
 	filter: function(target, callback, scope) {
 		var result = {};
 		JW.Map.every(target, function(item, key) {
@@ -73,9 +73,19 @@ JW.apply(JW.Map, {
 		}, scope);
 		return result;
 	},
-	
+
 	$filter: JW.AbstractCollection._createStatic$Map(JW.Map, "filter"),
-	
+
+	count: function(target, callback, scope) {
+		var result = 0;
+		JW.Map.every(target, function(item, key) {
+			if (callback.call(this, item, key) !== false) {
+				++result;
+			}
+		}, scope);
+		return result;
+	},
+
 	map: function(target, callback, scope) {
 		var result = {};
 		JW.Map.every(target, function(item, key) {
@@ -83,13 +93,13 @@ JW.apply(JW.Map, {
 		}, scope);
 		return result;
 	},
-	
+
 	$map: JW.AbstractCollection._createStatic$Map(JW.Map, "map"),
-	
+
 	asMap: function(target) {
 		return target;
 	},
-	
+
 	trySet: function(target, item, key) {
 		var oldItem = target[key];
 		if (oldItem === item) {
@@ -98,12 +108,12 @@ JW.apply(JW.Map, {
 		target[key] = item;
 		return new JW.Proxy(oldItem);
 	},
-	
+
 	setAll: function(target, items) {
 		var spliceResult = JW.Map.trySetAll(target, items);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
-	
+
 	trySetAll: function(target, map) {
 		// JW.assertMap(target);
 		// JW.assertMap(map, JW.assertDefined);
@@ -125,12 +135,12 @@ JW.apply(JW.Map, {
 			return new JW.AbstractMap.SpliceResult(removedItems, addedItems);
 		}
 	},
-	
+
 	setKey: function(target, oldKey, newKey) {
 		var item = JW.Map.trySetKey(target, oldKey, newKey);
 		return (item !== undefined) ? item : target[newKey];
 	},
-	
+
 	trySetKey: function(target, oldKey, newKey) {
 		// JW.assertMap(target);
 		// JW.assertString(oldKey);
@@ -145,7 +155,7 @@ JW.apply(JW.Map, {
 		target[newKey] = item;
 		return item;
 	},
-	
+
 	tryRemove: function(target, key) {
 		// JW.assertMap(target);
 		// JW.assertString(key);
@@ -155,14 +165,14 @@ JW.apply(JW.Map, {
 		}
 		return item;
 	},
-	
+
 	removeAll: function(target, keys) {
 		var items = JW.Map.tryRemoveAll(target, keys);
 		return (items !== undefined) ? items : {};
 	},
-	
+
 	$removeAll: JW.AbstractCollection._createStatic$Map(JW.Map, "removeAll"),
-	
+
 	tryRemoveAll: function(target, keys) {
 		// JW.assertMap(target);
 		var items = {};
@@ -177,7 +187,7 @@ JW.apply(JW.Map, {
 			return items;
 		}
 	},
-	
+
 	removeItems: function(target, items) {
 		var itemSet = new JW.Set(items);
 		var newItems = JW.Map.filter(target, function(item) {
@@ -185,14 +195,14 @@ JW.apply(JW.Map, {
 		});
 		JW.Map.performSplice(target, newItems);
 	},
-	
+
 	clear: function(target) {
 		var result = JW.Map.tryClear(target);
 		return (result !== undefined) ? result : {};
 	},
-	
+
 	$clear: JW.AbstractCollection._createStatic$Map(JW.Map, "clear"),
-	
+
 	tryClear: function(target) {
 		// JW.assertMap(target);
 		if (JW.Map.isEmpty(target)) {
@@ -204,12 +214,12 @@ JW.apply(JW.Map, {
 		}
 		return items;
 	},
-	
+
 	splice: function(target, removedKeys, updatedItems) {
 		var spliceResult = JW.Map.trySplice(target, removedKeys, updatedItems);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
-	
+
 	trySplice: function(target, removedKeys, updatedItems) {
 		// JW.assertMap(target);
 		// JW.assertArray(item, JW.assertString);
@@ -227,12 +237,12 @@ JW.apply(JW.Map, {
 			return new JW.AbstractMap.SpliceResult(removedItems, {});
 		}
 	},
-	
+
 	reindex: function(target, keyMap) {
 		var result = JW.Map.tryReindex(target, keyMap);
 		return (result !== undefined) ? result : {};
 	},
-	
+
 	tryReindex: function(target, keyMap) {
 		// JW.assertMap(target);
 		// JW.assertMap(keyMap, JW.assertString);
@@ -257,7 +267,7 @@ JW.apply(JW.Map, {
 			return resultMap;
 		}
 	},
-	
+
 	detectSplice: function(oldItems, newItems) {
 		// JW.assertMap(oldItems);
 		// JW.assertMap(newItems, JW.assertDefined);
@@ -278,7 +288,7 @@ JW.apply(JW.Map, {
 			return new JW.AbstractMap.SpliceParams(removedKeys, updatedItems);
 		}
 	},
-	
+
 	detectReindex: function(oldItems, newItems, getKey, scope) {
 		// JW.assertMap(oldItems);
 		// JW.assertMap(newItems, JW.assertDefined);
@@ -299,53 +309,21 @@ JW.apply(JW.Map, {
 			return keyMap;
 		}
 	},
-	
+
 	performSplice: function(target, newItems) {
 		var params = JW.Map.detectSplice(target, newItems);
 		if (params !== undefined) {
 			JW.Map.trySplice(target, params.removedKeys, params.updatedItems);
 		}
 	},
-	
+
 	performReindex: function(target, newItems, getKey, scope) {
 		var keyMap = JW.Map.detectReindex(target, newItems, getKey, scope);
 		if (keyMap !== undefined) {
 			JW.Map.tryReindex(target, keyMap);
 		}
 	},
-	
-	createMapper: function(source, config) {
-		return new JW.AbstractMap.Mapper(new JW.Map(source, true), config);
-	},
-	
-	createFilterer: function(source, config) {
-		return new JW.AbstractMap.Filterer(new JW.Map(source, true), config);
-	},
-	
-	createObserver: function(source, config) {
-		return new JW.AbstractMap.Observer(new JW.Map(source, true), config);
-	},
-	
-	createOrderer: function(source, config) {
-		return new JW.AbstractMap.Orderer(new JW.Map(source, true), config);
-	},
-	
-	createSorterComparing: function(source, config) {
-		return new JW.AbstractMap.SorterComparing(new JW.Map(source, true), config);
-	},
-	
-	createIndexer: function(source, config) {
-		return new JW.AbstractMap.Indexer(new JW.Map(source, true), config);
-	},
-	
-	createLister: function(source, config) {
-		return new JW.AbstractMap.Lister(new JW.Map(source, true), config);
-	},
-	
-	createInserter: function(source, config) {
-		return new JW.AbstractMap.Inserter(new JW.Map(source, true), config);
-	},
-	
+
 	equal: function(x, y) {
 		if (x === y) {
 			return true;
@@ -358,13 +336,13 @@ JW.apply(JW.Map, {
 		}
 		return length === 0;
 	},
-	
+
 	single: function(key, item) {
 		var result = {};
 		result[key] = item;
 		return result;
 	},
-	
+
 	getRemovedKeys: function(removedItems, addedItems) {
 		var removedKeys = [];
 		for (var key in removedItems) {

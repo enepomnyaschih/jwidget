@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -22,7 +22,7 @@
  *
  * `<T, C extends JW.AbstractCollection<T>>`
  *
- * Collection filterer. 
+ * Collection filterer.
  * Builds new collection of the same type, consisting of items for which callback
  * function returns !== `false`.
  * Keeps item order in array.
@@ -32,7 +32,7 @@
  *         {@link #cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
  *     });
  *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 3]));
- *     
+ *
  *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
  *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
  *
@@ -44,7 +44,7 @@
  *
  * You can pass target collection in config option:
  *
- *     var source = new JW.Set();
+ *     var source = new JW.ObservableSet();
  *     var target = new JW.Set();
  *     var filterer = source.{@link JW.AbstractCollection#createFilterer createFilterer}({
  *         {@link #cfg-target target}: target,
