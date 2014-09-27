@@ -1,7 +1,7 @@
 /*.log
 /guides/endownload/jwidget.zip
 /guides/endownload/plugins
-/guides/endownload/*.js
+/guides/endownload/**/*.js
 /jwsdk-config/temp
 /public/build
 /public/pages

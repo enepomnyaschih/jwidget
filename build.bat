@@ -5,10 +5,13 @@ call jwsdk release jwsdk-config
 
 :Copy distributive files into a temporary folder
 md jwidget-files
-xcopy /I /Y /E /Q jwsdk-config\temp\merge\jwlib.js jwidget-files
-xcopy /I /Y /E /Q jwsdk-config\temp\merge\jwui.js jwidget-files
-xcopy /I /Y /E /Q public\build\packages\jwlib.min.js jwidget-files
-xcopy /I /Y /E /Q public\build\packages\jwui.min.js jwidget-files
+md jwidget-files\plugins
+xcopy /I /Y /Q jwsdk-config\temp\merge\jwlib.js jwidget-files
+xcopy /I /Y /Q jwsdk-config\temp\merge\jwui.js jwidget-files
+xcopy /I /Y /Q jwsdk-config\temp\merge\plugins\* jwidget-files\plugins
+xcopy /I /Y /Q public\build\packages\jwlib.min.js jwidget-files
+xcopy /I /Y /Q public\build\packages\jwui.min.js jwidget-files
+xcopy /I /Y /Q public\build\packages\plugins\* jwidget-files\plugins
 
 :Compress an archive for downloading
 del /Q guides\endownload\jwidget.zip
@@ -33,6 +36,6 @@ rd /S /Q ..\docs\%version%\resources
 rd /S /Q ..\docs\%version%\source
 del /Q ..\docs\%version%\*
 md ..\docs-temp
-jsduck-5.2.0 public/jw* --output ../docs-temp --external=C,K,P,T,TC,U,UC,V,DOMElement,jQuery --title "jWidget %version% API documentation" --guides guides.json
+jsduck-5.2.0 public/jw* public/plugins --output ../docs-temp --external=C,K,P,T,TC,U,UC,V,DOMElement,jQuery --title "jWidget %version% API documentation" --guides guides.json
 xcopy /I /Y /E /Q ..\docs-temp\* ..\docs\%version%
 rd /S /Q ..\docs-temp
