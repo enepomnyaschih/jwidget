@@ -14,5 +14,5 @@ Back compatibility refusals:
 
 New features:
 
-- Matching item counting method and synchronizer: JW.AbstractCollection.count, JW.AbstractCollection.Counter (#90)
-- "target" is now a config option in JW.UI.*Listener for consistency (#87)
+- Matching item counting method and synchronizer: JW.AbstractCollection.count, JW.AbstractCollection.Counter ([#90](https://github.com/enepomnyaschih/jwidget/issues/90))
+- "target" is now a config option in JW.UI.*Listener for consistency ([#87](https://github.com/enepomnyaschih/jwidget/issues/87))
