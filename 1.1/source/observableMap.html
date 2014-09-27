@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+
+	Copyright (C) 2014 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-ObservableMap-method-constructor'><span id='JW-ObservableMap'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractMap&lt;T&gt;`
+ *
+ * Has several events and an observable property #length.
+ *
+ * See structurized list of methods in JW.AbstractMap.
+ *
+ * @extends JW.AbstractMap
+ *
+ * @constructor
+ * @param {Object} [items] Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create map as adapter of `items`. Defaults to false, so `items` is copied.
+ */
+JW.ObservableMap = function(json, adapter) {
+	JW.ObservableMap._super.call(this, json, adapter);
+	this.length = new JW.Property(this.getLength());
+	this.spliceEvent = new JW.Event();
+	this.reindexEvent = new JW.Event();
+	this.clearEvent = new JW.Event();
+	this.changeEvent = new JW.Event();
+};
+
+JW.extend(JW.ObservableMap, JW.AbstractMap, {
+<span id='JW-ObservableMap-property-length'>	/**
+</span>	 * @property {JW.Property} length `&lt;Number&gt;` Collection length. **Don't modify manually!**
+	 */
+<span id='JW-ObservableMap-event-spliceEvent'>	/**
+</span>	 * @event spliceEvent
+	 * Items are removed from map, items are added to map and items are updated in map. Triggered in result
+	 * of calling #set, #trySet, #setAll, #trySetAll, #remove, #tryRemove, #removeItem, #removeAll, #tryRemoveAll,
+	 * {@link #removeItems}, #splice, #trySplice, #performSplice.
+	 * @param {JW.ObservableMap.SpliceEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableMap-event-reindexEvent'>	/**
+</span>	 * @event reindexEvent
+	 * Keys of items are changed in map. Triggered in result
+	 * of calling #setKey, #trySetKey, #reindex, #tryReindex, #performReindex.
+	 * @param {JW.ObservableMap.ReindexEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableMap-event-clearEvent'>	/**
+</span>	 * @event clearEvent
+	 * Map is cleared. Triggered in result of calling #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableMap.ItemsEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableMap-event-changeEvent'>	/**
+</span>	 * @event changeEvent
+	 * Map is changed. Triggered right after one
+	 * of events #spliceEvent, #reindexEvent, #clearEvent.
+	 * @param {JW.ObservableMap.EventParams} params `&lt;T&gt;` Parameters.
+	 */
+
+	// override
+	destroy: function() {
+		this.changeEvent.destroy();
+		this.clearEvent.destroy();
+		this.reindexEvent.destroy();
+		this.spliceEvent.destroy();
+		this.length.destroy();
+		this._super();
+	},
+
+	// override
+	trySplice: function(removedKeys, updatedItems) {
+		var spliceResult = this._super(removedKeys, updatedItems);
+		if (spliceResult === undefined) {
+			return;
+		}
+		this.length.set(this.getLength());
+		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		return spliceResult;
+	},
+
+	// override
+	tryClear: function() {
+		var items = this._super();
+		if (items === undefined) {
+			return;
+		}
+		this.length.set(0);
+		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this, items));
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		return items;
+	},
+
+	// override
+	tryReindex: function(keyMap) {
+		var result = this._super(keyMap);
+		if (result === undefined) {
+			return;
+		}
+		this.reindexEvent.trigger(new JW.ObservableMap.ReindexEventParams(this, result));
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		return result;
+	},
+
+<span id='JW-ObservableMap-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.ObservableMap} `&lt;U&gt;` Collection.
+	 */
+	createEmpty: function() {
+		return new JW.ObservableMap();
+	},
+
+<span id='JW-ObservableMap-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Creates empty array of the same observability level.
+	 * @returns {JW.ObservableArray} `&lt;U&gt;` Array.
+	 */
+	createEmptyArray: function() {
+		return new JW.ObservableArray();
+	},
+
+<span id='JW-ObservableMap-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Creates empty map of the same observability level.
+	 * @returns {JW.ObservableMap} `&lt;U&gt;` Map.
+	 */
+	createEmptyMap: function() {
+		return new JW.ObservableMap();
+	},
+
+<span id='JW-ObservableMap-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Creates empty set of the same observability level.
+	 * @returns {JW.ObservableSet} `&lt;U&gt;` Set.
+	 */
+	createEmptySet: function() {
+		return new JW.ObservableSet();
+	},
+
+<span id='JW-ObservableMap-method-createMapper'>	/**
+</span>	 * `&lt;U&gt;` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Mapper}
+	 * `&lt;T, U&gt;` Synchronizer.
+	 */
+	createMapper: function(config) {
+		return new JW.ObservableMap.Mapper(this, config);
+	},
+
+<span id='JW-ObservableMap-method-createFilterer'>	/**
+</span>	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Filterer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createFilterer: function(config) {
+		return new JW.ObservableMap.Filterer(this, config);
+	},
+
+<span id='JW-ObservableMap-method-createCounter'>	/**
+</span>	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Counter}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.ObservableMap.Counter(this, config);
+	},
+
+<span id='JW-ObservableMap-method-createObserver'>	/**
+</span>	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Observer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createObserver: function(config) {
+		return new JW.ObservableMap.Observer(this, config);
+	},
+
+<span id='JW-ObservableMap-method-createOrderer'>	/**
+</span>	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Orderer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createOrderer: function(config) {
+		return new JW.ObservableMap.Orderer(this, config);
+	},
+
+<span id='JW-ObservableMap-method-createSorterComparing'>	/**
+</span>	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.SorterComparing}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.ObservableMap.SorterComparing(this, config);
+	},
+
+<span id='JW-ObservableMap-method-createIndexer'>	/**
+</span>	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Indexer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createIndexer: function(config) {
+		return new JW.ObservableMap.Indexer(this, config);
+	},
+
+<span id='JW-ObservableMap-method-createLister'>	/**
+</span>	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Lister}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createLister: function(config) {
+		return new JW.ObservableMap.Lister(this, config);
+	},
+
+<span id='JW-ObservableMap-method-createInserter'>	/**
+</span>	 * Creates view synchronizer with map.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Inserter}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createInserter: function(config) {
+		return new JW.ObservableMap.Inserter(this, config);
+	}
+});
+
+<span id='JW-ObservableMap-EventParams-method-constructor'><span id='JW-ObservableMap-EventParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` JW.ObservableMap event parameters.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `&lt;T&gt;` Event sender.
+ */
+JW.ObservableMap.EventParams = function(sender) {
+	JW.ObservableMap.EventParams._super.call(this, sender);
+};
+
+JW.extend(JW.ObservableMap.EventParams, JW.EventParams, {
+<span id='JW-ObservableMap-EventParams-property-sender'>	/**
+</span>	 * @property {JW.ObservableMap} sender `&lt;T&gt;` Event sender.
+	 */
+});
+
+<span id='JW-ObservableMap-SpliceEventParams-method-constructor'><span id='JW-ObservableMap-SpliceEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableMap.EventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableMap#spliceEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `&lt;T&gt;` Event sender.
+ * @param {JW.AbstractMap.SpliceResult} spliceResult `&lt;T&gt;` Result of JW.AbstractMap#splice method.
+ */
+JW.ObservableMap.SpliceEventParams = function(sender, spliceResult) {
+	JW.ObservableMap.SpliceEventParams._super.call(this, sender);
+	this.spliceResult = spliceResult;
+};
+
+JW.extend(JW.ObservableMap.SpliceEventParams, JW.ObservableMap.EventParams, {
+<span id='JW-ObservableMap-SpliceEventParams-property-spliceResult'>	/**
+</span>	 * @property {JW.AbstractMap.SpliceResult} spliceResult `&lt;T&gt;` Result of JW.AbstractMap#splice method.
+	 */
+});
+
+<span id='JW-ObservableMap-ReindexEventParams-method-constructor'><span id='JW-ObservableMap-ReindexEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableMap.EventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableMap#reindexEvent.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `&lt;T&gt;` Event sender.
+ * @param {Object} keyMap Map of changed keys.
+ */
+JW.ObservableMap.ReindexEventParams = function(sender, keyMap) {
+	JW.ObservableMap.ReindexEventParams._super.call(this, sender);
+	this.keyMap = keyMap;
+};
+
+JW.extend(JW.ObservableMap.ReindexEventParams, JW.ObservableMap.EventParams, {
+<span id='JW-ObservableMap-ReindexEventParams-property-keyMap'>	/**
+</span>	 * @property {Object} keyMap Map of changed keys.
+	 */
+});
+
+<span id='JW-ObservableMap-ItemsEventParams-method-constructor'><span id='JW-ObservableMap-ItemsEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableMap.EventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableMap event which bring its old contents.
+ *
+ * @extends JW.ObservableMap.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableMap} sender `&lt;T&gt;` Event sender.
+ * @param {Object} items Old map contents.
+ */
+JW.ObservableMap.ItemsEventParams = function(sender, items) {
+	JW.ObservableMap.ItemsEventParams._super.call(this, sender);
+	this.items = items;
+};
+
+JW.extend(JW.ObservableMap.ItemsEventParams, JW.ObservableMap.EventParams, {
+<span id='JW-ObservableMap-ItemsEventParams-property-items'>	/**
+</span>	 * @property {Object} items Old map contents.
+	 */
+});
+</pre>
+</body>
+</html>

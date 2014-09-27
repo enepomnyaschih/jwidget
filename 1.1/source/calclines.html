@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	JW Schema validation test (one of many).
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.ns(&quot;JW.Tests.Schema.DigMyData&quot;);
+
+JW.Tests.Schema.DigMyData.CalcLinesTestCase = JW.Schema.TestCase.extend({
+	schemaUrl: &quot;/tests/schema/digmydata/calclines&quot;,
+	
+	testValid: function()
+	{
+		this.assertValidName(&quot;valid&quot;);
+	},
+	
+	testInvalid: function()
+	{
+		this.assertInvalidName(&quot;invalid&quot;, null, true, [
+			&quot;Data is invalid. Full errors list:&quot;,
+			&quot;calclines.0.id: integer expected&quot;,
+			&quot;calclines.0.title: string expected&quot;,
+			&quot;calclines.0.format: value is not an element of enumeration&quot;,
+			&quot;calclines.0.definition: string expected&quot;,
+			&quot;calclines.0.valid: boolean expected&quot;,
+			&quot;calclines.1.id: must be more than 0&quot;,
+			&quot;calclines.1.title: string expected&quot;,
+			&quot;calclines.1.definition: string expected&quot;,
+			&quot;calclines.1.valid: boolean expected&quot;,
+			&quot;calclines.1: garbage found: valud&quot;
+		].join(&quot;\n&quot;));
+	}
+});
+</pre>
+</body>
+</html>
