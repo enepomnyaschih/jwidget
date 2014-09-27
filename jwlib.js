@@ -1,5 +1,5 @@
 /*!
-	jWidget Lib 1.0.2
+	jWidget Lib 1.1.0
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -1117,19 +1117,19 @@ JW.extend(JW.Class, Object, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -1140,63 +1140,63 @@ JW.extend(JW.Class, Object, {
  * `<P extends JW.EventParams>`
  *
  * Used to notify some objects (clients) about some events (for example, about some field value change).
- * 
+ *
  * **Notice:** You must destroy the events and event listeners in class destructor.
- * 
+ *
  * Full example of class that triggers the events:
- * 
+ *
  *     var Dispatcher = function() {
  *         Dispatcher.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.items = [];
  *         this.addEvent = this.{@link JW.Class#own own}(new JW.Event());
  *         this.removeEvent = this.{@link JW.Class#own own}(new JW.Event());
  *     };
- *     
+ *
  *     JW.extend(Dispatcher, JW.Class, {
  *         // Array items;
  *         // JW.Event<Dispatcher.EventParams> addEvent;
  *         // JW.Event<Dispatcher.EventParams> removeEvent;
- *         
+ *
  *         addItem: function(item, index) {
  *             this.items.splice(index, 0, item);
  *             this.addEvent.{@link JW.Event#trigger trigger}(new Dispatcher.EventParams(this, item, index));
  *         },
- *         
+ *
  *         removeItem: function(index) {
  *             var item = this.items.splice(index, 1)[0];
  *             this.removeEvent.{@link JW.Event#trigger trigger}(new Dispatcher.EventParams(this, item, index));
  *         }
  *     });
- *     
+ *
  *     Dispatcher.EventParams = function(sender, item, index) {
  *         Dispatcher.EventParams.{@link JW.Class#static-property-_super _super}.call(this, sender);
  *         this.item = item;
  *         this.index = index;
  *     };
- *     
+ *
  *     JW.extend(Dispatcher.EventParams, // <T>
  *               JW.EventParams, {
  *         // Dispatcher sender;
  *         // T item;
- *         // Integer index;
+ *         // number index;
  *     });
- * 
+ *
  * Full example of these events listening:
- * 
+ *
  *     var Client = function(dispatcher) {
  *         Client.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.dispatcher = dispatcher;
  *         this.{@link JW.Class#own own}(this.dispatcher.addEvent.{@link JW.Event#bind bind}(this._onAdd, this));
  *         this.{@link JW.Class#own own}(this.dispatcher.removeEvent.{@link JW.Event#bind bind}(this._onRemove, this));
  *     };
- *     
+ *
  *     JW.extend(Client, JW.Class, {
  *         // Dispatcher dispatcher;
- *         
+ *
  *         _onAdd: function(params) {
  *             console.log(params.item, " item is added at ", params.index);
  *         },
- *         
+ *
  *         _onRemove: function(params) {
  *             console.log(params.item, " item is removed at ", params.index);
  *         }
@@ -1214,18 +1214,18 @@ JW.extend(JW.Event, JW.Class, {
 	/*
 	Map<JW.EventAttachment> attachments;
 	*/
-	
+
 	destroy: function() {
 		this.purge();
 		this._super();
 	},
-	
+
 	/**
 	 * Starts listening the event.
-	 * 
+	 *
 	 * Whenever the event will be triggered with #trigger method, specified handler function
 	 * will be called in specified scope.
-	 * 
+	 *
 	 * You can stop listening the event by destroying the returned JW.EventAttachment instance.
 	 *
 	 * @param {Function} callback
@@ -1243,10 +1243,10 @@ JW.extend(JW.Event, JW.Class, {
 		this.attachments[attachment._iid] = attachment;
 		return attachment;
 	},
-	
+
 	/**
 	 * Stops listening the event with specific handler.
-	 * 
+	 *
 	 * Equivalent to `attachment.destroy()`.
 	 *
 	 * @param {JW.EventAttachment} attachment `<P>` Event attachment.
@@ -1255,7 +1255,7 @@ JW.extend(JW.Event, JW.Class, {
 	unbind: function(attachment) {
 		delete this.attachments[attachment._iid];
 	},
-	
+
 	/**
 	 * Unbinds all event handlers. Called automatically in event destructor.
 	 * @returns {void}
@@ -1263,12 +1263,12 @@ JW.extend(JW.Event, JW.Class, {
 	purge: function() {
 		this.attachments = {};
 	},
-	
+
 	/**
 	 * Triggers event, i.e. calls all bound handlers.
-	 * 
+	 *
 	 *     this.myEvent.{@link JW.Event#trigger trigger}(new JW.EventParams(this));
-	 * 
+	 *
 	 * This way, we've called all handlers of `myEvent` with argument `new JW.EventParams(this)`.
 	 *
 	 * @param {P} params Event params.
@@ -1528,19 +1528,19 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -1569,6 +1569,7 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  *
  * - Item mapper: JW.AbstractCollection.Mapper
  * - Filterer: JW.AbstractCollection.Filterer
+ * - Matching item counter: JW.AbstractCollection.Counter
  * - Converter to set: JW.AbstractCollection.Lister
  * - Converter to map (indexer): JW.AbstractCollection.Indexer
  * - Converter to array (orderer): JW.AbstractCollection.Orderer
@@ -1637,6 +1638,7 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  * Returns first item matching the criteria.
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -1658,6 +1660,7 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates matching item counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -1714,12 +1717,12 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		this._ownsItems = true;
 		return this;
 	},
-	
+
 	destroy: function() {
 		this.tryClear();
 		this._super();
 	},
-	
+
 	/**
 	 * @method getLength
 	 * Returns count of items in collection.
@@ -1737,7 +1740,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	getFirst: function() {
 		return this._callStatic("getFirst");
 	},
-	
+
 	/**
 	 * @method containsItem
 	 * Checks item existance in collection.
@@ -1776,9 +1779,9 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method every
 	 *
 	 * Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -1790,12 +1793,12 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {boolean} Result.
 	 */
-	
+
 	/**
 	 * Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -1812,7 +1815,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 			return callback.call(this, item) === false;
 		}, scope);
 	},
-	
+
 	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
@@ -1831,12 +1834,12 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 			return true;
 		}, scope);
 	},
-	
+
 	/**
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -1859,7 +1862,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to sorted array.
 	 *
@@ -1878,7 +1881,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	toSorted: function(callback, scope, order) {
 		return this._callStatic("toSorted", [callback, scope || this, order]);
 	},
-	
+
 	/**
 	 * Converts collection to sorted array.
 	 *
@@ -1895,7 +1898,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	$toSorted: JW.AbstractCollection._create$Array("toSorted"),
-	
+
 	/**
 	 * Converts collection to sorted array.
 	 *
@@ -1915,7 +1918,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	toSortedComparing: function(compare, scope, order) {
 		return this._callStatic("toSortedComparing", [compare, scope || this, order]);
 	},
-	
+
 	/**
 	 * Converts collection to sorted array.
 	 *
@@ -1933,7 +1936,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
 	$toSortedComparing: JW.AbstractCollection._create$Array("toSortedComparing"),
-	
+
 	/**
 	 * Indexes collection.
 	 *
@@ -1959,7 +1962,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * Indexes collection.
 	 *
@@ -1975,7 +1978,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Map} `<T>` Collection index.
 	 */
 	$index: JW.AbstractCollection._create$Map("index"),
-	
+
 	/**
 	 * Converts collection to array.
 	 *
@@ -1991,7 +1994,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		});
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to array.
 	 *
@@ -2000,7 +2003,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Array} `<T>` Items array.
 	 */
 	$toArray: JW.AbstractCollection._create$Array("toArray"),
-	
+
 	/**
 	 * Converts collection to set.
 	 *
@@ -2015,7 +2018,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		});
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to set.
 	 *
@@ -2024,7 +2027,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	$toSet: JW.AbstractCollection._create$Set("toSet"),
-	
+
 	/**
 	 * Represents collection as array.
 	 *
@@ -2037,7 +2040,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	asArray: function() {
 		return this.toArray();
 	},
-	
+
 	/**
 	 * Represents collection as array.
 	 *
@@ -2048,7 +2051,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Array} `<T>` Items array
 	 */
 	$asArray: JW.AbstractCollection._create$Array("asArray"),
-	
+
 	/**
 	 * Represents collection as set.
 	 *
@@ -2061,7 +2064,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	asSet: function() {
 		return this.toSet();
 	},
-	
+
 	/**
 	 * Represents collection as set.
 	 *
@@ -2072,7 +2075,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	$asSet: JW.AbstractCollection._create$Set("asSet")
-	
+
 	/**
 	 * @method filter
 	 *
@@ -2105,12 +2108,29 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.AbstractCollection} `<T>` Filtered collection.
 	 */
-	
+
+	/**
+	 * @method count
+	 *
+	 * Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Number of items.
+	 */
+
 	/**
 	 * @method map
 	 *
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -2126,7 +2146,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method $map
 	 *
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -2138,7 +2158,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.AbstractCollection} `<U>` Mapped collection.
 	 */
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.
@@ -2174,6 +2194,14 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Filterer}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
+	 */
+	/**
+	 * @method createCounter
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractCollection.Counter}
+	 * `<T>` Synchronizer.
 	 */
 	/**
 	 * @method createObserver
@@ -2219,19 +2247,155 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * `<T>`
+ *
+ * Counter for collection items which match the specified filter.
+ * Builds new JW.Property&lt;number&gt;, containing the number of items for which callback
+ * function returns !== `false`.
+ *
+ *     var source = new JW.ObservableArray([1, 2, 3]);
+ *     var counter = source.{@link JW.AbstractCollection#createFilterer createCounter}({
+ *         {@link JW.AbstractArray.Counter#cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
+ *     });
+ *     assert(counter.{@link JW.AbstractCollection.Counter#property-target target}.{@link JW.Property#get get}() === 2); // 1, 3
+ *
+ *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
+ *     assert(counter.{@link JW.AbstractCollection.Counter#property-target target}.{@link JW.Property#get get}() === 4); // 1, 3, 7, 1
+ *
+ * Use JW.AbstractCollection#createCounter method to create the synchronizer.
+ * The method will select which synchronizer implementation fits better (simple or observable).
+ *
+ * You can pass target property in config option:
+ *
+ *     var source = new JW.ObservableSet();
+ *     var target = new JW.Property(0);
+ *     var counter = source.{@link JW.AbstractCollection#createCounter createCounter}({
+ *         {@link JW.AbstractCollection.Counter#cfg-target target}: target,
+ *         {@link JW.AbstractCollection.Counter#cfg-filterItem filterItem}: this._filterItem,
+ *         {@link JW.AbstractCollection.Counter#cfg-scope scope}: this
+ *     });
+ *
+ * You may use JW.AbstractCollection.Filterer instead of counter, but counter works much
+ * faster because it doesn't create a filtered collection.
+ *
+ *     var source = new JW.ObservableArray();
+ *
+ *     // via filterer
+ *     var filterer = source.{@link JW.AbstractCollection#createFilterer createFilterer}({
+ *         {@link JW.AbstractCollection.Filterer#cfg-filterItem filterItem}: this._filterItem,
+ *         {@link JW.AbstractCollection.Filterer#cfg-scope scope}: this
+ *     });
+ *     var count = filterer.{@link JW.AbstractCollection.Filterer#property-target target}.{@link JW.ObservableArray#length length}; // JW.Property<number>
+ *
+ *     // via counter, works faster
+ *     var counter = source.{@link JW.AbstractCollection#createCounter createCounter}({
+ *         {@link JW.AbstractCollection.Counter#cfg-filterItem filterItem}: this._filterItem,
+ *         {@link JW.AbstractCollection.Counter#cfg-scope scope}: this
+ *     });
+ *     var count = counter.{@link JW.AbstractCollection.Counter#property-target target}; // JW.Property<number>
+ *
+ * Counter works correctly for observable collections only.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createCounter method is preferrable instead.
+ * @param {JW.AbstractCollection} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.AbstractCollection.Counter = function(source, config) {
+	JW.AbstractCollection.Counter._super.call(this);
+	config = config || {};
+	this.source = source;
+	this.filterItem = config.filterItem;
+	this.target = config.target || this.own(new JW.Property(0));
+	this.scope = config.scope || this;
+	this.target.set(source.count(this.filterItem, this.scope));
+};
+
+JW.extend(JW.AbstractCollection.Counter, JW.Class, {
+	/**
+	 * @cfg {JW.Property} target `<number>` Target property.
+	 */
+	/**
+	 * @cfg {Function} filterItem (required)
+	 *
+	 * `filterItem(item: T): boolean`
+	 *
+	 * Filtering function. Target property will count an item if filtering function
+	 * returns !== `false` for this item.
+	 */
+	/**
+	 * @cfg {Object} scope {@link #cfg-filterItem} call scope.
+	 */
+	/**
+	 * @property {JW.AbstractCollection} source `<T>` Source collection.
+	 */
+	/**
+	 * @property {JW.Property} target `<number>` Target property.
+	 */
+
+	// override
+	destroy: function() {
+		this.target.set(0);
+		this._super();
+	},
+
+	/**
+	 * Changes counter configuration and recounts matching items. Accepts next
+	 * options: #filterItem, #scope.
+	 * @param {Object} config Configuration.
+	 */
+	reconfigure: function(config) {
+		this.filterItem = JW.def(config.filterItem, this.filterItem);
+		this.scope = JW.def(config.scope, this.scope);
+		this.recount();
+	},
+
+	/**
+	 * Recounts matching items. Call this method when collection items properties change the way that
+	 * they must be refiltered.
+	 */
+	recount: function() {
+		this.target.set(this.source.count(this.filterItem, this.scope));
+	}
+});
+
+/*
+	jWidget Lib source file.
+
+	Copyright (C) 2014 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -2241,7 +2405,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
  *
  * `<T, C extends JW.AbstractCollection<T>>`
  *
- * Collection filterer. 
+ * Collection filterer.
  * Builds new collection of the same type, consisting of items for which callback
  * function returns !== `false`.
  * Keeps item order in array.
@@ -2251,7 +2415,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
  *         {@link #cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
  *     });
  *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 3]));
- *     
+ *
  *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
  *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
  *
@@ -2263,7 +2427,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
  *
  * You can pass target collection in config option:
  *
- *     var source = new JW.Set();
+ *     var source = new JW.ObservableSet();
  *     var target = new JW.Set();
  *     var filterer = source.{@link JW.AbstractCollection#createFilterer createFilterer}({
  *         {@link #cfg-target target}: target,
@@ -3258,19 +3422,19 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -3319,6 +3483,7 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
  * Returns index of first item matching the criteria.**
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -3346,6 +3511,7 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -3383,7 +3549,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * Clears collection.
 	 * @returns {JW.IndexedCollection} `<K, T>` Old collection contents.
 	 */
-	
+
 	/**
 	 * Returns key of first collection item. If collection is empty, returns `undefined`.
 	 * @returns {K} Key.
@@ -3391,7 +3557,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	getFirstKey: function() {
 		return this._callStatic("getFirstKey");
 	},
-	
+
 	/**
 	 * @method getKeys
 	 * Returns array of keys of all collection items.
@@ -3402,7 +3568,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Array} `<K>` Keys array.
 	 */
 	$getKeys: JW.AbstractCollection._create$Array("getKeys"),
-	
+
 	/**
 	 * Checks existance of item with specified index in collection.
 	 * @param {K} key Key.
@@ -3411,11 +3577,11 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	containsKey: function(key) {
 		return this.get(key) !== undefined;
 	},
-	
+
 	containsItem: function(item) {
 		return !this.every(function(v) { return item !== v; });
 	},
-	
+
 	/**
 	 * Returns index of item in collection. If such item doesn't exist, returns `undefined`.
 	 * @param {T} item Item.
@@ -3424,7 +3590,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	keyOf: function(item) {
 		return this.find(function(v) { return item === v; });
 	},
-	
+
 	/**
 	 * @method trySet
 	 *
@@ -3451,7 +3617,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		var result = this.trySet(item, key);
 		return (result !== undefined) ? result.value : this.get(key);
 	},
-	
+
 	/**
 	 * @method tryRemove
 	 * Removes item with specified key. If collection doesn't contain such key:
@@ -3474,7 +3640,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	remove: function(key) {
 		return this.tryRemove(key);
 	},
-	
+
 	removeItem: function(item) {
 		var key = this.keyOf(item);
 		if (key !== undefined) {
@@ -3482,14 +3648,14 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		}
 		return key;
 	},
-	
+
 	/**
 	 * @method every
 	 *
 	 * Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -3503,9 +3669,9 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 */
 	/**
 	 * Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -3522,7 +3688,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 			return callback.call(this, item, key) === false;
 		}, scope);
 	},
-	
+
 	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
@@ -3541,12 +3707,12 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 			return true;
 		}, scope);
 	},
-	
+
 	/**
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns key of first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -3569,12 +3735,12 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -3597,7 +3763,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * @method toSorted
 	 *
@@ -3668,7 +3834,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @param {1/-1} [order] Sorting order.
 	 * @returns {JW.Array} `<T>` Sorted array.
 	 */
-	 
+
 	/**
 	 * Returns keys of sorted items.
 	 *
@@ -3687,7 +3853,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	getSortingKeys: function(callback, scope, order) {
 		return this._callStatic("getSortingKeys", [callback, scope || this, order]);
 	},
-	
+
 	/**
 	 * Returns keys of sorted items.
 	 *
@@ -3704,7 +3870,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Array} `<K>` Sorted item keys array.
 	 */
 	$getSortingKeys: JW.AbstractCollection._create$Array("getSortingKeys"),
-	
+
 	/**
 	 * Returns keys of sorted items.
 	 *
@@ -3724,7 +3890,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	getSortingKeysComparing: function(compare, scope, order) {
 		return this._callStatic("getSortingKeysComparing", [compare, scope || this, order]);
 	},
-	
+
 	/**
 	 * Returns keys of sorted items.
 	 *
@@ -3742,7 +3908,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Array} `<K>` Sorted item keys array.
 	 */
 	$getSortingKeysComparing: JW.AbstractCollection._create$Array("getSortingKeysComparing"),
-	
+
 	/**
 	 * @method $index
 	 *
@@ -3784,7 +3950,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		}, scope);
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to map.
 	 *
@@ -3799,7 +3965,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 		});
 		return result;
 	},
-	
+
 	/**
 	 * Converts collection to map.
 	 *
@@ -3808,7 +3974,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Map} `<T>` Items map.
 	 */
 	$toMap: JW.AbstractCollection._create$Map("toMap"),
-	
+
 	/**
 	 * Represents collection as map.
 	 *
@@ -3821,7 +3987,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	asMap: function() {
 		return this.toMap();
 	},
-	
+
 	/**
 	 * Represents collection as map.
 	 *
@@ -3832,7 +3998,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.Map} `<T>` Items map.
 	 */
 	$asMap: JW.AbstractCollection._create$Map("asMap")
-	
+
 	/**
 	 * @method filter
 	 *
@@ -3869,7 +4035,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @method map
 	 *
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -3885,7 +4051,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @method $map
 	 *
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -3897,7 +4063,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.IndexedCollection} `<K, U>` Mapped collection.
 	 */
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.
@@ -4083,19 +4249,19 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -4142,6 +4308,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
  * Returns index of first item matching the criteria.
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -4181,6 +4348,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates matching item counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -4246,7 +4414,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @param {T} item Item.
 	 * @returns {number} Item index.
 	 */
-	
+
 	/**
 	 * Returns item array - internal collection representation.
 	 *
@@ -4257,7 +4425,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	getItems: function() {
 		return this.items;
 	},
-	
+
 	/**
 	 * Returns the last collection item. If collection is empty, returns `undefined`.
 	 * @returns {T} Item.
@@ -4265,7 +4433,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	getLast: function() {
 		return this.items[this.items.length - 1];
 	},
-	
+
 	/**
 	 * Returns index of last collection item. If collection is empty, returns `undefined`.
 	 * @returns {number} Index.
@@ -4276,15 +4444,15 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return l - 1;
 		}
 	},
-	
+
 	getLength: function() {
 		return this.items.length;
 	},
-	
+
 	isEmpty: function() {
 		return this.items.length === 0;
 	},
-	
+
 	/**
 	 * @method get
 	 * Returns item by index. If item with such index doesn't exist, returns `undefined`.
@@ -4294,7 +4462,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	get: function(index) {
 		return this.items[index];
 	},
-	
+
 	/**
 	 * @method $getKeys
 	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
@@ -4312,12 +4480,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		}
 		return result;
 	},
-	
+
 	/**
 	 * Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -4332,14 +4500,14 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	every: function(callback, scope) {
 		return JW.Array.every(this.items, callback, scope || this);
 	},
-	
+
 	/**
 	 * @method some
 	 *
 	 * Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -4369,9 +4537,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @method find
 	 *
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns index of first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -4387,9 +4555,9 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @method search
 	 *
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -4573,7 +4741,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.Map} `<T>` Collection index.
 	 */
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -4591,7 +4759,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	filter: function(callback, scope) {
 		return JW.Array.filter(this.items, callback, scope || this);
 	},
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -4607,10 +4775,14 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Array} `<T>` Filtered collection.
 	 */
 	$filter: JW.AbstractCollection._create$Array("filter"),
-	
+
+	count: function(callback, scope) {
+		return JW.Array.count(this.items, callback, scope || this);
+	},
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -4625,10 +4797,10 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	map: function(callback, scope) {
 		return JW.Array.map(this.items, callback, scope || this);
 	},
-	
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -4641,19 +4813,19 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Array} `<U>` Mapped collection.
 	 */
 	$map: JW.AbstractCollection._create$Array("map"),
-	
+
 	toArray: function() {
 		return this.items.concat();
 	},
-	
+
 	asArray: function() {
 		return this.items;
 	},
-	
+
 	$asArray: function() {
 		return this;
 	},
-	
+
 	/**
 	 * Inserts an item to array.
 	 * @param {T} item Item.
@@ -4663,7 +4835,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	add: function(item, index) {
 		this.tryAdd(item, index);
 	},
-	
+
 	/**
 	 * Inserts an item to array.
 	 * @param {T} item Item.
@@ -4673,7 +4845,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	tryAdd: function(item, index) {
 		return this.tryAddAll([item], index);
 	},
-	
+
 	/**
 	 * Inserts item range to array.
 	 * @param {Array} items `<T>` Items.
@@ -4683,7 +4855,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	addAll: function(items, index) {
 		this.tryAddAll(items, index);
 	},
-	
+
 	/**
 	 * Inserts item range to array.
 	 * @param {Array} items `<T>` Items.
@@ -4698,7 +4870,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return true;
 		}
 	},
-	
+
 	/**
 	 * @method set
 	 * Replaces item with specified index. If array doesn't contain such index, it will break the application.
@@ -4719,7 +4891,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		}
 		return oldProxy;
 	},
-	
+
 	/**
 	 * @method remove
 	 * Removes item with specified index. If array doesn't contain such index, it will break the application.
@@ -4737,7 +4909,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return result[0];
 		}
 	},
-	
+
 	/**
 	 * Removes item range from array.
 	 * @param {number} index Index of first item to remove.
@@ -4748,7 +4920,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		var result = this.tryRemoveAll(index, count);
 		return result || [];
 	},
-	
+
 	/**
 	 * Removes item range from array.
 	 * @param {number} index Index of first item to remove.
@@ -4756,7 +4928,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Array} `<T>` The removed items.
 	 */
 	$removeAll: JW.AbstractCollection._create$Array("removeAll"),
-	
+
 	/**
 	 * Removes item range from array.
 	 * @param {number} index Index of first item to remove.
@@ -4769,13 +4941,13 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return result.removedItemsList[0].items;
 		}
 	},
-	
+
 	removeItems: function(items) {
 		var itemSet = new JW.Set(items);
 		var newItems = this.filter(function(item) { return !itemSet.contains(item); });
 		this.performFilter(newItems);
 	},
-	
+
 	/**
 	 * Moves an item inside array.
 	 * @param {number} fromIndex Item index to move.
@@ -4786,7 +4958,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		this.tryMove(fromIndex, toIndex);
 		return this.get(toIndex);
 	},
-	
+
 	/**
 	 * Moves an item inside array.
 	 * @param {number} fromIndex Item index to move.
@@ -4796,7 +4968,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	tryMove: function(fromIndex, toIndex) {
 		return JW.Array.tryMove(this.items, fromIndex, toIndex);
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Array} `<T>` Old collection contents.
@@ -4805,13 +4977,13 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		var result = this.tryClear();
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {JW.Array} `<T>` Old collection contents.
 	 */
 	$clear: JW.AbstractCollection._create$Array("clear"),
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
@@ -4823,7 +4995,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		}
 		return items;
 	},
-	
+
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>`
@@ -4836,7 +5008,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		var result = this.trySplice(removeParamsList, addParamsList);
 		return (result !== undefined) ? result : new JW.AbstractArray.SpliceResult(this.items.concat(), [], []);
 	},
-	
+
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removeParamsList `<JW.AbstractArray.IndexCount>`
@@ -4852,7 +5024,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		}
 		return spliceResult;
 	},
-	
+
 	/**
 	 * Reorders array items.
 	 * @param {Array} indexArray `<number>` Index array. Item with index `i` will be moved to index `indexArray[i]`.
@@ -4862,7 +5034,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	reorder: function(indexArray) {
 		this.tryReorder(indexArray);
 	},
-	
+
 	/**
 	 * Reorders array items.
 	 * @param {Array} indexArray `<number>` Index array. Item with index `i` will be moved to index `indexArray[i]`.
@@ -4872,7 +5044,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	tryReorder: function(indexArray) {
 		return JW.Array.tryReorder(this.items, indexArray);
 	},
-	
+
 	/**
 	 * Detects #splice method arguments to adjust array contents to `newItems`.
 	 * Determines which item ranges should be removed and which ones should be inserted.
@@ -4890,7 +5062,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectSplice: function(newItems, getKey, scope) {
 		return JW.Array.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
 	},
-	
+
 	/**
 	 * Detects `removeParamsList` arguments of #splice to adjust array contents to `newItems`.
 	 * Determines which item ranges should be removed.
@@ -4904,7 +5076,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectFilter: function(newItems) {
 		return JW.Array.detectFilter(this.items, newItems);
 	},
-	
+
 	/**
 	 * Detects #reorder method arguments to adjust array contents to `newItems`.
 	 * Determines where to move all items.
@@ -4922,7 +5094,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectReorder: function(newItems, getKey, scope) {
 		return JW.Array.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
 	},
-	
+
 	/**
 	 * Detects #reorder method arguments to sort array contents by result of `f` call for each item.
 	 * @param {Function} [f]
@@ -4940,7 +5112,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectSort: function(callback, scope, order) {
 		return JW.Array.detectSort(this.items, callback, scope || this, order);
 	},
-	
+
 	/**
 	 * Detects #reorder method arguments to sort array contents by comparer.
 	 *
@@ -4960,7 +5132,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	detectSortComparing: function(compare, scope, order) {
 		return JW.Array.detectSortComparing(this.items, compare, scope || this, order);
 	},
-	
+
 	/**
 	 * Adjusts array contents to `newItems` using #detectSplice and #splice methods.
 	 * All items must have unique `getKey` function result.
@@ -4979,7 +5151,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.trySplice(params.removeParamsList, params.addParamsList);
 		}
 	},
-	
+
 	/**
 	 * Adjusts array contents to `newItems` using #detectFilter and #splice methods.
 	 * Only removes items. Doesn't assume items insertion - try #detectSplice if that's the case.
@@ -4993,7 +5165,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.trySplice(params, []);
 		}
 	},
-	
+
 	/**
 	 * Adjusts array contents to `newItems` using #detectReorder and #reorder methods.
 	 * @param {Array} newItems `<T>` New array contents.
@@ -5010,7 +5182,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.tryReorder(indexArray);
 		}
 	},
-	
+
 	/**
 	 * Sorts array by result of `f` function call for each item.
 	 *
@@ -5030,7 +5202,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.tryReorder(indexArray);
 		}
 	},
-	
+
 	/**
 	 * Sorts array by comparer.
 	 *
@@ -5051,7 +5223,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			this.tryReorder(indexArray);
 		}
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5062,7 +5234,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createMapper: function(config) {
 		return new JW.AbstractArray.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5073,7 +5245,18 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createFilterer: function(config) {
 		return new JW.AbstractArray.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractArray.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.AbstractArray.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5084,7 +5267,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createObserver: function(config) {
 		return new JW.AbstractArray.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5095,7 +5278,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createOrderer: function(config) {
 		return new JW.AbstractArray.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5106,7 +5289,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createSorterComparing: function(config) {
 		return new JW.AbstractArray.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5117,7 +5300,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createIndexer: function(config) {
 		return new JW.AbstractArray.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5128,7 +5311,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createLister: function(config) {
 		return new JW.AbstractArray.Lister(this, config);
 	},
-	
+
 	/**
 	 * Creates view synchronizer with array.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5139,7 +5322,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createInserter: function(config) {
 		return new JW.AbstractArray.Inserter(this, config);
 	},
-	
+
 	/**
 	 * Creates arrays merger.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5150,11 +5333,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createMerger: function(config) {
 		return new JW.AbstractArray.Merger(this, config);
 	},
-	
+
 	createMergerBunch: function(merger) {
 		return new JW.AbstractArray.Merger.Bunch(merger, this);
 	},
-	
+
 	/**
 	 * Creates array reverser.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -5165,11 +5348,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	createReverser: function(config) {
 		return new JW.AbstractArray.Reverser(this, config);
 	},
-	
+
 	createSplitter: function(config) {
 		return new JW.AbstractArray.Splitter(this, config);
 	},
-	
+
 	/**
 	 * Checks for equality (===) to another array, item by item.
 	 * @param {Array} arr `<T>` Another array.
@@ -5178,7 +5361,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	equal: function(arr) {
 		return JW.Array.equal(this.items, arr);
 	},
-	
+
 	/**
 	 * Collapses multi-dimentional array.
 	 * @param {number} depth Dimentions to collapse.
@@ -5187,7 +5370,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	collapse: function(depth) {
 		return JW.Array.collapse(this.items, depth);
 	},
-	
+
 	/**
 	 * Returns item index in this collection. If item doesn't exist, returns -1.
 	 * @param {T} item Item.
@@ -5196,12 +5379,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	indexOf: function(item) {
 		return JW.Array.indexOf(this.items, item);
 	},
-	
+
 	/**
 	 * Checks all items by criteria in backward order.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -5216,12 +5399,12 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	backEvery: function(callback, scope) {
 		return JW.Array.backEvery(this.items, callback, scope);
 	},
-	
+
 	// deprecated
 	top: function() {
 		return JW.Array.top(this.items);
 	},
-	
+
 	/**
 	 * Removes last array item. Does nothing if array is empty.
 	 * @returns {T} The removed item or `undefined`.
@@ -5231,7 +5414,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 			return this.tryRemove(this.items.length - 1);
 		}
 	},
-	
+
 	/**
 	 * Determines index of first item which is more than specified value by `compare` function,
 	 * using binary search. Array must be sorted by `compare` function.
@@ -5251,11 +5434,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	binarySearch: function(value, compare, scope) {
 		return JW.Array.binarySearch(this.items, value, compare, scope);
 	},
-	
+
 	_callStatic: function(algorithm, args) {
 		return JW.Array[algorithm].apply(JW.Array, [this.items].concat(args || []));
 	}
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.
@@ -5285,7 +5468,7 @@ JW.extend(JW.AbstractArray.IndexCount, JW.Class, {
 	/**
 	 * @property {number} count Count.
 	 */
-	
+
 	/**
 	 * Clones pair.
 	 * @returns {JW.AbstractArray.IndexCount}
@@ -5318,7 +5501,7 @@ JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
 	/**
 	 * @property {Array} items `<T>` Items.
 	 */
-	
+
 	/**
 	 * Converts to "index-count" pair.
 	 * @returns {JW.AbstractArray.IndexCount} "Index-count" pair.
@@ -5326,7 +5509,7 @@ JW.extend(JW.AbstractArray.IndexItems, JW.Class, {
 	toIndexCount: function() {
 		return new JW.AbstractArray.IndexCount(this.index, this.items.length);
 	},
-	
+
 	/**
 	 * Clones pair.
 	 * @returns {JW.AbstractArray.IndexItems}
@@ -5395,7 +5578,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 	Array<T> addedItems;
 	Array<JW.AbstractArray.IndexCount<T>> removeParamsList;
 	*/
-	
+
 	/**
 	 * Returns plain array of removed items.
 	 * @returns {Array} `<T>` Removed items array.
@@ -5406,7 +5589,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 		}
 		return this.removedItems;
 	},
-	
+
 	/**
 	 * Returns plain array of added items.
 	 * @returns {Array} `<T>` Added items array.
@@ -5417,7 +5600,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 		}
 		return this.addedItems;
 	},
-	
+
 	/**
 	 * Converts removed item segments to "index-count" pairs.
 	 * @returns {Array} `<JW.AbstractArray.IndexCount<T>>` Segments to remove.
@@ -5428,7 +5611,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 		}
 		return this.removeParamsList;
 	},
-	
+
 	/**
 	 * Checks that JW.AbstractArray#splice method call didn't change the array.
 	 * @returns {boolean} Array hasn't been changed.
@@ -5436,6 +5619,49 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 	isEmpty: function() {
 		return (this.removedItemsList.length === 0) && (this.addedItemsList.length === 0);
 	}
+});
+
+/*
+	jWidget Lib source file.
+
+	Copyright (C) 2014 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractCollection.Counter<T>`
+ *
+ * See JW.AbstractCollection.Counter for details.
+ *
+ * @extends JW.AbstractCollection.Counter
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createCounter method is preferrable instead.
+ * @param {JW.AbstractArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.AbstractArray.Counter = function(source, config) {
+	JW.AbstractArray.Counter._super.call(this, source, config);
+};
+
+JW.extend(JW.AbstractArray.Counter, JW.AbstractCollection.Counter, {
+	/**
+	 * @property {JW.AbstractArray} source `<T>` Source collection.
+	 */
 });
 
 /*
@@ -6344,19 +6570,19 @@ JW.extend(JW.AbstractArray.SorterComparing, JW.AbstractCollection.SorterComparin
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -6368,7 +6594,7 @@ JW.AbstractArray.Splitter = function(source, config) {
 	this.rows = config.rows || this.own(this.source.createEmpty());
 	this.capacity = config.capacity || 1;
 	this._length = 0;
-	
+
 	this.own(this.source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
@@ -6381,23 +6607,23 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 	/*
 	Required
 	JW.AbstractArray<T> source;
-	
+
 	Optional
 	JW.AbstractArray<R> rows;
-	Integer capacity;
-	
+	number capacity;
+
 	Fields
-	Integer _length;
+	number _length;
 	*/
-	
+
 	createRow: function() {
 		return this.source.createEmpty();
 	},
-	
+
 	destroyRow: function(row) {
 		row.destroy();
 	},
-	
+
 	_addItem: function(item, index) {
 		if (this._length % this.capacity === 0) {
 			this.rows.tryAdd(this.createRow.call(this.scope || this));
@@ -6410,7 +6636,7 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 		this.rows.get(firstRow).tryAdd(item, index % this.capacity);
 		++this._length;
 	},
-	
+
 	_removeItem: function(item, index) {
 		var firstRow = Math.floor(index / this.capacity);
 		this.rows.get(firstRow).tryRemove(index % this.capacity);
@@ -6423,7 +6649,7 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 			this.destroyRow.call(this.scope || this, this.rows.tryRemove(this.rows.getLength() - 1));
 		}
 	},
-	
+
 	_clearItems: function() {
 		var rows = this.rows.tryClear();
 		this._length = 0;
@@ -6433,19 +6659,19 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -6487,6 +6713,7 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
  * Returns index of first item matching the criteria.
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -6521,6 +6748,7 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates matching item counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -6581,7 +6809,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {T} item Item.
 	 * @returns {string} Item key.
 	 */
-	
+
 	/**
 	 * Returns item map - internal collection representation.
 	 *
@@ -6592,15 +6820,15 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	getJson: function() {
 		return this.json;
 	},
-	
+
 	getLength: function() {
 		return this._length;
 	},
-	
+
 	isEmpty: function() {
 		return this._length === 0;
 	},
-	
+
 	/**
 	 * @method get
 	 * Returns item by key. If item with such key doesn't exist, returns `undefined`.
@@ -6610,7 +6838,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	get: function(key) {
 		return this.json[key];
 	},
-	
+
 	/**
 	 * @method $getKeys
 	 * Returns array of keys of all collection items.
@@ -6623,12 +6851,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	getKeys: function() {
 		return JW.Map.getKeys(this.json);
 	},
-	
+
 	/**
 	 * Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @param {Function} f
@@ -6643,14 +6871,14 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	every: function(callback, scope) {
 		return JW.Map.every(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * @method some
 	 *
 	 * Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -6680,9 +6908,9 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @method find
 	 *
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns key of first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -6698,9 +6926,9 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @method search
 	 *
 	 * Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @param {Function} f
@@ -6852,7 +7080,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {1/-1} [order] Sorting order.
 	 * @returns {JW.Array} `<string>` Sorted item keys array.
 	 */
-	
+
 	/**
 	 * @method index
 	 *
@@ -6885,7 +7113,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.Map} `<T>` Collection index.
 	 */
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -6903,7 +7131,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	filter: function(callback, scope) {
 		return JW.Map.filter(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -6919,10 +7147,14 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.Map} `<T>` Filtered collection.
 	 */
 	$filter: JW.AbstractCollection._create$Map("filter"),
-	
+
+	count: function(callback, scope) {
+		return JW.Map.count(this.json, callback, scope);
+	},
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -6937,10 +7169,10 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	map: function(callback, scope) {
 		return JW.Map.map(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -6953,15 +7185,15 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.Map} `<U>` Mapped collection.
 	 */
 	$map: JW.AbstractCollection._create$Map("map"),
-	
+
 	asMap: function() {
 		return this.json;
 	},
-	
+
 	$asMap: function() {
 		return this;
 	},
-	
+
 	/**
 	 * @method set
 	 * Replaces item with specified key. If map doesn't contain such key, it will be added.
@@ -6981,7 +7213,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return new JW.Proxy(spliceResult.removedItems[key]);
 		}
 	},
-	
+
 	/**
 	 * Adds or replaces a bunch of items.
 	 * @param {Object} items Items.
@@ -6991,7 +7223,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var spliceResult = this.trySetAll(items);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
-	
+
 	/**
 	 * Adds or replaces a bunch of items.
 	 * @param {Object} items Items.
@@ -7000,7 +7232,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	trySetAll: function(items) {
 		return this.trySplice([], items);
 	},
-	
+
 	/**
 	 * Changes item key in map. If collection doesn't contain `oldKey` or contains `newKey`, it will cause an error.
 	 * @param {string} oldKey Old key of item.
@@ -7011,7 +7243,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		this.trySetKey(oldKey, newKey);
 		return this.json[newKey];
 	},
-	
+
 	/**
 	 * Changes item key in map. If collection doesn't contain `oldKey` or contains `newKey`, it will cause an error.
 	 * @param {string} oldKey Old key of item.
@@ -7024,7 +7256,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return this.json[newKey];
 		}
 	},
-	
+
 	/**
 	 * @method remove
 	 * Removes item with specified key if it exists in map.
@@ -7042,7 +7274,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return spliceResult.removedItems[key];
 		}
 	},
-	
+
 	/**
 	 * Removes a bunch of items from map.
 	 * @param {Array} keys `<string>` Item keys.
@@ -7052,14 +7284,14 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var items = this.tryRemoveAll(keys);
 		return (items !== undefined) ? items : {};
 	},
-	
+
 	/**
 	 * Removes a bunch of items from map.
 	 * @param {Array} keys `<string>` Item keys.
 	 * @returns {JW.Map} `<T>` The removed items.
 	 */
 	$removeAll: JW.AbstractCollection._create$Map("removeAll"),
-	
+
 	/**
 	 * Removes a bunch of items from map.
 	 * @param {Array} keys `<string>` Item keys.
@@ -7071,7 +7303,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return spliceResult.removedItems;
 		}
 	},
-	
+
 	removeItems: function(items) {
 		var itemSet = new JW.Set(items);
 		var newItems = this.filter(function(item) {
@@ -7079,7 +7311,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		});
 		this.performSplice(newItems);
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Object} `<T>` Old collection contents.
@@ -7088,13 +7320,13 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var result = this.tryClear();
 		return (result !== undefined) ? result : {};
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {JW.Map} `<T>` Old collection contents.
 	 */
 	$clear: JW.AbstractCollection._create$Map("clear"),
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Object} `<T>` Old collection contents. If not modified - `undefined`.
@@ -7107,7 +7339,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		}
 		return items;
 	},
-	
+
 	/**
 	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedKeys `<string>` Keys of items to remove.
@@ -7118,7 +7350,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var spliceResult = this.trySplice(removedKeys, updatedItems);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
-	
+
 	/**
 	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedKeys `<string>` Keys of items to remove.
@@ -7135,7 +7367,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			return spliceResult;
 		}
 	},
-	
+
 	/**
 	 * Changes item keys in map.
 	 * @param {Object} keyMap `<string>` Key map. Item with key `k` will gain key `keyMap[k]`.
@@ -7146,7 +7378,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		var result = this.tryReindex(keyMap);
 		return (result !== undefined) ? result : {};
 	},
-	
+
 	/**
 	 * Changes item keys in map.
 	 * @param {Object} keyMap `<string>` Key map. Item with key `k` will gain key `keyMap[k]`.
@@ -7156,7 +7388,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	tryReindex: function(keyMap) {
 		return JW.Map.tryReindex(this.json, keyMap);
 	},
-	
+
 	/**
 	 * Detects #splice method arguments to adjust map contents to `newItems`.
 	 * Determines which item bunches should be removed and which ones should be inserted/replaced, and their keys.
@@ -7167,7 +7399,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	detectSplice: function(newItems) {
 		return JW.Map.detectSplice(this.json, newItems);
 	},
-	
+
 	/**
 	 * Detects #reindex method arguments to adjust map contents to `newItems`.
 	 * Determines which keys should be assigned to all items.
@@ -7185,7 +7417,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	detectReindex: function(newItems, getKey, scope) {
 		return JW.Map.detectReindex(this.json, newItems, getKey || this.getKey, scope || this);
 	},
-	
+
 	/**
 	 * Adjusts map contents to `newItems` using #detectSplice and #splice methods.
 	 * @param {Object} newItems `<T>` New map contents.
@@ -7197,7 +7429,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			this.trySplice(params.removedKeys, params.updatedItems);
 		}
 	},
-	
+
 	/**
 	 * Adjusts map contents to `newItems` using #detectReindex and #reindex methods.
 	 * @param {Object} newItems `<T>` New map contents.
@@ -7214,7 +7446,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 			this.tryReindex(keyMap);
 		}
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -7225,7 +7457,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createMapper: function(config) {
 		return new JW.AbstractMap.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -7236,7 +7468,18 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createFilterer: function(config) {
 		return new JW.AbstractMap.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractMap.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.AbstractMap.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -7247,7 +7490,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createObserver: function(config) {
 		return new JW.AbstractMap.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -7258,7 +7501,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createOrderer: function(config) {
 		return new JW.AbstractMap.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -7269,7 +7512,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createSorterComparing: function(config) {
 		return new JW.AbstractMap.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -7280,7 +7523,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createIndexer: function(config) {
 		return new JW.AbstractMap.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -7291,7 +7534,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createLister: function(config) {
 		return new JW.AbstractMap.Lister(this, config);
 	},
-	
+
 	/**
 	 * Creates view synchronizer with map.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -7302,7 +7545,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	createInserter: function(config) {
 		return new JW.AbstractMap.Inserter(this, config);
 	},
-	
+
 	/**
 	 * Checks for equality (===) to another map, item by item.
 	 * @param {Object} map `<T>` Another map.
@@ -7311,11 +7554,11 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	equal: function(map) {
 		return JW.Map.equal(this.json, map);
 	},
-	
+
 	_callStatic: function(algorithm, args) {
 		return JW.Map[algorithm].apply(JW.Map, [this.json].concat(JW.args(args || [])));
 	}
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.
@@ -7368,6 +7611,49 @@ JW.extend(JW.AbstractMap.SpliceResult, JW.Class, {
 	 */
 	/**
 	 * @property {Object} addedItems `<T>` Added items.
+	 */
+});
+
+/*
+	jWidget Lib source file.
+
+	Copyright (C) 2014 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractCollection.Counter<T>`
+ *
+ * See JW.AbstractCollection.Counter for details.
+ *
+ * @extends JW.AbstractCollection.Counter
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createFilterer method is preferrable instead.
+ * @param {JW.AbstractMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.AbstractMap.Counter = function(source, config) {
+	JW.AbstractMap.Counter._super.call(this, source, config);
+};
+
+JW.extend(JW.AbstractMap.Counter, JW.AbstractCollection.Counter, {
+	/**
+	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });
 
@@ -7847,19 +8133,19 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -7896,6 +8182,7 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
  * Returns first item matching the criteria.
  * - {@link #filter}, #$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
  * - {@link #map}, #$map - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
@@ -7923,6 +8210,7 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
  *
  * - {@link #createMapper} - Creates item mapper.
  * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates matching item counter.
  * - {@link #createLister} - Creates converter to set.
  * - {@link #createIndexer} - Creates converter to map (indexer).
  * - {@link #createOrderer} - Creates converter to array (orderer).
@@ -7963,19 +8251,19 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	getJson: function() {
 		return this.json;
 	},
-	
+
 	getLength: function() {
 		return this._length;
 	},
-	
+
 	isEmpty: function() {
 		return this._length === 0;
 	},
-	
+
 	containsItem: function(item) {
 		return this.json.hasOwnProperty(item._iid);
 	},
-	
+
 	/**
 	 * Checks item existance in collection. Shortcut for #containsItem.
 	 * @param {T} item Item.
@@ -7984,11 +8272,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	contains: function(item) {
 		return this.json.hasOwnProperty(item._iid);
 	},
-	
+
 	every: function(callback, scope) {
 		return JW.Set.every(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -8006,7 +8294,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	filter: function(callback, scope) {
 		return JW.Set.filter(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * Filters collection by criteria.
 	 *
@@ -8022,10 +8310,14 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {JW.Set} `<T>` Filtered collection.
 	 */
 	$filter: JW.AbstractCollection._create$Set("filter"),
-	
+
+	count: function(callback, scope) {
+		return JW.Set.count(this.json, callback, scope);
+	},
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -8040,10 +8332,10 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	map: function(callback, scope) {
 		return JW.Set.map(this.json, callback, scope);
 	},
-	
+
 	/**
 	 * `<U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @param {Function} f
@@ -8056,15 +8348,15 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {JW.Set} `<U>` Mapped collection.
 	 */
 	$map: JW.AbstractCollection._create$Set("map"),
-	
+
 	asSet: function() {
 		return this.json;
 	},
-	
+
 	$asSet: function() {
 		return this;
 	},
-	
+
 	/**
 	 * Adds item to set if one is absent.
 	 * @param {T} item Item.
@@ -8073,7 +8365,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	add: function(item) {
 		return this.tryAdd(item) !== undefined;
 	},
-	
+
 	/**
 	 * Adds item to set if one is absent.
 	 * @param {T} item Item.
@@ -8084,7 +8376,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return true;
 		}
 	},
-	
+
 	/**
 	 * Adds multiple items to set, ones that are absent.
 	 * @param {Array} items `<T>` Items.
@@ -8094,14 +8386,14 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		var result = this.tryAddAll(items);
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	/**
 	 * Adds multiple items to set, ones that are absent.
 	 * @param {Array} items `<T>` Items.
 	 * @returns {JW.Array} `<T>` Added items.
 	 */
 	$addAll: JW.AbstractCollection._create$Array("addAll"),
-	
+
 	/**
 	 * Adds multiple items to set, ones that are absent.
 	 * @param {Array} items `<T>` Items.
@@ -8113,7 +8405,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return spliceResult.addedItems;
 		}
 	},
-	
+
 	/**
 	 * Removes item from set if one is present.
 	 * @param {T} item Item.
@@ -8122,7 +8414,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	remove: function(item) {
 		return this.tryRemove(item) !== undefined;
 	},
-	
+
 	/**
 	 * Removes item from set if one is present.
 	 * @param {T} item Item.
@@ -8133,11 +8425,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return true;
 		}
 	},
-	
+
 	removeItem: function(item) {
 		this.tryRemove(item);
 	},
-	
+
 	/**
 	 * Removes multiple items from set, ones that are present.
 	 * @param {Array} items `<T>` Items.
@@ -8147,14 +8439,14 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		var result = this.tryRemoveAll(items);
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	/**
 	 * Removes multiple items from set, ones that are present.
 	 * @param {Array} items `<T>` Items.
 	 * @returns {JW.Array} `<T>` Removed items.
 	 */
 	$removeAll: JW.AbstractCollection._create$Array("removeAll"),
-	
+
 	/**
 	 * Removes multiple items from set, ones that are present.
 	 * @param {Array} items `<T>` Items.
@@ -8166,11 +8458,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return spliceResult.removedItems;
 		}
 	},
-	
+
 	removeItems: function(items) {
 		this.tryRemoveAll(items);
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Array} `<T>` Old collection contents.
@@ -8179,13 +8471,13 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		var items = this.tryClear();
 		return (items !== undefined) ? items : [];
 	},
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {JW.Array} `<T>` Old collection contents.
 	 */
 	$clear: JW.AbstractCollection._create$Array("clear"),
-	
+
 	/**
 	 * Clears collection.
 	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
@@ -8198,7 +8490,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		}
 		return items;
 	},
-	
+
 	/**
 	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedItems `<T>` Items to remove.
@@ -8209,7 +8501,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 		var spliceResult = this.trySplice(removedItems, addedItems);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractSet.SpliceResult([], []);
 	},
-	
+
 	/**
 	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedItems `<T>` Items to remove.
@@ -8226,7 +8518,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			return spliceResult;
 		}
 	},
-	
+
 	/**
 	 * Detects #splice method arguments to adjust set contents to `newItems`.
 	 * Determines which items should be removed and which ones should be added.
@@ -8237,7 +8529,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	detectSplice: function(newItems) {
 		return JW.Set.detectSplice(this.json, newItems);
 	},
-	
+
 	/**
 	 * Adjusts map contents to `newItems` using #detectSplice and #splice methods.
 	 * @param {Object} newItems `<T>` New map contents.
@@ -8249,7 +8541,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 			this.trySplice(spliceParams.removedItems, spliceParams.addedItems);
 		}
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -8260,7 +8552,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createMapper: function(config) {
 		return new JW.AbstractSet.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -8271,7 +8563,18 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createFilterer: function(config) {
 		return new JW.AbstractSet.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.AbstractSet.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -8282,7 +8585,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createObserver: function(config) {
 		return new JW.AbstractSet.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -8293,7 +8596,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createOrderer: function(config) {
 		return new JW.AbstractSet.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -8304,7 +8607,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createSorterComparing: function(config) {
 		return new JW.AbstractSet.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -8315,7 +8618,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createIndexer: function(config) {
 		return new JW.AbstractSet.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -8326,7 +8629,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	createLister: function(config) {
 		return new JW.AbstractSet.Lister(this, config);
 	},
-	
+
 	/**
 	 * Checks for equality (===) to array, item by item.
 	 * @param {Array} array `<T>` Array.
@@ -8335,11 +8638,11 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	equal: function(array) {
 		return JW.Set.equal(this.json, array);
 	},
-	
+
 	_callStatic: function(algorithm, args) {
 		return JW.Set[algorithm].apply(JW.Set, [this.json].concat(JW.args(args || [])));
 	}
-	
+
 	/**
 	 * @method createEmpty
 	 * `<U>` Creates empty collection of the same type.
@@ -8392,6 +8695,49 @@ JW.extend(JW.AbstractSet.SpliceResult, JW.Class, {
 	 */
 	/**
 	 * @property {Array} addedItems `<T>` Added items.
+	 */
+});
+
+/*
+	jWidget Lib source file.
+
+	Copyright (C) 2014 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * `<T extends JW.Class> extends JW.AbstractCollection.Counter<T>`
+ *
+ * See JW.AbstractCollection.Counter for details.
+ *
+ * @extends JW.AbstractCollection.Counter
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createCounter method is preferrable instead.
+ * @param {JW.AbstractSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.AbstractSet.Counter = function(source, config) {
+	JW.AbstractSet.Counter._super.call(this, source, config);
+};
+
+JW.extend(JW.AbstractSet.Counter, JW.AbstractCollection.Counter, {
+	/**
+	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 });
 
@@ -8760,19 +9106,19 @@ JW.extend(JW.AbstractSet.SorterComparing, JW.AbstractCollection.SorterComparing,
 
 /*
 	JW array extension.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -8803,7 +9149,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	createEmpty: function() {
 		return new JW.Array();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.Array} `<U>` Array.
@@ -8811,7 +9157,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.Map} `<U>` Map.
@@ -8819,7 +9165,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.Set} `<U>` Set.
@@ -8827,7 +9173,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	createEmptySet: function() {
 		return new JW.Set();
 	}
-	
+
 	/**
 	 * @method getLength
 	 * `<T>` Returns count of items in collection.
@@ -8957,9 +9303,9 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @method every
 	 *
 	 * `<T>` Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @static
@@ -8977,9 +9323,9 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @method some
 	 *
 	 * `<T>` Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -9012,9 +9358,9 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @method find
 	 *
 	 * `<T>` Finds item by criteria.
-	 * 
+	 *
 	 * Returns index of first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -9032,9 +9378,9 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @method search
 	 *
 	 * `<T>` Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -9421,10 +9767,28 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @returns {JW.Array} `<T>` Filtered collection.
 	 */
 	/**
+	 * @method count
+	 *
+	 * `<T>` Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Array} array `<T>` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Number of items.
+	 */
+	/**
 	 * @method map
 	 *
 	 * `<T, U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -9442,7 +9806,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @method $map
 	 *
 	 * `<T, U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -9763,106 +10127,6 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @returns {void}
 	 */
 	/**
-	 * @method createMapper
-	 * `<T, U>` Creates collection item mapper.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.Mapper}
-	 * `<T, U>` Synchronizer.
-	 */
-	/**
-	 * @method createFilterer
-	 * `<T>` Creates collection filterer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.Filterer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createObserver
-	 * `<T>` Creates collection observer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.Observer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createOrderer
-	 * `<T>` Creates collection converter to array (orderer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.Orderer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createSorterComparing
-	 * `<T>` Creates collection converter to array (sorter by comparer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.SorterComparing}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createIndexer
-	 * `<T>` Creates collection converter to map (indexer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.Indexer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createLister
-	 * `<T>` Creates collection converter to set.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.Lister}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createInserter
-	 * `<T>` Creates view synchronizer with array.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.Inserter}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createMerger
-	 * `<T>` Creates arrays merger.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.Merger}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createReverser
-	 * `<T>` Creates array reverser.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Array} array `<T>` Array.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractArray.Reverser}
-	 * `<T>` Synchronizer.
-	 */
-	/**
 	 * @method equal
 	 * `<T>` Checks 2 arrays for equality (===), item by item.
 	 * @static
@@ -9890,9 +10154,9 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @method backEvery
 	 *
 	 * `<T>` Checks all items by criteria in backward order.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @static
@@ -9936,19 +10200,19 @@ JW.extend(JW.Array, JW.AbstractArray, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -9961,30 +10225,30 @@ JW.apply(JW.Array, {
 			return 0;
 		}
 	},
-	
+
 	getLast: function(target) {
 		return target[target.length - 1];
 	},
-	
+
 	getLastKey: function(target) {
 		var l = target.length;
 		if (l !== 0) {
 			return l - 1;
 		}
 	},
-	
+
 	getLength: function(target) {
 		return target.length;
 	},
-	
+
 	isEmpty: function(target) {
 		return target.length === 0;
 	},
-	
+
 	get: function(target, index) {
 		return target[index];
 	},
-	
+
 	getKeys: function(target) {
 		var result = new Array(target.length);
 		for (var i = 0, l = target.length; i < l; ++i) {
@@ -9992,7 +10256,7 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
 	every: function(target, callback, scope) {
 		// JW.assertArray(target);
 		// JW.assertFunction(callback);
@@ -10003,7 +10267,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	filter: function(target, callback, scope) {
 		var result = [];
 		JW.Array.every(target, function(item, index) {
@@ -10013,9 +10277,19 @@ JW.apply(JW.Array, {
 		}, scope);
 		return result;
 	},
-	
+
 	$filter: JW.AbstractCollection._createStatic$Array(JW.Array, "filter"),
-	
+
+	count: function(target, callback, scope) {
+		var result = 0;
+		JW.Array.every(target, function(item, index) {
+			if (callback.call(this, item, index) !== false) {
+				++result;
+			}
+		}, scope);
+		return result;
+	},
+
 	map: function(target, callback, scope) {
 		var result = [];
 		JW.Array.every(target, function(item, index) {
@@ -10023,34 +10297,34 @@ JW.apply(JW.Array, {
 		}, scope);
 		return result;
 	},
-	
+
 	$map: JW.AbstractCollection._createStatic$Array(JW.Array, "map"),
-	
+
 	toArray: function(target) {
 		return target.concat();
 	},
-	
+
 	toSet: function(target) {
 		return JW.Array.index(target, JW.iid);
 	},
-	
+
 	asArray: function(target) {
 		return target;
 	},
-	
+
 	add: function(target, item, index) {
 		JW.Array.tryAdd(target, item, index);
 	},
-	
+
 	tryAdd: function(target, item, index) {
 		target.splice(JW.def(index, target.length), 0, item);
 		return true;
 	},
-	
+
 	addAll: function(target, items, index) {
 		JW.Array.tryAddAll(target, items, index);
 	},
-	
+
 	tryAddAll: function(target, items, index) {
 		if (items.length === 0) {
 			return;
@@ -10062,7 +10336,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	trySet: function(target, item, index) {
 		// JW.assertArray(target);
 		// JW.assertIsSet(item);
@@ -10073,36 +10347,36 @@ JW.apply(JW.Array, {
 			return new JW.Proxy(oldItem);
 		}
 	},
-	
+
 	tryRemove: function(target, index) {
 		return target.splice(index, 1)[0];
 	},
-	
+
 	removeAll: function(target, index, count) {
 		var result = JW.Array.tryRemoveAll(target, index, count);
 		return result || [];
 	},
-	
+
 	$removeAll: JW.AbstractCollection._createStatic$Array(JW.Array, "removeAll"),
-	
+
 	tryRemoveAll: function(target, index, count) {
 		if (count === 0) {
 			return;
 		}
 		return target.splice(index, count);
 	},
-	
+
 	removeItems: function(target, items) {
 		var itemSet = new JW.Set(items);
 		var newItems = JW.Array.filter(target, function(item) { return !itemSet.contains(item); });
 		JW.Array.performSplice(target, newItems);
 	},
-	
+
 	move: function(target, fromIndex, toIndex) {
 		JW.Array.tryMove(target, fromIndex, toIndex);
 		return JW.Array.get(target, toIndex);
 	},
-	
+
 	tryMove: function(target, fromIndex, toIndex) {
 		// JW.assertArray(target);
 		// JW.assertInt(fromIndex, 0, target.length);
@@ -10115,33 +10389,33 @@ JW.apply(JW.Array, {
 		target.splice(toIndex, 0, item);
 		return item;
 	},
-	
+
 	clear: function(target) {
 		var result = JW.Array.tryClear(target);
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	$clear: JW.AbstractCollection._createStatic$Array(JW.Array, "clear"),
-	
+
 	tryClear: function(target) {
 		// JW.assertArray(target);
 		if (target.length !== 0) {
 			return target.splice(0, target.length);
 		}
 	},
-	
+
 	splice: function(target, removeParamsList, addParamsList) {
 		var result = JW.Array.trySplice(target, removeParamsList, addParamsList);
 		return (result !== undefined) ? result : new JW.AbstractArray.SpliceResult(target.concat(), [], []);
 	},
-	
+
 	trySplice: function(target, removeParamsList, addParamsList) {
 		// JW.assertArray(target);
 		// JW.assertArray(removeParamsList, function(params) { return params instanceof JW.AbstractArray.IndexCount; }, this);
 		// JW.assertArray(addParamsList, function(params) { return params instanceof JW.AbstractArray.IndexItems; }, this);
 		// TODO: assert out of bounds stuff
 		var last;
-		
+
 		var optimizedRemoveParamsList = [];
 		last = null;
 		for (var i = 0, l = removeParamsList.length; i < l; ++i) {
@@ -10153,7 +10427,7 @@ JW.apply(JW.Array, {
 				optimizedRemoveParamsList.push(last);
 			}
 		}
-		
+
 		var optimizedAddParamsList = [];
 		last = null;
 		for (var i = 0, l = addParamsList.length; i < l; ++i) {
@@ -10165,7 +10439,7 @@ JW.apply(JW.Array, {
 				optimizedAddParamsList.push(last);
 			}
 		}
-		
+
 		var oldItems = target.concat();
 		var removedItemsList = [];
 		for (var i = optimizedRemoveParamsList.length - 1; i >= 0; --i) {
@@ -10190,11 +10464,11 @@ JW.apply(JW.Array, {
 			return new JW.AbstractArray.SpliceResult(oldItems, removedItemsList, addedItemsList);
 		}
 	},
-	
+
 	reorder: function(target, indexList) {
 		JW.Array.tryReorder(target, indexList);
 	},
-	
+
 	tryReorder: function(target, indexArray) {
 		// JW.assertArray(target);
 		// JW.assertArray(indexArray);
@@ -10212,7 +10486,7 @@ JW.apply(JW.Array, {
 		}
 		return oldItems;
 	},
-	
+
 	detectSplice: function(oldItems, newItems, getKey, scope) {
 		getKey = getKey || JW.iid;
 		scope = scope || oldItems;
@@ -10225,11 +10499,11 @@ JW.apply(JW.Array, {
 		var nextOldIndex = 0;
 		var offset = 0;
 		var newItemBuffer = [];
-		
+
 		function buffer(item) {
 			newItemBuffer.push(item);
 		}
-		
+
 		function flush() {
 			if (newItemBuffer.length === 0) {
 				return;
@@ -10238,7 +10512,7 @@ JW.apply(JW.Array, {
 			offset += newItemBuffer.length;
 			newItemBuffer = [];
 		}
-		
+
 		function testRemove(oldIndex) {
 			if (oldIndex > nextOldIndex) {
 				var count = oldIndex - nextOldIndex;
@@ -10246,7 +10520,7 @@ JW.apply(JW.Array, {
 				offset -= count;
 			}
 		}
-		
+
 		for (var newIndex = 0, l = newItems.length; newIndex < l; ++newIndex) {
 			var item = newItems[newIndex];
 			var key = getKey.call(scope, item);
@@ -10265,7 +10539,7 @@ JW.apply(JW.Array, {
 			return new JW.AbstractArray.SpliceParams(removeParamsList, addParamsList);
 		}
 	},
-	
+
 	detectFilter: function(oldItems, newItems) {
 		var removeParamsList = [];
 		var oldIndex = 0;
@@ -10286,7 +10560,7 @@ JW.apply(JW.Array, {
 			return removeParamsList;
 		}
 	},
-	
+
 	detectReorder: function(oldItems, newItems, getKey, scope) {
 		getKey = getKey || JW.iid;
 		scope = scope || oldItems;
@@ -10302,100 +10576,56 @@ JW.apply(JW.Array, {
 			return indexArray;
 		}
 	},
-	
+
 	detectSort: function(target, callback, scope, order) {
 		var keys = JW.Array.getSortingKeys(target, callback, scope, order);
 		if (!JW.Array.isIdentity(keys)) {
 			return JW.Array.invert(keys);
 		}
 	},
-	
+
 	detectSortComparing: function(target, compare, scope, order) {
 		var keys = JW.Array.getSortingKeysComparing(target, compare, scope, order);
 		if (!JW.Array.isIdentity(keys)) {
 			return JW.Array.invert(keys);
 		}
 	},
-	
+
 	performSplice: function(target, newItems, getKey, scope) {
 		var params = JW.Array.detectSplice(target, newItems, getKey, scope);
 		if (params !== undefined) {
 			JW.Array.trySplice(target, params.removeParamsList, params.addParamsList);
 		}
 	},
-	
+
 	performFilter: function(target, newItems) {
 		var params = JW.Array.detectFilter(target, newItems);
 		if (params !== undefined) {
 			JW.Array.trySplice(target, params, []);
 		}
 	},
-	
+
 	performReorder: function(target, newItems, getKey, scope) {
 		var indexArray = JW.Array.detectReorder(target, newItems, getKey, scope);
 		if (indexArray !== undefined) {
 			JW.Array.tryReorder(target, indexArray);
 		}
 	},
-	
+
 	sort: function(target, callback, scope, order) {
 		var indexArray = JW.Array.detectSort(target, callback, scope, order);
 		if (indexArray !== undefined) {
 			JW.Array.tryReorder(target, indexArray);
 		}
 	},
-	
+
 	sortComparing: function(target, compare, scope, order) {
 		var indexArray = JW.Array.detectSortComparing(target, compare, scope, order);
 		if (indexArray !== undefined) {
 			JW.Array.tryReorder(target, indexArray);
 		}
 	},
-	
-	createMapper: function(source, config) {
-		return new JW.AbstractArray.Mapper(new JW.Array(source, true), config);
-	},
-	
-	createFilterer: function(source, config) {
-		return new JW.AbstractArray.Filterer(new JW.Array(source, true), config);
-	},
-	
-	createObserver: function(source, config) {
-		return new JW.AbstractArray.Observer(new JW.Array(source, true), config);
-	},
-	
-	createOrderer: function(source, config) {
-		return new JW.AbstractArray.Orderer(new JW.Array(source, true), config);
-	},
-	
-	createSorterComparing: function(source, config) {
-		return new JW.AbstractArray.SorterComparing(new JW.Array(source, true), config);
-	},
-	
-	createIndexer: function(source, config) {
-		return new JW.AbstractArray.Indexer(new JW.Array(source, true), config);
-	},
-	
-	createLister: function(source, config) {
-		return new JW.AbstractArray.Lister(new JW.Array(source, true), config);
-	},
-	
-	createInserter: function(source, config) {
-		return new JW.AbstractArray.Inserter(new JW.Array(source, true), config);
-	},
-	
-	createMerger: function(source, config) {
-		return new JW.AbstractArray.Merger(new JW.Array(source, true), config);
-	},
-	
-	createReverser: function(source, config) {
-		return new JW.AbstractArray.Reverser(new JW.Array(source, true), config);
-	},
-	
-	createSplitter: function(source, config) {
-		return new JW.AbstractArray.Splitter(new JW.Array(source, true), config);
-	},
-	
+
 	equal: function(target, arr) {
 		if (target === arr) {
 			return true;
@@ -10410,7 +10640,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	collapse: function(target, depth) {
 		var result = [];
 		for (var i = 0, l = target.length; i < l; ++i) {
@@ -10430,14 +10660,14 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
 	indexOf: Array.prototype.indexOf ? function(target, item) {
 		return target.indexOf(item);
 	} : function(target, item) {
 		var key = JW.Array.keyOf(target, item);
 		return (key !== undefined) ? key : -1;
 	},
-	
+
 	backEvery: function(target, callback, scope) {
 		for (var i = target.length - 1; i >= 0; --i) {
 			if (callback.call(scope || target, target[i], i) === false) {
@@ -10446,7 +10676,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	cmp: function(x, y, caseInsensitive) {
 		var n = Math.min(x.length, y.length);
 		for (var i = 0; i < n; ++i) {
@@ -10457,7 +10687,7 @@ JW.apply(JW.Array, {
 		}
 		return JW.cmp(x.length, y.length);
 	},
-	
+
 	shuffle: function(n) {
 		var result = new Array(n);
 		for (var i = 0; i < n; ++i) {
@@ -10471,7 +10701,7 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
 	isIdentity: function(array) {
 		for (var i = 0, l = array.length; i < l; ++i) {
 			if (array[i] !== i) {
@@ -10480,7 +10710,7 @@ JW.apply(JW.Array, {
 		}
 		return true;
 	},
-	
+
 	invert: function(array) {
 		var l = array.length;
 		var result = new Array(l);
@@ -10489,7 +10719,7 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
 	merge: function(arrays) {
 		var result = [];
 		for (var i = 0, l = arrays.length; i < l; ++i) {
@@ -10497,16 +10727,24 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
-	
+
+	countMerged: function(arrays) {
+		var result = 0;
+		for (var i = 0, l = arrays.length; i < l; ++i) {
+			result += arrays[i].length;
+		}
+		return result;
+	},
+
 	// deprecated
 	top: function(target) {
 		return JW.Array.getLast(target);
 	},
-	
+
 	pop: function(target) {
 		return target.pop();
 	},
-	
+
 	binarySearch: function(target, value, compare, scope) {
 		compare = compare || function(x, y) { return (x < y) ? -1 : (x > y) ? 1 : 0 };
 		scope = scope || target;
@@ -10529,19 +10767,19 @@ JW.apply(JW.Array, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -10572,7 +10810,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	createEmpty: function() {
 		return new JW.Map();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.Array} `<U>` Array.
@@ -10580,7 +10818,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.Map} `<U>` Map.
@@ -10588,7 +10826,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.Set} `<U>` Set.
@@ -10596,7 +10834,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	createEmptySet: function() {
 		return new JW.Set();
 	}
-	
+
 	/**
 	 * @method getLength
 	 * `<T>` Returns count of items in collection.
@@ -10712,9 +10950,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method every
 	 *
 	 * `<T>` Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @static
@@ -10732,9 +10970,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method some
 	 *
 	 * `<T>` Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -10768,9 +11006,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method find
 	 *
 	 * `<T>` Finds item by criteria.
-	 * 
+	 *
 	 * Returns key of first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -10788,9 +11026,9 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method search
 	 *
 	 * `<T>` Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -11177,10 +11415,28 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @returns {JW.Map} `<T>` Filtered collection.
 	 */
 	/**
+	 * @method count
+	 *
+	 * `<T>` Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Object} map `<T>` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Number of items.
+	 */
+	/**
 	 * @method map
 	 *
 	 * `<T, U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -11198,7 +11454,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @method $map
 	 *
 	 * `<T, U>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -11389,86 +11645,6 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @returns {void}
 	 */
 	/**
-	 * @method createMapper
-	 * `<T, U>` Creates collection item mapper.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Mapper}
-	 * `<T, U>` Synchronizer.
-	 */
-	/**
-	 * @method createFilterer
-	 * `<T>` Creates collection filterer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Filterer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createObserver
-	 * `<T>` Creates collection observer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Observer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createOrderer
-	 * `<T>` Creates collection converter to array (orderer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Orderer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createSorterComparing
-	 * `<T>` Creates collection converter to array (sorter by comparer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.SorterComparing}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createIndexer
-	 * `<T>` Creates collection converter to map (indexer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Indexer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createLister
-	 * `<T>` Creates collection converter to set.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Lister}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createInserter
-	 * `<T>` Creates view synchronizer with map.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} map `<T>` Map.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractMap.Inserter}
-	 * `<T>` Synchronizer.
-	 */
-	/**
 	 * @method equal
 	 * `<T>` Checks two maps for equality (===), item by item.
 	 * @static
@@ -11480,19 +11656,19 @@ JW.extend(JW.Map, JW.AbstractMap, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -11507,25 +11683,25 @@ JW.apply(JW.Map, {
 		}
 		return length;
 	},
-	
+
 	isEmpty: function(target) {
 		for (var key in target) {
 			return false;
 		}
 		return true;
 	},
-	
+
 	getFirstKey: function(target) {
 		for (var key in target) {
 			return key;
 		}
 		return undefined;
 	},
-	
+
 	get: function(target, key) {
 		return target[key];
 	},
-	
+
 	getKeys: function(target) {
 		var keys = [];
 		for (var key in target) {
@@ -11533,7 +11709,7 @@ JW.apply(JW.Map, {
 		}
 		return keys;
 	},
-	
+
 	every: function(target, callback, scope) {
 		scope = scope || target;
 		for (var key in target) {
@@ -11543,7 +11719,7 @@ JW.apply(JW.Map, {
 		}
 		return true;
 	},
-	
+
 	filter: function(target, callback, scope) {
 		var result = {};
 		JW.Map.every(target, function(item, key) {
@@ -11553,9 +11729,19 @@ JW.apply(JW.Map, {
 		}, scope);
 		return result;
 	},
-	
+
 	$filter: JW.AbstractCollection._createStatic$Map(JW.Map, "filter"),
-	
+
+	count: function(target, callback, scope) {
+		var result = 0;
+		JW.Map.every(target, function(item, key) {
+			if (callback.call(this, item, key) !== false) {
+				++result;
+			}
+		}, scope);
+		return result;
+	},
+
 	map: function(target, callback, scope) {
 		var result = {};
 		JW.Map.every(target, function(item, key) {
@@ -11563,13 +11749,13 @@ JW.apply(JW.Map, {
 		}, scope);
 		return result;
 	},
-	
+
 	$map: JW.AbstractCollection._createStatic$Map(JW.Map, "map"),
-	
+
 	asMap: function(target) {
 		return target;
 	},
-	
+
 	trySet: function(target, item, key) {
 		var oldItem = target[key];
 		if (oldItem === item) {
@@ -11578,12 +11764,12 @@ JW.apply(JW.Map, {
 		target[key] = item;
 		return new JW.Proxy(oldItem);
 	},
-	
+
 	setAll: function(target, items) {
 		var spliceResult = JW.Map.trySetAll(target, items);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
-	
+
 	trySetAll: function(target, map) {
 		// JW.assertMap(target);
 		// JW.assertMap(map, JW.assertDefined);
@@ -11605,12 +11791,12 @@ JW.apply(JW.Map, {
 			return new JW.AbstractMap.SpliceResult(removedItems, addedItems);
 		}
 	},
-	
+
 	setKey: function(target, oldKey, newKey) {
 		var item = JW.Map.trySetKey(target, oldKey, newKey);
 		return (item !== undefined) ? item : target[newKey];
 	},
-	
+
 	trySetKey: function(target, oldKey, newKey) {
 		// JW.assertMap(target);
 		// JW.assertString(oldKey);
@@ -11625,7 +11811,7 @@ JW.apply(JW.Map, {
 		target[newKey] = item;
 		return item;
 	},
-	
+
 	tryRemove: function(target, key) {
 		// JW.assertMap(target);
 		// JW.assertString(key);
@@ -11635,14 +11821,14 @@ JW.apply(JW.Map, {
 		}
 		return item;
 	},
-	
+
 	removeAll: function(target, keys) {
 		var items = JW.Map.tryRemoveAll(target, keys);
 		return (items !== undefined) ? items : {};
 	},
-	
+
 	$removeAll: JW.AbstractCollection._createStatic$Map(JW.Map, "removeAll"),
-	
+
 	tryRemoveAll: function(target, keys) {
 		// JW.assertMap(target);
 		var items = {};
@@ -11657,7 +11843,7 @@ JW.apply(JW.Map, {
 			return items;
 		}
 	},
-	
+
 	removeItems: function(target, items) {
 		var itemSet = new JW.Set(items);
 		var newItems = JW.Map.filter(target, function(item) {
@@ -11665,14 +11851,14 @@ JW.apply(JW.Map, {
 		});
 		JW.Map.performSplice(target, newItems);
 	},
-	
+
 	clear: function(target) {
 		var result = JW.Map.tryClear(target);
 		return (result !== undefined) ? result : {};
 	},
-	
+
 	$clear: JW.AbstractCollection._createStatic$Map(JW.Map, "clear"),
-	
+
 	tryClear: function(target) {
 		// JW.assertMap(target);
 		if (JW.Map.isEmpty(target)) {
@@ -11684,12 +11870,12 @@ JW.apply(JW.Map, {
 		}
 		return items;
 	},
-	
+
 	splice: function(target, removedKeys, updatedItems) {
 		var spliceResult = JW.Map.trySplice(target, removedKeys, updatedItems);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
-	
+
 	trySplice: function(target, removedKeys, updatedItems) {
 		// JW.assertMap(target);
 		// JW.assertArray(item, JW.assertString);
@@ -11707,12 +11893,12 @@ JW.apply(JW.Map, {
 			return new JW.AbstractMap.SpliceResult(removedItems, {});
 		}
 	},
-	
+
 	reindex: function(target, keyMap) {
 		var result = JW.Map.tryReindex(target, keyMap);
 		return (result !== undefined) ? result : {};
 	},
-	
+
 	tryReindex: function(target, keyMap) {
 		// JW.assertMap(target);
 		// JW.assertMap(keyMap, JW.assertString);
@@ -11737,7 +11923,7 @@ JW.apply(JW.Map, {
 			return resultMap;
 		}
 	},
-	
+
 	detectSplice: function(oldItems, newItems) {
 		// JW.assertMap(oldItems);
 		// JW.assertMap(newItems, JW.assertDefined);
@@ -11758,7 +11944,7 @@ JW.apply(JW.Map, {
 			return new JW.AbstractMap.SpliceParams(removedKeys, updatedItems);
 		}
 	},
-	
+
 	detectReindex: function(oldItems, newItems, getKey, scope) {
 		// JW.assertMap(oldItems);
 		// JW.assertMap(newItems, JW.assertDefined);
@@ -11779,53 +11965,21 @@ JW.apply(JW.Map, {
 			return keyMap;
 		}
 	},
-	
+
 	performSplice: function(target, newItems) {
 		var params = JW.Map.detectSplice(target, newItems);
 		if (params !== undefined) {
 			JW.Map.trySplice(target, params.removedKeys, params.updatedItems);
 		}
 	},
-	
+
 	performReindex: function(target, newItems, getKey, scope) {
 		var keyMap = JW.Map.detectReindex(target, newItems, getKey, scope);
 		if (keyMap !== undefined) {
 			JW.Map.tryReindex(target, keyMap);
 		}
 	},
-	
-	createMapper: function(source, config) {
-		return new JW.AbstractMap.Mapper(new JW.Map(source, true), config);
-	},
-	
-	createFilterer: function(source, config) {
-		return new JW.AbstractMap.Filterer(new JW.Map(source, true), config);
-	},
-	
-	createObserver: function(source, config) {
-		return new JW.AbstractMap.Observer(new JW.Map(source, true), config);
-	},
-	
-	createOrderer: function(source, config) {
-		return new JW.AbstractMap.Orderer(new JW.Map(source, true), config);
-	},
-	
-	createSorterComparing: function(source, config) {
-		return new JW.AbstractMap.SorterComparing(new JW.Map(source, true), config);
-	},
-	
-	createIndexer: function(source, config) {
-		return new JW.AbstractMap.Indexer(new JW.Map(source, true), config);
-	},
-	
-	createLister: function(source, config) {
-		return new JW.AbstractMap.Lister(new JW.Map(source, true), config);
-	},
-	
-	createInserter: function(source, config) {
-		return new JW.AbstractMap.Inserter(new JW.Map(source, true), config);
-	},
-	
+
 	equal: function(x, y) {
 		if (x === y) {
 			return true;
@@ -11838,13 +11992,13 @@ JW.apply(JW.Map, {
 		}
 		return length === 0;
 	},
-	
+
 	single: function(key, item) {
 		var result = {};
 		result[key] = item;
 		return result;
 	},
-	
+
 	getRemovedKeys: function(removedItems, addedItems) {
 		var removedKeys = [];
 		for (var key in removedItems) {
@@ -11858,19 +12012,19 @@ JW.apply(JW.Map, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -11902,7 +12056,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	createEmpty: function() {
 		return new JW.Set();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.Array} `<U>` Array.
@@ -11910,7 +12064,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	createEmptyArray: function() {
 		return new JW.Array();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.Map} `<U>` Map.
@@ -11918,7 +12072,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	createEmptyMap: function() {
 		return new JW.Map();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.Set} `<U>` Set.
@@ -11926,7 +12080,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	createEmptySet: function() {
 		return new JW.Set();
 	}
-	
+
 	/**
 	 * @method getLength
 	 * `<T extends JW.Class>` Returns count of items in collection.
@@ -12005,9 +12159,9 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @method every
 	 *
 	 * `<T extends JW.Class>` Checks all items by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for all collection items.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
 	 *
 	 * @static
@@ -12025,9 +12179,9 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @method some
 	 *
 	 * `<T extends JW.Class>` Checks each item by criteria.
-	 * 
+	 *
 	 * Returns true if function `f` returns !== `false` for some collection item.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -12060,9 +12214,9 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @method search
 	 *
 	 * `<T extends JW.Class>` Finds item by criteria.
-	 * 
+	 *
 	 * Returns first item for which `f` returns !== `false`.
-	 * 
+	 *
 	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
 	 *
 	 * @static
@@ -12323,10 +12477,28 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @returns {JW.Set} `<T>` Filtered collection.
 	 */
 	/**
+	 * @method count
+	 *
+	 * `<T extends JW.Class>` Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Object} set `<T>` Set.
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Number of items.
+	 */
+	/**
 	 * @method map
 	 *
 	 * `<T extends JW.Class, U extends JW.Class>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -12344,7 +12516,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @method $map
 	 *
 	 * `<T extends JW.Class, U extends JW.Class>` Maps collection items.
-	 * 
+	 *
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 *
 	 * @static
@@ -12475,76 +12647,6 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @returns {void}
 	 */
 	/**
-	 * @method createMapper
-	 * `<T extends JW.Class, U extends JW.Class>` Creates collection item mapper.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Mapper}
-	 * `<T, U>` Synchronizer.
-	 */
-	/**
-	 * @method createFilterer
-	 * `<T extends JW.Class>` Creates collection filterer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Filterer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createObserver
-	 * `<T extends JW.Class>` Creates collection observer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Observer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createOrderer
-	 * `<T extends JW.Class>` Creates collection converter to array (orderer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Orderer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createSorterComparing
-	 * `<T extends JW.Class>` Creates collection converter to array (sorter by comparer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.SorterComparing}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createIndexer
-	 * `<T extends JW.Class>` Creates collection converter to map (indexer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Indexer}
-	 * `<T>` Synchronizer.
-	 */
-	/**
-	 * @method createLister
-	 * `<T extends JW.Class>` Creates collection converter to set.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @static
-	 * @param {Object} set `<T>` Set.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
-	 * @returns {JW.AbstractSet.Lister}
-	 * `<T>` Synchronizer.
-	 */
-	/**
 	 * @method equal
 	 * `<T extends JW.Class>` Checks for set equality (===) to array, item by item.
 	 * @static
@@ -12556,19 +12658,19 @@ JW.extend(JW.Set, JW.AbstractSet, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -12583,29 +12685,29 @@ JW.apply(JW.Set, {
 		}
 		return length;
 	},
-	
+
 	isEmpty: function(target) {
 		for (var key in target) {
 			return false;
 		}
 		return true;
 	},
-	
+
 	getFirst: function(target) {
 		for (var key in target) {
 			return target[key];
 		}
 		return undefined;
 	},
-	
+
 	containsItem: function(target, item) {
 		return target.hasOwnProperty(item._iid);
 	},
-	
+
 	contains: function(target, item) {
 		return target.hasOwnProperty(item._iid);
 	},
-	
+
 	every: function(target, callback, scope) {
 		scope = scope || target;
 		for (var iid in target) {
@@ -12615,7 +12717,7 @@ JW.apply(JW.Set, {
 		}
 		return true;
 	},
-	
+
 	filter: function(target, callback, scope) {
 		var result = {};
 		JW.Set.every(target, function(item) {
@@ -12625,9 +12727,19 @@ JW.apply(JW.Set, {
 		}, scope);
 		return result;
 	},
-	
+
 	$filter: JW.AbstractCollection._createStatic$Set(JW.Set, "filter"),
-	
+
+	count: function(target, callback, scope) {
+		var result = 0;
+		JW.Set.every(target, function(item) {
+			if (callback.call(this, item) !== false) {
+				++result;
+			}
+		}, scope);
+		return result;
+	},
+
 	map: function(target, callback, scope) {
 		var result = {};
 		JW.Set.every(target, function(item) {
@@ -12635,17 +12747,17 @@ JW.apply(JW.Set, {
 		}, scope);
 		return result;
 	},
-	
+
 	$map: JW.AbstractCollection._createStatic$Set(JW.Set, "map"),
-	
+
 	asSet: function(target) {
 		return target;
 	},
-	
+
 	add: function(target, item) {
 		return JW.Set.tryAdd(target, item) !== undefined;
 	},
-	
+
 	tryAdd: function(target, item) {
 		var iid = item._iid;
 		if (target.hasOwnProperty(iid)) {
@@ -12654,14 +12766,14 @@ JW.apply(JW.Set, {
 		target[iid] = item;
 		return true;
 	},
-	
+
 	addAll: function(target, items) {
 		var result = JW.Set.tryAddAll(target, items);
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	$addAll: JW.AbstractCollection._createStatic$Array(JW.Set, "addAll"),
-	
+
 	tryAddAll: function(target, items) {
 		var addedItems = [];
 		for (var i = 0, l = items.length; i < l; ++i) {
@@ -12674,11 +12786,11 @@ JW.apply(JW.Set, {
 			return addedItems;
 		}
 	},
-	
+
 	remove: function(target, item) {
 		return JW.Set.tryRemove(target, item) !== undefined;
 	},
-	
+
 	tryRemove: function(target, item) {
 		var iid = item._iid;
 		if (!target.hasOwnProperty(iid)) {
@@ -12687,18 +12799,18 @@ JW.apply(JW.Set, {
 		delete target[iid];
 		return true;
 	},
-	
+
 	removeItem: function(target, item) {
 		JW.Set.tryRemove(target, item);
 	},
-	
+
 	removeAll: function(target, items) {
 		var result = JW.Set.tryRemoveAll(target, items);
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	$removeAll: JW.AbstractCollection._createStatic$Array(JW.Set, "removeAll"),
-	
+
 	tryRemoveAll: function(target, items) {
 		var removedItems = [];
 		for (var i = 0, l = items.length; i < l; ++i) {
@@ -12711,18 +12823,18 @@ JW.apply(JW.Set, {
 			return removedItems;
 		}
 	},
-	
+
 	removeItems: function(target, items) {
 		JW.Set.tryRemoveAll(target, items);
 	},
-	
+
 	clear: function(target) {
 		var result = JW.Set.tryClear(target);
 		return (result !== undefined) ? result : [];
 	},
-	
+
 	$clear: JW.AbstractCollection._createStatic$Array(JW.Set, "clear"),
-	
+
 	tryClear: function(target) {
 		var items = JW.Set.toArray(target);
 		if (!items.length) {
@@ -12731,12 +12843,12 @@ JW.apply(JW.Set, {
 		JW.Set.tryRemoveAll(target, items);
 		return items;
 	},
-	
+
 	splice: function(target, removedItems, addedItems) {
 		var spliceResult = JW.Set.trySplice(target, removedItems, addedItems);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractSet.SpliceResult([], []);
 	},
-	
+
 	trySplice: function(target, removedItems, addedItems) {
 		var addedItemSet = new JW.Set(addedItems);
 		removedItems = JW.Array.filter(removedItems, function(item) { return !addedItemSet.contains(item); });
@@ -12746,7 +12858,7 @@ JW.apply(JW.Set, {
 			return new JW.AbstractSet.SpliceResult(removedItems || [], addedItems || []);
 		}
 	},
-	
+
 	detectSplice: function(oldItems, newItemArray) {
 		var removedItems = [];
 		var addedItems = [];
@@ -12765,42 +12877,14 @@ JW.apply(JW.Set, {
 			return new JW.AbstractSet.SpliceParams(removedItems, addedItems);
 		}
 	},
-	
+
 	performSplice: function(target, newItems) {
 		var spliceParams = JW.Set.detectSplice(target, newItems);
 		if (spliceParams !== undefined) {
 			JW.Set.trySplice(target, spliceParams.removedItems, spliceParams.addedItems);
 		}
 	},
-	
-	createMapper: function(source, config) {
-		return new JW.AbstractSet.Mapper(new JW.Set(source, true), config);
-	},
-	
-	createFilterer: function(source, config) {
-		return new JW.AbstractSet.Filterer(new JW.Set(source, true), config);
-	},
-	
-	createObserver: function(source, config) {
-		return new JW.AbstractSet.Observer(new JW.Set(source, true), config);
-	},
-	
-	createOrderer: function(source, config) {
-		return new JW.AbstractSet.Orderer(new JW.Set(source, true), config);
-	},
-	
-	createSorterComparing: function(source, config) {
-		return new JW.AbstractSet.SorterComparing(new JW.Set(source, true), config);
-	},
-	
-	createIndexer: function(source, config) {
-		return new JW.AbstractSet.Indexer(new JW.Set(source, true), config);
-	},
-	
-	createLister: function(source, config) {
-		return new JW.AbstractSet.Lister(new JW.Set(source, true), config);
-	},
-	
+
 	equal: function(x, y) {
 		if (JW.Set.getLength(x) !== y.length) {
 			return false;
@@ -12812,7 +12896,7 @@ JW.apply(JW.Set, {
 		}
 		return true;
 	},
-	
+
 	single: function(item) {
 		var result = {};
 		result[item._iid] = item;
@@ -12822,19 +12906,19 @@ JW.apply(JW.Set, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -12903,7 +12987,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	 * of events #spliceEvent, #replaceEvent, #moveEvent, #clearEvent, #reorderEvent.
 	 * @param {JW.ObservableArray.EventParams} params `<T>` Parameters.
 	 */
-	
+
 	// override
 	destroy: function() {
 		this.changeEvent.destroy();
@@ -12915,7 +12999,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.length.destroy();
 		this._super();
 	},
-	
+
 	// override
 	trySet: function(item, index) {
 		var oldItem = this._super(item, index);
@@ -12926,7 +13010,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return oldItem;
 	},
-	
+
 	// override
 	tryMove: function(fromIndex, toIndex) {
 		var item = this._super(fromIndex, toIndex);
@@ -12937,7 +13021,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return item;
 	},
-	
+
 	// override
 	tryClear: function() {
 		var oldItems = this._super();
@@ -12949,7 +13033,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return oldItems;
 	},
-	
+
 	// override
 	trySplice: function(removeParamsList, addParamsList) {
 		var result = this._super(removeParamsList, addParamsList);
@@ -12961,7 +13045,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return result;
 	},
-	
+
 	// override
 	tryReorder: function(indexArray) {
 		var items = this._super(indexArray);
@@ -12972,7 +13056,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return items;
 	},
-	
+
 	/**
 	 * `<U>` Creates empty collection of the same type.
 	 * @returns {JW.ObservableArray} `<U>` Collection.
@@ -12980,7 +13064,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createEmpty: function() {
 		return new JW.ObservableArray();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.ObservableArray} `<U>` Array.
@@ -12988,7 +13072,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.ObservableMap} `<U>` Map.
@@ -12996,7 +13080,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.ObservableSet} `<U>` Set.
@@ -13004,7 +13088,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13015,7 +13099,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createMapper: function(config) {
 		return new JW.ObservableArray.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13026,7 +13110,18 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createFilterer: function(config) {
 		return new JW.ObservableArray.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableArray.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.ObservableArray.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13037,7 +13132,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createObserver: function(config) {
 		return new JW.ObservableArray.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13048,7 +13143,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createOrderer: function(config) {
 		return new JW.ObservableArray.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13059,7 +13154,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createSorterComparing: function(config) {
 		return new JW.ObservableArray.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13070,7 +13165,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createIndexer: function(config) {
 		return new JW.ObservableArray.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13081,7 +13176,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createLister: function(config) {
 		return new JW.ObservableArray.Lister(this, config);
 	},
-	
+
 	/**
 	 * Creates view synchronizer with array.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13092,7 +13187,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createInserter: function(config) {
 		return new JW.ObservableArray.Inserter(this, config);
 	},
-	
+
 	/**
 	 * Creates arrays merger.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13103,11 +13198,11 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createMerger: function(config) {
 		return new JW.ObservableArray.Merger(this, config);
 	},
-	
+
 	createMergerBunch: function(merger) {
 		return new JW.ObservableArray.Merger.Bunch(merger, this);
 	},
-	
+
 	/**
 	 * Creates array reverser.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -13118,7 +13213,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	createReverser: function(config) {
 		return new JW.ObservableArray.Reverser(this, config);
 	},
-	
+
 	createSplitter: function(config) {
 		return new JW.ObservableArray.Splitter(this, config);
 	}
@@ -13281,6 +13376,74 @@ JW.extend(JW.ObservableArray.ReorderEventParams, JW.ObservableArray.ItemsEventPa
 	/**
 	 * @property {Array} indexArray `<number>` Indexes of items in reordered array.
 	 */
+});
+
+/*
+	jWidget Lib source file.
+
+	Copyright (C) 2014 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractArray.Counter<T>`
+ *
+ * See JW.AbstractCollection.Counter for details.
+ *
+ * @extends JW.AbstractArray.Counter
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createCounter method is preferrable instead.
+ * @param {JW.ObservableArray} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.ObservableArray.Counter = function(source, config) {
+	JW.ObservableArray.Counter._super.call(this, source, config);
+	this.own(source.spliceEvent.bind(this._onSplice, this));
+	this.own(source.replaceEvent.bind(this._onReplace, this));
+	this.own(source.clearEvent.bind(this._onClear, this));
+};
+
+JW.extend(JW.ObservableArray.Counter, JW.AbstractArray.Counter, {
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		var value = this.target.get();
+		JW.Array.every(spliceResult.removedItemsList, function(indexItems) {
+			value -= JW.Array.count(indexItems.items, this.filterItem, this.scope);
+		}, this);
+		JW.Array.every(spliceResult.addedItemsList, function(indexItems) {
+			value += JW.Array.count(indexItems.items, this.filterItem, this.scope);
+		}, this);
+		this.target.set(value);
+	},
+
+	_onReplace: function(params) {
+		var oldFiltered = this.filterItem.call(this.scope, params.oldItem) !== false;
+		var newFiltered = this.filterItem.call(this.scope, params.newItem) !== false;
+		if (oldFiltered && !newFiltered) {
+			this.target.set(this.target.get() - 1);
+		} else if (!oldFiltered && newFiltered) {
+			this.target.set(this.target.get() + 1);
+		}
+	},
+
+	_onClear: function(params) {
+		this.target.set(0);
+	}
 });
 
 /*
@@ -14237,19 +14400,19 @@ JW.ObservableArray.Splitter = JW.AbstractArray.Splitter.extend();
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -14306,7 +14469,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	 * of events #spliceEvent, #reindexEvent, #clearEvent.
 	 * @param {JW.ObservableMap.EventParams} params `<T>` Parameters.
 	 */
-	
+
 	// override
 	destroy: function() {
 		this.changeEvent.destroy();
@@ -14316,7 +14479,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		this.length.destroy();
 		this._super();
 	},
-	
+
 	// override
 	trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = this._super(removedKeys, updatedItems);
@@ -14328,7 +14491,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
 		return spliceResult;
 	},
-	
+
 	// override
 	tryClear: function() {
 		var items = this._super();
@@ -14340,7 +14503,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
 		return items;
 	},
-	
+
 	// override
 	tryReindex: function(keyMap) {
 		var result = this._super(keyMap);
@@ -14351,7 +14514,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
 		return result;
 	},
-	
+
 	/**
 	 * `<U>` Creates empty collection of the same type.
 	 * @returns {JW.ObservableMap} `<U>` Collection.
@@ -14359,7 +14522,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createEmpty: function() {
 		return new JW.ObservableMap();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.ObservableArray} `<U>` Array.
@@ -14367,7 +14530,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.ObservableMap} `<U>` Map.
@@ -14375,7 +14538,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.ObservableSet} `<U>` Set.
@@ -14383,7 +14546,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -14394,7 +14557,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createMapper: function(config) {
 		return new JW.ObservableMap.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -14405,7 +14568,18 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createFilterer: function(config) {
 		return new JW.ObservableMap.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableMap.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.ObservableMap.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -14416,7 +14590,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createObserver: function(config) {
 		return new JW.ObservableMap.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -14427,7 +14601,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createOrderer: function(config) {
 		return new JW.ObservableMap.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -14438,7 +14612,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createSorterComparing: function(config) {
 		return new JW.ObservableMap.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -14449,7 +14623,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createIndexer: function(config) {
 		return new JW.ObservableMap.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -14460,7 +14634,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	createLister: function(config) {
 		return new JW.ObservableMap.Lister(this, config);
 	},
-	
+
 	/**
 	 * Creates view synchronizer with map.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -14561,6 +14735,58 @@ JW.extend(JW.ObservableMap.ItemsEventParams, JW.ObservableMap.EventParams, {
 	/**
 	 * @property {Object} items Old map contents.
 	 */
+});
+
+/*
+	jWidget Lib source file.
+
+	Copyright (C) 2014 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * `<T> extends JW.AbstractMap.Counter<T>`
+ *
+ * See JW.AbstractCollection.Counter for details.
+ *
+ * @extends JW.AbstractMap.Counter
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createCounter method is preferrable instead.
+ * @param {JW.ObservableMap} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.ObservableMap.Counter = function(source, config) {
+	JW.ObservableMap.Counter._super.call(this, source, config);
+	this.own(source.spliceEvent.bind(this._onSplice, this));
+	this.own(source.clearEvent.bind(this._onClear, this));
+};
+
+JW.extend(JW.ObservableMap.Counter, JW.AbstractMap.Counter, {
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		this.target.set(this.target.get() -
+			JW.Map.count(spliceResult.removedItems, this.filterItem, this.scope) +
+			JW.Map.count(spliceResult.addedItems, this.filterItem, this.scope));
+	},
+
+	_onClear: function(params) {
+		this.target.set(0);
+	}
 });
 
 /*
@@ -15016,19 +15242,19 @@ JW.extend(JW.ObservableMap.SorterComparing, JW.AbstractMap.SorterComparing, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -15079,7 +15305,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	 * of events #spliceEvent, #clearEvent.
 	 * @param {JW.ObservableSet.EventParams} params `<T>` Parameters.
 	 */
-	
+
 	// override
 	destroy: function() {
 		this.changeEvent.destroy();
@@ -15088,7 +15314,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 		this.length.destroy();
 		this._super();
 	},
-	
+
 	// override
 	tryClear: function() {
 		var items = this._super();
@@ -15100,7 +15326,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
 		return items;
 	},
-	
+
 	// override
 	trySplice: function(removedItems, addedItems) {
 		var spliceResult = this._super(removedItems, addedItems);
@@ -15112,7 +15338,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
 		return spliceResult;
 	},
-	
+
 	/**
 	 * `<U>` Creates empty collection of the same type.
 	 * @returns {JW.ObservableSet} `<U>` Collection.
@@ -15120,7 +15346,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createEmpty: function() {
 		return new JW.ObservableSet();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty array of the same observability level.
 	 * @returns {JW.ObservableArray} `<U>` Array.
@@ -15128,7 +15354,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createEmptyArray: function() {
 		return new JW.ObservableArray();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty map of the same observability level.
 	 * @returns {JW.ObservableMap} `<U>` Map.
@@ -15136,7 +15362,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createEmptyMap: function() {
 		return new JW.ObservableMap();
 	},
-	
+
 	/**
 	 * `<U>` Creates empty set of the same observability level.
 	 * @returns {JW.ObservableSet} `<U>` Set.
@@ -15144,7 +15370,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createEmptySet: function() {
 		return new JW.ObservableSet();
 	},
-	
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -15155,7 +15381,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createMapper: function(config) {
 		return new JW.ObservableSet.Mapper(this, config);
 	},
-	
+
 	/**
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -15166,7 +15392,18 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createFilterer: function(config) {
 		return new JW.ObservableSet.Filterer(this, config);
 	},
-	
+
+	/**
+	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.Counter}
+	 * `<T>` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.ObservableSet.Counter(this, config);
+	},
+
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -15177,7 +15414,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createObserver: function(config) {
 		return new JW.ObservableSet.Observer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -15188,7 +15425,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createOrderer: function(config) {
 		return new JW.ObservableSet.Orderer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -15199,7 +15436,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createSorterComparing: function(config) {
 		return new JW.ObservableSet.SorterComparing(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
@@ -15210,7 +15447,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	createIndexer: function(config) {
 		return new JW.ObservableSet.Indexer(this, config);
 	},
-	
+
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -15287,6 +15524,58 @@ JW.extend(JW.ObservableSet.ItemsEventParams, JW.ObservableSet.EventParams, {
 	/**
 	 * @property {Array} items `<T>` Old set contents.
 	 */
+});
+
+/*
+	jWidget Lib source file.
+
+	Copyright (C) 2014 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * `<T extends JW.Class> extends JW.AbstractSet.Counter<T>`
+ *
+ * See JW.AbstractCollection.Counter for details.
+ *
+ * @extends JW.AbstractSet.Counter
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createCounter method is preferrable instead.
+ * @param {JW.ObservableSet} source `<T>` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.ObservableSet.Counter = function(source, config) {
+	JW.ObservableSet.Counter._super.call(this, source, config);
+	this.own(source.spliceEvent.bind(this._onSplice, this));
+	this.own(source.clearEvent.bind(this._onClear, this));
+};
+
+JW.extend(JW.ObservableSet.Counter, JW.AbstractSet.Counter, {
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		this.target.set(this.target.get() -
+			JW.Array.count(spliceResult.removedItems, this.filterItem, this.scope) +
+			JW.Array.count(spliceResult.addedItems, this.filterItem, this.scope));
+	},
+
+	_onClear: function(params) {
+		this.target.set(0);
+	}
 });
 
 /*
@@ -16519,19 +16808,19 @@ JW.extend(JW.Updater, JW.Class, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -16549,7 +16838,7 @@ JW.extend(JW.Updater, JW.Class, {
  */
 JW.makeRegistry = function(cls, idField) {
 	idField = idField || "id";
-	
+
 	/**
 	 * @class Registry
 	 * Convert a class to a registry by method JW.makeRegistry. After that you'll be able to use several
@@ -16559,43 +16848,43 @@ JW.makeRegistry = function(cls, idField) {
 	 *     var TimeUnit = function() {
 	 *         TimeUnit.{@link JW.Class#_super _super}.call(this);
 	 *     };
-	 *     
+	 *
 	 *     JW.extend(TimeUnit, JW.Class, {
 	 *         // abstract id: String;
-	 *         // abstract add(date: Date, count: Integer): Date;
+	 *         // abstract add(date: Date, count: number): Date;
 	 *     });
-	 *     
+	 *
 	 *     JW.makeRegistry(TimeUnit);
-	 *     
+	 *
 	 *     // Date time unit
 	 *     TimeUnit.Day = function() {
 	 *         TimeUnit.Day.{@link JW.Class#_super _super}.call(this);
 	 *     };
-	 *     
+	 *
 	 *     JW.extend(TimeUnit.Day, TimeUnit, {
 	 *         id: "day",
 	 *         add: function(date, count) { date.setDate(date.getDate() + count); }
 	 *     });
-	 *     
+	 *
 	 *     TimeUnit.{@link Registry#registerItem registerItem}(new TimeUnit.Day());
-	 *     
+	 *
 	 *     // Month time unit
 	 *     TimeUnit.Month = function() {
 	 *         TimeUnit.Month.{@link JW.Class#_super _super}.call(this);
 	 *     };
-	 *     
+	 *
 	 *     JW.extend(TimeUnit.Month, TimeUnit, {
 	 *         id: "month",
 	 *         add: function(date, count) { date.setMonth(date.getMonth() + count); }
 	 *     });
-	 *     
+	 *
 	 *     TimeUnit.{@link Registry#registerItem registerItem}(new TimeUnit.Month());
-	 *     
+	 *
 	 *     // Example of how to utilize this
 	 *     function addDate(date, count, unit) {
 	 *         TimeUnit.{@link Registry#getItem getItem}(unit).add(date, count);
 	 *     }
-	 *     
+	 *
 	 *     var date = new Date(2000, 0, 1);
 	 *     addDate(date, 40, "day");
 	 *     assert(2000 === date.getFullYear());
@@ -16608,13 +16897,13 @@ JW.makeRegistry = function(cls, idField) {
 		 * @static
 		 */
 		items: {},
-		
+
 		/**
 		 * @property {Array} itemArray Array of all items in addition order.
 		 * @static
 		 */
 		itemArray: [],
-		
+
 		/**
 		 * @method
 		 * Registers a new item. Item must have an id field specified by JW.makeRegistry method call.
@@ -16625,7 +16914,7 @@ JW.makeRegistry = function(cls, idField) {
 			cls.items[item[idField]] = item;
 			cls.itemArray.push(item);
 		},
-		
+
 		/**
 		 * @method
 		 * Returns an item by id.
@@ -16635,12 +16924,12 @@ JW.makeRegistry = function(cls, idField) {
 		getItem: function(value) {
 			return (value instanceof cls) ? value : cls.items[value];
 		},
-		
+
 		getId: function(value) {
 			return (value instanceof cls) ? value[idField] : value;
 		}
 	});
-	
+
 	return cls;
 };
 
@@ -17094,19 +17383,19 @@ JW.extend(JW.Timeout, JW.Class, {
 
 /*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -17128,14 +17417,14 @@ JW.extend(JW.Timer, JW.Class, {
 	Number delay;
 	Boolean repeat;
 	Boolean sensitive;
-	Integer _handle;
+	number _handle;
 	*/
-	
+
 	destroy: function() {
 		this.stop();
 		this._super();
 	},
-	
+
 	start: function() {
 		if (this.isStarted()) {
 			return;
@@ -17143,7 +17432,7 @@ JW.extend(JW.Timer, JW.Class, {
 		var runner = this._getRunner();
 		this._handle = runner(this._onTimeout, this.delay);
 	},
-	
+
 	stop: function() {
 		if (!this.isStarted()) {
 			return;
@@ -17152,24 +17441,24 @@ JW.extend(JW.Timer, JW.Class, {
 		stopper(this._handle);
 		this._handle = 0;
 	},
-	
+
 	restart: function() {
 		this.stop();
 		this.start();
 	},
-	
+
 	isStarted: function() {
 		return this._handle !== 0;
 	},
-	
+
 	_getRunner: function() {
 		return !this.repeat ? setTimeout : this.sensitive ? JW.setInterval : setInterval;
 	},
-	
+
 	_getStopper: function() {
 		return this.repeat ? clearInterval : clearTimeout;
 	},
-	
+
 	_onTimeout: function() {
 		if (!this.repeat) {
 			this._handle = 0;

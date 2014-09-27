@@ -1,5 +1,5 @@
 /*!
-	jWidget UI 1.0.2
+	jWidget UI 1.1.0
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -1153,19 +1153,19 @@ JW.extend(JW.UI.Component.EventParams, JW.EventParams, {
 
 /*
 	jWidget UI source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -1177,8 +1177,8 @@ JW.UI.Component.AbstractTemplate = function() {
 
 JW.extend(JW.UI.Component.AbstractTemplate, JW.Class, {
 	// abstract Boolean requiresAfterAppend;
-	// abstract void _addElement(String id, DOMElement el, Array<Integer> path);
-	
+	// abstract void _addElement(String id, DOMElement el, Array<number> path);
+
 	_compileAttributes: function(root) {
 		this.prefixes = JW.String.parseClass(root.getAttribute("jwclass"));
 		root.removeAttribute("jwclass");
@@ -1203,7 +1203,7 @@ JW.extend(JW.UI.Component.AbstractTemplate, JW.Class, {
 		}, this);
 		this._addElement("root", root, []);
 	},
-	
+
 	_walk: function(el, path, callback, scope) {
 		if (el.nodeType !== 1) { // ELEMENT
 			return;
@@ -1862,19 +1862,19 @@ JW.extend(JW.UI.AttrUpdater, JW.Class, {
 
 /*
 	jWidget UI source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -1885,8 +1885,8 @@ JW.extend(JW.UI.AttrUpdater, JW.Class, {
  * {@link JW.Property property}.
  * Applied on initialization as well.
  *
- *     var checked = new JW.Property();
- *     var listener = new JW.UI.CheckedListener($("#mycheckbox"), value);
+ *     var listener = new JW.UI.CheckedListener($("#mycheckbox"));
+ *     var checked = listener.{@link JW.UI.CheckedListener#property-target target};
  *     // Assume that the checkbox is unchecked initially
  *     assertEquals(false, value.{@link JW.Property#get get}());
  *     // Later on, user checked the checkbox
@@ -1898,32 +1898,42 @@ JW.extend(JW.UI.AttrUpdater, JW.Class, {
  *
  * @constructor
  * @param {jQuery} el DOM element.
- * @param {JW.Property} property `<Boolean>` Target property.
+ * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * here, but this is a deprecated feature.
  */
-JW.UI.CheckedListener = function(el, property) {
+JW.UI.CheckedListener = function(el, config) {
 	this._update = JW.inScope(this._update, this);
 	JW.UI.CheckedListener._super.call(this);
+	config = (config instanceof JW.Property) ? {target: config} : (config || {});
 	this.el = jQuery(el);
-	this.property = property;
+	this.target = config.target || this.own(new JW.Property());
+	this.property = this.target;
 	this._update();
 	this.el.bind("change", this._update);
 };
 
 JW.extend(JW.UI.CheckedListener, JW.Class, {
 	/**
+	 * @cfg {JW.Property} target `<Boolean>` Target property. By default, created automatically.
+	 */
+	/**
 	 * @property {jQuery} el DOM element.
 	 */
 	/**
-	 * @property {JW.Property} property `<Boolean>` Target property.
+	 * @property {JW.Property} target `<Boolean>` Target property.
 	 */
-	
+	/**
+	 * @property {JW.Property} property `<Boolean>` Deprecated, use {@link #property-target target} instead.
+	 * @deprecated
+	 */
+
 	destroy: function() {
 		this.el.unbind("change", this._update);
 		this._super();
 	},
-	
+
 	_update: function() {
-		this.property.set(this.el.prop("checked"));
+		this.target.set(this.el.prop("checked"));
 	}
 });
 
@@ -2181,19 +2191,19 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
 
 /*
 	jWidget UI source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -2204,12 +2214,12 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
  * {@link JW.Property property}.
  * Applied on initialization as well.
  *
- *     var selected = new JW.Property();
- *     var listener = new JW.UI.RadioListener($("#myform"), "myradio", value);
+ *     var listener = new JW.UI.RadioListener($("#myform"), "myradio");
+ *     var selected = listener.{@link JW.UI.RadioListener#property-target target};
  *     // Assume that the radio with value "apple" is selected initially
- *     assertEquals("apple", value.{@link JW.Property#get get}());
+ *     assertEquals("apple", selected.{@link JW.Property#get get}());
  *     // Later on, user selected "banana" radio
- *     assertEquals("banana", value.{@link JW.Property#get get}());
+ *     assertEquals("banana", selected.{@link JW.Property#get get}());
  *
  * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
  * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
@@ -2222,14 +2232,17 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
  * @constructor
  * @param {jQuery} el Container DOM element.
  * @param {String} name Radios "name" attribute.
- * @param {JW.Property} property `<String>` Target property.
+ * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * here, but this is a deprecated feature.
  */
-JW.UI.RadioListener = function(el, name, property) {
+JW.UI.RadioListener = function(el, name, config) {
 	this._update = JW.inScope(this._update, this);
 	JW.UI.RadioListener._super.call(this);
+	config = (config instanceof JW.Property) ? {target: config} : (config || {});
 	this.el = jQuery(el);
 	this.name = name;
-	this.property = property;
+	this.target = config.target || this.own(new JW.Property());
+	this.property = this.target;
 	this._selector = "input[type=radio][name='" + name + "']";
 	this._update();
 	this.el.on("change", this._selector, this._update);
@@ -2237,23 +2250,30 @@ JW.UI.RadioListener = function(el, name, property) {
 
 JW.extend(JW.UI.RadioListener, JW.Class, {
 	/**
+	 * @cfg {JW.Property} target `<String>` Target property. By default, created automatically.
+	 */
+	/**
 	 * @property {jQuery} el Container DOM element.
 	 */
 	/**
 	 * @property {String} name Radios "name" attribute.
 	 */
 	/**
-	 * @property {JW.Property} property `<String>` Target property.
+	 * @property {JW.Property} target `<String>` Target property.
 	 */
-	
+	/**
+	 * @property {JW.Property} property `<String>` Deprecated, use {@link #property-target target} instead.
+	 * @deprecated
+	 */
+
 	destroy: function() {
 		this.el.off("change", this._selector, this._update);
 		this._super();
 	},
-	
+
 	_update: function() {
 		var radio = this.el.find(this._selector + ":checked");
-		this.property.set((radio.length !== 0) ? radio.attr("value") : null);
+		this.target.set((radio.length !== 0) ? radio.attr("value") : null);
 	}
 });
 
@@ -2392,19 +2412,19 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
 
 /*
 	jWidget UI source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -2415,8 +2435,8 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
  * {@link JW.Property property}.
  * Applied on initialization as well.
  *
- *     var value = new JW.Property();
- *     var listener = new JW.UI.ValueListener($("#myinput"), value);
+ *     var listener = new JW.UI.ValueListener($("#myinput"));
+ *     var value = listener.{@link JW.UI.ValueListener#property-target target};
  *     // Assume that the element is a blank field initially
  *     assertEquals("", value.{@link JW.Property#get get}());
  *     // Later on, user entered "foo" in the field
@@ -2428,17 +2448,20 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
  *
  * @constructor
  * @param {jQuery} el DOM element.
- * @param {JW.Property} property `<String>` Target property.
+ * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * here, {@link #cfg-simple simple} option is allowed as third argument, but this is a deprecated feature.
  * @param {Boolean} [simple=false]
  * If true, listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-JW.UI.ValueListener = function(el, property, simple) {
+JW.UI.ValueListener = function(el, config, simple) {
 	this._update = JW.inScope(this._update, this);
 	JW.UI.ValueListener._super.call(this);
+	config = (config instanceof JW.Property) ? {target: config, simple: simple} : (config || {});
 	this.el = jQuery(el);
-	this.property = property;
-	this.simple = simple || !JW.UI.isLifeInput(el);
+	this.target = config.target || this.own(new JW.Property());
+	this.property = this.target;
+	this.simple = config.simple || !JW.UI.isLifeInput(el);
 	this._update();
 	this.el.bind("change", this._update);
 	if (!this.simple) {
@@ -2448,12 +2471,24 @@ JW.UI.ValueListener = function(el, property, simple) {
 
 JW.extend(JW.UI.ValueListener, JW.Class, {
 	/**
+	 * @cfg {JW.Property} target `<String>` Target property. By default, created automatically.
+	 */
+	/**
+	 * @cfg {Boolean} simple
+	 * If true, listens "change" event only. Defaults to false which enables
+	 * reaction to any real-time field modification.
+	 */
+	/**
 	 * @property {jQuery} el DOM element.
 	 */
 	/**
-	 * @property {JW.Property} property `<String>` Target property.
+	 * @property {JW.Property} target `<String>` Target property.
 	 */
-	
+	/**
+	 * @property {JW.Property} property `<String>` Deprecated, use {@link #property-target target} instead.
+	 * @deprecated
+	 */
+
 	destroy: function() {
 		if (!this.simple) {
 			clearInterval(this._timer);
@@ -2461,9 +2496,9 @@ JW.extend(JW.UI.ValueListener, JW.Class, {
 		this.el.unbind("change", this._update);
 		this._super();
 	},
-	
+
 	_update: function() {
-		this.property.set(this.el.val());
+		this.target.set(this.el.val());
 	}
 });
 
