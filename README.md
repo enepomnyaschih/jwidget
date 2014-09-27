@@ -1,11 +1,12 @@
-﻿# Guides and API documentation
+﻿## Guides and API documentation
 
 http://enepomnyaschih.github.io/jwidget/#!/guide/home
+
 http://enepomnyaschih.github.io/jwidget/#!/api
 
-# Changelog
+## Changelog
 
-## 1.1
+### 1.1
 
 Back compatibility refusals:
 
