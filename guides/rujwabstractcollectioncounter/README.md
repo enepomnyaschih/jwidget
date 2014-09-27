@@ -7,7 +7,7 @@
 `<T>`
 
 Счетчик элементов коллекции, удовлетворяющих указанному критерию.
-Создает новый [JW.Property](#!/guide/rujwproperty)<Integer>, содержащий количество
+Создает новый [JW.Property](#!/guide/rujwproperty)&lt;number&gt;, содержащий количество
 элементов исходной коллекции, для которых указанная функция возвращает значение !== false.
 
     var source = new JW.ObservableArray([1, 2, 3]);
@@ -41,13 +41,13 @@
         {@link JW.AbstractCollection.Filterer#cfg-filterItem filterItem}: this._filterItem,
         {@link JW.AbstractCollection.Filterer#cfg-scope scope}: this
     });
-    var count = filterer.{@link JW.AbstractCollection.Filterer#property-target target}.{@link JW.ObservableArray#length length}; // JW.Property<Integer>
+    var count = filterer.{@link JW.AbstractCollection.Filterer#property-target target}.{@link JW.ObservableArray#length length}; // JW.Property<number>
 
     // via counter, works faster
     var counter = source.{@link JW.AbstractCollection#createCounter createCounter}({
         {@link JW.AbstractCollection.Counter#cfg-filterItem filterItem}: this._filterItem,
         {@link JW.AbstractCollection.Counter#cfg-scope scope}: this
     });
-    var count = counter.{@link JW.AbstractCollection.Counter#property-target target}; // JW.Property<Integer>
+    var count = counter.{@link JW.AbstractCollection.Counter#property-target target}; // JW.Property<number>
 
 Счетчик работает корректно только для наблюдаемых (observable) коллекций.

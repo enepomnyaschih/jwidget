@@ -676,7 +676,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * Criteria.
 	 *
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
-	 * @returns {Integer} Number of items.
+	 * @returns {number} Number of items.
 	 */
 	/**
 	 * @method map

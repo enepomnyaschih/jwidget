@@ -1,18 +1,18 @@
 ﻿/*
 	jWidget Lib source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -24,7 +24,7 @@ JW.AbstractArray.Splitter = function(source, config) {
 	this.rows = config.rows || this.own(this.source.createEmpty());
 	this.capacity = config.capacity || 1;
 	this._length = 0;
-	
+
 	this.own(this.source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
@@ -37,23 +37,23 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 	/*
 	Required
 	JW.AbstractArray<T> source;
-	
+
 	Optional
 	JW.AbstractArray<R> rows;
-	Integer capacity;
-	
+	number capacity;
+
 	Fields
-	Integer _length;
+	number _length;
 	*/
-	
+
 	createRow: function() {
 		return this.source.createEmpty();
 	},
-	
+
 	destroyRow: function(row) {
 		row.destroy();
 	},
-	
+
 	_addItem: function(item, index) {
 		if (this._length % this.capacity === 0) {
 			this.rows.tryAdd(this.createRow.call(this.scope || this));
@@ -66,7 +66,7 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 		this.rows.get(firstRow).tryAdd(item, index % this.capacity);
 		++this._length;
 	},
-	
+
 	_removeItem: function(item, index) {
 		var firstRow = Math.floor(index / this.capacity);
 		this.rows.get(firstRow).tryRemove(index % this.capacity);
@@ -79,7 +79,7 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 			this.destroyRow.call(this.scope || this, this.rows.tryRemove(this.rows.getLength() - 1));
 		}
 	},
-	
+
 	_clearItems: function() {
 		var rows = this.rows.tryClear();
 		this._length = 0;

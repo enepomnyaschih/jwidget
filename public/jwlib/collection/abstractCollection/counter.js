@@ -23,7 +23,7 @@
  * `<T>`
  *
  * Counter for collection items which match the specified filter.
- * Builds new JW.Property<Integer>, containing the number of items for which callback
+ * Builds new JW.Property&lt;number&gt;, containing the number of items for which callback
  * function returns !== `false`.
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
@@ -58,14 +58,14 @@
  *         {@link JW.AbstractCollection.Filterer#cfg-filterItem filterItem}: this._filterItem,
  *         {@link JW.AbstractCollection.Filterer#cfg-scope scope}: this
  *     });
- *     var count = filterer.{@link JW.AbstractCollection.Filterer#property-target target}.{@link JW.ObservableArray#length length}; // JW.Property<Integer>
+ *     var count = filterer.{@link JW.AbstractCollection.Filterer#property-target target}.{@link JW.ObservableArray#length length}; // JW.Property<number>
  *
  *     // via counter, works faster
  *     var counter = source.{@link JW.AbstractCollection#createCounter createCounter}({
  *         {@link JW.AbstractCollection.Counter#cfg-filterItem filterItem}: this._filterItem,
  *         {@link JW.AbstractCollection.Counter#cfg-scope scope}: this
  *     });
- *     var count = counter.{@link JW.AbstractCollection.Counter#property-target target}; // JW.Property<Integer>
+ *     var count = counter.{@link JW.AbstractCollection.Counter#property-target target}; // JW.Property<number>
  *
  * Counter works correctly for observable collections only.
  *
@@ -88,7 +88,7 @@ JW.AbstractCollection.Counter = function(source, config) {
 
 JW.extend(JW.AbstractCollection.Counter, JW.Class, {
 	/**
-	 * @cfg {JW.Property} target `<Integer>` Target property.
+	 * @cfg {JW.Property} target `<number>` Target property.
 	 */
 	/**
 	 * @cfg {Function} filterItem (required)
@@ -105,7 +105,7 @@ JW.extend(JW.AbstractCollection.Counter, JW.Class, {
 	 * @property {JW.AbstractCollection} source `<T>` Source collection.
 	 */
 	/**
-	 * @property {JW.Property} target `<Integer>` Target property.
+	 * @property {JW.Property} target `<number>` Target property.
 	 */
 
 	// override
