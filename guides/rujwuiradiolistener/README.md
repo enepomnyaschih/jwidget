@@ -8,12 +8,12 @@
 [свойства](#!/guide/rujwproperty).
 Также, применяется при инициализации.
 
-    var selected = new JW.Property();
-    var listener = new JW.UI.RadioListener($("#myform"), "myradio", value);
+    var listener = new JW.UI.RadioListener($("#myform"), "myradio");
+    var selected = listener.{@link JW.UI.RadioListener#property-target target};
     // Предположим, что изначально выбрана радиокнопка со значением "apple" атрибута "value"
-    assertEquals("apple", value.{@link JW.Property#get get}());
+    assertEquals("apple", selected.{@link JW.Property#get get}());
     // Позже, пользователь выбрал радиокнопку "banana"
-    assertEquals("banana", value.{@link JW.Property#get get}());
+    assertEquals("banana", selected.{@link JW.Property#get get}());
 
 Обратите внимание, что объект привязывает обработчик события к элементу-контейнеру и использует механизм бабблинга
 (всплытия) для определения изменения выбора. Поэтому не следует прерывать бабблинг в дочерних элементах контейнера.

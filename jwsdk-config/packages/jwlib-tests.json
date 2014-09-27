@@ -92,6 +92,10 @@
 
 		"jwlib/tests/ui.js",
 		"jwlib/tests/ui/component.js",
+		"jwlib/tests/ui/property.js",
+		"jwlib/tests/ui/property/checkedListener.js",
+		"jwlib/tests/ui/property/radioListener.js",
+		"jwlib/tests/ui/property/valueListener.js",
 
 		"jwlib/tests/util.js",
 		"jwlib/tests/util/factory.js",

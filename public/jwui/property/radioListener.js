@@ -1,18 +1,18 @@
 /*
 	jWidget UI source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -23,12 +23,12 @@
  * {@link JW.Property property}.
  * Applied on initialization as well.
  *
- *     var selected = new JW.Property();
- *     var listener = new JW.UI.RadioListener($("#myform"), "myradio", value);
+ *     var listener = new JW.UI.RadioListener($("#myform"), "myradio");
+ *     var selected = listener.{@link JW.UI.RadioListener#property-target target};
  *     // Assume that the radio with value "apple" is selected initially
- *     assertEquals("apple", value.{@link JW.Property#get get}());
+ *     assertEquals("apple", selected.{@link JW.Property#get get}());
  *     // Later on, user selected "banana" radio
- *     assertEquals("banana", value.{@link JW.Property#get get}());
+ *     assertEquals("banana", selected.{@link JW.Property#get get}());
  *
  * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
  * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
@@ -41,14 +41,17 @@
  * @constructor
  * @param {jQuery} el Container DOM element.
  * @param {String} name Radios "name" attribute.
- * @param {JW.Property} property `<String>` Target property.
+ * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * here, but this is a deprecated feature.
  */
-JW.UI.RadioListener = function(el, name, property) {
+JW.UI.RadioListener = function(el, name, config) {
 	this._update = JW.inScope(this._update, this);
 	JW.UI.RadioListener._super.call(this);
+	config = (config instanceof JW.Property) ? {target: config} : (config || {});
 	this.el = jQuery(el);
 	this.name = name;
-	this.property = property;
+	this.target = config.target || this.own(new JW.Property());
+	this.property = this.target;
 	this._selector = "input[type=radio][name='" + name + "']";
 	this._update();
 	this.el.on("change", this._selector, this._update);
@@ -56,22 +59,29 @@ JW.UI.RadioListener = function(el, name, property) {
 
 JW.extend(JW.UI.RadioListener, JW.Class, {
 	/**
+	 * @cfg {JW.Property} target `<String>` Target property. By default, created automatically.
+	 */
+	/**
 	 * @property {jQuery} el Container DOM element.
 	 */
 	/**
 	 * @property {String} name Radios "name" attribute.
 	 */
 	/**
-	 * @property {JW.Property} property `<String>` Target property.
+	 * @property {JW.Property} target `<String>` Target property.
 	 */
-	
+	/**
+	 * @property {JW.Property} property `<String>` Deprecated, use {@link #property-target target} instead.
+	 * @deprecated
+	 */
+
 	destroy: function() {
 		this.el.off("change", this._selector, this._update);
 		this._super();
 	},
-	
+
 	_update: function() {
 		var radio = this.el.find(this._selector + ":checked");
-		this.property.set((radio.length !== 0) ? radio.attr("value") : null);
+		this.target.set((radio.length !== 0) ? radio.attr("value") : null);
 	}
 });

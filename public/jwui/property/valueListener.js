@@ -1,18 +1,18 @@
 /*
 	jWidget UI source file.
-	
+
 	Copyright (C) 2014 Egor Nepomnyaschih
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -23,8 +23,8 @@
  * {@link JW.Property property}.
  * Applied on initialization as well.
  *
- *     var value = new JW.Property();
- *     var listener = new JW.UI.ValueListener($("#myinput"), value);
+ *     var listener = new JW.UI.ValueListener($("#myinput"));
+ *     var value = listener.{@link JW.UI.ValueListener#property-target target};
  *     // Assume that the element is a blank field initially
  *     assertEquals("", value.{@link JW.Property#get get}());
  *     // Later on, user entered "foo" in the field
@@ -36,17 +36,20 @@
  *
  * @constructor
  * @param {jQuery} el DOM element.
- * @param {JW.Property} property `<String>` Target property.
+ * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * here, {@link #cfg-simple simple} option is allowed as third argument, but this is a deprecated feature.
  * @param {Boolean} [simple=false]
  * If true, listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-JW.UI.ValueListener = function(el, property, simple) {
+JW.UI.ValueListener = function(el, config, simple) {
 	this._update = JW.inScope(this._update, this);
 	JW.UI.ValueListener._super.call(this);
+	config = (config instanceof JW.Property) ? {target: config, simple: simple} : (config || {});
 	this.el = jQuery(el);
-	this.property = property;
-	this.simple = simple || !JW.UI.isLifeInput(el);
+	this.target = config.target || this.own(new JW.Property());
+	this.property = this.target;
+	this.simple = config.simple || !JW.UI.isLifeInput(el);
 	this._update();
 	this.el.bind("change", this._update);
 	if (!this.simple) {
@@ -56,12 +59,24 @@ JW.UI.ValueListener = function(el, property, simple) {
 
 JW.extend(JW.UI.ValueListener, JW.Class, {
 	/**
+	 * @cfg {JW.Property} target `<String>` Target property. By default, created automatically.
+	 */
+	/**
+	 * @cfg {Boolean} simple
+	 * If true, listens "change" event only. Defaults to false which enables
+	 * reaction to any real-time field modification.
+	 */
+	/**
 	 * @property {jQuery} el DOM element.
 	 */
 	/**
-	 * @property {JW.Property} property `<String>` Target property.
+	 * @property {JW.Property} target `<String>` Target property.
 	 */
-	
+	/**
+	 * @property {JW.Property} property `<String>` Deprecated, use {@link #property-target target} instead.
+	 * @deprecated
+	 */
+
 	destroy: function() {
 		if (!this.simple) {
 			clearInterval(this._timer);
@@ -69,8 +84,8 @@ JW.extend(JW.UI.ValueListener, JW.Class, {
 		this.el.unbind("change", this._update);
 		this._super();
 	},
-	
+
 	_update: function() {
-		this.property.set(this.el.val());
+		this.target.set(this.el.val());
 	}
 });

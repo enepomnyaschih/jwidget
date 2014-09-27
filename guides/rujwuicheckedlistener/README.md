@@ -7,8 +7,8 @@
 Наблюдает за изменением выбора DOM чекбокса и обновляет значение указанного булевого [свойства](#!/guide/rujwproperty).
 Также, применяется при инициализации.
 
-    var checked = new JW.Property();
-    var listener = new JW.UI.CheckedListener($("#mycheckbox"), value);
+    var listener = new JW.UI.CheckedListener($("#mycheckbox"));
+    var checked = listener.{@link JW.UI.CheckedListener#property-target target};
     // Предположим, что чекбокс изначально не выбран
     assertEquals(false, value.{@link JW.Property#get get}());
     // Позже, пользователь выбрал чекбокс
