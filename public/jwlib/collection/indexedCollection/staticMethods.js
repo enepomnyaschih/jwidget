@@ -120,7 +120,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 			pairs.push([key, item]);
 		}, scope);
 		pairs.sort(function(x, y) {
-			return order * compare(x[1], y[1], x[0], y[0]);
+			return order * compare.call(scope, x[1], y[1], x[0], y[0]);
 		});
 		return JW.Array.map(pairs, function(pair) {
 			return pair[0];
