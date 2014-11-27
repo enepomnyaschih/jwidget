@@ -23,6 +23,20 @@ JW.UI.Component.ChildInserter = function() {
 
 JW.extend(JW.UI.Component.ChildInserter, JW.AbstractMap, {
 	// override
+	trySet: function(item, key) {
+		var result = this._super(item, key);
+		if (result === undefined) {
+			return;
+		}
+		var removedItem = result.get();
+		if (removedItem) {
+			removedItem.detach();
+		}
+		item.attach(key);
+		return result;
+	},
+
+	// override
 	trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = this._super(removedKeys, updatedItems);
 		if (spliceResult === undefined) {

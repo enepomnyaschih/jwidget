@@ -81,6 +81,26 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	},
 
 	// override
+	trySet: function(item, key) {
+		var result = this._super(item, key);
+		if (result === undefined) {
+			return;
+		}
+		var removedItems = {};
+		var removedItem = result.get();
+		if (removedItem !== undefined) {
+			removedItems[key] = removedItem;
+		}
+		var addedItems = {};
+		addedItems[key] = item;
+		var spliceResult = new JW.AbstractMap.SpliceResult(removedItems, addedItems);
+		this.length.set(this.getLength());
+		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		return result;
+	},
+
+	// override
 	trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = this._super(removedKeys, updatedItems);
 		if (spliceResult === undefined) {

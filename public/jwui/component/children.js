@@ -27,6 +27,17 @@ JW.extend(JW.UI.Component.Children, JW.AbstractMap, {
 	unrender: function() {
 		this.target.destroy();
 	},
+
+	// override
+	trySet: function(item, key) {
+		var result = this._super(item, key);
+		if (result === undefined) {
+			return;
+		}
+		var child = new JW.UI.Component.Child(this.component, item);
+		this.target.trySet(child, key);
+		return result;
+	},
 	
 	// override
 	trySplice: function(removedKeys, updatedItems) {
