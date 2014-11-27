@@ -117,7 +117,8 @@
  */
 JW.AbstractMap = function(json, adapter) {
 	JW.AbstractMap._super.call(this);
-	this.json = adapter ? json : json ? JW.apply({}, json) : {};
+	this._adapter = !!adapter;
+	this.json = this._adapter ? json : json ? JW.apply({}, json) : {};
 	this._length = JW.Map.getLength(this.json);
 	this.getKey = null;
 };
@@ -688,9 +689,18 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {Object} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
+		if (this._length === 0) {
+			return;
+		}
+		var items;
 		this._length = 0;
-		var items = JW.Map.tryClear(this.json);
-		if ((items !== undefined) && this._ownsItems) {
+		if (this._adapter) {
+			items = JW.Map.tryClear(this.json);
+		} else {
+			items = this.json;
+			this.json = {};
+		}
+		if (this._ownsItems) {
 			JW.Array.backEvery(JW.Map.toArray(items), JW.destroy);
 		}
 		return items;
