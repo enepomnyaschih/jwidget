@@ -885,4 +885,11 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @param {Object} map2 `<T>` Another map.
 	 * @returns {boolean} Maps are equal.
 	 */
+	/**
+	 * @method getInverted
+	 * Returns an inverted map. Keys are converted to values, and values are
+	 * converted to keys. `this` must be JW.AbstractMap<string>.
+	 * @static
+	 * @returns {JW.AbstractMap} `<string>` The inverted map.
+	 */
 });

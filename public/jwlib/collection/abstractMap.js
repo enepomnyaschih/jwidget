@@ -454,6 +454,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.Map} `<T>` Collection index.
 	 */
+	/**
+	 * @method getInverted
+	 * Returns an inverted map. Keys are converted to values, and values are
+	 * converted to keys. `this` must be JW.AbstractMap<string>.
+	 * @returns {JW.AbstractMap} `<string>` The inverted map.
+	 */
 
 	/**
 	 * Filters collection by criteria.
@@ -798,6 +804,10 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		if (keyMap !== undefined) {
 			this.tryReindex(keyMap);
 		}
+	},
+
+	getInverted: function() {
+		return JW.Map.getInverted(this.json);
 	},
 
 	/**

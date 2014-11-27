@@ -247,25 +247,36 @@ JW.apply(JW.Map, {
 		// JW.assertMap(target);
 		// JW.assertMap(keyMap, JW.assertString);
 		// JW.assertMap(keyMap, function(key) { return target.hasOwnProperty(key); }, this);
-		var oldItems = JW.Map.tryClear(target);
-		if (oldItems === undefined) {
-			return;
-		}
-		var resultMap = {};
-		for (var oldKey in oldItems) {
+		var sanitizedKeyMap = {};
+		for (var oldKey in keyMap) {
 			var newKey = keyMap[oldKey];
-			if ((newKey === undefined) || (newKey === oldKey)) {
-				// JW.assertUndefined(target[oldKey]);
-				target[oldKey] = oldItems[oldKey];
-			} else {
-				// JW.assertUndefined(target[newKey]);
-				target[newKey] = oldItems[oldKey];
-				resultMap[oldKey] = newKey;
+			if ((newKey === undefined) || (newKey === oldKey) || (target[oldKey] === undefined)) {
+				continue;
+			}
+			sanitizedKeyMap[oldKey] = newKey;
+		}
+
+		var backKeyMap = JW.Map.getInverted(sanitizedKeyMap);
+		var removedKeys = [];
+		var updatedItems = {};
+		for (var oldKey in sanitizedKeyMap) {
+			var newKey = sanitizedKeyMap[oldKey];
+			// JW.assertUndefined(updatedItems[newKey]);
+			sanitizedKeyMap[oldKey] = newKey;
+			updatedItems[newKey] = target[oldKey];
+			if (backKeyMap[oldKey] === undefined) {
+				removedKeys.push(oldKey);
 			}
 		}
-		if (!JW.Map.isEmpty(resultMap)) {
-			return resultMap;
+
+		if (JW.Map.isEmpty(sanitizedKeyMap)) {
+			return;
 		}
+		for (var i = 0, l = removedKeys.length; i < l; ++i) {
+			delete target[removedKeys[i]];
+		}
+		JW.apply(target, updatedItems);
+		return sanitizedKeyMap;
 	},
 
 	detectSplice: function(oldItems, newItems) {
@@ -351,5 +362,15 @@ JW.apply(JW.Map, {
 			}
 		}
 		return removedKeys;
+	},
+
+	getInverted: function(map) {
+		// JW.assertMap(map, JW.assertString);
+		var result = {};
+		for (var key in map) {
+			// JW.assertUndefined(result[map[key]]);
+			result[map[key]] = key;
+		}
+		return result;
 	}
 });

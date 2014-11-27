@@ -222,11 +222,11 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 	testSetKeyPerformance: function() {
 		this.assertPerformance(20, function() {
 			var values = {};
-			for (var i = 0; i < 1000; ++i) {
+			for (var i = 0; i < 10000; ++i) {
 				values["a" + i] = i;
 			}
 			var map = new JW.Map(values, true);
-			for (var i = 0; i < 1000; ++i) {
+			for (var i = 0; i < 10000; ++i) {
 				map.setKey("a" + i, "b" + i);
 			}
 		});
@@ -247,13 +247,13 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 	},
 
 	testReindexPerformance: function() {
-		this.assertPerformance(20, function() {
+		this.assertPerformance(100, function() {
 			var values = {};
-			for (var i = 0; i < 1000; ++i) {
+			for (var i = 0; i < 100; ++i) {
 				values["a" + i] = i;
 			}
 			var map = new JW.Map(values, true);
-			for (var i = 0; i < 1000; ++i) {
+			for (var i = 0; i < 100; ++i) {
 				map.reindex(JW.Map.single("a" + i, "b" + i));
 			}
 		});
