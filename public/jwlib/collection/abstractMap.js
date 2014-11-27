@@ -617,10 +617,15 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {T} Old collection item. If not modified - `undefined`.
 	 */
 	tryRemove: function(key) {
-		var spliceResult = this.trySplice([key], {});
-		if (spliceResult !== undefined) {
-			return spliceResult.removedItems[key];
+		var item = JW.Map.tryRemove(this.json, key);
+		if (item === undefined) {
+			return;
 		}
+		--this._length;
+		if (this._ownsItems) {
+			item.destroy();
+		}
+		return item;
 	},
 
 	/**

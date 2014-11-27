@@ -101,6 +101,19 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	},
 
 	// override
+	tryRemove: function(key) {
+		var item = this._super(key);
+		if (item === undefined) {
+			return;
+		}
+		var spliceResult = new JW.AbstractMap.SpliceResult(JW.Map.single(key, item), {});
+		this.length.set(this.getLength());
+		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		return item;
+	},
+
+	// override
 	trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = this._super(removedKeys, updatedItems);
 		if (spliceResult === undefined) {

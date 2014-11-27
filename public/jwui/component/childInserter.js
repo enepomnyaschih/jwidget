@@ -37,6 +37,16 @@ JW.extend(JW.UI.Component.ChildInserter, JW.AbstractMap, {
 	},
 
 	// override
+	tryRemove: function(key) {
+		var item = this._super(key);
+		if (item === undefined) {
+			return;
+		}
+		item.detach();
+		return item;
+	},
+
+	// override
 	trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = this._super(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
