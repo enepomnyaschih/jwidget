@@ -549,18 +549,17 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.Proxy} `<T>` Proxy of the replaced item. If not modified - `undefined`.
 	 */
 	trySet: function(item, key) {
-		var oldItem = this.json[key];
-		if (oldItem === item) {
+		var result = JW.Map.trySet(this.json, item, key);
+		if (result === undefined) {
 			return;
 		}
-		if (!this.json.hasOwnProperty(key)) {
+		var oldItem = result.get();
+		if (oldItem === undefined) {
 			++this._length;
-		}
-		this.json[key] = item;
-		if (this._ownsItems && (oldItem !== undefined)) {
+		} else if (this._ownsItems) {
 			oldItem.destroy();
 		}
-		return new JW.Proxy(oldItem);
+		return result;
 	},
 
 	/**
