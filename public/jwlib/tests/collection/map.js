@@ -164,6 +164,96 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 			"destroy a"
 		);
 		map.destroy();
+	},
+
+	testSetPerformance: function() {
+		this.assertPerformance(100, function() {
+			var map = new JW.Map();
+			for (var i = 0; i < 10000; ++i) {
+				map.set(i, "a" + i);
+			}
+		});
+	},
+
+	testSetAllPerformance: function() {
+		this.assertPerformance(20, function() {
+			var map = new JW.Map();
+			for (var i = 0; i < 1000; ++i) {
+				var values = {};
+				for (var j = 0; j < 10; ++j) {
+					var k = 10 * i + j;
+					values["a" + k] = k;
+				}
+				map.setAll(values);
+			}
+		});
+	},
+
+	testRemovePerformance: function() {
+		this.assertPerformance(100, function() {
+			var values = {};
+			for (var i = 0; i < 10000; ++i) {
+				values["a" + i] = i;
+			}
+			var map = new JW.Map(values, true);
+			for (var i = 0; i < 10000; ++i) {
+				map.remove("a" + i);
+			}
+		});
+	},
+
+	testRemoveAllPerformance: function() {
+		this.assertPerformance(20, function() {
+			var values = {};
+			for (var i = 0; i < 10000; ++i) {
+				values["a" + i] = i;
+			}
+			var map = new JW.Map(values, true);
+			for (var i = 0; i < 1000; ++i) {
+				var keys = [];
+				for (var j = 0; j < 10; ++j) {
+					keys.push("a" + (10 * i + j));
+				}
+				map.removeAll(keys);
+			}
+		});
+	},
+
+	testSetKeyPerformance: function() {
+		this.assertPerformance(20, function() {
+			var values = {};
+			for (var i = 0; i < 1000; ++i) {
+				values["a" + i] = i;
+			}
+			var map = new JW.Map(values, true);
+			for (var i = 0; i < 1000; ++i) {
+				map.setKey("a" + i, "b" + i);
+			}
+		});
+	},
+
+	testClearPerformance: function() {
+		this.assertPerformance(20, function() {
+			var values = {};
+			for (var i = 0; i < 100; ++i) {
+				values["a" + i] = i;
+			}
+			var map = new JW.Map();
+			for (var i = 0; i < 100; ++i) {
+				map.setAll(values);
+				map.clear();
+			}
+		});
+	},
+
+	assertPerformance: function(limit, callback) {
+		var time = new Date().getTime();
+		callback.call(this);
+		var duration = new Date().getTime() - time;
+		if (duration > limit) {
+			this.fail("Performance test failed. Time limit is " + limit +
+				"ms, test ran for " + duration + "ms");
+		}
 	}
 });
 
