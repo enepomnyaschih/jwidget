@@ -246,6 +246,19 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 		});
 	},
 
+	testReindexPerformance: function() {
+		this.assertPerformance(20, function() {
+			var values = {};
+			for (var i = 0; i < 1000; ++i) {
+				values["a" + i] = i;
+			}
+			var map = new JW.Map(values, true);
+			for (var i = 0; i < 1000; ++i) {
+				map.reindex(JW.Map.single("a" + i, "b" + i));
+			}
+		});
+	},
+
 	assertPerformance: function(limit, callback) {
 		var time = new Date().getTime();
 		callback.call(this);
