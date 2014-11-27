@@ -605,10 +605,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {T} Item. If not modified - `undefined`.
 	 */
 	trySetKey: function(oldKey, newKey) {
-		var keyMap = this.tryReindex(JW.Map.single(oldKey, newKey));
-		if (keyMap !== undefined) {
-			return this.json[newKey];
-		}
+		return JW.Map.trySetKey(this.json, oldKey, newKey);
 	},
 
 	/**

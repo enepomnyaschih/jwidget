@@ -220,7 +220,7 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 	},
 
 	testSetKeyPerformance: function() {
-		this.assertPerformance(20, function() {
+		this.assertPerformance(100, function() {
 			var values = {};
 			for (var i = 0; i < 10000; ++i) {
 				values["a" + i] = i;

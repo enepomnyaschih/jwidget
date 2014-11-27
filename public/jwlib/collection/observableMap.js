@@ -101,6 +101,17 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	},
 
 	// override
+	trySetKey: function(oldKey, newKey) {
+		var item = this._super(oldKey, newKey);
+		if (item === undefined) {
+			return;
+		}
+		this.reindexEvent.trigger(new JW.ObservableMap.ReindexEventParams(this, JW.Map.single(oldKey, newKey)));
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		return item;
+	},
+
+	// override
 	tryRemove: function(key) {
 		var item = this._super(key);
 		if (item === undefined) {

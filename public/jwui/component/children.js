@@ -40,6 +40,16 @@ JW.extend(JW.UI.Component.Children, JW.AbstractMap, {
 	},
 
 	// override
+	trySetKey: function(oldKey, newKey) {
+		var item = this._super(oldKey, newKey);
+		if (item === undefined) {
+			return;
+		}
+		this.target.trySetKey(oldKey, newKey);
+		return item;
+	},
+
+	// override
 	tryRemove: function(key) {
 		var item = this._super(key);
 		if (item === undefined) {
