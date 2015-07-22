@@ -721,7 +721,15 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 */
 	/**
 	 * @method setAll
-	 * `<T>` Adds or replaces a bunch of items.
+	 * `<T>` Adds or replaces a bunch of items. Since jWidget 1.2, doesn't return anything for sake of performance.
+	 * For old behaviour, use method {@link #static-method-setAllVerbose}.
+	 * @static
+	 * @param {Object} map `<T>` Map.
+	 * @param {Object} items Items.
+	 */
+	/**
+	 * @method setAllVerbose
+	 * `<T>` Adds or replaces a bunch of items. Returns verbose result set.
 	 * @static
 	 * @param {Object} map `<T>` Map.
 	 * @param {Object} items Items.

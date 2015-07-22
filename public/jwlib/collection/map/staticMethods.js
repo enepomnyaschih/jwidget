@@ -110,6 +110,14 @@ JW.apply(JW.Map, {
 	},
 
 	setAll: function(target, items) {
+		// JW.assertMap(target);
+		// JW.assertMap(items, JW.assertDefined);
+		for (var key in items) {
+			target[key] = items[key];
+		}
+	},
+
+	setAllVerbose: function(target, items) {
 		var spliceResult = JW.Map.trySetAll(target, items);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},

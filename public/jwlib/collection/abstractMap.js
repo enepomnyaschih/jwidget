@@ -570,11 +570,22 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Adds or replaces a bunch of items.
+	 * Adds or replaces a bunch of items. Since jWidget 1.2, doesn't return anything for sake of performance.
+	 * For old behaviour, use method {@link #setAllVerbose}.
+	 * @param {Object} items Items.
+	 */
+	setAll: function(items) {
+		for (var key in items) {
+			this.trySet(items[key], key);
+		}
+	},
+
+	/**
+	 * Adds or replaces a bunch of items. Returns verbose result set.
 	 * @param {Object} items Items.
 	 * @returns {JW.AbstractMap.SpliceResult} `<T>` Result of #splice method.
 	 */
-	setAll: function(items) {
+	setAllVerbose: function(items) {
 		var spliceResult = this.trySetAll(items);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},

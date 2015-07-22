@@ -331,14 +331,34 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 
 	testSetAll: function() {
 		var map = this.createMap({a: 2, b: 4, c: 5});
-		var empty = new JW.AbstractMap.SpliceResult({}, {});
 
 		this.setObservableOutput();
-		JW.Tests.Collection.assertMapSpliceResult(this, empty, this.invoke(map, "setAll", [{}]));
+		this.invoke(map, "setAll", [{}]);
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 5}]));
 
 		this.setObservableOutput();
-		JW.Tests.Collection.assertMapSpliceResult(this, empty, this.invoke(map, "setAll", [{a: 2, b: 4}]));
+		this.invoke(map, "setAll", [{a: 2, b: 4}]);
+		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 5}]));
+
+		this.setObservableOutput(
+			"Changed size from 3 to 4",
+			"Spliced -{b:4} +{b:3,d:6}",
+			"Changed"
+		);
+		this.invoke(map, "setAll", [{b: 3, c: 5, d: 6}]);
+		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 3, c: 5, d: 6}]));
+	},
+
+	testSetAllVerbose: function() {
+		var map = this.createMap({a: 2, b: 4, c: 5});
+		var empty = new JW.AbstractMap.SpliceResult({}, {});
+
+		this.setObservableOutput();
+		JW.Tests.Collection.assertMapSpliceResult(this, empty, this.invoke(map, "setAllVerbose", [{}]));
+		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 5}]));
+
+		this.setObservableOutput();
+		JW.Tests.Collection.assertMapSpliceResult(this, empty, this.invoke(map, "setAllVerbose", [{a: 2, b: 4}]));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 5}]));
 
 		this.setObservableOutput(
@@ -347,7 +367,7 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 			"Changed"
 		);
 		var expected = new JW.AbstractMap.SpliceResult({b: 4}, {b: 3, d: 6});
-		JW.Tests.Collection.assertMapSpliceResult(this, expected, this.invoke(map, "setAll", [{b: 3, c: 5, d: 6}]));
+		JW.Tests.Collection.assertMapSpliceResult(this, expected, this.invoke(map, "setAllVerbose", [{b: 3, c: 5, d: 6}]));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 3, c: 5, d: 6}]));
 	},
 
