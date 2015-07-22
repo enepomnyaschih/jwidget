@@ -143,8 +143,8 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 		);
 		map.remove("A");
 		this.setExpectedOutput(
-			"destroy m",
-			"destroy l"
+			"destroy l",
+			"destroy m"
 		);
 		map.removeAll(["B", "C"]);
 		//this.setExpectedOutput();
@@ -207,18 +207,22 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 	},
 
 	testRemoveAllPerformance: function() {
-		this.assertPerformance(20, function() {
-			var values = {};
-			for (var i = 0; i < 10000; ++i) {
-				values["a" + i] = i;
+		var values = {};
+		for (var i = 0; i < 30000; ++i) {
+			values["a" + i] = i;
+		}
+		var cases = [];
+		for (var i = 0; i < 3000; ++i) {
+			var keys = [];
+			for (var j = 0; j < 10; ++j) {
+				keys.push("a" + (10 * i + j));
 			}
-			var map = new JW.Map(values, true);
-			for (var i = 0; i < 1000; ++i) {
-				var keys = [];
-				for (var j = 0; j < 10; ++j) {
-					keys.push("a" + (10 * i + j));
-				}
-				map.removeAll(keys);
+			cases.push(keys);
+		}
+		var map = new JW.Map(values, true);
+		this.assertPerformance(20, function() {
+			for (var i = 0; i < 3000; ++i) {
+				map.removeAll(cases[i]);
 			}
 		});
 	},

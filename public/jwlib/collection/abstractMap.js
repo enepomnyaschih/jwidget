@@ -570,7 +570,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Adds or replaces a bunch of items. Since jWidget 1.2, doesn't return anything for sake of performance.
+	 * Adds or replaces a bunch of items. As of jWidget 1.2, doesn't return anything for sake of performance.
 	 * For old behaviour, use method {@link #setAllVerbose}.
 	 * @param {Object} items Items.
 	 */
@@ -644,21 +644,32 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Removes a bunch of items from map.
+	 * Removes a bunch of items from map. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * For old behaviour, use method {@link #removeAllVerbose}.
+	 * @param {Array} keys `<string>` Item keys.
+	 */
+	removeAll: function(keys) {
+		for (var i = 0, l = keys.length; i < l; ++i) {
+			this.tryRemove(keys[i]);
+		}
+	},
+
+	/**
+	 * Removes a bunch of items from map. Returns verbose result set.
 	 * @param {Array} keys `<string>` Item keys.
 	 * @returns {Object} `<T>` The removed items.
 	 */
-	removeAll: function(keys) {
+	removeAllVerbose: function(keys) {
 		var items = this.tryRemoveAll(keys);
 		return (items !== undefined) ? items : {};
 	},
 
 	/**
-	 * Removes a bunch of items from map.
+	 * Removes a bunch of items from map. Returns verbose result set.
 	 * @param {Array} keys `<string>` Item keys.
 	 * @returns {JW.Map} `<T>` The removed items.
 	 */
-	$removeAll: JW.AbstractCollection._create$Map("removeAll"),
+	$removeAllVerbose: JW.AbstractCollection._create$Map("removeAllVerbose"),
 
 	/**
 	 * Removes a bunch of items from map.

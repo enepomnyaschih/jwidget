@@ -63,6 +63,11 @@ JW.extend(JW.UI.Component.Children, JW.AbstractMap, {
 		this.target.tryRemove(key);
 		return item;
 	},
+
+	// override
+	removeAll: function(keys) {
+		this.tryRemoveAll(keys);
+	},
 	
 	// override
 	trySplice: function(removedKeys, updatedItems) {

@@ -429,11 +429,11 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 		var map = this.createMap({a: 2, b: 4, c: 3});
 
 		this.setObservableOutput();
-		this.assertTrue(JW.Map.equal(this.invoke(map, "removeAll", [[]]), {}));
+		this.invoke(map, "removeAll", [[]]);
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3}]));
 
 		this.setObservableOutput();
-		this.assertTrue(JW.Map.equal(this.invoke(map, "removeAll", [["d", "e"]]), {}));
+		this.invoke(map, "removeAll", [["d", "e"]]);
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3}]));
 
 		this.setObservableOutput(
@@ -441,19 +441,19 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 			"Spliced -{b:4,c:3} +{}",
 			"Changed"
 		);
-		this.assertTrue(JW.Map.equal(this.invoke(map, "removeAll", [["b", "c", "d"]]), {b: 4, c: 3}));
+		this.invoke(map, "removeAll", [["b", "c", "d"]]);
 		this.assertTrue(this.invoke(map, "equal", [{a: 2}]));
 	},
 
-	test$RemoveAll: function() {
+	testRemoveAllVerbose: function() {
 		var map = this.createMap({a: 2, b: 4, c: 3});
 
 		this.setObservableOutput();
-		this.assertTrue(this.invoke(map, "$removeAll", [[]]).equal({}));
+		this.assertTrue(JW.Map.equal(this.invoke(map, "removeAllVerbose", [[]]), {}));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3}]));
 
 		this.setObservableOutput();
-		this.assertTrue(this.invoke(map, "$removeAll", [["d", "e"]]).equal({}));
+		this.assertTrue(JW.Map.equal(this.invoke(map, "removeAllVerbose", [["d", "e"]]), {}));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3}]));
 
 		this.setObservableOutput(
@@ -461,7 +461,27 @@ JW.Tests.Collection.AbstractMapBase = JW.Unit.TestCase.extend({
 			"Spliced -{b:4,c:3} +{}",
 			"Changed"
 		);
-		this.assertTrue(this.invoke(map, "$removeAll", [["b", "c", "d"]]).equal({b: 4, c: 3}));
+		this.assertTrue(JW.Map.equal(this.invoke(map, "removeAllVerbose", [["b", "c", "d"]]), {b: 4, c: 3}));
+		this.assertTrue(this.invoke(map, "equal", [{a: 2}]));
+	},
+
+	test$RemoveAllVerbose: function() {
+		var map = this.createMap({a: 2, b: 4, c: 3});
+
+		this.setObservableOutput();
+		this.assertTrue(this.invoke(map, "$removeAllVerbose", [[]]).equal({}));
+		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3}]));
+
+		this.setObservableOutput();
+		this.assertTrue(this.invoke(map, "$removeAllVerbose", [["d", "e"]]).equal({}));
+		this.assertTrue(this.invoke(map, "equal", [{a: 2, b: 4, c: 3}]));
+
+		this.setObservableOutput(
+			"Changed size from 3 to 1",
+			"Spliced -{b:4,c:3} +{}",
+			"Changed"
+		);
+		this.assertTrue(this.invoke(map, "$removeAllVerbose", [["b", "c", "d"]]).equal({b: 4, c: 3}));
 		this.assertTrue(this.invoke(map, "equal", [{a: 2}]));
 	},
 

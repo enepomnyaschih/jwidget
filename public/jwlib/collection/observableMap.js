@@ -130,6 +130,11 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	},
 
 	// override
+	removeAll: function(keys) {
+		this.tryRemoveAll(keys);
+	},
+
+	// override
 	trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = this._super(removedKeys, updatedItems);
 		if (spliceResult === undefined) {

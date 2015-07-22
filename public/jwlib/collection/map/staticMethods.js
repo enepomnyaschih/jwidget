@@ -175,11 +175,19 @@ JW.apply(JW.Map, {
 	},
 
 	removeAll: function(target, keys) {
+		// JW.assertMap(target);
+		for (var i = 0, l = keys.length; i < l; ++i) {
+			var key = keys[i];
+			delete target[key];
+		}
+	},
+
+	removeAllVerbose: function(target, keys) {
 		var items = JW.Map.tryRemoveAll(target, keys);
 		return (items !== undefined) ? items : {};
 	},
 
-	$removeAll: JW.AbstractCollection._createStatic$Map(JW.Map, "removeAll"),
+	$removeAllVerbose: JW.AbstractCollection._createStatic$Map(JW.Map, "removeAllVerbose"),
 
 	tryRemoveAll: function(target, keys) {
 		// JW.assertMap(target);
