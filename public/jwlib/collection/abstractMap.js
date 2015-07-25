@@ -73,9 +73,9 @@
  * Collection modification:
  *
  * - {@link #set}, #trySet - Adds or replaces an item by key.
- * - **{@link #setAll}, #trySetAll - Adds or replaces a bunch of items.**
+ * - **{@link #setAll}, #setAllVerbose, #trySetAll - Adds or replaces a bunch of items.**
  * - {@link #remove}, #tryRemove - Removes an item by key.
- * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Removes a bunch of items.**
+ * - **{@link #removeAll}, #removeAllVerbose, #$removeAllVerbose, #tryRemoveAll - Removes a bunch of items.**
  * - {@link #removeItem} - Removes first occurency of an item in collection.
  * - {@link #removeItems} - Removes all occurencies of items in collection.
  * - **{@link #setKey}, #trySetKey - Changes item key.**
@@ -458,7 +458,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	/**
 	 * @method getInverted
 	 * Returns an inverted map. Keys are converted to values, and values are
-	 * converted to keys. `this` must be JW.AbstractMap<string>.
+	 * converted to keys. `this` must be `JW.AbstractMap<string>`.
 	 * @returns {JW.AbstractMap} `<string>` The inverted map.
 	 */
 

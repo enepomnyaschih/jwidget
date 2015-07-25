@@ -61,9 +61,9 @@
 Изменение коллекции:
 
 - {@link JW.AbstractMap#set set}, {@link JW.AbstractMap#trySet trySet} - Добавляет/заменяет элемент по ключу.
-- **{@link JW.AbstractMap#setAll setAll}, {@link JW.AbstractMap#trySetAll trySetAll} - Добавляет/заменяет набор элементов.**
+- **{@link JW.AbstractMap#setAll setAll}, {@link JW.AbstractMap#setAllVerbose setAllVerbose}, {@link JW.AbstractMap#trySetAll trySetAll} - Добавляет/заменяет набор элементов.**
 - {@link JW.AbstractMap#remove remove}, {@link JW.AbstractMap#tryRemove tryRemove} - Удаляет элемент по ключу.
-- **{@link JW.AbstractMap#removeAll removeAll}, {@link JW.AbstractMap#$removeAll $removeAll}, {@link JW.AbstractMap#tryRemoveAll tryRemoveAll} - Удаляет набор элементов.**
+- **{@link JW.AbstractMap#removeAll removeAll}, {@link JW.AbstractMap#removeAllVerbose removeAllVerbose}, {@link JW.AbstractMap#$removeAllVerbose $removeAllVerbose}, {@link JW.AbstractMap#tryRemoveAll tryRemoveAll} - Удаляет набор элементов.**
 - {@link JW.AbstractMap#removeItem removeItem} - Удаляет первое вхождение элемента из коллекции.
 - {@link JW.AbstractMap#removeItems removeItems} - Удаляет все вхождения элементов из коллекции.
 - **{@link JW.AbstractMap#setKey setKey}, {@link JW.AbstractMap#trySetKey trySetKey} - Меняет ключ элемента.**

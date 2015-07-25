@@ -8,7 +8,7 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ### 1.1
 
-Back compatibility refusals:
+Breaking changes:
 
 - Removed synchronizer creation static methods from JW.Array, JW.Map, JW.Set, because they are useless
 

@@ -67,7 +67,7 @@ practices are used to bind model objects to each other and to bind view componen
 
 Project license is LGPL.
 
-Current version: 1.1.0
+Current version: 1.2
 
 <font size="5">[Download jWidget](guides/endownload/jwidget.zip)</font>
 
