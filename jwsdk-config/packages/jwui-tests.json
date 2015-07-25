@@ -1,0 +1,12 @@
+{
+	"requires" : [
+		"jwunit"
+	],
+
+	"resources" : [
+		"jwui/tests/core.js",
+		"jwui/tests/jqEventAttachment.js",
+
+		"jwui/tests/boot.js"
+	]
+}

@@ -20,6 +20,8 @@
 		"jwui/component/replaceable.js",
 		"jwui/component/template.js",
 		"jwui/component/templateOutput.js",
+		"jwui/jqEventAttachment.js",
+		"jwui/jquery.js",
 		"jwui/params.js",
 		"jwui/preloadImage.js",
 		
