@@ -36,7 +36,7 @@
  *
  * @constructor
  * @param {jQuery} el DOM element.
- * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * @param {Object} [config] Configuration (see Config options). For backward compatibility, target property is allowed
  * here, {@link #cfg-simple simple} option is allowed as third argument, but this is a deprecated feature.
  * @param {Boolean} [simple=false]
  * If true, listens "change" event only. Defaults to false which enables

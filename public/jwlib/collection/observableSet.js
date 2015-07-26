@@ -182,7 +182,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -215,7 +215,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Lister}
 	 * `<T>` Synchronizer.
 	 */

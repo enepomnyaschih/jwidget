@@ -29,7 +29,7 @@
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.AbstractMap} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractMap.Orderer = function(source, config) {
 	JW.AbstractMap.Orderer._super.call(this, source, config);

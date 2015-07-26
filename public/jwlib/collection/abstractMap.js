@@ -910,7 +910,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractMap.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -943,7 +943,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractMap.Lister}
 	 * `<T>` Synchronizer.
 	 */

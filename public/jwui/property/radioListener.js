@@ -41,7 +41,7 @@
  * @constructor
  * @param {jQuery} el Container DOM element.
  * @param {String} name Radios "name" attribute.
- * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * @param {Object} [config] Configuration (see Config options). For backward compatibility, target property is allowed
  * here, but this is a deprecated feature.
  */
 JW.UI.RadioListener = function(el, name, config) {

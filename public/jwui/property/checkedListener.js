@@ -36,7 +36,7 @@
  *
  * @constructor
  * @param {jQuery} el DOM element.
- * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * @param {Object} [config] Configuration (see Config options). For backward compatibility, target property is allowed
  * here, but this is a deprecated feature.
  */
 JW.UI.CheckedListener = function(el, config) {

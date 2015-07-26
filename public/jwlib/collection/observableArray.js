@@ -239,7 +239,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableArray.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -272,7 +272,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableArray.Lister}
 	 * `<T>` Synchronizer.
 	 */
@@ -294,7 +294,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	/**
 	 * Creates arrays merger.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableArray.Merger}
 	 * `<T>` Synchronizer.
 	 */
@@ -309,7 +309,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	/**
 	 * Creates array reverser.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableArray.Reverser}
 	 * `<T>` Synchronizer.
 	 */

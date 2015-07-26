@@ -29,7 +29,7 @@
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.ObservableSet} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableSet.Orderer = function(source, config) {
 	JW.ObservableSet.Orderer._super.call(this, source, config);

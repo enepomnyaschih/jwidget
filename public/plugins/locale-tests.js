@@ -48,21 +48,28 @@ JW.Tests.Plugins.LocaleTestCase = JW.Unit.TestCase.extend({
 				              "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
 			}
 		};
+
+		this.lang = new JW.Property("en");
+		this.locale = new JW.Plugins.Locale(this.dictionary, this.lang);
 	},
 
-	testLocale: function()
-	{
-		var lang = new JW.Property("en");
-		var locale = new JW.Plugins.Locale(this.dictionary, lang);
-		this.assertTrue(JW.Array.equal(["en", "ru"], locale.getLanguages()));
-		this.assertStrictEqual("Name", locale.getString("name"));
-		this.assertStrictEqual("Monitor", locale.getString("equipment.monitor"));
-		this.assertStrictEqual("Feb", locale.getString(["monthsShort", 1]));
+	teardown: function() {
+		this.locale.destroy();
+		this.locale = null;
+		this.lang.destroy();
+		this.lang = null;
+	},
 
-		var equipmentLocale = locale.getSubLocale("equipment");
+	testLocale: function() {
+		this.assertTrue(JW.Array.equal(["en", "ru"], this.locale.getLanguages()));
+		this.assertStrictEqual("Name", this.locale.getString("name"));
+		this.assertStrictEqual("Monitor", this.locale.getString("equipment.monitor"));
+		this.assertStrictEqual("Feb", this.locale.getString(["monthsShort", 1]));
+
+		var equipmentLocale = this.locale.getSubLocale("equipment");
 		this.assertStrictEqual("Monitor", equipmentLocale.getString("monitor"));
 
-		var submitFunctor = locale.getFunctor("submit");
+		var submitFunctor = this.locale.getFunctor("submit");
 		this.assertStrictEqual("Submit", submitFunctor.target.get());
 
 		var monitorFunctor = equipmentLocale.getFunctor("monitor");
@@ -70,27 +77,61 @@ JW.Tests.Plugins.LocaleTestCase = JW.Unit.TestCase.extend({
 
 		var date = new Date(2010, 0, 1);
 		var format = JW.Plugins.Locale.formatDate(date, "mmm'yy");
-		this.assertStrictEqual("Jan'10", locale.expandTemplate(format));
+		this.assertStrictEqual("Jan'10", this.locale.expandTemplate(format));
 
-		var dateFunctor = locale.getTemplateFunctor(format);
+		var dateFunctor = this.locale.getTemplateFunctor(format);
 		this.assertStrictEqual("Jan'10", dateFunctor.target.get());
 
-		lang.set("ru");
-		this.assertStrictEqual("Имя", locale.getString("name"));
-		this.assertStrictEqual("Монитор", locale.getString("equipment.monitor"));
-		this.assertStrictEqual("Фев", locale.getString(["monthsShort", 1]));
+		this.lang.set("ru");
+		this.assertStrictEqual("Имя", this.locale.getString("name"));
+		this.assertStrictEqual("Монитор", this.locale.getString("equipment.monitor"));
+		this.assertStrictEqual("Фев", this.locale.getString(["monthsShort", 1]));
 		this.assertStrictEqual("Монитор", equipmentLocale.getString("monitor"));
 		this.assertStrictEqual("Отправить", submitFunctor.target.get());
 		this.assertStrictEqual("Монитор", monitorFunctor.target.get());
-		this.assertStrictEqual("Янв'10", locale.expandTemplate(format));
+		this.assertStrictEqual("Янв'10", this.locale.expandTemplate(format));
 		this.assertStrictEqual("Янв'10", dateFunctor.target.get());
 
-		this.assertStrictEqual("English", locale.getString("en", "_lang"));
-		this.assertStrictEqual("Русский", locale.getString("ru", "_lang"));
+		this.assertStrictEqual("English", this.locale.getString("en", "_lang"));
+		this.assertStrictEqual("Русский", this.locale.getString("ru", "_lang"));
 
 		submitFunctor.destroy();
 		monitorFunctor.destroy();
 		dateFunctor.destroy();
+	},
+
+	testFunctorConfig: function() {
+		var target = new JW.Property();
+		var functor = this.locale.getFunctor("submit", {target: target});
+		this.assertStrictEqual(functor.target, target);
+		this.assertStrictEqual("Submit", target.get());
+
+		this.lang.set("ru");
+		this.assertStrictEqual("Отправить", target.get());
+
+		functor.destroy();
+		this.lang.set("en");
+		this.assertStrictEqual("Отправить", target.get());
+
+		target.destroy();
+	},
+
+	testTemplateFunctorConfig: function() {
+		var date = new Date(2010, 0, 1);
+		var format = JW.Plugins.Locale.formatDate(date, "mmm'yy");
+		var target = new JW.Property();
+		var functor = this.locale.getTemplateFunctor(format, {target: target});
+		this.assertStrictEqual(functor.target, target);
+		this.assertStrictEqual("Jan'10", target.get());
+
+		this.lang.set("ru");
+		this.assertStrictEqual("Янв'10", target.get());
+
+		functor.destroy();
+		this.lang.set("en");
+		this.assertStrictEqual("Янв'10", target.get());
+
+		target.destroy();
 	}
 });
 

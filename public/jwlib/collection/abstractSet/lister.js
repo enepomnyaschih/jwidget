@@ -29,7 +29,7 @@
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
  * @param {JW.AbstractSet} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractSet.Lister = function(source, config) {
 	JW.AbstractSet.Lister._super.call(this, source, config);

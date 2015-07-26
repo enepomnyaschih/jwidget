@@ -47,7 +47,7 @@
  *
  * @constructor
  * @param {JW.Property} source `<V>` Source property.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.Copier = function(source, config) {
 	JW.Copier._super.call(this);

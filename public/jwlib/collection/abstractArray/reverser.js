@@ -65,7 +65,7 @@
  * @constructor
  * Creates synchronizer. JW.AbstractArray#createReverser method is preferrable instead.
  * @param {JW.AbstractArray} source `<T>` Source array.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractArray.Reverser = function(source, config) {
 	JW.AbstractArray.Reverser._super.call(this);

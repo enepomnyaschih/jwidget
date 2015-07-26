@@ -1034,7 +1034,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -1067,7 +1067,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Lister}
 	 * `<T>` Synchronizer.
 	 */
@@ -1089,7 +1089,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * Creates arrays merger.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Merger}
 	 * `<T>` Synchronizer.
 	 */
@@ -1104,7 +1104,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * Creates array reverser.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Reverser}
 	 * `<T>` Synchronizer.
 	 */

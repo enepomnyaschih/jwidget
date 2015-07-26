@@ -60,7 +60,7 @@
  * Calculates target property value based on source property values.
  *
  * @param {Object} scope Function call scope.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.Functor = function(sources, func, scope, config) {
 	JW.Functor._super.call(this);

@@ -687,7 +687,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createOrderer
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Orderer}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
@@ -711,7 +711,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createLister
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Lister}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */

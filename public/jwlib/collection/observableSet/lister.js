@@ -29,7 +29,7 @@
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
  * @param {JW.ObservableSet} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableSet.Lister = function(source, config) {
 	JW.ObservableSet.Lister._super.call(this, source, config);

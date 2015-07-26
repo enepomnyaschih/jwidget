@@ -69,7 +69,7 @@
  * @constructor
  * Creates synchronizer. JW.AbstractArray#createMerger method is preferrable instead.
  * @param {JW.AbstractArray} source `<T>` Source array.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractArray.Merger = function(source, config) {
 	JW.AbstractArray.Merger._super.call(this);

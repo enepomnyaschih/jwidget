@@ -341,12 +341,13 @@ JW.extend(JW.Plugins.Locale, JW.Class, {
 	 * Returns a functor which builds the string with a key "id" in a current locale.
 	 * The client which uses this method must take care of its destruction.
 	 * @param {string/Array} id String key to retrieve via JW.get method.
+	 * @param {Object} [config] Functor configuration (see JW.Functor configuration).
 	 * @returns {JW.Functor} `<string>` Functor.
 	 */
-	getFunctor: function(id) {
+	getFunctor: function(id, config) {
 		return new JW.Functor([this.lang], function(lang) {
 			return this.getString(id);
-		}, this);
+		}, this, config);
 	},
 
 	/**
@@ -380,12 +381,13 @@ JW.extend(JW.Plugins.Locale, JW.Class, {
 	 * Returns a functor which formats the specified template in a current locale.
 	 * The client which uses this method must take care of its destruction.
 	 * @param {string} template Template.
+	 * @param {Object} [config] Functor configuration (see JW.Functor configuration).
 	 * @returns {JW.Functor} `<string>` Functor.
 	 */
-	getTemplateFunctor: function(template) {
+	getTemplateFunctor: function(template, config) {
 		return new JW.Functor([this.lang], function(lang) {
 			return this.expandTemplate(template);
-		}, this);
+		}, this, config);
 	}
 });
 
