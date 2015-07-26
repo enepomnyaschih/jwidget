@@ -76,6 +76,29 @@ JW.Tests.Collection.ObservableSetTestCase = JW.Tests.Collection.AbstractSetBase.
 		this.assertTrue(set.asSet() === set.getJson());
 		this.assertTrue(set.$asSet() === set);
 		this.assertTrue(set.equal([this.b, this.d]));
+	},
+
+	testLateDestruction: function() {
+		var test = this;
+
+		var a = new JW.Class();
+		a.destroy = function() { test.output("Destroy a"); };
+
+		var b = new JW.Class();
+		b.destroy = function() { test.output("Destroy b"); };
+
+		var set = new JW.ObservableSet([a, b]).ownItems();
+		set.spliceEvent.bind(function() { test.output("Splice"); });
+		set.clearEvent.bind(function() { test.output("Clear"); });
+
+		this.setExpectedOutput("Splice", "Destroy a");
+		set.remove(a);
+
+		this.setExpectedOutput("Clear", "Destroy b");
+		set.clear();
+
+		this.setExpectedOutput();
+		set.destroy();
 	}
 });
 

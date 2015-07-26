@@ -556,15 +556,24 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.Proxy} `<T>` Proxy of the replaced item. If not modified - `undefined`.
 	 */
 	trySet: function(item, key) {
-		var result = JW.Map.trySet(this.json, item, key);
+		var result = this._trySet(item, key);
 		if (result === undefined) {
 			return;
 		}
 		var oldItem = result.get();
-		if (oldItem === undefined) {
-			++this._length;
-		} else if (this._ownsItems) {
+		if ((oldItem !== undefined) && this._ownsItems) {
 			oldItem.destroy();
+		}
+		return result;
+	},
+
+	_trySet: function(item, key) {
+		var result = JW.Map.trySet(this.json, item, key);
+		if (result === undefined) {
+			return;
+		}
+		if (result.get() === undefined) {
+			++this._length;
 		}
 		return result;
 	},
@@ -632,14 +641,19 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {T} Old collection item. If not modified - `undefined`.
 	 */
 	tryRemove: function(key) {
+		var item = this._tryRemove(key);
+		if ((item !== undefined) && this._ownsItems) {
+			item.destroy();
+		}
+		return item;
+	},
+
+	_tryRemove: function(key) {
 		var item = JW.Map.tryRemove(this.json, key);
 		if (item === undefined) {
 			return;
 		}
 		--this._length;
-		if (this._ownsItems) {
-			item.destroy();
-		}
 		return item;
 	},
 
@@ -711,6 +725,14 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {Object} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
+		var items = this._tryClear();
+		if ((items !== undefined) && this._ownsItems) {
+			JW.Array.backEvery(JW.Map.toArray(items), JW.destroy);
+		}
+		return items;
+	},
+
+	_tryClear: function() {
 		if (this._length === 0) {
 			return;
 		}
@@ -721,9 +743,6 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		} else {
 			items = this.json;
 			this.json = {};
-		}
-		if (this._ownsItems) {
-			JW.Array.backEvery(JW.Map.toArray(items), JW.destroy);
 		}
 		return items;
 	},
@@ -746,12 +765,17 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.AbstractMap.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	trySplice: function(removedKeys, updatedItems) {
+		var spliceResult = this._trySplice(removedKeys, updatedItems);
+		if ((spliceResult !== undefined) && this._ownsItems) {
+			JW.Array.backEvery(JW.Map.toArray(spliceResult.removedItems), JW.destroy);
+		}
+		return spliceResult;
+	},
+
+	_trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = JW.Map.trySplice(this.json, removedKeys, updatedItems);
 		if (spliceResult !== undefined) {
 			this._length += JW.Map.getLength(spliceResult.addedItems) - JW.Map.getLength(spliceResult.removedItems);
-			if (this._ownsItems) {
-				JW.Array.backEvery(JW.Map.toArray(spliceResult.removedItems), JW.destroy);
-			}
 			return spliceResult;
 		}
 	},

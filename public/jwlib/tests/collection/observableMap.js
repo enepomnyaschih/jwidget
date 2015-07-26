@@ -73,6 +73,41 @@ JW.Tests.Collection.ObservableMapTestCase = JW.Tests.Collection.AbstractMapBase.
 		this.assertTrue(map.asMap() === map.getJson());
 		this.assertTrue(map.$asMap() === map);
 		this.assertTrue(map.equal({a: 2, b: 4}));
+	},
+
+	testLateDestruction: function() {
+		var test = this;
+
+		var a = new JW.Class();
+		a.destroy = function() { test.output("Destroy a"); };
+
+		var b = new JW.Class();
+		b.destroy = function() { test.output("Destroy b"); };
+
+		var c = new JW.Class();
+		c.destroy = function() { test.output("Destroy c"); };
+
+		var d = new JW.Class();
+		d.destroy = function() { test.output("Destroy d"); };
+
+		var set = new JW.ObservableMap({a: a, b: b, c: c}).ownItems();
+		set.spliceEvent.bind(function() { test.output("Splice"); });
+		set.clearEvent.bind(function() { test.output("Clear"); });
+
+		this.setExpectedOutput("Splice", "Destroy a");
+		set.remove("a");
+
+		this.setExpectedOutput("Splice", "Destroy b");
+		set.set(d, "b");
+
+		this.setExpectedOutput("Splice", "Destroy c");
+		set.splice(["c"], {});
+
+		this.setExpectedOutput("Clear", "Destroy d");
+		set.clear();
+
+		this.setExpectedOutput();
+		set.destroy();
 	}
 });
 

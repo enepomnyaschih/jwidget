@@ -73,6 +73,36 @@ JW.Tests.Collection.ObservableArrayTestCase = JW.Tests.Collection.AbstractArrayB
 		this.assertTrue(array.asArray() === array.getItems());
 		this.assertTrue(array.$asArray() === array);
 		this.assertTrue(array.equal([2, 4]));
+	},
+
+	testLateDestruction: function() {
+		var test = this;
+
+		var a = new JW.Class();
+		a.destroy = function() { test.output("Destroy a"); };
+
+		var b = new JW.Class();
+		b.destroy = function() { test.output("Destroy b"); };
+
+		var c = new JW.Class();
+		c.destroy = function() { test.output("Destroy c"); };
+
+		var set = new JW.ObservableArray([a, b]).ownItems();
+		set.replaceEvent.bind(function() { test.output("Replace"); });
+		set.spliceEvent.bind(function() { test.output("Splice"); });
+		set.clearEvent.bind(function() { test.output("Clear"); });
+
+		this.setExpectedOutput("Replace", "Destroy a");
+		set.set(c, 0);
+
+		this.setExpectedOutput("Splice", "Destroy b");
+		set.remove(1);
+
+		this.setExpectedOutput("Clear", "Destroy c");
+		set.clear();
+
+		this.setExpectedOutput();
+		set.destroy();
 	}
 });
 

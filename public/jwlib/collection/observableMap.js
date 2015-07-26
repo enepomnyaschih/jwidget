@@ -82,7 +82,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 
 	// override
 	trySet: function(item, key) {
-		var result = this._super(item, key);
+		var result = this._trySet(item, key);
 		if (result === undefined) {
 			return;
 		}
@@ -97,6 +97,9 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		if ((removedItem !== undefined) && this._ownsItems) {
+			removedItem.destroy();
+		}
 		return result;
 	},
 
@@ -118,7 +121,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 
 	// override
 	tryRemove: function(key) {
-		var item = this._super(key);
+		var item = this._tryRemove(key);
 		if (item === undefined) {
 			return;
 		}
@@ -126,6 +129,9 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		if (this._ownsItems) {
+			item.destroy();
+		}
 		return item;
 	},
 
@@ -136,25 +142,31 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 
 	// override
 	trySplice: function(removedKeys, updatedItems) {
-		var spliceResult = this._super(removedKeys, updatedItems);
+		var spliceResult = this._trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return;
 		}
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(JW.Map.toArray(spliceResult.removedItems), JW.destroy);
+		}
 		return spliceResult;
 	},
 
 	// override
 	tryClear: function() {
-		var items = this._super();
+		var items = this._tryClear();
 		if (items === undefined) {
 			return;
 		}
 		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this, items));
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(JW.Map.toArray(items), JW.destroy);
+		}
 		return items;
 	},
 

@@ -75,25 +75,31 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 
 	// override
 	tryClear: function() {
-		var items = this._super();
+		var items = this._tryClear();
 		if (items === undefined) {
 			return;
 		}
 		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableSet.ItemsEventParams(this, items));
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(items, JW.destroy);
+		}
 		return items;
 	},
 
 	// override
 	trySplice: function(removedItems, addedItems) {
-		var spliceResult = this._super(removedItems, addedItems);
+		var spliceResult = this._trySplice(removedItems, addedItems);
 		if (spliceResult === undefined) {
 			return;
 		}
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, spliceResult));
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(spliceResult.removedItems, JW.destroy);
+		}
 		return spliceResult;
 	},
 

@@ -96,12 +96,15 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 
 	// override
 	trySet: function(item, index) {
-		var oldItem = this._super(item, index);
+		var oldItem = this._trySet(item, index);
 		if (oldItem === undefined) {
 			return;
 		}
 		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem.value, item));
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		if (this._ownsItems) {
+			oldItem.get().destroy();
+		}
 		return oldItem;
 	},
 
@@ -118,25 +121,31 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 
 	// override
 	tryClear: function() {
-		var oldItems = this._super();
+		var oldItems = this._tryClear();
 		if (oldItems === undefined) {
 			return;
 		}
 		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableArray.ItemsEventParams(this, oldItems));
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(oldItems, JW.destroy);
+		}
 		return oldItems;
 	},
 
 	// override
 	trySplice: function(removeParamsList, addParamsList) {
-		var result = this._super(removeParamsList, addParamsList);
+		var result = this._trySplice(removeParamsList, addParamsList);
 		if (result === undefined) {
 			return;
 		}
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableArray.SpliceEventParams(this, result));
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(result.getRemovedItems(), JW.destroy);
+		}
 		return result;
 	},
 

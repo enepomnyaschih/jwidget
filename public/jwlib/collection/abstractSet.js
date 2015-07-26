@@ -350,12 +350,16 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
-		this._length = 0;
-		var items = JW.Set.tryClear(this.json);
+		var items = this._tryClear();
 		if ((items !== undefined) && this._ownsItems) {
 			JW.Array.backEvery(items, JW.destroy);
 		}
 		return items;
+	},
+
+	_tryClear: function() {
+		this._length = 0;
+		return JW.Set.tryClear(this.json);
 	},
 
 	/**
@@ -376,12 +380,17 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	trySplice: function(removedItems, addedItems) {
+		var spliceResult = this._trySplice(removedItems, addedItems);
+		if ((spliceResult !== undefined) && this._ownsItems) {
+			JW.Array.backEvery(spliceResult.removedItems, JW.destroy);
+		}
+		return spliceResult;
+	},
+
+	_trySplice: function(removedItems, addedItems) {
 		var spliceResult = JW.Set.trySplice(this.json, removedItems, addedItems);
 		if (spliceResult !== undefined) {
 			this._length += spliceResult.addedItems.length - spliceResult.removedItems.length;
-			if (this._ownsItems) {
-				JW.Array.backEvery(spliceResult.removedItems, JW.destroy);
-			}
 			return spliceResult;
 		}
 	},
