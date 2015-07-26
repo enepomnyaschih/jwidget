@@ -44,6 +44,8 @@
  * CSS style in a DOM element
  * - JW.UI.ClassUpdater - watches a boolean property and updates the specified
  * CSS class presence in a DOM element
+ * - JW.UI.ClassNameUpdater - watches a string property and updates
+ * the CSS class name in the DOM element
  * - JW.UI.VisibleUpdater - watches a boolean property and updates visibility
  * of the specified DOM element
  * - JW.UI.RadioUpdater - watches a string property and updates the selection

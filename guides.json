@@ -187,6 +187,10 @@
 								"title": "JW.UI.ClassUpdater"
 							},
 							{
+								"name": "rujwuiclassnameupdater",
+								"title": "JW.UI.ClassNameUpdater"
+							},
+							{
 								"name": "rujwuivisibleupdater",
 								"title": "JW.UI.VisibleUpdater"
 							},

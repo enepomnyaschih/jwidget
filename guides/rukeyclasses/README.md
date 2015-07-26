@@ -22,6 +22,7 @@
 - [JW.UI.PropUpdater](#!/guide/rujwuipropupdater)
 - [JW.UI.CssUpdater](#!/guide/rujwuicssupdater)
 - [JW.UI.ClassUpdater](#!/guide/rujwuiclassupdater)
+- [JW.UI.ClassNameUpdater](#!/guide/rujwuiclassnameupdater)
 - [JW.UI.VisibleUpdater](#!/guide/rujwuivisibleupdater)
 - [JW.UI.RadioUpdater](#!/guide/rujwuiradioupdater)
 - [JW.UI.ValueListener](#!/guide/rujwuivaluelistener)

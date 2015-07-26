@@ -29,6 +29,7 @@
 		
 		"jwui/property/attrUpdater.js",
 		"jwui/property/checkedListener.js",
+		"jwui/property/classNameUpdater.js",
 		"jwui/property/classUpdater.js",
 		"jwui/property/cssUpdater.js",
 		"jwui/property/htmlUpdater.js",

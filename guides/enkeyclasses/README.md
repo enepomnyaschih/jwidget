@@ -22,6 +22,7 @@ Property and its helpers:
 - JW.UI.PropUpdater
 - JW.UI.CssUpdater
 - JW.UI.ClassUpdater
+- JW.UI.ClassNameUpdater
 - JW.UI.VisibleUpdater
 - JW.UI.RadioUpdater
 - JW.UI.ValueListener

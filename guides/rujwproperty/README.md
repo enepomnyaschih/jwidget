@@ -18,7 +18,8 @@
 - [JW.UI.AttrUpdater](#!/guide/rujwuiattrupdater) - наблюдает за строковым свойством и обновляет указанный атрибут в DOM элементе
 - [JW.UI.PropUpdater](#!/guide/rujwuipropupdater) - наблюдает за булевым свойством и обновляет указанное свойство в DOM элементе
 - [JW.UI.CssUpdater](#!/guide/rujwuicssupdater) - наблюдает за строковым свойством и обновляет указанный CSS стиль в DOM элементе
-- [JW.UI.ClassUpdater](#!/guide/rujwuiclassupdater) - наблюдает за булевым свойством и обновляет наличие укзанного CSS класса в DOM элементе
+- [JW.UI.ClassUpdater](#!/guide/rujwuiclassupdater) - наблюдает за булевым свойством и обновляет наличие указанного CSS класса в DOM элементе
+- [JW.UI.ClassNameUpdater](#!/guide/rujwuiclassnameupdater) - наблюдает за строковым свойством и обновляет имя CSS класса в DOM элементе
 - [JW.UI.RadioUpdater](#!/guide/rujwuiradioupdater) - наблюдает за строковым свойством и обновляет выбор DOM радиокнопок
 - [JW.UI.ValueListener](#!/guide/rujwuivaluelistener) - наблюдает за значением в DOM элементе текстового ввода и обновляет указанное строковое свойство
 - [JW.UI.CheckedListener](#!/guide/rujwuicheckedlistener) - наблюдает за выбором DOM чекбокса и обновляет указанное булевое свойство
