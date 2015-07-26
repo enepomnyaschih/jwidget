@@ -21,7 +21,7 @@ New features:
 
 Breaking changes:
 
-- All variations of Maps' [setAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-setAll) and [removeAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-removeAll) methods don't return anything (performance optimization). Item destruction order in "ownItems" mode may differ, but you shouldn't rely on that anyway in Maps. To find old behaviour, use [setAllVerbose](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-setAllVerbose) and [removeAllVerbose](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-removeAllVerbose) methods. Methods trySetAll and tryRemoveAll work as before ([#100](https://github.com/enepomnyaschih/jwidget/issues/100))
+- All variations of Maps' [setAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-setAll) and [removeAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-removeAll) methods don't return anything (performance optimization). Item destruction order in "ownItems" mode may differ, but you shouldn't rely on that anyway in Maps. To find old behaviour, use [setAllVerbose](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-setAllVerbose) and [removeAllVerbose](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-removeAllVerbose) methods. Methods [trySetAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-trySetAll) and [tryRemoveAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractMap-method-tryRemoveAll) work as before ([#100](https://github.com/enepomnyaschih/jwidget/issues/100))
 
 New features:
 
