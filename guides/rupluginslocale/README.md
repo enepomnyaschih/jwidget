@@ -40,7 +40,7 @@
 Вам необходимо реализовать компонент для динамического переключения локализации приложения без перезагрузки страницы.
 С классом JW.Plugins.Locale это делается очень легко. JW.Plugins.Locale работает на базе JW.Property.
 
-<iframe style="border: 1px solid green; padding: 10px;" width="400" height="140" src="http://enepomnyaschih.github.io/mt/1.0.0/locale.html"></iframe>
+<iframe style="border: 1px solid green; padding: 10px;" width="400" height="140" src="http://enepomnyaschih.github.io/mt/1.2/locale.html"></iframe>
 
 Исходный код примера не минимизирован, поэтому вы можете просмотреть его, используя опцию "Просмотр исходного кода
 фрейма" в вашем браузере.
