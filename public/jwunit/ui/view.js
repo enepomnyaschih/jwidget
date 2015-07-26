@@ -74,8 +74,8 @@ JW.extend(JW.Unit.UI.View, JW.UI.Component, {
 		this.getElement("status-value").text(this._statusText[unit.__status]);
 		
 		if (unit.__failed) {
-			this.getElement("error-value").html('<pre>' + unit.__msg + '</pre>');
-			this.getElement("stack-value").html('<pre>' + JW.Unit._getStackTrace(unit.__error) + '</pre>');
+			this.getElement("error-value").html('<pre>' + JW.String.htmlEncode(unit.__msg) + '</pre>');
+			this.getElement("stack-value").html('<pre>' + JW.String.htmlEncode(JW.Unit._getStackTrace(unit.__error)) + '</pre>');
 		} else {
 			this.getElement("error-value").text("");
 			this.getElement("stack-value").html("");

@@ -51,7 +51,7 @@ Model-View без больших усилий. Начнем с примеров.
 
 Рассмотрим, как это работает. У каждого компонента есть главный шаблон, который передается в функцию
 JW.UI.template с именем `main` и по умолчанию равен
-<code>&lt;div /&gt;</code>. Вы можете добавить и другие шаблоны, они будут доступны в поле компонента
+<code>&lt;div&gt;&lt;/div&gt;</code>. Вы можете добавить и другие шаблоны, они будут доступны в поле компонента
 <code>{@link JW.UI.Component#templates this.templates}.&lt;template_name&gt;</code> (но они используются очень редко).
 Подкласс наследует шаблоны базового класса.
 
@@ -82,7 +82,7 @@ JW.UI.template с именем `main` и по умолчанию равен
 
 ### Дочерние компоненты
 
-Есть 4 способа добавить дочерний компонент:
+Есть 5 способов добавить дочерний компонент:
 
 - Добавить компонент в словарь {@link JW.UI.Component#children children} с ключом, равным `jwid` элемента, который вы хотите заменить дочерним
 компонентом. Обычно, это делается в методе {@link JW.UI.Component#afterRender afterRender}.
@@ -91,19 +91,25 @@ JW.UI.template с именем `main` и по умолчанию равен
 - Добавить массив дочерних компонентов в один из элементов с помощью метода {@link JW.UI.Component#addArray addArray}. Если переданный массив
 является JW.ObservableArray, то фреймворк обеспечит непрерывную синхронизацию с этим массивом во время
 работы приложения.
+- Добавить коллекцию дочерних компонентов в один из элементов с помощью метода
+{@link JW.UI.Component#addCollection addCollection}. В отличие от метода {@link JW.UI.Component#addArray addArray},
+{@link JW.UI.Component#addCollection addCollection} не сохраняет порядок дочерних компонентов.
+Каждый новый добавленный компонент всегда добавляется в конец. Если переданная коллекция
+является прослушиваемой (observable), то фреймворк обеспечит непрерывную синхронизацию с этой коллекцией во время
+работы приложения.
 - Определить метод <code>render&lt;ChildId&gt;</code>, где <code>&lt;ChildId&gt;</code> - это `jwid` элемента,
 записанный в CamelCase с заглавной буквы. Пример: `renderArticle` (рендерит элемент `jwid="article"`).
-Если метод возвращает [JW.UI.Component](#!/guide/rujwuicomponent), [JW.Property](#!/guide/rujwproperty) или [JW.AbstractArray](#!/guide/rujwabstractarray), то результат будет трактоваться как дочерний компонент
-или массив дочерних компонентов. Определите метод `renderRoot` для рендеринга корневого элемента, но вы сможете
-вернуть там только JW.AbstractArray. Смотрите параграф **Подробнее о методе render&lt;ChildId&gt;** для деталей.
+Если метод возвращает [JW.UI.Component](#!/guide/rujwuicomponent), [JW.Property](#!/guide/rujwproperty) или [JW.AbstractCollection](#!/guide/rujwabstractcollection), то результат будет трактоваться как дочерний компонент
+или коллекция дочерних компонентов. Определите метод `renderRoot` для рендеринга корневого элемента, но вы сможете
+вернуть там только [JW.AbstractCollection](#!/guide/rujwabstractcollection). Смотрите параграф **Подробнее о методе render&lt;ChildId&gt;** для деталей.
 
 Такой интерфейс с одной стороны прост, с другой стороны гибок в плане следования архитектуре Model-View.
 
 [Учебник. Часть 1. Модель и представление](#!/guide/rusample1)
 
-### Подробнее о массивах дочерних компонентов
+### Подробнее о коллекциях дочерних компонентов
 
-Для создания массивов UI компонентов на основе массивов данных удобно использовать [JW.AbstractCollection.Mapper](#!/guide/rujwabstractcollectionmapper).
+Для создания коллекций UI компонентов на основе коллекций данных удобно использовать [JW.AbstractCollection.Mapper](#!/guide/rujwabstractcollectionmapper).
 Благодаря ему, представление будет автоматически обновляться при изменении данных.
 
 По этой же причине рекомендуем использовать [JW.AbstractCollection](#!/guide/rujwabstractcollection) в реализации классов модели вместо нативных
@@ -125,57 +131,66 @@ JavaScript Array и Object: у наших коллекций есть Observable
 - Если метод возвращает [JW.UI.Component](#!/guide/rujwuicomponent), то он будет добавлен в словарь {@link JW.UI.Component#children children} и станет дочерним компонентом. Не работает для корневого элемента.
 - Если метод возвращает [JW.Property](#!/guide/rujwproperty), то он будет добавлен как легко заменяемый дочерний компонент методом {@link JW.UI.Component#addReplaceable addReplaceable}. Не работает для корневого элемента.
 - Если метод возвращает [JW.AbstractArray](#!/guide/rujwabstractarray), то он будет добавлен как массив дочерних компонентов методом {@link JW.UI.Component#addArray addArray}.
+- Если метод возвращает [JW.AbstractCollection](#!/guide/rujwabstractcollection) (не являющаяся [JW.AbstractArray](#!/guide/rujwabstractarray)), то она будет добавлена как коллекция дочерних компонентов методом {@link JW.UI.Component#addCollection addCollection}.
 - Если метод возвращает `false` (===), то элемент будет удален из HTML компонента. Не работает для корневого элемента.
 - В противном случае, фреймворк не выполнит никаких дополнительных действий по инициализации элемента.
 
 ### Удаление и уничтожение компонентов
 
-Вы можете уничтожить компонент методом {@link JW.UI.Component#destroy destroy}. Но вы не сможете уничтожить компонент, который добавлен в другой
-компонент в качестве дочернего (если попробуете, фреймворк выбросит исключение). Сначала вы должны удалить
-дочерний компонент из родителя. Чтобы это сделать, нужно выполнить операцию, обратную операции добавления.
-Так, чтобы удалить компонент с `jwid="comments"` вы должны вызвать метод {@link JW.AbstractMap#method-remove remove}
-объекта {@link JW.UI.Component#children children}. Сразу же после этого вы можете уничтожить его:
+Вы можете уничтожать компоненты методом {@link JW.Class#destroy destroy}. Тем не менее, вы не можете уничтожить
+компонент, который был добавлен в другой в качестве дочернего (в этом случае, фреймворк выбросит исключение).
+Вы должны сначала удалить дочерний компонент из родителя. Чтобы это сделать, вам нужно выполнить операцию,
+обратную операции добавления.
+
+- Если вы добавили компонент в объект {@link JW.UI.Component#children children}, то вам нужно удалить его оттуда
+методом {@link JW.AbstractMap#method-remove remove}.
+- Метод {@link JW.UI.Component#addReplaceable addReplaceable} возвращает экземпляр класса JW.UI.Component.Replaceable.
+Его уничтожение влечет удаление заменяемого дочернего компонента.
+- Метод {@link JW.UI.Component#addArray addArray} возвращает экземпляр класса JW.UI.Component.Array.
+Его уничтожение влечет удаление массива дочерних компонентов.
+- Метод {@link JW.UI.Component#addCollection addCollection} возвращает экземпляр класса JW.UI.Component.Collection.
+Его уничтожение влечет удаление коллекции дочерних компонентов.
+
+Как только дочерний компонент удален, вы можете уничтожить его:
 
     this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#method-remove remove}("comments").{@link JW.Class#destroy destroy}();
 
-В таком случае, элемент HTML шаблона с таким `jwid` вернется в свое изначальное состояние.
+Другой пример:
 
-Вы можете свободно уничтожать дочерние компоненты в методе {@link JW.UI.Component#unrender unrender} родительского компонента.
-В этом методе, дочерние компоненты уже удалены из родителя фреймворком и готовы к уничтожению.
+    // следует вызывать не ранее начала рендеринга компонента
+    initLabels: function() {
+        this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
+            {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
+            {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
+            {@link JW.AbstractCollection.Mapper#scope scope}: this
+        });
+        // Add labels into element with jwid="labels"
+        this._labelArray = this.{@link JW.UI.Component#addArray addArray}(this._labelMapper.{@link JW.AbstractCollection.Mapper#property-target target}, "labels");
+    },
 
-Кроме того, вы можете использовать метод агрегации {@link JW.Class#own own} для уничтожения дочерних компонентов.
+    clearLabels: function() {
+        this._labelArray.{@link JW.Class#destroy destroy}();
+        this._labelArray = null;
+        this._labelMapper.{@link JW.Class#destroy destroy}();
+        this._labelMapper = null;
+    }
 
-С массивами дочерних компонентов все немного сложнее. Первый способ удалить дочерний компонент, который добавлен в
-родителя через массив - это удалить этот компонент из массива (если это JW.ObservableArray). Второй способ:
-метод {@link JW.UI.Component#addArray addArray} возвращает экземпляр JW.UI.Component.Array. Если вы его уничтожите, то массив будет
-удален из родительского компонента:
+Вам не нужно каждый раз явно удалять дочерние компоненты. При уничтожении родителя, фреймворк автоматически
+удаляет все дочерние компоненты непосредственно перед вызовом метода {@link JW.UI.Component#unrender unrender}.
+Тем не менее, он не уничтожает их. Вы можете воспользоваться методом агрегации объектов {@link JW.Class#own own},
+чтобы их уничтожить. Так что в большинстве случаев ваш код будет выглядеть очень просто:
 
-        // override
-        {@link JW.UI.Component#afterRender afterRender}: function() {
-            this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
-                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
-                {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
-                {@link JW.AbstractCollection.Mapper#scope scope}: this
-            });
-            // Добавляем метки в элемент с jwid="labels"
-            this._labelArray = this.{@link JW.UI.Component#addArray addArray}(this._labelMapper.{@link JW.AbstractCollection.Mapper#property-target target}, "labels");
-        },
-        
-        clearLabels: function() {
-            this._labelArray.{@link JW.Class#destroy destroy}();
-        }
+    renderTitleBox: function() {
+        return this.{@link JW.Class#own own}(new TitleBox());
+    },
 
-**Замечение:** Все массивы уже уничтожены перед вызовом метода {@link JW.UI.Component#unrender unrender}, т.е. такие дочерние компоненты
-уже удалены из родителя. Но сами компоненты еще не уничтожены. Обычно это делается путем уничтожения соответствующего
-синхронизатора:
-
-        {@link JW.UI.Component#unrender unrender}: function() {
-            this._labelMapper.{@link JW.Class#destroy destroy}(); // уничтожаем представления всех меток
-            this.{@link JW.Class#method-_super _super}();
-        }
-
-Правила, описанные в этом параграфе, могут показаться вам слишком сложными, но их первопричины станут яснее
-в следующем параграфе.
+    renderLabels: function() {
+        return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
+            {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
+            {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
+            {@link JW.AbstractCollection.Mapper#scope scope}: this
+        })).target;
+    }
 
 ### Общие практики работы с дочерними компонентами
 
@@ -232,9 +247,9 @@ JavaScript Array и Object: у наших коллекций есть Observable
             '</div>'
     });
 
-**Внутренние неизменяемые массивы дочерних компонентов**
+**Внутренние неизменяемые коллекции дочерних компонентов**
 
-Этот пример описывает, как дочерние компоненты создаются и уничтожаются на основе массива данных, и
+Этот пример описывает, как дочерние компоненты создаются и уничтожаются на основе коллекции данных, и
 как они добавляются внутрь элемента с `jwid="labels"`.
 
     var MyComponent = function(labels) {
@@ -259,10 +274,10 @@ JavaScript Array и Object: у наших коллекций есть Observable
             '</div>'
     });
 
-**Внутренний изменяемый массив дочерних компонентов**
+**Внутренние изменяемые коллекции дочерних компонентов**
 
-Этот пример описывает, как дочерние компоненты создаются и уничтожаются на основе массива данных, и
-как они добавляются внутрь элемента с `jwid="labels"`. Массив дочерних компонентов будет автоматически
+Этот пример описывает, как дочерние компоненты создаются и уничтожаются на основе коллекции данных, и
+как они добавляются внутрь элемента с `jwid="labels"`. Коллекция дочерних компонентов будет автоматически
 синхронизироваться с данными налету.
 
     var MyComponent = function(labels) {
@@ -293,9 +308,9 @@ JavaScript Array и Object: у наших коллекций есть Observable
 
 **Внешние дочерние компоненты**
 
-Этот пример описывает, как добавить дочерние компоненты, которые созданы кеи-то другим и, следовательно,
+Этот пример описывает, как добавить дочерние компоненты, которые созданы кем-то другим и, следовательно,
 не должны быть уничтожены здесь автоматически. Здесь, "titleBox" может быть JW.UI.Component,
-[JW.Property](#!/guide/rujwproperty)<JW.UI.Component> или [JW.AbstractArray](#!/guide/rujwproperty)<JW.UI.Component>.
+[JW.Property](#!/guide/rujwproperty)<JW.UI.Component> или [JW.AbstractCollection](#!/guide/rujwabstractcollection)<JW.UI.Component>.
 
     var MyComponent = function(titleBox) {
         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
@@ -325,7 +340,8 @@ JavaScript Array и Object: у наших коллекций есть Observable
 их изначальные значения, создаются события и т.д. Здесь затрагивается только модель компонента, представление
 полностью игнорируется. Обратите внимание, что компонент после конструирования еще не отрендерен, так что у него
 еще нет полей {@link JW.UI.Component#el el} и {@link JW.UI.Component#children children}, а
-метод {@link JW.UI.Component#addArray addArray} не будет работать. Смысл этого в том, чтобы дать вам возможность
+методы {@link JW.UI.Component#addArray addArray}, {@link JW.UI.Component#addCollection addCollection} и
+{@link JW.UI.Component#addReplaceable addReplaceable} не будут работать. Смысл этого в том, чтобы дать вам возможность
 сделать что-то еще между конструированием и рендерингом компонента, например, изменить значения каких-то полей и
 вызвать какие-то методы. Вторая причина: вообще, во всех объектно-ориентированных языках программирования не
 рекомендуется вызывать виртуальные методы внутри конструктора. Вы можете отрендерить компонент напрямую вызовом
@@ -341,9 +357,9 @@ JavaScript Array и Object: у наших коллекций есть Observable
 создание дочерних компонентов.
 1. Вызывается метод {@link JW.UI.Component#afterRender afterRender}. Здесь следует присваивать атрибуты элементов, создавать дочерние компоненты,
 подписываться на события и наполнять компонент поведением, если вы не захотели этого делать на предыдущем шаге.
-Вызов <code>this._super()</code> выполняется в первой строке метода.
+Здесь заканчивается рендеринг компонента. Вызов <code>this._super()</code> выполняется в первой строке метода.
 1. Метод {@link JW.UI.Component#afterAppend afterAppend} вызывается после первого появления компонента в HTML DOM и дереве UI компонентов.
-Здесь следует выполнять лайаутинг компонента (вычислять размеры элементов). Здесь заканчивается рендеринг компонента.
+Здесь следует выполнять лайаутинг компонента (вычислять размеры элементов).
 Вызов <code>this._super()</code> выполняется в первой строке метода.
 1. Метод {@link JW.UI.Component#releaseDom releaseDom} вызывается при уничтожении компонента. Здесь откатывается все, что было сделано в методе {@link JW.UI.Component#afterAppend afterAppend},
 т.е. на шаге 5. Вызов <code>this._super()</code> выполняется в последней строке метода.
@@ -407,6 +423,6 @@ JavaScript Array и Object: у наших коллекций есть Observable
 Конечно, вы можете использовать jWidget и без jWidget SDK, но в таком случае вам потребуется либо загружать
 HTML шаблоны динамически, либо объявлять их явно прямо в JavaScript коде, используя функцию JW.UI.template.
 
-Ищите более дополнительные примеры по использованию jWidget SDK в учебнике:
+Ищите дополнительные примеры по использованию jWidget SDK в учебнике:
 
 [Учебник. Часть 7. Инфраструктура проекта](#!/guide/rusample7)

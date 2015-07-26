@@ -5,6 +5,7 @@
 
 	"resources" : [
 		"jwui/tests/core.js",
+		"jwui/tests/component.js",
 		"jwui/tests/jqEventAttachment.js",
 
 		"jwui/tests/boot.js"
