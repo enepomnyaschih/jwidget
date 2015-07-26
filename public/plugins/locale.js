@@ -320,12 +320,50 @@ JW.extend(JW.Plugins.Locale, JW.Class, {
 	/**
 	 * Returns locale string by key. Supports two variations:
 	 *
-	 * - getString(id:string/Array):string - returns string with key "id" in a current locale
-	 * - getString(lang:string, id:string/Array):string - returns string with key "id" in locale "lang"
+	 * - getRawString(id:string/Array):string - returns string with key "id" in a current locale
+	 * - getRawString(lang:string, id:string/Array):string - returns string with key "id" in locale "lang"
+	 *
+	 * As opposed to #getString, returns `undefined` if the value is missing in the dictionary.
 	 *
 	 * @param {string} lang Locale identifier.
 	 * @param {string/Array} [id] String key to retrieve via JW.get method.
-	 * @returns {string} String. If dictionary doesn't contain string with a specified key, returns id.
+	 * @returns {string} The localized string.
+	 * If dictionary doesn't contain string with a specified key, returns `undefined`.
+	 */
+	getRawString: function(lang, id) {
+		if (!JW.isSet(id)) {
+			id = lang;
+			lang = this.lang.get();
+		}
+		return JW.get(this.data[lang], id);
+	},
+
+	/**
+	 * Checks the string presence in the dictionary. Supports two variations:
+	 *
+	 * - hasString(id:string/Array):boolean - checks in a current locale
+	 * - hasString(lang:string, id:string/Array):boolean - checks in a specified locale
+	 *
+	 * @param {string} lang Locale identifier.
+	 * @param {string/Array} [id] String key to retrieve via JW.get method.
+	 * @returns {boolean} String is present in the dictionary.
+	 */
+	hasString: function(lang, id) {
+		return this.getRawString(lang, id) != null;
+	},
+
+	/**
+	 * Returns locale string by key. Supports two variations:
+	 *
+	 * - getString(id:string/Array):string - returns string with key "id" in a current locale
+	 * - getString(lang:string, id:string/Array):string - returns string with key "id" in locale "lang"
+	 *
+	 * As opposed to #getString, returns the key if the value is missing in the dictionary.
+	 *
+	 * @param {string} lang Locale identifier.
+	 * @param {string/Array} [id] String key to retrieve via JW.get method.
+	 * @returns {string} The localized string.
+	 * If dictionary doesn't contain string with a specified key, returns id.
 	 * If id is an array in this situation, returns the last item of the array.
 	 */
 	getString: function(lang, id) {

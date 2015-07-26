@@ -44,6 +44,9 @@ JW.Tests.Plugins.LocaleTestCase = JW.Unit.TestCase.extend({
 					keyboard: "Клавиатура",
 					mouse: "Мышь"
 				},
+				job: {
+					title: "Работа"
+				},
 				monthsShort: ["Янв", "Фев", "Мар", "Апр", "Мая", "Июн",
 				              "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
 			}
@@ -135,6 +138,42 @@ JW.Tests.Plugins.LocaleTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual("Янв'10", target.get());
 
 		target.destroy();
+	},
+
+	testMissingStrings: function() {
+		this.assertFalse(this.locale.hasString("missing"));
+		this.assertUndefined(this.locale.getRawString("missing"));
+		this.assertStrictEqual("missing", this.locale.getString("missing"));
+
+		this.assertFalse(this.locale.hasString("job.title"));
+		this.assertUndefined(this.locale.getRawString("job.title"));
+		this.assertStrictEqual("job.title", this.locale.getString("job.title"));
+
+		this.assertFalse(this.locale.hasString(["job", "title"]));
+		this.assertStrictEqual("title", this.locale.getString(["job", "title"]));
+
+		var functor = this.locale.getFunctor("job.title");
+		this.assertStrictEqual("job.title", functor.target.get());
+
+		this.lang.set("ru");
+
+		this.assertFalse(this.locale.hasString("missing"));
+		this.assertUndefined(this.locale.getRawString("missing"));
+		this.assertStrictEqual("missing", this.locale.getString("missing"));
+
+		this.assertTrue(this.locale.hasString("job.title"));
+		this.assertStrictEqual("Работа", this.locale.getRawString("job.title"));
+		this.assertStrictEqual("Работа", this.locale.getString("job.title"));
+
+		this.assertTrue(this.locale.hasString(["job", "title"]));
+		this.assertStrictEqual("Работа", this.locale.getString(["job", "title"]));
+
+		this.assertStrictEqual("Работа", functor.target.get());
+
+		this.assertUndefined(this.locale.getRawString("en", "job.title"));
+		this.assertStrictEqual("Работа", this.locale.getRawString("ru", "job.title"));
+
+		functor.destroy();
 	}
 });
 
