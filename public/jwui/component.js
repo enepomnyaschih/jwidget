@@ -600,7 +600,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	render: function() {
 		if (this.el) {
-			return;
+			return this;
 		}
 		var output = this._template.createElement();
 		this.el = jQuery(output.root);
