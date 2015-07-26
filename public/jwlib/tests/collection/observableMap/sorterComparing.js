@@ -183,16 +183,43 @@ JW.Tests.Collection.ObservableMap.SorterComparingTestCase = JW.Unit.TestCase.ext
 		source.destroy();
 	},
 	
+	testBackOrder: function() {
+		var source = new JW.ObservableMap({"A": "c", "B": "b", "C": "a", "D": "d"});
+		var target = new JW.Array();
+		
+		var sorterComparing = this.createSorterComparing(source, target, null, -1);
+		this.assertTarget(["d", "c", "b", "a"], target);
+		
+		source.setAll({"D": "e", "A": "f"}); // A:f,B:b,C:a,D:e
+		this.assertTarget(["f", "e", "b", "a"], target);
+		
+		source.reindex({"A": "F", "C": "A"}); // F:f,B:b,A:a,D:e
+		this.assertTarget(["f", "e", "b", "a"], target);
+		
+		source.clear();
+		this.assertTarget([], target);
+		
+		source.set("c", "C");
+		this.assertTarget(["c"], target);
+		
+		sorterComparing.destroy();
+		this.assertTarget([], target);
+		
+		target.destroy();
+		source.destroy();
+	},
+	
 	createTarget: function() {
 		var target = new JW.ObservableArray();
 		JW.Tests.Collection.subscribeToArray(this, target);
 		return target;
 	},
 	
-	createSorterComparing: function(source, target, compare) {
+	createSorterComparing: function(source, target, compare, order) {
 		return source.createSorterComparing({
 			target: target,
-			compare: compare
+			compare: compare,
+			order: order
 		});
 	},
 	

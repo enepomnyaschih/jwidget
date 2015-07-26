@@ -218,16 +218,55 @@ JW.Tests.Collection.ObservableArray.SorterComparingTestCase = JW.Unit.TestCase.e
 		source.destroy();
 	},
 	
+	testBackOrder: function() {
+		var source = new JW.ObservableArray(["c", "b", "a", "d"]);
+		var target = new JW.Array();
+		
+		var sorterComparing = this.createSorterComparing(source, target, null, -1);
+		this.assertTarget(["d", "c", "b", "a"], target);
+		
+		source.splice([
+			new JW.AbstractArray.IndexCount(0, 1),
+			new JW.AbstractArray.IndexCount(2, 2)
+		], [
+			new JW.AbstractArray.IndexItems(0, ["f", "e"]),
+			new JW.AbstractArray.IndexItems(3, ["a"])
+		]); // f,e,b,a
+		this.assertTarget(["f", "e", "b", "a"], target);
+		
+		source.set("c", 0); // c,e,b,a
+		this.assertTarget(["e", "c", "b", "a"], target);
+		
+		source.move(0, 2); // e,b,c,a
+		this.assertTarget(["e", "c", "b", "a"], target);
+		
+		source.reorder([2, 0, 1, 3]); // b,c,e,a
+		this.assertTarget(["e", "c", "b", "a"], target);
+		
+		source.clear();
+		this.assertTarget([], target);
+		
+		source.add("c");
+		this.assertTarget(["c"], target);
+		
+		sorterComparing.destroy();
+		this.assertTarget([], target);
+		
+		target.destroy();
+		source.destroy();
+	},
+	
 	createTarget: function() {
 		var target = new JW.ObservableArray();
 		JW.Tests.Collection.subscribeToArray(this, target);
 		return target;
 	},
 	
-	createSorterComparing: function(source, target, compare) {
+	createSorterComparing: function(source, target, compare, order) {
 		return source.createSorterComparing({
 			target: target,
-			compare: compare
+			compare: compare,
+			order: order
 		});
 	},
 	

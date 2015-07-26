@@ -193,16 +193,40 @@ JW.Tests.Collection.ObservableSet.SorterComparingTestCase = JW.Unit.TestCase.ext
 		source.destroy();
 	},
 	
+	testBackOrder: function() {
+		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d]);
+		var target = new JW.Array();
+		
+		var sorterComparing = this.createSorterComparing(source, target, this.compare, -1);
+		this.assertTarget([1, 3, 2, 0], target);
+		
+		source.splice([this.b, this.c], [this.e, this.h, this.i]);
+		this.assertTarget([3, 7, 8, 4, 0], target);
+		
+		source.clear();
+		this.assertTarget([], target);
+		
+		source.add(this.c);
+		this.assertTarget([2], target);
+		
+		sorterComparing.destroy();
+		this.assertTarget([], target);
+		
+		target.destroy();
+		source.destroy();
+	},
+	
 	createTarget: function() {
 		var target = new JW.ObservableArray();
 		JW.Tests.Collection.subscribeToArray(this, target, function(x) { return x.value; });
 		return target;
 	},
 	
-	createSorterComparing: function(source, target, compare) {
+	createSorterComparing: function(source, target, compare, order) {
 		return source.createSorterComparing({
 			target: target,
-			compare: compare
+			compare: compare,
+			order: order
 		});
 	},
 	
