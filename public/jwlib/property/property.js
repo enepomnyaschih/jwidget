@@ -110,6 +110,7 @@ JW.extend(JW.Property, JW.Class, {
 		if (this._ownsValue && JW.isSet(this._value)) {
 			this._value.destroy();
 		}
+		this._value = null;
 		this._super();
 	},
 	
