@@ -1179,7 +1179,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Determines index of first item which is more than specified value by `compare` function,
+	 * Determines index of first item which is more (or less if `order` == -1) than specified value by `compare` function,
 	 * using binary search. Array must be sorted by `compare` function.
 	 * Can be used for item insertion easily.
 	 * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
@@ -1192,10 +1192,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {number} Item index.
 	 */
-	binarySearch: function(value, compare, scope) {
-		return JW.Array.binarySearch(this.items, value, compare, scope);
+	binarySearch: function(value, compare, scope, order) {
+		return JW.Array.binarySearch(this.items, value, compare, scope, order);
 	},
 
 	_callStatic: function(algorithm, args) {

@@ -545,9 +545,10 @@ JW.apply(JW.Array, {
 		return target.pop();
 	},
 
-	binarySearch: function(target, value, compare, scope) {
+	binarySearch: function(target, value, compare, scope, order) {
 		compare = compare || function(x, y) { return (x < y) ? -1 : (x > y) ? 1 : 0 };
 		scope = scope || target;
+		order = order || 1;
 		var length = target.length;
 		var len2 = length >> 1;
 		var step = 1;
@@ -556,7 +557,7 @@ JW.apply(JW.Array, {
 		}
 		var index = 0;
 		while (step) {
-			if ((index + step <= length) && (compare.call(scope, value, target[index + step - 1]) >= 0)) {
+			if ((index + step <= length) && (order * compare.call(scope, value, target[index + step - 1]) >= 0)) {
 				index += step;
 			}
 			step >>= 1;

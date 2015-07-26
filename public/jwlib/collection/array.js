@@ -1073,7 +1073,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 */
 	/**
 	 * @method binarySearch
-	 * `<T>` Determines index of first item which is more than specified value by `compare` function,
+	 * `<T>` Determines index of first item which is more (or less if `order` == -1) than specified value by `compare` function,
 	 * using binary search. Array must be sorted by `compare` function.
 	 * Can be used for item insertion easily.
 	 * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
@@ -1084,10 +1084,11 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * `f(t1: T, t2: T): number`
 	 *
-	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Comparer function. Returns positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {number} Item index.
 	 */
 });
