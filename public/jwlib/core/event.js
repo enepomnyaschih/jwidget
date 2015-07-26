@@ -20,62 +20,48 @@
 /**
  * @class
  *
- * `<P extends JW.EventParams>`
+ * `<P>`
  *
  * Used to notify some objects (clients) about some events (for example, about some field value change).
  *
- * **Notice:** You must destroy the events and event listeners in class destructor.
+ * **Notice:** Remember to destroy the events and event listeners.
  *
  * Full example of class that triggers the events:
  *
  *     var Dispatcher = function() {
  *         Dispatcher.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.items = [];
- *         this.addEvent = this.{@link JW.Class#own own}(new JW.Event());
- *         this.removeEvent = this.{@link JW.Class#own own}(new JW.Event());
+ *         this.addEvent = this.{@link JW.Class#own own}(new JW.Event()); // <Dispatcher.EventParams>
+ *         this.removeEvent = this.{@link JW.Class#own own}(new JW.Event()); // <Dispatcher.EventParams>
  *     };
  *
  *     JW.extend(Dispatcher, JW.Class, {
- *         // Array items;
- *         // JW.Event<Dispatcher.EventParams> addEvent;
- *         // JW.Event<Dispatcher.EventParams> removeEvent;
- *
  *         addItem: function(item, index) {
  *             this.items.splice(index, 0, item);
- *             this.addEvent.{@link JW.Event#trigger trigger}(new Dispatcher.EventParams(this, item, index));
+ *             this.addEvent.{@link JW.Event#trigger trigger}({sender: this, item: item, index: index});
  *         },
  *
  *         removeItem: function(index) {
  *             var item = this.items.splice(index, 1)[0];
- *             this.removeEvent.{@link JW.Event#trigger trigger}(new Dispatcher.EventParams(this, item, index));
+ *             this.removeEvent.{@link JW.Event#trigger trigger}({sender: this, item: item, index: index});
  *         }
  *     });
  *
- *     Dispatcher.EventParams = function(sender, item, index) {
- *         Dispatcher.EventParams.{@link JW.Class#static-property-_super _super}.call(this, sender);
- *         this.item = item;
- *         this.index = index;
- *     };
- *
- *     JW.extend(Dispatcher.EventParams, // <T>
- *               JW.EventParams, {
- *         // Dispatcher sender;
- *         // T item;
- *         // number index;
- *     });
+ *     // interface Dispatcher.EventParams {
+ *     //     Dispatcher sender;
+ *     //     Object item;
+ *     //     number index;
+ *     // }
  *
  * Full example of these events listening:
  *
  *     var Client = function(dispatcher) {
  *         Client.{@link JW.Class#static-property-_super _super}.call(this);
- *         this.dispatcher = dispatcher;
- *         this.{@link JW.Class#own own}(this.dispatcher.addEvent.{@link JW.Event#bind bind}(this._onAdd, this));
- *         this.{@link JW.Class#own own}(this.dispatcher.removeEvent.{@link JW.Event#bind bind}(this._onRemove, this));
+ *         this.{@link JW.Class#own own}(dispatcher.addEvent.{@link JW.Event#bind bind}(this._onAdd, this));
+ *         this.{@link JW.Class#own own}(dispatcher.removeEvent.{@link JW.Event#bind bind}(this._onRemove, this));
  *     };
  *
  *     JW.extend(Client, JW.Class, {
- *         // Dispatcher dispatcher;
- *
  *         _onAdd: function(params) {
  *             console.log(params.item, " item is added at ", params.index);
  *         },
@@ -150,9 +136,9 @@ JW.extend(JW.Event, JW.Class, {
 	/**
 	 * Triggers event, i.e. calls all bound handlers.
 	 *
-	 *     this.myEvent.{@link JW.Event#trigger trigger}(new JW.EventParams(this));
+	 *     this.myEvent.{@link JW.Event#trigger trigger}({sender: this});
 	 *
-	 * This way, we've called all handlers of `myEvent` with argument `new JW.EventParams(this)`.
+	 * This way, we've called all handlers of `myEvent` with argument `{sender: this}`.
 	 *
 	 * @param {P} params Event params.
 	 * @returns {void}

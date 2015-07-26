@@ -33,7 +33,7 @@ JW.EventAttachment = function(event, callback, scope) {
 
 JW.extend(JW.EventAttachment, JW.Class, {
 	/*
-	JW.Event<? extends JW.EventParams> event;
+	JW.Event event;
 	Function callback;
 	Object scope;
 	*/

@@ -19,7 +19,8 @@
 
 /**
  * @class
- * Event params.
+ * Typical interface for event params. You don't have to use it in your custom events, but jWidget
+ * uses it to expose some events.
  * @extends JW.Class
  *
  * @constructor
