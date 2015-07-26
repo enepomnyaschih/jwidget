@@ -1,9 +1,9 @@
 /*!
-	jWidget UI 1.1.0
+	jWidget UI 1.2
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -210,7 +210,7 @@ jQuery(function() {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -306,7 +306,7 @@ JW.UI.Browsers = (function()
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -377,7 +377,7 @@ JW.extend(JW.UI.Inserter, JW.Class, {
 /*
 	jWidget UI source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -443,7 +443,7 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *
  * Let's learn, how HTML-template works. Each component has main template, which is passed into
  * JW.UI.template function with name `main` and defaults to
- * <code>&lt;div /&gt;</code>. You can add other templates as well, they'll be available in component's field
+ * <code>&lt;div&gt;&lt;/div&gt;</code>. You can add other templates as well, they'll be available in component's field
  * <code>{@link #templates this.templates}.&lt;template_name&gt;</code> (but they are not used usually).
  * Subclass inherits superclass templates.
  *
@@ -474,7 +474,7 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *
  * ### Child components
  *
- * There are 4 ways to add a child component:
+ * There are 5 ways to add a child component:
  *
  * - Add a child component into #children map with a key equal to `jwid` of element to replace with the child
  * component. Usually it is done in #afterRender method.
@@ -483,10 +483,14 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  * - Add an array of child components into some element using #addArray method. If the passed array
  * is JW.ObservableArray, then framework will provide the continuous synchronization with this array during
  * application running.
+ * - Add a collection of child components into some element using #addCollection method. As opposed to #addArray
+ * method, #addCollection doesn't keep the child component order. A newly added component is always appended to the
+ * end. If the passed collection is observable, then framework will provide the continuous synchronization with this
+ * collection during application running.
  * - Define method <code>render&lt;ChildId&gt;</code>, where <code>&lt;ChildId&gt;</code> is `jwid` of element,
  * written in CamelCase with capitalized first letter. Example: `renderArticle` (renders element `jwid="article"`).
- * If the method returns JW.UI.Component, JW.Property or JW.AbstractArray, then result will be treated as child component
- * or child component array. Define method `renderRoot` to render root element, but you can return JW.AbstractArray
+ * If the method returns JW.UI.Component, JW.Property or JW.AbstractCollection, then result will be treated as child component
+ * or child component collection. Define method `renderRoot` to render root element, but you can return JW.AbstractCollection
  * only there.
  * See **More about render&lt;ChildId&gt; method** paragraph for details.
  *
@@ -495,9 +499,9 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *
  * [Getting started. Part 1. Model and view](#!/guide/ensample1)
  *
- * ### More about child component arrays
+ * ### More about child component collections
  *
- * It is convenient to use JW.AbstractCollection.Mapper to convert data arrays into UI component arrays.
+ * It is convenient to use JW.AbstractCollection.Mapper to convert data collections into UI component collections.
  * Thanks to it, view will be updated on data update automatically.
  *
  * That's the reason why we recommend to use jWidget JW.AbstractCollection in data model instead of native JavaScript
@@ -521,56 +525,64 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  * - If method returns JW.Property, then it will be added as easily replaceable child component by
  * method #addReplaceable. Doesn't work for root element.
  * - If method returns JW.AbstractArray, then it will be added as child array by method #addArray.
+ * - If method returns JW.AbstractCollection (which is not JW.AbstractArray), then it will be added as child
+ * collection by method #addCollection.
  * - If method returns `false` (===), then element will be removed from component HTML. Doesn't work for root element.
  * - In any other case, framework won't perform any additional action.
  *
  * ### Components removal and destruction
  *
- * You can destroy the component via #destroy method. But you can not destroy a component which is added into another one as a child (framework will
- * throw an exception in this case). You must remove child component from a parent first. To remove the component
- * from a parent, you must perform the operation opposite to adding operation. So, to remove a component
- * with `jwid="comments"` you must call {@link JW.AbstractMap#method-remove} method of #children object.
- * You can destroy this component immediately:
+ * You can destroy the component via #destroy method. However you can not destroy a component which is added into
+ * another one as a child (framework will throw an exception in this case). You must remove child component from a
+ * parent first. To remove the component from a parent, you must perform the operation opposite to adding operation.
+ *
+ * - If you have added a component to #children object, you must remove it via
+ * {@link JW.AbstractMap#method-remove remove} method.
+ * - Method #addReplaceable returns an instance of JW.UI.Component.Replaceable. Its destruction removes the
+ * replaceable child.
+ * - Method #addArray returns an instance of JW.UI.Component.Array. Its destruction removes the array.
+ * - Method #addCollection returns an instance of JW.UI.Component.Collection. Its destruction removes the collection.
+ *
+ * As soon as child component is removed, you can destroy it:
  *
  *     this.{@link JW.UI.Component#children children}.{@link JW.AbstractMap#method-remove remove}("comments").{@link JW.Class#destroy destroy}();
  *
- * In this case, the element of HTML template with such `jwid` will return back to its original state.
+ * Another example:
  *
- * You can destroy child components freely in {@link #unrender} method of parent component. In this method,
- * child components are already removed from the parent by the framework and are ready to be destroyed.
+ *     // should be called not before the rendering initiation
+ *     initLabels: function() {
+ *         this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
+ *             {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
+ *             {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
+ *             {@link JW.AbstractCollection.Mapper#scope scope}: this
+ *         });
+ *         // Add labels into element with jwid="labels"
+ *         this._labelArray = this.{@link #addArray addArray}(this._labelMapper.{@link JW.AbstractCollection.Mapper#property-target target}, "labels");
+ *     },
  *
- * Also, you can use aggregation method {@link JW.Class#own} to destroy the child component.
+ *     clearLabels: function() {
+ *         this._labelArray.{@link JW.Class#destroy destroy}();
+ *         this._labelArray = null;
+ *         this._labelMapper.{@link JW.Class#destroy destroy}();
+ *         this._labelMapper = null;
+ *     }
  *
- * Child arrays are a bit more complicated. First way to remove a child which is added to the parent via array is to
- * remove this child from this array (if it is JW.ObservableArray). Second way: #addArray method returns an instance of
- * JW.UI.Component.Array. If you destroy it, the array will be removed from parent component:
+ * You don't need to remove child components explicitly all the time. On parent component destruction, framework
+ * automatically removes all the children before {@link #unrender} method call. However, it doesn't destroy them.
+ * You can use aggregation method {@link JW.Class#own own} to destroy the child components. So, usually your code will
+ * look as simple as this:
  *
- *         // override
- *         {@link #afterRender afterRender}: function() {
- *             this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
- *                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
- *                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
- *                 {@link JW.AbstractCollection.Mapper#scope scope}: this
- *             });
- *             // Add labels into element with jwid="labels"
- *             this._labelArray = this.{@link #addArray addArray}(this._labelMapper.{@link JW.AbstractCollection.Mapper#property-target target}, "labels");
- *         },
+ *     renderTitleBox: function() {
+ *         return this.{@link JW.Class#own own}(new TitleBox());
+ *     },
  *
- *         clearLabels: function() {
- *             this._labelArray.{@link JW.Class#destroy destroy}();
- *         }
- *
- * **Notice:** All arrays are already destroyed before #unrender method call, i.e. all such child components
- * are already removed from a parent. But the components themselves are still not destroyed. You must destroy a
- * corresponding sychronizer for this usually:
- *
- *         {@link #unrender unrender}: function() {
- *             this._labelMapper.{@link JW.Class#destroy destroy}(); // destroys all label views
- *             this.{@link JW.Class#method-_super _super}();
- *         }
- *
- * Likely, the rules which were described in this paragraph seem too complicated for you, but their reasoning
- * will become clear in next paragraph.
+ *     renderLabels: function() {
+ *         return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
+ *             {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
+ *             {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
+ *             {@link JW.AbstractCollection.Mapper#scope scope}: this
+ *         })).target;
+ *     }
  *
  * ### Common practices of child component management
  *
@@ -627,9 +639,9 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *             '</div>'
  *     });
  *
- * **Internal immutable child array**
+ * **Internal immutable child collection**
  *
- * This example describes how to create and destroy child components by data array, and insert them into
+ * This example describes how to create and destroy child components by data collection, and insert them into
  * element with `jwid="labels"`.
  *
  *     var MyComponent = function(labels) {
@@ -654,10 +666,10 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *             '</div>'
  *     });
  *
- * **Internal mutable child array**
+ * **Internal mutable child collection**
  *
- * This example describes how to create and destroy child components by data array, and insert them into
- * element with `jwid="labels"`. Child array will be being synchronized with data on fly.
+ * This example describes how to create and destroy child components by data collection, and insert them into
+ * element with `jwid="labels"`. Child collection will be being synchronized with data on fly.
  *
  *     var MyComponent = function(labels) {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
@@ -689,7 +701,7 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *
  * This example describes how to insert child components which were created by someone else, and therefore
  * shouldn't be destroyed automatically. Here, "titleBox" can be either JW.UI.Component, or
- * JW.Property<JW.UI.Component>, or JW.AbstractArray<JW.UI.Component>.
+ * JW.Property<JW.UI.Component>, or JW.AbstractCollection<JW.UI.Component>.
  *
  *     var MyComponent = function(titleBox) {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
@@ -718,7 +730,8 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  * 1. Like in all other classes, **constructor** is called first. Usually all fields are defined and assigned to
  * their initial values here, events are created etc. Only component model should be touched here, view is completely
  * ignored. Notice that component is not rendered after construction yet, so it doesn't have
- * fields #el and #children, #addArray method won't work. The main reason of that is to give you ability to
+ * fields #el and #children, methods #addArray, #addCollection and #addReplaceable won't work.
+ * The main reason of that is to give you ability to
  * do something else between component construction and rendering, for example, change some field values and call
  * some methods. Second reason: it is not recommended to call virtual methods in constructor in any object-oriented
  * language. You can render the component directly by calling #render, #renderTo, #renderAs,
@@ -732,11 +745,11 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  * 1. All <code>render&lt;ChildId&gt;</code> methods are called for HTML template elements, i.e. child component
  * creation is performed.
  * 1. Method #afterRender is called. You should assign all elements' attributes here, create child components,
- * bind to events and fill component with interactivity. <code>this._super()</code> call is performed at first line of
- * method.
+ * bind to events and fill component with interactivity. Component rendering is finished here.
+ * <code>this._super()</code> call is performed at first line of method.
  * 1. Method #afterAppend is called after first-time component appearing in HTML DOM and UI components tree.
  * Component layouting should be performed here (calculate element sizes).
- * Component rendering is finished here. <code>this._super()</code> call is performed at first line of method.
+ * <code>this._super()</code> call is performed at first line of method.
  * 1. Method #releaseDom is called during component destruction. Everything that was performed in #afterAppend method,
  * i.e. on step 5, should be reverted here. <code>this._super()</code> method call is performed at last line of method.
  * 1. Method #unrender is called during component destruction. Everything that was performed during component
@@ -816,6 +829,7 @@ JW.UI.Component = function() {
 	this._elements = null; // Map<jQuery>
 	this._replaceables = null; // Set<JW.UI.Component.Replaceable>
 	this._arrays = null; // Set<JW.UI.Component.Array>
+	this._collections = null; // Set<JW.UI.Component.Collection>
 },
 
 JW.extend(JW.UI.Component, JW.Class, {
@@ -846,6 +860,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 		}
 		if (this.el) {
 			JW.UI.remove(this.el[0]);
+			JW.Set.each(this._collections, JW.destroy);
+			this._collections = null;
 			JW.Set.each(this._arrays, JW.destroy);
 			this._arrays = null;
 			JW.Set.each(this._replaceables, JW.destroy);
@@ -960,7 +976,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 */
 	render: function() {
 		if (this.el) {
-			return;
+			return this;
 		}
 		var output = this._template.createElement();
 		this.el = jQuery(output.root);
@@ -968,6 +984,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.children = new JW.UI.Component.Children(this);
 		this._replaceables = {};
 		this._arrays = {};
+		this._collections = {};
 		this.beforeRender();
 		var elements = JW.apply({}, this._elements);
 		for (var jwId in elements) {
@@ -978,6 +995,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 				if (jwId === "root") {
 					if (result instanceof JW.AbstractArray) {
 						this.addArray(result, jwId);
+					} else if (result instanceof JW.AbstractCollection) {
+						this.addCollection(result, jwId);
 					}
 				} else {
 					if (result instanceof JW.UI.Component) {
@@ -986,6 +1005,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 						this.addReplaceable(result, jwId);
 					} else if (result instanceof JW.AbstractArray) {
 						this.addArray(result, jwId);
+					} else if (result instanceof JW.AbstractCollection) {
+						this.addCollection(result, jwId);
 					} else if (result === false) {
 						this.removeElement(jwId);
 					}
@@ -1088,7 +1109,8 @@ JW.extend(JW.UI.Component, JW.Class, {
 	},
 
 	/**
-	 * Add child component array into specified element.
+	 * Add child component array into specified element. As opposed to #addCollection method, keeps
+	 * component order. However, it works slower and accepts array only.
 	 *
 	 * Based on JW.UI.Inserter synchronizer. Thanks to that, if you'll pass an instance of
 	 * JW.ObservableArray as "components", then view will be synchronized with this array content of fly.
@@ -1110,8 +1132,34 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * @returns {JW.UI.Component.Array} Child component array wrapper.
 	 */
 	addArray: function(source, el) {
-		return new JW.UI.Component.Array(this, source, (el === undefined) ? this.el :
-			(typeof el === "string") ? this._elements[el] : jQuery(el));
+		return new JW.UI.Component.Array(this, source, this._getContainerElement(el));
+	},
+
+	/**
+	 * Add child component collection into specified element. As opposed to #addArray method, ignores
+	 * component order. However, it works faster and accepts any kind of collection, not array only.
+	 *
+	 * If you'll pass an instance of JW.ObservableCollection as "components",
+	 * then view will be synchronized with this collection content of fly.
+	 *
+	 * It is convenient to create "components" collection from data collection using
+	 * JW.AbstractCollection#createMapper method, i.e. by JW.AbstractCollection.Mapper instantiation.
+	 *
+	 * Method returns an instance of JW.UI.Component.Collection. This object is purposed for child component
+	 * collection removal from parent component. Use {@link JW.Class#destroy destroy} method to do this.
+	 * Also, the collection will be removed from parent component on parent component destruction right
+	 * before #unrender method call.
+	 * But notice that child components inside this collection won't be destroyed automatically.
+	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper destruction in #unrender method.
+	 *
+	 * @param {JW.AbstractCollection} components Child component collection.
+	 * @param {jQuery/string} [el]
+	 * Element to add child components into, or its `jwid`.
+	 * Defaults to root element (#el) of component.
+	 * @returns {JW.UI.Component.Collection} Child component collection wrapper.
+	 */
+	addCollection: function(source, el) {
+		return new JW.UI.Component.Collection(this, source, this._getContainerElement(el));
 	},
 
 	_afterAppend: function() {
@@ -1137,6 +1185,11 @@ JW.extend(JW.UI.Component, JW.Class, {
 
 	_doneChild: function(component) {
 		component.parent = null;
+	},
+
+	_getContainerElement: function(el) {
+		return (el === undefined) ? this.el :
+			(typeof el === "string") ? this._elements[el] : jQuery(el);
 	}
 });
 
@@ -1154,7 +1207,7 @@ JW.extend(JW.UI.Component.EventParams, JW.EventParams, {
 /*
 	jWidget UI source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1223,7 +1276,7 @@ JW.extend(JW.UI.Component.AbstractTemplate, JW.Class, {
 /*
 	jWidget UI source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1282,7 +1335,7 @@ JW.extend(JW.UI.Component.Array, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1332,7 +1385,7 @@ JW.extend(JW.UI.Component.Child, JW.Class, {
 /*
 	jWidget UI source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1353,6 +1406,51 @@ JW.UI.Component.ChildInserter = function() {
 };
 
 JW.extend(JW.UI.Component.ChildInserter, JW.AbstractMap, {
+	// override
+	trySet: function(item, key) {
+		var result = this._super(item, key);
+		if (result === undefined) {
+			return;
+		}
+		var removedItem = result.get();
+		if (removedItem) {
+			removedItem.detach();
+		}
+		item.attach(key);
+		return result;
+	},
+
+	// override
+	setAll: function(items) {
+		this.trySetAll(items);
+	},
+
+	// override
+	trySetKey: function(oldKey, newKey) {
+		var item = this._super(oldKey, newKey);
+		if (item === undefined) {
+			return;
+		}
+		item.detach();
+		item.attach(newKey);
+		return item;
+	},
+
+	// override
+	tryRemove: function(key) {
+		var item = this._super(key);
+		if (item === undefined) {
+			return;
+		}
+		item.detach();
+		return item;
+	},
+
+	// override
+	removeAll: function(keys) {
+		this.tryRemoveAll(keys);
+	},
+
 	// override
 	trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = this._super(removedKeys, updatedItems);
@@ -1401,7 +1499,7 @@ JW.extend(JW.UI.Component.ChildInserter, JW.AbstractMap, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1426,6 +1524,47 @@ JW.UI.Component.Children = function(component) {
 JW.extend(JW.UI.Component.Children, JW.AbstractMap, {
 	unrender: function() {
 		this.target.destroy();
+	},
+
+	// override
+	trySet: function(item, key) {
+		var result = this._super(item, key);
+		if (result === undefined) {
+			return;
+		}
+		var child = new JW.UI.Component.Child(this.component, item);
+		this.target.trySet(child, key);
+		return result;
+	},
+
+	// override
+	setAll: function(items) {
+		this.trySetAll(items);
+	},
+
+	// override
+	trySetKey: function(oldKey, newKey) {
+		var item = this._super(oldKey, newKey);
+		if (item === undefined) {
+			return;
+		}
+		this.target.trySetKey(oldKey, newKey);
+		return item;
+	},
+
+	// override
+	tryRemove: function(key) {
+		var item = this._super(key);
+		if (item === undefined) {
+			return;
+		}
+		this.target.tryRemove(key);
+		return item;
+	},
+
+	// override
+	removeAll: function(keys) {
+		this.tryRemoveAll(keys);
 	},
 	
 	// override
@@ -1466,8 +1605,107 @@ JW.extend(JW.UI.Component.Children, JW.AbstractMap, {
 
 /*
 	jWidget UI source file.
+
+	Copyright (C) 2015 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * Child component collection wrapper in JW.UI.Component.
+ *
+ * Returned by JW.UI.Component#addCollection method. If you'll destroy this object, child components will be removed
+ * from parent.
+ *
+ * @extends JW.Class
+ */
+JW.UI.Component.Collection = function(parent, source, el) {
+	JW.UI.Component.Collection._super.call(this);
+	this.parent = parent;
+	this.source = source;
+	JW.Set.add(parent._collections, this);
+
+	var mapper = this.own(source.createMapper({
+		createItem  : function(child) { this.parent._initChild(child); return child; },
+		destroyItem : function(child) { this.parent._doneChild(child); },
+		scope       : this
+	}));
+
+	this.own(new JW.UI.Component.CollectionInserter(mapper.target, el[0]));
+};
+
+JW.extend(JW.UI.Component.Collection, JW.Class, {
+	// JW.UI.Component parent;
+	// JW.AbstractCollection<JW.UI.Component> source;
+
+	// override
+	destroy: function() {
+		JW.Set.remove(this.parent._collections, this);
+		this._super();
+	},
+
+	_afterAppend: function() {
+		this.source.each(JW.UI._afterAppend);
+	}
+});
+
+/*
+	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+JW.UI.Component.CollectionInserter = function(source, el) {
+	JW.UI.Component.CollectionInserter._super.call(this);
+	this.el = el;
+	this.own(source.createObserver({
+		addItem: this._addItem,
+		removeItem: this._removeItem,
+		scope: this
+	}));
+};
+
+JW.extend(JW.UI.Component.CollectionInserter, JW.Class, {
+	_addItem: function(item) {
+		this.el.appendChild(item.el[0]);
+		item._afterAppend();
+	},
+
+	_removeItem: function(item) {
+		JW.UI.remove(item.el[0]);
+	}
+});
+
+/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1511,7 +1749,7 @@ JW.extend(JW.UI.Component.DomTemplate, JW.UI.Component.AbstractTemplate, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1545,7 +1783,7 @@ JW.extend(JW.UI.Component.Inserter, JW.UI.Inserter, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1601,7 +1839,7 @@ JW.extend(JW.UI.Component.Replaceable, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1684,7 +1922,7 @@ JW.UI.template(JW.UI.Component, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1728,7 +1966,165 @@ JW.extend(JW.UI.Component.TemplateOutput, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ *
+ * jQuery event attachment adapter.
+ *
+ * - Allows you to use jQuery events in conjunction with jWidget object aggregation feature.
+ * Attachment destruction results in event unbinding.
+ * - Allows you to pass callback context.
+ * - However, it doesn't support "data" argument - use closures instead.
+ *
+ * Method {@link jQuery#jwon jwon} is a shorthand for adapter creation.
+ *
+ * **Example**
+ *
+ * Assume you have the next class:
+ *
+ *     var MyForm = function(el) {
+ *         this._onSubmit = JW.inScope(this._onSubmit, this);
+ *         this._onTextChange = JW.inScope(this._onTextChange, this);
+ *         MyForm.{@link JW.Class#static-property-_super _super}.call(this);
+ *         el.on("submit", this._onSubmit);
+ *         el.on("change", "input[type=text]", this._onTextChange);
+ *     };
+ *
+ *     JW.extend(MyForm, JW.Class, {
+ *         _onSubmit: function(event) {...},
+ *         _onTextChange: function(event) {...},
+ *
+ *         {@link #destroy}: function() {
+ *             el.off("submit", this._onSubmit);
+ *             el.off("change", "input[type=text]", this._onTextChange);
+ *             this.{@link #_super}();
+ *         }
+ *     });
+ *
+ * Thanks to the adapter, we can remove the overhead of locking the method call context and
+ * explicit event unsubscribing in the #destroy method:
+ *
+ *     var MyForm = function(el) {
+ *         MyForm.{@link JW.Class#static-property-_super _super}.call(this);
+ *         this.own(el.{@link jQuery#jwon jwon}("submit", this._onSubmit, this));
+ *         this.own(el.{@link jQuery#jwon jwon}("change", "input[type=text]", this._onTextChange, this));
+ *     };
+ *
+ *     JW.extend(MyForm, JW.Class, {
+ *         _onSubmit: function(event, target) {...},
+ *         _onTextChange: function(event, target) {...}
+ *     });
+ *
+ * Notice that event target which jQuery usually assigns the call context to is passed as a second callback argument.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * Creates the attachment, subscribes to the event. Shorthand: {@link jQuery#jwon jwon}
+ * @param {jQuery} el jQuery element collection.
+ * @param {string} events One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".
+ * @param {string} selector A selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.
+ * @param {Function} handler
+ *
+ * `handler(event: Event, target: DOMElement)`
+ *
+ * A function to execute when the event is triggered. The value `false` is also allowed as a shorthand for a function that simply does `return false`.
+ *
+ * @param {Object} [scope] Function call scope.
+ */
+JW.UI.JQEventAttachment = function(el, events, selector, handler, scope) {
+	JW.UI.JQEventAttachment._super.call(this);
+	this.el = el;
+	this.events = events;
+	if (typeof selector === "function") {
+		scope = handler;
+		handler = selector;
+		selector = null;
+	}
+	this.selector = selector;
+	if (scope) {
+		this.handler = function(event) {
+			handler.call(scope || this, event, this);
+		};
+	} else {
+		this.handler = handler;
+	}
+	el.on(events, this.selector, this.handler);
+};
+
+JW.extend(JW.UI.JQEventAttachment, JW.Class, {
+	destroy: function() {
+		this.el.off(this.events, this.selector, this.handler);
+		this._super();
+	}
+});
+
+/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class jQuery
+ *
+ * jQuery extension.
+ */
+jQuery.extend(jQuery.fn, {
+	/**
+	 * Creates jQuery event adapter managed by jWidget.
+	 * Shorthand for JW.UI.JQEventAttachment creation.
+	 * See JW.UI.JQEventAttachment for more details.
+	 *
+	 * @param {string} events One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".
+	 * @param {string} selector A selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.
+	 * @param {Function} handler
+	 *
+	 * `handler(event: Event, target: DOMElement)`
+	 *
+	 * A function to execute when the event is triggered. The value `false` is also allowed as a shorthand for a function that simply does `return false`.
+	 *
+	 * @param {Object} [scope] Function call scope.
+	 * @returns {JW.UI.JQEventAttachment} New event attachment.
+	 */
+	jwon: function(events, selector, handler, scope) {
+		return new JW.UI.JQEventAttachment(this, events, selector, handler, scope);
+	}
+});
+
+/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1763,7 +2159,7 @@ JW.UI.Params = {};
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1800,7 +2196,7 @@ JW.UI.preloadImage = function(
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1863,7 +2259,7 @@ JW.extend(JW.UI.AttrUpdater, JW.Class, {
 /*
 	jWidget UI source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1898,7 +2294,7 @@ JW.extend(JW.UI.AttrUpdater, JW.Class, {
  *
  * @constructor
  * @param {jQuery} el DOM element.
- * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * @param {Object} [config] Configuration (see Config options). For backward compatibility, target property is allowed
  * here, but this is a deprecated feature.
  */
 JW.UI.CheckedListener = function(el, config) {
@@ -1940,7 +2336,72 @@ JW.extend(JW.UI.CheckedListener, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ * Watches source string {@link JW.Property property} modification and updates
+ * the CSS class name in the DOM element.
+ * Applied on initialization as well.
+ *
+ *     var el = jQuery('<div class="elem"></div>');
+ *     var color = new JW.Property("red");
+ *
+ *     // Next command adds "red" CSS class to the element
+ *     var updater = new JW.UI.ClassNameUpdater(el, color);
+ *
+ *     // Next command removes "red" CSS class from the element and adds "blue" class instead
+ *     color.{@link JW.Property#set set}("blue");
+ *
+ *     // Next command removes "blue" CSS class from the element
+ *     color.{@link JW.Property#set set}(null);
+ *
+ *     // Next command adds "green" CSS class to the element
+ *     color.{@link JW.Property#set set}("green");
+ *
+ *     // Next command removes "green" CSS class from the element
+ *     updater.{@link #destroy destroy}();
+ *
+ * **Caution:** Updater doesn't check if the class of the same name is already present in the element.
+ * If that's the case, it will remove the class on the next property value change. However, it won't
+ * touch the other classes, e.g. it doesn't remove "elem" class in the example above.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {JW.Property} property `<String>` Source property.
+ */
+JW.UI.ClassNameUpdater = function(el, property) {
+	JW.UI.ClassNameUpdater._super.call(this);
+	this.el = jQuery(el);
+	this.own(new JW.Switcher([property], {
+		init: function(value) { this.el.addClass(value); },
+		done: function(value) { this.el.removeClass(value); },
+		scope: this
+	}));
+};
+
+JW.extend(JW.UI.ClassNameUpdater, JW.Class);
+
+/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2003,7 +2464,7 @@ JW.extend(JW.UI.ClassUpdater, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2066,7 +2527,7 @@ JW.extend(JW.UI.CssUpdater, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2124,7 +2585,7 @@ JW.extend(JW.UI.HtmlUpdater, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2192,7 +2653,7 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
 /*
 	jWidget UI source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2232,7 +2693,7 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
  * @constructor
  * @param {jQuery} el Container DOM element.
  * @param {String} name Radios "name" attribute.
- * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * @param {Object} [config] Configuration (see Config options). For backward compatibility, target property is allowed
  * here, but this is a deprecated feature.
  */
 JW.UI.RadioListener = function(el, name, config) {
@@ -2280,7 +2741,7 @@ JW.extend(JW.UI.RadioListener, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2355,7 +2816,7 @@ JW.extend(JW.UI.RadioUpdater, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2413,7 +2874,7 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
 /*
 	jWidget UI source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2448,7 +2909,7 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
  *
  * @constructor
  * @param {jQuery} el DOM element.
- * @param {Object} config Configuration (see Config options). For backward compatibility, target property is allowed
+ * @param {Object} [config] Configuration (see Config options). For backward compatibility, target property is allowed
  * here, {@link #cfg-simple simple} option is allowed as third argument, but this is a deprecated feature.
  * @param {Boolean} [simple=false]
  * If true, listens "change" event only. Defaults to false which enables
@@ -2505,7 +2966,7 @@ JW.extend(JW.UI.ValueListener, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2565,7 +3026,7 @@ JW.extend(JW.UI.ValueUpdater, JW.Class, {
 /*
 	jWidget UI source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by

@@ -1,9 +1,9 @@
 /*!
-	jWidget Lib 1.1.0
+	jWidget Lib 1.2
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -825,7 +825,7 @@ JW.toArray = JW.args;
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1118,7 +1118,7 @@ JW.extend(JW.Class, Object, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1137,62 +1137,48 @@ JW.extend(JW.Class, Object, {
 /**
  * @class
  *
- * `<P extends JW.EventParams>`
+ * `<P>`
  *
  * Used to notify some objects (clients) about some events (for example, about some field value change).
  *
- * **Notice:** You must destroy the events and event listeners in class destructor.
+ * **Notice:** Remember to destroy the events and event listeners.
  *
  * Full example of class that triggers the events:
  *
  *     var Dispatcher = function() {
  *         Dispatcher.{@link JW.Class#static-property-_super _super}.call(this);
  *         this.items = [];
- *         this.addEvent = this.{@link JW.Class#own own}(new JW.Event());
- *         this.removeEvent = this.{@link JW.Class#own own}(new JW.Event());
+ *         this.addEvent = this.{@link JW.Class#own own}(new JW.Event()); // <Dispatcher.EventParams>
+ *         this.removeEvent = this.{@link JW.Class#own own}(new JW.Event()); // <Dispatcher.EventParams>
  *     };
  *
  *     JW.extend(Dispatcher, JW.Class, {
- *         // Array items;
- *         // JW.Event<Dispatcher.EventParams> addEvent;
- *         // JW.Event<Dispatcher.EventParams> removeEvent;
- *
  *         addItem: function(item, index) {
  *             this.items.splice(index, 0, item);
- *             this.addEvent.{@link JW.Event#trigger trigger}(new Dispatcher.EventParams(this, item, index));
+ *             this.addEvent.{@link JW.Event#trigger trigger}({sender: this, item: item, index: index});
  *         },
  *
  *         removeItem: function(index) {
  *             var item = this.items.splice(index, 1)[0];
- *             this.removeEvent.{@link JW.Event#trigger trigger}(new Dispatcher.EventParams(this, item, index));
+ *             this.removeEvent.{@link JW.Event#trigger trigger}({sender: this, item: item, index: index});
  *         }
  *     });
  *
- *     Dispatcher.EventParams = function(sender, item, index) {
- *         Dispatcher.EventParams.{@link JW.Class#static-property-_super _super}.call(this, sender);
- *         this.item = item;
- *         this.index = index;
- *     };
- *
- *     JW.extend(Dispatcher.EventParams, // <T>
- *               JW.EventParams, {
- *         // Dispatcher sender;
- *         // T item;
- *         // number index;
- *     });
+ *     // interface Dispatcher.EventParams {
+ *     //     Dispatcher sender;
+ *     //     Object item;
+ *     //     number index;
+ *     // }
  *
  * Full example of these events listening:
  *
  *     var Client = function(dispatcher) {
  *         Client.{@link JW.Class#static-property-_super _super}.call(this);
- *         this.dispatcher = dispatcher;
- *         this.{@link JW.Class#own own}(this.dispatcher.addEvent.{@link JW.Event#bind bind}(this._onAdd, this));
- *         this.{@link JW.Class#own own}(this.dispatcher.removeEvent.{@link JW.Event#bind bind}(this._onRemove, this));
+ *         this.{@link JW.Class#own own}(dispatcher.addEvent.{@link JW.Event#bind bind}(this._onAdd, this));
+ *         this.{@link JW.Class#own own}(dispatcher.removeEvent.{@link JW.Event#bind bind}(this._onRemove, this));
  *     };
  *
  *     JW.extend(Client, JW.Class, {
- *         // Dispatcher dispatcher;
- *
  *         _onAdd: function(params) {
  *             console.log(params.item, " item is added at ", params.index);
  *         },
@@ -1267,9 +1253,9 @@ JW.extend(JW.Event, JW.Class, {
 	/**
 	 * Triggers event, i.e. calls all bound handlers.
 	 *
-	 *     this.myEvent.{@link JW.Event#trigger trigger}(new JW.EventParams(this));
+	 *     this.myEvent.{@link JW.Event#trigger trigger}({sender: this});
 	 *
-	 * This way, we've called all handlers of `myEvent` with argument `new JW.EventParams(this)`.
+	 * This way, we've called all handlers of `myEvent` with argument `{sender: this}`.
 	 *
 	 * @param {P} params Event params.
 	 * @returns {void}
@@ -1286,7 +1272,7 @@ JW.extend(JW.Event, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1318,7 +1304,7 @@ JW.EventAttachment = function(event, callback, scope) {
 
 JW.extend(JW.EventAttachment, JW.Class, {
 	/*
-	JW.Event<? extends JW.EventParams> event;
+	JW.Event event;
 	Function callback;
 	Object scope;
 	*/
@@ -1331,7 +1317,7 @@ JW.extend(JW.EventAttachment, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1349,7 +1335,8 @@ JW.extend(JW.EventAttachment, JW.Class, {
 
 /**
  * @class
- * Event params.
+ * Typical interface for event params. You don't have to use it in your custom events, but jWidget
+ * uses it to expose some events.
  * @extends JW.Class
  *
  * @constructor
@@ -1369,7 +1356,7 @@ JW.extend(JW.EventParams, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1408,7 +1395,7 @@ JW.extend(JW.ItemEventParams, JW.EventParams, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1447,7 +1434,7 @@ JW.extend(JW.ValueEventParams, JW.EventParams, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1488,7 +1475,7 @@ JW.extend(JW.ValueChangeEventParams, JW.ValueEventParams, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -1529,7 +1516,7 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2215,7 +2202,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createOrderer
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Orderer}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
@@ -2239,7 +2226,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createLister
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Lister}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
@@ -2248,7 +2235,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2384,7 +2371,7 @@ JW.extend(JW.AbstractCollection.Counter, JW.Class, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2506,7 +2493,7 @@ JW.extend(JW.AbstractCollection.Filterer, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2566,7 +2553,7 @@ JW.extend(JW.AbstractCollection.Filterer, JW.Class, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
  * @param {JW.AbstractCollection} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractCollection.Lister = function(source, config) {
 	JW.AbstractCollection.Lister._super.call(this);
@@ -2597,7 +2584,7 @@ JW.extend(JW.AbstractCollection.Lister, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2723,7 +2710,7 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -2850,7 +2837,7 @@ JW.extend(JW.AbstractCollection.Mapper, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -3000,7 +2987,7 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -3058,7 +3045,7 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.AbstractCollection} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractCollection.Orderer = function(source, config) {
 	JW.AbstractCollection.Orderer._super.call(this);
@@ -3102,7 +3089,7 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -3175,9 +3162,8 @@ JW.AbstractCollection.SorterComparing = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.compare = config.compare || JW.cmp;
+	this.order = config.order || 1;
 	this.scope = config.scope || this;
-	var scope = this.scope;
-	var compare = this.compare;
 	this.target = config.target || this.own(source.createEmptyArray());
 	this._splice([], source.asArray());
 };
@@ -3197,6 +3183,9 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	 * @cfg {Object} scope {@link #compare} call scope.
 	 */
 	/**
+	 * @cfg {1/-1} [order] Sorting order.
+	 */
+	/**
 	 * @property {C} source Source collection.
 	 */
 	/**
@@ -3214,12 +3203,12 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	 * @returns {void}
 	 */
 	resort: function() {
-		this.target.sortComparing(this.compare, this.scope);
+		this.target.sortComparing(this.compare, this.scope, this.order);
 	},
 	
 	_splice: function(removedItems, addedItems) {
-		var removedItemsSorted = JW.Array.toSortedComparing(removedItems, this.compare, this.scope);
-		var addedItemsSorted = JW.Array.toSortedComparing(addedItems, this.compare, this.scope);
+		var removedItemsSorted = JW.Array.toSortedComparing(removedItems, this.compare, this.scope, this.order);
+		var addedItemsSorted = JW.Array.toSortedComparing(addedItems, this.compare, this.scope, this.order);
 		removedItems = new Array(removedItems.length);
 		addedItems = new Array(addedItems.length);
 		var iRemoved = 0;
@@ -3231,7 +3220,7 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 			var removedItem = removedItemsSorted[iRemoved];
 			var addedItem = addedItemsSorted[iAdded];
 			var c = JW.cmp(removedItem === undefined, addedItem === undefined) ||
-				this.compare.call(this.scope, removedItem, addedItem);
+				(this.order * this.compare.call(this.scope, removedItem, addedItem));
 			if (c < 0) {
 				removedItems[jRemoved++] = removedItem;
 				++iRemoved;
@@ -3253,7 +3242,7 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 		var removeParams = null;
 		for (var iTarget = 0, lTarget = this.target.getLength(); iTarget < lTarget; ++iTarget) {
 			var value = this.target.get(iTarget);
-			if (removedItems[JW.Array.binarySearch(removedItems, value, this.compare, this.scope) - 1] === value) {
+			if (removedItems[JW.Array.binarySearch(removedItems, value, this.compare, this.scope, this.order) - 1] === value) {
 				if (!removeParams) {
 					removeParams = new JW.AbstractArray.IndexCount(iTarget, 0);
 					removeParamsList.push(removeParams);
@@ -3263,7 +3252,7 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 			} else {
 				removeParams = null;
 				var addParams = new JW.AbstractArray.IndexItems(iTarget + addShift, []);
-				while ((iAdds < addedItems.length) && (this.compare.call(this.scope, addedItems[iAdds], value) < 0)) {
+				while ((iAdds < addedItems.length) && (this.order * this.compare.call(this.scope, addedItems[iAdds], value) < 0)) {
 					addParams.items.push(addedItems[iAdds++]);
 					++addShift;
 				}
@@ -3282,7 +3271,7 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -3423,7 +3412,7 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -4074,7 +4063,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -4193,7 +4182,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 			pairs.push([key, item]);
 		}, scope);
 		pairs.sort(function(x, y) {
-			return order * compare(x[1], y[1], x[0], y[0]);
+			return order * compare.call(scope, x[1], y[1], x[0], y[0]);
 		});
 		return JW.Array.map(pairs, function(pair) {
 			return pair[0];
@@ -4250,7 +4239,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -4885,11 +4874,15 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.Proxy} `<T>` Proxy of the replaced item. If not modified - `undefined`.
 	 */
 	trySet: function(item, index) {
-		var oldProxy = JW.Array.trySet(this.items, item, index);
+		var oldProxy = this._trySet(item, index);
 		if ((oldProxy !== undefined) && this._ownsItems) {
 			oldProxy.get().destroy();
 		}
 		return oldProxy;
+	},
+
+	_trySet: function(item, index) {
+		return JW.Array.trySet(this.items, item, index);
 	},
 
 	/**
@@ -4989,11 +4982,15 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
-		var items = JW.Array.tryClear(this.items);
+		var items = this._tryClear(this.items);
 		if ((items !== undefined) && this._ownsItems) {
 			JW.Array.backEvery(items, JW.destroy);
 		}
 		return items;
+	},
+
+	_tryClear: function() {
+		return JW.Array.tryClear(this.items);
 	},
 
 	/**
@@ -5018,11 +5015,15 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.AbstractArray.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	trySplice: function(removeParamsList, addParamsList) {
-		var spliceResult = JW.Array.trySplice(this.items, removeParamsList, addParamsList);
+		var spliceResult = this._trySplice(removeParamsList, addParamsList);
 		if ((spliceResult !== undefined) && this._ownsItems) {
 			JW.Array.backEvery(spliceResult.getRemovedItems(), JW.destroy);
 		}
 		return spliceResult;
+	},
+
+	_trySplice: function(removeParamsList, addParamsList) {
+		return JW.Array.trySplice(this.items, removeParamsList, addParamsList);
 	},
 
 	/**
@@ -5271,7 +5272,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -5304,7 +5305,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Lister}
 	 * `<T>` Synchronizer.
 	 */
@@ -5326,7 +5327,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * Creates arrays merger.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Merger}
 	 * `<T>` Synchronizer.
 	 */
@@ -5341,7 +5342,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	/**
 	 * Creates array reverser.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractArray.Reverser}
 	 * `<T>` Synchronizer.
 	 */
@@ -5416,7 +5417,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Determines index of first item which is more than specified value by `compare` function,
+	 * Determines index of first item which is more (or less if `order` == -1) than specified value by `compare` function,
 	 * using binary search. Array must be sorted by `compare` function.
 	 * Can be used for item insertion easily.
 	 * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
@@ -5429,10 +5430,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {number} Item index.
 	 */
-	binarySearch: function(value, compare, scope) {
-		return JW.Array.binarySearch(this.items, value, compare, scope);
+	binarySearch: function(value, compare, scope, order) {
+		return JW.Array.binarySearch(this.items, value, compare, scope, order);
 	},
 
 	_callStatic: function(algorithm, args) {
@@ -5624,7 +5626,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -5667,7 +5669,7 @@ JW.extend(JW.AbstractArray.Counter, JW.AbstractCollection.Counter, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -5886,7 +5888,7 @@ JW.extend(JW.AbstractArray.Filterer, JW.AbstractCollection.Filterer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -5929,7 +5931,7 @@ JW.extend(JW.AbstractArray.Indexer, JW.AbstractCollection.Indexer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6058,7 +6060,7 @@ JW.extend(JW.AbstractArray.Inserter, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6086,7 +6088,7 @@ JW.extend(JW.AbstractArray.Inserter, JW.Class, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
  * @param {JW.AbstractArray} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractArray.Lister = function(source, config) {
 	JW.AbstractArray.Lister._super.call(this, source, config);
@@ -6101,7 +6103,7 @@ JW.extend(JW.AbstractArray.Lister, JW.AbstractCollection.Lister, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6174,7 +6176,7 @@ JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6242,7 +6244,7 @@ JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
  * @constructor
  * Creates synchronizer. JW.AbstractArray#createMerger method is preferrable instead.
  * @param {JW.AbstractArray} source `<T>` Source array.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractArray.Merger = function(source, config) {
 	JW.AbstractArray.Merger._super.call(this);
@@ -6316,7 +6318,7 @@ JW.extend(JW.AbstractArray.Merger, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6341,7 +6343,7 @@ JW.extend(JW.AbstractArray.Merger.Bunch, JW.Class);
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6384,7 +6386,7 @@ JW.extend(JW.AbstractArray.Observer, JW.AbstractCollection.Observer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6412,7 +6414,7 @@ JW.extend(JW.AbstractArray.Observer, JW.AbstractCollection.Observer, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.AbstractArray} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractArray.Orderer = function(source, config) {
 	JW.AbstractArray.Orderer._super.call(this, source, config);
@@ -6427,7 +6429,7 @@ JW.extend(JW.AbstractArray.Orderer, JW.AbstractCollection.Orderer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6491,7 +6493,7 @@ JW.extend(JW.AbstractArray.Orderer, JW.AbstractCollection.Orderer, {
  * @constructor
  * Creates synchronizer. JW.AbstractArray#createReverser method is preferrable instead.
  * @param {JW.AbstractArray} source `<T>` Source array.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractArray.Reverser = function(source, config) {
 	JW.AbstractArray.Reverser._super.call(this);
@@ -6528,7 +6530,7 @@ JW.extend(JW.AbstractArray.Reverser, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6571,7 +6573,7 @@ JW.extend(JW.AbstractArray.SorterComparing, JW.AbstractCollection.SorterComparin
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6660,7 +6662,7 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -6732,9 +6734,9 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
  * Collection modification:
  *
  * - {@link #set}, #trySet - Adds or replaces an item by key.
- * - **{@link #setAll}, #trySetAll - Adds or replaces a bunch of items.**
+ * - **{@link #setAll}, #setAllVerbose, #trySetAll - Adds or replaces a bunch of items.**
  * - {@link #remove}, #tryRemove - Removes an item by key.
- * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Removes a bunch of items.**
+ * - **{@link #removeAll}, #removeAllVerbose, #$removeAllVerbose, #tryRemoveAll - Removes a bunch of items.**
  * - {@link #removeItem} - Removes first occurency of an item in collection.
  * - {@link #removeItems} - Removes all occurencies of items in collection.
  * - **{@link #setKey}, #trySetKey - Changes item key.**
@@ -6776,7 +6778,8 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
  */
 JW.AbstractMap = function(json, adapter) {
 	JW.AbstractMap._super.call(this);
-	this.json = adapter ? json : json ? JW.apply({}, json) : {};
+	this._adapter = !!adapter;
+	this.json = this._adapter ? json : json ? JW.apply({}, json) : {};
 	this._length = JW.Map.getLength(this.json);
 	this.getKey = null;
 };
@@ -7113,6 +7116,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.Map} `<T>` Collection index.
 	 */
+	/**
+	 * @method getInverted
+	 * Returns an inverted map. Keys are converted to values, and values are
+	 * converted to keys. `this` must be `JW.AbstractMap<string>`.
+	 * @returns {JW.AbstractMap} `<string>` The inverted map.
+	 */
 
 	/**
 	 * Filters collection by criteria.
@@ -7208,18 +7217,45 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.Proxy} `<T>` Proxy of the replaced item. If not modified - `undefined`.
 	 */
 	trySet: function(item, key) {
-		var spliceResult = this.trySplice([], JW.Map.single(key, item));
-		if (spliceResult !== undefined) {
-			return new JW.Proxy(spliceResult.removedItems[key]);
+		var result = this._trySet(item, key);
+		if (result === undefined) {
+			return;
+		}
+		var oldItem = result.get();
+		if ((oldItem !== undefined) && this._ownsItems) {
+			oldItem.destroy();
+		}
+		return result;
+	},
+
+	_trySet: function(item, key) {
+		var result = JW.Map.trySet(this.json, item, key);
+		if (result === undefined) {
+			return;
+		}
+		if (result.get() === undefined) {
+			++this._length;
+		}
+		return result;
+	},
+
+	/**
+	 * Adds or replaces a bunch of items. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * For old behaviour, use method {@link #setAllVerbose}.
+	 * @param {Object} items Items.
+	 */
+	setAll: function(items) {
+		for (var key in items) {
+			this.trySet(items[key], key);
 		}
 	},
 
 	/**
-	 * Adds or replaces a bunch of items.
+	 * Adds or replaces a bunch of items. Returns verbose result set.
 	 * @param {Object} items Items.
 	 * @returns {JW.AbstractMap.SpliceResult} `<T>` Result of #splice method.
 	 */
-	setAll: function(items) {
+	setAllVerbose: function(items) {
 		var spliceResult = this.trySetAll(items);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
@@ -7251,10 +7287,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {T} Item. If not modified - `undefined`.
 	 */
 	trySetKey: function(oldKey, newKey) {
-		var keyMap = this.tryReindex(JW.Map.single(oldKey, newKey));
-		if (keyMap !== undefined) {
-			return this.json[newKey];
-		}
+		return JW.Map.trySetKey(this.json, oldKey, newKey);
 	},
 
 	/**
@@ -7269,28 +7302,49 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {T} Old collection item. If not modified - `undefined`.
 	 */
 	tryRemove: function(key) {
-		var spliceResult = this.trySplice([key], {});
-		if (spliceResult !== undefined) {
-			return spliceResult.removedItems[key];
+		var item = this._tryRemove(key);
+		if ((item !== undefined) && this._ownsItems) {
+			item.destroy();
+		}
+		return item;
+	},
+
+	_tryRemove: function(key) {
+		var item = JW.Map.tryRemove(this.json, key);
+		if (item === undefined) {
+			return;
+		}
+		--this._length;
+		return item;
+	},
+
+	/**
+	 * Removes a bunch of items from map. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * For old behaviour, use method {@link #removeAllVerbose}.
+	 * @param {Array} keys `<string>` Item keys.
+	 */
+	removeAll: function(keys) {
+		for (var i = 0, l = keys.length; i < l; ++i) {
+			this.tryRemove(keys[i]);
 		}
 	},
 
 	/**
-	 * Removes a bunch of items from map.
+	 * Removes a bunch of items from map. Returns verbose result set.
 	 * @param {Array} keys `<string>` Item keys.
 	 * @returns {Object} `<T>` The removed items.
 	 */
-	removeAll: function(keys) {
+	removeAllVerbose: function(keys) {
 		var items = this.tryRemoveAll(keys);
 		return (items !== undefined) ? items : {};
 	},
 
 	/**
-	 * Removes a bunch of items from map.
+	 * Removes a bunch of items from map. Returns verbose result set.
 	 * @param {Array} keys `<string>` Item keys.
 	 * @returns {JW.Map} `<T>` The removed items.
 	 */
-	$removeAll: JW.AbstractCollection._create$Map("removeAll"),
+	$removeAllVerbose: JW.AbstractCollection._create$Map("removeAllVerbose"),
 
 	/**
 	 * Removes a bunch of items from map.
@@ -7332,10 +7386,24 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {Object} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
-		this._length = 0;
-		var items = JW.Map.tryClear(this.json);
+		var items = this._tryClear();
 		if ((items !== undefined) && this._ownsItems) {
 			JW.Array.backEvery(JW.Map.toArray(items), JW.destroy);
+		}
+		return items;
+	},
+
+	_tryClear: function() {
+		if (this._length === 0) {
+			return;
+		}
+		var items;
+		this._length = 0;
+		if (this._adapter) {
+			items = JW.Map.tryClear(this.json);
+		} else {
+			items = this.json;
+			this.json = {};
 		}
 		return items;
 	},
@@ -7358,12 +7426,17 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	 * @returns {JW.AbstractMap.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	trySplice: function(removedKeys, updatedItems) {
+		var spliceResult = this._trySplice(removedKeys, updatedItems);
+		if ((spliceResult !== undefined) && this._ownsItems) {
+			JW.Array.backEvery(JW.Map.toArray(spliceResult.removedItems), JW.destroy);
+		}
+		return spliceResult;
+	},
+
+	_trySplice: function(removedKeys, updatedItems) {
 		var spliceResult = JW.Map.trySplice(this.json, removedKeys, updatedItems);
 		if (spliceResult !== undefined) {
 			this._length += JW.Map.getLength(spliceResult.addedItems) - JW.Map.getLength(spliceResult.removedItems);
-			if (this._ownsItems) {
-				JW.Array.backEvery(JW.Map.toArray(spliceResult.removedItems), JW.destroy);
-			}
 			return spliceResult;
 		}
 	},
@@ -7447,6 +7520,10 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 		}
 	},
 
+	getInverted: function() {
+		return JW.Map.getInverted(this.json);
+	},
+
 	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
@@ -7494,7 +7571,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractMap.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -7527,7 +7604,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractMap.Lister}
 	 * `<T>` Synchronizer.
 	 */
@@ -7617,7 +7694,7 @@ JW.extend(JW.AbstractMap.SpliceResult, JW.Class, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -7660,7 +7737,7 @@ JW.extend(JW.AbstractMap.Counter, JW.AbstractCollection.Counter, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -7716,7 +7793,7 @@ JW.extend(JW.AbstractMap.Filterer, JW.AbstractCollection.Filterer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -7759,7 +7836,7 @@ JW.extend(JW.AbstractMap.Indexer, JW.AbstractCollection.Indexer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -7889,7 +7966,7 @@ JW.extend(JW.AbstractMap.Inserter, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -7917,7 +7994,7 @@ JW.extend(JW.AbstractMap.Inserter, JW.Class, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
  * @param {JW.AbstractMap} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractMap.Lister = function(source, config) {
 	JW.AbstractMap.Lister._super.call(this, source, config);
@@ -7932,7 +8009,7 @@ JW.extend(JW.AbstractMap.Lister, JW.AbstractCollection.Lister, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -7980,7 +8057,7 @@ JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
 	
 	// override
 	destroy: function() {
-		this._destroyItems(this.target.removeAll(this.source.getKeys()), this.source.getJson());
+		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys()), this.source.getJson());
 		this._super();
 	},
 	
@@ -8005,7 +8082,7 @@ JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -8048,7 +8125,7 @@ JW.extend(JW.AbstractMap.Observer, JW.AbstractCollection.Observer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -8076,7 +8153,7 @@ JW.extend(JW.AbstractMap.Observer, JW.AbstractCollection.Observer, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.AbstractMap} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractMap.Orderer = function(source, config) {
 	JW.AbstractMap.Orderer._super.call(this, source, config);
@@ -8091,7 +8168,7 @@ JW.extend(JW.AbstractMap.Orderer, JW.AbstractCollection.Orderer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -8134,7 +8211,7 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -8236,7 +8313,8 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
  */
 JW.AbstractSet = function(items, adapter) {
 	JW.AbstractSet._super.call(this);
-	this.json = adapter ? items : items ? JW.Array.index(items, JW.byField("_iid")) : {};
+	this._adapter = !!adapter;
+	this.json = this._adapter ? items : items ? JW.Array.index(items, JW.byField("_iid")) : {};
 	this._length = JW.Set.getLength(this.json);
 };
 
@@ -8483,10 +8561,24 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {Array} `<T>` Old collection contents. If not modified - `undefined`.
 	 */
 	tryClear: function() {
-		this._length = 0;
-		var items = JW.Set.tryClear(this.json);
+		var items = this._tryClear();
 		if ((items !== undefined) && this._ownsItems) {
 			JW.Array.backEvery(items, JW.destroy);
+		}
+		return items;
+	},
+
+	_tryClear: function() {
+		if (this._length === 0) {
+			return;
+		}
+		var items;
+		this._length = 0;
+		if (this._adapter) {
+			items = JW.Set.tryClear(this.json);
+		} else {
+			items = this.toArray();
+			this.json = {};
 		}
 		return items;
 	},
@@ -8509,12 +8601,17 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Result. If not modified - `undefined`.
 	 */
 	trySplice: function(removedItems, addedItems) {
+		var spliceResult = this._trySplice(removedItems, addedItems);
+		if ((spliceResult !== undefined) && this._ownsItems) {
+			JW.Array.backEvery(spliceResult.removedItems, JW.destroy);
+		}
+		return spliceResult;
+	},
+
+	_trySplice: function(removedItems, addedItems) {
 		var spliceResult = JW.Set.trySplice(this.json, removedItems, addedItems);
 		if (spliceResult !== undefined) {
 			this._length += spliceResult.addedItems.length - spliceResult.removedItems.length;
-			if (this._ownsItems) {
-				JW.Array.backEvery(spliceResult.removedItems, JW.destroy);
-			}
 			return spliceResult;
 		}
 	},
@@ -8589,7 +8686,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -8622,7 +8719,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractSet.Lister}
 	 * `<T>` Synchronizer.
 	 */
@@ -8701,7 +8798,7 @@ JW.extend(JW.AbstractSet.SpliceResult, JW.Class, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -8744,7 +8841,7 @@ JW.extend(JW.AbstractSet.Counter, JW.AbstractCollection.Counter, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -8800,7 +8897,7 @@ JW.extend(JW.AbstractSet.Filterer, JW.AbstractCollection.Filterer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -8843,7 +8940,7 @@ JW.extend(JW.AbstractSet.Indexer, JW.AbstractCollection.Indexer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -8871,7 +8968,7 @@ JW.extend(JW.AbstractSet.Indexer, JW.AbstractCollection.Indexer, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
  * @param {JW.AbstractSet} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractSet.Lister = function(source, config) {
 	JW.AbstractSet.Lister._super.call(this, source, config);
@@ -8886,7 +8983,7 @@ JW.extend(JW.AbstractSet.Lister, JW.AbstractCollection.Lister, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -8978,7 +9075,7 @@ JW.extend(JW.AbstractSet.Mapper, JW.AbstractCollection.Mapper, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -9021,7 +9118,7 @@ JW.extend(JW.AbstractSet.Observer, JW.AbstractCollection.Observer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -9049,7 +9146,7 @@ JW.extend(JW.AbstractSet.Observer, JW.AbstractCollection.Observer, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.AbstractSet} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.AbstractSet.Orderer = function(source, config) {
 	JW.AbstractSet.Orderer._super.call(this, source, config);
@@ -9064,7 +9161,7 @@ JW.extend(JW.AbstractSet.Orderer, JW.AbstractCollection.Orderer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -9107,7 +9204,7 @@ JW.extend(JW.AbstractSet.SorterComparing, JW.AbstractCollection.SorterComparing,
 /*
 	JW array extension.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -10179,7 +10276,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 */
 	/**
 	 * @method binarySearch
-	 * `<T>` Determines index of first item which is more than specified value by `compare` function,
+	 * `<T>` Determines index of first item which is more (or less if `order` == -1) than specified value by `compare` function,
 	 * using binary search. Array must be sorted by `compare` function.
 	 * Can be used for item insertion easily.
 	 * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
@@ -10190,10 +10287,11 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * `f(t1: T, t2: T): number`
 	 *
-	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Comparer function. Returns positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to `JW.cmp(t1, t2)`.
 	 *
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
 	 * @returns {number} Item index.
 	 */
 });
@@ -10201,7 +10299,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -10745,9 +10843,10 @@ JW.apply(JW.Array, {
 		return target.pop();
 	},
 
-	binarySearch: function(target, value, compare, scope) {
+	binarySearch: function(target, value, compare, scope, order) {
 		compare = compare || function(x, y) { return (x < y) ? -1 : (x > y) ? 1 : 0 };
 		scope = scope || target;
+		order = order || 1;
 		var length = target.length;
 		var len2 = length >> 1;
 		var step = 1;
@@ -10756,7 +10855,7 @@ JW.apply(JW.Array, {
 		}
 		var index = 0;
 		while (step) {
-			if ((index + step <= length) && (compare.call(scope, value, target[index + step - 1]) >= 0)) {
+			if ((index + step <= length) && (order * compare.call(scope, value, target[index + step - 1]) >= 0)) {
 				index += step;
 			}
 			step >>= 1;
@@ -10768,7 +10867,7 @@ JW.apply(JW.Array, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -11488,7 +11587,15 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 */
 	/**
 	 * @method setAll
-	 * `<T>` Adds or replaces a bunch of items.
+	 * `<T>` Adds or replaces a bunch of items. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * For old behaviour, use method {@link #static-method-setAllVerbose}.
+	 * @static
+	 * @param {Object} map `<T>` Map.
+	 * @param {Object} items Items.
+	 */
+	/**
+	 * @method setAllVerbose
+	 * `<T>` Adds or replaces a bunch of items. Returns verbose result set.
 	 * @static
 	 * @param {Object} map `<T>` Map.
 	 * @param {Object} items Items.
@@ -11538,15 +11645,23 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 */
 	/**
 	 * @method removeAll
-	 * `<T>` Removes a bunch of items from map.
+	 * `<T>` Removes a bunch of items from map. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * For old behaviour, use method {@link #removeAllVerbose}.
+	 * @static
+	 * @param {Object} map `<T>` Map.
+	 * @param {Array} keys `<string>` Item keys.
+	 */
+	/**
+	 * @method removeAllVerbose
+	 * `<T>` Removes a bunch of items from map. Returns verbose result set.
 	 * @static
 	 * @param {Object} map `<T>` Map.
 	 * @param {Array} keys `<string>` Item keys.
 	 * @returns {Object} `<T>` The removed items.
 	 */
 	/**
-	 * @method $removeAll
-	 * `<T>` Removes a bunch of items from map.
+	 * @method $removeAllVerbose
+	 * `<T>` Removes a bunch of items from map. Returns verbose result set.
 	 * @static
 	 * @param {Object} map `<T>` Map.
 	 * @param {Array} keys `<string>` Item keys.
@@ -11652,12 +11767,19 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @param {Object} map2 `<T>` Another map.
 	 * @returns {boolean} Maps are equal.
 	 */
+	/**
+	 * @method getInverted
+	 * Returns an inverted map. Keys are converted to values, and values are
+	 * converted to keys. `this` must be `JW.AbstractMap<string>`.
+	 * @static
+	 * @returns {JW.AbstractMap} `<string>` The inverted map.
+	 */
 });
 
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -11766,6 +11888,14 @@ JW.apply(JW.Map, {
 	},
 
 	setAll: function(target, items) {
+		// JW.assertMap(target);
+		// JW.assertMap(items, JW.assertDefined);
+		for (var key in items) {
+			target[key] = items[key];
+		}
+	},
+
+	setAllVerbose: function(target, items) {
 		var spliceResult = JW.Map.trySetAll(target, items);
 		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractMap.SpliceResult({}, {});
 	},
@@ -11823,11 +11953,19 @@ JW.apply(JW.Map, {
 	},
 
 	removeAll: function(target, keys) {
+		// JW.assertMap(target);
+		for (var i = 0, l = keys.length; i < l; ++i) {
+			var key = keys[i];
+			delete target[key];
+		}
+	},
+
+	removeAllVerbose: function(target, keys) {
 		var items = JW.Map.tryRemoveAll(target, keys);
 		return (items !== undefined) ? items : {};
 	},
 
-	$removeAll: JW.AbstractCollection._createStatic$Map(JW.Map, "removeAll"),
+	$removeAllVerbose: JW.AbstractCollection._createStatic$Map(JW.Map, "removeAllVerbose"),
 
 	tryRemoveAll: function(target, keys) {
 		// JW.assertMap(target);
@@ -11903,25 +12041,36 @@ JW.apply(JW.Map, {
 		// JW.assertMap(target);
 		// JW.assertMap(keyMap, JW.assertString);
 		// JW.assertMap(keyMap, function(key) { return target.hasOwnProperty(key); }, this);
-		var oldItems = JW.Map.tryClear(target);
-		if (oldItems === undefined) {
-			return;
-		}
-		var resultMap = {};
-		for (var oldKey in oldItems) {
+		var sanitizedKeyMap = {};
+		for (var oldKey in keyMap) {
 			var newKey = keyMap[oldKey];
-			if ((newKey === undefined) || (newKey === oldKey)) {
-				// JW.assertUndefined(target[oldKey]);
-				target[oldKey] = oldItems[oldKey];
-			} else {
-				// JW.assertUndefined(target[newKey]);
-				target[newKey] = oldItems[oldKey];
-				resultMap[oldKey] = newKey;
+			if ((newKey === undefined) || (newKey === oldKey) || (target[oldKey] === undefined)) {
+				continue;
+			}
+			sanitizedKeyMap[oldKey] = newKey;
+		}
+
+		var backKeyMap = JW.Map.getInverted(sanitizedKeyMap);
+		var removedKeys = [];
+		var updatedItems = {};
+		for (var oldKey in sanitizedKeyMap) {
+			var newKey = sanitizedKeyMap[oldKey];
+			// JW.assertUndefined(updatedItems[newKey]);
+			sanitizedKeyMap[oldKey] = newKey;
+			updatedItems[newKey] = target[oldKey];
+			if (backKeyMap[oldKey] === undefined) {
+				removedKeys.push(oldKey);
 			}
 		}
-		if (!JW.Map.isEmpty(resultMap)) {
-			return resultMap;
+
+		if (JW.Map.isEmpty(sanitizedKeyMap)) {
+			return;
 		}
+		for (var i = 0, l = removedKeys.length; i < l; ++i) {
+			delete target[removedKeys[i]];
+		}
+		JW.apply(target, updatedItems);
+		return sanitizedKeyMap;
 	},
 
 	detectSplice: function(oldItems, newItems) {
@@ -12007,13 +12156,23 @@ JW.apply(JW.Map, {
 			}
 		}
 		return removedKeys;
+	},
+
+	getInverted: function(map) {
+		// JW.assertMap(map, JW.assertString);
+		var result = {};
+		for (var key in map) {
+			// JW.assertUndefined(result[map[key]]);
+			result[map[key]] = key;
+		}
+		return result;
 	}
 });
 
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -12659,7 +12818,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -12907,7 +13066,7 @@ JW.apply(JW.Set, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -13002,12 +13161,15 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 
 	// override
 	trySet: function(item, index) {
-		var oldItem = this._super(item, index);
+		var oldItem = this._trySet(item, index);
 		if (oldItem === undefined) {
 			return;
 		}
 		this.replaceEvent.trigger(new JW.ObservableArray.ReplaceEventParams(this, index, oldItem.value, item));
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		if (this._ownsItems) {
+			oldItem.get().destroy();
+		}
 		return oldItem;
 	},
 
@@ -13024,25 +13186,31 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 
 	// override
 	tryClear: function() {
-		var oldItems = this._super();
+		var oldItems = this._tryClear();
 		if (oldItems === undefined) {
 			return;
 		}
 		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableArray.ItemsEventParams(this, oldItems));
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(oldItems, JW.destroy);
+		}
 		return oldItems;
 	},
 
 	// override
 	trySplice: function(removeParamsList, addParamsList) {
-		var result = this._super(removeParamsList, addParamsList);
+		var result = this._trySplice(removeParamsList, addParamsList);
 		if (result === undefined) {
 			return;
 		}
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableArray.SpliceEventParams(this, result));
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(result.getRemovedItems(), JW.destroy);
+		}
 		return result;
 	},
 
@@ -13136,7 +13304,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableArray.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -13169,7 +13337,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableArray.Lister}
 	 * `<T>` Synchronizer.
 	 */
@@ -13191,7 +13359,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	/**
 	 * Creates arrays merger.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableArray.Merger}
 	 * `<T>` Synchronizer.
 	 */
@@ -13206,7 +13374,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	/**
 	 * Creates array reverser.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableArray.Reverser}
 	 * `<T>` Synchronizer.
 	 */
@@ -13381,7 +13549,7 @@ JW.extend(JW.ObservableArray.ReorderEventParams, JW.ObservableArray.ItemsEventPa
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -13449,7 +13617,7 @@ JW.extend(JW.ObservableArray.Counter, JW.AbstractArray.Counter, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -13555,7 +13723,7 @@ JW.extend(JW.ObservableArray.Filterer, JW.AbstractArray.Filterer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -13615,7 +13783,7 @@ JW.extend(JW.ObservableArray.Indexer, JW.AbstractArray.Indexer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -13711,7 +13879,7 @@ JW.extend(JW.ObservableArray.Inserter, JW.AbstractArray.Inserter, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -13739,7 +13907,7 @@ JW.extend(JW.ObservableArray.Inserter, JW.AbstractArray.Inserter, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
  * @param {JW.ObservableArray} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableArray.Lister = function(source, config) {
 	JW.ObservableArray.Lister._super.call(this, source, config);
@@ -13766,7 +13934,7 @@ JW.extend(JW.ObservableArray.Lister, JW.AbstractArray.Lister, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -13845,7 +14013,7 @@ JW.extend(JW.ObservableArray.Mapper, JW.AbstractArray.Mapper, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -13873,7 +14041,7 @@ JW.extend(JW.ObservableArray.Mapper, JW.AbstractArray.Mapper, {
  * @constructor
  * Creates synchronizer. JW.AbstractArray#createMerger method is preferrable instead.
  * @param {JW.ObservableArray} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableArray.Merger = function(source, config) {
 	JW.ObservableArray.Merger._super.call(this, source, config);
@@ -13996,7 +14164,7 @@ JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14093,7 +14261,7 @@ JW.extend(JW.ObservableArray.Merger.Bunch, JW.AbstractArray.Merger.Bunch, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14167,7 +14335,7 @@ JW.extend(JW.ObservableArray.Observer, JW.AbstractArray.Observer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14195,7 +14363,7 @@ JW.extend(JW.ObservableArray.Observer, JW.AbstractArray.Observer, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.ObservableArray} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableArray.Orderer = function(source, config) {
 	JW.ObservableArray.Orderer._super.call(this, source, config);
@@ -14227,7 +14395,7 @@ JW.extend(JW.ObservableArray.Orderer, JW.AbstractArray.Orderer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14255,7 +14423,7 @@ JW.extend(JW.ObservableArray.Orderer, JW.AbstractArray.Orderer, {
  * @constructor
  * Creates synchronizer. JW.AbstractArray#createReverser method is preferrable instead.
  * @param {JW.ObservableArray} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableArray.Reverser = function(source, config) {
 	JW.ObservableArray.Reverser._super.call(this, source, config);
@@ -14325,7 +14493,7 @@ JW.extend(JW.ObservableArray.Reverser, JW.AbstractArray.Reverser, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14380,7 +14548,7 @@ JW.extend(JW.ObservableArray.SorterComparing, JW.AbstractArray.SorterComparing, 
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14401,7 +14569,7 @@ JW.ObservableArray.Splitter = JW.AbstractArray.Splitter.extend();
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14481,26 +14649,92 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	},
 
 	// override
+	trySet: function(item, key) {
+		var result = this._trySet(item, key);
+		if (result === undefined) {
+			return;
+		}
+		var removedItems = {};
+		var removedItem = result.get();
+		if (removedItem !== undefined) {
+			removedItems[key] = removedItem;
+		}
+		var addedItems = {};
+		addedItems[key] = item;
+		var spliceResult = new JW.AbstractMap.SpliceResult(removedItems, addedItems);
+		this.length.set(this.getLength());
+		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		if ((removedItem !== undefined) && this._ownsItems) {
+			removedItem.destroy();
+		}
+		return result;
+	},
+
+	// override
+	setAll: function(items) {
+		this.trySetAll(items);
+	},
+
+	// override
+	trySetKey: function(oldKey, newKey) {
+		var item = this._super(oldKey, newKey);
+		if (item === undefined) {
+			return;
+		}
+		this.reindexEvent.trigger(new JW.ObservableMap.ReindexEventParams(this, JW.Map.single(oldKey, newKey)));
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		return item;
+	},
+
+	// override
+	tryRemove: function(key) {
+		var item = this._tryRemove(key);
+		if (item === undefined) {
+			return;
+		}
+		var spliceResult = new JW.AbstractMap.SpliceResult(JW.Map.single(key, item), {});
+		this.length.set(this.getLength());
+		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
+		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		if (this._ownsItems) {
+			item.destroy();
+		}
+		return item;
+	},
+
+	// override
+	removeAll: function(keys) {
+		this.tryRemoveAll(keys);
+	},
+
+	// override
 	trySplice: function(removedKeys, updatedItems) {
-		var spliceResult = this._super(removedKeys, updatedItems);
+		var spliceResult = this._trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return;
 		}
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableMap.SpliceEventParams(this, spliceResult));
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(JW.Map.toArray(spliceResult.removedItems), JW.destroy);
+		}
 		return spliceResult;
 	},
 
 	// override
 	tryClear: function() {
-		var items = this._super();
+		var items = this._tryClear();
 		if (items === undefined) {
 			return;
 		}
 		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableMap.ItemsEventParams(this, items));
 		this.changeEvent.trigger(new JW.ObservableMap.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(JW.Map.toArray(items), JW.destroy);
+		}
 		return items;
 	},
 
@@ -14594,7 +14828,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableMap.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -14627,7 +14861,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableMap.Lister}
 	 * `<T>` Synchronizer.
 	 */
@@ -14740,7 +14974,7 @@ JW.extend(JW.ObservableMap.ItemsEventParams, JW.ObservableMap.EventParams, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14792,7 +15026,7 @@ JW.extend(JW.ObservableMap.Counter, JW.AbstractMap.Counter, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14849,7 +15083,7 @@ JW.extend(JW.ObservableMap.Filterer, JW.AbstractMap.Filterer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14902,7 +15136,7 @@ JW.extend(JW.ObservableMap.Indexer, JW.AbstractMap.Indexer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14968,7 +15202,7 @@ JW.extend(JW.ObservableMap.Inserter, JW.AbstractMap.Inserter, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -14996,7 +15230,7 @@ JW.extend(JW.ObservableMap.Inserter, JW.AbstractMap.Inserter, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
  * @param {JW.ObservableMap} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableMap.Lister = function(source, config) {
 	JW.ObservableMap.Lister._super.call(this, source, config);
@@ -15021,7 +15255,7 @@ JW.extend(JW.ObservableMap.Lister, JW.AbstractMap.Lister, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15084,7 +15318,7 @@ JW.extend(JW.ObservableMap.Mapper, JW.AbstractMap.Mapper, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15138,7 +15372,7 @@ JW.extend(JW.ObservableMap.Observer, JW.AbstractMap.Observer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15166,7 +15400,7 @@ JW.extend(JW.ObservableMap.Observer, JW.AbstractMap.Observer, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.ObservableMap} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableMap.Orderer = function(source, config) {
 	JW.ObservableMap.Orderer._super.call(this, source, config);
@@ -15191,7 +15425,7 @@ JW.extend(JW.ObservableMap.Orderer, JW.AbstractMap.Orderer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15243,7 +15477,7 @@ JW.extend(JW.ObservableMap.SorterComparing, JW.AbstractMap.SorterComparing, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15317,25 +15551,31 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 
 	// override
 	tryClear: function() {
-		var items = this._super();
+		var items = this._tryClear();
 		if (items === undefined) {
 			return;
 		}
 		this.length.set(0);
 		this.clearEvent.trigger(new JW.ObservableSet.ItemsEventParams(this, items));
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(items, JW.destroy);
+		}
 		return items;
 	},
 
 	// override
 	trySplice: function(removedItems, addedItems) {
-		var spliceResult = this._super(removedItems, addedItems);
+		var spliceResult = this._trySplice(removedItems, addedItems);
 		if (spliceResult === undefined) {
 			return;
 		}
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, spliceResult));
 		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(spliceResult.removedItems, JW.destroy);
+		}
 		return spliceResult;
 	},
 
@@ -15418,7 +15658,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	/**
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Orderer}
 	 * `<T>` Synchronizer.
 	 */
@@ -15451,7 +15691,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	/**
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
-	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.ObservableSet.Lister}
 	 * `<T>` Synchronizer.
 	 */
@@ -15529,7 +15769,7 @@ JW.extend(JW.ObservableSet.ItemsEventParams, JW.ObservableSet.EventParams, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15581,7 +15821,7 @@ JW.extend(JW.ObservableSet.Counter, JW.AbstractSet.Counter, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15633,7 +15873,7 @@ JW.extend(JW.ObservableSet.Filterer, JW.AbstractSet.Filterer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15686,7 +15926,7 @@ JW.extend(JW.ObservableSet.Indexer, JW.AbstractSet.Indexer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15714,7 +15954,7 @@ JW.extend(JW.ObservableSet.Indexer, JW.AbstractSet.Indexer, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createLister method is preferrable instead.
  * @param {JW.ObservableSet} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableSet.Lister = function(source, config) {
 	JW.ObservableSet.Lister._super.call(this, source, config);
@@ -15736,7 +15976,7 @@ JW.extend(JW.ObservableSet.Lister, JW.AbstractSet.Lister, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15791,7 +16031,7 @@ JW.extend(JW.ObservableSet.Mapper, JW.AbstractSet.Mapper, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15845,7 +16085,7 @@ JW.extend(JW.ObservableSet.Observer, JW.AbstractSet.Observer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15873,7 +16113,7 @@ JW.extend(JW.ObservableSet.Observer, JW.AbstractSet.Observer, {
  * @constructor
  * Creates synchronizer. JW.AbstractCollection#createOrderer method is preferrable instead.
  * @param {JW.ObservableSet} source `<T>` Source collection.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.ObservableSet.Orderer = function(source, config) {
 	JW.ObservableSet.Orderer._super.call(this, source, config);
@@ -15897,7 +16137,7 @@ JW.extend(JW.ObservableSet.Orderer, JW.AbstractSet.Orderer, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15947,7 +16187,7 @@ JW.extend(JW.ObservableSet.SorterComparing, JW.AbstractSet.SorterComparing, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -15993,7 +16233,7 @@ JW.extend(JW.ObservableSet.SorterComparing, JW.AbstractSet.SorterComparing, {
  *
  * @constructor
  * @param {JW.Property} source `<V>` Source property.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.Copier = function(source, config) {
 	JW.Copier._super.call(this);
@@ -16024,7 +16264,7 @@ JW.extend(JW.Copier, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -16083,7 +16323,7 @@ JW.extend(JW.Copier, JW.Class, {
  * Calculates target property value based on source property values.
  *
  * @param {Object} scope Function call scope.
- * @param {Object} config Configuration (see Config options).
+ * @param {Object} [config] Configuration (see Config options).
  */
 JW.Functor = function(sources, func, scope, config) {
 	JW.Functor._super.call(this);
@@ -16142,7 +16382,7 @@ JW.extend(JW.Functor, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -16393,7 +16633,7 @@ JW.extend(JW.Mapper, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -16436,6 +16676,8 @@ JW.extend(JW.Mapper, JW.Class, {
  * CSS style in a DOM element
  * - JW.UI.ClassUpdater - watches a boolean property and updates the specified
  * CSS class presence in a DOM element
+ * - JW.UI.ClassNameUpdater - watches a string property and updates
+ * the CSS class name in the DOM element
  * - JW.UI.VisibleUpdater - watches a boolean property and updates visibility
  * of the specified DOM element
  * - JW.UI.RadioUpdater - watches a string property and updates the selection
@@ -16500,6 +16742,7 @@ JW.extend(JW.Property, JW.Class, {
 		if (this._ownsValue && JW.isSet(this._value)) {
 			this._value.destroy();
 		}
+		this._value = null;
 		this._super();
 	},
 	
@@ -16559,7 +16802,7 @@ JW.extend(JW.Property, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -16718,7 +16961,7 @@ JW.extend(JW.Switcher, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -16809,7 +17052,7 @@ JW.extend(JW.Updater, JW.Class, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -16938,7 +17181,7 @@ JW.makeFactory = JW.makeRegistry;
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -16990,7 +17233,7 @@ JW.extend(JW.Interval, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -17078,7 +17321,7 @@ JW.extend(JW.Proxy, JW.Class, {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -17125,7 +17368,7 @@ JW.setInterval = function(callback, ms) {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -17332,7 +17575,7 @@ JW.String = {
 /*
 	jWidget Lib source file.
 	
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
@@ -17384,7 +17627,7 @@ JW.extend(JW.Timeout, JW.Class, {
 /*
 	jWidget Lib source file.
 
-	Copyright (C) 2014 Egor Nepomnyaschih
+	Copyright (C) 2015 Egor Nepomnyaschih
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as published by
