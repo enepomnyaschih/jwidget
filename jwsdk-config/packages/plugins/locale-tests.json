@@ -1,0 +1,10 @@
+{
+	"requires" : [
+		"jwunit",
+		"plugins/locale"
+	],
+
+	"resources" : [
+		"plugins/locale-tests.js"
+	]
+}

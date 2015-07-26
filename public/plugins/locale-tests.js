@@ -1,0 +1,101 @@
+/*
+	jWidget UI tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+JW.Tests = {};
+JW.Tests.Plugins = {};
+
+JW.Tests.Plugins.LocaleTestCase = JW.Unit.TestCase.extend({
+	setup: function() {
+		this.dictionary = {
+			en: {
+				_lang: "English",
+				name: "Name",
+				submit: "Submit",
+				equipment: {
+					monitor: "Monitor",
+					keyboard: "Keyboard",
+					mouse: "Mouse"
+				},
+				monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+				              "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+			},
+			ru: {
+				_lang: "Русский",
+				name: "Имя",
+				submit: "Отправить",
+				equipment: {
+					monitor: "Монитор",
+					keyboard: "Клавиатура",
+					mouse: "Мышь"
+				},
+				monthsShort: ["Янв", "Фев", "Мар", "Апр", "Мая", "Июн",
+				              "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+			}
+		};
+	},
+
+	testLocale: function()
+	{
+		var lang = new JW.Property("en");
+		var locale = new JW.Plugins.Locale(this.dictionary, lang);
+		this.assertTrue(JW.Array.equal(["en", "ru"], locale.getLanguages()));
+		this.assertStrictEqual("Name", locale.getString("name"));
+		this.assertStrictEqual("Monitor", locale.getString("equipment.monitor"));
+		this.assertStrictEqual("Feb", locale.getString(["monthsShort", 1]));
+
+		var equipmentLocale = locale.getSubLocale("equipment");
+		this.assertStrictEqual("Monitor", equipmentLocale.getString("monitor"));
+
+		var submitFunctor = locale.getFunctor("submit");
+		this.assertStrictEqual("Submit", submitFunctor.target.get());
+
+		var monitorFunctor = equipmentLocale.getFunctor("monitor");
+		this.assertStrictEqual("Monitor", monitorFunctor.target.get());
+
+		var date = new Date(2010, 0, 1);
+		var format = JW.Plugins.Locale.formatDate(date, "mmm'yy");
+		this.assertStrictEqual("Jan'10", locale.expandTemplate(format));
+
+		var dateFunctor = locale.getTemplateFunctor(format);
+		this.assertStrictEqual("Jan'10", dateFunctor.target.get());
+
+		lang.set("ru");
+		this.assertStrictEqual("Имя", locale.getString("name"));
+		this.assertStrictEqual("Монитор", locale.getString("equipment.monitor"));
+		this.assertStrictEqual("Фев", locale.getString(["monthsShort", 1]));
+		this.assertStrictEqual("Монитор", equipmentLocale.getString("monitor"));
+		this.assertStrictEqual("Отправить", submitFunctor.target.get());
+		this.assertStrictEqual("Монитор", monitorFunctor.target.get());
+		this.assertStrictEqual("Янв'10", locale.expandTemplate(format));
+		this.assertStrictEqual("Янв'10", dateFunctor.target.get());
+
+		this.assertStrictEqual("English", locale.getString("en", "_lang"));
+		this.assertStrictEqual("Русский", locale.getString("ru", "_lang"));
+
+		submitFunctor.destroy();
+		monitorFunctor.destroy();
+		dateFunctor.destroy();
+	}
+});
+
+jQuery(function() {
+	setTimeout(function() {
+		JW.Unit.run("JW.Tests", JW.Tests);
+	}, 1000);
+});

@@ -1,0 +1,5 @@
+{
+	"template" : "base",
+	"package"  : "plugins/locale-tests",
+	"title"    : "jWidget Locale plugin unit tests"
+}
