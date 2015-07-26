@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractMap.FiltererTestCase = JW.Unit.TestCase.extend({
+	testUnobservableTarget: function() {
+		var source = new JW.Map({a: 1, b: 2, c: 3, d: 4, e: 5});
+		var target = new JW.Map();
+		
+		var filterer = this.createFilterer(source, target);
+		this.assertTarget({a: 1, c: 3, e: 5}, target);
+		
+		filterer.destroy();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testObservableTarget: function() {
+		var source = new JW.Map({a: 1, b: 2, c: 3, d: 4, e: 5});
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 0 to 3&quot;,
+			&quot;Spliced -{} +{a:1,c:3,e:5}&quot;,
+			&quot;Changed&quot;
+		);
+		var filterer = this.createFilterer(source, target);
+		this.assertTarget({a: 1, c: 3, e: 5}, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 3 to 0&quot;,
+			&quot;Spliced -{a:1,c:3,e:5} +{}&quot;,
+			&quot;Changed&quot;
+		);
+		filterer.destroy();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testMultiSource: function() {
+		var source1 = new JW.Map({&quot;a&quot;: 1, &quot;b&quot;: 2});
+		var source2 = new JW.Map({&quot;c&quot;: 4, &quot;d&quot;: 5});
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 0 to 1&quot;,
+			&quot;Spliced -{} +{e:7}&quot;,
+			&quot;Changed&quot;
+		);
+		target.set(7, &quot;e&quot;);
+		this.assertTarget({&quot;e&quot;: 7}, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 1 to 2&quot;,
+			&quot;Spliced -{} +{a:1}&quot;,
+			&quot;Changed&quot;
+		);
+		var filterer1 = this.createFilterer(source1, target);
+		this.assertTarget({e: 7, a: 1}, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 2 to 3&quot;,
+			&quot;Spliced -{} +{d:5}&quot;,
+			&quot;Changed&quot;
+		);
+		var filterer2 = this.createFilterer(source2, target);
+		this.assertTarget({e: 7, a: 1, d: 5}, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 3 to 2&quot;,
+			&quot;Spliced -{a:1} +{}&quot;,
+			&quot;Changed&quot;
+		);
+		filterer1.destroy();
+		this.assertTarget({e: 7, d: 5}, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 2 to 1&quot;,
+			&quot;Spliced -{d:5} +{}&quot;,
+			&quot;Changed&quot;
+		);
+		filterer2.destroy();
+		this.assertTarget({e: 7}, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		
+		source1.destroy();
+		source2.destroy();
+	},
+	
+	// tests that empty source doesn't cause target to trigger &quot;change&quot; on synchronizer initialization
+	testEmptyChange: function() {
+		var source = new JW.Map();
+		var target = this.createTarget();
+		var filterer = this.createFilterer(source, target);
+		filterer.destroy();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testAutoTarget: function() {
+		var source = new JW.Map({a: 1, b: 2, c: 3});
+		var filterer = this.createFilterer(source);
+		this.assertTrue(filterer.target instanceof JW.Map);
+		this.assertTarget({a: 1, c: 3}, filterer.target);
+		filterer.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function() {
+		var target = new JW.ObservableMap();
+		JW.Tests.Collection.subscribeToMap(this, target);
+		return target;
+	},
+	
+	createFilterer: function(source, target) {
+		return source.createFilterer({
+			target: target,
+			filterItem: function(x) { return x % 2 === 1; },
+			scope: this
+		});
+	},
+	
+	assertTarget: function(expected, map) {
+		JW.Tests.Collection.assertMap(this, expected, map);
+	}
+});
+</pre>
+</body>
+</html>

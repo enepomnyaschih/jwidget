@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">JW.Plugins = JW.Plugins || {};
+
+<span id='JW-Plugins-Locale-method-constructor'><span id='JW-Plugins-Locale'>/**
+</span></span> * @class
+ *
+ * Application localization management class.
+ *
+ * ## Definition of a problem
+ *
+ * Assume that you have the next localization dictionary:
+ *
+ *     var dictionary = {
+ *         en: {
+ *             _lang: &quot;English&quot;,
+ *             name: &quot;Name&quot;,
+ *             submit: &quot;Submit&quot;,
+ *             equipment: {
+ *                 monitor: &quot;Monitor&quot;,
+ *                 keyboard: &quot;Keyboard&quot;,
+ *                 mouse: &quot;Mouse&quot;
+ *             },
+ *             monthsShort: [&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;,
+ *                           &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot;]
+ *         },
+ *         ru: {
+ *             _lang: &quot;Русский&quot;,
+ *             name: &quot;Имя&quot;,
+ *             submit: &quot;Отправить&quot;,
+ *             equipment: {
+ *                 monitor: &quot;Монитор&quot;,
+ *                 keyboard: &quot;Клавиатура&quot;,
+ *                 mouse: &quot;Мышь&quot;
+ *             },
+ *             monthsShort: [&quot;Янв&quot;, &quot;Фев&quot;, &quot;Мар&quot;, &quot;Апр&quot;, &quot;Мая&quot;, &quot;Июн&quot;,
+ *                           &quot;Июл&quot;, &quot;Авг&quot;, &quot;Сен&quot;, &quot;Окт&quot;, &quot;Ноя&quot;, &quot;Дек&quot;]
+ *         }
+ *     };
+ *
+ * You need to implement a component for dynamic switching of application localization without page refreshing.
+ * It is easy thanks to JW.Plugins.Locale. It is based on JW.Property.
+ *
+ * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;400&quot; height=&quot;140&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.2/locale.html&quot;&gt;&lt;/iframe&gt;
+ *
+ * Source code of the example is not minified so you can review it using &quot;View source code of the frame&quot; context
+ * menu item in your browser.
+ *
+ * ## getString method
+ *
+ * You can get a specified string in a current or specified locale using {@link JW.Plugins.Locale#getString getString} method.
+ *
+ *     // ... define the dictionary
+ *
+ *     function assert(x) {
+ *         if (!x) {
+ *             throw &quot;Assertion failed&quot;;
+ *         }
+ *     }
+ *
+ *     $(function() {
+ *         var lang = new JW.Property(&quot;en&quot;);
+ *         var locale = new JW.Plugins.Locale(dictionary, lang);
+ *         assert(&quot;Name&quot; === locale.{@link JW.Plugins.Locale#getString getString}(&quot;name&quot;));
+ *         assert(&quot;Monitor&quot; === locale.{@link JW.Plugins.Locale#getString getString}(&quot;equipment.monitor&quot;));
+ *         assert(&quot;Feb&quot; === locale.{@link JW.Plugins.Locale#getString getString}([&quot;monthsShort&quot;, 1]));
+ *
+ *         lang.{@link JW.Property#set set}(&quot;ru&quot;);
+ *         assert(&quot;Имя&quot; === locale.{@link JW.Plugins.Locale#getString getString}(&quot;name&quot;));
+ *         assert(&quot;Монитор&quot; === locale.{@link JW.Plugins.Locale#getString getString}(&quot;equipment.monitor&quot;));
+ *         assert(&quot;Фев&quot; === locale.{@link JW.Plugins.Locale#getString getString}([&quot;monthsShort&quot;, 1]));
+ *
+ *         assert(&quot;English&quot; === locale.{@link JW.Plugins.Locale#getString getString}(&quot;en&quot;, &quot;_lang&quot;));
+ *         assert(&quot;Русский&quot; === locale.{@link JW.Plugins.Locale#getString getString}(&quot;ru&quot;, &quot;_lang&quot;));
+ *     });
+ *
+ * ## getProperty method
+ *
+ * If you need to switch the application locale dynamically, {@link JW.Plugins.Locale#getString getString} method is not enough.
+ * Let's try {@link JW.Plugins.Locale#getProperty getProperty} method which builds a new instance of JW.Property containing
+ * a specified string in a current locale. The property will update itself automatically when user selects another locale.
+ *
+ *     $(function() {
+ *         var lang = new JW.Property(&quot;en&quot;);
+ *         var locale = new JW.Plugins.Locale(dictionary, lang);
+ *
+ *         var submitProperty = locale.{@link JW.Plugins.Locale#getProperty getProperty}(&quot;submit&quot;);
+ *         assert(&quot;Submit&quot; === submitProperty.{@link JW.Property#get get}());
+ *
+ *         lang.{@link JW.Property#set set}(&quot;ru&quot;);
+ *         assert(&quot;Отправить&quot; === submitProperty.{@link JW.Property#get get}());
+ *
+ *         submitProperty.{@link JW.Property#destroy destroy}(); // destroy the property since it is no more in use
+ *     });
+ *
+ * ## getProperty method usage in the components
+ *
+ * Assume that you need to output a &quot;name&quot; string as a label inside a form, and &quot;submit&quot; string as a
+ * submit button caption. Let's use JW.UI.TextUpdater and JW.UI.ValueUpdater helpers.
+ *
+ *     var Form = function(locale) {
+ *         Form.{@link JW.Class#static-property-_super _super}.call(this);
+ *         this.locale = locale; // JW.Plugins.Locale
+ *     };
+ *
+ *     JW.extend(Form, JW.UI.Component, {
+ *         renderNameLabel: function(el) {
+ *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}(&quot;name&quot;));
+ *             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+ *         },
+ *
+ *         renderSubmit: function(el) {
+ *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}(&quot;submit&quot;));
+ *             this.{@link JW.Class#own own}(new JW.UI.ValueUpdater(el, text));
+ *         }
+ *     });
+ *
+ *     JW.UI.template(Form, {
+ *         main:
+ *             '&lt;form&gt;' +
+ *                 '&lt;label&gt;&lt;span jwid=&quot;name-label&quot;&gt;&lt;/span&gt;&lt;input type=&quot;text&quot;&gt;&lt;/label&gt;' +
+ *                 '&lt;input jwid=&quot;submit&quot; type=&quot;submit&quot;&gt;' +
+ *             '&lt;/form&gt;'
+ *     });
+ *
+ * Test the form.
+ *
+ *     $(function() {
+ *         var lang = new JW.Property(&quot;en&quot;);
+ *         var locale = new JW.Plugins.Locale(dictionary, lang);
+ *
+ *         var form = new Form(locale).{@link JW.UI.Component#renderTo renderTo}(&quot;body&quot;);
+ *
+ *         // In 2 seconds, switch to Russian locale
+ *         setTimeout(function() { lang.{@link JW.Property#set set}(&quot;ru&quot;); }, 2000);
+ *     });
+ *
+ * ## Locale switch component
+ *
+ * We need a nice component for localization switching. Let's render it as a set of radios with
+ * JW.UI.RadioUpdater and JW.UI.RadioListener helpers bound to them.
+ *
+ *     var LocaleSwitch = function(locale) {
+ *         LocaleSwitch.{@link JW.Class#static-property-_super _super}.call(this);
+ *         this.locale = locale; // JW.Plugins.Locale
+ *     };
+ *
+ *     JW.extend(LocaleSwitch, JW.UI.Component, {
+ *         renderRoot: function() {
+ *             return JW.Array.$map(this.locale.getLanguages(), function(lang) {
+ *                 return this.{@link JW.Class#own own}(new LocaleSwitchItem(this.locale, lang));
+ *             }, this);
+ *         },
+ *
+ *         afterRender: function() {
+ *             this.{@link JW.Class#method-_super _super}();
+ *             this.{@link JW.Class#own own}(new JW.UI.RadioUpdater(this.{@link JW.UI.Component#el el}, &quot;lang&quot;, this.locale.{@link JW.Plugins.Locale#lang lang}));
+ *             this.{@link JW.Class#own own}(new JW.UI.RadioListener(this.{@link JW.UI.Component#el el}, &quot;lang&quot;, this.locale.{@link JW.Plugins.Locale#lang lang}));
+ *         }
+ *     });
+ *
+ *     JW.UI.template(LocaleSwitch, {
+ *         main: '&lt;form&gt;&lt;/form&gt;'
+ *     });
+ *
+ *     //--------
+ *
+ *     var LocaleSwitchItem = function(locale, lang) {
+ *         LocaleSwitchItem.{@link JW.Class#static-property-_super _super}.call(this);
+ *         this.locale = locale; // JW.Plugins.Locale
+ *         this.lang = lang; // string
+ *     };
+ *
+ *     JW.extend(LocaleSwitchItem, JW.UI.Component, {
+ *         renderInput: function(el) {
+ *             el.attr(&quot;value&quot;, this.lang);
+ *         },
+ *
+ *         renderLabel: function(el) {
+ *             el.text(this.locale.{@link JW.Plugins.Locale#getString getString}(this.lang, &quot;_lang&quot;));
+ *         }
+ *     });
+ *
+ *     JW.UI.template(LocaleSwitchItem, {
+ *         main:
+ *             '&lt;div&gt;&lt;label&gt;' +
+ *                 '&lt;input type=&quot;radio&quot; name=&quot;lang&quot; jwid=&quot;input&quot;&gt;&lt;span jwid=&quot;label&quot;&gt;&lt;/span&gt;' +
+ *             '&lt;/label&gt;&lt;/div&gt;'
+ *     });
+ *
+ * Test.
+ *
+ *     $(function() {
+ *         var lang = new JW.Property(&quot;en&quot;);
+ *         var locale = new JW.Plugins.Locale(dictionary, lang);
+ *         var switcher = new LocaleSwitch(locale).{@link JW.UI.Component#renderTo renderTo}(&quot;body&quot;);
+ *     });
+ *
+ * ## Child localization (getSubLocale method)
+ *
+ * Let's look at one more way to simplify localization management. Sometimes a component needs just an isolated part
+ * of dictionary (e.g. strings in &quot;equipment&quot; object). To make access keys shorter, let's create child
+ * localization object.
+ *
+ *     var EquipmentSelector = function(locale) {
+ *         EquipmentSelector.{@link JW.Class#static-property-_super _super}.call(this);
+ *         this.locale = locale; // JW.Plugins.Locale, child localization object
+ *     };
+ *
+ *     JW.extend(EquipmentSelector, JW.UI.Component, {
+ *         renderMonitor: function(el) {
+ *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}(&quot;monitor&quot;));
+ *             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+ *         },
+ *
+ *         renderKeyboard: function(el) {
+ *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}(&quot;keyboard&quot;));
+ *             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+ *         },
+ *
+ *         renderMouse: function(el) {
+ *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}(&quot;mouse&quot;));
+ *             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+ *         }
+ *     });
+ *
+ *     JW.UI.template(EquipmentSelector, {
+ *         main:
+ *             '&lt;form&gt;' +
+ *                 '&lt;button jwid=&quot;monitor&quot;&gt;&lt;/button&gt;' +
+ *                 '&lt;button jwid=&quot;keyboard&quot;&gt;&lt;/button&gt;' +
+ *                 '&lt;button jwid=&quot;mouse&quot;&gt;&lt;/button&gt;' +
+ *             '&lt;/form&gt;'
+ *     });
+ *
+ * Let's use {@link JW.Plugins.Locale#getSubLocale getSubLocale} method to build the required child localization object.
+ *
+ *     $(function() {
+ *         var lang = new JW.Property(&quot;en&quot;);
+ *         var locale = new JW.Plugins.Locale(dictionary, lang);
+ *         var equipmentLocale = locale.{@link JW.Plugins.Locale#getSubLocale getSubLocale}(&quot;equipment&quot;);
+ *         var equipmentSelector = new EquipmentSelector(equipmentLocale).{@link JW.UI.Component#renderTo renderTo}(&quot;body&quot;);
+ *     });
+ *
+ * As you can see, we can use shorter keys inside EquipmentSelector component now:
+ *
+ * - &quot;monitor&quot;, not &quot;equipment.monitor&quot;
+ * - &quot;keyboard&quot;, not &quot;equipment.keyboard&quot;
+ * - &quot;mouse&quot;, not &quot;equipment.mouse&quot;
+ *
+ * ## Localization by template (expandTemplate and getTemplateProperty methods)
+ *
+ * It is quite challenging to format the dates sometimes. First, date string is formatted by mask (e.g., &quot;mmm'yy&quot;).
+ * Second, date string depends on current localization (&quot;Jan&quot; or &quot;Янв&quot;). Let's use template formatting method
+ * to format the dates.
+ *
+ *     $(function() {
+ *         var lang = new JW.Property(&quot;en&quot;);
+ *         var locale = new JW.Plugins.Locale(dictionary, lang);
+ *         assert(&quot;Jan'10&quot; === locale.{@link JW.Plugins.Locale#expandTemplate expandTemplate}(&quot;${monthsShort.0}'10&quot;);
+ *     });
+ *
+ * JW.Plugins.Locale.formatDate method allows you to build an appropriate date formatting template by mask.
+ *
+ *     $(function() {
+ *         var lang = new JW.Property(&quot;en&quot;);
+ *         var locale = new JW.Plugins.Locale(dictionary, lang);
+ *         var date = new Date(2010, 0, 1);
+ *         var format = JW.Plugins.Locale.formatDate(date, &quot;mmm'yy&quot;);
+ *         assert(&quot;Jan'10&quot; === locale.{@link JW.Plugins.Locale#expandTemplate expandTemplate}(format);
+ *     });
+ *
+ * Method {@link JW.Plugins.Locale#getTemplateProperty getTemplateProperty} allows you to start dynamic date
+ * reformatting on localization change.
+ *
+ *     $(function() {
+ *         var lang = new JW.Property(&quot;en&quot;);
+ *         var locale = new JW.Plugins.Locale(dictionary, lang);
+ *
+ *         var date = new Date(2010, 0, 1);
+ *         var format = JW.Plugins.Locale.formatDate(date, &quot;mmm'yy&quot;);
+ *         var dateProperty = locale.{@link JW.Plugins.Locale#getTemplateProperty getTemplateProperty}(format);
+ *         assert(&quot;Jan'10&quot; === dateProperty.{@link JW.Property#get get}());
+ *
+ *         lang.{@link JW.Property#set set}(&quot;ru&quot;);
+ *         assert(&quot;Янв'10&quot; === dateProperty.{@link JW.Property#get get}());
+ *
+ *         dateProperty.{@link JW.Property#destroy destroy}();
+ *     });
+ *
+ * Just as in previous examples, you can now easily bind text inside any DOM-element to dateProperty.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * Creates localization management model.
+ * @param {Object} data Dictionary.
+ * @param {JW.Property} lang `&lt;string&gt;` Currently selected locale identifier.
+ */
+JW.Plugins.Locale = function(data, lang) {
+	JW.Plugins.Locale._super.call(this);
+	this.data = data;
+	this.lang = lang;
+};
+
+JW.extend(JW.Plugins.Locale, JW.Class, {
+<span id='JW-Plugins-Locale-property-data'>	/**
+</span>	 * @property {Object} data Dictionary.
+	 */
+<span id='JW-Plugins-Locale-property-lang'>	/**
+</span>	 * @property {JW.Property} lang `&lt;string&gt;` Currently selected locale identifier.
+	 */
+
+<span id='JW-Plugins-Locale-method-getLanguages'>	/**
+</span>	 * Returns an array of all available locale identifiers in the dictionary.
+	 * @returns {Array} `&lt;string&gt;` Available locale identifiers.
+	 */
+	getLanguages: function() {
+		return JW.Map.getKeys(this.data);
+	},
+
+<span id='JW-Plugins-Locale-method-getRawString'>	/**
+</span>	 * Returns locale string by key. Supports two variations:
+	 *
+	 * - getRawString(id:string/Array):string - returns string with key &quot;id&quot; in a current locale
+	 * - getRawString(lang:string, id:string/Array):string - returns string with key &quot;id&quot; in locale &quot;lang&quot;
+	 *
+	 * As opposed to #getString, returns `undefined` if the value is missing in the dictionary.
+	 *
+	 * @param {string} lang Locale identifier.
+	 * @param {string/Array} [id] String key to retrieve via JW.get method.
+	 * @returns {string} The localized string.
+	 * If dictionary doesn't contain string with a specified key, returns `undefined`.
+	 */
+	getRawString: function(lang, id) {
+		if (!JW.isSet(id)) {
+			id = lang;
+			lang = this.lang.get();
+		}
+		return JW.get(this.data[lang], id);
+	},
+
+<span id='JW-Plugins-Locale-method-hasString'>	/**
+</span>	 * Checks the string presence in the dictionary. Supports two variations:
+	 *
+	 * - hasString(id:string/Array):boolean - checks in a current locale
+	 * - hasString(lang:string, id:string/Array):boolean - checks in a specified locale
+	 *
+	 * @param {string} lang Locale identifier.
+	 * @param {string/Array} [id] String key to retrieve via JW.get method.
+	 * @returns {boolean} String is present in the dictionary.
+	 */
+	hasString: function(lang, id) {
+		return this.getRawString(lang, id) != null;
+	},
+
+<span id='JW-Plugins-Locale-method-getString'>	/**
+</span>	 * Returns locale string by key. Supports two variations:
+	 *
+	 * - getString(id:string/Array):string - returns string with key &quot;id&quot; in a current locale
+	 * - getString(lang:string, id:string/Array):string - returns string with key &quot;id&quot; in locale &quot;lang&quot;
+	 *
+	 * As opposed to #getString, returns the key if the value is missing in the dictionary.
+	 *
+	 * @param {string} lang Locale identifier.
+	 * @param {string/Array} [id] String key to retrieve via JW.get method.
+	 * @returns {string} The localized string.
+	 * If dictionary doesn't contain string with a specified key, returns id.
+	 * If id is an array in this situation, returns the last item of the array.
+	 */
+	getString: function(lang, id) {
+		if (!JW.isSet(id)) {
+			id = lang;
+			lang = this.lang.get();
+		}
+		var str = JW.get(this.data[lang], id);
+		return JW.isSet(str) ? str : (typeof id === &quot;string&quot;) ? id : JW.Array.getLast(id);
+	},
+
+<span id='JW-Plugins-Locale-method-getFunctor'>	/**
+</span>	 * Returns a functor which builds the string with a key &quot;id&quot; in a current locale.
+	 * The client which uses this method must take care of function destruction.
+	 * @param {string/Array} id String key to retrieve via JW.get method.
+	 * @param {Object} [config] Functor configuration (see JW.Functor configuration).
+	 * @returns {JW.Functor} `&lt;string&gt;` Functor.
+	 */
+	getFunctor: function(id, config) {
+		return new JW.Functor([this.lang], function(lang) {
+			return this.getString(id);
+		}, this, config);
+	},
+
+<span id='JW-Plugins-Locale-method-getProperty'>	/**
+</span>	 * Returns a property containing the string with a key &quot;id&quot; in a current locale.
+	 * The client which uses this method must take care of property destruction.
+	 * @param {string/Array} id String key to retrieve via JW.get method.
+	 * @returns {JW.Property} `&lt;string&gt;` Localized string.
+	 */
+	getProperty: function(id) {
+		var result = new JW.Property();
+		result.own(this.getFunctor(id, {target: result}));
+		return result;
+	},
+
+<span id='JW-Plugins-Locale-method-getSubLocale'>	/**
+</span>	 * Builds a child localization object, which provides access to the strings in a specified sub-dictionary.
+	 * @param {string/Array} id Sub-dictionary key to retrieve via JW.get method.
+	 * @returns {JW.Plugins.Locale} Child localization object.
+	 */
+	getSubLocale: function(id) {
+		var data = JW.Map.map(this.data, function(langData) {
+			return JW.get(langData, id);
+		}, this);
+		return new JW.Plugins.Locale(data, this.lang);
+	},
+
+<span id='JW-Plugins-Locale-method-expandTemplate'>	/**
+</span>	 * Formats a string by a template. For example, &quot;${months.0}'10&quot; string
+	 * will be expanded to either &quot;Jan'10&quot; or &quot;Янв'10&quot; depending on the locale. The words which are taken to
+	 * the curly braces with $ sign will be replaced with the corresponding strings in the localization
+	 * dictionary. Supports two variations:
+	 *
+	 * - expandTemplate(template:string):string - formats a string in a current locale
+	 * - expandTemplate(lang:string, template:string):string - formats a string in a specified locale
+	 *
+	 * @param {string} lang Locale identifier.
+	 * @param {string} template Template.
+	 * @returns {string} Formatted string.
+	 */
+	expandTemplate: function(lang, template) {
+		if (!JW.isSet(template)) {
+			template = lang;
+			lang = this.lang.get();
+		}
+		var data = this.data[lang];
+		return template.replace(/\$\{([^\}]+)\}/g, function(a, b) {
+			return JW.get(data, b, a);
+		});
+	},
+
+<span id='JW-Plugins-Locale-method-getTemplateFunctor'>	/**
+</span>	 * Returns a functor which formats the specified template in a current locale.
+	 * The client which uses this method must take care of functor destruction.
+	 * @param {string} template Template.
+	 * @param {Object} [config] Functor configuration (see JW.Functor configuration).
+	 * @returns {JW.Functor} `&lt;string&gt;` Functor.
+	 */
+	getTemplateFunctor: function(template, config) {
+		return new JW.Functor([this.lang], function(lang) {
+			return this.expandTemplate(template);
+		}, this, config);
+	},
+
+<span id='JW-Plugins-Locale-method-getTemplateProperty'>	/**
+</span>	 * Returns a property containing the specified template formatted in a current locale.
+	 * The client which uses this method must take care of property destruction.
+	 * @param {string} template Template.
+	 * @returns {JW.Property} `&lt;string&gt;` Localized string.
+	 */
+	getTemplateProperty: function(template) {
+		var result = new JW.Property();
+		result.own(this.getTemplateFunctor(template, {target: result}));
+		return result;
+	}
+});
+
+<span id='JW-Plugins-Locale-static-method-formatDate'>/**
+</span> * @static
+ *
+ * Formats date string. An optimized version of the utility by Steven Levithan, which
+ * supports dynamic localization switching now.
+ * @param {Date} date Date.
+ * @param {string} mask Mask. Supports the next fragments:
+ *
+ * - d - day in month 1-31
+ * - dd - day in month 0-31
+ * - ddd - day in month ${daysShort.0-6}
+ * - dddd - day in month ${days.0-6}
+ * - m - month 1-12
+ * - mm - month 01-12
+ * - mmm - month ${monthsShort.0-11}
+ * - mmmm - month ${months.0-11}
+ * - yy - year 00-99
+ * - yyyy - year 1970-2100
+ * - q - quarter 1-4
+ * - h - hour 1-12
+ * - hh - hour 01-12
+ * - H - hour 0-23
+ * - HH - hour 00-23
+ * - M - minute 0-59
+ * - MM - minute 00-59
+ * - s - second 0-59
+ * - ss - second 00-59
+ * - l - millisecond 000-999
+ * - t - a/p
+ * - tt - am/pm
+ * - T - A/P
+ * - TT - AM/PM
+ *
+ * @param {boolean} utc Format in UTC.
+ * @returns Template to pass into JW.Plugins.Locale.expandTemplate method.
+ */
+JW.Plugins.Locale.formatDate = function() {
+	var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[lq]|&quot;[^&quot;]*&quot;|'[^']*'/g,
+		pad = function (val, len) {
+			val = String(val);
+			len = len || 2;
+			while (val.length &lt; len) val = &quot;0&quot; + val;
+			return val;
+		};
+
+	// Regexes and supporting functions are cached through closure
+	return function(date, mask, utc) {
+		// You can't provide utc if you skip other args (use the &quot;UTC:&quot; mask prefix)
+		if (arguments.length == 1 &amp;&amp; Object.prototype.toString.call(date) == &quot;[object String]&quot; &amp;&amp; !/\d/.test(date)) {
+			mask = date;
+			date = undefined;
+		}
+
+		// Passing date through Date applies Date.parse, if necessary
+		date = date ? new Date(date) : new Date;
+		if (isNaN(date)) throw SyntaxError(&quot;invalid date&quot;);
+
+		// Allow setting the utc argument via the mask
+		if (mask.slice(0, 4) == &quot;UTC:&quot;) {
+			mask = mask.slice(4);
+			utc = true;
+		}
+
+		var _ = utc ? &quot;getUTC&quot; : &quot;get&quot;;
+
+		return mask.replace(token, function ($0) {
+			switch ($0)
+			{
+				case &quot;d&quot;:    return date[_ + &quot;Date&quot;]();
+				case &quot;dd&quot;:   return pad(date[_ + &quot;Date&quot;]());
+				case &quot;ddd&quot;:  return &quot;${daysShort.&quot; + date[_ + &quot;Day&quot;]() + &quot;}&quot;;
+				case &quot;dddd&quot;: return &quot;${days.&quot; + date[_ + &quot;Day&quot;]() + &quot;}&quot;;
+				case &quot;m&quot;:    return date[_ + &quot;Month&quot;]() + 1;
+				case &quot;mm&quot;:   return pad(date[_ + &quot;Month&quot;]() + 1);
+				case &quot;mmm&quot;:  return &quot;${monthsShort.&quot; + [date[_ + &quot;Month&quot;]()] + &quot;}&quot;;
+				case &quot;mmmm&quot;: return &quot;${months.&quot; + [date[_ + &quot;Month&quot;]()] + &quot;}&quot;;
+				case &quot;yy&quot;:   return String(date[_ + &quot;FullYear&quot;]()).slice(2);
+				case &quot;yyyy&quot;: return date[_ + &quot;FullYear&quot;]();
+				case &quot;q&quot;:    return &quot;Q&quot; + (Math.floor(date[_ + &quot;Month&quot;]() / 3) + 1);
+				case &quot;h&quot;:    return date[_ + &quot;Hours&quot;]() % 12 || 12;
+				case &quot;hh&quot;:   return pad(date[_ + &quot;Hours&quot;]() % 12 || 12);
+				case &quot;H&quot;:    return date[_ + &quot;Hours&quot;]();
+				case &quot;HH&quot;:   return pad(date[_ + &quot;Hours&quot;]());
+				case &quot;M&quot;:    return date[_ + &quot;Minutes&quot;]();
+				case &quot;MM&quot;:   return pad(date[_ + &quot;Minutes&quot;]());
+				case &quot;s&quot;:    return date[_ + &quot;Seconds&quot;]();
+				case &quot;ss&quot;:   return pad(date[_ + &quot;Seconds&quot;]());
+				case &quot;l&quot;:    return pad(date[_ + &quot;Milliseconds&quot;](), 3);
+				case &quot;t&quot;:    return date[_ + &quot;Hours&quot;]() &lt; 12 ? &quot;a&quot;  : &quot;p&quot;;
+				case &quot;tt&quot;:   return date[_ + &quot;Hours&quot;]() &lt; 12 ? &quot;am&quot; : &quot;pm&quot;;
+				case &quot;T&quot;:    return date[_ + &quot;Hours&quot;]() &lt; 12 ? &quot;A&quot;  : &quot;P&quot;;
+				case &quot;TT&quot;:   return date[_ + &quot;Hours&quot;]() &lt; 12 ? &quot;AM&quot; : &quot;PM&quot;;
+				default:     return $0.slice(1, $0.length - 1);
+			}
+		});
+	};
+}();
+</pre>
+</body>
+</html>

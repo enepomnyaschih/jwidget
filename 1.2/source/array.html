@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	JW array extension.
+
+	Copyright (C) 2015 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-Array-method-constructor'><span id='JW-Array'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractArray&lt;T&gt;`
+ *
+ * See structurized list of methods in JW.AbstractArray.
+ * Static methods duplicate API of JW.AbstractArray, but take native Array as first argument.
+ *
+ * @extends JW.AbstractArray
+ *
+ * @constructor
+ * @param {Array} [items] `&lt;T&gt;` Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create array as adapter of `items`. Defaults to false, so `items` is copied.
+ */
+JW.Array = function(items, adapter) {
+	JW.Array._super.call(this, items, adapter);
+};
+
+JW.extend(JW.Array, JW.AbstractArray, {
+<span id='JW-Array-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.Array} `&lt;U&gt;` Collection.
+	 */
+	createEmpty: function() {
+		return new JW.Array();
+	},
+
+<span id='JW-Array-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Creates empty array of the same observability level.
+	 * @returns {JW.Array} `&lt;U&gt;` Array.
+	 */
+	createEmptyArray: function() {
+		return new JW.Array();
+	},
+
+<span id='JW-Array-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Creates empty map of the same observability level.
+	 * @returns {JW.Map} `&lt;U&gt;` Map.
+	 */
+	createEmptyMap: function() {
+		return new JW.Map();
+	},
+
+<span id='JW-Array-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Creates empty set of the same observability level.
+	 * @returns {JW.Set} `&lt;U&gt;` Set.
+	 */
+	createEmptySet: function() {
+		return new JW.Set();
+	}
+
+<span id='JW-Array-static-method-getLength'>	/**
+</span>	 * @method getLength
+	 * `&lt;T&gt;` Returns count of items in collection.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {number} Count of items in collection.
+	 */
+<span id='JW-Array-static-method-isEmpty'>	/**
+</span>	 * @method isEmpty
+	 * `&lt;T&gt;` Checks collection for emptiness.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {boolean} Collection doesn't contain any items.
+	 */
+<span id='JW-Array-static-method-getFirst'>	/**
+</span>	 * @method getFirst
+	 * `&lt;T&gt;` Returns first item in collection. If collection is empty, returns `undefined`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {T} Item.
+	 */
+<span id='JW-Array-static-method-getFirstKey'>	/**
+</span>	 * @method getFirstKey
+	 * `&lt;T&gt;` Returns index of first collection item. If collection is empty, returns `undefined`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {number} Index.
+	 */
+<span id='JW-Array-static-method-getLast'>	/**
+</span>	 * @method getLast
+	 * `&lt;T&gt;` Returns the last collection item. If collection is empty, returns `undefined`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {T} Item.
+	 */
+<span id='JW-Array-static-method-getLastKey'>	/**
+</span>	 * @method getLastKey
+	 * `&lt;T&gt;` Returns index of last collection item. If collection is empty, returns `undefined`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {number} Index.
+	 */
+<span id='JW-Array-static-method-get'>	/**
+</span>	 * @method get
+	 * `&lt;T&gt;` Returns item by index. If item with such index doesn't exist, returns `undefined`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} index Index.
+	 * @returns {T} Item.
+	 */
+<span id='JW-Array-static-method-containsKey'>	/**
+</span>	 * @method containsKey
+	 * `&lt;T&gt;` Checks existance of item with specified index in collection.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} index Index.
+	 * @returns {boolean} Collection contains item with specified index.
+	 */
+<span id='JW-Array-static-method-containsItem'>	/**
+</span>	 * @method containsItem
+	 * `&lt;T&gt;` Checks item existance in collection.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
+	 */
+<span id='JW-Array-static-method-keyOf'>	/**
+</span>	 * @method keyOf
+	 * `&lt;T&gt;` Returns index of item in collection. If such item doesn't exist, returns `undefined`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {T} item Item.
+	 * @returns {number} Item index.
+	 */
+<span id='JW-Array-static-method-getKeys'>	/**
+</span>	 * @method getKeys
+	 * `&lt;T&gt;` Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {Array} `&lt;number&gt;` Indexes array.
+	 */
+<span id='JW-Array-static-method-S-getKeys'>	/**
+</span>	 * @method $getKeys
+	 * `&lt;T&gt;` Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {JW.Array} `&lt;number&gt;` Indexes array.
+	 */
+<span id='JW-Array-static-method-removeItem'>	/**
+</span>	 * @method removeItem
+	 * `&lt;T&gt;` Removes first occurency of an item in collection.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {T} item Item.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-removeItems'>	/**
+</span>	 * @method removeItems
+	 * `&lt;T extends JW.Class&gt;` Removes all occurencies of items in collection.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-tryClear'>	/**
+</span>	 * @method tryClear
+	 * `&lt;T&gt;` Clears collection.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {Array} `&lt;T&gt;` Old collection contents. If not modified - `undefined`.
+	 */
+<span id='JW-Array-static-method-clear'>	/**
+</span>	 * @method clear
+	 * `&lt;T&gt;` Clears collection.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {Array} `&lt;T&gt;` Old collection contents.
+	 */
+<span id='JW-Array-static-method-S-clear'>	/**
+</span>	 * @method $clear
+	 * `&lt;T&gt;` Clears collection.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {JW.Array} `&lt;T&gt;` Old collection contents.
+	 */
+<span id='JW-Array-static-method-every'>	/**
+</span>	 * @method every
+	 *
+	 * `&lt;T&gt;` Checks all items by criteria.
+	 *
+	 * Returns true if function `f` returns !== `false` for all collection items.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-Array-static-method-some'>	/**
+</span>	 * @method some
+	 *
+	 * `&lt;T&gt;` Checks each item by criteria.
+	 *
+	 * Returns true if function `f` returns !== `false` for some collection item.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-Array-static-method-each'>	/**
+</span>	 * @method each
+	 * `&lt;T&gt;` Iterates collection items. Calls specified function for all items.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): void`
+	 *
+	 * Function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-find'>	/**
+</span>	 * @method find
+	 *
+	 * `&lt;T&gt;` Finds item by criteria.
+	 *
+	 * Returns index of first item for which `f` returns !== `false`.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Found item index or `undefined`.
+	 */
+<span id='JW-Array-static-method-search'>	/**
+</span>	 * @method search
+	 *
+	 * `&lt;T&gt;` Finds item by criteria.
+	 *
+	 * Returns first item for which `f` returns !== `false`.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
+	 */
+<span id='JW-Array-static-method-toSorted'>	/**
+</span>	 * @method toSorted
+	 *
+	 * `&lt;T&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Array-static-method-S-toSorted'>	/**
+</span>	 * @method $toSorted
+	 *
+	 * `&lt;T&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Array-static-method-toSortedComparing'>	/**
+</span>	 * @method toSortedComparing
+	 *
+	 * `&lt;T&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Array-static-method-S-toSortedComparing'>	/**
+</span>	 * @method $toSortedComparing
+	 *
+	 * `&lt;T&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Array-static-method-getSortingKeys'>	/**
+</span>	 * @method getSortingKeys
+	 *
+	 * `&lt;T&gt;` Returns indexes of sorted items.
+	 *
+	 * Builds array of item indexes, sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;number&gt;` Sorted item indexes array.
+	 */
+<span id='JW-Array-static-method-S-getSortingKeys'>	/**
+</span>	 * @method $getSortingKeys
+	 *
+	 * `&lt;T&gt;` Returns indexes of sorted items.
+	 *
+	 * Builds array of item indexes, sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;number&gt;` Sorted item indexes array.
+	 */
+<span id='JW-Array-static-method-getSortingKeysComparing'>	/**
+</span>	 * @method getSortingKeysComparing
+	 *
+	 * `&lt;T&gt;` Returns indexes of sorted items.
+	 *
+	 * Builds array of item indexes, sorted by comparer.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;number&gt;` Sorted item indexes array.
+	 */
+<span id='JW-Array-static-method-S-getSortingKeysComparing'>	/**
+</span>	 * @method $getSortingKeysComparing
+	 *
+	 * `&lt;T&gt;` Returns indexes of sorted items.
+	 *
+	 * Builds array of item indexes, sorted by comparer.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;number&gt;` Sorted item indexes array.
+	 */
+<span id='JW-Array-static-method-index'>	/**
+</span>	 * @method index
+	 *
+	 * `&lt;T&gt;` Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Collection index.
+	 */
+<span id='JW-Array-static-method-S-index'>	/**
+</span>	 * @method $index
+	 *
+	 * `&lt;T&gt;` Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;T&gt;` Collection index.
+	 */
+<span id='JW-Array-static-method-toArray'>	/**
+</span>	 * @method toArray
+	 *
+	 * `&lt;T&gt;` Converts collection to array.
+	 *
+	 * Builds new array consisting of collection items.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Array-static-method-S-toArray'>	/**
+</span>	 * @method $toArray
+	 *
+	 * `&lt;T&gt;` Converts collection to array.
+	 *
+	 * Builds new array consisting of collection items.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {JW.Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Array-static-method-toMap'>	/**
+</span>	 * @method toMap
+	 *
+	 * Converts collection to map.
+	 *
+	 * Builds new map consisting of collection items.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {Object} `&lt;T&gt;` Items map.
+	 */
+<span id='JW-Array-static-method-S-toMap'>	/**
+</span>	 * @method $toMap
+	 *
+	 * Converts collection to map.
+	 *
+	 * Builds new map consisting of collection items.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {JW.Map} `&lt;T&gt;` Items map.
+	 */
+<span id='JW-Array-static-method-toSet'>	/**
+</span>	 * @method toSet
+	 *
+	 * `&lt;T&gt;` Converts collection to set.
+	 *
+	 * Builds new set consisting of collection items.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {Object} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Array-static-method-S-toSet'>	/**
+</span>	 * @method $toSet
+	 *
+	 * `&lt;T&gt;` Converts collection to set.
+	 *
+	 * Builds new set consisting of collection items.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {JW.Set} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Array-static-method-asArray'>	/**
+</span>	 * @method asArray
+	 *
+	 * `&lt;T&gt;` Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Array-static-method-S-asArray'>	/**
+</span>	 * @method $asArray
+	 *
+	 * `&lt;T&gt;` Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {JW.Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Array-static-method-asMap'>	/**
+</span>	 * @method asMap
+	 *
+	 * `&lt;T&gt;` Represents collection as map.
+	 *
+	 * If this collection is map, returns it immediately. Else, executes {@link #static-method-toMap} method.
+	 * This method works probably faster than {@link #static-method-toMap}, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {Object} `&lt;T&gt;` Items map.
+	 */
+<span id='JW-Array-static-method-S-asMap'>	/**
+</span>	 * @method $asMap
+	 *
+	 * `&lt;T&gt;` Represents collection as map.
+	 *
+	 * If this collection is map, returns it immediately. Else, executes {@link #static-method-toMap} method.
+	 * This method works probably faster than {@link #static-method-toMap}, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {JW.Map} `&lt;T&gt;` Items map.
+	 */
+<span id='JW-Array-static-method-asSet'>	/**
+</span>	 * @method asSet
+	 *
+	 * `&lt;T&gt;` Represents collection as set.
+	 *
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet} method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {Object} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Array-static-method-S-asSet'>	/**
+</span>	 * @method $asSet
+	 *
+	 * `&lt;T&gt;` Represents collection as set.
+	 *
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet} method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {JW.Set} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Array-static-method-filter'>	/**
+</span>	 * @method filter
+	 *
+	 * `&lt;T&gt;` Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array} `&lt;T&gt;` Filtered collection.
+	 */
+<span id='JW-Array-static-method-S-filter'>	/**
+</span>	 * @method $filter
+	 *
+	 * `&lt;T&gt;` Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Array} `&lt;T&gt;` Filtered collection.
+	 */
+<span id='JW-Array-static-method-count'>	/**
+</span>	 * @method count
+	 *
+	 * `&lt;T&gt;` Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Number of items.
+	 */
+<span id='JW-Array-static-method-map'>	/**
+</span>	 * @method map
+	 *
+	 * `&lt;T, U&gt;` Maps collection items.
+	 *
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Array} `&lt;U&gt;` Mapped collection.
+	 */
+<span id='JW-Array-static-method-S-map'>	/**
+</span>	 * @method $map
+	 *
+	 * `&lt;T, U&gt;` Maps collection items.
+	 *
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Array} `&lt;U&gt;` Mapped collection.
+	 */
+<span id='JW-Array-static-method-add'>	/**
+</span>	 * @method add
+	 * `&lt;T&gt;` Inserts an item to array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {T} item Item.
+	 * @param {number} [index] Index of an item before which to insert new one. By default, appends the item.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-tryAdd'>	/**
+</span>	 * @method tryAdd
+	 * `&lt;T&gt;` Inserts an item to array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {T} item Item.
+	 * @param {number} [index] Index of an item before which to insert new one. By default, appends the item.
+	 * @returns {boolean} true.
+	 */
+<span id='JW-Array-static-method-addAll'>	/**
+</span>	 * @method addAll
+	 * `&lt;T&gt;` Inserts item range to array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @param {number} [index] Index of an item before which to insert new ones. By default, appends the items.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-tryAddAll'>	/**
+</span>	 * @method tryAddAll
+	 * `&lt;T&gt;` Inserts item range to array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @param {number} [index] Index of an item before which to insert new ones. By default, appends the items.
+	 * @returns {boolean} true. If not modified - `undefined`.
+	 */
+<span id='JW-Array-static-method-set'>	/**
+</span>	 * @method set
+	 * `&lt;T&gt;` Replaces item with specified index. If array doesn't contain such index, it will break the application.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {T} item Item.
+	 * @param {number} index Index.
+	 * @returns {T} The replaced item.
+	 */
+<span id='JW-Array-static-method-trySet'>	/**
+</span>	 * @method trySet
+	 * `&lt;T&gt;` Replaces item with specified index. If array doesn't contain such index, it will break the application.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {T} item Item.
+	 * @param {number} index Index.
+	 * @returns {JW.Proxy} `&lt;T&gt;` Proxy of the replaced item. If not modified - `undefined`.
+	 */
+<span id='JW-Array-static-method-remove'>	/**
+</span>	 * @method remove
+	 * `&lt;T&gt;` Removes item with specified index. If array doesn't contain such index, it will break the application.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} index Index.
+	 * @returns {T} The removed item.
+	 */
+<span id='JW-Array-static-method-tryRemove'>	/**
+</span>	 * @method tryRemove
+	 * `&lt;T&gt;` Removes item with specified index. If array doesn't contain such index, it will break the application.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} index Index.
+	 * @returns {T} The removed item. If not modified - `undefined`.
+	 */
+<span id='JW-Array-static-method-removeAll'>	/**
+</span>	 * @method removeAll
+	 * `&lt;T&gt;` Removes item range from array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {Array} `&lt;T&gt;` The removed items.
+	 */
+<span id='JW-Array-static-method-S-removeAll'>	/**
+</span>	 * @method $removeAll
+	 * `&lt;T&gt;` Removes item range from array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {JW.Array} `&lt;T&gt;` The removed items.
+	 */
+<span id='JW-Array-static-method-tryRemoveAll'>	/**
+</span>	 * @method tryRemoveAll
+	 * `&lt;T&gt;` Removes item range from array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} index Index of first item to remove.
+	 * @param {number} count Count of items to remove.
+	 * @returns {Array} `&lt;T&gt;` The removed items. If not modified - `undefined`.
+	 */
+<span id='JW-Array-static-method-move'>	/**
+</span>	 * @method move
+	 * `&lt;T&gt;` Moves an item inside array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} fromIndex Item index to move.
+	 * @param {number} toIndex Index to move to.
+	 * @returns {T} The moved item.
+	 */
+<span id='JW-Array-static-method-tryMove'>	/**
+</span>	 * @method tryMove
+	 * `&lt;T&gt;` Moves an item inside array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} fromIndex Item index to move.
+	 * @param {number} toIndex Index to move to.
+	 * @returns {T} The moved item. If not modified - `undefined`.
+	 */
+<span id='JW-Array-static-method-splice'>	/**
+</span>	 * @method splice
+	 * `&lt;T&gt;` Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} removeParamsList `&lt;JW.AbstractArray.IndexCount&gt;`
+	 * Array of segments to remove sorted by index asc. Segments are removed in backward order.
+	 * @param {Array} addParamsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;`
+	 * Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+	 * @returns {JW.AbstractArray.SpliceResult} `&lt;T&gt;` Result.
+	 */
+<span id='JW-Array-static-method-trySplice'>	/**
+</span>	 * @method trySplice
+	 * `&lt;T&gt;` Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} removeParamsList `&lt;JW.AbstractArray.IndexCount&gt;`
+	 * Array of segments to remove sorted by index asc. Segments are removed in backward order.
+	 * @param {Array} addParamsList `&lt;JW.AbstractArray.IndexItems&lt;T&gt;&gt;`
+	 * Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+	 * @returns {JW.AbstractArray.SpliceResult} `&lt;T&gt;` Result. If not modified - `undefined`.
+	 */
+<span id='JW-Array-static-method-reorder'>	/**
+</span>	 * @method reorder
+	 * `&lt;T&gt;` Reorders array items.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} indexArray `&lt;number&gt;` Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * Must contain all indexes from 0 to (length - 1).
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-tryReorder'>	/**
+</span>	 * @method tryReorder
+	 * `&lt;T&gt;` Reorders array items.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} indexArray `&lt;number&gt;` Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * Must contain all indexes from 0 to (length - 1).
+	 * @returns {Array} `&lt;T&gt;` Old array contents. If not modified - undefined.
+	 */
+<span id='JW-Array-static-method-detectSplice'>	/**
+</span>	 * @method detectSplice
+	 * `&lt;T&gt;` Detects {@link #static-method-splice} method arguments to adjust array contents to `newItems`.
+	 * Determines which item ranges should be removed and which ones should be inserted.
+	 * All items must have unique `getKey` function result.
+	 * If items don't have unique key, probably {@link #static-method-detectFilter} method will help.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {JW.AbstractArray.SpliceParams}
+	 * `&lt;T&gt;` {@link #static-method-splice} method arguments. If no method call required - `undefined`.
+	 */
+<span id='JW-Array-static-method-detectFilter'>	/**
+</span>	 * @method detectFilter
+	 * Detects `removeParamsList` arguments of {@link #static-method-splice} to adjust array contents to `newItems`.
+	 * Determines which item ranges should be removed.
+	 * Doesn't assume items insertion - try {@link #static-method-detectSplice} if that's the case.
+	 * In advantage to {@link #static-method-detectSplice}, doesn't require item uniquiness.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @returns {Array}
+	 * `&lt;JW.AbstractArray.IndexCount&gt;` `removeParamsList` argument of {@link #static-method-splice} method.
+	 * If no method call required - `undefined`.
+	 */
+<span id='JW-Array-static-method-detectReorder'>	/**
+</span>	 * @method detectReorder
+	 * `&lt;T&gt;` Detects {@link #static-method-reorder} method arguments to adjust array contents to `newItems`.
+	 * Determines where to move all items.
+	 * If `newItems` contents differ from `this` contents, the array will be broken.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {Array}
+	 * `&lt;number&gt;` `indexArray` argument of {@link #static-method-reorder} method.
+	 * If no method call required - `undefined`.
+	 */
+<span id='JW-Array-static-method-detectSort'>	/**
+</span>	 * @method detectSort
+	 * `&lt;T&gt;` Detects {@link #static-method-reorder} method arguments to sort array contents by result of `f` call for each item.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array}
+	 * `&lt;number&gt;` `indexArray` argument of {@link #static-method-reorder} method.
+	 * If no method call required - `undefined`.
+	 */
+<span id='JW-Array-static-method-detectSortComparing'>	/**
+</span>	 * @method detectSortComparing
+	 * `&lt;T&gt;` Detects {@link #static-method-reorder} method arguments to sort array contents by comparer.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array}
+	 * `&lt;number&gt;` `indexArray` argument of {@link #static-method-reorder} method.
+	 * If no method call required - `undefined`.
+	 */
+<span id='JW-Array-static-method-performSplice'>	/**
+</span>	 * @method performSplice
+	 * `&lt;T&gt;` Adjusts array contents to `newItems` using {@link #static-method-detectSplice} and {@link #static-method-splice} methods.
+	 * All items must have unique `getKey` function result.
+	 * If items don't have unique key, probably {@link #static-method-detectFilter} method will help.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-performFilter'>	/**
+</span>	 * @method performFilter
+	 * `&lt;T&gt;` Adjusts array contents to `newItems` using {@link #static-method-detectFilter} and {@link #static-method-splice} methods.
+	 * Only removes items. Doesn't assume items insertion - try {@link #static-method-detectSplice} if that's the case.
+	 * In advantage to {@link #static-method-detectSplice}, doesn't require item uniquiness.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-performReorder'>	/**
+</span>	 * @method performReorder
+	 * `&lt;T&gt;` Adjusts array contents to `newItems` using {@link #static-method-detectReorder} and {@link #static-method-reorder} methods.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} newItems `&lt;T&gt;` New array contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-sort'>	/**
+</span>	 * @method sort
+	 * `&lt;T&gt;` Sorts array by result of `f` function call for each item.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, index: number): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-sortComparing'>	/**
+</span>	 * @method sortComparing
+	 * `&lt;T&gt;` Sorts array by comparer.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, i1: number, i2: number): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {void}
+	 */
+<span id='JW-Array-static-method-equal'>	/**
+</span>	 * @method equal
+	 * `&lt;T&gt;` Checks 2 arrays for equality (===), item by item.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Array} arr `&lt;T&gt;` Another array.
+	 * @returns {boolean} Arrays are equal.
+	 */
+<span id='JW-Array-static-method-collapse'>	/**
+</span>	 * @method collapse
+	 * `&lt;T&gt;` Collapses multi-dimentional array.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {number} depth Dimentions to collapse.
+	 * @returns {Array} Collapsed array.
+	 */
+<span id='JW-Array-static-method-indexOf'>	/**
+</span>	 * @method indexOf
+	 * `&lt;T&gt;` Returns item index in this collection. If item doesn't exist, returns -1.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {T} item Item.
+	 * @returns {number} Item index or -1.
+	 */
+<span id='JW-Array-static-method-backEvery'>	/**
+</span>	 * @method backEvery
+	 *
+	 * `&lt;T&gt;` Checks all items by criteria in backward order.
+	 *
+	 * Returns true if function `f` returns !== `false` for all collection items.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
+	 *
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-Array-static-method-pop'>	/**
+</span>	 * @method pop
+	 * `&lt;T&gt;` Removes last array item. Does nothing if array is empty.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {T} The removed item or `undefined`.
+	 */
+<span id='JW-Array-static-method-binarySearch'>	/**
+</span>	 * @method binarySearch
+	 * `&lt;T&gt;` Determines index of first item which is more (or less if `order` == -1) than specified value by `compare` function,
+	 * using binary search. Array must be sorted by `compare` function.
+	 * Can be used for item insertion easily.
+	 * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
+	 * @static
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @param {T} value Value.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; negative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {number} Item index.
+	 */
+});
+</pre>
+</body>
+</html>

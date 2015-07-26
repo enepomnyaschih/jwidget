@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Property.PropertyTestCase = JW.Unit.TestCase.extend({
+	testProperty: function()
+	{
+		var property = new JW.Property(false);
+		this.assertStrictEqual(false, property.get());
+		property.changeEvent.bind(function(params) {
+			this.output(params.oldValue + &quot; to &quot; + params.value);
+		}, this);
+		this.setExpectedOutput(&quot;false to 10&quot;);
+		property.set(10);
+		this.assertStrictEqual(10, property.get());
+		this.setExpectedOutput(&quot;10 to 15&quot;);
+		property.set(15);
+		this.assertStrictEqual(15, property.get());
+		this.setExpectedOutput();
+		property.set(15);
+		this.assertStrictEqual(15, property.get());
+		property.destroy();
+	},
+	
+	testBindTo: function()
+	{
+		var source = new JW.Property(1);
+		var target = new JW.Property();
+		target.changeEvent.bind(function(params) {
+			this.output(params.oldValue + &quot; to &quot; + params.value);
+		}, this);
+		this.setExpectedOutput(&quot;null to 1&quot;);
+		target.bindTo(source);
+		this.assertStrictEqual(1, target.get());
+		this.setExpectedOutput(&quot;1 to 2&quot;);
+		source.set(2);
+		this.assertStrictEqual(2, target.get());
+		var source2 = new JW.Property(3);
+		this.setExpectedOutput(&quot;2 to 3&quot;);
+		target.bindTo(source2);
+		this.assertStrictEqual(3, target.get());
+		this.setExpectedOutput();
+		source.set(4);
+		this.assertStrictEqual(3, target.get());
+		target.bindTo();
+		source.set(5);
+		source2.set(6);
+		this.assertStrictEqual(3, target.get());
+		this.setExpectedOutput(&quot;3 to 5&quot;);
+		target.bindTo(source);
+		this.assertStrictEqual(5, target.get());
+		this.setExpectedOutput();
+		target.destroy();
+		source.set(7);
+		source2.set(8);
+		source.destroy();
+		source2.destroy();
+	},
+	
+	testOwnValue: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
+		
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output(&quot;destroy &quot; + this.value);
+				this._super();
+			}
+		});
+		
+		var property = new JW.Property();
+		var a = new cls(this, &quot;a&quot;);
+		var b = new cls(this, &quot;b&quot;);
+		var c = new cls(this, &quot;c&quot;);
+		property.ownValue();
+		property.set(a);
+		this.setExpectedOutput(&quot;destroy a&quot;);
+		property.set(b);
+		this.setExpectedOutput();
+		property.set(b);
+		this.setExpectedOutput(&quot;destroy b&quot;);
+		property.set(null);
+		this.setExpectedOutput();
+		property.set(c);
+		this.setExpectedOutput(&quot;destroy c&quot;);
+		property.destroy();
+	},
+	
+	testNull: function() {
+		var property = new JW.Property();
+		this.assertStrictEqual(null, property.get());
+		property.set();
+		this.assertStrictEqual(null, property.get());
+	}
+});
+</pre>
+</body>
+</html>

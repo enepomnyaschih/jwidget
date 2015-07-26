@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+
+	Copyright (C) 2015 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-ObservableSet-method-constructor'><span id='JW-ObservableSet'>/**
+</span></span> * @class
+ *
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractSet&lt;T&gt;`
+ *
+ * Has several events and an observable property #length.
+ *
+ * See structurized list of methods in JW.AbstractSet.
+ *
+ * @extends JW.AbstractSet
+ *
+ * @constructor
+ * @param {Array} [items] `&lt;T&gt;` Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create set as adapter of `items` (`items` should be Object for this, not Array).
+ * Defaults to false, so `items` is copied.
+ */
+JW.ObservableSet = function(json, adapter) {
+	JW.ObservableSet._super.call(this, json, adapter);
+	this.length = new JW.Property(this.getLength());
+	this.spliceEvent = new JW.Event();
+	this.clearEvent = new JW.Event();
+	this.changeEvent = new JW.Event();
+};
+
+JW.extend(JW.ObservableSet, JW.AbstractSet, {
+<span id='JW-ObservableSet-property-length'>	/**
+</span>	 * @property {JW.Property} length `&lt;Number&gt;` Collection length. **Don't modify manually!**
+	 */
+<span id='JW-ObservableSet-event-spliceEvent'>	/**
+</span>	 * @event spliceEvent
+	 * Items are removed from set, items are added to set. Triggered in result
+	 * of calling #add, #tryAdd, #addAll, #$addAll, #tryAddAll, #remove, #tryRemove, #removeItem, #removeAll, #$removeAll,
+	 * {@link #tryRemoveAll}, #removeItems, #splice, #trySplice, #performSplice.
+	 * @param {JW.ObservableSet.SpliceEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableSet-event-clearEvent'>	/**
+</span>	 * @event clearEvent
+	 * Set is cleared. Triggered in result of calling #clear, #$clear, #tryClear.
+	 * @param {JW.ObservableSet.ItemsEventParams} params `&lt;T&gt;` Parameters.
+	 */
+<span id='JW-ObservableSet-event-changeEvent'>	/**
+</span>	 * @event changeEvent
+	 * Set is changed. Triggered right after one
+	 * of events #spliceEvent, #clearEvent.
+	 * @param {JW.ObservableSet.EventParams} params `&lt;T&gt;` Parameters.
+	 */
+
+	// override
+	destroy: function() {
+		this.changeEvent.destroy();
+		this.clearEvent.destroy();
+		this.spliceEvent.destroy();
+		this.length.destroy();
+		this._super();
+	},
+
+	// override
+	tryClear: function() {
+		var items = this._tryClear();
+		if (items === undefined) {
+			return;
+		}
+		this.length.set(0);
+		this.clearEvent.trigger(new JW.ObservableSet.ItemsEventParams(this, items));
+		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(items, JW.destroy);
+		}
+		return items;
+	},
+
+	// override
+	trySplice: function(removedItems, addedItems) {
+		var spliceResult = this._trySplice(removedItems, addedItems);
+		if (spliceResult === undefined) {
+			return;
+		}
+		this.length.set(this.getLength());
+		this.spliceEvent.trigger(new JW.ObservableSet.SpliceEventParams(this, spliceResult));
+		this.changeEvent.trigger(new JW.ObservableSet.EventParams(this));
+		if (this._ownsItems) {
+			JW.Array.backEvery(spliceResult.removedItems, JW.destroy);
+		}
+		return spliceResult;
+	},
+
+<span id='JW-ObservableSet-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.ObservableSet} `&lt;U&gt;` Collection.
+	 */
+	createEmpty: function() {
+		return new JW.ObservableSet();
+	},
+
+<span id='JW-ObservableSet-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Creates empty array of the same observability level.
+	 * @returns {JW.ObservableArray} `&lt;U&gt;` Array.
+	 */
+	createEmptyArray: function() {
+		return new JW.ObservableArray();
+	},
+
+<span id='JW-ObservableSet-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Creates empty map of the same observability level.
+	 * @returns {JW.ObservableMap} `&lt;U&gt;` Map.
+	 */
+	createEmptyMap: function() {
+		return new JW.ObservableMap();
+	},
+
+<span id='JW-ObservableSet-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Creates empty set of the same observability level.
+	 * @returns {JW.ObservableSet} `&lt;U&gt;` Set.
+	 */
+	createEmptySet: function() {
+		return new JW.ObservableSet();
+	},
+
+<span id='JW-ObservableSet-method-createMapper'>	/**
+</span>	 * `&lt;U&gt;` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.Mapper}
+	 * `&lt;T, U&gt;` Synchronizer.
+	 */
+	createMapper: function(config) {
+		return new JW.ObservableSet.Mapper(this, config);
+	},
+
+<span id='JW-ObservableSet-method-createFilterer'>	/**
+</span>	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.Filterer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createFilterer: function(config) {
+		return new JW.ObservableSet.Filterer(this, config);
+	},
+
+<span id='JW-ObservableSet-method-createCounter'>	/**
+</span>	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.Counter}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.ObservableSet.Counter(this, config);
+	},
+
+<span id='JW-ObservableSet-method-createObserver'>	/**
+</span>	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.Observer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createObserver: function(config) {
+		return new JW.ObservableSet.Observer(this, config);
+	},
+
+<span id='JW-ObservableSet-method-createOrderer'>	/**
+</span>	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.Orderer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createOrderer: function(config) {
+		return new JW.ObservableSet.Orderer(this, config);
+	},
+
+<span id='JW-ObservableSet-method-createSorterComparing'>	/**
+</span>	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.SorterComparing}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.ObservableSet.SorterComparing(this, config);
+	},
+
+<span id='JW-ObservableSet-method-createIndexer'>	/**
+</span>	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.Indexer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createIndexer: function(config) {
+		return new JW.ObservableSet.Indexer(this, config);
+	},
+
+<span id='JW-ObservableSet-method-createLister'>	/**
+</span>	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
+	 * @returns {JW.ObservableSet.Lister}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createLister: function(config) {
+		return new JW.ObservableSet.Lister(this, config);
+	}
+});
+
+<span id='JW-ObservableSet-EventParams-method-constructor'><span id='JW-ObservableSet-EventParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` JW.ObservableSet event parameters.
+ * @extends JW.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableSet} sender `&lt;T&gt;` Event sender.
+ */
+JW.ObservableSet.EventParams = function(sender) {
+	JW.ObservableSet.EventParams._super.call(this, sender);
+};
+
+JW.extend(JW.ObservableSet.EventParams, JW.EventParams, {
+<span id='JW-ObservableSet-EventParams-property-sender'>	/**
+</span>	 * @property {JW.ObservableSet} sender `&lt;T&gt;` Event sender.
+	 */
+});
+
+<span id='JW-ObservableSet-SpliceEventParams-method-constructor'><span id='JW-ObservableSet-SpliceEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableSet.EventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableSet#spliceEvent.
+ *
+ * @extends JW.ObservableSet.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableSet} sender `&lt;T&gt;` Event sender.
+ * @param {JW.AbstractSet.SpliceResult} spliceResult `&lt;T&gt;` Result of JW.AbstractSet#splice method.
+ */
+JW.ObservableSet.SpliceEventParams = function(sender, spliceResult) {
+	JW.ObservableSet.SpliceEventParams._super.call(this, sender);
+	this.spliceResult = spliceResult;
+};
+
+JW.extend(JW.ObservableSet.SpliceEventParams, JW.ObservableSet.EventParams, {
+<span id='JW-ObservableSet-SpliceEventParams-property-spliceResult'>	/**
+</span>	 * @property {JW.AbstractSet.SpliceResult} spliceResult `&lt;T&gt;` Result of JW.AbstractSet#splice method.
+	 */
+});
+
+<span id='JW-ObservableSet-ItemsEventParams-method-constructor'><span id='JW-ObservableSet-ItemsEventParams'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.ObservableSet.EventParams&lt;T&gt;`
+ *
+ * Parameters of JW.ObservableSet event which bring its old contents.
+ *
+ * @extends JW.ObservableSet.EventParams
+ *
+ * @constructor
+ * @param {JW.ObservableSet} sender `&lt;T&gt;` Event sender.
+ * @param {Array} items `&lt;T&gt;` Old set contents.
+ */
+JW.ObservableSet.ItemsEventParams = function(sender, items) {
+	JW.ObservableSet.ItemsEventParams._super.call(this, sender);
+	this.items = items;
+};
+
+JW.extend(JW.ObservableSet.ItemsEventParams, JW.ObservableSet.EventParams, {
+<span id='JW-ObservableSet-ItemsEventParams-property-items'>	/**
+</span>	 * @property {Array} items `&lt;T&gt;` Old set contents.
+	 */
+});
+</pre>
+</body>
+</html>

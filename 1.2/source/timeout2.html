@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-Timeout-method-constructor'><span id='JW-Timeout'>/**
+</span></span> * @class
+ *
+ * jWidget wrapper over setTimeout function.
+ * JW.Timeout destruction causes clearTimeout invocation.
+ * Convenient to use in combination with {@link JW.Class#own} method:
+ *
+ *     this.{@link JW.Class#own own}(new JW.Timeout(this._update, this, 1000));
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Function} handler Timeout handler function.
+ * @param {Object} [scope] Call scope of handler.
+ * @param {Number} [delay] Timeout delay.
+ */
+JW.Timeout = function(handler, scope, delay) {
+	JW.Timeout._super.call(this);
+	if (JW.isSet(scope) &amp;&amp; (typeof scope === &quot;object&quot;)) {
+		handler = JW.inScope(handler, scope);
+	} else if (typeof scope === &quot;number&quot;) {
+		delay = scope;
+	}
+	this.timeout = setTimeout(handler, delay);
+};
+
+JW.extend(JW.Timeout, JW.Class, {
+	destroy: function() {
+		clearTimeout(this.timeout);
+		this._super();
+	}
+});
+</pre>
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+
+	Copyright (C) 2015 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-AbstractSet'>/**
+</span> * @class
+ *
+ * `&lt;T extends JW.Class&gt; extends JW.AbstractCollection&lt;T&gt;`
+ *
+ * Set is unordered collection optimized for items adding, removal and search. Unlike
+ * array and map, set can contain only JW.Class instances. Internal set representation is
+ * map from item {@link JW.Class#_iid iid} to this item.
+ *
+ * # Set methods
+ *
+ * **Difference compared to JW.AbstractCollection is in bold.**
+ *
+ * Content retrieving:
+ *
+ * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #isEmpty} - Checks collection for emptiness.
+ * - {@link #getFirst} - Returns first item in collection.
+ * - {@link #containsItem}, **{@link #contains}** - Does collection contain the item?
+ * - **{@link #getJson} - Returns internal representation of set.**
+ *
+ * Iteration algorhitms:
+ *
+ * - {@link #every} - Checks all items by criteria.
+ * Returns `true` if all items match the criteria.
+ * - {@link #some} - Checks each item by criteria.
+ * Returns `true` if some items matches the criteria.
+ * - {@link #each} - Iterates items.
+ * - {@link #search} - Finds item by criteria.
+ * Returns first item matching the criteria.
+ * - {@link #filter}, #$filter - Filters collection by criteria.
+ * Builds new collection of the same type, consisting of items matching the criteria.
+ * - {@link #count} - Counts the items matching criteria.
+ * - {@link #map}, #$map - Maps collection items.
+ * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * Builds array consisting of collection items sorted by indexer or comparer.
+ * - {@link #index}, #$index - Indexes collection.
+ * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #asArray}, #$asArray - Represents collection as array.
+ * - {@link #asSet}, #$asSet - Represents collection as set.
+ *
+ * Collection modification:
+ *
+ * - **{@link #add}, #tryAdd - Adds item to set.**
+ * - **{@link #addAll}, #$addAll, #tryAddAll - Adds multiple items to set.**
+ * - **{@link #remove}, #tryRemove - Removes item from set.**
+ * - **{@link #removeAll}, #$removeAll, #tryRemoveAll - Removes multiple items from set.**
+ * - {@link #removeItem} - Removes first occurency of an item in collection.
+ * - {@link #removeItems} - Removes all occurencies of items in collection.
+ * - {@link #clear}, #$clear, #tryClear - Clears collection.
+ * - **{@link #splice}, #trySplice - Removes and adds multiple items.**
+ * - **{@link #performSplice} - Adjusts contents using #splice method.**
+ *
+ * Synchronizers creation:
+ *
+ * - {@link #createMapper} - Creates item mapper.
+ * - {@link #createFilterer} - Creates filterer.
+ * - {@link #createCounter} - Creates matching item counter.
+ * - {@link #createLister} - Creates converter to set.
+ * - {@link #createIndexer} - Creates converter to map (indexer).
+ * - {@link #createOrderer} - Creates converter to array (orderer).
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createObserver} - Creates observer.
+ *
+ * Similar collection creation (for algorithms and synchronizers implementation):
+ *
+ * - {@link #createEmpty} - Creates empty collection of the same type.
+ * - {@link #createEmptyArray} - Creates empty array of the same observability type.
+ * - {@link #createEmptyMap} - Creates empty map of the same observability type.
+ * - {@link #createEmptySet} - Creates empty set of the same observability type.
+ *
+ * Other methods:
+ *
+ * - **{@link #detectSplice} - Detects #splice method arguments to adjust contents.**
+ * - **{@link #equal} - Checks for equality to array.**
+ *
+ * All the same algorithms are also available for native JavaScript Object as set, see JW.Set static methods.
+ *
+ * @extends JW.AbstractCollection
+ * @abstract
+ */
+JW.AbstractSet = function(items, adapter) {
+	JW.AbstractSet._super.call(this);
+	this._adapter = !!adapter;
+	this.json = this._adapter ? items : items ? JW.Array.index(items, JW.byField(&quot;_iid&quot;)) : {};
+	this._length = JW.Set.getLength(this.json);
+};
+
+JW.extend(JW.AbstractSet, JW.AbstractCollection, {
+<span id='JW-AbstractSet-method-getJson'>	/**
+</span>	 * Returns item map - internal collection representation.
+	 *
+	 * **Caution: doesn't make a copy.**
+	 *
+	 * @returns {Object} `&lt;T&gt;` Item map.
+	 */
+	getJson: function() {
+		return this.json;
+	},
+
+	getLength: function() {
+		return this._length;
+	},
+
+	isEmpty: function() {
+		return this._length === 0;
+	},
+
+	containsItem: function(item) {
+		return this.json.hasOwnProperty(item._iid);
+	},
+
+<span id='JW-AbstractSet-method-contains'>	/**
+</span>	 * Checks item existance in collection. Shortcut for #containsItem.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
+	 */
+	contains: function(item) {
+		return this.json.hasOwnProperty(item._iid);
+	},
+
+	every: function(callback, scope) {
+		return JW.Set.every(this.json, callback, scope);
+	},
+
+<span id='JW-AbstractSet-method-filter'>	/**
+</span>	 * Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Filtered collection.
+	 */
+	filter: function(callback, scope) {
+		return JW.Set.filter(this.json, callback, scope);
+	},
+
+<span id='JW-AbstractSet-method-S-filter'>	/**
+</span>	 * Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Set} `&lt;T&gt;` Filtered collection.
+	 */
+	$filter: JW.AbstractCollection._create$Set(&quot;filter&quot;),
+
+	count: function(callback, scope) {
+		return JW.Set.count(this.json, callback, scope);
+	},
+
+<span id='JW-AbstractSet-method-map'>	/**
+</span>	 * `&lt;U&gt;` Maps collection items.
+	 *
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;U&gt;` Mapped collection.
+	 */
+	map: function(callback, scope) {
+		return JW.Set.map(this.json, callback, scope);
+	},
+
+<span id='JW-AbstractSet-method-S-map'>	/**
+</span>	 * `&lt;U&gt;` Maps collection items.
+	 *
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Set} `&lt;U&gt;` Mapped collection.
+	 */
+	$map: JW.AbstractCollection._create$Set(&quot;map&quot;),
+
+	asSet: function() {
+		return this.json;
+	},
+
+	$asSet: function() {
+		return this;
+	},
+
+<span id='JW-AbstractSet-method-add'>	/**
+</span>	 * Adds item to set if one is absent.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is added successfully.
+	 */
+	add: function(item) {
+		return this.tryAdd(item) !== undefined;
+	},
+
+<span id='JW-AbstractSet-method-tryAdd'>	/**
+</span>	 * Adds item to set if one is absent.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is added successfully. If not modified - `undefined`.
+	 */
+	tryAdd: function(item) {
+		if (this.trySplice([], [item]) !== undefined) {
+			return true;
+		}
+	},
+
+<span id='JW-AbstractSet-method-addAll'>	/**
+</span>	 * Adds multiple items to set, ones that are absent.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {Array} `&lt;T&gt;` Added items.
+	 */
+	addAll: function(items) {
+		var result = this.tryAddAll(items);
+		return (result !== undefined) ? result : [];
+	},
+
+<span id='JW-AbstractSet-method-S-addAll'>	/**
+</span>	 * Adds multiple items to set, ones that are absent.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {JW.Array} `&lt;T&gt;` Added items.
+	 */
+	$addAll: JW.AbstractCollection._create$Array(&quot;addAll&quot;),
+
+<span id='JW-AbstractSet-method-tryAddAll'>	/**
+</span>	 * Adds multiple items to set, ones that are absent.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {Array} `&lt;T&gt;` Added items. If not modified - `undefined`.
+	 */
+	tryAddAll: function(items) {
+		var spliceResult = this.trySplice([], items);
+		if (spliceResult !== undefined) {
+			return spliceResult.addedItems;
+		}
+	},
+
+<span id='JW-AbstractSet-method-remove'>	/**
+</span>	 * Removes item from set if one is present.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is removed successfully.
+	 */
+	remove: function(item) {
+		return this.tryRemove(item) !== undefined;
+	},
+
+<span id='JW-AbstractSet-method-tryRemove'>	/**
+</span>	 * Removes item from set if one is present.
+	 * @param {T} item Item.
+	 * @returns {boolean} Item is removed successfully. If not modified - `undefined`.
+	 */
+	tryRemove: function(item) {
+		if (this.trySplice([item], []) !== undefined) {
+			return true;
+		}
+	},
+
+	removeItem: function(item) {
+		this.tryRemove(item);
+	},
+
+<span id='JW-AbstractSet-method-removeAll'>	/**
+</span>	 * Removes multiple items from set, ones that are present.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {Array} `&lt;T&gt;` Removed items.
+	 */
+	removeAll: function(items) {
+		var result = this.tryRemoveAll(items);
+		return (result !== undefined) ? result : [];
+	},
+
+<span id='JW-AbstractSet-method-S-removeAll'>	/**
+</span>	 * Removes multiple items from set, ones that are present.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {JW.Array} `&lt;T&gt;` Removed items.
+	 */
+	$removeAll: JW.AbstractCollection._create$Array(&quot;removeAll&quot;),
+
+<span id='JW-AbstractSet-method-tryRemoveAll'>	/**
+</span>	 * Removes multiple items from set, ones that are present.
+	 * @param {Array} items `&lt;T&gt;` Items.
+	 * @returns {Array} `&lt;T&gt;` Removes items. If not modified - `undefined`.
+	 */
+	tryRemoveAll: function(items) {
+		var spliceResult = this.trySplice(items, []);
+		if (spliceResult !== undefined) {
+			return spliceResult.removedItems;
+		}
+	},
+
+	removeItems: function(items) {
+		this.tryRemoveAll(items);
+	},
+
+<span id='JW-AbstractSet-method-clear'>	/**
+</span>	 * Clears collection.
+	 * @returns {Array} `&lt;T&gt;` Old collection contents.
+	 */
+	clear: function() {
+		var items = this.tryClear();
+		return (items !== undefined) ? items : [];
+	},
+
+<span id='JW-AbstractSet-method-S-clear'>	/**
+</span>	 * Clears collection.
+	 * @returns {JW.Array} `&lt;T&gt;` Old collection contents.
+	 */
+	$clear: JW.AbstractCollection._create$Array(&quot;clear&quot;),
+
+<span id='JW-AbstractSet-method-tryClear'>	/**
+</span>	 * Clears collection.
+	 * @returns {Array} `&lt;T&gt;` Old collection contents. If not modified - `undefined`.
+	 */
+	tryClear: function() {
+		var items = this._tryClear();
+		if ((items !== undefined) &amp;&amp; this._ownsItems) {
+			JW.Array.backEvery(items, JW.destroy);
+		}
+		return items;
+	},
+
+	_tryClear: function() {
+		if (this._length === 0) {
+			return;
+		}
+		var items;
+		this._length = 0;
+		if (this._adapter) {
+			items = JW.Set.tryClear(this.json);
+		} else {
+			items = this.toArray();
+			this.json = {};
+		}
+		return items;
+	},
+
+<span id='JW-AbstractSet-method-splice'>	/**
+</span>	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removedItems `&lt;T&gt;` Items to remove.
+	 * @param {Array} addedItems `&lt;T&gt;` Items to add.
+	 * @returns {JW.AbstractSet.SpliceResult} `&lt;T&gt;` Result.
+	 */
+	splice: function(removedItems, addedItems) {
+		var spliceResult = this.trySplice(removedItems, addedItems);
+		return (spliceResult !== undefined) ? spliceResult : new JW.AbstractSet.SpliceResult([], []);
+	},
+
+<span id='JW-AbstractSet-method-trySplice'>	/**
+</span>	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
+	 * @param {Array} removedItems `&lt;T&gt;` Items to remove.
+	 * @param {Array} addedItems `&lt;T&gt;` Items to add.
+	 * @returns {JW.AbstractSet.SpliceResult} `&lt;T&gt;` Result. If not modified - `undefined`.
+	 */
+	trySplice: function(removedItems, addedItems) {
+		var spliceResult = this._trySplice(removedItems, addedItems);
+		if ((spliceResult !== undefined) &amp;&amp; this._ownsItems) {
+			JW.Array.backEvery(spliceResult.removedItems, JW.destroy);
+		}
+		return spliceResult;
+	},
+
+	_trySplice: function(removedItems, addedItems) {
+		var spliceResult = JW.Set.trySplice(this.json, removedItems, addedItems);
+		if (spliceResult !== undefined) {
+			this._length += spliceResult.addedItems.length - spliceResult.removedItems.length;
+			return spliceResult;
+		}
+	},
+
+<span id='JW-AbstractSet-method-detectSplice'>	/**
+</span>	 * Detects #splice method arguments to adjust set contents to `newItems`.
+	 * Determines which items should be removed and which ones should be added.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `&lt;T&gt;` #splice method arguments. If no method call required - `undefined`.
+	 */
+	detectSplice: function(newItems) {
+		return JW.Set.detectSplice(this.json, newItems);
+	},
+
+<span id='JW-AbstractSet-method-performSplice'>	/**
+</span>	 * Adjusts map contents to `newItems` using #detectSplice and #splice methods.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @returns {void}
+	 */
+	performSplice: function(newItems) {
+		var spliceParams = this.detectSplice(newItems);
+		if (spliceParams !== undefined) {
+			this.trySplice(spliceParams.removedItems, spliceParams.addedItems);
+		}
+	},
+
+<span id='JW-AbstractSet-method-createMapper'>	/**
+</span>	 * `&lt;U&gt;` Creates collection item mapper.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Mapper}
+	 * `&lt;T, U&gt;` Synchronizer.
+	 */
+	createMapper: function(config) {
+		return new JW.AbstractSet.Mapper(this, config);
+	},
+
+<span id='JW-AbstractSet-method-createFilterer'>	/**
+</span>	 * Creates collection filterer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Filterer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createFilterer: function(config) {
+		return new JW.AbstractSet.Filterer(this, config);
+	},
+
+<span id='JW-AbstractSet-method-createCounter'>	/**
+</span>	 * Creates matching item counter.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Counter}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createCounter: function(config) {
+		return new JW.AbstractSet.Counter(this, config);
+	},
+
+<span id='JW-AbstractSet-method-createObserver'>	/**
+</span>	 * Creates collection observer.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Observer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createObserver: function(config) {
+		return new JW.AbstractSet.Observer(this, config);
+	},
+
+<span id='JW-AbstractSet-method-createOrderer'>	/**
+</span>	 * Creates collection converter to array (orderer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Orderer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createOrderer: function(config) {
+		return new JW.AbstractSet.Orderer(this, config);
+	},
+
+<span id='JW-AbstractSet-method-createSorterComparing'>	/**
+</span>	 * Creates collection converter to array (sorter by comparer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.SorterComparing}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createSorterComparing: function(config) {
+		return new JW.AbstractSet.SorterComparing(this, config);
+	},
+
+<span id='JW-AbstractSet-method-createIndexer'>	/**
+</span>	 * Creates collection converter to map (indexer).
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} config Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Indexer}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createIndexer: function(config) {
+		return new JW.AbstractSet.Indexer(this, config);
+	},
+
+<span id='JW-AbstractSet-method-createLister'>	/**
+</span>	 * Creates collection converter to set.
+	 * Selects appropriate synchronizer implementation automatically.
+	 * @param {Object} [config] Configuration (see synchronizer's Config options).
+	 * @returns {JW.AbstractSet.Lister}
+	 * `&lt;T&gt;` Synchronizer.
+	 */
+	createLister: function(config) {
+		return new JW.AbstractSet.Lister(this, config);
+	},
+
+<span id='JW-AbstractSet-method-equal'>	/**
+</span>	 * Checks for equality (===) to array, item by item.
+	 * @param {Array} array `&lt;T&gt;` Array.
+	 * @returns {boolean} Set is equal to array.
+	 */
+	equal: function(array) {
+		return JW.Set.equal(this.json, array);
+	},
+
+	_callStatic: function(algorithm, args) {
+		return JW.Set[algorithm].apply(JW.Set, [this.json].concat(JW.args(args || [])));
+	}
+
+<span id='JW-AbstractSet-method-createEmpty'>	/**
+</span>	 * @method createEmpty
+	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.AbstractSet} `&lt;U&gt;` Collection.
+	 */
+});
+
+<span id='JW-AbstractSet-SpliceParams-method-constructor'><span id='JW-AbstractSet-SpliceParams'>/**
+</span></span> * @class
+ * `&lt;T&gt;` JW.AbstractSet#splice method arguments. Returned by JW.AbstractSet#detectSplice method.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} removedItems `&lt;T&gt;` Items to remove.
+ * @param {Array} addedItems `&lt;T&gt;` Items to add.
+ */
+JW.AbstractSet.SpliceParams = function(removedItems, addedItems) {
+	JW.AbstractSet.SpliceParams._super.call(this);
+	this.removedItems = removedItems;
+	this.addedItems = addedItems;
+};
+
+JW.extend(JW.AbstractSet.SpliceParams, JW.Class, {
+<span id='JW-AbstractSet-SpliceParams-property-removedItems'>	/**
+</span>	 * @property {Array} removedItems `&lt;T&gt;` Items to remove.
+	 */
+<span id='JW-AbstractSet-SpliceParams-property-addedItems'>	/**
+</span>	 * @property {Array} addedItems `&lt;T&gt;` Items to add.
+	 */
+});
+
+<span id='JW-AbstractSet-SpliceResult-method-constructor'><span id='JW-AbstractSet-SpliceResult'>/**
+</span></span> * @class
+ * `&lt;T&gt;` JW.AbstractSet#splice method result.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {Array} removedItems `&lt;T&gt;` Removed items.
+ * @param {Array} addedItems `&lt;T&gt;` Added items.
+ */
+JW.AbstractSet.SpliceResult = function(removedItems, addedItems) {
+	JW.AbstractSet.SpliceResult._super.call(this);
+	this.removedItems = removedItems;
+	this.addedItems = addedItems;
+};
+
+JW.extend(JW.AbstractSet.SpliceResult, JW.Class, {
+<span id='JW-AbstractSet-SpliceResult-property-removedItems'>	/**
+</span>	 * @property {Array} removedItems `&lt;T&gt;` Removed items.
+	 */
+<span id='JW-AbstractSet-SpliceResult-property-addedItems'>	/**
+</span>	 * @property {Array} addedItems `&lt;T&gt;` Added items.
+	 */
+});
+</pre>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-Property-method-constructor'><span id='JW-Property'>/**
+</span></span> * @class
+ * `&lt;V&gt;` The observable property. A convenient way to keep one object in sync
+ * with another object. Has next helpers:
+ *
+ * - JW.Copier - keeps one property equal to another property
+ * - JW.Updater - watches several properties in order to update something by
+ * a callback
+ * - JW.Functor - watches several properties in order to reassign target
+ * property value to a callback result
+ * - JW.Mapper - watches several properties in order to recreate and destroy
+ * target property value by callbacks
+ * - JW.Switcher - watches a property to initialize and release its value
+ * - JW.UI.TextUpdater - watches a string property and updates the text in a
+ * DOM element
+ * - JW.UI.HtmlUpdater - watches a string property and updates the HTML in a
+ * DOM element
+ * - JW.UI.ValueUpdater - watches a string property and updates the value in a
+ * DOM element
+ * - JW.UI.AttrUpdater - watches a string property and updates the specified
+ * attribute in a DOM element
+ * - JW.UI.PropUpdater - watches a boolean property and updates the specified
+ * DOM property in a DOM element
+ * - JW.UI.CssUpdater - watches a string property and updates the specified
+ * CSS style in a DOM element
+ * - JW.UI.ClassUpdater - watches a boolean property and updates the specified
+ * CSS class presence in a DOM element
+ * - JW.UI.ClassNameUpdater - watches a string property and updates
+ * the CSS class name in the DOM element
+ * - JW.UI.VisibleUpdater - watches a boolean property and updates visibility
+ * of the specified DOM element
+ * - JW.UI.RadioUpdater - watches a string property and updates the selection
+ * of DOM radio elements
+ * - JW.UI.ValueListener - watches the value in a DOM text input and updates a
+ * string property
+ * - JW.UI.CheckedListener - watches the value in a DOM checkbox element and
+ * updates a boolean property
+ * - JW.UI.RadioListener - watches the selection of DOM radio elements and
+ * updates a string property
+ *
+ * For example, you can use the next algorithm to change localization on fly
+ * in your Web application:
+ *
+ *     var locale = {
+ *         en: {
+ *             hi: &quot;Hi&quot;,
+ *             bye: &quot;Bye&quot;
+ *         },
+ *         ru: {
+ *             hi: &quot;Привет&quot;,
+ *             bye: &quot;Пока&quot;
+ *         }
+ *     };
+ *     var language = new JW.Property(&quot;en&quot;);
+ *     var hiFunctor = new JW.Functor([ language ], function(language) {
+ *         return locale[language].hi;
+ *     });
+ *     var byeFunctor = new JW.Functor([ language ], function(language) {
+ *         return locale[language].bye;
+ *     });
+ *     new JW.UI.TextUpdater($(&quot;#hi&quot;), hiFunctor.{@link JW.Functor#property-target target});
+ *     new JW.UI.TextUpdater($(&quot;#bye&quot;), byeFunctor.{@link JW.Functor#property-target target});
+ *     // Now you can change localization easily
+ *     language.{@link #set}(&quot;ru&quot;);
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {V} value Initial value.
+ */
+JW.Property = function(value) {
+	JW.Property._super.call(this);
+	this._value = JW.defn(value, null);
+	this._ownsValue = false;
+	this._copier = null;
+	this.changeEvent = this.own(new JW.Event());
+};
+
+JW.extend(JW.Property, JW.Class, {
+<span id='JW-Property-event-changeEvent'>	/**
+</span>	 * @event changeEvent
+	 * Property value is changed. Triggered in result of calling #set method.
+	 * @param {JW.ValueChangeEventParams} params `&lt;V&gt;` Parameters.
+	 */
+	// V _value;
+	// boolean _ownsValue;
+	// JW.Copier&lt;V&gt; _copier;
+	
+	destroy: function() {
+		this.bindTo();
+		if (this._ownsValue &amp;&amp; JW.isSet(this._value)) {
+			this._value.destroy();
+		}
+		this._value = null;
+		this._super();
+	},
+	
+<span id='JW-Property-method-get'>	/**
+</span>	 * Returns property value.
+	 * @returns {V} Property value.
+	 */
+	get: function() {
+		return this._value;
+	},
+	
+<span id='JW-Property-method-set'>	/**
+</span>	 * Changes property value and triggers event #changeEvent.
+	 * @param {V} value
+	 */
+	set: function(value) {
+		if (value === undefined) {
+			value = null;
+		}
+		var oldValue = this._value;
+		if (oldValue === value) {
+			return;
+		}
+		this._value = value;
+		this.changeEvent.trigger(new JW.ValueChangeEventParams(this, value, oldValue));
+		if (this._ownsValue &amp;&amp; JW.isSet(oldValue)) {
+			oldValue.destroy();
+		}
+	},
+	
+<span id='JW-Property-method-ownValue'>	/**
+</span>	 * Makes this property an owner of its value. It means that the value will
+	 * be destroyed automatically on reassignment and on destruction of the
+	 * property.
+	 * @returns {JW.Property} this
+	 */
+	ownValue: function() {
+		this._ownsValue = true;
+		return this;
+	},
+	
+<span id='JW-Property-method-bindTo'>	/**
+</span>	 * Binds this property to another property using a JW.Copier.
+	 * @param {JW.Property} source `&lt;V&gt;` Source property to bind to.
+	 */
+	bindTo: function(source) {
+		if (this._copier) {
+			this._copier.destroy();
+			this._copier = null;
+		}
+		if (source) {
+			this._copier = new JW.Copier(source, { target: this });
+		}
+	}
+});
+</pre>
+</body>
+</html>
