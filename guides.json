@@ -292,6 +292,10 @@
 							{
 								"name": "rujwuicomponent",
 								"title": "JW.UI.Component"
+							},
+							{
+								"name": "rujwuijqeventattachment",
+								"title": "JW.UI.JQEventAttachment"
 							}
 						]
 					}

@@ -53,3 +53,4 @@
 UI компонент:
 
 - [JW.UI.Component](#!/guide/rujwuicomponent)
+- [JW.UI.JQEventAttachment](#!/guide/rujwuijqeventattachment)

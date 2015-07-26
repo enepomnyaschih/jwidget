@@ -24,8 +24,8 @@
  *
  * - Allows you to use jQuery events in conjunction with jWidget object aggregation feature.
  * Attachment destruction results in event unbinding.
- * - Allows you to pass callback context
- * - However, it doesn't support "data" argument - use closures instead
+ * - Allows you to pass callback context.
+ * - However, it doesn't support "data" argument - use closures instead.
  *
  * Method {@link jQuery#jwon jwon} is a shorthand for adapter creation.
  *
@@ -52,7 +52,7 @@
  *         }
  *     });
  *
- * Thanks to jQuery event adapter, we can remove the overhead of locking the method call context and
+ * Thanks to the adapter, we can remove the overhead of locking the method call context and
  * explicit event unsubscribing in the #destroy method:
  *
  *     var MyForm = function(el) {

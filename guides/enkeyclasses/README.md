@@ -53,3 +53,4 @@ Synchronizers:
 UI component:
 
 - JW.UI.Component
+- JW.UI.JQEventAttachment
