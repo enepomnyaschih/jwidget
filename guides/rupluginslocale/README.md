@@ -73,26 +73,26 @@
         assert("Русский" === locale.{@link JW.Plugins.Locale#getString getString}("ru", "_lang"));
     });
 
-## Метод getFunctor
+## Метод getProperty
 
 Если локализацию приложения необходимо переключать динамически, то одного метода {@link JW.Plugins.Locale#getString getString} не достаточно.
-Воспользуемся методом {@link JW.Plugins.Locale#getFunctor getFunctor}, который формирует новый экземпляр JW.Property, содержащий указанную строку в
+Воспользуемся методом {@link JW.Plugins.Locale#getProperty getProperty}, который формирует новый экземпляр JW.Property, содержащий указанную строку в
 текущей локализации и обновляющий ее при изменении текущей локализации.
 
     $(function() {
         var lang = new JW.Property("en");
         var locale = new JW.Plugins.Locale(dictionary, lang);
 
-        var submitFunctor = locale.{@link JW.Plugins.Locale#getFunctor getFunctor}("submit");
-        assert("Submit" === submitFunctor.{@link JW.Functor#property-target target}.{@link JW.Property#get get}());
+        var submitProperty = locale.{@link JW.Plugins.Locale#getProperty getProperty}("submit");
+        assert("Submit" === submitProperty.{@link JW.Property#get get}());
 
         lang.{@link JW.Property#set set}("ru");
-        assert("Отправить" === submitFunctor.{@link JW.Functor#property-target target}.{@link JW.Property#get get}());
+        assert("Отправить" === submitProperty.{@link JW.Property#get get}());
 
-        submitFunctor.{@link JW.Functor#destroy destroy}(); // если функтор больше не нужен, его необходимо уничтожить
+        submitProperty.{@link JW.Property#destroy destroy}(); // если свойство больше не нужно, его необходимо уничтожить
     });
 
-## Использование метода getFunctor в компонентах
+## Использование метода getProperty в компонентах
 
 Предположим, вам нужно вывести строку "name" в качестве метки внутри некоторой формы и "submit" в качестве текста для
 кнопки отправления формы. Воспользуемся хелперами JW.UI.TextUpdater и JW.UI.ValueUpdater.
@@ -104,12 +104,12 @@
 
     JW.extend(Form, JW.UI.Component, {
         renderNameLabel: function(el) {
-            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getFunctor getFunctor}("name")).{@link JW.Functor#property-target target};
+            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("name"));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
         },
 
         renderSubmit: function(el) {
-            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getFunctor getFunctor}("submit")).{@link JW.Functor#property-target target};
+            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("submit"));
             this.{@link JW.Class#own own}(new JW.UI.ValueUpdater(el, text));
         }
     });
@@ -208,17 +208,17 @@
 
     JW.extend(EquipmentSelector, JW.UI.Component, {
         renderMonitor: function(el) {
-            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getFunctor getFunctor}("monitor")).{@link JW.Functor#property-target target};
+            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("monitor"));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
         },
 
         renderKeyboard: function(el) {
-            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getFunctor getFunctor}("keyboard")).{@link JW.Functor#property-target target};
+            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("keyboard"));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
         },
 
         renderMouse: function(el) {
-            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getFunctor getFunctor}("mouse")).{@link JW.Functor#property-target target};
+            var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("mouse"));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
         }
     });
@@ -247,7 +247,7 @@
 - "keyboard", а не "equipment.keyboard"
 - "mouse", а не "equipment.mouse"
 
-## Локализация по шаблону (методы expandTemplate и getTemplateFunctor)
+## Локализация по шаблону (методы expandTemplate и getTemplateProperty)
 
 Даты форматировать непросто. Во-первых, строка даты зависит от маски (например, "mmm'yy"). Во-вторых - от текущей локализации
 ("Jan" или "Янв"). Для форматирования дат воспользуемся методом форматирования строки по шаблону.
@@ -268,7 +268,7 @@
         assert("Jan'10" === locale.{@link JW.Plugins.Locale#expandTemplate expandTemplate}(format);
     });
 
-Метод {@link JW.Plugins.Locale#getTemplateFunctor getTemplateFunctor} позволяет наладить динамическое изменение строки даты при изменении текущей локализации.
+Метод {@link JW.Plugins.Locale#getTemplateProperty getTemplateProperty} позволяет наладить динамическое изменение строки даты при изменении текущей локализации.
 
     $(function() {
         var lang = new JW.Property("en");
@@ -276,13 +276,13 @@
 
         var date = new Date(2010, 0, 1);
         var format = JW.Plugins.Locale.formatDate(date, "mmm'yy");
-        var dateFunctor = locale.{@link JW.Plugins.Locale#getTemplateFunctor getTemplateFunctor}(format);
-        assert("Jan'10" === dateFunctor.{@link JW.Functor#property-target target}.{@link JW.Property#get get}());
+        var dateProperty = locale.{@link JW.Plugins.Locale#getTemplateProperty getTemplateProperty}(format);
+        assert("Jan'10" === dateProperty.{@link JW.Property#get get}());
 
         lang.{@link JW.Property#set set}("ru");
-        assert("Янв'10" === dateFunctor.{@link JW.Functor#property-target target}.{@link JW.Property#get get}());
+        assert("Янв'10" === dateProperty.{@link JW.Property#get get}());
 
-        dateFunctor.{@link JW.Functor#destroy destroy}();
+        dateProperty.{@link JW.Property#destroy destroy}();
     });
 
-Теперь по аналогии с предыдущими примерами можно легко привязать текст внутри любого DOM-элемента к dateFunctor.{@link JW.Functor#property-target target}.
+Теперь по аналогии с предыдущими примерами можно легко привязать текст внутри любого DOM-элемента к dateProperty.

@@ -75,8 +75,14 @@ JW.Tests.Plugins.LocaleTestCase = JW.Unit.TestCase.extend({
 		var submitFunctor = this.locale.getFunctor("submit");
 		this.assertStrictEqual("Submit", submitFunctor.target.get());
 
+		var submitProperty = this.locale.getProperty("submit");
+		this.assertStrictEqual("Submit", submitProperty.get());
+
 		var monitorFunctor = equipmentLocale.getFunctor("monitor");
 		this.assertStrictEqual("Monitor", monitorFunctor.target.get());
+
+		var monitorProperty = equipmentLocale.getProperty("monitor");
+		this.assertStrictEqual("Monitor", monitorProperty.get());
 
 		var date = new Date(2010, 0, 1);
 		var format = JW.Plugins.Locale.formatDate(date, "mmm'yy");
@@ -85,15 +91,21 @@ JW.Tests.Plugins.LocaleTestCase = JW.Unit.TestCase.extend({
 		var dateFunctor = this.locale.getTemplateFunctor(format);
 		this.assertStrictEqual("Jan'10", dateFunctor.target.get());
 
+		var dateProperty = this.locale.getTemplateProperty(format);
+		this.assertStrictEqual("Jan'10", dateProperty.get());
+
 		this.lang.set("ru");
 		this.assertStrictEqual("Имя", this.locale.getString("name"));
 		this.assertStrictEqual("Монитор", this.locale.getString("equipment.monitor"));
 		this.assertStrictEqual("Фев", this.locale.getString(["monthsShort", 1]));
 		this.assertStrictEqual("Монитор", equipmentLocale.getString("monitor"));
 		this.assertStrictEqual("Отправить", submitFunctor.target.get());
+		this.assertStrictEqual("Отправить", submitProperty.get());
 		this.assertStrictEqual("Монитор", monitorFunctor.target.get());
+		this.assertStrictEqual("Монитор", monitorProperty.get());
 		this.assertStrictEqual("Янв'10", this.locale.expandTemplate(format));
 		this.assertStrictEqual("Янв'10", dateFunctor.target.get());
+		this.assertStrictEqual("Янв'10", dateProperty.get());
 
 		this.assertStrictEqual("English", this.locale.getString("en", "_lang"));
 		this.assertStrictEqual("Русский", this.locale.getString("ru", "_lang"));
@@ -102,8 +114,11 @@ JW.Tests.Plugins.LocaleTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual("Янв'10", this.locale.expandTemplate("ru", format));
 
 		submitFunctor.destroy();
+		submitProperty.destroy();
 		monitorFunctor.destroy();
+		monitorProperty.destroy();
 		dateFunctor.destroy();
+		dateProperty.destroy();
 	},
 
 	testFunctorConfig: function() {
