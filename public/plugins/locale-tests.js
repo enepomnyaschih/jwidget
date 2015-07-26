@@ -95,6 +95,9 @@ JW.Tests.Plugins.LocaleTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual("English", this.locale.getString("en", "_lang"));
 		this.assertStrictEqual("Русский", this.locale.getString("ru", "_lang"));
 
+		this.assertStrictEqual("Jan'10", this.locale.expandTemplate("en", format));
+		this.assertStrictEqual("Янв'10", this.locale.expandTemplate("ru", format));
+
 		submitFunctor.destroy();
 		monitorFunctor.destroy();
 		dateFunctor.destroy();

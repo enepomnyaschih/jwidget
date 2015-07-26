@@ -363,15 +363,24 @@ JW.extend(JW.Plugins.Locale, JW.Class, {
 	},
 
 	/**
-	 * Formats a string by a template in a current locale. For example, "${months.0}'10" string
-	 * will be expanded to either "Jan'10" or "Янв'10" depending on current locale. The words which are taken to
+	 * Formats a string by a template. For example, "${months.0}'10" string
+	 * will be expanded to either "Jan'10" or "Янв'10" depending on the locale. The words which are taken to
 	 * the curly braces with $ sign will be replaced with the corresponding strings in the localization
-	 * dictionary.
+	 * dictionary. Supports two variations:
+	 *
+	 * - expandTemplate(template:string):string - formats a string in a current locale
+	 * - expandTemplate(lang:string, template:string):string - formats a string in a specified locale
+	 *
+	 * @param {string} lang Locale identifier.
 	 * @param {string} template Template.
 	 * @returns {string} Formatted string.
 	 */
-	expandTemplate: function(template) {
-		var data = this.data[this.lang.get()];
+	expandTemplate: function(lang, template) {
+		if (!JW.isSet(template)) {
+			template = lang;
+			lang = this.lang.get();
+		}
+		var data = this.data[lang];
 		return template.replace(/\$\{([^\}]+)\}/g, function(a, b) {
 			return JW.get(data, b, a);
 		});
