@@ -103,7 +103,8 @@
  */
 JW.AbstractSet = function(items, adapter) {
 	JW.AbstractSet._super.call(this);
-	this.json = adapter ? items : items ? JW.Array.index(items, JW.byField("_iid")) : {};
+	this._adapter = !!adapter;
+	this.json = this._adapter ? items : items ? JW.Array.index(items, JW.byField("_iid")) : {};
 	this._length = JW.Set.getLength(this.json);
 };
 
@@ -358,8 +359,18 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 
 	_tryClear: function() {
+		if (this._length === 0) {
+			return;
+		}
+		var items;
 		this._length = 0;
-		return JW.Set.tryClear(this.json);
+		if (this._adapter) {
+			items = JW.Set.tryClear(this.json);
+		} else {
+			items = this.toArray();
+			this.json = {};
+		}
+		return items;
 	},
 
 	/**
