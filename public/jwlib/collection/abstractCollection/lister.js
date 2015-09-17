@@ -44,7 +44,7 @@
  *
  *     lister.{@link JW.AbstractCollection.Lister#destroy destroy}();
  *
- * **Notice:** All items of source collection must be different (i.e. have unique {@link JW.Class#_iid _iid}).
+ * **Notice:** All items of source collection must be different (i.e. have unique _iid).
  *
  * Use JW.AbstractCollection#createLister method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).

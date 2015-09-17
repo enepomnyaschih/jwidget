@@ -210,7 +210,7 @@ JW.extend(JW.Property, JW.Class, {
 	 * If property value is null, returns null property.
 	 * Otherwise, returns a property containing the result of `f` call with property value in argument.
 	 * Starts continuous synchronization, i.e. creates JW.Mapper implicitly.
-	 * In comparison to {#$$mapObject} method, doesn't destroy the previously assigned values.
+	 * In comparison to #$$mapObject method, doesn't destroy the previously assigned values.
 	 *
 	 * @param {Function} f
 	 *
@@ -237,7 +237,7 @@ JW.extend(JW.Property, JW.Class, {
 	 * If property value is null, returns null property.
 	 * Otherwise, returns a property containing the result of `f` call with property value in argument.
 	 * Starts continuous synchronization, i.e. creates JW.Mapper implicitly.
-	 * In comparison to {#$$mapValue} method, destroys the previously assigned values.
+	 * In comparison to #$$mapValue method, destroys the previously assigned values.
 	 *
 	 * @param {Function} f
 	 *

@@ -58,7 +58,7 @@
  * In simple cases, JW.AbstractCollection#$$filter shorthand can be used instead. It returns the target collection right away:
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
- *     var target = source.{@link JW.AbstractCollection#$$filter}(function(x) { return x % 2 === 1; });
+ *     var target = source.{@link JW.AbstractCollection#$$filter $$filter}(function(x) { return x % 2 === 1; });
  *     assert(target.{@link JW.AbstractArray#equal equal}([1, 3]));
  *
  *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);

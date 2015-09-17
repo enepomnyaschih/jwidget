@@ -61,7 +61,7 @@
  * In simple cases, JW.AbstractCollection#$$index shorthand can be used instead. It returns the target map right away:
  *
  *     var array = new JW.ObservableArray([{id: 9, label: "The item"}]);
- *     var map = array.{@link JW.AbstractCollection#$$index index}(function(item) { return item.id; });
+ *     var map = array.{@link JW.AbstractCollection#$$index $$index}(function(item) { return item.id; });
  *
  *     // Get an item with ID = 9
  *     assert(map.{@link JW.AbstractMap#get get}(9).label === "The item");

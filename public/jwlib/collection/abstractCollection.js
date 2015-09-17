@@ -39,17 +39,22 @@
  * It lets you to synchronize view with data on fly in accordance to Model-View architecture.
  * The next synchronizers exist to connect observable collections to each other:
  *
- * - Item mapper: JW.AbstractCollection.Mapper, created with methods #$$mapValues, #$$mapObjects, #createMapper
- * - Filterer: JW.AbstractCollection.Filterer, created with methods #$$filter, #createFilterer
- * - Matching item counter: JW.AbstractCollection.Counter, created with methods #$$count, #createCounter
- * - Converter to set: JW.AbstractCollection.Lister, created with methods #$$toSet, #createLister
- * - Converter to map (indexer): JW.AbstractCollection.Indexer, created with methods #$$index, #createIndexer
- * - Converter to array (orderer): JW.AbstractCollection.Orderer, created with methods #$$toArray, #createOrderer
- * - Converter to array (sorter by comparer): JW.AbstractCollection.SorterComparing, created with methods #$$toSortedComparing, #createSorterComparing
- * - Observer: JW.AbstractCollection.Observer, created with method #createObserver
- * - View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter, JW.UI.Inserter, created with method #createInserter
- * - Arrays merger: JW.AbstractArray.Merger, created with methods #$$merge, #createMerger
- * - Array reverser: JW.AbstractArray.Reverser, created with methods #$$toReversed, #createReverser
+ * <table>
+ *   <tbody>
+ *     <tr><td>Synchronizer</td><td>Class</td><td>Creation methods</td></tr>
+ *     <tr><td>Item mapper</td><td>JW.AbstractCollection.Mapper</td><td>#$$mapValues, #$$mapObjects, #createMapper</td></tr>
+ *     <tr><td>Filterer</td><td>JW.AbstractCollection.Filterer</td><td>#$$filter, #createFilterer</td></tr>
+ *     <tr><td>Matching item counter</td><td>JW.AbstractCollection.Counter</td><td>#$$count, #createCounter</td></tr>
+ *     <tr><td>Converter to set</td><td>JW.AbstractCollection.Lister</td><td>#$$toSet, #createLister</td></tr>
+ *     <tr><td>Converter to map (indexer)</td><td>JW.AbstractCollection.Indexer</td><td>#$$index, #createIndexer</td></tr>
+ *     <tr><td>Converter to array (orderer)</td><td>JW.AbstractCollection.Orderer</td><td>#$$toArray, #createOrderer</td></tr>
+ *     <tr><td>Converter to array (sorter by comparer)</td><td>JW.AbstractCollection.SorterComparing</td><td>#$$toSortedComparing, #createSorterComparing</td></tr>
+ *     <tr><td>Observer</td><td>JW.AbstractCollection.Observer</td><td>#createObserver</td></tr>
+ *     <tr><td>View synchronizers</td><td>JW.AbstractArray.Inserter, JW.AbstractMap.Inserter, JW.UI.Inserter</td><td>createInserter</td></tr>
+ *     <tr><td>Arrays merger</td><td>JW.AbstractArray.Merger</td><td>{@link JW.AbstractArray#$$merge $$merge}, {@link JW.AbstractArray#createMerger createMerger}</td></tr>
+ *     <tr><td>Array reverser</td><td>JW.AbstractArray.Reverser</td><td>{@link JW.AbstractArray#$$toReversed $$toReversed}, {@link JW.AbstractArray#createReverser createReverser}</td></tr>
+ *   </tbody>
+ * </table>
  *
  * Simple collections are very similar to native JavaScript collections.
  * Their main purpose is interface compatibility: they have the same API as observable collections, but they work a little bit faster.
@@ -74,10 +79,12 @@
  *
  * 3) Majority methods which return collection have 3 implementations: `method`, `$method` and `$$method`.
  * These methods perform the same modification but return the result in different format.
- * First implementation returns native JavaScript collection: Array or Object.
- * Second implementation returns jWidget collection: JW.Array, JW.Map or JW.Set.
- * Third implementation return jWidget collection and starts continuous synchronization with original
+ *
+ * - `method` returns native JavaScript collection: Array or Object.
+ * - `$method` returns jWidget collection: JW.Array, JW.Map or JW.Set.
+ * - `$$method` returns jWidget collection and starts continuous synchronization with original
  * collection if one is observable. To stop synchronization, #destroy the target collection.
+ *
  * Use one method that's more convenient in your specific situation.
  * For example, `$method` is convenient for chaining algorithm method calls.
  * So, previous example can be changed next way:
@@ -769,7 +776,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 * If this collection is observable, starts continuous synchronization,
 	 * i.e. creates JW.AbstractCollection.Mapper implicitly.
-	 * In comparison to {#$$mapObjects} method, doesn't destroy the resulting items after their removal.
+	 * In comparison to #$$mapObjects method, doesn't destroy the resulting items after their removal.
 	 *
 	 * @param {Function} f
 	 *
@@ -789,7 +796,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
 	 * If this collection is observable, starts continuous synchronization,
 	 * i.e. creates JW.AbstractCollection.Mapper implicitly.
-	 * In comparison to {#$$mapValues} method, destroys the resulting items after their removal.
+	 * In comparison to #$$mapValues method, destroys the resulting items after their removal.
 	 *
 	 * @param {Function} f
 	 *

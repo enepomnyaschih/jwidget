@@ -67,7 +67,9 @@
  * In simple cases, JW.AbstractCollection#$$mapValues and JW.AbstractCollection#$$mapObjects shorthand methods
  * can be used instead. They return the target collection right away:
  *
- *     var viewCollection = dataCollection.{@link JW.AbstractCollection#$$mapObjects $$mapObjects}(function(data) { return new View(this, data); }, this);
+ *     var viewCollection = dataCollection.{@link JW.AbstractCollection#$$mapObjects $$mapObjects}(function(data) {
+ *         return new View(this, data);
+ *     }, this);
  *
  *     // Once not needed anymore, destroy
  *     viewCollection.{@link JW.AbstractCollection#destroy destroy}();

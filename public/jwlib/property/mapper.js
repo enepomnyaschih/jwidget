@@ -41,9 +41,11 @@
  *         {@link JW.Mapper#scope scope}: this
  *     });
  *     assert("1 apples", target.{@link JW.Property#get get}());
+ *
  *     // Next command prints "Done 1 apples" and "Init 2 apples"
  *     count.{@link JW.Property#set set}(2);
  *     assert("2 apples", target.{@link JW.Property#get get}());
+ *
  *     // Next command prints "Done 2 apples"
  *     mapper.{@link JW.Mapper#destroy destroy}();
  *     assert(null, target.{@link JW.Property#get get}());
@@ -60,6 +62,15 @@
  *     });
  *     var target = mapper.{@link JW.Mapper#property-target target};
  *     assert("1 apples", target.{@link JW.Property#get get}());
+ *     mapper.{@link JW.Mapper#destroy destroy}();
+ *
+ * In simple cases, JW.Property#$$mapValue and JW.Property#$$mapObject shorthand methods
+ * can be used instead. They return the target property right away:
+ *
+ *     var source = new JW.Property(1);
+ *     var target = source.{@link JW.Property#$$mapValue $$mapValue}(function(value) { return value + " apples"; });
+ *     assert("1 apples", target.{@link JW.Property#get get}());
+ *     target.{@link JW.Property#destroy destroy}();
  *
  * On source property change, next flow will take a place:
  *
@@ -83,13 +94,9 @@
  *         // JW.Property<Document> document;
  *         
  *         renderDocument: function() {
- *             return this.{@link JW.Class#own own}(new JW.Mapper(this.document, {
- *                 {@link JW.Mapper#createValue createValue}: function(document) {
- *                     return new DocumentView(document);
- *                 },
- *                 {@link JW.Mapper#destroyValue destroyValue}: JW.destroy,
- *                 {@link JW.Mapper#scope scope}: this
- *             })).{@link JW.Mapper#property-target target};
+ *             return this.{@link JW.Class#own own}(this.document.{@link JW.Property#$$mapObject $$mapObject}(function(document) {
+ *                 return new DocumentView(document);
+ *             }, this);
  *         }
  *     });
  *     
