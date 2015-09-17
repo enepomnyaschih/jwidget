@@ -313,6 +313,8 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	}
 });
 
+JW.apply(JW.ObservableMap.prototype, JW.ObservableCollection);
+
 /**
  * @class
  * `<T>` JW.ObservableMap event parameters.

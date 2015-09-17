@@ -31,7 +31,8 @@
  *
  * Content retrieving:
  *
- * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #getLength} - Returns count of items in collection. For observable collections, `length` property may come
+ * in handy if you want to track collection length dynamically.
  * - {@link #isEmpty} - Checks collection for emptiness.
  * - {@link #get} - Returns collection item by index.
  * - {@link #getFirst} - Returns first item in collection.
@@ -57,24 +58,28 @@
  * Returns first item matching the criteria.
  * - {@link #find} - Finds item by criteria.
  * Returns index of first item matching the criteria.
- * - {@link #filter}, #$filter - Filters collection by criteria.
+ * - {@link #filter}, #$filter, #$$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * - {@link #count} - Counts the items matching criteria.
- * - {@link #map}, #$map - Maps collection items.
+ * - {@link #count}, #$count, #$$count - Counts the items matching criteria.
+ * - {@link #map}, #$map, #$$mapValues, #$$mapObjects - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing, #$$toSortedComparing -
  * Builds array consisting of collection items sorted by indexer or comparer.
  * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
  * Returns indexes of collection items sorted by indexer or comparer.
- * - {@link #index}, #$index - Indexes collection.
+ * - {@link #index}, #$index, #$$index - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toArray}, #$toArray, #$$toArray - Builds new array consisting of collection items.
  * - {@link #toMap}, #$toMap - Builds new map consisting of collection items.
- * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #toSet}, #$toSet, #$$toSet - Builds new set consisting of collection items.
  * - {@link #asArray}, #$asArray - Represents collection as array.
  * - {@link #asMap}, #$asMap - Represents collection as map.
  * - {@link #asSet}, #$asSet - Represents collection as set.
  * - **{@link #backEvery} - Checks all items by criteria in backward order.**
+ * - **{@link #merge}, #$merge, #$$merge - (for `JW.AbstractArray<? extends JW.AbstractArray>` only)
+ * Builds array consisting of items of subarrays in the same order.**
+ * - **{@link #toReversed}, #$toReversed, #$$toReversed -
+ * Builds array consisting of collection items in reverse order.**
  *
  * Collection modification:
  *
@@ -91,23 +96,24 @@
  * - **{@link #splice}, #trySplice - Removes/inserts item ranges.**
  * - **{@link #reorder}, #tryReorder - Reorders items.**
  * - **{@link #sort}, #sortComparing - Sorts array.**
+ * - **{@link #reverse} - Reverses item order in array.**
  * - **{@link #performSplice} - Adjusts contents using #splice method.**
  * - **{@link #performFilter} - Filters contents using #splice method.**
  * - **{@link #performReorder} - Adjusts contents using #reorder method.**
  *
  * Synchronizers creation:
  *
- * - {@link #createMapper} - Creates item mapper.
- * - {@link #createFilterer} - Creates filterer.
- * - {@link #createCounter} - Creates matching item counter.
- * - {@link #createLister} - Creates converter to set.
- * - {@link #createIndexer} - Creates converter to map (indexer).
- * - {@link #createOrderer} - Creates converter to array (orderer).
- * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createMapper} - Creates item mapper. Extended version of #$$mapValues and #$$mapObjects methods.
+ * - {@link #createFilterer} - Creates filterer. Extended version of #$$filter method.
+ * - {@link #createCounter} - Creates matching item counter. Extended version of #$$count method.
+ * - {@link #createLister} - Creates converter to set. Extended version of #$$toSet method.
+ * - {@link #createIndexer} - Creates converter to map (indexer). Extended version of #$$index method.
+ * - {@link #createOrderer} - Creates converter to array (orderer). Extended version of #$$toArray method.
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer). Extended version of #$$toSortedComparing method.
  * - {@link #createObserver} - Creates observer.
  * - **{@link #createInserter} - Creates view synchronizer with array.**
- * - **{@link #createMerger} - Creates arrays merger.**
- * - **{@link #createReverser} - Creates array reverser.**
+ * - **{@link #createMerger} - Creates arrays merger. Extended version of #$$merge method.**
+ * - **{@link #createReverser} - Creates array reverser. Extended version of #$$toReversed method.**
  *
  * Similar collection creation (for algorithms and synchronizers implementation):
  *
@@ -985,6 +991,71 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 		if (indexArray !== undefined) {
 			this.tryReorder(indexArray);
 		}
+	},
+
+	/**
+	 * For `JW.AbstractArray<? extends JW.AbstractArray>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Current array is not modified.
+	 * @returns {Array} Merged array.
+	 */
+	merge: function() {
+		throw new Error("Method not implemented");
+	},
+
+	/**
+	 * For `JW.AbstractArray<? extends JW.AbstractArray>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Current array is not modified.
+	 * @returns {JW.Array} Merged array.
+	 */
+	$merge: JW.AbstractCollection._create$Array("merge"),
+
+	/**
+	 * For `JW.AbstractArray<? extends JW.AbstractArray>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Current array is not modified.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractArray.Merger implicitly.
+	 * @returns {JW.AbstractArray} Merged array.
+	 */
+	$$merge: function() {
+		return this.$merge();
+	},
+
+	/**
+	 * Reverses item order in array.
+	 * @returns {void}
+	 */
+	reverse: function() {
+		throw new Error("Method not implemented");
+	},
+
+	/**
+	 * Builds a new array containing items of this array in reversed order.
+	 * Current array is not modified.
+	 * @returns {Array} `<T>` Reversed array.
+	 */
+	toReversed: function() {
+		throw new Error("Method not implemented");
+	},
+
+	/**
+	 * Builds a new array containing items of this array in reversed order.
+	 * Current array is not modified.
+	 * @returns {JW.Array} `<T>` Reversed array.
+	 */
+	$toReversed: JW.AbstractCollection._create$Array("toReversed"),
+
+	/**
+	 * Builds a new array containing items of this array in reversed order.
+	 * Current array is not modified.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractArray.Reverser implicitly.
+	 * @returns {JW.AbstractArray} `<T>` Reversed array.
+	 */
+	$$toReversed: function() {
+		return this.$toReversed();
 	},
 
 	/**

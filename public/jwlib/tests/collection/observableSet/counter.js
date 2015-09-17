@@ -28,6 +28,22 @@ JW.Tests.Collection.ObservableSet.CounterTestCase = JW.Unit.TestCase.extend({
 		this.g = new JW.Proxy(7);
 	},
 
+	testShorthand: function() {
+		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d, this.e]);
+		var target = source.$$count(this.countFunc, this);
+		JW.Tests.Collection.subscribeToProperty(this, target);
+
+		this.assertStrictEqual(3, target.get());
+
+		this.setExpectedOutput("3 > 2");
+		source.splice([this.a, this.b, this.c], [this.f, this.g]);
+		this.assertStrictEqual(2, target.get());
+
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+
 	testCounter: function() {
 		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d, this.e]);
 		var target = this.createTarget();
@@ -106,7 +122,13 @@ JW.Tests.Collection.ObservableSet.CounterTestCase = JW.Unit.TestCase.extend({
 	createCounter: function(source, target) {
 		return source.createCounter({
 			target: target,
-			filterItem: function(x) { return x.value % 2 === 1; }
+			filterItem: this.countFunc,
+			scope: this
 		});
+	},
+
+	countFunc: function(x) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
+		return x.get() % 2 === 1;
 	}
 });

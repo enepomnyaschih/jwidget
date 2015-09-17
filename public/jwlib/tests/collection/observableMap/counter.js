@@ -18,6 +18,22 @@
 */
 
 JW.Tests.Collection.ObservableMap.CounterTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var source = new JW.ObservableMap({a: 1, b: 2, c: 3, d: 4, e: 5});
+		var target = source.$$count(this.countFunc, this);
+		JW.Tests.Collection.subscribeToProperty(this, target);
+
+		this.assertStrictEqual(3, target.get());
+
+		this.setExpectedOutput("3 > 5");
+		source.splice(["d"], {f: 6, a: 7, g: 8, b: 9, h: 10, i: 11}); // {a: 7, b: 9, c: 3, e: 5, f: 6, g: 8, h: 10, i: 11}
+		this.assertStrictEqual(5, target.get());
+
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+
 	testCounter: function() {
 		var source = new JW.ObservableMap({a: 1, b: 2, c: 3, d: 4, e: 5});
 		var target = this.createTarget();
@@ -100,8 +116,13 @@ JW.Tests.Collection.ObservableMap.CounterTestCase = JW.Unit.TestCase.extend({
 	createCounter: function(source, target) {
 		return source.createCounter({
 			target: target,
-			filterItem: function(x) { return x % 2 === 1; },
+			filterItem: this.countFunc,
 			scope: this
 		});
+	},
+
+	countFunc: function(x) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
+		return x % 2 === 1;
 	}
 });

@@ -23,15 +23,28 @@
  * `<T extends JW.Class, C extends JW.AbstractCollection<T>>`
  *
  * Converter to set.
+ * If original collection is observable, starts continuous synchronization.
  * Can be used for fast item existance detection.
  *
- *     var lister = collection.{@link JW.AbstractCollection#createLister createLister}();
- *     var set = lister.{@link #property-target target};
- *     
- *     // Assert that some item x exists in source collection
- *     assert(set.{@link JW.AbstractSet#contains contains}(x));
+ *     // Create two dummy collection items
+ *     var x = new JW.Class();
+ *     var y = new JW.Class();
  *
- * **Notice:** All items of source collection must be different.
+ *     // Initialize collection and synchronizer
+ *     var array = new JW.ObservableArray([x]);
+ *     var lister = array.{@link JW.AbstractCollection#createLister createLister}();
+ *     var set = lister.{@link #property-target target};
+ *
+ *     assert(set.{@link JW.AbstractSet#contains contains}(x));
+ *     assert(!set.{@link JW.AbstractSet#contains contains}(y));
+ *
+ *     // Target set is automatically synchronized with original observable array
+ *     array.add(y);
+ *     assert(set.{@link JW.AbstractSet#contains contains}(y));
+ *
+ *     lister.{@link JW.AbstractCollection.Lister#destroy destroy}();
+ *
+ * **Notice:** All items of source collection must be different (i.e. have unique {@link JW.Class#_iid _iid}).
  *
  * Use JW.AbstractCollection#createLister method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -42,6 +55,25 @@
  *     var lister = collection.{@link JW.AbstractCollection#createLister createLister}({
  *         {@link #cfg-target target}: set
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$toSet shorthand can be used instead. It returns the target set right away:
+ *
+ *     // Create two dummy collection items
+ *     var x = new JW.Class();
+ *     var y = new JW.Class();
+ *
+ *     // Initialize collections
+ *     var array = new JW.ObservableArray([x]);
+ *     var set = array.{@link JW.AbstractCollection#$$toSet $$toSet}();
+ *
+ *     assert(set.{@link JW.AbstractSet#contains contains}(x));
+ *     assert(!set.{@link JW.AbstractSet#contains contains}(y));
+ *
+ *     // Target set is automatically synchronized with original observable array
+ *     array.add(y);
+ *     assert(set.{@link JW.AbstractSet#contains contains}(y));
+ *
+ *     set.{@link JW.AbstractSet#destroy destroy}();
  *
  * Synchronizer rules:
  *

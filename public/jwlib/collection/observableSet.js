@@ -224,6 +224,8 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	}
 });
 
+JW.apply(JW.ObservableSet.prototype, JW.ObservableCollection);
+
 /**
  * @class
  * `<T>` JW.ObservableSet event parameters.

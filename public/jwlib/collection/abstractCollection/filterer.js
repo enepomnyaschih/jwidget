@@ -25,6 +25,7 @@
  * Collection filterer.
  * Builds new collection of the same type, consisting of items for which callback
  * function returns !== `false`.
+ * If original collection is observable, starts continuous synchronization.
  * Keeps item order in array.
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
@@ -39,6 +40,8 @@
  *     source.{@link JW.AbstractArray#move move}(2, 6); // move "3" item to the end
  *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
  *
+ *     filterer.{@link JW.AbstractCollection.Filterer#destroy destroy}();
+ *
  * Use JW.AbstractCollection#createFilterer method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
  *
@@ -51,6 +54,20 @@
  *         {@link #cfg-filterItem filterItem}: this._filterItem,
  *         {@link #cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$filter shorthand can be used instead. It returns the target collection right away:
+ *
+ *     var source = new JW.ObservableArray([1, 2, 3]);
+ *     var target = source.{@link JW.AbstractCollection#$$filter}(function(x) { return x % 2 === 1; });
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 3]));
+ *
+ *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
+ *
+ *     source.{@link JW.AbstractArray#move move}(2, 6); // move "3" item to the end
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
+ *
+ *     target.{@link JW.AbstractArray#destroy destroy}();
  *
  * Synchronizer rules:
  *

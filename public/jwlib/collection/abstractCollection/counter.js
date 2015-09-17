@@ -25,15 +25,18 @@
  * Counter for collection items which match the specified filter.
  * Builds new JW.Property&lt;number&gt;, containing the number of items for which callback
  * function returns !== `false`.
+ * If original collection is observable, starts continuous synchronization.
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
- *     var counter = source.{@link JW.AbstractCollection#createFilterer createCounter}({
+ *     var counter = source.{@link JW.AbstractCollection#createCounter createCounter}({
  *         {@link JW.AbstractArray.Counter#cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
  *     });
  *     assert(counter.{@link JW.AbstractCollection.Counter#property-target target}.{@link JW.Property#get get}() === 2); // 1, 3
  *
  *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
  *     assert(counter.{@link JW.AbstractCollection.Counter#property-target target}.{@link JW.Property#get get}() === 4); // 1, 3, 7, 1
+ *
+ *     counter.{@link JW.AbstractCollection.Counter#destroy destroy}();
  *
  * Use JW.AbstractCollection#createCounter method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -47,6 +50,17 @@
  *         {@link JW.AbstractCollection.Counter#cfg-filterItem filterItem}: this._filterItem,
  *         {@link JW.AbstractCollection.Counter#cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$count shorthand can be used instead. It returns the target property right away:
+ *
+ *     var source = new JW.ObservableArray([1, 2, 3]);
+ *     var target = source.{@link JW.AbstractCollection#$$count $$count}(function(x) { return x % 2 === 1; });
+ *     assert(target.{@link JW.Property#get get}() === 2); // 1, 3
+ *
+ *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
+ *     assert(target.{@link JW.Property#get get}() === 4); // 1, 3, 7, 1
+ *
+ *     target.{@link JW.Property#destroy destroy}();
  *
  * You may use JW.AbstractCollection.Filterer instead of counter, but counter works much
  * faster because it doesn't create a filtered collection.
@@ -110,7 +124,9 @@ JW.extend(JW.AbstractCollection.Counter, JW.Class, {
 
 	// override
 	destroy: function() {
-		this.target.set(0);
+		if (this.target.get() != null) {
+			this.target.set(0);
+		}
 		this._super();
 	},
 

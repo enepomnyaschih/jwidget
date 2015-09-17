@@ -322,6 +322,8 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	}
 });
 
+JW.apply(JW.ObservableArray.prototype, JW.ObservableCollection);
+
 /**
  * @class
  * `<T>` JW.ObservableArray event parameters.

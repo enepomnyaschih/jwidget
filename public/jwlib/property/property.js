@@ -164,5 +164,98 @@ JW.extend(JW.Property, JW.Class, {
 		if (source) {
 			this._copier = new JW.Copier(source, { target: this });
 		}
+	},
+
+	/**
+	 * `<U>` Maps property value.
+	 *
+	 * If property value is null, returns null.
+	 * Otherwise, returns the result of `f` call with property value in argument.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {U} Result value.
+	 */
+	map: function(callback, scope) {
+		return (this._value == null) ? null : callback.call(scope || this, this._value);
+	},
+
+	/**
+	 * `<U>` Maps property value.
+	 *
+	 * If property value is null, returns null property.
+	 * Otherwise, returns a property containing the result of `f` call with property value in argument.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Property} `<U>` Result value.
+	 */
+	$map: function(callback, scope) {
+		return new JW.Property(this.map(callback, scope));
+	},
+
+	/**
+	 * `<U>` Maps property value.
+	 *
+	 * If property value is null, returns null property.
+	 * Otherwise, returns a property containing the result of `f` call with property value in argument.
+	 * Starts continuous synchronization, i.e. creates JW.Mapper implicitly.
+	 * In comparison to {#$$mapObject} method, doesn't destroy the previously assigned values.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Property} `<U>` Result value.
+	 */
+	$$mapValue: function(callback, scope) {
+		var result = new JW.Property();
+		result.own(new JW.Mapper([this], {
+			target: result,
+			createValue: callback,
+			scope: scope || this
+		}));
+		return result;
+	},
+
+	/**
+	 * `<U>` Maps property value.
+	 *
+	 * If property value is null, returns null property.
+	 * Otherwise, returns a property containing the result of `f` call with property value in argument.
+	 * Starts continuous synchronization, i.e. creates JW.Mapper implicitly.
+	 * In comparison to {#$$mapValue} method, destroys the previously assigned values.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Property} `<U>` Result value.
+	 */
+	$$mapObject: function(callback, scope) {
+		var result = new JW.Property();
+		result.own(new JW.Mapper([this], {
+			target: result,
+			createValue: callback,
+			destroyValue: JW.destroy,
+			scope: scope || this
+		}));
+		return result;
 	}
 });

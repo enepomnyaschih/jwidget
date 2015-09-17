@@ -18,6 +18,17 @@
 */
 
 JW.Tests.Collection.AbstractArray.CounterTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var source = new JW.Array([1, 2, 3, 4, 5, 7]);
+		var target = source.$$count(this.countFunc, this);
+		JW.Tests.Collection.subscribeToProperty(this, target);
+
+		this.assertStrictEqual(4, target.get());
+
+		target.destroy();
+		source.destroy();
+	},
+
 	testCounter: function() {
 		var source = new JW.Array([1, 2, 3, 4, 5, 7]);
 		var target = this.createTarget();
@@ -96,7 +107,13 @@ JW.Tests.Collection.AbstractArray.CounterTestCase = JW.Unit.TestCase.extend({
 	createCounter: function(source, target) {
 		return source.createCounter({
 			target: target,
-			filterItem: function(x) { return x % 2 === 1; }
+			filterItem: this.countFunc,
+			scope: this
 		});
+	},
+
+	countFunc: function(x) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
+		return x % 2 === 1;
 	}
 });

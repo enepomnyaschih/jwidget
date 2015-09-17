@@ -109,5 +109,72 @@ JW.Tests.Property.PropertyTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual(null, property.get());
 		property.set();
 		this.assertStrictEqual(null, property.get());
+	},
+
+	testMap: function() {
+		var self = this;
+
+		function twice(x) {
+			self.assertStrictEqual(self, this);
+			return 2 * x;
+		}
+
+		function objectize(x) {
+			self.assertStrictEqual(self, this);
+			return {
+				x: x,
+				destroy: function() {
+					self.output("Destroy " + x);
+				}
+			};
+		}
+
+		var property = new JW.Property();
+		var result = property.$map(twice, this);
+		var targetValue = property.$$mapValue(twice, this);
+		var targetObject = property.$$mapObject(objectize, this);
+		this.assertStrictEqual(null, property.map(twice, this));
+		this.assertStrictEqual(null, result.get());
+		this.assertStrictEqual(null, targetValue.get());
+		this.assertStrictEqual(null, targetObject.get());
+
+		property.set(1);
+		this.assertStrictEqual(2, property.map(twice, this));
+		this.assertStrictEqual(null, result.get());
+		this.assertStrictEqual(2, property.$map(twice, this).get());
+		this.assertStrictEqual(2, targetValue.get());
+		this.assertStrictEqual(1, targetObject.get().x);
+
+		this.setExpectedOutput("Destroy 1");
+		property.set(2);
+		this.assertStrictEqual(4, property.map(twice, this));
+		this.assertStrictEqual(4, property.$map(twice, this).get());
+		this.assertStrictEqual(4, targetValue.get());
+		this.assertStrictEqual(2, targetObject.get().x);
+
+		this.setExpectedOutput("Destroy 2");
+		property.set(null);
+		this.assertStrictEqual(null, property.map(twice, this));
+		this.assertStrictEqual(null, property.$map(twice, this).get());
+		this.assertStrictEqual(null, targetValue.get());
+		this.assertStrictEqual(null, targetObject.get());
+
+		this.setExpectedOutput();
+		property.set(3);
+		this.assertStrictEqual(6, property.map(twice, this));
+		this.assertStrictEqual(6, property.$map(twice, this).get());
+		this.assertStrictEqual(6, targetValue.get());
+		this.assertStrictEqual(3, targetObject.get().x);
+
+		targetValue.destroy();
+
+		this.setExpectedOutput("Destroy 3");
+		this.assertFalse(JW.Map.isEmpty(property.changeEvent.attachments));
+		targetObject.destroy();
+		this.assertTrue(JW.Map.isEmpty(property.changeEvent.attachments));
+
+		this.setExpectedOutput();
+		property.set(4);
+		property.destroy();
 	}
 });

@@ -25,6 +25,23 @@
  * Collection item converter.
  * Builds new collection of the same type, consisting of results of callback function
  * call for each collection item.
+ * If original collection is observable, starts continuous synchronization.
+ *
+ *     var source = new JW.ObservableArray([1, 2]);
+ *     var mapper = source.{@link JW.ObservableArray#createMapper createMapper}({
+ *         {@link #cfg-createItem createItem}: function(x) { return 2 * x }
+ *     });
+ *     var target = source.{@link #property-target target};
+ *
+ *     assert(target.{@link JW.ObservableArray#get get}(0) === 2);
+ *     assert(target.{@link JW.ObservableArray#get get}(1) === 4);
+ *
+ *     // Target collection is automatically synchronized with original observable collection
+ *     source.add(3);
+ *     assert(target.{@link JW.ObservableArray#get get}(2) === 6);
+ *
+ *     mapper.{@link JW.AbstractCollection.Mapper#destroy destroy}();
+ *
  * Can be used for data convertion into view.
  *
  *     var mapper = dataCollection.{@link JW.AbstractCollection#createMapper createMapper}({
@@ -46,6 +63,14 @@
  *         {@link #cfg-destroyItem destroyItem}: JW.destroy,
  *         {@link #cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$mapValues and JW.AbstractCollection#$$mapObjects shorthand methods
+ * can be used instead. They return the target collection right away:
+ *
+ *     var viewCollection = dataCollection.{@link JW.AbstractCollection#$$mapObjects $$mapObjects}(function(data) { return new View(this, data); }, this);
+ *
+ *     // Once not needed anymore, destroy
+ *     viewCollection.{@link JW.AbstractCollection#destroy destroy}();
  *
  * Synchronizer rules:
  *

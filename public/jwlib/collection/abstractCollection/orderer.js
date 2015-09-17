@@ -22,11 +22,22 @@
  *
  * `<T extends JW.Class, C extends JW.AbstractCollection<T>>`
  *
- * Converter to array (orderer).
- * Converts source collection to array. Adds new items to the end of array.
+ * Converter to array (orderer). Converts source collection to array.
+ * Adds new items to the end of array.
+ * If original collection is observable, starts continuous synchronization.
  *
- *     var orderer = collection.{@link JW.AbstractCollection#createOrderer createOrderer}();
- *     var array = orderer.{@link #property-target target};
+ *     var map = new JW.ObservableMap({a: "A", b: "B"});
+ *     var orderer = map.{@link JW.ObservableMap#createOrderer createOrderer}();
+ *     var array = orderer.{@link JW.AbstractCollection.Orderer#property-target target};
+ *
+ *     assert(array.{@link JW.AbstractArray#get get}(0) === "A");
+ *     assert(array.{@link JW.AbstractArray#get get}(1) === "B");
+ *
+ *     // Target array is automatically synchronized with original observable collection
+ *     map.{@link JW.AbstractMap#set set}("C", "c");
+ *     assert(array.{@link JW.AbstractArray#get get}(2) === "C");
+ *
+ *     orderer.{@link JW.AbstractCollection.Orderer#destroy destroy}();
  *
  * **Notice:** All items of source collection must be different.
  *
@@ -37,8 +48,22 @@
  *
  *     var array = new JW.Array();
  *     var orderer = collection.{@link JW.AbstractCollection#createOrderer createOrderer}({
- *         {@link #cfg-target target}: array
+ *         {@link JW.AbstractCollection.Orderer#cfg-target target}: array
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$toArray shorthand can be used instead. It returns the target array right away:
+ *
+ *     var map = new JW.ObservableMap({a: "A", b: "B"});
+ *     var array = map.{@link JW.ObservableMap#$$toArray $$toArray}();
+ *
+ *     assert(array.{@link JW.AbstractArray#get get}(0) === "A");
+ *     assert(array.{@link JW.AbstractArray#get get}(1) === "B");
+ *
+ *     // Target array is automatically synchronized with original observable collection
+ *     map.{@link JW.AbstractMap#set set}("C", "c");
+ *     assert(array.{@link JW.AbstractArray#get get}(2) === "C");
+ *
+ *     array.{@link JW.AbstractArray#destroy destroy}();
  *
  * Synchronizer rules:
  *

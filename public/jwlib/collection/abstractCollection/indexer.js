@@ -24,18 +24,27 @@
  *
  * Collection indexer.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * If original collection is observable, starts continuous synchronization.
  * Can be used for fast item search by key (for example, by ID).
  *
- *     var indexer = collection.{@link JW.AbstractCollection#createIndexer createIndexer}({
+ *     var array = new JW.ObservableArray([{id: 9, label: "The item"}]);
+ *     var indexer = array.{@link JW.ObservableArray#createIndexer createIndexer}({
  *         {@link #cfg-getKey getKey}: function(item) { return item.id; },
  *         {@link #cfg-scope scope}: this
  *     });
  *     var map = indexer.{@link #property-target target};
- *     
- *     // Get an item with ID = 9
- *     var item = map.{@link JW.AbstractMap#get get}(9);
  *
- * **Notice:** All items of source collection must have different keys.
+ *     // Get an item with ID = 9
+ *     assert(map.{@link JW.AbstractMap#get get}(9).label === "The item");
+ *     assert(map.{@link JW.AbstractMap#get get}(5) == null);
+ *
+ *     // Target map is automatically synchronized with original observable array
+ *     array.add({id: 5, label: "New item"});
+ *     assert(map.{@link JW.AbstractMap#get get}(5).label === "New item");
+ *
+ *     indexer.{@link JW.AbstractCollection.Indexer#destroy destroy}();
+ *
+ * **Notice:** All items of source collection must have different (unique) string keys.
  *
  * Use JW.AbstractCollection#createIndexer method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -48,6 +57,21 @@
  *         {@link #cfg-getKey getKey}: function(item) { return item.id; },
  *         {@link #cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$index shorthand can be used instead. It returns the target map right away:
+ *
+ *     var array = new JW.ObservableArray([{id: 9, label: "The item"}]);
+ *     var map = array.{@link JW.AbstractCollection#$$index index}(function(item) { return item.id; });
+ *
+ *     // Get an item with ID = 9
+ *     assert(map.{@link JW.AbstractMap#get get}(9).label === "The item");
+ *     assert(map.{@link JW.AbstractMap#get get}(5) == null);
+ *
+ *     // Target map is automatically synchronized with original observable array
+ *     array.add({id: 5, label: "New item"});
+ *     assert(map.{@link JW.AbstractMap#get get}(5).label === "New item");
+ *
+ *     map.{@link JW.AbstractMap#destroy destroy}();
  *
  * Synchronizer rules:
  *

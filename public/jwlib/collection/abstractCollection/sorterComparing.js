@@ -24,15 +24,36 @@
  *
  * Converter to array (sorter by comparer).
  * Converts source collection to array. Adds new items into such locations that target array is always kept in sorted
- * state. Sorting is performed by comparing function defined by user.
+ * state. If original collection is observable, starts continuous synchronization.
+ * Sorting is performed by comparing function defined by user.
  *
- *     var sorter = collection.{@link JW.AbstractCollection#createSorterComparing createSorterComparing}({
+ *     var source = new JW.ObservableArray([
+ *         {title: "apple", id: 3},
+ *         {title: "Carrot", id: 1},
+ *         {title: "Apple", id: 2}
+ *     ]);
+ *
+ *     // Sort by title case-insensitively, and then by id
+ *     var sorter = source.{@link JW.AbstractCollection#createSorterComparing createSorterComparing}({
  *         {@link #cfg-compare compare}: function(x, y) {
  *             return JW.cmp(x.title, y.title, true) || JW.cmp(x.id, y.id);
  *         },
  *         {@link #cfg-scope scope}: this
  *     });
- *     var array = sorter.{@link #property-target target};
+ *     var target = sorter.{@link #property-target target};
+ *
+ *     assert(target.{@link JW.AbstractArray#get get}(0).id === 2); // Apple
+ *     assert(target.{@link JW.AbstractArray#get get}(1).id === 3); // apple
+ *     assert(target.{@link JW.AbstractArray#get get}(2).id === 1); // Carrot
+ *
+ *     // Target array is automatically synchronized with original observable collection
+ *     source.add({title: "Banana", id: 4});
+ *     assert(target.{@link JW.AbstractArray#get get}(0).id === 2); // Apple
+ *     assert(target.{@link JW.AbstractArray#get get}(1).id === 3); // apple
+ *     assert(target.{@link JW.AbstractArray#get get}(2).id === 4); // Banana
+ *     assert(target.{@link JW.AbstractArray#get get}(3).id === 1); // Carrot
+ *
+ *     sorter.{@link JW.AbstractCollection.SorterComparing#destroy destroy}();
  *
  * Use JW.AbstractCollection#createOrderer method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -47,6 +68,33 @@
  *         },
  *         {@link #cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$toSortedComparing shorthand can be used instead.
+ * It returns the target array right away:
+ *
+ *     var source = new JW.ObservableArray([
+ *         {title: "apple", id: 3},
+ *         {title: "Carrot", id: 1},
+ *         {title: "Apple", id: 2}
+ *     ]);
+ *
+ *     // Sort by title case-insensitively, and then by id
+ *     var target = source.{@link JW.AbstractCollection#$$toSortedComparing $$toSortedComparing}(function(x, y) {
+ *         return JW.cmp(x.title, y.title, true) || JW.cmp(x.id, y.id);
+ *     });
+ *
+ *     assert(target.{@link JW.AbstractArray#get get}(0).id === 2); // Apple
+ *     assert(target.{@link JW.AbstractArray#get get}(1).id === 3); // apple
+ *     assert(target.{@link JW.AbstractArray#get get}(2).id === 1); // Carrot
+ *
+ *     // Target array is automatically synchronized with original observable collection
+ *     source.add({title: "Banana", id: 4});
+ *     assert(target.{@link JW.AbstractArray#get get}(0).id === 2); // Apple
+ *     assert(target.{@link JW.AbstractArray#get get}(1).id === 3); // apple
+ *     assert(target.{@link JW.AbstractArray#get get}(2).id === 4); // Banana
+ *     assert(target.{@link JW.AbstractArray#get get}(3).id === 1); // Carrot
+ *
+ *     target.{@link JW.AbstractArray#destroy destroy}();
  *
  * Synchronizer rules:
  *

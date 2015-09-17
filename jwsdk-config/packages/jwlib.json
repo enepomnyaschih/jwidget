@@ -61,6 +61,7 @@
 		"jwlib/collection/map/staticMethods.js",
 		"jwlib/collection/set.js",
 		"jwlib/collection/set/staticMethods.js",
+		"jwlib/collection/observableCollection.js",
 		"jwlib/collection/observableArray.js",
 		"jwlib/collection/observableArray/counter.js",
 		"jwlib/collection/observableArray/filterer.js",

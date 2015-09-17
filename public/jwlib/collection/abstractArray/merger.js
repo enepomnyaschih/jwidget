@@ -23,6 +23,7 @@
  * `<T>`
  *
  * Arrays merger. Builds array consisting of all source collections items in the same order.
+ * If original collection is observable, starts continuous synchronization.
  *
  *     var source = new JW.ObservableArray([
  *         new JW.Array([1, 2, 3]),
@@ -30,13 +31,16 @@
  *         new JW.Array([4])
  *     ]);
  *     var merger = source.{@link JW.AbstractArray#createMerger createMerger}();
- *     assert(merger.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4]));
- *     
+ *     var target = merger.{@link #property-target target};
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4]));
+ *
  *     source.{@link JW.AbstractArray#add add}(new JW.Array([5, 6]));
- *     assert(merger.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4, 5, 6]));
- *     
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4, 5, 6]));
+ *
  *     source.{@link JW.AbstractArray#get get}(1).{@link JW.AbstractArray#addAll addAll}([7, 8, 9]);
- *     assert(merger.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
+ *
+ *     merger.{@link JW.AbstractArray.Merger#destroy destroy}();
  * 
  * Use JW.AbstractArray#createMerger method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -48,6 +52,24 @@
  *     var merger = source.{@link JW.AbstractArray#createMerger createMerger}({
  *         {@link #cfg-target target}: target
  *     });
+ *
+ * In simple cases, JW.AbstractArray#$$merge shorthand can be used instead. It returns the target array right away:
+ *
+ *     var source = new JW.ObservableArray([
+ *         new JW.Array([1, 2, 3]),
+ *         new JW.ObservableArray(),
+ *         new JW.Array([4])
+ *     ]);
+ *     var target = source.{@link JW.AbstractArray#$$merge $$merge}();
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4]));
+ *
+ *     source.{@link JW.AbstractArray#add add}(new JW.Array([5, 6]));
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4, 5, 6]));
+ *
+ *     source.{@link JW.AbstractArray#get get}(1).{@link JW.AbstractArray#addAll addAll}([7, 8, 9]);
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
+ *
+ *     target.{@link JW.AbstractArray#destroy destroy}();
  *
  * Synchronizer rules:
  *
