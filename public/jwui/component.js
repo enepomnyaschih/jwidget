@@ -125,11 +125,11 @@
  *
  * ### More about child component collections
  *
- * It is convenient to use JW.AbstractCollection.Mapper to convert data collections into UI component collections.
+ * It is convenient to use JW.AbstractCollection#$$mapObjects method to convert data collections into UI component collections.
  * Thanks to it, view will be updated on data update automatically.
  *
- * That's the reason why we recommend to use jWidget JW.AbstractCollection in data model instead of native JavaScript
- * Array and Object: these collections have Observable-implementations and can be synchronized with each other.
+ * That's the reason why we recommend to use jWidget collections in data model instead of native JavaScript
+ * Array and Object: jWidget collections have observable implementations which can be synchronized to each other.
  *
  * [Getting started. Part 6. Collection synchronizers](#!/guide/ensample6)
  *
@@ -175,20 +175,18 @@
  *
  *     // should be called not before the rendering initiation
  *     initLabels: function() {
- *         this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
- *             {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
- *             {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
- *             {@link JW.AbstractCollection.Mapper#scope scope}: this
- *         });
+ *         this._labelViews = this.labels.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(label) {
+ *             return new LabelView(label);
+ *         }, this);
  *         // Add labels into element with jwid="labels"
- *         this._labelArray = this.{@link #addArray addArray}(this._labelMapper.{@link JW.AbstractCollection.Mapper#property-target target}, "labels");
+ *         this._labelArray = this.{@link #addArray addArray}(this._labelViews, "labels");
  *     },
  *
  *     clearLabels: function() {
  *         this._labelArray.{@link JW.Class#destroy destroy}();
  *         this._labelArray = null;
- *         this._labelMapper.{@link JW.Class#destroy destroy}();
- *         this._labelMapper = null;
+ *         this._labelViews.{@link JW.Class#destroy destroy}();
+ *         this._labelViews = null;
  *     }
  *
  * You don't need to remove child components explicitly all the time. On parent component destruction, framework
@@ -201,18 +199,16 @@
  *     },
  *
  *     renderLabels: function() {
- *         return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
- *             {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
- *             {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
- *             {@link JW.AbstractCollection.Mapper#scope scope}: this
- *         })).target;
+ *         return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(label) {
+ *             return new LabelView(label);
+ *         }, this));
  *     }
  *
  * ### Common practices of child component management
  *
- * **Internal named child component**
+ * **Create child component**
  *
- * This example describes how to create and destroy the child component with `jwid="title-box"`.
+ * This example describes how to create and destroy a child component with `jwid="title-box"`.
  *
  *     var MyComponent = function() {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
@@ -231,7 +227,7 @@
  *             '</div>'
  *     });
  *
- * **Internal replaceable child component**
+ * **Create replaceable child component**
  *
  * This example describes how to create an easily replaceable child component with `jwid="document"`.
  * Assume that you have a property "document" and want to replace an old document view with a new one
@@ -246,13 +242,9 @@
  *         // JW.Property<Document> document;
  *
  *         renderDocument: function() {
- *             return this.{@link JW.Class#own own}(new JW.Mapper([this.document], {
- *                 {@link JW.Mapper#createValue createValue}: function(document) {
- *                     return new DocumentView(document);
- *                 },
- *                 {@link JW.Mapper#destroyValue destroyValue}: JW.destroy,
- *                 {@link JW.Mapper#scope scope}: this
- *             })).{@link JW.Mapper#property-target target};
+ *             return this.{@link JW.Class#own own}(this.document.{@link JW.Property#$$mapObject $$mapObject}(function(document) {
+ *                 return new DocumentView(document);
+ *             }));
  *         }
  *     });
  *
@@ -263,10 +255,10 @@
  *             '</div>'
  *     });
  *
- * **Internal immutable child collection**
+ * **Create child collection**
  *
  * This example describes how to create and destroy child components by data collection, and insert them into
- * element with `jwid="labels"`.
+ * element with `jwid="labels"`. If data array is observable, child collection will be constantly synchronized with data.
  *
  *     var MyComponent = function(labels) {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
@@ -277,9 +269,9 @@
  *         // JW.AbstractArray<Label> labels;
  *
  *         renderLabels: function() {
- *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$map $map}(function(label) {
+ *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(label) {
  *                 return new LabelView(label);
- *             }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
+ *             }, this));
  *         }
  *     });
  *
@@ -290,38 +282,7 @@
  *             '</div>'
  *     });
  *
- * **Internal mutable child collection**
- *
- * This example describes how to create and destroy child components by data collection, and insert them into
- * element with `jwid="labels"`. Child collection will be being synchronized with data on fly.
- *
- *     var MyComponent = function(labels) {
- *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
- *         this.labels = labels;
- *     };
- *
- *     JW.extend(MyComponent, JW.UI.Component, {
- *         // JW.AbstractArray<Label> labels;
- *
- *         renderLabels: function() {
- *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
- *                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) {
- *                     return new LabelView(label);
- *                 },
- *                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
- *                 {@link JW.AbstractCollection.Mapper#scope scope}: this
- *             })).{@link JW.AbstractCollection.Mapper#property-target target};
- *         }
- *     });
- *
- *     JW.UI.template(MyComponent, {
- *         main:
- *             '<div jwclass="my-component">' +
- *                 '<div jwid="labels"></div>' +
- *             '</div>'
- *     });
- *
- * **External child components**
+ * **Add existing components as children**
  *
  * This example describes how to insert child components which were created by someone else, and therefore
  * shouldn't be destroyed automatically. Here, "titleBox" can be either JW.UI.Component, or
@@ -715,14 +676,14 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 *
 	 * Pass an instance of JW.Property<JW.UI.Component>, and view will be synchronized with this property of fly.
 	 *
-	 * It is convenient to create "component" property from data property using JW.Mapper class.
+	 * It is convenient to create "component" property from data property using JW.Property#$$mapObject method.
 	 *
 	 * Method returns an instance of JW.UI.Component.Replaceable. This object is purposed for replaceable child
 	 * removal from parent component. Use {@link JW.Class#destroy destroy} method to do this.
 	 * Also, the replaceable will be removed from parent component on parent component destruction right
 	 * before #unrender method call.
 	 * But notice that child component inside this property won't be destroyed automatically.
-	 * Usually it can be done by corresponding JW.Mapper destruction in #unrender method.
+	 * Usually it can be done by corresponding JW.Mapper or property destruction in #unrender method.
 	 *
 	 * @param {JW.Property} component `<JW.UI.Component>` Child component property.
 	 * @param {String} id jwId of element to replace.
@@ -739,7 +700,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * Based on JW.UI.Inserter synchronizer. Thanks to that, if you'll pass an instance of
 	 * JW.ObservableArray as "components", then view will be synchronized with this array content of fly.
 	 *
-	 * It is convenient to create "components" array from data array using JW.AbstractArray#createMapper method,
+	 * It is convenient to create "components" array from data array using JW.AbstractArray#$$mapObjects method,
 	 * i.e. by JW.AbstractCollection.Mapper instantiation.
 	 *
 	 * Method returns an instance of JW.UI.Component.Array. This object is purposed for child component array
@@ -747,7 +708,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * Also, the array will be removed from parent component on parent component destruction right
 	 * before #unrender method call.
 	 * But notice that child components inside this array won't be destroyed automatically.
-	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper destruction in #unrender method.
+	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper or array destruction in #unrender method.
 	 *
 	 * @param {JW.AbstractArray} components Child component array.
 	 * @param {jQuery/string} [el]
@@ -767,14 +728,14 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * then view will be synchronized with this collection content of fly.
 	 *
 	 * It is convenient to create "components" collection from data collection using
-	 * JW.AbstractCollection#createMapper method, i.e. by JW.AbstractCollection.Mapper instantiation.
+	 * JW.AbstractCollection#$$mapObjects method, i.e. by JW.AbstractCollection.Mapper instantiation.
 	 *
 	 * Method returns an instance of JW.UI.Component.Collection. This object is purposed for child component
 	 * collection removal from parent component. Use {@link JW.Class#destroy destroy} method to do this.
 	 * Also, the collection will be removed from parent component on parent component destruction right
 	 * before #unrender method call.
 	 * But notice that child components inside this collection won't be destroyed automatically.
-	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper destruction in #unrender method.
+	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper or collection destruction in #unrender method.
 	 *
 	 * @param {JW.AbstractCollection} components Child component collection.
 	 * @param {jQuery/string} [el]
