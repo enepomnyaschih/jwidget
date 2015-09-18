@@ -18,6 +18,29 @@
 */
 
 JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var d = new JW.Proxy("d");
+		var source = new JW.ObservableArray([ d ]);
+		var target = source.$$index(this.indexFunc, this);
+		var subscription = JW.Tests.Collection.subscribeToMap(this, target, function(x) { return x.value; });
+
+		this.assertTarget({ "d": d }, target);
+
+		// d
+		var f = new JW.Proxy("f");
+		this.setExpectedOutput(
+			"Changed size from 1 to 2",
+			"Spliced -{} +{f:f}",
+			"Changed"
+		);
+		source.addAll([ f ]);
+		this.assertTarget({ "d": d, "f": f }, target);
+
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var d = new JW.Proxy("d");
 		var source = new JW.ObservableArray([ d ]);
@@ -426,9 +449,14 @@ JW.Tests.Collection.ObservableArray.IndexerTestCase = JW.Unit.TestCase.extend({
 	createIndexer: function(source, target) {
 		return source.createIndexer({
 			target : target,
-			getKey : function(item) { return item.value; },
+			getKey : this.indexFunc,
 			scope  : this
 		});
+	},
+
+	indexFunc: function(item) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
+		return item.value;
 	},
 	
 	assertTarget: function(expected, target) {

@@ -18,6 +18,19 @@
 */
 
 JW.Tests.Collection.AbstractSet.IndexerTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var a = new JW.Proxy("a");
+		var b = new JW.Proxy("b");
+		var c = new JW.Proxy("c");
+		var source = new JW.Set([ a, b, c ]);
+		var target = source.$$index(this.indexFunc, this);
+
+		this.assertTarget({ "a": a, "b": b, "c": c }, target);
+
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var a = new JW.Proxy("a");
 		var b = new JW.Proxy("b");
@@ -151,12 +164,14 @@ JW.Tests.Collection.AbstractSet.IndexerTestCase = JW.Unit.TestCase.extend({
 	createIndexer: function(source, target) {
 		return source.createIndexer({
 			target : target,
-			scope  : this,
-			
-			getKey: function(item) {
-				return item.value;
-			}
+			getKey : this.indexFunc,
+			scope  : this
 		});
+	},
+
+	indexFunc: function(item) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
+		return item.value;
 	},
 	
 	assertTarget: function(expected, target) {
