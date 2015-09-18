@@ -18,6 +18,86 @@
 */
 
 JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
+	testMapValues: function() {
+		var source = new JW.ObservableArray([ "d" ]);
+
+		this.setExpectedOutput(
+			"Created by d"
+		);
+		var target = source.$$mapValues(this.createFunc, this);
+		var subscription = JW.Tests.Collection.subscribeToArray(this, target);
+
+		this.assertTarget([ "D" ], target);
+
+		this.setExpectedOutput(
+			"Created by f",
+			"Changed length from 1 to 2",
+			"Spliced -[] +[1:[F]] to [D]",
+			"Changed"
+		);
+		source.addAll([ "f" ]);
+		this.assertTarget([ "D", "F" ], target);
+
+		this.setExpectedOutput(
+			"Changed length from 2 to 1",
+			"Spliced -[0:[D]] +[] to [D,F]",
+			"Changed"
+		);
+		source.remove(0);
+		this.assertTarget([ "F" ], target);
+
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
+
+	testMapObjects: function() {
+		var source = new JW.ObservableArray([ "d" ]);
+
+		this.setExpectedOutput(
+			"Created by d"
+		);
+		var target = source.$$mapObjects(function(x) {
+			this.output("Created by " + x);
+			var self = this;
+			return {
+				x: x,
+				destroy: function() {
+					self.output("Destroyed by " + x);
+				}
+			};
+		}, this);
+		var subscription = JW.Tests.Collection.subscribeToArray(this, target, function(item) { return item.x; });
+
+		this.assertTarget([ "d" ], target.$map(JW.byField("x")));
+
+		this.setExpectedOutput(
+			"Created by f",
+			"Changed length from 1 to 2",
+			"Spliced -[] +[1:[f]] to [d]",
+			"Changed"
+		);
+		source.addAll([ "f" ]);
+		this.assertTarget([ "d", "f" ], target.$map(JW.byField("x")));
+
+		this.setExpectedOutput(
+			"Changed length from 2 to 1",
+			"Spliced -[0:[d]] +[] to [d,f]",
+			"Changed",
+			"Destroyed by d"
+		);
+		source.remove(0);
+		this.assertTarget([ "f" ], target.$map(JW.byField("x")));
+
+		subscription.destroy();
+
+		this.setExpectedOutput(
+			"Destroyed by f"
+		);
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var source = new JW.ObservableArray([ "d" ]);
 		var target = new JW.Array();
@@ -355,15 +435,17 @@ JW.Tests.Collection.ObservableArray.MapperTestCase = JW.Unit.TestCase.extend({
 			target : target,
 			scope  : this,
 			
-			createItem: function(data) {
-				this.output("Created by " + data);
-				return data.toUpperCase();
-			},
+			createItem: this.createFunc,
 			
 			destroyItem: function(item, data) {
 				this.output("Destroyed " + item + " by " + data);
 			}
 		});
+	},
+
+	createFunc: function(data) {
+		this.output("Created by " + data);
+		return data.toUpperCase();
 	},
 	
 	assertTarget: function(values, target) {

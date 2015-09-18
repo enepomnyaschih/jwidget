@@ -18,6 +18,50 @@
 */
 
 JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
+	testMapValues: function() {
+		var source = new JW.Array([ "a", "b", "c" ]);
+
+		this.setExpectedOutput(
+			"Created by a",
+			"Created by b",
+			"Created by c"
+		);
+		var target = source.$$mapValues(this.createFunc, this);
+		this.assertTarget([ "A", "B", "C" ], target);
+
+		target.destroy();
+		source.destroy();
+	},
+
+	testMapObjects: function() {
+		var source = new JW.Array([ "a", "b", "c" ]);
+
+		this.setExpectedOutput(
+			"Created by a",
+			"Created by b",
+			"Created by c"
+		);
+		var target = source.$$mapObjects(function(x) {
+			this.output("Created by " + x);
+			var self = this;
+			return {
+				x: x,
+				destroy: function() {
+					self.output("Destroyed by " + x);
+				}
+			};
+		}, this);
+		this.assertTarget([ "a", "b", "c" ], target.$map(JW.byField("x")));
+
+		this.setExpectedOutput(
+			"Destroyed by c",
+			"Destroyed by b",
+			"Destroyed by a"
+		);
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var source = new JW.Array([ "a", "b", "c" ]);
 		var target = new JW.Array();
@@ -106,15 +150,17 @@ JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
 			target : target,
 			scope  : this,
 			
-			createItem: function(data) {
-				this.output("Created by " + data);
-				return data.toUpperCase();
-			},
+			createItem: this.createFunc,
 			
 			destroyItem: function(item, data) {
 				this.output("Destroyed " + item + " by " + data);
 			}
 		});
+	},
+
+	createFunc: function(data) {
+		this.output("Created by " + data);
+		return data.toUpperCase();
 	},
 	
 	assertTarget: function(values, target) {
