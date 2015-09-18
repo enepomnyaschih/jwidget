@@ -18,6 +18,28 @@
 */
 
 JW.Tests.Collection.ObservableArray.ListerTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var d = new JW.Proxy("d");
+		var source = new JW.ObservableArray([ d ]);
+		var target = source.$$toSet();
+		var subscription = JW.Tests.Collection.subscribeToSet(this, target);
+
+		this.assertTarget([ d ], target);
+
+		var f = new JW.Proxy("f");
+		this.setExpectedOutput(
+			"Changed size from 1 to 2",
+			"Spliced -[] +[f]",
+			"Changed"
+		);
+		source.addAll([ f ]);
+		this.assertTarget([ d, f ], target);
+
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
+
 	testObservableTarget: function() {
 		var d = new JW.Proxy("d");
 		var source = new JW.ObservableArray([ d ]);

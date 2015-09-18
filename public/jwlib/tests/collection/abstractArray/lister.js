@@ -18,6 +18,19 @@
 */
 
 JW.Tests.Collection.AbstractArray.ListerTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var a = new JW.Proxy("a");
+		var b = new JW.Proxy("b");
+
+		var source = new JW.Array([ a, b ]);
+		var target = source.$$toSet();
+
+		this.assertTarget([ a, b ], target);
+
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var a = new JW.Proxy("a");
 		var b = new JW.Proxy("b");

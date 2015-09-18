@@ -23,8 +23,7 @@ JW.ObservableCollection = {
 	$$toArray: function() {
 		var result = new JW.ObservableArray();
 		result.own(this.createOrderer({
-			target: result,
-			scope: scope || this
+			target: result
 		}));
 		return result;
 	},
@@ -32,8 +31,7 @@ JW.ObservableCollection = {
 	$$toSet: function() {
 		var result = new JW.ObservableSet();
 		result.own(this.createLister({
-			target: result,
-			scope: scope || this
+			target: result
 		}));
 		return result;
 	},

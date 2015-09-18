@@ -18,6 +18,29 @@
 */
 
 JW.Tests.Collection.ObservableMap.ListerTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var testCase = this;
+		var d = new JW.Proxy("d");
+		var source = new JW.ObservableMap({ "d": d });
+		var target = source.$$toSet();
+		var subscription = JW.Tests.Collection.subscribeToSet(this, target);
+
+		this.assertTarget([ d ], target);
+
+		var f = new JW.Proxy("f");
+		this.setExpectedOutput(
+			"Changed size from 1 to 2",
+			"Spliced -[] +[f]",
+			"Changed"
+		);
+		source.setAll({ "f": f });
+		this.assertTarget([ d, f ], target);
+
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var testCase = this;
 		var d = new JW.Proxy("d");
