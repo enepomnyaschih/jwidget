@@ -19,7 +19,7 @@
 
 JW.Tests.Collection = {
 	subscribeToProperty: function(testCase, property) {
-		property.changeEvent.bind(function(params) {
+		return property.changeEvent.bind(function(params) {
 			testCase.output(params.oldValue + " > " + params.value);
 		});
 	},
@@ -39,38 +39,42 @@ JW.Tests.Collection = {
 			return "[" + JW.Array.map(itemsList, formatParams).join(",") + "]";
 		}
 
-		array.spliceEvent.bind(function(params) {
+		var subscription = new JW.Class();
+
+		subscription.own(array.spliceEvent.bind(function(params) {
 			var spliceResult = params.spliceResult;
 			testCase.output(
 				"Spliced -" + formatItemsList(spliceResult.removedItemsList) +
 				" +" + formatItemsList(spliceResult.addedItemsList) +
 				" to " + formatItems(spliceResult.oldItems));
-		});
+		}));
 
-		array.replaceEvent.bind(function(params) {
+		subscription.own(array.replaceEvent.bind(function(params) {
 			testCase.output("Replaced " + formatter(params.oldItem) + " with " + formatter(params.newItem) +
 				" at " + params.index);
-		});
+		}));
 
-		array.moveEvent.bind(function(params) {
+		subscription.own(array.moveEvent.bind(function(params) {
 			testCase.output("Moved " + formatter(params.item) + " from " + params.fromIndex + " to " + params.toIndex);
-		});
+		}));
 
-		array.clearEvent.bind(function(params) {
+		subscription.own(array.clearEvent.bind(function(params) {
 			testCase.output("Cleared " + formatItems(params.items));
-		});
+		}));
 
-		array.reorderEvent.bind(function(params) {
+		subscription.own(array.reorderEvent.bind(function(params) {
 			testCase.output("Reordered " + formatItems(params.items) + " by [" + params.indexArray.join(",") + "]");
-		});
+		}));
 
-		array.changeEvent.bind(function(params) {
+		subscription.own(array.changeEvent.bind(function(params) {
 			testCase.output("Changed");
-		});
+		}));
 
-		array.length.changeEvent.bind(function(params) {
+		subscription.own(array.length.changeEvent.bind(function(params) {
 			testCase.output("Changed length from " + params.oldValue + " to " + params.value);
-		});
+		}));
+
+		return subscription;
 	},
 
 	subscribeToMap: function(testCase, map, formatter) {
@@ -80,28 +84,32 @@ JW.Tests.Collection = {
 			return JW.Tests.Collection.formatMap(JW.Map.map(items, formatter))
 		}
 
-		map.spliceEvent.bind(function(params) {
+		var subscription = new JW.Class();
+
+		subscription.own(map.spliceEvent.bind(function(params) {
 			var spliceResult = params.spliceResult;
 			testCase.output(
 				"Spliced -" + formatItems(spliceResult.removedItems) +
 				" +" + formatItems(spliceResult.addedItems));
-		});
+		}));
 
-		map.reindexEvent.bind(function(params) {
+		subscription.own(map.reindexEvent.bind(function(params) {
 			testCase.output("Reindexed by " + JW.Tests.Collection.formatMap(params.keyMap));
-		});
+		}));
 
-		map.clearEvent.bind(function(params) {
+		subscription.own(map.clearEvent.bind(function(params) {
 			testCase.output("Cleared " + formatItems(params.items));
-		});
+		}));
 
-		map.changeEvent.bind(function(params) {
+		subscription.own(map.changeEvent.bind(function(params) {
 			testCase.output("Changed");
-		});
+		}));
 
-		map.length.changeEvent.bind(function(params) {
+		subscription.own(map.length.changeEvent.bind(function(params) {
 			testCase.output("Changed size from " + params.oldValue + " to " + params.value);
-		});
+		}));
+
+		return subscription;
 	},
 
 	subscribeToSet: function(testCase, set, formatter) {
@@ -117,24 +125,28 @@ JW.Tests.Collection = {
 			return JW.cmp(formatter(x), formatter(y));
 		}
 
-		set.spliceEvent.bind(function(params) {
+		var subscription = new JW.Class();
+
+		subscription.own(set.spliceEvent.bind(function(params) {
 			var spliceResult = params.spliceResult;
 			testCase.output(
 				"Spliced -" + formatItems(spliceResult.removedItems) +
 				" +" + formatItems(spliceResult.addedItems));
-		});
+		}));
 
-		set.clearEvent.bind(function(params) {
+		subscription.own(set.clearEvent.bind(function(params) {
 			testCase.output("Cleared " + formatItems(params.items));
-		});
+		}));
 
-		set.changeEvent.bind(function(params) {
+		subscription.own(set.changeEvent.bind(function(params) {
 			testCase.output("Changed");
-		});
+		}));
 
-		set.length.changeEvent.bind(function(params) {
+		subscription.own(set.length.changeEvent.bind(function(params) {
 			testCase.output("Changed size from " + params.oldValue + " to " + params.value);
-		});
+		}));
+
+		return subscription;
 	},
 
 	assertArray: function(testCase, values, array) {

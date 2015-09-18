@@ -28,6 +28,16 @@ JW.Tests.Collection.AbstractSet.FiltererTestCase = JW.Unit.TestCase.extend({
 		this.g = new JW.Proxy(7);
 	},
 	
+	testShorthand: function() {
+		var source = new JW.Set([this.a, this.b, this.c, this.d, this.e]);
+		var target = source.$$filter(this.filterFunc, this);
+
+		this.assertTarget([this.a, this.c, this.e], target);
+
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var source = new JW.Set([this.a, this.b, this.c, this.d, this.e]);
 		var target = new JW.Set();
@@ -148,8 +158,14 @@ JW.Tests.Collection.AbstractSet.FiltererTestCase = JW.Unit.TestCase.extend({
 	createFilterer: function(source, target) {
 		return source.createFilterer({
 			target: target,
-			filterItem: function(x) { return x.value % 2 === 1; }
+			filterItem: this.filterFunc,
+			scope: this
 		});
+	},
+
+	filterFunc: function(x) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
+		return x.get() % 2 === 1;
 	},
 	
 	assertTarget: function(values, target) {

@@ -18,6 +18,26 @@
 */
 
 JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var source = new JW.ObservableMap({a: 1, b: 2, c: 3, d: 4, e: 5});
+		var target = source.$$filter(this.filterFunc, this);
+		var subscription = JW.Tests.Collection.subscribeToMap(this, target);
+
+		this.assertTarget({a: 1, c: 3, e: 5}, target);
+
+		this.setExpectedOutput(
+			"Changed size from 3 to 5",
+			"Spliced -{a:1} +{a:7,b:9,i:11}",
+			"Changed"
+		);
+		source.splice(["d"], {f: 6, a: 7, g: 8, b: 9, h: 10, i: 11}); // {a: 7, b: 9, c: 3, e: 5, f: 6, g: 8, h: 10, i: 11}
+		this.assertTarget({a: 7, c: 3, e: 5, b: 9, i: 11}, target);
+
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var source = new JW.ObservableMap({a: 1, b: 2, c: 3, d: 4, e: 5});
 		var target = new JW.Map();
@@ -207,9 +227,14 @@ JW.Tests.Collection.ObservableMap.FiltererTestCase = JW.Unit.TestCase.extend({
 	createFilterer: function(source, target) {
 		return source.createFilterer({
 			target: target,
-			filterItem: function(x) { return x % 2 === 1; },
+			filterItem: this.filterFunc,
 			scope: this
 		});
+	},
+
+	filterFunc: function(x) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
+		return x % 2 === 1;
 	},
 	
 	assertTarget: function(expected, map) {

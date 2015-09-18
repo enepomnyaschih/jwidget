@@ -18,6 +18,32 @@
 */
 
 JW.Tests.Collection.ObservableArray.FiltererTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var source = new JW.ObservableArray([1, 2, 3, 4, 5, 7]);
+		var target = source.$$filter(this.filterFunc, this);
+		var subscription = JW.Tests.Collection.subscribeToArray(this, target);
+
+		this.assertTarget([1, 3, 5, 7], target);
+
+		this.setExpectedOutput(
+			"Changed length from 4 to 6",
+			"Spliced -[0:[1]] +[0:[7],2:[9],4:[11]] to [1,3,5,7]",
+			"Changed"
+		);
+		source.splice( // 6,7,3,8,9,5,10,11,7
+			[new JW.AbstractArray.IndexCount(0, 2),
+			 new JW.AbstractArray.IndexCount(3, 1)],
+			[new JW.AbstractArray.IndexItems(0, [6, 7]),
+			 new JW.AbstractArray.IndexItems(3, [8, 9]),
+			 new JW.AbstractArray.IndexItems(6, [10, 11])]);
+		this.assertTarget([7, 3, 9, 5, 11, 7], target);
+
+		subscription.destroy();
+		target.destroy()
+		source.destroy();
+	},
+	},
+
 	testUnobservableTarget: function() {
 		var source = new JW.ObservableArray([1, 2, 3, 4, 5, 7]);
 		var target = new JW.Array();
@@ -299,8 +325,14 @@ JW.Tests.Collection.ObservableArray.FiltererTestCase = JW.Unit.TestCase.extend({
 	createFilterer: function(source, target) {
 		return source.createFilterer({
 			target: target,
-			filterItem: function(x) { return x % 2 === 1; }
+			filterItem: this.filterFunc,
+			scope: this
 		});
+	},
+
+	filterFunc: function(x) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
+		return x % 2 === 1;
 	},
 	
 	assertTarget: function(values, target) {
