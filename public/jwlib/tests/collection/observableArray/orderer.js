@@ -27,6 +27,32 @@ JW.Tests.Collection.ObservableArray.OrdererTestCase = JW.Unit.TestCase.extend({
 		this.f = new JW.Proxy("f");
 		this.x = new JW.Proxy("x");
 	},
+
+	testShorthand: function() {
+		var source = new JW.ObservableArray([this.a, this.b, this.c, this.d]);
+		var target = source.$$toArray();
+		var subscription = JW.Tests.Collection.subscribeToArray(this, target, function(x) { return x.value; });
+
+		this.assertTarget([this.a, this.b, this.c, this.d], target);
+
+		this.setExpectedOutput(
+			"Spliced -[1:[b],3:[d]] +[2:[e,f]] to [a,b,c,d]",
+			"Changed"
+		);
+		source.splice([
+			new JW.AbstractArray.IndexCount(0, 2),
+			new JW.AbstractArray.IndexCount(3, 1)
+		], [
+			new JW.AbstractArray.IndexItems(0, [this.e, this.f]),
+			new JW.AbstractArray.IndexItems(3, [this.a])
+		]); // e,f,c,a
+		this.assertTarget([this.a, this.c, this.e, this.f], target);
+
+		this.setExpectedOutput();
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
 	
 	testObservableTarget: function() {
 		var source = new JW.ObservableArray([this.a, this.b, this.c, this.d]);
@@ -96,7 +122,6 @@ JW.Tests.Collection.ObservableArray.OrdererTestCase = JW.Unit.TestCase.extend({
 		target.destroy();
 		source.destroy();
 	},
-	
 	
 	testUnobservableTarget: function() {
 		var source = new JW.ObservableArray([this.a, this.b, this.c, this.d]);

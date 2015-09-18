@@ -25,6 +25,16 @@ JW.Tests.Collection.AbstractMap.OrdererTestCase = JW.Unit.TestCase.extend({
 		this.d = new JW.Proxy("d");
 		this.x = new JW.Proxy("x");
 	},
+
+	testShorthand: function() {
+		var source = new JW.Map({"A": this.a, "B": this.b});
+		var target = source.$$toArray();
+
+		this.assertTarget([this.a, this.b], target);
+
+		target.destroy();
+		source.destroy();
+	},
 	
 	testUnobservableTarget: function() {
 		var source = new JW.Map({"A": this.a, "B": this.b});

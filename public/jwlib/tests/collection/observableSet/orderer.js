@@ -27,6 +27,26 @@ JW.Tests.Collection.ObservableSet.OrdererTestCase = JW.Unit.TestCase.extend({
 		this.f = new JW.Proxy("f");
 		this.x = new JW.Proxy("x");
 	},
+
+	testShorthand: function() {
+		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d]);
+		var target = source.$$toArray();
+		var subscription = JW.Tests.Collection.subscribeToArray(this, target, function(x) { return x.value; });
+
+		this.assertTarget([this.a, this.b, this.c, this.d], target);
+
+		this.setExpectedOutput(
+			"Spliced -[1:[b],3:[d]] +[2:[e,f]] to [a,b,c,d]",
+			"Changed"
+		);
+		source.splice([this.d, this.b], [this.e, this.f]);
+		this.assertTarget([this.a, this.c, this.e, this.f], target);
+
+		this.setExpectedOutput();
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
 	
 	testObservableTarget: function() {
 		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d]);
