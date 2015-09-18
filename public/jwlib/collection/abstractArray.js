@@ -1000,7 +1000,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {Array} Merged array.
 	 */
 	merge: function() {
-		throw new Error("Method not implemented");
+		return JW.Array.merge(this.map(JW.byMethod("getItems")));
 	},
 
 	/**
@@ -1020,7 +1020,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {JW.AbstractArray} Merged array.
 	 */
 	$$merge: function() {
-		return this.$merge();
+		var result = this._createMergerTarget();
+		result.own(this.createMerger({
+			target: result
+		}));
+		return result;
 	},
 
 	/**
@@ -1272,6 +1276,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 
 	_callStatic: function(algorithm, args) {
 		return JW.Array[algorithm].apply(JW.Array, [this.items].concat(args || []));
+	},
+
+	_createMergerTarget: function() {
+		return this.some(function(bunch) { return bunch instanceof JW.ObservableArray; }) ?
+			new JW.ObservableArray() : new JW.Array();
 	}
 
 	/**

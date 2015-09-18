@@ -41,11 +41,6 @@ JW.ObservableArray.Merger = function(source, config) {
 };
 
 JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
-	// override
-	_createTarget: function() {
-		return new JW.ObservableArray();
-	},
-	
 	_getIndexes: function(bunches) {
 		var currentIndex = 0;
 		var indexes = JW.Array.map(bunches, function(bunch) {

@@ -98,7 +98,7 @@ JW.AbstractArray.Merger = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this._targetCreated = config.target == null;
-	this.target = this._targetCreated ? this._createTarget() : config.target;
+	this.target = this._targetCreated ? source._createMergerTarget() : config.target;
 	this._bunches = source.$$mapObjects(function(bunch) {
 		return bunch.createMergerBunch(this);
 	}, this);
@@ -127,12 +127,6 @@ JW.extend(JW.AbstractArray.Merger, JW.Class, {
 		this.target = null;
 		this._bunches = null;
 		this._super();
-	},
-	
-	// virtual
-	_createTarget: function() {
-		return this.source.some(function(bunch) { return bunch instanceof JW.ObservableArray; }, this) ?
-			new JW.ObservableArray() : new JW.Array();
 	},
 	
 	_getAllItems: function() {

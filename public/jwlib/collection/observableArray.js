@@ -319,6 +319,10 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 
 	createSplitter: function(config) {
 		return new JW.ObservableArray.Splitter(this, config);
+	},
+
+	_createMergerTarget: function() {
+		return new JW.ObservableArray();
 	}
 });
 
