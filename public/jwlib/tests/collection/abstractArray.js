@@ -793,6 +793,15 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4, 5, 6]]));
 	},
 
+	testMerge: function() {
+		var array = this.createArray([this.createArray([1, 2]), this.createArray([3, 4])]);
+		var merged = this.invoke(array, "merge", []);
+		this.assertTrue(JW.Array.equal(merged, [1, 2, 3, 4]));
+
+		var $merged = this.invoke(array, "$merge", []);
+		this.assertTrue($merged.equal([1, 2, 3, 4]));
+	},
+
 	testPerformSplice: function() {
 		var array = this.createArray([1, 2, 3, 4, 5, 6]);
 		this.setObservableOutput();

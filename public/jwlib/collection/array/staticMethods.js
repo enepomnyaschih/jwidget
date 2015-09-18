@@ -528,6 +528,8 @@ JW.apply(JW.Array, {
 		return result;
 	},
 
+	$merge: JW.AbstractCollection._createStatic$Array(JW.Array, "merge"),
+
 	countMerged: function(arrays) {
 		var result = 0;
 		for (var i = 0, l = arrays.length; i < l; ++i) {
