@@ -90,7 +90,8 @@ JW.AbstractCollection.Orderer = function(source, config) {
 	JW.AbstractCollection.Orderer._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.target = config.target || this.own(source.createEmptyArray());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
 	this.target.tryAddAll(source.asArray());
 };
 
@@ -106,8 +107,13 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.removeItems(this.source.asArray());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
 		this._super();
 	},
 	

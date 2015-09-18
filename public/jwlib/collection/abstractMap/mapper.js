@@ -48,7 +48,7 @@ JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys()), this.source.getJson());
 		this._super();
 	},

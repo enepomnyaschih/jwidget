@@ -44,7 +44,7 @@ JW.Interval = function(handler, scope, delay) {
 };
 
 JW.extend(JW.Interval, JW.Class, {
-	destroy: function() {
+	destroyObject: function() {
 		clearInterval(this.interval);
 		this._super();
 	}

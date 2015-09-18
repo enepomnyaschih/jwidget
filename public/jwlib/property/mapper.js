@@ -155,7 +155,8 @@ JW.Mapper = function(sources, config) {
 	this.createValue = config.createValue;
 	this.destroyValue = config.destroyValue;
 	this.scope = config.scope || this;
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.acceptNull = config.acceptNull || false;
 	this._sourceValues = null;
 	this._targetValue = null;
@@ -199,13 +200,22 @@ JW.extend(JW.Mapper, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		var oldValue = this.target.get();
 		if (oldValue === this._targetValue) {
 			this.target.set(null);
 		}
 		this._done();
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.sources = null;
+		this.createValue = null;
+		this.destroyValue = null;
+		this.scope = null;
+		this.target = null;
 		this._sourceValues = null;
+		this._targetValue = null;
 		this._super();
 	},
 	

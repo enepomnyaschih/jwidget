@@ -83,7 +83,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	 */
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.changeEvent.destroy();
 		this.reorderEvent.destroy();
 		this.clearEvent.destroy();

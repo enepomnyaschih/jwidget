@@ -55,6 +55,12 @@ JW.extend(JW.UI.CssUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.css(this.style, this.property.get());

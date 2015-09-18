@@ -53,7 +53,8 @@ JW.Copier = function(source, config) {
 	JW.Copier._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this._update();
 	this.own(source.changeEvent.bind(this._update, this));
 };
@@ -69,6 +70,15 @@ JW.extend(JW.Copier, JW.Class, {
 	/**
 	 * @property {JW.Property} target `<V>` Target property.
 	 */
+
+	destroyObject: function() {
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.target.set(this.source.get());

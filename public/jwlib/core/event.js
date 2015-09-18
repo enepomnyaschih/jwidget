@@ -84,7 +84,7 @@ JW.extend(JW.Event, JW.Class, {
 	Map<JW.EventAttachment> attachments;
 	*/
 
-	destroy: function() {
+	destroyObject: function() {
 		this.purge();
 		this._super();
 	},

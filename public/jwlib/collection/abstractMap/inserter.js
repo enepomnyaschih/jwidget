@@ -59,8 +59,8 @@ JW.AbstractMap.Inserter = function(source, config) {
 	this.source = source;
 	this.addItem = config.addItem;
 	this.removeItem = config.removeItem;
-	this.scope = config.scope || this;
 	this.clearItems = config.clearItems;
+	this.scope = config.scope || this;
 	this._addItems(this.source.getJson());
 };
 
@@ -93,8 +93,13 @@ JW.extend(JW.AbstractMap.Inserter, JW.Class, {
 	 * @property {JW.AbstractMap} source `<T>` Source map.
 	 */
 	
-	destroy: function() {
+	destroyObject: function() {
 		this._clearItems(this.source.getJson());
+		this.source = null;
+		this.addItem = null;
+		this.removeItem = null;
+		this.clearItems = null;
+		this.scope = null;
 		this._super();
 	},
 	

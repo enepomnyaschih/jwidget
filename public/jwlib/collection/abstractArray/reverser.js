@@ -89,7 +89,8 @@ JW.AbstractArray.Reverser = function(source, config) {
 	JW.AbstractArray.Reverser._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.target = config.target || this.own(source.createEmpty());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source.createEmpty() : config.target;
 	this.target.tryAddAll(this._reverse(source.getItems()));
 };
 
@@ -105,8 +106,13 @@ JW.extend(JW.AbstractArray.Reverser, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryClear();
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
 		this._super();
 	},
 	

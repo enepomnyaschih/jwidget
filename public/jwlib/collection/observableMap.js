@@ -71,7 +71,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	 */
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.changeEvent.destroy();
 		this.clearEvent.destroy();
 		this.reindexEvent.destroy();

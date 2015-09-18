@@ -65,7 +65,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	 */
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.changeEvent.destroy();
 		this.clearEvent.destroy();
 		this.spliceEvent.destroy();

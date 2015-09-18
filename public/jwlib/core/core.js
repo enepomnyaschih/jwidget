@@ -738,8 +738,9 @@ JW.apply(JW, {
 	 *         // String message;
 	 *
 	 *         // override
-	 *         {@link JW.Class#destroy destroy}: function() {
+	 *         {@link JW.Class#destroyObject destroyObject}: function() {
 	 *             this.el.unbind("click", this._onClick);
+	 *             this._super();
 	 *         },
 	 *
 	 *         _onClick: function() {

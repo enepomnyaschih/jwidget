@@ -49,7 +49,7 @@ JW.Tests.Collection.ObservableArray.SplitterTestCase = JW.Unit.TestCase.extend({
 			*/
 
 			// override
-			destroy: function() {
+			destroyObject: function() {
 				this._inserter.destroy();
 				testCase.output("Destroyed row " + this.id);
 				this._super();

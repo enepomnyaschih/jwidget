@@ -92,8 +92,13 @@ JW.extend(JW.AbstractArray.Inserter, JW.Class, {
 	 * @property {JW.AbstractArray} source `<T>` Source array.
 	 */
 	
-	destroy: function() {
+	destroyObject: function() {
 		this._clearItems(this.source.getItems());
+		this.source = null;
+		this.addItem = null;
+		this.removeItem = null;
+		this.clearItems = null;
+		this.scope = null;
 		this._super();
 	},
 	

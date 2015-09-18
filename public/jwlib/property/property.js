@@ -105,7 +105,7 @@ JW.extend(JW.Property, JW.Class, {
 	// boolean _ownsValue;
 	// JW.Copier<V> _copier;
 	
-	destroy: function() {
+	destroyObject: function() {
 		this.bindTo();
 		if (this._ownsValue && JW.isSet(this._value)) {
 			this._value.destroy();

@@ -106,8 +106,13 @@ JW.extend(JW.Switcher, JW.Class, {
 	 * Optional. If false, functions won't be called if at least one of the source values is null.
 	 */
 	
-	destroy: function() {
+	destroyObject: function() {
 		this._done();
+		this.sources = null;
+		this.init = null;
+		this.done = null;
+		this.scope = null;
+		this._values = null;
 		this._super();
 	},
 	

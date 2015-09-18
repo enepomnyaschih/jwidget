@@ -51,6 +51,12 @@ JW.extend(JW.UI.VisibleUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.css("display", this.property.get() ? "" : "none");

@@ -31,7 +31,7 @@ JW.Tests.Collection.ObservableSet.CounterTestCase = JW.Unit.TestCase.extend({
 	testShorthand: function() {
 		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d, this.e]);
 		var target = source.$$count(this.countFunc, this);
-		JW.Tests.Collection.subscribeToProperty(this, target);
+		var subscription = JW.Tests.Collection.subscribeToProperty(this, target);
 
 		this.assertStrictEqual(3, target.get());
 
@@ -40,6 +40,7 @@ JW.Tests.Collection.ObservableSet.CounterTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual(2, target.get());
 
 		this.setExpectedOutput();
+		subscription.destroy();
 		target.destroy();
 		source.destroy();
 	},

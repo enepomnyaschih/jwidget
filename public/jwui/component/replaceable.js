@@ -33,7 +33,7 @@ JW.UI.Component.Replaceable = function(parent, component, id) {
 	this.id = id;
 	JW.Set.add(parent._replaceables, this);
 	
-	this.own(new JW.Switcher([component], {
+	this._switcher = new JW.Switcher([component], {
 		init: function(child) {
 			this.parent.children.set(child, this.id);
 		},
@@ -41,14 +41,16 @@ JW.UI.Component.Replaceable = function(parent, component, id) {
 			this.parent.children.remove(this.id);
 		},
 		scope: this
-	}));
+	});
 };
 
 JW.extend(JW.UI.Component.Replaceable, JW.Class, {
 	// JW.UI.Component parent;
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
+		this._switcher.destroy();
+		this._switcher = null;
 		JW.Set.remove(this.parent._replaceables, this);
 		this._super();
 	}

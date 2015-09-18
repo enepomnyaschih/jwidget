@@ -76,7 +76,7 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 		};
 		
 		JW.extend(cls, JW.Class, {
-			destroy: function() {
+			destroyObject: function() {
 				this.testCase.output("destroy " + this.value);
 				this._super();
 			}

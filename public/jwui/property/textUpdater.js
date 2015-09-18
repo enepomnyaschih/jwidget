@@ -50,6 +50,12 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el[0].textContent = this.property.get();

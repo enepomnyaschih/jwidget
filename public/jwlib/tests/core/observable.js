@@ -42,7 +42,7 @@ JW.extend(JW.Tests.Core.ObservableTestCase, JW.Unit.TestCase, {
 			JW.Event<EventParams> eventb;
 			*/
 			
-			destroy: function() {
+			destroyObject: function() {
 				this.eventb.destroy();
 				this.eventa.destroy();
 				this._super();
@@ -91,7 +91,7 @@ JW.extend(JW.Tests.Core.ObservableTestCase, JW.Unit.TestCase, {
 			JW.EventAttachment<EventParams> attachmentb;
 			*/
 			
-			destroy: function() {
+			destroyObject: function() {
 				this.attachmentb.destroy();
 				this.attachmenta.destroy();
 				this._super();

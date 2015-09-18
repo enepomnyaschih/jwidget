@@ -98,7 +98,8 @@ JW.AbstractCollection.Indexer = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.getKey = config.getKey;
-	this.target = config.target || this.own(source.createEmptyMap());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source.createEmptyMap() : config.target;
 	this.scope = config.scope || this;
 	this.target.trySetAll(this._index(source.asArray()));
 };
@@ -125,8 +126,15 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryRemoveAll(this._keys(this.source.asArray()));
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.getKey = null;
+		this.target = null;
+		this.scope = null;
 		this._super();
 	},
 	

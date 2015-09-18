@@ -52,6 +52,12 @@ JW.extend(JW.UI.ValueUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.val(this.property.get());

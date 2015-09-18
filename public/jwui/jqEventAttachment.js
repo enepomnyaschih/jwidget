@@ -45,7 +45,7 @@
  *         _onSubmit: function(event) {...},
  *         _onTextChange: function(event) {...},
  *
- *         {@link #destroy}: function() {
+ *         {@link #destroyObject}: function() {
  *             el.off("submit", this._onSubmit);
  *             el.off("change", "input[type=text]", this._onTextChange);
  *             this.{@link #_super}();
@@ -53,7 +53,7 @@
  *     });
  *
  * Thanks to the adapter, we can remove the overhead of locking the method call context and
- * explicit event unsubscribing in the #destroy method:
+ * explicit event unsubscribing in the #destroyObject method:
  *
  *     var MyForm = function(el) {
  *         MyForm.{@link JW.Class#static-property-_super _super}.call(this);
@@ -104,7 +104,7 @@ JW.UI.JQEventAttachment = function(el, events, selector, handler, scope) {
 };
 
 JW.extend(JW.UI.JQEventAttachment, JW.Class, {
-	destroy: function() {
+	destroyObject: function() {
 		this.el.off(this.events, this.selector, this.handler);
 		this._super();
 	}

@@ -79,7 +79,7 @@ JW.Tests.Collection.SetTestCase = JW.Tests.Collection.AbstractSetBase.extend({
 		};
 		
 		JW.extend(cls, JW.Class, {
-			destroy: function() {
+			destroyObject: function() {
 				this.testCase.output("destroy " + this.value);
 				this._super();
 			}
@@ -108,7 +108,7 @@ JW.Tests.Collection.SetTestCase = JW.Tests.Collection.AbstractSetBase.extend({
 		};
 		
 		JW.extend(cls, JW.Class, {
-			destroy: function() {
+			destroyObject: function() {
 				this.testCase.output("destroy " + this.value);
 				this._super();
 			}

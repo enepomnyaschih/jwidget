@@ -48,7 +48,7 @@ JW.extend(JW.AbstractSet.Filterer, JW.AbstractCollection.Filterer, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryRemoveAll(this.source.toArray());
 		this._super();
 	}

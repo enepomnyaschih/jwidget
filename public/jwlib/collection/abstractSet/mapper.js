@@ -52,7 +52,7 @@ JW.extend(JW.AbstractSet.Mapper, JW.AbstractCollection.Mapper, {
 	*/
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		var datas = this.source.toArray();
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);

@@ -50,7 +50,8 @@ JW.UI.RadioListener = function(el, name, config) {
 	config = (config instanceof JW.Property) ? {target: config} : (config || {});
 	this.el = jQuery(el);
 	this.name = name;
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.property = this.target;
 	this._selector = "input[type=radio][name='" + name + "']";
 	this._update();
@@ -75,8 +76,14 @@ JW.extend(JW.UI.RadioListener, JW.Class, {
 	 * @deprecated
 	 */
 
-	destroy: function() {
+	destroyObject: function() {
 		this.el.off("change", this._selector, this._update);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.el = null;
+		this.target = null;
+		this.property = null;
 		this._super();
 	},
 

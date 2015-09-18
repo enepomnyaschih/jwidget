@@ -56,6 +56,12 @@ JW.extend(JW.UI.ClassUpdater, JW.Class, {
 	 * @property {JW.Property} property `<Boolean>` Source property.
 	 */
 	
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
+
 	_update: function() {
 		this.el.toggleClass(this.cls, !!this.property.get());
 	}

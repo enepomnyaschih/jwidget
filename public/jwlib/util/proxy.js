@@ -45,10 +45,11 @@ JW.extend(JW.Proxy, JW.Class, {
 	 */
 	// boolean _ownsValue;
 	
-	destroy: function() {
+	destroyObject: function() {
 		if (this._ownsValue && JW.isSet(this.value)) {
 			this.value.destroy();
 		}
+		this.value = null;
 		this._super();
 	},
 	

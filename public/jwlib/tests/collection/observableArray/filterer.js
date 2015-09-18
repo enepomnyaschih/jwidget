@@ -42,7 +42,6 @@ JW.Tests.Collection.ObservableArray.FiltererTestCase = JW.Unit.TestCase.extend({
 		target.destroy()
 		source.destroy();
 	},
-	},
 
 	testUnobservableTarget: function() {
 		var source = new JW.ObservableArray([1, 2, 3, 4, 5, 7]);

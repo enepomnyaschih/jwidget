@@ -68,7 +68,8 @@ JW.Functor = function(sources, func, scope, config) {
 	this.sources = sources;
 	this.func = func;
 	this.scope = scope || this;
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.update();
 	JW.Array.every(sources, this.watch, this);
 };
@@ -84,6 +85,17 @@ JW.extend(JW.Functor, JW.Class, {
 	/**
 	 * @property {JW.Property} target `<T>` Target property.
 	 */
+
+	destroyObject: function() {
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.sources = null;
+		this.target = null;
+		this.func = null;
+		this.scope = null;
+		this._super();
+	},
 	
 	/**
 	 * Watches specified event and triggers target value recalculation on

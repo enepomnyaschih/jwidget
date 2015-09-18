@@ -50,7 +50,7 @@ JW.extend(JW.AbstractArray.Filterer, JW.AbstractCollection.Filterer, {
 	// Array<number> _filtered; // 0 - false, 1 - true
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryClear();
 		this._super();
 	},

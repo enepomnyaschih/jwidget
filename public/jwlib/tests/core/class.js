@@ -168,7 +168,7 @@ JW.Tests.Core.ClassTestCase = JW.Unit.TestCase.extend({
 		};
 		
 		JW.extend(cls, JW.Class, {
-			destroy: function() {
+			destroyObject: function() {
 				this.testCase.output("destroy " + this.value);
 				this._super();
 			}
@@ -182,10 +182,10 @@ JW.Tests.Core.ClassTestCase = JW.Unit.TestCase.extend({
 		a.own(c);
 		b.own(d);
 		this.setExpectedOutput(
-			"destroy a",
 			"destroy c",
+			"destroy d",
 			"destroy b",
-			"destroy d"
+			"destroy a"
 		);
 		a.destroy();
 	}

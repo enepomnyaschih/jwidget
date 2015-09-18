@@ -37,7 +37,7 @@ JW.extend(JW.Timer, JW.Class, {
 	number _handle;
 	*/
 
-	destroy: function() {
+	destroyObject: function() {
 		this.stop();
 		this._super();
 	},

@@ -68,7 +68,7 @@ JW.AbstractCollection.Observer = function(source, config) {
 	this.removeItem = config.removeItem;
 	this.clearItems = config.clearItems;
 	this.change = config.change;
-	this.scope = config.scope || this;
+		this.scope = config.scope || this;
 	this._addItems(source.asArray());
 };
 
@@ -109,8 +109,14 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this._clearItems(this.source.asArray());
+		this.source = null;
+		this.addItem = null;
+		this.removeItem = null;
+		this.clearItems = null;
+		this.change = null;
+		this.scope = null;
 		this._super();
 	},
 	

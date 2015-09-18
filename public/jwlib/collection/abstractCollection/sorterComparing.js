@@ -124,7 +124,8 @@ JW.AbstractCollection.SorterComparing = function(source, config) {
 	this.compare = config.compare || JW.cmp;
 	this.order = config.order || 1;
 	this.scope = config.scope || this;
-	this.target = config.target || this.own(source.createEmptyArray());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
 	this._splice([], source.asArray());
 };
 
@@ -153,8 +154,15 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this._splice(this.source.asArray(), []);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
+		this.compare = null;
+		this.scope = null;
 		this._super();
 	},
 	

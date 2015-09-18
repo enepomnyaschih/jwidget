@@ -44,7 +44,8 @@ JW.UI.CheckedListener = function(el, config) {
 	JW.UI.CheckedListener._super.call(this);
 	config = (config instanceof JW.Property) ? {target: config} : (config || {});
 	this.el = jQuery(el);
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.property = this.target;
 	this._update();
 	this.el.bind("change", this._update);
@@ -65,8 +66,14 @@ JW.extend(JW.UI.CheckedListener, JW.Class, {
 	 * @deprecated
 	 */
 
-	destroy: function() {
+	destroyObject: function() {
 		this.el.unbind("change", this._update);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.el = null;
+		this.target = null;
+		this.property = null;
 		this._super();
 	},
 

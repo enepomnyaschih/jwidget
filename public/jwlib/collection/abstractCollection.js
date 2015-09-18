@@ -206,7 +206,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		return this;
 	},
 
-	destroy: function() {
+	destroyObject: function() {
 		this.tryClear();
 		this._super();
 	},

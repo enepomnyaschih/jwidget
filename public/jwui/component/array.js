@@ -33,13 +33,13 @@ JW.UI.Component.Array = function(parent, source, el) {
 	this.source = source;
 	JW.Set.add(parent._arrays, this);
 
-	var mapper = this.own(source.createMapper({
+	this._mapper = source.createMapper({
 		createItem  : function(child) { this.parent._initChild(child); return child; },
 		destroyItem : function(child) { this.parent._doneChild(child); },
 		scope       : this
-	}));
+	});
 
-	this.own(new JW.UI.Component.Inserter(mapper.target, el[0]));
+	this._inserter = new JW.UI.Component.Inserter(this._mapper.target, el[0]);
 };
 
 JW.extend(JW.UI.Component.Array, JW.Class, {
@@ -47,7 +47,11 @@ JW.extend(JW.UI.Component.Array, JW.Class, {
 	// JW.AbstractArray<JW.UI.Component> source;
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
+		this._inserter.destroy();
+		this._inserter = null;
+		this._mapper.destroy();
+		this._mapper = null;
 		JW.Set.remove(this.parent._arrays, this);
 		this._super();
 	},

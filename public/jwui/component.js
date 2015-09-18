@@ -451,7 +451,12 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this._arrays = null;
 			JW.Set.each(this._replaceables, JW.destroy);
 			this._replaceables = null;
+		}
+		this._super();
+	},
 
+	destroyObject: function() {
+		if (this.el) {
 			this.children.unrender();
 			this.unrender();
 

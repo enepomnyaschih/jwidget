@@ -38,7 +38,8 @@ JW.extend(JW.EventAttachment, JW.Class, {
 	Object scope;
 	*/
 	
-	destroy: function() {
+	destroyObject: function() {
 		this.event.unbind(this);
+		this._super();
 	}
 });

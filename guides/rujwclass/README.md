@@ -38,7 +38,7 @@
         // Element el;
         
         // Деструктор
-        {@link JW.Class#method-destroy destroy}: function() {
+        {@link JW.Class#method-destroyObject destroyObject}: function() {
             // Освобождаем ресурсы
             if (this.el) {
                 this.el.remove();

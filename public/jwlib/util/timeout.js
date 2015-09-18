@@ -44,7 +44,7 @@ JW.Timeout = function(handler, scope, delay) {
 };
 
 JW.extend(JW.Timeout, JW.Class, {
-	destroy: function() {
+	destroyObject: function() {
 		clearTimeout(this.timeout);
 		this._super();
 	}

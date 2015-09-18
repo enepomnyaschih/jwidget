@@ -47,7 +47,8 @@ JW.UI.ValueListener = function(el, config, simple) {
 	JW.UI.ValueListener._super.call(this);
 	config = (config instanceof JW.Property) ? {target: config, simple: simple} : (config || {});
 	this.el = jQuery(el);
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.property = this.target;
 	this.simple = config.simple || !JW.UI.isLifeInput(el);
 	this._update();
@@ -77,11 +78,17 @@ JW.extend(JW.UI.ValueListener, JW.Class, {
 	 * @deprecated
 	 */
 
-	destroy: function() {
+	destroyObject: function() {
 		if (!this.simple) {
 			clearInterval(this._timer);
 		}
 		this.el.unbind("change", this._update);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.el = null;
+		this.target = null;
+		this.property = null;
 		this._super();
 	},
 

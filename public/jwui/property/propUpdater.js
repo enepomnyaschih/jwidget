@@ -57,6 +57,12 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<Boolean>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.prop(this.prop, this.property.get());

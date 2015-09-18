@@ -116,7 +116,7 @@ JW.extend = JW.ClassUtil.extend;
  *         // Element el;
  *         
  *         // Destructor
- *         {@link JW.Class#method-destroy destroy}: function() {
+ *         {@link JW.Class#method-destroyObject destroyObject}: function() {
  *             // Release resources
  *             if (this.el) {
  *                 this.el.remove();
@@ -175,12 +175,31 @@ JW.Class = function() {
 /**
  * @method destroy
  *
- * Class destructor. The logic of class instance destruction should be implemented here. You must call this method
- * explicitly from outside, because JavaScript doesn't support automatic class destructor calling. Alternatively
- * (and optimally), you should use method #own to aggregate objects inside each other. If you override this method,
+ * Class destructor invocation method. Destroys all aggregated objects and calls #destroyObject method.
+ * You must call this method explicitly from outside, because JavaScript doesn't support automatic class destructor
+ * calling. Alternatively (and optimally), you should use method #own to aggregate this object inside some another.
+ *
+ *     var object = new MyClass();
+ *
+ *     // ...
+ *
+ *     // Once object is not needed anymore, destroy it
+ *     object.{@link #method-destroy destroy}();
+ *
+ * You can override this method in a subclass to do some preliminary work before aggregated objects destruction.
+ * For example, JW.UI.Component overrides this method to remove child components before their destruction,
+ * before child components are usually aggregated inside the component.
+ *
+ * @returns {void}
+ */
+/**
+ * @method destroyObject
+ *
+ * Class destructor implementation. Called inside #destroy method after aggregated objects destruction.
+ * The logic of class instance destruction should be implemented here. If you override this method,
  * don't forget to call superclass destructor at the end of the method:
  *
- *     destroy: function() {
+ *     destroyObject: function() {
  *         // Release resources
  *         ...
  *         // Call superclass destructor
@@ -288,5 +307,8 @@ JW.extend(JW.Class, Object, {
 		for (var i = pool.length - 1; i >= 0; --i) {
 			pool[i].destroy();
 		}
-	}
+		this.destroyObject();
+	},
+
+	destroyObject: function() {}
 });

@@ -95,7 +95,8 @@ JW.AbstractCollection.Counter = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.filterItem = config.filterItem;
-	this.target = config.target || this.own(new JW.Property(0));
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property(0) : config.target;
 	this.scope = config.scope || this;
 	this.target.set(source.count(this.filterItem, this.scope));
 };
@@ -123,10 +124,15 @@ JW.extend(JW.AbstractCollection.Counter, JW.Class, {
 	 */
 
 	// override
-	destroy: function() {
-		if (this.target.get() != null) {
-			this.target.set(0);
+	destroyObject: function() {
+		this.target.set(0);
+		if (this._targetCreated) {
+			this.target.destroy();
 		}
+		this.source = null;
+		this.filterItem = null;
+		this.target = null;
+		this.scope = null;
 		this._super();
 	},
 

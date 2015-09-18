@@ -110,7 +110,8 @@ JW.AbstractCollection.Filterer = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.filterItem = config.filterItem;
-	this.target = config.target || this.own(this.source.createEmpty());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? this.source.createEmpty() : config.target;
 	this.scope = config.scope || this;
 };
 
@@ -135,4 +136,15 @@ JW.extend(JW.AbstractCollection.Filterer, JW.Class, {
 	/**
 	 * @property {C} target Target collection.
 	 */
+
+	destroyObject: function() {
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.filterItem = null;
+		this.target = null;
+		this.scope = null;
+		this._super();
+	}
 });

@@ -26,7 +26,7 @@ JW.Tests.Core.ProxyTestCase = JW.Unit.TestCase.extend({
 		};
 		
 		JW.extend(cls, JW.Class, {
-			destroy: function() {
+			destroyObject: function() {
 				this.testCase.output("destroy " + this.value);
 				this._super();
 			}

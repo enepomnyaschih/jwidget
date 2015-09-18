@@ -48,7 +48,7 @@ JW.extend(JW.AbstractMap.Filterer, JW.AbstractCollection.Filterer, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryRemoveAll(this.source.getKeys());
 		this._super();
 	}
