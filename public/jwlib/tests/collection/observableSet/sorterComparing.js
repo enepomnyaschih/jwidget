@@ -33,6 +33,27 @@ JW.Tests.Collection.ObservableSet.SorterComparingTestCase = JW.Unit.TestCase.ext
 		this.l = new JW.Proxy(11);
 		this.m = new JW.Proxy(12);
 	},
+
+	testShorthand: function() {
+		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d]);
+		var target = source.$$toSortedComparing(this.compare, this);
+		var subscription = JW.Tests.Collection.subscribeToArray(this, target, function(x) { return x.value; });
+
+		this.assertTarget([0, 2, 3, 1], target);
+
+		this.setExpectedOutput(
+			"Changed length from 4 to 5",
+			"Spliced -[1:[2],3:[1]] +[1:[4,8,7]] to [0,2,3,1]",
+			"Changed"
+		);
+		source.splice([this.b, this.c], [this.e, this.h, this.i]);
+		this.assertTarget([0, 4, 8, 7, 3], target);
+
+		this.setExpectedOutput();
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
 	
 	testObservableTarget: function() {
 		var source = new JW.ObservableSet([this.a, this.b, this.c, this.d]);
@@ -226,7 +247,8 @@ JW.Tests.Collection.ObservableSet.SorterComparingTestCase = JW.Unit.TestCase.ext
 		return source.createSorterComparing({
 			target: target,
 			compare: compare,
-			order: order
+			order: order,
+			scope: this
 		});
 	},
 	
@@ -235,6 +257,7 @@ JW.Tests.Collection.ObservableSet.SorterComparingTestCase = JW.Unit.TestCase.ext
 	},
 	
 	compare: function(x, y) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
 		x = x.value;
 		y = y.value;
 		return JW.cmp(x % 2, y % 2) || ((x % 2) ? -JW.cmp(x, y) : JW.cmp(x, y));

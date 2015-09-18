@@ -18,6 +18,26 @@
 */
 
 JW.Tests.Collection.ObservableMap.SorterComparingTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var source = new JW.ObservableMap({"A": "c", "B": "b", "C": "a", "D": "d"});
+		var target = source.$$toSortedComparing(this.compare, this);
+		var subscription = JW.Tests.Collection.subscribeToArray(this, target);
+
+		this.assertTarget(["a", "b", "c", "d"], target);
+
+		this.setExpectedOutput(
+			"Spliced -[2:[c,d]] +[2:[e,f]] to [a,b,c,d]",
+			"Changed"
+		);
+		source.setAll({"D": "e", "A": "f"}); // A:f,B:b,C:a,D:e
+		this.assertTarget(["a", "b", "e", "f"], target);
+
+		this.setExpectedOutput();
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
+
 	testObservableTarget: function() {
 		var source = new JW.ObservableMap({"A": "c", "B": "b", "C": "a", "D": "d"});
 		var target = this.createTarget();
@@ -219,7 +239,8 @@ JW.Tests.Collection.ObservableMap.SorterComparingTestCase = JW.Unit.TestCase.ext
 		return source.createSorterComparing({
 			target: target,
 			compare: compare,
-			order: order
+			order: order,
+			scope: this
 		});
 	},
 	
@@ -228,6 +249,7 @@ JW.Tests.Collection.ObservableMap.SorterComparingTestCase = JW.Unit.TestCase.ext
 	},
 	
 	compare: function(x, y) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
 		return JW.cmp(x % 2, y % 2) || ((x % 2) ? -JW.cmp(x, y) : JW.cmp(x, y));
 	}
 });

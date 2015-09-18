@@ -18,6 +18,32 @@
 */
 
 JW.Tests.Collection.ObservableArray.SorterComparingTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var source = new JW.ObservableArray(["c", "b", "a", "d"]);
+		var target = source.$$toSortedComparing(this.compare, this);
+		var subscription = JW.Tests.Collection.subscribeToArray(this, target);
+
+		this.assertTarget(["a", "b", "c", "d"], target);
+
+		this.setExpectedOutput(
+			"Spliced -[2:[c,d]] +[2:[e,f]] to [a,b,c,d]",
+			"Changed"
+		);
+		source.splice([
+			new JW.AbstractArray.IndexCount(0, 1),
+			new JW.AbstractArray.IndexCount(2, 2)
+		], [
+			new JW.AbstractArray.IndexItems(0, ["f", "e"]),
+			new JW.AbstractArray.IndexItems(3, ["a"])
+		]); // f,e,b,a
+		this.assertTarget(["a", "b", "e", "f"], target);
+
+		this.setExpectedOutput();
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
+
 	testObservableTarget: function() {
 		var source = new JW.ObservableArray(["c", "b", "a", "d"]);
 		var target = this.createTarget();
@@ -266,7 +292,8 @@ JW.Tests.Collection.ObservableArray.SorterComparingTestCase = JW.Unit.TestCase.e
 		return source.createSorterComparing({
 			target: target,
 			compare: compare,
-			order: order
+			order: order,
+			scope: this
 		});
 	},
 	
@@ -275,6 +302,7 @@ JW.Tests.Collection.ObservableArray.SorterComparingTestCase = JW.Unit.TestCase.e
 	},
 	
 	compare: function(x, y) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
 		return JW.cmp(x % 2, y % 2) || ((x % 2) ? -JW.cmp(x, y) : JW.cmp(x, y));
 	}
 });

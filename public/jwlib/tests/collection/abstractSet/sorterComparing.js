@@ -29,6 +29,16 @@ JW.Tests.Collection.AbstractSet.SorterComparingTestCase = JW.Unit.TestCase.exten
 		this.h = new JW.Proxy(7);
 		this.i = new JW.Proxy(8);
 	},
+
+	testShorthand: function() {
+		var source = new JW.Set([this.a, this.b, this.c, this.d]);
+		var target = source.$$toSortedComparing(this.compare, this);
+
+		this.assertTarget([0, 2, 3, 1], target);
+
+		target.destroy();
+		source.destroy();
+	},
 	
 	testUnobservableTarget: function() {
 		var source = new JW.Set([this.a, this.b, this.c, this.d]);
@@ -160,7 +170,8 @@ JW.Tests.Collection.AbstractSet.SorterComparingTestCase = JW.Unit.TestCase.exten
 	createSorterComparing: function(source, target, compare) {
 		return source.createSorterComparing({
 			target: target,
-			compare: compare
+			compare: compare,
+			scope: this
 		});
 	},
 	
@@ -169,6 +180,7 @@ JW.Tests.Collection.AbstractSet.SorterComparingTestCase = JW.Unit.TestCase.exten
 	},
 	
 	compare: function(x, y) {
+		this.assertTrue(this instanceof JW.Unit.TestCase);
 		x = x.value;
 		y = y.value;
 		return JW.cmp(x % 2, y % 2) || ((x % 2) ? -JW.cmp(x, y) : JW.cmp(x, y));
