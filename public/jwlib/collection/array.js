@@ -736,14 +736,14 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @method reverse
 	 * `<T>` Reverses item order in array. Modifies the array itself.
 	 * @static
-	 * @param {Array} `<T>` array Array.
+	 * @param {Array} array `<T>` array Array.
 	 */
 	/**
 	 * @method toReversed
 	 * `<T>` Builds a new array containing items of original array in reversed order.
 	 * Original array is not modified.
 	 * @static
-	 * @param {Array} `<T>` array Array.
+	 * @param {Array} array `<T>` array Array.
 	 * @returns {Array} `<T>` Reversed array.
 	 */
 	/**
@@ -751,7 +751,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * `<T>` Builds a new array containing items of original array in reversed order.
 	 * Original array is not modified.
 	 * @static
-	 * @param {Array} `<T>` array Array.
+	 * @param {Array} array `<T>` array Array.
 	 * @returns {JW.Array} `<T>` Reversed array.
 	 */
 	/**

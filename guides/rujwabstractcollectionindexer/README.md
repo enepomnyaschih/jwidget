@@ -50,7 +50,7 @@
     assert(map.{@link JW.AbstractMap#get get}(9).label === "The item");
     assert(map.{@link JW.AbstractMap#get get}(5) == null);
 
-    // Целевой словарь автоматически синхронизируется с исходным наблюаемым словарем
+    // Целевой словарь автоматически синхронизируется с исходным наблюдаемым словарем
     array.add({id: 5, label: "New item"});
     assert(map.{@link JW.AbstractMap#get get}(5).label === "New item");
 

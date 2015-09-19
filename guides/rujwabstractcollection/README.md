@@ -26,14 +26,14 @@
  <table>
    <tbody>
      <tr><td>Синхронизатор</td><td>Класс</td><td>Методы создания</td></tr>
-     <tr><td>Конвертер элементов</td><td>JW.AbstractCollection.Mapper</td><td>#$$mapValues, #$$mapObjects, #createMapper</td></tr>
-     <tr><td>Фильтровщик</td><td>JW.AbstractCollection.Filterer</td><td>#$$filter, #createFilterer</td></tr>
-     <tr><td>Счетчик подходящих элементов</td><td>JW.AbstractCollection.Counter</td><td>#$$count, #createCounter</td></tr>
-     <tr><td>Конвертер в множество</td><td>JW.AbstractCollection.Lister</td><td>#$$toSet, #createLister</td></tr>
-     <tr><td>Конвертер в словарь (индексатор)</td><td>JW.AbstractCollection.Indexer</td><td>#$$index, #createIndexer</td></tr>
-     <tr><td>Конвертер в массив (упорядочитель)</td><td>JW.AbstractCollection.Orderer</td><td>#$$toArray, #createOrderer</td></tr>
-     <tr><td>Конвертер в массив (сортировщик по компаратору)</td><td>JW.AbstractCollection.SorterComparing</td><td>#$$toSortedComparing, #createSorterComparing</td></tr>
-     <tr><td>Наблюдатель</td><td>JW.AbstractCollection.Observer</td><td>#createObserver</td></tr>
+     <tr><td>Конвертер элементов</td><td>JW.AbstractCollection.Mapper</td><td>{@link JW.AbstractCollection#$$mapValues $$mapValues}, {@link JW.AbstractCollection#$$mapObjects $$mapObjects}, {@link JW.AbstractCollection#createMapper createMapper}</td></tr>
+     <tr><td>Фильтровщик</td><td>JW.AbstractCollection.Filterer</td><td>{@link JW.AbstractCollection#$$filter $$filter}, {@link JW.AbstractCollection#createFilterer createFilterer}</td></tr>
+     <tr><td>Счетчик подходящих элементов</td><td>JW.AbstractCollection.Counter</td><td>{@link JW.AbstractCollection#$$count $$count}, {@link JW.AbstractCollection#createCounter createCounter}</td></tr>
+     <tr><td>Конвертер в множество</td><td>JW.AbstractCollection.Lister</td><td>{@link JW.AbstractCollection#$$toSet $$toSet}, {@link JW.AbstractCollection#createLister createLister}</td></tr>
+     <tr><td>Конвертер в словарь (индексатор)</td><td>JW.AbstractCollection.Indexer</td><td>{@link JW.AbstractCollection#$$index $$index}, {@link JW.AbstractCollection#createIndexer createIndexer}</td></tr>
+     <tr><td>Конвертер в массив (упорядочитель)</td><td>JW.AbstractCollection.Orderer</td><td>{@link JW.AbstractCollection#$$toArray $$toArray}, {@link JW.AbstractCollection#createOrderer createOrderer}</td></tr>
+     <tr><td>Конвертер в массив (сортировщик по компаратору)</td><td>JW.AbstractCollection.SorterComparing</td><td>{@link JW.AbstractCollection#$$toSortedComparing $$toSortedComparing}, {@link JW.AbstractCollection#createSorterComparing createSorterComparing}</td></tr>
+     <tr><td>Наблюдатель</td><td>JW.AbstractCollection.Observer</td><td>{@link JW.AbstractCollection#createObserver createObserver}</td></tr>
      <tr><td>Синхронизаторы представления</td><td>JW.AbstractArray.Inserter, JW.AbstractMap.Inserter, JW.UI.Inserter</td><td>createInserter</td></tr>
      <tr><td>Объединитель массивов</td><td>JW.AbstractArray.Merger</td><td>{@link JW.AbstractArray#$$merge $$merge}, {@link JW.AbstractArray#createMerger createMerger}</td></tr>
      <tr><td>Обратитель массива</td><td>JW.AbstractArray.Reverser</td><td>{@link JW.AbstractArray#$$toReversed $$toReversed}, {@link JW.AbstractArray#createReverser createReverser}</td></tr>

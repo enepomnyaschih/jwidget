@@ -65,14 +65,14 @@
 
 Создание синхронизаторов:
 
-- {@link JW.AbstractMapAbstractSet#createMapper createMapper} - Создает конвертер элементов. Расширенная версия методов {@link JW.AbstractMapAbstractSet#$$mapValues $$mapValues} и {@link JW.AbstractMapAbstractSet#$$mapObjects $$mapObjects}.
-- {@link JW.AbstractMapAbstractSet#createFilterer createFilterer} - Создает фильтровщик. Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$filter $$filter}.
-- {@link JW.AbstractMapAbstractSet#createCounter createCounter} - Создает счетчик подходящих элементов. Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$count $$count}.
-- {@link JW.AbstractMapAbstractSet#createLister createLister} - Создает конвертер в множество. Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$toSet $$toSet}.
-- {@link JW.AbstractMapAbstractSet#createIndexer createIndexer} - Создает индексатор. Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$index $$index}.
-- {@link JW.AbstractMapAbstractSet#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель). Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$toArray $$toArray}.
-- {@link JW.AbstractMapAbstractSet#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору). Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$toSortedComparing $$toSortedComparing}.
-- {@link JW.AbstractMapAbstractSet#createObserver createObserver} - Создает наблюдатель.
+- {@link JW.AbstractSet#createMapper createMapper} - Создает конвертер элементов. Расширенная версия методов {@link JW.AbstractSet#$$mapValues $$mapValues} и {@link JW.AbstractSet#$$mapObjects $$mapObjects}.
+- {@link JW.AbstractSet#createFilterer createFilterer} - Создает фильтровщик. Расширенная версия метода {@link JW.AbstractSet#$$filter $$filter}.
+- {@link JW.AbstractSet#createCounter createCounter} - Создает счетчик подходящих элементов. Расширенная версия метода {@link JW.AbstractSet#$$count $$count}.
+- {@link JW.AbstractSet#createLister createLister} - Создает конвертер в множество. Расширенная версия метода {@link JW.AbstractSet#$$toSet $$toSet}.
+- {@link JW.AbstractSet#createIndexer createIndexer} - Создает индексатор. Расширенная версия метода {@link JW.AbstractSet#$$index $$index}.
+- {@link JW.AbstractSet#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель). Расширенная версия метода {@link JW.AbstractSet#$$toArray $$toArray}.
+- {@link JW.AbstractSet#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору). Расширенная версия метода {@link JW.AbstractSet#$$toSortedComparing $$toSortedComparing}.
+- {@link JW.AbstractSet#createObserver createObserver} - Создает наблюдатель.
 
 Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
 

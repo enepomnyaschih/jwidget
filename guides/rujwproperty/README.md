@@ -39,13 +39,9 @@
         }
     };
     var language = new JW.Property("en");
-    var hiFunctor = new JW.Functor([ language ], function(language) {
-        return locale[language].hi;
-    });
-    var byeFunctor = new JW.Functor([ language ], function(language) {
-        return locale[language].bye;
-    });
-    new JW.UI.TextUpdater($("#hi"), hiFunctor.{@link JW.Functor#property-target target});
-    new JW.UI.TextUpdater($("#bye"), byeFunctor.{@link JW.Functor#property-target target});
+    var hi = language.{@link JW.Property#$$mapValue $$mapValue}(function(language) { return locale[language].hi; });
+    var bye = language.{@link JW.Property#$$mapValue $$mapValue}(function(language) { return locale[language].bye; });
+    new JW.UI.TextUpdater($("#hi"), hi);
+    new JW.UI.TextUpdater($("#bye"), bye);
     // Теперь можно легко менять локализацию
     language.{@link JW.Property#set set}("ru");
