@@ -715,6 +715,46 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @returns {JW.Array} `<U>` Mapped collection.
 	 */
 	/**
+	 * @method merge
+	 * For `Array<Array>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Original array is not modified.
+	 * @static
+	 * @param {Array} array Array.
+	 * @returns {Array} Merged array.
+	 */
+	/**
+	 * @method $merge
+	 * For `Array<Array>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Original array is not modified.
+	 * @static
+	 * @param {Array} array Array.
+	 * @returns {JW.Array} Merged array.
+	 */
+	/**
+	 * @method reverse
+	 * `<T>` Reverses item order in array. Modifies the array itself.
+	 * @static
+	 * @param {Array} `<T>` array Array.
+	 */
+	/**
+	 * @method toReversed
+	 * `<T>` Builds a new array containing items of original array in reversed order.
+	 * Original array is not modified.
+	 * @static
+	 * @param {Array} `<T>` array Array.
+	 * @returns {Array} `<T>` Reversed array.
+	 */
+	/**
+	 * @method $toReversed
+	 * `<T>` Builds a new array containing items of original array in reversed order.
+	 * Original array is not modified.
+	 * @static
+	 * @param {Array} `<T>` array Array.
+	 * @returns {JW.Array} `<T>` Reversed array.
+	 */
+	/**
 	 * @method add
 	 * `<T>` Inserts an item to array.
 	 * @static

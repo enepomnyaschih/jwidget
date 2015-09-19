@@ -18,6 +18,16 @@
 */
 
 JW.Tests.Collection.AbstractArray.ReverserTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var source = new JW.Array([1, 2, 3, 4, 5]);
+		var target = source.$$toReversed();
+
+		this.assertTarget([5, 4, 3, 2, 1], target);
+
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var source = new JW.Array([1, 2, 3, 4, 5]);
 		var target = new JW.Array();

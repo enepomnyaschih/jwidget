@@ -795,11 +795,34 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 
 	testMerge: function() {
 		var array = this.createArray([this.createArray([1, 2]), this.createArray([3, 4])]);
-		var merged = this.invoke(array, "merge", []);
+		var merged = this.invoke(array, "merge");
 		this.assertTrue(JW.Array.equal(merged, [1, 2, 3, 4]));
 
-		var $merged = this.invoke(array, "$merge", []);
+		var $merged = this.invoke(array, "$merge");
 		this.assertTrue($merged.equal([1, 2, 3, 4]));
+	},
+
+	testReverse: function() {
+		var array = this.createArray([1, 2, 3, 4]);
+
+		this.setObservableOutput(
+			"Reordered [1,2,3,4] by [3,2,1,0]",
+			"Changed"
+		);
+		this.invoke(array, "reverse");
+		this.assertTrue(this.invoke(array, "equal", [[4, 3, 2, 1]]));
+	},
+
+	testToReversed: function() {
+		var array = this.createArray([1, 2, 3, 4]);
+
+		var result = this.invoke(array, "toReversed");
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4]]));
+		this.assertTrue(JW.Array.equal(result, [4, 3, 2, 1]));
+
+		var $result = this.invoke(array, "$toReversed");
+		this.assertTrue(this.invoke(array, "equal", [[1, 2, 3, 4]]));
+		this.assertTrue($result.equal([4, 3, 2, 1]));
 	},
 
 	testPerformSplice: function() {

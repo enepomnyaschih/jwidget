@@ -1028,11 +1028,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Reverses item order in array.
+	 * Reverses item order in array. Modifies the array itself.
 	 * @returns {void}
 	 */
 	reverse: function() {
-		throw new Error("Method not implemented");
+		this.items.reverse();
 	},
 
 	/**
@@ -1041,7 +1041,7 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	 * @returns {Array} `<T>` Reversed array.
 	 */
 	toReversed: function() {
-		throw new Error("Method not implemented");
+		return JW.Array.toReversed(this.items);
 	},
 
 	/**

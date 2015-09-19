@@ -18,6 +18,32 @@
 */
 
 JW.Tests.Collection.ObservableArray.ReverserTestCase = JW.Unit.TestCase.extend({
+	testShorthand: function() {
+		var source = new JW.ObservableArray([1, 2, 3, 4, 5]);
+		var target = source.$$toReversed();
+		var subscription = JW.Tests.Collection.subscribeToArray(this, target);
+
+		this.assertTarget([5, 4, 3, 2, 1], target);
+
+		this.setExpectedOutput(
+			"Changed length from 5 to 8",
+			"Spliced -[1:[4],3:[2,1]] +[0:[11,10],3:[9,8],6:[7,6]] to [5,4,3,2,1]",
+			"Changed"
+		);
+		source.splice( // 6,7,3,8,9,1,10,11
+			[new JW.AbstractArray.IndexCount(0, 2),
+			 new JW.AbstractArray.IndexCount(3, 1)],
+			[new JW.AbstractArray.IndexItems(0, [6, 7]),
+			 new JW.AbstractArray.IndexItems(3, [8, 9]),
+			 new JW.AbstractArray.IndexItems(6, [10, 11])]);
+		this.assertTarget([11, 10, 5, 9, 8, 3, 7, 6], target);
+
+		this.setExpectedOutput();
+		subscription.destroy();
+		target.destroy();
+		source.destroy();
+	},
+
 	testUnobservableTarget: function() {
 		var source = new JW.ObservableArray([1, 2, 3, 4, 5]);
 		var target = new JW.Array();

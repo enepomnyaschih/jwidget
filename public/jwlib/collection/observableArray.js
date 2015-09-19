@@ -160,6 +160,25 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		return items;
 	},
 
+	// override
+	reverse: function() {
+		var length = this.getLength();
+		var indices = new Array(length);
+		for (var i = 0; i < length; ++i) {
+			indices[i] = length - i - 1;
+		}
+		this.reorder(indices);
+	},
+
+	// override
+	$$toReversed: function() {
+		var result = new JW.ObservableArray();
+		result.own(this.createReverser({
+			target: result
+		}));
+		return result;
+	},
+
 	/**
 	 * `<U>` Creates empty collection of the same type.
 	 * @returns {JW.ObservableArray} `<U>` Collection.

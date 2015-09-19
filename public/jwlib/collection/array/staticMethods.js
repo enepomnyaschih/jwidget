@@ -538,6 +538,18 @@ JW.apply(JW.Array, {
 		return result;
 	},
 
+	reverse: function(target) {
+		target.reverse();
+	},
+
+	toReversed: function(target) {
+		var result = target.concat();
+		result.reverse();
+		return result;
+	},
+
+	$toReversed: JW.AbstractCollection._createStatic$Array(JW.Array, "toReversed"),
+
 	// deprecated
 	top: function(target) {
 		return JW.Array.getLast(target);
