@@ -6,16 +6,13 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
-### 1.1
+### 1.3
 
 Breaking changes:
 
-- Removed synchronizer creation static methods from JW.Array, JW.Map, JW.Set, because they are useless
-
-New features:
-
-- Matching item counting method and synchronizer: JW.AbstractCollection.count, JW.AbstractCollection.Counter ([#90](https://github.com/enepomnyaschih/jwidget/issues/90))
-- "target" is now a config option in JW.UI.*Listener for consistency ([#87](https://github.com/enepomnyaschih/jwidget/issues/87))
+- New virtual method [destroyObject](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Class-method-destroyObject) is introduced. In the majority of cases, you should override [destroyObject](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Class-method-destroyObject) method instead of [destroy](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Class-method-destroy) in subclasses. Here's the difference:
+-- Code of [destroy](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Class-method-destroy) method is executed **before** aggregated objects destruction. `_super` method should be called at the end. We recommend you to keep pre-destruction logic here. For example, [JW.UI.Component](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.UI.Component) removes child components in [destroy](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Class-method-destroy) method to make sure that aggregated child components can be destroyed properly.
+-- Code of [destroyObject](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Class-method-destroyObject) method is executed **after** aggregated objects destruction. `_super` method should be called at the end. We recommend you to release object resources here. The majority of jWidget classes release their resources here now, after aggregated objects destruction.
 
 ### 1.2
 
@@ -43,3 +40,14 @@ Bug fixes:
 
 - Fixed return value for JW.UI.Component [render](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.UI.Component-method-render) method - now it is always chainable ([#98](https://github.com/enepomnyaschih/jwidget/issues/98))
 - Fixed context loss in JW.IndexedCollection [getSortingKeysComparing](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.IndexedCollection-method-getSortingKeysComparing) method ([#101](https://github.com/enepomnyaschih/jwidget/issues/101))
+
+### 1.1
+
+Breaking changes:
+
+- Removed synchronizer creation static methods from JW.Array, JW.Map, JW.Set, because they are useless
+
+New features:
+
+- Matching item counting method and synchronizer: JW.AbstractCollection.count, JW.AbstractCollection.Counter ([#90](https://github.com/enepomnyaschih/jwidget/issues/90))
+- "target" is now a config option in JW.UI.*Listener for consistency ([#87](https://github.com/enepomnyaschih/jwidget/issues/87))

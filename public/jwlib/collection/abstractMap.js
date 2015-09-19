@@ -580,7 +580,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Adds or replaces a bunch of items. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * Adds or replaces a bunch of items. As of jWidget 1.3, doesn't return anything for sake of performance.
 	 * For old behaviour, use method {@link #setAllVerbose}.
 	 * @param {Object} items Items.
 	 */
@@ -659,7 +659,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Removes a bunch of items from map. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * Removes a bunch of items from map. As of jWidget 1.3, doesn't return anything for sake of performance.
 	 * For old behaviour, use method {@link #removeAllVerbose}.
 	 * @param {Array} keys `<string>` Item keys.
 	 */

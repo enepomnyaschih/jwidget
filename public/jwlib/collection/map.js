@@ -721,7 +721,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 */
 	/**
 	 * @method setAll
-	 * `<T>` Adds or replaces a bunch of items. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * `<T>` Adds or replaces a bunch of items. As of jWidget 1.3, doesn't return anything for sake of performance.
 	 * For old behaviour, use method {@link #static-method-setAllVerbose}.
 	 * @static
 	 * @param {Object} map `<T>` Map.
@@ -779,7 +779,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 */
 	/**
 	 * @method removeAll
-	 * `<T>` Removes a bunch of items from map. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * `<T>` Removes a bunch of items from map. As of jWidget 1.3, doesn't return anything for sake of performance.
 	 * For old behaviour, use method {@link #removeAllVerbose}.
 	 * @static
 	 * @param {Object} map `<T>` Map.
