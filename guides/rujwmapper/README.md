@@ -11,6 +11,7 @@
     var count = new JW.Property(1);
     var units = new JW.Property("apples");
     var target = new JW.Property();
+
     // Следующая команда напечатает в консоль "Init 1 apples"
     var mapper = new JW.Mapper([ count, units ], {
         {@link JW.Mapper#cfg-target target}: target,
@@ -25,9 +26,11 @@
         {@link JW.Mapper#scope scope}: this
     });
     assert("1 apples", target.{@link JW.Property#get get}());
+
     // Следующая команда напечатает "Done 1 apples" и "Init 2 apples"
     count.{@link JW.Property#set set}(2);
     assert("2 apples", target.{@link JW.Property#get get}());
+
     // Следующая команда напечатает "Done 2 apples"
     mapper.{@link JW.Mapper#destroy destroy}();
     assert(null, target.{@link JW.Property#get get}());
@@ -44,6 +47,14 @@
     });
     var target = mapper.{@link JW.Mapper#property-target target};
     assert("1 apples", target.{@link JW.Property#get get}());
+    mapper.{@link JW.Mapper#destroy destroy}();
+
+В простых случаях, вы можете использовать упрощенные методы JW.Property#$$mapValue и JW.Property#$$mapObject. Они сразу возвращают целевое свойство:
+
+    var source = new JW.Property(1);
+    var target = source.{@link JW.Property#$$mapValue $$mapValue}(function(value) { return value + " apples"; });
+    assert("1 apples", target.{@link JW.Property#get get}());
+    target.{@link JW.Property#destroy destroy}();
 
 Когда меняется значение исходного свойства, запускается следующий алгоритм:
 
@@ -67,13 +78,9 @@
         // JW.Property<Document> document;
         
         renderDocument: function() {
-            return this.{@link JW.Class#own own}(new JW.Mapper(this.document, {
-                {@link JW.Mapper#createValue createValue}: function(document) {
-                    return new DocumentView(document);
-                },
-                {@link JW.Mapper#destroyValue destroyValue}: JW.destroy,
-                {@link JW.Mapper#scope scope}: this
-            })).{@link JW.Mapper#property-target target};
+            return this.{@link JW.Class#own own}(this.document.{@link JW.Property#$$mapObject $$mapObject}(function(document) {
+                return new DocumentView(document);
+            }, this);
         }
     });
     

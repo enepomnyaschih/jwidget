@@ -8,6 +8,23 @@
 
 Конвертер элементов коллекции. Создает новую коллекцию того же типа, состоящую из элементов,
 равных результату запуска функции, указанной пользователем, на каждом элементе.
+Если исходная коллекция наблюдаемая (observable), начинает непрерывную синхронизацию.
+
+    var source = new JW.ObservableArray([1, 2]);
+    var mapper = source.{@link JW.ObservableArray#createMapper createMapper}({
+        {@link JW.AbstractCollection.Mapper#cfg-createItem createItem}: function(x) { return 2 * x }
+    });
+    var target = source.{@link JW.AbstractCollection.Mapper#property-target target};
+
+    assert(target.{@link JW.ObservableArray#get get}(0) === 2);
+    assert(target.{@link JW.ObservableArray#get get}(1) === 4);
+
+    // Целевая коллекция автоматически синхронизируется с исходной
+    source.add(3);
+    assert(target.{@link JW.ObservableArray#get get}(2) === 6);
+
+    mapper.{@link JW.AbstractCollection.Mapper#destroy destroy}();
+
 Используется, прежде всего, для превращения данных в представление.
 
     var mapper = dataCollection.{@link JW.AbstractCollection#createMapper createMapper}({
@@ -29,6 +46,15 @@
         {@link JW.AbstractCollection.Mapper#cfg-destroyItem destroyItem}: JW.destroy,
         {@link JW.AbstractCollection.Mapper#cfg-scope scope}: this
     });
+
+В простых случаях, вы можете использовать упрощенные методы JW.AbstractCollection#$$mapValues и JW.AbstractCollection#$$mapObjects. Они сразу возвращают целевую коллекцию:
+
+    var viewCollection = dataCollection.{@link JW.AbstractCollection#$$mapObjects $$mapObjects}(function(data) {
+        return new View(this, data);
+    }, this);
+
+    // Если коллекция больше не нужна, уничтожаем ее
+    viewCollection.{@link JW.AbstractCollection#destroy destroy}();
 
 Правила работы синхронизатора:
 

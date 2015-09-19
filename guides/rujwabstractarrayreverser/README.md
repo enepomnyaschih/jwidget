@@ -7,16 +7,20 @@
 `<T>`
 
 Обратитель массива. Создает массив, содержащий все элементы исходного массива в обратном порядке.
+Если исходная коллекция наблюдаемая (observable), начинает непрерывную синхронизацию.
 
     var source = new JW.ObservableArray([1, 2, 3]);
     var reverser = source.{@link JW.AbstractArray#createReverser createReverser}();
-    assert(reverser.{@link JW.AbstractArray.Reverser#property-target target}.{@link JW.AbstractArray#equal equal}([3, 2, 1]));
+    var target = reverser.{@link JW.AbstractArray.Reverser#property-target target};
+    assert(target.{@link JW.AbstractArray#equal equal}([3, 2, 1]));
     
     source.{@link JW.AbstractArray#add add}(4);
-    assert(reverser.{@link JW.AbstractArray.Reverser#property-target target}.{@link JW.AbstractArray#equal equal}([4, 3, 2, 1]));
+    assert(target.{@link JW.AbstractArray#equal equal}([4, 3, 2, 1]));
     
     source.{@link JW.AbstractArray#remove remove}(2);
-    assert(reverser.{@link JW.AbstractArray.Reverser#property-target target}.{@link JW.AbstractArray#equal equal}([4, 2, 1]));
+    assert(target.{@link JW.AbstractArray#equal equal}([4, 2, 1]));
+
+    reverser.{@link JW.AbstractArray.Reverser#destroy destroy}();
 
 Создавайте синхронизатор с помощью метода JW.AbstractArray#createReverser.
 Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
@@ -28,6 +32,20 @@
     var reverser = source.{@link JW.AbstractArray#createReverser createReverser}({
         {@link JW.AbstractArray.Reverser#cfg-target target}: target
     });
+
+В простых случаях, вы можете использовать упрощенный метод JW.AbstractArray#$$toReversed. Он сразу возвращает целевой массив:
+
+    var source = new JW.ObservableArray([1, 2, 3]);
+    var target = source.{@link JW.AbstractArray#$$toReversed $$toReversed}();
+    assert(target.{@link JW.AbstractArray#equal equal}([3, 2, 1]));
+
+    source.{@link JW.AbstractArray#add add}(4);
+    assert(target.{@link JW.AbstractArray#equal equal}([4, 3, 2, 1]));
+
+    source.{@link JW.AbstractArray#remove remove}(2);
+    assert(target.{@link JW.AbstractArray#equal equal}([4, 2, 1]));
+
+    target.{@link JW.AbstractArray#destroy destroy}();
 
 Правила работы синхронизатора:
 

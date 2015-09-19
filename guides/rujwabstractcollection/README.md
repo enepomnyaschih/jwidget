@@ -23,19 +23,24 @@
 синхронизировать данные с представлением налету в соответствии с архитектурой Model-View. Для связи оповещающих
 коллекций между собой существуют синхронизаторы:
 
-- Конвертер элементов: [JW.AbstractCollection.Mapper](#!/guide/rujwabstractcollectionmapper)
-- Фильтровщик: [JW.AbstractCollection.Filterer](#!/guide/rujwabstractcollectionfilterer)
-- Счетчик подходящих элементов: [JW.AbstractCollection.Counter](#!/guide/rujwabstractcollectioncounter)
-- Конвертер в множество: [JW.AbstractCollection.Lister](#!/guide/rujwabstractcollectionlister)
-- Конвертер в словарь (индексатор): [JW.AbstractCollection.Indexer](#!/guide/rujwabstractcollectionindexer)
-- Конвертер в массив (упорядочитель): [JW.AbstractCollection.Orderer](#!/guide/rujwabstractcollectionorderer)
-- Конвертер в массив (сортировщик по компаратору): [JW.AbstractCollection.SorterComparing](#!/guide/rujwabstractcollectionsortercomparing)
-- Наблюдатель: [JW.AbstractCollection.Observer](#!/guide/rujwabstractcollectionobserver)
-- Синхронизаторы представления: [JW.AbstractArray.Inserter](#!/guide/rujwabstractarrayinserter), [JW.AbstractMap.Inserter](#!/guide/rujwabstractmapinserter), [JW.UI.Inserter](#!/guide/rujwuiinserter)
-- Объединитель массивов: [JW.AbstractArray.Merger](#!/guide/rujwabstractarraymerger)
-- Обратитель массива: [JW.AbstractArray.Reverser](#!/guide/rujwabstractarrayreverser)
+ <table>
+   <tbody>
+     <tr><td>Синхронизатор</td><td>Класс</td><td>Методы создания</td></tr>
+     <tr><td>Конвертер элементов</td><td>JW.AbstractCollection.Mapper</td><td>#$$mapValues, #$$mapObjects, #createMapper</td></tr>
+     <tr><td>Фильтровщик</td><td>JW.AbstractCollection.Filterer</td><td>#$$filter, #createFilterer</td></tr>
+     <tr><td>Счетчик подходящих элементов</td><td>JW.AbstractCollection.Counter</td><td>#$$count, #createCounter</td></tr>
+     <tr><td>Конвертер в множество</td><td>JW.AbstractCollection.Lister</td><td>#$$toSet, #createLister</td></tr>
+     <tr><td>Конвертер в словарь (индексатор)</td><td>JW.AbstractCollection.Indexer</td><td>#$$index, #createIndexer</td></tr>
+     <tr><td>Конвертер в массив (упорядочитель)</td><td>JW.AbstractCollection.Orderer</td><td>#$$toArray, #createOrderer</td></tr>
+     <tr><td>Конвертер в массив (сортировщик по компаратору)</td><td>JW.AbstractCollection.SorterComparing</td><td>#$$toSortedComparing, #createSorterComparing</td></tr>
+     <tr><td>Наблюдатель</td><td>JW.AbstractCollection.Observer</td><td>#createObserver</td></tr>
+     <tr><td>Синхронизаторы представления</td><td>JW.AbstractArray.Inserter, JW.AbstractMap.Inserter, JW.UI.Inserter</td><td>createInserter</td></tr>
+     <tr><td>Объединитель массивов</td><td>JW.AbstractArray.Merger</td><td>{@link JW.AbstractArray#$$merge $$merge}, {@link JW.AbstractArray#createMerger createMerger}</td></tr>
+     <tr><td>Обратитель массива</td><td>JW.AbstractArray.Reverser</td><td>{@link JW.AbstractArray#$$toReversed $$toReversed}, {@link JW.AbstractArray#createReverser createReverser}</td></tr>
+   </tbody>
+ </table>
 
-Простые коллекции введены прежде всего для совместимости. Они имеют общий интерфейс с оповещающими коллекциями,
+Простые коллекции введены прежде всего для совместимости интерфейса. Они имеют общий интерфейс с оповещающими коллекциями,
 но работают немного быстрее.
 
 При работе с коллекциями jWidget следует помнить несколько важных правил.
@@ -56,17 +61,29 @@ undefined, если вы пытаетесь очистить пустую кол
 Так вы можете быть уверены в том, что функция JW.Array#each всегда получит на вход корректный массив, тогда как
 метод JW.AbstractCollection#tryClear мог дать на выходе undefined.
 
-3) Все методы, возвращающие коллекцию, предоставлены в двух вариантах: method и $method. Эти методы выполняют одно и
-то же действие, но возвращают результат в разном формате. Первый метод вернет нативную коллекцию JavaScript: Array
-или Object. Второй метод вернет обертку jWidget: JW.Array, JW.Map или JW.Set. Используйте тот метод, который
-удобнее в данной конкретной ситуации. Например, $method удобен для цепочечных вызовов алгоритмов. Так, предыдущий
-пример можно переписать следующим образом:
+3) Большинство методов, возвращающих коллекцию, предоставлены в трех вариантах: `method`, `$method` и `$$method`. Эти методы выполняют одно и
+то же действие, но возвращают результат в разном формате.
+
+- `method` вернет нативную коллекцию JavaScript: Array или Object.
+- `$method` вернет коллекцию jWidget: JW.Array, JW.Map или JW.Set.
+- `$$method` вернет коллекцию jWidget и начнет непрерывную синхронизацию с исходной коллекцией,
+если она наблюдаемая (observable). Чтобы прервать синхронизацию, нужно уничтожить целевую коллекцию
+методом {@link JW.AbstractCollection#destroy destroy}.
+
+Используйте тот метод, который удобнее в данной конкретной ситуации. Например, `$method` удобен для цепочечных
+вызовов алгоритмов. Так, предыдущий пример можно переписать следующим образом:
 
     array.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy);
 
-А в следующем примере гораздо удобнее воспользоваться реализацией method:
+А в следующем примере гораздо удобнее воспользоваться реализацией `method`:
 
     set.{@link JW.AbstractArray#addAll addAll}(array.{@link JW.AbstractArray#clear clear}());
+
+В то же время, `$$method` является простым способом создания синхронизатора:
+
+	this.set = this.own(array.{@link JW.AbstractArray#$$toSet $$toSet}());
+	// Примерно то же самое, что и
+	this.set = this.own(array.{@link JW.AbstractArray#createLister createLister}()).target;
 
 4) Желательно, чтобы все элементы коллекции были различны. Некоторые методы, такие как
 JW.AbstractArray#performReorder, требуют, чтобы у каждого элемента коллекции был свой уникальный ключ. Если 2
@@ -76,7 +93,9 @@ JW.AbstractArray#performReorder, требуют, чтобы у каждого э
 
 Получение содержимого:
 
-- {@link JW.AbstractCollection#getLength getLength} - Возвращает количество элементов в коллекции.
+- {@link JW.AbstractCollection#getLength getLength} - Возвращает количество элементов в коллекции. Для наблюдаемых
+(observable) коллекций, вам может также пригодиться свойство `length`, в том случае, если вы хотите динамически
+следить за изменением количества элементов в коллекции.
 - {@link JW.AbstractCollection#isEmpty isEmpty} - Проверяет коллекцию на пустоту.
 - {@link JW.AbstractCollection#getFirst getFirst} - Возвращает первый элемент коллекции.
 - {@link JW.AbstractCollection#containsItem containsItem} - Содержит ли коллекция элемент.
@@ -90,19 +109,19 @@ JW.AbstractArray#performReorder, требуют, чтобы у каждого э
 - {@link JW.AbstractCollection#each each} - Перебирает элементы.
 - {@link JW.AbstractCollection#search search} - Ищет элемент по критерию.
 Возвращает первый элемент, удовлетворяющий критерию.
-- {@link JW.AbstractCollection#filter filter}, {@link JW.AbstractCollection#$filter $filter} - Фильтрует коллекцию по критерию.
+- {@link JW.AbstractCollection#filter filter}, {@link JW.AbstractCollection#$filter $filter}, {@link JW.AbstractCollection#$$filter $$filter} - Фильтрует коллекцию по критерию.
 Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
-- {@link JW.AbstractCollection#count count} - Считает количество элементов, удовлетворяющих критерию.
-- {@link JW.AbstractCollection#map map}, {@link JW.AbstractCollection#$map $map} - Отображает элементы коллекции.
+- {@link JW.AbstractCollection#count count}, {@link JW.AbstractCollection#$count $count}, {@link JW.AbstractCollection#$$count $$count} - Считает количество элементов, удовлетворяющих критерию.
+- {@link JW.AbstractCollection#map map}, {@link JW.AbstractCollection#$map $map}, {@link JW.AbstractCollection#$$mapValues $$mapValues}, {@link JW.AbstractCollection#$$mapObjects $$mapObjects} - Отображает элементы коллекции.
 Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
 коллекции.
-- {@link JW.AbstractCollection#toSorted toSorted}, {@link JW.AbstractCollection#$toSorted $toSorted}, {@link JW.AbstractCollection#toSortedComparing toSortedComparing}, {@link JW.AbstractCollection#$toSortedComparing $toSortedComparing} -
+- {@link JW.AbstractCollection#toSorted toSorted}, {@link JW.AbstractCollection#$toSorted $toSorted}, {@link JW.AbstractCollection#toSortedComparing toSortedComparing}, {@link JW.AbstractCollection#$toSortedComparing $toSortedComparing}, {@link JW.AbstractCollection#$$toSortedComparing $$toSortedComparing} -
 Строит массив из элементов коллекции, отсортированный по индексу
 или компаратору.
-- {@link JW.AbstractCollection#index index}, {@link JW.AbstractCollection#$index $index} - Индексирует коллекцию.
+- {@link JW.AbstractCollection#index index}, {@link JW.AbstractCollection#$index $index}, {@link JW.AbstractCollection#$$index $$index} - Индексирует коллекцию.
 Строит словарь, в ключах которого находятся индексы элементов, а в значениях - соответствующие элементы.
-- {@link JW.AbstractCollection#toArray toArray}, {@link JW.AbstractCollection#$toArray $toArray} - Строит новый массив из элементов коллекции.
-- {@link JW.AbstractCollection#toSet toSet}, {@link JW.AbstractCollection#$toSet $toSet} - Строит новое множество из элементов коллекции.
+- {@link JW.AbstractCollection#toArray toArray}, {@link JW.AbstractCollection#$toArray $toArray}, {@link JW.AbstractCollection#$$toArray $$toArray} - Строит новый массив из элементов коллекции.
+- {@link JW.AbstractCollection#toSet toSet}, {@link JW.AbstractCollection#$toSet $toSet}, {@link JW.AbstractCollection#$$toSet $$toSet} - Строит новое множество из элементов коллекции.
 - {@link JW.AbstractCollection#asArray asArray}, {@link JW.AbstractCollection#$asArray $asArray} - Представляет коллекцию в виде массива.
 - {@link JW.AbstractCollection#asSet asSet}, {@link JW.AbstractCollection#$asSet $asSet} - Представляет коллекцию в виде множества.
 
@@ -114,13 +133,13 @@ JW.AbstractArray#performReorder, требуют, чтобы у каждого э
 
 Создание синхронизаторов:
 
-- {@link JW.AbstractCollection#createMapper createMapper} - Создает конвертер элементов.
-- {@link JW.AbstractCollection#createFilterer createFilterer} - Создает фильтровщик.
-- {@link JW.AbstractCollection#createCounter createCounter} - Создает счетчик подходящих элементов.
-- {@link JW.AbstractCollection#createLister createLister} - Создает конвертер в множество.
-- {@link JW.AbstractCollection#createIndexer createIndexer} - Создает индексатор.
-- {@link JW.AbstractCollection#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель).
-- {@link JW.AbstractCollection#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
+- {@link JW.AbstractCollection#createMapper createMapper} - Создает конвертер элементов. Расширенная версия методов {@link JW.AbstractCollection#$$mapValues $$mapValues} и {@link JW.AbstractCollection#$$mapObjects $$mapObjects}.
+- {@link JW.AbstractCollection#createFilterer createFilterer} - Создает фильтровщик. Расширенная версия метода {@link JW.AbstractCollection#$$filter $$filter}.
+- {@link JW.AbstractCollection#createCounter createCounter} - Создает счетчик подходящих элементов. Расширенная версия метода {@link JW.AbstractCollection#$$count $$count}.
+- {@link JW.AbstractCollection#createLister createLister} - Создает конвертер в множество. Расширенная версия метода {@link JW.AbstractCollection#$$toSet $$toSet}.
+- {@link JW.AbstractCollection#createIndexer createIndexer} - Создает индексатор. Расширенная версия метода {@link JW.AbstractCollection#$$index $$index}.
+- {@link JW.AbstractCollection#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель). Расширенная версия метода {@link JW.AbstractCollection#$$toArray $$toArray}.
+- {@link JW.AbstractCollection#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору). Расширенная версия метода {@link JW.AbstractCollection#$$toSortedComparing $$toSortedComparing}.
 - {@link JW.AbstractCollection#createObserver createObserver} - Создает наблюдатель.
 
 Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):

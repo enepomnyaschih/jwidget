@@ -29,12 +29,13 @@
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
  *     var counter = source.{@link JW.AbstractCollection#createCounter createCounter}({
- *         {@link JW.AbstractArray.Counter#cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
+ *         {@link JW.AbstractCollection.Counter#cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
  *     });
- *     assert(counter.{@link JW.AbstractCollection.Counter#property-target target}.{@link JW.Property#get get}() === 2); // 1, 3
+ *     var target = counter.{@link JW.AbstractCollection.Counter#property-target target};
+ *     assert(target.{@link JW.Property#get get}() === 2); // 1, 3
  *
  *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
- *     assert(counter.{@link JW.AbstractCollection.Counter#property-target target}.{@link JW.Property#get get}() === 4); // 1, 3, 7, 1
+ *     assert(target.{@link JW.Property#get get}() === 4); // 1, 3, 7, 1
  *
  *     counter.{@link JW.AbstractCollection.Counter#destroy destroy}();
  *

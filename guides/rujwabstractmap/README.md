@@ -16,7 +16,9 @@
 
 Получение содержимого:
 
-- {@link JW.AbstractMap#getLength getLength} - Возвращает количество элементов в коллекции.
+- {@link JW.AbstractMap#getLength getLength} - Возвращает количество элементов в коллекции. Для наблюдаемых
+(observable) коллекций, вам может также пригодиться свойство `length`, в том случае, если вы хотите динамически
+следить за изменением количества элементов в коллекции.
 - {@link JW.AbstractMap#isEmpty isEmpty} - Проверяет коллекцию на пустоту.
 - {@link JW.AbstractMap#get get} - Возвращает элемент коллекции по ключу.
 - {@link JW.AbstractMap#getFirst getFirst} - Возвращает первый элемент коллекции.
@@ -38,22 +40,22 @@
 Возвращает первый элемент, удовлетворяющий критерию.
 - {@link JW.AbstractMap#find find} - Ищет элемент по критерию.
 Возвращает ключ первого элемента, удовлетворяющего критерию.
-- {@link JW.AbstractMap#filter filter}, {@link JW.AbstractMap#$filter $filter} - Фильтрует коллекцию по критерию.
+- {@link JW.AbstractMap#filter filter}, {@link JW.AbstractMap#$filter $filter}, {@link JW.AbstractMap#$$filter $$filter} - Фильтрует коллекцию по критерию.
 Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
-- {@link JW.AbstractMap#count count} - Считает количество элементов, удовлетворяющих критерию.
-- {@link JW.AbstractMap#map map}, {@link JW.AbstractMap#$map $map} - Отображает элементы коллекции.
+- {@link JW.AbstractMap#count count}, {@link JW.AbstractMap#$count $count}, {@link JW.AbstractMap#$$count $$count} - Считает количество элементов, удовлетворяющих критерию.
+- {@link JW.AbstractMap#map map}, {@link JW.AbstractMap#$map $map}, {@link JW.AbstractMap#$$mapValues $$mapValues}, {@link JW.AbstractMap#$$mapObjects $$mapObjects} - Отображает элементы коллекции.
 Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
 коллекции.
-- {@link JW.AbstractMap#toSorted toSorted}, {@link JW.AbstractMap#$toSorted $toSorted}, {@link JW.AbstractMap#toSortedComparing toSortedComparing}, {@link JW.AbstractMap#$toSortedComparing $toSortedComparing} -
+- {@link JW.AbstractMap#toSorted toSorted}, {@link JW.AbstractMap#$toSorted $toSorted}, {@link JW.AbstractMap#toSortedComparing toSortedComparing}, {@link JW.AbstractMap#$toSortedComparing $toSortedComparing}, {@link JW.AbstractMap#$$toSortedComparing $$toSortedComparing} -
 Строит массив из элементов коллекции, отсортированный по индексу
 или компаратору.
 - {@link JW.AbstractMap#getSortingKeys getSortingKeys}, {@link JW.AbstractMap#$getSortingKeys $getSortingKeys}, {@link JW.AbstractMap#getSortingKeysComparing getSortingKeysComparing}, {@link JW.AbstractMap#$getSortingKeysComparing $getSortingKeysComparing} -
 Возвращает ключи элементов, отсортированных по индексу или компаратору.
-- {@link JW.AbstractMap#index index}, {@link JW.AbstractMap#$index $index} - Индексирует коллекцию.
+- {@link JW.AbstractMap#index index}, {@link JW.AbstractMap#$index $index}, {@link JW.AbstractMap#$$index $$index} - Индексирует коллекцию.
 Строит словарь, в ключах которого находятся индексы элементов, а в значениях - соответствующие элементы.
-- {@link JW.AbstractMap#toArray toArray}, {@link JW.AbstractMap#$toArray $toArray} - Строит новый массив из элементов коллекции.
+- {@link JW.AbstractMap#toArray toArray}, {@link JW.AbstractMap#$toArray $toArray}, {@link JW.AbstractMap#$$toArray $$toArray} - Строит новый массив из элементов коллекции.
 - {@link JW.AbstractMap#toMap toMap}, {@link JW.AbstractMap#$toMap $toMap} - Строит новый словарь из элементов коллекции.
-- {@link JW.AbstractMap#toSet toSet}, {@link JW.AbstractMap#$toSet $toSet} - Строит новое множество из элементов коллекции.
+- {@link JW.AbstractMap#toSet toSet}, {@link JW.AbstractMap#$toSet $toSet}, {@link JW.AbstractMap#$$toSet $$toSet} - Строит новое множество из элементов коллекции.
 - {@link JW.AbstractMap#asArray asArray}, {@link JW.AbstractMap#$asArray $asArray} - Представляет коллекцию в виде массива.
 - {@link JW.AbstractMap#asMap asMap}, {@link JW.AbstractMap#$asMap $asMap} - Представляет коллекцию в виде словаря.
 - {@link JW.AbstractMap#asSet asSet}, {@link JW.AbstractMap#$asSet $asSet} - Представляет коллекцию в виде множества.
@@ -75,13 +77,13 @@
 
 Создание синхронизаторов:
 
-- {@link JW.AbstractMap#createMapper createMapper} - Создает конвертер элементов.
-- {@link JW.AbstractMap#createFilterer createFilterer} - Создает фильтровщик.
-- {@link JW.AbstractMap#createCounter createCounter} - Создает счетчик подходящих элементов.
-- {@link JW.AbstractMap#createLister createLister} - Создает конвертер в множество.
-- {@link JW.AbstractMap#createIndexer createIndexer} - Создает индексатор.
-- {@link JW.AbstractMap#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель).
-- {@link JW.AbstractMap#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
+- {@link JW.AbstractMap#createMapper createMapper} - Создает конвертер элементов. Расширенная версия методов {@link JW.AbstractMap#$$mapValues $$mapValues} и {@link JW.AbstractMap#$$mapObjects $$mapObjects}.
+- {@link JW.AbstractMap#createFilterer createFilterer} - Создает фильтровщик. Расширенная версия метода {@link JW.AbstractMap#$$filter $$filter}.
+- {@link JW.AbstractMap#createCounter createCounter} - Создает счетчик подходящих элементов. Расширенная версия метода {@link JW.AbstractMap#$$count $$count}.
+- {@link JW.AbstractMap#createLister createLister} - Создает конвертер в множество. Расширенная версия метода {@link JW.AbstractMap#$$toSet $$toSet}.
+- {@link JW.AbstractMap#createIndexer createIndexer} - Создает индексатор. Расширенная версия метода {@link JW.AbstractMap#$$index $$index}.
+- {@link JW.AbstractMap#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель). Расширенная версия метода {@link JW.AbstractMap#$$toArray $$toArray}.
+- {@link JW.AbstractMap#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору). Расширенная версия метода {@link JW.AbstractMap#$$toSortedComparing $$toSortedComparing}.
 - {@link JW.AbstractMap#createObserver createObserver} - Создает наблюдатель.
 - **{@link JW.AbstractMap#createInserter createInserter} - Создает синхронизатор представления со словарем.**
 

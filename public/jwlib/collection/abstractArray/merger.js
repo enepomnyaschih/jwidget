@@ -23,7 +23,7 @@
  * `<T>`
  *
  * Arrays merger. Builds array consisting of all source collections items in the same order.
- * If original collection is observable, starts continuous synchronization.
+ * If any of the original collections is observable, starts continuous synchronization.
  *
  *     var source = new JW.ObservableArray([
  *         new JW.Array([1, 2, 3]),

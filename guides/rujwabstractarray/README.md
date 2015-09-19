@@ -17,7 +17,9 @@
 
 Получение содержимого:
 
-- {@link JW.AbstractArray#getLength getLength} - Возвращает количество элементов в коллекции.
+- {@link JW.AbstractArray#getLength getLength} - Возвращает количество элементов в коллекции. Для наблюдаемых
+(observable) коллекций, вам может также пригодиться свойство `length`, в том случае, если вы хотите динамически
+следить за изменением количества элементов в коллекции.
 - {@link JW.AbstractArray#isEmpty isEmpty} - Проверяет коллекцию на пустоту.
 - {@link JW.AbstractArray#get get} - Возвращает элемент коллекции по индексу.
 - {@link JW.AbstractArray#getFirst getFirst} - Возвращает первый элемент коллекции.
@@ -43,26 +45,28 @@
 Возвращает первый элемент, удовлетворяющий критерию.
 - {@link JW.AbstractArray#find find} - Ищет элемент по критерию.
 Возвращает индекс первого элемента, удовлетворяющего критерию.
-- {@link JW.AbstractArray#filter filter}, {@link JW.AbstractArray#$filter $filter} - Фильтрует коллекцию по критерию.
+- {@link JW.AbstractArray#filter filter}, {@link JW.AbstractArray#$filter $filter}, {@link JW.AbstractArray#$$filter $$filter} - Фильтрует коллекцию по критерию.
 Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
-- {@link JW.AbstractArray#count count} - Считает количество элементов, удовлетворяющих критерию.
-- {@link JW.AbstractArray#map map}, {@link JW.AbstractArray#$map $map} - Отображает элементы коллекции.
+- {@link JW.AbstractArray#count count}, {@link JW.AbstractArray#$count $count}, {@link JW.AbstractArray#$$count $$count} - Считает количество элементов, удовлетворяющих критерию.
+- {@link JW.AbstractArray#map map}, {@link JW.AbstractArray#$map $map}, {@link JW.AbstractArray#$$mapValues $$mapValues}, {@link JW.AbstractArray#$$mapObjects $$mapObjects} - Отображает элементы коллекции.
 Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
 коллекции.
-- {@link JW.AbstractArray#toSorted toSorted}, {@link JW.AbstractArray#$toSorted $toSorted}, {@link JW.AbstractArray#toSortedComparing toSortedComparing}, {@link JW.AbstractArray#$toSortedComparing $toSortedComparing} -
+- {@link JW.AbstractArray#toSorted toSorted}, {@link JW.AbstractArray#$toSorted $toSorted}, {@link JW.AbstractArray#toSortedComparing toSortedComparing}, {@link JW.AbstractArray#$toSortedComparing $toSortedComparing}, {@link JW.AbstractArray#$$toSortedComparing $$toSortedComparing} -
 Строит массив из элементов коллекции, отсортированный по индексу
 или компаратору.
 - {@link JW.AbstractArray#getSortingKeys getSortingKeys}, {@link JW.AbstractArray#$getSortingKeys $getSortingKeys}, {@link JW.AbstractArray#getSortingKeysComparing getSortingKeysComparing}, {@link JW.AbstractArray#$getSortingKeysComparing $getSortingKeysComparing} -
 Возвращает индексы элементов, отсортированных по индексу или компаратору.
-- {@link JW.AbstractArray#index index}, {@link JW.AbstractArray#$index $index} - Индексирует коллекцию.
+- {@link JW.AbstractArray#index index}, {@link JW.AbstractArray#$index $index}, {@link JW.AbstractArray#$$index $$index} - Индексирует коллекцию.
 Строит словарь, в индексах которого находятся индексы элементов, а в значениях - соответствующие элементы.
-- {@link JW.AbstractArray#toArray toArray}, {@link JW.AbstractArray#$toArray $toArray} - Строит новый массив из элементов коллекции.
+- {@link JW.AbstractArray#toArray toArray}, {@link JW.AbstractArray#$toArray $toArray}, {@link JW.AbstractArray#$$toArray $$toArray} - Строит новый массив из элементов коллекции.
 - {@link JW.AbstractArray#toMap toMap}, {@link JW.AbstractArray#$toMap $toMap} - Строит новый словарь из элементов коллекции.
-- {@link JW.AbstractArray#toSet toSet}, {@link JW.AbstractArray#$toSet $toSet} - Строит новое множество из элементов коллекции.
+- {@link JW.AbstractArray#toSet toSet}, {@link JW.AbstractArray#$toSet $toSet}, {@link JW.AbstractArray#$$toSet $$toSet} - Строит новое множество из элементов коллекции.
 - {@link JW.AbstractArray#asArray asArray}, {@link JW.AbstractArray#$asArray $asArray} - Представляет коллекцию в виде массива.
 - {@link JW.AbstractArray#asMap asMap}, {@link JW.AbstractArray#$asMap $asMap} - Представляет коллекцию в виде словаря.
 - {@link JW.AbstractArray#asSet asSet}, {@link JW.AbstractArray#$asSet $asSet} - Представляет коллекцию в виде множества.
 - **{@link JW.AbstractArray#backEvery backEvery} - Проверяет все элементы по критерию в обратном порядке.**
+- **{@link JW.AbstractArray#merge merge}, {@link JW.AbstractArray#$merge $merge}, {@link JW.AbstractArray#$$merge $$merge} - (только для `JW.AbstractArray<? extends JW.AbstractArray>`). Строит новый массив, содержащий элементы всех подмассивов в том же порядке.**
+- **{@link JW.AbstractArray#toReversed toReversed}, {@link JW.AbstractArray#$toReversed $toReversed}, {@link JW.AbstractArray#$$toReversed $$toReversed} - Строит новый массив, содержащий элементы исходного массива в обратном порядке.**
 
 Изменение коллекции:
 
@@ -79,23 +83,24 @@
 - **{@link JW.AbstractArray#splice splice}, {@link JW.AbstractArray#trySplice trySplice} - Удаляет/вставляет элементы.**
 - **{@link JW.AbstractArray#reorder reorder}, {@link JW.AbstractArray#tryReorder tryReorder} - Переупорядочивает элементы.**
 - **{@link JW.AbstractArray#sort sort}, {@link JW.AbstractArray#sortComparing sortComparing} - Сортирует массив.**
+- **{@link JW.AbstractArray#reverse reverse} - Обращает порядок элементов в массиве.**
 - **{@link JW.AbstractArray#performSplice performSplice} - Приводит содержимое методом {@link JW.AbstractArray#splice splice}.**
 - **{@link JW.AbstractArray#performFilter performFilter} - Фильтрует содержимое методом {@link JW.AbstractArray#splice splice}.**
 - **{@link JW.AbstractArray#performReorder performReorder} - Приводит содержимое методом {@link JW.AbstractArray#reorder reorder}.**
 
 Создание синхронизаторов:
 
-- {@link JW.AbstractArray#createMapper createMapper} - Создает конвертер элементов.
-- {@link JW.AbstractArray#createFilterer createFilterer} - Создает фильтровщик.
-- {@link JW.AbstractArray#createCounter createCounter} - Создает счетчик подходящих элементов.
-- {@link JW.AbstractArray#createLister createLister} - Создает конвертер в множество.
-- {@link JW.AbstractArray#createIndexer createIndexer} - Создает индексатор.
-- {@link JW.AbstractArray#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель).
-- {@link JW.AbstractArray#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
+- {@link JW.AbstractArray#createMapper createMapper} - Создает конвертер элементов. Расширенная версия методов {@link JW.AbstractArray#$$mapValues $$mapValues} и {@link JW.AbstractArray#$$mapObjects $$mapObjects}.
+- {@link JW.AbstractArray#createFilterer createFilterer} - Создает фильтровщик. Расширенная версия метода {@link JW.AbstractArray#$$filter $$filter}.
+- {@link JW.AbstractArray#createCounter createCounter} - Создает счетчик подходящих элементов. Расширенная версия метода {@link JW.AbstractArray#$$count $$count}.
+- {@link JW.AbstractArray#createLister createLister} - Создает конвертер в множество. Расширенная версия метода {@link JW.AbstractArray#$$toSet $$toSet}.
+- {@link JW.AbstractArray#createIndexer createIndexer} - Создает индексатор. Расширенная версия метода {@link JW.AbstractArray#$$index $$index}.
+- {@link JW.AbstractArray#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель). Расширенная версия метода {@link JW.AbstractArray#$$toArray $$toArray}.
+- {@link JW.AbstractArray#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору). Расширенная версия метода {@link JW.AbstractArray#$$toSortedComparing $$toSortedComparing}.
 - {@link JW.AbstractArray#createObserver createObserver} - Создает наблюдатель.
 - **{@link JW.AbstractArray#createInserter createInserter} - Создает синхронизатор представления с массивом.**
-- **{@link JW.AbstractArray#createMerger createMerger} - Создает объединитель массивов.**
-- **{@link JW.AbstractArray#createReverser createReverser} - Создает обратитель массива.**
+- **{@link JW.AbstractArray#createMerger createMerger} - Создает объединитель массивов. Расширенная версия метода {@link JW.AbstractArray#$$merge $$merge}.**
+- **{@link JW.AbstractArray#createReverser createReverser} - Создает обратитель массива. Расширенная версия метода {@link JW.AbstractArray#$$toReversed $$toReversed}.**
 
 Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
 

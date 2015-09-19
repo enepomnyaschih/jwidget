@@ -9,13 +9,25 @@
 Конвертер в множество. Преобразует исходную коллекцию в множество. Можно использовать для быстрой проверки
 принадлежности элемента коллекции.
 
-    var lister = collection.{@link JW.AbstractCollection#createLister createLister}();
-    var set = lister.{@link JW.AbstractCollection.Lister#property-target target};
-    
-    // Assert that some item x exists in source collection
-    assert(set.{@link JW.AbstractSet#contains contains}(x));
+    // Создаем два элемента для демонстрации
+    var x = new JW.Class();
+    var y = new JW.Class();
 
-**Замечание:** Элементы исходной коллекции не должны повторяться.
+    // Создаем коллекцию и синхронизатор
+    var array = new JW.ObservableArray([x]);
+    var lister = array.{@link JW.AbstractCollection#createLister createLister}();
+    var set = lister.{@link JW.AbstractCollection.Lister#property-target target};
+
+    assert(set.{@link JW.AbstractSet#contains contains}(x));
+    assert(!set.{@link JW.AbstractSet#contains contains}(y));
+
+    // Целевое множество автоматически синхронизируется с исходной наблюдаемой коллекцией
+    array.add(y);
+    assert(set.{@link JW.AbstractSet#contains contains}(y));
+
+    lister.{@link JW.AbstractCollection.Lister#destroy destroy}();
+
+**Замечание:** Элементы исходной коллекции не должны повторяться (т.е. все элементы должны иметь уникальный _iid).
 
 Создавайте конвертер с помощью метода JW.AbstractCollection#createLister.
 Метод сам определит, какая реализация конвертера лучше подойдет (простая или observable).
@@ -26,6 +38,25 @@
     var lister = collection.{@link JW.AbstractCollection#createLister createLister}({
         {@link JW.AbstractCollection.Lister#cfg-target target}: set
     });
+
+В простых случаях, вы можете использовать упрощенный метод JW.AbstractCollection#$$toSet. Он сразу возвращает целевое множество:
+
+    // Создаем два элемента для демонстрации
+    var x = new JW.Class();
+    var y = new JW.Class();
+
+    // Создаем коллекции
+    var array = new JW.ObservableArray([x]);
+    var set = array.{@link JW.AbstractCollection#$$toSet $$toSet}();
+
+    assert(set.{@link JW.AbstractSet#contains contains}(x));
+    assert(!set.{@link JW.AbstractSet#contains contains}(y));
+
+    // Целевое множество автоматически синхронизируется с исходной наблюдаемой коллекцией
+    array.add(y);
+    assert(set.{@link JW.AbstractSet#contains contains}(y));
+
+    set.{@link JW.AbstractSet#destroy destroy}();
 
 Правила работы конвертера:
 

@@ -109,11 +109,12 @@ JW.UI.template с именем `main` и по умолчанию равен
 
 ### Подробнее о коллекциях дочерних компонентов
 
-Для создания коллекций UI компонентов на основе коллекций данных удобно использовать [JW.AbstractCollection.Mapper](#!/guide/rujwabstractcollectionmapper).
+Для создания коллекций UI компонентов на основе коллекций данных удобно использовать метод
+{@link JW.AbstractCollection#$$mapObjects $$mapObjects}.
 Благодаря ему, представление будет автоматически обновляться при изменении данных.
 
-По этой же причине рекомендуем использовать [JW.AbstractCollection](#!/guide/rujwabstractcollection) в реализации классов модели вместо нативных
-JavaScript Array и Object: у наших коллекций есть Observable-реализации и они могут синхронизироваться друг с другом.
+По этой же причине рекомендуем использовать коллекции jWidget в реализации классов модели вместо нативных
+JavaScript Array и Object: у коллекций jWidget есть Observable-реализации, и они могут синхронизироваться друг с другом.
 
 [Учебник. Часть 6. Синхронизаторы коллекций](#!/guide/rusample6)
 
@@ -159,20 +160,18 @@ JavaScript Array и Object: у наших коллекций есть Observable
 
     // следует вызывать не ранее начала рендеринга компонента
     initLabels: function() {
-        this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
-            {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
-            {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
-            {@link JW.AbstractCollection.Mapper#scope scope}: this
-        });
-        // Add labels into element with jwid="labels"
-        this._labelArray = this.{@link JW.UI.Component#addArray addArray}(this._labelMapper.{@link JW.AbstractCollection.Mapper#property-target target}, "labels");
+        this._labelViews = this.labels.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(label) {
+            return new LabelView(label);
+        }, this);
+        // Добавляем метки в элемент с jwid="labels"
+        this._labelArray = this.{@link JW.UI.Component#addArray addArray}(this._labelViews, "labels");
     },
 
     clearLabels: function() {
         this._labelArray.{@link JW.Class#destroy destroy}();
         this._labelArray = null;
-        this._labelMapper.{@link JW.Class#destroy destroy}();
-        this._labelMapper = null;
+        this._labelViews.{@link JW.Class#destroy destroy}();
+        this._labelViews = null;
     }
 
 Вам не нужно каждый раз явно удалять дочерние компоненты. При уничтожении родителя, фреймворк автоматически
@@ -185,16 +184,14 @@ JavaScript Array и Object: у наших коллекций есть Observable
     },
 
     renderLabels: function() {
-        return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
-            {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
-            {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
-            {@link JW.AbstractCollection.Mapper#scope scope}: this
-        })).target;
+        return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(label) {
+            return new LabelView(label);
+        }, this));
     }
 
 ### Общие практики работы с дочерними компонентами
 
-**Внутренние именованные дочерние компоненты**
+**Создание дочернего компонента**
 
 Этот пример описывает, как создается и уничтожается дочерний компонент с `jwid="title-box"`.
 
@@ -215,7 +212,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
             '</div>'
     });
 
-**Внутренний заменяемый дочерний компонент**
+**Создание заменяемого дочернего компонента**
 
 Этот пример описывает, как создается легко заменяемый дочерний компонент с `jwid="document"`.
 Предположим, что у вас есть свойство "document", и вы хотите заменять старое представление документа новым при смене
@@ -230,13 +227,9 @@ JavaScript Array и Object: у наших коллекций есть Observable
         // JW.Property<Document> document;
         
         renderDocument: function() {
-            return this.{@link JW.Class#own own}(new JW.Mapper([this.document], {
-                {@link JW.Mapper#createValue createValue}: function(document) {
-                    return new DocumentView(document);
-                },
-                {@link JW.Mapper#destroyValue destroyValue}: JW.destroy,
-                {@link JW.Mapper#scope scope}: this
-            })).{@link JW.Mapper#property-target target};
+            return this.{@link JW.Class#own own}(this.document.{@link JW.Property#$$mapObject $$mapObject}(function(document) {
+                return new DocumentView(document);
+            }, this));
         }
     });
     
@@ -247,10 +240,11 @@ JavaScript Array и Object: у наших коллекций есть Observable
             '</div>'
     });
 
-**Внутренние неизменяемые коллекции дочерних компонентов**
+**Создание коллекции дочерних компонентов**
 
 Этот пример описывает, как дочерние компоненты создаются и уничтожаются на основе коллекции данных, и
-как они добавляются внутрь элемента с `jwid="labels"`.
+как они добавляются внутрь элемента с `jwid="labels"`. Если коллекция данных наблюдаемая (observable),
+то коллекция дочерних компонентов будет непрерывно синхронизироваться с данными.
 
     var MyComponent = function(labels) {
         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
@@ -261,9 +255,9 @@ JavaScript Array и Object: у наших коллекций есть Observable
         // JW.AbstractArray<Label> labels;
         
         renderLabels: function() {
-            return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$map $map}(function(label) {
+            return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(label) {
                 return new LabelView(label);
-            }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
+            }, this));
         }
     });
     
@@ -274,39 +268,7 @@ JavaScript Array и Object: у наших коллекций есть Observable
             '</div>'
     });
 
-**Внутренние изменяемые коллекции дочерних компонентов**
-
-Этот пример описывает, как дочерние компоненты создаются и уничтожаются на основе коллекции данных, и
-как они добавляются внутрь элемента с `jwid="labels"`. Коллекция дочерних компонентов будет автоматически
-синхронизироваться с данными налету.
-
-    var MyComponent = function(labels) {
-        MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
-        this.labels = labels;
-    };
-    
-    JW.extend(MyComponent, JW.UI.Component, {
-        // JW.AbstractArray<Label> labels;
-        
-        renderLabels: function() {
-            return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
-                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) {
-                    return new LabelView(label);
-                },
-                {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
-                {@link JW.AbstractCollection.Mapper#scope scope}: this
-            })).{@link JW.AbstractCollection.Mapper#property-target target};
-        }
-    });
-    
-    JW.UI.template(MyComponent, {
-        main:
-            '<div jwclass="my-component">' +
-                '<div jwid="labels"></div>' +
-            '</div>'
-    });
-
-**Внешние дочерние компоненты**
+**Добавление существующих компонентов в качестве дочерних**
 
 Этот пример описывает, как добавить дочерние компоненты, которые созданы кем-то другим и, следовательно,
 не должны быть уничтожены здесь автоматически. Здесь, "titleBox" может быть JW.UI.Component,

@@ -18,7 +18,9 @@
 
 Получение содержимого:
 
-- {@link JW.AbstractSet#getLength getLength} - Возвращает количество элементов в коллекции.
+- {@link JW.AbstractSet#getLength getLength} - Возвращает количество элементов в коллекции. Для наблюдаемых
+(observable) коллекций, вам может также пригодиться свойство `length`, в том случае, если вы хотите динамически
+следить за изменением количества элементов в коллекции.
 - {@link JW.AbstractSet#isEmpty isEmpty} - Проверяет коллекцию на пустоту.
 - {@link JW.AbstractSet#getFirst getFirst} - Возвращает первый элемент коллекции.
 - {@link JW.AbstractSet#containsItem containsItem}, **{@link JW.AbstractSet#contains contains}** - Содержит ли коллекция элемент.
@@ -33,19 +35,19 @@
 - {@link JW.AbstractSet#each each} - Перебирает элементы.
 - {@link JW.AbstractSet#search search} - Ищет элемент по критерию.
 Возвращает первый элемент, удовлетворяющий критерию.
-- {@link JW.AbstractSet#filter filter}, {@link JW.AbstractSet#$filter $filter} - Фильтрует коллекцию по критерию.
+- {@link JW.AbstractSet#filter filter}, {@link JW.AbstractSet#$filter $filter}, {@link JW.AbstractSet#$$filter $$filter} - Фильтрует коллекцию по критерию.
 Строит новую коллекцию того же типа, включающую только элементы, удовлетворяющие критерию.
-- {@link JW.AbstractSet#count count} - Считает количество элементов, удовлетворяющих критерию.
-- {@link JW.AbstractSet#map map}, {@link JW.AbstractSet#$map $map} - Отображает элементы коллекции.
+- {@link JW.AbstractSet#count count}, {@link JW.AbstractSet#$count $count}, {@link JW.AbstractSet#$$count $$count} - Считает количество элементов, удовлетворяющих критерию.
+- {@link JW.AbstractSet#map map}, {@link JW.AbstractSet#$map $map}, {@link JW.AbstractSet#$$mapValues $$mapValues}, {@link JW.AbstractSet#$$mapObjects $$mapObjects} - Отображает элементы коллекции.
 Строит новую коллекцию того же типа, состояющую из результатов запуска отображающей функции на каждом элементе
 коллекции.
-- {@link JW.AbstractSet#toSorted toSorted}, {@link JW.AbstractSet#$toSorted $toSorted}, {@link JW.AbstractSet#toSortedComparing toSortedComparing}, {@link JW.AbstractSet#$toSortedComparing $toSortedComparing} -
+- {@link JW.AbstractSet#toSorted toSorted}, {@link JW.AbstractSet#$toSorted $toSorted}, {@link JW.AbstractSet#toSortedComparing toSortedComparing}, {@link JW.AbstractSet#$toSortedComparing $toSortedComparing}, {@link JW.AbstractSet#$$toSortedComparing $$toSortedComparing} -
 Строит массив из элементов коллекции, отсортированный по индексу
 или компаратору.
-- {@link JW.AbstractSet#index index}, {@link JW.AbstractSet#$index $index} - Индексирует коллекцию.
+- {@link JW.AbstractSet#index index}, {@link JW.AbstractSet#$index $index}, {@link JW.AbstractSet#$$index $$index} - Индексирует коллекцию.
 Строит словарь, в ключах которого находятся индексы элементов, а в значениях - соответствующие элементы.
-- {@link JW.AbstractSet#toArray toArray}, {@link JW.AbstractSet#$toArray $toArray} - Строит новый массив из элементов коллекции.
-- {@link JW.AbstractSet#toSet toSet}, {@link JW.AbstractSet#$toSet $toSet} - Строит новое множество из элементов коллекции.
+- {@link JW.AbstractSet#toArray toArray}, {@link JW.AbstractSet#$toArray $toArray}, {@link JW.AbstractSet#$$toArray $$toArray} - Строит новый массив из элементов коллекции.
+- {@link JW.AbstractSet#toSet toSet}, {@link JW.AbstractSet#$toSet $toSet}, {@link JW.AbstractSet#$$toSet $$toSet} - Строит новое множество из элементов коллекции.
 - {@link JW.AbstractSet#asArray asArray}, {@link JW.AbstractSet#$asArray $asArray} - Представляет коллекцию в виде массива.
 - {@link JW.AbstractSet#asSet asSet}, {@link JW.AbstractSet#$asSet $asSet} - Представляет коллекцию в виде множества.
 
@@ -63,14 +65,14 @@
 
 Создание синхронизаторов:
 
-- {@link JW.AbstractSet#createMapper createMapper} - Создает конвертер элементов.
-- {@link JW.AbstractSet#createFilterer createFilterer} - Создает фильтровщик.
-- {@link JW.AbstractSet#createCounter createCounter} - Создает счетчик подходящих элементов.
-- {@link JW.AbstractSet#createLister createLister} - Создает конвертер в множество.
-- {@link JW.AbstractSet#createIndexer createIndexer} - Создает индексатор.
-- {@link JW.AbstractSet#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель).
-- {@link JW.AbstractSet#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору).
-- {@link JW.AbstractSet#createObserver createObserver} - Создает наблюдатель.
+- {@link JW.AbstractMapAbstractSet#createMapper createMapper} - Создает конвертер элементов. Расширенная версия методов {@link JW.AbstractMapAbstractSet#$$mapValues $$mapValues} и {@link JW.AbstractMapAbstractSet#$$mapObjects $$mapObjects}.
+- {@link JW.AbstractMapAbstractSet#createFilterer createFilterer} - Создает фильтровщик. Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$filter $$filter}.
+- {@link JW.AbstractMapAbstractSet#createCounter createCounter} - Создает счетчик подходящих элементов. Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$count $$count}.
+- {@link JW.AbstractMapAbstractSet#createLister createLister} - Создает конвертер в множество. Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$toSet $$toSet}.
+- {@link JW.AbstractMapAbstractSet#createIndexer createIndexer} - Создает индексатор. Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$index $$index}.
+- {@link JW.AbstractMapAbstractSet#createOrderer createOrderer} - Создает конвертер в массив (упорядочитель). Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$toArray $$toArray}.
+- {@link JW.AbstractMapAbstractSet#createSorterComparing createSorterComparing} - Создает конвертер в массив (сортировщик по компаратору). Расширенная версия метода {@link JW.AbstractMapAbstractSet#$$toSortedComparing $$toSortedComparing}.
+- {@link JW.AbstractMapAbstractSet#createObserver createObserver} - Создает наблюдатель.
 
 Создание родственных коллекций (для разработки алгоритмов и синхронизаторов):
 

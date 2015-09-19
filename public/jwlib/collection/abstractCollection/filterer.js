@@ -32,13 +32,14 @@
  *     var filterer = source.{@link JW.AbstractCollection#createFilterer createFilterer}({
  *         {@link #cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
  *     });
- *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 3]));
+ *     var target = filterer.{@link JW.AbstractCollection.Filterer#property-target target};
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 3]));
  *
  *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
- *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
  *
  *     source.{@link JW.AbstractArray#move move}(2, 6); // move "3" item to the end
- *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
  *
  *     filterer.{@link JW.AbstractCollection.Filterer#destroy destroy}();
  *

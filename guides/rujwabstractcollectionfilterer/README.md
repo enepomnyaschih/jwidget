@@ -9,18 +9,22 @@
 Фильтровщик коллекции. Создает новую коллекцию того же типа, включающую только те
 элементы исходной коллекции, для которых указанная функция возвращает значение !== false.
 Для массива синхронизатор сохранит порядок элементов.
+Если исходная коллекция наблюдаемая (observable), начинает непрерывную синхронизацию.
 
     var source = new JW.ObservableArray([1, 2, 3]);
     var filterer = source.{@link JW.AbstractCollection#createFilterer createFilterer}({
         {@link JW.AbstractCollection.Filterer#cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
     });
-    assert(filterer.{@link JW.AbstractCollection.Filterer#property-target target}.{@link JW.AbstractArray#equal equal}([1, 3]));
+    var target = filterer.{@link JW.AbstractCollection.Filterer#property-target target};
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 3]));
     
     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
-    assert(filterer.{@link JW.AbstractCollection.Filterer#property-target target}.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
     
     source.{@link JW.AbstractArray#move move}(2, 6); // move "3" item to the end
-    assert(filterer.{@link JW.AbstractCollection.Filterer#property-target target}.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
+
+    filterer.{@link JW.AbstractCollection.Filterer#destroy destroy}();
 
 Создавайте синхронизатор с помощью метода JW.AbstractCollection#createFilterer.
 Метод сам определит, какая реализация синхронизатора лучше подойдет (простая или observable).
@@ -34,6 +38,20 @@
         {@link JW.AbstractCollection.Filterer#cfg-filterItem filterItem}: this._filterItem,
         {@link JW.AbstractCollection.Filterer#cfg-scope scope}: this
     });
+
+В простых случаях, вы можете использовать упрощенный метод JW.AbstractCollection#$$filter. Он сразу возвращает целевую коллекцию:
+
+    var source = new JW.ObservableArray([1, 2, 3]);
+    var target = source.{@link JW.AbstractCollection#$$filter $$filter}(function(x) { return x % 2 === 1; });
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 3]));
+
+    source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
+
+    source.{@link JW.AbstractArray#move move}(2, 6); // move "3" item to the end
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
+
+    target.{@link JW.AbstractArray#destroy destroy}();
 
 Правила работы синхронизатора:
 

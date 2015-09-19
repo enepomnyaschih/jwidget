@@ -244,7 +244,7 @@
  *         renderDocument: function() {
  *             return this.{@link JW.Class#own own}(this.document.{@link JW.Property#$$mapObject $$mapObject}(function(document) {
  *                 return new DocumentView(document);
- *             }));
+ *             }, this));
  *         }
  *     });
  *
@@ -258,7 +258,7 @@
  * **Create child collection**
  *
  * This example describes how to create and destroy child components by data collection, and insert them into
- * element with `jwid="labels"`. If data array is observable, child collection will be constantly synchronized with data.
+ * element with `jwid="labels"`. If data collection is observable, child collection will be constantly synchronized with data.
  *
  *     var MyComponent = function(labels) {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);

@@ -7,6 +7,7 @@
 `<T>`
 
 Объединитель массивов. Создает массив, содержащий все элементы исходных массивов в том же порядке.
+Если один из исходных массивов наблюдаемый (observable), начинает непрерывную синхронизацию.
 
     var source = new JW.ObservableArray([
         new JW.Array([1, 2, 3]),
@@ -14,13 +15,16 @@
         new JW.Array([4])
     ]);
     var merger = source.{@link JW.AbstractArray#createMerger createMerger}();
-    assert(merger.{@link JW.AbstractArray.Merger#property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4]));
+    var target = merger.{@link JW.AbstractArray.Merger#property-target target};
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4]));
     
     source.{@link JW.AbstractArray#add add}(new JW.Array([5, 6]));
-    assert(merger.{@link JW.AbstractArray.Merger#property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4, 5, 6]));
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4, 5, 6]));
     
     source.{@link JW.AbstractArray#get get}(1).{@link JW.AbstractArray#addAll addAll}([7, 8, 9]);
-    assert(merger.{@link JW.AbstractArray.Merger#property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
+
+    merger.{@link JW.AbstractArray.Merger#destroy destroy}();
 
 Создавайте синхронизатор с помощью метода JW.AbstractArray#createMerger:
 
@@ -36,6 +40,24 @@
     var merger = source.{@link JW.AbstractArray#createMerger createMerger}({
         {@link JW.AbstractArray.Merger#cfg-target target}: target
     });
+
+В простых случаях, вы можете использовать упрощенный метод JW.AbstractArray#$$merge. Он сразу возвращает целевой массив:
+
+    var source = new JW.ObservableArray([
+        new JW.Array([1, 2, 3]),
+        new JW.ObservableArray(),
+        new JW.Array([4])
+    ]);
+    var target = source.{@link JW.AbstractArray#$$merge $$merge}();
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4]));
+
+    source.{@link JW.AbstractArray#add add}(new JW.Array([5, 6]));
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4, 5, 6]));
+
+    source.{@link JW.AbstractArray#get get}(1).{@link JW.AbstractArray#addAll addAll}([7, 8, 9]);
+    assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
+
+    target.{@link JW.AbstractArray#destroy destroy}();
 
 Правила работы синхронизатора:
 
