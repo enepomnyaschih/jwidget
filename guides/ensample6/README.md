@@ -47,7 +47,7 @@ So, let's replace code of mt.TweetFeed with the next:
 the view will be kept up-to-date.
 
 **Notice** that {@link JW.AbstractArray#$$mapObjects $$mapObjects} method invokes child item destructor on its
-removal from the collection. In the majority on cases, it is enough. If this is not something you need,
+removal from the collection. In the majority of cases, it is enough. If this is not something you need,
 try {@link JW.AbstractArray#$$mapValues $$mapValues} and {@link JW.AbstractArray#createMapper createMapper} methods.
 
 Since our array of this.data.tweets is still simple (JW.Array), this code is completely equal to the original one -
