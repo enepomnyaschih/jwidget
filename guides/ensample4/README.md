@@ -1,8 +1,8 @@
 ﻿# Part 4. Events
 
-Demo: [http://enepomnyaschih.github.io/mt/1.0.0-4/](http://enepomnyaschih.github.io/mt/1.0.0-4/)
+Demo: [http://enepomnyaschih.github.io/mt/1.3-4/](http://enepomnyaschih.github.io/mt/1.3-4/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-4](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-4) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.3-4](https://github.com/enepomnyaschih/mt/tree/mt-1.3-4) (Git branch)
 
 We'll learn how to bind handlers to jQuery elements in scope of jWidget framework in this part.
 Also, we'll create some model events and will learn how to listen and trigger them.
@@ -30,8 +30,7 @@ event listening and handling. jWidget doesn't provide any features for such cont
 
 Events API is maximally optimized in jWidget in performance regard and implemented by all OOD main principles.
 That's the reason why events API is very different in jWidget and jQuery.
-jWidget event is implemented by class JW.Event. There are 2 adjacent classes: JW.EventParams and
-JW.EventAttachment. Let's look how to use them.
+jWidget event is implemented by class JW.Event. There is an adjacent class: JW.EventAttachment. Let's look how to use them.
 
 So, let's start listening Like and Retweet button clicks. Let's follow the steps described above. First, bind to
 click event using jQuery in mt.TweetView class:
@@ -72,6 +71,20 @@ By standard, you should do this in the constructor, before superclass constructo
         this.tweetData = tweetData; // mt.data.Tweet
     };
 
+Alternative solution - utilize method {@link jQuery#jwon jwon}:
+
+        renderLike: function(el) {
+            el.toggleClass("active", this.tweetData.like).text(this.tweetData.like ? "Unlike" : "Like");
+            el.{@link jQuery#jwon jwon}("click", this._onLikeClick, this);
+        },
+
+        renderRetweet: function(el) {
+            el.toggleClass("active", this.tweetData.retweet).text(this.tweetData.retweet ? "Unretweet" : "Retweet");
+            el.{@link jQuery#jwon jwon}("click", this._onRetweetClick, this);
+        },
+
+Second solution is more versatile, so let's stick to it.
+
 At the next step, we'll add methods setLike and setRetweet to the model. To implement them, we'll need likeChangeEvent and
 retweetChangeEvent, which we'll create and aggregate in the constructor:
 
@@ -86,8 +99,8 @@ retweetChangeEvent, which we'll create and aggregate in the constructor:
         this.time = config.time; // number
         this.like = config.like; // number
         this.retweet = config.retweet; // number
-        this.likeChangeEvent = this.{@link JW.Class#own own}(new JW.Event()); // JW.Event<JW.ValueEventParams<boolean>>
-        this.retweetChangeEvent = this.{@link JW.Class#own own}(new JW.Event()); // JW.Event<JW.ValueEventParams<boolean>>
+        this.likeChangeEvent = this.{@link JW.Class#own own}(new JW.Event()); // JW.Event<boolean>
+        this.retweetChangeEvent = this.{@link JW.Class#own own}(new JW.Event()); // JW.Event<boolean>
     };
     
     JW.extend(mt.data.Tweet, JW.Class, {
@@ -96,7 +109,7 @@ retweetChangeEvent, which we'll create and aggregate in the constructor:
                 return;
             }
             this.like = value;
-            this.likeChangeEvent.{@link JW.Event#trigger trigger}(new JW.ValueEventParams(this, value));
+            this.likeChangeEvent.{@link JW.Event#trigger trigger}(value);
         },
         
         setRetweet: function(value) {
@@ -104,7 +117,7 @@ retweetChangeEvent, which we'll create and aggregate in the constructor:
                 return;
             }
             this.retweet = value;
-            this.retweetChangeEvent.{@link JW.Event#trigger trigger}(new JW.ValueEventParams(this, value));
+            this.retweetChangeEvent.{@link JW.Event#trigger trigger}(value);
         }
     });
     
@@ -114,14 +127,11 @@ retweetChangeEvent, which we'll create and aggregate in the constructor:
         }));
     };
 
-Event is triggered by {@link JW.Event#trigger trigger} method, which takes JW.EventParams argument.
-In this case it is JW.ValueEventParams, which takes 2 parameters: event sender (this) and some value.
-You can extend your own subclasses of JW.EventParams for your event, but standard JW.ValueEventParams,
-JW.ItemEventParams and JW.ItemValueEventParams are enough in the majority of cases.
-
-jWidget event is essentially simple: all listeners are iterated and called one by one.
+Event is triggered by {@link JW.Event#trigger trigger} method, which takes arbitrary argument to
+pass to event listeners. In this case it is boolean.
+jWidget event is very simple: all listeners are iterated and called one by one.
 There are no any special features like bubbling, "preventDefault" or "stopPropagation". If you want to introduce
-something like this, implement it by yourself or find somewhere else.
+something like this, implement it by yourself or find something else.
 jWidget is modest in this regard, but fast.
 
 Next, we must bind handlers to these events and update view in them. To prevent code duplication, let's
@@ -131,12 +141,12 @@ extract element updating code of mt.TweetView into separate methods "updateLike"
 
         renderLike: function(el) {
             this._updateLike();
-            el.click(this._onLikeClick);
+            el.{@link jQuery#jwon jwon}("click", this._onLikeClick, this);
         },
         
         renderRetweet: function(el) {
             this._updateRetweet();
-            el.click(this._onRetweetClick);
+            el.{@link jQuery#jwon jwon}("click", this._onRetweetClick, this);
         },
         
         _updateLike: function() {
@@ -157,8 +167,6 @@ aggregate:
 **public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(tweetData) {
-        this._onLikeClick = JW.inScope(this._onLikeClick, this);
-        this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
         this.tweetData = tweetData; // mt.data.Tweet
     };
@@ -169,19 +177,19 @@ aggregate:
         renderLike: function(el) {
             this._updateLike();
             this.{@link JW.Class#own own}(this.tweetData.likeChangeEvent.{@link JW.Event#bind bind}(this._updateLike, this));
-            el.click(this._onLikeClick);
+            el.{@link jQuery#jwon jwon}("click", this._onLikeClick, this);
         },
         
         renderRetweet: function(el) {
             this._updateRetweet();
             this.{@link JW.Class#own own}(this.tweetData.retweetChangeEvent.{@link JW.Event#bind bind}(this._updateRetweet, this));
-            el.click(this._onRetweetClick);
+            el.{@link jQuery#jwon jwon}("click", this._onRetweetClick, this);
         },
         
         // ...
 
 It must work! Try to execute it in browser or open link
-[http://enepomnyaschih.github.io/mt/1.0.0-4/](http://enepomnyaschih.github.io/mt/1.0.0-4/)
+[http://enepomnyaschih.github.io/mt/1.3-4/](http://enepomnyaschih.github.io/mt/1.3-4/)
 and click Like/Unlike and Retweet/Unretweet buttons. Moreover, you can open browser console and run
 next command:
 

@@ -1,8 +1,8 @@
 ﻿# Part 5. Properties
 
-Demo: [http://enepomnyaschih.github.io/mt/1.0.0-5/](http://enepomnyaschih.github.io/mt/1.0.0-5/)
+Demo: [http://enepomnyaschih.github.io/mt/1.3-5/](http://enepomnyaschih.github.io/mt/1.3-5/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.3-5](https://github.com/enepomnyaschih/mt/tree/mt-1.3-5) (Git branch)
 
 Now it's the time to learn a new layer of jWidget: the properties brought to us by class JW.Property. The **property**
 is any value which can notify the clients about its modification. So, JW.Property is a class which has 2 methods:
@@ -39,32 +39,35 @@ events and setting methods:
     };
 
 We have removed quite a big chunk of code. Let's modify the view now. Instead of listening property change event
-manually, we can utilize special functor and updater classes.
+manually, we can utilize special mapper and updater classes.
 
-**Functor** builds a new property based on existing ones. In our particular case, we're gonna build string properties
-with "Like/Unlike" and "Retweet/Unretweet" values.
+**Mapper** builds a new property based on existing ones. In our particular case, we're gonna build string properties
+with "Like/Unlike" and "Retweet/Unretweet" values. Mapper is created implicitly by
+methods {@link JW.Property#$$mapValue $$mapValue} and {@link JW.Property#$$mapObject $$mapObject}.
 
 **Updater** watches for a property modification and handles it some way. In our case, we're gonna update the text
 inside the buttons and change their CSS classes.
 
+You must constrain mapper and updater life time by component's life time, so don't forget to aggregate them.
+
 **public/mt/tweetview/tweetview.js**
 
         renderLike: function(el) {
-            var text = this.{@link JW.Class#own own}(new JW.Functor([this.tweetData.like], function(like) {
+            var text = this.{@link JW.Class#own own}(this.tweetData.like.{@link JW.Property#$$mapValue $$mapValue}(function(like) {
                 return like ? "Unlike" : "Like";
-            }, this)).{@link JW.Functor#property-target target};
+            }, this));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
             this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.like));
-            el.click(this._onLikeClick);
+            el.{@link jQuery#jwon jwon}("click", this._onLikeClick, this);
         },
         
         renderRetweet: function(el) {
-            var text = this.{@link JW.Class#own own}(new JW.Functor([this.tweetData.retweet], function(retweet) {
+            var text = this.{@link JW.Class#own own}(this.tweetData.retweet.{@link JW.Property#$$mapValue $$mapValue}(function(retweet) {
                 return retweet ? "Unretweet" : "Retweet";
-            }, this)).{@link JW.Functor#property-target target};
+            }, this));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
             this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.retweet));
-            el.click(this._onRetweetClick);
+            el.{@link jQuery#jwon jwon}("click", this._onRetweetClick, this);
         },
         
         _onLikeClick: function(event) {

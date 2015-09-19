@@ -1,8 +1,8 @@
 ﻿# Part 2. Arrays of child components
 
-Demo: [http://enepomnyaschih.github.io/mt/1.0.0-2/](http://enepomnyaschih.github.io/mt/1.0.0-2/)
+Demo: [http://enepomnyaschih.github.io/mt/1.3-2/](http://enepomnyaschih.github.io/mt/1.3-2/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-2](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-2) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.3-2](https://github.com/enepomnyaschih/mt/tree/mt-1.3-2) (Git branch)
 
 In this part, we'll meet JW.AbstractArray. We will try its algorithms
 {@link JW.AbstractArray#method-map map} and {@link JW.AbstractArray#method-$map $map}
@@ -24,7 +24,7 @@ for this. It will contain an array of the tweets.
     
     JW.extend(mt.Data, JW.Class, {
         // override
-        {@link JW.Class#destroy destroy}: function() {
+        {@link JW.Class#destroyObject destroyObject}: function() {
             this.tweets.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // clear array and destroy items
             this.tweets.{@link JW.AbstractArray#destroy destroy}(); // destroy array
             this.{@link JW.Class#method-_super _super}();

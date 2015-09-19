@@ -31,9 +31,9 @@ example:
         },
 
         renderGreeting: function(el) {
-            var text = this.{@link JW.Class#own own}(new JW.Functor([this.name], function(name) {
+            var text = this.{@link JW.Class#own own}(this.name.{@link JW.Property#$$mapValue $$mapValue}(function(name) { // build greeting message
                 return "Hello, " + name + "!";
-            }, this)).{@link JW.Functor#property-target target}; // build greeting message
+            }, this));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text)); // bind element text to message
         }
     });
@@ -48,7 +48,7 @@ example:
 
     new Greeter().{@link JW.UI.Component#renderTo renderTo}("body");
 
-<iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.0.0/greeter.html"></iframe>
+<iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.3/greeter.html"></iframe>
 
 Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes
 you confident in that you're able to implement as complicated and big MVC application as you would like to. You

@@ -1,9 +1,9 @@
 ﻿# Часть 5. Свойства
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/1.0.0-5/](http://enepomnyaschih.github.io/mt/1.0.0-5/)
+[http://enepomnyaschih.github.io/mt/1.3-5/](http://enepomnyaschih.github.io/mt/1.3-5/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-5) (Git branch)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.3-5](https://github.com/enepomnyaschih/mt/tree/mt-1.3-5) (Git branch)
 
 Пришло время познакомиться с еще одним слоем jWidget: свойствами, которые предоставляются нам классом [JW.Property](#!/guide/rujwproperty).
 Свойство - это любое значение, которое может оповещать клиенты о своем изменении. Таким образом, [JW.Property](#!/guide/rujwproperty) - это
@@ -41,32 +41,35 @@
 
 Мы избавились от весомого куска кода. Давайте перейдем к представлению, и посмотрим, что можно сделать там.
 Вместо того, чтобы прослушивать событие изменения свойства вручную, давайте воспользуемся специальными классами
-функтора и апдейтера.
+маппера и апдейтера.
 
-**Функтор** строит новое свойство на базе существующих. В нашем конкретном случае, мы планируем построить
-строковые свойства, содержащие значения "Like/Unlike" и "Retweet/Unretweet".
+**Маппер** строит новое свойство на базе существующих. В нашем конкретном случае, мы планируем построить
+строковые свойства, содержащие значения "Like/Unlike" и "Retweet/Unretweet". Маппер неявно создается
+методами {@link JW.Property#$$mapValue $$mapValue} и {@link JW.Property#$$mapObject $$mapObject}.
 
 **Апдейтер** прослушивает изменения свойства и обрабатывает их каким-то способом. В нашем случае, мы планируем
 обновлять текст внутри кнопок и менять набор их CSS классов.
 
+Время жизни маппера и апдейтера надо ограничить временем жизни компонента, поэтому не забудьте их заагрегировать.
+
 **public/mt/tweetview/tweetview.js**
 
         renderLike: function(el) {
-            var text = this.{@link JW.Class#own own}(new JW.Functor([this.tweetData.like], function(like) {
+            var text = this.{@link JW.Class#own own}(this.tweetData.like.{@link JW.Property#$$mapValue $$mapValue}(function(like) {
                 return like ? "Unlike" : "Like";
-            }, this)).{@link JW.Functor#property-target target};
+            }, this));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
             this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.like));
-            el.click(this._onLikeClick);
+            el.{@link jQuery#jwon jwon}("click", this._onLikeClick, this);
         },
         
         renderRetweet: function(el) {
-            var text = this.{@link JW.Class#own own}(new JW.Functor([this.tweetData.retweet], function(retweet) {
+            var text = this.{@link JW.Class#own own}(this.tweetData.retweet.{@link JW.Property#$$mapValue $$mapValue}(function(retweet) {
                 return retweet ? "Unretweet" : "Retweet";
-            }, this)).{@link JW.Functor#property-target target};
+            }, this));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
             this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.retweet));
-            el.click(this._onRetweetClick);
+            el.{@link jQuery#jwon jwon}("click", this._onRetweetClick, this);
         },
         
         _onLikeClick: function(event) {

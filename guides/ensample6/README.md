@@ -1,8 +1,8 @@
 ﻿# Part 6. Collection synchronizers
 
-Demo: [http://enepomnyaschih.github.io/mt/1.0.0-6/](http://enepomnyaschih.github.io/mt/1.0.0-6/)
+Demo: [http://enepomnyaschih.github.io/mt/1.3-6/](http://enepomnyaschih.github.io/mt/1.3-6/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.3-6](https://github.com/enepomnyaschih/mt/tree/mt-1.3-6) (Git branch)
 
 Now we'll switch to the most wonderful and important part of jWidget which makes jWidget special -
 collection synchronizers.
@@ -37,14 +37,18 @@ So, let's replace code of mt.TweetFeed with the next:
 **public/mt/tweetfeed/tweetfeed.js**
 
         renderTweets: function() {
-            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#createMapper createMapper}({
-                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
-                    return new mt.TweetView(tweetData);
-                },
-                {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
-                {@link JW.AbstractCollection.Mapper#scope scope}: this
-            })).{@link JW.AbstractArray.Mapper#property-target target};
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(tweetData) {
+                return new mt.TweetView(tweetData);
+            }, this));
         }
+
+{@link JW.AbstractArray#$$mapObjects $$mapObjects} method implicitly creates a synchronizer - item converter
+(JW.AbstractCollection.Mapper). That's why all changes in data collection will be tracked properly, and
+the view will be kept up-to-date.
+
+**Notice** that {@link JW.AbstractArray#$$mapObjects $$mapObjects} method invokes child item destructor on its
+removal from the collection. In the majority on cases, it is enough. If this is not something you need,
+try {@link JW.AbstractArray#$$mapValues $$mapValues} and {@link JW.AbstractArray#createMapper createMapper} methods.
 
 Since our array of this.data.tweets is still simple (JW.Array), this code is completely equal to the original one -
 run the application in browser and you won't see any difference. But now we are able to replace simple array
@@ -82,17 +86,8 @@ submit. Bind mt.ProfileBox to jQuery.submit event:
 
 **public/mt/profilebox/profilebox.js**
 
-    mt.ProfileBox = function(data) {
-        this._onComposeSubmit = JW.inScope(this._onComposeSubmit, this);
-        mt.ProfileBox.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data; // mt.Data
-    };
-    
-    JW.extend(mt.ProfileBox, JW.UI.Component, {
-        // ... code
-        
         renderComposeForm: function(el) {
-            el.submit(this._onComposeSubmit);
+            el.{@link jQuery#jwon jwon}("submit", this._onComposeSubmit, this);
         },
         
         _onComposeSubmit: function(event) {
@@ -112,7 +107,6 @@ submit. Bind mt.ProfileBox to jQuery.submit event:
             }), 0);
             this.{@link JW.UI.Component#getElement getElement}("compose-input").val("")
         }
-    });
 
 And run our application. After text input and "Tweet" button click, we'll see a new tweet in tweet feed:
 
@@ -126,9 +120,6 @@ We'll need the access to mt.Data object to remove the tweet:
 **public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(data, tweetData) {
-        this._onLikeClick = JW.inScope(this._onLikeClick, this);
-        this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
-        this._onRemoveClick = JW.inScope(this._onRemoveClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
         this.data = data; // mt.Data
         this.tweetData = tweetData; // mt.data.Tweet
@@ -136,7 +127,7 @@ We'll need the access to mt.Data object to remove the tweet:
     
     JW.extend(mt.TweetView, JW.UI.Component, {
         renderRemove: function(el) {
-            el.click(this._onRemoveClick);
+            el.{@link jQuery#jwon jwon}("click", this._onRemoveClick, this);
         },
         
         // ...
@@ -153,9 +144,7 @@ Update mt.TweetView object construction arguments in mt.TweetFeed:
 
 **public/mt/tweetfeed/tweetfeed.js**
 
-                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
-                    return new mt.TweetView(this.data, tweetData);
-                },
+                return new mt.TweetView(this.data, tweetData);
 
 Run application and try to click Remove button in tweet:
 

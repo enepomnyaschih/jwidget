@@ -1,9 +1,9 @@
 ﻿# Часть 6. Синхронизаторы коллекций
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/1.0.0-6/](http://enepomnyaschih.github.io/mt/1.0.0-6/)
+[http://enepomnyaschih.github.io/mt/1.3-6/](http://enepomnyaschih.github.io/mt/1.3-6/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-6) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.3-6](https://github.com/enepomnyaschih/mt/tree/mt-1.3-6) (ветка)
 
 Этот пример является продолжением предыдущей части.
 
@@ -41,14 +41,18 @@
 **public/mt/tweetfeed/tweetfeed.js**
 
         renderTweets: function() {
-            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#createMapper createMapper}({
-                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
-                    return new mt.TweetView(tweetData);
-                },
-                {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
-                {@link JW.AbstractCollection.Mapper#scope scope}: this
-            })).{@link JW.AbstractArray.Mapper#property-target target};
+            return this.{@link JW.Class#own own}(this.data.tweets.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(tweetData) {
+                return new mt.TweetView(tweetData);
+            }, this));
         }
+
+Метод {@link JW.AbstractArray#$$mapObjects $$mapObjects} неявно создает внутри себя синхронизатор - конвертер элементов
+(JW.AbstractCollection.Mapper). Поэтому теперь все изменения в коллекции данных будут корректно отслеживаться, и
+представление будет обновляться.
+
+**Замечание:** Метод {@link JW.AbstractArray#$$mapObjects $$mapObjects} запускает деструктор дочернего элемента при
+его удалении из коллекции. Этого хватает в большинстве случаев. Если вас данное поведение не устраивает, рассмотрите
+методы {@link JW.AbstractArray#$$mapValues $$mapValues} и {@link JW.AbstractArray#createMapper createMapper}.
 
 Поскольку наш массив this.data.tweets пока простой (JW.Array), этот код эквивалентен предыдущему - запустите
 приложение в браузере, и вы не заметите разницы. Зато теперь мы получили возможность заменить реализацию массива
@@ -86,17 +90,8 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
 
 **public/mt/profilebox/profilebox.js**
 
-    mt.ProfileBox = function(data) {
-        this._onComposeSubmit = JW.inScope(this._onComposeSubmit, this);
-        mt.ProfileBox.{@link JW.Class#static-property-_super _super}.call(this);
-        this.data = data; // mt.Data
-    };
-    
-    JW.extend(mt.ProfileBox, JW.UI.Component, {
-        // ... код
-        
         renderComposeForm: function(el) {
-            el.submit(this._onComposeSubmit);
+            el.{@link jQuery#jwon jwon}("submit", this._onComposeSubmit, this);
         },
         
         _onComposeSubmit: function(event) {
@@ -116,7 +111,6 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
             }), 0);
             this.{@link JW.UI.Component#getElement getElement}("compose-input").val("")
         }
-    });
 
 И запустим наше приложение. После ввода текста и нажатия кнопки "Tweet" мы увидим новый твит в начале ленты твитов:
 
@@ -130,9 +124,6 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
 **public/mt/tweetview/tweetview.js**
 
     mt.TweetView = function(data, tweetData) {
-        this._onLikeClick = JW.inScope(this._onLikeClick, this);
-        this._onRetweetClick = JW.inScope(this._onRetweetClick, this);
-        this._onRemoveClick = JW.inScope(this._onRemoveClick, this);
         mt.TweetView.{@link JW.Class#static-property-_super _super}.call(this);
         this.data = data; // mt.Data
         this.tweetData = tweetData; // mt.data.Tweet
@@ -140,7 +131,7 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
     
     JW.extend(mt.TweetView, JW.UI.Component, {
         renderRemove: function(el) {
-            el.click(this._onRemoveClick);
+            el.{@link jQuery#jwon jwon}("click", this._onRemoveClick, this);
         },
         
         // ...
@@ -157,9 +148,7 @@ Compose tweet. Подпишемся на событие jQuery.submit в mt.Prof
 
 **public/mt/tweetfeed/tweetfeed.js**
 
-                {@link JW.AbstractCollection.Mapper#createItem createItem}: function(tweetData) {
-                    return new mt.TweetView(this.data, tweetData);
-                },
+                return new mt.TweetView(this.data, tweetData);
 
 Запустите приложение и попробуйте кликнуть по кнопке Remove у твита:
 

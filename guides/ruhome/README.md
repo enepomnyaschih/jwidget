@@ -30,9 +30,9 @@ jWidget - чисто объектно-ориентированное решен�
         },
 
         renderGreeting: function(el) {
-            var text = this.{@link JW.Class#own own}(new JW.Functor([this.name], function(name) {
+            var text = this.{@link JW.Class#own own}(this.name.{@link JW.Property#$$mapValue $$mapValue}(function(name) { // строим сообщение приветствия
                 return "Hello, " + name + "!";
-            }, this)).{@link JW.Functor#property-target target}; // строим сообщение приветствия
+            }, this));
             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text)); // привязываем текст элемента к сообщению
         }
     });
@@ -47,7 +47,7 @@ jWidget - чисто объектно-ориентированное решен�
 
     new Greeter().{@link JW.UI.Component#renderTo renderTo}("body");
 
-<iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.0.0/greeter.html"></iframe>
+<iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.3/greeter.html"></iframe>
 
 Конечно, в Angular и Ember этот пример выглядел бы гораздо короче, но зато с jWidget вы ясно видите, что происходит в
 этом коде. Благодаря этому вы можете быть абсолютно уверены в том, что с помощью jWidget можно реализовать сколь

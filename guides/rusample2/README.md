@@ -1,9 +1,9 @@
 ﻿# Часть 2. Дочерние компоненты, массивы
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/1.0.0-2/](http://enepomnyaschih.github.io/mt/1.0.0-2/)
+[http://enepomnyaschih.github.io/mt/1.3-2/](http://enepomnyaschih.github.io/mt/1.3-2/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-2](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-2) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.3-2](https://github.com/enepomnyaschih/mt/tree/mt-1.3-2) (ветка)
 
 Этот пример является продолжением предыдущей части.
 
@@ -27,7 +27,7 @@
     
     JW.extend(mt.Data, JW.Class, {
         // override
-        {@link JW.Class#destroy destroy}: function() {
+        {@link JW.Class#destroyObject destroyObject}: function() {
             this.tweets.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy); // очищаем массив и уничтожаем элементы
             this.tweets.{@link JW.AbstractArray#destroy destroy}(); // уничтожаем массив
             this.{@link JW.Class#method-_super _super}();
@@ -149,7 +149,7 @@ JavaScript или другие значения.**
 **всегда, когда вы передаете функцию в качестве аргумента функции, следующим аргументом передается контекст
 вызова этой функции.**
 
-В результате мы получаем JW.Array, содержщащий объекты типа mt.TweetView, который мы возвращаем на выходе из
+В результате мы получаем JW.Array, содержащий объекты типа mt.TweetView, который мы возвращаем на выходе из
 метода renderTweets. Тем самым мы просим фреймворк отрендерить дочерние компоненты внутрь элемента с jwid="tweets".
 
 Далее, добавим CSS-файл.

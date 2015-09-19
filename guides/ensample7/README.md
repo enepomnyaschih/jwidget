@@ -1,8 +1,8 @@
 ﻿# Part 7. Project infrastructure
 
-Demo: [http://enepomnyaschih.github.io/mt/1.0.0-7/](http://enepomnyaschih.github.io/mt/1.0.0-7/)
+Demo: [http://enepomnyaschih.github.io/mt/1.3-7/](http://enepomnyaschih.github.io/mt/1.3-7/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-7](https://github.com/enepomnyaschih/mt/tree/mt-1.0.0-7) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.3-7](https://github.com/enepomnyaschih/mt/tree/mt-1.3-7) (Git branch)
 
 In this part, we'll improve the project infrastructure:
 
