@@ -27,14 +27,14 @@ JW.Plugins = JW.Plugins || {};
  * URL router. Converts incoming URL part (hash or pathname) to a target object and passes tail string to it
  * for further routing.
  *
- * Router takes an incoming JW.Property<string> (for example, JW.UI.hash), parses it and provides an outcoming
+ * Router takes an incoming string JW.Property (for example, JW.UI.hash), parses it and provides an outcoming
  * JW.Property. Outcoming property may contain any object you want. If it implements JW.Plugins.Router.Routable
  * interface (i.e. has {@link JW.Plugins.Router.Routable#setPath setPath} method), path tail is passed to it
  * for further routing. It is convenient to use a nested router object to process path tail as well.
  *
  * Example:
  *
- * <iframe style="border: 1px solid green; padding: 10px;" width="400" height="350" src="http://enepomnyaschih.github.io/mt/1.3/router.html"></iframe>
+ * <iframe style="border: 1px solid green; padding: 10px;" width="600" height="300" src="http://enepomnyaschih.github.io/mt/1.3/router.html"></iframe>
  *
  * Source code of the example is not minified so you can review it using "View source code of the frame" context
  * menu item in your browser.
@@ -48,9 +48,11 @@ JW.Plugins = JW.Plugins || {};
  * - blank URL is mapped to a simple JW.UI.Component as a blank page placeholder
  * - any other URL is mapped to NotFound component
  *
+ * Code:
+ *
  *     {@link JW.UI.Component#beforeRender beforeRender}: function(el) {
  *         this.{@link JW.Class#method-_super _super}();
- *         this.router = this.own(new JW.Plugins.Router({
+ *         this.router = this.{@link JW.Class#own own}(new JW.Plugins.Router({
  *             {@link JW.Plugins.Router#cfg-path path}: JW.UI.hash,
  *             {@link JW.Plugins.Router#cfg-handler handler}: {
  *                 {@link JW.Plugins.Router.Handler#cfg-routes routes}: {
@@ -73,12 +75,14 @@ JW.Plugins = JW.Plugins || {};
  * "inbox/*" URL's. Applacation router passes URL tail string to
  * Inbox.{@link JW.Plugins.Router.Routable#setPath setPath} method to do that.
  *
- * - "inbox/<id>" URL is mapped to Email component if an email with such ID exists
- * - "inbox/<id>" URL is mapped to EmailNotFounc component if there's no email with such ID
  * - "inbox" URL is mapped to EmailList component
+ * - "inbox/&lt;id&gt;" URL is mapped to Email component if an email with such ID exists
+ * - "inbox/&lt;id&gt;" URL is mapped to EmailNotFound component if there's no email with such ID
+ *
+ * Code:
  *
  *     renderContent: function() {
- *         return this.own(new JW.Plugins.Router({
+ *         return this.{@link JW.Class#own own}(new JW.Plugins.Router({
  *             {@link JW.Plugins.Router#cfg-path path}: this.path,
  *             {@link JW.Plugins.Router#cfg-handler handler}: function(id) {
  *                 if (!id) {
@@ -98,20 +102,20 @@ JW.Plugins = JW.Plugins || {};
  * Routing is performed in three steps:
  *
  * - Incoming path string is parsed using {@link JW.Plugins.Router#cfg-separator separator} callback into two tokens:
- * route and argument. Route will be used to process this single routing step, and argument will be passed to a target
- * for further routing. Make sure that separator never returns two routes which have the same meaning.
- * For example, if both "" and "inbox"
+ * route and argument. Route will be used to process this single routing step, and argument will be passed to a
+ * {@link JW.Plugins.Router#property-target target} for further routing. Make sure that separator never returns two
+ * routes which have the same target. For example, if both "" and "inbox"
  * lead to Inbox component, make sure that separator function returns the same route for them, for example, "".
  * Otherwise, expect your target component to be recreated when user switches back and forth between "" and "inbox".
  * If separator function returns null or undefined route, it is automatically mapped to blank string.
  * Separator can be specified as a string. In this case, it is passed to JW.Plugins.Router#makeSeparator
  * method - see it for more details. Separator defaults to "/".
  * - The route returned by separator is assigned to {@link JW.Plugins.Router#property-route route} property. If it
- * is changed, the next steps are following:
- * -- Null is assigned to {@link JW.Plugins.Router#property-target target} property
- * -- Previous target is being destroyed
- * -- {@link JW.Plugins.Router#cfg-handler handler} function is called to build a new target
- * -- Result is assigned to {@link JW.Plugins.Router#property-target target} property
+ * is changed, the next steps are following:<ul>
+ * <li>Null is assigned to {@link JW.Plugins.Router#property-target target} property</li>
+ * <li>Previous target is being destroyed</li>
+ * <li>{@link JW.Plugins.Router#cfg-handler handler} function is called to build a new target</li>
+ * <li>Result is assigned to {@link JW.Plugins.Router#property-target target} property</li></ul>
  * - If target implements JW.Plugins.Router.Routable interface, its {@link JW.Plugins.Router.Routable#setPath setPath}
  * method is called with an argument string provided by separator callback
  *
@@ -169,21 +173,21 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	 * `separator(path: string): string|Array<string>`
 	 *
 	 * Path separator. Parses incoming path to two tokens: route and argument. Route will be used to process this
-	 * single routing step, and argument will be passed to a target for further routing.
+	 * single routing step, and argument will be passed to a {@link #property-target} for further routing.
 	 *
-	 * Make sure that separator never returns two routes which have the same meaning. For example, if both "" and "inbox"
+	 * Make sure that separator never returns two routes which have the same target. For example, if both "" and "inbox"
 	 * lead to Inbox component, make sure that separator function returns the same route for them, for example, "".
 	 * Otherwise, expect your target component to be recreated when user switches back and forth between "" and "inbox".
 	 *
 	 * If separator function returns null or undefined route, it is automatically mapped to blank string.
 	 *
-	 * Separator can be specified as a string. In this case, it is passed to JW.Plugins.Router#makeSeparator
+	 * Separator can be specified as a string. In this case, it is built with JW.Plugins.Router#makeSeparator
 	 * method - see it for more details.
 	 *
 	 * Defaults to "/".
 	 */
 	/**
-	 * @cfg {Function|Object} handler `<Function>`
+	 * @cfg {Function|JW.Plugins.Router.Handler} handler
 	 *
 	 * `handler(route: string): JW.Plugins.Router.Routable`
 	 *
@@ -197,19 +201,19 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	 *     },
 	 *     scope: this
 	 *
-	 * Handler can be specified as an Object. In this case, it is passed to JW.Plugins.Router#makeHandler
-	 * method - see it for more details.
+	 * Handler can be specified as an object matching JW.Plugins.Router.Handler interface.
+	 * In this case, it is built with JW.Plugins.Router#makeHandler method - see it for more details.
 	 *
 	 * Default handler function returns null no matter what which makes no sense. Please specify always.
 	 */
 	/**
-	 * @cfg {Object} scope #cfg-handler's call scope.
+	 * @cfg {Object} scope Call scope for {@link #cfg-separator} and {@link #cfg-handler}.
 	 */
 	/**
 	 * @property {JW.Property} target `<JW.Plugins.Router.Routable>` Target routable object.
 	 */
 	/**
-	 * @property {JW.Property} route `<string>` Current route.
+	 * @property {JW.Property} route `<string>` Current route. Read-only.
 	 */
 
 	destroyObject: function() {
@@ -256,6 +260,20 @@ JW.extend(JW.Plugins.Router, JW.Class, {
  * route, and a remaining part of the path after separator symbol is used as an argument. Leading separator symbols are
  * trimmed. If separator symbol is not found in trimmed path, the entire path is used as a route, and argument is null.
  *
+ * Examples:
+ *
+ * <table>
+ *   <tr><td>Incoming path</td><td>Separator</td><td>Resulting route</td><td>Resulting argument</td></tr>
+ *   <tr><td>"" or null</td><td>"/"</td><td>""</td><td>null</td></tr>
+ *   <tr><td>"inbox"</td><td>"/"</td><td>"inbox"</td><td>null</td></tr>
+ *   <tr><td>"inbox/"</td><td>"/"</td><td>"inbox"</td><td>""</td></tr>
+ *   <tr><td>"inbox/1"</td><td>"/"</td><td>"inbox"</td><td>"1"</td></tr>
+ *   <tr><td>"inbox/1/edit"</td><td>"/"</td><td>"inbox"</td><td>"1/edit"</td></tr>
+ *   <tr><td>"/inbox"</td><td>"/"</td><td>"inbox"</td><td>null</td></tr>
+ *   <tr><td>"/inbox/"</td><td>"/"</td><td>"inbox"</td><td>""</td></tr>
+ *   <tr><td>"///inbox///"</td><td>"/"</td><td>"inbox"</td><td>"//"</td></tr>
+ * </table>
+ *
  * @static
  * @param {string} separator Separator symbol/string.
  * @returns {Function} Separator function.
@@ -287,7 +305,7 @@ JW.Plugins.Router.makeSeparator = function(separator) {
  *
  * Example:
  *
- *     this.router = this.own(new JW.Plugins.Router({
+ *     this.router = this.{@link JW.Class#own own}(new JW.Plugins.Router({
  *         {@link JW.Plugins.Router#cfg-path path}: JW.UI.hash,
  *         {@link JW.Plugins.Router#cfg-handler handler}: {
  *             {@link JW.Plugins.Router.Handler#cfg-routes routes}: {
@@ -302,8 +320,8 @@ JW.Plugins.Router.makeSeparator = function(separator) {
  *     }));
  *
  * @static
- * @param {string} separator Separator symbol/string.
- * @returns {Function} Separator function.
+ * @param {JW.Plugins.Router.Handler} configuration Handler configuration object.
+ * @returns {Function} Handler function.
  */
 JW.Plugins.Router.makeHandler = function(config) {
 	return function(route) {
@@ -316,19 +334,20 @@ JW.Plugins.Router.makeHandler = function(config) {
  * @class JW.Plugins.Router.Handler
  *
  * Interface for router {@link JW.Plugins.Router#cfg-handler handler} configuration object.
+ * Converted to a function by JW.Plugins.Router#makeHandler method.
  */
 /**
  * @cfg {Object} routes Mapping from route string to a handler function for this specific route.
  */
 /**
- * @cfg {Function} handler function for all routes which don't match
+ * @cfg {Function} notFound Function for all routes which don't match
  * {@link JW.Plugins.Router.Handler#cfg-routes routes} mapping.
  */
 
 /**
  * @class JW.Plugins.Router.Routable
  *
- * Interface for routerable {@link JW.Plugins.Router#cfg-target target} object.
+ * Interface for routable {@link JW.Plugins.Router#cfg-target target} object.
  */
 /**
  * @method setPath
