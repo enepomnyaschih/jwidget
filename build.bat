@@ -12,6 +12,7 @@ xcopy /I /Y /Q jwsdk-config\temp\merge\plugins\* jwidget-files\plugins
 xcopy /I /Y /Q public\build\packages\jwlib.min.js jwidget-files
 xcopy /I /Y /Q public\build\packages\jwui.min.js jwidget-files
 xcopy /I /Y /Q public\build\packages\plugins\* jwidget-files\plugins
+del /Q jwidget-files\plugins\*-tests.*
 
 :Compress an archive for downloading
 del /Q guides\endownload\jwidget.zip
