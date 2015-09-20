@@ -44,29 +44,9 @@ JW.Tests.Plugins.RouterTestCase = JW.Unit.TestCase.extend({
 			}
 		});
 
-		var router = new JW.Plugins.Router({
-			handler: {
-				routes: {
-					"admin": function() {
-						return new Routable("admin");
-					},
-					"app": function() {
-						return new Routable("app");
-					},
-					"settings": function() {
-						return new Routable("settings");
-					},
-					"": function() {
-						return new Routable("blank");
-					},
-				},
-				notFound: function(core) {
-					return new Routable("not found: " + core);
-				}
-			}
-		});
+		var target = new JW.Property();
 
-		router.target.changeEvent.bind(function(params) {
+		target.changeEvent.bind(function(params) {
 			if (params.value) {
 				test.output("Activate " + params.value.name);
 			} else {
@@ -75,6 +55,25 @@ JW.Tests.Plugins.RouterTestCase = JW.Unit.TestCase.extend({
 		});
 
 		this.setExpectedOutput(
+			"Create blank",
+			"Activate blank"
+		);
+		var router = new JW.Plugins.Router({
+			target: target,
+			handler: {
+				routes: {
+					"admin"   : function() { return new Routable("admin");    },
+					"app"     : function() { return new Routable("app");      },
+					"settings": function() { return new Routable("settings"); },
+					""        : function() { return new Routable("blank");    }
+				},
+				notFound: function(core) { return new Routable("not found: " + core); }
+			}
+		});
+
+		this.setExpectedOutput(
+			"Deactivate",
+			"Destroy blank",
 			"Create admin",
 			"Activate admin"
 		);
@@ -110,14 +109,13 @@ JW.Tests.Plugins.RouterTestCase = JW.Unit.TestCase.extend({
 
 		this.setExpectedOutput(
 			"Deactivate",
-			"Destroy app"
-		);
-		router.path.set(null);
-
-		this.setExpectedOutput(
+			"Destroy app",
 			"Create blank",
 			"Activate blank"
 		);
+		router.path.set(null);
+
+		this.setExpectedOutput();
 		router.path.set("");
 
 		this.setExpectedOutput(

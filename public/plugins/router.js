@@ -16,7 +16,20 @@ JW.Plugins.Router = function(config) {
 	this.path = this._pathCreated ? new JW.Property() : config.path;
 	this._targetCreated = config.target == null;
 	this.target = this._targetCreated ? new JW.Property() : config.target;
-	this._route = null;
+	this.route = new JW.Property();
+	this.own(new JW.Switcher([this.route], {
+		init: function(route) {
+			this.target.set(this.handler.call(this.scope, route));
+		},
+		done: function(route) {
+			var target = this.target.get();
+			this.target.set(null);
+			if (target != null) {
+				target.destroy();
+			}
+		},
+		scope: this
+	}));
 	this.update();
 	this.own(this.path.changeEvent.bind(this.update, this));
 };
@@ -66,18 +79,19 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	 */
 
 	destroyObject: function() {
-		this._done();
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		if (this._pathCreated) {
 			this.path.destroy();
 		}
+		this.route.destroy();
 		this.separator = null;
 		this.handler = null;
 		this.scope = null;
 		this.path = null;
 		this.target = null;
+		this.route = null;
 		this._super();
 	},
 
@@ -93,17 +107,9 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 			route = pair[0];
 			arg = pair[1];
 		}
-		if (route == null) {
-			this._done();
-			return;
-		}
-		if (route !== this._route) {
-			this._done();
-			this._route = route;
-			this.target.set(this.handler.call(this.scope, route) || null);
-		}
+		this.route.set(route || "");
 		var target = this.target.get();
-		if (target != null) {
+		if (target != null && (typeof target.setPath === "function")) {
 			target.setPath(arg);
 		}
 	},
@@ -121,15 +127,6 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 				path.substr(index + separator.length)
 			];
 		};
-	},
-
-	_done: function() {
-		var target = this.target.get();
-		this.target.set(null);
-		if (target != null) {
-			target.destroy();
-		}
-		this._route = null;
 	}
 });
 
