@@ -1,0 +1,5 @@
+{
+	"template" : "base",
+	"package"  : "plugins/router-tests",
+	"title"    : "jWidget Router plugin unit tests"
+}

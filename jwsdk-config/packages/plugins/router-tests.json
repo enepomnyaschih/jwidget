@@ -1,0 +1,10 @@
+{
+	"requires" : [
+		"jwunit",
+		"plugins/router"
+	],
+
+	"resources" : [
+		"plugins/router-tests.js"
+	]
+}
