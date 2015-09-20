@@ -1,5 +1,5 @@
 /*!
-	jWidget UI 1.2
+	jWidget UI 1.3
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -501,11 +501,11 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *
  * ### More about child component collections
  *
- * It is convenient to use JW.AbstractCollection.Mapper to convert data collections into UI component collections.
+ * It is convenient to use JW.AbstractCollection#$$mapObjects method to convert data collections into UI component collections.
  * Thanks to it, view will be updated on data update automatically.
  *
- * That's the reason why we recommend to use jWidget JW.AbstractCollection in data model instead of native JavaScript
- * Array and Object: these collections have Observable-implementations and can be synchronized with each other.
+ * That's the reason why we recommend to use jWidget collections in data model instead of native JavaScript
+ * Array and Object: jWidget collections have observable implementations which can be synchronized to each other.
  *
  * [Getting started. Part 6. Collection synchronizers](#!/guide/ensample6)
  *
@@ -551,20 +551,18 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *
  *     // should be called not before the rendering initiation
  *     initLabels: function() {
- *         this._labelMapper = this.labels.{@link JW.AbstractArray#createMapper createMapper}({
- *             {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
- *             {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
- *             {@link JW.AbstractCollection.Mapper#scope scope}: this
- *         });
+ *         this._labelViews = this.labels.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(label) {
+ *             return new LabelView(label);
+ *         }, this);
  *         // Add labels into element with jwid="labels"
- *         this._labelArray = this.{@link #addArray addArray}(this._labelMapper.{@link JW.AbstractCollection.Mapper#property-target target}, "labels");
+ *         this._labelArray = this.{@link #addArray addArray}(this._labelViews, "labels");
  *     },
  *
  *     clearLabels: function() {
  *         this._labelArray.{@link JW.Class#destroy destroy}();
  *         this._labelArray = null;
- *         this._labelMapper.{@link JW.Class#destroy destroy}();
- *         this._labelMapper = null;
+ *         this._labelViews.{@link JW.Class#destroy destroy}();
+ *         this._labelViews = null;
  *     }
  *
  * You don't need to remove child components explicitly all the time. On parent component destruction, framework
@@ -577,18 +575,16 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *     },
  *
  *     renderLabels: function() {
- *         return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
- *             {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) { return new LabelView(label); },
- *             {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
- *             {@link JW.AbstractCollection.Mapper#scope scope}: this
- *         })).target;
+ *         return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(label) {
+ *             return new LabelView(label);
+ *         }, this));
  *     }
  *
  * ### Common practices of child component management
  *
- * **Internal named child component**
+ * **Create child component**
  *
- * This example describes how to create and destroy the child component with `jwid="title-box"`.
+ * This example describes how to create and destroy a child component with `jwid="title-box"`.
  *
  *     var MyComponent = function() {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
@@ -607,7 +603,7 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *             '</div>'
  *     });
  *
- * **Internal replaceable child component**
+ * **Create replaceable child component**
  *
  * This example describes how to create an easily replaceable child component with `jwid="document"`.
  * Assume that you have a property "document" and want to replace an old document view with a new one
@@ -622,13 +618,9 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *         // JW.Property<Document> document;
  *
  *         renderDocument: function() {
- *             return this.{@link JW.Class#own own}(new JW.Mapper([this.document], {
- *                 {@link JW.Mapper#createValue createValue}: function(document) {
- *                     return new DocumentView(document);
- *                 },
- *                 {@link JW.Mapper#destroyValue destroyValue}: JW.destroy,
- *                 {@link JW.Mapper#scope scope}: this
- *             })).{@link JW.Mapper#property-target target};
+ *             return this.{@link JW.Class#own own}(this.document.{@link JW.Property#$$mapObject $$mapObject}(function(document) {
+ *                 return new DocumentView(document);
+ *             }, this));
  *         }
  *     });
  *
@@ -639,10 +631,10 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *             '</div>'
  *     });
  *
- * **Internal immutable child collection**
+ * **Create child collection**
  *
  * This example describes how to create and destroy child components by data collection, and insert them into
- * element with `jwid="labels"`.
+ * element with `jwid="labels"`. If data collection is observable, child collection will be constantly synchronized with data.
  *
  *     var MyComponent = function(labels) {
  *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
@@ -653,9 +645,9 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *         // JW.AbstractArray<Label> labels;
  *
  *         renderLabels: function() {
- *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$map $map}(function(label) {
+ *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#$$mapObjects $$mapObjects}(function(label) {
  *                 return new LabelView(label);
- *             }, this)).{@link JW.AbstractCollection#ownItems ownItems}();
+ *             }, this));
  *         }
  *     });
  *
@@ -666,38 +658,7 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *             '</div>'
  *     });
  *
- * **Internal mutable child collection**
- *
- * This example describes how to create and destroy child components by data collection, and insert them into
- * element with `jwid="labels"`. Child collection will be being synchronized with data on fly.
- *
- *     var MyComponent = function(labels) {
- *         MyComponent.{@link JW.Class#static-property-_super _super}.call(this);
- *         this.labels = labels;
- *     };
- *
- *     JW.extend(MyComponent, JW.UI.Component, {
- *         // JW.AbstractArray<Label> labels;
- *
- *         renderLabels: function() {
- *             return this.{@link JW.Class#own own}(this.labels.{@link JW.AbstractArray#createMapper createMapper}({
- *                 {@link JW.AbstractCollection.Mapper#createItem createItem}: function(label) {
- *                     return new LabelView(label);
- *                 },
- *                 {@link JW.AbstractCollection.Mapper#destroyItem destroyItem}: JW.destroy,
- *                 {@link JW.AbstractCollection.Mapper#scope scope}: this
- *             })).{@link JW.AbstractCollection.Mapper#property-target target};
- *         }
- *     });
- *
- *     JW.UI.template(MyComponent, {
- *         main:
- *             '<div jwclass="my-component">' +
- *                 '<div jwid="labels"></div>' +
- *             '</div>'
- *     });
- *
- * **External child components**
+ * **Add existing components as children**
  *
  * This example describes how to insert child components which were created by someone else, and therefore
  * shouldn't be destroyed automatically. Here, "titleBox" can be either JW.UI.Component, or
@@ -866,7 +827,12 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this._arrays = null;
 			JW.Set.each(this._replaceables, JW.destroy);
 			this._replaceables = null;
+		}
+		this._super();
+	},
 
+	destroyObject: function() {
+		if (this.el) {
 			this.children.unrender();
 			this.unrender();
 
@@ -1091,14 +1057,14 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 *
 	 * Pass an instance of JW.Property<JW.UI.Component>, and view will be synchronized with this property of fly.
 	 *
-	 * It is convenient to create "component" property from data property using JW.Mapper class.
+	 * It is convenient to create "component" property from data property using JW.Property#$$mapObject method.
 	 *
 	 * Method returns an instance of JW.UI.Component.Replaceable. This object is purposed for replaceable child
 	 * removal from parent component. Use {@link JW.Class#destroy destroy} method to do this.
 	 * Also, the replaceable will be removed from parent component on parent component destruction right
 	 * before #unrender method call.
 	 * But notice that child component inside this property won't be destroyed automatically.
-	 * Usually it can be done by corresponding JW.Mapper destruction in #unrender method.
+	 * Usually it can be done by corresponding JW.Mapper or property destruction in #unrender method.
 	 *
 	 * @param {JW.Property} component `<JW.UI.Component>` Child component property.
 	 * @param {String} id jwId of element to replace.
@@ -1115,7 +1081,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * Based on JW.UI.Inserter synchronizer. Thanks to that, if you'll pass an instance of
 	 * JW.ObservableArray as "components", then view will be synchronized with this array content of fly.
 	 *
-	 * It is convenient to create "components" array from data array using JW.AbstractArray#createMapper method,
+	 * It is convenient to create "components" array from data array using JW.AbstractArray#$$mapObjects method,
 	 * i.e. by JW.AbstractCollection.Mapper instantiation.
 	 *
 	 * Method returns an instance of JW.UI.Component.Array. This object is purposed for child component array
@@ -1123,7 +1089,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * Also, the array will be removed from parent component on parent component destruction right
 	 * before #unrender method call.
 	 * But notice that child components inside this array won't be destroyed automatically.
-	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper destruction in #unrender method.
+	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper or array destruction in #unrender method.
 	 *
 	 * @param {JW.AbstractArray} components Child component array.
 	 * @param {jQuery/string} [el]
@@ -1143,14 +1109,14 @@ JW.extend(JW.UI.Component, JW.Class, {
 	 * then view will be synchronized with this collection content of fly.
 	 *
 	 * It is convenient to create "components" collection from data collection using
-	 * JW.AbstractCollection#createMapper method, i.e. by JW.AbstractCollection.Mapper instantiation.
+	 * JW.AbstractCollection#$$mapObjects method, i.e. by JW.AbstractCollection.Mapper instantiation.
 	 *
 	 * Method returns an instance of JW.UI.Component.Collection. This object is purposed for child component
 	 * collection removal from parent component. Use {@link JW.Class#destroy destroy} method to do this.
 	 * Also, the collection will be removed from parent component on parent component destruction right
 	 * before #unrender method call.
 	 * But notice that child components inside this collection won't be destroyed automatically.
-	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper destruction in #unrender method.
+	 * Usually it can be done by corresponding JW.AbstractCollection.Mapper or collection destruction in #unrender method.
 	 *
 	 * @param {JW.AbstractCollection} components Child component collection.
 	 * @param {jQuery/string} [el]
@@ -1308,13 +1274,13 @@ JW.UI.Component.Array = function(parent, source, el) {
 	this.source = source;
 	JW.Set.add(parent._arrays, this);
 
-	var mapper = this.own(source.createMapper({
+	this._mapper = source.createMapper({
 		createItem  : function(child) { this.parent._initChild(child); return child; },
 		destroyItem : function(child) { this.parent._doneChild(child); },
 		scope       : this
-	}));
+	});
 
-	this.own(new JW.UI.Component.Inserter(mapper.target, el[0]));
+	this._inserter = new JW.UI.Component.Inserter(this._mapper.target, el[0]);
 };
 
 JW.extend(JW.UI.Component.Array, JW.Class, {
@@ -1322,7 +1288,11 @@ JW.extend(JW.UI.Component.Array, JW.Class, {
 	// JW.AbstractArray<JW.UI.Component> source;
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
+		this._inserter.destroy();
+		this._inserter = null;
+		this._mapper.destroy();
+		this._mapper = null;
 		JW.Set.remove(this.parent._arrays, this);
 		this._super();
 	},
@@ -1638,13 +1608,13 @@ JW.UI.Component.Collection = function(parent, source, el) {
 	this.source = source;
 	JW.Set.add(parent._collections, this);
 
-	var mapper = this.own(source.createMapper({
+	this._mapper = source.createMapper({
 		createItem  : function(child) { this.parent._initChild(child); return child; },
 		destroyItem : function(child) { this.parent._doneChild(child); },
 		scope       : this
-	}));
+	});
 
-	this.own(new JW.UI.Component.CollectionInserter(mapper.target, el[0]));
+	this._inserter = new JW.UI.Component.CollectionInserter(this._mapper.target, el[0]);
 };
 
 JW.extend(JW.UI.Component.Collection, JW.Class, {
@@ -1652,7 +1622,11 @@ JW.extend(JW.UI.Component.Collection, JW.Class, {
 	// JW.AbstractCollection<JW.UI.Component> source;
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
+		this._inserter.destroy();
+		this._inserter = null;
+		this._mapper.destroy();
+		this._mapper = null;
 		JW.Set.remove(this.parent._collections, this);
 		this._super();
 	},
@@ -1815,7 +1789,7 @@ JW.UI.Component.Replaceable = function(parent, component, id) {
 	this.id = id;
 	JW.Set.add(parent._replaceables, this);
 	
-	this.own(new JW.Switcher([component], {
+	this._switcher = new JW.Switcher([component], {
 		init: function(child) {
 			this.parent.children.set(child, this.id);
 		},
@@ -1823,14 +1797,16 @@ JW.UI.Component.Replaceable = function(parent, component, id) {
 			this.parent.children.remove(this.id);
 		},
 		scope: this
-	}));
+	});
 };
 
 JW.extend(JW.UI.Component.Replaceable, JW.Class, {
 	// JW.UI.Component parent;
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
+		this._switcher.destroy();
+		this._switcher = null;
 		JW.Set.remove(this.parent._replaceables, this);
 		this._super();
 	}
@@ -2010,7 +1986,7 @@ JW.extend(JW.UI.Component.TemplateOutput, JW.Class, {
  *         _onSubmit: function(event) {...},
  *         _onTextChange: function(event) {...},
  *
- *         {@link #destroy}: function() {
+ *         {@link #destroyObject}: function() {
  *             el.off("submit", this._onSubmit);
  *             el.off("change", "input[type=text]", this._onTextChange);
  *             this.{@link #_super}();
@@ -2018,7 +1994,7 @@ JW.extend(JW.UI.Component.TemplateOutput, JW.Class, {
  *     });
  *
  * Thanks to the adapter, we can remove the overhead of locking the method call context and
- * explicit event unsubscribing in the #destroy method:
+ * explicit event unsubscribing in the #destroyObject method:
  *
  *     var MyForm = function(el) {
  *         MyForm.{@link JW.Class#static-property-_super _super}.call(this);
@@ -2069,7 +2045,7 @@ JW.UI.JQEventAttachment = function(el, events, selector, handler, scope) {
 };
 
 JW.extend(JW.UI.JQEventAttachment, JW.Class, {
-	destroy: function() {
+	destroyObject: function() {
 		this.el.off(this.events, this.selector, this.handler);
 		this._super();
 	}
@@ -2250,6 +2226,12 @@ JW.extend(JW.UI.AttrUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.attr(this.attr, this.property.get());
@@ -2302,7 +2284,8 @@ JW.UI.CheckedListener = function(el, config) {
 	JW.UI.CheckedListener._super.call(this);
 	config = (config instanceof JW.Property) ? {target: config} : (config || {});
 	this.el = jQuery(el);
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.property = this.target;
 	this._update();
 	this.el.bind("change", this._update);
@@ -2323,8 +2306,14 @@ JW.extend(JW.UI.CheckedListener, JW.Class, {
 	 * @deprecated
 	 */
 
-	destroy: function() {
+	destroyObject: function() {
 		this.el.unbind("change", this._update);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.el = null;
+		this.target = null;
+		this.property = null;
 		this._super();
 	},
 
@@ -2456,6 +2445,12 @@ JW.extend(JW.UI.ClassUpdater, JW.Class, {
 	 * @property {JW.Property} property `<Boolean>` Source property.
 	 */
 	
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
+
 	_update: function() {
 		this.el.toggleClass(this.cls, !!this.property.get());
 	}
@@ -2518,6 +2513,12 @@ JW.extend(JW.UI.CssUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.css(this.style, this.property.get());
@@ -2576,6 +2577,12 @@ JW.extend(JW.UI.HtmlUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.html(this.property.get());
@@ -2641,6 +2648,12 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<Boolean>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.prop(this.prop, this.property.get());
@@ -2702,7 +2715,8 @@ JW.UI.RadioListener = function(el, name, config) {
 	config = (config instanceof JW.Property) ? {target: config} : (config || {});
 	this.el = jQuery(el);
 	this.name = name;
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.property = this.target;
 	this._selector = "input[type=radio][name='" + name + "']";
 	this._update();
@@ -2727,8 +2741,14 @@ JW.extend(JW.UI.RadioListener, JW.Class, {
 	 * @deprecated
 	 */
 
-	destroy: function() {
+	destroyObject: function() {
 		this.el.off("change", this._selector, this._update);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.el = null;
+		this.target = null;
+		this.property = null;
 		this._super();
 	},
 
@@ -2799,6 +2819,12 @@ JW.extend(JW.UI.RadioUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		var value = this.property.get();
@@ -2865,6 +2891,12 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el[0].textContent = this.property.get();
@@ -2920,7 +2952,8 @@ JW.UI.ValueListener = function(el, config, simple) {
 	JW.UI.ValueListener._super.call(this);
 	config = (config instanceof JW.Property) ? {target: config, simple: simple} : (config || {});
 	this.el = jQuery(el);
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.property = this.target;
 	this.simple = config.simple || !JW.UI.isLifeInput(el);
 	this._update();
@@ -2950,11 +2983,17 @@ JW.extend(JW.UI.ValueListener, JW.Class, {
 	 * @deprecated
 	 */
 
-	destroy: function() {
+	destroyObject: function() {
 		if (!this.simple) {
 			clearInterval(this._timer);
 		}
 		this.el.unbind("change", this._update);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.el = null;
+		this.target = null;
+		this.property = null;
 		this._super();
 	},
 
@@ -3017,6 +3056,12 @@ JW.extend(JW.UI.ValueUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.val(this.property.get());
@@ -3076,6 +3121,12 @@ JW.extend(JW.UI.VisibleUpdater, JW.Class, {
 	/**
 	 * @property {JW.Property} property `<String>` Source property.
 	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.el.css("display", this.property.get() ? "" : "none");

@@ -1,5 +1,5 @@
 /*!
-	jWidget Lib 1.2
+	jWidget Lib 1.3
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -738,8 +738,9 @@ JW.apply(JW, {
 	 *         // String message;
 	 *
 	 *         // override
-	 *         {@link JW.Class#destroy destroy}: function() {
+	 *         {@link JW.Class#destroyObject destroyObject}: function() {
 	 *             this.el.unbind("click", this._onClick);
+	 *             this._super();
 	 *         },
 	 *
 	 *         _onClick: function() {
@@ -940,7 +941,7 @@ JW.extend = JW.ClassUtil.extend;
  *         // Element el;
  *         
  *         // Destructor
- *         {@link JW.Class#method-destroy destroy}: function() {
+ *         {@link JW.Class#method-destroyObject destroyObject}: function() {
  *             // Release resources
  *             if (this.el) {
  *                 this.el.remove();
@@ -999,12 +1000,31 @@ JW.Class = function() {
 /**
  * @method destroy
  *
- * Class destructor. The logic of class instance destruction should be implemented here. You must call this method
- * explicitly from outside, because JavaScript doesn't support automatic class destructor calling. Alternatively
- * (and optimally), you should use method #own to aggregate objects inside each other. If you override this method,
+ * Class destructor invocation method. Destroys all aggregated objects and calls #destroyObject method.
+ * You must call this method explicitly from outside, because JavaScript doesn't support automatic class destructor
+ * calling. Alternatively (and optimally), you should use method #own to aggregate this object inside some another.
+ *
+ *     var object = new MyClass();
+ *
+ *     // ...
+ *
+ *     // Once object is not needed anymore, destroy it
+ *     object.{@link #method-destroy destroy}();
+ *
+ * You can override this method in a subclass to do some preliminary work before aggregated objects destruction.
+ * For example, JW.UI.Component overrides this method to remove child components before their destruction,
+ * before child components are usually aggregated inside the component.
+ *
+ * @returns {void}
+ */
+/**
+ * @method destroyObject
+ *
+ * Class destructor implementation. Called inside #destroy method after aggregated objects destruction.
+ * The logic of class instance destruction should be implemented here. If you override this method,
  * don't forget to call superclass destructor at the end of the method:
  *
- *     destroy: function() {
+ *     destroyObject: function() {
  *         // Release resources
  *         ...
  *         // Call superclass destructor
@@ -1112,7 +1132,10 @@ JW.extend(JW.Class, Object, {
 		for (var i = pool.length - 1; i >= 0; --i) {
 			pool[i].destroy();
 		}
-	}
+		this.destroyObject();
+	},
+
+	destroyObject: function() {}
 });
 
 /*
@@ -1201,7 +1224,7 @@ JW.extend(JW.Event, JW.Class, {
 	Map<JW.EventAttachment> attachments;
 	*/
 
-	destroy: function() {
+	destroyObject: function() {
 		this.purge();
 		this._super();
 	},
@@ -1309,8 +1332,9 @@ JW.extend(JW.EventAttachment, JW.Class, {
 	Object scope;
 	*/
 	
-	destroy: function() {
+	destroyObject: function() {
 		this.event.unbind(this);
+		this._super();
 	}
 });
 
@@ -1554,20 +1578,25 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  * It lets you to synchronize view with data on fly in accordance to Model-View architecture.
  * The next synchronizers exist to connect observable collections to each other:
  *
- * - Item mapper: JW.AbstractCollection.Mapper
- * - Filterer: JW.AbstractCollection.Filterer
- * - Matching item counter: JW.AbstractCollection.Counter
- * - Converter to set: JW.AbstractCollection.Lister
- * - Converter to map (indexer): JW.AbstractCollection.Indexer
- * - Converter to array (orderer): JW.AbstractCollection.Orderer
- * - Converter to array (sorter by comparer): JW.AbstractCollection.SorterComparing
- * - Observer: JW.AbstractCollection.Observer
- * - View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter, JW.UI.Inserter
- * - Arrays merger: JW.AbstractArray.Merger
- * - Array reverser: JW.AbstractArray.Reverser
+ * <table>
+ *   <tbody>
+ *     <tr><td>Synchronizer</td><td>Class</td><td>Creation methods</td></tr>
+ *     <tr><td>Item mapper</td><td>JW.AbstractCollection.Mapper</td><td>#$$mapValues, #$$mapObjects, #createMapper</td></tr>
+ *     <tr><td>Filterer</td><td>JW.AbstractCollection.Filterer</td><td>#$$filter, #createFilterer</td></tr>
+ *     <tr><td>Matching item counter</td><td>JW.AbstractCollection.Counter</td><td>#$$count, #createCounter</td></tr>
+ *     <tr><td>Converter to set</td><td>JW.AbstractCollection.Lister</td><td>#$$toSet, #createLister</td></tr>
+ *     <tr><td>Converter to map (indexer)</td><td>JW.AbstractCollection.Indexer</td><td>#$$index, #createIndexer</td></tr>
+ *     <tr><td>Converter to array (orderer)</td><td>JW.AbstractCollection.Orderer</td><td>#$$toArray, #createOrderer</td></tr>
+ *     <tr><td>Converter to array (sorter by comparer)</td><td>JW.AbstractCollection.SorterComparing</td><td>#$$toSortedComparing, #createSorterComparing</td></tr>
+ *     <tr><td>Observer</td><td>JW.AbstractCollection.Observer</td><td>#createObserver</td></tr>
+ *     <tr><td>View synchronizers</td><td>JW.AbstractArray.Inserter, JW.AbstractMap.Inserter, JW.UI.Inserter</td><td>createInserter</td></tr>
+ *     <tr><td>Arrays merger</td><td>JW.AbstractArray.Merger</td><td>{@link JW.AbstractArray#$$merge $$merge}, {@link JW.AbstractArray#createMerger createMerger}</td></tr>
+ *     <tr><td>Array reverser</td><td>JW.AbstractArray.Reverser</td><td>{@link JW.AbstractArray#$$toReversed $$toReversed}, {@link JW.AbstractArray#createReverser createReverser}</td></tr>
+ *   </tbody>
+ * </table>
  *
  * Simple collections are very similar to native JavaScript collections.
- * The main aim of them is compatibility: they have the same API as observable collections, but work a bit faster.
+ * Their main purpose is interface compatibility: they have the same API as observable collections, but they work a little bit faster.
  *
  * Please keep in mind the next rules whenever you work with jWidget collections.
  *
@@ -1587,19 +1616,29 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  *     JW.Array.each(array.{@link JW.AbstractArray#clear clear}(), JW.destroy); // correct
  *     JW.Array.each(array.{@link JW.AbstractArray#clear tryClear}(), JW.destroy); // incorrect: 'undefined' exception if array is empty
  *
- * 3) All methods which return collection have 2 implementations: `method` and `$method`.
+ * 3) Majority methods which return collection have 3 implementations: `method`, `$method` and `$$method`.
  * These methods perform the same modification but return the result in different format.
- * First implementation returns native JavaScript collection: Array or Object.
- * Second implementation returns jWidget adapter: JW.Array, JW.Map or JW.Set.
+ *
+ * - `method` returns native JavaScript collection: Array or Object.
+ * - `$method` returns jWidget collection: JW.Array, JW.Map or JW.Set.
+ * - `$$method` returns jWidget collection and starts continuous synchronization with original
+ * collection if one is observable. To stop synchronization, #destroy the target collection.
+ *
  * Use one method that's more convenient in your specific situation.
  * For example, `$method` is convenient for chaining algorithm method calls.
  * So, previous example can be changed next way:
  *
  *     array.{@link JW.AbstractArray#$clear $clear}().{@link JW.AbstractArray#each each}(JW.destroy);
  *
- * But in next example `method` is more appropriate:
+ * But in the next example `method` is more appropriate:
  *
  *     set.{@link JW.AbstractArray#addAll addAll}(array.{@link JW.AbstractArray#clear clear}());
+ *
+ * Whereas `$$method` is just a shorthand for synchronizer creation:
+ *
+ *     this.set = this.own(array.{@link JW.AbstractArray#$$toSet $$toSet}());
+ *     // pretty much the same as
+ *     this.set = this.own(array.{@link JW.AbstractArray#createLister createLister}()).target;
  *
  * 4) It is better if all items in collection are unique. Some methods like
  * JW.AbstractArray#performReorder require each item to have an unique key.
@@ -1609,7 +1648,8 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  *
  * Content retrieving:
  *
- * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #getLength} - Returns count of items in collection. For observable collections, `length` property may come
+ * in handy if you want to track collection length dynamically.
  * - {@link #isEmpty} - Checks collection for emptiness.
  * - {@link #getFirst} - Returns first item in collection.
  * - {@link #containsItem} - Does collection contain the item?
@@ -1623,17 +1663,17 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  * - {@link #each} - Iterates items.
  * - {@link #search} - Finds item by criteria.
  * Returns first item matching the criteria.
- * - {@link #filter}, #$filter - Filters collection by criteria.
+ * - {@link #filter}, #$filter, #$$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * - {@link #count} - Counts the items matching criteria.
- * - {@link #map}, #$map - Maps collection items.
+ * - {@link #count}, #$count, #$$count - Counts the items matching criteria.
+ * - {@link #map}, #$map, #$$mapValues, #$$mapObjects - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing, #$$toSortedComparing -
  * Builds array consisting of collection items sorted by indexer or comparer.
- * - {@link #index}, #$index - Indexes collection.
+ * - {@link #index}, #$index, #$$index - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
- * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #toArray}, #$toArray, #$$toArray - Builds new array consisting of collection items.
+ * - {@link #toSet}, #$toSet, #$$toSet - Builds new set consisting of collection items.
  * - {@link #asArray}, #$asArray - Represents collection as array.
  * - {@link #asSet}, #$asSet - Represents collection as set.
  *
@@ -1645,13 +1685,13 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  *
  * Synchronizers creation:
  *
- * - {@link #createMapper} - Creates item mapper.
- * - {@link #createFilterer} - Creates filterer.
- * - {@link #createCounter} - Creates matching item counter.
- * - {@link #createLister} - Creates converter to set.
- * - {@link #createIndexer} - Creates converter to map (indexer).
- * - {@link #createOrderer} - Creates converter to array (orderer).
- * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createMapper} - Creates item mapper. Extended version of #$$mapValues and #$$mapObjects methods.
+ * - {@link #createFilterer} - Creates filterer. Extended version of #$$filter method.
+ * - {@link #createCounter} - Creates matching item counter. Extended version of #$$count method.
+ * - {@link #createLister} - Creates converter to set. Extended version of #$$toSet method.
+ * - {@link #createIndexer} - Creates converter to map (indexer). Extended version of #$$index method.
+ * - {@link #createOrderer} - Creates converter to array (orderer). Extended version of #$$toArray method.
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer). Extended version of #$$toSortedComparing method.
  * - {@link #createObserver} - Creates observer.
  *
  * Similar collection creation (for algorithms and synchronizers implementation):
@@ -1705,7 +1745,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 		return this;
 	},
 
-	destroy: function() {
+	destroyObject: function() {
 		this.tryClear();
 		this._super();
 	},
@@ -1925,6 +1965,28 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	$toSortedComparing: JW.AbstractCollection._create$Array("toSortedComparing"),
 
 	/**
+	 * Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractCollection.SorterComparing implicitly.
+	 *
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T): number`
+	 *
+	 * Comparer function. Returns positive value if t1 > t2; nagative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.AbstractArray} `<T>` Sorted array.
+	 */
+	$$toSortedComparing: function(compare, scope, order) {
+		return this.$toSortedComparing(compare, scope, order);
+	},
+
+	/**
 	 * Indexes collection.
 	 *
 	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
@@ -1967,6 +2029,26 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	$index: JW.AbstractCollection._create$Map("index"),
 
 	/**
+	 * Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractCollection.Indexer implicitly.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.AbstractMap} `<T>` Collection index.
+	 */
+	$$index: function(callback, scope) {
+		return this.$index(callback, scope);
+	},
+
+	/**
 	 * Converts collection to array.
 	 *
 	 * Builds new array consisting of collection items.
@@ -1992,6 +2074,19 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	$toArray: JW.AbstractCollection._create$Array("toArray"),
 
 	/**
+	 * Converts collection to array.
+	 *
+	 * Builds new array consisting of collection items.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractCollection.Orderer implicitly.
+	 *
+	 * @returns {JW.AbstractArray} `<T>` Items array.
+	 */
+	$$toArray: function() {
+		return this.$toArray();
+	},
+
+	/**
 	 * Converts collection to set.
 	 *
 	 * Builds new set consisting of collection items.
@@ -2014,6 +2109,19 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @returns {JW.Set} `<T>` Items set.
 	 */
 	$toSet: JW.AbstractCollection._create$Set("toSet"),
+
+	/**
+	 * Converts collection to set.
+	 *
+	 * Builds new set consisting of collection items.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractCollection.Lister implicitly.
+	 *
+	 * @returns {JW.AbstractSet} `<T>` Items set.
+	 */
+	$$toSet: function() {
+		return this.$toSet();
+	},
 
 	/**
 	 * Represents collection as array.
@@ -2061,7 +2169,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 *
 	 * @returns {JW.Set} `<T>` Items set.
 	 */
-	$asSet: JW.AbstractCollection._create$Set("asSet")
+	$asSet: JW.AbstractCollection._create$Set("asSet"),
 
 	/**
 	 * @method filter
@@ -2095,6 +2203,25 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.AbstractCollection} `<T>` Filtered collection.
 	 */
+	/**
+	 * Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractCollection.Filterer implicitly.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T, index: number): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.AbstractCollection} `<T>` Filtered collection.
+	 */
+	$$filter: function(callback, scope) {
+		return this.$filter(callback, scope);
+	},
 
 	/**
 	 * @method count
@@ -2112,6 +2239,43 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {number} Number of items.
 	 */
+	/**
+	 * Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Property} `<number>` Number of items.
+	 */
+	$count: function(callback, scope) {
+		return new JW.Property(this.count(callback, scope));
+	},
+
+	/**
+	 * Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractCollection.Counter implicitly.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Property} `<number>` Number of items.
+	 */
+	$$count: function(callback, scope) {
+		return this.$count(callback, scope);
+	},
 
 	/**
 	 * @method map
@@ -2145,6 +2309,46 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.AbstractCollection} `<U>` Mapped collection.
 	 */
+	/**
+	 * `<U>` Maps collection items.
+	 *
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractCollection.Mapper implicitly.
+	 * In comparison to #$$mapObjects method, doesn't destroy the resulting items after their removal.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.AbstractCollection} `<U>` Mapped collection.
+	 */
+	$$mapValues: function(callback, scope) {
+		return this.$map(callback, scope);
+	},
+	/**
+	 * `<U>` Maps collection items.
+	 *
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractCollection.Mapper implicitly.
+	 * In comparison to #$$mapValues method, destroys the resulting items after their removal.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.AbstractCollection} `<U>` Mapped collection.
+	 */
+	$$mapObjects: function(callback, scope) {
+		return this.$map(callback, scope).ownItems();
+	}
 
 	/**
 	 * @method createEmpty
@@ -2170,6 +2374,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createMapper
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
+	 * Extended version of #$$mapValues and #$$mapObjects methods.
 	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Mapper}
 	 * `<T, U, JW.AbstractCollection<T>, JW.AbstractCollection<U>>` Synchronizer.
@@ -2178,6 +2383,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createFilterer
 	 * Creates collection filterer.
 	 * Selects appropriate synchronizer implementation automatically.
+	 * Extended version of #$$filter method.
 	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Filterer}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
@@ -2186,6 +2392,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createCounter
 	 * Creates matching item counter.
 	 * Selects appropriate synchronizer implementation automatically.
+	 * Extended version of #$$count method.
 	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Counter}
 	 * `<T>` Synchronizer.
@@ -2202,6 +2409,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createOrderer
 	 * Creates collection converter to array (orderer).
 	 * Selects appropriate synchronizer implementation automatically.
+	 * Extended version of #$$toArray method.
 	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Orderer}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
@@ -2210,6 +2418,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createSorterComparing
 	 * Creates collection converter to array (sorter by comparer).
 	 * Selects appropriate synchronizer implementation automatically.
+	 * Extended version of #$$toSortedComparing method.
 	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.SorterComparing}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
@@ -2218,6 +2427,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createIndexer
 	 * Creates collection converter to map (indexer).
 	 * Selects appropriate synchronizer implementation automatically.
+	 * Extended version of #$$index method.
 	 * @param {Object} config Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Indexer}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
@@ -2226,6 +2436,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * @method createLister
 	 * Creates collection converter to set.
 	 * Selects appropriate synchronizer implementation automatically.
+	 * Extended version of #$$toSet method.
 	 * @param {Object} [config] Configuration (see synchronizer's Config options).
 	 * @returns {JW.AbstractCollection.Lister}
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
@@ -2259,15 +2470,19 @@ JW.extend(JW.AbstractCollection, JW.Class, {
  * Counter for collection items which match the specified filter.
  * Builds new JW.Property&lt;number&gt;, containing the number of items for which callback
  * function returns !== `false`.
+ * If original collection is observable, starts continuous synchronization.
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
- *     var counter = source.{@link JW.AbstractCollection#createFilterer createCounter}({
- *         {@link JW.AbstractArray.Counter#cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
+ *     var counter = source.{@link JW.AbstractCollection#createCounter createCounter}({
+ *         {@link JW.AbstractCollection.Counter#cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
  *     });
- *     assert(counter.{@link JW.AbstractCollection.Counter#property-target target}.{@link JW.Property#get get}() === 2); // 1, 3
+ *     var target = counter.{@link JW.AbstractCollection.Counter#property-target target};
+ *     assert(target.{@link JW.Property#get get}() === 2); // 1, 3
  *
  *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
- *     assert(counter.{@link JW.AbstractCollection.Counter#property-target target}.{@link JW.Property#get get}() === 4); // 1, 3, 7, 1
+ *     assert(target.{@link JW.Property#get get}() === 4); // 1, 3, 7, 1
+ *
+ *     counter.{@link JW.AbstractCollection.Counter#destroy destroy}();
  *
  * Use JW.AbstractCollection#createCounter method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -2281,6 +2496,17 @@ JW.extend(JW.AbstractCollection, JW.Class, {
  *         {@link JW.AbstractCollection.Counter#cfg-filterItem filterItem}: this._filterItem,
  *         {@link JW.AbstractCollection.Counter#cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$count shorthand can be used instead. It returns the target property right away:
+ *
+ *     var source = new JW.ObservableArray([1, 2, 3]);
+ *     var target = source.{@link JW.AbstractCollection#$$count $$count}(function(x) { return x % 2 === 1; });
+ *     assert(target.{@link JW.Property#get get}() === 2); // 1, 3
+ *
+ *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
+ *     assert(target.{@link JW.Property#get get}() === 4); // 1, 3, 7, 1
+ *
+ *     target.{@link JW.Property#destroy destroy}();
  *
  * You may use JW.AbstractCollection.Filterer instead of counter, but counter works much
  * faster because it doesn't create a filtered collection.
@@ -2315,7 +2541,8 @@ JW.AbstractCollection.Counter = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.filterItem = config.filterItem;
-	this.target = config.target || this.own(new JW.Property(0));
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property(0) : config.target;
 	this.scope = config.scope || this;
 	this.target.set(source.count(this.filterItem, this.scope));
 };
@@ -2343,8 +2570,15 @@ JW.extend(JW.AbstractCollection.Counter, JW.Class, {
 	 */
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.set(0);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.filterItem = null;
+		this.target = null;
+		this.scope = null;
 		this._super();
 	},
 
@@ -2395,19 +2629,23 @@ JW.extend(JW.AbstractCollection.Counter, JW.Class, {
  * Collection filterer.
  * Builds new collection of the same type, consisting of items for which callback
  * function returns !== `false`.
+ * If original collection is observable, starts continuous synchronization.
  * Keeps item order in array.
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
  *     var filterer = source.{@link JW.AbstractCollection#createFilterer createFilterer}({
  *         {@link #cfg-filterItem filterItem}: function(x) { return x % 2 === 1; }
  *     });
- *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 3]));
+ *     var target = filterer.{@link JW.AbstractCollection.Filterer#property-target target};
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 3]));
  *
  *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
- *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
  *
  *     source.{@link JW.AbstractArray#move move}(2, 6); // move "3" item to the end
- *     assert(filterer.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
+ *
+ *     filterer.{@link JW.AbstractCollection.Filterer#destroy destroy}();
  *
  * Use JW.AbstractCollection#createFilterer method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -2421,6 +2659,20 @@ JW.extend(JW.AbstractCollection.Counter, JW.Class, {
  *         {@link #cfg-filterItem filterItem}: this._filterItem,
  *         {@link #cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$filter shorthand can be used instead. It returns the target collection right away:
+ *
+ *     var source = new JW.ObservableArray([1, 2, 3]);
+ *     var target = source.{@link JW.AbstractCollection#$$filter $$filter}(function(x) { return x % 2 === 1; });
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 3]));
+ *
+ *     source.{@link JW.AbstractArray#addAll addAll}([4, 7, 1, 6]);
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 3, 7, 1]));
+ *
+ *     source.{@link JW.AbstractArray#move move}(2, 6); // move "3" item to the end
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 7, 1, 3]));
+ *
+ *     target.{@link JW.AbstractArray#destroy destroy}();
  *
  * Synchronizer rules:
  *
@@ -2463,7 +2715,8 @@ JW.AbstractCollection.Filterer = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.filterItem = config.filterItem;
-	this.target = config.target || this.own(this.source.createEmpty());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? this.source.createEmpty() : config.target;
 	this.scope = config.scope || this;
 };
 
@@ -2488,6 +2741,17 @@ JW.extend(JW.AbstractCollection.Filterer, JW.Class, {
 	/**
 	 * @property {C} target Target collection.
 	 */
+
+	destroyObject: function() {
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.filterItem = null;
+		this.target = null;
+		this.scope = null;
+		this._super();
+	}
 });
 
 /*
@@ -2515,15 +2779,28 @@ JW.extend(JW.AbstractCollection.Filterer, JW.Class, {
  * `<T extends JW.Class, C extends JW.AbstractCollection<T>>`
  *
  * Converter to set.
+ * If original collection is observable, starts continuous synchronization.
  * Can be used for fast item existance detection.
  *
- *     var lister = collection.{@link JW.AbstractCollection#createLister createLister}();
- *     var set = lister.{@link #property-target target};
- *     
- *     // Assert that some item x exists in source collection
- *     assert(set.{@link JW.AbstractSet#contains contains}(x));
+ *     // Create two dummy collection items
+ *     var x = new JW.Class();
+ *     var y = new JW.Class();
  *
- * **Notice:** All items of source collection must be different.
+ *     // Initialize collection and synchronizer
+ *     var array = new JW.ObservableArray([x]);
+ *     var lister = array.{@link JW.AbstractCollection#createLister createLister}();
+ *     var set = lister.{@link #property-target target};
+ *
+ *     assert(set.{@link JW.AbstractSet#contains contains}(x));
+ *     assert(!set.{@link JW.AbstractSet#contains contains}(y));
+ *
+ *     // Target set is automatically synchronized with original observable array
+ *     array.add(y);
+ *     assert(set.{@link JW.AbstractSet#contains contains}(y));
+ *
+ *     lister.{@link JW.AbstractCollection.Lister#destroy destroy}();
+ *
+ * **Notice:** All items of source collection must be different (i.e. have unique _iid).
  *
  * Use JW.AbstractCollection#createLister method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -2534,6 +2811,25 @@ JW.extend(JW.AbstractCollection.Filterer, JW.Class, {
  *     var lister = collection.{@link JW.AbstractCollection#createLister createLister}({
  *         {@link #cfg-target target}: set
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$toSet shorthand can be used instead. It returns the target set right away:
+ *
+ *     // Create two dummy collection items
+ *     var x = new JW.Class();
+ *     var y = new JW.Class();
+ *
+ *     // Initialize collections
+ *     var array = new JW.ObservableArray([x]);
+ *     var set = array.{@link JW.AbstractCollection#$$toSet $$toSet}();
+ *
+ *     assert(set.{@link JW.AbstractSet#contains contains}(x));
+ *     assert(!set.{@link JW.AbstractSet#contains contains}(y));
+ *
+ *     // Target set is automatically synchronized with original observable array
+ *     array.add(y);
+ *     assert(set.{@link JW.AbstractSet#contains contains}(y));
+ *
+ *     set.{@link JW.AbstractSet#destroy destroy}();
  *
  * Synchronizer rules:
  *
@@ -2559,7 +2855,8 @@ JW.AbstractCollection.Lister = function(source, config) {
 	JW.AbstractCollection.Lister._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.target = config.target || this.own(source.createEmptySet());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source.createEmptySet() : config.target;
 	this.target.tryAddAll(source.asArray());
 };
 
@@ -2575,8 +2872,13 @@ JW.extend(JW.AbstractCollection.Lister, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryRemoveAll(this.source.asArray());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
 		this._super();
 	}
 });
@@ -2607,18 +2909,27 @@ JW.extend(JW.AbstractCollection.Lister, JW.Class, {
  *
  * Collection indexer.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * If original collection is observable, starts continuous synchronization.
  * Can be used for fast item search by key (for example, by ID).
  *
- *     var indexer = collection.{@link JW.AbstractCollection#createIndexer createIndexer}({
+ *     var array = new JW.ObservableArray([{id: 9, label: "The item"}]);
+ *     var indexer = array.{@link JW.ObservableArray#createIndexer createIndexer}({
  *         {@link #cfg-getKey getKey}: function(item) { return item.id; },
  *         {@link #cfg-scope scope}: this
  *     });
  *     var map = indexer.{@link #property-target target};
- *     
- *     // Get an item with ID = 9
- *     var item = map.{@link JW.AbstractMap#get get}(9);
  *
- * **Notice:** All items of source collection must have different keys.
+ *     // Get an item with ID = 9
+ *     assert(map.{@link JW.AbstractMap#get get}(9).label === "The item");
+ *     assert(map.{@link JW.AbstractMap#get get}(5) == null);
+ *
+ *     // Target map is automatically synchronized with original observable array
+ *     array.add({id: 5, label: "New item"});
+ *     assert(map.{@link JW.AbstractMap#get get}(5).label === "New item");
+ *
+ *     indexer.{@link JW.AbstractCollection.Indexer#destroy destroy}();
+ *
+ * **Notice:** All items of source collection must have different (unique) string keys.
  *
  * Use JW.AbstractCollection#createIndexer method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -2631,6 +2942,21 @@ JW.extend(JW.AbstractCollection.Lister, JW.Class, {
  *         {@link #cfg-getKey getKey}: function(item) { return item.id; },
  *         {@link #cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$index shorthand can be used instead. It returns the target map right away:
+ *
+ *     var array = new JW.ObservableArray([{id: 9, label: "The item"}]);
+ *     var map = array.{@link JW.AbstractCollection#$$index $$index}(function(item) { return item.id; });
+ *
+ *     // Get an item with ID = 9
+ *     assert(map.{@link JW.AbstractMap#get get}(9).label === "The item");
+ *     assert(map.{@link JW.AbstractMap#get get}(5) == null);
+ *
+ *     // Target map is automatically synchronized with original observable array
+ *     array.add({id: 5, label: "New item"});
+ *     assert(map.{@link JW.AbstractMap#get get}(5).label === "New item");
+ *
+ *     map.{@link JW.AbstractMap#destroy destroy}();
  *
  * Synchronizer rules:
  *
@@ -2657,7 +2983,8 @@ JW.AbstractCollection.Indexer = function(source, config) {
 	config = config || {};
 	this.source = source;
 	this.getKey = config.getKey;
-	this.target = config.target || this.own(source.createEmptyMap());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source.createEmptyMap() : config.target;
 	this.scope = config.scope || this;
 	this.target.trySetAll(this._index(source.asArray()));
 };
@@ -2684,8 +3011,15 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryRemoveAll(this._keys(this.source.asArray()));
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.getKey = null;
+		this.target = null;
+		this.scope = null;
 		this._super();
 	},
 	
@@ -2734,6 +3068,23 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
  * Collection item converter.
  * Builds new collection of the same type, consisting of results of callback function
  * call for each collection item.
+ * If original collection is observable, starts continuous synchronization.
+ *
+ *     var source = new JW.ObservableArray([1, 2]);
+ *     var mapper = source.{@link JW.ObservableArray#createMapper createMapper}({
+ *         {@link #cfg-createItem createItem}: function(x) { return 2 * x }
+ *     });
+ *     var target = source.{@link #property-target target};
+ *
+ *     assert(target.{@link JW.ObservableArray#get get}(0) === 2);
+ *     assert(target.{@link JW.ObservableArray#get get}(1) === 4);
+ *
+ *     // Target collection is automatically synchronized with original observable collection
+ *     source.add(3);
+ *     assert(target.{@link JW.ObservableArray#get get}(2) === 6);
+ *
+ *     mapper.{@link JW.AbstractCollection.Mapper#destroy destroy}();
+ *
  * Can be used for data convertion into view.
  *
  *     var mapper = dataCollection.{@link JW.AbstractCollection#createMapper createMapper}({
@@ -2755,6 +3106,16 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
  *         {@link #cfg-destroyItem destroyItem}: JW.destroy,
  *         {@link #cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$mapValues and JW.AbstractCollection#$$mapObjects shorthand methods
+ * can be used instead. They return the target collection right away:
+ *
+ *     var viewCollection = dataCollection.{@link JW.AbstractCollection#$$mapObjects $$mapObjects}(function(data) {
+ *         return new View(this, data);
+ *     }, this);
+ *
+ *     // Once not needed anymore, destroy
+ *     viewCollection.{@link JW.AbstractCollection#destroy destroy}();
  *
  * Synchronizer rules:
  *
@@ -2801,7 +3162,8 @@ JW.AbstractCollection.Mapper = function(source, config) {
 	this.source = source;
 	this.createItem = config.createItem;
 	this.destroyItem = config.destroyItem;
-	this.target = config.target || this.own(this.source.createEmpty());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? this.source.createEmpty() : config.target;
 	this.scope = config.scope || this;
 };
 
@@ -2832,6 +3194,18 @@ JW.extend(JW.AbstractCollection.Mapper, JW.Class, {
 	/**
 	 * @property {UC} target Target collection.
 	 */
+
+	destroyObject: function() {
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.createItem = null;
+		this.destroyItem = null;
+		this.target = null;
+		this.scope = null;
+		this._super();
+	}
 });
 
 /*
@@ -2904,7 +3278,7 @@ JW.AbstractCollection.Observer = function(source, config) {
 	this.removeItem = config.removeItem;
 	this.clearItems = config.clearItems;
 	this.change = config.change;
-	this.scope = config.scope || this;
+		this.scope = config.scope || this;
 	this._addItems(source.asArray());
 };
 
@@ -2945,8 +3319,14 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this._clearItems(this.source.asArray());
+		this.source = null;
+		this.addItem = null;
+		this.removeItem = null;
+		this.clearItems = null;
+		this.change = null;
+		this.scope = null;
 		this._super();
 	},
 	
@@ -3008,11 +3388,22 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
  *
  * `<T extends JW.Class, C extends JW.AbstractCollection<T>>`
  *
- * Converter to array (orderer).
- * Converts source collection to array. Adds new items to the end of array.
+ * Converter to array (orderer). Converts source collection to array.
+ * Adds new items to the end of array.
+ * If original collection is observable, starts continuous synchronization.
  *
- *     var orderer = collection.{@link JW.AbstractCollection#createOrderer createOrderer}();
- *     var array = orderer.{@link #property-target target};
+ *     var map = new JW.ObservableMap({a: "A", b: "B"});
+ *     var orderer = map.{@link JW.ObservableMap#createOrderer createOrderer}();
+ *     var array = orderer.{@link JW.AbstractCollection.Orderer#property-target target};
+ *
+ *     assert(array.{@link JW.AbstractArray#get get}(0) === "A");
+ *     assert(array.{@link JW.AbstractArray#get get}(1) === "B");
+ *
+ *     // Target array is automatically synchronized with original observable collection
+ *     map.{@link JW.AbstractMap#set set}("C", "c");
+ *     assert(array.{@link JW.AbstractArray#get get}(2) === "C");
+ *
+ *     orderer.{@link JW.AbstractCollection.Orderer#destroy destroy}();
  *
  * **Notice:** All items of source collection must be different.
  *
@@ -3023,8 +3414,22 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
  *
  *     var array = new JW.Array();
  *     var orderer = collection.{@link JW.AbstractCollection#createOrderer createOrderer}({
- *         {@link #cfg-target target}: array
+ *         {@link JW.AbstractCollection.Orderer#cfg-target target}: array
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$toArray shorthand can be used instead. It returns the target array right away:
+ *
+ *     var map = new JW.ObservableMap({a: "A", b: "B"});
+ *     var array = map.{@link JW.ObservableMap#$$toArray $$toArray}();
+ *
+ *     assert(array.{@link JW.AbstractArray#get get}(0) === "A");
+ *     assert(array.{@link JW.AbstractArray#get get}(1) === "B");
+ *
+ *     // Target array is automatically synchronized with original observable collection
+ *     map.{@link JW.AbstractMap#set set}("C", "c");
+ *     assert(array.{@link JW.AbstractArray#get get}(2) === "C");
+ *
+ *     array.{@link JW.AbstractArray#destroy destroy}();
  *
  * Synchronizer rules:
  *
@@ -3051,7 +3456,8 @@ JW.AbstractCollection.Orderer = function(source, config) {
 	JW.AbstractCollection.Orderer._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.target = config.target || this.own(source.createEmptyArray());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
 	this.target.tryAddAll(source.asArray());
 };
 
@@ -3067,8 +3473,13 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.removeItems(this.source.asArray());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
 		this._super();
 	},
 	
@@ -3112,15 +3523,36 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
  *
  * Converter to array (sorter by comparer).
  * Converts source collection to array. Adds new items into such locations that target array is always kept in sorted
- * state. Sorting is performed by comparing function defined by user.
+ * state. If original collection is observable, starts continuous synchronization.
+ * Sorting is performed by comparing function defined by user.
  *
- *     var sorter = collection.{@link JW.AbstractCollection#createSorterComparing createSorterComparing}({
+ *     var source = new JW.ObservableArray([
+ *         {title: "apple", id: 3},
+ *         {title: "Carrot", id: 1},
+ *         {title: "Apple", id: 2}
+ *     ]);
+ *
+ *     // Sort by title case-insensitively, and then by id
+ *     var sorter = source.{@link JW.AbstractCollection#createSorterComparing createSorterComparing}({
  *         {@link #cfg-compare compare}: function(x, y) {
  *             return JW.cmp(x.title, y.title, true) || JW.cmp(x.id, y.id);
  *         },
  *         {@link #cfg-scope scope}: this
  *     });
- *     var array = sorter.{@link #property-target target};
+ *     var target = sorter.{@link #property-target target};
+ *
+ *     assert(target.{@link JW.AbstractArray#get get}(0).id === 2); // Apple
+ *     assert(target.{@link JW.AbstractArray#get get}(1).id === 3); // apple
+ *     assert(target.{@link JW.AbstractArray#get get}(2).id === 1); // Carrot
+ *
+ *     // Target array is automatically synchronized with original observable collection
+ *     source.add({title: "Banana", id: 4});
+ *     assert(target.{@link JW.AbstractArray#get get}(0).id === 2); // Apple
+ *     assert(target.{@link JW.AbstractArray#get get}(1).id === 3); // apple
+ *     assert(target.{@link JW.AbstractArray#get get}(2).id === 4); // Banana
+ *     assert(target.{@link JW.AbstractArray#get get}(3).id === 1); // Carrot
+ *
+ *     sorter.{@link JW.AbstractCollection.SorterComparing#destroy destroy}();
  *
  * Use JW.AbstractCollection#createOrderer method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -3135,6 +3567,33 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
  *         },
  *         {@link #cfg-scope scope}: this
  *     });
+ *
+ * In simple cases, JW.AbstractCollection#$$toSortedComparing shorthand can be used instead.
+ * It returns the target array right away:
+ *
+ *     var source = new JW.ObservableArray([
+ *         {title: "apple", id: 3},
+ *         {title: "Carrot", id: 1},
+ *         {title: "Apple", id: 2}
+ *     ]);
+ *
+ *     // Sort by title case-insensitively, and then by id
+ *     var target = source.{@link JW.AbstractCollection#$$toSortedComparing $$toSortedComparing}(function(x, y) {
+ *         return JW.cmp(x.title, y.title, true) || JW.cmp(x.id, y.id);
+ *     });
+ *
+ *     assert(target.{@link JW.AbstractArray#get get}(0).id === 2); // Apple
+ *     assert(target.{@link JW.AbstractArray#get get}(1).id === 3); // apple
+ *     assert(target.{@link JW.AbstractArray#get get}(2).id === 1); // Carrot
+ *
+ *     // Target array is automatically synchronized with original observable collection
+ *     source.add({title: "Banana", id: 4});
+ *     assert(target.{@link JW.AbstractArray#get get}(0).id === 2); // Apple
+ *     assert(target.{@link JW.AbstractArray#get get}(1).id === 3); // apple
+ *     assert(target.{@link JW.AbstractArray#get get}(2).id === 4); // Banana
+ *     assert(target.{@link JW.AbstractArray#get get}(3).id === 1); // Carrot
+ *
+ *     target.{@link JW.AbstractArray#destroy destroy}();
  *
  * Synchronizer rules:
  *
@@ -3164,7 +3623,8 @@ JW.AbstractCollection.SorterComparing = function(source, config) {
 	this.compare = config.compare || JW.cmp;
 	this.order = config.order || 1;
 	this.scope = config.scope || this;
-	this.target = config.target || this.own(source.createEmptyArray());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source.createEmptyArray() : config.target;
 	this._splice([], source.asArray());
 };
 
@@ -3193,8 +3653,15 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this._splice(this.source.asArray(), []);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
+		this.compare = null;
+		this.scope = null;
 		this._super();
 	},
 	
@@ -3449,7 +3916,8 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
  *
  * Content retrieving:
  *
- * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #getLength} - Returns count of items in collection. For observable collections, `length` property may come
+ * in handy if you want to track collection length dynamically.
  * - {@link #isEmpty} - Checks collection for emptiness.
  * - **{@link #get} - Returns collection item by key.**
  * - {@link #getFirst} - Returns first item in collection
@@ -3470,20 +3938,20 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
  * Returns first item matching the criteria.
  * - **{@link #find} - Finds item by criteria.
  * Returns index of first item matching the criteria.**
- * - {@link #filter}, #$filter - Filters collection by criteria.
+ * - {@link #filter}, #$filter, #$$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * - {@link #count} - Counts the items matching criteria.
- * - {@link #map}, #$map - Maps collection items.
+ * - {@link #count}, #$count, #$$count - Counts the items matching criteria.
+ * - {@link #map}, #$map, #$$mapValues, #$$mapObjects - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing, #$$toSortedComparing -
  * Builds array consisting of collection items sorted by indexer or comparer.
  * - **{@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
  * Returns indexes of collection items sorted by indexer or comparer.**
- * - {@link #index}, #$index - Indexes collection.
+ * - {@link #index}, #$index, #$$index - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toArray}, #$toArray, #$$toArray - Builds new array consisting of collection items.
  * - **{@link #toMap}, #$toMap - Builds new map consisting of collection items.**
- * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #toSet}, #$toSet, #$$toSet - Builds new set consisting of collection items.
  * - {@link #asArray}, #$asArray - Represents collection as array.
  * - **{@link #asMap}, #$asMap - Represents collection as map.**
  * - {@link #asSet}, #$asSet - Represents collection as set.
@@ -3498,13 +3966,13 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
  *
  * Synchronizers creation:
  *
- * - {@link #createMapper} - Creates item mapper.
- * - {@link #createFilterer} - Creates filterer.
- * - {@link #createCounter} - Creates counter.
- * - {@link #createLister} - Creates converter to set.
- * - {@link #createIndexer} - Creates converter to map (indexer).
- * - {@link #createOrderer} - Creates converter to array (orderer).
- * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createMapper} - Creates item mapper. Extended version of #$$mapValues and #$$mapObjects methods.
+ * - {@link #createFilterer} - Creates filterer. Extended version of #$$filter method.
+ * - {@link #createCounter} - Creates matching item counter. Extended version of #$$count method.
+ * - {@link #createLister} - Creates converter to set. Extended version of #$$toSet method.
+ * - {@link #createIndexer} - Creates converter to map (indexer). Extended version of #$$index method.
+ * - {@link #createOrderer} - Creates converter to array (orderer). Extended version of #$$toArray method.
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer). Extended version of #$$toSortedComparing method.
  * - {@link #createObserver} - Creates observer.
  *
  * Similar collection creation (for algorithms and synchronizers implementation):
@@ -4269,7 +4737,8 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
  *
  * Content retrieving:
  *
- * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #getLength} - Returns count of items in collection. For observable collections, `length` property may come
+ * in handy if you want to track collection length dynamically.
  * - {@link #isEmpty} - Checks collection for emptiness.
  * - {@link #get} - Returns collection item by index.
  * - {@link #getFirst} - Returns first item in collection.
@@ -4295,24 +4764,28 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
  * Returns first item matching the criteria.
  * - {@link #find} - Finds item by criteria.
  * Returns index of first item matching the criteria.
- * - {@link #filter}, #$filter - Filters collection by criteria.
+ * - {@link #filter}, #$filter, #$$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * - {@link #count} - Counts the items matching criteria.
- * - {@link #map}, #$map - Maps collection items.
+ * - {@link #count}, #$count, #$$count - Counts the items matching criteria.
+ * - {@link #map}, #$map, #$$mapValues, #$$mapObjects - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing, #$$toSortedComparing -
  * Builds array consisting of collection items sorted by indexer or comparer.
  * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
  * Returns indexes of collection items sorted by indexer or comparer.
- * - {@link #index}, #$index - Indexes collection.
+ * - {@link #index}, #$index, #$$index - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toArray}, #$toArray, #$$toArray - Builds new array consisting of collection items.
  * - {@link #toMap}, #$toMap - Builds new map consisting of collection items.
- * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #toSet}, #$toSet, #$$toSet - Builds new set consisting of collection items.
  * - {@link #asArray}, #$asArray - Represents collection as array.
  * - {@link #asMap}, #$asMap - Represents collection as map.
  * - {@link #asSet}, #$asSet - Represents collection as set.
  * - **{@link #backEvery} - Checks all items by criteria in backward order.**
+ * - **{@link #merge}, #$merge, #$$merge - (for `JW.AbstractArray<? extends JW.AbstractArray>` only)
+ * Builds array consisting of items of subarrays in the same order.**
+ * - **{@link #toReversed}, #$toReversed, #$$toReversed -
+ * Builds array consisting of collection items in reverse order.**
  *
  * Collection modification:
  *
@@ -4329,23 +4802,24 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
  * - **{@link #splice}, #trySplice - Removes/inserts item ranges.**
  * - **{@link #reorder}, #tryReorder - Reorders items.**
  * - **{@link #sort}, #sortComparing - Sorts array.**
+ * - **{@link #reverse} - Reverses item order in array.**
  * - **{@link #performSplice} - Adjusts contents using #splice method.**
  * - **{@link #performFilter} - Filters contents using #splice method.**
  * - **{@link #performReorder} - Adjusts contents using #reorder method.**
  *
  * Synchronizers creation:
  *
- * - {@link #createMapper} - Creates item mapper.
- * - {@link #createFilterer} - Creates filterer.
- * - {@link #createCounter} - Creates matching item counter.
- * - {@link #createLister} - Creates converter to set.
- * - {@link #createIndexer} - Creates converter to map (indexer).
- * - {@link #createOrderer} - Creates converter to array (orderer).
- * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createMapper} - Creates item mapper. Extended version of #$$mapValues and #$$mapObjects methods.
+ * - {@link #createFilterer} - Creates filterer. Extended version of #$$filter method.
+ * - {@link #createCounter} - Creates matching item counter. Extended version of #$$count method.
+ * - {@link #createLister} - Creates converter to set. Extended version of #$$toSet method.
+ * - {@link #createIndexer} - Creates converter to map (indexer). Extended version of #$$index method.
+ * - {@link #createOrderer} - Creates converter to array (orderer). Extended version of #$$toArray method.
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer). Extended version of #$$toSortedComparing method.
  * - {@link #createObserver} - Creates observer.
  * - **{@link #createInserter} - Creates view synchronizer with array.**
- * - **{@link #createMerger} - Creates arrays merger.**
- * - **{@link #createReverser} - Creates array reverser.**
+ * - **{@link #createMerger} - Creates arrays merger. Extended version of #$$merge method.**
+ * - **{@link #createReverser} - Creates array reverser. Extended version of #$$toReversed method.**
  *
  * Similar collection creation (for algorithms and synchronizers implementation):
  *
@@ -5226,6 +5700,75 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 	},
 
 	/**
+	 * For `JW.AbstractArray<? extends JW.AbstractArray>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Current array is not modified.
+	 * @returns {Array} Merged array.
+	 */
+	merge: function() {
+		return JW.Array.merge(this.map(JW.byMethod("getItems")));
+	},
+
+	/**
+	 * For `JW.AbstractArray<? extends JW.AbstractArray>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Current array is not modified.
+	 * @returns {JW.Array} Merged array.
+	 */
+	$merge: JW.AbstractCollection._create$Array("merge"),
+
+	/**
+	 * For `JW.AbstractArray<? extends JW.AbstractArray>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Current array is not modified.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractArray.Merger implicitly.
+	 * @returns {JW.AbstractArray} Merged array.
+	 */
+	$$merge: function() {
+		var result = this._createMergerTarget();
+		result.own(this.createMerger({
+			target: result
+		}));
+		return result;
+	},
+
+	/**
+	 * Reverses item order in array. Modifies the array itself.
+	 * @returns {void}
+	 */
+	reverse: function() {
+		this.items.reverse();
+	},
+
+	/**
+	 * Builds a new array containing items of this array in reversed order.
+	 * Current array is not modified.
+	 * @returns {Array} `<T>` Reversed array.
+	 */
+	toReversed: function() {
+		return JW.Array.toReversed(this.items);
+	},
+
+	/**
+	 * Builds a new array containing items of this array in reversed order.
+	 * Current array is not modified.
+	 * @returns {JW.Array} `<T>` Reversed array.
+	 */
+	$toReversed: JW.AbstractCollection._create$Array("toReversed"),
+
+	/**
+	 * Builds a new array containing items of this array in reversed order.
+	 * Current array is not modified.
+	 * If this collection is observable, starts continuous synchronization,
+	 * i.e. creates JW.AbstractArray.Reverser implicitly.
+	 * @returns {JW.AbstractArray} `<T>` Reversed array.
+	 */
+	$$toReversed: function() {
+		return this.$toReversed();
+	},
+
+	/**
 	 * `<U>` Creates collection item mapper.
 	 * Selects appropriate synchronizer implementation automatically.
 	 * @param {Object} config Configuration (see synchronizer's Config options).
@@ -5439,6 +5982,11 @@ JW.extend(JW.AbstractArray, JW.IndexedCollection, {
 
 	_callStatic: function(algorithm, args) {
 		return JW.Array[algorithm].apply(JW.Array, [this.items].concat(args || []));
+	},
+
+	_createMergerTarget: function() {
+		return this.some(function(bunch) { return bunch instanceof JW.ObservableArray; }) ?
+			new JW.ObservableArray() : new JW.Array();
 	}
 
 	/**
@@ -5718,7 +6266,7 @@ JW.extend(JW.AbstractArray.Filterer, JW.AbstractCollection.Filterer, {
 	// Array<number> _filtered; // 0 - false, 1 - true
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryClear();
 		this._super();
 	},
@@ -6022,8 +6570,13 @@ JW.extend(JW.AbstractArray.Inserter, JW.Class, {
 	 * @property {JW.AbstractArray} source `<T>` Source array.
 	 */
 	
-	destroy: function() {
+	destroyObject: function() {
 		this._clearItems(this.source.getItems());
+		this.source = null;
+		this.addItem = null;
+		this.removeItem = null;
+		this.clearItems = null;
+		this.scope = null;
 		this._super();
 	},
 	
@@ -6150,7 +6703,7 @@ JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this._destroyItems(this.target.clear(), this.source.getItems());
 		this._super();
 	},
@@ -6198,6 +6751,7 @@ JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
  * `<T>`
  *
  * Arrays merger. Builds array consisting of all source collections items in the same order.
+ * If any of the original collections is observable, starts continuous synchronization.
  *
  *     var source = new JW.ObservableArray([
  *         new JW.Array([1, 2, 3]),
@@ -6205,13 +6759,16 @@ JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
  *         new JW.Array([4])
  *     ]);
  *     var merger = source.{@link JW.AbstractArray#createMerger createMerger}();
- *     assert(merger.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4]));
- *     
+ *     var target = merger.{@link #property-target target};
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4]));
+ *
  *     source.{@link JW.AbstractArray#add add}(new JW.Array([5, 6]));
- *     assert(merger.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4, 5, 6]));
- *     
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4, 5, 6]));
+ *
  *     source.{@link JW.AbstractArray#get get}(1).{@link JW.AbstractArray#addAll addAll}([7, 8, 9]);
- *     assert(merger.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
+ *
+ *     merger.{@link JW.AbstractArray.Merger#destroy destroy}();
  * 
  * Use JW.AbstractArray#createMerger method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -6223,6 +6780,24 @@ JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
  *     var merger = source.{@link JW.AbstractArray#createMerger createMerger}({
  *         {@link #cfg-target target}: target
  *     });
+ *
+ * In simple cases, JW.AbstractArray#$$merge shorthand can be used instead. It returns the target array right away:
+ *
+ *     var source = new JW.ObservableArray([
+ *         new JW.Array([1, 2, 3]),
+ *         new JW.ObservableArray(),
+ *         new JW.Array([4])
+ *     ]);
+ *     var target = source.{@link JW.AbstractArray#$$merge $$merge}();
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4]));
+ *
+ *     source.{@link JW.AbstractArray#add add}(new JW.Array([5, 6]));
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 4, 5, 6]));
+ *
+ *     source.{@link JW.AbstractArray#get get}(1).{@link JW.AbstractArray#addAll addAll}([7, 8, 9]);
+ *     assert(target.{@link JW.AbstractArray#equal equal}([1, 2, 3, 7, 8, 9, 4, 5, 6]));
+ *
+ *     target.{@link JW.AbstractArray#destroy destroy}();
  *
  * Synchronizer rules:
  *
@@ -6250,14 +6825,11 @@ JW.AbstractArray.Merger = function(source, config) {
 	JW.AbstractArray.Merger._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.target = config.target || this.own(this._createTarget());
-	this.own(source.createMapper({
-		createItem: function(bunch) {
-			return bunch.createMergerBunch(this);
-		},
-		destroyItem: JW.destroy,
-		scope: this
-	}));
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source._createMergerTarget() : config.target;
+	this._bunches = source.$$mapObjects(function(bunch) {
+		return bunch.createMergerBunch(this);
+	}, this);
 	this.target.tryAddAll(this._getAllItems());
 };
 
@@ -6273,15 +6845,16 @@ JW.extend(JW.AbstractArray.Merger, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryClear();
+		this._bunches.destroy();
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
+		this._bunches = null;
 		this._super();
-	},
-	
-	// virtual
-	_createTarget: function() {
-		return this.source.some(function(bunch) { return bunch instanceof JW.ObservableArray; }, this) ?
-			new JW.ObservableArray() : new JW.Array();
 	},
 	
 	_getAllItems: function() {
@@ -6451,16 +7024,20 @@ JW.extend(JW.AbstractArray.Orderer, JW.AbstractCollection.Orderer, {
  * `<T>`
  *
  * Array reverser. Builds array containing all items of source array in reversed order.
+ * If original collection is observable, starts continuous synchronization.
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
  *     var reverser = source.{@link JW.AbstractArray#createReverser createReverser}();
- *     assert(reverser.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([3, 2, 1]));
- *     
+ *     var target = reverser.{@link #property-target target};
+ *     assert(target.{@link JW.AbstractArray#equal equal}([3, 2, 1]));
+ *
  *     source.{@link JW.AbstractArray#add add}(4);
- *     assert(reverser.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([4, 3, 2, 1]));
- *     
+ *     assert(target.{@link JW.AbstractArray#equal equal}([4, 3, 2, 1]));
+ *
  *     source.{@link JW.AbstractArray#remove remove}(2);
- *     assert(reverser.{@link #property-target target}.{@link JW.AbstractArray#equal equal}([4, 2, 1]));
+ *     assert(target.{@link JW.AbstractArray#equal equal}([4, 2, 1]));
+ *
+ *     reverser.{@link JW.AbstractArray.Reverser#destroy destroy}();
  * 
  * Use JW.AbstractArray#createReverser method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
@@ -6472,6 +7049,20 @@ JW.extend(JW.AbstractArray.Orderer, JW.AbstractCollection.Orderer, {
  *     var reverser = source.{@link JW.AbstractArray#createReverser createReverser}({
  *         {@link #cfg-target target}: target
  *     });
+ *
+ * In simple cases, JW.AbstractArray#$$toReversed shorthand can be used instead. It returns the target array right away:
+ *
+ *     var source = new JW.ObservableArray([1, 2, 3]);
+ *     var target = source.{@link JW.AbstractArray#$$toReversed $$toReversed}();
+ *     assert(target.{@link JW.AbstractArray#equal equal}([3, 2, 1]));
+ *
+ *     source.{@link JW.AbstractArray#add add}(4);
+ *     assert(target.{@link JW.AbstractArray#equal equal}([4, 3, 2, 1]));
+ *
+ *     source.{@link JW.AbstractArray#remove remove}(2);
+ *     assert(target.{@link JW.AbstractArray#equal equal}([4, 2, 1]));
+ *
+ *     target.{@link JW.AbstractArray#destroy destroy}();
  *
  * Synchronizer rules:
  *
@@ -6499,7 +7090,8 @@ JW.AbstractArray.Reverser = function(source, config) {
 	JW.AbstractArray.Reverser._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.target = config.target || this.own(source.createEmpty());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? source.createEmpty() : config.target;
 	this.target.tryAddAll(this._reverse(source.getItems()));
 };
 
@@ -6515,8 +7107,13 @@ JW.extend(JW.AbstractArray.Reverser, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryClear();
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
 		this._super();
 	},
 	
@@ -6691,7 +7288,8 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
  *
  * Content retrieving:
  *
- * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #getLength} - Returns count of items in collection. For observable collections, `length` property may come
+ * in handy if you want to track collection length dynamically.
  * - {@link #isEmpty} - Checks collection for emptiness.
  * - {@link #get} - Returns collection item by key.
  * - {@link #getFirst} - Returns first item in collection.
@@ -6713,20 +7311,20 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
  * Returns first item matching the criteria.
  * - {@link #find} - Finds item by criteria.
  * Returns index of first item matching the criteria.
- * - {@link #filter}, #$filter - Filters collection by criteria.
+ * - {@link #filter}, #$filter, #$$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * - {@link #count} - Counts the items matching criteria.
- * - {@link #map}, #$map - Maps collection items.
+ * - {@link #count}, #$count, #$$count - Counts the items matching criteria.
+ * - {@link #map}, #$map, #$$mapValues, #$$mapObjects - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing, #$$toSortedComparing -
  * Builds array consisting of collection items sorted by indexer or comparer.
  * - {@link #getSortingKeys}, #$getSortingKeys, #getSortingKeysComparing, #$getSortingKeysComparing -
  * Returns indexes of collection items sorted by indexer or comparer.
- * - {@link #index}, #$index - Indexes collection.
+ * - {@link #index}, #$index, #$$index - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
+ * - {@link #toArray}, #$toArray, #$$toArray - Builds new array consisting of collection items.
  * - {@link #toMap}, #$toMap - Builds new map consisting of collection items.
- * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #toSet}, #$toSet, #$$toSet - Builds new set consisting of collection items.
  * - {@link #asArray}, #$asArray - Represents collection as array.
  * - {@link #asMap}, #$asMap - Represents collection as map.
  * - {@link #asSet}, #$asSet - Represents collection as set.
@@ -6748,13 +7346,13 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
  *
  * Synchronizers creation:
  *
- * - {@link #createMapper} - Creates item mapper.
- * - {@link #createFilterer} - Creates filterer.
- * - {@link #createCounter} - Creates matching item counter.
- * - {@link #createLister} - Creates converter to set.
- * - {@link #createIndexer} - Creates converter to map (indexer).
- * - {@link #createOrderer} - Creates converter to array (orderer).
- * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createMapper} - Creates item mapper. Extended version of #$$mapValues and #$$mapObjects methods.
+ * - {@link #createFilterer} - Creates filterer. Extended version of #$$filter method.
+ * - {@link #createCounter} - Creates matching item counter. Extended version of #$$count method.
+ * - {@link #createLister} - Creates converter to set. Extended version of #$$toSet method.
+ * - {@link #createIndexer} - Creates converter to map (indexer). Extended version of #$$index method.
+ * - {@link #createOrderer} - Creates converter to array (orderer). Extended version of #$$toArray method.
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer). Extended version of #$$toSortedComparing method.
  * - {@link #createObserver} - Creates observer.
  * - **{@link #createInserter} - Creates view synchronizer with map.**
  *
@@ -7240,7 +7838,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Adds or replaces a bunch of items. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * Adds or replaces a bunch of items. As of jWidget 1.3, doesn't return anything for sake of performance.
 	 * For old behaviour, use method {@link #setAllVerbose}.
 	 * @param {Object} items Items.
 	 */
@@ -7319,7 +7917,7 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	},
 
 	/**
-	 * Removes a bunch of items from map. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * Removes a bunch of items from map. As of jWidget 1.3, doesn't return anything for sake of performance.
 	 * For old behaviour, use method {@link #removeAllVerbose}.
 	 * @param {Array} keys `<string>` Item keys.
 	 */
@@ -7784,7 +8382,7 @@ JW.extend(JW.AbstractMap.Filterer, JW.AbstractCollection.Filterer, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryRemoveAll(this.source.getKeys());
 		this._super();
 	}
@@ -7894,8 +8492,8 @@ JW.AbstractMap.Inserter = function(source, config) {
 	this.source = source;
 	this.addItem = config.addItem;
 	this.removeItem = config.removeItem;
-	this.scope = config.scope || this;
 	this.clearItems = config.clearItems;
+	this.scope = config.scope || this;
 	this._addItems(this.source.getJson());
 };
 
@@ -7928,8 +8526,13 @@ JW.extend(JW.AbstractMap.Inserter, JW.Class, {
 	 * @property {JW.AbstractMap} source `<T>` Source map.
 	 */
 	
-	destroy: function() {
+	destroyObject: function() {
 		this._clearItems(this.source.getJson());
+		this.source = null;
+		this.addItem = null;
+		this.removeItem = null;
+		this.clearItems = null;
+		this.scope = null;
 		this._super();
 	},
 	
@@ -8056,7 +8659,7 @@ JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys()), this.source.getJson());
 		this._super();
 	},
@@ -8242,7 +8845,8 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
  *
  * Content retrieving:
  *
- * - {@link #getLength} - Returns count of items in collection.
+ * - {@link #getLength} - Returns count of items in collection. For observable collections, `length` property may come
+ * in handy if you want to track collection length dynamically.
  * - {@link #isEmpty} - Checks collection for emptiness.
  * - {@link #getFirst} - Returns first item in collection.
  * - {@link #containsItem}, **{@link #contains}** - Does collection contain the item?
@@ -8257,17 +8861,17 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
  * - {@link #each} - Iterates items.
  * - {@link #search} - Finds item by criteria.
  * Returns first item matching the criteria.
- * - {@link #filter}, #$filter - Filters collection by criteria.
+ * - {@link #filter}, #$filter, #$$filter - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * - {@link #count} - Counts the items matching criteria.
- * - {@link #map}, #$map - Maps collection items.
+ * - {@link #count}, #$count, #$$count - Counts the items matching criteria.
+ * - {@link #map}, #$map, #$$mapValues, #$$mapObjects - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing -
+ * - {@link #toSorted}, #$toSorted, #toSortedComparing, #$toSortedComparing, #$$toSortedComparing -
  * Builds array consisting of collection items sorted by indexer or comparer.
- * - {@link #index}, #$index - Indexes collection.
+ * - {@link #index}, #$index, #$$index - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * - {@link #toArray}, #$toArray - Builds new array consisting of collection items.
- * - {@link #toSet}, #$toSet - Builds new set consisting of collection items.
+ * - {@link #toArray}, #$toArray, #$$toArray - Builds new array consisting of collection items.
+ * - {@link #toSet}, #$toSet, #$$toSet - Builds new set consisting of collection items.
  * - {@link #asArray}, #$asArray - Represents collection as array.
  * - {@link #asSet}, #$asSet - Represents collection as set.
  *
@@ -8285,13 +8889,13 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
  *
  * Synchronizers creation:
  *
- * - {@link #createMapper} - Creates item mapper.
- * - {@link #createFilterer} - Creates filterer.
- * - {@link #createCounter} - Creates matching item counter.
- * - {@link #createLister} - Creates converter to set.
- * - {@link #createIndexer} - Creates converter to map (indexer).
- * - {@link #createOrderer} - Creates converter to array (orderer).
- * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer).
+ * - {@link #createMapper} - Creates item mapper. Extended version of #$$mapValues and #$$mapObjects methods.
+ * - {@link #createFilterer} - Creates filterer. Extended version of #$$filter method.
+ * - {@link #createCounter} - Creates matching item counter. Extended version of #$$count method.
+ * - {@link #createLister} - Creates converter to set. Extended version of #$$toSet method.
+ * - {@link #createIndexer} - Creates converter to map (indexer). Extended version of #$$index method.
+ * - {@link #createOrderer} - Creates converter to array (orderer). Extended version of #$$toArray method.
+ * - {@link #createSorterComparing} - Creates converter to array (sorter by comparer). Extended version of #$$toSortedComparing method.
  * - {@link #createObserver} - Creates observer.
  *
  * Similar collection creation (for algorithms and synchronizers implementation):
@@ -8888,7 +9492,7 @@ JW.extend(JW.AbstractSet.Filterer, JW.AbstractCollection.Filterer, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.target.tryRemoveAll(this.source.toArray());
 		this._super();
 	}
@@ -9034,7 +9638,7 @@ JW.extend(JW.AbstractSet.Mapper, JW.AbstractCollection.Mapper, {
 	*/
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		var datas = this.source.toArray();
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);
@@ -9916,6 +10520,46 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 *
 	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
 	 * @returns {JW.Array} `<U>` Mapped collection.
+	 */
+	/**
+	 * @method merge
+	 * For `Array<Array>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Original array is not modified.
+	 * @static
+	 * @param {Array} array Array.
+	 * @returns {Array} Merged array.
+	 */
+	/**
+	 * @method $merge
+	 * For `Array<Array>` only.
+	 * Builds array consisting of subarray items in the same order.
+	 * Original array is not modified.
+	 * @static
+	 * @param {Array} array Array.
+	 * @returns {JW.Array} Merged array.
+	 */
+	/**
+	 * @method reverse
+	 * `<T>` Reverses item order in array. Modifies the array itself.
+	 * @static
+	 * @param {Array} array `<T>` array Array.
+	 */
+	/**
+	 * @method toReversed
+	 * `<T>` Builds a new array containing items of original array in reversed order.
+	 * Original array is not modified.
+	 * @static
+	 * @param {Array} array `<T>` array Array.
+	 * @returns {Array} `<T>` Reversed array.
+	 */
+	/**
+	 * @method $toReversed
+	 * `<T>` Builds a new array containing items of original array in reversed order.
+	 * Original array is not modified.
+	 * @static
+	 * @param {Array} array `<T>` array Array.
+	 * @returns {JW.Array} `<T>` Reversed array.
 	 */
 	/**
 	 * @method add
@@ -10826,6 +11470,8 @@ JW.apply(JW.Array, {
 		return result;
 	},
 
+	$merge: JW.AbstractCollection._createStatic$Array(JW.Array, "merge"),
+
 	countMerged: function(arrays) {
 		var result = 0;
 		for (var i = 0, l = arrays.length; i < l; ++i) {
@@ -10833,6 +11479,18 @@ JW.apply(JW.Array, {
 		}
 		return result;
 	},
+
+	reverse: function(target) {
+		target.reverse();
+	},
+
+	toReversed: function(target) {
+		var result = target.concat();
+		result.reverse();
+		return result;
+	},
+
+	$toReversed: JW.AbstractCollection._createStatic$Array(JW.Array, "toReversed"),
 
 	// deprecated
 	top: function(target) {
@@ -11587,7 +12245,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 */
 	/**
 	 * @method setAll
-	 * `<T>` Adds or replaces a bunch of items. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * `<T>` Adds or replaces a bunch of items. As of jWidget 1.3, doesn't return anything for sake of performance.
 	 * For old behaviour, use method {@link #static-method-setAllVerbose}.
 	 * @static
 	 * @param {Object} map `<T>` Map.
@@ -11645,7 +12303,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 */
 	/**
 	 * @method removeAll
-	 * `<T>` Removes a bunch of items from map. As of jWidget 1.2, doesn't return anything for sake of performance.
+	 * `<T>` Removes a bunch of items from map. As of jWidget 1.3, doesn't return anything for sake of performance.
 	 * For old behaviour, use method {@link #removeAllVerbose}.
 	 * @static
 	 * @param {Object} map `<T>` Map.
@@ -13063,6 +13721,86 @@ JW.apply(JW.Set, {
 	}
 });
 
+JW.ObservableCollection = {
+	$$toSortedComparing: function(compare, scope, order) {
+		var result = new JW.ObservableArray();
+		result.own(this.createSorterComparing({
+			target: result,
+			compare: compare,
+			scope: scope || this,
+			order: order
+		}));
+		return result;
+	},
+
+	$$index: function(callback, scope) {
+		var result = new JW.ObservableMap();
+		result.own(this.createIndexer({
+			target: result,
+			getKey: callback,
+			scope: scope || this
+		}));
+		return result;
+	},
+
+	$$toArray: function() {
+		var result = new JW.ObservableArray();
+		result.own(this.createOrderer({
+			target: result
+		}));
+		return result;
+	},
+
+	$$toSet: function() {
+		var result = new JW.ObservableSet();
+		result.own(this.createLister({
+			target: result
+		}));
+		return result;
+	},
+
+	$$filter: function(callback, scope) {
+		var result = this.createEmpty();
+		result.own(this.createFilterer({
+			target: result,
+			filterItem: callback,
+			scope: scope || this
+		}));
+		return result;
+	},
+
+	$$count: function(callback, scope) {
+		var result = new JW.Property(0);
+		result.own(this.createCounter({
+			target: result,
+			filterItem: callback,
+			scope: scope || this
+		}));
+		return result;
+	},
+
+	$$mapValues: function(callback, scope) {
+		var result = this.createEmpty();
+		result.own(this.createMapper({
+			target: result,
+			createItem: callback,
+			scope: scope || this
+		}));
+		return result;
+	},
+
+	$$mapObjects: function(callback, scope) {
+		var result = this.createEmpty();
+		result.own(this.createMapper({
+			target: result,
+			createItem: callback,
+			destroyItem: JW.destroy,
+			scope: scope || this
+		}));
+		return result;
+	}
+};
+
 /*
 	jWidget Lib source file.
 
@@ -13148,7 +13886,7 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 	 */
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.changeEvent.destroy();
 		this.reorderEvent.destroy();
 		this.clearEvent.destroy();
@@ -13223,6 +13961,25 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 		this.reorderEvent.trigger(new JW.ObservableArray.ReorderEventParams(this, indexArray, items));
 		this.changeEvent.trigger(new JW.ObservableArray.EventParams(this));
 		return items;
+	},
+
+	// override
+	reverse: function() {
+		var length = this.getLength();
+		var indices = new Array(length);
+		for (var i = 0; i < length; ++i) {
+			indices[i] = length - i - 1;
+		}
+		this.reorder(indices);
+	},
+
+	// override
+	$$toReversed: function() {
+		var result = new JW.ObservableArray();
+		result.own(this.createReverser({
+			target: result
+		}));
+		return result;
 	},
 
 	/**
@@ -13384,8 +14141,14 @@ JW.extend(JW.ObservableArray, JW.AbstractArray, {
 
 	createSplitter: function(config) {
 		return new JW.ObservableArray.Splitter(this, config);
+	},
+
+	_createMergerTarget: function() {
+		return new JW.ObservableArray();
 	}
 });
+
+JW.apply(JW.ObservableArray.prototype, JW.ObservableCollection);
 
 /**
  * @class
@@ -14053,11 +14816,6 @@ JW.ObservableArray.Merger = function(source, config) {
 };
 
 JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
-	// override
-	_createTarget: function() {
-		return new JW.ObservableArray();
-	},
-	
 	_getIndexes: function(bunches) {
 		var currentIndex = 0;
 		var indexes = JW.Array.map(bunches, function(bunch) {
@@ -14639,7 +15397,7 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 	 */
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.changeEvent.destroy();
 		this.clearEvent.destroy();
 		this.reindexEvent.destroy();
@@ -14880,6 +15638,8 @@ JW.extend(JW.ObservableMap, JW.AbstractMap, {
 		return new JW.ObservableMap.Inserter(this, config);
 	}
 });
+
+JW.apply(JW.ObservableMap.prototype, JW.ObservableCollection);
 
 /**
  * @class
@@ -15541,7 +16301,7 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 	 */
 
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		this.changeEvent.destroy();
 		this.clearEvent.destroy();
 		this.spliceEvent.destroy();
@@ -15699,6 +16459,8 @@ JW.extend(JW.ObservableSet, JW.AbstractSet, {
 		return new JW.ObservableSet.Lister(this, config);
 	}
 });
+
+JW.apply(JW.ObservableSet.prototype, JW.ObservableCollection);
 
 /**
  * @class
@@ -16239,7 +17001,8 @@ JW.Copier = function(source, config) {
 	JW.Copier._super.call(this);
 	config = config || {};
 	this.source = source;
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this._update();
 	this.own(source.changeEvent.bind(this._update, this));
 };
@@ -16255,6 +17018,15 @@ JW.extend(JW.Copier, JW.Class, {
 	/**
 	 * @property {JW.Property} target `<V>` Target property.
 	 */
+
+	destroyObject: function() {
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.source = null;
+		this.target = null;
+		this._super();
+	},
 	
 	_update: function() {
 		this.target.set(this.source.get());
@@ -16331,7 +17103,8 @@ JW.Functor = function(sources, func, scope, config) {
 	this.sources = sources;
 	this.func = func;
 	this.scope = scope || this;
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.update();
 	JW.Array.every(sources, this.watch, this);
 };
@@ -16347,6 +17120,17 @@ JW.extend(JW.Functor, JW.Class, {
 	/**
 	 * @property {JW.Property} target `<T>` Target property.
 	 */
+
+	destroyObject: function() {
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.sources = null;
+		this.target = null;
+		this.func = null;
+		this.scope = null;
+		this._super();
+	},
 	
 	/**
 	 * Watches specified event and triggers target value recalculation on
@@ -16422,9 +17206,11 @@ JW.extend(JW.Functor, JW.Class, {
  *         {@link JW.Mapper#scope scope}: this
  *     });
  *     assert("1 apples", target.{@link JW.Property#get get}());
+ *
  *     // Next command prints "Done 1 apples" and "Init 2 apples"
  *     count.{@link JW.Property#set set}(2);
  *     assert("2 apples", target.{@link JW.Property#get get}());
+ *
  *     // Next command prints "Done 2 apples"
  *     mapper.{@link JW.Mapper#destroy destroy}();
  *     assert(null, target.{@link JW.Property#get get}());
@@ -16441,6 +17227,15 @@ JW.extend(JW.Functor, JW.Class, {
  *     });
  *     var target = mapper.{@link JW.Mapper#property-target target};
  *     assert("1 apples", target.{@link JW.Property#get get}());
+ *     mapper.{@link JW.Mapper#destroy destroy}();
+ *
+ * In simple cases, JW.Property#$$mapValue and JW.Property#$$mapObject shorthand methods
+ * can be used instead. They return the target property right away:
+ *
+ *     var source = new JW.Property(1);
+ *     var target = source.{@link JW.Property#$$mapValue $$mapValue}(function(value) { return value + " apples"; });
+ *     assert("1 apples", target.{@link JW.Property#get get}());
+ *     target.{@link JW.Property#destroy destroy}();
  *
  * On source property change, next flow will take a place:
  *
@@ -16464,13 +17259,9 @@ JW.extend(JW.Functor, JW.Class, {
  *         // JW.Property<Document> document;
  *         
  *         renderDocument: function() {
- *             return this.{@link JW.Class#own own}(new JW.Mapper(this.document, {
- *                 {@link JW.Mapper#createValue createValue}: function(document) {
- *                     return new DocumentView(document);
- *                 },
- *                 {@link JW.Mapper#destroyValue destroyValue}: JW.destroy,
- *                 {@link JW.Mapper#scope scope}: this
- *             })).{@link JW.Mapper#property-target target};
+ *             return this.{@link JW.Class#own own}(this.document.{@link JW.Property#$$mapObject $$mapObject}(function(document) {
+ *                 return new DocumentView(document);
+ *             }, this);
  *         }
  *     });
  *     
@@ -16529,7 +17320,8 @@ JW.Mapper = function(sources, config) {
 	this.createValue = config.createValue;
 	this.destroyValue = config.destroyValue;
 	this.scope = config.scope || this;
-	this.target = config.target || this.own(new JW.Property());
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
 	this.acceptNull = config.acceptNull || false;
 	this._sourceValues = null;
 	this._targetValue = null;
@@ -16573,13 +17365,22 @@ JW.extend(JW.Mapper, JW.Class, {
 	 */
 	
 	// override
-	destroy: function() {
+	destroyObject: function() {
 		var oldValue = this.target.get();
 		if (oldValue === this._targetValue) {
 			this.target.set(null);
 		}
 		this._done();
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.sources = null;
+		this.createValue = null;
+		this.destroyValue = null;
+		this.scope = null;
+		this.target = null;
 		this._sourceValues = null;
+		this._targetValue = null;
 		this._super();
 	},
 	
@@ -16703,14 +17504,10 @@ JW.extend(JW.Mapper, JW.Class, {
  *         }
  *     };
  *     var language = new JW.Property("en");
- *     var hiFunctor = new JW.Functor([ language ], function(language) {
- *         return locale[language].hi;
- *     });
- *     var byeFunctor = new JW.Functor([ language ], function(language) {
- *         return locale[language].bye;
- *     });
- *     new JW.UI.TextUpdater($("#hi"), hiFunctor.{@link JW.Functor#property-target target});
- *     new JW.UI.TextUpdater($("#bye"), byeFunctor.{@link JW.Functor#property-target target});
+ *     var hi = language.{@link JW.Property#$$mapValue $$mapValue}(function(language) { return locale[language].hi; });
+ *     var bye = language.{@link JW.Property#$$mapValue $$mapValue}(function(language) { return locale[language].bye; });
+ *     new JW.UI.TextUpdater($("#hi"), hi);
+ *     new JW.UI.TextUpdater($("#bye"), bye);
  *     // Now you can change localization easily
  *     language.{@link #set}("ru");
  *
@@ -16737,7 +17534,7 @@ JW.extend(JW.Property, JW.Class, {
 	// boolean _ownsValue;
 	// JW.Copier<V> _copier;
 	
-	destroy: function() {
+	destroyObject: function() {
 		this.bindTo();
 		if (this._ownsValue && JW.isSet(this._value)) {
 			this._value.destroy();
@@ -16796,6 +17593,99 @@ JW.extend(JW.Property, JW.Class, {
 		if (source) {
 			this._copier = new JW.Copier(source, { target: this });
 		}
+	},
+
+	/**
+	 * `<U>` Maps property value.
+	 *
+	 * If property value is null, returns null.
+	 * Otherwise, returns the result of `f` call with property value in argument.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {U} Result value.
+	 */
+	map: function(callback, scope) {
+		return (this._value == null) ? null : callback.call(scope || this, this._value);
+	},
+
+	/**
+	 * `<U>` Maps property value.
+	 *
+	 * If property value is null, returns null property.
+	 * Otherwise, returns a property containing the result of `f` call with property value in argument.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Property} `<U>` Result value.
+	 */
+	$map: function(callback, scope) {
+		return new JW.Property(this.map(callback, scope));
+	},
+
+	/**
+	 * `<U>` Maps property value.
+	 *
+	 * If property value is null, returns null property.
+	 * Otherwise, returns a property containing the result of `f` call with property value in argument.
+	 * Starts continuous synchronization, i.e. creates JW.Mapper implicitly.
+	 * In comparison to #$$mapObject method, doesn't destroy the previously assigned values.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Property} `<U>` Result value.
+	 */
+	$$mapValue: function(callback, scope) {
+		var result = new JW.Property();
+		result.own(new JW.Mapper([this], {
+			target: result,
+			createValue: callback,
+			scope: scope || this
+		}));
+		return result;
+	},
+
+	/**
+	 * `<U>` Maps property value.
+	 *
+	 * If property value is null, returns null property.
+	 * Otherwise, returns a property containing the result of `f` call with property value in argument.
+	 * Starts continuous synchronization, i.e. creates JW.Mapper implicitly.
+	 * In comparison to #$$mapValue method, destroys the previously assigned values.
+	 *
+	 * @param {Function} f
+	 *
+	 * `f(item: T): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Property} `<U>` Result value.
+	 */
+	$$mapObject: function(callback, scope) {
+		var result = new JW.Property();
+		result.own(new JW.Mapper([this], {
+			target: result,
+			createValue: callback,
+			destroyValue: JW.destroy,
+			scope: scope || this
+		}));
+		return result;
 	}
 });
 
@@ -16907,8 +17797,13 @@ JW.extend(JW.Switcher, JW.Class, {
 	 * Optional. If false, functions won't be called if at least one of the source values is null.
 	 */
 	
-	destroy: function() {
+	destroyObject: function() {
 		this._done();
+		this.sources = null;
+		this.init = null;
+		this.done = null;
+		this.scope = null;
+		this._values = null;
 		this._super();
 	},
 	
@@ -17224,7 +18119,7 @@ JW.Interval = function(handler, scope, delay) {
 };
 
 JW.extend(JW.Interval, JW.Class, {
-	destroy: function() {
+	destroyObject: function() {
 		clearInterval(this.interval);
 		this._super();
 	}
@@ -17277,10 +18172,11 @@ JW.extend(JW.Proxy, JW.Class, {
 	 */
 	// boolean _ownsValue;
 	
-	destroy: function() {
+	destroyObject: function() {
 		if (this._ownsValue && JW.isSet(this.value)) {
 			this.value.destroy();
 		}
+		this.value = null;
 		this._super();
 	},
 	
@@ -17618,7 +18514,7 @@ JW.Timeout = function(handler, scope, delay) {
 };
 
 JW.extend(JW.Timeout, JW.Class, {
-	destroy: function() {
+	destroyObject: function() {
 		clearTimeout(this.timeout);
 		this._super();
 	}
@@ -17663,7 +18559,7 @@ JW.extend(JW.Timer, JW.Class, {
 	number _handle;
 	*/
 
-	destroy: function() {
+	destroyObject: function() {
 		this.stop();
 		this._super();
 	},
