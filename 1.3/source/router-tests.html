@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget UI tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests = {};
+JW.Tests.Plugins = {};
+
+JW.Tests.Plugins.RouterTestCase = JW.Unit.TestCase.extend({
+	testRouter: function() {
+		var test = this;
+
+		var Routable = function(name) {
+			Routable._super.call(this);
+			this.name = name;
+			test.output(&quot;Create &quot; + name);
+			this.path = this.own(new JW.Property());
+			this.path.changeEvent.bind(function(params) {
+				test.output(&quot;Set path for &quot; + this.name + &quot; to &quot; + params.value);
+			}, this);
+		};
+
+		JW.extend(Routable, JW.Class, {
+			setPath: function(path) {
+				this.path.set(path);
+			},
+
+			destroyObject: function() {
+				test.output(&quot;Destroy &quot; + this.name);
+			}
+		});
+
+		var target = new JW.Property();
+
+		target.changeEvent.bind(function(params) {
+			if (params.value) {
+				test.output(&quot;Activate &quot; + params.value.name);
+			} else {
+				test.output(&quot;Deactivate&quot;);
+			}
+		});
+
+		this.setExpectedOutput(
+			&quot;Create blank&quot;,
+			&quot;Activate blank&quot;
+		);
+		var router = new JW.Plugins.Router({
+			target: target,
+			handler: {
+				routes: {
+					&quot;admin&quot;   : function() { return new Routable(&quot;admin&quot;);    },
+					&quot;app&quot;     : function() { return new Routable(&quot;app&quot;);      },
+					&quot;settings&quot;: function() { return new Routable(&quot;settings&quot;); },
+					&quot;&quot;        : function() { return new Routable(&quot;blank&quot;);    }
+				},
+				notFound: function(core) { return new Routable(&quot;not found: &quot; + core); }
+			}
+		});
+
+		this.setExpectedOutput(
+			&quot;Deactivate&quot;,
+			&quot;Destroy blank&quot;,
+			&quot;Create admin&quot;,
+			&quot;Activate admin&quot;
+		);
+		router.path.set(&quot;admin&quot;);
+
+		this.setExpectedOutput();
+		router.path.set(&quot;admin&quot;);
+		router.path.set(&quot;/admin&quot;);
+
+		this.setExpectedOutput(
+			&quot;Set path for admin to users&quot;
+		);
+		router.path.set(&quot;admin/users&quot;);
+
+		this.setExpectedOutput(
+			&quot;Set path for admin to companies&quot;
+		);
+		router.path.set(&quot;admin/companies&quot;);
+
+		this.setExpectedOutput(
+			&quot;Deactivate&quot;,
+			&quot;Destroy admin&quot;,
+			&quot;Create app&quot;,
+			&quot;Activate app&quot;,
+			&quot;Set path for app to emails&quot;
+		);
+		router.path.set(&quot;app/emails&quot;);
+
+		this.setExpectedOutput(
+			&quot;Set path for app to null&quot;
+		);
+		router.path.set(&quot;app&quot;);
+
+		this.setExpectedOutput(
+			&quot;Deactivate&quot;,
+			&quot;Destroy app&quot;,
+			&quot;Create blank&quot;,
+			&quot;Activate blank&quot;
+		);
+		router.path.set(null);
+
+		this.setExpectedOutput();
+		router.path.set(&quot;&quot;);
+
+		this.setExpectedOutput(
+			&quot;Deactivate&quot;,
+			&quot;Destroy blank&quot;,
+			&quot;Create settings&quot;,
+			&quot;Activate settings&quot;,
+			&quot;Set path for settings to profile/password&quot;
+		);
+		router.path.set(&quot;settings/profile/password&quot;);
+
+		this.setExpectedOutput(
+			&quot;Deactivate&quot;,
+			&quot;Destroy settings&quot;,
+			&quot;Create not found: other&quot;,
+			&quot;Activate not found: other&quot;,
+			&quot;Set path for not found: other to smile/happy&quot;
+		);
+		router.path.set(&quot;other/smile/happy&quot;);
+
+		this.setExpectedOutput(
+			&quot;Deactivate&quot;,
+			&quot;Destroy not found: other&quot;
+		);
+		router.destroy();
+	}
+});
+
+jQuery(function() {
+	setTimeout(function() {
+		JW.Unit.run(&quot;JW.Tests&quot;, JW.Tests);
+	}, 1000);
+});
+</pre>
+</body>
+</html>

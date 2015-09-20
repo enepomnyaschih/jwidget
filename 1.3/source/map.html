@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+
+	Copyright (C) 2015 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-Map-method-constructor'><span id='JW-Map'>/**
+</span></span> * @class
+ *
+ * `&lt;T&gt; extends JW.AbstractMap&lt;T&gt;`
+ *
+ * See structurized list of methods in JW.AbstractMap.
+ * Static methods duplicate API of JW.AbstractMap, but take native Object as first argument.
+ *
+ * @extends JW.AbstractMap
+ *
+ * @constructor
+ * @param {Object} [items] `&lt;T&gt;` Initial contents. By default, created collection is empty.
+ * @param {boolean} [adapter] Create map as adapter of `items`. Defaults to false, so `items` is copied.
+ */
+JW.Map = function(json, adapter) {
+	JW.Map._super.call(this, json, adapter);
+};
+
+JW.extend(JW.Map, JW.AbstractMap, {
+<span id='JW-Map-method-createEmpty'>	/**
+</span>	 * `&lt;U&gt;` Creates empty collection of the same type.
+	 * @returns {JW.Map} `&lt;U&gt;` Collection.
+	 */
+	createEmpty: function() {
+		return new JW.Map();
+	},
+
+<span id='JW-Map-method-createEmptyArray'>	/**
+</span>	 * `&lt;U&gt;` Creates empty array of the same observability level.
+	 * @returns {JW.Array} `&lt;U&gt;` Array.
+	 */
+	createEmptyArray: function() {
+		return new JW.Array();
+	},
+
+<span id='JW-Map-method-createEmptyMap'>	/**
+</span>	 * `&lt;U&gt;` Creates empty map of the same observability level.
+	 * @returns {JW.Map} `&lt;U&gt;` Map.
+	 */
+	createEmptyMap: function() {
+		return new JW.Map();
+	},
+
+<span id='JW-Map-method-createEmptySet'>	/**
+</span>	 * `&lt;U&gt;` Creates empty set of the same observability level.
+	 * @returns {JW.Set} `&lt;U&gt;` Set.
+	 */
+	createEmptySet: function() {
+		return new JW.Set();
+	}
+
+<span id='JW-Map-static-method-getLength'>	/**
+</span>	 * @method getLength
+	 * `&lt;T&gt;` Returns count of items in collection.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {number} Count of items in collection.
+	 */
+<span id='JW-Map-static-method-isEmpty'>	/**
+</span>	 * @method isEmpty
+	 * `&lt;T&gt;` Checks collection for emptiness.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {boolean} Collection doesn't contain any items.
+	 */
+<span id='JW-Map-static-method-getFirst'>	/**
+</span>	 * @method getFirst
+	 * `&lt;T&gt;` Returns first item in collection. If collection is empty, returns `undefined`.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {T} Item.
+	 */
+<span id='JW-Map-static-method-getFirstKey'>	/**
+</span>	 * @method getFirstKey
+	 * `&lt;T&gt;` Returns key of first collection item. If collection is empty, returns `undefined`.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {string} Key.
+	 */
+<span id='JW-Map-static-method-get'>	/**
+</span>	 * @method get
+	 * `&lt;T&gt;` Returns item by key. If item with such key doesn't exist, returns `undefined`.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {string} key Key.
+	 * @returns {T} Item.
+	 */
+<span id='JW-Map-static-method-getKeys'>	/**
+</span>	 * @method getKeys
+	 * `&lt;T&gt;` Returns array of keys of all collection items.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {Array} `&lt;string&gt;` Keys array.
+	 */
+<span id='JW-Map-static-method-S-getKeys'>	/**
+</span>	 * @method $getKeys
+	 * `&lt;T&gt;` Returns array of keys of all collection items.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {JW.Array} `&lt;string&gt;` Keys array.
+	 */
+<span id='JW-Map-static-method-containsKey'>	/**
+</span>	 * @method containsKey
+	 * `&lt;T&gt;` Checks existance of item with specified index in collection.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {string} key Key.
+	 * @returns {boolean} Collection contains item with specified key.
+	 */
+<span id='JW-Map-static-method-containsItem'>	/**
+</span>	 * @method containsItem
+	 * `&lt;T&gt;` Checks item existance in collection.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {T} item Item.
+	 * @returns {boolean} Collection contains specified item.
+	 */
+<span id='JW-Map-static-method-keyOf'>	/**
+</span>	 * @method keyOf
+	 * `&lt;T&gt;` Returns index of item in collection. If such item doesn't exist, returns `undefined`.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {T} item Item.
+	 * @returns {string} Item key.
+	 */
+<span id='JW-Map-static-method-removeItem'>	/**
+</span>	 * @method removeItem
+	 * `&lt;T&gt;` Removes first occurency of an item in collection.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {T} item Item.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-removeItems'>	/**
+</span>	 * @method removeItems
+	 * `&lt;T extends JW.Class&gt;` Removes all occurencies of items in collection.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Array} items `&lt;T&gt;` Item.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-tryClear'>	/**
+</span>	 * @method tryClear
+	 * `&lt;T&gt;` Clears collection.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {Object} `&lt;T&gt;` Old collection contents. If not modified - `undefined`.
+	 */
+<span id='JW-Map-static-method-clear'>	/**
+</span>	 * @method clear
+	 * `&lt;T&gt;` Clears collection.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {Object} `&lt;T&gt;` Old collection contents.
+	 */
+<span id='JW-Map-static-method-S-clear'>	/**
+</span>	 * @method $clear
+	 * `&lt;T&gt;` Clears collection.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {JW.Map} `&lt;T&gt;` Old collection contents.
+	 */
+<span id='JW-Map-static-method-every'>	/**
+</span>	 * @method every
+	 *
+	 * `&lt;T&gt;` Checks all items by criteria.
+	 *
+	 * Returns true if function `f` returns !== `false` for all collection items.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-Map-static-method-some'>	/**
+</span>	 * @method some
+	 *
+	 * `&lt;T&gt;` Checks each item by criteria.
+	 *
+	 * Returns true if function `f` returns !== `false` for some collection item.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {boolean} Result.
+	 */
+<span id='JW-Map-static-method-each'>	/**
+</span>	 * @method each
+	 *
+	 * `&lt;T&gt;` Iterates collection items. Calls specified function for all items.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): void`
+	 *
+	 * Function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-find'>	/**
+</span>	 * @method find
+	 *
+	 * `&lt;T&gt;` Finds item by criteria.
+	 *
+	 * Returns key of first item for which `f` returns !== `false`.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {string} Found item key or `undefined`.
+	 */
+<span id='JW-Map-static-method-search'>	/**
+</span>	 * @method search
+	 *
+	 * `&lt;T&gt;` Finds item by criteria.
+	 *
+	 * Returns first item for which `f` returns !== `false`.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {T} Found item or `undefined`.
+	 */
+<span id='JW-Map-static-method-toSorted'>	/**
+</span>	 * @method toSorted
+	 *
+	 * `&lt;T&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Map-static-method-S-toSorted'>	/**
+</span>	 * @method $toSorted
+	 *
+	 * `&lt;T&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Map-static-method-toSortedComparing'>	/**
+</span>	 * @method toSortedComparing
+	 *
+	 * `&lt;T&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Map-static-method-S-toSortedComparing'>	/**
+</span>	 * @method $toSortedComparing
+	 *
+	 * `&lt;T&gt;` Converts collection to sorted array.
+	 *
+	 * Builds array consisting of collection items sorted by comparer.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;T&gt;` Sorted array.
+	 */
+<span id='JW-Map-static-method-getSortingKeys'>	/**
+</span>	 * @method getSortingKeys
+	 *
+	 * `&lt;T&gt;` Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;string&gt;` Sorted item keys array.
+	 */
+<span id='JW-Map-static-method-S-getSortingKeys'>	/**
+</span>	 * @method $getSortingKeys
+	 *
+	 * `&lt;T&gt;` Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by result of `f` call for each item.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} [f]
+	 *
+	 * `f(item: T, key: string): number/string`
+	 *
+	 * Indexer function. Returns `item` by default.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;string&gt;` Sorted item keys array.
+	 */
+<span id='JW-Map-static-method-getSortingKeysComparing'>	/**
+</span>	 * @method getSortingKeysComparing
+	 *
+	 * `&lt;T&gt;` Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by comparer.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {Array} `&lt;string&gt;` Sorted item keys array.
+	 */
+<span id='JW-Map-static-method-S-getSortingKeysComparing'>	/**
+</span>	 * @method $getSortingKeysComparing
+	 *
+	 * `&lt;T&gt;` Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by comparer.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} [compare]
+	 *
+	 * `f(t1: T, t2: T, k1: string, k2: string): number`
+	 *
+	 * Comparer function. Returns positive value if t1 &gt; t2; nagative value if t1 &lt; t2; 0 if t1 == t2.
+	 * Defaults to `JW.cmp(t1, t2)`.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @param {1/-1} [order] Sorting order.
+	 * @returns {JW.Array} `&lt;string&gt;` Sorted item keys array.
+	 */
+<span id='JW-Map-static-method-index'>	/**
+</span>	 * @method index
+	 *
+	 * `&lt;T&gt;` Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Collection index.
+	 */
+<span id='JW-Map-static-method-S-index'>	/**
+</span>	 * @method $index
+	 *
+	 * `&lt;T&gt;` Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): string`
+	 *
+	 * Indexer function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;T&gt;` Collection index.
+	 */
+<span id='JW-Map-static-method-toArray'>	/**
+</span>	 * @method toArray
+	 *
+	 * `&lt;T&gt;` Converts collection to array.
+	 *
+	 * Builds new array consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Map-static-method-S-toArray'>	/**
+</span>	 * @method $toArray
+	 *
+	 * `&lt;T&gt;` Converts collection to array.
+	 *
+	 * Builds new array consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {JW.Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Map-static-method-toMap'>	/**
+</span>	 * @method toMap
+	 *
+	 * `&lt;T&gt;` Converts collection to map.
+	 *
+	 * Builds new map consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {Object} `&lt;T&gt;` Items map.
+	 */
+<span id='JW-Map-static-method-S-toMap'>	/**
+</span>	 * @method $toMap
+	 *
+	 * `&lt;T&gt;` Converts collection to map.
+	 *
+	 * Builds new map consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {JW.Map} `&lt;T&gt;` Items map.
+	 */
+<span id='JW-Map-static-method-toSet'>	/**
+</span>	 * @method toSet
+	 *
+	 * `&lt;T&gt;` Converts collection to set.
+	 *
+	 * Builds new set consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {Object} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Map-static-method-S-toSet'>	/**
+</span>	 * @method $toSet
+	 *
+	 * `&lt;T&gt;` Converts collection to set.
+	 *
+	 * Builds new set consisting of collection items.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {JW.Set} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Map-static-method-asArray'>	/**
+</span>	 * @method asArray
+	 *
+	 * `&lt;T&gt;` Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {Array} `&lt;T&gt;` Items array.
+	 */
+<span id='JW-Map-static-method-S-asArray'>	/**
+</span>	 * @method $asArray
+	 *
+	 * `&lt;T&gt;` Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately. Else, executes {@link #static-method-toArray} method.
+	 * This method works probably faster than {@link #static-method-toArray}, but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {JW.Array} `&lt;T&gt;` Items array
+	 */
+<span id='JW-Map-static-method-asMap'>	/**
+</span>	 * @method asMap
+	 *
+	 * `&lt;T&gt;` Represents collection as map.
+	 *
+	 * If this collection is map, returns it immediately. Else, executes {@link #static-method-toMap} method.
+	 * This method works probably faster than {@link #static-method-toMap}, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {Object} `&lt;T&gt;` Items map.
+	 */
+<span id='JW-Map-static-method-S-asMap'>	/**
+</span>	 * @method $asMap
+	 *
+	 * `&lt;T&gt;` Represents collection as map.
+	 *
+	 * If this collection is map, returns it immediately. Else, executes {@link #static-method-toMap} method.
+	 * This method works probably faster than {@link #static-method-toMap}, but please make sure that the returned map
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {JW.Map} `&lt;T&gt;` Items map.
+	 */
+<span id='JW-Map-static-method-asSet'>	/**
+</span>	 * @method asSet
+	 *
+	 * `&lt;T&gt;` Represents collection as set.
+	 *
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet}method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {Object} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Map-static-method-S-asSet'>	/**
+</span>	 * @method $asSet
+	 *
+	 * `&lt;T&gt;` Represents collection as set.
+	 *
+	 * If this collection is set, returns it immediately. Else, executes {@link #static-method-toSet} method.
+	 * This method works probably faster than {@link #static-method-toSet}, but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @returns {JW.Set} `&lt;T&gt;` Items set.
+	 */
+<span id='JW-Map-static-method-filter'>	/**
+</span>	 * @method filter
+	 *
+	 * `&lt;T&gt;` Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;T&gt;` Filtered collection.
+	 */
+<span id='JW-Map-static-method-S-filter'>	/**
+</span>	 * @method $filter
+	 *
+	 * `&lt;T&gt;` Filters collection by criteria.
+	 *
+	 * Builds new collection of the same type, consisting of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;T&gt;` Filtered collection.
+	 */
+<span id='JW-Map-static-method-count'>	/**
+</span>	 * @method count
+	 *
+	 * `&lt;T&gt;` Counts the items matching criteria.
+	 *
+	 * Returns the number of items for which `f` returns !== `false`.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): boolean`
+	 *
+	 * Criteria.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {number} Number of items.
+	 */
+<span id='JW-Map-static-method-map'>	/**
+</span>	 * @method map
+	 *
+	 * `&lt;T, U&gt;` Maps collection items.
+	 *
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {Object} `&lt;U&gt;` Mapped collection.
+	 */
+<span id='JW-Map-static-method-S-map'>	/**
+</span>	 * @method $map
+	 *
+	 * `&lt;T, U&gt;` Maps collection items.
+	 *
+	 * Builds new collection of the same type, consisting of results of `f` call for each collection item.
+	 *
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Function} f
+	 *
+	 * `f(item: T, key: string): U`
+	 *
+	 * Mapping function.
+	 *
+	 * @param {Object} [scope] `f` call scope. Defaults to `this`.
+	 * @returns {JW.Map} `&lt;U&gt;` Mapped collection.
+	 */
+<span id='JW-Map-static-method-set'>	/**
+</span>	 * @method set
+	 * `&lt;T&gt;` Replaces item with specified key. If map doesn't contain such key, it will be added.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {T} item Item.
+	 * @param {string} key Key.
+	 * @returns {T} The replaced item.
+	 */
+<span id='JW-Map-static-method-trySet'>	/**
+</span>	 * @method trySet
+	 * `&lt;T&gt;` Replaces item with specified key. If map doesn't contain such key, it will be added.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {T} item Item.
+	 * @param {string} key Key.
+	 * @returns {JW.Proxy} `&lt;T&gt;` Proxy of the replaced item. If not modified - `undefined`.
+	 */
+<span id='JW-Map-static-method-setAll'>	/**
+</span>	 * @method setAll
+	 * `&lt;T&gt;` Adds or replaces a bunch of items. As of jWidget 1.3, doesn't return anything for sake of performance.
+	 * For old behaviour, use method {@link #static-method-setAllVerbose}.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Object} items Items.
+	 */
+<span id='JW-Map-static-method-setAllVerbose'>	/**
+</span>	 * @method setAllVerbose
+	 * `&lt;T&gt;` Adds or replaces a bunch of items. Returns verbose result set.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Object} items Items.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Result of {@link #static-method-splice} method.
+	 */
+<span id='JW-Map-static-method-trySetAll'>	/**
+</span>	 * @method trySetAll
+	 * `&lt;T&gt;` Adds or replaces a bunch of items.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Object} items Items.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Result of {@link #static-method-splice} method. If not modified - `undefined`.
+	 */
+<span id='JW-Map-static-method-setKey'>	/**
+</span>	 * @method setKey
+	 * `&lt;T&gt;` Changes item key in map. If collection doesn't contain `oldKey` or contains `newKey`, it will cause an error.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {string} oldKey Old key of item.
+	 * @param {string} newKey New key of item.
+	 * @returns {T} Item.
+	 */
+<span id='JW-Map-static-method-trySetKey'>	/**
+</span>	 * @method trySetKey
+	 * `&lt;T&gt;` Changes item key in map. If collection doesn't contain `oldKey` or contains `newKey`, it will cause an error.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {string} oldKey Old key of item.
+	 * @param {string} newKey New key of item.
+	 * @returns {T} Item. If not modified - `undefined`.
+	 */
+<span id='JW-Map-static-method-remove'>	/**
+</span>	 * @method remove
+	 * `&lt;T&gt;` Removes item with specified key if it exists in map.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {K} key Key.
+	 * @returns {T} Old collection item or `undefined`.
+	 */
+<span id='JW-Map-static-method-tryRemove'>	/**
+</span>	 * @method tryRemove
+	 * `&lt;T&gt;` Removes item with specified key if it exists in map.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {K} key Key.
+	 * @returns {T} Old collection item. If not modified - `undefined`.
+	 */
+<span id='JW-Map-static-method-removeAll'>	/**
+</span>	 * @method removeAll
+	 * `&lt;T&gt;` Removes a bunch of items from map. As of jWidget 1.3, doesn't return anything for sake of performance.
+	 * For old behaviour, use method {@link #removeAllVerbose}.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Array} keys `&lt;string&gt;` Item keys.
+	 */
+<span id='JW-Map-static-method-removeAllVerbose'>	/**
+</span>	 * @method removeAllVerbose
+	 * `&lt;T&gt;` Removes a bunch of items from map. Returns verbose result set.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Array} keys `&lt;string&gt;` Item keys.
+	 * @returns {Object} `&lt;T&gt;` The removed items.
+	 */
+<span id='JW-Map-static-method-S-removeAllVerbose'>	/**
+</span>	 * @method $removeAllVerbose
+	 * `&lt;T&gt;` Removes a bunch of items from map. Returns verbose result set.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Array} keys `&lt;string&gt;` Item keys.
+	 * @returns {JW.Map} `&lt;T&gt;` The removed items.
+	 */
+<span id='JW-Map-static-method-tryRemoveAll'>	/**
+</span>	 * @method tryRemoveAll
+	 * `&lt;T&gt;` Removes a bunch of items from map.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Array} keys `&lt;string&gt;` Item keys.
+	 * @returns {Object} `&lt;T&gt;` The removed items. If not modified - `undefined`.
+	 */
+<span id='JW-Map-static-method-splice'>	/**
+</span>	 * @method splice
+	 * `&lt;T&gt;` Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Array} removedKeys `&lt;string&gt;` Keys of items to remove.
+	 * @param {Object} updatedItems `&lt;T&gt;` Items to add/replace.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Result.
+	 */
+<span id='JW-Map-static-method-trySplice'>	/**
+</span>	 * @method trySplice
+	 * `&lt;T&gt;` Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Array} removedKeys `&lt;string&gt;` Keys of items to remove.
+	 * @param {Object} updatedItems `&lt;T&gt;` Items to add/replace.
+	 * @returns {JW.AbstractMap.SpliceResult} `&lt;T&gt;` Result. If not modified - `undefined`.
+	 */
+<span id='JW-Map-static-method-reindex'>	/**
+</span>	 * @method reindex
+	 * `&lt;T&gt;` Changes item keys in map.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Object} keyMap `&lt;string&gt;` Key map. Item with key `k` will gain key `keyMap[k]`.
+	 * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
+	 * @returns {Object} `&lt;T&gt;` Map of changed keys.
+	 */
+<span id='JW-Map-static-method-tryReindex'>	/**
+</span>	 * @method tryReindex
+	 * `&lt;T&gt;` Changes item keys in map.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Object} keyMap `&lt;string&gt;` Key map. Item with key `k` will gain key `keyMap[k]`.
+	 * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
+	 * @returns {Object} `&lt;T&gt;` Map of changed keys. If not modified - `undefined`.
+	 */
+<span id='JW-Map-static-method-detectSplice'>	/**
+</span>	 * @method detectSplice
+	 * `&lt;T&gt;` Detects {@link #static-method-splice} method arguments to adjust map contents to `newItems`.
+	 * Determines which item bunches should be removed and which ones should be inserted/replaced, and their keys.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @returns {JW.AbstractMap.SpliceParams}
+	 * `&lt;T&gt;` {@link #static-method-splice} method arguments. If no method call required - `undefined`.
+	 */
+<span id='JW-Map-static-method-detectReindex'>	/**
+</span>	 * @method detectReindex
+	 * `&lt;T&gt;` Detects {@link #static-method-reindex} method arguments to adjust map contents to `newItems`.
+	 * Determines which keys should be assigned to all items.
+	 * If `newItems` contents differ from `this` contents, the map will be broken.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {Object}
+	 * `&lt;string&gt;` `keyMap` argument of {@link #static-method-reindex} method.
+	 * If no method call required - `undefined`.
+	 */
+<span id='JW-Map-static-method-performSplice'>	/**
+</span>	 * @method performSplice
+	 * `&lt;T&gt;` Adjusts map contents to `newItems` using {@link #static-method-detectSplice} and {@link #static-method-splice} methods.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-performReindex'>	/**
+</span>	 * @method performReindex
+	 * `&lt;T&gt;` Adjusts map contents to `newItems` using {@link #static-method-detectReindex} and {@link #static-method-reindex} methods.
+	 * @static
+	 * @param {Object} map `&lt;T&gt;` Map.
+	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @param {Function} [getKey]
+	 * Function which returns unique key of an item in this collection.
+	 * Defaults to JW.iid.
+	 * If collection consists of instances of JW.Class, then it's all right.
+	 * @param {Object} [scope] `getKey` call scope. Defaults to `this`.
+	 * @returns {void}
+	 */
+<span id='JW-Map-static-method-equal'>	/**
+</span>	 * @method equal
+	 * `&lt;T&gt;` Checks two maps for equality (===), item by item.
+	 * @static
+	 * @param {Object} map1 `&lt;T&gt;` Map.
+	 * @param {Object} map2 `&lt;T&gt;` Another map.
+	 * @returns {boolean} Maps are equal.
+	 */
+<span id='JW-Map-static-method-getInverted'>	/**
+</span>	 * @method getInverted
+	 * Returns an inverted map. Keys are converted to values, and values are
+	 * converted to keys. `this` must be `JW.AbstractMap&lt;string&gt;`.
+	 * @static
+	 * @returns {JW.AbstractMap} `&lt;string&gt;` The inverted map.
+	 */
+});
+</pre>
+</body>
+</html>

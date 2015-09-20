@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-UI-CssUpdater-method-constructor'><span id='JW-UI-CssUpdater'>/**
+</span></span> * @class
+ * Watches source string {@link JW.Property property} modification and updates the
+ * specified CSS style of the DOM element.
+ * Applied on initialization as well.
+ *
+ *     var color = new JW.Property(&quot;red&quot;);
+ *     // Next command sets &quot;color&quot; style value to &quot;red&quot;
+ *     var updater = new JW.UI.CssUpdater($(&quot;#myelem&quot;), &quot;color&quot;, color);
+ *     // Next command changes &quot;color&quot; style value to &quot;blue&quot;
+ *     color.{@link JW.Property#set set}(&quot;blue&quot;);
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {String} style CSS style name.
+ * @param {JW.Property} property `&lt;String&gt;` Source property.
+ */
+JW.UI.CssUpdater = function(el, style, property) {
+	JW.UI.CssUpdater._super.call(this);
+	this.el = jQuery(el);
+	this.style = style;
+	this.property = property;
+	this._update();
+	this.own(property.changeEvent.bind(this._update, this));
+};
+
+JW.extend(JW.UI.CssUpdater, JW.Class, {
+<span id='JW-UI-CssUpdater-property-el'>	/**
+</span>	 * @property {jQuery} el DOM element.
+	 */
+<span id='JW-UI-CssUpdater-property-style'>	/**
+</span>	 * @property {String} style CSS style name.
+	 */
+<span id='JW-UI-CssUpdater-property-property'>	/**
+</span>	 * @property {JW.Property} property `&lt;String&gt;` Source property.
+	 */
+
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
+	
+	_update: function() {
+		this.el.css(this.style, this.property.get());
+	}
+});
+</pre>
+</body>
+</html>
