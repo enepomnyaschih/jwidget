@@ -28,6 +28,15 @@
  *     var updater = new JW.UI.PropUpdater($("#myelem"), "checked", checked);
  *     // Next command unchecks the checkbox
  *     checked.{@link JW.Property#set set}(false);
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     updater.{@link JW.UI.PropUpdater#destroy destroy}();
+ *
+ * Method {@link jQuery#jwprop jwprop} is a shorthand for synchronizer creation.
+ *
+ *     var checked = new JW.Property(true);
+ *     var updater = $("#myelem").{@link jQuery#jwprop jwprop}("checked", checked);
+ *     checked.{@link JW.Property#set set}(false);
+ *     updater.{@link JW.UI.PropUpdater#destroy destroy}();
  *
  * For backward binding, use JW.UI.CheckedListener for checkboxes and JW.UI.RadioListener for radios.
  *

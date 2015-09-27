@@ -28,6 +28,15 @@
  *     var updater = new JW.UI.ValueUpdater($("#myelem"), value);
  *     // Next command changes element value to "Отправить"
  *     value.{@link JW.Property#set set}("Отправить");
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     updater.{@link JW.UI.ValueUpdater#destroy destroy}();
+ *
+ * Method {@link jQuery#jwval jwval} is a shorthand for synchronizer creation.
+ *
+ *     var value = new JW.Property("Submit");
+ *     var updater = $("#myelem").{@link jQuery#jwval jwval}(value);
+ *     value.{@link JW.Property#set set}("Отправить");
+ *     updater.{@link JW.UI.ValueUpdater#destroy destroy}();
  *
  * For backward binding, use JW.UI.ValueListener.
  *

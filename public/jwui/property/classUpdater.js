@@ -28,6 +28,15 @@
  *     var updater = new JW.UI.ClassUpdater($("#myelem"), "selected", selected);
  *     // Next command removes "selected" CSS class from element
  *     selected.{@link JW.Property#set set}(false);
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     updater.{@link JW.UI.ClassUpdater#destroy destroy}();
+ *
+ * Method {@link jQuery#jwclass jwclass} is a shorthand for synchronizer creation.
+ *
+ *     var selected = new JW.Property(true);
+ *     var updater = $("#myelem").{@link jQuery#jwclass jwclass}("selected", selected);
+ *     selected.{@link JW.Property#set set}(false);
+ *     updater.{@link JW.UI.ClassUpdater#destroy destroy}();
  *
  * @extends JW.Class
  *

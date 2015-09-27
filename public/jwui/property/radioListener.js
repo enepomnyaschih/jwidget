@@ -29,10 +29,18 @@
  *     assertEquals("apple", selected.{@link JW.Property#get get}());
  *     // Later on, user selected "banana" radio
  *     assertEquals("banana", selected.{@link JW.Property#get get}());
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     listener.{@link JW.UI.RadioListener#destroy destroy}();
  *
  * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
  * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
  * All radios must have the same "name" attribute value. If neighter radio is selected, property is set to null.
+ *
+ * In simple scenarios, {@link jQuery#jwradio jwradio} is a shorthand for synchronizer creation.
+ *
+ *     var selected = $("#myform").{@link jQuery#jwradio jwradio}("myradio");
+ *     assertEquals("apple", selected.{@link JW.Property#get get}());
+ *     selected.{@link JW.Property#destroy destroy}();
  *
  * For backward binding, use JW.UI.RadioUpdater.
  *

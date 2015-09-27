@@ -28,6 +28,15 @@
  *     var updater = new JW.UI.CssUpdater($("#myelem"), "color", color);
  *     // Next command changes "color" style value to "blue"
  *     color.{@link JW.Property#set set}("blue");
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     updater.{@link JW.UI.CssUpdater#destroy destroy}();
+ *
+ * Method {@link jQuery#jwcss jwcss} is a shorthand for synchronizer creation.
+ *
+ *     var color = new JW.Property("red");
+ *     var updater = $("#myelem").{@link jQuery#jwcss jwcss}("color", color);
+ *     color.{@link JW.Property#set set}("blue");
+ *     updater.{@link JW.UI.CssUpdater#destroy destroy}();
  *
  * @extends JW.Class
  *

@@ -28,6 +28,15 @@
  *     var updater = new JW.UI.AttrUpdater($("#myelem"), "title", title);
  *     // Next command changes "title" attribute value to "Это подсказка"
  *     title.{@link JW.Property#set set}("Это подсказка");
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     updater.{@link JW.UI.AttrUpdater#destroy destroy}();
+ *
+ * Method {@link jQuery#jwattr jwattr} is a shorthand for synchronizer creation.
+ *
+ *     var title = new JW.Property("This is a tooltip");
+ *     var updater = $("#myelem").{@link jQuery#jwattr jwattr}("title", title);
+ *     title.{@link JW.Property#set set}("Это подсказка");
+ *     updater.{@link JW.UI.AttrUpdater#destroy destroy}();
  *
  * @extends JW.Class
  *

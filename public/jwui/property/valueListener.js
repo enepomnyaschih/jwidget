@@ -29,6 +29,18 @@
  *     assertEquals("", value.{@link JW.Property#get get}());
  *     // Later on, user entered "foo" in the field
  *     assertEquals("foo", value.{@link JW.Property#get get}());
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     listener.{@link JW.UI.ValueListener#destroy destroy}();
+ *
+ * In simple scenarios, {@link jQuery#jwval jwval} is a shorthand for synchronizer creation.
+ *
+ *     var value = $("#myinput").{@link jQuery#jwval jwval}();
+ *     // Assume that the element is a blank field initially
+ *     assertEquals("", value.{@link JW.Property#get get}());
+ *     // Later on, user entered "foo" in the field
+ *     assertEquals("foo", value.{@link JW.Property#get get}());
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     value.{@link JW.Property#destroy destroy}();
  *
  * For backward binding, use JW.UI.ValueUpdater.
  *

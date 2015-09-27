@@ -29,6 +29,15 @@
  *     var updater = new JW.UI.VisibleUpdater($("#myelem"), visible);
  *     // Next command makes element invisible
  *     visible.{@link JW.Property#set set}(false);
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     updater.{@link JW.UI.VisibleUpdater#destroy destroy}();
+ *
+ * Method {@link jQuery#jwshow jwshow} is a shorthand for synchronizer creation.
+ *
+ *     var visible = new JW.Property(true);
+ *     var updater = $("#myelem").{@link jQuery#jwshow jwshow}(visible);
+ *     visible.{@link JW.Property#set set}(false);
+ *     updater.{@link JW.UI.VisibleUpdater#destroy destroy}();
  *
  * @extends JW.Class
  *

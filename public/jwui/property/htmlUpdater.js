@@ -28,6 +28,15 @@
  *     var updater = new JW.UI.HtmlUpdater($("#myelem"), html);
  *     // Next command changes element HTML to loaded stuff
  *     html.{@link JW.Property#set set}('<img src="loaded.png"> Loaded!');
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     updater.{@link JW.UI.HtmlUpdater#destroy destroy}();
+ *
+ * Method {@link jQuery#jwhtml jwhtml} is a shorthand for synchronizer creation.
+ *
+ *     var html = new JW.Property('<img src="loading.gif"> Loading...');
+ *     var updater = $("#myelem").{@link jQuery#jwhtml jwhtml}(html);
+ *     html.{@link JW.Property#set set}('<img src="loaded.png"> Loaded!');
+ *     updater.{@link JW.UI.HtmlUpdater#destroy destroy}();
  *
  * @extends JW.Class
  *

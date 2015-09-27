@@ -28,6 +28,15 @@
  *     var updater = new JW.UI.TextUpdater($("#myelem"), text);
  *     // Next command changes element text to "Everyone likes cats"
  *     text.{@link JW.Property#set set}("Everyone likes cats");
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     updater.{@link JW.UI.TextUpdater#destroy destroy}();
+ *
+ * Method {@link jQuery#jwtext jwtext} is a shorthand for synchronizer creation.
+ *
+ *     var text = new JW.Property("I like cats");
+ *     var updater = $("#myelem").{@link jQuery#jwtext jwtext}(text);
+ *     text.{@link JW.Property#set set}("Everyone likes cats");
+ *     updater.{@link JW.UI.TextUpdater#destroy destroy}();
  *
  * @extends JW.Class
  *

@@ -27,8 +27,17 @@
  *     var updater = new JW.UI.RadioUpdater($("#myform"), "myradio", value);
  *     // Next command selects a radio with value "banana" in a group
  *     value.{@link JW.Property#set set}("banana");
+ *     // If helper is not needed anymore, destroy it to stop synchronization
+ *     updater.{@link JW.UI.RadioUpdater#destroy destroy}();
  *
  * All radios must have the same "name" attribute value.
+ *
+ * Method {@link jQuery#jwradio jwradio} is a shorthand for synchronizer creation.
+ *
+ *     var value = new JW.Property("apple");
+ *     var updater = $("#myform").{@link jQuery#jwradio jwradio}("myradio", value);
+ *     value.{@link JW.Property#set set}("banana");
+ *     updater.{@link JW.UI.RadioUpdater#destroy destroy}();
  *
  * For backward binding, use JW.UI.RadioListener.
  *
