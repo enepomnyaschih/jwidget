@@ -19,30 +19,13 @@
 
 /**
  * @class
- * Watches DOM text input value modification and updates the value of the target string
- * {@link JW.Property property}.
- * Applied on initialization as well.
  *
- *     var listener = new JW.UI.ValueListener($("#myinput"));
- *     var value = listener.{@link JW.UI.ValueListener#property-target target};
- *     // Assume that the element is a blank field initially
- *     assertEquals("", value.{@link JW.Property#get get}());
- *     // Later on, user entered "foo" in the field
- *     assertEquals("foo", value.{@link JW.Property#get get}());
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     listener.{@link JW.UI.ValueListener#destroy destroy}();
+ * Element value listener for {@link jQuery#jwval jwval} method.
  *
- * In simple scenarios, {@link jQuery#jwval jwval} is a shorthand for synchronizer creation.
+ * You may use it as a standalone class. In addition to {@link jQuery#jwval jwval} features,
+ * has some configuration options. Destroy it to stop synchronization.
  *
- *     var value = $("#myinput").{@link jQuery#jwval jwval}();
- *     // Assume that the element is a blank field initially
- *     assertEquals("", value.{@link JW.Property#get get}());
- *     // Later on, user entered "foo" in the field
- *     assertEquals("foo", value.{@link JW.Property#get get}());
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     value.{@link JW.Property#destroy destroy}();
- *
- * For backward binding, use JW.UI.ValueUpdater.
+ * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-valueListener.html"></iframe>
  *
  * @extends JW.Class
  *

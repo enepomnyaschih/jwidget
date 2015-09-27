@@ -79,6 +79,10 @@ jQuery.extend(jQuery.fn, {
 	 * Watches string property modification and updates CSS class name in the DOM element.
 	 * Returns JW.UI.ClassNameUpdater instance. Destroy it to stop synchronization.
 	 *
+	 * **Caution:** Method doesn't check if the class of the same name is already present in the element.
+	 * If that's the case, it will remove the class on the next property value change. However, it won't
+	 * touch the other classes, e.g. it doesn't remove "application-rect" class in the example below.
+	 *
 	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="250" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html"></iframe>
 	 */
 	jwclass: function() {
@@ -163,6 +167,8 @@ jQuery.extend(jQuery.fn, {
 	 * Watches string property modification and selects a corresponding radio button.
 	 * Returns JW.UI.RadioUpdater instance. Destroy it to stop synchronization.
 	 *
+	 * All radios must have the same "name" attribute value.
+	 *
 	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="170" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio.html"></iframe>
 	 *
 	 * <hr>
@@ -171,6 +177,10 @@ jQuery.extend(jQuery.fn, {
 	 *
 	 * Returns a string property containing current radio group selection and starts watching for selection modification.
 	 * Creates JW.UI.RadioListener implicitly. Destroy the result property to stop synchronization.
+	 *
+	 * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
+	 * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
+	 * All radios must have the same "name" attribute value. If neighter radio is selected, property is set to null.
 	 *
 	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="255" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html"></iframe>
 	 *

@@ -19,26 +19,11 @@
 
 /**
  * @class
- * Watches source boolean {@link JW.Property property} modification and updates the
- * specified property of the DOM element.
- * Applied on initialization as well.
  *
- *     var checked = new JW.Property(true);
- *     // Next command checks the checkbox
- *     var updater = new JW.UI.PropUpdater($("#myelem"), "checked", checked);
- *     // Next command unchecks the checkbox
- *     checked.{@link JW.Property#set set}(false);
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     updater.{@link JW.UI.PropUpdater#destroy destroy}();
+ * Result of {@link jQuery#jwprop jwprop} method call. Destroy it to stop synchronization.
  *
- * Method {@link jQuery#jwprop jwprop} is a shorthand for synchronizer creation.
- *
- *     var checked = new JW.Property(true);
- *     var updater = $("#myelem").{@link jQuery#jwprop jwprop}("checked", checked);
- *     checked.{@link JW.Property#set set}(false);
- *     updater.{@link JW.UI.PropUpdater#destroy destroy}();
- *
- * For backward binding, use JW.UI.CheckedListener for checkboxes and JW.UI.RadioListener for radios.
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwprop jwprop} is an easier alternative.
  *
  * @extends JW.Class
  *

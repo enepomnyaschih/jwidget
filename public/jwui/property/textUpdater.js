@@ -19,24 +19,11 @@
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * inner text of the DOM element.
- * Applied on initialization as well.
  *
- *     var text = new JW.Property("I like cats");
- *     // Next command sets element text to "I like cats"
- *     var updater = new JW.UI.TextUpdater($("#myelem"), text);
- *     // Next command changes element text to "Everyone likes cats"
- *     text.{@link JW.Property#set set}("Everyone likes cats");
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     updater.{@link JW.UI.TextUpdater#destroy destroy}();
+ * Result of {@link jQuery#jwtext jwtext} method call. Destroy it to stop synchronization.
  *
- * Method {@link jQuery#jwtext jwtext} is a shorthand for synchronizer creation.
- *
- *     var text = new JW.Property("I like cats");
- *     var updater = $("#myelem").{@link jQuery#jwtext jwtext}(text);
- *     text.{@link JW.Property#set set}("Everyone likes cats");
- *     updater.{@link JW.UI.TextUpdater#destroy destroy}();
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwtext jwtext} is an easier alternative.
  *
  * @extends JW.Class
  *

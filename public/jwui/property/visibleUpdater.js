@@ -19,25 +19,11 @@
 
 /**
  * @class
- * Watches source boolean {@link JW.Property property} modification and updates
- * visibility of the DOM element. To make element invisible, sets "display: none" inline style. To make
- * element visible, removes "display" inline style. Make sure that element is visible by your CSS rules.
- * Applied on initialization as well.
  *
- *     var visible = new JW.Property(true);
- *     // Next command makes element visible
- *     var updater = new JW.UI.VisibleUpdater($("#myelem"), visible);
- *     // Next command makes element invisible
- *     visible.{@link JW.Property#set set}(false);
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     updater.{@link JW.UI.VisibleUpdater#destroy destroy}();
+ * Result of {@link jQuery#jwshow jwshow} method call. Destroy it to stop synchronization.
  *
- * Method {@link jQuery#jwshow jwshow} is a shorthand for synchronizer creation.
- *
- *     var visible = new JW.Property(true);
- *     var updater = $("#myelem").{@link jQuery#jwshow jwshow}(visible);
- *     visible.{@link JW.Property#set set}(false);
- *     updater.{@link JW.UI.VisibleUpdater#destroy destroy}();
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwshow jwshow} is an easier alternative.
  *
  * @extends JW.Class
  *

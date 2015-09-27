@@ -19,26 +19,11 @@
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * value of the DOM text input.
- * Applied on initialization as well.
  *
- *     var value = new JW.Property("Submit");
- *     // Next command sets element value to "Submit"
- *     var updater = new JW.UI.ValueUpdater($("#myelem"), value);
- *     // Next command changes element value to "Отправить"
- *     value.{@link JW.Property#set set}("Отправить");
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     updater.{@link JW.UI.ValueUpdater#destroy destroy}();
+ * Result of {@link jQuery#jwval jwval} method call. Destroy it to stop synchronization.
  *
- * Method {@link jQuery#jwval jwval} is a shorthand for synchronizer creation.
- *
- *     var value = new JW.Property("Submit");
- *     var updater = $("#myelem").{@link jQuery#jwval jwval}(value);
- *     value.{@link JW.Property#set set}("Отправить");
- *     updater.{@link JW.UI.ValueUpdater#destroy destroy}();
- *
- * For backward binding, use JW.UI.ValueListener.
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwval jwval} is an easier alternative.
  *
  * @extends JW.Class
  *
@@ -69,6 +54,9 @@ JW.extend(JW.UI.ValueUpdater, JW.Class, {
 	},
 	
 	_update: function() {
-		this.el.val(this.property.get());
+		var value = this.property.get();
+		if (this.el.val() !== value) {
+			this.el.val(value);
+		}
 	}
 });

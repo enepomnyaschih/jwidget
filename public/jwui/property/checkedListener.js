@@ -19,26 +19,13 @@
 
 /**
  * @class
- * Watches checkbox state modification and updates the value of the target boolean
- * {@link JW.Property property}.
- * Applied on initialization as well.
  *
- *     var listener = new JW.UI.CheckedListener($("#mycheckbox"));
- *     var checked = listener.{@link JW.UI.CheckedListener#property-target target};
- *     // Assume that the checkbox is unchecked initially
- *     assertEquals(false, checked.{@link JW.Property#get get}());
- *     // Later on, user checked the checkbox
- *     assertEquals(true, checked.{@link JW.Property#get get}());
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     listener.{@link JW.UI.CheckedListener#destroy destroy}();
+ * Checked state listener for {@link jQuery#jwprop jwprop} method.
  *
- * In simple scenarios, {@link jQuery#jwprop jwprop} is a shorthand for synchronizer creation.
+ * You may use it as a standalone class. In addition to {@link jQuery#jwprop jwprop} features,
+ * allows you to specify target property explicitly. Destroy it to stop synchronization.
  *
- *     var checked = $("#mycheckbox").{@link jQuery#jwprop jwprop}("checked");
- *     assertEquals(false, checked.{@link JW.Property#get get}());
- *     checked.{@link JW.Property#destroy destroy}();
- *
- * For backward binding, use JW.UI.PropUpdater, passing "checked" as a prop argument value.
+ * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="150" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-checkedListener.html"></iframe>
  *
  * @extends JW.Class
  *

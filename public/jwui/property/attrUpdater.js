@@ -19,24 +19,11 @@
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * specified attribute of the DOM element.
- * Applied on initialization as well.
  *
- *     var title = new JW.Property("This is a tooltip");
- *     // Next command sets "title" attribute value to "This is a tooltip"
- *     var updater = new JW.UI.AttrUpdater($("#myelem"), "title", title);
- *     // Next command changes "title" attribute value to "Это подсказка"
- *     title.{@link JW.Property#set set}("Это подсказка");
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     updater.{@link JW.UI.AttrUpdater#destroy destroy}();
+ * Result of {@link jQuery#jwattr jwattr} method call. Destroy it to stop synchronization.
  *
- * Method {@link jQuery#jwattr jwattr} is a shorthand for synchronizer creation.
- *
- *     var title = new JW.Property("This is a tooltip");
- *     var updater = $("#myelem").{@link jQuery#jwattr jwattr}("title", title);
- *     title.{@link JW.Property#set set}("Это подсказка");
- *     updater.{@link JW.UI.AttrUpdater#destroy destroy}();
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwattr jwattr} is an easier alternative.
  *
  * @extends JW.Class
  *

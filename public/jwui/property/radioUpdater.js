@@ -19,27 +19,11 @@
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and selects a corresponding radio.
- * Applied on initialization as well.
  *
- *     var value = new JW.Property("apple");
- *     // Next command selects a radio with value "apple" in a group
- *     var updater = new JW.UI.RadioUpdater($("#myform"), "myradio", value);
- *     // Next command selects a radio with value "banana" in a group
- *     value.{@link JW.Property#set set}("banana");
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     updater.{@link JW.UI.RadioUpdater#destroy destroy}();
+ * Result of {@link jQuery#jwradio jwradio} method call. Destroy it to stop synchronization.
  *
- * All radios must have the same "name" attribute value.
- *
- * Method {@link jQuery#jwradio jwradio} is a shorthand for synchronizer creation.
- *
- *     var value = new JW.Property("apple");
- *     var updater = $("#myform").{@link jQuery#jwradio jwradio}("myradio", value);
- *     value.{@link JW.Property#set set}("banana");
- *     updater.{@link JW.UI.RadioUpdater#destroy destroy}();
- *
- * For backward binding, use JW.UI.RadioListener.
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwradio jwradio} is an easier alternative.
  *
  * @extends JW.Class
  *

@@ -19,30 +19,13 @@
 
 /**
  * @class
- * Watches selection modification in radio group and updates the value of the target string
- * {@link JW.Property property}.
- * Applied on initialization as well.
  *
- *     var listener = new JW.UI.RadioListener($("#myform"), "myradio");
- *     var selected = listener.{@link JW.UI.RadioListener#property-target target};
- *     // Assume that the radio with value "apple" is selected initially
- *     assertEquals("apple", selected.{@link JW.Property#get get}());
- *     // Later on, user selected "banana" radio
- *     assertEquals("banana", selected.{@link JW.Property#get get}());
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     listener.{@link JW.UI.RadioListener#destroy destroy}();
+ * Radio group selection listener for {@link jQuery#jwradio jwradio} method.
  *
- * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
- * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
- * All radios must have the same "name" attribute value. If neighter radio is selected, property is set to null.
+ * You may use it as a standalone class. In addition to {@link jQuery#jwradio jwradio} features,
+ * allows you to specify target property explicitly. Destroy it to stop synchronization.
  *
- * In simple scenarios, {@link jQuery#jwradio jwradio} is a shorthand for synchronizer creation.
- *
- *     var selected = $("#myform").{@link jQuery#jwradio jwradio}("myradio");
- *     assertEquals("apple", selected.{@link JW.Property#get get}());
- *     selected.{@link JW.Property#destroy destroy}();
- *
- * For backward binding, use JW.UI.RadioUpdater.
+ * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-radioListener.html"></iframe>
  *
  * @extends JW.Class
  *

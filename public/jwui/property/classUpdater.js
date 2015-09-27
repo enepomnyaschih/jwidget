@@ -19,24 +19,11 @@
 
 /**
  * @class
- * Watches source boolean {@link JW.Property property} modification and updates the
- * specified CSS class presence in the DOM element.
- * Applied on initialization as well.
  *
- *     var selected = new JW.Property(true);
- *     // Next command adds "selected" CSS class to element
- *     var updater = new JW.UI.ClassUpdater($("#myelem"), "selected", selected);
- *     // Next command removes "selected" CSS class from element
- *     selected.{@link JW.Property#set set}(false);
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     updater.{@link JW.UI.ClassUpdater#destroy destroy}();
+ * Result of {@link jQuery#jwclass jwclass} method call. Destroy it to stop synchronization.
  *
- * Method {@link jQuery#jwclass jwclass} is a shorthand for synchronizer creation.
- *
- *     var selected = new JW.Property(true);
- *     var updater = $("#myelem").{@link jQuery#jwclass jwclass}("selected", selected);
- *     selected.{@link JW.Property#set set}(false);
- *     updater.{@link JW.UI.ClassUpdater#destroy destroy}();
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwclass jwclass} is an easier alternative.
  *
  * @extends JW.Class
  *

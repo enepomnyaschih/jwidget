@@ -19,24 +19,11 @@
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * specified CSS style of the DOM element.
- * Applied on initialization as well.
  *
- *     var color = new JW.Property("red");
- *     // Next command sets "color" style value to "red"
- *     var updater = new JW.UI.CssUpdater($("#myelem"), "color", color);
- *     // Next command changes "color" style value to "blue"
- *     color.{@link JW.Property#set set}("blue");
- *     // If helper is not needed anymore, destroy it to stop synchronization
- *     updater.{@link JW.UI.CssUpdater#destroy destroy}();
+ * Result of {@link jQuery#jwcss jwcss} method call. Destroy it to stop synchronization.
  *
- * Method {@link jQuery#jwcss jwcss} is a shorthand for synchronizer creation.
- *
- *     var color = new JW.Property("red");
- *     var updater = $("#myelem").{@link jQuery#jwcss jwcss}("color", color);
- *     color.{@link JW.Property#set set}("blue");
- *     updater.{@link JW.UI.CssUpdater#destroy destroy}();
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwcss jwcss} is an easier alternative.
  *
  * @extends JW.Class
  *
