@@ -44,7 +44,10 @@ jQuery.extend(jQuery.fn, {
 	},
 
 	/**
-	 * Shorthand for JW.UI.AttrUpdater creation - see it for details.
+	 * Watches string property modification and updates the specified attribute of the DOM element.
+	 * Returns JW.UI.AttrUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwattr.html"></iframe>
 	 *
 	 * @param {String} attr DOM element attribute name.
 	 * @param {JW.Property} property `<String>` Attribute value.
@@ -55,10 +58,28 @@ jQuery.extend(jQuery.fn, {
 	},
 
 	/**
-	 * Shorthand for JW.UI.ClassUpdater and JW.UI.ClassNameUpdater creation - see them for details.
+	 * DOM element CSS class management method. Supports two variations.
 	 *
 	 *     jwclass(cls: String, property: JW.Property<Boolean>): JW.UI.ClassUpdater
 	 *     jwclass(cls: JW.Property<String>): JW.UI.ClassNameUpdater
+	 *
+	 * <hr>
+	 *
+	 *     jwclass(cls: String, property: JW.Property<Boolean>): JW.UI.ClassUpdater
+	 *
+	 * Watches boolean property modification and updates the specified CSS class presence in the DOM element.
+	 * Returns JW.UI.ClassUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-bool.html"></iframe>
+	 *
+	 * <hr>
+	 *
+	 *     jwclass(cls: JW.Property<String>): JW.UI.ClassNameUpdater
+	 *
+	 * Watches string property modification and updates CSS class name in the DOM element.
+	 * Returns JW.UI.ClassNameUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="250" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html"></iframe>
 	 */
 	jwclass: function() {
 		var a = arguments[0], b = arguments[1];
@@ -66,7 +87,10 @@ jQuery.extend(jQuery.fn, {
 	},
 
 	/**
-	 * Shorthand for JW.UI.CssUpdater creation - see it for details.
+	 * Watches string modification and updates the specified CSS style of the DOM element.
+	 * Returns JW.UI.CssUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwcss.html"></iframe>
 	 *
 	 * @param {String} style CSS style name.
 	 * @param {JW.Property} property `<String>` Style value.
@@ -77,7 +101,10 @@ jQuery.extend(jQuery.fn, {
 	},
 
 	/**
-	 * Shorthand for JW.UI.HtmlUpdater creation - see it for details.
+	 * Watches string property modification and updates inner HTML of the DOM element.
+	 * Returns JW.UI.HtmlUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwhtml.html"></iframe>
 	 *
 	 * @param {JW.Property} property `<String>` HTML value.
 	 * @returns {JW.UI.HtmlUpdater} Synchronizer instance.
@@ -87,10 +114,26 @@ jQuery.extend(jQuery.fn, {
 	},
 
 	/**
-	 * Shorthand for JW.UI.PropUpdater and JW.UI.CheckedListener creation - see them for details.
+	 * DOM element property management method. Supports two variations.
 	 *
 	 *     jwprop(prop: String, property: JW.Property<Boolean>): JW.UI.PropUpdater
-	 *     jwprop("checked"): JW.Property<Boolean> // creates JW.UI.CheckedListener implicitly
+	 *     jwprop("checked"): JW.Property<Boolean>
+	 *
+	 * <hr>
+	 *
+	 *     jwprop(prop: String, property: JW.Property<Boolean>): JW.UI.PropUpdater
+	 *
+	 * Watches boolean property modification and updates the specified property of the DOM element.
+	 * Returns JW.UI.PropUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <hr>
+	 *
+	 *     jwprop("checked"): JW.Property<Boolean>
+	 *
+	 * Returns a boolean property containing current checkbox state and starts watching for checkbox modification.
+	 * Creates JW.UI.CheckedListener implicitly. Destroy the result property to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="140" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwprop.html"></iframe>
 	 *
 	 * @param {String} prop Element's property name.
 	 * @param {JW.Property} [property] `<Boolean>` Property value.
@@ -108,10 +151,28 @@ jQuery.extend(jQuery.fn, {
 	},
 
 	/**
-	 * Shorthand for JW.UI.RadioUpdater and JW.UI.RadioListener creation - see them for details.
+	 * Radio group value management method. Supports two variations.
 	 *
 	 *     jwradio(name: String, value: JW.Property<String>): JW.UI.RadioUpdater
-	 *     jwradio(name: String): JW.Property<String> // creates JW.UI.RadioListener implicitly
+	 *     jwradio(name: String): JW.Property<String>
+	 *
+	 * <hr>
+	 *
+	 *     jwradio(name: String, value: JW.Property<String>): JW.UI.RadioUpdater
+	 *
+	 * Watches string property modification and selects a corresponding radio button.
+	 * Returns JW.UI.RadioUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="170" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio.html"></iframe>
+	 *
+	 * <hr>
+	 *
+	 *     jwradio(name: String): JW.Property<String>
+	 *
+	 * Returns a string property containing current radio group selection and starts watching for selection modification.
+	 * Creates JW.UI.RadioListener implicitly. Destroy the result property to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="255" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html"></iframe>
 	 *
 	 * @param {String} name Radios "name" attribute.
 	 * @param {JW.Property} [property] `<String>` Radio value.
@@ -126,7 +187,10 @@ jQuery.extend(jQuery.fn, {
 	},
 
 	/**
-	 * Shorthand for JW.UI.TextUpdater creation - see it for details.
+	 * Watches string modification and updates inner text of the DOM element.
+	 * Returns JW.UI.TextUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwtext.html"></iframe>
 	 *
 	 * @param {JW.Property} property `<String>` HTML value.
 	 * @returns {JW.UI.TextUpdater} Synchronizer instance.
@@ -136,10 +200,26 @@ jQuery.extend(jQuery.fn, {
 	},
 
 	/**
-	 * Shorthand for JW.UI.ValueUpdater and JW.ValueListener creation - see them for details.
+	 * DOM element value management method. Supports two variations.
 	 *
 	 *     jwval(value: JW.Property<String>): JW.UI.ValueUpdater
-	 *     jwval(): JW.Property<String> // creates JW.UI.ValueListener implicitly
+	 *     jwval(): JW.Property<String>
+	 *
+	 * <hr>
+	 *
+	 *     jwval(value: JW.Property<String>): JW.UI.ValueUpdater
+	 *
+	 * Watches string property modification and updates the value of the DOM text input.
+	 * Returns JW.UI.ValueUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <hr>
+	 *
+	 *     jwval(): JW.Property<String>
+	 *
+	 * Returns a string property containing current element value and starts watching for value modification.
+	 * Creates JW.UI.ValueListener implicitly. Destroy the result property to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="285" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval.html"></iframe>
 	 *
 	 * @param {JW.Property} [property] `<String>` Element value.
 	 */
@@ -153,7 +233,12 @@ jQuery.extend(jQuery.fn, {
 	},
 
 	/**
-	 * Shorthand for JW.UI.VisibleUpdater creation - see it for details.
+	 * Watches boolean property modification and updates visibility of the DOM element.
+	 * To make element invisible, sets "display: none" inline style. To make
+	 * element visible, removes "display" inline style. Make sure that element is visible according to your CSS rules.
+	 * Returns JW.UI.VisibleUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="215" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwshow.html"></iframe>
 	 *
 	 * @param {JW.Property} property `<Boolean>` Element visibility.
 	 * @returns {JW.UI.VisibleUpdater} Synchronizer instance.
