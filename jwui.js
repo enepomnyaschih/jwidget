@@ -1,5 +1,5 @@
 /*!
-	jWidget UI 1.3
+	jWidget UI 1.3.1
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -827,13 +827,13 @@ JW.extend(JW.UI.Component, JW.Class, {
 			this._arrays = null;
 			JW.Set.each(this._replaceables, JW.destroy);
 			this._replaceables = null;
+			this.children.unrender();
 		}
 		this._super();
 	},
 
 	destroyObject: function() {
 		if (this.el) {
-			this.children.unrender();
 			this.unrender();
 
 			this.children.destroy();
