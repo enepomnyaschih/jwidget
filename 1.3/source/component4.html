@@ -94,6 +94,45 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual('&lt;li&gt;a&lt;/li&gt;&lt;li&gt;b&lt;/li&gt;', view.el.html());
 
 		view.destroy();
+	},
+
+	// https://github.com/enepomnyaschih/jwidget/issues/127
+	testDestructionOrder: function() {
+		/* Preset */
+
+		var ChildView = function(text) {
+			ChildView._super.call(this);
+			this.text = text;
+		};
+
+		JW.extend(ChildView, JW.UI.Component, {
+			renderRoot: function(el) {
+				el.text(this.text);
+			}
+		});
+
+		JW.UI.template(ChildView, {main: '&lt;div jwclass=&quot;child&quot;&gt;&lt;/div&gt;'});
+
+		var ParentView = function() {
+			ParentView._super.call(this);
+		};
+
+		JW.extend(ParentView, JW.UI.Component, {
+			renderChild: function() {
+				return this.own(new ChildView(&quot;Child&quot;));
+			}
+		});
+
+		JW.UI.template(ParentView, {main: '&lt;div jwclass=&quot;parent&quot;&gt;&lt;div jwid=&quot;child&quot;&gt;&lt;/div&gt;&lt;/div&gt;'});
+
+		/* Test case */
+
+		var parent = new ParentView();
+		parent.render();
+		this.assertStrictEqual(&quot;Child&quot;, parent.el.children().text());
+		this.assertTrue(parent.el.children().hasClass(&quot;child&quot;));
+		this.assertTrue(parent.el.children().hasClass(&quot;parent-child&quot;));
+		parent.destroy();
 	}
 });
 </pre>
