@@ -6,7 +6,7 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
-### 1.3.1
+### 1.3.1 (October 10, 2015)
 
 - Fixed critical bug causing exceptions in component destruction method
 
