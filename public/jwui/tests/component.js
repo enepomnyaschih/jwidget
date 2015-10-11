@@ -77,5 +77,44 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual('<li>a</li><li>b</li>', view.el.html());
 
 		view.destroy();
+	},
+
+	// https://github.com/enepomnyaschih/jwidget/issues/127
+	testDestructionOrder: function() {
+		/* Preset */
+
+		var ChildView = function(text) {
+			ChildView._super.call(this);
+			this.text = text;
+		};
+
+		JW.extend(ChildView, JW.UI.Component, {
+			renderRoot: function(el) {
+				el.text(this.text);
+			}
+		});
+
+		JW.UI.template(ChildView, {main: '<div jwclass="child"></div>'});
+
+		var ParentView = function() {
+			ParentView._super.call(this);
+		};
+
+		JW.extend(ParentView, JW.UI.Component, {
+			renderChild: function() {
+				return this.own(new ChildView("Child"));
+			}
+		});
+
+		JW.UI.template(ParentView, {main: '<div jwclass="parent"><div jwid="child"></div></div>'});
+
+		/* Test case */
+
+		var parent = new ParentView();
+		parent.render();
+		this.assertStrictEqual("Child", parent.el.children().text());
+		this.assertTrue(parent.el.children().hasClass("child"));
+		this.assertTrue(parent.el.children().hasClass("parent-child"));
+		parent.destroy();
 	}
 });
