@@ -20,53 +20,7 @@
 /**
  * @class
  *
- * jQuery event attachment adapter.
- *
- * - Allows you to use jQuery events in conjunction with jWidget object aggregation feature.
- * Attachment destruction results in event unbinding.
- * - Allows you to pass callback context.
- * - However, it doesn't support "data" argument - use closures instead.
- *
- * Method {@link jQuery#jwon jwon} is a shorthand for adapter creation.
- *
- * **Example**
- *
- * Assume you have the next class:
- *
- *     var MyForm = function(el) {
- *         this._onSubmit = JW.inScope(this._onSubmit, this);
- *         this._onTextChange = JW.inScope(this._onTextChange, this);
- *         MyForm.{@link JW.Class#static-property-_super _super}.call(this);
- *         el.on("submit", this._onSubmit);
- *         el.on("change", "input[type=text]", this._onTextChange);
- *     };
- *
- *     JW.extend(MyForm, JW.Class, {
- *         _onSubmit: function(event) {...},
- *         _onTextChange: function(event) {...},
- *
- *         {@link #destroyObject}: function() {
- *             el.off("submit", this._onSubmit);
- *             el.off("change", "input[type=text]", this._onTextChange);
- *             this.{@link #_super}();
- *         }
- *     });
- *
- * Thanks to the adapter, we can remove the overhead of locking the method call context and
- * explicit event unsubscribing in the #destroyObject method:
- *
- *     var MyForm = function(el) {
- *         MyForm.{@link JW.Class#static-property-_super _super}.call(this);
- *         this.own(el.{@link jQuery#jwon jwon}("submit", this._onSubmit, this));
- *         this.own(el.{@link jQuery#jwon jwon}("change", "input[type=text]", this._onTextChange, this));
- *     };
- *
- *     JW.extend(MyForm, JW.Class, {
- *         _onSubmit: function(event, target) {...},
- *         _onTextChange: function(event, target) {...}
- *     });
- *
- * Notice that event target which jQuery usually assigns the call context to is passed as a second callback argument.
+ * Result of {@link jQuery#jwon jwon} method call. Destroy it to unbind event handler.
  *
  * @extends JW.Class
  *

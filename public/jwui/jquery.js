@@ -24,9 +24,32 @@
  */
 jQuery.extend(jQuery.fn, {
 	/**
-	 * Creates jQuery event adapter managed by jWidget.
-	 * Shorthand for JW.UI.JQEventAttachment creation.
-	 * See JW.UI.JQEventAttachment for more details.
+	 * Attaches handler to an event. jWidget extension for <a href="http://api.jquery.com/on/" target="_blank">on</a>
+	 * method which has the next features.
+	 *
+	 * ### 1. Aggregation
+	 *
+	 * The method returns event attachment object. Its destruction results in event unbinding which allows you to use
+	 * jQuery events in conjunction with {@link JW.Class#own own} method.
+	 *
+	 *     // Bind a handler to "mousemove" event and aggregate the attachment
+	 *     this.own($(window).jwon("mousemove", function(event) {
+	 *         $(".output").text(event.pageX + ":" + event.pageY);
+	 *     }, this));
+	 *
+	 * ### 2. Call context argument
+	 *
+	 * The method accepts callback context as an argument which allows you to avoid JW.inScope
+	 * and <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQuery.proxy</a> usage.
+	 *
+	 *     // On button click, destroy this component
+	 *     el.jwon("click", this.destroy, this);
+	 *
+	 * Event target which jQuery usually assigns the call context to is passed as a second callback argument.
+	 *
+	 *     el.jwon("click", function(event, target) { ... }, this);
+	 *
+	 * The method doesn't support "data" argument - please use closures instead.
 	 *
 	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-jwon.html"></iframe>
 	 *

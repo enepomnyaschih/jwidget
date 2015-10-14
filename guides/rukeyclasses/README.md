@@ -15,19 +15,6 @@
 - [JW.Mapper](#!/guide/rujwmapper)
 - [JW.Updater](#!/guide/rujwupdater)
 - [JW.Switcher](#!/guide/rujwswitcher)
-- [JW.UI.TextUpdater](#!/guide/rujwuitextupdater)
-- [JW.UI.HtmlUpdater](#!/guide/rujwuihtmlupdater)
-- [JW.UI.ValueUpdater](#!/guide/rujwuivalueupdater)
-- [JW.UI.AttrUpdater](#!/guide/rujwuiattrupdater)
-- [JW.UI.PropUpdater](#!/guide/rujwuipropupdater)
-- [JW.UI.CssUpdater](#!/guide/rujwuicssupdater)
-- [JW.UI.ClassUpdater](#!/guide/rujwuiclassupdater)
-- [JW.UI.ClassNameUpdater](#!/guide/rujwuiclassnameupdater)
-- [JW.UI.VisibleUpdater](#!/guide/rujwuivisibleupdater)
-- [JW.UI.RadioUpdater](#!/guide/rujwuiradioupdater)
-- [JW.UI.ValueListener](#!/guide/rujwuivaluelistener)
-- [JW.UI.CheckedListener](#!/guide/rujwuicheckedlistener)
-- [JW.UI.RadioListener](#!/guide/rujwuiradiolistener)
 
 Коллекции:
 
@@ -51,7 +38,7 @@
 - Объединитель массивов: [JW.AbstractArray.Merger](#!/guide/rujwabstractarraymerger)
 - Обратитель массива: [JW.AbstractArray.Reverser](#!/guide/rujwabstractarrayreverser)
 
-UI компонент:
+UI:
 
 - [JW.UI.Component](#!/guide/rujwuicomponent)
-- [JW.UI.JQEventAttachment](#!/guide/rujwuijqeventattachment)
+- Методы [jQuery](#!/guide/rujquery)-дополнения

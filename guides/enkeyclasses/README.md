@@ -15,19 +15,6 @@ Property and its helpers:
 - JW.Mapper
 - JW.Updater
 - JW.Switcher
-- JW.UI.TextUpdater
-- JW.UI.HtmlUpdater
-- JW.UI.ValueUpdater
-- JW.UI.AttrUpdater
-- JW.UI.PropUpdater
-- JW.UI.CssUpdater
-- JW.UI.ClassUpdater
-- JW.UI.ClassNameUpdater
-- JW.UI.VisibleUpdater
-- JW.UI.RadioUpdater
-- JW.UI.ValueListener
-- JW.UI.CheckedListener
-- JW.UI.RadioListener
 
 Collections:
 
@@ -51,7 +38,7 @@ Synchronizers:
 - Arrays merger: JW.AbstractArray.Merger
 - Array reverser: JW.AbstractArray.Reverser
 
-UI component:
+UI:
 
 - JW.UI.Component
-- JW.UI.JQEventAttachment
+- {@link jQuery jQuery} extension methods

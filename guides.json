@@ -157,58 +157,6 @@
 							{
 								"name": "rujwswitcher",
 								"title": "JW.Switcher"
-							},
-							{
-								"name": "rujwuitextupdater",
-								"title": "JW.UI.TextUpdater"
-							},
-							{
-								"name": "rujwuihtmlupdater",
-								"title": "JW.UI.HtmlUpdater"
-							},
-							{
-								"name": "rujwuivalueupdater",
-								"title": "JW.UI.ValueUpdater"
-							},
-							{
-								"name": "rujwuiattrupdater",
-								"title": "JW.UI.AttrUpdater"
-							},
-							{
-								"name": "rujwuipropupdater",
-								"title": "JW.UI.PropUpdater"
-							},
-							{
-								"name": "rujwuicssupdater",
-								"title": "JW.UI.CssUpdater"
-							},
-							{
-								"name": "rujwuiclassupdater",
-								"title": "JW.UI.ClassUpdater"
-							},
-							{
-								"name": "rujwuiclassnameupdater",
-								"title": "JW.UI.ClassNameUpdater"
-							},
-							{
-								"name": "rujwuivisibleupdater",
-								"title": "JW.UI.VisibleUpdater"
-							},
-							{
-								"name": "rujwuiradioupdater",
-								"title": "JW.UI.RadioUpdater"
-							},
-							{
-								"name": "rujwuivaluelistener",
-								"title": "JW.UI.ValueListener"
-							},
-							{
-								"name": "rujwuicheckedlistener",
-								"title": "JW.UI.CheckedListener"
-							},
-							{
-								"name": "rujwuiradiolistener",
-								"title": "JW.UI.RadioListener"
 							}
 						]
 					},
@@ -291,15 +239,15 @@
 						]
 					},
 					{
-						"title": "UI компонент",
+						"title": "UI",
 						"items": [
 							{
 								"name": "rujwuicomponent",
 								"title": "JW.UI.Component"
 							},
 							{
-								"name": "rujwuijqeventattachment",
-								"title": "JW.UI.JQEventAttachment"
+								"name": "rujquery",
+								"title": "Методы jQuery-дополнения"
 							}
 						]
 					}
