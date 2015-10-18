@@ -21,20 +21,26 @@ example:
 
     var Greeter = function() {
         Greeter.{@link JW.Class#_super _super}.call(this);
-        this.name = this.{@link JW.Class#own own}(new JW.Property("wanderer"));
+        this.name = this.{@link JW.Class#own own}(new JW.Property("guest"));
     };
 
     JW.extend(Greeter, JW.UI.Component, {
         renderNameField: function(el) {
-            this.{@link JW.Class#own own}(new JW.UI.ValueUpdater(el, this.name)); // bind element value to property
-            this.{@link JW.Class#own own}(new JW.UI.ValueListener(el, this.name)); // bind property to element value
+            // Bind element value to property
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(this.name));
+
+            // Bind property to element value
+            this.name.{@link JW.Property#bindTo bindTo}(this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}()));
         },
 
         renderGreeting: function(el) {
-            var text = this.{@link JW.Class#own own}(this.name.{@link JW.Property#$$mapValue $$mapValue}(function(name) { // build greeting message
+            // Build greeting message
+            var text = this.{@link JW.Class#own own}(this.name.{@link JW.Property#$$mapValue $$mapValue}(function(name) {
                 return "Hello, " + name + "!";
             }, this));
-            this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text)); // bind element text to message
+
+            // Bind element text to message
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
         }
     });
 
@@ -48,10 +54,10 @@ example:
 
     new Greeter().{@link JW.UI.Component#renderTo renderTo}("body");
 
-<iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.3/greeter.html"></iframe>
+<iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.4/greeter.html"></iframe>
 
 Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes
-you confident in that you're able to implement as complicated and big MVC application as you would like to. You
+you confident in that you're able to implement as complicated and big MV application as you would like to. You
 can be confident to use all well-known OOD patterns and follow OOD
 <a href="http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)">SOLID principles</a>. Read the
 [tutorial](#!/guide/ensample1) for more examples.
@@ -60,7 +66,6 @@ The difference between jWidget and other Model-View frameworks is the approach o
 collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding
 is performed explicitly using JW.Property and its helpers. Instead of special tags-repeaters in HTML templates, you work with
 collections explicitly using {@link JW.AbstractCollection collection classes} and their synchronizers.
-This is very similar to database theory basics, but on UI level.
 
 This approach is more effective: data binding is not constrained by connection between model and view. All the same
 practices are used to bind model objects to each other and to bind view components to each other.
