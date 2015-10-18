@@ -2,7 +2,7 @@
 
 Это краткое описание класса на русском языке.
 
-Полная документация на английском: jQuery
+Полная документация на английском: {@link jQuery jQuery}
 
 ## jwon
 
@@ -59,7 +59,7 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
 	{@link jQuery#jwclass jwclass}(cls: String, property: JW.Property<Boolean>): JW.UI.ClassUpdater
 	{@link jQuery#jwclass jwclass}(cls: JW.Property<String>): JW.UI.ClassNameUpdater
 
-<hr>
+<hr style="display: block">
 
     {@link jQuery#jwclass jwclass}(cls: String, property: JW.Property<Boolean>): JW.UI.ClassUpdater
 
@@ -71,7 +71,7 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
 
 <iframe style="border: 1px solid green; padding: 10px;" width="800" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-bool.html"></iframe>
 
-<hr>
+<hr style="display: block">
 
     {@link jQuery#jwclass jwclass}(cls: JW.Property<String>): JW.UI.ClassNameUpdater
 
@@ -107,7 +107,7 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
 Возвращает экземпляр JW.UI.HtmlUpdater, уничтожение которого прекращает синхронизацию.
 
     // Привязываем HTML внутри элемента к значению свойства
-    this.own(el.jwhtml(html));
+    this.own(el.{@link jQuery#jwhtml jwhtml}(html));
 
 <iframe style="border: 1px solid green; padding: 10px;" width="800" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwhtml.html"></iframe>
 
@@ -118,7 +118,7 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
     {@link jQuery#jwprop jwprop}("checked"): JW.Property<Boolean>
     {@link jQuery#jwprop jwprop}(prop: String, property: JW.Property<Boolean>): JW.UI.PropUpdater
 
-<hr>
+<hr style="display: block">
 
     {@link jQuery#jwprop jwprop}("checked"): JW.Property<Boolean>
 
@@ -129,7 +129,7 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
     // Наблюдаем за состоянием чекбокса
     var disabled = this.own(el.{@link jQuery#jwprop jwprop}("checked"));
 
-<hr>
+<hr style="display: block">
 
     {@link jQuery#jwprop jwprop}(prop: String, property: JW.Property<Boolean>): JW.UI.PropUpdater
 
@@ -145,12 +145,12 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
 
 Метод управления значением группы радиокнопок. Имеет две сигнатуры.
 
-    jwradio(name: String): JW.Property<String>
-    jwradio(name: String, value: JW.Property<String>): JW.UI.RadioUpdater
+    {@link jQuery#jwradio jwradio}(name: String): JW.Property<String>
+    {@link jQuery#jwradio jwradio}(name: String, value: JW.Property<String>): JW.UI.RadioUpdater
 
-<hr>
+<hr style="display: block">
 
-    jwradio(name: String): JW.Property<String>
+    {@link jQuery#jwradio jwradio}(name: String): JW.Property<String>
 
 Возвращает строковое [свойство](#!/guide/rujwproperty), содержащее текущий выбор в группе радиокнопок, и
 начинает наблюдать за его изменением.
@@ -162,13 +162,13 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
 свойства сбрасывается в null.
 
     // Наблюдаем за выбранной радиокнопкой
-    var color = this.own(el.jwradio("color"));
+    var color = this.own(el.{@link jQuery#jwradio jwradio}("color"));
 
 <iframe style="border: 1px solid green; padding: 10px;" width="800" height="255" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html"></iframe>
 
-<hr>
+<hr style="display: block">
 
-    jwradio(name: String, value: JW.Property<String>): JW.UI.RadioUpdater
+    {@link jQuery#jwradio jwradio}(name: String, value: JW.Property<String>): JW.UI.RadioUpdater
 
 Наблюдает за изменением строкового [свойства](#!/guide/rujwproperty) и обновляет выбор DOM радиокнопок.
 Возвращает экземпляр JW.UI.RadioUpdater, уничтожение которого прекращает синхронизацию.
@@ -176,7 +176,7 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
 У всех радиокнопок должен быть одинаковый атрибут "name".
 
     // Привязываем выбор радиокнопки к значению свойства
-    this.own(el.jwradio("letter", value));
+    this.own(el.{@link jQuery#jwradio jwradio}("letter", value));
 
 <iframe style="border: 1px solid green; padding: 10px;" width="800" height="170" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio.html"></iframe>
 
@@ -186,7 +186,7 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
 Возвращает экземпляр JW.UI.TextUpdater, уничтожение которого прекращает синхронизацию.
 
     // Привязываем текст внутри элемента к значению свойства
-    this.own(el.jwtext(text));
+    this.own(el.{@link jQuery#jwtext jwtext}(text));
 
 <iframe style="border: 1px solid green; padding: 10px;" width="800" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwtext.html"></iframe>
 
@@ -194,29 +194,29 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
 
 Метод управления значением DOM элемента. Имеет две сигнатуры.
 
-    jwval(): JW.Property<String>
-    jwval(value: JW.Property<String>): JW.UI.ValueUpdater
+    {@link jQuery#jwval jwval}(): JW.Property<String>
+    {@link jQuery#jwval jwval}(value: JW.Property<String>): JW.UI.ValueUpdater
 
-<hr>
+<hr style="display: block">
 
-    jwval(): JW.Property<String>
+    {@link jQuery#jwval jwval}(): JW.Property<String>
 
 Возвращает строковое [свойство](#!/guide/rujwproperty), содержащее текущее значение элемента, и
 начинает наблюдать за его изменением.
 Неявно создает JW.UI.ValueListener. Уничтожение результирующего свойства прекращает синхронизацию.
 
     // Наблюдаем за значением текстового поля
-    var value = this.own(el.jwval());
+    var value = this.own(el.{@link jQuery#jwval jwval}());
 
-<hr>
+<hr style="display: block">
 
-    jwval(value: JW.Property<String>): JW.UI.ValueUpdater
+    {@link jQuery#jwval jwval}(value: JW.Property<String>): JW.UI.ValueUpdater
 
 Наблюдает за изменением строкового [свойства](#!/guide/rujwproperty) и обновляет значение внутри DOM элемента ввода текста.
 Возвращает экземпляр JW.UI.ValueUpdater, уничтожение которого прекращает синхронизацию.
 
     // Привязываем значение элемента к свойству
-    this.own(el.jwval(value));
+    this.own(el.{@link jQuery#jwval jwval}(value));
 
 <iframe style="border: 1px solid green; padding: 10px;" width="800" height="285" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval.html"></iframe>
 
@@ -228,6 +228,6 @@ inline стиль "display". Перед использованием убеди�
 Возвращает экземпляр JW.UI.VisibleUpdater, уничтожение которого прекращает синхронизацию.
 
     // Привязываем видимость элемента к значению свойства
-    this.own(el.jwshow(checked));
+    this.own(el.{@link jQuery#jwshow jwshow}(checked));
 
 <iframe style="border: 1px solid green; padding: 10px;" width="800" height="215" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwshow.html"></iframe>
