@@ -72,7 +72,7 @@ jQuery.extend(jQuery.fn, {
 	 * Watches string property modification and updates the specified attribute of the DOM element.
 	 * Returns JW.UI.AttrUpdater instance. Destroy it to stop synchronization.
 	 *
-	 *     Bind "title" attribute to title property value
+	 *     // Bind "title" attribute to title property value
 	 *     this.own(el.jwattr("title", title));
 	 *
 	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwattr.html"></iframe>
