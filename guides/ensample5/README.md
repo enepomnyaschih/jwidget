@@ -39,16 +39,14 @@ events and setting methods:
     };
 
 We have removed quite a big chunk of code. Let's modify the view now. Instead of listening property change event
-manually, we can utilize special mapper and updater classes.
+manually, we can utilize property bindings.
 
-**Mapper** builds a new property based on existing ones. In our particular case, we're gonna build string properties
-with "Like/Unlike" and "Retweet/Unretweet" values. Mapper is created implicitly by
-methods {@link JW.Property#$$mapValue $$mapValue} and {@link JW.Property#$$mapObject $$mapObject}.
+First, we're going to build string properties with "Like/Unlike" and "Retweet/Unretweet" values from
+original boolean properties. To do so, we can use method {@link JW.Property#$$mapValue $$mapValue}.
 
-**Updater** watches for a property modification and handles it some way. In our case, we're gonna update the text
-inside the buttons and change their CSS classes.
+Second, we're going to bind DOM elements to all these properties using {@link jQuery jQuery} extension methods.
 
-You must constrain mapper and updater life time by component's life time, so don't forget to aggregate them.
+You must constrain bindings' life time by component's life time, so don't forget to aggregate them.
 
 **public/mt/tweetview/tweetview.js**
 
@@ -56,8 +54,8 @@ You must constrain mapper and updater life time by component's life time, so don
             var text = this.{@link JW.Class#own own}(this.tweetData.like.{@link JW.Property#$$mapValue $$mapValue}(function(like) {
                 return like ? "Unlike" : "Like";
             }, this));
-            this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
-            this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.like));
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwclass jwclass}("active", this.tweetData.like));
             el.{@link jQuery#jwon jwon}("click", this._onLikeClick, this);
         },
         
@@ -65,8 +63,8 @@ You must constrain mapper and updater life time by component's life time, so don
             var text = this.{@link JW.Class#own own}(this.tweetData.retweet.{@link JW.Property#$$mapValue $$mapValue}(function(retweet) {
                 return retweet ? "Unretweet" : "Retweet";
             }, this));
-            this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
-            this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.retweet));
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwclass jwclass}("active", this.tweetData.retweet));
             el.{@link jQuery#jwon jwon}("click", this._onRetweetClick, this);
         },
         
@@ -82,5 +80,5 @@ You must constrain mapper and updater life time by component's life time, so don
 
 And we can delete methods `_updateLike` and `_updateRetweet` - we don't use them anymore.
 
-The syntax of properties, functors and updaters is clean and straightforward. They let you make code shorter and
-more readable. Take a look at JW.Property documentation for full list of features.
+The syntax of properties and bindings is clean and straightforward. They let you make code shorter and
+more readable. Take a look at JW.Property and {@link jQuery jQuery extension} documentation for full list of features.

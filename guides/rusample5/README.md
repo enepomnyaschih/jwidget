@@ -40,17 +40,14 @@
     };
 
 Мы избавились от весомого куска кода. Давайте перейдем к представлению, и посмотрим, что можно сделать там.
-Вместо того, чтобы прослушивать событие изменения свойства вручную, давайте воспользуемся специальными классами
-маппера и апдейтера.
+Вместо того, чтобы прослушивать событие изменения свойства вручную, давайте воспользуемся привязками.
 
-**Маппер** строит новое свойство на базе существующих. В нашем конкретном случае, мы планируем построить
-строковые свойства, содержащие значения "Like/Unlike" и "Retweet/Unretweet". Маппер неявно создается
-методами {@link JW.Property#$$mapValue $$mapValue} и {@link JW.Property#$$mapObject $$mapObject}.
+Во-первых, построим строковые свойства со значениями "Like/Unlike" и "Retweet/Unretweet" из исходных
+булевых свойств. Чтобы это сделать, воспользуемся методом {@link JW.Property#$$mapValue $$mapValue}.
 
-**Апдейтер** прослушивает изменения свойства и обрабатывает их каким-то способом. В нашем случае, мы планируем
-обновлять текст внутри кнопок и менять набор их CSS классов.
+Во-вторых, привяжем DOM элементы ко всем этим свойствам через методы расширения [jQuery](#!/guide/rujquery).
 
-Время жизни маппера и апдейтера надо ограничить временем жизни компонента, поэтому не забудьте их заагрегировать.
+Время жизни привязок надо ограничить временем жизни компонента, поэтому не забудьте их заагрегировать.
 
 **public/mt/tweetview/tweetview.js**
 
@@ -58,8 +55,8 @@
             var text = this.{@link JW.Class#own own}(this.tweetData.like.{@link JW.Property#$$mapValue $$mapValue}(function(like) {
                 return like ? "Unlike" : "Like";
             }, this));
-            this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
-            this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.like));
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwclass jwclass}("active", this.tweetData.like));
             el.{@link jQuery#jwon jwon}("click", this._onLikeClick, this);
         },
         
@@ -67,8 +64,8 @@
             var text = this.{@link JW.Class#own own}(this.tweetData.retweet.{@link JW.Property#$$mapValue $$mapValue}(function(retweet) {
                 return retweet ? "Unretweet" : "Retweet";
             }, this));
-            this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
-            this.{@link JW.Class#own own}(new JW.UI.ClassUpdater(el, "active", this.tweetData.retweet));
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwclass jwclass}("active", this.tweetData.retweet));
             el.{@link jQuery#jwon jwon}("click", this._onRetweetClick, this);
         },
         
@@ -84,5 +81,6 @@
 
 И теперь мы можем удалить методы `_updateLike` и `_updateRetweet` - они нам больше не нужны.
 
-С точки зрения синтаксиса, свойства, функторы и апдейтеры очень понятны и просты. Они позволяют вам сделать код
-более коротким и читаемым. Посмотрите на документацию [JW.Property](#!/guide/rujwproperty) для полного списка возможностей.
+С точки зрения синтаксиса, свойства и привязки очень понятны и просты. Они позволяют вам сделать код
+более коротким и читаемым. Посмотрите документацию [JW.Property](#!/guide/rujwproperty)
+и [jQuery](#!/guide/rujquery)-расширения для полного списка возможностей.

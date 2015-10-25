@@ -30,32 +30,8 @@
  * - JW.Mapper - watches several properties in order to recreate and destroy
  * target property value by callbacks
  * - JW.Switcher - watches a property to initialize and release its value
- * - JW.UI.TextUpdater - watches a string property and updates the text in a
- * DOM element
- * - JW.UI.HtmlUpdater - watches a string property and updates the HTML in a
- * DOM element
- * - JW.UI.ValueUpdater - watches a string property and updates the value in a
- * DOM element
- * - JW.UI.AttrUpdater - watches a string property and updates the specified
- * attribute in a DOM element
- * - JW.UI.PropUpdater - watches a boolean property and updates the specified
- * DOM property in a DOM element
- * - JW.UI.CssUpdater - watches a string property and updates the specified
- * CSS style in a DOM element
- * - JW.UI.ClassUpdater - watches a boolean property and updates the specified
- * CSS class presence in a DOM element
- * - JW.UI.ClassNameUpdater - watches a string property and updates
- * the CSS class name in the DOM element
- * - JW.UI.VisibleUpdater - watches a boolean property and updates visibility
- * of the specified DOM element
- * - JW.UI.RadioUpdater - watches a string property and updates the selection
- * of DOM radio elements
- * - JW.UI.ValueListener - watches the value in a DOM text input and updates a
- * string property
- * - JW.UI.CheckedListener - watches the value in a DOM checkbox element and
- * updates a boolean property
- * - JW.UI.RadioListener - watches the selection of DOM radio elements and
- * updates a string property
+ *
+ * Also, see {@link jQuery jQuery} extension methods.
  *
  * For example, you can use the next algorithm to change localization on fly
  * in your Web application:
@@ -73,8 +49,8 @@
  *     var language = new JW.Property("en");
  *     var hi = language.{@link JW.Property#$$mapValue $$mapValue}(function(language) { return locale[language].hi; });
  *     var bye = language.{@link JW.Property#$$mapValue $$mapValue}(function(language) { return locale[language].bye; });
- *     new JW.UI.TextUpdater($("#hi"), hi);
- *     new JW.UI.TextUpdater($("#bye"), bye);
+ *     $("#hi").{@link jQuery#jwtext jwtext}(hi);
+ *     $("#bye").{@link jQuery#jwtext jwtext}(bye);
  *     // Now you can change localization easily
  *     language.{@link #set}("ru");
  *
