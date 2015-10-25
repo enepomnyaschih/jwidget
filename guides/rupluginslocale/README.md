@@ -153,8 +153,7 @@
 
         afterRender: function() {
             this.{@link JW.Class#method-_super _super}();
-            this.{@link JW.Class#own own}(this.{@link JW.UI.Component#el el}.{@link jQuery#jwradio jwradio}("lang", this.locale.{@link JW.Plugins.Locale#lang lang}));
-            this.locale.{@link JW.Plugins.Locale#lang lang}.{@link JW.Property#bindTo bindTo}(this.{@link JW.Class#own own}(this.{@link JW.UI.Component#el el}.{@link jQuery#jwradio jwradio}("lang")));
+            this.{@link JW.Class#own own}(this.{@link JW.UI.Component#el el}.{@link jQuery#jwradio jwradio}("lang", this.locale.{@link JW.Plugins.Locale#lang lang}, JW.TWOWAY));
         }
     });
 
