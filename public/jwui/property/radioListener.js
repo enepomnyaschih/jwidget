@@ -19,14 +19,7 @@
 
 /**
  * @class
- *
- * Radio group selection listener for {@link jQuery#jwradio jwradio} method.
- *
- * You may use it as a standalone class. In addition to {@link jQuery#jwradio jwradio} features,
- * allows you to specify target property explicitly. Destroy it to stop synchronization.
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-radioListener.html"></iframe>
- *
+ * @deprecated 1.4 Use {@link jQuery#jwradio jwradio} instead.
  * @extends JW.Class
  *
  * @constructor

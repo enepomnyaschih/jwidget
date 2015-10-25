@@ -19,12 +19,7 @@
 
 /**
  * @class
- *
- * Result of {@link jQuery#jwval jwval} method call. Destroy it to stop synchronization.
- *
- * Was used as a standalone class before jWidget 1.4.
- * As of jWidget 1.4, {@link jQuery#jwval jwval} is an easier alternative.
- *
+ * @deprecated 1.4 Use {@link jQuery#jwval jwval} instead.
  * @extends JW.Class
  *
  * @constructor

@@ -33,10 +33,13 @@
 		"jwui/property/classUpdater.js",
 		"jwui/property/cssUpdater.js",
 		"jwui/property/htmlUpdater.js",
+		"jwui/property/propBinding.js",
 		"jwui/property/propUpdater.js",
+		"jwui/property/radioBinding.js",
 		"jwui/property/radioListener.js",
 		"jwui/property/radioUpdater.js",
 		"jwui/property/textUpdater.js",
+		"jwui/property/valueBinding.js",
 		"jwui/property/valueListener.js",
 		"jwui/property/valueUpdater.js",
 		"jwui/property/visibleUpdater.js"

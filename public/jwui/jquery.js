@@ -161,36 +161,43 @@ jQuery.extend(jQuery.fn, {
 	 * DOM element property management method. Supports two variations.
 	 *
 	 *     jwprop("checked"): JW.Property<Boolean>
-	 *     jwprop(prop: String, property: JW.Property<Boolean>): JW.UI.PropUpdater
+	 *     jwprop(prop: String, property: JW.Property<Boolean>, [binding: JW.Binding]): JW.UI.PropBinding
 	 *
 	 * <hr>
 	 *
 	 *     jwprop("checked"): JW.Property<Boolean>
 	 *
 	 * Returns a boolean property containing current checkbox state and starts watching for its modification.
-	 * Creates JW.UI.CheckedListener implicitly. Destroy the result property to stop synchronization.
+	 * Destroy the result property to stop synchronization.
 	 *
 	 *     // Watch checkbox state
-	 *     var disabled = this.own(el.jwprop("checked"));
+	 *     var property = this.own(el.jwprop("checked"));
 	 *
 	 * <hr>
 	 *
-	 *     jwprop(prop: String, property: JW.Property<Boolean>): JW.UI.PropUpdater
+	 *     jwprop(prop: String, property: JW.Property<Boolean>, [binding: JW.Binding]): JW.UI.PropBinding
 	 *
-	 * Watches boolean property modification and updates the specified property of the DOM element.
-	 * Returns JW.UI.PropUpdater instance. Destroy it to stop synchronization.
+	 * Binds specified property of the DOM element to boolean property and/or vice versa.
+	 * Returns JW.UI.PropBinding instance. Destroy it to stop synchronization.
 	 *
 	 *     // Bind element state to property
-	 *     this.own(el.jwprop("disabled", disabled));
+	 *     this.own(el.jwprop("disabled", property));
 	 *
 	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="140" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwprop.html"></iframe>
 	 *
+	 * Two way binding:
+	 *
+	 *     this.own(el.jwprop("checked", this.value, JW.TWOWAY));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="150" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwprop-two.html"></iframe>
+	 *
 	 * @param {String} prop Element's property name.
 	 * @param {JW.Property} [property] `<Boolean>` Property value.
+	 * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
 	 */
-	jwprop: function(prop, property) {
+	jwprop: function(prop, property, binding) {
 		if (property != null) {
-			return new JW.UI.PropUpdater(this, prop, property);
+			return new JW.UI.PropBinding(this, prop, property, binding);
 		}
 		if (prop === "checked") {
 			var target = new JW.Property();
@@ -204,14 +211,14 @@ jQuery.extend(jQuery.fn, {
 	 * Radio group value management method. Supports two variations.
 	 *
 	 *     jwradio(name: String): JW.Property<String>
-	 *     jwradio(name: String, value: JW.Property<String>): JW.UI.RadioUpdater
+	 *     jwradio(name: String, value: JW.Property<String>, [binding: JW.Binding]): JW.UI.RadioBinding
 	 *
 	 * <hr>
 	 *
 	 *     jwradio(name: String): JW.Property<String>
 	 *
 	 * Returns a string property containing current radio group selection and starts watching for selection modification.
-	 * Creates JW.UI.RadioListener implicitly. Destroy the result property to stop synchronization.
+	 * Destroy the result property to stop synchronization.
 	 *
 	 * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
 	 * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
@@ -224,10 +231,10 @@ jQuery.extend(jQuery.fn, {
 	 *
 	 * <hr>
 	 *
-	 *     jwradio(name: String, value: JW.Property<String>): JW.UI.RadioUpdater
+	 *     jwradio(name: String, value: JW.Property<String>, [binding: JW.Binding]): JW.UI.RadioBinding
 	 *
-	 * Watches string property modification and selects a corresponding radio button.
-	 * Returns JW.UI.RadioUpdater instance. Destroy it to stop synchronization.
+	 * Binds radio group selection to string property and/or vice versa.
+	 * Returns JW.UI.RadioBinding instance. Destroy it to stop synchronization.
 	 *
 	 * All radios must have the same "name" attribute value.
 	 *
@@ -236,12 +243,19 @@ jQuery.extend(jQuery.fn, {
 	 *
 	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="170" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio.html"></iframe>
 	 *
+	 * Two way binding:
+	 *
+	 *     this.own(el.jwradio("first", this.value, JW.TWOWAY));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio-two.html"></iframe>
+	 *
 	 * @param {String} name Radios "name" attribute.
 	 * @param {JW.Property} [property] `<String>` Radio value.
+	 * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
 	 */
-	jwradio: function(name, property) {
+	jwradio: function(name, property, binding) {
 		if (property != null) {
-			return new JW.UI.RadioUpdater(this, name, property);
+			return new JW.UI.RadioBinding(this, name, property, binding);
 		}
 		var target = new JW.Property();
 		target.own(new JW.UI.RadioListener(this, name, {target: target}));
@@ -267,39 +281,55 @@ jQuery.extend(jQuery.fn, {
 	/**
 	 * DOM element value management method. Supports two variations.
 	 *
-	 *     jwval(): JW.Property<String>
-	 *     jwval(value: JW.Property<String>): JW.UI.ValueUpdater
+	 *     jwval([simple: Boolean]): JW.Property<String>
+	 *     jwval(value: JW.Property<String>, [binding: JW.Binding], [simple: Boolean]): JW.UI.ValueBinding
 	 *
 	 * <hr>
 	 *
-	 *     jwval(): JW.Property<String>
+	 *     jwval([simple: Boolean]): JW.Property<String>
 	 *
 	 * Returns a string property containing current element value and starts watching for value modification.
-	 * Creates JW.UI.ValueListener implicitly. Destroy the result property to stop synchronization.
+	 * Destroy the result property to stop synchronization.
 	 *
 	 *     // Watch input element value
 	 *     var value = this.own(el.jwval());
 	 *
+	 * If simple is `true`, listens "change" event only. Defaults to `false` which enables
+	 * reaction to any real-time field modification.
+	 *
 	 * <hr>
 	 *
-	 *     jwval(value: JW.Property<String>): JW.UI.ValueUpdater
+	 *     jwval(value: JW.Property<String>, [binding: JW.Binding], [simple: Boolean]): JW.UI.ValueBinding
 	 *
-	 * Watches string property modification and updates the value of the DOM text input.
-	 * Returns JW.UI.ValueUpdater instance. Destroy it to stop synchronization.
+	 * Binds DOM text input value to string property and/or vice versa.
+	 * Returns JW.UI.ValueBinding instance. Destroy it to stop synchronization.
 	 *
 	 *     // Bind element value to property
 	 *     this.own(el.jwval(value));
 	 *
+	 * If simple is `true`, watch-binding listens "change" event only. Defaults to `false` which enables
+	 * reaction to any real-time field modification.
+	 *
 	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="285" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval.html"></iframe>
 	 *
+	 * Two way binding:
+	 *
+	 *     this.own(el.jwval(this.value, JW.TWOWAY));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval-two.html"></iframe>
+	 *
 	 * @param {JW.Property} [property] `<String>` Element value.
+	 * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+	 * @param {Boolean} [simple=false]
+	 * If true, watch-binding listens "change" event only. Defaults to false which enables
+	 * reaction to any real-time field modification.
 	 */
-	jwval: function(property) {
-		if (property != null) {
-			return new JW.UI.ValueUpdater(this, property);
+	jwval: function(property, binding, simple) {
+		if (property != null && (typeof property !== "boolean")) {
+			return new JW.UI.ValueBinding(this, property, binding, simple);
 		}
 		var target = new JW.Property();
-		target.own(new JW.UI.ValueListener(this, {target: target}));
+		target.own(new JW.UI.ValueListener(this, {target: target, simple: simple}));
 		return target;
 	},
 

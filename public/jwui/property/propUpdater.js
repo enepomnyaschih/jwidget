@@ -19,12 +19,7 @@
 
 /**
  * @class
- *
- * Result of {@link jQuery#jwprop jwprop} method call. Destroy it to stop synchronization.
- *
- * Was used as a standalone class before jWidget 1.4.
- * As of jWidget 1.4, {@link jQuery#jwprop jwprop} is an easier alternative.
- *
+ * @deprecated 1.4 Use {@link jQuery#jwprop jwprop} instead.
  * @extends JW.Class
  *
  * @constructor

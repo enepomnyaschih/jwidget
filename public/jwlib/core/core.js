@@ -818,7 +818,72 @@ JW.apply(JW, {
 
 	makeArray: function(v) {
 		return JW.isArray(v) ? v : JW.isSet(v) ? [v] : [];
-	}
+	},
+
+	/**
+	 * @property {JW.Binding} UPDATE
+	 * Shorthand for JW.Binding.UPDATE.
+	 */
+	UPDATE: 1,
+
+	/**
+	 * @property {JW.Binding} WATCH
+	 * Shorthand for JW.Binding.WATCH.
+	 */
+	WATCH: 2,
+
+	/**
+	 * @property {JW.Binding} TWOWAY
+	 * Shorthand for JW.Binding.TWOWAY.
+	 */
+	TWOWAY: 3
 });
 
 JW.toArray = JW.args;
+
+/**
+ * @enum {number}
+ * jWidget binding mode. All properties have shorthands in {@link JW JW} namespace.
+ * Can always be replaced with JW.BindingConfig for advanced binding configuration.
+ */
+JW.Binding = {
+	/**
+	 * Bind invoker to argument.
+	 *
+	 *     // Bind element value to property
+	 *     this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(property, JW.UPDATE));
+	 *
+	 * Always used as default binding. Hence, the next code is equivalent:
+	 *
+	 *     this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(property));
+	 *
+	 * Shorthand: JW.UPDATE.
+	 */
+	UPDATE: 1,
+
+	/**
+	 * Bind argument to invoker.
+	 *
+	 *     // Bind property to element value
+	 *     this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(property, JW.WATCH));
+	 *
+	 * Always supplied with a no-argument method, which creates the property automatically.
+	 *
+	 *     // Watch element value
+	 *     var property = this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}());
+	 *
+	 * Shorthand: JW.WATCH.
+	 */
+	WATCH: 2,
+
+	/**
+	 * Bind invoker and argument to each other.
+	 * UPDATE-binding is applied first.
+	 *
+	 *     // Assign element value to property and setup two-way binding
+	 *     this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(property, JW.TWOWAY));
+	 *
+	 * Shorthand: JW.TWOWAY.
+	 */
+	TWOWAY: 3
+};

@@ -19,14 +19,7 @@
 
 /**
  * @class
- *
- * Checked state listener for {@link jQuery#jwprop jwprop} method.
- *
- * You may use it as a standalone class. In addition to {@link jQuery#jwprop jwprop} features,
- * allows you to specify target property explicitly. Destroy it to stop synchronization.
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="150" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-checkedListener.html"></iframe>
- *
+ * @deprecated 1.4 Use {@link jQuery#jwprop jwprop} instead.
  * @extends JW.Class
  *
  * @constructor

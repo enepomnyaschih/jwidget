@@ -19,14 +19,7 @@
 
 /**
  * @class
- *
- * Element value listener for {@link jQuery#jwval jwval} method.
- *
- * You may use it as a standalone class. In addition to {@link jQuery#jwval jwval} features,
- * has some configuration options. Destroy it to stop synchronization.
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-valueListener.html"></iframe>
- *
+ * @deprecated 1.4 Use {@link jQuery#jwval jwval} instead.
  * @extends JW.Class
  *
  * @constructor
