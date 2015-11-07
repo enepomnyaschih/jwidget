@@ -259,6 +259,10 @@
 					{
 						"name": "rupluginslocale",
 						"title": "JW.Plugins.Locale"
+					},
+					{
+						"name": "rupluginsrouter",
+						"title": "JW.Plugins.Router"
 					}
 				]
 			}

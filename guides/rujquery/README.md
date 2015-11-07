@@ -38,7 +38,7 @@ JW.inScope и <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQue
 
 Метод не имеет аргумента для передачи данных - используйте вместо него замыкания.
 
-<iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-jwon.html"></iframe>
+<iframe style="border: 1px solid green; padding: 10px;" width="800" height="200" src="http://enepomnyaschih.github.io/mt/1.4/jwui-jwon.html"></iframe>
 
 ## jwattr
 

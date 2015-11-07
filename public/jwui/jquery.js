@@ -51,7 +51,7 @@ jQuery.extend(jQuery.fn, {
 	 *
 	 * The method doesn't support "data" argument - please use closures instead.
 	 *
-	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-jwon.html"></iframe>
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="200" src="http://enepomnyaschih.github.io/mt/1.4/jwui-jwon.html"></iframe>
 	 *
 	 * @param {String} events One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".
 	 * @param {String} selector A selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.
