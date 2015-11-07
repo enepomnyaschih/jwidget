@@ -11,7 +11,7 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 New features:
 
 - Introduced [jQuery adapter methods](http://enepomnyaschih.github.io/jwidget/index.html#!/api/jQuery), deprecated corresponding [JW.Property](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Property) helper classes ([#122](https://github.com/enepomnyaschih/jwidget/issues/122))
-- Added clear-div persistence feature for (JW.UI.Component)[http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.UI.Component] child collections ([#116](https://github.com/enepomnyaschih/jwidget/issues/116))
+- Added clear-div persistence feature for [JW.UI.Component](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.UI.Component) child collections ([#116](https://github.com/enepomnyaschih/jwidget/issues/116))
 
 ### 1.3.1 (October 10, 2015)
 
