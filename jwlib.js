@@ -1,5 +1,5 @@
 /*!
-	jWidget Lib 1.3.1
+	jWidget Lib 1.4
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -818,11 +818,76 @@ JW.apply(JW, {
 
 	makeArray: function(v) {
 		return JW.isArray(v) ? v : JW.isSet(v) ? [v] : [];
-	}
+	},
+
+	/**
+	 * @property {JW.Binding} UPDATE
+	 * Shorthand for JW.Binding.UPDATE.
+	 */
+	UPDATE: 1,
+
+	/**
+	 * @property {JW.Binding} WATCH
+	 * Shorthand for JW.Binding.WATCH.
+	 */
+	WATCH: 2,
+
+	/**
+	 * @property {JW.Binding} TWOWAY
+	 * Shorthand for JW.Binding.TWOWAY.
+	 */
+	TWOWAY: 3
 });
 
 JW.toArray = JW.args;
 
+/**
+ * @enum {number}
+ * jWidget binding mode. All properties have shorthands in {@link JW JW} namespace.
+ * Can always be replaced with JW.BindingConfig for advanced binding configuration.
+ */
+JW.Binding = {
+	/**
+	 * Bind invoker to argument.
+	 *
+	 *     // Bind element value to property
+	 *     this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(property, JW.UPDATE));
+	 *
+	 * Always used as default binding. Hence, the next code is equivalent:
+	 *
+	 *     this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(property));
+	 *
+	 * Shorthand: JW.UPDATE.
+	 */
+	UPDATE: 1,
+
+	/**
+	 * Bind argument to invoker.
+	 *
+	 *     // Bind property to element value
+	 *     this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(property, JW.WATCH));
+	 *
+	 * Always supplied with a no-argument method, which creates the property automatically.
+	 *
+	 *     // Watch element value
+	 *     var property = this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}());
+	 *
+	 * Shorthand: JW.WATCH.
+	 */
+	WATCH: 2,
+
+	/**
+	 * Bind invoker and argument to each other.
+	 * UPDATE-binding is applied first.
+	 *
+	 *     // Assign element value to property and setup two-way binding
+	 *     this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(property, JW.TWOWAY));
+	 *
+	 * Shorthand: JW.TWOWAY.
+	 */
+	TWOWAY: 3
+};
+;
 /*
 	jWidget Lib source file.
 	
@@ -1137,7 +1202,7 @@ JW.extend(JW.Class, Object, {
 
 	destroyObject: function() {}
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -1291,7 +1356,7 @@ JW.extend(JW.Event, JW.Class, {
 		}
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -1337,7 +1402,7 @@ JW.extend(JW.EventAttachment, JW.Class, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -1376,7 +1441,7 @@ JW.extend(JW.EventParams, JW.Class, {
 	 * @property {Object} sender Event sender.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -1415,7 +1480,7 @@ JW.extend(JW.ItemEventParams, JW.EventParams, {
 	 * @property {T} item Item.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -1454,7 +1519,7 @@ JW.extend(JW.ValueEventParams, JW.EventParams, {
 	 * @property {V} value Value.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -1495,7 +1560,7 @@ JW.extend(JW.ValueChangeEventParams, JW.ValueEventParams, {
 	 * @property {V} oldValue Old value.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -1536,7 +1601,7 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
 	 * @property {T} item Item.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -2442,7 +2507,7 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 	 * `<T, JW.AbstractCollection<T>>` Synchronizer.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -2601,7 +2666,7 @@ JW.extend(JW.AbstractCollection.Counter, JW.Class, {
 		this.target.set(this.source.count(this.filterItem, this.scope));
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -2753,7 +2818,7 @@ JW.extend(JW.AbstractCollection.Filterer, JW.Class, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -2882,7 +2947,7 @@ JW.extend(JW.AbstractCollection.Lister, JW.Class, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -3040,7 +3105,7 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
 		return keys;
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -3207,7 +3272,7 @@ JW.extend(JW.AbstractCollection.Mapper, JW.Class, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -3363,7 +3428,7 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
 		this.change.call(this.scope);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -3496,7 +3561,7 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
 		);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -3734,7 +3799,7 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -3875,7 +3940,7 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
 	
 	namespace.$asSet = JW.AbstractCollection._createStatic$Set(namespace, "asSet");
 };
-
+;
 /*
 	jWidget Lib source file.
 
@@ -4527,7 +4592,7 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 	 * @returns {JW.IndexedCollection} `<K, U>` Collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -4703,7 +4768,7 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 	
 	namespace.$asMap = JW.AbstractCollection._createStatic$Map(namespace, "asMap");
 };
-
+;
 /*
 	jWidget Lib source file.
 
@@ -6170,7 +6235,7 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 		return (this.removedItemsList.length === 0) && (this.addedItemsList.length === 0);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -6213,7 +6278,7 @@ JW.extend(JW.AbstractArray.Counter, JW.AbstractCollection.Counter, {
 	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -6432,7 +6497,7 @@ JW.extend(JW.AbstractArray.Filterer, JW.AbstractCollection.Filterer, {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -6475,7 +6540,7 @@ JW.extend(JW.AbstractArray.Indexer, JW.AbstractCollection.Indexer, {
 	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -6609,7 +6674,7 @@ JW.extend(JW.AbstractArray.Inserter, JW.Class, {
 		}
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -6652,7 +6717,7 @@ JW.extend(JW.AbstractArray.Lister, JW.AbstractCollection.Lister, {
 	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -6725,7 +6790,7 @@ JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
 		}
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -6887,7 +6952,7 @@ JW.extend(JW.AbstractArray.Merger, JW.Class, {
 		return count;
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -6912,7 +6977,7 @@ JW.AbstractArray.Merger.Bunch = function(merger, bunch) {
 };
 
 JW.extend(JW.AbstractArray.Merger.Bunch, JW.Class);
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -6955,7 +7020,7 @@ JW.extend(JW.AbstractArray.Observer, JW.AbstractCollection.Observer, {
 	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -6998,7 +7063,7 @@ JW.extend(JW.AbstractArray.Orderer, JW.AbstractCollection.Orderer, {
 	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -7123,7 +7188,7 @@ JW.extend(JW.AbstractArray.Reverser, JW.Class, {
 		return items;
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -7166,7 +7231,7 @@ JW.extend(JW.AbstractArray.SorterComparing, JW.AbstractCollection.SorterComparin
 	 * @property {JW.AbstractArray} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -7255,7 +7320,7 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 		JW.Array.each(rows, this.destroyRow, this.scope || this);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -8288,7 +8353,7 @@ JW.extend(JW.AbstractMap.SpliceResult, JW.Class, {
 	 * @property {Object} addedItems `<T>` Added items.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -8331,7 +8396,7 @@ JW.extend(JW.AbstractMap.Counter, JW.AbstractCollection.Counter, {
 	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -8387,7 +8452,7 @@ JW.extend(JW.AbstractMap.Filterer, JW.AbstractCollection.Filterer, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -8430,7 +8495,7 @@ JW.extend(JW.AbstractMap.Indexer, JW.AbstractCollection.Indexer, {
 	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -8565,7 +8630,7 @@ JW.extend(JW.AbstractMap.Inserter, JW.Class, {
 		}
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -8608,7 +8673,7 @@ JW.extend(JW.AbstractMap.Lister, JW.AbstractCollection.Lister, {
 	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -8681,7 +8746,7 @@ JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
 		}
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -8724,7 +8789,7 @@ JW.extend(JW.AbstractMap.Observer, JW.AbstractCollection.Observer, {
 	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -8767,7 +8832,7 @@ JW.extend(JW.AbstractMap.Orderer, JW.AbstractCollection.Orderer, {
 	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -8810,7 +8875,7 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
 	 * @property {JW.AbstractMap} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -9398,7 +9463,7 @@ JW.extend(JW.AbstractSet.SpliceResult, JW.Class, {
 	 * @property {Array} addedItems `<T>` Added items.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -9441,7 +9506,7 @@ JW.extend(JW.AbstractSet.Counter, JW.AbstractCollection.Counter, {
 	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -9497,7 +9562,7 @@ JW.extend(JW.AbstractSet.Filterer, JW.AbstractCollection.Filterer, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -9540,7 +9605,7 @@ JW.extend(JW.AbstractSet.Indexer, JW.AbstractCollection.Indexer, {
 	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -9583,7 +9648,7 @@ JW.extend(JW.AbstractSet.Lister, JW.AbstractCollection.Lister, {
 	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -9675,7 +9740,7 @@ JW.extend(JW.AbstractSet.Mapper, JW.AbstractCollection.Mapper, {
 		}
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -9718,7 +9783,7 @@ JW.extend(JW.AbstractSet.Observer, JW.AbstractCollection.Observer, {
 	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -9761,7 +9826,7 @@ JW.extend(JW.AbstractSet.Orderer, JW.AbstractCollection.Orderer, {
 	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -9804,7 +9869,7 @@ JW.extend(JW.AbstractSet.SorterComparing, JW.AbstractCollection.SorterComparing,
 	 * @property {JW.AbstractSet} source `<T>` Source collection.
 	 */
 });
-
+;
 /*
 	JW array extension.
 
@@ -10939,7 +11004,7 @@ JW.extend(JW.Array, JW.AbstractArray, {
 	 * @returns {number} Item index.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -11521,7 +11586,7 @@ JW.apply(JW.Array, {
 		return index;
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -12433,7 +12498,7 @@ JW.extend(JW.Map, JW.AbstractMap, {
 	 * @returns {JW.AbstractMap} `<string>` The inverted map.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -12826,7 +12891,7 @@ JW.apply(JW.Map, {
 		return result;
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -13472,7 +13537,7 @@ JW.extend(JW.Set, JW.AbstractSet, {
 	 * @returns {boolean} Set is equal to array.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -13720,7 +13785,7 @@ JW.apply(JW.Set, {
 		return result;
 	}
 });
-
+;
 JW.ObservableCollection = {
 	$$toSortedComparing: function(compare, scope, order) {
 		var result = new JW.ObservableArray();
@@ -13800,7 +13865,7 @@ JW.ObservableCollection = {
 		return result;
 	}
 };
-
+;
 /*
 	jWidget Lib source file.
 
@@ -14308,7 +14373,7 @@ JW.extend(JW.ObservableArray.ReorderEventParams, JW.ObservableArray.ItemsEventPa
 	 * @property {Array} indexArray `<number>` Indexes of items in reordered array.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -14376,7 +14441,7 @@ JW.extend(JW.ObservableArray.Counter, JW.AbstractArray.Counter, {
 		this.target.set(0);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -14482,7 +14547,7 @@ JW.extend(JW.ObservableArray.Filterer, JW.AbstractArray.Filterer, {
 		this.target.tryReorder(indexes);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -14542,7 +14607,7 @@ JW.extend(JW.ObservableArray.Indexer, JW.AbstractArray.Indexer, {
 			this._keys(params.items));
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -14638,7 +14703,7 @@ JW.extend(JW.ObservableArray.Inserter, JW.AbstractArray.Inserter, {
 		this._addItems(this.source.getItems(), 0);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -14693,7 +14758,7 @@ JW.extend(JW.ObservableArray.Lister, JW.AbstractArray.Lister, {
 		this.target.tryRemoveAll(params.items);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -14772,7 +14837,7 @@ JW.extend(JW.ObservableArray.Mapper, JW.AbstractArray.Mapper, {
 		this.target.tryReorder(params.indexArray);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -14918,7 +14983,7 @@ JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
 		this.target.tryReorder(indexes);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -15015,7 +15080,7 @@ JW.extend(JW.ObservableArray.Merger.Bunch, JW.AbstractArray.Merger.Bunch, {
 		this.target.tryReorder(targetIndexArray);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -15089,7 +15154,7 @@ JW.extend(JW.ObservableArray.Observer, JW.AbstractArray.Observer, {
 		this._clearItems(params.items);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -15149,7 +15214,7 @@ JW.extend(JW.ObservableArray.Orderer, JW.AbstractArray.Orderer, {
 		this.target.removeItems(params.items);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -15247,7 +15312,7 @@ JW.extend(JW.ObservableArray.Reverser, JW.AbstractArray.Reverser, {
 		this.target.tryReorder(indexes);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -15302,7 +15367,7 @@ JW.extend(JW.ObservableArray.SorterComparing, JW.AbstractArray.SorterComparing, 
 		this._splice(params.items, []);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -15323,7 +15388,7 @@ JW.extend(JW.ObservableArray.SorterComparing, JW.AbstractArray.SorterComparing, 
 */
 
 JW.ObservableArray.Splitter = JW.AbstractArray.Splitter.extend();
-
+;
 /*
 	jWidget Lib source file.
 
@@ -15730,7 +15795,7 @@ JW.extend(JW.ObservableMap.ItemsEventParams, JW.ObservableMap.EventParams, {
 	 * @property {Object} items Old map contents.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -15782,7 +15847,7 @@ JW.extend(JW.ObservableMap.Counter, JW.AbstractMap.Counter, {
 		this.target.set(0);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -15839,7 +15904,7 @@ JW.extend(JW.ObservableMap.Filterer, JW.AbstractMap.Filterer, {
 		this.target.tryRemoveAll(JW.Map.getKeys(params.items));
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -15892,7 +15957,7 @@ JW.extend(JW.ObservableMap.Indexer, JW.AbstractMap.Indexer, {
 			this._keys(JW.Map.toArray(params.items)));
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -15958,7 +16023,7 @@ JW.extend(JW.ObservableMap.Inserter, JW.AbstractMap.Inserter, {
 		this._clearItems(params.items);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16011,7 +16076,7 @@ JW.extend(JW.ObservableMap.Lister, JW.AbstractMap.Lister, {
 			JW.Map.toArray(params.items));
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16074,7 +16139,7 @@ JW.extend(JW.ObservableMap.Mapper, JW.AbstractMap.Mapper, {
 		this._destroyItems(this.target.tryRemoveAll(JW.Map.getKeys(datas)), datas);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16128,7 +16193,7 @@ JW.extend(JW.ObservableMap.Observer, JW.AbstractMap.Observer, {
 		this._clearItems(JW.Map.toArray(params.items));
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16181,7 +16246,7 @@ JW.extend(JW.ObservableMap.Orderer, JW.AbstractMap.Orderer, {
 			JW.Map.toArray(params.items));
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16233,7 +16298,7 @@ JW.extend(JW.ObservableMap.SorterComparing, JW.AbstractMap.SorterComparing, {
 		this._splice(JW.Map.toArray(params.items), []);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -16527,7 +16592,7 @@ JW.extend(JW.ObservableSet.ItemsEventParams, JW.ObservableSet.EventParams, {
 	 * @property {Array} items `<T>` Old set contents.
 	 */
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -16579,7 +16644,7 @@ JW.extend(JW.ObservableSet.Counter, JW.AbstractSet.Counter, {
 		this.target.set(0);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16631,7 +16696,7 @@ JW.extend(JW.ObservableSet.Filterer, JW.AbstractSet.Filterer, {
 		this.target.tryRemoveAll(params.items);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16684,7 +16749,7 @@ JW.extend(JW.ObservableSet.Indexer, JW.AbstractSet.Indexer, {
 			this._keys(params.items));
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16734,7 +16799,7 @@ JW.extend(JW.ObservableSet.Lister, JW.AbstractSet.Lister, {
 		this.target.tryRemoveAll(params.items);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16789,7 +16854,7 @@ JW.extend(JW.ObservableSet.Mapper, JW.AbstractSet.Mapper, {
 		this._destroyItems(datas);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16843,7 +16908,7 @@ JW.extend(JW.ObservableSet.Observer, JW.AbstractSet.Observer, {
 		this._clearItems(params.items);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16895,7 +16960,7 @@ JW.extend(JW.ObservableSet.Orderer, JW.AbstractSet.Orderer, {
 		this.target.removeItems(params.items);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -16945,7 +17010,7 @@ JW.extend(JW.ObservableSet.SorterComparing, JW.AbstractSet.SorterComparing, {
 		this._splice(params.items, []);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -17032,7 +17097,7 @@ JW.extend(JW.Copier, JW.Class, {
 		this.target.set(this.source.get());
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -17162,7 +17227,7 @@ JW.extend(JW.Functor, JW.Class, {
 		this.target.set(this.func.apply(this.scope, values));
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -17430,7 +17495,7 @@ JW.extend(JW.Mapper, JW.Class, {
 		}
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -17463,32 +17528,8 @@ JW.extend(JW.Mapper, JW.Class, {
  * - JW.Mapper - watches several properties in order to recreate and destroy
  * target property value by callbacks
  * - JW.Switcher - watches a property to initialize and release its value
- * - JW.UI.TextUpdater - watches a string property and updates the text in a
- * DOM element
- * - JW.UI.HtmlUpdater - watches a string property and updates the HTML in a
- * DOM element
- * - JW.UI.ValueUpdater - watches a string property and updates the value in a
- * DOM element
- * - JW.UI.AttrUpdater - watches a string property and updates the specified
- * attribute in a DOM element
- * - JW.UI.PropUpdater - watches a boolean property and updates the specified
- * DOM property in a DOM element
- * - JW.UI.CssUpdater - watches a string property and updates the specified
- * CSS style in a DOM element
- * - JW.UI.ClassUpdater - watches a boolean property and updates the specified
- * CSS class presence in a DOM element
- * - JW.UI.ClassNameUpdater - watches a string property and updates
- * the CSS class name in the DOM element
- * - JW.UI.VisibleUpdater - watches a boolean property and updates visibility
- * of the specified DOM element
- * - JW.UI.RadioUpdater - watches a string property and updates the selection
- * of DOM radio elements
- * - JW.UI.ValueListener - watches the value in a DOM text input and updates a
- * string property
- * - JW.UI.CheckedListener - watches the value in a DOM checkbox element and
- * updates a boolean property
- * - JW.UI.RadioListener - watches the selection of DOM radio elements and
- * updates a string property
+ *
+ * Also, see {@link jQuery jQuery} extension methods.
  *
  * For example, you can use the next algorithm to change localization on fly
  * in your Web application:
@@ -17506,8 +17547,8 @@ JW.extend(JW.Mapper, JW.Class, {
  *     var language = new JW.Property("en");
  *     var hi = language.{@link JW.Property#$$mapValue $$mapValue}(function(language) { return locale[language].hi; });
  *     var bye = language.{@link JW.Property#$$mapValue $$mapValue}(function(language) { return locale[language].bye; });
- *     new JW.UI.TextUpdater($("#hi"), hi);
- *     new JW.UI.TextUpdater($("#bye"), bye);
+ *     $("#hi").{@link jQuery#jwtext jwtext}(hi);
+ *     $("#bye").{@link jQuery#jwtext jwtext}(bye);
  *     // Now you can change localization easily
  *     language.{@link #set}("ru");
  *
@@ -17688,7 +17729,7 @@ JW.extend(JW.Property, JW.Class, {
 		return result;
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -17852,7 +17893,7 @@ JW.extend(JW.Switcher, JW.Class, {
 		this._values = null;
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -17943,7 +17984,7 @@ JW.extend(JW.Updater, JW.Class, {
 		this.func.apply(this.scope, values);
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -18072,7 +18113,7 @@ JW.makeRegistry = function(cls, idField) {
 };
 
 JW.makeFactory = JW.makeRegistry;
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -18124,7 +18165,7 @@ JW.extend(JW.Interval, JW.Class, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -18213,7 +18254,7 @@ JW.extend(JW.Proxy, JW.Class, {
 		return this;
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -18260,7 +18301,7 @@ JW.setInterval = function(callback, ms) {
 	
 	return setInterval(onInterval, ms);
 };
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -18467,7 +18508,7 @@ JW.String = {
 		return "-" + b.toLowerCase();
 	}
 };
-
+;
 /*
 	jWidget Lib source file.
 	
@@ -18519,7 +18560,7 @@ JW.extend(JW.Timeout, JW.Class, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget Lib source file.
 
@@ -18607,3 +18648,4 @@ JW.extend(JW.Timer, JW.Class, {
 });
 
 JW.Timer.EventParams = JW.EventParams.extend();
+;

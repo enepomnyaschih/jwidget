@@ -125,12 +125,12 @@ JW.Plugins = JW.Plugins || {};
  *     JW.extend(Form, JW.UI.Component, {
  *         renderNameLabel: function(el) {
  *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("name"));
- *             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+ *             this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
  *         },
  *
  *         renderSubmit: function(el) {
  *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("submit"));
- *             this.{@link JW.Class#own own}(new JW.UI.ValueUpdater(el, text));
+ *             this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(text));
  *         }
  *     });
  *
@@ -173,8 +173,7 @@ JW.Plugins = JW.Plugins || {};
  *
  *         afterRender: function() {
  *             this.{@link JW.Class#method-_super _super}();
- *             this.{@link JW.Class#own own}(new JW.UI.RadioUpdater(this.{@link JW.UI.Component#el el}, "lang", this.locale.{@link JW.Plugins.Locale#lang lang}));
- *             this.{@link JW.Class#own own}(new JW.UI.RadioListener(this.{@link JW.UI.Component#el el}, "lang", this.locale.{@link JW.Plugins.Locale#lang lang}));
+ *             this.{@link JW.Class#own own}(this.{@link JW.UI.Component#el el}.{@link jQuery#jwradio jwradio}("lang", this.locale.{@link JW.Plugins.Locale#lang lang}, JW.TWOWAY));
  *         }
  *     });
  *
@@ -229,17 +228,17 @@ JW.Plugins = JW.Plugins || {};
  *     JW.extend(EquipmentSelector, JW.UI.Component, {
  *         renderMonitor: function(el) {
  *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("monitor"));
- *             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+ *             this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
  *         },
  *
  *         renderKeyboard: function(el) {
  *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("keyboard"));
- *             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+ *             this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
  *         },
  *
  *         renderMouse: function(el) {
  *             var text = this.{@link JW.Class#own own}(this.locale.{@link JW.Plugins.Locale#getProperty getProperty}("mouse"));
- *             this.{@link JW.Class#own own}(new JW.UI.TextUpdater(el, text));
+ *             this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
  *         }
  *     });
  *
@@ -580,3 +579,4 @@ JW.Plugins.Locale.formatDate = function() {
 		});
 	};
 }();
+;

@@ -34,7 +34,7 @@ JW.Plugins = JW.Plugins || {};
  *
  * Example:
  *
- * <iframe style="border: 1px solid green; padding: 10px;" width="600" height="300" src="http://enepomnyaschih.github.io/mt/1.3/router.html"></iframe>
+ * <iframe style="border: 1px solid green; padding: 10px;" width="700" height="300" src="http://enepomnyaschih.github.io/mt/1.4/router.html"></iframe>
  *
  * Source code of the example is not minified so you can review it using "View source code of the frame" context
  * menu item in your browser.
@@ -354,3 +354,4 @@ JW.Plugins.Router.makeHandler = function(config) {
  * Accepts a new path argument from parent router for further routing.
  * @param {string} path Path argument.
  */
+;

@@ -1,5 +1,5 @@
 /*!
-	jWidget UI 1.3.1
+	jWidget UI 1.4
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -206,7 +206,7 @@ jQuery(function() {
 		JW.UI.hash.set(location.hash.substr(1));
 	});
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -302,7 +302,7 @@ JW.UI.Browsers = (function()
 		isPaddingWideTd    : isPaddingWideTd
 	};
 })();
-
+;
 /*
 	jWidget UI source file.
 	
@@ -344,7 +344,6 @@ JW.UI.Browsers = (function()
 JW.UI.Inserter = function(source, el) {
 	JW.UI.Inserter._super.call(this);
 	this.el = el; // DOMElement
-	this.len = 0; // Number
 	this.own(source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
@@ -359,21 +358,20 @@ JW.extend(JW.UI.Inserter, JW.Class, {
 	
 	_addItem: function(item, index) {
 		var parent = this.el;
+		var anchor = parent.childNodes[index];
 		var child = this._getElement(item);
-		if (index === this.len) {
-			parent.appendChild(child);
+		if (anchor != null) {
+			parent.insertBefore(child, anchor);
 		} else {
-			parent.insertBefore(child, parent.childNodes.item(index));
+			parent.appendChild(child);
 		}
-		++this.len;
 	},
 	
 	_removeItem: function(item) {
-		--this.len;
 		JW.UI.remove(this._getElement(item));
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 
@@ -777,6 +775,14 @@ JW.extend(JW.UI.Inserter, JW.Class, {
  *
  * [Getting started. Part 7. Project infrastructure](#!/guide/ensample7)
  *
+ * ### Clear-div persistence
+ *
+ * As of jWidget 1.4, you may render child collections to non-blank DOM elements. In this case, all existing nodes
+ * stay at the end of the element. The most common application of this feature
+ * is <a href="https://css-tricks.com/the-how-and-why-of-clearing-floats/" target="_blank">clear-div usage</a>.
+ *
+ * <iframe style="border: 1px solid green; padding: 10px;" width="600" height="260" src="http://enepomnyaschih.github.io/mt/1.4/jwui-clear-div.html"></iframe>
+ *
  * @extends JW.Class
  * @constructor
  */
@@ -1169,7 +1175,7 @@ JW.extend(JW.UI.Component.EventParams, JW.EventParams, {
 	JW.UI.Component sender;
 	*/
 });
-
+;
 /*
 	jWidget UI source file.
 
@@ -1238,7 +1244,7 @@ JW.extend(JW.UI.Component.AbstractTemplate, JW.Class, {
 		path.pop();
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 
@@ -1301,7 +1307,7 @@ JW.extend(JW.UI.Component.Array, JW.Class, {
 		this.source.each(JW.UI._afterAppend);
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -1351,7 +1357,7 @@ JW.extend(JW.UI.Component.Child, JW.Class, {
 		this.name = null;
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 
@@ -1465,7 +1471,7 @@ JW.extend(JW.UI.Component.ChildInserter, JW.AbstractMap, {
 		item.detach();
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -1572,7 +1578,7 @@ JW.extend(JW.UI.Component.Children, JW.AbstractMap, {
 		return result;
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 
@@ -1635,7 +1641,7 @@ JW.extend(JW.UI.Component.Collection, JW.Class, {
 		this.source.each(JW.UI._afterAppend);
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -1657,7 +1663,8 @@ JW.extend(JW.UI.Component.Collection, JW.Class, {
 
 JW.UI.Component.CollectionInserter = function(source, el) {
 	JW.UI.Component.CollectionInserter._super.call(this);
-	this.el = el;
+	this.el = el; // DOMElement
+	this.len = 0; // Number
 	this.own(source.createObserver({
 		addItem: this._addItem,
 		removeItem: this._removeItem,
@@ -1667,15 +1674,24 @@ JW.UI.Component.CollectionInserter = function(source, el) {
 
 JW.extend(JW.UI.Component.CollectionInserter, JW.Class, {
 	_addItem: function(item) {
-		this.el.appendChild(item.el[0]);
+		var parent = this.el;
+		var anchor = parent.childNodes[this.len];
+		var child = item.el[0];
+		if (anchor != null) {
+			parent.insertBefore(child, anchor);
+		} else {
+			parent.appendChild(child);
+		}
+		++this.len;
 		item._afterAppend();
 	},
 
 	_removeItem: function(item) {
 		JW.UI.remove(item.el[0]);
+		--this.len;
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -1719,7 +1735,7 @@ JW.extend(JW.UI.Component.DomTemplate, JW.UI.Component.AbstractTemplate, {
 		groups[id].push(el);
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -1753,7 +1769,7 @@ JW.extend(JW.UI.Component.Inserter, JW.UI.Inserter, {
 		item._afterAppend();
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -1811,7 +1827,7 @@ JW.extend(JW.UI.Component.Replaceable, JW.Class, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -1894,7 +1910,7 @@ JW.extend(JW.UI.Component.Template, JW.UI.Component.AbstractTemplate, {
 JW.UI.template(JW.UI.Component, {
 	main: '<div></div>'
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -1938,7 +1954,7 @@ JW.extend(JW.UI.Component.TemplateOutput, JW.Class, {
 	 * @property {Object} groups `<Array<DOMElement>>` Map from jwid to the elements with this jwid.
 	 */
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -1961,53 +1977,7 @@ JW.extend(JW.UI.Component.TemplateOutput, JW.Class, {
 /**
  * @class
  *
- * jQuery event attachment adapter.
- *
- * - Allows you to use jQuery events in conjunction with jWidget object aggregation feature.
- * Attachment destruction results in event unbinding.
- * - Allows you to pass callback context.
- * - However, it doesn't support "data" argument - use closures instead.
- *
- * Method {@link jQuery#jwon jwon} is a shorthand for adapter creation.
- *
- * **Example**
- *
- * Assume you have the next class:
- *
- *     var MyForm = function(el) {
- *         this._onSubmit = JW.inScope(this._onSubmit, this);
- *         this._onTextChange = JW.inScope(this._onTextChange, this);
- *         MyForm.{@link JW.Class#static-property-_super _super}.call(this);
- *         el.on("submit", this._onSubmit);
- *         el.on("change", "input[type=text]", this._onTextChange);
- *     };
- *
- *     JW.extend(MyForm, JW.Class, {
- *         _onSubmit: function(event) {...},
- *         _onTextChange: function(event) {...},
- *
- *         {@link #destroyObject}: function() {
- *             el.off("submit", this._onSubmit);
- *             el.off("change", "input[type=text]", this._onTextChange);
- *             this.{@link #_super}();
- *         }
- *     });
- *
- * Thanks to the adapter, we can remove the overhead of locking the method call context and
- * explicit event unsubscribing in the #destroyObject method:
- *
- *     var MyForm = function(el) {
- *         MyForm.{@link JW.Class#static-property-_super _super}.call(this);
- *         this.own(el.{@link jQuery#jwon jwon}("submit", this._onSubmit, this));
- *         this.own(el.{@link jQuery#jwon jwon}("change", "input[type=text]", this._onTextChange, this));
- *     };
- *
- *     JW.extend(MyForm, JW.Class, {
- *         _onSubmit: function(event, target) {...},
- *         _onTextChange: function(event, target) {...}
- *     });
- *
- * Notice that event target which jQuery usually assigns the call context to is passed as a second callback argument.
+ * Result of {@link jQuery#jwon jwon} method call. Destroy it to unbind event handler.
  *
  * @extends JW.Class
  *
@@ -2050,7 +2020,7 @@ JW.extend(JW.UI.JQEventAttachment, JW.Class, {
 		this._super();
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2077,12 +2047,37 @@ JW.extend(JW.UI.JQEventAttachment, JW.Class, {
  */
 jQuery.extend(jQuery.fn, {
 	/**
-	 * Creates jQuery event adapter managed by jWidget.
-	 * Shorthand for JW.UI.JQEventAttachment creation.
-	 * See JW.UI.JQEventAttachment for more details.
+	 * Attaches handler to an event. jWidget extension for <a href="http://api.jquery.com/on/" target="_blank">on</a>
+	 * method which has the next features.
 	 *
-	 * @param {string} events One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".
-	 * @param {string} selector A selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.
+	 * ### 1. Aggregation
+	 *
+	 * The method returns event attachment object. Its destruction results in event unbinding which allows you to use
+	 * jQuery events in conjunction with {@link JW.Class#own own} method.
+	 *
+	 *     // Bind a handler to "mousemove" event and aggregate the attachment
+	 *     this.own($(window).jwon("mousemove", function(event) {
+	 *         $(".output").text(event.pageX + ":" + event.pageY);
+	 *     }, this));
+	 *
+	 * ### 2. Call context argument
+	 *
+	 * The method accepts callback context as an argument which allows you to avoid JW.inScope
+	 * and <a href="http://api.jquery.com/jQuery.proxy/" target="_blank">jQuery.proxy</a> usage.
+	 *
+	 *     // On button click, destroy this component
+	 *     el.jwon("click", this.destroy, this);
+	 *
+	 * Event target which jQuery usually assigns the call context to is passed as a second callback argument.
+	 *
+	 *     el.jwon("click", function(event, target) { ... }, this);
+	 *
+	 * The method doesn't support "data" argument - please use closures instead.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="200" src="http://enepomnyaschih.github.io/mt/1.4/jwui-jwon.html"></iframe>
+	 *
+	 * @param {String} events One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".
+	 * @param {String} selector A selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.
 	 * @param {Function} handler
 	 *
 	 * `handler(event: Event, target: DOMElement)`
@@ -2094,9 +2089,292 @@ jQuery.extend(jQuery.fn, {
 	 */
 	jwon: function(events, selector, handler, scope) {
 		return new JW.UI.JQEventAttachment(this, events, selector, handler, scope);
+	},
+
+	/**
+	 * Watches string property modification and updates the specified attribute of the DOM element.
+	 * Returns JW.UI.AttrUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind "title" attribute to title property value
+	 *     this.own(el.jwattr("title", title));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwattr.html"></iframe>
+	 *
+	 * @param {String} attr DOM element attribute name.
+	 * @param {JW.Property} property `<String>` Attribute value.
+	 * @returns {JW.UI.AttrUpdater} Synchronizer instance.
+	 */
+	jwattr: function(attr, property) {
+		return new JW.UI.AttrUpdater(this, attr, property);
+	},
+
+	/**
+	 * DOM element CSS class management method. Supports two variations.
+	 *
+	 *     jwclass(cls: String, property: JW.Property<Boolean>): JW.UI.ClassUpdater
+	 *     jwclass(cls: JW.Property<String>): JW.UI.ClassNameUpdater
+	 *
+	 * <hr>
+	 *
+	 *     jwclass(cls: String, property: JW.Property<Boolean>): JW.UI.ClassUpdater
+	 *
+	 * Watches boolean property modification and updates the specified CSS class presence in the DOM element.
+	 * Returns JW.UI.ClassUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind "checked" CSS class to checked property value
+	 *     this.own(el.jwclass("checked", checked));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-bool.html"></iframe>
+	 *
+	 * <hr>
+	 *
+	 *     jwclass(cls: JW.Property<String>): JW.UI.ClassNameUpdater
+	 *
+	 * Watches string property modification and updates CSS class name in the DOM element.
+	 * Returns JW.UI.ClassNameUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * **Caution:** Method doesn't check if the class of the same name is already present in the element.
+	 * If that's the case, it will remove the class on the next property value change. However, it won't
+	 * touch the other classes, e.g. it doesn't remove "application-rect" class in the example below.
+	 *
+	 *     // Bind CSS class name to color property value
+	 *     this.own(el.jwclass(color));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="250" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html"></iframe>
+	 */
+	jwclass: function() {
+		var a = arguments[0], b = arguments[1];
+		return (b != null) ? new JW.UI.ClassUpdater(this, a, b) : new JW.UI.ClassNameUpdater(this, a);
+	},
+
+	/**
+	 * Watches string modification and updates the specified CSS style of the DOM element.
+	 * Returns JW.UI.CssUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind background color style to color property value
+	 *     this.own(el.jwcss("background-color", color));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwcss.html"></iframe>
+	 *
+	 * @param {String} style CSS style name.
+	 * @param {JW.Property} property `<String>` Style value.
+	 * @returns {JW.UI.CssUpdater} Synchronizer instance.
+	 */
+	jwcss: function(style, property) {
+		return new JW.UI.CssUpdater(this, style, property);
+	},
+
+	/**
+	 * Watches string property modification and updates inner HTML of the DOM element.
+	 * Returns JW.UI.HtmlUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind inner HTML to html property value
+	 *     this.own(el.jwhtml(html));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwhtml.html"></iframe>
+	 *
+	 * @param {JW.Property} property `<String>` HTML value.
+	 * @returns {JW.UI.HtmlUpdater} Synchronizer instance.
+	 */
+	jwhtml: function(property) {
+		return new JW.UI.HtmlUpdater(this, property);
+	},
+
+	/**
+	 * DOM element property management method. Supports two variations.
+	 *
+	 *     jwprop("checked"): JW.Property<Boolean>
+	 *     jwprop(prop: String, property: JW.Property<Boolean>, [binding: JW.Binding]): JW.UI.PropBinding
+	 *
+	 * <hr>
+	 *
+	 *     jwprop("checked"): JW.Property<Boolean>
+	 *
+	 * Returns a boolean property containing current checkbox state and starts watching for its modification.
+	 * Destroy the result property to stop synchronization.
+	 *
+	 *     // Watch checkbox state
+	 *     var property = this.own(el.jwprop("checked"));
+	 *
+	 * <hr>
+	 *
+	 *     jwprop(prop: String, property: JW.Property<Boolean>, [binding: JW.Binding]): JW.UI.PropBinding
+	 *
+	 * Binds specified property of the DOM element to boolean property and/or vice versa.
+	 * Returns JW.UI.PropBinding instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind element state to property
+	 *     this.own(el.jwprop("disabled", property));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="140" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwprop.html"></iframe>
+	 *
+	 * Two way binding:
+	 *
+	 *     this.own(el.jwprop("checked", this.value, JW.TWOWAY));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="150" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwprop-two.html"></iframe>
+	 *
+	 * @param {String} prop Element's property name.
+	 * @param {JW.Property} [property] `<Boolean>` Property value.
+	 * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+	 */
+	jwprop: function(prop, property, binding) {
+		if (property != null) {
+			return new JW.UI.PropBinding(this, prop, property, binding);
+		}
+		if (prop === "checked") {
+			var target = new JW.Property();
+			target.own(new JW.UI.CheckedListener(this, {target: target}));
+			return target;
+		}
+		throw new Error("Invalid argument");
+	},
+
+	/**
+	 * Radio group value management method. Supports two variations.
+	 *
+	 *     jwradio(name: String): JW.Property<String>
+	 *     jwradio(name: String, value: JW.Property<String>, [binding: JW.Binding]): JW.UI.RadioBinding
+	 *
+	 * <hr>
+	 *
+	 *     jwradio(name: String): JW.Property<String>
+	 *
+	 * Returns a string property containing current radio group selection and starts watching for selection modification.
+	 * Destroy the result property to stop synchronization.
+	 *
+	 * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
+	 * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
+	 * All radios must have the same "name" attribute value. If neighter radio is selected, property is set to null.
+	 *
+	 *     // Watch radio button selection
+	 *     var color = this.own(el.jwradio("color"));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="255" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html"></iframe>
+	 *
+	 * <hr>
+	 *
+	 *     jwradio(name: String, value: JW.Property<String>, [binding: JW.Binding]): JW.UI.RadioBinding
+	 *
+	 * Binds radio group selection to string property and/or vice versa.
+	 * Returns JW.UI.RadioBinding instance. Destroy it to stop synchronization.
+	 *
+	 * All radios must have the same "name" attribute value.
+	 *
+	 *     // Bind radio button selection to property value
+	 *     this.own(el.jwradio("letter", value));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="170" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio.html"></iframe>
+	 *
+	 * Two way binding:
+	 *
+	 *     this.own(el.jwradio("first", this.value, JW.TWOWAY));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio-two.html"></iframe>
+	 *
+	 * @param {String} name Radios "name" attribute.
+	 * @param {JW.Property} [property] `<String>` Radio value.
+	 * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+	 */
+	jwradio: function(name, property, binding) {
+		if (property != null) {
+			return new JW.UI.RadioBinding(this, name, property, binding);
+		}
+		var target = new JW.Property();
+		target.own(new JW.UI.RadioListener(this, name, {target: target}));
+		return target;
+	},
+
+	/**
+	 * Watches string modification and updates inner text of the DOM element.
+	 * Returns JW.UI.TextUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind inner text to property value
+	 *     this.own(el.jwtext(text));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwtext.html"></iframe>
+	 *
+	 * @param {JW.Property} property `<String>` HTML value.
+	 * @returns {JW.UI.TextUpdater} Synchronizer instance.
+	 */
+	jwtext: function(property) {
+		return new JW.UI.TextUpdater(this, property);
+	},
+
+	/**
+	 * DOM element value management method. Supports two variations.
+	 *
+	 *     jwval([simple: Boolean]): JW.Property<String>
+	 *     jwval(value: JW.Property<String>, [binding: JW.Binding], [simple: Boolean]): JW.UI.ValueBinding
+	 *
+	 * <hr>
+	 *
+	 *     jwval([simple: Boolean]): JW.Property<String>
+	 *
+	 * Returns a string property containing current element value and starts watching for value modification.
+	 * Destroy the result property to stop synchronization.
+	 *
+	 *     // Watch input element value
+	 *     var value = this.own(el.jwval());
+	 *
+	 * If simple is `true`, listens "change" event only. Defaults to `false` which enables
+	 * reaction to any real-time field modification.
+	 *
+	 * <hr>
+	 *
+	 *     jwval(value: JW.Property<String>, [binding: JW.Binding], [simple: Boolean]): JW.UI.ValueBinding
+	 *
+	 * Binds DOM text input value to string property and/or vice versa.
+	 * Returns JW.UI.ValueBinding instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind element value to property
+	 *     this.own(el.jwval(value));
+	 *
+	 * If simple is `true`, watch-binding listens "change" event only. Defaults to `false` which enables
+	 * reaction to any real-time field modification.
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="285" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval.html"></iframe>
+	 *
+	 * Two way binding:
+	 *
+	 *     this.own(el.jwval(this.value, JW.TWOWAY));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval-two.html"></iframe>
+	 *
+	 * @param {JW.Property} [property] `<String>` Element value.
+	 * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+	 * @param {Boolean} [simple=false]
+	 * If true, watch-binding listens "change" event only. Defaults to false which enables
+	 * reaction to any real-time field modification.
+	 */
+	jwval: function(property, binding, simple) {
+		if (property != null && (typeof property !== "boolean")) {
+			return new JW.UI.ValueBinding(this, property, binding, simple);
+		}
+		var target = new JW.Property();
+		target.own(new JW.UI.ValueListener(this, {target: target, simple: simple}));
+		return target;
+	},
+
+	/**
+	 * Watches boolean property modification and updates visibility of the DOM element.
+	 * To make element invisible, sets "display: none" inline style. To make
+	 * element visible, removes "display" inline style. Make sure that element is visible according to your CSS rules.
+	 * Returns JW.UI.VisibleUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind element visibility to property value
+	 *     this.own(el.jwshow(checked));
+	 *
+	 * <iframe style="border: 1px solid green; padding: 10px;" width="800" height="215" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwshow.html"></iframe>
+	 *
+	 * @param {JW.Property} property `<Boolean>` Element visibility.
+	 * @returns {JW.UI.VisibleUpdater} Synchronizer instance.
+	 */
+	jwshow: function(property) {
+		return new JW.UI.VisibleUpdater(this, property);
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2131,7 +2409,7 @@ JW.UI.Params = {};
 		
 		JW.UI.Params[tokens[0]] = decodeURIComponent(tokens[1]).replace(/\+/g, " ");
 	}
-})();
+})();;
 /*
 	jWidget UI source file.
 	
@@ -2168,7 +2446,7 @@ JW.UI.preloadImage = function(
 		}).
 		attr("src", src);
 }
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2190,15 +2468,11 @@ JW.UI.preloadImage = function(
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * specified attribute of the DOM element.
- * Applied on initialization as well.
  *
- *     var title = new JW.Property("This is a tooltip");
- *     // Next command sets "title" attribute value to "This is a tooltip"
- *     var updater = new JW.UI.AttrUpdater($("#myelem"), "title", title);
- *     // Next command changes "title" attribute value to "Это подсказка"
- *     title.{@link JW.Property#set set}("Это подсказка");
+ * Result of {@link jQuery#jwattr jwattr} method call. Destroy it to stop synchronization.
+ *
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwattr jwattr} is an easier alternative.
  *
  * @extends JW.Class
  *
@@ -2237,7 +2511,7 @@ JW.extend(JW.UI.AttrUpdater, JW.Class, {
 		this.el.attr(this.attr, this.property.get());
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 
@@ -2259,19 +2533,7 @@ JW.extend(JW.UI.AttrUpdater, JW.Class, {
 
 /**
  * @class
- * Watches checkbox state modification and updates the value of the target boolean
- * {@link JW.Property property}.
- * Applied on initialization as well.
- *
- *     var listener = new JW.UI.CheckedListener($("#mycheckbox"));
- *     var checked = listener.{@link JW.UI.CheckedListener#property-target target};
- *     // Assume that the checkbox is unchecked initially
- *     assertEquals(false, value.{@link JW.Property#get get}());
- *     // Later on, user checked the checkbox
- *     assertEquals(true, value.{@link JW.Property#get get}());
- *
- * For backward binding, use JW.UI.PropUpdater, passing "checked" as a prop argument value.
- *
+ * @deprecated 1.4 Use {@link jQuery#jwprop jwprop} instead.
  * @extends JW.Class
  *
  * @constructor
@@ -2321,7 +2583,7 @@ JW.extend(JW.UI.CheckedListener, JW.Class, {
 		this.target.set(this.el.prop("checked"));
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2343,31 +2605,11 @@ JW.extend(JW.UI.CheckedListener, JW.Class, {
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates
- * the CSS class name in the DOM element.
- * Applied on initialization as well.
  *
- *     var el = jQuery('<div class="elem"></div>');
- *     var color = new JW.Property("red");
+ * Result of {@link jQuery#jwclass jwclass} method call. Destroy it to stop synchronization.
  *
- *     // Next command adds "red" CSS class to the element
- *     var updater = new JW.UI.ClassNameUpdater(el, color);
- *
- *     // Next command removes "red" CSS class from the element and adds "blue" class instead
- *     color.{@link JW.Property#set set}("blue");
- *
- *     // Next command removes "blue" CSS class from the element
- *     color.{@link JW.Property#set set}(null);
- *
- *     // Next command adds "green" CSS class to the element
- *     color.{@link JW.Property#set set}("green");
- *
- *     // Next command removes "green" CSS class from the element
- *     updater.{@link #destroy destroy}();
- *
- * **Caution:** Updater doesn't check if the class of the same name is already present in the element.
- * If that's the case, it will remove the class on the next property value change. However, it won't
- * touch the other classes, e.g. it doesn't remove "elem" class in the example above.
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwclass jwclass} is an easier alternative.
  *
  * @extends JW.Class
  *
@@ -2386,7 +2628,7 @@ JW.UI.ClassNameUpdater = function(el, property) {
 };
 
 JW.extend(JW.UI.ClassNameUpdater, JW.Class);
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2408,15 +2650,11 @@ JW.extend(JW.UI.ClassNameUpdater, JW.Class);
 
 /**
  * @class
- * Watches source boolean {@link JW.Property property} modification and updates the
- * specified CSS class presence in the DOM element.
- * Applied on initialization as well.
  *
- *     var selected = new JW.Property(true);
- *     // Next command adds "selected" CSS class to element
- *     var updater = new JW.UI.ClassUpdater($("#myelem"), "selected", selected);
- *     // Next command removes "selected" CSS class from element
- *     selected.{@link JW.Property#set set}(false);
+ * Result of {@link jQuery#jwclass jwclass} method call. Destroy it to stop synchronization.
+ *
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwclass jwclass} is an easier alternative.
  *
  * @extends JW.Class
  *
@@ -2455,7 +2693,7 @@ JW.extend(JW.UI.ClassUpdater, JW.Class, {
 		this.el.toggleClass(this.cls, !!this.property.get());
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2477,15 +2715,11 @@ JW.extend(JW.UI.ClassUpdater, JW.Class, {
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * specified CSS style of the DOM element.
- * Applied on initialization as well.
  *
- *     var color = new JW.Property("red");
- *     // Next command sets "color" style value to "red"
- *     var updater = new JW.UI.CssUpdater($("#myelem"), "color", color);
- *     // Next command changes "color" style value to "blue"
- *     color.{@link JW.Property#set set}("blue");
+ * Result of {@link jQuery#jwcss jwcss} method call. Destroy it to stop synchronization.
+ *
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwcss jwcss} is an easier alternative.
  *
  * @extends JW.Class
  *
@@ -2524,7 +2758,7 @@ JW.extend(JW.UI.CssUpdater, JW.Class, {
 		this.el.css(this.style, this.property.get());
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2546,15 +2780,11 @@ JW.extend(JW.UI.CssUpdater, JW.Class, {
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * inner HTML of the DOM element.
- * Applied on initialization as well.
  *
- *     var html = new JW.Property('<img src="loading.gif"> Loading...');
- *     // Next command sets element HTML to loading stuff
- *     var updater = new JW.UI.HtmlUpdater($("#myelem"), html);
- *     // Next command changes element HTML to loaded stuff
- *     html.{@link JW.Property#set set}('<img src="loaded.png"> Loaded!');
+ * Result of {@link jQuery#jwhtml jwhtml} method call. Destroy it to stop synchronization.
+ *
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwhtml jwhtml} is an easier alternative.
  *
  * @extends JW.Class
  *
@@ -2588,7 +2818,7 @@ JW.extend(JW.UI.HtmlUpdater, JW.Class, {
 		this.el.html(this.property.get());
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2610,18 +2840,52 @@ JW.extend(JW.UI.HtmlUpdater, JW.Class, {
 
 /**
  * @class
- * Watches source boolean {@link JW.Property property} modification and updates the
- * specified property of the DOM element.
- * Applied on initialization as well.
  *
- *     var checked = new JW.Property(true);
- *     // Next command checks the checkbox
- *     var updater = new JW.UI.PropUpdater($("#myelem"), "checked", checked);
- *     // Next command unchecks the checkbox
- *     checked.{@link JW.Property#set set}(false);
+ * Result of {@link jQuery#jwprop jwprop} method call. Destroy it to stop synchronization.
  *
- * For backward binding, use JW.UI.CheckedListener for checkboxes and JW.UI.RadioListener for radios.
+ * @extends JW.Class
  *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {String} prop Element's property name.
+ * @param {JW.Property} property `<Boolean>` Property.
+ * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+ */
+JW.UI.PropBinding = function(el, prop, property, binding) {
+	JW.UI.PropBinding._super.call(this);
+	binding = binding || JW.UPDATE;
+	if (binding & JW.UPDATE) {
+		this.own(new JW.UI.PropUpdater(el, prop, property));
+	}
+	if (prop === "checked" && (binding & JW.WATCH)) {
+		this.own(new JW.UI.CheckedListener(el, {target: property}));
+	}
+};
+
+JW.extend(JW.UI.PropBinding, JW.Class);
+;
+/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @class
+ * @deprecated 1.4 Use {@link jQuery#jwprop jwprop} instead.
  * @extends JW.Class
  *
  * @constructor
@@ -2662,7 +2926,52 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
 		}
 	}
 });
+;
+/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
+/**
+ * @class
+ *
+ * Result of {@link jQuery#jwradio jwradio} method call. Destroy it to stop synchronization.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el Container DOM element.
+ * @param {String} name Radios "name" attribute.
+ * @param {JW.Property} property `<String>` Property.
+ * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+ */
+JW.UI.RadioBinding = function(el, name, property, binding) {
+	JW.UI.RadioBinding._super.call(this);
+	binding = binding || JW.UPDATE;
+	if (binding & JW.UPDATE) {
+		this.own(new JW.UI.RadioUpdater(el, name, property));
+	}
+	if (binding & JW.WATCH) {
+		this.own(new JW.UI.RadioListener(el, name, {target: property}));
+	}
+};
+
+JW.extend(JW.UI.RadioBinding, JW.Class);
+;
 /*
 	jWidget UI source file.
 
@@ -2684,23 +2993,7 @@ JW.extend(JW.UI.PropUpdater, JW.Class, {
 
 /**
  * @class
- * Watches selection modification in radio group and updates the value of the target string
- * {@link JW.Property property}.
- * Applied on initialization as well.
- *
- *     var listener = new JW.UI.RadioListener($("#myform"), "myradio");
- *     var selected = listener.{@link JW.UI.RadioListener#property-target target};
- *     // Assume that the radio with value "apple" is selected initially
- *     assertEquals("apple", selected.{@link JW.Property#get get}());
- *     // Later on, user selected "banana" radio
- *     assertEquals("banana", selected.{@link JW.Property#get get}());
- *
- * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
- * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
- * All radios must have the same "name" attribute value. If neighter radio is selected, property is set to null.
- *
- * For backward binding, use JW.UI.RadioUpdater.
- *
+ * @deprecated 1.4 Use {@link jQuery#jwradio jwradio} instead.
  * @extends JW.Class
  *
  * @constructor
@@ -2757,7 +3050,7 @@ JW.extend(JW.UI.RadioListener, JW.Class, {
 		this.target.set((radio.length !== 0) ? radio.attr("value") : null);
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2779,19 +3072,7 @@ JW.extend(JW.UI.RadioListener, JW.Class, {
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and selects a corresponding radio.
- * Applied on initialization as well.
- *
- *     var value = new JW.Property("apple");
- *     // Next command selects a radio with value "apple" in a group
- *     var updater = new JW.UI.RadioUpdater($("#myform"), "myradio", value);
- *     // Next command selects a radio with value "banana" in a group
- *     value.{@link JW.Property#set set}("banana");
- *
- * All radios must have the same "name" attribute value.
- *
- * For backward binding, use JW.UI.RadioListener.
- *
+ * @deprecated 1.4 Use {@link jQuery#jwradio jwradio} instead.
  * @extends JW.Class
  *
  * @constructor
@@ -2838,7 +3119,7 @@ JW.extend(JW.UI.RadioUpdater, JW.Class, {
 		this.el.find(this._selector + ":checked").prop("checked", false).change();
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -2860,15 +3141,11 @@ JW.extend(JW.UI.RadioUpdater, JW.Class, {
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * inner text of the DOM element.
- * Applied on initialization as well.
  *
- *     var text = new JW.Property("I like cats");
- *     // Next command sets element text to "I like cats"
- *     var updater = new JW.UI.TextUpdater($("#myelem"), text);
- *     // Next command changes element text to "Everyone likes cats"
- *     text.{@link JW.Property#set set}("Everyone likes cats");
+ * Result of {@link jQuery#jwtext jwtext} method call. Destroy it to stop synchronization.
+ *
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwtext jwtext} is an easier alternative.
  *
  * @extends JW.Class
  *
@@ -2902,7 +3179,54 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
 		this.el[0].textContent = this.property.get();
 	}
 });
+;
+/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
+/**
+ * @class
+ *
+ * Result of {@link jQuery#jwval jwval} method call. Destroy it to stop synchronization.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {JW.Property} property `<String>` Property.
+ * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+ * @param {Boolean} [simple=false]
+ * If true, watch-binding listens "change" event only. Defaults to false which enables
+ * reaction to any real-time field modification.
+ */
+JW.UI.ValueBinding = function(el, property, binding, simple) {
+	JW.UI.ValueBinding._super.call(this);
+	binding = binding || JW.UPDATE;
+	if (binding & JW.UPDATE) {
+		this.own(new JW.UI.ValueUpdater(el, property));
+	}
+	if (binding & JW.WATCH) {
+		this.own(new JW.UI.ValueListener(el, {target: property, simple: simple}));
+	}
+};
+
+JW.extend(JW.UI.ValueBinding, JW.Class);
+;
 /*
 	jWidget UI source file.
 
@@ -2924,19 +3248,7 @@ JW.extend(JW.UI.TextUpdater, JW.Class, {
 
 /**
  * @class
- * Watches DOM text input value modification and updates the value of the target string
- * {@link JW.Property property}.
- * Applied on initialization as well.
- *
- *     var listener = new JW.UI.ValueListener($("#myinput"));
- *     var value = listener.{@link JW.UI.ValueListener#property-target target};
- *     // Assume that the element is a blank field initially
- *     assertEquals("", value.{@link JW.Property#get get}());
- *     // Later on, user entered "foo" in the field
- *     assertEquals("foo", value.{@link JW.Property#get get}());
- *
- * For backward binding, use JW.UI.ValueUpdater.
- *
+ * @deprecated 1.4 Use {@link jQuery#jwval jwval} instead.
  * @extends JW.Class
  *
  * @constructor
@@ -3001,7 +3313,7 @@ JW.extend(JW.UI.ValueListener, JW.Class, {
 		this.target.set(this.el.val());
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -3023,18 +3335,7 @@ JW.extend(JW.UI.ValueListener, JW.Class, {
 
 /**
  * @class
- * Watches source string {@link JW.Property property} modification and updates the
- * value of the DOM text input.
- * Applied on initialization as well.
- *
- *     var value = new JW.Property("Submit");
- *     // Next command sets element value to "Submit"
- *     var updater = new JW.UI.ValueUpdater($("#myelem"), value);
- *     // Next command changes element value to "Отправить"
- *     value.{@link JW.Property#set set}("Отправить");
- *
- * For backward binding, use JW.UI.ValueListener.
- *
+ * @deprecated 1.4 Use {@link jQuery#jwval jwval} instead.
  * @extends JW.Class
  *
  * @constructor
@@ -3064,10 +3365,13 @@ JW.extend(JW.UI.ValueUpdater, JW.Class, {
 	},
 	
 	_update: function() {
-		this.el.val(this.property.get());
+		var value = this.property.get();
+		if (this.el.val() !== value) {
+			this.el.val(value);
+		}
 	}
 });
-
+;
 /*
 	jWidget UI source file.
 	
@@ -3089,16 +3393,11 @@ JW.extend(JW.UI.ValueUpdater, JW.Class, {
 
 /**
  * @class
- * Watches source boolean {@link JW.Property property} modification and updates
- * visibility of the DOM element. To make element invisible, sets "display: none" inline style. To make
- * element visible, removes "display" inline style. Make sure that element is visible by your CSS rules.
- * Applied on initialization as well.
  *
- *     var visible = new JW.Property(true);
- *     // Next command makes element visible
- *     var updater = new JW.UI.VisibleUpdater($("#myelem"), visible);
- *     // Next command makes element invisible
- *     visible.{@link JW.Property#set set}(false);
+ * Result of {@link jQuery#jwshow jwshow} method call. Destroy it to stop synchronization.
+ *
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwshow jwshow} is an easier alternative.
  *
  * @extends JW.Class
  *
@@ -3132,3 +3431,4 @@ JW.extend(JW.UI.VisibleUpdater, JW.Class, {
 		this.el.css("display", this.property.get() ? "" : "none");
 	}
 });
+;
