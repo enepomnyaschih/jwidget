@@ -1,9 +1,9 @@
 ﻿# Часть 3. Именованные дочерние компоненты
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/1.3-3/](http://enepomnyaschih.github.io/mt/1.3-3/)
+[http://enepomnyaschih.github.io/mt/1.4-3/](http://enepomnyaschih.github.io/mt/1.4-3/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.3-3](https://github.com/enepomnyaschih/mt/tree/mt-1.3-3) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.4-3](https://github.com/enepomnyaschih/mt/tree/mt-1.4-3) (ветка)
 
 В этом примере мы научимся рендерить дочерние компоненты, которые не находятся в массивах.
 

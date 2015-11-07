@@ -1,9 +1,9 @@
 ﻿# Часть 2. Дочерние компоненты, массивы
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/1.3-2/](http://enepomnyaschih.github.io/mt/1.3-2/)
+[http://enepomnyaschih.github.io/mt/1.4-2/](http://enepomnyaschih.github.io/mt/1.4-2/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.3-2](https://github.com/enepomnyaschih/mt/tree/mt-1.3-2) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.4-2](https://github.com/enepomnyaschih/mt/tree/mt-1.4-2) (ветка)
 
 Этот пример является продолжением предыдущей части.
 

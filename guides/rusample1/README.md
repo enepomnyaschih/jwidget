@@ -1,9 +1,9 @@
 ﻿# Часть 1. Модель и представление
 
 Демонстрация доступна по адресу
-[http://enepomnyaschih.github.io/mt/1.3-1/](http://enepomnyaschih.github.io/mt/1.3-1/)
+[http://enepomnyaschih.github.io/mt/1.4-1/](http://enepomnyaschih.github.io/mt/1.4-1/)
 
-Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.3-1](https://github.com/enepomnyaschih/mt/tree/mt-1.3-1) (ветка)
+Исходный код [https://github.com/enepomnyaschih/mt/tree/mt-1.4-1](https://github.com/enepomnyaschih/mt/tree/mt-1.4-1) (ветка)
 
 Серия примеров jWidget покажет, как разработать свой собственный Twitter за несколько шагов с помощью jWidget.
 Если вы хотите научиться разрабатывать мощные Model-View-приложения на jWidget, просим вас проделать все те же

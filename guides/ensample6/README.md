@@ -1,8 +1,8 @@
 ﻿# Part 6. Collection synchronizers
 
-Demo: [http://enepomnyaschih.github.io/mt/1.3-6/](http://enepomnyaschih.github.io/mt/1.3-6/)
+Demo: [http://enepomnyaschih.github.io/mt/1.4-6/](http://enepomnyaschih.github.io/mt/1.4-6/)
 
-Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.3-6](https://github.com/enepomnyaschih/mt/tree/mt-1.3-6) (Git branch)
+Source: [https://github.com/enepomnyaschih/mt/tree/mt-1.4-6](https://github.com/enepomnyaschih/mt/tree/mt-1.4-6) (Git branch)
 
 Now we'll switch to the most wonderful and important part of jWidget which makes jWidget special -
 collection synchronizers.
