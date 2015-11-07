@@ -401,6 +401,14 @@
  *
  * [Getting started. Part 7. Project infrastructure](#!/guide/ensample7)
  *
+ * ### Clear-div persistence
+ *
+ * As of jWidget 1.4, you may render child collections to non-blank DOM elements. In this case, all existing nodes
+ * stay at the end of the element. The most common application of this feature
+ * is <a href="https://css-tricks.com/the-how-and-why-of-clearing-floats/" target="_blank">clear-div usage</a>.
+ *
+ * <iframe style="border: 1px solid green; padding: 10px;" width="600" height="260" src="http://enepomnyaschih.github.io/mt/1.4/jwui-clear-div.html"></iframe>
+ *
  * @extends JW.Class
  * @constructor
  */
