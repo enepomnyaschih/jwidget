@@ -225,7 +225,7 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		items.clear();
 		this.assertStrictEqual('<div class="clear"></div>', view.el.html());
 
-		items.addAll(new ItemView("a"), new ItemView("b"));
+		items.addAll([new ItemView("a"), new ItemView("b")]);
 		this.assertStrictEqual('<div>a</div><div>b</div><div class="clear"></div>', view.el.html());
 
 		view.destroy();

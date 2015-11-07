@@ -39,7 +39,6 @@
 JW.UI.Inserter = function(source, el) {
 	JW.UI.Inserter._super.call(this);
 	this.el = el; // DOMElement
-	this.len = 0; // Number
 	this.own(source.createInserter({
 		addItem    : this._addItem,
 		removeItem : this._removeItem,
@@ -54,17 +53,16 @@ JW.extend(JW.UI.Inserter, JW.Class, {
 	
 	_addItem: function(item, index) {
 		var parent = this.el;
+		var anchor = parent.childNodes[index];
 		var child = this._getElement(item);
-		if (index === this.len) {
-			parent.appendChild(child);
+		if (anchor != null) {
+			parent.insertBefore(child, anchor);
 		} else {
-			parent.insertBefore(child, parent.childNodes.item(index));
+			parent.appendChild(child);
 		}
-		++this.len;
 	},
 	
 	_removeItem: function(item) {
-		--this.len;
 		JW.UI.remove(this._getElement(item));
 	}
 });

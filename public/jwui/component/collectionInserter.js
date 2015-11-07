@@ -19,7 +19,8 @@
 
 JW.UI.Component.CollectionInserter = function(source, el) {
 	JW.UI.Component.CollectionInserter._super.call(this);
-	this.el = el;
+	this.el = el; // DOMElement
+	this.len = 0; // Number
 	this.own(source.createObserver({
 		addItem: this._addItem,
 		removeItem: this._removeItem,
@@ -29,11 +30,20 @@ JW.UI.Component.CollectionInserter = function(source, el) {
 
 JW.extend(JW.UI.Component.CollectionInserter, JW.Class, {
 	_addItem: function(item) {
-		this.el.appendChild(item.el[0]);
+		var parent = this.el;
+		var anchor = parent.childNodes[this.len];
+		var child = item.el[0];
+		if (anchor != null) {
+			parent.insertBefore(child, anchor);
+		} else {
+			parent.appendChild(child);
+		}
+		++this.len;
 		item._afterAppend();
 	},
 
 	_removeItem: function(item) {
 		JW.UI.remove(item.el[0]);
+		--this.len;
 	}
 });
