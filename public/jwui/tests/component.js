@@ -116,5 +116,118 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		this.assertTrue(parent.el.children().hasClass("child"));
 		this.assertTrue(parent.el.children().hasClass("parent-child"));
 		parent.destroy();
+	},
+
+	testClearDivInSet: function() {
+		/* Preset */
+
+		var ItemView = function(id) {
+			ItemView._super.call(this);
+			this.id = id;
+		};
+
+		JW.extend(ItemView, JW.UI.Component, {
+			renderRoot: function(el) {
+				el.text(this.id);
+			}
+		});
+
+		JW.UI.template(ItemView, {main: '<div></div>'});
+
+		var SetView = function() {
+			SetView._super.call(this);
+			this.items = this.own(new JW.ObservableSet()).ownItems();
+		};
+
+		JW.extend(SetView, JW.UI.Component, {
+			renderRoot: function() {
+				return this.items;
+			}
+		});
+
+		JW.UI.template(SetView, {main: '<div><div class="clear"></div></div>'});
+
+		/* Test case */
+
+		var view = new SetView();
+		var items = view.items;
+		var a, b, c, d, e, f;
+		items.add(a = new ItemView("a"));
+		items.add(b = new ItemView("b"));
+		view.render();
+		this.assertStrictEqual('<div>a</div><div>b</div><div class="clear"></div>', view.el.html());
+
+		items.addAll([c = new ItemView("c"), d = new ItemView("d")]);
+		this.assertStrictEqual('<div>a</div><div>b</div><div>c</div><div>d</div><div class="clear"></div>', view.el.html());
+
+		items.removeAll([b, c]);
+		this.assertStrictEqual('<div>a</div><div>d</div><div class="clear"></div>', view.el.html());
+
+		items.addAll([e = new ItemView("e"), f = new ItemView("f")]);
+		this.assertStrictEqual('<div>a</div><div>d</div><div>e</div><div>f</div><div class="clear"></div>', view.el.html());
+
+		items.remove(a);
+		this.assertStrictEqual('<div>d</div><div>e</div><div>f</div><div class="clear"></div>', view.el.html());
+
+		items.clear();
+		this.assertStrictEqual('<div class="clear"></div>', view.el.html());
+
+		items.addAll([a, b]);
+		this.assertStrictEqual('<div>a</div><div>b</div><div class="clear"></div>', view.el.html());
+
+		view.destroy();
+	},
+
+	testClearDivInArray: function() {
+		/* Preset */
+
+		var ItemView = function(id) {
+			ItemView._super.call(this);
+			this.id = id;
+		};
+
+		JW.extend(ItemView, JW.UI.Component, {
+			renderRoot: function(el) {
+				el.text(this.id);
+			}
+		});
+
+		JW.UI.template(ItemView, {main: '<div></div>'});
+
+		var ArrayView = function() {
+			ArrayView._super.call(this);
+			this.items = this.own(new JW.ObservableArray()).ownItems();
+		};
+
+		JW.extend(ArrayView, JW.UI.Component, {
+			renderRoot: function() {
+				return this.items;
+			}
+		});
+
+		JW.UI.template(ArrayView, {main: '<div><div class="clear"></div></div>'});
+
+		/* Test case */
+
+		var view = new ArrayView();
+		var items = view.items;
+		items.add(new ItemView("a"));
+		items.add(new ItemView("b"));
+		view.render();
+		this.assertStrictEqual('<div>a</div><div>b</div><div class="clear"></div>', view.el.html());
+
+		items.addAll([new ItemView("c"), new ItemView("d")]);
+		this.assertStrictEqual('<div>a</div><div>b</div><div>c</div><div>d</div><div class="clear"></div>', view.el.html());
+
+		items.remove(1);
+		this.assertStrictEqual('<div>a</div><div>c</div><div>d</div><div class="clear"></div>', view.el.html());
+
+		items.clear();
+		this.assertStrictEqual('<div class="clear"></div>', view.el.html());
+
+		items.addAll(new ItemView("a"), new ItemView("b"));
+		this.assertStrictEqual('<div>a</div><div>b</div><div class="clear"></div>', view.el.html());
+
+		view.destroy();
 	}
 });
