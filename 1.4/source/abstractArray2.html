@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+
+	Copyright (C) 2015 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
+	/*
+	JW.AbstractArray createArray(items, formatter);
+	Mixed invoke(target, method, args);
+	*/
+
+	setObservableOutput: function() {},
+
+	testEmpty: function() {
+		var array = this.createArray();
+		this.assertStrictEqual(0, this.invoke(array, &quot;getLength&quot;));
+		this.assertTrue(this.invoke(array, &quot;isEmpty&quot;));
+		this.assertUndefined(this.invoke(array, &quot;get&quot;, [0]));
+		this.assertUndefined(this.invoke(array, &quot;getFirst&quot;));
+		this.assertUndefined(this.invoke(array, &quot;getFirstKey&quot;));
+		this.assertUndefined(this.invoke(array, &quot;getLast&quot;));
+		this.assertUndefined(this.invoke(array, &quot;getLastKey&quot;));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getKeys&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$getKeys&quot;).equal([]));
+		this.assertFalse(this.invoke(array, &quot;containsItem&quot;, [0]));
+		this.assertFalse(this.invoke(array, &quot;containsKey&quot;, [0]));
+		this.assertUndefined(this.invoke(array, &quot;keyOf&quot;, [0]));
+		this.assertStrictEqual(-1, this.invoke(array, &quot;indexOf&quot;, [0]));
+		this.assertTrue(this.invoke(array, &quot;every&quot;, [JW.isInt]));
+		this.assertFalse(this.invoke(array, &quot;some&quot;, [JW.isInt]));
+		this.assertUndefined(this.invoke(array, &quot;search&quot;, [JW.isInt]));
+		this.assertUndefined(this.invoke(array, &quot;find&quot;, [JW.isInt]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;filter&quot;, [JW.isInt]), []));
+		this.assertTrue(this.invoke(array, &quot;$filter&quot;, [JW.isInt]).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;map&quot;, [function(x) { return x + 1; }]), []));
+		this.assertTrue(this.invoke(array, &quot;$map&quot;, [function(x) { return x + 1; }]).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSorted&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$toSorted&quot;).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSortedComparing&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$toSortedComparing&quot;).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeys&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeys&quot;).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeysComparing&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeysComparing&quot;).equal([]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, &quot;index&quot;, [function(x) { return x; }]), {}));
+		this.assertTrue(this.invoke(array, &quot;$index&quot;, [function(x) { return x; }]).equal({}));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toArray&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$toArray&quot;).equal([]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, &quot;toMap&quot;), {}));
+		this.assertTrue(this.invoke(array, &quot;$toMap&quot;).equal({}));
+		this.assertTrue(JW.Set.equal(this.invoke(array, &quot;toSet&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$toSet&quot;).equal([]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;asArray&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$asArray&quot;).equal([]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, &quot;asMap&quot;), {}));
+		this.assertTrue(this.invoke(array, &quot;$asMap&quot;).equal({}));
+		this.assertTrue(JW.Set.equal(this.invoke(array, &quot;asSet&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$asSet&quot;).equal([]));
+		this.assertTrue(this.invoke(array, &quot;backEvery&quot;, [JW.isInt]));
+	},
+
+	testItems: function() {
+		var array = this.createArray([2, 4]);
+		this.assertStrictEqual(2, this.invoke(array, &quot;getLength&quot;));
+		this.assertFalse(this.invoke(array, &quot;isEmpty&quot;));
+		this.assertStrictEqual(2, this.invoke(array, &quot;get&quot;, [0]));
+		this.assertStrictEqual(4, this.invoke(array, &quot;get&quot;, [1]));
+		this.assertStrictEqual(2, this.invoke(array, &quot;getFirst&quot;));
+		this.assertStrictEqual(0, this.invoke(array, &quot;getFirstKey&quot;));
+		this.assertStrictEqual(4, this.invoke(array, &quot;getLast&quot;));
+		this.assertStrictEqual(1, this.invoke(array, &quot;getLastKey&quot;));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getKeys&quot;), [0, 1]));
+		this.assertTrue(this.invoke(array, &quot;$getKeys&quot;).equal([0, 1]));
+		this.assertFalse(this.invoke(array, &quot;containsItem&quot;, [0]));
+		this.assertTrue(this.invoke(array, &quot;containsItem&quot;, [2]));
+		this.assertFalse(this.invoke(array, &quot;containsKey&quot;, [2]));
+		this.assertTrue(this.invoke(array, &quot;containsKey&quot;, [0]));
+		this.assertUndefined(this.invoke(array, &quot;keyOf&quot;, [0]));
+		this.assertStrictEqual(0, this.invoke(array, &quot;keyOf&quot;, [2]));
+		this.assertStrictEqual(-1, this.invoke(array, &quot;indexOf&quot;, [0]));
+		this.assertStrictEqual(0, this.invoke(array, &quot;indexOf&quot;, [2]));
+		this.assertTrue(this.invoke(array, &quot;every&quot;, [JW.isInt]));
+		this.assertTrue(this.invoke(array, &quot;some&quot;, [JW.isInt]));
+		this.assertStrictEqual(2, this.invoke(array, &quot;search&quot;, [JW.isInt]));
+		this.assertStrictEqual(0, this.invoke(array, &quot;find&quot;, [JW.isInt]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;filter&quot;, [JW.isInt]), [2, 4]));
+		this.assertTrue(this.invoke(array, &quot;$filter&quot;, [JW.isInt]).equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;map&quot;, [function(x) { return x + 1; }]), [3, 5]));
+		this.assertTrue(this.invoke(array, &quot;$map&quot;, [function(x) { return x + 1; }]).equal([3, 5]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSorted&quot;), [2, 4]));
+		this.assertTrue(this.invoke(array, &quot;$toSorted&quot;).equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSortedComparing&quot;), [2, 4]));
+		this.assertTrue(this.invoke(array, &quot;$toSortedComparing&quot;).equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeys&quot;), [0, 1]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeys&quot;).equal([0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeysComparing&quot;), [0, 1]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeysComparing&quot;).equal([0, 1]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, &quot;index&quot;, [function(x) { return x; }]), {&quot;2&quot;: 2, &quot;4&quot;: 4}));
+		this.assertTrue(this.invoke(array, &quot;$index&quot;, [function(x) { return x; }]).equal({&quot;2&quot;: 2, &quot;4&quot;: 4}));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toArray&quot;), [2, 4]));
+		this.assertTrue(this.invoke(array, &quot;$toArray&quot;).equal([2, 4]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, &quot;toMap&quot;), {&quot;0&quot;: 2, &quot;1&quot;: 4}));
+		this.assertTrue(this.invoke(array, &quot;$toMap&quot;).equal({&quot;0&quot;: 2, &quot;1&quot;: 4}));
+		//this.assertTrue(JW.Set.equal(array.toSet(), [2, 4]));
+		//this.assertTrue(array.$toSet().equal([2, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;asArray&quot;), [2, 4]));
+		this.assertTrue(this.invoke(array, &quot;$asArray&quot;).equal([2, 4]));
+		this.assertTrue(JW.Map.equal(this.invoke(array, &quot;asMap&quot;), {&quot;0&quot;: 2, &quot;1&quot;: 4}));
+		this.assertTrue(this.invoke(array, &quot;$asMap&quot;).equal({&quot;0&quot;: 2, &quot;1&quot;: 4}));
+		//this.assertTrue(JW.Set.equal(array.asSet(), [2, 4]));
+		//this.assertTrue(array.$asSet().equal([2, 4]));
+		this.assertTrue(this.invoke(array, &quot;backEvery&quot;, [JW.isInt]));
+	},
+
+	testEvery: function() {
+		var array = this.createArray([2, 3.5, 4]);
+		this.assertTrue(this.invoke(array, &quot;every&quot;, [JW.isNumber]));
+		this.assertFalse(this.invoke(array, &quot;every&quot;, [JW.isInt]));
+		this.assertFalse(this.invoke(array, &quot;every&quot;, [JW.isString]));
+
+		this.setExpectedOutput(
+			&quot;2 at 0&quot;,
+			&quot;3.5 at 1&quot;,
+			&quot;4 at 2&quot;
+		);
+		this.invoke(array, &quot;every&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+		}, this]);
+
+		this.setExpectedOutput(
+			&quot;2 at 0&quot;,
+			&quot;3.5 at 1&quot;
+		);
+		this.invoke(array, &quot;every&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+			return JW.isInt(item);
+		}, this]);
+	},
+
+	testSome: function() {
+		var array = this.createArray([2, 3.5, 4]);
+		this.assertTrue(this.invoke(array, &quot;some&quot;, [JW.isNumber]));
+		this.assertTrue(this.invoke(array, &quot;some&quot;, [JW.isInt]));
+		this.assertFalse(this.invoke(array, &quot;some&quot;, [JW.isString]));
+
+		this.setExpectedOutput(
+			&quot;2 at 0&quot;
+		);
+		this.invoke(array, &quot;some&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+		}, this]);
+
+		this.setExpectedOutput(
+			&quot;2 at 0&quot;,
+			&quot;3.5 at 1&quot;
+		);
+		this.invoke(array, &quot;some&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+			return !JW.isInt(item);
+		}, this]);
+	},
+
+	testEach: function() {
+		var array = this.createArray([2, 3.5, 4]);
+		this.setExpectedOutput(
+			&quot;2 at 0&quot;,
+			&quot;3.5 at 1&quot;,
+			&quot;4 at 2&quot;
+		);
+		this.invoke(array, &quot;each&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+			return false;
+		}, this]);
+	},
+
+	testSearch: function() {
+		var array = this.createArray([2.5, 3.5, 4]);
+		this.assertStrictEqual(4, this.invoke(array, &quot;search&quot;, [JW.isInt]));
+	},
+
+	testFind: function() {
+		var array = this.createArray([2.5, 3.5, 4]);
+		this.assertStrictEqual(2, this.invoke(array, &quot;find&quot;, [JW.isInt]));
+	},
+
+	testFilter: function() {
+		var array = this.createArray([2, 3.5, 4]);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;filter&quot;, [JW.isInt]), [2, 4]));
+		this.assertTrue(this.invoke(array, &quot;$filter&quot;, [JW.isInt]).equal([2, 4]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 3.5, 4]]));
+	},
+
+	testCount: function() {
+		var array = this.createArray([2, 3.5, 4]);
+		this.assertStrictEqual(2, this.invoke(array, &quot;count&quot;, [JW.isInt]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 3.5, 4]]));
+	},
+
+	testMap: function() {
+		var array = this.createArray([2, 4]);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;map&quot;, [function(x) { return x + 1; }]), [3, 5]));
+		this.assertTrue(this.invoke(array, &quot;$map&quot;, [function(x) { return x + 1; }]).equal([3, 5]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4]]));
+	},
+
+	testToSorted: function() {
+		var array = this.createArray([3, 2, 4]);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSorted&quot;), [2, 3, 4]));
+		this.assertTrue(this.invoke(array, &quot;$toSorted&quot;).equal([2, 3, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSorted&quot;, [null, null, -1]), [4, 3, 2]));
+		this.assertTrue(this.invoke(array, &quot;$toSorted&quot;, [null, null, -1]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSorted&quot;, [function(x) { return -x; }]), [4, 3, 2]));
+		this.assertTrue(this.invoke(array, &quot;$toSorted&quot;, [function(x) { return -x; }]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSorted&quot;, [function(x) { return -x; }, null, -1]), [2, 3, 4]));
+		this.assertTrue(this.invoke(array, &quot;$toSorted&quot;, [function(x) { return -x; }, null, -1]).equal([2, 3, 4]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[3, 2, 4]]));
+	},
+
+	testToSortedComparing: function() {
+		var array = this.createArray([3, 2, 4]);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSortedComparing&quot;), [2, 3, 4]));
+		this.assertTrue(this.invoke(array, &quot;$toSortedComparing&quot;).equal([2, 3, 4]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSortedComparing&quot;, [null, null, -1]), [4, 3, 2]));
+		this.assertTrue(this.invoke(array, &quot;$toSortedComparing&quot;, [null, null, -1]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSortedComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]), [4, 3, 2]));
+		this.assertTrue(this.invoke(array, &quot;$toSortedComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]).equal([4, 3, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;toSortedComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, null, -1]), [2, 3, 4]));
+		this.assertTrue(this.invoke(array, &quot;$toSortedComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, null, -1]).equal([2, 3, 4]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[3, 2, 4]]));
+	},
+
+	testGetSortingKeys: function() {
+		var array = this.createArray([3, 2, 4]);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeys&quot;), [1, 0, 2]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeys&quot;).equal([1, 0, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeys&quot;, [null, null, -1]), [2, 0, 1]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeys&quot;, [null, null, -1]).equal([2, 0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeys&quot;, [function(x) { return -x; }]), [2, 0, 1]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeys&quot;, [function(x) { return -x; }]).equal([2, 0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeys&quot;, [function(x) { return -x; }, null, -1]), [1, 0, 2]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeys&quot;, [function(x) { return -x; }, null, -1]).equal([1, 0, 2]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[3, 2, 4]]));
+	},
+
+	testGetSortingKeysComparing: function() {
+		var array = this.createArray([3, 2, 4]);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeysComparing&quot;), [1, 0, 2]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeysComparing&quot;).equal([1, 0, 2]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeysComparing&quot;, [null, null, -1]), [2, 0, 1]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeysComparing&quot;, [null, null, -1]).equal([2, 0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeysComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]), [2, 0, 1]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeysComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]).equal([2, 0, 1]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;getSortingKeysComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, null, -1]), [1, 0, 2]));
+		this.assertTrue(this.invoke(array, &quot;$getSortingKeysComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, null, -1]).equal([1, 0, 2]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[3, 2, 4]]));
+	},
+
+	testIndex: function() {
+		var array = this.createArray([2, 4]);
+		this.assertTrue(JW.Map.equal(this.invoke(array, &quot;index&quot;, [function(x) { return x + 1; }]), {&quot;3&quot;: 2, &quot;5&quot;: 4}));
+		this.assertTrue(this.invoke(array, &quot;$index&quot;, [function(x) { return x + 1; }]).equal({&quot;3&quot;: 2, &quot;5&quot;: 4}));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4]]));
+	},
+
+	testToSet: function() {
+		var items = [new JW.Proxy(), new JW.Proxy()];
+		var array = this.createArray(items);
+		this.assertTrue(JW.Set.equal(this.invoke(array, &quot;toSet&quot;), items));
+		this.assertTrue(this.invoke(array, &quot;$toSet&quot;).equal(items));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [items]));
+	},
+
+	testAsSet: function() {
+		var items = [new JW.Proxy(), new JW.Proxy()];
+		var array = this.createArray(items);
+		this.assertTrue(JW.Set.equal(this.invoke(array, &quot;asSet&quot;), items));
+		this.assertTrue(this.invoke(array, &quot;$asSet&quot;).equal(items));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [items]));
+	},
+
+	testBackEvery: function() {
+		var array = this.createArray([2, 3.5, 4]);
+		this.assertTrue(this.invoke(array, &quot;backEvery&quot;, [JW.isNumber]));
+		this.assertFalse(this.invoke(array, &quot;backEvery&quot;, [JW.isInt]));
+		this.assertFalse(this.invoke(array, &quot;backEvery&quot;, [JW.isString]));
+
+		this.setExpectedOutput(
+			&quot;4 at 2&quot;,
+			&quot;3.5 at 1&quot;,
+			&quot;2 at 0&quot;
+		);
+		this.invoke(array, &quot;backEvery&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+		}, this]);
+
+		this.setExpectedOutput(
+			&quot;4 at 2&quot;,
+			&quot;3.5 at 1&quot;
+		);
+		this.invoke(array, &quot;backEvery&quot;, [function(item, index) {
+			this.output(item + &quot; at &quot; + index);
+			return JW.isInt(item);
+		}, this]);
+	},
+
+	testAdd: function() {
+		var array = this.createArray([2, 4]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 2 to 3&quot;,
+			&quot;Spliced -[] +[2:[3]] to [2,4]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;add&quot;, [3]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3]]));
+	},
+
+	testTryAdd: function() {
+		var array = this.createArray([2, 4]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 2 to 3&quot;,
+			&quot;Spliced -[] +[2:[3]] to [2,4]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(this.invoke(array, &quot;tryAdd&quot;, [3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3]]));
+	},
+
+	testAddAll: function() {
+		var array = this.createArray([2, 4]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 2 to 4&quot;,
+			&quot;Spliced -[] +[2:[3,5]] to [2,4]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;addAll&quot;, [[3, 5]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3, 5]]));
+	},
+
+	testTryAddAll: function() {
+		var array = this.createArray([2, 4]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 2 to 4&quot;,
+			&quot;Spliced -[] +[2:[3,5]] to [2,4]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(this.invoke(array, &quot;tryAddAll&quot;, [[3, 5]]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3, 5]]));
+	},
+
+	testSet: function() {
+		var array = this.createArray([2, 4]);
+
+		this.setObservableOutput();
+		this.assertStrictEqual(4, this.invoke(array, &quot;set&quot;, [4, 1]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4]]));
+
+		this.setObservableOutput(
+			&quot;Replaced 4 with 3 at 1&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(array, &quot;set&quot;, [3, 1]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 3]]));
+	},
+
+	testTrySet: function() {
+		var array = this.createArray([2, 4]);
+
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(array, &quot;trySet&quot;, [4, 1]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4]]));
+
+		this.setObservableOutput(
+			&quot;Replaced 4 with 3 at 1&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(array, &quot;trySet&quot;, [3, 1]).value);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 3]]));
+	},
+
+	testRemove: function() {
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 3 to 2&quot;,
+			&quot;Spliced -[1:[4]] +[] to [2,4,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(array, &quot;remove&quot;, [1]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 3]]));
+	},
+
+	testTryRemove: function() {
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 3 to 2&quot;,
+			&quot;Spliced -[1:[4]] +[] to [2,4,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(array, &quot;tryRemove&quot;, [1]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 3]]));
+	},
+
+	testRemoveAll: function() {
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput();
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;removeAll&quot;, [1, 0]), []));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3]]));
+
+		this.setObservableOutput(
+			&quot;Changed length from 3 to 1&quot;,
+			&quot;Spliced -[1:[4,3]] +[] to [2,4,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;removeAll&quot;, [1, 2]), [4, 3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2]]));
+
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput();
+		this.assertTrue(this.invoke(array, &quot;$removeAll&quot;, [1, 0]).equal([]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3]]));
+
+		this.setObservableOutput(
+			&quot;Changed length from 3 to 1&quot;,
+			&quot;Spliced -[1:[4,3]] +[] to [2,4,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(this.invoke(array, &quot;$removeAll&quot;, [1, 2]).equal([4, 3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2]]));
+	},
+
+	testTryRemoveAll: function() {
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(array, &quot;tryRemoveAll&quot;, [1, 0]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3]]));
+
+		this.setObservableOutput(
+			&quot;Changed length from 3 to 1&quot;,
+			&quot;Spliced -[1:[4,3]] +[] to [2,4,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;tryRemoveAll&quot;, [1, 2]), [4, 3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2]]));
+	},
+
+	testRemoveItem: function() {
+		var array = this.createArray([2, 4, 3, 4]);
+		this.setObservableOutput();
+		this.invoke(array, &quot;removeItem&quot;, [1]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3, 4]]));
+
+		this.setObservableOutput(
+			&quot;Changed length from 4 to 3&quot;,
+			&quot;Spliced -[1:[4]] +[] to [2,4,3,4]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;removeItem&quot;, [4]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 3, 4]]));
+	},
+
+	testRemoveItems: function() {
+		var a = new JW.Proxy(&quot;a&quot;);
+		var b = new JW.Proxy(&quot;b&quot;);
+		var c = new JW.Proxy(&quot;c&quot;);
+		var d = new JW.Proxy(&quot;d&quot;);
+		var array = this.createArray([a, b, a, c], function(x) { return x.value; });
+
+		this.setObservableOutput();
+		this.invoke(array, &quot;removeItems&quot;, [[]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[a, b, a, c]]));
+
+		this.setObservableOutput();
+		this.invoke(array, &quot;removeItems&quot;, [[d]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[a, b, a, c]]));
+
+		this.setObservableOutput(
+			&quot;Changed length from 4 to 1&quot;,
+			&quot;Spliced -[0:[a],2:[a,c]] +[] to [a,b,a,c]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;removeItems&quot;, [[a, c]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[b]]));
+	},
+
+	testPop: function() {
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 3 to 2&quot;,
+			&quot;Spliced -[2:[3]] +[] to [2,4,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(3, this.invoke(array, &quot;pop&quot;));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4]]));
+	},
+
+	testMove: function() {
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput();
+		this.assertStrictEqual(4, this.invoke(array, &quot;move&quot;, [1, 1]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3]]));
+
+		this.setObservableOutput(
+			&quot;Moved 4 from 1 to 0&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(array, &quot;move&quot;, [1, 0]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[4, 2, 3]]));
+	},
+
+	testTryMove: function() {
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(array, &quot;tryMove&quot;, [1, 1]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3]]));
+
+		this.setObservableOutput(
+			&quot;Moved 4 from 1 to 0&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertStrictEqual(4, this.invoke(array, &quot;tryMove&quot;, [1, 0]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[4, 2, 3]]));
+	},
+
+	testClear: function() {
+		var array = this.createArray();
+
+		this.setObservableOutput();
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;clear&quot;), []));
+		this.assertTrue(this.invoke(array, &quot;$clear&quot;).equal([]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[]]));
+
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 3 to 0&quot;,
+			&quot;Cleared [2,4,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;clear&quot;), [2, 4, 3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[]]));
+
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 3 to 0&quot;,
+			&quot;Cleared [2,4,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(this.invoke(array, &quot;$clear&quot;).equal([2, 4, 3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[]]));
+	},
+
+	testTryClear: function() {
+		var array = this.createArray();
+
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(array, &quot;tryClear&quot;), []);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[]]));
+
+		var array = this.createArray([2, 4, 3]);
+
+		this.setObservableOutput(
+			&quot;Changed length from 3 to 0&quot;,
+			&quot;Cleared [2,4,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;tryClear&quot;), [2, 4, 3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[]]));
+	},
+
+	testSplice: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+
+		this.setObservableOutput();
+		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [], []);
+		var got = this.invoke(array, &quot;splice&quot;, [[
+			new JW.AbstractArray.IndexCount(1, 0),
+			new JW.AbstractArray.IndexCount(3, 0),
+		], [
+			new JW.AbstractArray.IndexItems(3, []),
+		]]);
+		JW.Tests.Collection.assertArraySpliceResult(this, expected, got);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		this.setObservableOutput(
+			&quot;Spliced -[1:[2,3],4:[5,6]] +[0:[7,8,10],5:[9]] to [1,2,3,4,5,6]&quot;,
+			&quot;Changed&quot;
+		);
+		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [
+			new JW.AbstractArray.IndexItems(1, [2, 3]),
+			new JW.AbstractArray.IndexItems(4, [5, 6])
+		], [
+			new JW.AbstractArray.IndexItems(0, [7, 8, 10]),
+			new JW.AbstractArray.IndexItems(5, [9])
+		]);
+		var got = this.invoke(array, &quot;splice&quot;, [[
+			new JW.AbstractArray.IndexCount(1, 1),
+			new JW.AbstractArray.IndexCount(2, 0),
+			new JW.AbstractArray.IndexCount(2, 1),
+			new JW.AbstractArray.IndexCount(3, 0),
+			new JW.AbstractArray.IndexCount(4, 2)
+		], [
+			new JW.AbstractArray.IndexItems(0, [7, 8]),
+			new JW.AbstractArray.IndexItems(2, []),
+			new JW.AbstractArray.IndexItems(2, [10]),
+			new JW.AbstractArray.IndexItems(4, []),
+			new JW.AbstractArray.IndexItems(5, [9])
+		]]);
+		JW.Tests.Collection.assertArraySpliceResult(this, expected, got);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[7, 8, 10, 1, 4, 9]]));
+	},
+
+	testTrySplice: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(array, &quot;trySplice&quot;, [[
+			new JW.AbstractArray.IndexCount(1, 0),
+			new JW.AbstractArray.IndexCount(3, 0),
+		], [
+			new JW.AbstractArray.IndexItems(3, []),
+		]]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		this.setObservableOutput(
+			&quot;Spliced -[1:[2,3],4:[5,6]] +[0:[7,8,10],5:[9]] to [1,2,3,4,5,6]&quot;,
+			&quot;Changed&quot;
+		);
+		var expected = new JW.AbstractArray.SpliceResult([1, 2, 3, 4, 5, 6], [
+			new JW.AbstractArray.IndexItems(1, [2, 3]),
+			new JW.AbstractArray.IndexItems(4, [5, 6])
+		], [
+			new JW.AbstractArray.IndexItems(0, [7, 8, 10]),
+			new JW.AbstractArray.IndexItems(5, [9])
+		]);
+		var got = this.invoke(array, &quot;trySplice&quot;, [[
+			new JW.AbstractArray.IndexCount(1, 1),
+			new JW.AbstractArray.IndexCount(2, 0),
+			new JW.AbstractArray.IndexCount(2, 1),
+			new JW.AbstractArray.IndexCount(3, 0),
+			new JW.AbstractArray.IndexCount(4, 2)
+		], [
+			new JW.AbstractArray.IndexItems(0, [7, 8]),
+			new JW.AbstractArray.IndexItems(2, []),
+			new JW.AbstractArray.IndexItems(2, [10]),
+			new JW.AbstractArray.IndexItems(4, []),
+			new JW.AbstractArray.IndexItems(5, [9])
+		]]);
+		JW.Tests.Collection.assertArraySpliceResult(this, expected, got);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[7, 8, 10, 1, 4, 9]]));
+	},
+
+	testReorder: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+
+		this.setObservableOutput();
+		this.invoke(array, &quot;reorder&quot;, [[0, 1, 2, 3, 4, 5]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		this.setObservableOutput(
+			&quot;Reordered [1,2,3,4,5,6] by [2,1,4,5,0,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;reorder&quot;, [[2, 1, 4, 5, 0, 3]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[5, 2, 1, 6, 3, 4]]));
+	},
+
+	testTryReorder: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+
+		this.setObservableOutput();
+		this.assertUndefined(this.invoke(array, &quot;tryReorder&quot;, [[0, 1, 2, 3, 4, 5]]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		this.setObservableOutput(
+			&quot;Reordered [1,2,3,4,5,6] by [2,1,4,5,0,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;tryReorder&quot;, [[2, 1, 4, 5, 0, 3]]), [1, 2, 3, 4, 5, 6]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[5, 2, 1, 6, 3, 4]]));
+	},
+
+	testSort: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+
+		this.setObservableOutput();
+		this.invoke(array, &quot;sort&quot;);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+
+		this.setObservableOutput(
+			&quot;Reordered [5,2,1,6,3,4] by [4,1,0,5,2,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;sort&quot;);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+
+		this.setObservableOutput(
+			&quot;Reordered [5,2,1,6,3,4] by [1,4,5,0,3,2]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;sort&quot;, [function(x) { return -x; }]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[6, 5, 4, 3, 2, 1]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+
+		this.setObservableOutput(
+			&quot;Reordered [5,2,1,6,3,4] by [1,4,5,0,3,2]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;sort&quot;, [null, null, -1]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[6, 5, 4, 3, 2, 1]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+
+		this.setObservableOutput(
+			&quot;Reordered [5,2,1,6,3,4] by [4,1,0,5,2,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;sort&quot;, [function(x) { return -x; }, this, -1]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+	},
+
+	testSortComparing: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+
+		this.setObservableOutput();
+		this.invoke(array, &quot;sortComparing&quot;);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+
+		this.setObservableOutput(
+			&quot;Reordered [5,2,1,6,3,4] by [4,1,0,5,2,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;sortComparing&quot;);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+
+		this.setObservableOutput(
+			&quot;Reordered [5,2,1,6,3,4] by [1,4,5,0,3,2]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;sortComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[6, 5, 4, 3, 2, 1]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+
+		this.setObservableOutput(
+			&quot;Reordered [5,2,1,6,3,4] by [1,4,5,0,3,2]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;sortComparing&quot;, [null, null, -1]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[6, 5, 4, 3, 2, 1]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+
+		this.setObservableOutput(
+			&quot;Reordered [5,2,1,6,3,4] by [4,1,0,5,2,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;sortComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, this, -1]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+	},
+
+	testMerge: function() {
+		var array = this.createArray([this.createArray([1, 2]), this.createArray([3, 4])]);
+		var merged = this.invoke(array, &quot;merge&quot;);
+		this.assertTrue(JW.Array.equal(merged, [1, 2, 3, 4]));
+
+		var $merged = this.invoke(array, &quot;$merge&quot;);
+		this.assertTrue($merged.equal([1, 2, 3, 4]));
+	},
+
+	testReverse: function() {
+		var array = this.createArray([1, 2, 3, 4]);
+
+		this.setObservableOutput(
+			&quot;Reordered [1,2,3,4] by [3,2,1,0]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;reverse&quot;);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[4, 3, 2, 1]]));
+	},
+
+	testToReversed: function() {
+		var array = this.createArray([1, 2, 3, 4]);
+
+		var result = this.invoke(array, &quot;toReversed&quot;);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4]]));
+		this.assertTrue(JW.Array.equal(result, [4, 3, 2, 1]));
+
+		var $result = this.invoke(array, &quot;$toReversed&quot;);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4]]));
+		this.assertTrue($result.equal([4, 3, 2, 1]));
+	},
+
+	testPerformSplice: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.setObservableOutput();
+		this.invoke(array, &quot;performSplice&quot;, [[1, 2, 3, 4, 5, 6]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		this.setObservableOutput(
+			&quot;Changed length from 6 to 7&quot;,
+			&quot;Spliced -[1:[2],3:[4]] +[2:[7],4:[8],6:[9]] to [1,2,3,4,5,6]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;performSplice&quot;, [[1, 3, 7, 5, 8, 6, 9]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 3, 7, 5, 8, 6, 9]]));
+	},
+
+	testPerformFilter: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.setObservableOutput();
+		this.invoke(array, &quot;performFilter&quot;, [[1, 2, 3, 4, 5, 6]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		this.setObservableOutput(
+			&quot;Changed length from 6 to 4&quot;,
+			&quot;Spliced -[1:[2],3:[4]] +[] to [1,2,3,4,5,6]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;performFilter&quot;, [[1, 3, 5, 6]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 3, 5, 6]]));
+	},
+
+	testPerformReorder: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.setObservableOutput();
+		this.invoke(array, &quot;performReorder&quot;, [[1, 2, 3, 4, 5, 6]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		this.setObservableOutput(
+			&quot;Reordered [1,2,3,4,5,6] by [2,1,4,5,0,3]&quot;,
+			&quot;Changed&quot;
+		);
+		this.invoke(array, &quot;performReorder&quot;, [[5, 2, 1, 6, 3, 4]]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[5, 2, 1, 6, 3, 4]]));
+	},
+
+	testDetectSplice: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(this.invoke(array, &quot;detectSplice&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		var expected = new JW.AbstractArray.SpliceParams([
+			new JW.AbstractArray.IndexCount(1, 2),
+			new JW.AbstractArray.IndexCount(4, 2)
+		], [
+			new JW.AbstractArray.IndexItems(0, [7, 8, 10]),
+			new JW.AbstractArray.IndexItems(5, [9])
+		]);
+		var got = this.invoke(array, &quot;detectSplice&quot;, [[7, 8, 10, 1, 4, 9]]);
+		JW.Tests.Collection.assertArraySpliceParams(this, expected, got);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+	},
+
+	testDetectFilter: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(this.invoke(array, &quot;detectFilter&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		var expected = new JW.AbstractArray.SpliceParams([
+			new JW.AbstractArray.IndexCount(1, 2),
+			new JW.AbstractArray.IndexCount(4, 2)
+		], []);
+		var got = this.invoke(array, &quot;detectFilter&quot;, [[1, 4]]);
+		JW.Tests.Collection.assertArraySpliceParams(this, expected, new JW.AbstractArray.SpliceParams(got, []));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+	},
+
+	testDetectReorder: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(this.invoke(array, &quot;detectReorder&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;detectReorder&quot;, [[5, 2, 1, 6, 3, 4]]), [2, 1, 4, 5, 0, 3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+	},
+
+	testDetectSort: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(this.invoke(array, &quot;detectSort&quot;));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;detectSort&quot;, [function(x) { return -x; }]), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;detectSort&quot;, [null, null, -1]), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertUndefined(this.invoke(array, &quot;detectSort&quot;, [function(x) { return -x; }, this, -1]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;detectSort&quot;), [4, 1, 0, 5, 2, 3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[5, 2, 1, 6, 3, 4]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;detectSort&quot;, [function(x) { return -x; }]), [1, 4, 5, 0, 3, 2]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[5, 2, 1, 6, 3, 4]]));
+	},
+
+	testDetectSortComparing: function() {
+		var array = this.createArray([1, 2, 3, 4, 5, 6]);
+		this.assertUndefined(this.invoke(array, &quot;detectSortComparing&quot;));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;detectSortComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;detectSortComparing&quot;, [null, null, -1]), [5, 4, 3, 2, 1, 0]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+		this.assertUndefined(this.invoke(array, &quot;detectSortComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }, this, -1]), [0, 1, 2, 3, 4, 5]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[1, 2, 3, 4, 5, 6]]));
+
+		var array = this.createArray([5, 2, 1, 6, 3, 4]);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;detectSortComparing&quot;), [4, 1, 0, 5, 2, 3]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[5, 2, 1, 6, 3, 4]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;detectSortComparing&quot;, [function(x, y) { return -JW.cmp(x, y); }]), [1, 4, 5, 0, 3, 2]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[5, 2, 1, 6, 3, 4]]));
+	},
+
+	testCollapse: function() {
+		var a = [1, 2, 3];
+		var b = [5, 6];
+		var c = [8, 9];
+		var d = [b, 7, c];
+		var array = this.createArray([a, 4, d, 10]);
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;collapse&quot;), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[a, 4, d, 10]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;collapse&quot;, [1]), [1, 2, 3, 4, b, 7, c, 10]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[a, 4, d, 10]]));
+		this.assertTrue(JW.Array.equal(this.invoke(array, &quot;collapse&quot;, [0]), [a, 4, d, 10]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[a, 4, d, 10]]));
+	},
+
+	testEqual: function() {
+		var array = this.createArray([2, 3]);
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 3]]));
+		this.assertFalse(this.invoke(array, &quot;equal&quot;, [[2, 3, 4]]));
+		this.assertFalse(this.invoke(array, &quot;equal&quot;, [[2]]));
+		this.assertFalse(this.invoke(array, &quot;equal&quot;, [[3, 2]]));
+		this.assertFalse(this.invoke(array, &quot;equal&quot;, [[2, 4]]));
+		this.assertFalse(this.invoke(array, &quot;equal&quot;, [[1, 3]]));
+	},
+
+	testBinarySearch: function() {
+		this.assertStrictEqual(0, this.invoke(this.createArray(), &quot;binarySearch&quot;, [4]));
+		this.assertStrictEqual(0, this.invoke(this.createArray([1]), &quot;binarySearch&quot;, [0]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1]), &quot;binarySearch&quot;, [1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1]), &quot;binarySearch&quot;, [2]));
+		this.assertStrictEqual(0, this.invoke(this.createArray([1, 3]), &quot;binarySearch&quot;, [0]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1, 3]), &quot;binarySearch&quot;, [1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1, 3]), &quot;binarySearch&quot;, [2]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([1, 3]), &quot;binarySearch&quot;, [3]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([1, 3]), &quot;binarySearch&quot;, [4]));
+		this.assertStrictEqual(0, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [-2]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [0]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [.5]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [1]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [2]));
+		this.assertStrictEqual(3, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [4]));
+		this.assertStrictEqual(3, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [5]));
+		this.assertStrictEqual(4, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [7]));
+		this.assertStrictEqual(4, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [9]));
+		this.assertStrictEqual(5, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [10]));
+		this.assertStrictEqual(5, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [14]));
+		this.assertStrictEqual(6, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [15]));
+		this.assertStrictEqual(6, this.invoke(this.createArray([0, 1, 4, 7, 10, 15]), &quot;binarySearch&quot;, [18]));
+	},
+
+	testBinarySearchBack: function() {
+		this.assertStrictEqual(0, this.invoke(this.createArray(), &quot;binarySearch&quot;, [4, null, null, -1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1]), &quot;binarySearch&quot;, [0, null, null, -1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([1]), &quot;binarySearch&quot;, [1, null, null, -1]));
+		this.assertStrictEqual(0, this.invoke(this.createArray([1]), &quot;binarySearch&quot;, [2, null, null, -1]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([3, 1]), &quot;binarySearch&quot;, [0, null, null, -1]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([3, 1]), &quot;binarySearch&quot;, [1, null, null, -1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([3, 1]), &quot;binarySearch&quot;, [2, null, null, -1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([3, 1]), &quot;binarySearch&quot;, [3, null, null, -1]));
+		this.assertStrictEqual(0, this.invoke(this.createArray([3, 1]), &quot;binarySearch&quot;, [4, null, null, -1]));
+		this.assertStrictEqual(6, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [-2, null, null, -1]));
+		this.assertStrictEqual(6, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [0, null, null, -1]));
+		this.assertStrictEqual(5, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [.5, null, null, -1]));
+		this.assertStrictEqual(5, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [1, null, null, -1]));
+		this.assertStrictEqual(4, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [2, null, null, -1]));
+		this.assertStrictEqual(4, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [4, null, null, -1]));
+		this.assertStrictEqual(3, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [5, null, null, -1]));
+		this.assertStrictEqual(3, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [7, null, null, -1]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [9, null, null, -1]));
+		this.assertStrictEqual(2, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [10, null, null, -1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [14, null, null, -1]));
+		this.assertStrictEqual(1, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [15, null, null, -1]));
+		this.assertStrictEqual(0, this.invoke(this.createArray([15, 10, 7, 4, 1, 0]), &quot;binarySearch&quot;, [18, null, null, -1]));
+	}
+});
+
+JW.Tests.Collection.AbstractArray = {};
+</pre>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Property.MapperTestCase = JW.Unit.TestCase.extend({
+	testMapper: function()
+	{
+		var source1 = new JW.Property(1);
+		var source2 = new JW.Property(&quot;a&quot;);
+		var target = new JW.Property();
+		
+		this.setExpectedOutput(&quot;Create 1a&quot;);
+		var mapper = new JW.Mapper([ source1, source2 ], {
+			target: target,
+			createValue: function(a, b) {
+				var result = &quot;&quot; + a + b;
+				this.output(&quot;Create &quot; + result);
+				return result;
+			},
+			destroyValue: function(result) {
+				this.output(&quot;Destroy &quot; + result);
+			},
+			scope: this
+		});
+		this.assertStrictEqual(&quot;1a&quot;, target.get());
+		
+		this.setExpectedOutput(&quot;Create 2a&quot;, &quot;Destroy 1a&quot;);
+		source1.set(2);
+		this.assertStrictEqual(&quot;2a&quot;, target.get());
+		
+		this.setExpectedOutput(&quot;Destroy 2a&quot;);
+		source2.set(null)
+		this.assertStrictEqual(null, target.get());
+		
+		this.setExpectedOutput(&quot;Create 2b&quot;);
+		source2.set(&quot;b&quot;);
+		this.assertStrictEqual(&quot;2b&quot;, target.get());
+		
+		this.setExpectedOutput(&quot;Destroy 2b&quot;);
+		mapper.destroy();
+		this.assertStrictEqual(null, target.get());
+		
+		source1.set(3);
+		source2.set(&quot;c&quot;);
+		this.assertStrictEqual(null, target.get());
+	},
+	
+	testWatchAndScope: function()
+	{
+		var source1 = new JW.Property(1);
+		var source2 = new JW.Property(&quot;a&quot;);
+		var value = 1;
+		var event = new JW.Event();
+		var property = new JW.Property();
+		var target = new JW.Property();
+		
+		var mapper = new JW.Mapper([ source1, source2 ], {
+			target: target,
+			createValue: function(a, b) {
+				this.assertStrictEqual(2, arguments.length);
+				return a + b + value;
+			},
+			scope: this
+		});
+		mapper.bind(event);
+		mapper.watch(property);
+		this.assertStrictEqual(&quot;1a1&quot;, target.get());
+		
+		source1.set(2);
+		this.assertStrictEqual(&quot;2a1&quot;, target.get());
+		
+		source2.set(&quot;b&quot;);
+		this.assertStrictEqual(&quot;2b1&quot;, target.get());
+		
+		value = 2;
+		this.assertStrictEqual(&quot;2b1&quot;, target.get());
+		
+		event.trigger(new JW.EventParams(this));
+		this.assertStrictEqual(&quot;2b2&quot;, target.get());
+		
+		value = 3;
+		property.set(false);
+		this.assertStrictEqual(&quot;2b3&quot;, target.get());
+		
+		this.setExpectedOutput();
+		mapper.destroy();
+		this.assertStrictEqual(null, target.get());
+		
+		source1.set(3);
+		source2.set(&quot;c&quot;);
+		event.trigger(new JW.EventParams(this));
+		property.set(true);
+		this.assertStrictEqual(null, target.get());
+	},
+	
+	testAutoTarget: function()
+	{
+		var source1 = new JW.Property(1);
+		var source2 = new JW.Property(&quot;a&quot;);
+		
+		var mapper = new JW.Mapper([ source1, source2 ], {
+			createValue: function(a, b) {
+				return a + b;
+			},
+			scope: this
+		});
+		var target = mapper.target;
+		this.assertStrictEqual(&quot;1a&quot;, target.get());
+		
+		source1.set(2);
+		this.assertStrictEqual(&quot;2a&quot;, target.get());
+		
+		source2.set(&quot;b&quot;);
+		this.assertStrictEqual(&quot;2b&quot;, target.get());
+		
+		mapper.destroy();
+		source1.set(3);
+		source2.set(&quot;c&quot;);
+	},
+	
+	testDestroyValue: function()
+	{
+		var source = new JW.Property(&quot;a&quot;);
+		
+		this.setExpectedOutput(
+			&quot;Create by a&quot;
+		);
+		var mapper = new JW.Mapper([ source ], {
+			createValue: function(source) {
+				this.output(&quot;Create by &quot; + source);
+				return source.toUpperCase();
+			},
+			destroyValue: function(target, source) {
+				this.output(&quot;Destroy &quot; + target + &quot; by &quot; + source);
+			},
+			scope: this
+		});
+		
+		var target = mapper.target;
+		this.assertStrictEqual(&quot;A&quot;, target.get());
+		
+		this.setExpectedOutput(
+			&quot;Create by b&quot;,
+			&quot;Destroy A by a&quot;
+		);
+		source.set(&quot;b&quot;);
+		this.assertStrictEqual(&quot;B&quot;, target.get());;
+		
+		this.setExpectedOutput(
+			&quot;Destroy B by b&quot;
+		);
+		mapper.destroy();
+		
+		this.setExpectedOutput();
+		source.set(&quot;c&quot;);
+	},
+	
+	testChaining: function()
+	{
+		var Document = function(name) {
+			Document._super.call(this);
+			this.name = name;
+		};
+		
+		JW.extend(Document, JW.Class);
+		
+		var Folder = function(name, document) {
+			Folder._super.call(this);
+			this.name = name;
+			this.selectedDocument = this.own(new JW.Property(document));
+		};
+		
+		JW.extend(Folder, JW.Class);
+		
+		var document1 = new Document(&quot;d1&quot;);
+		var document2 = new Document(&quot;d2&quot;);
+		var folder1 = new Folder(&quot;f1&quot;, document1);
+		var folder2 = new Folder(&quot;f2&quot;, document2);
+		
+		var selectedFolder = new JW.Property(folder1);
+		var fullName = new JW.Property();
+		
+		this.setExpectedOutput(null);
+		var updater = new JW.Updater([fullName], this.output, this);
+		
+		this.setExpectedOutput(&quot;f1/d1&quot;);
+		var mapper = new JW.Mapper([selectedFolder], {
+			createValue: function(folder) {
+				return new JW.Functor([folder.selectedDocument], function(document) {
+					return folder.name + &quot;/&quot; + document.name;
+				}, this, { target: fullName });
+			},
+			destroyValue: JW.destroy,
+			scope: this
+		});
+		
+		this.setExpectedOutput(&quot;f1/d2&quot;);
+		folder1.selectedDocument.set(document2);
+		
+		this.setExpectedOutput(&quot;f2/d2&quot;);
+		selectedFolder.set(folder2);
+		
+		this.setExpectedOutput();
+		mapper.destroy();
+		updater.destroy();
+	},
+	
+	testChaining2: function()
+	{
+		var Document = function(name) {
+			Document._super.call(this);
+			this.name = name;
+		};
+		
+		JW.extend(Document, JW.Class);
+		
+		var Folder = function(name, document) {
+			Folder._super.call(this);
+			this.name = name;
+			this.selectedDocument = this.own(new JW.Property(document));
+		};
+		
+		JW.extend(Folder, JW.Class);
+		
+		var document1 = new Document(&quot;d1&quot;);
+		var document2 = new Document(&quot;d2&quot;);
+		var folder1 = new Folder(&quot;f1&quot;, document1);
+		var folder2 = new Folder(&quot;f2&quot;, document2);
+		
+		var selectedFolder = new JW.Property(folder1);
+		var fullName = new JW.Property();
+		
+		this.setExpectedOutput(null);
+		var updater = new JW.Updater([fullName], this.output, this);
+		
+		this.setExpectedOutput(&quot;f1/d1&quot;);
+		var mapper = new JW.Mapper([selectedFolder], {
+			createValue: function(folder) {
+				return new JW.Mapper([folder.selectedDocument], {
+					target: fullName,
+					createValue: function(document) {
+						return folder.name + &quot;/&quot; + document.name;
+					},
+					scope: this
+				});
+			},
+			destroyValue: JW.destroy,
+			scope: this
+		});
+		
+		this.setExpectedOutput(&quot;f1/d2&quot;);
+		folder1.selectedDocument.set(document2);
+		
+		this.setExpectedOutput(&quot;f2/d2&quot;);
+		selectedFolder.set(folder2);
+		
+		this.setExpectedOutput(null);
+		mapper.destroy();
+		updater.destroy();
+	},
+	
+	testAcceptNull: function()
+	{
+		var source1 = new JW.Property(1);
+		var source2 = new JW.Property(&quot;a&quot;);
+		var target = new JW.Property();
+		
+		this.setExpectedOutput(&quot;Create 1a&quot;);
+		var mapper = new JW.Mapper([ source1, source2 ], {
+			target: target,
+			acceptNull: true,
+			createValue: function(a, b) {
+				var result = &quot;&quot; + a + b;
+				this.output(&quot;Create &quot; + result);
+				return result;
+			},
+			destroyValue: function(result) {
+				this.output(&quot;Destroy &quot; + result);
+			},
+			scope: this
+		});
+		this.assertStrictEqual(&quot;1a&quot;, target.get());
+		
+		this.setExpectedOutput(&quot;Create 2a&quot;, &quot;Destroy 1a&quot;);
+		source1.set(2);
+		this.assertStrictEqual(&quot;2a&quot;, target.get());
+		
+		this.setExpectedOutput(&quot;Create 2null&quot;, &quot;Destroy 2a&quot;);
+		source2.set(null)
+		this.assertStrictEqual(&quot;2null&quot;, target.get());
+		
+		this.setExpectedOutput(&quot;Create 2b&quot;, &quot;Destroy 2null&quot;);
+		source2.set(&quot;b&quot;);
+		this.assertStrictEqual(&quot;2b&quot;, target.get());
+		
+		this.setExpectedOutput(&quot;Destroy 2b&quot;);
+		mapper.destroy();
+		this.assertStrictEqual(null, target.get());
+		
+		source1.set(3);
+		source2.set(&quot;c&quot;);
+		this.assertStrictEqual(null, target.get());
+	},
+	
+	testNull: function()
+	{
+		var source = new JW.Property();
+		var target = new JW.Property();
+		var mapper = new JW.Mapper([ source ], {
+			target: target,
+			createValue: function() {
+				this.fail();
+			},
+			destroyValue: function() {
+				this.fail();
+			},
+			scope: this
+		});
+		mapper.destroy();
+	},
+	
+	testBlank: function()
+	{
+		var target = new JW.Property();
+		
+		this.setExpectedOutput(&quot;Create&quot;);
+		var mapper = new JW.Mapper([], {
+			target: target,
+			createValue: function() {
+				this.output(&quot;Create&quot;);
+				return &quot;a&quot;;
+			},
+			destroyValue: function(x) {
+				this.assertStrictEqual(&quot;a&quot;, x);
+				this.output(&quot;Destroy&quot;);
+			},
+			scope: this
+		});
+		this.assertStrictEqual(&quot;a&quot;, target.get());
+		
+		this.setExpectedOutput(&quot;Destroy&quot;);
+		mapper.destroy();
+		this.assertStrictEqual(null, target.get());
+	}
+});
+</pre>
+</body>
+</html>
