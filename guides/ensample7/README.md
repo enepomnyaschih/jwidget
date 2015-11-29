@@ -31,7 +31,7 @@ Create public/bower.json file in repository folder.
         "version": "0.0.0",
         "dependencies": {
             "jquery": "~2.1.0",
-            "jwidget": "1.0"
+            "jwidget": "~1.4.1"
         }
     }
 

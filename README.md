@@ -6,6 +6,22 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
+### 1.4.1 (November 29, 2015)
+
+[JW.Plugins.Router](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Plugins.Router) enhancements.
+
+Breaking changes:
+
+- [update](http://enepomnyaschih.github.io/jwidget/1.4/index.html#!/api/JW.Plugins.Router-method-update) method call is mandatory on initialization. It is not called in constructor anymore. This allows you to assign router instance to a class field before initial routing
+- [separator](http://enepomnyaschih.github.io/jwidget/1.4/index.html#!/api/JW.Plugins.Router-cfg-separator) can not be specified as string anymore. Instead, you may use a regular expression
+- Default [separator](http://enepomnyaschih.github.io/jwidget/1.4/index.html#!/api/JW.Plugins.Router-cfg-separator) considers questionmarks in addition to slashes
+- Only one router stack is supported at any moment. Two routers can not work in parallel - the second router is assumed to be a subrouter of the first one
+- [JW.UI.hash](http://enepomnyaschih.github.io/jwidget/1.4/index.html#!/api/JW.UI-static-property-hash) is two-way bound to location.hash now. Before, JW.UI.hash reassignment didn't impact location.hash
+
+New features:
+
+- Introduced redirections. See [JW.Plugins.Router](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Plugins.Router) class description
+
 ### 1.4 (November 7, 2015)
 
 New features:
