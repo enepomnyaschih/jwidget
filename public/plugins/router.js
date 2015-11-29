@@ -27,6 +27,8 @@ JW.Plugins = JW.Plugins || {};
  * URL router. Converts incoming URL part (hash or pathname) to a target object and passes tail string to it
  * for further routing.
  *
+ * ## How it works
+ *
  * Router takes an incoming string JW.Property (for example, JW.UI.hash), parses it and provides an outcoming
  * JW.Property. Outcoming property may contain any object you want. If it implements JW.Plugins.Router.Routable
  * interface (i.e. has {@link JW.Plugins.Router.Routable#setPath setPath} method), path tail is passed to it
@@ -34,7 +36,7 @@ JW.Plugins = JW.Plugins || {};
  *
  * Example:
  *
- * <iframe style="border: 1px solid green; padding: 10px;" width="700" height="300" src="http://enepomnyaschih.github.io/mt/1.4/router.html"></iframe>
+ * <iframe style="border: 1px solid green; padding: 10px;" width="700" height="300" src="http://enepomnyaschih.github.io/mt/1.4.1/router.html"></iframe>
  *
  * Source code of the example is not minified so you can review it using "View source code of the frame" context
  * menu item in your browser.
@@ -45,7 +47,7 @@ JW.Plugins = JW.Plugins || {};
  * - "inbox/*" URL is mapped to Inbox component
  * - "compose/*" URL is mapped to Compose component
  * - "settings/*" URL is mapped to Settings component
- * - blank URL is mapped to a simple JW.UI.Component as a blank page placeholder
+ * - blank URL is automatically redirected to inbox
  * - any other URL is mapped to NotFound component
  *
  * Code:
@@ -56,24 +58,30 @@ JW.Plugins = JW.Plugins || {};
  *             {@link JW.Plugins.Router#cfg-path path}: JW.UI.hash,
  *             {@link JW.Plugins.Router#cfg-handler handler}: {
  *                 {@link JW.Plugins.Router.Handler#cfg-routes routes}: {
- *                     "inbox"   : function() { return new Inbox();           },
- *                     "compose" : function() { return new Compose();         },
- *                     "settings": function() { return new Settings();        },
- *                     ""        : function() { return new JW.UI.Component(); }
+ *                     // passing path to inbox constructor lets us avoid an unneccessary redirection
+ *                     "inbox"   : function(path) { return new Inbox(path); },
+ *                     "compose" : function() { return new Compose(); },
+ *                     "settings": function() { return new Settings(); },
+ *                     ""        : function() { return new JW.Plugins.Router.Redirector("inbox"); }
  *                 },
  *                 {@link JW.Plugins.Router.Handler#cfg-notFound notFound}: function(route) { return new NotFound(route); }
  *             },
  *             {@link JW.Plugins.Router#cfg-scope scope}: this
  *         }));
+ *         this.router.{@link JW.Plugins.Router#update update}();
  *     },
  *
  *     renderPage: function() {
  *         return this.router.target;
  *     },
  *
+ * Notice that {@link JW.Plugins.Router#update update} method is called separately, after router construction.
+ * It is implemented so to make sure that this.router field is assigned before routing. Sometimes it is crucial
+ * (in an example below, this.router is used in {@link JW.Plugins.Router#cfg-handler handler}).
+ *
  * Inbox implements JW.Plugins.Router.Routable interface, and therefore provides further routing for all
  * "inbox/*" URL's. Applacation router passes URL tail string to
- * Inbox.{@link JW.Plugins.Router.Routable#setPath setPath} method to do that.
+ * Inbox constructor and {@link JW.Plugins.Router.Routable#setPath setPath} method to do that.
  *
  * - "inbox" URL is mapped to EmailList component
  * - "inbox/&lt;id&gt;" URL is mapped to Email component if an email with such ID exists
@@ -82,22 +90,26 @@ JW.Plugins = JW.Plugins || {};
  * Code:
  *
  *     renderContent: function() {
- *         return this.{@link JW.Class#own own}(new JW.Plugins.Router({
+ *         this.router = this.{@link JW.Class#own own}(new JW.Plugins.Router({
  *             {@link JW.Plugins.Router#cfg-path path}: this.path,
  *             {@link JW.Plugins.Router#cfg-handler handler}: function(id) {
  *                 if (!id) {
  *                     return new EmailList(this.emails);
  *                 }
  *                 var email = this.emails.search(JW.byValue("id", id));
- *                 return (email != null) ? new Email(email) : new EmailNotFound(id);
+ *                 return (email != null) ? new Email(email, this.router) : new EmailNotFound(id);
  *             },
  *             {@link JW.Plugins.Router#cfg-scope scope}: this
- *         })).{@link JW.Plugins.Router#property-target target};
+ *         }));
+ *         this.router.update();
+ *         return this.router.{@link JW.Plugins.Router#property-target target}
  *     },
  *
  *     {@link JW.Plugins.Router.Routable#setPath setPath}: function(path) {
  *         this.path.{@link JW.Property#set set}(path);
  *     }
+ *
+ * ## Routing flow
  *
  * Routing is performed in three steps:
  *
@@ -119,6 +131,56 @@ JW.Plugins = JW.Plugins || {};
  * - If target implements JW.Plugins.Router.Routable interface, its {@link JW.Plugins.Router.Routable#setPath setPath}
  * method is called with an argument string provided by separator callback
  *
+ * ## Redirection
+ *
+ * As of jWidget 1.4.1, router supports redirection logic. You can perform redirections manually, whenever you need,
+ * or automatically when some route is entered.
+ *
+ * For manual redirection, use router.{@link JW.Plugins.Router#method-redirect redirect} instance method or
+ * JW.Plugins.Router.{@link JW.Plugins.Router#static-method-redirect redirect} static method. The instance method performs redirection inside
+ * this router. The static method performs redirection in a current top router - it is easier to use, because you
+ * are not obligated to pass the router into child components explicitly, however, it is suitable only if you know
+ * exactly which router sits on top of router stack at any moment.
+ *
+ *     this.router.{@link JW.Plugins.Router#method-redirect redirect}("inbox"); // redirection in this router
+ *     JW.Plugins.Router.{@link JW.Plugins.Router#static-method-redirect redirect}("inbox"); // redirection in top router
+ *
+ * You may modify the redirection scope by passing a second argument. Passing 0 changes absolute path.
+ * This is useful for global navigation.
+ *
+ *     JW.Plugins.Router.{@link JW.Plugins.Router#static-method-redirect redirect}("inbox", 0); // absolute redirection
+ *
+ * Passing positive number performs redirection in N'th router up from the bottom of router stack. Assume that current
+ * full path is "inbox/123/reply" or "all-emails/123/reply" and you want to get back to "inbox" or "all-emails",
+ * depending on what is currently opened - here's the easiest way to do that:
+ *
+ *     JW.Plugins.Router.{@link JW.Plugins.Router#static-method-redirect redirect}("", 1); // absolute redirection shifted by 1
+ *
+ * Passing negative number performs redirection in -N'th router down from the top of router stack. For example,
+ * passing -1 gets you back to a parent router and changes its subpath to a specified one. Assume that your
+ * Inbox component needs to have a link to settings page. Considering that you don't know how many routers
+ * are active above inbox at the moment, it is a smart choice to use instance redirection with -1 shift.
+ *
+ *     this.router.{@link JW.Plugins.Router#method-redirect redirect}("settings", -1); // redirection in parent router
+ *
+ * Redirections should not occur inside router's update cycle, otherwise an error is thrown. That's why you can
+ * not call redirection methods inside a handler function. Use JW.Plugins.Router.Redirector instead - this is a
+ * UI component which waits for current isolate to complete and performs a redirection after that.
+ *
+ *     this.router = this.{@link JW.Class#own own}(new JW.Plugins.Router({
+ *         {@link JW.Plugins.Router#cfg-path path}: JW.UI.hash,
+ *         {@link JW.Plugins.Router#cfg-handler handler}: {
+ *             {@link JW.Plugins.Router.Handler#cfg-routes routes}: {
+ *                 "inbox" : function(path) { return new Inbox(path); },
+ *                 ""      : function() { return new JW.Plugins.Router.Redirector("inbox"); }
+ *             }
+ *         }
+ *         {@link JW.Plugins.Router#cfg-scope scope}: this
+ *     }));
+ *
+ * **IMPORTANT:** If you define custom {@link JW.Plugins.Router#cfg-separator separator} function, you must also define
+ * an opposite {@link JW.Plugins.Router#cfg-joiner joiner} function for redirections to work properly.
+ *
  * @extends JW.Class
  *
  * @constructor
@@ -130,6 +192,10 @@ JW.Plugins.Router = function(config) {
 	this.separator = config.separator || "/";
 	if (typeof this.separator === "string") {
 		this.separator = JW.Plugins.Router.makeSeparator(this.separator);
+	}
+	this.joiner = config.joiner || "/";
+	if (typeof this.joiner === "string") {
+		this.joiner = JW.Plugins.Router.makeJoiner(this.joiner);
 	}
 	this.handler = config.handler || {};
 	if (typeof this.handler === "object") {
@@ -143,7 +209,7 @@ JW.Plugins.Router = function(config) {
 	this.route = new JW.Property();
 	this.own(new JW.Switcher([this.route], {
 		init: function(route) {
-			this.target.set(this.handler.call(this.scope, route) || null);
+			this.target.set(this.handler.call(this.scope, route, this.arg) || null);
 		},
 		done: function(route) {
 			var target = this.target.get();
@@ -154,7 +220,9 @@ JW.Plugins.Router = function(config) {
 		},
 		scope: this
 	}));
-	this.update();
+	this.arg = null;
+	JW.Plugins.Router._routerStack.push(this);
+	this._active = false;
 	this.own(this.path.changeEvent.bind(this.update, this));
 };
 
@@ -184,20 +252,35 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	 * Separator can be specified as a string. In this case, it is built with JW.Plugins.Router#makeSeparator
 	 * method - see it for more details.
 	 *
+	 * **IMPORTANT:** If you define custom {@link JW.Plugins.Router#cfg-separator separator} function, you must also define
+	 * an opposite {@link JW.Plugins.Router#cfg-joiner joiner} function for redirections to work properly.
+	 *
+	 * Defaults to "/".
+	 */
+	/**
+	 * @cfg {Function|string} joiner
+	 *
+	 * `joiner(route: string, arg: string): string`
+	 *
+	 * Path joiner. Opposite to #separator. Used for redirections. Joins incoming route and argument to a full pass.
+	 *
+	 * Joiner can be specified as a string. In this case, it is built with JW.Plugins.Router#makeJoiner
+	 * method - see it for more details.
+	 *
 	 * Defaults to "/".
 	 */
 	/**
 	 * @cfg {Function|JW.Plugins.Router.Handler} handler
 	 *
-	 * `handler(route: string): JW.Plugins.Router.Routable`
+	 * `handler(route: string, arg: string): JW.Plugins.Router.Routable`
 	 *
 	 * Route handler. Creates a routable object by route string.
 	 *
 	 * Example:
 	 *
-	 *     handler: function(route) {
+	 *     handler: function(route, arg) {
 	 *         var doc = this.docs.get(route);
-	 *         return doc ? doc.createView(this.data) : new Page404(route);
+	 *         return doc ? doc.createView(this.data, arg) : new Page404(route);
 	 *     },
 	 *     scope: this
 	 *
@@ -215,8 +298,20 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	/**
 	 * @property {JW.Property} route `<string>` Current route. Read-only.
 	 */
+	/**
+	 * @property {string} arg Current path argument. Assigned right before #route modification. Read-only.
+	 */
 
 	destroyObject: function() {
+		if (this._active) {
+			throw new Error("Router can not be destroyed during its update cycle.");
+		}
+		if (JW.Array.getLast(JW.Plugins.Router._routerStack) !== this) {
+			throw new Error("Router can not be destroyed because it is not on top of router stack. " +
+				"Make sure that you don't create two subrouters in parallel. " +
+				"Make sure that you destroy all routers correctly.");
+		}
+		JW.Plugins.Router._routerStack.pop();
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -237,98 +332,233 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	 * Updates route focibly.
 	 */
 	update: function() {
+		if (this._active) {
+			throw new Error("Can't update router because its update cycle is already active. " +
+				"Suggest using JW.Plugins.Router.Redirector or moving URL redirection to an asyncronous callback.");
+		}
+		this._active = true;
 		var path = this.path.get();
 		var pair = (path == null) ? null : this.separator.call(this.scope, path);
 		var route = pair;
-		var arg = null;
+		this.arg = null;
 		if (pair != null && (typeof pair !== "string")) {
 			route = pair[0];
-			arg = pair[1];
+			this.arg = pair[1];
 		}
 		this.route.set(route || "");
 		var target = this.target.get();
 		if (target != null && (typeof target.setPath === "function")) {
-			target.setPath(arg);
+			target.setPath(this.arg);
 		}
+		this._active = false;
+	},
+
+	/**
+	 * Calls #joiner function with specified arguments.
+	 *
+	 * @param {string} route The route.
+	 * @param {string} arg=null The path argument.
+	 * @returns {string} Path string.
+	 */
+	join: function(route, arg) {
+		return this.joiner.call(this.scope, route, arg);
+	},
+
+	/**
+	 * Returns full redirection path pretending this router being on top of router stack.
+	 * See **Redirection** topic in class description for more details.
+	 *
+	 * @param {string} path Redirection path.
+	 * @param {number} [scope] Redirection scope. Defaults to current scope.
+	 * @returns {string} Full path string.
+	 */
+	getFullPath: function(path, scope) {
+		return JW.Plugins.Router.getFullPath(path, this, scope);
+	},
+
+	/**
+	 * Performs redirection to result of #method-getFullPath method.
+	 *
+	 * @param {string} path Redirection path.
+	 * @param {number} [scope] Redirection scope. Defaults to current scope.
+	 */
+	redirect: function(path, scope) {
+		JW.Plugins.Router.redirect(path, this, scope);
 	}
 });
 
-/**
- * @method makeSeparator
- *
- * Converts separator symbol/string to separator function. A first token of path before separator symbol is used as a
- * route, and a remaining part of the path after separator symbol is used as an argument. Leading separator symbols are
- * trimmed. If separator symbol is not found in trimmed path, the entire path is used as a route, and argument is null.
- *
- * Examples:
- *
- * <table>
- *   <tr><td>Incoming path</td><td>Separator</td><td>Resulting route</td><td>Resulting argument</td></tr>
- *   <tr><td>"" or null</td><td>"/"</td><td>""</td><td>null</td></tr>
- *   <tr><td>"inbox"</td><td>"/"</td><td>"inbox"</td><td>null</td></tr>
- *   <tr><td>"inbox/"</td><td>"/"</td><td>"inbox"</td><td>""</td></tr>
- *   <tr><td>"inbox/1"</td><td>"/"</td><td>"inbox"</td><td>"1"</td></tr>
- *   <tr><td>"inbox/1/edit"</td><td>"/"</td><td>"inbox"</td><td>"1/edit"</td></tr>
- *   <tr><td>"/inbox"</td><td>"/"</td><td>"inbox"</td><td>null</td></tr>
- *   <tr><td>"/inbox/"</td><td>"/"</td><td>"inbox"</td><td>""</td></tr>
- *   <tr><td>"///inbox///"</td><td>"/"</td><td>"inbox"</td><td>"//"</td></tr>
- * </table>
- *
- * @static
- * @param {string} separator Separator symbol/string.
- * @returns {Function} Separator function.
- */
-JW.Plugins.Router.makeSeparator = function(separator) {
-	var trimmer = new RegExp("^(?:" + separator.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&') + ")*");
-	return function(path) {
-		path = path.replace(trimmer, "");
-		var index = path.indexOf(separator);
-		if (index === -1) {
-			return path;
-		}
-		return [
-			path.substr(0, index),
-			path.substr(index + separator.length)
-		];
-	};
-};
+JW.apply(JW.Plugins.Router, {
+	_routerStack: [],
 
-/**
- * @method makeHandler
- *
- * Converts handler configuration object to handler function. Configuration has two optional fields:
- *
- * - {@link JW.Plugins.Router.Handler#cfg-routes routes} is a mapping from route string to a handler function for
- * this specific route.
- * - {@link JW.Plugins.Router.Handler#cfg-notFound notFound} is a handler function for all routes which don't
- * match {@link JW.Plugins.Router.Handler#cfg-routes routes} mapping.
- *
- * Example:
- *
- *     this.router = this.{@link JW.Class#own own}(new JW.Plugins.Router({
- *         {@link JW.Plugins.Router#cfg-path path}: JW.UI.hash,
- *         {@link JW.Plugins.Router#cfg-handler handler}: {
- *             {@link JW.Plugins.Router.Handler#cfg-routes routes}: {
- *                 "inbox"   : function() { return new Inbox();           },
- *                 "compose" : function() { return new Compose();         },
- *                 "settings": function() { return new Settings();        },
- *                 ""        : function() { return new JW.UI.Component(); }
- *             },
- *             {@link JW.Plugins.Router.Handler#cfg-notFound notFound}: function(route) { return new NotFound(route); }
- *         },
- *         {@link JW.Plugins.Router#cfg-scope scope}: this
- *     }));
- *
- * @static
- * @param {JW.Plugins.Router.Handler} configuration Handler configuration object.
- * @returns {Function} Handler function.
- */
-JW.Plugins.Router.makeHandler = function(config) {
-	return function(route) {
-		var handler = config.routes[route] || config.notFound;
-		return handler ? handler.call(this, route) : null;
-	};
-};
+	/**
+	 * Returns full redirection path pretending the specified router being on top of router stack.
+	 * See **Redirection** topic in class description for more details.
+	 *
+	 * @static
+	 * @param {string} path Redirection path.
+	 * @param {JW.Plugins.Router} [router] Top router to pretend. Defaults to top router in current router stack.
+	 * @param {number} [scope] Redirection scope. Defaults to current scope.
+	 * @returns {string} Full path string.
+	 */
+	getFullPath: function(path, router, scope) {
+		if (typeof router === "number") {
+			scope = router;
+			router = null;
+		}
+		var routers = JW.Plugins.Router._routerStack;
+		if (routers.length == 0) {
+			throw new Error("No routers exist in the system.");
+		}
+		var routerIndex = router ? JW.Array.indexOf(routers, router) : (routers.length - 1);
+		if (routerIndex === -1) {
+			throw new Error("Current router stack doesn't contain the specified router.");
+		}
+		var index = (scope == null) ? routerIndex :
+			(scope >= 0) ? scope : (routerIndex + scope);
+		if (index < 0 || index > routerIndex) {
+			throw new Error(router ?
+				("The specified router has index " + routerIndex + " in current router stack") :
+				("Current router stack contains only " + routers.length + " routers."));
+		}
+		for (var i = index - 1; i >= 0; --i) {
+			path = routers[i].join(routers[i].route.get(), path);
+		}
+		return path;
+	},
+
+	/**
+	 * Performs redirection to result of #static-method-getFullPath method.
+	 *
+	 * @static
+	 * @param {string} path Redirection path.
+	 * @param {JW.Plugins.Router} [router] Top router to pretend. Defaults to top router in current router stack.
+	 * @param {number} [scope] Redirection scope. Defaults to current scope.
+	 */
+	redirect: function(path, router, scope) {
+		if (typeof router === "number") {
+			scope = router;
+			router = null;
+		}
+		var fullPath;
+		try {
+			fullPath = JW.Plugins.Router.getFullPath(path, router, scope);
+			if (JW.Plugins.Router._routerStack[0]._active) {
+				throw new Error("Update cycle is already active. " +
+					"Suggest using JW.Plugins.Router.Redirector or moving URL redirection to an asyncronous callback.");
+			}
+		} catch (e) {
+			throw new Error("Can not perform URL redirection to " + path + " in scope " +
+				((scope == null) ? "CURRENT" : scope) + ": " + e.message);
+		}
+		JW.Plugins.Router._routerStack[0].path.set(fullPath);
+	},
+
+	/**
+	 * @method makeSeparator
+	 *
+	 * Converts separator symbol/string to separator function. A first token of path before separator symbol is used as a
+	 * route, and a remaining part of the path after separator symbol is used as an argument. Leading separator symbols are
+	 * trimmed. If separator symbol is not found in trimmed path, the entire path is used as a route, and argument is null.
+	 *
+	 * Examples:
+	 *
+	 * <table>
+	 *   <tr><td>Incoming path</td><td>Separator</td><td>Resulting route</td><td>Resulting argument</td></tr>
+	 *   <tr><td>"" or null</td><td>"/"</td><td>""</td><td>null</td></tr>
+	 *   <tr><td>"inbox"</td><td>"/"</td><td>"inbox"</td><td>null</td></tr>
+	 *   <tr><td>"inbox/"</td><td>"/"</td><td>"inbox"</td><td>""</td></tr>
+	 *   <tr><td>"inbox/1"</td><td>"/"</td><td>"inbox"</td><td>"1"</td></tr>
+	 *   <tr><td>"inbox/1/edit"</td><td>"/"</td><td>"inbox"</td><td>"1/edit"</td></tr>
+	 *   <tr><td>"/inbox"</td><td>"/"</td><td>"inbox"</td><td>null</td></tr>
+	 *   <tr><td>"/inbox/"</td><td>"/"</td><td>"inbox"</td><td>""</td></tr>
+	 *   <tr><td>"///inbox///"</td><td>"/"</td><td>"inbox"</td><td>"//"</td></tr>
+	 * </table>
+	 *
+	 * @static
+	 * @param {string} separator Separator symbol/string.
+	 * @returns {Function} Separator function.
+	 */
+	makeSeparator: function(separator) {
+		var trimmer = new RegExp("^(?:" + separator.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&') + ")*");
+		return function(path) {
+			path = path.replace(trimmer, "");
+			var index = path.indexOf(separator);
+			if (index === -1) {
+				return path;
+			}
+			return [
+				path.substr(0, index),
+				path.substr(index + separator.length)
+			];
+		};
+	},
+
+	/**
+	 * @method makeJoiner
+	 *
+	 * Converts joiner symbol/string to joiner function. Joins incoming route/argument pair via the specified string.
+	 * Leading joiner symbols in argument are trimmed. If argument is null or blank, returns route.
+	 *
+	 * Examples:
+	 *
+	 * <table>
+	 *   <tr><td>Incoming route</td><td>Incoming argument</td><td>Separator</td><td>Resulting path</td></tr>
+	 *   <tr><td>""</td><td>""</td><td>"/"</td><td>""</td></tr>
+	 *   <tr><td>"inbox"</td><td>""</td><td>"/"</td><td>"inbox"</td></tr>
+	 *   <tr><td>"inbox"</td><td>"1"</td><td>"/"</td><td>"inbox/1"</td></tr>
+	 *   <tr><td>"inbox"</td><td>"1/reply"</td><td>"/"</td><td>"inbox/1/reply"</td></tr>
+	 *   <tr><td>"inbox"</td><td>"/1/reply"</td><td>"/"</td><td>"inbox/1/reply"</td></tr>
+	 *   <tr><td>"inbox"</td><td>"/1/reply/"</td><td>"/"</td><td>"inbox/1/reply/"</td></tr>
+	 *   <tr><td>"inbox"</td><td>"///1/reply///"</td><td>"/"</td><td>"inbox/1/reply///"</td></tr>
+	 * </table>
+	 *
+	 * @static
+	 * @param {string} joiner Joiner symbol/string.
+	 * @returns {Function} Joiner function.
+	 */
+	makeJoiner: function(joiner) {
+		var trimmer = new RegExp("^(?:" + joiner.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&') + ")*");
+		return function(route, arg) {
+			return arg ? (route + joiner + arg.replace(trimmer, "")) : route;
+		};
+	},
+
+	/**
+	 * @method makeHandler
+	 *
+	 * Converts handler configuration object to handler function. Configuration has two optional fields:
+	 *
+	 * - {@link JW.Plugins.Router.Handler#cfg-routes routes} is a mapping from route string to a handler function for
+	 * this specific route. The function takes the path argument as an argument.
+	 * - {@link JW.Plugins.Router.Handler#cfg-notFound notFound} is a handler function for all routes which don't
+	 * match {@link JW.Plugins.Router.Handler#cfg-routes routes} mapping. The function takes route and path argument as
+	 * arguments.
+	 *
+	 * Example:
+	 *
+	 *     this.router = this.{@link JW.Class#own own}(new JW.Plugins.Router({
+	 *         {@link JW.Plugins.Router#cfg-path path}: JW.UI.hash,
+	 *         {@link JW.Plugins.Router#cfg-handler handler}: {
+	 *             {@link JW.Plugins.Router.Handler#cfg-routes routes}: {
+	 *                 "inbox"   : function(arg) { return new Inbox(arg);        },
+	 *                 ""        : function(arg) { return new JW.UI.Component(); }
+	 *             },
+	 *             {@link JW.Plugins.Router.Handler#cfg-notFound notFound}: function(route, arg) { return new NotFound(route, arg); }
+	 *         },
+	 *         {@link JW.Plugins.Router#cfg-scope scope}: this
+	 *     }));
+	 *
+	 * @static
+	 * @param {JW.Plugins.Router.Handler} configuration Handler configuration object.
+	 * @returns {Function} Handler function.
+	 */
+	makeHandler: function(config) {
+		return function(route, arg) {
+			return config.routes[route] ? config.routes[route].call(this, arg) :
+				config.notFound ? config.notFound.call(this, route, arg) : null;
+		};
+	}
+});
 
 /**
  * @class JW.Plugins.Router.Handler
@@ -337,11 +567,20 @@ JW.Plugins.Router.makeHandler = function(config) {
  * Converted to a function by JW.Plugins.Router#makeHandler method.
  */
 /**
- * @cfg {Object} routes Mapping from route string to a handler function for this specific route.
+ * @cfg {Object} routes
+ *
+ * Mapping from route string to a handler function for this specific route.
+ * The function is determined as:
+ *
+ * `route(arg: string): JW.Plugins.Router.Routable`
  */
 /**
- * @cfg {Function} notFound Function for all routes which don't match
- * {@link JW.Plugins.Router.Handler#cfg-routes routes} mapping.
+ * @cfg {Function} notFound
+ *
+ * Function for all routes which don't match {@link JW.Plugins.Router.Handler#cfg-routes routes} mapping.
+ * The function is determined as:
+ *
+ * `notFound(route: string, arg: string): JW.Plugins.Router.Routable`
  */
 
 /**
@@ -351,6 +590,34 @@ JW.Plugins.Router.makeHandler = function(config) {
  */
 /**
  * @method setPath
- * Accepts a new path argument from parent router for further routing.
+ *
+ * Accepts a new path argument from parent router for further routing. This method is optional.
+ *
  * @param {string} path Path argument.
  */
+
+/**
+ * @class JW.Plugins.Router.Redirector
+ *
+ * UI component which performs router redirection once current isolate is complete (asyncronously).
+ * See **Redirection** topic in JW.Plugins.Router class description for details.
+ *
+ * You may destroy redirector to cancel redirection before it occurs.
+ *
+ * @extends JW.UI.Component
+ * @constructor
+ * @param {string} path Redirection path.
+ * @param {JW.Plugins.Router} [router] Top router to pretend. Defaults to top router in current router stack.
+ * @param {number} [scope] Redirection scope. Defaults to current scope.
+ */
+JW.Plugins.Router.Redirector = function() {
+	JW.Plugins.Router.Redirector._super.call(this);
+	this.args = JW.args(arguments);
+	this.own(new JW.Timeout(this.redirect, this));
+};
+
+JW.extend(JW.Plugins.Router.Redirector, JW.UI.Component, {
+	redirect: function() {
+		JW.Plugins.Router.redirect.apply(JW.Plugins.Router, this.args);
+	}
+});
