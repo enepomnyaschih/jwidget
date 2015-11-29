@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-String'>/**
+</span> * @class
+ *
+ * String utility functions.
+ */
+JW.String = {
+<span id='JW-String-static-method-htmlEncode'>	/**
+</span>	 * Escapes special HTML symbols.
+	 * Converts symbols &amp;amp;, &amp;gt;, &amp;lt;, &amp;quot; to `&amp;amp;` `&amp;gt;` `&amp;lt;` `&amp;quot;` correspondingly.
+	 * @static
+	 * @param {string} str String.
+	 * @returns {string} Result.
+	 */
+	htmlEncode: function(target) {
+		return String(target).
+			replace(/&amp;/g, &quot;&amp;amp;&quot;).
+			replace(/&gt;/g, &quot;&amp;gt;&quot;).
+			replace(/&lt;/g, &quot;&amp;lt;&quot;).
+			replace(/&quot;/g, &quot;&amp;quot;&quot;);
+	},
+	
+<span id='JW-String-static-method-htmlDecode'>	/**
+</span>	 * Unescapes special HTML symbols.
+	 * Converts sequences `&amp;amp;` `&amp;gt;` `&amp;lt;` `&amp;quot;` to &amp;amp;, &amp;gt;, &amp;lt;, &amp;quot; correspondingly.
+	 * @static
+	 * @param {string} str String.
+	 * @returns {string} Result.
+	 */
+	htmlDecode: function(target) {
+		return String(target).
+			replace(/&amp;quot;/g, '&quot;').
+			replace(/&amp;lt;/g, &quot;&lt;&quot;).
+			replace(/&amp;gt;/g, &quot;&gt;&quot;).
+			replace(/&amp;amp;/g, &quot;&amp;&quot;);
+	},
+	
+<span id='JW-String-method-removeScripts'>	removeScripts: function(target) {
+</span>		target = String(target);
+		var result = [];
+		var index = 0;
+		while (true) {
+			var from = target.indexOf(&quot;&lt;script&quot;, index);
+			if (from === -1) {
+				break;
+			}
+			result.push(target.substr(index, from - index));
+			index = target.indexOf(&quot;&lt;/script&gt;&quot;, from) + 9;
+			if (index === -1) {
+				return result.join(&quot;&quot;);
+			}
+		}
+		result.push(target.substr(index));
+		return result.join(&quot;&quot;);
+	},
+	
+<span id='JW-String-static-method-ellipsis'>	/**
+</span>	 * Shortens the string to specified length. If string is short enough, it doesn't change.
+	 * Otherwise, it is cutted, and `ellipsis` substring is appended so the resulting string length
+	 * equals to `length`.
+	 * @static
+	 * @param {string} str String.
+	 * @param {number} length Maximum length of resulting string.
+	 * @param {string} [ellipsis] String tail for shortening. Defaults to `...`
+	 * @returns {string} Result.
+	 */
+	ellipsis: function(target, length, ellipsis) {
+		target = String(target);
+		if (target.length &lt;= length) {
+			return target;
+		}
+		ellipsis = ellipsis || &quot;...&quot;;
+		return target.substr(0, length - ellipsis.length) + ellipsis;
+	},
+	
+<span id='JW-String-static-method-prepend'>	/**
+</span>	 * Prepends string with specified symbol at the beginning to adjust to specified length.
+	 * If string is long enough, it doesn't change.
+	 * 
+	 *     JW.String.prepend(&quot;123&quot;, 5, &quot;0&quot;)  // &quot;00123&quot;
+	 * 
+	 * @static
+	 * @param {string} str String.
+	 * @param {number} length Minimum length of resulting string.
+	 * @param {string} ch Symbol to prepend.
+	 * @returns {string} Result.
+	 */
+	prepend: function(target, length, ch) {
+		target = String(target);
+		var buf = [];
+		length -= target.length;
+		for (var i = 0; i &lt; length; ++i) {
+			buf.push(ch);
+		}
+		buf.push(target);
+		return buf.join(&quot;&quot;);
+	},
+	
+<span id='JW-String-static-method-capitalize'>	/**
+</span>	 * Capitalizes first symbol.
+	 * 
+	 *     JW.String.capitalize(&quot;vasya&quot;)  // &quot;Vasya&quot;
+	 * 
+	 * @static
+	 * @param {string} str String.
+	 * @returns {string} Result.
+	 */
+	capitalize: function(target) {
+		target = String(target);
+		return target.charAt(0).toUpperCase() + target.substr(1);
+	},
+	
+<span id='JW-String-static-method-camel'>	/**
+</span>	 * Converts hyphen-style to camelStyle.
+	 * 
+	 *     JW.String.camel(&quot;i-love-js&quot;)  // &quot;iLoveJs&quot;
+	 *
+	 * @static
+	 * @param {string} str String.
+	 * @returns {string} result.
+	 */
+	camel: function(target) {
+		return String(target).replace(/-([a-z])/ig, JW.String._fcamel);
+	},
+	
+<span id='JW-String-static-method-hyphen'>	/**
+</span>	 * Converts camelStyle to hyphen-style.
+	 * 
+	 *     JW.String.hyphen(&quot;iLoveJs&quot;)  // &quot;i-love-js&quot;
+	 *
+	 * @static
+	 * @param {string} str String.
+	 * @returns {string} Result.
+	 */
+	hyphen: function(target) {
+		return String(target).replace(/([A-Z])/g, JW.String._fhyphen);
+	},
+	
+<span id='JW-String-static-method-trim'>	/**
+</span>	 * Removes whitespace symbols at begin and end of string.
+	 * 
+	 *     JW.String.trim(&quot;\t\tI love JS!    &quot;)  // &quot;I love JS!&quot;
+	 *
+	 * @static
+	 * @param {string} str String.
+	 * @returns {string} Result.
+	 */
+	trim: function(target) {
+		return String(target).replace(/^\s*/, &quot;&quot;).replace(/\s*$/, &quot;&quot;);
+	},
+	
+<span id='JW-String-static-method-parseClass'>	/**
+</span>	 * Parses CSS class string and returns array of CSS class names.
+	 * Supports strings, untrimmed strings, space-separated strings, arrays
+	 * and subarrays.
+	 * 
+	 *     JW.String.parseClass([&quot;  a    b &quot;, &quot;c&quot;, [], [[&quot;d&quot;, &quot;e&quot;]]]); // [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;]
+	 *
+	 * @static
+	 * @param {String/Array} str String.
+	 * @returns {Array} `&lt;String&gt;` Result.
+	 */
+	parseClass: function(str) {
+		if (JW.isArray(str)) {
+			var result = [];
+			for (var i = 0; i &lt; str.length; ++i) {
+				result.push.apply(result, JW.String.parseClass(str[i]));
+			}
+			return result;
+		}
+		if (typeof str === &quot;string&quot;) {
+			str = JW.String.trim(str);
+			if (str === &quot;&quot;) {
+				return [];
+			}
+			return str.split(/\s+/);
+		}
+		return [];
+	},
+	
+<span id='JW-String-method-_fcamel'>	_fcamel: function(a, b) {
+</span>		return b.toUpperCase();
+	},
+	
+<span id='JW-String-method-_fhyphen'>	_fhyphen: function(a, b) {
+</span>		return &quot;-&quot; + b.toLowerCase();
+	}
+};
+</pre>
+</body>
+</html>

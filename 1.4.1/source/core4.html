@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*!
+	jWidget UI 1.4.1
+
+	http://enepomnyaschih.github.io/jwidget/#!/guide/home
+
+	Copyright (C) 2015 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-UI'>/**
+</span> * @class JW.UI
+ *
+ * Main jWidget UI library namespace.
+ */
+JW.UI = {
+<span id='JW-UI-property-wrapMap'>	// Some code is taken from jQuery. We are not happy with standard jQuery.parseHtml, because it is slow.
+</span>	// We implement an own JW.UI.parseHtml which omits a good bunch of useless manupulations.
+	wrapMap: {
+		option: [ 1, &quot;&lt;select multiple='multiple'&gt;&quot;, &quot;&lt;/select&gt;&quot; ],
+		thead: [ 1, &quot;&lt;table&gt;&quot;, &quot;&lt;/table&gt;&quot; ],
+		col: [ 2, &quot;&lt;table&gt;&lt;colgroup&gt;&quot;, &quot;&lt;/colgroup&gt;&lt;/table&gt;&quot; ],
+		tr: [ 2, &quot;&lt;table&gt;&lt;tbody&gt;&quot;, &quot;&lt;/tbody&gt;&lt;/table&gt;&quot; ],
+		td: [ 3, &quot;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&quot;, &quot;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&quot; ],
+		_default: [ 0, &quot;&quot;, &quot;&quot; ]
+	},
+
+<span id='JW-UI-property-rtagName'>	rtagName: /^&lt;([\w:]+)/,
+</span>
+<span id='JW-UI-static-property-hash'>	/**
+</span>	 * @property {JW.Property} hash
+	 *
+	 * `&lt;String&gt;` Current page hash (without leading &quot;#&quot;). As of jWidget 1.4.1, two-way bound to location.hash.
+	 *
+	 * @static
+	 */
+	hash: new JW.Property(location.hash.substr(1)),
+
+<span id='JW-UI-static-method-template'>	/**
+</span>	 * Defines HTML templates for specified JW.UI.Component subclass.
+	 *
+	 * You can define multiple templates for any subclass of JW.UI.Component. Each template has a name.
+	 * You can get component template via JW.UI.Component.templates dictionary.
+	 *
+	 * Templates are inherited together with component classes.
+	 *
+	 * Each component class has at least one template, its name is `main`. This is the main template which is
+	 * used to render the component. By default, `main` equals to `&lt;div&gt;&lt;/div&gt;`.
+	 * Usually, `main` template is enough for the majority of components. This template is applied automatically,
+	 * unlike other templates which should be applied manually.
+	 *
+	 * JW.UI.template function is called automatically if you attach `jw.html` files via
+	 * [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/en). See
+	 * [Getting started. Part 7. Project infrastructure](#!/guide/ensample7) for details.
+	 *
+	 * @static
+	 * @param {Function} cls JW.UI.Component subclass.
+	 * @param {Object} tpls Templates to add or override.
+	 */
+	template: function(cls, tpls) {
+		tpls = JW.Map.map(tpls, function(html) {
+			return new JW.UI.Component.Template(html);
+		});
+		if (cls.prototype.Templates &amp;&amp; cls.prototype.Templates.componentCls == cls) {
+			JW.apply(cls.prototype.Templates.prototype, tpls);
+		} else {
+			cls.prototype.Templates = (cls.superclass.Templates || JW.Class).extend(tpls);
+			cls.prototype.Templates.componentCls = cls;
+			cls.prototype.templates = new cls.prototype.Templates();
+		}
+	},
+
+<span id='JW-UI-static-method-isElement'>	/**
+</span>	 * Checks whether x is [jQuery element](http://api.jquery.com/).
+	 * @static
+	 * @param {Mixed} x
+	 * @returns {boolean} Result.
+	 */
+	isElement: function(v) {
+		return v instanceof jQuery.fn.init;
+	},
+
+<span id='JW-UI-static-method-preventDefault'>	/**
+</span>	 * Calls `preventDefault` method for [jQuery event](http://api.jquery.com/category/events/event-object/).
+	 *
+	 * Use this way:
+	 *
+	 *     el.click(JW.UI.preventDefault);
+	 *
+	 * Shorthand for
+	 *
+	 *     el.click(JW.byMethod(&quot;preventDefault&quot;));
+	 *
+	 * and
+	 *
+	 *     el.click(function(e) { e.preventDefault(); });
+	 *
+	 * @static
+	 * @param {Object} event jQuery event.
+	 */
+	preventDefault: function(event) {
+		event.preventDefault();
+	},
+
+<span id='JW-UI-method-isLifeInput'>	isLifeInput: function(el) {
+</span>		el = jQuery(el);
+		var tagName = el[0].tagName.toLowerCase();
+		if (tagName === &quot;input&quot;) {
+			var type = el.attr(&quot;type&quot;);
+			return (type === &quot;text&quot;) || (type !== &quot;password&quot;);
+		}
+		return tagName === &quot;textarea&quot;;
+	},
+
+<span id='JW-UI-method-insert'>	insert: function(parent, child, index) {
+</span>		if (!JW.isSet(index) || (index &gt;= parent.childNodes.length)) {
+			parent.appendChild(child);
+		} else {
+			parent.insertBefore(child, parent.childNodes.item(index));
+		}
+	},
+
+<span id='JW-UI-method-remove'>	remove: function(el) {
+</span>		if (el.parentNode) {
+			el.parentNode.removeChild(el);
+		}
+	},
+
+<span id='JW-UI-method-parseHtml'>	parseHtml: function(html) {
+</span>		if (JW.UI._fragment) {
+			JW.UI._fragment.textContent = &quot;&quot;;
+		} else {
+			JW.UI._fragment = document.createDocumentFragment();
+		}
+		var el = JW.UI._fragment.appendChild(document.createElement(&quot;div&quot;));
+		var tagName = JW.UI.rtagName.exec(html)[1];
+		var wrap = JW.UI.wrapMap[tagName] || JW.UI.wrapMap._default;
+		el.innerHTML = wrap[1] + html + wrap[2];
+		for (var i = 0; i &lt; wrap[0]; ++i) {
+			el = el.firstChild;
+		}
+		return el.firstChild;
+	},
+
+<span id='JW-UI-method-hasClass'>	hasClass: function(el, cls) {
+</span>		return (&quot; &quot; + el.className + &quot; &quot;).indexOf(cls) !== -1;
+	},
+
+<span id='JW-UI-method-addClass'>	addClass: function(el, cls) {
+</span>		if (!el.className) {
+			el.className = cls;
+		} else if (!JW.UI.hasClass(el, cls)) {
+			el.className += &quot; &quot; + cls;
+		}
+	},
+
+<span id='JW-UI-method-inDom'>	inDom: function(el) {
+</span>		while (el) {
+			if (el.tagName.toLowerCase() === &quot;body&quot;) {
+				return true;
+			}
+			el = el.parentNode;
+		}
+		return false;
+	},
+
+<span id='JW-UI-method-replace'>	replace: function(removeEl, insertEl, attrs) {
+</span>		var parentEl = removeEl.parentNode;
+		if (!parentEl) {
+			return;
+		}
+		var id = attrs ? removeEl.getAttribute(&quot;id&quot;) : null,
+			cls = attrs ? removeEl.getAttribute(&quot;class&quot;) : null;
+		parentEl.replaceChild(insertEl, removeEl);
+		if (id) {
+			insertEl.setAttribute(&quot;id&quot;, id);
+		}
+		if (cls) {
+			JW.UI.addClass(insertEl, cls);
+		}
+	},
+
+<span id='JW-UI-method-_afterAppend'>	_afterAppend: function(child) {
+</span>		child._afterAppend();
+	}
+};
+
+(function(wrapMap) {
+	wrapMap.optgroup = wrapMap.option;
+	wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
+	wrapMap.th = wrapMap.td;
+})(JW.UI.wrapMap);
+
+jQuery(function() {
+	JW.UI.windowEl = jQuery(window);
+	JW.UI.bodyEl   = jQuery(document.body);
+	jQuery(window).bind(&quot;hashchange&quot;, function() {
+		JW.UI.hash.set(location.hash.substr(1));
+	});
+	JW.UI.hash.changeEvent.bind(function(params) {
+		location.hash = &quot;#&quot; + params.value;
+	});
+});
+</pre>
+</body>
+</html>

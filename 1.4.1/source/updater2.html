@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Property.UpdaterTestCase = JW.Unit.TestCase.extend({
+	testUpdater: function()
+	{
+		var source1 = new JW.Property(1);
+		var source2 = new JW.Property(&quot;a&quot;);
+		
+		this.setExpectedOutput(&quot;1a&quot;);
+		var updater = new JW.Updater([ source1, source2 ], function(a, b) {
+			this.output(a + b);
+		}, this);
+		
+		this.setExpectedOutput(&quot;2a&quot;);
+		source1.set(2);
+		
+		this.setExpectedOutput(&quot;2b&quot;);
+		source2.set(&quot;b&quot;);
+		
+		this.setExpectedOutput();
+		updater.destroy();
+		source1.set(3);
+		source2.set(&quot;c&quot;);
+	},
+	
+	testWatch: function()
+	{
+		var source1 = new JW.Property(1);
+		var source2 = new JW.Property(&quot;a&quot;);
+		var event = new JW.Event();
+		var property = new JW.Property();
+		
+		this.setExpectedOutput(&quot;1a&quot;);
+		var updater = new JW.Updater([ source1, source2 ], function(a, b) {
+			this.assertStrictEqual(2, arguments.length);
+			this.output(a + b);
+		}, this);
+		updater.bind(event);
+		updater.watch(property);
+		
+		this.setExpectedOutput(&quot;2a&quot;);
+		source1.set(2);
+		
+		this.setExpectedOutput(&quot;2b&quot;);
+		source2.set(&quot;b&quot;);
+		
+		this.setExpectedOutput(&quot;2b&quot;);
+		event.trigger(new JW.EventParams(this));
+		
+		this.setExpectedOutput(&quot;2b&quot;);
+		property.set(false);
+		
+		this.setExpectedOutput();
+		updater.destroy();
+		source1.set(3);
+		source2.set(&quot;c&quot;);
+		event.trigger(new JW.EventParams(this));
+		property.set(true);
+	}
+});
+</pre>
+</body>
+</html>

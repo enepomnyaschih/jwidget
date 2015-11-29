@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-ObservableSet-Mapper-method-constructor'><span id='JW-ObservableSet-Mapper'>/**
+</span></span> * @class
+ *
+ * `&lt;T extends JW.Class, U extends JW.Class&gt; extends JW.AbstractSet.Mapper&lt;T, U&gt;`
+ *
+ * See JW.AbstractCollection.Mapper for details.
+ *
+ * @extends JW.AbstractSet.Mapper
+ *
+ * @constructor
+ * Creates synchronizer. JW.AbstractCollection#createMapper method is preferrable instead.
+ * @param {JW.ObservableSet} source `&lt;T&gt;` Source collection.
+ * @param {Object} config Configuration (see Config options).
+ */
+JW.ObservableSet.Mapper = function(source, config) {
+	JW.ObservableSet.Mapper._super.call(this, source, config);
+	this.own(source.spliceEvent.bind(this._onSplice, this));
+	this.own(source.clearEvent.bind(this._onClear, this));
+};
+
+JW.extend(JW.ObservableSet.Mapper, JW.AbstractSet.Mapper, {
+	_onSplice: function(params) {
+		var spliceResult = params.spliceResult;
+		var removedDatas = spliceResult.removedItems;
+		var addedDatas = spliceResult.addedItems;
+		this.target.trySplice(this._getItems(removedDatas), this._createItems(addedDatas));
+		this._destroyItems(removedDatas);
+	},
+	
+	_onClear: function(params) {
+		var datas = params.items;
+		this.target.tryRemoveAll(this._getItems(datas));
+		this._destroyItems(datas);
+	}
+});
+</pre>
+</body>
+</html>

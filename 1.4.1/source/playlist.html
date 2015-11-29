@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">JW.Audio.Playlist = JW.ObservableConfig.extend({
+    // Events:
+    // trackchange(event, track)
+    
+    tracks   : null,  // [optional] Array of JW.Audio.Track
+    
+    playback : null,  // [readonly] JW.Audio.Playback
+    index    : null,  // [readonly] Integer
+    
+    init: function(config)
+    {
+        this._super(config);
+        
+        this.tracks = JW.makeArray(this.tracks).map(JW.Audio.Track.create);
+    },
+    
+    destroy: function()
+    {
+        this.stop();
+        
+        this._super();
+    },
+    
+    next: function()
+    {
+        this.stop();
+        
+        if (this.tracks.isEmpty())
+            return;
+        
+        if (JW.isSet(this.index))
+            this.index = (this.index + 1) % this.tracks.length;
+        
+        this.play();
+    },
+    
+    play: function()
+    {
+        this.stop();
+        
+        if (this.tracks.isEmpty())
+            return;
+        
+        this.index = JW.defn(this.index, 0);
+        
+        var track = this.getCurrentTrack();
+        
+        this.playback = track.play();
+        this.playback.bind(&quot;finish&quot;, this.next.as(this), this);
+        
+        this.trigger(&quot;trackchange&quot;, track);
+    },
+    
+    stop: function()
+    {
+        if (!this.isPlay())
+            return;
+        
+        this.playback.destroy();
+        delete this.playback;
+    },
+    
+    getCurrentTrack: function()
+    {
+        if (this.tracks.isEmpty() || !JW.isSet(this.index))
+            return null;
+        
+        return this.tracks[this.index];
+    },
+    
+    isPlay: function()
+    {
+        return JW.isSet(this.playback);
+    }
+});
+</pre>
+</body>
+</html>
