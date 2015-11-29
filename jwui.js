@@ -1,5 +1,5 @@
 /*!
-	jWidget UI 1.4
+	jWidget UI 1.4.1
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -39,7 +39,10 @@ JW.UI = {
 	rtagName: /^<([\w:]+)/,
 
 	/**
-	 * @property {JW.Property} hash `<String>` Current page hash (without leading "#").
+	 * @property {JW.Property} hash
+	 *
+	 * `<String>` Current page hash (without leading "#"). As of jWidget 1.4.1, two-way bound to location.hash.
+	 *
 	 * @static
 	 */
 	hash: new JW.Property(location.hash.substr(1)),
@@ -204,6 +207,9 @@ jQuery(function() {
 	JW.UI.bodyEl   = jQuery(document.body);
 	jQuery(window).bind("hashchange", function() {
 		JW.UI.hash.set(location.hash.substr(1));
+	});
+	JW.UI.hash.changeEvent.bind(function(params) {
+		location.hash = "#" + params.value;
 	});
 });
 ;
