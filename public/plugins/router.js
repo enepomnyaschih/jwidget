@@ -189,8 +189,8 @@ JW.Plugins = JW.Plugins || {};
 JW.Plugins.Router = function(config) {
 	JW.Plugins.Router._super.call(this);
 	config = config || {};
-	this.separator = config.separator || "/";
-	if (typeof this.separator === "string") {
+	this.separator = config.separator || /^\/*([^?\/]+)(?:\/(.*)|(\?.*))?$/;
+	if (JW.isRegExp(this.separator)) {
 		this.separator = JW.Plugins.Router.makeSeparator(this.separator);
 	}
 	this.joiner = config.joiner || "/";
@@ -236,7 +236,7 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	 * aggregates this property automatically.
 	 */
 	/**
-	 * @cfg {Function|string} separator
+	 * @cfg {Function|RegExp} separator
 	 *
 	 * `separator(path: string): string|Array<string>`
 	 *
@@ -249,13 +249,33 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	 *
 	 * If separator function returns null or undefined route, it is automatically mapped to blank string.
 	 *
-	 * Separator can be specified as a string. In this case, it is built with JW.Plugins.Router#makeSeparator
-	 * method - see it for more details.
-	 *
 	 * **IMPORTANT:** If you define custom {@link JW.Plugins.Router#cfg-separator separator} function, you must also define
 	 * an opposite {@link JW.Plugins.Router#cfg-joiner joiner} function for redirections to work properly.
 	 *
-	 * Defaults to "/".
+	 * Separator function can be specified as a regular expression.
+	 * In this case, it is built with JW.Plugins.Router#makeSeparator method - see it for more details.
+	 *
+	 * Defaults to `/^\/*([^?\/]+)(?:\/(.*)|(\?.*))?$/`, which:
+	 *
+	 * - Trims leading /
+	 * - Looks for the first / or ?
+	 * - Uses first part as route
+	 * - Uses second part as argument. Questionmark ? is included to the argument, slash / is not
+	 *
+	 * Examples:
+	 *
+	 * <table>
+	 *   <tr><td>Incoming path</td><td>Resulting route</td><td>Resulting argument</td></tr>
+	 *   <tr><td>"" or null</td><td>""</td><td>null</td></tr>
+	 *   <tr><td>"inbox"</td><td>"inbox"</td><td>null</td></tr>
+	 *   <tr><td>"inbox/"</td><td>"inbox"</td><td>""</td></tr>
+	 *   <tr><td>"inbox/1"</td><td>"inbox"</td><td>"1"</td></tr>
+	 *   <tr><td>"inbox/1/edit"</td><td>"inbox"</td><td>"1/edit"</td></tr>
+	 *   <tr><td>"/inbox"</td><td>"inbox"</td><td>null</td></tr>
+	 *   <tr><td>"/inbox/"</td><td>"inbox"</td><td>""</td></tr>
+	 *   <tr><td>"///inbox///"</td><td>"inbox"</td><td>"//"</td></tr>
+	 *   <tr><td>"inbox?id=1"</td><td>"inbox"</td><td>"?id=1"</td></tr>
+	 * </table>
 	 */
 	/**
 	 * @cfg {Function|string} joiner
@@ -343,7 +363,9 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 		this.arg = null;
 		if (pair != null && (typeof pair !== "string")) {
 			route = pair[0];
-			this.arg = pair[1];
+			if (pair.length > 1) {
+				this.arg = pair[1];
+			}
 		}
 		this.route.set(route || "");
 		var target = this.target.get();
@@ -377,7 +399,7 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	},
 
 	/**
-	 * Performs redirection to result of #method-getFullPath method.
+	 * Performs redirection to result of {@link #method-getFullPath} method.
 	 *
 	 * @param {string} path Redirection path.
 	 * @param {number} [scope] Redirection scope. Defaults to current scope.
@@ -427,7 +449,7 @@ JW.apply(JW.Plugins.Router, {
 	},
 
 	/**
-	 * Performs redirection to result of #static-method-getFullPath method.
+	 * Performs redirection to result of {@link #static-method-getFullPath} method.
 	 *
 	 * @static
 	 * @param {string} path Redirection path.
@@ -456,40 +478,17 @@ JW.apply(JW.Plugins.Router, {
 	/**
 	 * @method makeSeparator
 	 *
-	 * Converts separator symbol/string to separator function. A first token of path before separator symbol is used as a
-	 * route, and a remaining part of the path after separator symbol is used as an argument. Leading separator symbols are
-	 * trimmed. If separator symbol is not found in trimmed path, the entire path is used as a route, and argument is null.
-	 *
-	 * Examples:
-	 *
-	 * <table>
-	 *   <tr><td>Incoming path</td><td>Separator</td><td>Resulting route</td><td>Resulting argument</td></tr>
-	 *   <tr><td>"" or null</td><td>"/"</td><td>""</td><td>null</td></tr>
-	 *   <tr><td>"inbox"</td><td>"/"</td><td>"inbox"</td><td>null</td></tr>
-	 *   <tr><td>"inbox/"</td><td>"/"</td><td>"inbox"</td><td>""</td></tr>
-	 *   <tr><td>"inbox/1"</td><td>"/"</td><td>"inbox"</td><td>"1"</td></tr>
-	 *   <tr><td>"inbox/1/edit"</td><td>"/"</td><td>"inbox"</td><td>"1/edit"</td></tr>
-	 *   <tr><td>"/inbox"</td><td>"/"</td><td>"inbox"</td><td>null</td></tr>
-	 *   <tr><td>"/inbox/"</td><td>"/"</td><td>"inbox"</td><td>""</td></tr>
-	 *   <tr><td>"///inbox///"</td><td>"/"</td><td>"inbox"</td><td>"//"</td></tr>
-	 * </table>
+	 * Converts RegExp to separator function. The first token ($1) of path is used as a
+	 * route, and second on ($2) is used as an argument. If path is null, it is assumed to be "".
 	 *
 	 * @static
-	 * @param {string} separator Separator symbol/string.
+	 * @param {RegExp} regexp Regular expression.
 	 * @returns {Function} Separator function.
 	 */
-	makeSeparator: function(separator) {
-		var trimmer = new RegExp("^(?:" + separator.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&') + ")*");
+	makeSeparator: function(regexp) {
 		return function(path) {
-			path = path.replace(trimmer, "");
-			var index = path.indexOf(separator);
-			if (index === -1) {
-				return path;
-			}
-			return [
-				path.substr(0, index),
-				path.substr(index + separator.length)
-			];
+			var result = regexp.exec(path || "");
+			return result ? result.slice(1) : "";
 		};
 	},
 
