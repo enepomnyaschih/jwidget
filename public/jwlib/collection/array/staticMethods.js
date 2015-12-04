@@ -130,9 +130,13 @@ JW.apply(JW.Array, {
 			return;
 		}
 		if (index === undefined) {
-			target.push.apply(target, items);
+			for (var i = 0; i < items.length; ++i) {
+				target.push(items[i]);
+			}
 		} else {
-			target.splice.apply(target, [ index, 0 ].concat(items));
+			var tail = target.splice(index, target.length - index);
+			JW.Array.tryAddAll(target, items);
+			JW.Array.tryAddAll(target, tail);
 		}
 		return true;
 	},

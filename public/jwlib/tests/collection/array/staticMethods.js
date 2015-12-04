@@ -42,5 +42,21 @@ JW.Tests.Collection.Array.StaticMethodsTestCase = JW.Tests.Collection.AbstractAr
 		this.assertTrue(JW.Array.asArray(array) === array);
 		this.assertTrue(JW.Array.$asArray(array).getItems() === array);
 		this.assertTrue(JW.Array.equal(array, [2, 4]));
+	},
+
+	testTryAddAllHuge: function() {
+		var array = [];
+		for (var i = 0; i < 300000; ++i) {
+			array.push(i);
+		}
+		this.assertTrue(JW.Array.tryAddAll([], array));
+	},
+
+	testTryAddAllHuge2: function() {
+		var array = [];
+		for (var i = 0; i < 300000; ++i) {
+			array.push(i);
+		}
+		this.assertTrue(JW.Array.tryAddAll([1], array, 0));
 	}
 });
