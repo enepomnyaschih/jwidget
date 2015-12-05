@@ -1,5 +1,5 @@
 /*!
-	jWidget Lib 1.4
+	jWidget Lib 1.4.2
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -11137,9 +11137,15 @@ JW.apply(JW.Array, {
 			return;
 		}
 		if (index === undefined) {
-			target.push.apply(target, items);
+			var l = target.length;
+			target.length += items.length;
+			for (var i = 0; i < items.length; ++i) {
+				target[i + l] = items[i];
+			}
 		} else {
-			target.splice.apply(target, [ index, 0 ].concat(items));
+			var tail = target.splice(index, target.length - index);
+			JW.Array.tryAddAll(target, items);
+			JW.Array.tryAddAll(target, tail);
 		}
 		return true;
 	},
