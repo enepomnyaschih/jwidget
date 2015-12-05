@@ -6,6 +6,10 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
+### 1.4.2 (December 5, 2015)
+
+- Fixed a bug in [addAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractArray-method-addAll) and [tryAddAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractArray-method-tryAddAll) causing stack overflow on big data arrays
+
 ### 1.4.1 (November 29, 2015)
 
 [JW.Plugins.Router](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.Plugins.Router) enhancements.
