@@ -59,4 +59,16 @@ JW.Tests.Collection.Array.StaticMethodsTestCase = JW.Tests.Collection.AbstractAr
 		}
 		this.assertTrue(JW.Array.tryAddAll([1], array, 0));
 	}
+/*
+	// The next tests are dependent on hardware performance, and sometimes fail.
+	// For debugging purposes only.
+	testTryAddAllHugeTime: function() {
+		var array = [];
+		for (var i = 0; i < 300000; ++i) {
+			array.push(i);
+		}
+		this.assertPerformance(50, function() {
+			JW.Array.tryAddAll([], array);
+		});
+	}*/
 });

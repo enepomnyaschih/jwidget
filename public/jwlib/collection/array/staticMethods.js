@@ -130,8 +130,10 @@ JW.apply(JW.Array, {
 			return;
 		}
 		if (index === undefined) {
+			var l = target.length;
+			target.length += items.length;
 			for (var i = 0; i < items.length; ++i) {
-				target.push(items[i]);
+				target[i + l] = items[i];
 			}
 		} else {
 			var tail = target.splice(index, target.length - index);

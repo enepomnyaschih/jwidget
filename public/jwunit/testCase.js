@@ -141,6 +141,16 @@ JW.extend(JW.Unit.TestCase, JW.Unit.TestGroup, {
 		}
 	},
 	
+	assertPerformance: function(limit, callback) {
+		var time = new Date().getTime();
+		callback.call(this);
+		var duration = new Date().getTime() - time;
+		if (duration > limit) {
+			this.fail("Performance test failed. Time limit is " + limit +
+				"ms, test ran for " + duration + "ms");
+		}
+	},
+
 	load: function(url, dataType, callback, scope) {
 		var onLoadSuccess = function(response) {
 			return this._onLoadSuccess(response, callback, scope);

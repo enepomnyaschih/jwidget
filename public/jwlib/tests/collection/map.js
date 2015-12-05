@@ -269,15 +269,6 @@ JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
 		});
 	},
 */
-	assertPerformance: function(limit, callback) {
-		var time = new Date().getTime();
-		callback.call(this);
-		var duration = new Date().getTime() - time;
-		if (duration > limit) {
-			this.fail("Performance test failed. Time limit is " + limit +
-				"ms, test ran for " + duration + "ms");
-		}
-	}
 });
 
 JW.Tests.Collection.Map = {};
