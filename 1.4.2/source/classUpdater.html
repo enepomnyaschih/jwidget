@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-UI-ClassUpdater-method-constructor'><span id='JW-UI-ClassUpdater'>/**
+</span></span> * @class
+ *
+ * Result of {@link jQuery#jwclass jwclass} method call. Destroy it to stop synchronization.
+ *
+ * Was used as a standalone class before jWidget 1.4.
+ * As of jWidget 1.4, {@link jQuery#jwclass jwclass} is an easier alternative.
+ *
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {String} cls CSS class name.
+ * @param {JW.Property} property `&lt;Boolean&gt;` Source property.
+ */
+JW.UI.ClassUpdater = function(el, cls, property) {
+	JW.UI.ClassUpdater._super.call(this);
+	this.el = jQuery(el);
+	this.cls = cls;
+	this.property = property;
+	this._update();
+	this.own(property.changeEvent.bind(this._update, this));
+};
+
+JW.extend(JW.UI.ClassUpdater, JW.Class, {
+<span id='JW-UI-ClassUpdater-property-el'>	/**
+</span>	 * @property {jQuery} el DOM element.
+	 */
+<span id='JW-UI-ClassUpdater-property-cls'>	/**
+</span>	 * @property {String} cls CSS class name.
+	 */
+<span id='JW-UI-ClassUpdater-property-property'>	/**
+</span>	 * @property {JW.Property} property `&lt;Boolean&gt;` Source property.
+	 */
+	
+	destroyObject: function() {
+		this.el = null;
+		this.property = null;
+		this._super();
+	},
+
+	_update: function() {
+		this.el.toggleClass(this.cls, !!this.property.get());
+	}
+});
+</pre>
+</body>
+</html>
