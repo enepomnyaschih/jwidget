@@ -646,16 +646,16 @@ JW.apply(JW, {
 	 * @returns {Mixed} Unique object ID.
 	 */
 	iid: function(obj) {
-		return (typeof obj === "object") ? obj._iid : obj;
+		return (obj && typeof obj === "object") ? obj._iid : obj;
 	},
 
 
 	/**
-	 * Calls object method {@link JW.Class#destroy destroy}. Can be used in mappers configuration:
+	 * Calls object method {@link JW.Class#destroy destroy} if available. Can be used in mappers configuration:
 	 *
 	 *     var mapper = collection.{@link JW.AbstractCollection#createMapper createMapper}({
 	 *         {@link JW.AbstractCollection.Mapper#createItem createItem}  : function(data) { return new View(data); },
-	 *         {@link JW.AbstractCollection.Mapper#destroyItem destroyItem} : JW.destroy, // shorthand for function(view) { view.destroy(); }
+	 *         {@link JW.AbstractCollection.Mapper#destroyItem destroyItem} : JW.destroy,
 	 *         {@link JW.AbstractCollection.Mapper#scope scope}       : this
 	 *     });
 	 *
@@ -664,7 +664,9 @@ JW.apply(JW, {
 	 * @returns {void}
 	 */
 	destroy: function(obj) {
-		obj.destroy();
+		if (obj && typeof obj.destroy === "function") {
+			obj.destroy();
+		}
 	},
 
 	/**
