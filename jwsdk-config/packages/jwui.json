@@ -6,6 +6,8 @@
 	
 	"resources" : [
 		"jwui/core.js",
+		"jwui/jqEventAttachment.js",
+		"jwui/jquery.js",
 		
 		"jwui/browsers.js",
 		"jwui/inserter.js",
@@ -22,8 +24,7 @@
 		"jwui/component/replaceable.js",
 		"jwui/component/template.js",
 		"jwui/component/templateOutput.js",
-		"jwui/jqEventAttachment.js",
-		"jwui/jquery.js",
+		"jwui/hash.js",
 		"jwui/params.js",
 		"jwui/preloadImage.js",
 		

@@ -39,13 +39,13 @@ JW.UI = {
 	rtagName: /^<([\w:]+)/,
 
 	/**
-	 * @property {JW.Property} hash
+	 * @property {JW.UI.Hash} hash
 	 *
-	 * `<String>` Current page hash (without leading "#"). As of jWidget 1.4.1, two-way bound to location.hash.
+	 * Current page hash (without leading "#"). As of jWidget 1.4.1, two-way bound to location.hash.
 	 *
 	 * @static
 	 */
-	hash: new JW.Property(location.hash.substr(1)),
+	hash: null,
 
 	/**
 	 * Defines HTML templates for specified JW.UI.Component subclass.
@@ -205,10 +205,4 @@ JW.UI = {
 jQuery(function() {
 	JW.UI.windowEl = jQuery(window);
 	JW.UI.bodyEl   = jQuery(document.body);
-	jQuery(window).bind("hashchange", function() {
-		JW.UI.hash.set(location.hash.substr(1));
-	});
-	JW.UI.hash.changeEvent.bind(function(params) {
-		location.hash = "#" + params.value;
-	});
 });

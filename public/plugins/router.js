@@ -455,8 +455,10 @@ JW.apply(JW.Plugins.Router, {
 	 * @param {string} path Redirection path.
 	 * @param {JW.Plugins.Router} [router] Top router to pretend. Defaults to top router in current router stack.
 	 * @param {number} [scope] Redirection scope. Defaults to current scope.
+	 * @param {boolean} [replaceState] Replaces current history entry rather than creating a new one.
+	 * Defaults to false, but if used in JW.Plugins.Router.Redirector, defaults to true.
 	 */
-	redirect: function(path, router, scope) {
+	redirect: function(path, router, scope, replaceState) {
 		if (typeof router === "number") {
 			scope = router;
 			router = null;
@@ -472,7 +474,7 @@ JW.apply(JW.Plugins.Router, {
 			throw new Error("Can not perform URL redirection to " + path + " in scope " +
 				((scope == null) ? "CURRENT" : scope) + ": " + e.message);
 		}
-		JW.Plugins.Router._routerStack[0].path.set(fullPath);
+		JW.Plugins.Router._routerStack[0].path.set(fullPath, replaceState);
 	},
 
 	/**
@@ -608,10 +610,14 @@ JW.apply(JW.Plugins.Router, {
  * @param {string} path Redirection path.
  * @param {JW.Plugins.Router} [router] Top router to pretend. Defaults to top router in current router stack.
  * @param {number} [scope] Redirection scope. Defaults to current scope.
+ * @param {boolean} [replaceState] Replaces current history entry rather than creating a new one. Defaults to true.
  */
 JW.Plugins.Router.Redirector = function() {
 	JW.Plugins.Router.Redirector._super.call(this);
 	this.args = JW.args(arguments);
+	if (this.args[3] == null) {
+		this.args[3] = true;
+	}
 	this.own(new JW.Timeout(this.redirect, this));
 };
 
