@@ -41,15 +41,15 @@ JW.UI.JQEventAttachment = function(el, events, selector, handler, scope) {
 	JW.UI.JQEventAttachment._super.call(this);
 	this.el = el;
 	this.events = events;
-	if (typeof selector === "function") {
+	if (typeof selector === "function" || typeof selector === "boolean") {
 		scope = handler;
 		handler = selector;
 		selector = null;
 	}
 	this.selector = selector;
-	if (scope) {
+	if (scope && typeof handler === "function") {
 		this.handler = function(event) {
-			handler.call(scope || this, event, this);
+			return handler.call(scope || this, event, this);
 		};
 	} else {
 		this.handler = handler;
