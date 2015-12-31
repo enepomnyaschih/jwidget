@@ -403,9 +403,11 @@ JW.extend(JW.Plugins.Router, JW.Class, {
 	 *
 	 * @param {string} path Redirection path.
 	 * @param {number} [scope] Redirection scope. Defaults to current scope.
+	 * @param {boolean} [replaceState] Replaces current history entry rather than creating a new one.
+	 * Defaults to false, but if used in JW.Plugins.Router.Redirector, defaults to true.
 	 */
-	redirect: function(path, scope) {
-		JW.Plugins.Router.redirect(path, this, scope);
+	redirect: function(path, scope, replaceState) {
+		JW.Plugins.Router.redirect(path, this, scope, replaceState);
 	}
 });
 
