@@ -60,7 +60,7 @@ JW.global = (typeof window === "undefined" ? global : window);
  *                           g: undefined  //
  *     };                };                // };
  *
- *     JW.applyIf(x, y);
+ *     JW.apply(x, y);
  *
  * Example 2 (form data preparing):
  *
@@ -649,7 +649,6 @@ JW.apply(JW, {
 		return (obj && typeof obj === "object") ? obj._iid : obj;
 	},
 
-
 	/**
 	 * Calls object method {@link JW.Class#destroy destroy} if available. Can be used in mappers configuration:
 	 *
@@ -846,7 +845,6 @@ JW.toArray = JW.args;
 /**
  * @enum {number}
  * jWidget binding mode. All properties have shorthands in {@link JW JW} namespace.
- * Can always be replaced with JW.BindingConfig for advanced binding configuration.
  */
 JW.Binding = {
 	/**

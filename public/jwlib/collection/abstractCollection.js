@@ -56,33 +56,35 @@
  *   </tbody>
  * </table>
  *
- * Simple collections are very similar to native JavaScript collections.
- * Their main purpose is interface compatibility: they have the same API as observable collections, but they work a little bit faster.
+ * Internally, simple collections are very similar to native JavaScript collections.
+ * But their API is identical to observable collections' (excepting lack of events).
+ * So you can use simple collections as a bridge between native JavaScript collections and
+ * jWidget observable collections.
  *
- * Please keep in mind the next rules whenever you work with jWidget collections.
+ * Please keep the next rules in mind whenever you work with jWidget collections.
  *
- * 1) `null` and `undefined` are denied to be added into jWidget collection.
+ * 1) null and undefined items are prohibited in jWidget collections.
  * Use "Null Object" pattern if it is neccessary.
  *
- * 2) The majority of collection modification methods have 2 implementations: `tryMethod` and `method`.
- * These methods perform the same modification but return different result.
- * First implementation is introduced for internal use mainly,
- * and <em>it always returns `undefined` if collection has not been modified</em>.
- * For example, #tryClear will return `undefined` if collection is empty,
- * else it will return old collection contents.
- * Second implementation returns result in more friendly format.
- * For example, #clear always returns old collection contents.
- * So, if you want to clear collection and destroy all items, #clear method will fit better:
+ * 2) The majority of collection modification methods have 2 implementations: **tryMethod** and **method**.
+ * These methods perform the same collection modification but return different result.
+ * tryMethod is introduced for internal use mainly,
+ * and *it always returns undefined if collection has not been modified*.
+ * For example, <a href="#tryclear">tryClear</a> returns undefined if collection is empty,
+ * else it returns old collection contents.
+ * **method** returns result in more friendly format.
+ * For example, <a href="#clear">clear</a> always returns old collection contents.
+ * So, if you want to clear collection and destroy all items, <a href="#clear">clear</a> method fits better:
  *
- *     JW.Array.each(array.{@link JW.AbstractArray#clear clear}(), JW.destroy); // correct
- *     JW.Array.each(array.{@link JW.AbstractArray#clear tryClear}(), JW.destroy); // incorrect: 'undefined' exception if array is empty
+ *     JW.Array.each(array.clear(), JW.destroy); // correct
+ *     JW.Array.each(array.tryClear(), JW.destroy); // incorrect: 'undefined' exception if array is empty
  *
- * 3) Majority methods which return collection have 3 implementations: `method`, `$method` and `$$method`.
+ * 3) Majority of collection returning methods have 3 implementations: **method**, **$method** and **$$method**.
  * These methods perform the same modification but return the result in different format.
  *
- * - `method` returns native JavaScript collection: Array or Object.
- * - `$method` returns jWidget collection: JW.Array, JW.Map or JW.Set.
- * - `$$method` returns jWidget collection and starts continuous synchronization with original
+ * * **method** returns native JavaScript collection: Array or Object.
+ * * **$method** returns jWidget collection: JW.Array, JW.Map or JW.Set.
+ * * **$$method** returns jWidget collection and starts continuous synchronization with original
  * collection if one is observable. To stop synchronization, #destroy the target collection.
  *
  * Use one method that's more convenient in your specific situation.

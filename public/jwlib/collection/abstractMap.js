@@ -633,12 +633,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	/**
 	 * @method remove
 	 * Removes item with specified key if it exists in map.
-	 * @param {K} key Key.
+	 * @param {string} key Key.
 	 * @returns {T} Old collection item or `undefined`.
 	 */
 	/**
 	 * Removes item with specified key if it exists in map.
-	 * @param {K} key Key.
+	 * @param {string} key Key.
 	 * @returns {T} Old collection item. If not modified - `undefined`.
 	 */
 	tryRemove: function(key) {
