@@ -786,6 +786,7 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.afterAppend();
 		this.children.each(JW.UI._afterAppend);
 		JW.Set.each(this._arrays, JW.UI._afterAppend);
+		JW.Set.each(this._collections, JW.UI._afterAppend);
 	},
 
 	_initChild: function(component) {

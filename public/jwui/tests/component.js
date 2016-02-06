@@ -358,5 +358,70 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		);
 
 		new View().render();
+	},
+
+	testAfterAppend: function() {
+		var testCase = this;
+
+		var View = function() {
+			View._super.call(this);
+		};
+
+		JW.extend(View, JW.UI.Component, {
+			renderChild: function() {
+				return new Subview("Child");
+			},
+
+			renderProperty: function() {
+				return new JW.Property(new Subview("Property"));
+			},
+
+			renderArray: function() {
+				return new JW.Array([new Subview("Array")]);
+			},
+
+			renderCollection: function() {
+				return new JW.Set([new Subview("Collection")]);
+			},
+
+			afterAppend: function() {
+				this._super();
+				testCase.output("View");
+			}
+		});
+
+		JW.UI.template(View, {
+			main:
+				'<div>' +
+					'<div jwid="child"></div>' +
+					'<div jwid="property"></div>' +
+					'<div jwid="array"></div>' +
+					'<div jwid="collection"></div>' +
+				'</div>'
+		});
+
+		var Subview = function(name) {
+			Subview._super.call(this);
+			this.name = name;
+		};
+
+		JW.extend(Subview, JW.UI.Component, {
+			afterAppend: function() {
+				this._super();
+				testCase.output(this.name);
+			}
+		});
+
+		this.setExpectedOutput(
+			"View",
+			"Child",
+			"Property",
+			"Array",
+			"Collection"
+		);
+		var view = new View().renderTo("body");
+
+		this.setExpectedOutput();
+		view.destroy();
 	}
 });
