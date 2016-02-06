@@ -30,14 +30,19 @@ JW.extend(JW.UI.Component.DomTemplate, JW.UI.Component.AbstractTemplate, {
 		if (this.output !== null) {
 			return this.output;
 		}
-		this.output = new JW.UI.Component.TemplateOutput(this.el, {});
+		this.groups = {};
 		this._compileAttributes(this.el);
+		var orderedGroups = {};
+		for (var i = 0, l = this.ids.length; i < l; ++i) {
+			var id = this.ids[i];
+			orderedGroups[id] = this.groups[id];
+		}
+		this.output = new JW.UI.Component.TemplateOutput(this.el, orderedGroups);
 		return this.output;
 	},
 	
 	_addElement: function(id, el, path) {
-		var groups = this.output.groups;
-		groups[id] = groups[id] || [];
-		groups[id].push(el);
+		this.groups[id] = this.groups[id] || [];
+		this.groups[id].push(el);
 	}
 });

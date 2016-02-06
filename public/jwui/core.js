@@ -175,6 +175,16 @@ JW.UI = {
 		return false;
 	},
 
+	inEl: function(childEl, parentEl) {
+		while (childEl) {
+			if (childEl === parentEl) {
+				return true;
+			}
+			childEl = childEl.parentNode;
+		}
+		return false;
+	},
+
 	replace: function(removeEl, insertEl, attrs) {
 		var parentEl = removeEl.parentNode;
 		if (!parentEl) {

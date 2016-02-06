@@ -45,7 +45,8 @@ JW.extend(JW.UI.Component.Template, JW.UI.Component.AbstractTemplate, {
 		this._compile();
 		var root = this.mirror.cloneNode(true);
 		var groups = {};
-		for (var id in this.groups) {
+		for (var index = 0, count = this.ids.length; index < count; ++index) {
+			var id = this.ids[index];
 			var paths = this.groups[id];
 			var groupSize = paths.length;
 			var group = new Array(groupSize);

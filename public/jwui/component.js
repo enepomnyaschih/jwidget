@@ -586,10 +586,22 @@ JW.extend(JW.UI.Component, JW.Class, {
 		this.beforeRender();
 		var elements = JW.apply({}, this._elements);
 		for (var jwId in elements) {
+			var element = elements[jwId];
+			var aliveElements = JW.Array.filter(element, function(el) {
+				return JW.UI.inEl(el, this.el[0]);
+			}, this);
+			if (aliveElements.length === 0) {
+				delete this._elements[jwId];
+				continue;
+			}
+			if (aliveElements.length !== element.length) {
+				element = jQuery(aliveElements);
+				this._elements[jwId] = element;
+			}
 			var jwIdCamel = JW.String.camel(jwId);
 			var renderMethodName = "render" + JW.String.capitalize(jwIdCamel);
 			if (typeof this[renderMethodName] === "function") {
-				var result = this[renderMethodName](elements[jwId]);
+				var result = this[renderMethodName](element);
 				if (jwId === "root") {
 					if (result instanceof JW.AbstractArray) {
 						this.addArray(result, jwId);

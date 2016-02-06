@@ -229,5 +229,134 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual('<div>a</div><div>b</div><div class="clear"></div>', view.el.html());
 
 		view.destroy();
+	},
+
+	testRenderingOrder: function() {
+		var self = this;
+
+		var View = function() {
+			View._super.call(this);
+		};
+
+		JW.extend(View, JW.UI.Component, {
+			renderDelOne: function() {
+				self.output("del-one");
+				return false;
+			},
+
+			renderSkipOne: function() {
+				self.fail("unexpected skip-one rendering");
+			},
+
+			renderDelTwo: function(el) {
+				self.output("del-two");
+				el.remove();
+			},
+
+			renderSkipTwo: function() {
+				self.fail("unexpected skip-two rendering");
+			},
+
+			renderDelThree: function() {
+				self.output("del-three");
+				return false;
+			},
+
+			renderSkipThree: function() {
+				self.fail("unexpected skip-three rendering");
+			},
+
+			renderDelFour: function() {
+				self.output("del-four");
+				return false;
+			},
+
+			renderPartialFour: function(el) {
+				self.output("partial-four");
+				self.assertStrictEqual(1, el.length);
+			},
+
+			renderDelFive: function() {
+				self.output("del-five");
+				return false;
+			},
+
+			renderPartialFive: function(el) {
+				self.output("partial-five");
+				self.assertStrictEqual(1, el.length);
+			},
+
+			renderDelSix: function() {
+				self.output("del-six");
+				return false;
+			},
+
+			renderSkipSix: function() {
+				self.fail("unexpected skip-six rendering");
+			},
+
+			renderLoop: function() {
+				self.output("loop");
+			}
+		});
+
+		JW.UI.template(View, {
+			main:
+				'<div jwclass="my-component">' +
+					// case 1 - element is skipped if parent rendering has returned false
+					'<div jwid="del-one">' +
+						'<div jwid="skip-one"></div>' +
+					'</div>' +
+
+					// case 2 - element is skipped if parent rendering has removed the element
+					'<div jwid="del-two">' +
+						'<div jwid="skip-two"></div>' +
+					'</div>' +
+
+					// case 3 - add extra parent element
+					'<div jwid="root-three">' +
+						'<div jwid="del-three">' +
+							'<div jwid="skip-three"></div>' +
+						'</div>' +
+					'</div>' +
+
+					// case 4 - loop
+					'<div jwid="loop">' +
+						'<div jwid="loop"></div>' +
+					'</div>' +
+
+					// case 5 - multi-element, partially inside, prefix case
+					'<div jwid="partial-four"></div>' +
+					'<div jwid="del-four">' +
+						'<div jwid="partial-four"></div>' +
+					'</div>' +
+
+					// case 6 - multi-element, partially inside, postfix case
+					'<div jwid="del-five">' +
+						'<div jwid="partial-five"></div>' +
+					'</div>' +
+					'<div jwid="partial-five"></div>' +
+
+					// case 7 - multi-element completely inside
+					'<div jwid="del-six">' +
+						'<div jwid="skip-six"></div>' +
+						'<div jwid="skip-six"></div>' +
+					'</div>' +
+				'</div>'
+		});
+
+		this.setExpectedOutput(
+			"del-one",
+			"del-two",
+			"del-three",
+			"del-four",
+			"partial-four",
+			"del-five",
+			"partial-five",
+			"del-six",
+			"loop"
+		);
+
+		new View().render();
 	}
 });
