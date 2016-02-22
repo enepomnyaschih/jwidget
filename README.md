@@ -15,7 +15,7 @@ Breaking changes:
 Improvements:
 
 - Redirection in a route replaces history state instead of pushing a new one. So "Back" button works better now ([#133](https://github.com/enepomnyaschih/jwidget/issues/133))
-- [JW.destroy](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW-static-method-destroy) never throws the exception now. If the object doesn't have "destroy" method, method doesn nothing ([#134](https://github.com/enepomnyaschih/jwidget/issues/134))
+- [JW.destroy](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW-static-method-destroy) never throws an exception now. If the object doesn't have "destroy" method, method does nothing ([#134](https://github.com/enepomnyaschih/jwidget/issues/134))
 
 Bug fixes:
 
