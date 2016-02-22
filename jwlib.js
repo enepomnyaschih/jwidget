@@ -1,5 +1,5 @@
 /*!
-	jWidget Lib 1.4.2
+	jWidget Lib 1.4.3
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -60,7 +60,7 @@ JW.global = (typeof window === "undefined" ? global : window);
  *                           g: undefined  //
  *     };                };                // };
  *
- *     JW.applyIf(x, y);
+ *     JW.apply(x, y);
  *
  * Example 2 (form data preparing):
  *
@@ -646,16 +646,15 @@ JW.apply(JW, {
 	 * @returns {Mixed} Unique object ID.
 	 */
 	iid: function(obj) {
-		return (typeof obj === "object") ? obj._iid : obj;
+		return (obj && typeof obj === "object") ? obj._iid : obj;
 	},
 
-
 	/**
-	 * Calls object method {@link JW.Class#destroy destroy}. Can be used in mappers configuration:
+	 * Calls object method {@link JW.Class#destroy destroy} if available. Can be used in mappers configuration:
 	 *
 	 *     var mapper = collection.{@link JW.AbstractCollection#createMapper createMapper}({
 	 *         {@link JW.AbstractCollection.Mapper#createItem createItem}  : function(data) { return new View(data); },
-	 *         {@link JW.AbstractCollection.Mapper#destroyItem destroyItem} : JW.destroy, // shorthand for function(view) { view.destroy(); }
+	 *         {@link JW.AbstractCollection.Mapper#destroyItem destroyItem} : JW.destroy,
 	 *         {@link JW.AbstractCollection.Mapper#scope scope}       : this
 	 *     });
 	 *
@@ -664,7 +663,9 @@ JW.apply(JW, {
 	 * @returns {void}
 	 */
 	destroy: function(obj) {
-		obj.destroy();
+		if (obj && typeof obj.destroy === "function") {
+			obj.destroy();
+		}
 	},
 
 	/**
@@ -844,7 +845,6 @@ JW.toArray = JW.args;
 /**
  * @enum {number}
  * jWidget binding mode. All properties have shorthands in {@link JW JW} namespace.
- * Can always be replaced with JW.BindingConfig for advanced binding configuration.
  */
 JW.Binding = {
 	/**
@@ -1660,33 +1660,35 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
  *   </tbody>
  * </table>
  *
- * Simple collections are very similar to native JavaScript collections.
- * Their main purpose is interface compatibility: they have the same API as observable collections, but they work a little bit faster.
+ * Internally, simple collections are very similar to native JavaScript collections.
+ * But their API is identical to observable collections' (excepting lack of events).
+ * So you can use simple collections as a bridge between native JavaScript collections and
+ * jWidget observable collections.
  *
- * Please keep in mind the next rules whenever you work with jWidget collections.
+ * Please keep the next rules in mind whenever you work with jWidget collections.
  *
- * 1) `null` and `undefined` are denied to be added into jWidget collection.
+ * 1) null and undefined items are prohibited in jWidget collections.
  * Use "Null Object" pattern if it is neccessary.
  *
- * 2) The majority of collection modification methods have 2 implementations: `tryMethod` and `method`.
- * These methods perform the same modification but return different result.
- * First implementation is introduced for internal use mainly,
- * and <em>it always returns `undefined` if collection has not been modified</em>.
- * For example, #tryClear will return `undefined` if collection is empty,
- * else it will return old collection contents.
- * Second implementation returns result in more friendly format.
- * For example, #clear always returns old collection contents.
- * So, if you want to clear collection and destroy all items, #clear method will fit better:
+ * 2) The majority of collection modification methods have 2 implementations: **tryMethod** and **method**.
+ * These methods perform the same collection modification but return different result.
+ * tryMethod is introduced for internal use mainly,
+ * and *it always returns undefined if collection has not been modified*.
+ * For example, <a href="#tryclear">tryClear</a> returns undefined if collection is empty,
+ * else it returns old collection contents.
+ * **method** returns result in more friendly format.
+ * For example, <a href="#clear">clear</a> always returns old collection contents.
+ * So, if you want to clear collection and destroy all items, <a href="#clear">clear</a> method fits better:
  *
- *     JW.Array.each(array.{@link JW.AbstractArray#clear clear}(), JW.destroy); // correct
- *     JW.Array.each(array.{@link JW.AbstractArray#clear tryClear}(), JW.destroy); // incorrect: 'undefined' exception if array is empty
+ *     JW.Array.each(array.clear(), JW.destroy); // correct
+ *     JW.Array.each(array.tryClear(), JW.destroy); // incorrect: 'undefined' exception if array is empty
  *
- * 3) Majority methods which return collection have 3 implementations: `method`, `$method` and `$$method`.
+ * 3) Majority of collection returning methods have 3 implementations: **method**, **$method** and **$$method**.
  * These methods perform the same modification but return the result in different format.
  *
- * - `method` returns native JavaScript collection: Array or Object.
- * - `$method` returns jWidget collection: JW.Array, JW.Map or JW.Set.
- * - `$$method` returns jWidget collection and starts continuous synchronization with original
+ * * **method** returns native JavaScript collection: Array or Object.
+ * * **$method** returns jWidget collection: JW.Array, JW.Map or JW.Set.
+ * * **$$method** returns jWidget collection and starts continuous synchronization with original
  * collection if one is observable. To stop synchronization, #destroy the target collection.
  *
  * Use one method that's more convenient in your specific situation.
@@ -3343,7 +3345,7 @@ JW.AbstractCollection.Observer = function(source, config) {
 	this.removeItem = config.removeItem;
 	this.clearItems = config.clearItems;
 	this.change = config.change;
-		this.scope = config.scope || this;
+	this.scope = config.scope || this;
 	this._addItems(source.asArray());
 };
 
@@ -3619,7 +3621,7 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
  *
  *     sorter.{@link JW.AbstractCollection.SorterComparing#destroy destroy}();
  *
- * Use JW.AbstractCollection#createOrderer method to create the synchronizer.
+ * Use JW.AbstractCollection#createSorterComparing method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
  *
  * You can pass target array in config option:
@@ -7956,12 +7958,12 @@ JW.extend(JW.AbstractMap, JW.IndexedCollection, {
 	/**
 	 * @method remove
 	 * Removes item with specified key if it exists in map.
-	 * @param {K} key Key.
+	 * @param {string} key Key.
 	 * @returns {T} Old collection item or `undefined`.
 	 */
 	/**
 	 * Removes item with specified key if it exists in map.
-	 * @param {K} key Key.
+	 * @param {string} key Key.
 	 * @returns {T} Old collection item. If not modified - `undefined`.
 	 */
 	tryRemove: function(key) {
@@ -9253,7 +9255,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 
 	/**
-	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
+	 * Removes and adds multiple items in set. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedItems `<T>` Items to remove.
 	 * @param {Array} addedItems `<T>` Items to add.
 	 * @returns {JW.AbstractSet.SpliceResult} `<T>` Result.
@@ -9288,7 +9290,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	/**
 	 * Detects #splice method arguments to adjust set contents to `newItems`.
 	 * Determines which items should be removed and which ones should be added.
-	 * @param {Object} newItems `<T>` New map contents.
+	 * @param {Object} newItems `<T>` New set contents.
 	 * @returns {JW.AbstractMap.SpliceParams}
 	 * `<T>` #splice method arguments. If no method call required - `undefined`.
 	 */
@@ -9297,8 +9299,8 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 
 	/**
-	 * Adjusts map contents to `newItems` using #detectSplice and #splice methods.
-	 * @param {Object} newItems `<T>` New map contents.
+	 * Adjusts set contents to `newItems` using #detectSplice and #splice methods.
+	 * @param {Object} newItems `<T>` New set contents.
 	 * @returns {void}
 	 */
 	performSplice: function(newItems) {
