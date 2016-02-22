@@ -10,7 +10,7 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 Breaking changes:
 
-- Child element rendering order is changed. jWidget always renders the component from root element down to the leafs now. If the same jwid is used multiple times and causes circular dependencies between jwid's, jWidget renders them in arbitrary order and prints a warning into console ([#132](https://github.com/enepomnyaschih/jwidget/issues/132))
+- Child element rendering order is changed. jWidget always renders the component from root element down to the leafs now. If the same jwid is used multiple times and causes circular dependencies between jwid's, jWidget renders them in arbitrary order and prints a warning into console. Also, if parent element rendering method has removed a bunch of child elements, they are removed from element dictionary. If all elements with specific jwid were removed, it prevents render method call for this jwid ([#132](https://github.com/enepomnyaschih/jwidget/issues/132))
 
 Improvements:
 
