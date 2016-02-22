@@ -25,11 +25,8 @@ jWidget - чисто объектно-ориентированное решен�
 
     JW.extend(Greeter, JW.UI.Component, {
         renderNameField: function(el) {
-            // Привязываем значение элемента к свойству
-            this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(this.name));
-
-            // Привязываем свойство к значению элемента
-            this.name.{@link JW.Property#bindTo bindTo}(this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}()));
+            // Настраиваем двустороннюю связь между значением элемента и свойством
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(this.name, JW.TWOWAY));
         },
 
         renderGreeting: function(el) {
