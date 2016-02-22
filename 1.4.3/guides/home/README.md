@@ -26,11 +26,8 @@ example:
 
     JW.extend(Greeter, JW.UI.Component, {
         renderNameField: function(el) {
-            // Bind element value to property
-            this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(this.name));
-
-            // Bind property to element value
-            this.name.{@link JW.Property#bindTo bindTo}(this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}()));
+            // Setup two-way binding between element value and property
+            this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(this.name, JW.TWOWAY));
         },
 
         renderGreeting: function(el) {
