@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget UI source file.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='jQuery'>/**
+</span> * @class jQuery
+ *
+ * jQuery extension.
+ */
+jQuery.extend(jQuery.fn, {
+<span id='jQuery-method-jwon'>	/**
+</span>	 * Attaches handler to an event. jWidget extension for &lt;a href=&quot;http://api.jquery.com/on/&quot; target=&quot;_blank&quot;&gt;on&lt;/a&gt;
+	 * method which has the next features.
+	 *
+	 * ### 1. Aggregation
+	 *
+	 * The method returns event attachment object. Its destruction results in event unbinding which allows you to use
+	 * jQuery events in conjunction with {@link JW.Class#own own} method.
+	 *
+	 *     // Bind a handler to &quot;mousemove&quot; event and aggregate the attachment
+	 *     this.own($(window).jwon(&quot;mousemove&quot;, function(event) {
+	 *         $(&quot;.output&quot;).text(event.pageX + &quot;:&quot; + event.pageY);
+	 *     }, this));
+	 *
+	 * ### 2. Call context argument
+	 *
+	 * The method accepts callback context as an argument which allows you to avoid JW.inScope
+	 * and &lt;a href=&quot;http://api.jquery.com/jQuery.proxy/&quot; target=&quot;_blank&quot;&gt;jQuery.proxy&lt;/a&gt; usage.
+	 *
+	 *     // On button click, destroy this component
+	 *     el.jwon(&quot;click&quot;, this.destroy, this);
+	 *
+	 * Event target which jQuery usually assigns the call context to is passed as a second callback argument.
+	 *
+	 *     el.jwon(&quot;click&quot;, function(event, target) { ... }, this);
+	 *
+	 * The method doesn't support &quot;data&quot; argument - please use closures instead.
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;200&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-jwon.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * @param {String} events One or more space-separated event types and optional namespaces, such as &quot;click&quot; or &quot;keydown.myPlugin&quot;.
+	 * @param {String} selector A selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.
+	 * @param {Function} handler
+	 *
+	 * `handler(event: Event, target: DOMElement)`
+	 *
+	 * A function to execute when the event is triggered. The value `false` is also allowed as a shorthand for a function that simply does `return false`.
+	 *
+	 * @param {Object} [scope] Function call scope.
+	 * @returns {JW.UI.JQEventAttachment} New event attachment.
+	 */
+	jwon: function(events, selector, handler, scope) {
+		return new JW.UI.JQEventAttachment(this, events, selector, handler, scope);
+	},
+
+<span id='jQuery-method-jwattr'>	/**
+</span>	 * Watches string property modification and updates the specified attribute of the DOM element.
+	 * Returns JW.UI.AttrUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind &quot;title&quot; attribute to title property value
+	 *     this.own(el.jwattr(&quot;title&quot;, title));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;180&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwattr.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * @param {String} attr DOM element attribute name.
+	 * @param {JW.Property} property `&lt;String&gt;` Attribute value.
+	 * @returns {JW.UI.AttrUpdater} Synchronizer instance.
+	 */
+	jwattr: function(attr, property) {
+		return new JW.UI.AttrUpdater(this, attr, property);
+	},
+
+<span id='jQuery-method-jwclass'>	/**
+</span>	 * DOM element CSS class management method. Supports two variations.
+	 *
+	 *     jwclass(cls: String, property: JW.Property&lt;Boolean&gt;): JW.UI.ClassUpdater
+	 *     jwclass(cls: JW.Property&lt;String&gt;): JW.UI.ClassNameUpdater
+	 *
+	 * &lt;hr&gt;
+	 *
+	 *     jwclass(cls: String, property: JW.Property&lt;Boolean&gt;): JW.UI.ClassUpdater
+	 *
+	 * Watches boolean property modification and updates the specified CSS class presence in the DOM element.
+	 * Returns JW.UI.ClassUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind &quot;checked&quot; CSS class to checked property value
+	 *     this.own(el.jwclass(&quot;checked&quot;, checked));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;220&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-bool.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * &lt;hr&gt;
+	 *
+	 *     jwclass(cls: JW.Property&lt;String&gt;): JW.UI.ClassNameUpdater
+	 *
+	 * Watches string property modification and updates CSS class name in the DOM element.
+	 * Returns JW.UI.ClassNameUpdater instance. Destroy it to stop synchronization.
+	 *
+	 * **Caution:** Method doesn't check if the class of the same name is already present in the element.
+	 * If that's the case, it will remove the class on the next property value change. However, it won't
+	 * touch the other classes, e.g. it doesn't remove &quot;application-rect&quot; class in the example below.
+	 *
+	 *     // Bind CSS class name to color property value
+	 *     this.own(el.jwclass(color));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;250&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html&quot;&gt;&lt;/iframe&gt;
+	 */
+	jwclass: function() {
+		var a = arguments[0], b = arguments[1];
+		return (b != null) ? new JW.UI.ClassUpdater(this, a, b) : new JW.UI.ClassNameUpdater(this, a);
+	},
+
+<span id='jQuery-method-jwcss'>	/**
+</span>	 * Watches string modification and updates the specified CSS style of the DOM element.
+	 * Returns JW.UI.CssUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind background color style to color property value
+	 *     this.own(el.jwcss(&quot;background-color&quot;, color));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;180&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwcss.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * @param {String} style CSS style name.
+	 * @param {JW.Property} property `&lt;String&gt;` Style value.
+	 * @returns {JW.UI.CssUpdater} Synchronizer instance.
+	 */
+	jwcss: function(style, property) {
+		return new JW.UI.CssUpdater(this, style, property);
+	},
+
+<span id='jQuery-method-jwhtml'>	/**
+</span>	 * Watches string property modification and updates inner HTML of the DOM element.
+	 * Returns JW.UI.HtmlUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind inner HTML to html property value
+	 *     this.own(el.jwhtml(html));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;220&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwhtml.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * @param {JW.Property} property `&lt;String&gt;` HTML value.
+	 * @returns {JW.UI.HtmlUpdater} Synchronizer instance.
+	 */
+	jwhtml: function(property) {
+		return new JW.UI.HtmlUpdater(this, property);
+	},
+
+<span id='jQuery-method-jwprop'>	/**
+</span>	 * DOM element property management method. Supports two variations.
+	 *
+	 *     jwprop(&quot;checked&quot;): JW.Property&lt;Boolean&gt;
+	 *     jwprop(prop: String, property: JW.Property&lt;Boolean&gt;, [binding: JW.Binding]): JW.UI.PropBinding
+	 *
+	 * &lt;hr&gt;
+	 *
+	 *     jwprop(&quot;checked&quot;): JW.Property&lt;Boolean&gt;
+	 *
+	 * Returns a boolean property containing current checkbox state and starts watching for its modification.
+	 * Destroy the result property to stop synchronization.
+	 *
+	 *     // Watch checkbox state
+	 *     var property = this.own(el.jwprop(&quot;checked&quot;));
+	 *
+	 * &lt;hr&gt;
+	 *
+	 *     jwprop(prop: String, property: JW.Property&lt;Boolean&gt;, [binding: JW.Binding]): JW.UI.PropBinding
+	 *
+	 * Binds specified property of the DOM element to boolean property and/or vice versa.
+	 * Returns JW.UI.PropBinding instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind element state to property
+	 *     this.own(el.jwprop(&quot;disabled&quot;, property));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;140&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwprop.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * Two way binding:
+	 *
+	 *     this.own(el.jwprop(&quot;checked&quot;, this.value, JW.TWOWAY));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;150&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwprop-two.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * @param {String} prop Element's property name.
+	 * @param {JW.Property} [property] `&lt;Boolean&gt;` Property value.
+	 * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+	 */
+	jwprop: function(prop, property, binding) {
+		if (property != null) {
+			return new JW.UI.PropBinding(this, prop, property, binding);
+		}
+		if (prop === &quot;checked&quot;) {
+			var target = new JW.Property();
+			target.own(new JW.UI.CheckedListener(this, {target: target}));
+			return target;
+		}
+		throw new Error(&quot;Invalid argument&quot;);
+	},
+
+<span id='jQuery-method-jwradio'>	/**
+</span>	 * Radio group value management method. Supports two variations.
+	 *
+	 *     jwradio(name: String): JW.Property&lt;String&gt;
+	 *     jwradio(name: String, value: JW.Property&lt;String&gt;, [binding: JW.Binding]): JW.UI.RadioBinding
+	 *
+	 * &lt;hr&gt;
+	 *
+	 *     jwradio(name: String): JW.Property&lt;String&gt;
+	 *
+	 * Returns a string property containing current radio group selection and starts watching for selection modification.
+	 * Destroy the result property to stop synchronization.
+	 *
+	 * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
+	 * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
+	 * All radios must have the same &quot;name&quot; attribute value. If neighter radio is selected, property is set to null.
+	 *
+	 *     // Watch radio button selection
+	 *     var color = this.own(el.jwradio(&quot;color&quot;));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;255&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * &lt;hr&gt;
+	 *
+	 *     jwradio(name: String, value: JW.Property&lt;String&gt;, [binding: JW.Binding]): JW.UI.RadioBinding
+	 *
+	 * Binds radio group selection to string property and/or vice versa.
+	 * Returns JW.UI.RadioBinding instance. Destroy it to stop synchronization.
+	 *
+	 * All radios must have the same &quot;name&quot; attribute value.
+	 *
+	 *     // Bind radio button selection to property value
+	 *     this.own(el.jwradio(&quot;letter&quot;, value));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;170&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * Two way binding:
+	 *
+	 *     this.own(el.jwradio(&quot;first&quot;, this.value, JW.TWOWAY));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;300&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio-two.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * @param {String} name Radios &quot;name&quot; attribute.
+	 * @param {JW.Property} [property] `&lt;String&gt;` Radio value.
+	 * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+	 */
+	jwradio: function(name, property, binding) {
+		if (property != null) {
+			return new JW.UI.RadioBinding(this, name, property, binding);
+		}
+		var target = new JW.Property();
+		target.own(new JW.UI.RadioListener(this, name, {target: target}));
+		return target;
+	},
+
+<span id='jQuery-method-jwtext'>	/**
+</span>	 * Watches string modification and updates inner text of the DOM element.
+	 * Returns JW.UI.TextUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind inner text to property value
+	 *     this.own(el.jwtext(text));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;220&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwtext.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * @param {JW.Property} property `&lt;String&gt;` HTML value.
+	 * @returns {JW.UI.TextUpdater} Synchronizer instance.
+	 */
+	jwtext: function(property) {
+		return new JW.UI.TextUpdater(this, property);
+	},
+
+<span id='jQuery-method-jwval'>	/**
+</span>	 * DOM element value management method. Supports two variations.
+	 *
+	 *     jwval([simple: Boolean]): JW.Property&lt;String&gt;
+	 *     jwval(value: JW.Property&lt;String&gt;, [binding: JW.Binding], [simple: Boolean]): JW.UI.ValueBinding
+	 *
+	 * &lt;hr&gt;
+	 *
+	 *     jwval([simple: Boolean]): JW.Property&lt;String&gt;
+	 *
+	 * Returns a string property containing current element value and starts watching for value modification.
+	 * Destroy the result property to stop synchronization.
+	 *
+	 *     // Watch input element value
+	 *     var value = this.own(el.jwval());
+	 *
+	 * If simple is `true`, listens &quot;change&quot; event only. Defaults to `false` which enables
+	 * reaction to any real-time field modification.
+	 *
+	 * &lt;hr&gt;
+	 *
+	 *     jwval(value: JW.Property&lt;String&gt;, [binding: JW.Binding], [simple: Boolean]): JW.UI.ValueBinding
+	 *
+	 * Binds DOM text input value to string property and/or vice versa.
+	 * Returns JW.UI.ValueBinding instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind element value to property
+	 *     this.own(el.jwval(value));
+	 *
+	 * If simple is `true`, watch-binding listens &quot;change&quot; event only. Defaults to `false` which enables
+	 * reaction to any real-time field modification.
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;285&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * Two way binding:
+	 *
+	 *     this.own(el.jwval(this.value, JW.TWOWAY));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;180&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval-two.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * @param {JW.Property} [property] `&lt;String&gt;` Element value.
+	 * @param {JW.Binding} [binding] Binding mode. Defaults to JW.Binding.UPDATE.
+	 * @param {Boolean} [simple=false]
+	 * If true, watch-binding listens &quot;change&quot; event only. Defaults to false which enables
+	 * reaction to any real-time field modification.
+	 */
+	jwval: function(property, binding, simple) {
+		if (property != null &amp;&amp; (typeof property !== &quot;boolean&quot;)) {
+			return new JW.UI.ValueBinding(this, property, binding, simple);
+		}
+		var target = new JW.Property();
+		target.own(new JW.UI.ValueListener(this, {target: target, simple: simple}));
+		return target;
+	},
+
+<span id='jQuery-method-jwshow'>	/**
+</span>	 * Watches boolean property modification and updates visibility of the DOM element.
+	 * To make element invisible, sets &quot;display: none&quot; inline style. To make
+	 * element visible, removes &quot;display&quot; inline style. Make sure that element is visible according to your CSS rules.
+	 * Returns JW.UI.VisibleUpdater instance. Destroy it to stop synchronization.
+	 *
+	 *     // Bind element visibility to property value
+	 *     this.own(el.jwshow(checked));
+	 *
+	 * &lt;iframe style=&quot;border: 1px solid green; padding: 10px;&quot; width=&quot;800&quot; height=&quot;215&quot; src=&quot;http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwshow.html&quot;&gt;&lt;/iframe&gt;
+	 *
+	 * @param {JW.Property} property `&lt;Boolean&gt;` Element visibility.
+	 * @returns {JW.UI.VisibleUpdater} Synchronizer instance.
+	 */
+	jwshow: function(property) {
+		return new JW.UI.VisibleUpdater(this, property);
+	}
+});
+</pre>
+</body>
+</html>

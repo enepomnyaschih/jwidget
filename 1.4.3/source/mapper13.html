@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.ObservableMap.MapperTestCase = JW.Unit.TestCase.extend({
+	testUnobservableTarget: function() {
+		var source = new JW.ObservableMap({ &quot;d&quot;: &quot;D&quot; });
+		var target = new JW.Map();
+		
+		this.setExpectedOutput(
+			&quot;Created D! by D&quot;
+		);
+		var mapper = this.createMapper(source, target);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created F! by F&quot;
+		);
+		source.setAll({ &quot;f&quot;: &quot;F&quot; });
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created C! by C&quot;
+		);
+		source.set(&quot;C&quot;, &quot;c&quot;);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created B! by B&quot;,
+			&quot;Created M! by M&quot;
+		);
+		source.setAll({ &quot;b&quot;: &quot;B&quot;, &quot;m&quot;: &quot;M&quot; });
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;m&quot;: &quot;M!&quot; }, target);
+		
+		this.setExpectedOutput();
+		source.setAll({});
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;m&quot;: &quot;M!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Destroyed M! by M&quot;
+		);
+		source.remove(&quot;m&quot;);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;b&quot;: &quot;B!&quot; }, target);
+		
+		this.setExpectedOutput();
+		source.remove(&quot;m&quot;);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;b&quot;: &quot;B!&quot; }, target);
+		
+		this.setExpectedOutput();
+		source.setKey(&quot;c&quot;, &quot;a&quot;);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;a&quot;: &quot;C!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created M! by M&quot;,
+			&quot;Destroyed C! by C&quot;,
+			&quot;Destroyed F! by F&quot;
+		);
+		source.splice([ &quot;a&quot;, &quot;f&quot; ], { &quot;m&quot;: &quot;M&quot; });
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;m&quot;: &quot;M!&quot; }, target);
+		
+		this.setExpectedOutput();
+		source.performReindex({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;d&quot;: &quot;M&quot; });
+		this.assertTarget({ &quot;a&quot;: &quot;D!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;d&quot;: &quot;M!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created C! by C&quot;,
+			&quot;Destroyed M! by M&quot;
+		);
+		source.performSplice({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		this.assertTarget({ &quot;a&quot;: &quot;D!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;c&quot;: &quot;C!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Destroyed B! by B&quot;,
+			&quot;Destroyed C! by C&quot;
+		);
+		source.removeAll([ &quot;b&quot;, &quot;c&quot; ]);
+		this.assertTarget({ &quot;a&quot;: &quot;D!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Destroyed D! by D&quot;
+		);
+		source.clear();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput(
+			&quot;Created H! by H&quot;
+		);
+		source.set(&quot;H&quot;, &quot;h&quot;);
+		this.assertTarget({ &quot;h&quot;: &quot;H!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Destroyed H! by H&quot;
+		);
+		mapper.destroy();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testObservableTarget: function() {
+		var source = new JW.ObservableMap({ &quot;d&quot;: &quot;D&quot; });
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Created D! by D&quot;,
+			&quot;Changed size from 0 to 1&quot;,
+			&quot;Spliced -{} +{d:D!}&quot;,
+			&quot;Changed&quot;
+		);
+		var mapper = this.createMapper(source, target);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created F! by F&quot;,
+			&quot;Changed size from 1 to 2&quot;,
+			&quot;Spliced -{} +{f:F!}&quot;,
+			&quot;Changed&quot;
+		);
+		source.setAll({ &quot;f&quot;: &quot;F&quot; });
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created C! by C&quot;,
+			&quot;Changed size from 2 to 3&quot;,
+			&quot;Spliced -{} +{c:C!}&quot;,
+			&quot;Changed&quot;
+		);
+		source.set(&quot;C&quot;, &quot;c&quot;);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created B! by B&quot;,
+			&quot;Created M! by M&quot;,
+			&quot;Changed size from 3 to 5&quot;,
+			&quot;Spliced -{} +{b:B!,m:M!}&quot;,
+			&quot;Changed&quot;
+		);
+		source.setAll({ &quot;b&quot;: &quot;B&quot;, &quot;m&quot;: &quot;M&quot; });
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;m&quot;: &quot;M!&quot; }, target);
+		
+		this.setExpectedOutput();
+		source.setAll({});
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;m&quot;: &quot;M!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 5 to 4&quot;,
+			&quot;Spliced -{m:M!} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed M! by M&quot;
+		);
+		source.remove(&quot;m&quot;);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;b&quot;: &quot;B!&quot; }, target);
+		
+		this.setExpectedOutput();
+		source.remove(&quot;m&quot;);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;b&quot;: &quot;B!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Reindexed by {c:a}&quot;,
+			&quot;Changed&quot;
+		);
+		source.setKey(&quot;c&quot;, &quot;a&quot;);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;f&quot;: &quot;F!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;a&quot;: &quot;C!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created M! by M&quot;,
+			&quot;Changed size from 4 to 3&quot;,
+			&quot;Spliced -{a:C!,f:F!} +{m:M!}&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed C! by C&quot;,
+			&quot;Destroyed F! by F&quot;
+		);
+		source.splice([ &quot;a&quot;, &quot;f&quot; ], { &quot;m&quot;: &quot;M&quot; });
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;m&quot;: &quot;M!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Reindexed by {d:a,m:d}&quot;,
+			&quot;Changed&quot;
+		);
+		source.performReindex({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;d&quot;: &quot;M&quot; });
+		this.assertTarget({ &quot;a&quot;: &quot;D!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;d&quot;: &quot;M!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created C! by C&quot;,
+			&quot;Spliced -{d:M!} +{c:C!}&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed M! by M&quot;
+		);
+		source.performSplice({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		this.assertTarget({ &quot;a&quot;: &quot;D!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;c&quot;: &quot;C!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 3 to 1&quot;,
+			&quot;Spliced -{b:B!,c:C!} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed B! by B&quot;,
+			&quot;Destroyed C! by C&quot;
+		);
+		source.removeAll([ &quot;b&quot;, &quot;c&quot; ]);
+		this.assertTarget({ &quot;a&quot;: &quot;D!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 1 to 0&quot;,
+			&quot;Spliced -{a:D!} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed D! by D&quot;
+		);
+		source.clear();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput(
+			&quot;Created H! by H&quot;,
+			&quot;Changed size from 0 to 1&quot;,
+			&quot;Spliced -{} +{h:H!}&quot;,
+			&quot;Changed&quot;
+		);
+		source.set(&quot;H&quot;, &quot;h&quot;);
+		this.assertTarget({ &quot;h&quot;: &quot;H!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 1 to 0&quot;,
+			&quot;Spliced -{h:H!} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed H! by H&quot;
+		);
+		mapper.destroy();
+		this.assertTarget({}, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testMultiSource: function() {
+		var source1 = new JW.ObservableMap({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot; });
+		var source2 = new JW.ObservableMap({ &quot;c&quot;: &quot;C&quot;, &quot;d&quot;: &quot;D&quot; });
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 0 to 1&quot;,
+			&quot;Spliced -{} +{x:X!}&quot;,
+			&quot;Changed&quot;
+		);
+		target.set(&quot;X!&quot;, &quot;x&quot;);
+		this.assertTarget({ &quot;x&quot;: &quot;X!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created A! by A&quot;,
+			&quot;Created B! by B&quot;,
+			&quot;Changed size from 1 to 3&quot;,
+			&quot;Spliced -{} +{a:A!,b:B!}&quot;,
+			&quot;Changed&quot;
+		);
+		var mapper1 = this.createMapper(source1, target);
+		this.assertTarget({ &quot;a&quot;: &quot;A!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;x&quot;: &quot;X!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created C! by C&quot;,
+			&quot;Created D! by D&quot;,
+			&quot;Changed size from 3 to 5&quot;,
+			&quot;Spliced -{} +{c:C!,d:D!}&quot;,
+			&quot;Changed&quot;
+		);
+		var mapper2 = this.createMapper(source2, target);
+		this.assertTarget({ &quot;a&quot;: &quot;A!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;d&quot;: &quot;D!&quot;, &quot;x&quot;: &quot;X!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created E! by E&quot;,
+			&quot;Changed size from 5 to 6&quot;,
+			&quot;Spliced -{} +{e:E!}&quot;,
+			&quot;Changed&quot;
+		);
+		source1.set(&quot;E&quot;, &quot;e&quot;);
+		this.assertTarget({ &quot;a&quot;: &quot;A!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;d&quot;: &quot;D!&quot;, &quot;e&quot;: &quot;E!&quot;, &quot;x&quot;: &quot;X!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Created F! by F&quot;,
+			&quot;Spliced -{d:D!} +{d:F!}&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed D! by D&quot;
+		);
+		source2.set(&quot;F&quot;, &quot;d&quot;);
+		this.assertTarget({ &quot;a&quot;: &quot;A!&quot;, &quot;b&quot;: &quot;B!&quot;, &quot;c&quot;: &quot;C!&quot;, &quot;d&quot;: &quot;F!&quot;, &quot;e&quot;: &quot;E!&quot;, &quot;x&quot;: &quot;X!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 6 to 3&quot;,
+			&quot;Spliced -{a:A!,b:B!,e:E!} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed A! by A&quot;,
+			&quot;Destroyed B! by B&quot;,
+			&quot;Destroyed E! by E&quot;
+		);
+		source1.clear();
+		this.assertTarget({ &quot;c&quot;: &quot;C!&quot;, &quot;d&quot;: &quot;F!&quot;, &quot;x&quot;: &quot;X!&quot; }, target);
+		
+		this.setExpectedOutput(
+			&quot;Changed size from 3 to 1&quot;,
+			&quot;Spliced -{c:C!,d:F!} +{}&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed C! by C&quot;,
+			&quot;Destroyed F! by F&quot;
+		);
+		mapper2.destroy();
+		this.assertTarget({ &quot;x&quot;: &quot;X!&quot; }, target);
+		
+		this.setExpectedOutput();
+		mapper1.destroy();
+		this.assertTarget({ &quot;x&quot;: &quot;X!&quot; }, target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		
+		source1.destroy();
+		source2.destroy();
+	},
+	
+	// tests that empty source doesn't cause target to trigger &quot;change&quot; on synchronizer initialization
+	testEmptyChange: function() {
+		var source = new JW.ObservableMap();
+		var target = this.createTarget();
+		var mapper = this.createMapper(source, target);
+		mapper.destroy();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testAutoTarget: function() {
+		var source = new JW.ObservableMap({ &quot;d&quot;: &quot;D&quot; });
+		this.setExpectedOutput(&quot;Created D! by D&quot;);
+		var mapper = this.createMapper(source);
+		this.assertTrue(mapper.target instanceof JW.ObservableMap);
+		this.assertTarget({ &quot;d&quot;: &quot;D!&quot; }, mapper.target);
+		this.setExpectedOutput(&quot;Destroyed D! by D&quot;);
+		mapper.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function() {
+		var target = new JW.ObservableMap();
+		JW.Tests.Collection.subscribeToMap(this, target);
+		return target;
+	},
+	
+	createMapper: function(source, target) {
+		return source.createMapper({
+			target : target,
+			scope  : this,
+			
+			createItem: function(data) {
+				var item = data + &quot;!&quot;;
+				this.output(&quot;Created &quot; + item + &quot; by &quot; + data);
+				return item;
+			},
+			
+			destroyItem: function(item, data) {
+				this.output(&quot;Destroyed &quot; + item + &quot; by &quot; + data);
+			}
+		});
+	},
+	
+	assertTarget: function(expected, map) {
+		JW.Tests.Collection.assertMap(this, expected, map);
+	}
+});
+</pre>
+</body>
+</html>

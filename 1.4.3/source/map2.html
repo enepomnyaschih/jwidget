@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.MapTestCase = JW.Tests.Collection.AbstractMapBase.extend({
+	// override
+	createMap: function(items) {
+		return new JW.Map(items);
+	},
+	
+	// override
+	invoke: function(map, method, args) {
+		return map[method].apply(map, args || []);
+	},
+	
+	testNotAdapter: function() {
+		var items = {a: 2, b: 4};
+		var map = new JW.Map(items);
+		this.assertStrictEqual(2, map.getLength());
+		this.assertFalse(map.isEmpty());
+		this.assertStrictEqual(2, map.get(&quot;a&quot;));
+		this.assertStrictEqual(4, map.get(&quot;b&quot;));
+		map.set(3, &quot;a&quot;);
+		this.assertStrictEqual(3, map.get(&quot;a&quot;));
+		this.assertStrictEqual(2, items.a);
+	},
+	
+	testAdapter: function() {
+		var items = {a: 2, b: 4};
+		var map = new JW.Map(items, true);
+		this.assertStrictEqual(2, map.getLength());
+		this.assertFalse(map.isEmpty());
+		this.assertStrictEqual(2, map.get(&quot;a&quot;));
+		this.assertStrictEqual(4, map.get(&quot;b&quot;));
+		map.set(3, &quot;a&quot;);
+		this.assertStrictEqual(3, map.get(&quot;a&quot;));
+		this.assertStrictEqual(3, items.a);
+	},
+	
+	testToMap: function() {
+		var map = new JW.Map({a: 2, b: 4});
+		this.assertTrue(JW.Map.equal(map.toMap(), map.getJson()));
+		this.assertTrue(map.$toMap().equal(map.getJson()));
+		this.assertFalse(map.toMap() === map.getJson());
+		this.assertFalse(map.$toMap() === map);
+		this.assertTrue(map.equal({a: 2, b: 4}));
+	},
+	
+	testAsMap: function() {
+		var map = new JW.Map({a: 2, b: 4});
+		this.assertTrue(map.asMap() === map.getJson());
+		this.assertTrue(map.$asMap() === map);
+		this.assertTrue(map.equal({a: 2, b: 4}));
+	},
+	
+	testOwnItemsOff: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
+		
+		JW.extend(cls, JW.Class, {
+			destroyObject: function() {
+				this.testCase.output(&quot;destroy &quot; + this.value);
+				this._super();
+			}
+		});
+		
+		var map = new JW.Map({
+			A: new cls(this, &quot;a&quot;),
+			B: new cls(this, &quot;b&quot;),
+			C: new cls(this, &quot;c&quot;),
+			D: new cls(this, &quot;d&quot;),
+			E: new cls(this, &quot;e&quot;)
+		});
+		map.set(new cls(this, &quot;k&quot;), &quot;A&quot;);
+		map.setAll({
+			B: new cls(this, &quot;l&quot;),
+			C: new cls(this, &quot;m&quot;),
+		});
+		map.remove(&quot;A&quot;);
+		map.removeAll([&quot;B&quot;, &quot;C&quot;]);
+		map.setKey(&quot;D&quot;, &quot;F&quot;);
+		map.clear();
+		map.setAll({
+			A: new cls(this, &quot;a&quot;),
+			B: new cls(this, &quot;b&quot;)
+		});
+		map.destroy();
+	},
+	
+	testOwnItemsOn: function() {
+		var cls = function(testCase, value) {
+			cls._super.call(this);
+			this.testCase = testCase;
+			this.value = value;
+		};
+		
+		JW.extend(cls, JW.Class, {
+			destroy: function() {
+				this.testCase.output(&quot;destroy &quot; + this.value);
+				this._super();
+			}
+		});
+		
+		var map = new JW.Map({
+			A: new cls(this, &quot;a&quot;),
+			B: new cls(this, &quot;b&quot;),
+			C: new cls(this, &quot;c&quot;),
+			D: new cls(this, &quot;d&quot;),
+			E: new cls(this, &quot;e&quot;)
+		}).ownItems();
+		this.setExpectedOutput(
+			&quot;destroy a&quot;
+		);
+		map.set(new cls(this, &quot;k&quot;), &quot;A&quot;);
+		this.setExpectedOutput(
+			&quot;destroy b&quot;,
+			&quot;destroy c&quot;
+		);
+		map.setAll({
+			B: new cls(this, &quot;l&quot;),
+			C: new cls(this, &quot;m&quot;),
+		});
+		this.setExpectedOutput(
+			&quot;destroy k&quot;
+		);
+		map.remove(&quot;A&quot;);
+		this.setExpectedOutput(
+			&quot;destroy l&quot;,
+			&quot;destroy m&quot;
+		);
+		map.removeAll([&quot;B&quot;, &quot;C&quot;]);
+		//this.setExpectedOutput();
+		//map.setKey(&quot;D&quot;, &quot;F&quot;); // browser-dependent behavior
+		this.setExpectedOutput(
+			&quot;destroy e&quot;,
+			&quot;destroy d&quot;
+		);
+		map.clear();
+		this.setExpectedOutput();
+		map.setAll({
+			A: new cls(this, &quot;a&quot;),
+			B: new cls(this, &quot;b&quot;)
+		});
+		this.setExpectedOutput(
+			&quot;destroy b&quot;,
+			&quot;destroy a&quot;
+		);
+		map.destroy();
+	},
+/*
+	// The next tests are dependent on hardware performance, and sometimes fail.
+	// For debugging purposes only.
+	testSetPerformance: function() {
+		this.assertPerformance(100, function() {
+			var map = new JW.Map();
+			for (var i = 0; i &lt; 10000; ++i) {
+				map.set(i, &quot;a&quot; + i);
+			}
+		});
+	},
+
+	testSetAllPerformance: function() {
+		var cases = [];
+		for (var i = 0; i &lt; 1000; ++i) {
+			var values = {};
+			for (var j = 0; j &lt; 10; ++j) {
+				var k = 10 * i + j;
+				values[&quot;a&quot; + k] = k;
+			}
+			cases.push(values);
+		}
+		this.assertPerformance(20, function() {
+			var map = new JW.Map();
+			for (var i = 0; i &lt; 1000; ++i) {
+				map.setAll(cases[i]);
+			}
+		});
+	},
+
+	testRemovePerformance: function() {
+		this.assertPerformance(100, function() {
+			var values = {};
+			for (var i = 0; i &lt; 10000; ++i) {
+				values[&quot;a&quot; + i] = i;
+			}
+			var map = new JW.Map(values, true);
+			for (var i = 0; i &lt; 10000; ++i) {
+				map.remove(&quot;a&quot; + i);
+			}
+		});
+	},
+
+	testRemoveAllPerformance: function() {
+		var values = {};
+		for (var i = 0; i &lt; 30000; ++i) {
+			values[&quot;a&quot; + i] = i;
+		}
+		var cases = [];
+		for (var i = 0; i &lt; 3000; ++i) {
+			var keys = [];
+			for (var j = 0; j &lt; 10; ++j) {
+				keys.push(&quot;a&quot; + (10 * i + j));
+			}
+			cases.push(keys);
+		}
+		var map = new JW.Map(values, true);
+		this.assertPerformance(30, function() {
+			for (var i = 0; i &lt; 3000; ++i) {
+				map.removeAll(cases[i]);
+			}
+		});
+	},
+
+	testSetKeyPerformance: function() {
+		this.assertPerformance(100, function() {
+			var values = {};
+			for (var i = 0; i &lt; 10000; ++i) {
+				values[&quot;a&quot; + i] = i;
+			}
+			var map = new JW.Map(values, true);
+			for (var i = 0; i &lt; 10000; ++i) {
+				map.setKey(&quot;a&quot; + i, &quot;b&quot; + i);
+			}
+		});
+	},
+
+	testClearPerformance: function() {
+		this.assertPerformance(20, function() {
+			var values = {};
+			for (var i = 0; i &lt; 100; ++i) {
+				values[&quot;a&quot; + i] = i;
+			}
+			var map = new JW.Map();
+			for (var i = 0; i &lt; 100; ++i) {
+				map.setAll(values);
+				map.clear();
+			}
+		});
+	},
+
+	testReindexPerformance: function() {
+		this.assertPerformance(100, function() {
+			var values = {};
+			for (var i = 0; i &lt; 100; ++i) {
+				values[&quot;a&quot; + i] = i;
+			}
+			var map = new JW.Map(values, true);
+			for (var i = 0; i &lt; 100; ++i) {
+				map.reindex(JW.Map.single(&quot;a&quot; + i, &quot;b&quot; + i));
+			}
+		});
+	},
+*/
+});
+
+JW.Tests.Collection.Map = {};
+</pre>
+</body>
+</html>
