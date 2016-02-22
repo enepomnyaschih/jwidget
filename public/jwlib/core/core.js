@@ -1,5 +1,5 @@
 ﻿/*!
-	jWidget Lib 1.4.2
+	jWidget Lib 1.4.3
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 

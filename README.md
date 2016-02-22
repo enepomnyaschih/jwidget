@@ -6,6 +6,22 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
+### 1.4.3 (February 22, 2016)
+
+Breaking changes:
+
+- Child element rendering order is changed. jWidget always renders the component from root element down to the leafs now. If the same jwid is used multiple times and causes circular dependencies between jwid's, jWidget renders them in arbitrary order and prints a warning into console ([#132](https://github.com/enepomnyaschih/jwidget/issues/132))
+
+Improvements:
+
+- Redirection in a route replaces history state instead of pushing a new one. So "Back" button works better now ([#133](https://github.com/enepomnyaschih/jwidget/issues/133))
+- [JW.destroy](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW-static-method-destroy) never throws the exception now. If the object doesn't have "destroy" method, method doesn nothing ([#134](https://github.com/enepomnyaschih/jwidget/issues/134))
+
+Bug fixes:
+
+- Fixed a bug of ignoring return value in jwon callback if scope argument is passed ([#135](https://github.com/enepomnyaschih/jwidget/issues/135))
+- Fixed a bug of missing afterAppend call for a child component rendered as a member of non-array collection ([#136](https://github.com/enepomnyaschih/jwidget/issues/136))
+
 ### 1.4.2 (December 5, 2015)
 
 - Fixed a bug in [addAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractArray-method-addAll) and [tryAddAll](http://enepomnyaschih.github.io/jwidget/index.html#!/api/JW.AbstractArray-method-tryAddAll) causing stack overflow on big data arrays
