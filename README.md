@@ -6,6 +6,12 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
+### 1.4.4 (April 29, 2016)
+
+Bug fixes:
+
+- Fixed a warning message if a component has jwid defined in root element ([#137](https://github.com/enepomnyaschih/jwidget/issues/137))
+
 ### 1.4.3 (February 22, 2016)
 
 Breaking changes:

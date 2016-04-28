@@ -22,6 +22,7 @@ JW.UI.Component.AbstractTemplate = function() {
 	this.prefixes = null; // Array<String>
 	this.parentIdMap = null; // Map<String, Map<String, true>>, the parent IDs of [key] item
 	this.childIdMap = null; // Map<String, Map<String, true>>, the child IDs of [key] item
+	this.rootIds = null; // Array<String>
 	this.ids = null; // Array<String>, in dependency order
 };
 
@@ -45,6 +46,9 @@ JW.extend(JW.UI.Component.AbstractTemplate, JW.Class, {
 		// resolving dependencies to a plain list of IDs
 		this.ids = [];
 		this._backtrace("root");
+		if (this.rootIds) {
+			JW.Array.each(this.rootIds, this._backtrace, this);
+		}
 
 		// check for trash
 		var remainingIds = JW.Map.getKeys(this.parentIdMap);
@@ -68,6 +72,9 @@ JW.extend(JW.UI.Component.AbstractTemplate, JW.Class, {
 				return null;
 			}
 			var ids = JW.String.parseClass(attr);
+			if (path.length === 0) {
+				this.rootIds = ids.concat();
+			}
 			el.removeAttribute("jwid");
 			var l = ids.length;
 			if (l === 0) {
