@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget UI source file.
+
+	Copyright (C) 2015 Egor Nepomnyaschih
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+<span id='JW-UI-CheckedListener-method-constructor'><span id='JW-UI-CheckedListener'>/**
+</span></span> * @class
+ * @deprecated 1.4 Use {@link jQuery#jwprop jwprop} instead.
+ * @extends JW.Class
+ *
+ * @constructor
+ * @param {jQuery} el DOM element.
+ * @param {Object} [config] Configuration (see Config options). For backward compatibility, target property is allowed
+ * here, but this is a deprecated feature.
+ */
+JW.UI.CheckedListener = function(el, config) {
+	this._update = JW.inScope(this._update, this);
+	JW.UI.CheckedListener._super.call(this);
+	config = (config instanceof JW.Property) ? {target: config} : (config || {});
+	this.el = jQuery(el);
+	this._targetCreated = config.target == null;
+	this.target = this._targetCreated ? new JW.Property() : config.target;
+	this.property = this.target;
+	this._update();
+	this.el.bind(&quot;change&quot;, this._update);
+};
+
+JW.extend(JW.UI.CheckedListener, JW.Class, {
+<span id='JW-UI-CheckedListener-cfg-target'>	/**
+</span>	 * @cfg {JW.Property} target `&lt;Boolean&gt;` Target property. By default, created automatically.
+	 */
+<span id='JW-UI-CheckedListener-property-el'>	/**
+</span>	 * @property {jQuery} el DOM element.
+	 */
+<span id='JW-UI-CheckedListener-property-target'>	/**
+</span>	 * @property {JW.Property} target `&lt;Boolean&gt;` Target property.
+	 */
+<span id='JW-UI-CheckedListener-property-property'>	/**
+</span>	 * @property {JW.Property} property `&lt;Boolean&gt;` Deprecated, use {@link #property-target target} instead.
+	 * @deprecated
+	 */
+
+	destroyObject: function() {
+		this.el.unbind(&quot;change&quot;, this._update);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.el = null;
+		this.target = null;
+		this.property = null;
+		this._super();
+	},
+
+	_update: function() {
+		this.target.set(this.el.prop(&quot;checked&quot;));
+	}
+});
+</pre>
+</body>
+</html>

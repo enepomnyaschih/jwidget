@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.ObservableMap.ObserverTestCase = JW.Unit.TestCase.extend({
+	testObserver: function() {
+		var source = new JW.ObservableMap({ &quot;d&quot;: &quot;D&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Added D&quot;
+		);
+		var syncher = source.createObserver({
+			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
+			clearItems : function(items) {
+				items = items.concat();
+				items.sort();
+				this.output(&quot;Cleared &quot; + items.join(&quot;, &quot;));
+			},
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Added F&quot;
+		);
+		source.setAll({ &quot;f&quot;: &quot;F&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Added C&quot;
+		);
+		source.set(&quot;C&quot;, &quot;c&quot;);
+		
+		this.setExpectedOutput(
+			&quot;Added B&quot;,
+			&quot;Added M&quot;
+		);
+		source.setAll({ &quot;b&quot;: &quot;B&quot;, &quot;m&quot;: &quot;M&quot; });
+		
+		this.setExpectedOutput();
+		source.setAll({});
+		
+		this.setExpectedOutput(
+			&quot;Removed M&quot;
+		);
+		source.remove(&quot;m&quot;);
+		
+		this.setExpectedOutput();
+		source.remove(&quot;m&quot;);
+		
+		this.setExpectedOutput(
+			&quot;Removed F&quot;,
+			&quot;Added T&quot;
+		);
+		source.set(&quot;T&quot;, &quot;f&quot;);
+		
+		this.setExpectedOutput();
+		source.setKey(&quot;c&quot;, &quot;a&quot;);
+		
+		this.setExpectedOutput(
+			&quot;Removed T&quot;,
+			&quot;Removed C&quot;,
+			&quot;Added M&quot;
+		);
+		source.splice([ &quot;a&quot;, &quot;f&quot; ], { &quot;m&quot;: &quot;M&quot; });
+		
+		this.setExpectedOutput();
+		source.performReindex({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;d&quot;: &quot;M&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Removed M&quot;,
+			&quot;Added C&quot;
+		);
+		source.performSplice({ &quot;a&quot;: &quot;D&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Removed C&quot;,
+			&quot;Removed B&quot;
+		);
+		source.removeAll([ &quot;b&quot;, &quot;c&quot; ]);
+		
+		this.setExpectedOutput(
+			&quot;Cleared D&quot;
+		);
+		source.clear();
+		
+		this.setExpectedOutput(
+			&quot;Added H&quot;
+		);
+		source.set(&quot;H&quot;, &quot;h&quot;);
+		
+		this.setExpectedOutput(
+			&quot;Cleared H&quot;
+		);
+		syncher.destroy();
+	},
+	
+	testAutoClear: function() {
+		var source = new JW.ObservableMap({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Added A&quot;,
+			&quot;Added B&quot;,
+			&quot;Added C&quot;
+		);
+		var syncher = source.createObserver({
+			addItem    : function(item) { this.output(&quot;Added &quot; + item); },
+			removeItem : function(item) { this.output(&quot;Removed &quot; + item); },
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Removed C&quot;,
+			&quot;Removed B&quot;,
+			&quot;Removed A&quot;
+		);
+		syncher.destroy();
+	}
+});
+</pre>
+</body>
+</html>

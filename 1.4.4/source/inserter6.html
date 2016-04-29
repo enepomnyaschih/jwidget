@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractMap.InserterTestCase = JW.Unit.TestCase.extend({
+	testInserter: function() {
+		var source = new JW.Map({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Added A at a&quot;,
+			&quot;Added B at b&quot;,
+			&quot;Added C at c&quot;
+		);
+		var syncher = source.createInserter({
+			addItem    : function(item, key) { this.output(&quot;Added &quot; + item + &quot; at &quot; + key); },
+			removeItem : function(key, item) { this.output(&quot;Removed &quot; + item + &quot; at &quot; + key); },
+			clearItems : function(items) { this.output(&quot;Cleared &quot; + JW.Tests.Collection.formatMap(items)); },
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Cleared {a:A,b:B,c:C}&quot;
+		);
+		syncher.destroy();
+	},
+	
+	testAutoClear: function() {
+		var source = new JW.Map({ &quot;a&quot;: &quot;A&quot;, &quot;b&quot;: &quot;B&quot;, &quot;c&quot;: &quot;C&quot; });
+		
+		this.setExpectedOutput(
+			&quot;Added A at a&quot;,
+			&quot;Added B at b&quot;,
+			&quot;Added C at c&quot;
+		);
+		var syncher = source.createInserter({
+			addItem    : function(item, key) { this.output(&quot;Added &quot; + item + &quot; at &quot; + key); },
+			removeItem : function(key, item) { this.output(&quot;Removed &quot; + item + &quot; at &quot; + key); },
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Removed A at a&quot;,
+			&quot;Removed B at b&quot;,
+			&quot;Removed C at c&quot;
+		);
+		syncher.destroy();
+	}
+});
+</pre>
+</body>
+</html>

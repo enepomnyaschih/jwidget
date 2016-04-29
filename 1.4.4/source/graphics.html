@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	JW.Canvas component graphics model.
+	
+	Copyright (C) 2013 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+	
+	----
+	
+	See http://www.w3.org/TR/2dcontext for canvas 2D context specification.
+*/
+
+JW.Canvas.Graphics = JW.Class.extend({
+	items : null, // Array of JW.Canvas.Graphics.Item
+	
+	init: function()
+	{
+		this.items = [];
+	},
+	
+	save: function()
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;save&quot;));
+	},
+	
+	restore: function()
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;restore&quot;));
+	},
+	
+	scale: function(x, y)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;scale&quot;, [ x, y ]));
+	},
+	
+	rotate: function(angle)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;rotate&quot;, [ angle ]));
+	},
+	
+	translate: function(x, y)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;translate&quot;, [ x, y ]));
+	},
+	
+	transform: function(a, b, c, d, e, f)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;transform&quot;, [ a, b, c, d, e, f ]));
+	},
+	
+	flipX: function(x)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;transform&quot;, [ -1, 0, 0, 1, 2 * x, 0 ]));
+	},
+	
+	flipY: function(y)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;transform&quot;, [ 1, 0, 0, -1, 0, 2 * y ]));
+	},
+	
+	// TODO: test
+	flip: function(a, r)
+	{
+		var sin  = Math.sin(a);
+		var cos  = Math.cos(a);
+		var sin2 = Math.sin(2 * a);
+		var cos2 = Math.cos(2 * a);
+		
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;transform&quot;, [ -cos2, -sin2, -sin2, cos2, 2 * r * cos, 2 * r * sin ]));
+	},
+	
+	setTransform: function(a, b, c, d, e, f)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;setTransform&quot;, [ a, b, c, d, e, f ]));
+	},
+	
+	globalAlpha: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;globalAlpha&quot;, value));
+	},
+	
+	strokeStyle: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;strokeStyle&quot;, value));
+	},
+	
+	fillStyle: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;fillStyle&quot;, value));
+	},
+	
+	lineWidth: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;lineWidth&quot;, value));
+	},
+	
+	lineCap: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;lineCap&quot;, value));
+	},
+	
+	lineJoin: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;lineJoin&quot;, value));
+	},
+	
+	miterLimit: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;miterLimit&quot;, value));
+	},
+	
+	shadowOffsetX: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;shadowOffsetX&quot;, value));
+	},
+	
+	shadowOffsetY: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;shadowOffsetY&quot;, value));
+	},
+	
+	shadowBlur: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;shadowBlur&quot;, value));
+	},
+	
+	shadowColor: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;shadowColor&quot;, value));
+	},
+	
+	fillRect: function(x, y, w, h)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;fillRect&quot;, [ x, y, w, h ]));
+	},
+	
+	strokeRect: function(x, y, w, h)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;strokeRect&quot;, [ x, y, w, h ]));
+	},
+	
+	beginPath: function()
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method.Path(&quot;beginPath&quot;, true));
+	},
+	
+	closePath: function()
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method.Path(&quot;closePath&quot;, false));
+	},
+	
+	moveTo: function(x, y)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;moveTo&quot;, [ x, y ]));
+	},
+	
+	lineTo: function(x, y)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;lineTo&quot;, [ x, y ]));
+	},
+	
+	quadraticCurveTo: function(cpx, cpy, x, y)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;quadraticCurveTo&quot;, [ cpx, cpy, x, y ]));
+	},
+	
+	bezierCurveTo: function(cp1x, cp1y, cp2x, cp2y, x, y)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;bezierCurveTo&quot;, [ cp1x, cp1y, cp2x, cp2y, x, y ]));
+	},
+	
+	arcTo: function(x1, y1, x2, y2, radius)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;arcTo&quot;, [ x1, y1, x2, y2, radius ]));
+	},
+	
+	rect: function(x, y, w, h)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;rect&quot;, [ x, y, w, h ]));
+	},
+	
+	arc: function(x, y, radius, startAngle, endAngle, anticlockwise)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;arc&quot;, [ x, y, radius, startAngle, endAngle, anticlockwise ]));
+	},
+	
+	fill: function()
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;fill&quot;));
+	},
+	
+	stroke: function()
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;stroke&quot;));
+	},
+	
+	font: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;font&quot;, value));
+	},
+	
+	textAlign: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;textAlign&quot;, value));
+	},
+	
+	textBaseline: function(value)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Property(&quot;textBaseline&quot;, value));
+	},
+	
+	fillText: function(text, x, y, maxWidth)
+	{
+		// Temporary hack due to http://code.google.com/p/chromium/issues/detail?id=110995
+		if (JW.isSet(maxWidth))
+			this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;fillText&quot;, [ text, x, y, maxWidth ]));
+		else
+			this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;fillText&quot;, [ text, x, y ]));
+	},
+	
+	strokeText: function(text, x, y, maxWidth)
+	{
+		// Temporary hack due to http://code.google.com/p/chromium/issues/detail?id=110995
+		if (JW.isSet(maxWidth))
+			this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;strokeText&quot;, [ text, x, y, maxWidth ]));
+		else
+			this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;strokeText&quot;, [ text, x, y ]));
+	},
+	
+	measureText: function(text)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;measureText&quot;, [ text ]));
+	},
+	
+	drawImage: function(image, sx, sy, sw, sh, dx, dy, dw, dh)
+	{
+		this.items.push(new JW.Canvas.Graphics.Item.Method(&quot;drawImage&quot;, [ image, sx, sy, sw, sh, dx, dy, dw, dh ]));
+	},
+	
+	clear: function()
+	{
+		this.items.splice(0, this.items.length);
+	}
+});
+</pre>
+</body>
+</html>

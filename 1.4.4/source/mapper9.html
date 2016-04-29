@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.AbstractArray.MapperTestCase = JW.Unit.TestCase.extend({
+	testMapValues: function() {
+		var source = new JW.Array([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ]);
+
+		this.setExpectedOutput(
+			&quot;Created by a&quot;,
+			&quot;Created by b&quot;,
+			&quot;Created by c&quot;
+		);
+		var target = source.$$mapValues(this.createFunc, this);
+		this.assertTarget([ &quot;A&quot;, &quot;B&quot;, &quot;C&quot; ], target);
+
+		target.destroy();
+		source.destroy();
+	},
+
+	testMapObjects: function() {
+		var source = new JW.Array([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ]);
+
+		this.setExpectedOutput(
+			&quot;Created by a&quot;,
+			&quot;Created by b&quot;,
+			&quot;Created by c&quot;
+		);
+		var target = source.$$mapObjects(function(x) {
+			this.output(&quot;Created by &quot; + x);
+			var self = this;
+			return {
+				x: x,
+				destroy: function() {
+					self.output(&quot;Destroyed by &quot; + x);
+				}
+			};
+		}, this);
+		this.assertTarget([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ], target.$map(JW.byField(&quot;x&quot;)));
+
+		this.setExpectedOutput(
+			&quot;Destroyed by c&quot;,
+			&quot;Destroyed by b&quot;,
+			&quot;Destroyed by a&quot;
+		);
+		target.destroy();
+		source.destroy();
+	},
+
+	testUnobservableTarget: function() {
+		var source = new JW.Array([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ]);
+		var target = new JW.Array();
+		
+		this.setExpectedOutput(
+			&quot;Created by a&quot;,
+			&quot;Created by b&quot;,
+			&quot;Created by c&quot;
+		);
+		var mapper = this.createMapper(source, target);
+		this.assertTarget([ &quot;A&quot;, &quot;B&quot;, &quot;C&quot; ], target);
+		
+		this.setExpectedOutput(
+			&quot;Destroyed C by c&quot;,
+			&quot;Destroyed B by b&quot;,
+			&quot;Destroyed A by a&quot;
+		);
+		mapper.destroy();
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testObservableTarget: function() {
+		var source = new JW.Array([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot; ]);
+		var target = this.createTarget();
+		
+		this.setExpectedOutput(
+			&quot;Created by a&quot;,
+			&quot;Created by b&quot;,
+			&quot;Created by c&quot;,
+			&quot;Changed length from 0 to 3&quot;,
+			&quot;Spliced -[] +[0:[A,B,C]] to []&quot;,
+			&quot;Changed&quot;
+		);
+		var mapper = this.createMapper(source, target);
+		this.assertTarget([ &quot;A&quot;, &quot;B&quot;, &quot;C&quot; ], target);
+		
+		this.setExpectedOutput(
+			&quot;Changed length from 3 to 0&quot;,
+			&quot;Cleared [A,B,C]&quot;,
+			&quot;Changed&quot;,
+			&quot;Destroyed C by c&quot;,
+			&quot;Destroyed B by b&quot;,
+			&quot;Destroyed A by a&quot;
+		);
+		mapper.destroy();
+		this.assertTarget([], target);
+		
+		this.setExpectedOutput();
+		target.destroy();
+		source.destroy();
+	},
+	
+	// tests that empty source doesn't caused target to trigger &quot;change&quot; on synchronizer initialization
+	testEmptyChange: function() {
+		var source = new JW.Array();
+		var target = this.createTarget();
+		var mapper = this.createMapper(source, target);
+		mapper.destroy();
+		target.destroy();
+		source.destroy();
+	},
+	
+	testAutoTarget: function() {
+		var source = new JW.Array([ &quot;d&quot; ]);
+		this.setExpectedOutput(&quot;Created by d&quot;);
+		var mapper = this.createMapper(source);
+		this.assertTrue(mapper.target instanceof JW.Array);
+		this.assertTarget([ &quot;D&quot; ], mapper.target);
+		this.setExpectedOutput(&quot;Destroyed D by d&quot;);
+		mapper.destroy();
+		source.destroy();
+	},
+	
+	createTarget: function(target) {
+		var target = new JW.ObservableArray();
+		JW.Tests.Collection.subscribeToArray(this, target);
+		return target;
+	},
+	
+	createMapper: function(source, target) {
+		return source.createMapper({
+			target : target,
+			scope  : this,
+			
+			createItem: this.createFunc,
+			
+			destroyItem: function(item, data) {
+				this.output(&quot;Destroyed &quot; + item + &quot; by &quot; + data);
+			}
+		});
+	},
+
+	createFunc: function(data) {
+		this.output(&quot;Created by &quot; + data);
+		return data.toUpperCase();
+	},
+	
+	assertTarget: function(values, target) {
+		this.assertStrictEqual(values.length, target.getLength());
+		for (var i = 0; i &lt; target.getLength(); ++i) {
+			this.assertStrictEqual(values[i], target.get(i));
+		}
+	}
+});
+</pre>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
+	testReplaceable: function()
+	{
+		var testCase = this;
+		
+		var Document = function(name) {
+			Document._super.call(this);
+			this.name = name;
+		};
+		
+		JW.extend(Document, JW.Class, {
+			// String name
+		});
+		
+		var DocumentView = function(document) {
+			DocumentView._super.call(this);
+			this.document = document;
+		};
+		
+		JW.extend(DocumentView, JW.UI.Component, {
+			// Document document;
+			
+			afterRender: function() {
+				this._super();
+				testCase.output(&quot;Create &quot; + this.document.name);
+				this.el.text(this.document.name);
+			},
+			
+			unrender: function() {
+				testCase.output(&quot;Destroy &quot; + this.document.name);
+				this._super();
+			}
+		});
+		
+		var MyComponent = function(document) {
+			MyComponent._super.call(this);
+			this.document = document;
+		};
+		
+		JW.extend(MyComponent, JW.UI.Component, {
+			// JW.Property&lt;Document&gt; document;
+			
+			renderDocument: function() {
+				return this.own(new JW.Mapper([this.document], {
+					createValue: function(document) {
+						return new DocumentView(document);
+					},
+					destroyValue: JW.destroy,
+					scope: this
+				})).target;
+			}
+		});
+		
+		JW.UI.template(MyComponent, {
+			main:
+				'&lt;div jwclass=&quot;my-component&quot;&gt;' +
+					'&lt;div jwid=&quot;document&quot;&gt;&lt;/div&gt;' +
+				'&lt;/div&gt;'
+		});
+		
+		var document = new JW.Property(new Document(&quot;apple&quot;));
+		var component = new MyComponent(document);
+		
+		this.setExpectedOutput(&quot;Create apple&quot;);
+		component.render();
+		this.assertStrictEqual('&lt;div class=&quot;my-component-document&quot;&gt;apple&lt;/div&gt;', component.el.html());
+		this.assertTrue(component.children.containsKey(&quot;document&quot;));
+		
+		this.setExpectedOutput(&quot;Create banana&quot;, &quot;Destroy apple&quot;);
+		document.set(new Document(&quot;banana&quot;));
+		this.assertStrictEqual('&lt;div class=&quot;my-component-document&quot;&gt;banana&lt;/div&gt;', component.el.html());
+		
+		this.setExpectedOutput(&quot;Destroy banana&quot;);
+		document.set(null);
+		this.assertStrictEqual('&lt;div class=&quot;my-component-document&quot;&gt;&lt;/div&gt;', component.el.html());
+		this.assertFalse(component.children.containsKey(&quot;document&quot;));
+		
+		this.setExpectedOutput(&quot;Create cytrus&quot;);
+		document.set(new Document(&quot;cytrus&quot;));
+		this.assertStrictEqual('&lt;div class=&quot;my-component-document&quot;&gt;cytrus&lt;/div&gt;', component.el.html());
+		
+		this.setExpectedOutput(&quot;Destroy cytrus&quot;);
+		component.destroy();
+	},
+	
+	testRenderRoot: function()
+	{
+		var Component = function(text) {
+			Component._super.call(this);
+			this.text = text;
+		};
+		
+		JW.extend(Component, JW.UI.Component, {
+			renderRoot: function(el) {
+				el.text(this.text);
+			}
+		});
+		
+		var component = new Component(&quot;apple&quot;);
+		component.render();
+		this.assertStrictEqual(&quot;apple&quot;, component.el.text());
+		component.destroy();
+		
+		// JW.AbstractArray
+		var Container = function(values) {
+			Container._super.call(this);
+			this.values = values;
+		};
+		
+		JW.extend(Container, JW.UI.Component, {
+			renderRoot: function() {
+				return this.own(JW.Array.$map(this.values, function(text) {
+					return new Component(text);
+				}, this)).ownItems();
+			}
+		});
+		
+		var container = new Container([&quot;apple&quot;, &quot;banana&quot;]);
+		container.render();
+		this.assertStrictEqual('&lt;div&gt;apple&lt;/div&gt;&lt;div&gt;banana&lt;/div&gt;', container.el.html());
+		container.destroy();
+		
+		// JW.UI.Component (denied)
+		var DeniedComponent = function() {
+			DeniedComponent._super.call(this);
+		};
+		
+		JW.extend(DeniedComponent, JW.UI.Component, {
+			renderRoot: function() {
+				return this.own(new Component(&quot;apple&quot;));
+			}
+		});
+		
+		JW.UI.template(DeniedComponent, {
+			main: '&lt;div my-attr=&quot;banana&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;'
+		});
+		
+		var deniedComponent = new DeniedComponent();
+		deniedComponent.render();
+		this.assertStrictEqual('&lt;span&gt;&lt;/span&gt;', deniedComponent.el.html());
+		this.assertStrictEqual(&quot;banana&quot;, deniedComponent.el.attr(&quot;my-attr&quot;));
+		
+		// false (denied)
+		var DeniedFalse = function() {
+			DeniedFalse._super.call(this);
+		};
+		
+		JW.extend(DeniedFalse, JW.UI.Component, {
+			renderRoot: function() {
+				return false;
+			}
+		});
+		
+		JW.UI.template(DeniedFalse, {
+			main: '&lt;div my-attr=&quot;banana&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;'
+		});
+		
+		var deniedFalse = new DeniedFalse();
+		deniedFalse.render();
+		this.assertStrictEqual('&lt;span&gt;&lt;/span&gt;', deniedFalse.el.html());
+		this.assertStrictEqual(&quot;banana&quot;, deniedFalse.el.attr(&quot;my-attr&quot;));
+	},
+	
+	testWrapMap: function() {
+		var tags = [
+			&quot;option&quot;,
+			&quot;optgroup&quot;,
+			&quot;thead&quot;,
+			&quot;tbody&quot;,
+			&quot;tfoot&quot;,
+			&quot;colgroup&quot;,
+			&quot;caption&quot;,
+			&quot;col&quot;,
+			&quot;tr&quot;,
+			&quot;td&quot;,
+			&quot;th&quot;,
+			&quot;li&quot;
+		];
+		
+		JW.Array.each(tags, this._testWrapMapTag, this);
+	},
+	
+	_testWrapMapTag: function(tag) {
+		try {
+			var Component = function() {
+				Component._super.call(this);
+			};
+			
+			JW.extend(Component, JW.UI.Component);
+			
+			JW.UI.template(Component, {
+				main: '&lt;' + tag + '&gt;&lt;/' + tag + '&gt;'
+			});
+			
+			var component = new Component();
+			component.render();
+			this.assertStrictEqual(tag, component.el[0].tagName.toLowerCase());
+			component.destroy();
+		} catch (e) {
+			throw new Error(&quot;Tag &quot; + tag + &quot; is not wrapped correctly: &quot; + e);
+		}
+	},
+	
+	testUsingElement: function() {
+		var testCase = this;
+		var root = JW.UI.parseHtml(
+			'&lt;div jwclass=&quot;my-component&quot;&gt;' +
+				'&lt;div jwid=&quot;first&quot;&gt;' +
+					'&lt;div jwid=&quot;second&quot;&gt;&lt;/div&gt;' +
+				'&lt;/div&gt;' +
+			'&lt;/div&gt;');
+		document.body.appendChild(root);
+		var wasAfterAppend = false;
+		var Component = function() {
+			Component._super.call(this);
+		};
+		JW.extend(Component, JW.UI.Component, {
+			renderRoot: function(el) {
+				testCase.assertStrictEqual(&quot;my-component&quot;, JW.String.trim(el.attr(&quot;class&quot;)));
+			},
+			renderFirst: function(el) {
+				testCase.assertStrictEqual(&quot;my-component-first&quot;, JW.String.trim(el.attr(&quot;class&quot;)));
+			},
+			renderSecond: function(el) {
+				testCase.assertStrictEqual(&quot;my-component-second&quot;, JW.String.trim(el.attr(&quot;class&quot;)));
+			},
+			afterAppend: function() {
+				this._super();
+				wasAfterAppend = true;
+			}
+		});
+		var component = new Component().using(root).render();
+		this.assertStrictEqual(root, component.el[0]);
+		this.assertTrue(wasAfterAppend);
+		component.destroy();
+		this.assertStrictEqual(0, jQuery(&quot;#my-component&quot;).length);
+	}
+});
+</pre>
+</body>
+</html>

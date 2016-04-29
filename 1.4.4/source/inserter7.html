@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*
+	jWidget Lib tests.
+	
+	Copyright (C) 2015 Egor Nepomnyaschih
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
+	
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/
+
+JW.Tests.Collection.ObservableArray.InserterTestCase = JW.Unit.TestCase.extend({
+	testInserter: function() {
+		var collection = new JW.ObservableArray([ &quot;d&quot; ]);
+		
+		this.setExpectedOutput(
+			&quot;Added d at 0&quot;
+		);
+		var inserter = collection.createInserter({
+			addItem    : function(item, index) { this.output(&quot;Added &quot; + item + &quot; at &quot; + index); },
+			removeItem : function(item, index) { this.output(&quot;Removed &quot; + item + &quot; at &quot; + index); },
+			clearItems : function(items) { this.output(&quot;Cleared &quot; + items.join(&quot;, &quot;)); },
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Added f at 1&quot;
+		);
+		collection.addAll([ &quot;f&quot; ]);
+		
+		this.setExpectedOutput(
+			&quot;Added c at 1&quot;
+		);
+		collection.add(&quot;c&quot;, 1);
+		
+		this.setExpectedOutput(
+			&quot;Added b at 0&quot;,
+			&quot;Added m at 1&quot;
+		);
+		collection.addAll([ &quot;b&quot;, &quot;m&quot; ], 0);
+		
+		this.setExpectedOutput();
+		collection.addAll([], 1);
+		
+		this.setExpectedOutput(
+			&quot;Added a at 5&quot;
+		);
+		collection.add(&quot;a&quot;, 5);
+		
+		this.setExpectedOutput(
+			&quot;Removed m at 1&quot;
+		);
+		collection.remove(1);
+		
+		this.setExpectedOutput(
+			&quot;Removed b at 0&quot;
+		);
+		collection.remove(0);
+		
+		this.setExpectedOutput(
+			&quot;Added k at 4&quot;
+		);
+		collection.add(&quot;k&quot;);
+		
+		this.setExpectedOutput(
+			&quot;Removed f at 2&quot;,
+			&quot;Added g at 2&quot;
+		);
+		collection.set(&quot;g&quot;, 2);
+		
+		this.setExpectedOutput();
+		collection.set(&quot;a&quot;, 3);
+		
+		this.setExpectedOutput(
+			&quot;Removed g at 2&quot;,
+			&quot;Added g at 1&quot;
+		);
+		collection.move(2, 1);
+		
+		this.setExpectedOutput(
+			&quot;Removed d at 0&quot;,
+			&quot;Added d at 4&quot;
+		);
+		collection.move(0, 4);
+		
+		this.setExpectedOutput();
+		collection.move(1, 1);
+		
+		this.setExpectedOutput(
+			&quot;Cleared g, c, a, k, d&quot;,
+			&quot;Added a at 0&quot;,
+			&quot;Added c at 1&quot;,
+			&quot;Added d at 2&quot;,
+			&quot;Added g at 3&quot;,
+			&quot;Added k at 4&quot;
+		);
+		var items = collection.getItems().concat();
+		items.sort();
+		collection.performReorder(items);
+		
+		// If length has decreased more than 3 times, clear+add is used, remove specific items instead
+		this.setExpectedOutput(
+			&quot;Removed c at 1&quot;
+		);
+		collection.performSplice([ &quot;a&quot;, &quot;d&quot;, &quot;g&quot;, &quot;k&quot; ]);
+		
+		this.setExpectedOutput(
+			&quot;Cleared a, d, g, k&quot;,
+			&quot;Added k at 0&quot;
+		);
+		collection.performSplice([ &quot;k&quot; ]);
+		
+		this.setExpectedOutput(
+			&quot;Cleared k&quot;,
+			&quot;Added u at 0&quot;,
+			&quot;Added t at 1&quot;,
+			&quot;Added c at 2&quot;
+		);
+		collection.performSplice([ &quot;u&quot;, &quot;t&quot;, &quot;c&quot; ]);
+		
+		this.setExpectedOutput(
+			&quot;Cleared u, t, c&quot;
+		);
+		collection.clear();
+		
+		this.setExpectedOutput(
+			&quot;Added h at 0&quot;
+		);
+		collection.add(&quot;h&quot;);
+		
+		this.setExpectedOutput(
+			&quot;Cleared h&quot;
+		);
+		inserter.destroy();
+		
+		this.setExpectedOutput();
+		collection.destroy();
+	},
+	
+	testAutoClear: function() {
+		var collection = new JW.ObservableArray([ &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot; ]);
+		
+		this.setExpectedOutput(
+			&quot;Added a at 0&quot;,
+			&quot;Added b at 1&quot;,
+			&quot;Added c at 2&quot;,
+			&quot;Added d at 3&quot;,
+			&quot;Added e at 4&quot;
+		);
+		var inserter = collection.createInserter({
+			addItem    : function(item, index) { this.output(&quot;Added &quot; + item + &quot; at &quot; + index); },
+			removeItem : function(item, index) { this.output(&quot;Removed &quot; + item + &quot; at &quot; + index); },
+			scope      : this
+		});
+		
+		this.setExpectedOutput(
+			&quot;Removed e at 4&quot;,
+			&quot;Removed d at 3&quot;,
+			&quot;Removed c at 2&quot;,
+			&quot;Removed b at 1&quot;,
+			&quot;Removed a at 0&quot;
+		);
+		inserter.destroy();
+		
+		this.setExpectedOutput();
+		collection.destroy();
+	}
+});
+</pre>
+</body>
+</html>
