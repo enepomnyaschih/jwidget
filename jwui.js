@@ -1,5 +1,5 @@
 /*!
-	jWidget UI 1.4.3
+	jWidget UI 1.4.4
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -1670,10 +1670,16 @@ JW.extend(JW.UI.Component.AbstractTemplate, JW.Class, {
 		// check for trash
 		var remainingIds = JW.Map.getKeys(this.parentIdMap);
 		if (remainingIds.length !== 0) {
-			console.warn("jWidget template '" + this.prefixes.join(" ") +
-				"' has cyclic dependencies among the next jwid's: " + remainingIds.join(", ") +
-				". Can't detect the desired rendering order. Rendering elements in arbitrary order...");
-			this.ids.push.apply(this.ids, remainingIds);
+			// some ID's may not have been backtraced if they are assigned to the root element,
+			// so we must backtrace them to make sure that everything is processed
+			JW.Array.each(remainingIds, this._backtrace, this);
+			remainingIds = JW.Map.getKeys(this.parentIdMap);
+			if (remainingIds.length !== 0) {
+				console.warn("jWidget template '" + this.prefixes.join(" ") +
+					"' has cyclic dependencies among the next jwid's: " + remainingIds.join(", ") +
+					". Can't detect the desired rendering order. Rendering elements in arbitrary order...");
+				this.ids.push.apply(this.ids, remainingIds);
+			}
 		}
 
 		this.prefixes = null;
