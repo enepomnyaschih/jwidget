@@ -94,7 +94,7 @@ JW.Tests.Property.SwitcherTestCase = JW.Unit.TestCase.extend({
 	testOptional: function()
 	{
 		var property = new JW.Property(1);
-		var switcher = new JW.Switcher(property);
+		var switcher = new JW.Switcher([property]);
 		switcher.destroy();
 	},
 	
