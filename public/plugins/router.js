@@ -228,12 +228,12 @@ JW.Plugins.Router = function(config) {
 
 JW.extend(JW.Plugins.Router, JW.Class, {
 	/**
-	 * @property {Function|RegExp} Default separator value. See #separator for details.
+	 * @property {Function|RegExp} defaultSeparator Default separator value. See #separator for details.
 	 */
 	defaultSeparator: /^\/*([^?\/]+)(?:\/(.*)|(\?.*))?$/,
 
 	/**
-	 * @property {Function|string} Default joiner value. See #joiner for details.
+	 * @property {Function|string} defaultJoiner Default joiner value. See #joiner for details.
 	 */
 	defaultJoiner: "/",
 
