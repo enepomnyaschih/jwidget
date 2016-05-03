@@ -392,7 +392,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 
 <span id='JW-AbstractSet-method-splice'>	/**
-</span>	 * Removes and adds multiple items in map. Universal optimized granular operation of removal/insertion.
+</span>	 * Removes and adds multiple items in set. Universal optimized granular operation of removal/insertion.
 	 * @param {Array} removedItems `&lt;T&gt;` Items to remove.
 	 * @param {Array} addedItems `&lt;T&gt;` Items to add.
 	 * @returns {JW.AbstractSet.SpliceResult} `&lt;T&gt;` Result.
@@ -427,7 +427,7 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 <span id='JW-AbstractSet-method-detectSplice'>	/**
 </span>	 * Detects #splice method arguments to adjust set contents to `newItems`.
 	 * Determines which items should be removed and which ones should be added.
-	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+	 * @param {Object} newItems `&lt;T&gt;` New set contents.
 	 * @returns {JW.AbstractMap.SpliceParams}
 	 * `&lt;T&gt;` #splice method arguments. If no method call required - `undefined`.
 	 */
@@ -436,8 +436,8 @@ JW.extend(JW.AbstractSet, JW.AbstractCollection, {
 	},
 
 <span id='JW-AbstractSet-method-performSplice'>	/**
-</span>	 * Adjusts map contents to `newItems` using #detectSplice and #splice methods.
-	 * @param {Object} newItems `&lt;T&gt;` New map contents.
+</span>	 * Adjusts set contents to `newItems` using #detectSplice and #splice methods.
+	 * @param {Object} newItems `&lt;T&gt;` New set contents.
 	 * @returns {void}
 	 */
 	performSplice: function(newItems) {

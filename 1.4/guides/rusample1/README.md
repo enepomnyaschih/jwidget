@@ -223,7 +223,7 @@ CSS-класс каждого элемента, для которого вы о�
             <script type="text/javascript" charset="utf-8" src="thirdparty/jwidget/jwui.js"></script>
             <script type="text/javascript" charset="utf-8" src="mt/mt.js"></script>
             <script type="text/javascript" charset="utf-8" src="mt/data/data.js"></script>
-            <script type="text/javascript" charset="utf-8" src="mt/data/profile.js"></script>
+            <script type="text/javascript" charset="utf-8" src="mt/data/tweet.js"></script>
             <script type="text/javascript" charset="utf-8" src="mt/tweetview/tweetview.js"></script>
             <script type="text/javascript" charset="utf-8" src="boot.js"></script>
         </head>

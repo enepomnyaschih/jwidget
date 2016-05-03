@@ -167,6 +167,24 @@ JW.Tests.UI.JQEventAttachmentTestCase = JW.Unit.TestCase.extend({
 		component.getElement(&quot;a&quot;).trigger(&quot;click&quot;);
 		component.getElement(&quot;b&quot;).trigger(&quot;click&quot;);
 		component.destroy();
+	},
+
+	testReturnValue: function() {
+		var el = jQuery('&lt;div&gt;&lt;/div&gt;');
+		el.jwon(&quot;click&quot;, function() {
+			return false;
+		}, this);
+		var e = jQuery.Event(&quot;click&quot;);
+		el.trigger(e);
+		this.assertTrue(e.isDefaultPrevented());
+	},
+
+	testFalseCallback: function() {
+		var el = jQuery('&lt;div&gt;&lt;/div&gt;');
+		el.jwon(&quot;click&quot;, false, this);
+		var e = jQuery.Event(&quot;click&quot;);
+		el.trigger(e);
+		this.assertTrue(e.isDefaultPrevented());
 	}
 });
 </pre>

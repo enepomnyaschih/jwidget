@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*!
-	jWidget Lib 1.4
+	jWidget Lib 1.4.5
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -77,7 +77,7 @@ JW.global = (typeof window === &quot;undefined&quot; ? global : window);
  *                           g: undefined  //
  *     };                };                // };
  *
- *     JW.applyIf(x, y);
+ *     JW.apply(x, y);
  *
  * Example 2 (form data preparing):
  *
@@ -663,16 +663,15 @@ JW.apply(JW, {
 	 * @returns {Mixed} Unique object ID.
 	 */
 	iid: function(obj) {
-		return (typeof obj === &quot;object&quot;) ? obj._iid : obj;
+		return (obj &amp;&amp; typeof obj === &quot;object&quot;) ? obj._iid : obj;
 	},
 
-
 <span id='JW-static-method-destroy'>	/**
-</span>	 * Calls object method {@link JW.Class#destroy destroy}. Can be used in mappers configuration:
+</span>	 * Calls object method {@link JW.Class#destroy destroy} if available. Can be used in mappers configuration:
 	 *
 	 *     var mapper = collection.{@link JW.AbstractCollection#createMapper createMapper}({
 	 *         {@link JW.AbstractCollection.Mapper#createItem createItem}  : function(data) { return new View(data); },
-	 *         {@link JW.AbstractCollection.Mapper#destroyItem destroyItem} : JW.destroy, // shorthand for function(view) { view.destroy(); }
+	 *         {@link JW.AbstractCollection.Mapper#destroyItem destroyItem} : JW.destroy,
 	 *         {@link JW.AbstractCollection.Mapper#scope scope}       : this
 	 *     });
 	 *
@@ -681,7 +680,9 @@ JW.apply(JW, {
 	 * @returns {void}
 	 */
 	destroy: function(obj) {
-		obj.destroy();
+		if (obj &amp;&amp; typeof obj.destroy === &quot;function&quot;) {
+			obj.destroy();
+		}
 	},
 
 <span id='JW-static-method-mod'>	/**
@@ -861,7 +862,6 @@ JW.toArray = JW.args;
 <span id='JW-Binding'>/**
 </span> * @enum {number}
  * jWidget binding mode. All properties have shorthands in {@link JW JW} namespace.
- * Can always be replaced with JW.BindingConfig for advanced binding configuration.
  */
 JW.Binding = {
 <span id='JW-Binding-property-UPDATE'>	/**

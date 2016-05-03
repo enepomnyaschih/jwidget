@@ -376,10 +376,15 @@ JW.Tests.Collection.AbstractArrayBase = JW.Unit.TestCase.extend({
 		this.setObservableOutput(
 			&quot;Changed length from 2 to 4&quot;,
 			&quot;Spliced -[] +[2:[3,5]] to [2,4]&quot;,
+			&quot;Changed&quot;,
+			&quot;Changed length from 4 to 6&quot;,
+			&quot;Spliced -[] +[1:[6,7]] to [2,4,3,5]&quot;,
 			&quot;Changed&quot;
 		);
 		this.assertTrue(this.invoke(array, &quot;tryAddAll&quot;, [[3, 5]]));
 		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 4, 3, 5]]));
+		this.assertTrue(this.invoke(array, &quot;tryAddAll&quot;, [[6, 7], 1]));
+		this.assertTrue(this.invoke(array, &quot;equal&quot;, [[2, 6, 7, 4, 3, 5]]));
 	},
 
 	testSet: function() {

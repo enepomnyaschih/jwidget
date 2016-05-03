@@ -85,7 +85,7 @@ JW.AbstractCollection.Observer = function(source, config) {
 	this.removeItem = config.removeItem;
 	this.clearItems = config.clearItems;
 	this.change = config.change;
-		this.scope = config.scope || this;
+	this.scope = config.scope || this;
 	this._addItems(source.asArray());
 };
 

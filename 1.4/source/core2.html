@@ -575,6 +575,41 @@ JW.Tests.Core.CoreTestCase = JW.Unit.TestCase.extend({
 		this.assertEpsEqual(.6, JW.mod(7.6, 7), .001);
 		this.assertEpsEqual(.7, JW.mod(7.6, 2.3), .001);
 		this.assertEpsEqual(.5, JW.mod(-7.6, 2.7), .001);
+	},
+
+	testIid: function()
+	{
+		this.assertStrictEqual(undefined, JW.iid());
+		this.assertStrictEqual(undefined, JW.iid(undefined));
+		this.assertStrictEqual(null, JW.iid(null));
+		this.assertStrictEqual(1, JW.iid(1));
+		this.assertStrictEqual(true, JW.iid(true));
+		this.assertStrictEqual(false, JW.iid(false));
+		this.assertStrictEqual(&quot;&quot;, JW.iid(&quot;&quot;));
+		this.assertStrictEqual(undefined, JW.iid({}));
+		this.assertStrictEqual(10, JW.iid({_iid: 10}));
+	},
+
+	testDestroy: function()
+	{
+		JW.destroy();
+		JW.destroy(undefined);
+		JW.destroy(null);
+		JW.destroy(1);
+		JW.destroy(true);
+		JW.destroy(false);
+		JW.destroy(&quot;&quot;);
+		JW.destroy({destroy: 0});
+
+		this.setExpectedOutput(&quot;hello&quot;);
+		var self = this;
+		JW.destroy({
+			value: 10,
+			destroy: function() {
+				self.output(&quot;hello&quot;);
+				self.assertStrictEqual(10, this.value);
+			}
+		});
 	}
 });
 </pre>

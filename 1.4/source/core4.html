@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*!
-	jWidget UI 1.4
+	jWidget UI 1.4.5
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -56,10 +56,13 @@ JW.UI = {
 <span id='JW-UI-property-rtagName'>	rtagName: /^&lt;([\w:]+)/,
 </span>
 <span id='JW-UI-static-property-hash'>	/**
-</span>	 * @property {JW.Property} hash `&lt;String&gt;` Current page hash (without leading &quot;#&quot;).
+</span>	 * @property {JW.UI.Hash} hash
+	 *
+	 * Current page hash (without leading &quot;#&quot;). As of jWidget 1.4.1, two-way bound to location.hash.
+	 *
 	 * @static
 	 */
-	hash: new JW.Property(location.hash.substr(1)),
+	hash: null,
 
 <span id='JW-UI-static-method-template'>	/**
 </span>	 * Defines HTML templates for specified JW.UI.Component subclass.
@@ -189,6 +192,16 @@ JW.UI = {
 		return false;
 	},
 
+<span id='JW-UI-method-inEl'>	inEl: function(childEl, parentEl) {
+</span>		while (childEl) {
+			if (childEl === parentEl) {
+				return true;
+			}
+			childEl = childEl.parentNode;
+		}
+		return false;
+	},
+
 <span id='JW-UI-method-replace'>	replace: function(removeEl, insertEl, attrs) {
 </span>		var parentEl = removeEl.parentNode;
 		if (!parentEl) {
@@ -219,9 +232,6 @@ JW.UI = {
 jQuery(function() {
 	JW.UI.windowEl = jQuery(window);
 	JW.UI.bodyEl   = jQuery(document.body);
-	jQuery(window).bind(&quot;hashchange&quot;, function() {
-		JW.UI.hash.set(location.hash.substr(1));
-	});
 });
 </pre>
 </body>

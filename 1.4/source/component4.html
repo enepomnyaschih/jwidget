@@ -246,6 +246,200 @@ JW.Tests.UI.ComponentTestCase = JW.Unit.TestCase.extend({
 		this.assertStrictEqual('&lt;div&gt;a&lt;/div&gt;&lt;div&gt;b&lt;/div&gt;&lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;', view.el.html());
 
 		view.destroy();
+	},
+
+	testRenderingOrder: function() {
+		var self = this;
+
+		var View = function() {
+			View._super.call(this);
+		};
+
+		JW.extend(View, JW.UI.Component, {
+			renderDelOne: function() {
+				self.output(&quot;del-one&quot;);
+				return false;
+			},
+
+			renderSkipOne: function() {
+				self.fail(&quot;unexpected skip-one rendering&quot;);
+			},
+
+			renderDelTwo: function(el) {
+				self.output(&quot;del-two&quot;);
+				el.remove();
+			},
+
+			renderSkipTwo: function() {
+				self.fail(&quot;unexpected skip-two rendering&quot;);
+			},
+
+			renderDelThree: function() {
+				self.output(&quot;del-three&quot;);
+				return false;
+			},
+
+			renderSkipThree: function() {
+				self.fail(&quot;unexpected skip-three rendering&quot;);
+			},
+
+			renderDelFour: function() {
+				self.output(&quot;del-four&quot;);
+				return false;
+			},
+
+			renderPartialFour: function(el) {
+				self.output(&quot;partial-four&quot;);
+				self.assertStrictEqual(1, el.length);
+			},
+
+			renderDelFive: function() {
+				self.output(&quot;del-five&quot;);
+				return false;
+			},
+
+			renderPartialFive: function(el) {
+				self.output(&quot;partial-five&quot;);
+				self.assertStrictEqual(1, el.length);
+			},
+
+			renderDelSix: function() {
+				self.output(&quot;del-six&quot;);
+				return false;
+			},
+
+			renderSkipSix: function() {
+				self.fail(&quot;unexpected skip-six rendering&quot;);
+			},
+
+			renderLoop: function() {
+				self.output(&quot;loop&quot;);
+			}
+		});
+
+		JW.UI.template(View, {
+			main:
+				'&lt;div jwclass=&quot;my-component&quot;&gt;' +
+					// case 1 - element is skipped if parent rendering has returned false
+					'&lt;div jwid=&quot;del-one&quot;&gt;' +
+						'&lt;div jwid=&quot;skip-one&quot;&gt;&lt;/div&gt;' +
+					'&lt;/div&gt;' +
+
+					// case 2 - element is skipped if parent rendering has removed the element
+					'&lt;div jwid=&quot;del-two&quot;&gt;' +
+						'&lt;div jwid=&quot;skip-two&quot;&gt;&lt;/div&gt;' +
+					'&lt;/div&gt;' +
+
+					// case 3 - add extra parent element
+					'&lt;div jwid=&quot;root-three&quot;&gt;' +
+						'&lt;div jwid=&quot;del-three&quot;&gt;' +
+							'&lt;div jwid=&quot;skip-three&quot;&gt;&lt;/div&gt;' +
+						'&lt;/div&gt;' +
+					'&lt;/div&gt;' +
+
+					// case 4 - loop
+					'&lt;div jwid=&quot;loop&quot;&gt;' +
+						'&lt;div jwid=&quot;loop&quot;&gt;&lt;/div&gt;' +
+					'&lt;/div&gt;' +
+
+					// case 5 - multi-element, partially inside, prefix case
+					'&lt;div jwid=&quot;partial-four&quot;&gt;&lt;/div&gt;' +
+					'&lt;div jwid=&quot;del-four&quot;&gt;' +
+						'&lt;div jwid=&quot;partial-four&quot;&gt;&lt;/div&gt;' +
+					'&lt;/div&gt;' +
+
+					// case 6 - multi-element, partially inside, postfix case
+					'&lt;div jwid=&quot;del-five&quot;&gt;' +
+						'&lt;div jwid=&quot;partial-five&quot;&gt;&lt;/div&gt;' +
+					'&lt;/div&gt;' +
+					'&lt;div jwid=&quot;partial-five&quot;&gt;&lt;/div&gt;' +
+
+					// case 7 - multi-element completely inside
+					'&lt;div jwid=&quot;del-six&quot;&gt;' +
+						'&lt;div jwid=&quot;skip-six&quot;&gt;&lt;/div&gt;' +
+						'&lt;div jwid=&quot;skip-six&quot;&gt;&lt;/div&gt;' +
+					'&lt;/div&gt;' +
+				'&lt;/div&gt;'
+		});
+
+		this.setExpectedOutput(
+			&quot;del-one&quot;,
+			&quot;del-two&quot;,
+			&quot;del-three&quot;,
+			&quot;del-four&quot;,
+			&quot;partial-four&quot;,
+			&quot;del-five&quot;,
+			&quot;partial-five&quot;,
+			&quot;del-six&quot;,
+			&quot;loop&quot;
+		);
+
+		new View().render();
+	},
+
+	testAfterAppend: function() {
+		var testCase = this;
+
+		var View = function() {
+			View._super.call(this);
+		};
+
+		JW.extend(View, JW.UI.Component, {
+			renderChild: function() {
+				return new Subview(&quot;Child&quot;);
+			},
+
+			renderProperty: function() {
+				return new JW.Property(new Subview(&quot;Property&quot;));
+			},
+
+			renderArray: function() {
+				return new JW.Array([new Subview(&quot;Array&quot;)]);
+			},
+
+			renderCollection: function() {
+				return new JW.Set([new Subview(&quot;Collection&quot;)]);
+			},
+
+			afterAppend: function() {
+				this._super();
+				testCase.output(&quot;View&quot;);
+			}
+		});
+
+		JW.UI.template(View, {
+			main:
+				'&lt;div&gt;' +
+					'&lt;div jwid=&quot;child&quot;&gt;&lt;/div&gt;' +
+					'&lt;div jwid=&quot;property&quot;&gt;&lt;/div&gt;' +
+					'&lt;div jwid=&quot;array&quot;&gt;&lt;/div&gt;' +
+					'&lt;div jwid=&quot;collection&quot;&gt;&lt;/div&gt;' +
+				'&lt;/div&gt;'
+		});
+
+		var Subview = function(name) {
+			Subview._super.call(this);
+			this.name = name;
+		};
+
+		JW.extend(Subview, JW.UI.Component, {
+			afterAppend: function() {
+				this._super();
+				testCase.output(this.name);
+			}
+		});
+
+		this.setExpectedOutput(
+			&quot;View&quot;,
+			&quot;Child&quot;,
+			&quot;Property&quot;,
+			&quot;Array&quot;,
+			&quot;Collection&quot;
+		);
+		var view = new View().renderTo(&quot;body&quot;);
+
+		this.setExpectedOutput();
+		view.destroy();
 	}
 });
 </pre>
