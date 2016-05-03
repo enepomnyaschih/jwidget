@@ -6,6 +6,12 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
+### 1.4.5 (May 3, 2016)
+
+Bug fixes:
+
+- Changed default routing separator and joiner to handle "?" notation properly ([#138](https://github.com/enepomnyaschih/jwidget/issues/138))
+
 ### 1.4.4 (April 29, 2016)
 
 Bug fixes:
