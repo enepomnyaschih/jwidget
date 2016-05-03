@@ -524,6 +524,43 @@ JW.Tests.Plugins.RouterTestCase = JW.Unit.TestCase.extend({
 		}
 		JW.Plugins.Router._routerStack = [];
 		throw new Error("Router stack depth error wasn't thrown");
+	},
+
+	testDefaultSeparator: function() {
+		var router = new JW.Plugins.Router();
+		this.assertStrictEqual("", router.separator(null));
+		this.assertStrictEqual("", router.separator(""));
+		this.assertTrue(JW.Array.equal(router.separator("inbox"), ["inbox", null]));
+		this.assertTrue(JW.Array.equal(router.separator("inbox/"), ["inbox", ""]));
+		this.assertTrue(JW.Array.equal(router.separator("inbox/1"), ["inbox", "1"]));
+		this.assertTrue(JW.Array.equal(router.separator("inbox/1/edit"), ["inbox", "1/edit"]));
+		this.assertTrue(JW.Array.equal(router.separator("/inbox"), ["inbox", null]));
+		this.assertTrue(JW.Array.equal(router.separator("/inbox/"), ["inbox", ""]));
+		this.assertTrue(JW.Array.equal(router.separator("///inbox///"), ["inbox", "//"]));
+		this.assertTrue(JW.Array.equal(router.separator("inbox?id=1"), ["inbox", "?id=1"]));
+		router.destroy();
+	},
+
+	testDefaultJoiner: function() {
+		var router = new JW.Plugins.Router();
+		this.assertStrictEqual("", router.joiner("", ""));
+		this.assertStrictEqual("inbox", router.joiner("inbox", ""));
+		this.assertStrictEqual("inbox/1", router.joiner("inbox", "1"));
+		this.assertStrictEqual("inbox/1/reply", router.joiner("inbox", "1/reply"));
+		this.assertStrictEqual("inbox/1/reply", router.joiner("inbox", "/1/reply"));
+		this.assertStrictEqual("inbox/1/reply/", router.joiner("inbox", "/1/reply/"));
+		this.assertStrictEqual("inbox/1/reply///", router.joiner("inbox", "///1/reply///"));
+		this.assertStrictEqual("inbox?id=1", router.joiner("inbox", "?id=1"));
+	},
+
+	testDefaultHandler: function() {
+		this.assertStrictEqual(null, JW.Plugins.Router.makeHandler()("", null));
+		this.assertStrictEqual(null, JW.Plugins.Router.makeHandler({})("", null));
+
+		var handler = JW.Plugins.Router.makeHandler({
+			notFound: function() { return "Hello"; }
+		});
+		this.assertStrictEqual("Hello", handler("", null));
 	}
 });
 
