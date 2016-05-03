@@ -189,11 +189,11 @@ JW.Plugins = JW.Plugins || {};
 JW.Plugins.Router = function(config) {
 	JW.Plugins.Router._super.call(this);
 	config = config || {};
-	this.separator = config.separator || /^\/*([^?\/]+)(?:\/(.*)|(\?.*))?$/;
+	this.separator = config.separator || this.defaultSeparator;
 	if (JW.isRegExp(this.separator)) {
 		this.separator = JW.Plugins.Router.makeSeparator(this.separator);
 	}
-	this.joiner = config.joiner || "/";
+	this.joiner = config.joiner || this.defaultJoiner;
 	if (typeof this.joiner === "string") {
 		this.joiner = JW.Plugins.Router.makeJoiner(this.joiner);
 	}
@@ -227,6 +227,16 @@ JW.Plugins.Router = function(config) {
 };
 
 JW.extend(JW.Plugins.Router, JW.Class, {
+	/**
+	 * @property {Function|RegExp} defaultSeparator Default separator value. See #separator for details.
+	 */
+	defaultSeparator: /^\/*([^?\/]+)(?:\/(.*)|(\?.*))?$/,
+
+	/**
+	 * @property {Function|string} defaultJoiner Default joiner value. See #joiner for details.
+	 */
+	defaultJoiner: "/",
+
 	/**
 	 * @cfg {JW.Property} path `<string>` Source path string. If omitted, router creates and aggregates this property
 	 * automatically.
@@ -492,7 +502,7 @@ JW.apply(JW.Plugins.Router, {
 	makeSeparator: function(regexp) {
 		return function(path) {
 			var result = regexp.exec(path || "");
-			return result ? result.slice(1) : "";
+			return result ? [result[1], JW.def(JW.Array.search(result.slice(2), JW.isSet), null)] : "";
 		};
 	},
 
@@ -500,7 +510,8 @@ JW.apply(JW.Plugins.Router, {
 	 * @method makeJoiner
 	 *
 	 * Converts joiner symbol/string to joiner function. Joins incoming route/argument pair via the specified string.
-	 * Leading joiner symbols in argument are trimmed. If argument is null or blank, returns route.
+	 * Leading joiner symbols in argument are trimmed. If argument starts with "?", joiner symbol is not added.
+	 * If argument is null or blank, returns route.
 	 *
 	 * Examples:
 	 *
@@ -513,6 +524,7 @@ JW.apply(JW.Plugins.Router, {
 	 *   <tr><td>"inbox"</td><td>"/1/reply"</td><td>"/"</td><td>"inbox/1/reply"</td></tr>
 	 *   <tr><td>"inbox"</td><td>"/1/reply/"</td><td>"/"</td><td>"inbox/1/reply/"</td></tr>
 	 *   <tr><td>"inbox"</td><td>"///1/reply///"</td><td>"/"</td><td>"inbox/1/reply///"</td></tr>
+	 *   <tr><td>"inbox"</td><td>"?id=1"</td><td>"/"</td><td>"inbox?id=1"</td></tr>
 	 * </table>
 	 *
 	 * @static
@@ -522,7 +534,7 @@ JW.apply(JW.Plugins.Router, {
 	makeJoiner: function(joiner) {
 		var trimmer = new RegExp("^(?:" + joiner.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&') + ")*");
 		return function(route, arg) {
-			return arg ? (route + joiner + arg.replace(trimmer, "")) : route;
+			return !arg ? route : (arg.charAt(0) === "?") ? (route + arg) : (route + joiner + arg.replace(trimmer, ""));
 		};
 	},
 
@@ -556,8 +568,10 @@ JW.apply(JW.Plugins.Router, {
 	 * @returns {Function} Handler function.
 	 */
 	makeHandler: function(config) {
+		config = config || {};
+		var routes = config.routes || {};
 		return function(route, arg) {
-			return config.routes[route] ? config.routes[route].call(this, arg) :
+			return routes[route] ? routes[route].call(this, arg) :
 				config.notFound ? config.notFound.call(this, route, arg) : null;
 		};
 	}
