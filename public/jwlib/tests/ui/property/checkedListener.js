@@ -42,17 +42,6 @@ JW.Tests.UI.Property.CheckedListenerTestCase = JW.Unit.TestCase.extend({
 		listener.destroy();
 	},
 
-	testDeprecatedConstructor: function()
-	{
-		var target = new JW.Property();
-		JW.Tests.UI.Property.subscribeToProperty(this, target);
-		this.setExpectedOutput("null > false");
-		var listener = new JW.UI.CheckedListener(this.el, target);
-		this._poke();
-		listener.destroy();
-		target.destroy();
-	},
-
 	_poke: function()
 	{
 		this.setExpectedOutput("false > true");

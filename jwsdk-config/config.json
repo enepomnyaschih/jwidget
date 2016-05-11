@@ -12,6 +12,7 @@
 //	"snippetsPath"  : "snippets",  // optional, skip to disable "snippets" processor
 	
 	"tempPath"      : "temp",
+	"tsTarget"      : "ES3",
 	
 	"urlPrefix"     : "/",
 	"dynamicLoader" : false,

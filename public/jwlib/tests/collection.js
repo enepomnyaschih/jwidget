@@ -174,7 +174,7 @@ JW.Tests.Collection = {
 	},
 
 	assertArraySpliceParams: function(testCase, expected, spliceParams) {
-		testCase.assertTrue(spliceParams instanceof JW.AbstractArray.SpliceParams);
+		//testCase.assertTrue(spliceParams instanceof JW.AbstractArray.SpliceParams);
 
 		testCase.assertStrictEqual(expected.removeParamsList.length, spliceParams.removeParamsList.length);
 		for (var i = 0; i < spliceParams.removeParamsList.length; ++i) {
@@ -219,25 +219,25 @@ JW.Tests.Collection = {
 	},
 
 	assertMapSpliceParams: function(testCase, expected, spliceParams) {
-		testCase.assertTrue(spliceParams instanceof JW.AbstractMap.SpliceParams);
+		//testCase.assertTrue(spliceParams instanceof JW.AbstractMap.SpliceParams);
 		testCase.assertTrue(JW.Array.equal(expected.removedKeys, spliceParams.removedKeys));
 		testCase.assertTrue(JW.Map.equal(expected.updatedItems, spliceParams.updatedItems));
 	},
 
 	assertMapSpliceResult: function(testCase, expected, spliceResult) {
-		testCase.assertTrue(spliceResult instanceof JW.AbstractMap.SpliceResult);
+		//testCase.assertTrue(spliceResult instanceof JW.AbstractMap.SpliceResult);
 		testCase.assertTrue(JW.Map.equal(expected.removedItems, spliceResult.removedItems));
 		testCase.assertTrue(JW.Map.equal(expected.addedItems, spliceResult.addedItems));
 	},
 
 	assertSetSpliceParams: function(testCase, expected, spliceParams) {
-		testCase.assertTrue(spliceParams instanceof JW.AbstractSet.SpliceParams);
+		//testCase.assertTrue(spliceParams instanceof JW.AbstractSet.SpliceParams);
 		testCase.assertTrue(new JW.Set(expected.removedItems).equal(spliceParams.removedItems));
 		testCase.assertTrue(new JW.Set(expected.addedItems).equal(spliceParams.addedItems));
 	},
 
 	assertSetSpliceResult: function(testCase, expected, spliceResult) {
-		testCase.assertTrue(spliceResult instanceof JW.AbstractSet.SpliceResult);
+		//testCase.assertTrue(spliceResult instanceof JW.AbstractSet.SpliceResult);
 		testCase.assertTrue(new JW.Set(expected.removedItems).equal(spliceResult.removedItems));
 		testCase.assertTrue(new JW.Set(expected.addedItems).equal(spliceResult.addedItems));
 	},

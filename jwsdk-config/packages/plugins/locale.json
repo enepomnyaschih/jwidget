@@ -1,5 +1,8 @@
 {
+	"requires": [
+		"jwlib"
+	],
 	"resources": [
-		"plugins/locale.js"
+		"plugins/locale.ts"
 	]
 }

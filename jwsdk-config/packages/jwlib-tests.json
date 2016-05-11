@@ -27,7 +27,6 @@
 		"jwlib/tests/collection/abstractArray/orderer.js",
 		"jwlib/tests/collection/abstractArray/reverser.js",
 		"jwlib/tests/collection/abstractArray/sorterComparing.js",
-		"jwlib/tests/collection/abstractArray/splitter.js",
 		"jwlib/tests/collection/abstractMap.js",
 		"jwlib/tests/collection/abstractMap/counter.js",
 		"jwlib/tests/collection/abstractMap/filterer.js",
@@ -61,7 +60,6 @@
 		"jwlib/tests/collection/observableArray/orderer.js",
 		"jwlib/tests/collection/observableArray/reverser.js",
 		"jwlib/tests/collection/observableArray/sorterComparing.js",
-		"jwlib/tests/collection/observableArray/splitter.js",
 		"jwlib/tests/collection/observableMap.js",
 		"jwlib/tests/collection/observableMap/counter.js",
 		"jwlib/tests/collection/observableMap/filterer.js",
@@ -101,7 +99,6 @@
 		"jwlib/tests/util/factory.js",
 		"jwlib/tests/util/interval.js",
 		"jwlib/tests/util/timeout.js",
-		"jwlib/tests/util/timer.js",
 		"jwlib/tests/util/string.js",
 
 		"jwlib/tests/boot.js"

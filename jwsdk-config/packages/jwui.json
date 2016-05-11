@@ -1,48 +1,10 @@
 ﻿{
-	"requires" : [
-		"thirdparty/jquery/jquery.js|auto",
-		"jwlib"
+	"requires": [
+		"jwlib",
+		"scripts/jquery/jquery.js|auto"
 	],
-	
-	"resources" : [
-		"jwui/core.js",
-		"jwui/jqEventAttachment.js",
-		"jwui/jquery.js",
-		
-		"jwui/browsers.js",
-		"jwui/inserter.js",
-		"jwui/component.js",
-		"jwui/component/abstractTemplate.js",
-		"jwui/component/array.js",
-		"jwui/component/child.js",
-		"jwui/component/childInserter.js",
-		"jwui/component/children.js",
-		"jwui/component/collection.js",
-		"jwui/component/collectionInserter.js",
-		"jwui/component/domTemplate.js",
-		"jwui/component/inserter.js",
-		"jwui/component/replaceable.js",
-		"jwui/component/template.js",
-		"jwui/component/templateOutput.js",
-		"jwui/hash.js",
-		"jwui/params.js",
-		"jwui/preloadImage.js",
-		
-		"jwui/property/attrUpdater.js",
-		"jwui/property/checkedListener.js",
-		"jwui/property/classNameUpdater.js",
-		"jwui/property/classUpdater.js",
-		"jwui/property/cssUpdater.js",
-		"jwui/property/htmlUpdater.js",
-		"jwui/property/propBinding.js",
-		"jwui/property/propUpdater.js",
-		"jwui/property/radioBinding.js",
-		"jwui/property/radioListener.js",
-		"jwui/property/radioUpdater.js",
-		"jwui/property/textUpdater.js",
-		"jwui/property/valueBinding.js",
-		"jwui/property/valueListener.js",
-		"jwui/property/valueUpdater.js",
-		"jwui/property/visibleUpdater.js"
+	"resources": [
+		"jwui/jwui.ref.ts",
+		"jwui/core/JQuery.js"
 	]
 }

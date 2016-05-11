@@ -42,17 +42,6 @@ JW.Tests.UI.Property.ValueListenerTestCase = JW.Unit.TestCase.extend({
 		listener.destroy();
 	},
 
-	testDeprecatedConstructor: function()
-	{
-		var target = new JW.Property();
-		JW.Tests.UI.Property.subscribeToProperty(this, target);
-		this.setExpectedOutput("null > ");
-		var listener = new JW.UI.ValueListener(this.el, target);
-		this._poke();
-		listener.destroy();
-		target.destroy();
-	},
-
 	_poke: function()
 	{
 		this.setExpectedOutput(" > abc");

@@ -6,6 +6,12 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
+### 2.0
+
+Breaking changes:
+
+- Removed legacy constructors from JW.UI.CheckedListener, JW.UI.RadioListener and JW.UI.ValueListener (deprecated since 1.4)
+
 ### 1.4.4 (April 29, 2016)
 
 Bug fixes:

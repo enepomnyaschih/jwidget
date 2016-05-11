@@ -1,5 +1,8 @@
 {
+	"requires": [
+		"jwui"
+	],
 	"resources": [
-		"plugins/router.js"
+		"plugins/router.ts"
 	]
 }

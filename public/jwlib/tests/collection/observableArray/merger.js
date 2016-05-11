@@ -264,10 +264,10 @@ JW.Tests.Collection.ObservableArray.MergerTestCase = JW.Unit.TestCase.extend({
 		var source = new JW.ObservableArray([
 			new JW.Array(["d"])
 		]);
-		var mapper = this.createMerger(source);
-		this.assertTrue(mapper.target instanceof JW.ObservableArray);
-		this.assertTarget(["d"], mapper.target);
-		mapper.destroy();
+		var merger = this.createMerger(source);
+		this.assertTrue(merger.target instanceof JW.ObservableArray);
+		this.assertTarget(["d"], merger.target);
+		merger.destroy();
 		source.destroy();
 	},
 	

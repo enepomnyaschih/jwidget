@@ -48,17 +48,6 @@ JW.Tests.UI.Property.RadioListenerTestCase = JW.Unit.TestCase.extend({
 		listener.destroy();
 	},
 
-	testDeprecatedConstructor: function()
-	{
-		var target = new JW.Property();
-		JW.Tests.UI.Property.subscribeToProperty(this, target);
-		this.setExpectedOutput("null > x");
-		var listener = new JW.UI.RadioListener(this.el, "myradio", target);
-		this._poke();
-		listener.destroy();
-		target.destroy();
-	},
-
 	_poke: function()
 	{
 		this.setExpectedOutput("x > y");

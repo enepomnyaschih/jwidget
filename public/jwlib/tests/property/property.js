@@ -169,9 +169,7 @@ JW.Tests.Property.PropertyTestCase = JW.Unit.TestCase.extend({
 		targetValue.destroy();
 
 		this.setExpectedOutput("Destroy 3");
-		this.assertFalse(JW.Map.isEmpty(property.changeEvent.attachments));
 		targetObject.destroy();
-		this.assertTrue(JW.Map.isEmpty(property.changeEvent.attachments));
 
 		this.setExpectedOutput();
 		property.set(4);

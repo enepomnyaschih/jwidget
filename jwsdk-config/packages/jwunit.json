@@ -1,7 +1,7 @@
 ﻿{
 	"requires" : [
 		"thirdparty/reset.css",
-		"jwui"
+		"jwui-legacy"
 	],
 	
 	"resources" : [
