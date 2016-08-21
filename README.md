@@ -4,6 +4,22 @@ http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
 http://enepomnyaschih.github.io/jwidget/#!/api
 
+## Contribution guide
+
+### Install
+
+	npm install -g typescript typings webpack bower
+	npm link typescript
+	npm install
+	typings install
+	bower install
+
+Set Web document root to the repository folder.
+
+### Build
+
+    webpack
+
 ## Changelog
 
 ### 2.0

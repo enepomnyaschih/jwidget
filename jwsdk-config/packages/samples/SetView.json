@@ -1,9 +1,0 @@
-{
-	"requires": [
-		"scripts/jquery/jquery.js",
-		"jwui"
-	],
-	"resources": [
-		"samples/SetView.ts"
-	]
-}

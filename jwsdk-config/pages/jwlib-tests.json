@@ -1,5 +1,0 @@
-﻿{
-	"template" : "base",
-	"package"  : "jwlib-tests",
-	"title"    : "jWidget Lib (non-package-safe) unit tests"
-}

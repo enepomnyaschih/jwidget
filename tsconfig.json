@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "es3"
+    },
+    "files": [
+        "./typings/index.d.ts",
+        "./src/components/Hello.ts",
+        "./src/index.ts"
+    ]
+}

@@ -1,9 +1,0 @@
-{
-	"requires": [
-		"jwlib-legacy",
-		"jwui"
-	],
-	"resources": [
-		"jwui/jwui-legacy.js"
-	]
-}

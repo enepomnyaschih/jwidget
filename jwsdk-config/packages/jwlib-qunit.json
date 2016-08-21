@@ -1,8 +1,0 @@
-{
-	"requires": [
-		"jwlib"
-	],
-	"resources": [
-		"jwlib/tests/tests.ref.ts"
-	]
-}

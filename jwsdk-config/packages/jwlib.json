@@ -1,6 +1,0 @@
-﻿{
-	"resources": [
-		"jwlib/jwlib.ref.ts",
-		"jwlib/jwlib-js.js"
-	]
-}
