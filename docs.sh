@@ -1,3 +1,5 @@
+# Build documentation
+echo Building documentation
 echo "WARNING! Make sure you build documentation from final version of release branch, because TypeDoc uses it for reference."
 
 pushd public/jwui >> /dev/null

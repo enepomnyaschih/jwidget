@@ -5,7 +5,7 @@ Demo: [http://enepomnyaschih.github.io/mt/2.0-1/](http://enepomnyaschih.github.i
 Source: [https://github.com/enepomnyaschih/mt/tree/mt-2.0-1](https://github.com/enepomnyaschih/mt/tree/mt-2.0-1) (Git branch)
 
 This jWidget samples series shows you a way to develop an own Twitter in several steps using jWidget
-and JavaScript.
+and TypeScript.
 If you want to learn how to develop powerful Model-View-applications with jWidget, please follow these steps
 accurately in the same order. If motivation of some action is unclear for you, then probably we'll explain it
 at the next steps. Please don't deviate from this strategy yet.
@@ -13,17 +13,12 @@ at the next steps. Please don't deviate from this strategy yet.
 In the first sample we take a look at model and view. We will develop a simple UI component which takes data
 from a model to render itself.
 
-First, download [jQuery](http://jquery.com), [jWidget](guides/endownload/jwidget.zip) and
+First, download [jQuery](http://jquery.com), jquery.d.ts file from [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/jquery) repository, [jWidget](guides/endownload/jwidget.zip) and
 [style resetting file](https://raw.github.com/enepomnyaschih/mt1/master/public/thirdparty/reset.css).
 Drop them to "thirdparty" folder. All public content, including "thirdparty", should be located in "public" folder.
 Unzip jwidget.zip and rename "jwidget-files" folder to "jwidget".
 
 Create folder "public/mt" (Mini-Twitter). We will create all project-specific source files there.
-Let's define a namespace.
-
-**public/mt/mt.js**
-
-    var mt = {};
 
 Download profile avatar files
 [public/backend/avatar-32.png](https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-32.png) and
@@ -37,16 +32,18 @@ We'll get the next file/folder structure:
             avatar-32.png
             avatar-48.png
         mt/
-            mt.js
-        thirdparty/
+        scripts/
             jquery/
                 jquery.js
                 jquery.min.js
+                jquery.d.ts
             jwidget/
                 jwlib.js
                 jwlib.min.js
+                jwlib.d.ts
                 jwui.js
                 jwui.min.js
+                jwui.d.ts
             reset.css
 
 Create file public/index.html with next content:

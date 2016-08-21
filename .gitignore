@@ -1,6 +1,7 @@
 /guides/endownload/jwidget.zip
 /guides/endownload/plugins
 /guides/endownload/**/*.js
+/guides/endownload/**/*.ts
 /jwsdk-config/temp
 /public/build
 /public/pages

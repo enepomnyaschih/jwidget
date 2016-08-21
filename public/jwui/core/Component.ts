@@ -560,16 +560,19 @@ module JW {
 			 * raw HTML rendering thanks to preliminary compilation and node cloning method.
 			 *
 			 * @param value Template to use for component rendering.
+			 * @returns this
 			 */
 			using(value: string): Component;
 
 			/**
 			 * @param value Template to use for component rendering.
+			 * @returns this
 			 */
 			using(value: AbstractTemplate): Component;
 
 			/**
 			 * @param value Element to use for component rendering.
+			 * @returns this
 			 */
 			using(value: HTMLElement): Component;
 			using(value: any): Component {
@@ -655,7 +658,20 @@ module JW {
 			 * @param el Element to render component into.
 			 * @returns this
 			 */
-			renderTo(el: HTMLElement): Component {
+			renderTo(el: HTMLElement): Component;
+
+			/**
+			 * @param el Element to render component into.
+			 * @returns this
+			 */
+			renderTo(el: string): Component;
+
+			/**
+			 * @param el Element to render component into.
+			 * @returns this
+			 */
+			renderTo(el: JQuery): Component;
+			renderTo(el: any): Component {
 				this.render();
 				jQuery(el)[0].appendChild(this.el[0]);
 				this._afterAppend();
@@ -669,7 +685,20 @@ module JW {
 			 * @param el Element to render component in place of.
 			 * @returns this
 			 */
-			renderAs(el: HTMLElement): Component {
+			renderAs(el: HTMLElement): Component;
+
+			/**
+			 * @param el Element to render component in place of.
+			 * @returns this
+			 */
+			renderAs(el: string): Component;
+
+			/**
+			 * @param el Element to render component in place of.
+			 * @returns this
+			 */
+			renderAs(el: JQuery): Component;
+			renderAs(el: any): Component {
 				this.render();
 				replace(jQuery(el)[0], this.el[0], true);
 				this._afterAppend();

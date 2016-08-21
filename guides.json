@@ -20,7 +20,7 @@
 				]
 			},
 			{
-				"title": "Getting started",
+				"title": "Tutorial (JavaScript)",
 				"items": [
 					{
 						"name": "ensample1",
@@ -53,6 +53,15 @@
 					{
 						"name": "enkeyclasses",
 						"title": "List of key classes"
+					}
+				]
+			},
+			{
+				"title": "Tutorial (TypeScript)",
+				"items": [
+					{
+						"name": "ensample1ts",
+						"title": "Part 1. Model and view"
 					}
 				]
 			}
@@ -112,146 +121,8 @@
 				]
 			},
 			{
-				"title": "Ключевые классы",
-				"items": [
-					{
-						"name": "rukeyclasses",
-						"title": "Ключевые классы"
-					},
-					{
-						"title": "Ядро",
-						"items": [
-							{
-								"name": "rujwclass",
-								"title": "JW.Class"
-							},
-							{
-								"name": "rujwevent",
-								"title": "JW.Event"
-							}
-						]
-					},
-					{
-						"title": "Свойство и его хелперы",
-						"items": [
-							{
-								"name": "rujwproperty",
-								"title": "JW.Property"
-							},
-							{
-								"name": "rujwcopier",
-								"title": "JW.Copier"
-							},
-							{
-								"name": "rujwupdater",
-								"title": "JW.Updater"
-							},
-							{
-								"name": "rujwfunctor",
-								"title": "JW.Functor"
-							},
-							{
-								"name": "rujwmapper",
-								"title": "JW.Mapper"
-							},
-							{
-								"name": "rujwswitcher",
-								"title": "JW.Switcher"
-							}
-						]
-					},
-					{
-						"title": "Коллекции",
-						"items": [
-							{
-								"name": "rujwabstractcollection",
-								"title": "JW.AbstractCollection"
-							},
-							{
-								"name": "rujwindexedcollection",
-								"title": "JW.IndexedCollection"
-							},
-							{
-								"name": "rujwabstractarray",
-								"title": "JW.AbstractArray"
-							},
-							{
-								"name": "rujwabstractmap",
-								"title": "JW.AbstractMap"
-							},
-							{
-								"name": "rujwabstractset",
-								"title": "JW.AbstractSet"
-							}
-						]
-					},
-					{
-						"title": "Синхронизаторы коллекций",
-						"items": [
-							{
-								"name": "rujwabstractcollectionmapper",
-								"title": "JW.AbstractCollection.Mapper"
-							},
-							{
-								"name": "rujwabstractcollectionfilterer",
-								"title": "JW.AbstractCollection.Filterer"
-							},
-							{
-								"name": "rujwabstractcollectionlister",
-								"title": "JW.AbstractCollection.Lister"
-							},
-							{
-								"name": "rujwabstractcollectionindexer",
-								"title": "JW.AbstractCollection.Indexer"
-							},
-							{
-								"name": "rujwabstractcollectionorderer",
-								"title": "JW.AbstractCollection.Orderer"
-							},
-							{
-								"name": "rujwabstractcollectionsortercomparing",
-								"title": "JW.AbstractCollection.SorterComparing"
-							},
-							{
-								"name": "rujwabstractcollectionobserver",
-								"title": "JW.AbstractCollection.Observer"
-							},
-							{
-								"name": "rujwabstractarrayinserter",
-								"title": "JW.AbstractArray.Inserter"
-							},
-							{
-								"name": "rujwabstractmapinserter",
-								"title": "JW.AbstractMap.Inserter"
-							},
-							{
-								"name": "rujwabstractarraymerger",
-								"title": "JW.AbstractArray.Merger"
-							},
-							{
-								"name": "rujwabstractarrayreverser",
-								"title": "JW.AbstractArray.Reverser"
-							},
-							{
-								"name": "rujwuiinserter",
-								"title": "JW.UI.Inserter"
-							}
-						]
-					},
-					{
-						"title": "UI",
-						"items": [
-							{
-								"name": "rujwuicomponent",
-								"title": "JW.UI.Component"
-							},
-							{
-								"name": "rujquery",
-								"title": "Методы jQuery-дополнения"
-							}
-						]
-					}
-				]
+				"name": "rukeyclasses",
+				"title": "Ключевые классы"
 			},
 			{
 				"title": "Дополнения",
