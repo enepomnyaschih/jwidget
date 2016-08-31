@@ -6,6 +6,12 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
+### 1.4.6 (August 31, 2016)
+
+Bug fixes:
+
+- Changed [jwval](http://enepomnyaschih.github.io/jwidget/1.4/index.html#!/api/jQuery-method-jwval) update-binding to trigger "change" event on the element
+
 ### 1.4.5 (May 3, 2016)
 
 Bug fixes:
