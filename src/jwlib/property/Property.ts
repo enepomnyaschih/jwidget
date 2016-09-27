@@ -1,4 +1,5 @@
-﻿import {Class} from '../core/Class';
+﻿import {destroy} from '../core/Core';
+import {Class} from '../core/Class';
 import {Destroyable} from '../core/Destroyable';
 import {Event} from '../core/Event';
 import {Copier} from './Copier';
@@ -176,7 +177,7 @@ export class Property<V> extends Class {
 		result.own(new Mapper([this], {
 			target: result,
 			createValue: callback,
-			destroyValue: JW.destroy,
+			destroyValue: destroy,
 			scope: scope || this
 		}));
 		return result;

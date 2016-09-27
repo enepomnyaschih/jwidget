@@ -2,13 +2,18 @@
     "compilerOptions": {
         "outDir": "./dist/",
         "sourceMap": true,
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "module": "commonjs",
-        "target": "es3"
+        "target": "es3",
+        "declaration": true
     },
     "files": [
         "./typings/index.d.ts",
-        "./src/components/Hello.ts",
         "./src/index.ts"
-    ]
+    ],
+    "bundles": {
+        "jwidget": {
+            "files": ["./src/index.ts"]
+        }
+    }
 }

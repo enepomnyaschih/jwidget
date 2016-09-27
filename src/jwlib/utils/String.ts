@@ -35,7 +35,7 @@ export function htmlDecode(str: string): string {
  */
 export function removeScripts(target: string): string {
 	target = String(target);
-	var result = [];
+	var result: string[] = [];
 	var index = 0;
 	while (true) {
 		var from = target.indexOf("<script", index);
@@ -84,7 +84,7 @@ export function ellipsis(str: string, length: number, ellipsis?: string): string
  */
 export function prepend(str: string, length: number, ch: string): string {
 	str = String(str);
-	var buf = [];
+	var buf: string[] = [];
 	length -= str.length;
 	for (var i = 0; i < length; ++i) {
 		buf.push(ch);

@@ -1,1 +1,3 @@
-export * from './jwlib/index';
+import * as JW from './jwlib/index';
+
+window.JW = JW;

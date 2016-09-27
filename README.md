@@ -8,7 +8,8 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ### Install
 
-	npm install -g typescript typings webpack bower
+	npm install -g gulp typescript typings webpack bower
+	npm link gulp
 	npm link typescript
 	npm install
 	typings install

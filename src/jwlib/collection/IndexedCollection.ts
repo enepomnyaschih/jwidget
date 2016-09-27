@@ -1,4 +1,4 @@
-﻿import {Dictionary, Proxy} from '../core/Core';
+﻿import {cmp, Dictionary, Proxy} from '../core/Core';
 import {Destroyable} from '../core/Destroyable';
 import {Property} from '../property/Property';
 import {AbstractCollection} from './AbstractCollection';

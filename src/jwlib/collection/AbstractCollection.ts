@@ -1,5 +1,5 @@
 ﻿import {array} from '../core/globals';
-import {Dictionary} from '../core/Core';
+import {cmp, Dictionary} from '../core/Core';
 import {Class} from '../core/Class';
 import {Destroyable} from '../core/Destroyable';
 import {Property} from '../property/Property';

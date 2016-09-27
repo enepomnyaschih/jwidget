@@ -1,4 +1,4 @@
-﻿import {destroyForcibly, Dictionary, Proxy} from '../core/Core';
+﻿import {destroy, destroyForcibly, Dictionary, Proxy} from '../core/Core';
 import {Class} from '../core/Class';
 import {Destroyable} from '../core/Destroyable';
 import {Event} from '../core/Event';
