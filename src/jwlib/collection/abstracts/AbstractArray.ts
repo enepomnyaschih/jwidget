@@ -1,12 +1,14 @@
-﻿import {array} from '../core/globals';
-import {byMethod, def, destroyForcibly, Proxy} from '../core/Core';
-import {Class} from '../core/Class';
-import {Destroyable} from '../core/Destroyable';
+﻿import {array} from '../../core/globals';
+import {byMethod, def, destroyForcibly, Dictionary, Proxy} from '../../core/Core';
+import {Class} from '../../core/Class';
+import {IClass} from '../../core/IClass';
+import {Destroyable} from '../../core/Destroyable';
 import {AbstractCollection} from './AbstractCollection';
 import {IndexedCollection} from './IndexedCollection';
-import {Array} from './Array';
-import {Set} from './Set';
-import {ObservableArray} from './ObservableArray';
+import * as Collections from '../interfaces/ICollection';
+import {IArray} from '../interfaces/IArray';
+import * as Arrays from '../interfaces/IArray';
+import * as ArrayUtils from '../utils/Array';
 
 /**
  * Array is ordered collection. Each item of array has an index. Index of first item is 0,
@@ -148,7 +150,7 @@ import {ObservableArray} from './ObservableArray';
  *
  * @param T Array item type.
  */
-export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
+export abstract class AbstractArray<T> extends IndexedCollection<number, T> implements IArray<T> {
 	protected items: T[];
 
 	/**
@@ -175,7 +177,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): AbstractArray<T> {
+	ownItems(): IArray<T> {
 		super.ownItems();
 		return this;
 	}
@@ -255,62 +257,60 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @inheritdoc
 	 */
 	containsItem(item: T): boolean {
-		return Array.containsItem(this.items, item);
+		return ArrayUtils.containsItem(this.items, item);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	every(callback: (item: T, index: number) => boolean, scope?: any): boolean {
-		return Array.every(this.items, callback, scope || this);
+		return ArrayUtils.every(this.items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): T[] {
-		return Array.toSorted(this.items, callback, scope || this, order);
+		return ArrayUtils.toSorted(this.items, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): T[] {
-		return Array.toSortedComparing(this.items, compare, scope || this, order);
+		return ArrayUtils.toSortedComparing(this.items, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): number[] {
-		return Array.getSortingKeys(this.items, callback, scope || this, order);
+		return ArrayUtils.getSortingKeys(this.items, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): number[] {
-		return Array.getSortingKeysComparing(this.items, compare, scope || this, order);
+		return ArrayUtils.getSortingKeysComparing(this.items, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T, index: number) => boolean, scope?: any): T[] {
-		return Array.filter(this.items, callback, scope || this);
+		return ArrayUtils.filter(this.items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T, index: number) => boolean, scope?: any): Array<T> {
-		return new Array<T>(this.filter(callback, scope || this), true);
-	}
+	abstract $filter(callback: (item: T, index: number) => boolean, scope?: any): IArray<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): AbstractArray<T> {
+	$$filter(callback: (item: T) => boolean, scope?: any): IArray<T> {
 		return this.$filter(callback, scope || this);
 	}
 
@@ -318,34 +318,32 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @inheritdoc
 	 */
 	count(callback: (item: T, index: number) => boolean, scope?: any): number {
-		return Array.count(this.items, callback, scope || this);
+		return ArrayUtils.count(this.items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	map<U>(callback: (item: T, index: number) => U, scope?: any): U[] {
-		return Array.map(this.items, callback, scope || this);
+		return ArrayUtils.map(this.items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$map<U>(callback: (item: T, index: number) => U, scope?: any): Array<U> {
-		return new Array<U>(this.map(callback, scope || this), true);
-	}
+	abstract $map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$$mapValues<U>(callback: (item: T) => U, scope?: any): AbstractArray<U> {
+	$$mapValues<U>(callback: (item: T) => U, scope?: any): IArray<U> {
 		return this.$map(callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): AbstractArray<U> {
+	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): IArray<U> {
 		return this.$map(callback, scope || this).ownItems();
 	}
 
@@ -366,7 +364,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$asArray(): AbstractArray<T> {
+	$asArray(): IArray<T> {
 		return this;
 	}
 
@@ -427,13 +425,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 *
 	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, index: number): Proxy<T> {
-		var oldProxy = Array.trySet(this.items, item, index);
-		if ((oldProxy !== undefined) && this._ownsItems) {
-			(<Destroyable><any>oldProxy.value).destroy();
-		}
-		return oldProxy;
-	}
+	abstract trySet(item: T, index: number): Proxy<T>;
 
 	/**
 	 * Removes item at specified position.
@@ -467,9 +459,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @param count Count of items to remove.
 	 * @returns The removed items.
 	 */
-	$removeAll(index: number, count: number): AbstractArray<T> {
-		return new Array<T>(this.removeAll(index, count), true);
-	}
+	abstract $removeAll(index: number, count: number): IArray<T>;
 
 	/**
 	 * Removes item range from array.
@@ -489,8 +479,11 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @inheritdoc
 	 */
 	removeItems(items: T[]) {
-		var itemSet = new Set<any>(items);
-		var newItems = this.filter(function (item) { return !itemSet.contains(item); });
+		var itemSet: Dictionary<any> = {};
+		for (var i = 0; i < items.length; ++i) {
+			itemSet[(<any>items[i])._iid] = items[i];
+		}
+		var newItems = this.filter(function (item: any) { return !itemSet.hasOwnProperty(item._iid); });
 		this.performFilter(newItems);
 	}
 
@@ -513,9 +506,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @param toIndex Index to move to.
 	 * @returns The moved item. If collection is not modified, returns undefined.
 	 */
-	tryMove(fromIndex: number, toIndex: number): T {
-		return Array.tryMove(this.items, fromIndex, toIndex);
-	}
+	abstract tryMove(fromIndex: number, toIndex: number): T;
 
 	/**
 	 * @inheritdoc
@@ -528,20 +519,12 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$clear(): Array<T> {
-		return new Array<T>(this.clear(), true);
-	}
+	abstract $clear(): IArray<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	tryClear(): T[]{
-		var items = Array.tryClear(this.items);
-		if ((items !== undefined) && this._ownsItems) {
-			Array.backEvery(items, destroyForcibly);
-		}
-		return items;
-	}
+	abstract tryClear(): T[];
 
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
@@ -550,7 +533,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removeParamsList: AbstractArray.IndexCount[], addParamsList: AbstractArray.IndexItems<T>[]): AbstractArray.SpliceResult<T> {
+	splice(removeParamsList: Arrays.IndexCount[], addParamsList: Arrays.IndexItems<T>[]): Arrays.SpliceResult<T> {
 		var result = this.trySplice(removeParamsList, addParamsList);
 		return (result !== undefined) ? result : new AbstractArray.SpliceResult(this.items.concat(), [], []);
 	}
@@ -562,13 +545,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. If collection is not modified, returns undefined.
 	 */
-	trySplice(removeParamsList: AbstractArray.IndexCount[], addParamsList: AbstractArray.IndexItems<T>[]): AbstractArray.SpliceResult<T> {
-		var spliceResult = Array.trySplice(this.items, removeParamsList, addParamsList);
-		if ((spliceResult !== undefined) && this._ownsItems) {
-			Array.backEvery(spliceResult.getRemovedItems(), destroyForcibly);
-		}
-		return spliceResult;
-	}
+	abstract trySplice(removeParamsList: Arrays.IndexCount[], addParamsList: Arrays.IndexItems<T>[]): Arrays.SpliceResult<T>;
 
 	/**
 	 * Reorders array items.
@@ -587,9 +564,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * Must contain all indexes from 0 to (length - 1).
 	 * @returns Old array contents. If collection is not modified, returns undefined.
 	 */
-	tryReorder(indexArray: number[]): T[]{
-		return Array.tryReorder(this.items, indexArray);
-	}
+	abstract tryReorder(indexArray: number[]): T[];
 
 	/**
 	 * Detects [[splice]] method arguments to adjust array contents to **newItems**.
@@ -605,9 +580,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): AbstractArray.SpliceParams<T> {
-		return Array.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
-	}
+	abstract detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): Arrays.SpliceParams<T>;
 
 	/**
 	 * Detects **removeParamsList** arguments of [[splice]] to adjust array contents to **newItems**.
@@ -619,9 +592,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @returns **removeParamsList** argument of [[splice]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectFilter(newItems: T[]): AbstractArray.IndexCount[]{
-		return Array.detectFilter(this.items, newItems);
-	}
+	abstract detectFilter(newItems: T[]): Arrays.IndexCount[];
 
 	/**
 	 * Detects [[reorder]] method arguments to adjust array contents to **newItems**.
@@ -637,9 +608,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): number[] {
-		return Array.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
-	}
+	abstract detectReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): number[];
 
 	/**
 	 * Detects [[reorder]] method arguments to sort array contents by result of
@@ -652,9 +621,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
-		return Array.detectSort(this.items, callback, scope || this, order);
-	}
+	abstract detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[];
 
 	/**
 	 * Detects [[reorder]] method arguments to sort array contents by comparer.
@@ -667,9 +634,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[]{
-		return Array.detectSortComparing(this.items, compare, scope || this, order);
-	}
+	abstract detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[];
 
 	/**
 	 * Adjusts array contents to **newItems** using [[detectSplice]] and
@@ -762,11 +727,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 *
 	 * @returns Merged array.
 	 */
-	merge(): any[] {
-		return Array.merge(this.map(function(item: any): any[] {
-			return item.getItems();
-		}, this));
-	}
+	abstract merge(): any[];
 
 	/**
 	 * *Suitable if array consists of JW.AbstractArray instances only.*
@@ -775,7 +736,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 *
 	 * @returns Merged array.
 	 */
-	$merge(): Array<any> {
+	$merge(): IArray<any> {
 		var result = this._createMergerTarget<any>();
 		result.own(this.createMerger({
 			target: result
@@ -792,7 +753,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 *
 	 * @returns Merged array.
 	 */
-	$$merge(): AbstractArray<any> {
+	$$merge(): IArray<any> {
 		return this.$merge();
 	}
 
@@ -809,9 +770,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 *
 	 * @returns Reversed array.
 	 */
-	toReversed(): T[] {
-		return Array.toReversed(this.items);
-	}
+	abstract toReversed(): T[];
 
 	/**
 	 * Builds a new array containing items of this array in reversed order.
@@ -819,9 +778,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 *
 	 * @returns Reversed array.
 	 */
-	$toReversed(): Array<T> {
-		return new Array(this.toReversed(), true);
-	}
+	abstract $toReversed(): IArray<T>;
 
 	/**
 	 * Builds a new array containing items of this array in reversed order.
@@ -831,7 +788,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 *
 	 * @returns Reversed array.
 	 */
-	$$toReversed(): AbstractArray<T> {
+	$$toReversed(): IArray<T> {
 		return this.$toReversed();
 	}
 
@@ -841,9 +798,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @param arr Another array.
 	 * @returns Arrays are equal.
 	 */
-	equal(arr: T[]): boolean {
-		return Array.equal(this.items, arr);
-	}
+	abstract equal(arr: T[]): boolean;
 
 	/**
 	 * Collapses multi-dimentional array.
@@ -851,18 +806,14 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @param depth Dimentions to collapse.
 	 * @returns Collapsed array.
 	 */
-	collapse(depth: number): any[]{
-		return Array.collapse(this.items, depth);
-	}
+	abstract collapse(depth: number): any[];
 
 	/**
 	 * Returns item index in this collection.
 	 *
 	 * @returns Item index. If item doesn't exist, returns -1.
 	 */
-	indexOf(item: T): number {
-		return Array.indexOf(this.items, item);
-	}
+	abstract indexOf(item: T): number;
 
 	/**
 	 * Checks all items against criteria in backward order.
@@ -874,9 +825,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @param callback Criteria callback.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
-	backEvery(callback: (item: T, index: number) => boolean, scope?: any): boolean {
-		return Array.backEvery(this.items, callback, scope);
-	}
+	abstract backEvery(callback: (item: T, index: number) => boolean, scope?: any): boolean;
 
 	/**
 	 * Removes last array item. Does nothing if array is empty.
@@ -902,68 +851,66 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Item index.
 	 */
-	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
-		return Array.binarySearch(this.items, value, compare, scope, order);
-	}
+	abstract binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract createEmpty<U>(): AbstractArray<U>;
+	abstract createEmpty<U>(): IArray<U>;
 
 	/**
 	 * @inheritdoc
 	 */
-	createMapper<U>(config: AbstractArray.Mapper.Config<T, U>): AbstractArray.Mapper<T, U> {
+	createMapper<U>(config: Arrays.MapperConfig<T, U>): Arrays.Mapper<T, U> {
 		return new AbstractArray.Mapper<T, U>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createFilterer(config: AbstractArray.Filterer.Config<T>): AbstractArray.Filterer<T> {
+	createFilterer(config: Arrays.FiltererConfig<T>): Arrays.Filterer<T> {
 		return new AbstractArray.Filterer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createCounter(config: AbstractCollection.Counter.Config<T>): AbstractArray.Counter<T> {
+	createCounter(config: Collections.CounterConfig<T>): Arrays.Counter<T> {
 		return new AbstractArray.Counter<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createObserver(config: AbstractCollection.Observer.Config<T>): AbstractArray.Observer<T> {
+	createObserver(config: Collections.ObserverConfig<T>): Arrays.Observer<T> {
 		return new AbstractArray.Observer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createOrderer(config?: AbstractCollection.Orderer.Config<any>): AbstractArray.Orderer<any> {
+	createOrderer(config?: Collections.OrdererConfig<any>): Arrays.Orderer<any> {
 		return new AbstractArray.Orderer<any>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createSorterComparing(config?: AbstractCollection.SorterComparing.Config<T>): AbstractArray.SorterComparing<T> {
+	createSorterComparing(config?: Collections.SorterComparingConfig<T>): Arrays.SorterComparing<T> {
 		return new AbstractArray.SorterComparing<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createIndexer(config: AbstractCollection.Indexer.Config<T>): AbstractArray.Indexer<T> {
+	createIndexer(config: Collections.IndexerConfig<T>): Arrays.Indexer<T> {
 		return new AbstractArray.Indexer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createLister(config?: AbstractCollection.Lister.Config<any>): AbstractArray.Lister<any> {
+	createLister(config?: Collections.ListerConfig<any>): Arrays.Lister<any> {
 		return new AbstractArray.Lister<any>(this, config);
 	}
 
@@ -971,7 +918,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * Creates view synchronizer with array.
 	 * Selects appropriate synchronizer implementation automatically.
 	 */
-	createInserter(config: AbstractArray.Inserter.Config<T>): AbstractArray.Inserter<T> {
+	createInserter(config: Arrays.InserterConfig<T>): Arrays.Inserter<T> {
 		return new AbstractArray.Inserter<T>(this, config);
 	}
 
@@ -979,7 +926,7 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * Creates arrays merger.
 	 * Selects appropriate synchronizer implementation automatically.
 	 */
-	createMerger<U>(config?: AbstractArray.Merger.Config<U>): AbstractArray.Merger<U> {
+	createMerger<U>(config?: Arrays.MergerConfig<U>): Arrays.Merger<U> {
 		return new AbstractArray.Merger<U>(<AbstractArray<any>>this, config);
 	}
 
@@ -995,154 +942,34 @@ export abstract class AbstractArray<T> extends IndexedCollection<number, T> {
 	 * Creates array reverser.
 	 * Selects appropriate synchronizer implementation automatically.
 	 */
-	createReverser(config?: AbstractArray.Reverser.Config<T>): AbstractArray.Reverser<T> {
+	createReverser(config?: Arrays.ReverserConfig<T>): Arrays.Reverser<T> {
 		return new AbstractArray.Reverser<T>(this, config);
 	}
 
 	/**
 	 * @hidden
 	 */
-	_createMergerTarget<T>(): AbstractArray<T> {
-		return this.some((bunch) => { return bunch instanceof ObservableArray; }) ?
-			new ObservableArray<T>() : new Array<T>();
-	}
+	abstract _createMergerTarget<T>(): IArray<T>;
 }
 
 export module AbstractArray {
-	/**
-	 * "Index-count" pair. Used in [[JW.AbstractArray.splice|splice]] method arguments
-	 * to specify item segments to remove.
-	 */
-	export class IndexCount {
-		constructor(public index: number, public count: number) {
-		}
-
-		/**
-		 * Clones pair.
-		 */
-		clone(): IndexCount {
-			return new IndexCount(this.index, this.count);
-		}
-	}
-
-	/**
-	 * "Index-items" pair. Used in [[JW.AbstractArray.splice|splice]] method arguments
-	 * to specify item segments to insert, and in [[JW.AbstractArray.SpliceResult|SpliceResult]]
-	 * class to specify removed and added item segments.
-	 *
-	 * @param T Item type.
-	 */
-	export class IndexItems<T> {
-		constructor(public index: number, public items: T[]) {
-		}
-
-		/**
-		 * Converts to "index-count" pair.
-		 */
-		toIndexCount(): IndexCount {
-			return new IndexCount(this.index, this.items.length);
-		}
-
-		/**
-		 * Clones pair.
-		 */
-		clone(): IndexItems<T> {
-			return new IndexItems<T>(this.index, this.items.concat());
-		}
-	}
-
-	/**
-	 * [[JW.AbstractArray.splice|splice]] method arguments.
-	 * Returned by [[JW.AbstractArray.detectSplice|detectSplice]] method.
-	 *
-	 * @param T Item type.
-	 */
-	export interface SpliceParams<T> {
-		/**
-		 * Segments to remove.
-		 */
-		removeParamsList: IndexCount[];
-
-		/**
-		 * Segments to add.
-		 */
-		addParamsList: IndexItems<T>[];
-	}
-
-	/**
-	 * [[JW.AbstractArray.splice|splice]] method result.
-	 *
-	 * @param T Item type.
-	 */
-	export class SpliceResult<T> {
-		private removedItems: T[];
-		private addedItems: T[];
-		private removeParamsList: IndexCount[];
-
-		/**
-		 * @param oldItems Old array contents.
-		 * @param removedItemsList Removed item segments.
-		 * @param addedItemsList Added item segments.
-		 */
-		constructor(public oldItems: T[], public removedItemsList: IndexItems<T>[], public addedItemsList: IndexItems<T>[]) {
-		}
-
-		/**
-		 * Returns plain array of removed items.
-		 */
-		getRemovedItems(): T[]{
-			if (!this.removedItems) {
-				this.removedItems = Array.merge(Array.map(this.removedItemsList, function (indexItems) {
-					return indexItems.items;
-				}));
-			}
-			return this.removedItems;
-		}
-
-		/**
-		 * Returns plain array of added items.
-		 */
-		getAddedItems(): T[]{
-			if (!this.addedItems) {
-				this.addedItems = Array.merge(Array.map(this.addedItemsList, function (indexItems) {
-					return indexItems.items;
-				}));
-			}
-			return this.addedItems;
-		}
-
-		/**
-		 * Converts removed item segments to "index-count" pairs.
-		 */
-		getRemoveParamsList(): IndexCount[]{
-			if (!this.removeParamsList) {
-				this.removeParamsList = Array.map(this.removedItemsList, byMethod<IndexCount>("toIndexCount"));
-			}
-			return this.removeParamsList;
-		}
-
-		/**
-		 * Checks if [[JW.AbstractArray.splice|splice]] method call didn't change the array.
-		 * @returns Array hasn't been changed.
-		 */
-		isEmpty(): boolean {
-			return (this.removedItemsList.length === 0) && (this.addedItemsList.length === 0);
-		}
-	}
+	export var IndexItems = ArrayUtils.IndexItems;
+	export var IndexCount = ArrayUtils.IndexCount;
+	export var SpliceResult = ArrayUtils.SpliceResult;
 
 	/**
 	 * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Array]].
 	 */
-	export class Counter<T> extends AbstractCollection.Counter<T> {
+	export class Counter<T> extends AbstractCollection.Counter<T> implements Arrays.Counter<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractArray<T>;
+		public source: IArray<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractArray<T>, config: AbstractCollection.Counter.Config<T>) {
+		constructor(source: IArray<T>, config: Collections.CounterConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -1150,7 +977,7 @@ export module AbstractArray {
 	/**
 	 * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Array]].
 	 */
-	export class Filterer<T> extends AbstractCollection.Filterer<T> {
+	export class Filterer<T> extends AbstractCollection.Filterer<T> implements Arrays.Filterer<T> {
 		/**
 		 * @hidden
 		 */
@@ -1159,17 +986,17 @@ export module AbstractArray {
 		/**
 		 * @inheritdoc
 		 */
-		source: AbstractArray<T>;
+		source: IArray<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		target: AbstractArray<T>;
+		target: IArray<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractArray<T>, config: Filterer.Config<T>) {
+		constructor(source: IArray<T>, config: Arrays.FiltererConfig<T>) {
 			super(source, config);
 			this._splice([], [new AbstractArray.IndexItems(0, this.source.getItems())]);
 		}
@@ -1196,10 +1023,10 @@ export module AbstractArray {
 		/**
 		 * @hidden
 		 */
-		protected _splice(removedItemsList: AbstractArray.IndexItems<T>[], addedItemsList: AbstractArray.IndexItems<T>[]) {
+		protected _splice(removedItemsList: Arrays.IndexItems<T>[], addedItemsList: Arrays.IndexItems<T>[]) {
 			var sourceIndex = 0;
 			var targetIndex = 0;
-			var removeParamsList = Array.map(removedItemsList, (indexItems) => {
+			var removeParamsList = ArrayUtils.map(removedItemsList, (indexItems) => {
 				targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
 				var count = this._countFiltered(indexItems.index, indexItems.items.length);
 				var params = new AbstractArray.IndexCount(targetIndex, count);
@@ -1207,14 +1034,14 @@ export module AbstractArray {
 				targetIndex += count;
 				return params;
 			});
-			Array.trySplice(this._filtered, Array.map(removedItemsList, byMethod<AbstractArray.IndexCount>("toIndexCount")), []);
+			ArrayUtils.trySplice(this._filtered, ArrayUtils.map(removedItemsList, (x) => x.toIndexCount()), []);
 
 			var sourceIndex = 0;
 			var targetIndex = 0;
-			var addParamsList = Array.map(addedItemsList, (indexItems) => {
+			var addParamsList = ArrayUtils.map(addedItemsList, (indexItems) => {
 				targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
 				var items = [];
-				var filtered = Array.map(indexItems.items, (item) => {
+				var filtered = ArrayUtils.map(indexItems.items, (item) => {
 					if (this._filterItem.call(this._scope, item) === false) {
 						return 0;
 					}
@@ -1222,7 +1049,7 @@ export module AbstractArray {
 					return 1;
 				});
 				var params = new AbstractArray.IndexItems(targetIndex, items);
-				Array.tryAddAll(this._filtered, filtered, indexItems.index);
+				ArrayUtils.tryAddAll(this._filtered, filtered, indexItems.index);
 				sourceIndex = indexItems.index + filtered.length;
 				targetIndex += items.length;
 				return params;
@@ -1235,7 +1062,7 @@ export module AbstractArray {
 		 * Changes filterer configuration and refilters target collection.
 		 * @param config Options to modify.
 		 */
-		reconfigure(config: AbstractCollection.Filterer.Reconfig<T>) {
+		reconfigure(config: Collections.FiltererReconfig<T>) {
 			this._filterItem = def(config.filterItem, this._filterItem);
 			this._scope = def(config.scope, this._scope);
 			this.refilter();
@@ -1284,8 +1111,8 @@ export module AbstractArray {
 				return (this._filterItem.call(this._scope, item) !== false) ? 1 : 0;
 			});
 
-			var removeParams: AbstractArray.IndexCount = null;
-			var removeParamsList: AbstractArray.IndexCount[] = [];
+			var removeParams: Arrays.IndexCount = null;
+			var removeParamsList: Arrays.IndexCount[] = [];
 
 			function flushRemove() {
 				if (removeParams !== null) {
@@ -1314,8 +1141,8 @@ export module AbstractArray {
 
 			flushRemove();
 
-			var addParams: AbstractArray.IndexItems<T> = null;
-			var addParamsList: AbstractArray.IndexItems<T>[] = [];
+			var addParams: Arrays.IndexItems<T> = null;
+			var addParamsList: Arrays.IndexItems<T>[] = [];
 
 			function flushAdd() {
 				if (addParams !== null) {
@@ -1351,31 +1178,19 @@ export module AbstractArray {
 		}
 	}
 
-	export module Filterer {
-		/**
-		 * @inheritdoc
-		 */
-		export interface Config<T> extends AbstractCollection.Filterer.Config<T> {
-			/**
-			 * @inheritdoc
-			 */
-			target?: AbstractArray<T>;
-		}
-	}
-
 	/**
 	 * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Array]].
 	 */
-	export class Indexer<T> extends AbstractCollection.Indexer<T> {
+	export class Indexer<T> extends AbstractCollection.Indexer<T> implements Arrays.Indexer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractArray<T>;
+		public source: IArray<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractArray<T>, config: AbstractCollection.Indexer.Config<T>) {
+		constructor(source: IArray<T>, config: Collections.IndexerConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -1408,7 +1223,7 @@ export module AbstractArray {
 	 *
 	 * @param T Array item type.
 	 */
-	export class Inserter<T> extends Class {
+	export class Inserter<T> extends Class implements Arrays.Inserter<T> {
 		/**
 		 * @hidden
 		 */
@@ -1436,7 +1251,7 @@ export module AbstractArray {
 		 * @param source Source array.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractArray<T>, config: Inserter.Config<T> = {}) {
+		constructor(public source: IArray<T>, config: Arrays.InserterConfig<T> = {}) {
 			super();
 			this._addItem = config.addItem;
 			this._removeItem = config.removeItem;
@@ -1497,50 +1312,19 @@ export module AbstractArray {
 		}
 	}
 
-	export module Inserter {
-		/**
-		 * [[JW.AbstractArray.Inserter]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T> {
-			/**
-			 * Function to call on item adding to specific position in array.
-			 */
-			addItem?: (item: T, index: number) => void;
-
-			/**
-			 * Function to call on item removing from specific position in array.
-			 */
-			removeItem?: (item: T, index: number) => void;
-
-			/**
-			 * Function to call on array cleanup.
-			 * By default, calls [[removeItem]] for all array items.
-			 */
-			clearItems?: (items: T[]) => void;
-
-			/**
-			 * [[addItem]], [[removeItem]] and [[clearItems]] call scope.
-			 * Defaults to synchronizer itself.
-			 */
-			scope?: any;
-		}
-	}
-
 	/**
 	 * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Array]].
 	 */
-	export class Lister<T extends Class> extends AbstractCollection.Lister<T> {
+	export class Lister<T extends IClass> extends AbstractCollection.Lister<T> implements Arrays.Lister<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractArray<T>;
+		public source: IArray<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractArray<T>, config: AbstractCollection.Lister.Config<T>) {
+		constructor(source: IArray<T>, config: Collections.ListerConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -1548,21 +1332,21 @@ export module AbstractArray {
 	/**
 	 * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Array]].
 	 */
-	export class Mapper<T, U> extends AbstractCollection.Mapper<T, U> {
+	export class Mapper<T, U> extends AbstractCollection.Mapper<T, U> implements Arrays.Mapper<T, U> {
 		/**
 		 * @inheritdoc
 		 */
-		source: AbstractArray<T>;
+		source: IArray<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		target: AbstractArray<U>;
+		target: IArray<U>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractArray<T>, config: AbstractArray.Mapper.Config<T, U>) {
+		constructor(source: IArray<T>, config: Arrays.MapperConfig<T, U>) {
 			super(source, config);
 			this.target.tryAddAll(this._createItems(this.source.getItems()));
 		}
@@ -1596,18 +1380,6 @@ export module AbstractArray {
 			for (var i = items.length - 1; i >= 0; --i) {
 				this._destroyItem.call(this._scope, items[i], datas[i]);
 			}
-		}
-	}
-
-	export module Mapper {
-		/**
-		 * @inheritdoc
-		 */
-		export interface Config<T, U> extends AbstractCollection.Mapper.Config<T, U> {
-			/**
-			 * @inheritdoc
-			 */
-			target?: AbstractArray<U>;
 		}
 	}
 
@@ -1679,14 +1451,14 @@ export module AbstractArray {
 	 *
 	 * @param T Array item type.
 	 */
-	export class Merger<T> extends Class {
+	export class Merger<T> extends Class implements Arrays.Merger<T> {
 		private _targetCreated: boolean;
-		private _bunches: AbstractArray<Class>;
+		private _bunches: IArray<IClass>;
 
 		/**
 		 * Target array.
 		 */
-		target: AbstractArray<T>;
+		target: IArray<T>;
 
 		/**
 		 * Creates synchronizer.
@@ -1695,7 +1467,7 @@ export module AbstractArray {
 		 * @param source Source array.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractArray<AbstractArray<T>>, config: AbstractArray.Merger.Config<T> = {}) {
+		constructor(public source: IArray<IArray<T>>, config: Arrays.MergerConfig<T> = {}) {
 			super();
 			this._targetCreated = config.target == null;
 			this.target = this._targetCreated ? source._createMergerTarget<T>() : config.target;
@@ -1730,7 +1502,7 @@ export module AbstractArray {
 		/**
 		 * @hidden
 		 */
-		protected _merge(bunches: AbstractArray<T>[]): T[] {
+		protected _merge(bunches: IArray<T>[]): T[] {
 			var items = array<T>(this._count(bunches));
 			var iItems = 0;
 			for (var i = 0, l = bunches.length; i < l; ++i) {
@@ -1745,7 +1517,7 @@ export module AbstractArray {
 		/**
 		 * @hidden
 		 */
-		protected _count(bunches: AbstractArray<T>[], index?: number, length?: number): number {
+		protected _count(bunches: IArray<T>[], index?: number, length?: number): number {
 			if (index === undefined) {
 				index = 0;
 			}
@@ -1760,33 +1532,19 @@ export module AbstractArray {
 		}
 	}
 
-	export module Merger {
-		/**
-		 * [[JW.AbstractArray.Merger]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T> {
-			/**
-			 * Target array. By default, created automatically.
-			 */
-			target?: AbstractArray<T>;
-		}
-	}
-
 	/**
 	 * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Array]].
 	 */
-	export class Observer<T> extends AbstractCollection.Observer<T> {
+	export class Observer<T> extends AbstractCollection.Observer<T> implements Arrays.Observer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		source: AbstractArray<T>;
+		source: IArray<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractArray<T>, config: AbstractCollection.Observer.Config<T>) {
+		constructor(source: IArray<T>, config: Collections.ObserverConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -1794,16 +1552,16 @@ export module AbstractArray {
 	/**
 	 * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Array]].
 	 */
-	export class Orderer<T extends Class> extends AbstractCollection.Orderer<T> {
+	export class Orderer<T extends IClass> extends AbstractCollection.Orderer<T> implements Arrays.Orderer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractArray<T>;
+		public source: IArray<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractArray<T>, config: AbstractCollection.Orderer.Config<T>) {
+		constructor(source: IArray<T>, config: Collections.OrdererConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -1868,13 +1626,13 @@ export module AbstractArray {
 	 *
 	 * @param T Array item type.
 	 */
-	export class Reverser<T> extends Class {
+	export class Reverser<T> extends Class implements Arrays.Reverser<T> {
 		private _targetCreated: boolean;
 
 		/**
 		 * Target array.
 		 */
-		target: AbstractArray<T>;
+		target: IArray<T>;
 
 		/**
 		 * Creates synchronizer.
@@ -1883,7 +1641,7 @@ export module AbstractArray {
 		 * @param source Source array.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractArray<T>, config: Reverser.Config<T> = {}) {
+		constructor(public source: IArray<T>, config: Arrays.ReverserConfig<T> = {}) {
 			super();
 			this._targetCreated = config.target == null;
 			this.target = this._targetCreated ? source.createEmpty<T>() : config.target;
@@ -1913,33 +1671,19 @@ export module AbstractArray {
 		}
 	}
 
-	export module Reverser {
-		/**
-		 * [[JW.AbstractArray.Reverser]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T> {
-			/**
-			 * Target array. By default, created automatically.
-			 */
-			target?: AbstractArray<T>;
-		}
-	}
-
 	/**
 	 * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Array]].
 	 */
-	export class SorterComparing<T> extends AbstractCollection.SorterComparing<T> {
+	export class SorterComparing<T> extends AbstractCollection.SorterComparing<T> implements Arrays.SorterComparing<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractArray<T>;
+		public source: IArray<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractArray<T>, config: AbstractCollection.SorterComparing.Config<T>) {
+		constructor(source: IArray<T>, config: Collections.SorterComparingConfig<T>) {
 			super(source, config);
 		}
 	}

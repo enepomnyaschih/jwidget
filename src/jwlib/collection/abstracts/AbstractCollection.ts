@@ -1,14 +1,17 @@
-﻿import {array} from '../core/globals';
-import {cmp, Dictionary} from '../core/Core';
-import {Class} from '../core/Class';
-import {Destroyable} from '../core/Destroyable';
-import {Property} from '../property/Property';
-import {AbstractArray} from './AbstractArray';
-import {AbstractMap} from './AbstractMap';
-import {AbstractSet} from './AbstractSet';
-import {Array} from './Array';
-import {Map} from './Map';
-import {Set} from './Set';
+﻿import {array} from '../../core/globals';
+import {cmp, Dictionary} from '../../core/Core';
+import {Class} from '../../core/Class';
+import {IClass} from '../../core/IClass';
+import {Destroyable} from '../../core/Destroyable';
+import {Property} from '../../property/Property';
+import {ICollection} from '../interfaces/ICollection';
+import * as Collections from '../interfaces/ICollection';
+import {IArray} from '../interfaces/IArray';
+import * as Arrays from '../interfaces/IArray';
+import {IMap} from '../interfaces/IMap';
+import {ISet} from '../interfaces/ISet';
+import * as ArrayUtils from '../utils/Array';
+import * as SetUtils from '../utils/Set';
 
 /**
  * Abstract collection.
@@ -235,7 +238,7 @@ import {Set} from './Set';
  *
  * @param T Collection item type.
  */
-export abstract class AbstractCollection<T> extends Class {
+export abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	protected _ownsItems: Boolean = false;
 
 	protected destroyObject(): void {
@@ -249,7 +252,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * collection, and all items are destroyed on the collection destruction.
 	 * @returns this
 	 */
-	ownItems(): AbstractCollection<T> {
+	ownItems(): ICollection<T> {
 		this._ownsItems = true;
 		return this;
 	}
@@ -301,7 +304,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * Clears collection.
 	 * @returns Old collection contents. Never returns null or undefined.
 	 */
-	abstract $clear(): AbstractCollection<T>;
+	abstract $clear(): ICollection<T>;
 
 	/**
 	 * Matches all items against criteria.
@@ -391,9 +394,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
 	 */
-	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): Array<T> {
-		return new Array<T>(this.toSorted(callback, scope, order), true);
-	}
+	abstract $toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T>;
 
 	/**
 	 * Converts collection to sorted array.
@@ -421,9 +422,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): Array<T> {
-		return new Array<T>(this.toSortedComparing(compare, scope, order), true);
-	}
+	abstract $toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T>;
 
 	/**
 	 * Converts collection to sorted array.
@@ -439,7 +438,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
 	 */
-	$$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): AbstractArray<T> {
+	$$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T> {
 		return this.$toSortedComparing(compare, scope, order);
 	}
 
@@ -473,9 +472,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Collection index.
 	 */
-	$index(callback: (item: T) => string, scope?: any): Map<T> {
-		return new Map<T>(this.index(callback, scope), true);
-	}
+	abstract $index(callback: (item: T) => string, scope?: any): IMap<T>;
 
 	/**
 	 * Indexes collection.
@@ -488,7 +485,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Collection index.
 	 */
-	$$index(callback: (item: T) => string, scope?: any): AbstractMap<T> {
+	$$index(callback: (item: T) => string, scope?: any): IMap<T> {
 		return this.$index(callback, scope);
 	}
 
@@ -512,9 +509,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 *
 	 * Builds new array consisting of collection items.
 	 */
-	$toArray(): Array<T> {
-		return new Array(this.toArray(), true);
-	}
+	abstract $toArray(): IArray<T>;
 
 	/**
 	 * Converts collection to array.
@@ -523,7 +518,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * If this collection is observable, starts continuous synchronization,
 	 * i.e. creates [[JW.AbstractCollection.Orderer]] implicitly.
 	 */
-	$$toArray(): AbstractArray<T> {
+	$$toArray(): IArray<T> {
 		return this.$toArray();
 	}
 
@@ -536,7 +531,7 @@ export abstract class AbstractCollection<T> extends Class {
 	toSet(): Dictionary<T> {
 		var result: Dictionary<any> = {};
 		this.every(function (item) {
-			Set.add(result, item);
+			SetUtils.add(result, item);
 			return true;
 		});
 		return result;
@@ -548,9 +543,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * Builds new set consisting of collection items.
 	 * Requires T to extend JW.Class.
 	 */
-	$toSet(): Set<any> {
-		return new Set<any>(this.toSet(), true);
-	}
+	abstract $toSet(): ISet<any>;
 
 	/**
 	 * Converts collection to set.
@@ -560,7 +553,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * i.e. creates [[JW.AbstractCollection.Lister]] implicitly.
 	 * Requires T to extend JW.Class.
 	 */
-	$$toSet(): AbstractSet<any> {
+	$$toSet(): ISet<any> {
 		return this.$toSet();
 	}
 
@@ -586,9 +579,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * but please make sure that the returned array
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	$asArray(): AbstractArray<T> {
-		return new Array<T>(this.asArray(), true);
-	}
+	abstract $asArray(): IArray<T>;
 
 	/**
 	 * Represents collection as set.
@@ -614,9 +605,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 * Requires T to extend JW.Class.
 	 */
-	$asSet(): AbstractSet<any> {
-		return new Set<any>(this.asSet(), true);
-	}
+	abstract $asSet(): ISet<any>;
 
 	/**
 	 * Filters collection by criteria.
@@ -638,7 +627,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Filtered collection.
 	 */
-	abstract $filter(callback: (item: T) => boolean, scope?: any): AbstractCollection<T>;
+	abstract $filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
 
 	/**
 	 * Filters collection by criteria.
@@ -651,7 +640,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Filtered collection.
 	 */
-	abstract $$filter(callback: (item: T) => boolean, scope?: any): AbstractCollection<T>;
+	abstract $$filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
 
 	/**
 	 * Counts the items matching criteria.
@@ -712,7 +701,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Mapped collection.
 	 */
-	abstract $map<U>(callback: (item: T) => U, scope?: any): AbstractCollection<U>;
+	abstract $map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
 
 	/**
 	 * Maps collection items.
@@ -726,7 +715,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Mapped collection.
 	 */
-	abstract $$mapValues<U>(callback: (item: T) => U, scope?: any): AbstractCollection<U>;
+	abstract $$mapValues<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
 
 	/**
 	 * Maps collection items.
@@ -740,27 +729,27 @@ export abstract class AbstractCollection<T> extends Class {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Mapped collection.
 	 */
-	abstract $$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): AbstractCollection<U>;
+	abstract $$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): ICollection<U>;
 
 	/**
 	 * Creates empty collection of the same type.
 	 */
-	abstract createEmpty<U>(): AbstractCollection<U>;
+	abstract createEmpty<U>(): ICollection<U>;
 
 	/**
 	 * Creates empty array of the same observability level.
 	 */
-	abstract createEmptyArray<U>(): AbstractArray<U>;
+	abstract createEmptyArray<U>(): IArray<U>;
 
 	/**
 	 * Creates empty map of the same observability level.
 	 */
-	abstract createEmptyMap<U>(): AbstractMap<U>;
+	abstract createEmptyMap<U>(): IMap<U>;
 
 	/**
 	 * Creates empty set of the same observability level.
 	 */
-	abstract createEmptySet<U extends Class>(): AbstractSet<U>;
+	abstract createEmptySet<U extends IClass>(): ISet<U>;
 
 	/**
 	 * Creates collection item mapper.
@@ -768,7 +757,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
 	 * @param config Configuration.
 	 */
-	abstract createMapper<U>(config: AbstractCollection.Mapper.Config<T, U>): AbstractCollection.Mapper<T, U>;
+	abstract createMapper<U>(config: Collections.MapperConfig<T, U>): Collections.Mapper<T, U>;
 
 	/**
 	 * Creates collection filterer.
@@ -776,7 +765,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * Extended version of [[$$filter]] method.
 	 * @param config Configuration.
 	 */
-	abstract createFilterer(config: AbstractCollection.Filterer.Config<T>): AbstractCollection.Filterer<T>;
+	abstract createFilterer(config: Collections.FiltererConfig<T>): Collections.Filterer<T>;
 
 	/**
 	 * Creates matching item counter.
@@ -784,14 +773,14 @@ export abstract class AbstractCollection<T> extends Class {
 	 * Extended version of [[$$count]] method.
 	 * @param config Configuration.
 	 */
-	abstract createCounter(config: AbstractCollection.Counter.Config<T>): AbstractCollection.Counter<T>;
+	abstract createCounter(config: Collections.CounterConfig<T>): Collections.Counter<T>;
 
 	/**
 	 * Creates collection observer.
 	 * Selects appropriate synchronizer implementation automatically.
 	 * @param config Configuration.
 	 */
-	abstract createObserver(config?: AbstractCollection.Observer.Config<T>): AbstractCollection.Observer<T>;
+	abstract createObserver(config?: Collections.ObserverConfig<T>): Collections.Observer<T>;
 
 	/**
 	 * Creates collection converter to array (orderer).
@@ -799,7 +788,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * Extended version of [[$$toArray]] method.
 	 * @param config Configuration.
 	 */
-	abstract createOrderer(config?: AbstractCollection.Orderer.Config<any>): AbstractCollection.Orderer<any>;
+	abstract createOrderer(config?: Collections.OrdererConfig<any>): Collections.Orderer<any>;
 
 	/**
 	 * Creates collection converter to array (sorter by comparer).
@@ -807,7 +796,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * Extended version of [[$$toSortedComparing]] method.
 	 * @param config Configuration.
 	 */
-	abstract createSorterComparing(config?: AbstractCollection.SorterComparing.Config<T>): AbstractCollection.SorterComparing<T>;
+	abstract createSorterComparing(config?: Collections.SorterComparingConfig<T>): Collections.SorterComparing<T>;
 
 	/**
 	 * Creates collection converter to map (indexer).
@@ -815,7 +804,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * Extended version of [[$$index]] method.
 	 * @param config Configuration.
 	 */
-	abstract createIndexer(config: AbstractCollection.Indexer.Config<T>): AbstractCollection.Indexer<T>;
+	abstract createIndexer(config: Collections.IndexerConfig<T>): Collections.Indexer<T>;
 
 	/**
 	 * Creates collection converter to set.
@@ -823,7 +812,7 @@ export abstract class AbstractCollection<T> extends Class {
 	 * Extended version of [[$$toSet]] method.
 	 * @param config Configuration.
 	 */
-	abstract createLister(config?: AbstractCollection.Lister.Config<any>): AbstractCollection.Lister<any>;
+	abstract createLister(config?: Collections.ListerConfig<any>): Collections.Lister<any>;
 }
 
 export module AbstractCollection {
@@ -893,7 +882,7 @@ export module AbstractCollection {
 	 *
 	 * @param T Collection item type.
 	 */
-	export abstract class Counter<T> extends Class {
+	export abstract class Counter<T> extends Class implements Collections.Counter<T> {
 		private _targetCreated: boolean;
 
 		/**
@@ -918,7 +907,7 @@ export module AbstractCollection {
 		 * @param source Source collection.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractCollection<T>, config: Counter.Config<T>) {
+		constructor(public source: ICollection<T>, config: Collections.CounterConfig<T>) {
 			super();
 			this._filterItem = config.filterItem;
 			this._scope = config.scope || this;
@@ -946,7 +935,7 @@ export module AbstractCollection {
 		 * Changes counter configuration and recounts matching items.
 		 * @param config Options to modify.
 		 */
-		reconfigure(config: Counter.Reconfig<T>) {
+		reconfigure(config: Collections.CounterReconfig<T>) {
 			this._filterItem = config.filterItem || this._filterItem;
 			this._scope = config.scope || this._scope;
 			this.recount();
@@ -958,49 +947,6 @@ export module AbstractCollection {
 		 */
 		recount() {
 			this.target.set(this.source.count(this._filterItem, this._scope));
-		}
-	}
-
-	export module Counter {
-		/**
-		 * [[Counter]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T> {
-			/**
-			 * Filtering criteria.
-			 */
-			filterItem: (item: T) => boolean;
-
-			/**
-			 * [[filterItem]] call scope.
-			 * Defaults to synchronizer itself.
-			 */
-			scope?: any;
-
-			/**
-			 * Target property. By default, created automatically.
-			 */
-			target?: Property<number>;
-		}
-
-		/**
-		 * [[Counter]]'s [[Counter.reconfigure|reconfigure]] method options.
-		 * All options are optional. If skipped, an option stays the same.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Reconfig<T> {
-			/**
-			 * Filtering criteria.
-			 */
-			filterItem?: (item: T) => boolean;
-
-			/**
-			 * [[filterItem]] call scope.
-			 */
-			scope?: any;
 		}
 	}
 
@@ -1087,7 +1033,7 @@ export module AbstractCollection {
 	 *
 	 * @param T Collection item type.
 	 */
-	export abstract class Filterer<T> extends Class {
+	export abstract class Filterer<T> extends Class implements Collections.Filterer<T> {
 		private _targetCreated: boolean;
 
 		/**
@@ -1103,7 +1049,7 @@ export module AbstractCollection {
 		/**
 		 * Target collection.
 		 */
-		target: AbstractCollection<T>;
+		target: ICollection<T>;
 
 		/**
 		 * Creates synchronizer.
@@ -1112,7 +1058,7 @@ export module AbstractCollection {
 		 * @param source Source collection.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractCollection<T>, config: Filterer.Config<T>) {
+		constructor(public source: ICollection<T>, config: Collections.FiltererConfig<T>) {
 			super();
 			this._filterItem = config.filterItem;
 			this._scope = config.scope || this;
@@ -1133,49 +1079,25 @@ export module AbstractCollection {
 			this._scope = null;
 			super.destroyObject();
 		}
-	}
-
-	export module Filterer {
-		/**
-		 * [[JW.AbstractCollection.Filterer]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T> {
-			/**
-			 * Filtering criteria.
-			 */
-			filterItem: (item: T) => boolean;
-
-			/**
-			 * [[filterItem]] call scope.
-			 * Defaults to synchronizer itself.
-			 */
-			scope?: any;
-
-			/**
-			 * Target collection. By default, created automatically.
-			 */
-			target?: AbstractCollection<T>;
-		}
 
 		/**
-		 * [[Filterer]]'s [[Filterer.reconfigure|reconfigure]] method options.
-		 * All options are optional. If skipped, an option stays the same.
-		 *
-		 * @param T Collection item type.
+		 * Changes filterer configuration and refilters target collection.
+		 * @param config Options to modify.
 		 */
-		export interface Reconfig<T> {
-			/**
-			 * Filtering criteria.
-			 */
-			filterItem?: (item: T) => boolean;
+		abstract reconfigure(config: Collections.FiltererReconfig<T>);
 
-			/**
-			 * [[filterItem]] call scope.
-			 */
-			scope?: any;
-		}
+		/**
+		 * Refilters target collection item. Call this method when collection item properties change the way that
+		 * it must be refiltered.
+		 * @param item Item to refilter.
+		 */
+		abstract refilterItem(item: T);
+
+		/**
+		 * Refilters target collection. Call this method when collection item properties change the way that
+		 * they must be refiltered.
+		 */
+		abstract refilter();
 	}
 
 	/**
@@ -1254,7 +1176,7 @@ export module AbstractCollection {
 	 *
 	 * @param T Collection item type.
 	 */
-	export abstract class Indexer<T> extends Class {
+	export abstract class Indexer<T> extends Class implements Collections.Indexer<T> {
 		private _targetCreated: boolean;
 
 		/**
@@ -1270,7 +1192,7 @@ export module AbstractCollection {
 		/**
 		 * Target map.
 		 */
-		target: AbstractMap<T>;
+		target: IMap<T>;
 
 		/**
 		 * Creates synchronizer.
@@ -1279,7 +1201,7 @@ export module AbstractCollection {
 		 * @param source Source collection.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractCollection<T>, config: Indexer.Config<T>) {
+		constructor(public source: ICollection<T>, config: Collections.IndexerConfig<T>) {
 			super();
 			this._getKey = config.getKey;
 			this._scope = config.scope || this;
@@ -1324,31 +1246,6 @@ export module AbstractCollection {
 				keys.push(this._getKey.call(this._scope, items[i]));
 			}
 			return keys;
-		}
-	}
-
-	export module Indexer {
-		/**
-		 * [[JW.AbstractCollection.Indexer]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T> {
-			/**
-			 * Indexing function. Determines item key in map.
-			 */
-			getKey: (item: T) => string;
-
-			/**
-			 * [[getKey]] call scope.
-			 * Defaults to synchronizer itself.
-			 */
-			scope?: any;
-
-			/**
-			 * Target map. By default, created automatically.
-			 */
-			target?: AbstractMap<T>;
 		}
 	}
 
@@ -1424,13 +1321,13 @@ export module AbstractCollection {
 	 *
 	 * @param T Collection item type.
 	 */
-	export abstract class Lister<T extends Class> extends Class {
+	export abstract class Lister<T extends IClass> extends Class implements Collections.Lister<T> {
 		private _targetCreated: boolean;
 
 		/**
 		 * Target set.
 		 */
-		target: AbstractSet<T>;
+		target: ISet<T>;
 
 		/**
 		 * Creates synchronizer.
@@ -1439,7 +1336,7 @@ export module AbstractCollection {
 		 * @param source Source collection.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractCollection<T>, config: Lister.Config<T> = {}) {
+		constructor(public source: ICollection<T>, config: Collections.ListerConfig<T> = {}) {
 			super();
 			this._targetCreated = config.target == null;
 			this.target = this._targetCreated ? source.createEmptySet<T>() : config.target;
@@ -1457,20 +1354,6 @@ export module AbstractCollection {
 			this.source = null;
 			this.target = null;
 			super.destroyObject();
-		}
-	}
-
-	export module Lister {
-		/**
-		 * [[JW.AbstractCollection.Lister]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T extends Class> {
-			/**
-			 * Target set. By default, created automatically.
-			 */
-			target?: AbstractSet<T>;
 		}
 	}
 
@@ -1565,7 +1448,7 @@ export module AbstractCollection {
 	 * @param T Source collection item type.
 	 * @param U Target collection item type.
 	 */
-	export abstract class Mapper<T, U> extends Class {
+	export abstract class Mapper<T, U> extends Class implements Collections.Mapper<T, U> {
 		private _targetCreated: boolean;
 
 		/**
@@ -1586,7 +1469,7 @@ export module AbstractCollection {
 		/**
 		 * Target collection.
 		 */
-		target: AbstractCollection<U>;
+		target: ICollection<U>;
 
 		/**
 		 * Creates synchronizer.
@@ -1595,7 +1478,7 @@ export module AbstractCollection {
 		 * @param source Source collection.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractCollection<T>, config: Mapper.Config<T, U>) {
+		constructor(public source: ICollection<T>, config: Collections.MapperConfig<T, U>) {
 			super();
 			this._createItem = config.createItem;
 			this._destroyItem = config.destroyItem;
@@ -1617,37 +1500,6 @@ export module AbstractCollection {
 			this.target = null;
 			this._scope = null;
 			super.destroyObject();
-		}
-	}
-
-	export module Mapper {
-		/**
-		 * [[JW.AbstractCollection.Mapper]] configuration.
-		 *
-		 * @param T Source collection item type.
-		 * @param U Target collection item type.
-		 */
-		export interface Config<T, U> {
-			/**
-			 * Mapping function. Creates an item of target collection by item of source collection.
-			 */
-			createItem: (data: T) => U;
-
-			/**
-			 * Item destructor. Destroys an item of target collection.
-			 */
-			destroyItem?: (item: U, data: T) => void;
-
-			/**
-			 * [[createItem]] and [[destroyItem]] call scope.
-			 * Defaults to synchronizer itself.
-			 */
-			scope?: any;
-
-			/**
-			 * Target collection. By default, created automatically.
-			 */
-			target?: AbstractCollection<U>;
 		}
 	}
 
@@ -1690,7 +1542,7 @@ export module AbstractCollection {
 	 *
 	 * @param T Collection item type.
 	 */
-	export abstract class Observer<T> extends Class {
+	export abstract class Observer<T> extends Class implements Collections.Observer<T>{
 		/**
 		 * @hidden
 		 */
@@ -1723,7 +1575,7 @@ export module AbstractCollection {
 		 * @param source Source collection.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractCollection<T>, config: Observer.Config<T>) {
+		constructor(public source: ICollection<T>, config: Collections.ObserverConfig<T>) {
 			super();
 			config = config || {};
 			this._addItem = config.addItem;
@@ -1794,42 +1646,6 @@ export module AbstractCollection {
 		}
 	}
 
-	export module Observer {
-		/**
-		 * [[JW.AbstractCollection.Observer]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T> {
-			/**
-			 * Item is added to collection.
-			 */
-			addItem?: (item: T) => void;
-
-			/**
-			 * Item is removed from collection.
-			 */
-			removeItem?: (item: T) => void;
-
-			/**
-			 * Collection is cleared. By default, calls [[removeItem]] for all collection items.
-			 */
-			clearItems?: (items: T[]) => void;
-
-			/**
-			 * Collection is changed arbitrarily.
-			 */
-			change?: () => void;
-
-			/**
-			 * [[addItem]], [[removeItem]],
-			 * [[clearItems]] and [[change]] call scope.
-			 * Defaults to synchronizer itself.
-			 */
-			scope?: any;
-		}
-	}
-
 	/**
 	 * Converter to array (orderer). Converts source collection to array.
 	 * Adds new items to the end of array.
@@ -1891,13 +1707,13 @@ export module AbstractCollection {
 	 *
 	 * @param T Collection item type.
 	 */
-	export abstract class Orderer<T extends Class> extends Class {
+	export abstract class Orderer<T extends IClass> extends Class implements Collections.Orderer<T> {
 		private _targetCreated: boolean;
 
 		/**
 		 * Target array.
 		 */
-		target: AbstractArray<T>;
+		target: IArray<T>;
 
 		/**
 		 * Creates synchronizer.
@@ -1906,7 +1722,7 @@ export module AbstractCollection {
 		 * @param source Source collection.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractCollection<T>, config: Orderer.Config<T> = {}) {
+		constructor(public source: ICollection<T>, config: Collections.OrdererConfig<T> = {}) {
 			super();
 			this._targetCreated = config.target == null;
 			this.target = this._targetCreated ? source.createEmptyArray<T>() : config.target;
@@ -1931,28 +1747,14 @@ export module AbstractCollection {
 		 */
 		protected _splice(removedItemsSet: Dictionary<T>, addedItemsSet: Dictionary<T>) {
 			var filteredItems = this.target.filter((item) => {
-				return !Set.contains(removedItemsSet, item) || Set.contains(addedItemsSet, item);
+				return !SetUtils.contains(removedItemsSet, item) || SetUtils.contains(addedItemsSet, item);
 			});
-			var addedItems = Set.$toArray(addedItemsSet).filter((item) => {
-				return !Set.contains(removedItemsSet, item);
+			var addedItems = ArrayUtils.filter(SetUtils.toArray(addedItemsSet), (item) => {
+				return !SetUtils.contains(removedItemsSet, item);
 			});
 			this.target.trySplice(
 				this.target.detectFilter(filteredItems) || [],
-				[new AbstractArray.IndexItems(filteredItems.length, addedItems)]);
-		}
-	}
-
-	export module Orderer {
-		/**
-		 * [[JW.AbstractCollection.Orderer]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T extends Class> {
-			/**
-			 * Target array. By default, created automatically.
-			 */
-			target?: AbstractArray<T>;
+				[new ArrayUtils.IndexItems(filteredItems.length, addedItems)]);
 		}
 	}
 
@@ -2054,7 +1856,7 @@ export module AbstractCollection {
 	 *
 	 * @param T Collection item type.
 	 */
-	export abstract class SorterComparing<T> extends Class {
+	export abstract class SorterComparing<T> extends Class implements Collections.SorterComparing<T> {
 		private _targetCreated: boolean;
 
 		/**
@@ -2075,7 +1877,7 @@ export module AbstractCollection {
 		/**
 		 * Target array.
 		 */
-		target: AbstractArray<T>;
+		target: IArray<T>;
 
 		/**
 		 * Creates synchronizer.
@@ -2084,7 +1886,7 @@ export module AbstractCollection {
 		 * @param source Source collection.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractCollection<T>, config: SorterComparing.Config<T>) {
+		constructor(public source: ICollection<T>, config: Collections.SorterComparingConfig<T>) {
 			super();
 			this._compare = config.compare || cmp;
 			this._order = config.order || 1;
@@ -2120,8 +1922,8 @@ export module AbstractCollection {
 		 * @hidden
 		 */
 		protected _splice(removedItems: T[], addedItems: T[]) {
-			var removedItemsSorted = Array.toSortedComparing(removedItems, this._compare, this._scope, this._order);
-			var addedItemsSorted = Array.toSortedComparing(addedItems, this._compare, this._scope, this._order);
+			var removedItemsSorted = ArrayUtils.toSortedComparing(removedItems, this._compare, this._scope, this._order);
+			var addedItemsSorted = ArrayUtils.toSortedComparing(addedItems, this._compare, this._scope, this._order);
 			removedItems = array<T>(removedItems.length);
 			addedItems = array<T>(addedItems.length);
 			var iRemoved = 0;
@@ -2150,21 +1952,21 @@ export module AbstractCollection {
 
 			var iAdds = 0;
 			var addShift = 0;
-			var removeParamsList: AbstractArray.IndexCount[] = [];
-			var addParamsList: AbstractArray.IndexItems<T>[] = [];
-			var removeParams: AbstractArray.IndexCount = null;
+			var removeParamsList: Arrays.IndexCount[] = [];
+			var addParamsList: Arrays.IndexItems<T>[] = [];
+			var removeParams: Arrays.IndexCount = null;
 			for (var iTarget = 0, lTarget = this.target.getLength(); iTarget < lTarget; ++iTarget) {
 				var value = this.target.get(iTarget);
-				if (removedItems[Array.binarySearch(removedItems, value, this._compare, this._scope, this._order) - 1] === value) {
+				if (removedItems[ArrayUtils.binarySearch(removedItems, value, this._compare, this._scope, this._order) - 1] === value) {
 					if (!removeParams) {
-						removeParams = new AbstractArray.IndexCount(iTarget, 0);
+						removeParams = new ArrayUtils.IndexCount(iTarget, 0);
 						removeParamsList.push(removeParams);
 					}
 					++removeParams.count;
 					--addShift;
 				} else {
 					removeParams = null;
-					var addParams = new AbstractArray.IndexItems<T>(iTarget + addShift, []);
+					var addParams = new ArrayUtils.IndexItems<T>(iTarget + addShift, []);
 					while ((iAdds < addedItems.length) && (this._order * this._compare.call(this._scope, addedItems[iAdds], value) < 0)) {
 						addParams.items.push(addedItems[iAdds++]);
 						++addShift;
@@ -2175,40 +1977,9 @@ export module AbstractCollection {
 				}
 			}
 			if (iAdds < addedItems.length) {
-				addParamsList.push(new AbstractArray.IndexItems<T>(iTarget + addShift, addedItems.slice(iAdds)));
+				addParamsList.push(new ArrayUtils.IndexItems<T>(iTarget + addShift, addedItems.slice(iAdds)));
 			}
 			this.target.trySplice(removeParamsList, addParamsList);
-		}
-	}
-
-	export module SorterComparing {
-		/**
-		 * [[JW.AbstractCollection.SorterComparing]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T> {
-			/**
-			 * Item comparing callback.
-			 */
-			compare: (x: T, y: T) => number;
-
-			/**
-			 * [[compare]] call scope.
-			 * Defaults to synchronizer itself.
-			 */
-			scope?: any;
-
-			/**
-			 * Target array. By default, created automatically.
-			 */
-			target?: AbstractArray<T>;
-
-			/**
-			 * Sorting order. Positive number for ascending sorting, negative for descending sorting.
-			 * Defaults to 1.
-			 */
-			order?: number;
 		}
 	}
 }

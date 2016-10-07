@@ -1,11 +1,15 @@
-﻿import {apply, destroyForcibly, Dictionary, Proxy} from '../core/Core';
-import {Class} from '../core/Class';
-import {Destroyable} from '../core/Destroyable';
+﻿import {apply, destroyForcibly, iidString, Dictionary, Proxy} from '../../core/Core';
+import {Destroyable} from '../../core/Destroyable';
+import {Class} from '../../core/Class';
+import {IClass} from '../../core/IClass';
 import {AbstractCollection} from './AbstractCollection';
+import * as Collections from '../interfaces/ICollection';
 import {IndexedCollection} from './IndexedCollection';
-import {Array} from './Array';
-import {Map} from './Map';
-import {Set} from './Set';
+import {IArray} from '../interfaces/IArray';
+import * as ArrayUtils from '../utils/Array';
+import {IMap} from '../interfaces/IMap';
+import * as Maps from '../interfaces/IMap';
+import * as MapUtils from '../utils/Map';
 
 /**
  * Map is unordered collection. Each item has its own string key.
@@ -123,7 +127,7 @@ import {Set} from './Set';
  *
  * @param T Map item type.
  */
-export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
+export abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IMap<T> {
 	private json: Dictionary<T>;
 	private _length: number;
 	private _adapter: boolean;
@@ -146,7 +150,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 		super();
 		this._adapter = Boolean(adapter);
 		this.json = adapter ? json : json ? apply<T>({}, json) : {};
-		this._length = Map.getLength(this.json);
+		this._length = MapUtils.getLength(this.json);
 	}
 
 	/**
@@ -175,14 +179,14 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * @inheritdoc
 	 */
 	getFirst(): T {
-		return Map.getFirst(this.json);
+		return MapUtils.getFirst(this.json);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getFirstKey(): string {
-		return Map.getFirstKey(this.json);
+		return MapUtils.getFirstKey(this.json);
 	}
 
 	/**
@@ -205,69 +209,67 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * @inheritdoc
 	 */
 	getKeys(): string[] {
-		return Map.getKeys(this.json);
+		return MapUtils.getKeys(this.json);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	containsItem(item: T): boolean {
-		return Map.containsItem(this.json, item);
+		return MapUtils.containsItem(this.json, item);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	every(callback: (item: T, key: string) => boolean, scope?: any): boolean {
-		return Map.every(this.json, callback, scope || this);
+		return MapUtils.every(this.json, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): T[] {
-		return Map.toSorted(this.json, callback, scope || this, order);
+		return MapUtils.toSorted(this.json, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T[] {
-		return Map.toSortedComparing(this.json, compare, scope || this, order);
+		return MapUtils.toSortedComparing(this.json, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): string[] {
-		return Map.getSortingKeys(this.json, callback, scope || this, order);
+		return MapUtils.getSortingKeys(this.json, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string[] {
-		return Map.getSortingKeysComparing(this.json, compare, scope || this, order);
+		return MapUtils.getSortingKeysComparing(this.json, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
-		return Map.filter(this.json, callback, scope || this);
+		return MapUtils.filter(this.json, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T, key: string) => boolean, scope?: any): Map<T> {
-		return new Map<T>(this.filter(callback, scope || this), true);
-	}
+	abstract $filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): AbstractMap<T> {
+	$$filter(callback: (item: T) => boolean, scope?: any): IMap<T> {
 		return this.$filter(callback, scope || this);
 	}
 
@@ -275,34 +277,32 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * @inheritdoc
 	 */
 	count(callback: (item: T, key: string) => boolean, scope?: any): number {
-		return Map.count(this.json, callback, scope || this);
+		return MapUtils.count(this.json, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	map<U>(callback: (item: T, key: string) => U, scope?: any): Dictionary<U> {
-		return Map.map(this.json, callback, scope || this);
+		return MapUtils.map(this.json, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$map<U>(callback: (item: T, key: string) => U, scope?: any): Map<U> {
-		return new Map<U>(this.map(callback, scope || this), true);
-	}
+	abstract $map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$$mapValues<U>(callback: (item: T) => U, scope?: any): AbstractMap<U> {
+	$$mapValues<U>(callback: (item: T) => U, scope?: any): IMap<U> {
 		return this.$map(callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): AbstractMap<U> {
+	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): IMap<U> {
 		return this.$map(callback, scope || this);
 	}
 
@@ -323,7 +323,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$asMap(): AbstractMap<T> {
+	$asMap(): IMap<T> {
 		return this;
 	}
 
@@ -344,7 +344,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	}
 
 	protected _trySet(item: T, key: string): Proxy<T> {
-		var result = Map.trySet(this.json, item, key);
+		var result = MapUtils.trySet(this.json, item, key);
 		if (result === undefined) {
 			return;
 		}
@@ -396,7 +396,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * If collection is not modified, returns undefined.
 	 */
 	trySetKey(oldKey: string, newKey: string): T {
-		return Map.trySetKey(this.json, oldKey, newKey);
+		return MapUtils.trySetKey(this.json, oldKey, newKey);
 	}
 
 	/**
@@ -413,7 +413,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	}
 
 	protected _tryRemove(key: string): T {
-		var item = Map.tryRemove(this.json, key);
+		var item = MapUtils.tryRemove(this.json, key);
 		if (item === undefined) {
 			return;
 		}
@@ -443,9 +443,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * Low-performance alternative to [[removeAll]] with verbose result set.
 	 * @returns The removed items.
 	 */
-	$removeAllVerbose(keys: string[]): Map<T> {
-		return new Map<T>(this.removeAllVerbose(keys), true);
-	}
+	abstract $removeAllVerbose(keys: string[]): IMap<T>;
 
 	/**
 	 * Removes a bunch of items from map.
@@ -463,9 +461,9 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * @inheritdoc
 	 */
 	removeItems(items: T[]) {
-		var itemSet = new Set<any>(items);
+		var itemSet = ArrayUtils.index<any>(items, iidString);
 		var newItems = this.filter(function (item) {
-			return !itemSet.contains(item);
+			return !itemSet.hasOwnProperty((<any>item)._iid);
 		});
 		this.performSplice(newItems);
 	}
@@ -481,9 +479,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$clear(): Map<T> {
-		return new Map<T>(this.clear(), true);
-	}
+	abstract $clear(): IMap<T>;
 
 	/**
 	 * @inheritdoc
@@ -491,7 +487,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	tryClear(): Dictionary<T> {
 		var items = this._tryClear();
 		if (items !== undefined && this._ownsItems) {
-			Array.backEvery(Map.toArray(items), destroyForcibly);
+			ArrayUtils.backEvery(MapUtils.toArray(items), destroyForcibly);
 		}
 		return items;
 	}
@@ -503,7 +499,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 		var items: Dictionary<T>;
 		this._length = 0;
 		if (this._adapter) {
-			items = Map.tryClear(this.json);
+			items = MapUtils.tryClear(this.json);
 		} else {
 			items = this.json;
 			this.json = {};
@@ -517,7 +513,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * @param updatedItems Items to add/replace.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removedKeys: string[], updatedItems: Dictionary<T>): AbstractMap.SpliceResult<T> {
+	splice(removedKeys: string[], updatedItems: Dictionary<T>): Maps.SpliceResult<T> {
 		var spliceResult = this.trySplice(removedKeys, updatedItems);
 		return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 	}
@@ -529,18 +525,18 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * @returns Splice result.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): AbstractMap.SpliceResult<T> {
+	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): Maps.SpliceResult<T> {
 		var spliceResult = this._trySplice(removedKeys, updatedItems);
 		if ((spliceResult !== undefined) && this._ownsItems) {
-			Array.backEvery<T>(Map.toArray(spliceResult.removedItems), destroyForcibly);
+			ArrayUtils.backEvery<T>(MapUtils.toArray(spliceResult.removedItems), destroyForcibly);
 		}
 		return spliceResult;
 	}
 
-	protected _trySplice(removedKeys: string[], updatedItems: Dictionary<T>): AbstractMap.SpliceResult<T> {
-		var spliceResult = Map.trySplice(this.json, removedKeys, updatedItems);
+	protected _trySplice(removedKeys: string[], updatedItems: Dictionary<T>): Maps.SpliceResult<T> {
+		var spliceResult = MapUtils.trySplice(this.json, removedKeys, updatedItems);
 		if (spliceResult !== undefined) {
-			this._length += Map.getLength(spliceResult.addedItems) - Map.getLength(spliceResult.removedItems);
+			this._length += MapUtils.getLength(spliceResult.addedItems) - MapUtils.getLength(spliceResult.removedItems);
 			return spliceResult;
 		}
 	}
@@ -564,7 +560,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * If collection is not modified, returns undefined.
 	 */
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
-		return Map.tryReindex(this.json, keyMap);
+		return MapUtils.tryReindex(this.json, keyMap);
 	}
 
 	/**
@@ -573,8 +569,8 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * @param newItems New map contents.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: Dictionary<T>): AbstractMap.SpliceParams<T> {
-		return Map.detectSplice(this.json, newItems);
+	detectSplice(newItems: Dictionary<T>): Maps.SpliceParams<T> {
+		return MapUtils.detectSplice(this.json, newItems);
 	}
 
 	/**
@@ -590,7 +586,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * If no method call required, returns undefined.
 	 */
 	detectReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): Dictionary<string> {
-		return Map.detectReindex(this.json, newItems, getKey || this.getKey, scope || this);
+		return MapUtils.detectReindex(this.json, newItems, getKey || this.getKey, scope || this);
 	}
 
 	/**
@@ -625,14 +621,14 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * @hidden
 	 */
 	getInverted(): Dictionary<string> {
-		return Map.getInverted(<Dictionary<any>>this.json);
+		return MapUtils.getInverted(<Dictionary<any>>this.json);
 	}
 
 	/**
 	 * Checks for equality (===) to another map, item by item.
 	 */
 	equal(map: Dictionary<T>): boolean {
-		return Map.equal(this.json, map);
+		return MapUtils.equal(this.json, map);
 	}
 
 	/**
@@ -643,56 +639,56 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	createMapper<U>(config: AbstractMap.Mapper.Config<T, U>): AbstractMap.Mapper<T, U> {
+	createMapper<U>(config: Maps.MapperConfig<T, U>): Maps.Mapper<T, U> {
 		return new AbstractMap.Mapper<T, U>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createFilterer(config: AbstractMap.Filterer.Config<T>): AbstractMap.Filterer<T> {
+	createFilterer(config: Maps.FiltererConfig<T>): Maps.Filterer<T> {
 		return new AbstractMap.Filterer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createCounter(config: AbstractCollection.Counter.Config<T>): AbstractMap.Counter<T> {
+	createCounter(config: Collections.CounterConfig<T>): Maps.Counter<T> {
 		return new AbstractMap.Counter<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createObserver(config: AbstractCollection.Observer.Config<T>): AbstractMap.Observer<T> {
+	createObserver(config: Collections.ObserverConfig<T>): Maps.Observer<T> {
 		return new AbstractMap.Observer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createOrderer(config?: AbstractCollection.Orderer.Config<any>): AbstractMap.Orderer<any> {
+	createOrderer(config?: Collections.OrdererConfig<any>): Maps.Orderer<any> {
 		return new AbstractMap.Orderer<any>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createSorterComparing(config?: AbstractCollection.SorterComparing.Config<T>): AbstractMap.SorterComparing<T> {
+	createSorterComparing(config?: Collections.SorterComparingConfig<T>): Maps.SorterComparing<T> {
 		return new AbstractMap.SorterComparing<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createIndexer(config: AbstractCollection.Indexer.Config<T>): AbstractMap.Indexer<T> {
+	createIndexer(config: Collections.IndexerConfig<T>): Maps.Indexer<T> {
 		return new AbstractMap.Indexer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createLister(config?: AbstractCollection.Lister.Config<any>): AbstractMap.Lister<any> {
+	createLister(config?: Collections.ListerConfig<any>): Maps.Lister<any> {
 		return new AbstractMap.Lister<any>(this, config);
 	}
 
@@ -700,53 +696,25 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> {
 	 * Creates view synchronizer with map.
 	 * Selects appropriate synchronizer implementation automatically.
 	 */
-	createInserter(config: AbstractMap.Inserter.Config<T>): AbstractMap.Inserter<T> {
+	createInserter(config: Maps.InserterConfig<T>): Maps.Inserter<T> {
 		return new AbstractMap.Inserter<T>(this, config);
 	}
 }
 
 export module AbstractMap {
 	/**
-	 * [[JW.AbstractMap.splice]] method arguments.
-	 * Returned by [[JW.AbstractMap.detectSplice]] method.
-	 *
-	 * @param T Item type.
-	 */
-	export interface SpliceParams<T> {
-		/**
-		 * Keys of items to remove.
-		 */
-		removedKeys: string[];
-
-		/**
-		 * Items to add/replace.
-		 */
-		updatedItems: Dictionary<T>;
-	}
-
-	/**
-	 * [[JW.AbstractMap.splice]] method result.
-	 *
-	 * @param T Item type.
-	 */
-	export interface SpliceResult<T> {
-		removedItems: Dictionary<T>;
-		addedItems: Dictionary<T>;
-	}
-
-	/**
 	 * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Map]].
 	 */
-	export class Counter<T> extends AbstractCollection.Counter<T> {
+	export class Counter<T> extends AbstractCollection.Counter<T> implements Maps.Counter<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractMap<T>;
+		public source: IMap<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractMap<T>, config: AbstractCollection.Counter.Config<T>) {
+		constructor(source: IMap<T>, config: Collections.CounterConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -754,21 +722,21 @@ export module AbstractMap {
 	/**
 	 * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Map]].
 	 */
-	export class Filterer<T> extends AbstractCollection.Filterer<T> {
+	export class Filterer<T> extends AbstractCollection.Filterer<T> implements Maps.Filterer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		source: AbstractMap<T>;
+		source: IMap<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		target: AbstractMap<T>;
+		target: IMap<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractMap<T>, config: Filterer.Config<T>) {
+		constructor(source: IMap<T>, config: Maps.FiltererConfig<T>) {
 			super(source, config);
 			this.target.trySetAll(source.filter(this._filterItem, this._scope));
 		}
@@ -782,31 +750,19 @@ export module AbstractMap {
 		}
 	}
 
-	export module Filterer {
-		/**
-		 * @inheritdoc
-		 */
-		export interface Config<T> extends AbstractCollection.Filterer.Config<T> {
-			/**
-			 * @inheritdoc
-			 */
-			target?: AbstractMap<T>;
-		}
-	}
-
 	/**
 	 * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Map]].
 	 */
-	export class Indexer<T> extends AbstractCollection.Indexer<T> {
+	export class Indexer<T> extends AbstractCollection.Indexer<T> implements Maps.Indexer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractMap<T>;
+		public source: IMap<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractMap<T>, config: AbstractCollection.Indexer.Config<T>) {
+		constructor(source: IMap<T>, config: Collections.IndexerConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -841,7 +797,7 @@ export module AbstractMap {
 	 *
 	 * @param T Map item type.
 	 */
-	export class Inserter<T> extends Class {
+	export class Inserter<T> extends Class implements Maps.Inserter<T> {
 		/**
 		 * @hidden
 		 */
@@ -870,7 +826,7 @@ export module AbstractMap {
 		 * @param source Source map.
 		 * @param config Configuration.
 		 */
-		constructor(public source: AbstractMap<T>, config: Inserter.Config<T> = {}) {
+		constructor(public source: IMap<T>, config: Maps.InserterConfig<T> = {}) {
 			super();
 			this._addItem = config.addItem;
 			this._removeItem = config.removeItem;
@@ -920,7 +876,7 @@ export module AbstractMap {
 		 * @hidden
 		 */
 		protected _doClearItems(items: Dictionary<T>) {
-			if (Map.isEmpty(items)) {
+			if (MapUtils.isEmpty(items)) {
 				return;
 			}
 			if (this._clearItems) {
@@ -931,51 +887,19 @@ export module AbstractMap {
 		}
 	}
 
-	export module Inserter {
-		/**
-		 * [[JW.AbstractMap.Inserter]] configuration.
-		 *
-		 * @param T Collection item type.
-		 */
-		export interface Config<T> {
-			/**
-			 * Function to call on item adding to specific position in map.
-			 */
-			addItem?: (item: T, key: string) => void;
-
-			/**
-			 * Function to call on item removing from specific position in map.
-			 */
-			removeItem?: (item: T, key: string) => void;
-
-			/**
-			 * Function to call on map cleanup.
-			 * By default, calls [[removeItem]] for all map items.
-			 */
-			clearItems?: (items: Dictionary<T>) => void;
-
-			/**
-			 * [[addItem]], [[removeItem]] and
-			 * [[clearItems]] call scope.
-			 * Defaults to synchronizer itself.
-			 */
-			scope?: any;
-		}
-	}
-
 	/**
 	 * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Map]].
 	 */
-	export class Lister<T extends Class> extends AbstractCollection.Lister<T> {
+	export class Lister<T extends IClass> extends AbstractCollection.Lister<T> implements Maps.Lister<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractMap<T>;
+		public source: IMap<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractMap<T>, config: AbstractCollection.Lister.Config<T>) {
+		constructor(source: IMap<T>, config: Collections.ListerConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -983,21 +907,21 @@ export module AbstractMap {
 	/**
 	 * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Map]].
 	 */
-	export class Mapper<T, U> extends AbstractCollection.Mapper<T, U> {
+	export class Mapper<T, U> extends AbstractCollection.Mapper<T, U> implements Maps.Mapper<T, U> {
 		/**
 		 * @inheritdoc
 		 */
-		source: AbstractMap<T>;
+		source: IMap<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		target: AbstractMap<U>;
+		target: IMap<U>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractMap<T>, config: AbstractMap.Mapper.Config<T, U>) {
+		constructor(source: IMap<T>, config: Maps.MapperConfig<T, U>) {
 			super(source, config);
 			this.target.trySetAll(this._createItems(source.getJson()));
 		}
@@ -1034,31 +958,19 @@ export module AbstractMap {
 		}
 	}
 
-	export module Mapper {
-		/**
-		 * @inheritdoc
-		 */
-		export interface Config<T, U> extends AbstractCollection.Mapper.Config<T, U> {
-			/**
-			 * @inheritdoc
-			 */
-			target?: AbstractMap<U>;
-		}
-	}
-
 	/**
 	 * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Map]].
 	 */
-	export class Observer<T> extends AbstractCollection.Observer<T> {
+	export class Observer<T> extends AbstractCollection.Observer<T> implements Maps.Observer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		source: AbstractMap<T>;
+		source: IMap<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractMap<T>, config: AbstractCollection.Observer.Config<T>) {
+		constructor(source: IMap<T>, config: Collections.ObserverConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -1066,16 +978,16 @@ export module AbstractMap {
 	/**
 	 * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Map]].
 	 */
-	export class Orderer<T extends Class> extends AbstractCollection.Orderer<T> {
+	export class Orderer<T extends IClass> extends AbstractCollection.Orderer<T> implements Maps.Orderer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractMap<T>;
+		public source: IMap<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractMap<T>, config: AbstractCollection.Orderer.Config<T>) {
+		constructor(source: IMap<T>, config: Collections.OrdererConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -1083,16 +995,16 @@ export module AbstractMap {
 	/**
 	 * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Map]].
 	 */
-	export class SorterComparing<T> extends AbstractCollection.SorterComparing<T> {
+	export class SorterComparing<T> extends AbstractCollection.SorterComparing<T> implements Maps.SorterComparing<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractMap<T>;
+		public source: IMap<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractMap<T>, config: AbstractCollection.SorterComparing.Config<T>) {
+		constructor(source: IMap<T>, config: Collections.SorterComparingConfig<T>) {
 			super(source, config);
 		}
 	}

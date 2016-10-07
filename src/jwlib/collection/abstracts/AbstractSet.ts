@@ -1,8 +1,13 @@
-﻿import {apply, byField, destroyForcibly, Dictionary} from '../core/Core';
-import {Class} from '../core/Class';
+﻿import {apply, byField, destroyForcibly, iidString, Dictionary} from '../../core/Core';
+import {Class} from '../../core/Class';
+import {IClass} from '../../core/IClass';
 import {AbstractCollection} from './AbstractCollection';
-import {Array} from './Array';
-import {Set} from './Set';
+import * as Collections from '../interfaces/ICollection';
+import {IArray} from '../interfaces/IArray';
+import * as ArrayUtils from '../utils/Array';
+import {ISet} from '../interfaces/ISet';
+import * as Sets from '../interfaces/ISet';
+import * as SetUtils from '../utils/Set';
 
 /**
  * Set is unordered collection optimized for items adding, removal and search. Unlike
@@ -99,7 +104,7 @@ import {Set} from './Set';
  *
  * @param T Collection item type.
  */
-export abstract class AbstractSet<T extends Class> extends AbstractCollection<T> {
+export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	private json: Dictionary<T>;
 	private _length: number;
 	private _adapter: boolean;
@@ -129,14 +134,14 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	constructor(items?, adapter?: boolean) {
 		super();
 		this._adapter = Boolean(adapter);
-		this.json = this._adapter ? items : items ? Array.index(items, byField<string>("_iid")) : {};
-		this._length = Set.getLength(this.json);
+		this.json = this._adapter ? items : items ? ArrayUtils.index(items, iidString) : {};
+		this._length = SetUtils.getLength(this.json);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): AbstractSet<T> {
+	ownItems(): ISet<T> {
 		super.ownItems();
 		return this;
 	}
@@ -168,7 +173,7 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	 * @inheritdoc
 	 */
 	getFirst(): T {
-		return Set.getFirst(this.json);
+		return SetUtils.getFirst(this.json);
 	}
 
 	/**
@@ -189,41 +194,39 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	 * @inheritdoc
 	 */
 	every(callback: (item: T) => boolean, scope?: any): boolean {
-		return Set.every(this.json, callback, scope);
+		return SetUtils.every(this.json, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSorted(callback?: (item: T) => any, scope?: any, order?: number): T[] {
-		return Set.toSorted(this.json, callback, scope || this, order);
+		return SetUtils.toSorted(this.json, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[] {
-		return Set.toSortedComparing(this.json, compare, scope || this, order);
+		return SetUtils.toSortedComparing(this.json, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T) => boolean, scope?: any): Dictionary<T> {
-		return Set.filter(this.json, callback, scope);
+		return SetUtils.filter(this.json, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T) => boolean, scope?: any): Set<T> {
-		return Set.$filter(this.json, callback, scope);
-	}
+	abstract $filter(callback: (item: T) => boolean, scope?: any): ISet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): AbstractSet<T> {
+	$$filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
 		return this.$filter(callback, scope);
 	}
 
@@ -231,34 +234,32 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	 * @inheritdoc
 	 */
 	count(callback: (item: T) => boolean, scope?: any): number {
-		return Set.count(this.json, callback, scope);
+		return SetUtils.count(this.json, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	map<U extends Class>(callback: (item: T) => U, scope?: any): Dictionary<U> {
-		return Set.map(this.json, callback, scope);
+	map<U extends IClass>(callback: (item: T) => U, scope?: any): Dictionary<U> {
+		return SetUtils.map(this.json, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$map<U extends Class>(callback: (item: T) => U, scope?: any): Set<U> {
-		return Set.$map(this.json, callback, scope);
-	}
+	abstract $map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$$mapValues<U extends Class>(callback: (item: T) => U, scope?: any): AbstractSet<U> {
+	$$mapValues<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
 		return this.$map(callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$$mapObjects<U extends Class>(callback: (item: T) => U, scope?: any): AbstractSet<U> {
+	$$mapObjects<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
 		return this.$map(callback, scope);
 	}
 
@@ -272,13 +273,6 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	/**
 	 * @inheritdoc
 	 */
-	$toSet(): Set<T> {
-		return new Set<T>(this.toSet(), true);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	asSet(): Dictionary<T> {
 		return this.json;
 	}
@@ -286,7 +280,7 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	/**
 	 * @inheritdoc
 	 */
-	$asSet(): AbstractSet<T> {
+	$asSet(): ISet<T> {
 		return this;
 	}
 
@@ -322,9 +316,7 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	 * Adds multiple items to set, ones that are absent.
 	 * @returns The added items.
 	 */
-	$addAll(items: T[]): Array<T> {
-		return new Array<T>(this.addAll(items), true);
-	}
+	abstract $addAll(items: T[]): IArray<T>;
 
 	/**
 	 * Adds multiple items to set, ones that are absent.
@@ -377,9 +369,7 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	 * Removes multiple items from set, ones that are present.
 	 * @returns The removed items.
 	 */
-	$removeAll(items: T[]): Array<T> {
-		return new Array<T>(this.removeAll(items), true);
-	}
+	abstract $removeAll(items: T[]): IArray<T>;
 
 	/**
 	 * Removes multiple items from set, ones that are present.
@@ -411,9 +401,7 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	/**
 	 * @inheritdoc
 	 */
-	$clear(): Array<T> {
-		return new Array<T>(this.clear(), true);
-	}
+	abstract $clear(): IArray<T>;
 
 	/**
 	 * @inheritdoc
@@ -421,7 +409,7 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	tryClear(): T[] {
 		var items = this._tryClear();
 		if (items !== undefined && this._ownsItems) {
-			Array.backEvery(items, destroyForcibly);
+			ArrayUtils.backEvery(items, destroyForcibly);
 		}
 		return items;
 	}
@@ -433,7 +421,7 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 		var items: T[];
 		this._length = 0;
 		if (this._adapter) {
-			items = Set.tryClear(this.json);
+			items = SetUtils.tryClear(this.json);
 		} else {
 			items = this.toArray();
 			this.json = {};
@@ -447,7 +435,7 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	 * @param addedItems Items to add.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removedItems: T[], addedItems: T[]): AbstractSet.SpliceResult<T> {
+	splice(removedItems: T[], addedItems: T[]): Sets.SpliceResult<T> {
 		var spliceResult = this.trySplice(removedItems, addedItems);
 		return (spliceResult !== undefined) ? spliceResult : { addedItems: [], removedItems: [] };
 	}
@@ -459,16 +447,16 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	 * @returns Splice result.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySplice(removedItems: T[], addedItems: T[]): AbstractSet.SpliceResult<T> {
+	trySplice(removedItems: T[], addedItems: T[]): Sets.SpliceResult<T> {
 		var spliceResult = this._trySplice(removedItems, addedItems);
 		if ((spliceResult !== undefined) && this._ownsItems) {
-			Array.backEvery(spliceResult.removedItems, destroyForcibly);
+			ArrayUtils.backEvery(spliceResult.removedItems, destroyForcibly);
 		}
 		return spliceResult;
 	}
 
-	_trySplice(removedItems: T[], addedItems: T[]): AbstractSet.SpliceResult<T> {
-		var spliceResult = Set.trySplice(this.json, removedItems, addedItems);
+	_trySplice(removedItems: T[], addedItems: T[]): Sets.SpliceResult<T> {
+		var spliceResult = SetUtils.trySplice(this.json, removedItems, addedItems);
 		if (spliceResult !== undefined) {
 			this._length += spliceResult.addedItems.length - spliceResult.removedItems.length;
 			return spliceResult;
@@ -481,8 +469,8 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	 * @param newItems New set contents.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[]): AbstractSet.SpliceParams<T> {
-		return Set.detectSplice(this.json, newItems);
+	detectSplice(newItems: T[]): Sets.SpliceParams<T> {
+		return SetUtils.detectSplice(this.json, newItems);
 	}
 
 	/**
@@ -501,113 +489,85 @@ export abstract class AbstractSet<T extends Class> extends AbstractCollection<T>
 	 * Checks for equality (===) to array, item by item.
 	 */
 	equal(array: T[]): boolean {
-		return Set.equal(this.json, array);
+		return SetUtils.equal(this.json, array);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract createEmpty<U extends Class>(): AbstractSet<U>;
+	abstract createEmpty<U extends IClass>(): ISet<U>;
 
 	/**
 	 * @inheritdoc
 	 */
-	createMapper<U extends Class>(config: AbstractSet.Mapper.Config<T, U>): AbstractSet.Mapper<T, U> {
+	createMapper<U extends IClass>(config: Sets.MapperConfig<T, U>): Sets.Mapper<T, U> {
 		return new AbstractSet.Mapper<T, U>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createFilterer(config: AbstractSet.Filterer.Config<T>): AbstractSet.Filterer<T> {
+	createFilterer(config: Sets.FiltererConfig<T>): Sets.Filterer<T> {
 		return new AbstractSet.Filterer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createCounter(config: AbstractCollection.Counter.Config<T>): AbstractSet.Counter<T> {
+	createCounter(config: Collections.CounterConfig<T>): Sets.Counter<T> {
 		return new AbstractSet.Counter<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createObserver(config: AbstractCollection.Observer.Config<T>): AbstractSet.Observer<T> {
+	createObserver(config: Collections.ObserverConfig<T>): Sets.Observer<T> {
 		return new AbstractSet.Observer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createOrderer(config?: AbstractCollection.Orderer.Config<T>): AbstractSet.Orderer<T> {
+	createOrderer(config?: Collections.OrdererConfig<T>): Sets.Orderer<T> {
 		return new AbstractSet.Orderer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createSorterComparing(config?: AbstractCollection.SorterComparing.Config<T>): AbstractSet.SorterComparing<T> {
+	createSorterComparing(config?: Collections.SorterComparingConfig<T>): Sets.SorterComparing<T> {
 		return new AbstractSet.SorterComparing<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createIndexer(config: AbstractCollection.Indexer.Config<T>): AbstractSet.Indexer<T> {
+	createIndexer(config: Collections.IndexerConfig<T>): Sets.Indexer<T> {
 		return new AbstractSet.Indexer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createLister(config?: AbstractCollection.Lister.Config<T>): AbstractSet.Lister<T> {
+	createLister(config?: Collections.ListerConfig<T>): Sets.Lister<T> {
 		return new AbstractSet.Lister<T>(this, config);
 	}
 }
 
 export module AbstractSet {
 	/**
-	 * [[JW.AbstractSet.splice]] method arguments.
-	 * Returned by [[JW.AbstractSet.detectSplice]] method.
-	 *
-	 * @param T Item type.
-	 */
-	export interface SpliceParams<T> {
-		/**
-		 * Items to remove.
-		 */
-		removedItems: T[];
-
-		/**
-		 * Items to add.
-		 */
-		addedItems: T[];
-	}
-
-	/**
-	 * [[JW.AbstractSet.splice]] method result.
-	 *
-	 * @param T Item type.
-	 */
-	export interface SpliceResult<T> {
-		removedItems: T[];
-		addedItems: T[];
-	}
-
-	/**
 	 * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Set]].
 	 */
-	export class Counter<T extends Class> extends AbstractCollection.Counter<T> {
+	export class Counter<T extends IClass> extends AbstractCollection.Counter<T> implements Sets.Counter<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractSet<T>;
+		public source: ISet<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractSet<T>, config: AbstractCollection.Counter.Config<T>) {
+		constructor(source: ISet<T>, config: Collections.CounterConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -615,21 +575,21 @@ export module AbstractSet {
 	/**
 	 * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Set]].
 	 */
-	export class Filterer<T extends Class> extends AbstractCollection.Filterer<T> {
+	export class Filterer<T extends IClass> extends AbstractCollection.Filterer<T> implements Sets.Filterer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		source: AbstractSet<T>;
+		source: ISet<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		target: AbstractSet<T>;
+		target: ISet<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractSet<T>, config: Filterer.Config<T>) {
+		constructor(source: ISet<T>, config: Sets.FiltererConfig<T>) {
 			super(source, config);
 			this.target.tryAddAll(source.$toArray().filter(this._filterItem, this._scope));
 		}
@@ -643,31 +603,19 @@ export module AbstractSet {
 		}
 	}
 
-	export module Filterer {
-		/**
-		 * @inheritdoc
-		 */
-		export interface Config<T extends Class> extends AbstractCollection.Filterer.Config<T> {
-			/**
-			 * @inheritdoc
-			 */
-			target?: AbstractSet<T>;
-		}
-	}
-
 	/**
 	 * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Set]].
 	 */
-	export class Indexer<T extends Class> extends AbstractCollection.Indexer<T> {
+	export class Indexer<T extends IClass> extends AbstractCollection.Indexer<T> implements Sets.Indexer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractSet<T>;
+		public source: ISet<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractSet<T>, config: AbstractCollection.Indexer.Config<T>) {
+		constructor(source: ISet<T>, config: Collections.IndexerConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -675,16 +623,16 @@ export module AbstractSet {
 	/**
 	 * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Set]].
 	 */
-	export class Lister<T extends Class> extends AbstractCollection.Lister<T> {
+	export class Lister<T extends IClass> extends AbstractCollection.Lister<T> implements Sets.Lister<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractSet<T>;
+		public source: ISet<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractSet<T>, config: AbstractCollection.Lister.Config<T>) {
+		constructor(source: ISet<T>, config: Collections.ListerConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -692,7 +640,7 @@ export module AbstractSet {
 	/**
 	 * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Set]].
 	 */
-	export class Mapper<T extends Class, U extends Class> extends AbstractCollection.Mapper<T, U> {
+	export class Mapper<T extends IClass, U extends IClass> extends AbstractCollection.Mapper<T, U> implements Sets.Mapper<T, U> {
 		/**
 		 * @hidden
 		 */
@@ -701,17 +649,17 @@ export module AbstractSet {
 		/**
 		 * @inheritdoc
 		 */
-		source: AbstractSet<T>;
+		source: ISet<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		target: AbstractSet<U>;
+		target: ISet<U>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractSet<T>, config: AbstractSet.Mapper.Config<T, U>) {
+		constructor(source: ISet<T>, config: Sets.MapperConfig<T, U>) {
 			super(source, config);
 			this.target.tryAddAll(this._createItems(source.toArray()));
 		}
@@ -766,31 +714,19 @@ export module AbstractSet {
 		}
 	}
 
-	export module Mapper {
-		/**
-		 * @inheritdoc
-		 */
-		export interface Config<T extends Class, U extends Class> extends AbstractCollection.Mapper.Config<T, U> {
-			/**
-			 * @inheritdoc
-			 */
-			target?: AbstractSet<U>;
-		}
-	}
-
 	/**
 	 * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Set]].
 	 */
-	export class Observer<T extends Class> extends AbstractCollection.Observer<T> {
+	export class Observer<T extends IClass> extends AbstractCollection.Observer<T> implements Sets.Observer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		source: AbstractSet<T>;
+		source: ISet<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractSet<T>, config: AbstractCollection.Observer.Config<T>) {
+		constructor(source: ISet<T>, config: Collections.ObserverConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -798,16 +734,16 @@ export module AbstractSet {
 	/**
 	 * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Set]].
 	 */
-	export class Orderer<T extends Class> extends AbstractCollection.Orderer<T> {
+	export class Orderer<T extends IClass> extends AbstractCollection.Orderer<T> implements Sets.Orderer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractSet<T>;
+		public source: ISet<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractSet<T>, config: AbstractCollection.Orderer.Config<T>) {
+		constructor(source: ISet<T>, config: Collections.OrdererConfig<T>) {
 			super(source, config);
 		}
 	}
@@ -815,16 +751,16 @@ export module AbstractSet {
 	/**
 	 * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Set]].
 	 */
-	export class SorterComparing<T extends Class> extends AbstractCollection.SorterComparing<T> {
+	export class SorterComparing<T extends IClass> extends AbstractCollection.SorterComparing<T> implements Sets.SorterComparing<T> {
 		/**
 		 * @inheritdoc
 		 */
-		public source: AbstractSet<T>;
+		public source: ISet<T>;
 
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: AbstractSet<T>, config: AbstractCollection.SorterComparing.Config<T>) {
+		constructor(source: ISet<T>, config: Collections.SorterComparingConfig<T>) {
 			super(source, config);
 		}
 	}

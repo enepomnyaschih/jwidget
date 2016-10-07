@@ -1,10 +1,9 @@
-﻿import {cmp, Dictionary, Proxy} from '../core/Core';
-import {Destroyable} from '../core/Destroyable';
-import {Property} from '../property/Property';
-import {AbstractCollection} from './AbstractCollection';
-import {AbstractMap} from './AbstractMap';
-import {Array} from './Array';
-import {Map} from './Map';
+import {cmp, Dictionary, Proxy} from '../../core/Core';
+import {Destroyable} from '../../core/Destroyable';
+import {Property} from '../../property/Property';
+import {ICollection} from './ICollection';
+import {IArray} from './IArray';
+import {IMap} from './IMap';
 
 /**
  * Abstract collection of items of type T with keys of type K.
@@ -115,66 +114,51 @@ import {Map} from './Map';
  * @param K Collection item key type.
  * @param T Collection item type.
  */
-export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
+export interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): IndexedCollection<K, T> {
-		super.ownItems();
-		return this;
-	}
+	ownItems(): IIndexedCollection<K, T>;
 
 	/**
 	 * Returns item by key. If item with such key doesn't exist, returns undefined.
 	 */
-	abstract get(key: K): T;
+	get(key: K): T;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $clear(): IndexedCollection<K, T>;
+	$clear(): IIndexedCollection<K, T>;
 
 	/**
 	 * Returns key of first collection item. If collection is empty, returns undefined.
 	 */
-	abstract getFirstKey(): K;
+	getFirstKey(): K;
 
 	/**
 	 * Returns array of keys of all collection items.
 	 */
-	abstract getKeys(): K[];
+	getKeys(): K[];
 
 	/**
 	 * Returns array of keys of all collection items.
 	 */
-	$getKeys(): Array<K> {
-		return new Array<K>(this.getKeys(), true);
-	}
+	$getKeys(): IArray<K>;
 
 	/**
 	 * Checks existance of item with specified key in collection.
 	 */
-	containsKey(key: K): boolean {
-		return this.get(key) !== undefined;
-	}
+	containsKey(key: K): boolean;
 
 	/**
 	 * @inheritdoc
 	 */
-	containsItem(item: T): boolean {
-		return !this.every(function (v: T): boolean {
-			return item !== v;
-		});
-	}
+	containsItem(item: T): boolean;
 
 	/**
 	 * Returns key of item in collection. If such item doesn't exist, returns undefined.
 	 */
-	keyOf(item: T): K {
-		return this.find(function (v: T): boolean {
-			return item === v;
-		});
-	}
+	keyOf(item: T): K;
 
 	/**
 	 * Replaces item with specified key. If collection doesn't contain such key:
@@ -184,7 +168,7 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 *
 	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
 	 */
-	abstract trySet(item: T, key: K): Proxy<T>;
+	trySet(item: T, key: K): Proxy<T>;
 
 	/**
 	 * Replaces item with specified key. If collection doesn't contain such key:
@@ -194,10 +178,7 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 *
 	 * @returns The replaced item.
 	 */
-	set(item: T, key: K): T {
-		var result = this.trySet(item, key);
-		return (result !== undefined) ? result.value : this.get(key);
-	}
+	set(item: T, key: K): T;
 
 	/**
 	 * Removes item with specified key. If collection doesn't contain such key:
@@ -207,7 +188,7 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 *
 	 * @returns The removed item. If collection is not modified, returns undefined.
 	 */
-	abstract tryRemove(key: K): T;
+	tryRemove(key: K): T;
 
 	/**
 	 * Removes item with specified key. If collection doesn't contain such key:
@@ -217,44 +198,27 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 *
 	 * @returns The removed item.
 	 */
-	remove(key: K): T {
-		return this.tryRemove(key);
-	}
+	remove(key: K): T;
 
 	/**
 	 * @inheritdoc
 	 */
-	removeItem(item: T): K {
-		var key = this.keyOf(item);
-		if (key !== undefined) {
-			this.tryRemove(key);
-		}
-		return key;
-	}
+	removeItem(item: T): K;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract every(callback: (item: T, key: K) => boolean, scope?: any): boolean;
+	every(callback: (item: T, key: K) => boolean, scope?: any): boolean;
 
 	/**
 	 * @inheritdoc
 	 */
-	some(callback: (item: T, key: K) => boolean, scope?: any): boolean {
-		return !this.every(function (item: T, key: K): boolean {
-			return callback.call(this, item, key) === false;
-		}, scope);
-	}
+	some(callback: (item: T, key: K) => boolean, scope?: any): boolean;
 
 	/**
 	 * @inheritdoc
 	 */
-	each(callback: (item: T, key: K) => any, scope?: any) {
-		this.every(function (item: T, key: K): boolean {
-			callback.call(this, item, key);
-			return true;
-		}, scope);
-	}
+	each(callback: (item: T, key: K) => any, scope?: any);
 
 	/**
 	 * Finds item matching criteria.
@@ -267,56 +231,32 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	find(callback: (item: T, key: K) => boolean, scope?: any): K {
-		var result: K;
-		this.every(function (item: T, key: K): boolean {
-			if (callback.call(this, item, key) !== false) {
-				result = key;
-				return false;
-			}
-			return true;
-		}, scope);
-		return result;
-	}
+	find(callback: (item: T, key: K) => boolean, scope?: any): K;
 
 	/**
 	 * @inheritdoc
 	 */
-	search(callback: (item: T, key: K) => boolean, scope: any = null): T {
-		var result: T;
-		this.every(function (item: T, key: K): boolean {
-			if (callback.call(this, item, key) !== false) {
-				result = item;
-				return false;
-			}
-			return true;
-		}, scope);
-		return result;
-	}
+	search(callback: (item: T, key: K) => boolean, scope: any): T;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract toSorted(callback?: (item: T, key: K) => any, scope?: any, order?: number): T[];
+	toSorted(callback?: (item: T, key: K) => any, scope?: any, order?: number): T[];
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T, key: K) => any, scope?: any, order?: number): Array<T> {
-		return new Array<T>(this.toSorted(callback, scope, order), true);
-	}
+	$toSorted(callback?: (item: T, key: K) => any, scope?: any, order?: number): IArray<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract toSortedComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): T[];
+	toSortedComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): T[];
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): Array<T> {
-		return new Array<T>(this.toSortedComparing(compare, scope, order), true);
-	}
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IArray<T>;
 
 	/**
 	 * Returns keys of sorted items.
@@ -329,7 +269,7 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
 	 */
-	abstract getSortingKeys(callback?: (item: T, key: K) => any, scope?: any, order?: number): K[];
+	getSortingKeys(callback?: (item: T, key: K) => any, scope?: any, order?: number): K[];
 
 	/**
 	 * Returns keys of sorted items.
@@ -342,9 +282,7 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
 	 */
-	$getSortingKeys(callback?: (item: T, key: K) => any, scope?: any, order?: number): Array<K> {
-		return new Array<K>(this.getSortingKeys(callback, scope, order), true);
-	}
+	$getSortingKeys(callback?: (item: T, key: K) => any, scope?: any, order?: number): IArray<K>;
 
 	/**
 	 * Returns keys of sorted items.
@@ -358,7 +296,7 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
 	 */
-	abstract getSortingKeysComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): K[];
+	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): K[];
 
 	/**
 	 * Returns keys of sorted items.
@@ -372,54 +310,31 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
 	 */
-	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): Array<K> {
-		return new Array<K>(this.getSortingKeysComparing(compare, scope, order), true);
-	}
+	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IArray<K>;
 
 	/**
 	 * @inheritdoc
 	 */
-	index(callback: (item: T, key: K) => string, scope?: any): Dictionary<T> {
-		var result: Dictionary<T> = {};
-		this.every(function (item, key) {
-			var k: string = callback.call(this, item, key);
-			if (k != null) {
-				result[k] = item;
-			}
-			return true;
-		}, scope);
-		return result;
-	}
+	index(callback: (item: T, key: K) => string, scope?: any): Dictionary<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$index(callback: (item: T, key: K) => string, scope?: any): Map<T> {
-		return new Map<T>(this.index(callback, scope), true);
-	}
+	$index(callback: (item: T, key: K) => string, scope?: any): IMap<T>;
 
 	/**
 	 * Converts collection to map.
 	 *
 	 * Builds new map consisting of collection items.
 	 */
-	toMap(): Dictionary<T> {
-		var result: Dictionary<T> = {};
-		this.every(function (v, k) {
-			result[String(k)] = v;
-			return true;
-		});
-		return result;
-	}
+	toMap(): Dictionary<T>;
 
 	/**
 	 * Converts collection to map.
 	 *
 	 * Builds new map consisting of collection items.
 	 */
-	$toMap(): Map<T> {
-		return new Map<T>(this.toMap(), true);
-	}
+	$toMap(): IMap<T>;
 
 	/**
 	 * Represents collection as map.
@@ -428,9 +343,7 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 * This method works usually faster than [[toMap]], but please make sure that the returned map
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	asMap(): Dictionary<T> {
-		return this.toMap();
-	}
+	asMap(): Dictionary<T>;
 
 	/**
 	 * Represents collection as map.
@@ -439,66 +352,60 @@ export abstract class IndexedCollection<K, T> extends AbstractCollection<T> {
 	 * This method works usually faster than [[toMap]], but please make sure that the returned map
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	$asMap(): AbstractMap<T> {
-		return new Map<T>(this.asMap(), true);
-	}
+	$asMap(): IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract filter(callback: (item: T, key: K) => boolean, scope?: any): any;
+	filter(callback: (item: T, key: K) => boolean, scope?: any): any;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $filter(callback: (item: T, key: K) => boolean, scope?: any): IndexedCollection<K, T>;
+	$filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $$filter(callback: (item: T, key: K) => boolean, scope?: any): IndexedCollection<K, T>;
+	$$filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract count(callback: (item: T, key: K) => boolean, scope?: any): number;
+	count(callback: (item: T, key: K) => boolean, scope?: any): number;
 
 	/**
 	 * @inheritdoc
 	 */
-	$count(callback: (item: T, key: K) => boolean, scope?: any): Property<number> {
-		return new Property<number>(this.count(callback, scope));
-	}
+	$count(callback: (item: T, key: K) => boolean, scope?: any): Property<number>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$$count(callback: (item: T, key: K) => boolean, scope?: any): Property<number> {
-		return this.$count(callback, scope);
-	}
+	$$count(callback: (item: T, key: K) => boolean, scope?: any): Property<number>;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract map<U>(callback: (item: T, key: K) => U, scope?: any): any;
+	map<U>(callback: (item: T, key: K) => U, scope?: any): any;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $map<U>(callback: (item: T, key: K) => U, scope?: any): IndexedCollection<K, U>;
+	$map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $$mapValues<U>(callback: (item: T, key: K) => U, scope?: any): IndexedCollection<K, U>;
+	$$mapValues<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $$mapObjects<U extends Destroyable>(callback: (item: T, key: K) => U, scope?: any): IndexedCollection<K, U>;
+	$$mapObjects<U extends Destroyable>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract createEmpty<U>(): IndexedCollection<K, U>;
+	createEmpty<U>(): IIndexedCollection<K, U>;
 }

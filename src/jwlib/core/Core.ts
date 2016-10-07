@@ -1,6 +1,8 @@
-﻿import {Class} from './Class';
+﻿import {IClass} from './IClass';
 import {Destroyable} from './Destroyable';
-import {Array} from '../collection/Array';
+import {everyInArray, filterArray, Dictionary} from './globals';
+
+export {Dictionary} from './globals';
 
 /**
  * Value proxy. The interface which hash only one field: "value".
@@ -10,10 +12,6 @@ export interface Proxy<T> {
 	 * The proxied value.
 	 */
 	value: T;
-}
-
-export interface Dictionary<T> {
-	[index: string]: T;
 }
 
 /**
@@ -398,7 +396,14 @@ export function cmp(x, y, caseInsensitive?: boolean): number {
 		return x ? (y ? 0 : 1) : (y ? -1 : 0);
 	}
 	if (isArray(x) && isArray(y)) {
-		return Array.cmp(x, y, caseInsensitive);
+		var n = Math.min(x.length, y.length);
+		for (var i = 0; i < n; ++i) {
+			var result = cmp(x[i], y[i], caseInsensitive);
+			if (result) {
+				return result;
+			}
+		}
+		return cmp(x.length, y.length);
 	}
 	if (caseInsensitive) {
 		if (typeof x === "string") {
@@ -471,7 +476,7 @@ export function get<T>(obj, field?, def_?: T): T {
 	if (typeof field === "string") {
 		field = field.split(".");
 	}
-	field = Array.filter(field, function (token) {
+	field = filterArray(field, function (token) {
 		return (token != null) && (token !== "");
 	});
 	for (var i = 0, l = field.length; i < l; ++i) {
@@ -508,21 +513,22 @@ export function set(obj, value, field) {
 	if (typeof field === "string") {
 		field = field.split(".");
 	}
-	field = Array.filter(field, function (token) {
+	field = filterArray(field, function (token) {
 		return (token != null) && (token !== "");
 	});
-	for (var i = 0, l = field.length - 1; i < l; ++i) {
+	var len = field.length - 1;
+	for (var i = 0; i < len; ++i) {
 		var token = field[i];
 		obj[token] = obj[token] || {};
 		obj = obj[token];
 	}
-	obj[Array.getLast<string>(field)] = value;
+	obj[field[len]] = value;
 }
 
 /**
  * Returns object unique ID. Returns iid of object. Returns undefined if obj is null or undefined.
  */
-export function iid(obj: Class): number {
+export function iid(obj: IClass): number {
 	if (obj) {
 		return obj._iid;
 	}
@@ -540,6 +546,15 @@ export function iid(obj: Class): number {
  */
 export function iidForcibly(obj): any {
 	return (obj && typeof obj === "object") ? obj._iid : obj;
+}
+
+/**
+ * Returns object unique ID as string. Returns iid of object. Returns undefined if obj is null or undefined.
+ */
+export function iidString(obj: IClass): string {
+	if (obj) {
+		return String(obj._iid);
+	}
 }
 
 /**

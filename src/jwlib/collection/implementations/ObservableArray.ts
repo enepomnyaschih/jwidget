@@ -1,12 +1,21 @@
-import {array} from '../core/globals';
-import {destroy, destroyForcibly, Dictionary, Proxy} from '../core/Core';
-import {Class} from '../core/Class';
-import {Destroyable} from '../core/Destroyable';
-import {Event} from '../core/Event';
-import {Property} from '../property/Property';
-import {AbstractCollection} from './AbstractCollection';
-import {AbstractArray} from './AbstractArray';
+import {array} from '../../core/globals';
+import {destroy, destroyForcibly, Dictionary, Proxy} from '../../core/Core';
+import {Class} from '../../core/Class';
+import {IClass} from '../../core/IClass';
+import {Destroyable} from '../../core/Destroyable';
+import {Event} from '../../core/Event';
+import {Property} from '../../property/Property';
+import {AbstractCollection} from '../abstracts/AbstractCollection';
+import * as Collections from '../interfaces/ICollection';
+import {AbstractArray} from '../abstracts/AbstractArray';
 import {Array} from './Array';
+import {IArray} from '../interfaces/IArray';
+import * as Arrays from '../interfaces/IArray';
+import * as ArrayUtils from '../utils/Array';
+import {Map} from './Map';
+import {IMap} from '../interfaces/IMap';
+import {Set} from './Set';
+import {ISet} from '../interfaces/ISet';
 import {ObservableMap} from './ObservableMap';
 import {ObservableSet} from './ObservableSet';
 
@@ -121,8 +130,106 @@ export class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
+	$getKeys(): IArray<number> {
+		return new Array<number>(this.getKeys(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<T> {
+		return new Array<T>(this.toSorted(callback, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<T> {
+		return new Array<T>(this.toSortedComparing(compare, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<number> {
+		return new Array<number>(this.getSortingKeys(callback, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<number> {
+		return new Array<number>(this.getSortingKeysComparing(compare, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T, key: number) => string, scope?: any): IMap<T> {
+		return new Map<T>(this.index(callback, scope), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$filter(callback: (item: T, index: number) => boolean, scope?: any): IArray<T> {
+		return new Array<T>(this.filter(callback, scope || this), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U> {
+		return new Array<U>(this.map(callback, scope || this), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toArray(): IArray<T> {
+		return new Array<T>(this.toArray(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toMap(): IMap<T> {
+		return new Map<T>(this.toMap(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asMap(): IMap<T> {
+		return new Map<T>(this.asMap(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSet(): ISet<any> {
+		return new Set<any>(this.toSet(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asSet(): ISet<any> {
+		return new Set<any>(this.asSet(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$removeAll(index: number, count: number): IArray<T> {
+		return new Array<T>(this.removeAll(index, count), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	trySet(item: T, index: number): Proxy<T> {
-		var oldItem = Array.trySet(this.items, item, index);
+		var oldItem = ArrayUtils.trySet(this.items, item, index);
 		if (oldItem === undefined) {
 			return;
 		}
@@ -138,7 +245,7 @@ export class ObservableArray<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	tryMove(fromIndex: number, toIndex: number): T {
-		var item = super.tryMove(fromIndex, toIndex);
+		var item = ArrayUtils.tryMove(this.items, fromIndex, toIndex);
 		if (item === undefined) {
 			return;
 		}
@@ -150,8 +257,15 @@ export class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
+	$clear(): IArray<T> {
+		return new Array<T>(this.clear(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	tryClear(): T[] {
-		var oldItems = Array.tryClear(this.items);
+		var oldItems = ArrayUtils.tryClear(this.items);
 		if (oldItems === undefined) {
 			return;
 		}
@@ -159,7 +273,7 @@ export class ObservableArray<T> extends AbstractArray<T> {
 		this.clearEvent.trigger({ sender: this, items: oldItems });
 		this.changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			Array.backEvery(oldItems, destroyForcibly);
+			ArrayUtils.backEvery(oldItems, destroyForcibly);
 		}
 		return oldItems;
 	}
@@ -167,8 +281,8 @@ export class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	trySplice(removeParamsList: AbstractArray.IndexCount[], addParamsList: AbstractArray.IndexItems<T>[]): AbstractArray.SpliceResult<T> {
-		var result = Array.trySplice(this.items, removeParamsList, addParamsList);
+	trySplice(removeParamsList: Arrays.IndexCount[], addParamsList: Arrays.IndexItems<T>[]): Arrays.SpliceResult<T> {
+		var result = ArrayUtils.trySplice(this.items, removeParamsList, addParamsList);
 		if (result === undefined) {
 			return;
 		}
@@ -176,7 +290,7 @@ export class ObservableArray<T> extends AbstractArray<T> {
 		this.spliceEvent.trigger({ sender: this, spliceResult: result });
 		this.changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			Array.backEvery(result.getRemovedItems(), destroyForcibly);
+			ArrayUtils.backEvery(result.getRemovedItems(), destroyForcibly);
 		}
 		return result;
 	}
@@ -185,7 +299,7 @@ export class ObservableArray<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	tryReorder(indexArray: number[]): T[] {
-		var items = super.tryReorder(indexArray);
+		var items = ArrayUtils.tryReorder(this.items, indexArray);
 		if (items === undefined) {
 			return;
 		}
@@ -322,6 +436,99 @@ export class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
+	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): Arrays.SpliceParams<T> {
+		return ArrayUtils.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	detectFilter(newItems: T[]): Arrays.IndexCount[]{
+		return ArrayUtils.detectFilter(this.items, newItems);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	detectReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): number[] {
+		return ArrayUtils.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
+		return ArrayUtils.detectSort(this.items, callback, scope || this, order);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[]{
+		return ArrayUtils.detectSortComparing(this.items, compare, scope || this, order);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	merge(): any[] {
+		return ArrayUtils.merge(this.map(function(item: any): any[] {
+			return item.getItems();
+		}, this));
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	toReversed(): T[] {
+		return ArrayUtils.toReversed(this.items);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toReversed(): IArray<T> {
+		return new Array(this.toReversed(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	equal(arr: T[]): boolean {
+		return ArrayUtils.equal(this.items, arr);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	collapse(depth: number): any[]{
+		return ArrayUtils.collapse(this.items, depth);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	indexOf(item: T): number {
+		return ArrayUtils.indexOf(this.items, item);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	backEvery(callback: (item: T, index: number) => boolean, scope?: any): boolean {
+		return ArrayUtils.backEvery(this.items, callback, scope);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
+		return ArrayUtils.binarySearch(this.items, value, compare, scope, order);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	createEmpty<U>(): ObservableArray<U> {
 		return new ObservableArray<U>();
 	}
@@ -350,70 +557,70 @@ export class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	createMapper<U>(config: AbstractArray.Mapper.Config<T, U>): ObservableArray.Mapper<T, U> {
+	createMapper<U>(config: Arrays.MapperConfig<T, U>): ObservableArray.Mapper<T, U> {
 		return new ObservableArray.Mapper<T, U>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createFilterer(config: AbstractArray.Filterer.Config<T>): ObservableArray.Filterer<T> {
+	createFilterer(config: Arrays.FiltererConfig<T>): ObservableArray.Filterer<T> {
 		return new ObservableArray.Filterer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createCounter(config: AbstractCollection.Counter.Config<T>): ObservableArray.Counter<T> {
+	createCounter(config: Collections.CounterConfig<T>): ObservableArray.Counter<T> {
 		return new ObservableArray.Counter<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createObserver(config: AbstractCollection.Observer.Config<T>): ObservableArray.Observer<T> {
+	createObserver(config: Collections.ObserverConfig<T>): ObservableArray.Observer<T> {
 		return new ObservableArray.Observer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createOrderer(config?: AbstractCollection.Orderer.Config<any>): ObservableArray.Orderer<any> {
+	createOrderer(config?: Collections.OrdererConfig<any>): ObservableArray.Orderer<any> {
 		return new ObservableArray.Orderer<any>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createSorterComparing(config?: AbstractCollection.SorterComparing.Config<T>): ObservableArray.SorterComparing<T> {
+	createSorterComparing(config?: Collections.SorterComparingConfig<T>): ObservableArray.SorterComparing<T> {
 		return new ObservableArray.SorterComparing<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createIndexer(config: AbstractCollection.Indexer.Config<T>): ObservableArray.Indexer<T> {
+	createIndexer(config: Collections.IndexerConfig<T>): ObservableArray.Indexer<T> {
 		return new ObservableArray.Indexer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createLister(config?: AbstractCollection.Lister.Config<any>): ObservableArray.Lister<any> {
+	createLister(config?: Collections.ListerConfig<any>): ObservableArray.Lister<any> {
 		return new ObservableArray.Lister<any>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createInserter(config: AbstractArray.Inserter.Config<T>): ObservableArray.Inserter<T> {
+	createInserter(config: Arrays.InserterConfig<T>): ObservableArray.Inserter<T> {
 		return new ObservableArray.Inserter<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createMerger<U>(config?: AbstractArray.Merger.Config<U>): ObservableArray.Merger<U> {
+	createMerger<U>(config?: Arrays.MergerConfig<U>): ObservableArray.Merger<U> {
 		return new ObservableArray.Merger<U>(<ObservableArray<any>>this, config);
 	}
 
@@ -421,14 +628,14 @@ export class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	createMergerBunch(merger: any): Class {
+	createMergerBunch(merger: any): IClass {
 		return new ObservableArray.Merger.Bunch<T>(merger, this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createReverser(config?: AbstractArray.Reverser.Config<T>): ObservableArray.Reverser<T> {
+	createReverser(config?: Arrays.ReverserConfig<T>): ObservableArray.Reverser<T> {
 		return new ObservableArray.Reverser<T>(this, config);
 	}
 
@@ -458,7 +665,7 @@ export module ObservableArray {
 		/**
 		 * Result of [[JW.ObservableArray.splice]] method.
 		 */
-		spliceResult: AbstractArray.SpliceResult<T>;
+		spliceResult: Arrays.SpliceResult<T>;
 	}
 
 	/**
@@ -528,7 +735,7 @@ export module ObservableArray {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config: AbstractCollection.Counter.Config<T>) {
+		constructor(source: ObservableArray<T>, config: Collections.CounterConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -538,12 +745,12 @@ export module ObservableArray {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			var value = this.target.get();
-			Array.every(spliceResult.removedItemsList, (indexItems) => {
-				value -= Array.count(indexItems.items, this._filterItem, this._scope);
+			ArrayUtils.every(spliceResult.removedItemsList, (indexItems) => {
+				value -= ArrayUtils.count(indexItems.items, this._filterItem, this._scope);
 				return true;
 			});
-			Array.every(spliceResult.addedItemsList, (indexItems) => {
-				value += Array.count(indexItems.items, this._filterItem, this._scope);
+			ArrayUtils.every(spliceResult.addedItemsList, (indexItems) => {
+				value += ArrayUtils.count(indexItems.items, this._filterItem, this._scope);
 				return true;
 			});
 			this.target.set(value);
@@ -571,7 +778,7 @@ export module ObservableArray {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config: AbstractArray.Filterer.Config<T>) {
+		constructor(source: ObservableArray<T>, config: Arrays.FiltererConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -614,7 +821,7 @@ export module ObservableArray {
 				}
 				this.target.tryMove(fromIndex, toIndex);
 			}
-			Array.tryMove(this._filtered, params.fromIndex, params.toIndex);
+			ArrayUtils.tryMove(this._filtered, params.fromIndex, params.toIndex);
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
@@ -629,7 +836,7 @@ export module ObservableArray {
 					targetIndexWhichMovesToI[params.indexArray[sourceIndex]] = targetIndex++;
 				}
 			}
-			Array.tryReorder(this._filtered, params.indexArray);
+			ArrayUtils.tryReorder(this._filtered, params.indexArray);
 
 			var targetIndex = 0;
 			var indexes = array<number>(this.target.getLength());
@@ -650,7 +857,7 @@ export module ObservableArray {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config: AbstractCollection.Indexer.Config<T>) {
+		constructor(source: ObservableArray<T>, config: Collections.IndexerConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -683,7 +890,7 @@ export module ObservableArray {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config?: AbstractArray.Inserter.Config<T>) {
+		constructor(source: ObservableArray<T>, config?: Arrays.InserterConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -748,11 +955,11 @@ export module ObservableArray {
 	/**
 	 * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.ObservableArray]].
 	 */
-	export class Lister<T extends Class> extends AbstractArray.Lister<T> {
+	export class Lister<T extends IClass> extends AbstractArray.Lister<T> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config: AbstractCollection.Lister.Config<T>) {
+		constructor(source: ObservableArray<T>, config: Collections.ListerConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -780,7 +987,7 @@ export module ObservableArray {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config: AbstractArray.Mapper.Config<T, U>) {
+		constructor(source: ObservableArray<T>, config: Arrays.MapperConfig<T, U>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -792,7 +999,7 @@ export module ObservableArray {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var sourceResult = params.spliceResult;
 			var sourceAddedItemsList = sourceResult.addedItemsList;
-			var targetAddParamsList: AbstractArray.IndexItems<U>[] = [];
+			var targetAddParamsList: Arrays.IndexItems<U>[] = [];
 			for (var i = 0, l = sourceAddedItemsList.length; i < l; ++i) {
 				var addParams = sourceAddedItemsList[i];
 				targetAddParamsList.push(new AbstractArray.IndexItems(
@@ -832,7 +1039,7 @@ export module ObservableArray {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<AbstractArray<T>>, config?: AbstractArray.Merger.Config<T>) {
+		constructor(source: ObservableArray<IArray<T>>, config?: Arrays.MergerConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -841,9 +1048,9 @@ export module ObservableArray {
 			this.own(source.reorderEvent.bind(this._onReorder, this));
 		}
 
-		private _getIndexes(bunches: AbstractArray<T>[]): number[] {
+		private _getIndexes(bunches: IArray<T>[]): number[] {
 			var currentIndex = 0;
-			var indexes = Array.map(bunches, function (bunch) {
+			var indexes = ArrayUtils.map(bunches, function (bunch) {
 				var index = currentIndex;
 				currentIndex += bunch.getLength();
 				return index;
@@ -852,13 +1059,13 @@ export module ObservableArray {
 			return indexes;
 		}
 
-		private _onSplice(params: SpliceEventParams<AbstractArray<T>>) {
+		private _onSplice(params: SpliceEventParams<IArray<T>>) {
 			var spliceResult = params.spliceResult;
 			var indexes = this._getIndexes(spliceResult.oldItems);
-			var removeParamsList = Array.map(spliceResult.removedItemsList, (indexItems) => {
+			var removeParamsList = ArrayUtils.map(spliceResult.removedItemsList, (indexItems) => {
 				return new AbstractArray.IndexCount(indexes[indexItems.index], this._count(indexItems.items));
 			}, this);
-			Array.backEvery(spliceResult.removedItemsList, (indexItems) => {
+			ArrayUtils.backEvery(spliceResult.removedItemsList, (indexItems) => {
 				indexes.splice(indexItems.index, indexItems.items.length);
 				var count = this._count(indexItems.items);
 				for (var i = indexItems.index; i < indexes.length; ++i) {
@@ -866,20 +1073,20 @@ export module ObservableArray {
 				}
 				return true;
 			}, this);
-			var addParamsList = Array.map(spliceResult.addedItemsList, (indexItems) => {
+			var addParamsList = ArrayUtils.map(spliceResult.addedItemsList, (indexItems) => {
 				return new AbstractArray.IndexItems<T>(indexes[indexItems.index], this._merge(indexItems.items));
 			}, this);
 			this.target.trySplice(removeParamsList, addParamsList);
 		}
 
-		private _onReplace(params: ReplaceEventParams<AbstractArray<T>>) {
+		private _onReplace(params: ReplaceEventParams<IArray<T>>) {
 			var index = this._count(this.source.getItems(), 0, params.index);
 			this.target.trySplice(
 				[new AbstractArray.IndexCount(index, params.oldItem.getLength())],
 				[new AbstractArray.IndexItems<T>(index, params.newItem.getItems())]);
 		}
 
-		private _onMove(params: MoveEventParams<AbstractArray<T>>) {
+		private _onMove(params: MoveEventParams<IArray<T>>) {
 			var count = params.item.getLength();
 			var indexes = array<number>(this.target.getLength());
 			var currentIndex = 0;
@@ -916,11 +1123,11 @@ export module ObservableArray {
 			this.target.tryReorder(indexes);
 		}
 
-		private _onClear(params: ItemsEventParams<AbstractArray<T>>) {
+		private _onClear(params: ItemsEventParams<IArray<T>>) {
 			this.target.tryClear();
 		}
 
-		private _onReorder(params: ReorderEventParams<AbstractArray<T>>) {
+		private _onReorder(params: ReorderEventParams<IArray<T>>) {
 			var oldIndexes = this._getIndexes(params.items);
 			var newIndexes = this._getIndexes(this.source.getItems());
 			var indexes = array<number>(this.target.getLength());
@@ -941,8 +1148,8 @@ export module ObservableArray {
 	 */
 	export module Merger {
 		export class Bunch<T> extends Class {
-			private source: AbstractArray<AbstractArray<T>>;
-			private target: AbstractArray<T>;
+			private source: IArray<IArray<T>>;
+			private target: IArray<T>;
 			private bunch: ObservableArray<T>;
 
 			constructor(merger: Merger<T>, bunch: ObservableArray<T>) {
@@ -974,10 +1181,10 @@ export module ObservableArray {
 			private _onSplice(params: SpliceEventParams<T>) {
 				var spliceResult = params.spliceResult;
 				var index = this._getIndex();
-				var removeParamsList = Array.map(spliceResult.removedItemsList, (indexItems) => {
+				var removeParamsList = ArrayUtils.map(spliceResult.removedItemsList, (indexItems) => {
 					return new AbstractArray.IndexCount(indexItems.index + index, indexItems.items.length);
 				});
-				var addParamsList = Array.map(spliceResult.addedItemsList, (indexItems) => {
+				var addParamsList = ArrayUtils.map(spliceResult.addedItemsList, (indexItems) => {
 					return new AbstractArray.IndexItems<T>(indexItems.index + index, indexItems.items.concat());
 				});
 				this.target.trySplice(removeParamsList, addParamsList);
@@ -1023,7 +1230,7 @@ export module ObservableArray {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config: AbstractCollection.Observer.Config<T>) {
+		constructor(source: ObservableArray<T>, config: Collections.ObserverConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -1066,11 +1273,11 @@ export module ObservableArray {
 	/**
 	 * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.ObservableArray]].
 	 */
-	export class Orderer<T extends Class> extends AbstractArray.Orderer<T> {
+	export class Orderer<T extends IClass> extends AbstractArray.Orderer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config: AbstractCollection.Orderer.Config<T>) {
+		constructor(source: ObservableArray<T>, config: Collections.OrdererConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -1080,8 +1287,8 @@ export module ObservableArray {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			this._splice(
-				Array.toSet(spliceResult.getRemovedItems()),
-				Array.toSet(spliceResult.getAddedItems()));
+				ArrayUtils.toSet(spliceResult.getRemovedItems()),
+				ArrayUtils.toSet(spliceResult.getAddedItems()));
 		}
 
 		private _onReplace(params: ReplaceEventParams<T>) {
@@ -1103,7 +1310,7 @@ export module ObservableArray {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config?: AbstractArray.Reverser.Config<T>) {
+		constructor(source: ObservableArray<T>, config?: Arrays.ReverserConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -1117,7 +1324,7 @@ export module ObservableArray {
 			var oldLength = this.target.getLength();
 			var newLength = oldLength;
 
-			var removeParamsList = Array.map(spliceResult.removedItemsList, (indexItems) => {
+			var removeParamsList = ArrayUtils.map(spliceResult.removedItemsList, (indexItems) => {
 				var length = indexItems.items.length;
 				var index = oldLength - indexItems.index - length;
 				newLength -= length;
@@ -1128,11 +1335,11 @@ export module ObservableArray {
 			var addedItemsList = spliceResult.addedItemsList.concat();
 			addedItemsList.reverse();
 
-			Array.each(addedItemsList, (indexItems) => {
+			ArrayUtils.each(addedItemsList, (indexItems) => {
 				newLength += indexItems.items.length;
 			});
 
-			var addParamsList = Array.map(addedItemsList, (indexItems) => {
+			var addParamsList = ArrayUtils.map(addedItemsList, (indexItems) => {
 				var items = indexItems.items;
 				var length = items.length;
 				var index = newLength - indexItems.index - length;
@@ -1174,7 +1381,7 @@ export module ObservableArray {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableArray<T>, config: AbstractCollection.SorterComparing.Config<T>) {
+		constructor(source: ObservableArray<T>, config: Collections.SorterComparingConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.replaceEvent.bind(this._onReplace, this));

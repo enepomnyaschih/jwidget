@@ -1,12 +1,20 @@
-﻿import {destroy, destroyForcibly, Dictionary, Proxy} from '../core/Core';
-import {Class} from '../core/Class';
-import {Destroyable} from '../core/Destroyable';
-import {Event} from '../core/Event';
-import {Property} from '../property/Property';
-import {AbstractCollection} from './AbstractCollection';
-import {AbstractMap} from './AbstractMap';
+﻿import {destroy, destroyForcibly, Dictionary, Proxy} from '../../core/Core';
+import {Class} from '../../core/Class';
+import {IClass} from '../../core/IClass';
+import {Destroyable} from '../../core/Destroyable';
+import {Event} from '../../core/Event';
+import {Property} from '../../property/Property';
+import * as Collections from '../interfaces/ICollection';
+import {AbstractMap} from '../abstracts/AbstractMap';
 import {Array} from './Array';
+import {IArray} from '../interfaces/IArray';
+import * as ArrayUtils from '../utils/Array';
 import {Map} from './Map';
+import {IMap} from '../interfaces/IMap';
+import * as Maps from '../interfaces/IMap';
+import * as MapUtils from '../utils/Map';
+import {Set} from './Set';
+import {ISet} from '../interfaces/ISet';
 import {ObservableArray} from './ObservableArray';
 import {ObservableSet} from './ObservableSet';
 
@@ -101,6 +109,104 @@ export class ObservableMap<T> extends AbstractMap<T> {
 	/**
 	 * @inheritdoc
 	 */
+	$getKeys(): IArray<string> {
+		return new Array<string>(this.getKeys(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<T> {
+		return new Array<T>(this.toSorted(callback, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<T> {
+		return new Array<T>(this.toSortedComparing(compare, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<string> {
+		return new Array<string>(this.getSortingKeys(callback, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<string> {
+		return new Array<string>(this.getSortingKeysComparing(compare, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T> {
+		return new Map<T>(this.filter(callback, scope || this), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U> {
+		return new Map<U>(this.map(callback, scope || this), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T, key: string) => string, scope?: any): IMap<T> {
+		return new Map<T>(this.index(callback, scope), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toArray(): IArray<T> {
+		return new Array<T>(this.toArray(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asArray(): IArray<T> {
+		return new Array<T>(this.asArray(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toMap(): IMap<T> {
+		return new Map<T>(this.toMap(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asMap(): IMap<T> {
+		return new Map<T>(this.asMap(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSet(): ISet<any> {
+		return new Set<any>(this.toSet(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asSet(): ISet<any> {
+		return new Set<any>(this.asSet(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	trySet(item: T, key: string): Proxy<T> {
 		var result = this._trySet(item, key);
 		if (result === undefined) {
@@ -138,7 +244,7 @@ export class ObservableMap<T> extends AbstractMap<T> {
 		if (item === undefined) {
 			return;
 		}
-		this.reindexEvent.trigger({ sender: this, keyMap: Map.single(oldKey, newKey) });
+		this.reindexEvent.trigger({ sender: this, keyMap: MapUtils.single(oldKey, newKey) });
 		this.changeEvent.trigger({ sender: this });
 		return item;
 	}
@@ -151,7 +257,7 @@ export class ObservableMap<T> extends AbstractMap<T> {
 		if (item === undefined) {
 			return;
 		}
-		var spliceResult: AbstractMap.SpliceResult<T> = { addedItems: {}, removedItems: Map.single(key, item) };
+		var spliceResult: Maps.SpliceResult<T> = { addedItems: {}, removedItems: MapUtils.single(key, item) };
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 		this.changeEvent.trigger({ sender: this });
@@ -171,7 +277,14 @@ export class ObservableMap<T> extends AbstractMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): AbstractMap.SpliceResult<T> {
+	$removeAllVerbose(keys: string[]): IMap<T> {
+		return new Map<T>(this.removeAllVerbose(keys), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): Maps.SpliceResult<T> {
 		var spliceResult = this._trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return;
@@ -180,7 +293,7 @@ export class ObservableMap<T> extends AbstractMap<T> {
 		this.spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 		this.changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			Array.backEvery(Map.toArray(spliceResult.removedItems), destroyForcibly);
+			ArrayUtils.backEvery(MapUtils.toArray(spliceResult.removedItems), destroyForcibly);
 		}
 		return spliceResult;
 	}
@@ -197,9 +310,16 @@ export class ObservableMap<T> extends AbstractMap<T> {
 		this.clearEvent.trigger({ sender: this, items: items });
 		this.changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			Array.backEvery(Map.toArray(items), destroyForcibly);
+			ArrayUtils.backEvery(MapUtils.toArray(items), destroyForcibly);
 		}
 		return items;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$clear(): IMap<T> {
+		return new Map<T>(this.clear(), true);
 	}
 
 	/**
@@ -348,63 +468,63 @@ export class ObservableMap<T> extends AbstractMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	createMapper<U>(config: AbstractMap.Mapper.Config<T, U>): ObservableMap.Mapper<T, U> {
+	createMapper<U>(config: Maps.MapperConfig<T, U>): ObservableMap.Mapper<T, U> {
 		return new ObservableMap.Mapper<T, U>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createFilterer(config: AbstractMap.Filterer.Config<T>): ObservableMap.Filterer<T> {
+	createFilterer(config: Maps.FiltererConfig<T>): ObservableMap.Filterer<T> {
 		return new ObservableMap.Filterer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createCounter(config: AbstractCollection.Counter.Config<T>): ObservableMap.Counter<T> {
+	createCounter(config: Collections.CounterConfig<T>): ObservableMap.Counter<T> {
 		return new ObservableMap.Counter<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createObserver(config: AbstractCollection.Observer.Config<T>): ObservableMap.Observer<T> {
+	createObserver(config: Collections.ObserverConfig<T>): ObservableMap.Observer<T> {
 		return new ObservableMap.Observer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createOrderer(config?: AbstractCollection.Orderer.Config<any>): ObservableMap.Orderer<any> {
+	createOrderer(config?: Collections.OrdererConfig<any>): ObservableMap.Orderer<any> {
 		return new ObservableMap.Orderer<any>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createSorterComparing(config?: AbstractCollection.SorterComparing.Config<T>): ObservableMap.SorterComparing<T> {
+	createSorterComparing(config?: Collections.SorterComparingConfig<T>): ObservableMap.SorterComparing<T> {
 		return new ObservableMap.SorterComparing<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createIndexer(config: AbstractCollection.Indexer.Config<T>): ObservableMap.Indexer<T> {
+	createIndexer(config: Collections.IndexerConfig<T>): ObservableMap.Indexer<T> {
 		return new ObservableMap.Indexer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createLister(config?: AbstractCollection.Lister.Config<any>): ObservableMap.Lister<any> {
+	createLister(config?: Collections.ListerConfig<any>): ObservableMap.Lister<any> {
 		return new ObservableMap.Lister<any>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createInserter(config: AbstractMap.Inserter.Config<T>): ObservableMap.Inserter<T> {
+	createInserter(config: Maps.InserterConfig<T>): ObservableMap.Inserter<T> {
 		return new ObservableMap.Inserter<T>(this, config);
 	}
 }
@@ -427,7 +547,7 @@ export module ObservableMap {
 		/**
 		 * Result of [[JW.ObservableMap.splice]] method.
 		 */
-		spliceResult: AbstractMap.SpliceResult<T>;
+		spliceResult: Maps.SpliceResult<T>;
 	}
 
 	/**
@@ -457,7 +577,7 @@ export module ObservableMap {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableMap<T>, config: AbstractCollection.Counter.Config<T>) {
+		constructor(source: ObservableMap<T>, config: Collections.CounterConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -466,8 +586,8 @@ export module ObservableMap {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			this.target.set(this.target.get() -
-				Map.count(spliceResult.removedItems, this._filterItem, this._scope) +
-				Map.count(spliceResult.addedItems, this._filterItem, this._scope));
+				MapUtils.count(spliceResult.removedItems, this._filterItem, this._scope) +
+				MapUtils.count(spliceResult.addedItems, this._filterItem, this._scope));
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
@@ -482,7 +602,7 @@ export module ObservableMap {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableMap<T>, config: AbstractMap.Filterer.Config<T>) {
+		constructor(source: ObservableMap<T>, config: Maps.FiltererConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.reindexEvent.bind(this._onReindex, this));
@@ -492,8 +612,8 @@ export module ObservableMap {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			this.target.trySplice(
-				Map.getKeys(spliceResult.removedItems),
-				Map.filter(spliceResult.addedItems, this._filterItem, this._scope));
+				MapUtils.getKeys(spliceResult.removedItems),
+				MapUtils.filter(spliceResult.addedItems, this._filterItem, this._scope));
 		}
 
 		private _onReindex(params: ReindexEventParams<T>) {
@@ -501,7 +621,7 @@ export module ObservableMap {
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
-			this.target.tryRemoveAll(Map.getKeys(params.items));
+			this.target.tryRemoveAll(MapUtils.getKeys(params.items));
 		}
 	}
 
@@ -512,7 +632,7 @@ export module ObservableMap {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableMap<T>, config: AbstractCollection.Indexer.Config<T>) {
+		constructor(source: ObservableMap<T>, config: Collections.IndexerConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -521,13 +641,13 @@ export module ObservableMap {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			this.target.trySplice(
-				this._keys(Map.toArray(spliceResult.removedItems)),
-				this._index(Map.toArray(spliceResult.addedItems)));
+				this._keys(MapUtils.toArray(spliceResult.removedItems)),
+				this._index(MapUtils.toArray(spliceResult.addedItems)));
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
 			this.target.tryRemoveAll(
-				this._keys(Map.toArray(params.items)));
+				this._keys(MapUtils.toArray(params.items)));
 		}
 	}
 
@@ -538,7 +658,7 @@ export module ObservableMap {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableMap<T>, config?: AbstractMap.Inserter.Config<T>) {
+		constructor(source: ObservableMap<T>, config?: Maps.InserterConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.reindexEvent.bind(this._onReindex, this));
@@ -577,7 +697,7 @@ export module ObservableMap {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableMap<T>, config: AbstractCollection.Lister.Config<T>) {
+		constructor(source: ObservableMap<T>, config: Collections.ListerConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -586,13 +706,13 @@ export module ObservableMap {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			this.target.trySplice(
-				Map.toArray(spliceResult.removedItems),
-				Map.toArray(spliceResult.addedItems));
+				MapUtils.toArray(spliceResult.removedItems),
+				MapUtils.toArray(spliceResult.addedItems));
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
 			this.target.tryRemoveAll(
-				Map.toArray(params.items));
+				MapUtils.toArray(params.items));
 		}
 	}
 
@@ -603,7 +723,7 @@ export module ObservableMap {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableMap<T>, config: AbstractMap.Mapper.Config<T, U>) {
+		constructor(source: ObservableMap<T>, config: Maps.MapperConfig<T, U>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.reindexEvent.bind(this._onReindex, this));
@@ -615,7 +735,7 @@ export module ObservableMap {
 			var removedDatas = sourceResult.removedItems;
 			var addedDatas = sourceResult.addedItems;
 			var targetResult = this.target.trySplice(
-				Map.getRemovedKeys(removedDatas, addedDatas),
+				MapUtils.getRemovedKeys(removedDatas, addedDatas),
 				this._createItems(addedDatas));
 			if (targetResult !== undefined) {
 				this._destroyItems(targetResult.removedItems, removedDatas);
@@ -628,7 +748,7 @@ export module ObservableMap {
 
 		private _onClear(params: ItemsEventParams<T>) {
 			var datas = params.items;
-			this._destroyItems(this.target.tryRemoveAll(Map.getKeys(datas)), datas);
+			this._destroyItems(this.target.tryRemoveAll(MapUtils.getKeys(datas)), datas);
 		}
 	}
 
@@ -639,7 +759,7 @@ export module ObservableMap {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableMap<T>, config: AbstractCollection.Observer.Config<T>) {
+		constructor(source: ObservableMap<T>, config: Collections.ObserverConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -650,23 +770,23 @@ export module ObservableMap {
 
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
-			this._removeItems(Map.toArray(spliceResult.removedItems));
-			this._addItems(Map.toArray(spliceResult.addedItems));
+			this._removeItems(MapUtils.toArray(spliceResult.removedItems));
+			this._addItems(MapUtils.toArray(spliceResult.addedItems));
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
-			this._doClearItems(Map.toArray(params.items));
+			this._doClearItems(MapUtils.toArray(params.items));
 		}
 	}
 
 	/**
 	 * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.ObservableMap]].
 	 */
-	export class Orderer<T extends Class> extends AbstractMap.Orderer<T> {
+	export class Orderer<T extends IClass> extends AbstractMap.Orderer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableMap<T>, config: AbstractCollection.Orderer.Config<T>) {
+		constructor(source: ObservableMap<T>, config: Collections.OrdererConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -675,13 +795,13 @@ export module ObservableMap {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			this._splice(
-				Map.toSet(spliceResult.removedItems),
-				Map.toSet(spliceResult.addedItems));
+				MapUtils.toSet(spliceResult.removedItems),
+				MapUtils.toSet(spliceResult.addedItems));
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
 			this.target.removeItems(
-				Map.toArray(params.items));
+				MapUtils.toArray(params.items));
 		}
 	}
 
@@ -692,7 +812,7 @@ export module ObservableMap {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableMap<T>, config: AbstractCollection.SorterComparing.Config<T>) {
+		constructor(source: ObservableMap<T>, config: Collections.SorterComparingConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -701,12 +821,12 @@ export module ObservableMap {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			this._splice(
-				Map.toArray(spliceResult.removedItems),
-				Map.toArray(spliceResult.addedItems));
+				MapUtils.toArray(spliceResult.removedItems),
+				MapUtils.toArray(spliceResult.addedItems));
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
-			this._splice(Map.toArray(params.items), []);
+			this._splice(MapUtils.toArray(params.items), []);
 		}
 	}
 }

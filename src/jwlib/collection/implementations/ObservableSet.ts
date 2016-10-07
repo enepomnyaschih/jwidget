@@ -1,10 +1,16 @@
-﻿import {destroy, destroyForcibly, Dictionary} from '../core/Core';
-import {Class} from '../core/Class';
-import {Event} from '../core/Event';
-import {Property} from '../property/Property';
-import {AbstractCollection} from './AbstractCollection';
-import {AbstractSet} from './AbstractSet';
+﻿import {destroy, destroyForcibly, Dictionary} from '../../core/Core';
+import {Class} from '../../core/Class';
+import {IClass} from '../../core/IClass';
+import {Event} from '../../core/Event';
+import {Property} from '../../property/Property';
+import * as Collections from '../interfaces/ICollections';
+import {AbstractSet} from '../abstracts/AbstractSet';
 import {Array} from './Array';
+import {IArray} from '../interfaces/IArray';
+import * as ArrayUtils from '../utils/Array';
+import {Set} from './Set';
+import {ISet} from '../interfaces/ISet';
+import * as Sets from '../interfaces/ISet';
 import {ObservableArray} from './ObservableArray';
 import {ObservableMap} from './ObservableMap';
 
@@ -13,7 +19,7 @@ import {ObservableMap} from './ObservableMap';
  *
  * @param T Collection item type.
  */
-export class ObservableSet<T extends Class> extends AbstractSet<T> {
+export class ObservableSet<T extends IClass> extends AbstractSet<T> {
 	/**
 	 * Collection length. **Don't modify manually!**
 	 */
@@ -99,6 +105,62 @@ export class ObservableSet<T extends Class> extends AbstractSet<T> {
 	/**
 	 * @inheritdoc
 	 */
+	$filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
+		return new Set<T>(this.filter(callback, scope), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
+		return new Set<T>(this.map(callback, scope), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toArray(): IArray<T> {
+		return new Array<T>(this.toArray(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asArray(): IArray<T> {
+		return new Array<T>(this.asArray(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSet(): ISet<T> {
+		return new Set<T>(this.toSet(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$addAll(items: T[]): IArray<T> {
+		return new Array<T>(this.addAll(items), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$removeAll(items: T[]): IArray<T> {
+		return new Array<T>(this.removeAll(items), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$clear(): IArray<T> {
+		return new Array<T>(this.clear(), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	tryClear(): T[] {
 		var items = this._tryClear();
 		if (items === undefined) {
@@ -108,7 +170,7 @@ export class ObservableSet<T extends Class> extends AbstractSet<T> {
 		this.clearEvent.trigger({ sender: this, items: items });
 		this.changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			Array.backEvery(items, destroyForcibly);
+			ArrayUtils.backEvery(items, destroyForcibly);
 		}
 		return items;
 	}
@@ -116,7 +178,7 @@ export class ObservableSet<T extends Class> extends AbstractSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	trySplice(removedItems: T[], addedItems: T[]): AbstractSet.SpliceResult<T> {
+	trySplice(removedItems: T[], addedItems: T[]): Sets.SpliceResult<T> {
 		var spliceResult = this._trySplice(removedItems, addedItems);
 		if (spliceResult === undefined) {
 			return;
@@ -125,7 +187,7 @@ export class ObservableSet<T extends Class> extends AbstractSet<T> {
 		this.spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 		this.changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			Array.backEvery(spliceResult.removedItems, destroyForcibly);
+			ArrayUtils.backEvery(spliceResult.removedItems, destroyForcibly);
 		}
 		return spliceResult;
 	}
@@ -208,7 +270,7 @@ export class ObservableSet<T extends Class> extends AbstractSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$$mapValues<U extends Class>(callback: (item: T) => U, scope?: any): ObservableSet<U> {
+	$$mapValues<U extends IClass>(callback: (item: T) => U, scope?: any): ObservableSet<U> {
 		var result = new ObservableSet<U>();
 		result.own(this.createMapper({
 			target: result,
@@ -221,7 +283,7 @@ export class ObservableSet<T extends Class> extends AbstractSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$$mapObjects<U extends Class>(callback: (item: T) => U, scope?: any): ObservableSet<U> {
+	$$mapObjects<U extends IClass>(callback: (item: T) => U, scope?: any): ObservableSet<U> {
 		var result = new ObservableSet<U>();
 		result.own(this.createMapper({
 			target: result,
@@ -235,7 +297,7 @@ export class ObservableSet<T extends Class> extends AbstractSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	createEmpty<U extends Class>(): ObservableSet<U> {
+	createEmpty<U extends IClass>(): ObservableSet<U> {
 		return new ObservableSet<U>();
 	}
 
@@ -256,63 +318,63 @@ export class ObservableSet<T extends Class> extends AbstractSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	createEmptySet<U extends Class>(): ObservableSet<U> {
+	createEmptySet<U extends IClass>(): ObservableSet<U> {
 		return new ObservableSet<U>();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createMapper<U extends Class>(config: AbstractSet.Mapper.Config<T, U>): ObservableSet.Mapper<T, U> {
+	createMapper<U extends IClass>(config: Sets.MapperConfig<T, U>): ObservableSet.Mapper<T, U> {
 		return new ObservableSet.Mapper<T, U>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createFilterer(config: AbstractSet.Filterer.Config<T>): ObservableSet.Filterer<T> {
+	createFilterer(config: Sets.FiltererConfig<T>): ObservableSet.Filterer<T> {
 		return new ObservableSet.Filterer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createCounter(config: AbstractCollection.Counter.Config<T>): ObservableSet.Counter<T> {
+	createCounter(config: Collections.CounterConfig<T>): ObservableSet.Counter<T> {
 		return new ObservableSet.Counter<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createObserver(config: AbstractCollection.Observer.Config<T>): ObservableSet.Observer<T> {
+	createObserver(config: Collections.ObserverConfig<T>): ObservableSet.Observer<T> {
 		return new ObservableSet.Observer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createOrderer(config?: AbstractCollection.Orderer.Config<T>): ObservableSet.Orderer<T> {
+	createOrderer(config?: Collections.OrdererConfig<T>): ObservableSet.Orderer<T> {
 		return new ObservableSet.Orderer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createSorterComparing(config?: AbstractCollection.SorterComparing.Config<T>): ObservableSet.SorterComparing<T> {
+	createSorterComparing(config?: Collections.SorterComparingConfig<T>): ObservableSet.SorterComparing<T> {
 		return new ObservableSet.SorterComparing<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createIndexer(config: AbstractCollection.Indexer.Config<T>): ObservableSet.Indexer<T> {
+	createIndexer(config: Collections.IndexerConfig<T>): ObservableSet.Indexer<T> {
 		return new ObservableSet.Indexer<T>(this, config);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createLister(config?: AbstractCollection.Lister.Config<T>): ObservableSet.Lister<T> {
+	createLister(config?: Collections.ListerConfig<T>): ObservableSet.Lister<T> {
 		return new ObservableSet.Lister<T>(this, config);
 	}
 }
@@ -321,7 +383,7 @@ export module ObservableSet {
 	/**
 	 * [[JW.ObservableSet]] event parameters.
 	 */
-	export interface EventParams<T extends Class> {
+	export interface EventParams<T extends IClass> {
 		/**
 		 * Event sender.
 		 */
@@ -331,17 +393,17 @@ export module ObservableSet {
 	/**
 	 * Parameters of [[JW.ObservableSet]]'s [[JW.ObservableSet.spliceEvent]].
 	 */
-	export interface SpliceEventParams<T extends Class> extends EventParams<T> {
+	export interface SpliceEventParams<T extends IClass> extends EventParams<T> {
 		/**
 		 * Result of [[splice]] method.
 		 */
-		spliceResult: AbstractSet.SpliceResult<T>;
+		spliceResult: Sets.SpliceResult<T>;
 	}
 
 	/**
 	 * Parameters of [[JW.ObservableSet]]'s [[JW.ObservableSet.clearEvent]].
 	 */
-	export interface ItemsEventParams<T extends Class> extends EventParams<T> {
+	export interface ItemsEventParams<T extends IClass> extends EventParams<T> {
 		/**
 		 * Old set contents.
 		 */
@@ -351,11 +413,11 @@ export module ObservableSet {
 	/**
 	 * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.ObservableSet]].
 	 */
-	export class Counter<T extends Class> extends AbstractSet.Counter<T> {
+	export class Counter<T extends IClass> extends AbstractSet.Counter<T> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableSet<T>, config: AbstractCollection.Counter.Config<T>) {
+		constructor(source: ObservableSet<T>, config: Collections.CounterConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -364,8 +426,8 @@ export module ObservableSet {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			this.target.set(this.target.get() -
-				Array.count(spliceResult.removedItems, this._filterItem, this._scope) +
-				Array.count(spliceResult.addedItems, this._filterItem, this._scope));
+				ArrayUtils.count(spliceResult.removedItems, this._filterItem, this._scope) +
+				ArrayUtils.count(spliceResult.addedItems, this._filterItem, this._scope));
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
@@ -376,11 +438,11 @@ export module ObservableSet {
 	/**
 	 * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.ObservableSet]].
 	 */
-	export class Filterer<T extends Class> extends AbstractSet.Filterer<T> {
+	export class Filterer<T extends IClass> extends AbstractSet.Filterer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableSet<T>, config: AbstractSet.Filterer.Config<T>) {
+		constructor(source: ObservableSet<T>, config: Sets.FiltererConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -390,7 +452,7 @@ export module ObservableSet {
 			var spliceResult = params.spliceResult;
 			this.target.trySplice(
 				spliceResult.removedItems,
-				Array.filter(spliceResult.addedItems, this._filterItem, this._scope));
+				ArrayUtils.filter(spliceResult.addedItems, this._filterItem, this._scope));
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
@@ -401,11 +463,11 @@ export module ObservableSet {
 	/**
 	 * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.ObservableSet]].
 	 */
-	export class Indexer<T extends Class> extends AbstractSet.Indexer<T> {
+	export class Indexer<T extends IClass> extends AbstractSet.Indexer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableSet<T>, config: AbstractCollection.Indexer.Config<T>) {
+		constructor(source: ObservableSet<T>, config: Collections.IndexerConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -427,11 +489,11 @@ export module ObservableSet {
 	/**
 	 * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.ObservableSet]].
 	 */
-	export class Lister<T extends Class> extends AbstractSet.Lister<T> {
+	export class Lister<T extends IClass> extends AbstractSet.Lister<T> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableSet<T>, config: AbstractCollection.Lister.Config<T>) {
+		constructor(source: ObservableSet<T>, config: Collections.ListerConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -450,11 +512,11 @@ export module ObservableSet {
 	/**
 	 * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.ObservableSet]].
 	 */
-	export class Mapper<T extends Class, U extends Class> extends AbstractSet.Mapper<T, U> {
+	export class Mapper<T extends IClass, U extends IClass> extends AbstractSet.Mapper<T, U> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableSet<T>, config: AbstractSet.Mapper.Config<T, U>) {
+		constructor(source: ObservableSet<T>, config: Sets.MapperConfig<T, U>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -478,11 +540,11 @@ export module ObservableSet {
 	/**
 	 * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.ObservableSet]].
 	 */
-	export class Observer<T extends Class> extends AbstractSet.Observer<T> {
+	export class Observer<T extends IClass> extends AbstractSet.Observer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableSet<T>, config: AbstractCollection.Observer.Config<T>) {
+		constructor(source: ObservableSet<T>, config: Collections.ObserverConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -505,11 +567,11 @@ export module ObservableSet {
 	/**
 	 * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.ObservableSet]].
 	 */
-	export class Orderer<T extends Class> extends AbstractSet.Orderer<T> {
+	export class Orderer<T extends IClass> extends AbstractSet.Orderer<T> {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableSet<T>, config: AbstractCollection.Orderer.Config<T>) {
+		constructor(source: ObservableSet<T>, config: Collections.OrdererConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
@@ -518,8 +580,8 @@ export module ObservableSet {
 		private _onSplice(params: SpliceEventParams<T>) {
 			var spliceResult = params.spliceResult;
 			this._splice(
-				Array.toSet(spliceResult.removedItems),
-				Array.toSet(spliceResult.addedItems));
+				ArrayUtils.toSet(spliceResult.removedItems),
+				ArrayUtils.toSet(spliceResult.addedItems));
 		}
 
 		private _onClear(params: ItemsEventParams<T>) {
@@ -534,7 +596,7 @@ export module ObservableSet {
 		/**
 		 * @inheritdoc
 		 */
-		constructor(source: ObservableSet<T>, config: AbstractCollection.SorterComparing.Config<T>) {
+		constructor(source: ObservableSet<T>, config: Collections.SorterComparingConfig<T>) {
 			super(source, config);
 			this.own(source.spliceEvent.bind(this._onSplice, this));
 			this.own(source.clearEvent.bind(this._onClear, this));
