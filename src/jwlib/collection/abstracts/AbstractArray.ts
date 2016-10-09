@@ -1062,7 +1062,7 @@ export module AbstractArray {
 		 * Changes filterer configuration and refilters target collection.
 		 * @param config Options to modify.
 		 */
-		reconfigure(config: Collections.FiltererReconfig<T>) {
+		reconfigure(config: Arrays.FiltererReconfig<T>) {
 			this._filterItem = def(config.filterItem, this._filterItem);
 			this._scope = def(config.scope, this._scope);
 			this.refilter();

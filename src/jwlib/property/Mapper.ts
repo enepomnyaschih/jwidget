@@ -2,7 +2,7 @@
 import {Class} from '../core/Class';
 import {Event} from '../core/Event';
 import {Property} from './Property';
-import {Array} from '../collection/Array';
+import * as ArrayUtils from '../collection/utils/Array';
 
 /**
  * Watches source [[JW.Property|properties]] modification and recreates
@@ -156,7 +156,7 @@ export class Mapper<T> extends Class {
 		this._sourceValues = null;
 		this._targetValue = null;
 		this.update();
-		Array.each(sources, this.watch, this);
+		ArrayUtils.each(sources, this.watch, this);
 	}
 
 	protected destroyObject() {
@@ -203,9 +203,9 @@ export class Mapper<T> extends Class {
 	 * Updates target property focibly.
 	 */
 	update() {
-		var values = Array.map(this.sources, byMethod("get"));
+		var values = ArrayUtils.map(this.sources, byMethod("get"));
 		var newValue: T;
-		if (this._acceptNull || Array.every(values, isSet)) {
+		if (this._acceptNull || ArrayUtils.every(values, isSet)) {
 			newValue = this._createValue.apply(this._scope, values);
 		} else {
 			newValue = null;

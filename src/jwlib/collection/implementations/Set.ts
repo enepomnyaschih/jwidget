@@ -1,4 +1,5 @@
-﻿import {IClass} from '../../core/IClass';
+﻿import {Dictionary} from '../../core/Core';
+import {IClass} from '../../core/IClass';
 import {AbstractSet} from '../abstracts/AbstractSet';
 import {ISet} from '../interfaces/ISet';
 import {Array} from './Array';
@@ -49,7 +50,28 @@ export class Set<T extends IClass> extends AbstractSet<T> {
 	 * @inheritdoc
 	 */
 	$map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
-		return new Set<T>(this.map(callback, scope), true);
+		return new Set<U>(this.map(callback, scope), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T> {
+		return new Array<T>(this.toSorted(callback, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T> {
+		return new Array<T>(this.toSortedComparing(compare, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T) => string, scope?: any): IMap<T> {
+		return new Map<T>(this.index(callback, scope), true);
 	}
 
 	/**

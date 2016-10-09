@@ -2,7 +2,7 @@
 import {Class} from '../core/Class';
 import {Event} from '../core/Event';
 import {Property} from './Property';
-import {Array} from '../collection/Array';
+import * as ArrayUtils from '../collection/utils/Array';
 
 /**
  * Watches source [[JW.Property|properties]] modification and calls
@@ -68,7 +68,7 @@ export class Switcher extends Class {
 		this._acceptNull = config.acceptNull || false;
 		this._sourceValues = null;
 		this._doInit();
-		Array.each(sources, this.watch, this);
+		ArrayUtils.each(sources, this.watch, this);
 	}
 
 	protected destroyObject() {
@@ -109,8 +109,8 @@ export class Switcher extends Class {
 	}
 
 	private _doInit() {
-		var values = Array.map(this.sources, byMethod("get"));
-		this._sourceValues = (this._acceptNull || Array.every(values, isSet)) ? values : null;
+		var values = ArrayUtils.map(this.sources, byMethod("get"));
+		this._sourceValues = (this._acceptNull || ArrayUtils.every(values, isSet)) ? values : null;
 		if (this._sourceValues && this._init) {
 			this._init.apply(this._scope, this._sourceValues);
 		}

@@ -443,7 +443,7 @@ export interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	createFilterer(config: FiltererConfig<T>): IMapFilterer<T>;
+	createFilterer(config: FiltererConfig<T>): Filterer<T>;
 
 	/**
 	 * @inheritdoc

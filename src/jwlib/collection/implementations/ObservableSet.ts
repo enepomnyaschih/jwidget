@@ -3,11 +3,13 @@ import {Class} from '../../core/Class';
 import {IClass} from '../../core/IClass';
 import {Event} from '../../core/Event';
 import {Property} from '../../property/Property';
-import * as Collections from '../interfaces/ICollections';
+import * as Collections from '../interfaces/ICollection';
 import {AbstractSet} from '../abstracts/AbstractSet';
 import {Array} from './Array';
 import {IArray} from '../interfaces/IArray';
 import * as ArrayUtils from '../utils/Array';
+import {Map} from './Map';
+import {IMap} from '../interfaces/IMap';
 import {Set} from './Set';
 import {ISet} from '../interfaces/ISet';
 import * as Sets from '../interfaces/ISet';
@@ -113,7 +115,28 @@ export class ObservableSet<T extends IClass> extends AbstractSet<T> {
 	 * @inheritdoc
 	 */
 	$map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
-		return new Set<T>(this.map(callback, scope), true);
+		return new Set<U>(this.map(callback, scope), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T> {
+		return new Array<T>(this.toSorted(callback, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T> {
+		return new Array<T>(this.toSortedComparing(compare, scope, order), true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T) => string, scope?: any): IMap<T> {
+		return new Map<T>(this.index(callback, scope), true);
 	}
 
 	/**
@@ -592,7 +615,7 @@ export module ObservableSet {
 	/**
 	 * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.ObservableSet]].
 	 */
-	export class SorterComparing<T extends Class> extends AbstractSet.SorterComparing<T> {
+	export class SorterComparing<T extends IClass> extends AbstractSet.SorterComparing<T> {
 		/**
 		 * @inheritdoc
 		 */

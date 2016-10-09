@@ -1,3 +1,3 @@
 import * as JW from './jwlib/index';
 
-window.JW = JW;
+(<any>window).JW = JW;

@@ -2,7 +2,7 @@
 import {Class} from '../core/Class';
 import {Event} from '../core/Event';
 import {Property} from './Property';
-import {Array} from '../collection/Array';
+import * as ArrayUtils from '../collection/utils/Array';
 
 /**
  * Watches source [[JW.Property|properties]] modification and updates
@@ -62,7 +62,7 @@ export class Functor<T> extends Class {
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Property<T>() : config.target;
 		this.update();
-		Array.each(sources, this.watch, this);
+		ArrayUtils.each(sources, this.watch, this);
 	}
 
 	protected destroyObject() {
@@ -101,7 +101,7 @@ export class Functor<T> extends Class {
 	 * Updates target property focibly.
 	 */
 	update() {
-		var values = Array.map(this.sources, byMethod("get"));
+		var values = ArrayUtils.map(this.sources, byMethod("get"));
 		this.target.set(this.callback.apply(this.scope, values));
 	}
 }

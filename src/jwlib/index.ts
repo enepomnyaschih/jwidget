@@ -21,8 +21,8 @@ import * as _MapUtils from './collection/utils/Map';
 import * as _SetUtils from './collection/utils/Set';
 
 export var ArrayUtils = _ArrayUtils;
-export var MapUtils = _ArrayUtils;
-export var SetUtils = _ArrayUtils;
+export var MapUtils = _MapUtils;
+export var SetUtils = _SetUtils;
 
 export {ICollection} from './collection/interfaces/ICollection';
 export {IIndexedCollection} from './collection/interfaces/IIndexedCollection';

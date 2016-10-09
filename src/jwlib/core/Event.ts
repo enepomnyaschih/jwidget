@@ -1,7 +1,7 @@
 ﻿import {Class} from './Class';
 import {Dictionary} from './Core';
 import {EventAttachment} from './EventAttachment';
-import {Map} from '../collection/Map';
+import * as MapUtils from '../collection/utils/Map';
 
 /**
  * Used to notify some objects (clients) about certain events (for example, field value change).
@@ -125,6 +125,6 @@ export class Event<P> extends Class {
 	 * Checks if the event has attachments.
 	 */
 	hasAttachments(): boolean {
-		return (this._attachments === null) || !Map.isEmpty(this._attachments);
+		return (this._attachments === null) || !MapUtils.isEmpty(this._attachments);
 	}
 }

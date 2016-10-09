@@ -892,6 +892,25 @@ export interface Filterer<T> extends Collection.Filterer<T> {
 	target: IArray<T>;
 
 	/**
+	 * Changes filterer configuration and refilters target collection.
+	 * @param config Options to modify.
+	 */
+	reconfigure(config: FiltererReconfig<T>);
+
+	/**
+	 * Refilters target collection item. Call this method when collection item properties change the way that
+	 * it must be refiltered.
+	 * @param item Item to refilter.
+	 */
+	refilterItem(item: T);
+
+	/**
+	 * Refilters target collection. Call this method when collection item properties change the way that
+	 * they must be refiltered.
+	 */
+	refilter();
+
+	/**
 	 * Refilters target collection item at specified position in source collection.
 	 * Call this method when collection item properties change the way that it must be refiltered.
 	 * @param index Index of source collection item to refilter.
@@ -907,6 +926,24 @@ export interface FiltererConfig<T> extends Collection.FiltererConfig<T> {
 	 * @inheritdoc
 	 */
 	target?: IArray<T>;
+}
+
+/**
+ * [[Filterer]]'s [[Filterer.reconfigure|reconfigure]] method options.
+ * All options are optional. If skipped, an option stays the same.
+ *
+ * @param T Collection item type.
+ */
+export interface FiltererReconfig<T> {
+	/**
+	 * Filtering criteria.
+	 */
+	filterItem?: (item: T) => boolean;
+
+	/**
+	 * [[filterItem]] call scope.
+	 */
+	scope?: any;
 }
 
 /**

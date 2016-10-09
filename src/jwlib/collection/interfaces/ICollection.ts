@@ -953,25 +953,6 @@ export interface Filterer<T> extends IClass {
 	 * Target collection.
 	 */
 	target: ICollection<T>;
-
-	/**
-	 * Changes filterer configuration and refilters target collection.
-	 * @param config Options to modify.
-	 */
-	reconfigure(config: FiltererReconfig<T>);
-
-	/**
-	 * Refilters target collection item. Call this method when collection item properties change the way that
-	 * it must be refiltered.
-	 * @param item Item to refilter.
-	 */
-	refilterItem(item: T);
-
-	/**
-	 * Refilters target collection. Call this method when collection item properties change the way that
-	 * they must be refiltered.
-	 */
-	refilter();
 }
 
 /**
@@ -995,24 +976,6 @@ export interface FiltererConfig<T> {
 	 * Target collection. By default, created automatically.
 	 */
 	target?: ICollection<T>;
-}
-
-/**
- * [[Filterer]]'s [[Filterer.reconfigure|reconfigure]] method options.
- * All options are optional. If skipped, an option stays the same.
- *
- * @param T Collection item type.
- */
-export interface FiltererReconfig<T> {
-	/**
-	 * Filtering criteria.
-	 */
-	filterItem?: (item: T) => boolean;
-
-	/**
-	 * [[filterItem]] call scope.
-	 */
-	scope?: any;
 }
 
 /**

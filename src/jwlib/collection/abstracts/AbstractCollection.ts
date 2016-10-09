@@ -1079,25 +1079,6 @@ export module AbstractCollection {
 			this._scope = null;
 			super.destroyObject();
 		}
-
-		/**
-		 * Changes filterer configuration and refilters target collection.
-		 * @param config Options to modify.
-		 */
-		abstract reconfigure(config: Collections.FiltererReconfig<T>);
-
-		/**
-		 * Refilters target collection item. Call this method when collection item properties change the way that
-		 * it must be refiltered.
-		 * @param item Item to refilter.
-		 */
-		abstract refilterItem(item: T);
-
-		/**
-		 * Refilters target collection. Call this method when collection item properties change the way that
-		 * they must be refiltered.
-		 */
-		abstract refilter();
 	}
 
 	/**

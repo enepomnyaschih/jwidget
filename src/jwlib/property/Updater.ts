@@ -2,7 +2,7 @@
 import {Class} from '../core/Class';
 import {Event} from '../core/Event';
 import {Property} from './Property';
-import {Array} from '../collection/Array';
+import * as ArrayUtils from '../collection/utils/Array';
 
 /**
  * Watches source [[JW.Property|properties]] modification and calls
@@ -31,7 +31,7 @@ export class Updater extends Class {
 		super();
 		this.scope = scope || this;
 		this.update();
-		Array.each(sources, this.watch, this);
+		ArrayUtils.each(sources, this.watch, this);
 	}
 
 	/**
@@ -57,7 +57,7 @@ export class Updater extends Class {
 	 * Calls function focibly.
 	 */
 	update() {
-		var values = Array.map(this.sources, byMethod("get"));
+		var values = ArrayUtils.map(this.sources, byMethod("get"));
 		this.callback.apply(this.scope, values);
 	}
 }

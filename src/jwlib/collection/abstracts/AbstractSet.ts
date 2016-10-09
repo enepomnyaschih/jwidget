@@ -678,7 +678,7 @@ export module AbstractSet {
 		 * @hidden
 		 */
 		protected _getItems(datas: T[]): U[] {
-			return Array.map(datas, (data) => {
+			return ArrayUtils.map(datas, (data) => {
 				return this._items[data._iid];
 			}, this);
 		}

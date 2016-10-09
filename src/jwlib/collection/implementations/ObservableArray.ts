@@ -628,7 +628,7 @@ export class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	createMergerBunch(merger: any): IClass {
+	_createMergerBunch(merger: any): IClass {
 		return new ObservableArray.Merger.Bunch<T>(merger, this);
 	}
 

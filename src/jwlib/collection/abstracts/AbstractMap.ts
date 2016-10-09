@@ -367,7 +367,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> implem
 	 * Low-performance alternative to [[setAll]] with verbose result set.
 	 * @returns Result of internal [[splice]] method call.
 	 */
-	setAllVerbose(items: Dictionary<T>): AbstractMap.SpliceResult<T> {
+	setAllVerbose(items: Dictionary<T>): Maps.SpliceResult<T> {
 		var spliceResult = this.trySetAll(items);
 		return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 	}
@@ -377,7 +377,7 @@ export abstract class AbstractMap<T> extends IndexedCollection<string, T> implem
 	 * @returns Result of internal [[splice]] method call.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySetAll(items: Dictionary<T>): AbstractMap.SpliceResult<T> {
+	trySetAll(items: Dictionary<T>): Maps.SpliceResult<T> {
 		return this.trySplice([], items);
 	}
 
