@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
+        "outDir": "./dist",
         "sourceMap": true,
         "module": "commonjs",
         "target": "es5",
@@ -15,8 +15,9 @@
         "declaration": true
     },
     "include": [
-        "src/**/*"
+        "dist/src/**/*"
     ],
+    "exclude": [],
     "bundles": {
         "jwidget": {
             "files": ["./src/index.ts"]

@@ -1,8 +1,7 @@
-/bower_components
 /dist
+!/dist/src
 /guides/endownload/jwidget.zip
 /guides/endownload/plugins
 /guides/endownload/**/*.js
 /guides/endownload/**/*.ts
 /node_modules
-/typings
