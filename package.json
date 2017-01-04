@@ -11,12 +11,7 @@
     "email": "enepomnyaschih@gmail.com"
   },
   "license": "LGPL",
-  "devDependencies": {
-    "source-map-loader": "^0.1.5",
-    "ts-loader": "^0.8.2"
-  },
   "dependencies": {
-    "tsproject": "1.2.1",
-    "webpack": "^1.13.1"
+    "@types/jquery": "*"
   }
 }

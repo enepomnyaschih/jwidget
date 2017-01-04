@@ -1,4 +1,4 @@
-﻿## Guides and API documentation
+## Guides and API documentation
 
 http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -28,6 +28,16 @@ Set Web document root to the repository folder.
 Breaking changes:
 
 - Removed legacy constructors from JW.UI.CheckedListener, JW.UI.RadioListener and JW.UI.ValueListener (deprecated since 1.4)
+- get function doesn't split string by period anymore
+- iid function returns value itself if it is not an object
+- destroy function doesn't fail if the object doesn't implement Destroyable interface
+- inScope is renamed to bind and returns null/undefined if the callback is null/undefined
+- isSet is renamed to isNotNil to comply lodash isNil method
+- jQuery extension is converted to a set of functions in UIBinding module
+
+TODO:
+
+- rework Mapper, rename callbacks, add updateViaNull, add acceptNull to $$map methods
 
 ### 1.4.4 (April 29, 2016)
 
