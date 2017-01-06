@@ -1,39 +1,43 @@
-var webpack = require("webpack");
+var path = require("path"),
+	webpack = require("webpack"),
+	CleanWebpackPlugin = require('clean-webpack-plugin');
+
+var optimize = process.argv.indexOf('--optimize') !== -1;
 
 module.exports = {
-	entry: "./src/index.ts",
+	context: path.resolve(__dirname, "dist/src"),
+	entry: "./index.ts",
 	output: {
-		filename: "./dist/jwidget.js",
+		path: path.resolve(__dirname, "dist"),
+		filename: "jwidget.js",
 	},
 
-	// Enable sourcemaps for debugging webpack's output.
-	devtool: "source-map",
+	devtool: optimize ? undefined : "source-map",
 
 	resolve: {
-		// Add '.ts' as resolvable extension.
 		extensions: ["", ".webpack.js", ".web.js", ".ts", ".js"]
 	},
 
 	module: {
 		loaders: [
-			// All files with a '.ts' extension will be handled by 'ts-loader'.
-			{ test: /\.ts$/, loader: "ts-loader" }
+			{ test: /\.ts$/, loader: "ts" }
 		],
 
 		preLoaders: [
-			// All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-			{ test: /\.js$/, loader: "source-map-loader" }
+			{ test: /\.js$/, loader: optimize ? "webpack-strip-block" : "source-map" }
 		]
 	},
 
-	// When importing a module whose path matches one of the following, just
-	// assume a corresponding global variable exists and use that instead.
-	// This is important because it allows us to avoid bundling all of our
-	// dependencies, which allows browsers to cache those libraries between builds.
-	externals: {
-	},
-
 	plugins: [
-		//new webpack.optimize.UglifyJsPlugin({minimize: true})
-	]
+		new CleanWebpackPlugin(['dist'], {
+			exclude: ['src']
+		})
+	].concat(optimize ? [
+		new webpack.optimize.UglifyJsPlugin({
+			minimize: true,
+			compressor: {
+				warnings: false
+			}
+		})
+	] : [])
 };

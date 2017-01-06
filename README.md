@@ -38,6 +38,7 @@ Breaking changes:
 TODO:
 
 - rework Mapper, rename callbacks, add updateViaNull, add acceptNull to $$map methods
+- add debugging code (asserts)
 
 ### 1.4.4 (April 29, 2016)
 

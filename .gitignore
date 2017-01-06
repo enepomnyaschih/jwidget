@@ -1,4 +1,4 @@
-/dist
+/dist/*
 !/dist/src
 /guides/endownload/jwidget.zip
 /guides/endownload/plugins

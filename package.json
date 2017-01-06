@@ -3,15 +3,18 @@
   "version": "2.0.0",
   "description": "Object-oriented JavaScript MV-framework",
   "main": "./dist/jwidget.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": {
     "name": "Egor Nepomnyaschih",
     "email": "enepomnyaschih@gmail.com"
   },
   "license": "LGPL",
   "dependencies": {
-    "@types/jquery": "*"
+    "source-map-loader": "0.1.5",
+    "ts-loader": "1.3.3",
+
+    "clean-webpack-plugin": "0.1.14",
+    "webpack-strip-block": "0.1.0",
+
+    "@types/jquery": "2.0.39"
   }
 }
