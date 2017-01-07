@@ -1,4 +1,5 @@
 ﻿import Destroyable from './Destroyable';
+import IClass from './IClass';
 
 /**
  * The base class of all jWidget classes.
@@ -30,7 +31,7 @@
  *
  * Aggregated objects are destroyed in reversive order.
  */
-class Class implements Destroyable {
+class Class implements IClass {
 	private static _lastIid: number = 0;
 	private _ownagePool: Destroyable[] = null;
 

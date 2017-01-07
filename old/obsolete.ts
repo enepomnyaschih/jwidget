@@ -146,57 +146,6 @@ export function defn<T>(value: T, defaultValue: T): T {
 }
 
 /**
- * Iterates through objects passed after first argument and copies all their fields into
- * **target** object. Returns **target**. Fields of source objects which are undefined will be ignored.
- * Empty source objects (undefined, null) will be ignored.
- *
- * Function modifies **target** object!
- *
- * Example 1:
- *
- *     var x: JW.Dictionary<number> = {   var y: JW.Dictionary<number> = {  // Result = {
- *         a: 10,                                                           //     a: 10,
- *         b: 20,                             b: 30,                        //     b: 30,
- *         c: null,                           c: 40,                        //     c: 40,
- *         d: undefined,                      d: 50,                        //     d: 50,
- *         e: null                                                          //     e: null,
- *                                            f: 60,                        //     f: 60
- *                                            g: undefined                  //
- *     };                                 };                                // };
- *
- *     JW.apply<number>(x, y);
- *
- * Example 2 (form data preparing):
- *
- *     class Form extends JW.Class {
- *         data: JW.Dictionary<any>;
- *
- *         composeData(extraData: JW.Dictionary<any>): JW.Dictionary<any> {
- *             return JW.apply<any>({}, this.getDefaultData(), this.data, extraData);
- *         }
- *
- *         // virtual
- *         getDefaultData(): JW.Dictionary<any> {
- *             return null;
- *         }
- *     }
- */
-export function apply<T>(target: Dictionary<T>, ...sources: Dictionary<T>[]): Dictionary<T> {
-	for (var i = 0; i < sources.length; ++i) {
-		var source = sources[i];
-		if (!source) {
-			continue;
-		}
-		for (var key in source) {
-			if (source[key] !== undefined) {
-				target[key] = source[key];
-			}
-		}
-	}
-	return target;
-}
-
-/**
  * The same as JW.apply, but ignores fields which are defined in **target**.
  *
  * **Example**

@@ -5,7 +5,7 @@ import Property from './Property';
  *
  * @param V Property value type.
  */
-interface Params<V> {
+interface PropertyChangeEventParams<V> {
 	/**
 	 * Sender property.
 	 */
@@ -22,4 +22,4 @@ interface Params<V> {
 	oldValue: V;
 }
 
-export default Params;
+export default PropertyChangeEventParams;
