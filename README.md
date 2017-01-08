@@ -46,7 +46,7 @@ TODO:
 - adjust collections API to native API and lodash
 - use 'let'
 - make String(item._iid) an internal utility function
-- remove $$ methods and 'create**er' methods to optimize bundle size
+- remove $$ methods and 'create**er' and 'createEmpty*' methods to optimize bundle size
 
 ### 1.4.4 (April 29, 2016)
 

@@ -1,22 +1,26 @@
-﻿import {destroyForcibly, Proxy} from '../../core/Core';
-import {Destroyable} from '../../core/Destroyable';
-import {IClass} from '../../core/IClass';
-import {ObservableArray} from './ObservableArray';
-import {AbstractArray} from '../abstracts/AbstractArray';
-import {IArray} from '../interfaces/IArray';
-import * as Arrays from '../interfaces/IArray';
-import * as ArrayUtils from '../utils/Array';
-import {Map} from './Map';
-import {IMap} from '../interfaces/IMap';
-import {Set} from './Set';
-import {ISet} from '../interfaces/ISet';
+﻿import {destroy} from './Core';
+import AbstractArray from './AbstractArray';
+import Destroyable from './Destroyable';
+import IArray from './IArray';
+import IArraySpliceParams from './IArraySpliceParams';
+import IArraySpliceResult from './IArraySpliceResult';
+import IClass from './IClass';
+import IIndexCount from './IIndexCount';
+import IIndexItems from './IIndexItems';
+import IMap from './IMap';
+import ISet from './ISet';
+import JWMap from './JWMap';
+import JWSet from './JWSet';
+import ObservableArray from './ObservableArray';
+import Proxy from './Proxy';
+import * as ArrayUtils from './ArrayUtils';
 
 /**
  * Simple implementation of [[JW.AbstractArray]].
  *
  * @param T Collection item type.
  */
-export class Array<T> extends AbstractArray<T> {
+export default class JWArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -27,7 +31,7 @@ export class Array<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): Array<T> {
+	ownItems(): JWArray<T> {
 		super.ownItems();
 		return this;
 	}
@@ -36,91 +40,91 @@ export class Array<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	$getKeys(): IArray<number> {
-		return new Array<number>(this.getKeys(), true);
+		return new JWArray<number>(this.getKeys(), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<T> {
-		return new Array<T>(this.toSorted(callback, scope, order), true);
+		return new JWArray<T>(this.toSorted(callback, scope, order), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<T> {
-		return new Array<T>(this.toSortedComparing(compare, scope, order), true);
+		return new JWArray<T>(this.toSortedComparing(compare, scope, order), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<number> {
-		return new Array<number>(this.getSortingKeys(callback, scope, order), true);
+		return new JWArray<number>(this.getSortingKeys(callback, scope, order), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<number> {
-		return new Array<number>(this.getSortingKeysComparing(compare, scope, order), true);
+		return new JWArray<number>(this.getSortingKeysComparing(compare, scope, order), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T, key: number) => string, scope?: any): IMap<T> {
-		return new Map<T>(this.index(callback, scope), true);
+		return new JWMap<T>(this.index(callback, scope), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$filter(callback: (item: T, index: number) => boolean, scope?: any): IArray<T> {
-		return new Array<T>(this.filter(callback, scope || this), true);
+		return new JWArray<T>(this.filter(callback, scope || this), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U> {
-		return new Array<U>(this.map(callback, scope || this), true);
+		return new JWArray<U>(this.map(callback, scope || this), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toArray(): IArray<T> {
-		return new Array<T>(this.toArray(), true);
+		return new JWArray<T>(this.toArray(), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toMap(): IMap<T> {
-		return new Map<T>(this.toMap(), true);
+		return new JWMap<T>(this.toMap(), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asMap(): IMap<T> {
-		return new Map<T>(this.asMap(), true);
+		return new JWMap<T>(this.asMap(), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSet(): ISet<any> {
-		return new Set<any>(this.toSet(), true);
+		return new JWSet<any>(this.toSet(), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asSet(): ISet<any> {
-		return new Set<any>(this.asSet(), true);
+		return new JWSet<any>(this.asSet(), true);
 	}
 
 	/**
@@ -138,7 +142,7 @@ export class Array<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	$removeAll(index: number, count: number): IArray<T> {
-		return new Array<T>(this.removeAll(index, count), true);
+		return new JWArray<T>(this.removeAll(index, count), true);
 	}
 
 	/**
@@ -152,7 +156,7 @@ export class Array<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	$clear(): IArray<T> {
-		return new Array<T>(this.clear(), true);
+		return new JWArray<T>(this.clear(), true);
 	}
 
 	/**
@@ -161,7 +165,7 @@ export class Array<T> extends AbstractArray<T> {
 	tryClear(): T[]{
 		var items = ArrayUtils.tryClear(this.items);
 		if ((items !== undefined) && this._ownsItems) {
-			ArrayUtils.backEvery(items, destroyForcibly);
+			ArrayUtils.backEvery(items, destroy);
 		}
 		return items;
 	}
@@ -169,10 +173,10 @@ export class Array<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	trySplice(removeParamsList: Arrays.IndexCount[], addParamsList: Arrays.IndexItems<T>[]): Arrays.SpliceResult<T> {
+	trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T> {
 		var spliceResult = ArrayUtils.trySplice(this.items, removeParamsList, addParamsList);
 		if ((spliceResult !== undefined) && this._ownsItems) {
-			ArrayUtils.backEvery(spliceResult.getRemovedItems(), destroyForcibly);
+			ArrayUtils.backEvery(spliceResult.getRemovedItems(), destroy);
 		}
 		return spliceResult;
 	}
@@ -187,14 +191,14 @@ export class Array<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): Arrays.SpliceParams<T> {
+	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArraySpliceParams<T> {
 		return ArrayUtils.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	detectFilter(newItems: T[]): Arrays.IndexCount[]{
+	detectFilter(newItems: T[]): IIndexCount[]{
 		return ArrayUtils.detectFilter(this.items, newItems);
 	}
 
@@ -239,7 +243,7 @@ export class Array<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	$toReversed(): IArray<T> {
-		return new Array(this.toReversed(), true);
+		return new JWArray(this.toReversed(), true);
 	}
 
 	/**
@@ -260,7 +264,7 @@ export class Array<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	indexOf(item: T): number {
-		return ArrayUtils.indexOf(this.items, item);
+		return this.items.indexOf(item);
 	}
 
 	/**
@@ -280,29 +284,29 @@ export class Array<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	createEmpty<U>(): Array<U> {
-		return new Array<U>();
+	createEmpty<U>(): JWArray<U> {
+		return new JWArray<U>();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createEmptyArray<U>(): Array<U> {
-		return new Array<U>();
+	createEmptyArray<U>(): JWArray<U> {
+		return new JWArray<U>();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createEmptyMap<U>(): Map<U> {
-		return new Map<U>();
+	createEmptyMap<U>(): JWMap<U> {
+		return new JWMap<U>();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	createEmptySet<U extends IClass>(): Set<U> {
-		return new Set<U>();
+	createEmptySet<U extends IClass>(): JWSet<U> {
+		return new JWSet<U>();
 	}
 
 	/**
@@ -310,6 +314,6 @@ export class Array<T> extends AbstractArray<T> {
 	 */
 	_createMergerTarget<T>(): IArray<T> {
 		return this.some((bunch) => { return bunch instanceof ObservableArray; }) ?
-			new ObservableArray<T>() : new Array<T>();
+			new ObservableArray<T>() : new JWArray<T>();
 	}
 }
