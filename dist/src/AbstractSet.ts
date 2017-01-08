@@ -227,13 +227,6 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
-		return this.$filter(callback, scope);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	count(callback: (item: T) => boolean, scope?: any): number {
 		return SetUtils.count(this.json, callback, scope);
 	}
@@ -249,20 +242,6 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * @inheritdoc
 	 */
 	abstract $map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapValues<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
-		return this.$map(callback, scope);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapObjects<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
-		return this.$map(callback, scope);
-	}
 
 	/**
 	 * @inheritdoc
@@ -502,62 +481,6 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * @inheritdoc
 	 */
 	abstract createEmpty<U extends IClass>(): ISet<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createMapper<U extends IClass>(config: ISetMapperConfig<T, U>): Sets.Mapper<T, U> {
-		return new AbstractSet.Mapper<T, U>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createFilterer(config: Sets.FiltererConfig<T>): Sets.Filterer<T> {
-		return new AbstractSet.Filterer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createCounter(config: Collections.CounterConfig<T>): Sets.Counter<T> {
-		return new AbstractSet.Counter<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createObserver(config: Collections.ObserverConfig<T>): Sets.Observer<T> {
-		return new AbstractSet.Observer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createOrderer(config?: Collections.OrdererConfig<T>): Sets.Orderer<T> {
-		return new AbstractSet.Orderer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createSorterComparing(config?: Collections.SorterComparingConfig<T>): Sets.SorterComparing<T> {
-		return new AbstractSet.SorterComparing<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createIndexer(config: Collections.IndexerConfig<T>): Sets.Indexer<T> {
-		return new AbstractSet.Indexer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createLister(config?: Collections.ListerConfig<T>): Sets.Lister<T> {
-		return new AbstractSet.Lister<T>(this, config);
-	}
 }
 
 export default AbstractSet;

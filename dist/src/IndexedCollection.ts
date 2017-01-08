@@ -1,5 +1,4 @@
 ﻿import AbstractCollection from './AbstractCollection';
-import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IIndexedCollection from './IIndexedCollection';
@@ -441,11 +440,6 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $$filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	abstract count(callback: (item: T, key: K) => boolean, scope?: any): number;
 
 	/**
@@ -458,29 +452,12 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	$$count(callback: (item: T, key: K) => boolean, scope?: any): Property<number> {
-		return this.$count(callback, scope);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	abstract map<U>(callback: (item: T, key: K) => U, scope?: any): any;
 
 	/**
 	 * @inheritdoc
 	 */
 	abstract $map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	abstract $$mapValues<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	abstract $$mapObjects<U extends Destroyable>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
 
 	/**
 	 * @inheritdoc

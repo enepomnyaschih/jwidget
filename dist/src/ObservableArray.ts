@@ -1,12 +1,10 @@
 import {destroy} from './Core';
 import AbstractArray from './AbstractArray';
 import Class from './Class';
-import Destroyable from './Destroyable';
 import Event from './Event';
 import IArray from './IArray';
 import IArraySpliceParams from './IArraySpliceParams';
 import IArraySpliceResult from './IArraySpliceResult';
-import IClass from './IClass';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 import IMap from './IMap';
@@ -324,119 +322,6 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): ObservableArray<T> {
-		var result = new ObservableArray<T>();
-		result.own(this.createSorterComparing({
-			target: result,
-			compare: compare,
-			scope: scope || this,
-			order: order
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$index(callback: (item: T) => string, scope?: any): ObservableMap<T> {
-		var result = new ObservableMap<T>();
-		result.own(this.createIndexer({
-			target: result,
-			getKey: callback,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$toArray(): ObservableArray<T> {
-		var result = new ObservableArray<T>();
-		result.own(this.createOrderer({
-			target: result
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$toSet(): ObservableSet<any> {
-		var result = new ObservableSet<any>();
-		result.own(this.createLister({
-			target: result
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): ObservableArray<T> {
-		var result = new ObservableArray<T>();
-		result.own(this.createFilterer({
-			target: result,
-			filterItem: callback,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$count(callback: (item: T) => boolean, scope?: any): Property<number> {
-		var result = new Property(0);
-		result.own(this.createCounter({
-			target: result,
-			filterItem: callback,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapValues<U>(callback: (item: T) => U, scope?: any): ObservableArray<U> {
-		var result = new ObservableArray<U>();
-		result.own(this.createMapper({
-			target: result,
-			createItem: callback,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): ObservableArray<U> {
-		var result = new ObservableArray<U>();
-		result.own(this.createMapper({
-			target: result,
-			createItem: callback,
-			destroyItem: destroy,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$toReversed(): ObservableArray<T> {
-		var result = new ObservableArray<T>();
-		result.own(this.createReverser({
-			target: result
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArraySpliceParams<T> {
 		return ArrayUtils.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
 	}
@@ -553,98 +438,6 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 */
 	createEmptySet<U extends Class>(): ObservableSet<U> {
 		return new ObservableSet<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createMapper<U>(config: Arrays.MapperConfig<T, U>): ObservableArray.Mapper<T, U> {
-		return new ObservableArray.Mapper<T, U>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createFilterer(config: Arrays.FiltererConfig<T>): ObservableArray.Filterer<T> {
-		return new ObservableArray.Filterer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createCounter(config: Collections.CounterConfig<T>): ObservableArray.Counter<T> {
-		return new ObservableArray.Counter<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createObserver(config: Collections.ObserverConfig<T>): ObservableArray.Observer<T> {
-		return new ObservableArray.Observer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createOrderer(config?: Collections.OrdererConfig<any>): ObservableArray.Orderer<any> {
-		return new ObservableArray.Orderer<any>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createSorterComparing(config?: Collections.SorterComparingConfig<T>): ObservableArray.SorterComparing<T> {
-		return new ObservableArray.SorterComparing<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createIndexer(config: Collections.IndexerConfig<T>): ObservableArray.Indexer<T> {
-		return new ObservableArray.Indexer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createLister(config?: Collections.ListerConfig<any>): ObservableArray.Lister<any> {
-		return new ObservableArray.Lister<any>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createInserter(config: Arrays.InserterConfig<T>): ObservableArray.Inserter<T> {
-		return new ObservableArray.Inserter<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createMerger<U>(config?: Arrays.MergerConfig<U>): ObservableArray.Merger<U> {
-		return new ObservableArray.Merger<U>(<ObservableArray<any>>this, config);
-	}
-
-	// type definition in argument breaks compiler for some reason
-	/**
-	 * @inheritdoc
-	 */
-	_createMergerBunch(merger: any): IClass {
-		return new ObservableArray.Merger.Bunch<T>(merger, this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createReverser(config?: Arrays.ReverserConfig<T>): ObservableArray.Reverser<T> {
-		return new ObservableArray.Reverser<T>(this, config);
-	}
-
-	/**
-	 * @hidden
-	 */
-	_createMergerTarget<T>(): ObservableArray<T> {
-		return new ObservableArray<T>();
 	}
 }
 

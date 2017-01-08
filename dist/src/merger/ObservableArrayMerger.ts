@@ -10,7 +10,7 @@ import * as ArrayUtils from '../ArrayUtils';
 /**
  * [[JW.AbstractArray.Merger|Merger]] implementation for [[JW.ObservableArray]].
  */
-export class ObservableArrayMerger<T> extends ArrayMerger<T> {
+export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 	/**
 	 * @inheritdoc
 	 */

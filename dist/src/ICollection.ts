@@ -1,23 +1,6 @@
-import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IClass from './IClass';
-import ICollectionCounter from './counter/ICollectionCounter';
-import ICollectionCounterConfig from './counter/ICollectionCounterConfig';
-import ICollectionFilterer from './filterer/ICollectionFilterer';
-import ICollectionFiltererConfig from './filterer/ICollectionFiltererConfig';
-import ICollectionIndexer from './indexer/ICollectionIndexer';
-import ICollectionIndexerConfig from './indexer/ICollectionIndexerConfig';
-import ICollectionLister from './lister/ICollectionLister';
-import ICollectionListerConfig from './lister/ICollectionListerConfig';
-import ICollectionMapper from './mapper/ICollectionMapper';
-import ICollectionMapperConfig from './mapper/ICollectionMapperConfig';
-import ICollectionObserver from './observer/ICollectionObserver';
-import ICollectionObserverConfig from './observer/ICollectionObserverConfig';
-import ICollectionOrderer from './orderer/ICollectionOrderer';
-import ICollectionOrdererConfig from './orderer/ICollectionOrdererConfig';
-import ICollectionSorterComparing from './sortercomparing/ICollectionSorterComparing';
-import ICollectionSorterComparingConfig from './sortercomparing/ICollectionSorterComparingConfig';
 import IMap from './IMap';
 import ISet from './ISet';
 import Property from './Property';
@@ -405,22 +388,6 @@ interface ICollection<T> extends IClass {
 	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T>;
 
 	/**
-	 * Converts collection to sorted array.
-	 *
-	 * Builds array consisting of collection items sorted by comparer.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.AbstractCollection.SorterComparing]] implicitly.
-	 *
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
-	 * @param scope **comparer** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted array.
-	 */
-	$$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T>;
-
-	/**
 	 * Indexes collection.
 	 *
 	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
@@ -443,19 +410,6 @@ interface ICollection<T> extends IClass {
 	$index(callback: (item: T) => string, scope?: any): IMap<T>;
 
 	/**
-	 * Indexes collection.
-	 *
-	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.AbstractCollection.Indexer]] implicitly.
-	 *
-	 * @param callback Indexer function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Collection index.
-	 */
-	$$index(callback: (item: T) => string, scope?: any): IMap<T>;
-
-	/**
 	 * Converts collection to array.
 	 *
 	 * Builds new array consisting of collection items.
@@ -468,15 +422,6 @@ interface ICollection<T> extends IClass {
 	 * Builds new array consisting of collection items.
 	 */
 	$toArray(): IArray<T>;
-
-	/**
-	 * Converts collection to array.
-	 *
-	 * Builds new array consisting of collection items.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.AbstractCollection.Orderer]] implicitly.
-	 */
-	$$toArray(): IArray<T>;
 
 	/**
 	 * Converts collection to set.
@@ -493,16 +438,6 @@ interface ICollection<T> extends IClass {
 	 * Requires T to extend JW.Class.
 	 */
 	$toSet(): ISet<any>;
-
-	/**
-	 * Converts collection to set.
-	 *
-	 * Builds new set consisting of collection items.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.AbstractCollection.Lister]] implicitly.
-	 * Requires T to extend JW.Class.
-	 */
-	$$toSet(): ISet<any>;
 
 	/**
 	 * Represents collection as array.
@@ -573,19 +508,6 @@ interface ICollection<T> extends IClass {
 	$filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
 
 	/**
-	 * Filters collection by criteria.
-	 *
-	 * Builds new collection of the same type, consisting of items for which callback returns !== false.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.AbstractCollection.Filterer]] implicitly.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Filtered collection.
-	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
-
-	/**
 	 * Counts the items matching criteria.
 	 *
 	 * Returns the number of items for which callback returns !== false.
@@ -606,19 +528,6 @@ interface ICollection<T> extends IClass {
 	 * @returns Number of items.
 	 */
 	$count(callback: (item: T) => boolean, scope?: any): Property<number>;
-
-	/**
-	 * Counts the items matching criteria.
-	 *
-	 * Returns the number of items for which callback returns !== false.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.AbstractCollection.Counter]] implicitly.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Number of items.
-	 */
-	$$count(callback: (item: T) => boolean, scope?: any): Property<number>;
 
 	/**
 	 * Maps collection items.
@@ -643,34 +552,6 @@ interface ICollection<T> extends IClass {
 	$map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
 
 	/**
-	 * Maps collection items.
-	 *
-	 * Builds new collection of the same type, containing results of callback call for each collection item.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.AbstractCollection.Mapper]] implicitly.
-	 * Unlike [[$$mapObjects]] method, doesn't destroy the resulting items after their removal.
-	 *
-	 * @param callback Mapping function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Mapped collection.
-	 */
-	$$mapValues<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
-
-	/**
-	 * Maps collection items.
-	 *
-	 * Builds new collection of the same type, containing results of callback call for each collection item.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.AbstractCollection.Mapper]] implicitly.
-	 * Unlike [[$$mapValues]] method, destroys the resulting items after their removal.
-	 *
-	 * @param callback Mapping function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Mapped collection.
-	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): ICollection<U>;
-
-	/**
 	 * Creates empty collection of the same type.
 	 */
 	createEmpty<U>(): ICollection<U>;
@@ -689,69 +570,6 @@ interface ICollection<T> extends IClass {
 	 * Creates empty set of the same observability level.
 	 */
 	createEmptySet<U extends IClass>(): ISet<U>;
-
-	/**
-	 * Creates collection item mapper.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
-	 * @param config Configuration.
-	 */
-	createMapper<U>(config: ICollectionMapperConfig<T, U>): ICollectionMapper<T, U>;
-
-	/**
-	 * Creates collection filterer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * Extended version of [[$$filter]] method.
-	 * @param config Configuration.
-	 */
-	createFilterer(config: ICollectionFiltererConfig<T>): ICollectionFilterer<T>;
-
-	/**
-	 * Creates matching item counter.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * Extended version of [[$$count]] method.
-	 * @param config Configuration.
-	 */
-	createCounter(config: ICollectionCounterConfig<T>): ICollectionCounter<T>;
-
-	/**
-	 * Creates collection observer.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * @param config Configuration.
-	 */
-	createObserver(config?: ICollectionObserverConfig<T>): ICollectionObserver;
-
-	/**
-	 * Creates collection converter to array (orderer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * Extended version of [[$$toArray]] method.
-	 * @param config Configuration.
-	 */
-	createOrderer(config?: ICollectionOrdererConfig<any>): ICollectionOrderer<any>;
-
-	/**
-	 * Creates collection converter to array (sorter by comparer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * Extended version of [[$$toSortedComparing]] method.
-	 * @param config Configuration.
-	 */
-	createSorterComparing(config?: ICollectionSorterComparingConfig<T>): ICollectionSorterComparing<T>;
-
-	/**
-	 * Creates collection converter to map (indexer).
-	 * Selects appropriate synchronizer implementation automatically.
-	 * Extended version of [[$$index]] method.
-	 * @param config Configuration.
-	 */
-	createIndexer(config: ICollectionIndexerConfig<T>): ICollectionIndexer<T>;
-
-	/**
-	 * Creates collection converter to set.
-	 * Selects appropriate synchronizer implementation automatically.
-	 * Extended version of [[$$toSet]] method.
-	 * @param config Configuration.
-	 */
-	createLister(config?: ICollectionListerConfig<any>): ICollectionLister<any>;
 }
 
 export default ICollection;

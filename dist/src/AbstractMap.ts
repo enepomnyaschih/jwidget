@@ -267,13 +267,6 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): IMap<T> {
-		return this.$filter(callback, scope || this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	count(callback: (item: T, key: string) => boolean, scope?: any): number {
 		return MapUtils.count(this.json, callback, scope || this);
 	}
@@ -289,20 +282,6 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * @inheritdoc
 	 */
 	abstract $map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapValues<U>(callback: (item: T) => U, scope?: any): IMap<U> {
-		return this.$map(callback, scope || this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): IMap<U> {
-		return this.$map(callback, scope || this);
-	}
 
 	/**
 	 * @inheritdoc
@@ -637,70 +616,6 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * @inheritdoc
 	 */
 	abstract createEmpty<U>(): AbstractMap<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createMapper<U>(config: IMapMapperConfig<T, U>): IMapMapper<T, U> {
-		return new MapMapper<T, U>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createFilterer(config: IMapFiltererConfig<T>): IMapFilterer<T> {
-		return new AbstractMap.Filterer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createCounter(config: Collections.CounterConfig<T>): Maps.Counter<T> {
-		return new AbstractMap.Counter<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createObserver(config: Collections.ObserverConfig<T>): Maps.Observer<T> {
-		return new AbstractMap.Observer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createOrderer(config?: Collections.OrdererConfig<any>): Maps.Orderer<any> {
-		return new AbstractMap.Orderer<any>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createSorterComparing(config?: Collections.SorterComparingConfig<T>): Maps.SorterComparing<T> {
-		return new AbstractMap.SorterComparing<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createIndexer(config: Collections.IndexerConfig<T>): Maps.Indexer<T> {
-		return new AbstractMap.Indexer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createLister(config?: Collections.ListerConfig<any>): Maps.Lister<any> {
-		return new AbstractMap.Lister<any>(this, config);
-	}
-
-	/**
-	 * Creates view synchronizer with map.
-	 * Selects appropriate synchronizer implementation automatically.
-	 */
-	createInserter(config: Maps.InserterConfig<T>): Maps.Inserter<T> {
-		return new AbstractMap.Inserter<T>(this, config);
-	}
 }
 
 export default AbstractMap;

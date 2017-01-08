@@ -1,5 +1,4 @@
-﻿import {destroy} from './Core';
-import AbstractMap from './AbstractMap';
+﻿import AbstractMap from './AbstractMap';
 import Class from './Class';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
@@ -338,108 +337,6 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): ObservableArray<T> {
-		var result = new ObservableArray<T>();
-		result.own(this.createSorterComparing({
-			target: result,
-			compare: compare,
-			scope: scope || this,
-			order: order
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$index(callback: (item: T) => string, scope?: any): ObservableMap<T> {
-		var result = new ObservableMap<T>();
-		result.own(this.createIndexer({
-			target: result,
-			getKey: callback,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$toArray(): ObservableArray<T> {
-		var result = new ObservableArray<T>();
-		result.own(this.createOrderer({
-			target: result
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$toSet(): ObservableSet<any> {
-		var result = new ObservableSet<any>();
-		result.own(this.createLister({
-			target: result
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): ObservableMap<T> {
-		var result = new ObservableMap<T>();
-		result.own(this.createFilterer({
-			target: result,
-			filterItem: callback,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$count(callback: (item: T) => boolean, scope?: any): Property<number> {
-		var result = new Property(0);
-		result.own(this.createCounter({
-			target: result,
-			filterItem: callback,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapValues<U>(callback: (item: T) => U, scope?: any): ObservableMap<U> {
-		var result = new ObservableMap<U>();
-		result.own(this.createMapper({
-			target: result,
-			createItem: callback,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): ObservableMap<U> {
-		var result = new ObservableMap<U>();
-		result.own(this.createMapper({
-			target: result,
-			createItem: callback,
-			destroyItem: destroy,
-			scope: scope || this
-		}));
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	createEmpty<U>(): ObservableMap<U> {
 		return new ObservableMap<U>();
 	}
@@ -463,69 +360,6 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	 */
 	createEmptySet<U extends Class>(): ObservableSet<U> {
 		return new ObservableSet<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createMapper<U>(config: Maps.MapperConfig<T, U>): ObservableMap.Mapper<T, U> {
-		return new ObservableMap.Mapper<T, U>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createFilterer(config: Maps.FiltererConfig<T>): ObservableMap.Filterer<T> {
-		return new ObservableMap.Filterer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createCounter(config: Collections.CounterConfig<T>): ObservableMap.Counter<T> {
-		return new ObservableMap.Counter<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createObserver(config: Collections.ObserverConfig<T>): ObservableMap.Observer<T> {
-		return new ObservableMap.Observer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createOrderer(config?: Collections.OrdererConfig<any>): ObservableMap.Orderer<any> {
-		return new ObservableMap.Orderer<any>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createSorterComparing(config?: Collections.SorterComparingConfig<T>): ObservableMap.SorterComparing<T> {
-		return new ObservableMap.SorterComparing<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createIndexer(config: Collections.IndexerConfig<T>): ObservableMap.Indexer<T> {
-		return new ObservableMap.Indexer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createLister(config?: Collections.ListerConfig<any>): ObservableMap.Lister<any> {
-		return new ObservableMap.Lister<any>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createInserter(config: Maps.InserterConfig<T>): ObservableMap.Inserter<T> {
-		return new ObservableMap.Inserter<T>(this, config);
 	}
 }
 

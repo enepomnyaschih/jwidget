@@ -1,24 +1,5 @@
-import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
-import ICollectionCounterConfig from './counter/ICollectionCounterConfig';
-import ICollectionIndexerConfig from './indexer/ICollectionIndexerConfig';
-import ICollectionListerConfig from './lister/ICollectionListerConfig';
-import ICollectionObserverConfig from './observer/ICollectionObserverConfig';
-import ICollectionOrdererConfig from './orderer/ICollectionOrdererConfig';
-import ICollectionSorterComparingConfig from './sortercomparing/ICollectionSorterComparingConfig';
 import IIndexedCollection from './IIndexedCollection';
-import IMapCounter from './counter/IMapCounter';
-import IMapFilterer from './filterer/IMapFilterer';
-import IMapFiltererConfig from './filterer/IMapFiltererConfig';
-import IMapIndexer from './indexer/IMapIndexer';
-import IMapInserter from './inserter/IMapInserter';
-import IMapInserterConfig from './inserter/IMapInserterConfig';
-import IMapLister from './lister/IMapLister';
-import IMapMapper from './mapper/IMapMapper';
-import IMapMapperConfig from './mapper/IMapMapperConfig';
-import IMapObserver from './observer/IMapObserver';
-import IMapOrderer from './orderer/IMapOrderer';
-import IMapSorterComparing from './sortercomparing/IMapSorterComparing';
 import IMapSpliceParams from './IMapSpliceParams';
 import IMapSpliceResult from './IMapSpliceResult';
 import Proxy from './Proxy';
@@ -234,11 +215,6 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): IMap<T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	count(callback: (item: T, key: string) => boolean, scope?: any): number;
 
 	/**
@@ -250,16 +226,6 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * @inheritdoc
 	 */
 	$map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapValues<U>(callback: (item: T) => U, scope?: any): IMap<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): IMap<U>;
 
 	/**
 	 * @inheritdoc
@@ -452,52 +418,6 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * @inheritdoc
 	 */
 	createEmpty<U>(): IMap<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createMapper<U>(config: IMapMapperConfig<T, U>): IMapMapper<T, U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createFilterer(config: IMapFiltererConfig<T>): IMapFilterer<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createCounter(config: ICollectionCounterConfig<T>): IMapCounter<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createObserver(config: ICollectionObserverConfig<T>): IMapObserver<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createOrderer(config?: ICollectionOrdererConfig<any>): IMapOrderer<any>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createSorterComparing(config?: ICollectionSorterComparingConfig<T>): IMapSorterComparing<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createIndexer(config: ICollectionIndexerConfig<T>): IMapIndexer<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createLister(config?: ICollectionListerConfig<any>): IMapLister<any>;
-
-	/**
-	 * Creates view synchronizer with map.
-	 * Selects appropriate synchronizer implementation automatically.
-	 */
-	createInserter(config: IMapInserterConfig<T>): IMapInserter;
 }
 
 export default IMap;

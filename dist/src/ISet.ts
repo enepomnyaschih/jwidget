@@ -2,22 +2,6 @@ import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IClass from './IClass';
 import ICollection from './ICollection';
-import ICollectionCounterConfig from './counter/ICollectionCounterConfig';
-import ICollectionIndexerConfig from './indexer/ICollectionIndexerConfig';
-import ICollectionListerConfig from './lister/ICollectionListerConfig';
-import ICollectionObserverConfig from './observer/ICollectionObserverConfig';
-import ICollectionOrdererConfig from './orderer/ICollectionOrdererConfig';
-import ICollectionSorterComparingConfig from './sortercomparing/ICollectionSorterComparingConfig';
-import ISetCounter from './counter/ISetCounter';
-import ISetFilterer from './filterer/ISetFilterer';
-import ISetFiltererConfig from './filterer/ISetFiltererConfig';
-import ISetIndexer from './indexer/ISetIndexer';
-import ISetLister from './lister/ISetLister';
-import ISetMapper from './mapper/ISetMapper';
-import ISetMapperConfig from './mapper/ISetMapperConfig';
-import ISetObserver from './observer/ISetObserver';
-import ISetOrderer from './orderer/ISetOrderer';
-import ISetSorterComparing from './sortercomparing/ISetSorterComparing';
 import ISetSpliceParams from './ISetSpliceParams';
 import ISetSpliceResult from './ISetSpliceResult';
 
@@ -182,11 +166,6 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): ISet<T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	count(callback: (item: T) => boolean, scope?: any): number;
 
 	/**
@@ -198,16 +177,6 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * @inheritdoc
 	 */
 	$map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapValues<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapObjects<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U>;
 
 	/**
 	 * @inheritdoc
@@ -363,46 +332,6 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * @inheritdoc
 	 */
 	createEmpty<U extends IClass>(): ISet<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createMapper<U extends IClass>(config: ISetMapperConfig<T, U>): ISetMapper<T, U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createFilterer(config: ISetFiltererConfig<T>): ISetFilterer<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createCounter(config: ICollectionCounterConfig<T>): ISetCounter<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createObserver(config: ICollectionObserverConfig<T>): ISetObserver<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createOrderer(config?: ICollectionOrdererConfig<T>): ISetOrderer<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createSorterComparing(config?: ICollectionSorterComparingConfig<T>): ISetSorterComparing<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createIndexer(config: ICollectionIndexerConfig<T>): ISetIndexer<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createLister(config?: ICollectionListerConfig<T>): ISetLister<T>;
 }
 
 export default ISet;

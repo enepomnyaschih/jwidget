@@ -1,29 +1,5 @@
 import IArraySpliceParams from './IArraySpliceParams';
 import IArraySpliceResult from './IArraySpliceResult';
-import Destroyable from './Destroyable';
-import IArrayCounter from './counter/IArrayCounter';
-import IArrayFilterer from './filterer/IArrayFilterer';
-import IArrayFiltererConfig from './filterer/IArrayFiltererConfig';
-import IArrayIndexer from './indexer/IArrayIndexer';
-import IArrayInserter from './inserter/IArrayInserter';
-import IArrayInserterConfig from './inserter/IArrayInserterConfig';
-import IArrayLister from './lister/IArrayLister';
-import IArrayMapper from './mapper/IArrayMapper';
-import IArrayMapperConfig from './mapper/IArrayMapperConfig';
-import IArrayMerger from './merger/IArrayMerger';
-import IArrayMergerConfig from './merger/IArrayMergerConfig';
-import IArrayObserver from './observer/IArrayObserver';
-import IArrayOrderer from './orderer/IArrayOrderer';
-import IArrayReverser from './reverser/IArrayReverser';
-import IArrayReverserConfig from './reverser/IArrayReverserConfig';
-import IArraySorterComparing from './sortercomparing/IArraySorterComparing';
-import ICollectionCounterConfig from './counter/ICollectionCounterConfig';
-import ICollectionIndexerConfig from './indexer/ICollectionIndexerConfig';
-import ICollectionListerConfig from './lister/ICollectionListerConfig';
-import ICollectionObserverConfig from './observer/ICollectionObserverConfig';
-import ICollectionOrdererConfig from './orderer/ICollectionOrdererConfig';
-import ICollectionSorterComparingConfig from './sortercomparing/ICollectionSorterComparingConfig';
-import IClass from './IClass';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 import IIndexedCollection from './IIndexedCollection';
@@ -276,11 +252,6 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): IArray<T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	count(callback: (item: T, index: number) => boolean, scope?: any): number;
 
 	/**
@@ -292,16 +263,6 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @inheritdoc
 	 */
 	$map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapValues<U>(callback: (item: T) => U, scope?: any): IArray<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): IArray<U>;
 
 	/**
 	 * @inheritdoc
@@ -620,17 +581,6 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	$merge(): IArray<any>;
 
 	/**
-	 * *Suitable if array consists of JW.AbstractArray instances only.*
-	 * Builds array consisting of subarray items in the same order.
-	 * Current array is not modified.
-	 * Starts continuous synchronization,
-	 * i.e. creates [[JW.abstractarray.Merger]] implicitly.
-	 *
-	 * @returns Merged array.
-	 */
-	$$merge(): IArray<any>;
-
-	/**
 	 * Reverses item order in array. Modifies the array itself.
 	 */
 	reverse(): void;
@@ -650,16 +600,6 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @returns Reversed array.
 	 */
 	$toReversed(): IArray<T>;
-
-	/**
-	 * Builds a new array containing items of this array in reversed order.
-	 * Current array is not modified.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.abstractarray.Reverser]] implicitly.
-	 *
-	 * @returns Reversed array.
-	 */
-	$$toReversed(): IArray<T>;
 
 	/**
 	 * Checks for equality (===) to another array, item by item.
@@ -722,75 +662,6 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @inheritdoc
 	 */
 	createEmpty<U>(): IArray<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createMapper<U>(config: IArrayMapperConfig<T, U>): IArrayMapper<T, U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createFilterer(config: IArrayFiltererConfig<T>): IArrayFilterer<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createCounter(config: ICollectionCounterConfig<T>): IArrayCounter<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createObserver(config: ICollectionObserverConfig<T>): IArrayObserver<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createOrderer(config?: ICollectionOrdererConfig<any>): IArrayOrderer<any>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createSorterComparing(config?: ICollectionSorterComparingConfig<T>): IArraySorterComparing<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createIndexer(config: ICollectionIndexerConfig<T>): IArrayIndexer<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createLister(config?: ICollectionListerConfig<any>): IArrayLister<any>;
-
-	/**
-	 * Creates view synchronizer with array.
-	 * Selects appropriate synchronizer implementation automatically.
-	 */
-	createInserter(config: IArrayInserterConfig<T>): IArrayInserter;
-
-	/**
-	 * Creates arrays merger.
-	 * Selects appropriate synchronizer implementation automatically.
-	 */
-	createMerger<U>(config?: IArrayMergerConfig<U>): IArrayMerger<U>;
-
-	// type definition in argument breaks compiler for some reason
-	/**
-	 * @hidden
-	 */
-	createMergerBunch(merger: any): IClass;
-
-	/**
-	 * Creates array reverser.
-	 * Selects appropriate synchronizer implementation automatically.
-	 */
-	createReverser(config?: IArrayReverserConfig<T>): IArrayReverser<T>;
-
-	/**
-	 * @hidden
-	 */
-	_createMergerTarget<T>(): IArray<T>;
 }
 
 export default IArray;

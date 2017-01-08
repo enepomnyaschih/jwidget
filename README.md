@@ -47,6 +47,7 @@ TODO:
 - use 'let'
 - make String(item._iid) an internal utility function
 - remove $$ methods and 'create**er' and 'createEmpty*' methods to optimize bundle size
+- rename lister to converterToSet etc.
 
 ### 1.4.4 (April 29, 2016)
 

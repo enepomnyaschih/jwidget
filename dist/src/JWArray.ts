@@ -11,7 +11,6 @@ import IMap from './IMap';
 import ISet from './ISet';
 import JWMap from './JWMap';
 import JWSet from './JWSet';
-import ObservableArray from './ObservableArray';
 import Proxy from './Proxy';
 import * as ArrayUtils from './ArrayUtils';
 
@@ -307,13 +306,5 @@ export default class JWArray<T> extends AbstractArray<T> {
 	 */
 	createEmptySet<U extends IClass>(): JWSet<U> {
 		return new JWSet<U>();
-	}
-
-	/**
-	 * @hidden
-	 */
-	_createMergerTarget<T>(): IArray<T> {
-		return this.some((bunch) => { return bunch instanceof ObservableArray; }) ?
-			new ObservableArray<T>() : new JWArray<T>();
 	}
 }

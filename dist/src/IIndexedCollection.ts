@@ -1,4 +1,3 @@
-import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
 import ICollection from './ICollection';
@@ -368,11 +367,6 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	count(callback: (item: T, key: K) => boolean, scope?: any): number;
 
 	/**
@@ -383,27 +377,12 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$$count(callback: (item: T, key: K) => boolean, scope?: any): Property<number>;
-
-	/**
-	 * @inheritdoc
-	 */
 	map<U>(callback: (item: T, key: K) => U, scope?: any): any;
 
 	/**
 	 * @inheritdoc
 	 */
 	$map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapValues<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
 
 	/**
 	 * @inheritdoc

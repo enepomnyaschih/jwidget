@@ -1,6 +1,4 @@
 ﻿import ArraySpliceResult from './ArraySpliceResult';
-import Class from './Class';
-import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IArraySpliceParams from './IArraySpliceParams';
@@ -313,13 +311,6 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	$$filter(callback: (item: T) => boolean, scope?: any): IArray<T> {
-		return this.$filter(callback, scope || this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	count(callback: (item: T, index: number) => boolean, scope?: any): number {
 		return ArrayUtils.count(this.items, callback, scope || this);
 	}
@@ -335,20 +326,6 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @inheritdoc
 	 */
 	abstract $map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapValues<U>(callback: (item: T) => U, scope?: any): IArray<U> {
-		return this.$map(callback, scope || this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$$mapObjects<U extends Destroyable>(callback: (item: T) => U, scope?: any): IArray<U> {
-		return this.$map(callback, scope || this).ownItems();
-	}
 
 	/**
 	 * @inheritdoc
@@ -750,19 +727,6 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	}
 
 	/**
-	 * *Suitable if array consists of JW.AbstractArray instances only.*
-	 * Builds array consisting of subarray items in the same order.
-	 * Current array is not modified.
-	 * Starts continuous synchronization,
-	 * i.e. creates [[JW.abstractarray.Merger]] implicitly.
-	 *
-	 * @returns Merged array.
-	 */
-	$$merge(): IArray<any> {
-		return this.$merge();
-	}
-
-	/**
 	 * Reverses item order in array. Modifies the array itself.
 	 */
 	reverse() {
@@ -784,18 +748,6 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @returns Reversed array.
 	 */
 	abstract $toReversed(): IArray<T>;
-
-	/**
-	 * Builds a new array containing items of this array in reversed order.
-	 * Current array is not modified.
-	 * If this collection is observable, starts continuous synchronization,
-	 * i.e. creates [[JW.abstractarray.Reverser]] implicitly.
-	 *
-	 * @returns Reversed array.
-	 */
-	$$toReversed(): IArray<T> {
-		return this.$toReversed();
-	}
 
 	/**
 	 * Checks for equality (===) to another array, item by item.
@@ -862,100 +814,6 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @inheritdoc
 	 */
 	abstract createEmpty<U>(): IArray<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createMapper<U>(config: IArrayMapperConfig<T, U>): IArrayMapper<T, U> {
-		return new ArrayMapper<T, U>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createFilterer(config: IArrayFiltererConfig<T>): IArrayFilterer<T> {
-		return new ArrayFilterer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createCounter(config: ICollectionCounterConfig<T>): IArrayCounter<T> {
-		return new ArrayCounter<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createObserver(config: ICollectionObserverConfig<T>): IArrayObserver<T> {
-		return new ArrayObserver<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createOrderer(config?: ICollectionOrdererConfig<any>): IArrayOrderer<any> {
-		return new ArrayOrderer<any>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createSorterComparing(config?: ICollectionSorterComparingConfig<T>): IArraySorterComparing<T> {
-		return new ArraySorterComparing<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createIndexer(config: ICollectionIndexerConfig<T>): IArrayIndexer<T> {
-		return new ArrayIndexer<T>(this, config);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createLister(config?: ICollectionListerConfig<any>): IArrayLister<any> {
-		return new ArrayLister<any>(this, config);
-	}
-
-	/**
-	 * Creates view synchronizer with array.
-	 * Selects appropriate synchronizer implementation automatically.
-	 */
-	createInserter(config: IArrayInserterConfig<T>): IArrayInserter<T> {
-		return new ArrayInserter<T>(this, config);
-	}
-
-	/**
-	 * Creates arrays merger.
-	 * Selects appropriate synchronizer implementation automatically.
-	 */
-	createMerger<U>(config?: IArrayMergerConfig<U>): IArrayMerger<U> {
-		return new ArrayMerger<U>(<AbstractArray<any>>this, config);
-	}
-
-	// type definition in argument breaks compiler for some reason
-	/**
-	 * @hidden
-	 */
-	createMergerBunch(merger: any): Class {
-		merger = merger;
-		return new Class();
-	}
-
-	/**
-	 * Creates array reverser.
-	 * Selects appropriate synchronizer implementation automatically.
-	 */
-	createReverser(config?: IArrayReverserConfig<T>): IArrayReverser<T> {
-		return new AbstractArray.Reverser<T>(this, config);
-	}
-
-	/**
-	 * @hidden
-	 */
-	abstract _createMergerTarget<T>(): IArray<T>;
 }
 
 export default AbstractArray;
