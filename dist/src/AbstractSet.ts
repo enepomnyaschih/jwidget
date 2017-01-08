@@ -1,13 +1,13 @@
-﻿import {apply, byField, destroyForcibly, iidString, Dictionary} from '../../core/Core';
-import {Class} from '../../core/Class';
-import {IClass} from '../../core/IClass';
-import {AbstractCollection} from './AbstractCollection';
-import * as Collections from '../interfaces/ICollection';
-import {IArray} from '../interfaces/IArray';
-import * as ArrayUtils from '../utils/Array';
-import {ISet} from '../interfaces/ISet';
-import * as Sets from '../interfaces/ISet';
-import * as SetUtils from '../utils/Set';
+﻿import {apply, destroy} from './Core';
+import AbstractCollection from './AbstractCollection';
+import Dictionary from './Dictionary';
+import IArray from './IArray';
+import IClass from './IClass';
+import ISet from './ISet';
+import ISetSpliceParams from './ISetSpliceParams';
+import ISetSpliceResult from './ISetSpliceResult';
+import * as ArrayUtils from './ArrayUtils';
+import * as SetUtils from './SetUtils';
 
 /**
  * Set is unordered collection optimized for items adding, removal and search. Unlike
@@ -104,7 +104,7 @@ import * as SetUtils from '../utils/Set';
  *
  * @param T Collection item type.
  */
-export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
+abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	private json: Dictionary<T>;
 	private _length: number;
 	private _adapter: boolean;
@@ -131,10 +131,11 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 	 * for consistency to other collections. Must be true.
 	 */
 	constructor(items: Dictionary<T>, adapter: boolean);
-	constructor(items?, adapter?: boolean) {
+	constructor(items?: any, adapter?: boolean) {
 		super();
 		this._adapter = Boolean(adapter);
-		this.json = this._adapter ? items : items ? ArrayUtils.index(items, iidString) : {};
+		this.json = this._adapter ? items :
+			items ? ArrayUtils.index(<T[]>items, function(item) { return String(item._iid); }) : {};
 		this._length = SetUtils.getLength(this.json);
 	}
 
@@ -301,6 +302,7 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 		if (this.trySplice([], [item]) !== undefined) {
 			return true;
 		}
+		return undefined;
 	}
 
 	/**
@@ -328,6 +330,7 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 		if (spliceResult !== undefined) {
 			return spliceResult.addedItems;
 		}
+		return undefined;
 	}
 
 	/**
@@ -347,6 +350,7 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 		if (this.trySplice([item], []) !== undefined) {
 			return true;
 		}
+		return undefined;
 	}
 
 	/**
@@ -381,6 +385,7 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 		if (spliceResult !== undefined) {
 			return spliceResult.removedItems;
 		}
+		return undefined;
 	}
 
 	/**
@@ -409,14 +414,14 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 	tryClear(): T[] {
 		var items = this._tryClear();
 		if (items !== undefined && this._ownsItems) {
-			ArrayUtils.backEvery(items, destroyForcibly);
+			ArrayUtils.backEvery(items, destroy);
 		}
 		return items;
 	}
 
 	_tryClear(): T[] {
 		if (this._length === 0) {
-			return;
+			return undefined;
 		}
 		var items: T[];
 		this._length = 0;
@@ -435,7 +440,7 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 	 * @param addedItems Items to add.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removedItems: T[], addedItems: T[]): Sets.SpliceResult<T> {
+	splice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
 		var spliceResult = this.trySplice(removedItems, addedItems);
 		return (spliceResult !== undefined) ? spliceResult : { addedItems: [], removedItems: [] };
 	}
@@ -447,20 +452,21 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 	 * @returns Splice result.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySplice(removedItems: T[], addedItems: T[]): Sets.SpliceResult<T> {
+	trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
 		var spliceResult = this._trySplice(removedItems, addedItems);
 		if ((spliceResult !== undefined) && this._ownsItems) {
-			ArrayUtils.backEvery(spliceResult.removedItems, destroyForcibly);
+			ArrayUtils.backEvery(spliceResult.removedItems, destroy);
 		}
 		return spliceResult;
 	}
 
-	_trySplice(removedItems: T[], addedItems: T[]): Sets.SpliceResult<T> {
+	_trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
 		var spliceResult = SetUtils.trySplice(this.json, removedItems, addedItems);
 		if (spliceResult !== undefined) {
 			this._length += spliceResult.addedItems.length - spliceResult.removedItems.length;
 			return spliceResult;
 		}
+		return undefined;
 	}
 
 	/**
@@ -469,7 +475,7 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 	 * @param newItems New set contents.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[]): Sets.SpliceParams<T> {
+	detectSplice(newItems: T[]): ISetSpliceParams<T> {
 		return SetUtils.detectSplice(this.json, newItems);
 	}
 
@@ -500,7 +506,7 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 	/**
 	 * @inheritdoc
 	 */
-	createMapper<U extends IClass>(config: Sets.MapperConfig<T, U>): Sets.Mapper<T, U> {
+	createMapper<U extends IClass>(config: ISetMapperConfig<T, U>): Sets.Mapper<T, U> {
 		return new AbstractSet.Mapper<T, U>(this, config);
 	}
 
@@ -554,214 +560,4 @@ export abstract class AbstractSet<T extends IClass> extends AbstractCollection<T
 	}
 }
 
-export module AbstractSet {
-	/**
-	 * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Set]].
-	 */
-	export class Counter<T extends IClass> extends AbstractCollection.Counter<T> implements Sets.Counter<T> {
-		/**
-		 * @inheritdoc
-		 */
-		public source: ISet<T>;
-
-		/**
-		 * @inheritdoc
-		 */
-		constructor(source: ISet<T>, config: Collections.CounterConfig<T>) {
-			super(source, config);
-		}
-	}
-
-	/**
-	 * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Set]].
-	 */
-	export class Filterer<T extends IClass> extends AbstractCollection.Filterer<T> implements Sets.Filterer<T> {
-		/**
-		 * @inheritdoc
-		 */
-		source: ISet<T>;
-
-		/**
-		 * @inheritdoc
-		 */
-		target: ISet<T>;
-
-		/**
-		 * @inheritdoc
-		 */
-		constructor(source: ISet<T>, config: Sets.FiltererConfig<T>) {
-			super(source, config);
-			this.target.tryAddAll(source.$toArray().filter(this._filterItem, this._scope));
-		}
-
-		/**
-		 * @inheritdoc
-		 */
-		protected destroyObject() {
-			this.target.tryRemoveAll(this.source.toArray());
-			super.destroyObject();
-		}
-	}
-
-	/**
-	 * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Set]].
-	 */
-	export class Indexer<T extends IClass> extends AbstractCollection.Indexer<T> implements Sets.Indexer<T> {
-		/**
-		 * @inheritdoc
-		 */
-		public source: ISet<T>;
-
-		/**
-		 * @inheritdoc
-		 */
-		constructor(source: ISet<T>, config: Collections.IndexerConfig<T>) {
-			super(source, config);
-		}
-	}
-
-	/**
-	 * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Set]].
-	 */
-	export class Lister<T extends IClass> extends AbstractCollection.Lister<T> implements Sets.Lister<T> {
-		/**
-		 * @inheritdoc
-		 */
-		public source: ISet<T>;
-
-		/**
-		 * @inheritdoc
-		 */
-		constructor(source: ISet<T>, config: Collections.ListerConfig<T>) {
-			super(source, config);
-		}
-	}
-
-	/**
-	 * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Set]].
-	 */
-	export class Mapper<T extends IClass, U extends IClass> extends AbstractCollection.Mapper<T, U> implements Sets.Mapper<T, U> {
-		/**
-		 * @hidden
-		 */
-		protected _items: Dictionary<U> = {};
-
-		/**
-		 * @inheritdoc
-		 */
-		source: ISet<T>;
-
-		/**
-		 * @inheritdoc
-		 */
-		target: ISet<U>;
-
-		/**
-		 * @inheritdoc
-		 */
-		constructor(source: ISet<T>, config: Sets.MapperConfig<T, U>) {
-			super(source, config);
-			this.target.tryAddAll(this._createItems(source.toArray()));
-		}
-
-		/**
-		 * @inheritdoc
-		 */
-		protected destroyObject() {
-			var datas = this.source.toArray();
-			this.target.tryRemoveAll(this._getItems(datas));
-			this._destroyItems(datas);
-			super.destroyObject();
-		}
-
-		/**
-		 * @hidden
-		 */
-		protected _getItems(datas: T[]): U[] {
-			return ArrayUtils.map(datas, (data) => {
-				return this._items[data._iid];
-			}, this);
-		}
-
-		/**
-		 * @hidden
-		 */
-		protected _createItems(datas: T[]): U[] {
-			var items: U[] = [];
-			for (var i = 0, l = datas.length; i < l; ++i) {
-				var data = datas[i];
-				var item = this._createItem.call(this._scope || this, data);
-				items.push(item);
-				this._items[data._iid] = item;
-			}
-			return items;
-		}
-
-		/**
-		 * @hidden
-		 */
-		protected _destroyItems(datas: T[]) {
-			if (this._destroyItem === undefined) {
-				return;
-			}
-			for (var i = datas.length - 1; i >= 0; --i) {
-				var data = datas[i];
-				var iid = data._iid;
-				var item = this._items[iid];
-				delete this._items[iid];
-				this._destroyItem.call(this._scope || this, item, data);
-			}
-		}
-	}
-
-	/**
-	 * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Set]].
-	 */
-	export class Observer<T extends IClass> extends AbstractCollection.Observer<T> implements Sets.Observer<T> {
-		/**
-		 * @inheritdoc
-		 */
-		source: ISet<T>;
-
-		/**
-		 * @inheritdoc
-		 */
-		constructor(source: ISet<T>, config: Collections.ObserverConfig<T>) {
-			super(source, config);
-		}
-	}
-
-	/**
-	 * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Set]].
-	 */
-	export class Orderer<T extends IClass> extends AbstractCollection.Orderer<T> implements Sets.Orderer<T> {
-		/**
-		 * @inheritdoc
-		 */
-		public source: ISet<T>;
-
-		/**
-		 * @inheritdoc
-		 */
-		constructor(source: ISet<T>, config: Collections.OrdererConfig<T>) {
-			super(source, config);
-		}
-	}
-
-	/**
-	 * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Set]].
-	 */
-	export class SorterComparing<T extends IClass> extends AbstractCollection.SorterComparing<T> implements Sets.SorterComparing<T> {
-		/**
-		 * @inheritdoc
-		 */
-		public source: ISet<T>;
-
-		/**
-		 * @inheritdoc
-		 */
-		constructor(source: ISet<T>, config: Collections.SorterComparingConfig<T>) {
-			super(source, config);
-		}
-	}
-}
+export default AbstractSet;
