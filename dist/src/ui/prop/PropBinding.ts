@@ -1,10 +1,10 @@
 /// <reference types="jquery" />
 
-import {Binding, UPDATE, WATCH} from '../Core';
+import {Binding, UPDATE, WATCH} from '../../Core';
 import CheckedListener from './CheckedListener';
-import Class from '../Class';
+import Class from '../../Class';
 import PropUpdater from './PropUpdater';
-import Property from '../Property';
+import Property from '../../Property';
 
 /**
  * Result of [[JQuery.jwprop|jwprop]] method call. Destroy it to stop synchronization.

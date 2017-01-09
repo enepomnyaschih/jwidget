@@ -1,8 +1,8 @@
 /// <reference types="jquery" />
 
-import {isLifeInput} from '../internal';
-import Class from '../Class';
-import Property from '../Property';
+import {isLifeInput} from '../../internal';
+import Class from '../../Class';
+import Property from '../../Property';
 
 /**
  * @deprecated 1.4 Use [[JQuery.jwval|jwval]] instead.

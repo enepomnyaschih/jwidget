@@ -1,7 +1,7 @@
 /// <reference types="jquery" />
 
-import Class from '../Class';
-import Property from '../Property';
+import Class from '../../Class';
+import Property from '../../Property';
 
 /**
  * Result of [[JQuery.jwattr|jwattr]] method call. Destroy it to stop synchronization.

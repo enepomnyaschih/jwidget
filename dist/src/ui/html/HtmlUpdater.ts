@@ -1,15 +1,15 @@
 /// <reference types="jquery" />
 
-import Class from '../Class';
-import Property from '../Property';
+import Class from '../../Class';
+import Property from '../../Property';
 
 /**
- * Result of [[JQuery.jwtext|jwtext]] method call. Destroy it to stop synchronization.
+ * Result of [[JQuery.jwhtml|jwhtml]] method call. Destroy it to stop synchronization.
  *
  * Was used as a standalone class before jWidget 1.4.
- * As of jWidget 1.4, [[JQuery.jwtext|jwtext]] is an easier alternative.
+ * As of jWidget 1.4, [[JQuery.jwhtml|jwhtml]] is an easier alternative.
  */
-class TextUpdater extends Class {
+class HtmlUpdater extends Class {
 	/**
 	 * @param el DOM element.
 	 * @param property Source property.
@@ -21,8 +21,8 @@ class TextUpdater extends Class {
 	}
 
 	private _update() {
-		this.el[0].textContent = this.property.get();
+		this.el.html(this.property.get());
 	}
 }
 
-export default TextUpdater;
+export default HtmlUpdater;

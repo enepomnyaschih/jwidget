@@ -1,8 +1,8 @@
 /// <reference types="jquery" />
 
-import {Binding, UPDATE, WATCH} from '../Core';
-import Class from '../Class';
-import Property from '../Property';
+import {Binding, UPDATE, WATCH} from '../../Core';
+import Class from '../../Class';
+import Property from '../../Property';
 import ValueListener from './ValueListener';
 import ValueUpdater from './ValueUpdater';
 

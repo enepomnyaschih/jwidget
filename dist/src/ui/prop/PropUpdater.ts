@@ -1,7 +1,7 @@
 /// <reference types="jquery" />
 
-import Class from '../Class';
-import Property from '../Property';
+import Class from '../../Class';
+import Property from '../../Property';
 
 /**
  * @deprecated 1.4 Use [[JQuery.jwprop|jwprop]] instead.

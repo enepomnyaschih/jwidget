@@ -1,7 +1,7 @@
 /// <reference types="jquery" />
 
-import Class from '../Class';
-import Property from '../Property';
+import Class from '../../Class';
+import Property from '../../Property';
 
 /**
  * Use [[JQuery.jwradio|jwradio]] instead.

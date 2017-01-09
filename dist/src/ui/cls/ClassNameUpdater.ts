@@ -1,8 +1,8 @@
 /// <reference types="jquery" />
 
-import Class from '../Class';
-import Property from '../Property';
-import Switcher from '../Switcher';
+import Class from '../../Class';
+import Property from '../../Property';
+import Switcher from '../../Switcher';
 
 /**
  * Result of [[JQuery.jwclass|jwclass]] method call. Destroy it to stop synchronization.

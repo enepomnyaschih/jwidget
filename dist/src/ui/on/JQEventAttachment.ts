@@ -1,6 +1,6 @@
 /// <reference types="jquery" />
 
-import Class from '../Class';
+import Class from '../../Class';
 
 /**
  * Result of [[JQuery.jwon|jwon]] method call. Destroy it to unbind event handler.
