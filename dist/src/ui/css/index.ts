@@ -14,6 +14,6 @@ import Property from '../../Property';
  * @param style CSS style name.
  * @param property Style value.
  */
-export function css(el: JQuery, style: string, property: Property<any>): IClass {
+export default function css(el: JQuery, style: string, property: Property<any>): IClass {
 	return new CssUpdater(el, style, property);
 }

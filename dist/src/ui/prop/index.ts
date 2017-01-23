@@ -15,7 +15,7 @@ import Property from '../../Property';
  *
  * @param prop Element's property name.
  */
-export function prop(el: JQuery, prop: string): Property<boolean>;
+export default function prop(el: JQuery, prop: string): Property<boolean>;
 
 /**
  * DOM element property management method.
@@ -38,8 +38,8 @@ export function prop(el: JQuery, prop: string): Property<boolean>;
  * @param property Property value.
  * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
  */
-export function prop(el: JQuery, prop: string, property: Property<boolean>, binding?: Binding): IClass;
-export function prop(el: JQuery, prop: string, property?: Property<boolean>, binding?: Binding): IClass {
+export default function prop(el: JQuery, prop: string, property: Property<boolean>, binding?: Binding): IClass;
+export default function prop(el: JQuery, prop: string, property?: Property<boolean>, binding?: Binding): IClass {
 	if (property != null) {
 		return new PropBinding(el, prop, property, binding);
 	}

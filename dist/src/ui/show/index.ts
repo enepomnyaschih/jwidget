@@ -15,6 +15,6 @@ import VisibleUpdater from './VisibleUpdater';
  *
  * @param property Element visibility.
  */
-export function show(el: JQuery, property: Property<boolean>): IClass {
+export default function show(el: JQuery, property: Property<boolean>): IClass {
 	return new VisibleUpdater(el, property);
 }

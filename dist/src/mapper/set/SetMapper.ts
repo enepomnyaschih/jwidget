@@ -9,6 +9,8 @@ import ISetMapperConfig from './ISetMapperConfig';
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Set]].
  */
 export default class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMapper<T, U> implements ISetMapper<T, U> {
+	private _targetCreated: boolean;
+
 	/**
 	 * @hidden
 	 */
@@ -29,6 +31,8 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 	 */
 	constructor(source: ISet<T>, config: ISetMapperConfig<T, U>) {
 		super(source, config);
+		this._targetCreated = config.target == null;
+		this.target = this._targetCreated ? this.source.createEmpty<U>() : config.target;
 		this.target.tryAddAll(this._createItems(source.toArray()));
 	}
 
@@ -39,6 +43,9 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 		var datas = this.source.toArray();
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
 		super.destroyObject();
 	}
 

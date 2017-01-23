@@ -7,6 +7,8 @@ import IMapFiltererConfig from './IMapFiltererConfig';
  * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Map]].
  */
 export default class MapFilterer<T> extends AbstractCollectionFilterer<T> implements IMapFilterer<T> {
+	private _targetCreated: boolean;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -22,6 +24,8 @@ export default class MapFilterer<T> extends AbstractCollectionFilterer<T> implem
 	 */
 	constructor(source: IMap<T>, config: IMapFiltererConfig<T>) {
 		super(source, config);
+		this._targetCreated = config.target == null;
+		this.target = this._targetCreated ? this.source.createEmpty<T>() : config.target;
 		this.target.trySetAll(source.filter(this._filterItem, this._scope));
 	}
 
@@ -30,6 +34,9 @@ export default class MapFilterer<T> extends AbstractCollectionFilterer<T> implem
 	 */
 	protected destroyObject() {
 		this.target.tryRemoveAll(this.source.getKeys());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
 		super.destroyObject();
 	}
 }

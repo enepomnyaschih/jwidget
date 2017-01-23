@@ -14,6 +14,8 @@ import * as ArrayUtils from '../../ArrayUtils';
  * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Array]].
  */
 export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> implements IArrayFilterer<T> {
+	private _targetCreated: boolean;
+
 	/**
 	 * @hidden
 	 */
@@ -34,6 +36,8 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	 */
 	constructor(source: IArray<T>, config: IArrayFiltererConfig<T>) {
 		super(source, config);
+		this._targetCreated = config.target == null;
+		this.target = this._targetCreated ? this.source.createEmpty<T>() : config.target;
 		this._splice([], [new IndexItems(0, this.source.getItems())]);
 	}
 
@@ -42,6 +46,9 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	 */
 	protected destroyObject() {
 		this.target.tryClear();
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
 		super.destroyObject();
 	}
 

@@ -87,8 +87,6 @@ import ICollectionFiltererConfig from './ICollectionFiltererConfig';
  * @param T Collection item type.
  */
 abstract class AbstractCollectionFilterer<T> extends Class implements ICollectionFilterer<T> {
-	private _targetCreated: boolean;
-
 	/**
 	 * @hidden
 	 */
@@ -115,17 +113,12 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 		super();
 		this._filterItem = config.filterItem;
 		this._scope = config.scope || this;
-		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? this.source.createEmpty<T>() : config.target;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this.source = null;
 		this._filterItem = null;
 		this.target = null;

@@ -14,6 +14,6 @@ import Property from '../../Property';
  * @param attr DOM element attribute name.
  * @param property Attribute value.
  */
-export function attr(el: JQuery, attr: string, property: Property<any>): IClass {
+export default function attr(el: JQuery, attr: string, property: Property<any>): IClass {
 	return new AttrUpdater(el, attr, property);
 }

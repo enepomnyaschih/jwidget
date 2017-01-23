@@ -1,4 +1,4 @@
-import ICollection from '../ICollection';
+import IClass from '../IClass';
 
 /**
  * [[JW.AbstractCollection.Mapper]] configuration.
@@ -22,11 +22,6 @@ interface ICollectionMapperConfig<T, U> {
 	 * Defaults to synchronizer itself.
 	 */
 	scope?: any;
-
-	/**
-	 * Target collection. By default, created automatically.
-	 */
-	target?: ICollection<U>;
 }
 
 export default ICollectionMapperConfig;

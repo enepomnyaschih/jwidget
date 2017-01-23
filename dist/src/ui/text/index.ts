@@ -13,6 +13,6 @@ import TextUpdater from './TextUpdater';
  *
  * @param property Text value.
  */
-export function text(el: JQuery, property: Property<string>): IClass {
+export default function text(el: JQuery, property: Property<string>): IClass {
 	return new TextUpdater(el, property);
 }

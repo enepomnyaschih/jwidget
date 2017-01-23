@@ -16,7 +16,7 @@ import ValueListener from './ValueListener';
  * @param simple If true, listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-export function val(el: JQuery, simple?: boolean): Property<string>;
+export default function val(el: JQuery, simple?: boolean): Property<string>;
 
 /**
  * DOM element value management method.
@@ -40,8 +40,8 @@ export function val(el: JQuery, simple?: boolean): Property<string>;
  * @param simple If true, watch-binding listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-export function val(el: JQuery, value: Property<string>, binding?: Binding, simple?: boolean): IClass;
-export function val(el: JQuery, value: any, binding?: Binding, simple?: boolean): IClass {
+export default function val(el: JQuery, value: Property<string>, binding?: Binding, simple?: boolean): IClass;
+export default function val(el: JQuery, value: any, binding?: Binding, simple?: boolean): IClass {
 	if (value != null && (typeof value !== "boolean")) {
 		return new ValueBinding(el, value, binding, simple);
 	}

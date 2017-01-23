@@ -35,7 +35,7 @@ import JQEventAttachment from './JQEventAttachment';
  * @param handler A function to execute when the event is triggered. The value `false` is also allowed as a shorthand for a function that simply does `return false`.
  * @param scope Function call scope.
  */
-export function on(el: JQuery, events: string, handler: (eventObject: JQueryEventObject) => any, scope?: any): IClass;
+export default function on(el: JQuery, events: string, handler: (eventObject: JQueryEventObject) => any, scope?: any): IClass;
 
 /**
  * @param events One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".
@@ -43,7 +43,7 @@ export function on(el: JQuery, events: string, handler: (eventObject: JQueryEven
  * @param handler A function to execute when the event is triggered. The value `false` is also allowed as a shorthand for a function that simply does `return false`.
  * @param scope Function call scope.
  */
-export function on(el: JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any, scope?: any): IClass;
-export function on(el: JQuery, events: string, selector: any, handler: any, scope?: any): IClass {
+export default function on(el: JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any, scope?: any): IClass;
+export default function on(el: JQuery, events: string, selector: any, handler: any, scope?: any): IClass {
 	return new JQEventAttachment(el, events, selector, handler, scope);
 }

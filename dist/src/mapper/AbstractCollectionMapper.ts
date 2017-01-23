@@ -95,8 +95,6 @@ import ICollectionMapperConfig from './ICollectionMapperConfig';
  * @param U Target collection item type.
  */
 abstract class AbstractCollectionMapper<T, U> extends Class implements ICollectionMapper<T, U> {
-	private _targetCreated: boolean;
-
 	/**
 	 * @hidden
 	 */
@@ -129,21 +127,16 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 		this._createItem = config.createItem;
 		this._destroyItem = config.destroyItem;
 		this._scope = config.scope || this;
-		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? this.source.createEmpty<U>() : config.target;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		this.source = null;
+		this.target = null;
 		this._createItem = null;
 		this._destroyItem = null;
-		this.target = null;
 		this._scope = null;
 		super.destroyObject();
 	}

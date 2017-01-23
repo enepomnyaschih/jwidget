@@ -7,6 +7,8 @@ import IArrayMapperConfig from './IArrayMapperConfig';
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Array]].
  */
 export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> implements IArrayMapper<T, U> {
+	private _targetCreated: boolean;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -22,6 +24,8 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 	 */
 	constructor(source: IArray<T>, config: IArrayMapperConfig<T, U>) {
 		super(source, config);
+		this._targetCreated = config.target == null;
+		this.target = this._targetCreated ? this.source.createEmpty<U>() : config.target;
 		this.target.tryAddAll(this._createItems(this.source.getItems()));
 	}
 
@@ -30,6 +34,9 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 	 */
 	protected destroyObject() {
 		this._destroyItems(this.target.clear(), this.source.getItems());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
 		super.destroyObject();
 	}
 

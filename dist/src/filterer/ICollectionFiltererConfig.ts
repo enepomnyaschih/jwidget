@@ -1,5 +1,3 @@
-import ICollection from '../ICollection';
-
 /**
  * [[JW.AbstractCollection.Filterer]] configuration.
  *
@@ -16,11 +14,6 @@ interface ICollectionFiltererConfig<T> {
 	 * Defaults to synchronizer itself.
 	 */
 	scope?: any;
-
-	/**
-	 * Target collection. By default, created automatically.
-	 */
-	target?: ICollection<T>;
 }
 
 export default ICollectionFiltererConfig;

@@ -47,6 +47,7 @@ TODO:
 - use 'let'
 - make String(item._iid) an internal utility function
 - rename lister to converterToSet etc.
+- remove scope from all signatures? TypeScript still supports arrow functions...
 
 ### 1.4.4 (April 29, 2016)
 

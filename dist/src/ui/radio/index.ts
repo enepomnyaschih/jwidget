@@ -21,7 +21,7 @@ import RadioListener from './RadioListener';
  *
  * @param name Radios "name" attribute.
  */
-export function radio(el: JQuery, name: string): Property<string>;
+export default function radio(el: JQuery, name: string): Property<string>;
 
 /**
  * Radio group value management method.
@@ -46,8 +46,8 @@ export function radio(el: JQuery, name: string): Property<string>;
  * @param property Radio value.
  * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
  */
-export function radio(el: JQuery, name: string, property: Property<string>, binding?: Binding): IClass;
-export function radio(el: JQuery, name: string, property?: Property<string>, binding?: Binding): IClass {
+export default function radio(el: JQuery, name: string, property: Property<string>, binding?: Binding): IClass;
+export default function radio(el: JQuery, name: string, property?: Property<string>, binding?: Binding): IClass {
 	if (property != null) {
 		return new RadioBinding(el, name, property, binding);
 	}

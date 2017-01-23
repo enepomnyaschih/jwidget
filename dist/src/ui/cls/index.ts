@@ -17,7 +17,7 @@ import Property from '../../Property';
  * @param cls CSS class name.
  * @param property Boolean property to bind CSS class to.
  */
-export function cls(el: JQuery, cls: string, property: Property<boolean>): IClass;
+export default function cls(el: JQuery, cls: string, property: Property<boolean>): IClass;
 
 /**
  * DOM element CSS class management method.
@@ -36,7 +36,7 @@ export function cls(el: JQuery, cls: string, property: Property<boolean>): IClas
  *
  * @param cls CSS class name.
  */
-export function cls(el: JQuery, cls: Property<string>): IClass;
-export function cls(el: JQuery, a: any, b?: any): IClass {
+export default function cls(el: JQuery, cls: Property<string>): IClass;
+export default function cls(el: JQuery, a: any, b?: any): IClass {
 	return (b != null) ? new ClassUpdater(el, a, b) : new ClassNameUpdater(el, a);
 }

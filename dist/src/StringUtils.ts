@@ -1,4 +1,4 @@
-﻿import {defn, isArray} from '../core/Core';
+﻿import {defn, isArray} from './Core';
 
 /**
  * Escapes special HTML symbols.

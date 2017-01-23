@@ -8,6 +8,8 @@ import ISetFiltererConfig from './ISetFiltererConfig';
  * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Set]].
  */
 export default class SetFilterer<T extends IClass> extends AbstractCollectionFilterer<T> implements ISetFilterer<T> {
+	private _targetCreated: boolean;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -23,6 +25,8 @@ export default class SetFilterer<T extends IClass> extends AbstractCollectionFil
 	 */
 	constructor(source: ISet<T>, config: ISetFiltererConfig<T>) {
 		super(source, config);
+		this._targetCreated = config.target == null;
+		this.target = this._targetCreated ? this.source.createEmpty<T>() : config.target;
 		this.target.tryAddAll(source.$toArray().filter(this._filterItem, this._scope));
 	}
 
@@ -31,6 +35,9 @@ export default class SetFilterer<T extends IClass> extends AbstractCollectionFil
 	 */
 	protected destroyObject() {
 		this.target.tryRemoveAll(this.source.toArray());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
 		super.destroyObject();
 	}
 }

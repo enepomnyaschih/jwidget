@@ -13,6 +13,6 @@ import Property from '../../Property';
  *
  * @param property HTML value.
  */
-export function html(el: JQuery, property: Property<string>): IClass {
+export default function html(el: JQuery, property: Property<string>): IClass {
 	return new HtmlUpdater(el, property);
 }

@@ -8,6 +8,8 @@ import IMapMapperConfig from './IMapMapperConfig';
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Map]].
  */
 export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> implements IMapMapper<T, U> {
+	private _targetCreated: boolean;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -23,6 +25,8 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 	 */
 	constructor(source: IMap<T>, config: IMapMapperConfig<T, U>) {
 		super(source, config);
+		this._targetCreated = config.target == null;
+		this.target = this._targetCreated ? this.source.createEmpty<U>() : config.target;
 		this.target.trySetAll(this._createItems(source.getJson()));
 	}
 
@@ -31,6 +35,9 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 	 */
 	protected destroyObject() {
 		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys()), this.source.getJson());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
 		super.destroyObject();
 	}
 

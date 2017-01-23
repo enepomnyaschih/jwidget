@@ -8,6 +8,10 @@ export function def<T>(value: T, defaultValue: T): T {
 	return (value !== undefined) ? value : defaultValue;
 }
 
+export function defn<T>(value: T, defaultValue: T): T {
+	return (value != null) ? value : defaultValue;
+}
+
 export function isNotNil(value: any): boolean {
 	return value != null;
 }

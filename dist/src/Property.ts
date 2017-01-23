@@ -4,7 +4,6 @@ import Copier from './Copier';
 import Destroyable from './Destroyable';
 import Event from './Event';
 import Mapper from './Mapper';
-import PropertyChangeEventParams from './PropertyChangeEventParams';
 
 /**
  * The observable property. A convenient way to keep an object in sync
@@ -44,7 +43,7 @@ import PropertyChangeEventParams from './PropertyChangeEventParams';
  *
  * @param V Property value type.
  */
-class Property<V> extends Class {
+export default class Property<V> extends Class {
 	private _ownsValue = false;
 	private _copier: Copier<V> = null;
 
@@ -185,4 +184,24 @@ class Property<V> extends Class {
 	}
 }
 
-export default Property;
+/**
+ * [[JW.Property]]'s [[JW.Property.changeEvent|changeEvent]] params.
+ *
+ * @param V Property value type.
+ */
+export interface PropertyChangeEventParams<V> {
+	/**
+	 * Sender property.
+	 */
+	sender: Property<V>;
+
+	/**
+	 * New value.
+	 */
+	value: V;
+
+	/**
+	 * Old value.
+	 */
+	oldValue: V;
+}
