@@ -1,4 +1,4 @@
-import {default as ObservableSet, ItemsEventParams, SpliceEventParams} from '../../ObservableSet';
+import {default as ObservableSet, SetItemsEventParams, SetSpliceEventParams} from '../../ObservableSet';
 import IClass from '../../IClass';
 import ISetMapperConfig from './ISetMapperConfig';
 import SetMapper from './SetMapper';
@@ -16,7 +16,7 @@ export default class ObservableSetMapper<T extends IClass, U extends IClass> ext
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: SetSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var removedDatas = spliceResult.removedItems;
 		var addedDatas = spliceResult.addedItems;
@@ -24,7 +24,7 @@ export default class ObservableSetMapper<T extends IClass, U extends IClass> ext
 		this._destroyItems(removedDatas);
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: SetItemsEventParams<T>) {
 		var datas = params.items;
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);

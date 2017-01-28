@@ -1,4 +1,4 @@
-import {default as ObservableMap, ItemsEventParams, SpliceEventParams} from '../../ObservableMap';
+import {default as ObservableMap, MapItemsEventParams, MapSpliceEventParams} from '../../ObservableMap';
 import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
 import MapIndexer from './MapIndexer';
 import * as MapUtils from '../../MapUtils';
@@ -16,14 +16,14 @@ export default class ObservableMapIndexer<T> extends MapIndexer<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: MapSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			this._keys(MapUtils.toArray(spliceResult.removedItems)),
 			this._index(MapUtils.toArray(spliceResult.addedItems)));
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: MapItemsEventParams<T>) {
 		this.target.tryRemoveAll(
 			this._keys(MapUtils.toArray(params.items)));
 	}

@@ -159,9 +159,11 @@ export function parseClass(str: any): string[] {
 }
 
 function _fcamel(a: string, b: string): string {
+	a = a;
 	return b.toUpperCase();
 }
 
 function _fhyphen(a: string, b: string): string {
+	a = a;
 	return "-" + b.toLowerCase();
 }

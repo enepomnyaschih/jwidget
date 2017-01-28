@@ -1,4 +1,4 @@
-import {default as ObservableArray, ItemsEventParams, MoveEventParams, ReorderEventParams, ReplaceEventParams, SpliceEventParams} from '../../ObservableArray';
+import {default as ObservableArray, ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
 import ArrayMapper from './ArrayMapper';
 import IArrayMapperConfig from './IArrayMapperConfig';
 import IIndexItems from '../../IIndexItems';
@@ -20,7 +20,7 @@ export default class Mapper<T, U> extends ArrayMapper<T, U> {
 		this.own(source.reorderEvent.bind(this._onReorder, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var sourceResult = params.spliceResult;
 		var sourceAddedItemsList = sourceResult.addedItemsList;
 		var targetAddParamsList: IIndexItems<U>[] = [];
@@ -37,21 +37,21 @@ export default class Mapper<T, U> extends ArrayMapper<T, U> {
 		}
 	}
 
-	private _onReplace(params: ReplaceEventParams<T>) {
+	private _onReplace(params: ArrayReplaceEventParams<T>) {
 		var newItem = this._createItem.call(this._scope, params.newItem);
 		var oldItem = this.target.trySet(newItem, params.index).value;
 		this._destroyItem.call(this._scope, oldItem, params.oldItem);
 	}
 
-	private _onMove(params: MoveEventParams<T>) {
+	private _onMove(params: ArrayMoveEventParams<T>) {
 		this.target.tryMove(params.fromIndex, params.toIndex);
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: ArrayItemsEventParams<T>) {
 		this._destroyItems(this.target.tryClear(), params.items);
 	}
 
-	private _onReorder(params: ReorderEventParams<T>) {
+	private _onReorder(params: ArrayReorderEventParams<T>) {
 		this.target.tryReorder(params.indexArray);
 	}
 }

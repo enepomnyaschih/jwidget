@@ -1,4 +1,4 @@
-import {default as ObservableMap, ItemsEventParams, ReindexEventParams, SpliceEventParams} from '../../ObservableMap';
+import {default as ObservableMap, MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from '../../ObservableMap';
 import IMapFiltererConfig from './IMapFiltererConfig';
 import MapFilterer from './MapFilterer';
 import * as MapUtils from '../../MapUtils';
@@ -17,18 +17,18 @@ export default class ObservableMapFilterer<T> extends MapFilterer<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: MapSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			Object.keys(spliceResult.removedItems),
 			MapUtils.filter(spliceResult.addedItems, this._filterItem, this._scope));
 	}
 
-	private _onReindex(params: ReindexEventParams<T>) {
+	private _onReindex(params: MapReindexEventParams<T>) {
 		this.target.tryReindex(params.keyMap);
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: MapItemsEventParams<T>) {
 		this.target.tryRemoveAll(Object.keys(params.items));
 	}
 }

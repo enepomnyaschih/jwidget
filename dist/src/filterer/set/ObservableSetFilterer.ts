@@ -1,4 +1,4 @@
-import {default as ObservableSet, ItemsEventParams, SpliceEventParams} from '../../ObservableSet';
+import {default as ObservableSet, SetItemsEventParams, SetSpliceEventParams} from '../../ObservableSet';
 import IClass from '../../IClass';
 import ISetFiltererConfig from './ISetFiltererConfig';
 import SetFilterer from './SetFilterer';
@@ -16,14 +16,14 @@ export default class ObservableSetFilterer<T extends IClass> extends SetFilterer
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: SetSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			spliceResult.removedItems,
 			spliceResult.addedItems.filter(this._filterItem, this._scope));
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: SetItemsEventParams<T>) {
 		this.target.tryRemoveAll(params.items);
 	}
 }

@@ -13,4 +13,3 @@ export function createObserver<T>(source: ICollection<T>, config: ICollectionObs
 		(source instanceof AbstractMap) ? createMapObserver(source, config) :
 		(source instanceof AbstractSet) ? createSetObserver(source, config) : null;
 }
-}

@@ -1,4 +1,4 @@
-import {default as ObservableArray, ItemsEventParams, ReplaceEventParams, SpliceEventParams} from '../../ObservableArray';
+import {default as ObservableArray, ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
 import ArrayOrderer from './ArrayOrderer';
 import IClass from '../../IClass';
 import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
@@ -20,21 +20,21 @@ export default class ObservableArrayOrderer<T extends IClass> extends ArrayOrder
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			ArrayUtils.toSet(spliceResult.getRemovedItems()),
 			ArrayUtils.toSet(spliceResult.getAddedItems()));
 	}
 
-	private _onReplace(params: ReplaceEventParams<T>) {
+	private _onReplace(params: ArrayReplaceEventParams<T>) {
 		var index = this.target.keyOf(params.oldItem);
 		this.target.trySplice(
 			[new IndexCount(index, 1)],
 			[new IndexItems(this.target.getLength() - 1, [params.newItem])]);
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: ArrayItemsEventParams<T>) {
 		this.target.removeItems(params.items);
 	}
 }

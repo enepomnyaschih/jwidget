@@ -1,7 +1,9 @@
 import {createArrayMapper} from '../mapper/array';
 import Class from '../Class';
 import Component from '../Component';
+import ComponentInserter from './ComponentInserter';
 import IArray from '../IArray';
+import * as DomUtils from '../DomUtils';
 import * as SetUtils from '../SetUtils';
 
 /**
@@ -28,14 +30,14 @@ export default class ComponentArray extends Class {
 			}
 		}));
 
-		this.own(new Component.Inserter(mapper.target, el[0]));
+		this.own(new ComponentInserter(mapper.target, el[0]));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	destroy() {
-		JW.Set.remove(this.parent._arrays, this);
+		SetUtils.remove(this.parent._arrays, this);
 		super.destroy();
 	}
 
@@ -43,6 +45,6 @@ export default class ComponentArray extends Class {
 	 * @inheritdoc
 	 */
 	_afterAppend() {
-		this.source.each(_afterAppend);
+		this.source.each(DomUtils._afterAppend);
 	}
 }

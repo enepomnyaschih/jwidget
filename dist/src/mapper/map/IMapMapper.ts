@@ -4,7 +4,7 @@ import IMap from '../../IMap';
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Map]].
  */
-interface IMapMapper<T, U> extends ICollectionMapper<T, U> {
+interface IMapMapper<T, U> extends ICollectionMapper<U> {
 	/**
 	 * @inheritdoc
 	 */

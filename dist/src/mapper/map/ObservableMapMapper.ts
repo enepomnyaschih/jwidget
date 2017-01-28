@@ -1,4 +1,4 @@
-import {default as ObservableMap, ItemsEventParams, ReindexEventParams, SpliceEventParams} from '../../ObservableMap';
+import {default as ObservableMap, MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from '../../ObservableMap';
 import IMapMapperConfig from './IMapMapperConfig';
 import MapMapper from './MapMapper';
 import * as MapUtils from '../../MapUtils';
@@ -17,7 +17,7 @@ export default class ObservableMapMapper<T, U> extends MapMapper<T, U> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: MapSpliceEventParams<T>) {
 		var sourceResult = params.spliceResult;
 		var removedDatas = sourceResult.removedItems;
 		var addedDatas = sourceResult.addedItems;
@@ -29,11 +29,11 @@ export default class ObservableMapMapper<T, U> extends MapMapper<T, U> {
 		}
 	}
 
-	private _onReindex(params: ReindexEventParams<T>) {
+	private _onReindex(params: MapReindexEventParams<T>) {
 		this.target.tryReindex(params.keyMap);
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: MapItemsEventParams<T>) {
 		var datas = params.items;
 		this._destroyItems(this.target.tryRemoveAll(Object.keys(datas)), datas);
 	}

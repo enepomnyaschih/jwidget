@@ -1,4 +1,4 @@
-import {apply, cmp, iid} from './Core';
+import {apply, cmp} from './Core';
 import Dictionary from './Dictionary';
 import IClass from './IClass';
 import ISetSpliceParams from './ISetSpliceParams';

@@ -48,7 +48,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	spliceEvent: Event<SpliceEventParams<T>> = new Event<SpliceEventParams<T>>();
+	spliceEvent: Event<ArraySpliceEventParams<T>> = new Event<ArraySpliceEventParams<T>>();
 
 	/**
 	 * Item is replaced in array. Triggered in result of calling:
@@ -56,7 +56,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * * [[set]]
 	 * * [[trySet]]
 	 */
-	replaceEvent: Event<ReplaceEventParams<T>> = new Event<ReplaceEventParams<T>>();
+	replaceEvent: Event<ArrayReplaceEventParams<T>> = new Event<ArrayReplaceEventParams<T>>();
 
 	/**
 	 * Item is moved in array. Triggered in result of calling:
@@ -64,7 +64,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * * [[move]]
 	 * * [[tryMove]]
 	 */
-	moveEvent: Event<MoveEventParams<T>> = new Event<MoveEventParams<T>>();
+	moveEvent: Event<ArrayMoveEventParams<T>> = new Event<ArrayMoveEventParams<T>>();
 
 	/**
 	 * Array is cleared. Triggered in result of calling:
@@ -72,7 +72,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	clearEvent: Event<ItemsEventParams<T>> = new Event<ItemsEventParams<T>>();
+	clearEvent: Event<ArrayItemsEventParams<T>> = new Event<ArrayItemsEventParams<T>>();
 
 	/**
 	 * Items are reordered in array. Triggered in result of calling:
@@ -83,7 +83,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * * [[sort]]
 	 * * [[sortComparing]]
 	 */
-	reorderEvent: Event<ReorderEventParams<T>> = new Event<ReorderEventParams<T>>();
+	reorderEvent: Event<ArrayReorderEventParams<T>> = new Event<ArrayReorderEventParams<T>>();
 
 	/**
 	 * Array is changed. Triggered right after one of events:
@@ -94,7 +94,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * * [[clearEvent]]
 	 * * [[reorderEvent]]
 	 */
-	changeEvent: Event<EventParams<T>> = new Event<EventParams<T>>();
+	changeEvent: Event<ArrayEventParams<T>> = new Event<ArrayEventParams<T>>();
 
 	/**
 	 * @inheritdoc
@@ -357,15 +357,6 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	merge(): any[] {
-		return ArrayUtils.merge(this.map(function(item: any): any[] {
-			return item.getItems();
-		}, this));
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	toReversed(): T[] {
 		return ArrayUtils.toReversed(this.items);
 	}
@@ -444,7 +435,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 /**
  * [[JW.ObservableArray]] event parameters.
  */
-export interface EventParams<T> {
+export interface ArrayEventParams<T> {
 	/**
 	 * Event sender.
 	 */
@@ -454,7 +445,7 @@ export interface EventParams<T> {
 /**
  * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.spliceEvent]].
  */
-export interface SpliceEventParams<T> extends EventParams<T> {
+export interface ArraySpliceEventParams<T> extends ArrayEventParams<T> {
 	/**
 	 * Result of [[JW.ObservableArray.splice]] method.
 	 */
@@ -464,7 +455,7 @@ export interface SpliceEventParams<T> extends EventParams<T> {
 /**
  * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.moveEvent]].
  */
-export interface MoveEventParams<T> extends EventParams<T> {
+export interface ArrayMoveEventParams<T> extends ArrayEventParams<T> {
 	/**
 	 * Where item is moved from.
 	 */
@@ -484,7 +475,7 @@ export interface MoveEventParams<T> extends EventParams<T> {
 /**
  * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.replaceEvent]].
  */
-export interface ReplaceEventParams<T> extends EventParams<T> {
+export interface ArrayReplaceEventParams<T> extends ArrayEventParams<T> {
 	/**
 	 * Index of the replaced item.
 	 */
@@ -504,7 +495,7 @@ export interface ReplaceEventParams<T> extends EventParams<T> {
 /**
  * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.clearEvent]].
  */
-export interface ItemsEventParams<T> extends EventParams<T> {
+export interface ArrayItemsEventParams<T> extends ArrayEventParams<T> {
 	/**
 	 * Old array contents.
 	 */
@@ -514,7 +505,7 @@ export interface ItemsEventParams<T> extends EventParams<T> {
 /**
  * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.reorderEvent]].
  */
-export interface ReorderEventParams<T> extends ItemsEventParams<T> {
+export interface ArrayReorderEventParams<T> extends ArrayItemsEventParams<T> {
 	/**
 	 * Indexes of items in reordered array.
 	 */

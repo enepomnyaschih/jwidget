@@ -92,7 +92,7 @@ import ICollection from '../ICollection';
  * @param T Source collection item type.
  * @param U Target collection item type.
  */
-interface ICollectionMapper<T, U> extends IClass {
+interface ICollectionMapper<U> extends IClass {
 	/**
 	 * Target collection.
 	 */

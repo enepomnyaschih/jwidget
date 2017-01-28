@@ -1,4 +1,4 @@
-import {default as ObservableMap, SpliceEventParams} from '../../ObservableMap';
+import {default as ObservableMap, MapSpliceEventParams} from '../../ObservableMap';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
 import MapCounter from './MapCounter';
 import * as MapUtils from '../../MapUtils';
@@ -16,7 +16,7 @@ export default class ObservableMapCounter<T> extends MapCounter<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: MapSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.set(this.target.get() -
 			MapUtils.count(spliceResult.removedItems, this._filterItem, this._scope) +

@@ -1,4 +1,4 @@
-import {default as ObservableArray, ItemsEventParams, ReplaceEventParams, SpliceEventParams} from '../../ObservableArray';
+import {default as ObservableArray, ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
 import ArraySorterComparing from './ArraySorterComparing';
 import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
 
@@ -16,16 +16,16 @@ export default class ObservableArraySorterComparing<T> extends ArraySorterCompar
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.getRemovedItems(), spliceResult.getAddedItems());
 	}
 
-	private _onReplace(params: ReplaceEventParams<T>) {
+	private _onReplace(params: ArrayReplaceEventParams<T>) {
 		this._splice([params.oldItem], [params.newItem]);
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: ArrayItemsEventParams<T>) {
 		this._splice(params.items, []);
 	}
 }

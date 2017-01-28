@@ -1,6 +1,7 @@
 import IArraySpliceResult from './IArraySpliceResult';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
+import * as ArrayUtils from './ArrayUtils';
 
 /**
  * [[JW.AbstractArray.splice|splice]] method result.
@@ -25,7 +26,7 @@ export default class ArraySpliceResult<T> implements IArraySpliceResult<T> {
 	 */
 	getRemovedItems(): T[]{
 		if (!this.removedItems) {
-			this.removedItems = merge(map(this.removedItemsList, function (indexItems) {
+			this.removedItems = ArrayUtils.merge(this.removedItemsList.map(function (indexItems) {
 				return indexItems.items;
 			}));
 		}
@@ -37,7 +38,7 @@ export default class ArraySpliceResult<T> implements IArraySpliceResult<T> {
 	 */
 	getAddedItems(): T[]{
 		if (!this.addedItems) {
-			this.addedItems = merge(map(this.addedItemsList, function (indexItems) {
+			this.addedItems = ArrayUtils.merge(this.addedItemsList.map(function (indexItems) {
 				return indexItems.items;
 			}));
 		}
@@ -49,7 +50,7 @@ export default class ArraySpliceResult<T> implements IArraySpliceResult<T> {
 	 */
 	getRemoveParamsList(): IIndexCount[]{
 		if (!this.removeParamsList) {
-			this.removeParamsList = map(this.removedItemsList, (x) => x.toIndexCount());
+			this.removeParamsList = this.removedItemsList.map((x) => x.toIndexCount());
 		}
 		return this.removeParamsList;
 	}

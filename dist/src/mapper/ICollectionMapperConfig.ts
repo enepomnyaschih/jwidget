@@ -1,5 +1,3 @@
-import IClass from '../IClass';
-
 /**
  * [[JW.AbstractCollection.Mapper]] configuration.
  *

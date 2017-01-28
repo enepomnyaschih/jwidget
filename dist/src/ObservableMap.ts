@@ -1,4 +1,5 @@
-﻿import AbstractMap from './AbstractMap';
+﻿import {destroy} from './Core';
+import AbstractMap from './AbstractMap';
 import Class from './Class';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
@@ -46,7 +47,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	spliceEvent: Event<SpliceEventParams<T>> = new Event<SpliceEventParams<T>>();
+	spliceEvent: Event<MapSpliceEventParams<T>> = new Event<MapSpliceEventParams<T>>();
 
 	/**
 	 * Keys of items are changed in map. Triggered in result of calling:
@@ -57,7 +58,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	 * * [[tryReindex]]
 	 * * [[performReindex]]
 	 */
-	reindexEvent: Event<ReindexEventParams<T>> = new Event<ReindexEventParams<T>>();
+	reindexEvent: Event<MapReindexEventParams<T>> = new Event<MapReindexEventParams<T>>();
 
 	/**
 	 * Map is cleared. Triggered in result of calling:
@@ -66,7 +67,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	clearEvent: Event<ItemsEventParams<T>> = new Event<ItemsEventParams<T>>();
+	clearEvent: Event<MapItemsEventParams<T>> = new Event<MapItemsEventParams<T>>();
 
 	/**
 	 * Map is changed. Triggered right after one of events:
@@ -75,7 +76,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	 * * [[reindexEvent]]
 	 * * [[clearEvent]]
 	 */
-	changeEvent: Event<EventParams<T>> = new Event<EventParams<T>>();
+	changeEvent: Event<MapEventParams<T>> = new Event<MapEventParams<T>>();
 
 	/**
 	 * @inheritdoc
@@ -209,7 +210,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	trySet(item: T, key: string): Proxy<T> {
 		var result = this._trySet(item, key);
 		if (result === undefined) {
-			return;
+			return undefined;
 		}
 		var removedItems: Dictionary<T> = {};
 		var removedItem = result.value;
@@ -241,7 +242,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	trySetKey(oldKey: string, newKey: string): T {
 		var item = super.trySetKey(oldKey, newKey);
 		if (item === undefined) {
-			return;
+			return undefined;
 		}
 		this.reindexEvent.trigger({ sender: this, keyMap: MapUtils.single(oldKey, newKey) });
 		this.changeEvent.trigger({ sender: this });
@@ -254,9 +255,9 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	tryRemove(key: string): T {
 		var item = this._tryRemove(key);
 		if (item === undefined) {
-			return;
+			return undefined;
 		}
-		var spliceResult: Maps.SpliceResult<T> = { addedItems: {}, removedItems: MapUtils.single(key, item) };
+		var spliceResult: IMapSpliceResult<T> = { addedItems: {}, removedItems: MapUtils.single(key, item) };
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 		this.changeEvent.trigger({ sender: this });
@@ -283,16 +284,16 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): Maps.SpliceResult<T> {
+	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
 		var spliceResult = this._trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
-			return;
+			return undefined;
 		}
 		this.length.set(this.getLength());
 		this.spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 		this.changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			ArrayUtils.backEvery(MapUtils.toArray(spliceResult.removedItems), destroyForcibly);
+			ArrayUtils.backEvery(MapUtils.toArray(spliceResult.removedItems), destroy);
 		}
 		return spliceResult;
 	}
@@ -303,13 +304,13 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	tryClear(): Dictionary<T> {
 		var items = this._tryClear();
 		if (items === undefined) {
-			return;
+			return undefined;
 		}
 		this.length.set(0);
 		this.clearEvent.trigger({ sender: this, items: items });
 		this.changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			ArrayUtils.backEvery(MapUtils.toArray(items), destroyForcibly);
+			ArrayUtils.backEvery(MapUtils.toArray(items), destroy);
 		}
 		return items;
 	}
@@ -327,7 +328,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
 		var result = super.tryReindex(keyMap);
 		if (result === undefined) {
-			return;
+			return undefined;
 		}
 		this.reindexEvent.trigger({ sender: this, keyMap: result });
 		this.changeEvent.trigger({ sender: this });
@@ -366,7 +367,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 /**
  * [[JW.ObservableMap]] event parameters.
  */
-export interface EventParams<T> {
+export interface MapEventParams<T> {
 	/**
 	 * Event sender.
 	 */
@@ -376,7 +377,7 @@ export interface EventParams<T> {
 /**
  * Parameters of [[JW.ObservableMap]]'s [[JW.ObservableMap.spliceEvent]].
  */
-export interface SpliceEventParams<T> extends EventParams<T> {
+export interface MapSpliceEventParams<T> extends MapEventParams<T> {
 	/**
 	 * Result of [[JW.ObservableMap.splice]] method.
 	 */
@@ -386,7 +387,7 @@ export interface SpliceEventParams<T> extends EventParams<T> {
 /**
  * Parameters of [[JW.ObservableMap]]'s [[JW.ObservableMap.reindexEvent]].
  */
-export interface ReindexEventParams<T> extends EventParams<T> {
+export interface MapReindexEventParams<T> extends MapEventParams<T> {
 	/**
 	 * Map of changed keys.
 	 */
@@ -396,7 +397,7 @@ export interface ReindexEventParams<T> extends EventParams<T> {
 /**
  * Parameters of [[JW.ObservableMap]]'s [[JW.ObservableMap.clearEvent]].
  */
-export interface ItemsEventParams<T> extends EventParams<T> {
+export interface MapItemsEventParams<T> extends MapEventParams<T> {
 	/**
 	 * Old map contents.
 	 */

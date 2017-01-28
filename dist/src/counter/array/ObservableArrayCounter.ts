@@ -1,4 +1,4 @@
-import {default as ObservableArray, ReplaceEventParams, SpliceEventParams} from '../../ObservableArray';
+import {default as ObservableArray, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
 import ArrayCounter from './ArrayCounter';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
 import * as ArrayUtils from '../../ArrayUtils';
@@ -17,7 +17,7 @@ export default class ObservableArrayCounter<T> extends ArrayCounter<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var value = this.target.get();
 		spliceResult.removedItemsList.forEach((indexItems) => {
@@ -29,7 +29,7 @@ export default class ObservableArrayCounter<T> extends ArrayCounter<T> {
 		this.target.set(value);
 	}
 
-	private _onReplace(params: ReplaceEventParams<T>) {
+	private _onReplace(params: ArrayReplaceEventParams<T>) {
 		var oldFiltered = this._filterItem.call(this._scope, params.oldItem) !== false;
 		var newFiltered = this._filterItem.call(this._scope, params.newItem) !== false;
 		if (oldFiltered && !newFiltered) {

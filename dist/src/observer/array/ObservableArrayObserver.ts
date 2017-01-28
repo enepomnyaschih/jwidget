@@ -1,4 +1,4 @@
-import {default as ObservableArray, ItemsEventParams, ReplaceEventParams, SpliceEventParams} from '../../ObservableArray';
+import {default as ObservableArray, ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
 import ArrayObserver from './ArrayObserver';
 import ICollectionObserverConfig from '../ICollectionObserverConfig';
 
@@ -19,7 +19,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 		}
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.getRemovedItems();
@@ -35,7 +35,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 		}
 	}
 
-	private _onReplace(params: ReplaceEventParams<T>) {
+	private _onReplace(params: ArrayReplaceEventParams<T>) {
 		if (this._removeItem) {
 			this._removeItem.call(this._scope, params.oldItem);
 		}
@@ -44,7 +44,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 		}
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: ArrayItemsEventParams<T>) {
 		this._doClearItems(params.items);
 	}
 }

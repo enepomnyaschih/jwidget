@@ -1,4 +1,4 @@
-import {default as ObservableSet, SpliceEventParams} from '../../ObservableSet';
+import {default as ObservableSet, SetSpliceEventParams} from '../../ObservableSet';
 import IClass from '../../IClass';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
 import SetCounter from './SetCounter';
@@ -17,7 +17,7 @@ export default class ObservableSetCounter<T extends IClass> extends SetCounter<T
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: SetSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.set(this.target.get() -
 			ArrayUtils.count(spliceResult.removedItems, this._filterItem, this._scope) +

@@ -1,4 +1,4 @@
-import {createMapper} from '../mapper';
+import {createMapper} from '../mapper/collection';
 import Class from '../Class';
 import Component from '../Component';
 import ComponentCollectionInserter from './ComponentCollectionInserter';

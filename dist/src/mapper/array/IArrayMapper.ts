@@ -4,7 +4,7 @@ import ICollectionMapper from '../ICollectionMapper';
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Array]].
  */
-interface IArrayMapper<T, U> extends ICollectionMapper<T, U> {
+interface IArrayMapper<T, U> extends ICollectionMapper<U> {
 	/**
 	 * @inheritdoc
 	 */

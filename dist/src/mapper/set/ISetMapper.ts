@@ -5,7 +5,7 @@ import ISet from '../../ISet';
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Set]].
  */
-interface ISetMapper<T extends IClass, U extends IClass> extends ICollectionMapper<T, U> {
+interface ISetMapper<T extends IClass, U extends IClass> extends ICollectionMapper<U> {
 	/**
 	 * @inheritdoc
 	 */

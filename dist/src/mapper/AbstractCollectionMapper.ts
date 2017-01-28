@@ -94,7 +94,7 @@ import ICollectionMapperConfig from './ICollectionMapperConfig';
  * @param T Source collection item type.
  * @param U Target collection item type.
  */
-abstract class AbstractCollectionMapper<T, U> extends Class implements ICollectionMapper<T, U> {
+abstract class AbstractCollectionMapper<T, U> extends Class implements ICollectionMapper<U> {
 	/**
 	 * @hidden
 	 */

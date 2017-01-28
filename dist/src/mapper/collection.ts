@@ -9,7 +9,7 @@ import ICollection from '../ICollection';
 import ICollectionMapper from './ICollectionMapper';
 import ICollectionMapperConfig from './ICollectionMapperConfig';
 
-export function createMapper<T extends IClass, U extends IClass>(source: ICollection<T>, config: ICollectionMapperConfig<T, U>): ICollectionMapper<T, U> {
+export function createMapper<T extends IClass, U extends IClass>(source: ICollection<T>, config: ICollectionMapperConfig<T, U>): ICollectionMapper<U> {
 	return (source instanceof AbstractArray) ? createArrayMapper(source, config) :
 		(source instanceof AbstractMap) ? createMapMapper(source, config) :
 		(source instanceof AbstractSet) ? createSetMapper(source, config) : null;

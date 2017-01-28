@@ -46,7 +46,7 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	spliceEvent: Event<SpliceEventParams<T>> = new Event<SpliceEventParams<T>>();
+	spliceEvent: Event<SetSpliceEventParams<T>> = new Event<SetSpliceEventParams<T>>();
 
 	/**
 	 * Set is cleared. Triggered in result of calling:
@@ -55,7 +55,7 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	clearEvent: Event<ItemsEventParams<T>> = new Event<ItemsEventParams<T>>();
+	clearEvent: Event<SetItemsEventParams<T>> = new Event<SetItemsEventParams<T>>();
 
 	/**
 	 * Set is changed. Triggered right after one of events:
@@ -63,7 +63,7 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 	 * * [[spliceEvent]]
 	 * * [[clearEvent]]
 	 */
-	changeEvent: Event<EventParams<T>> = new Event<EventParams<T>>();
+	changeEvent: Event<SetEventParams<T>> = new Event<SetEventParams<T>>();
 
 	/**
 	 * @inheritdoc
@@ -246,7 +246,7 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 /**
  * [[JW.ObservableSet]] event parameters.
  */
-export interface EventParams<T extends IClass> {
+export interface SetEventParams<T extends IClass> {
 	/**
 	 * Event sender.
 	 */
@@ -256,7 +256,7 @@ export interface EventParams<T extends IClass> {
 /**
  * Parameters of [[JW.ObservableSet]]'s [[JW.ObservableSet.spliceEvent]].
  */
-export interface SpliceEventParams<T extends IClass> extends EventParams<T> {
+export interface SetSpliceEventParams<T extends IClass> extends SetEventParams<T> {
 	/**
 	 * Result of [[splice]] method.
 	 */
@@ -266,7 +266,7 @@ export interface SpliceEventParams<T extends IClass> extends EventParams<T> {
 /**
  * Parameters of [[JW.ObservableSet]]'s [[JW.ObservableSet.clearEvent]].
  */
-export interface ItemsEventParams<T extends IClass> extends EventParams<T> {
+export interface SetItemsEventParams<T extends IClass> extends SetEventParams<T> {
 	/**
 	 * Old set contents.
 	 */

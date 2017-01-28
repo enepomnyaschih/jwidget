@@ -1,6 +1,5 @@
-import {default as ObservableArray, ItemsEventParams, MoveEventParams, ReorderEventParams, ReplaceEventParams, SpliceEventParams} from '../../ObservableArray';
+import {default as ObservableArray, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
 import ArrayMerger from './ArrayMerger';
-import Class from '../../Class';
 import IArray from '../../IArray';
 import IArrayMergerConfig from './IArrayMergerConfig';
 import IndexCount from '../../IndexCount';
@@ -34,7 +33,7 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 		return indexes;
 	}
 
-	private _onSplice(params: SpliceEventParams<IArray<T>>) {
+	private _onSplice(params: ArraySpliceEventParams<IArray<T>>) {
 		var spliceResult = params.spliceResult;
 		var indexes = this._getIndexes(spliceResult.oldItems);
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -54,14 +53,14 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: ReplaceEventParams<IArray<T>>) {
+	private _onReplace(params: ArrayReplaceEventParams<IArray<T>>) {
 		var index = this._count(this.source.getItems(), 0, params.index);
 		this.target.trySplice(
 			[new IndexCount(index, params.oldItem.getLength())],
 			[new IndexItems<T>(index, params.newItem.getItems())]);
 	}
 
-	private _onMove(params: MoveEventParams<IArray<T>>) {
+	private _onMove(params: ArrayMoveEventParams<IArray<T>>) {
 		var count = params.item.getLength();
 		var indexes = new Array<number>(this.target.getLength());
 		var currentIndex = 0;
@@ -102,7 +101,7 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 		this.target.tryClear();
 	}
 
-	private _onReorder(params: ReorderEventParams<IArray<T>>) {
+	private _onReorder(params: ArrayReorderEventParams<IArray<T>>) {
 		var oldIndexes = this._getIndexes(params.items);
 		var newIndexes = this._getIndexes(this.source.getItems());
 		var indexes = new Array<number>(this.target.getLength());
@@ -115,83 +114,5 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 			}
 		}
 		this.target.tryReorder(indexes);
-	}
-}
-
-/**
- * @hidden
- */
-export class Bunch<T> extends Class {
-	private source: IArray<IArray<T>>;
-	private target: IArray<T>;
-	private bunch: ObservableArray<T>;
-
-	constructor(merger: ObservableArrayMerger<T>, bunch: ObservableArray<T>) {
-		super();
-		this.source = merger.source;
-		this.target = merger.target;
-		this.bunch = bunch;
-		this.own(bunch.spliceEvent.bind(this._onSplice, this));
-		this.own(bunch.replaceEvent.bind(this._onReplace, this));
-		this.own(bunch.moveEvent.bind(this._onMove, this));
-		this.own(bunch.clearEvent.bind(this._onClear, this));
-		this.own(bunch.reorderEvent.bind(this._onReorder, this));
-	}
-
-	private _getIndex(): number {
-		var bunches = this.source.getItems();
-		var index = 0;
-		for (var i = 0, l = bunches.length; i < l; ++i) {
-			var bunch = bunches[i];
-			if (bunch === this.bunch) {
-				return index;
-			}
-			index += bunch.getLength();
-		}
-		console.warn("JW.ObservableArray.Merger object is corrupted");
-		return 0;
-	}
-
-	private _onSplice(params: SpliceEventParams<T>) {
-		var spliceResult = params.spliceResult;
-		var index = this._getIndex();
-		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
-			return new IndexCount(indexItems.index + index, indexItems.items.length);
-		});
-		var addParamsList = spliceResult.addedItemsList.map((indexItems) => {
-			return new IndexItems<T>(indexItems.index + index, indexItems.items.concat());
-		});
-		this.target.trySplice(removeParamsList, addParamsList);
-	}
-
-	private _onReplace(params: ReplaceEventParams<T>) {
-		this.target.trySet(params.newItem, this._getIndex() + params.index);
-	}
-
-	private _onMove(params: MoveEventParams<T>) {
-		var index = this._getIndex();
-		this.target.tryMove(index + params.fromIndex, index + params.toIndex);
-	}
-
-	private _onClear(params: ItemsEventParams<T>) {
-		this.target.tryRemoveAll(this._getIndex(), params.items.length);
-	}
-
-	private _onReorder(params: ReorderEventParams<T>) {
-		var index = this._getIndex();
-		var bunchIndexArray = params.indexArray;
-		var bunchLength = bunchIndexArray.length;
-		var targetLength = this.target.getLength();
-		var targetIndexArray = new Array<number>(targetLength);
-		for (var i = 0; i < index; ++i) {
-			targetIndexArray[i] = i;
-		}
-		for (var i = 0; i < bunchLength; ++i) {
-			targetIndexArray[index + i] = index + bunchIndexArray[i];
-		}
-		for (var i = index + bunchLength; i < targetLength; ++i) {
-			targetIndexArray[i] = i;
-		}
-		this.target.tryReorder(targetIndexArray);
 	}
 }

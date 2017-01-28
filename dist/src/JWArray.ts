@@ -225,15 +225,6 @@ export default class JWArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	merge(): any[] {
-		return ArrayUtils.merge(this.map(function(item: any): any[] {
-			return item.getItems();
-		}, this));
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	toReversed(): T[] {
 		return ArrayUtils.toReversed(this.items);
 	}

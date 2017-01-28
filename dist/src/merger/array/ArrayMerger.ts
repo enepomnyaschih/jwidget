@@ -1,8 +1,12 @@
+import {mapDestroyableArray} from '../../mapper/array';
+import Bunch from './Bunch';
 import Class from '../../Class';
 import IArray from '../../IArray';
 import IArrayMerger from './IArrayMerger';
 import IArrayMergerConfig from './IArrayMergerConfig';
 import IClass from '../../IClass';
+import JWArray from '../../JWArray';
+import ObservableArray from '../../ObservableArray';
 
 /**
  * Arrays merger. Builds array consisting of all source collections items in the same order.
@@ -91,10 +95,8 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 	constructor(public source: IArray<IArray<T>>, config: IArrayMergerConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? source._createMergerTarget<T>() : config.target;
-		this._bunches = source.$$mapObjects((bunch) => {
-			return bunch.createMergerBunch(this);
-		});
+		this.target = this._targetCreated ? this.createTarget(source) : config.target;
+		this._bunches = mapDestroyableArray(source, (bunch) => this.createMergerBunch(bunch));
 		this.target.tryAddAll(this._getAllItems());
 	}
 
@@ -150,5 +152,19 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 			count += bunches[index + i].getLength();
 		}
 		return count;
+	}
+
+	private createTarget(source: IArray<IArray<T>>): IArray<T> {
+		if (source instanceof ObservableArray) {
+			return new ObservableArray<T>();
+		}
+		if (source.some((item) => item instanceof ObservableArray)) {
+			return new ObservableArray<T>();
+		}
+		return new JWArray<T>();
+	}
+
+	private createMergerBunch(item: IArray<T>): IClass {
+		return (item instanceof ObservableArray) ? new Bunch(this.source, this.target, item) : new Class();
 	}
 }

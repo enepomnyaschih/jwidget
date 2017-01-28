@@ -1,4 +1,4 @@
-import {default as ObservableArray, ItemsEventParams, MoveEventParams, ReorderEventParams, ReplaceEventParams, SpliceEventParams} from '../../ObservableArray';
+import {default as ObservableArray, ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
 import ArrayInserter from './ArrayInserter';
 import IArrayInserterConfig from './IArrayInserterConfig';
 
@@ -18,7 +18,7 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		this.own(source.reorderEvent.bind(this._onReorder, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.getRemovedItems();
@@ -43,7 +43,7 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		}
 	}
 
-	private _onReplace(params: ReplaceEventParams<T>) {
+	private _onReplace(params: ArrayReplaceEventParams<T>) {
 		if (this._removeItem) {
 			this._removeItem.call(this._scope, params.oldItem, params.index);
 		}
@@ -52,7 +52,7 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		}
 	}
 
-	private _onMove(params: MoveEventParams<T>) {
+	private _onMove(params: ArrayMoveEventParams<T>) {
 		if (this._removeItem) {
 			this._removeItem.call(this._scope, params.item, params.fromIndex);
 		}
@@ -61,11 +61,11 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		}
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: ArrayItemsEventParams<T>) {
 		this._doClearItems(params.items);
 	}
 
-	private _onReorder(params: ReorderEventParams<T>) {
+	private _onReorder(params: ArrayReorderEventParams<T>) {
 		this._doClearItems(params.items);
 		this._addItems(this.source.getItems(), 0);
 	}

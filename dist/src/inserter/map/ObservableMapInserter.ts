@@ -1,4 +1,4 @@
-import {default as ObservableMap, ItemsEventParams, ReindexEventParams, SpliceEventParams} from '../../ObservableMap';
+import {default as ObservableMap, MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from '../../ObservableMap';
 import IMapInserterConfig from './IMapInserterConfig';
 import MapInserter from './MapInserter';
 
@@ -16,13 +16,13 @@ export default class ObservableMapInserter<T> extends MapInserter<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: MapSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._removeItems(spliceResult.removedItems);
 		this._addItems(spliceResult.addedItems);
 	}
 
-	private _onReindex(params: ReindexEventParams<T>) {
+	private _onReindex(params: MapReindexEventParams<T>) {
 		var keyMap = params.keyMap;
 		for (var oldKey in keyMap) {
 			var newKey = keyMap[oldKey];
@@ -36,7 +36,7 @@ export default class ObservableMapInserter<T> extends MapInserter<T> {
 		}
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: MapItemsEventParams<T>) {
 		this._doClearItems(params.items);
 	}
 }

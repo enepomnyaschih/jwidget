@@ -39,7 +39,7 @@ export default class ComponentChildren extends JWMap<Component> {
 	trySet(item: Component, key: string): Proxy<Component> {
 		var result = super.trySet(item, key);
 		if (result === undefined) {
-			return;
+			return undefined;
 		}
 		var child = new ComponentChild(this.component, item);
 		this.target.trySet(child, key);
@@ -52,7 +52,7 @@ export default class ComponentChildren extends JWMap<Component> {
 	trySetKey(oldKey: string, newKey: string): Component {
 		var item = super.trySetKey(oldKey, newKey);
 		if (item === undefined) {
-			return;
+			return undefined;
 		}
 		this.target.trySetKey(oldKey, newKey);
 		return item;
@@ -64,7 +64,7 @@ export default class ComponentChildren extends JWMap<Component> {
 	tryRemove(key: string): Component {
 		var item = super.tryRemove(key);
 		if (item === undefined) {
-			return;
+			return undefined;
 		}
 		this.target.tryRemove(key);
 		return item;
@@ -76,14 +76,14 @@ export default class ComponentChildren extends JWMap<Component> {
 	trySplice(removedKeys: string[], updatedItems: Dictionary<Component>): IMapSpliceResult<Component> {
 		var spliceResult = super.trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
-			return;
+			return undefined;
 		}
 		var removedItems = spliceResult.removedItems;
 		var addedItems = spliceResult.addedItems;
 		var children = MapUtils.map(addedItems, (item) => {
 			return new ComponentChild(this.component, item);
 		}, this);
-		var targetResult = this.target.trySplice(MapUtils.getRemovedKeys(removedItems, addedItems), children);
+		this.target.trySplice(MapUtils.getRemovedKeys(removedItems, addedItems), children);
 		return spliceResult;
 	}
 
@@ -93,7 +93,7 @@ export default class ComponentChildren extends JWMap<Component> {
 	tryClear(): Dictionary<Component> {
 		var items = super.tryClear();
 		if (items === undefined) {
-			return;
+			return undefined;
 		}
 		this.target.tryClear();
 		return items;
@@ -105,7 +105,7 @@ export default class ComponentChildren extends JWMap<Component> {
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
 		var result = super.tryReindex(keyMap);
 		if (result === undefined) {
-			return;
+			return undefined;
 		}
 		this.target.tryReindex(keyMap);
 		return result;

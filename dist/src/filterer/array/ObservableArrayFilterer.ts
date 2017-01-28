@@ -1,4 +1,4 @@
-import {default as ObservableArray, ItemsEventParams, MoveEventParams, ReorderEventParams, ReplaceEventParams, SpliceEventParams} from '../../ObservableArray';
+import {default as ObservableArray, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
 import ArrayFilterer from './ArrayFilterer';
 import Dictionary from '../../Dictionary';
 import IArrayFiltererConfig from './IArrayFiltererConfig';
@@ -20,12 +20,12 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 		this.own(source.reorderEvent.bind(this._onReorder, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.removedItemsList, spliceResult.addedItemsList);
 	}
 
-	private _onReplace(params: ReplaceEventParams<T>) {
+	private _onReplace(params: ArrayReplaceEventParams<T>) {
 		var oldFiltered = this._filtered[params.index] !== 0;
 		var newFiltered = this._filterItem.call(this._scope, params.newItem) !== false;
 		if (!oldFiltered && !newFiltered) {
@@ -42,7 +42,7 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 		}
 	}
 
-	private _onMove(params: MoveEventParams<T>) {
+	private _onMove(params: ArrayMoveEventParams<T>) {
 		if (this._filtered[params.fromIndex] !== 0) {
 			var fromIndex: number, toIndex: number;
 			if (params.fromIndex < params.toIndex) {
@@ -57,11 +57,11 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 		ArrayUtils.tryMove(this._filtered, params.fromIndex, params.toIndex);
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear() {
 		this.target.tryClear();
 	}
 
-	private _onReorder(params: ReorderEventParams<T>) {
+	private _onReorder(params: ArrayReorderEventParams<T>) {
 		var targetIndex = 0;
 		var targetIndexWhichMovesToI: Dictionary<number> = {};
 		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {

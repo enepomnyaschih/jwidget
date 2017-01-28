@@ -17,7 +17,6 @@ import ICollection from './ICollection';
 import Property from './Property';
 import Template from './Template';
 import TemplateOutput from './TemplateOutput';
-import * as ArrayUtils from './ArrayUtils';
 import * as DomUtils from './DomUtils';
 import * as MapUtils from './MapUtils';
 import * as SetUtils from './SetUtils';
@@ -632,9 +631,9 @@ export default class Component extends Class {
 		var elements = apply({}, this._elements);
 		for (var jwId in elements) {
 			var element = elements[jwId];
-			var aliveElements = (<HTMLElement[]><any>element).filter(function(el) {
+			var aliveElements = (<HTMLElement[]><any>element).filter((el) => {
 				return DomUtils.inEl(el, this.el[0]);
-			}, this);
+			});
 			if (aliveElements.length === 0) {
 				delete this._elements[jwId];
 				continue;
@@ -645,8 +644,8 @@ export default class Component extends Class {
 			}
 			var jwIdCamel = StringUtils.camel(jwId);
 			var renderMethodName = "render" + StringUtils.capitalize(jwIdCamel);
-			if (typeof this[renderMethodName] === "function") {
-				var result = this[renderMethodName](element);
+			if (typeof (<any>this)[renderMethodName] === "function") {
+				var result = (<any>this)[renderMethodName](element);
 				if (jwId === "root") {
 					if (result instanceof AbstractArray) {
 						this.addArray(result, jwId);
@@ -901,7 +900,7 @@ export default class Component extends Class {
 		if (this.parent && !this.parent.wasAfterAppend) {
 			return;
 		}
-		if (!this.parent && !inDom(this.el[0])) {
+		if (!this.parent && !DomUtils.inDom(this.el[0])) {
 			return;
 		}
 		this.wasAfterAppend = true;

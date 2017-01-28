@@ -1,4 +1,4 @@
-import {default as ObservableSet, ItemsEventParams, SpliceEventParams} from '../../ObservableSet';
+import {default as ObservableSet, SetItemsEventParams, SetSpliceEventParams} from '../../ObservableSet';
 import IClass from '../../IClass';
 import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
 import SetOrderer from './SetOrderer';
@@ -17,14 +17,14 @@ export default class ObservableSetOrderer<T extends IClass> extends SetOrderer<T
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SpliceEventParams<T>) {
+	private _onSplice(params: SetSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			ArrayUtils.toSet(spliceResult.removedItems),
 			ArrayUtils.toSet(spliceResult.addedItems));
 	}
 
-	private _onClear(params: ItemsEventParams<T>) {
+	private _onClear(params: SetItemsEventParams<T>) {
 		this.target.removeItems(params.items);
 	}
 }

@@ -419,6 +419,7 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 		if (result !== undefined) {
 			return result[0];
 		}
+		return undefined;
 	}
 
 	/**
@@ -703,30 +704,6 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	}
 
 	/**
-	 * *Suitable if array consists of JW.AbstractArray instances only.*
-	 * Builds array consisting of subarray items in the same order.
-	 * Current array is not modified.
-	 *
-	 * @returns Merged array.
-	 */
-	abstract merge(): any[];
-
-	/**
-	 * *Suitable if array consists of JW.AbstractArray instances only.*
-	 * Builds array consisting of subarray items in the same order.
-	 * Current array is not modified.
-	 *
-	 * @returns Merged array.
-	 */
-	$merge(): IArray<any> {
-		var result = this._createMergerTarget<any>();
-		result.own(this.createMerger({
-			target: result
-		}));
-		return result;
-	}
-
-	/**
 	 * Reverses item order in array. Modifies the array itself.
 	 */
 	reverse() {
@@ -793,6 +770,7 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 		if (this.items.length !== 0) {
 			return this.tryRemove(this.items.length - 1);
 		}
+		return undefined;
 	}
 
 	/**

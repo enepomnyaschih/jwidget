@@ -563,24 +563,6 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	sortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): void;
 
 	/**
-	 * *Suitable if array consists of JW.AbstractArray instances only.*
-	 * Builds array consisting of subarray items in the same order.
-	 * Current array is not modified.
-	 *
-	 * @returns Merged array.
-	 */
-	merge(): any[];
-
-	/**
-	 * *Suitable if array consists of JW.AbstractArray instances only.*
-	 * Builds array consisting of subarray items in the same order.
-	 * Current array is not modified.
-	 *
-	 * @returns Merged array.
-	 */
-	$merge(): IArray<any>;
-
-	/**
 	 * Reverses item order in array. Modifies the array itself.
 	 */
 	reverse(): void;

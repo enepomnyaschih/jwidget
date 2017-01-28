@@ -1,4 +1,4 @@
-import {createObserver} from '../observer';
+import {createObserver} from '../observer/collection';
 import Class from '../Class';
 import Component from '../Component';
 import ICollection from '../ICollection';
