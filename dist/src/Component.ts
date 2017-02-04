@@ -15,7 +15,7 @@ import IArray from './IArray';
 import IClass from './IClass';
 import ICollection from './ICollection';
 import Property from './Property';
-import Template from './Template';
+import HtmlTemplate from './HtmlTemplate';
 import TemplateOutput from './TemplateOutput';
 import * as DomUtils from './DomUtils';
 import * as MapUtils from './MapUtils';
@@ -469,7 +469,7 @@ export default class Component extends Class {
 	 */
 	constructor() {
 		super();
-		if (!this.templates) {
+		if (!Component.prototype.templates) {
 			DomUtils.template(Component, {main: '<div></div>'});
 		}
 		this._template = this.templates['main'];
@@ -600,8 +600,8 @@ export default class Component extends Class {
 	using(value: HTMLElement): Component;
 	using(value: any): Component {
 		this._template =
-			(typeof value === "string") ? new Template(value) :
-				(value instanceof Template) ? value : new DomTemplate(value);
+			(typeof value === "string") ? new HtmlTemplate(value) :
+				(value instanceof HtmlTemplate) ? value : new DomTemplate(value);
 		return this;
 	}
 
@@ -631,7 +631,7 @@ export default class Component extends Class {
 		var elements = apply({}, this._elements);
 		for (var jwId in elements) {
 			var element = elements[jwId];
-			var aliveElements = (<HTMLElement[]><any>element).filter((el) => {
+			var aliveElements = Array.prototype.filter.call(element, (el: HTMLElement) => {
 				return DomUtils.inEl(el, this.el[0]);
 			});
 			if (aliveElements.length === 0) {

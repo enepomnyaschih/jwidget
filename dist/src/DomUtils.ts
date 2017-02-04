@@ -2,7 +2,7 @@
 import Class from './Class';
 import Component from './Component';
 import Dictionary from './Dictionary';
-import Template from './Template';
+import HtmlTemplate from './HtmlTemplate';
 import * as MapUtils from './MapUtils';
 
 /**
@@ -51,9 +51,11 @@ var _fragment: DocumentFragment = null;
  * @param tpls Templates to add or override.
  */
 export function template(cls: any, tpls: Dictionary<string>) {
-	Component.prototype.templates['main'] = Component.prototype.templates['main'] || new Template('<div></div>');
+	if (cls !== Component && !Component.prototype.templates) {
+		template(Component, {main: '<div></div>'});
+	}
 	var templates = MapUtils.map(tpls, function(html) {
-		return new Template(html);
+		return new HtmlTemplate(html);
 	});
 	if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls) {
 		apply(cls.prototype.Templates.prototype, templates);

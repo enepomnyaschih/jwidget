@@ -7,7 +7,7 @@ import * as DomUtils from './DomUtils';
  * HTML template. This class compiles the input template only once, and uses element cloning further on to
  * optimize rendering performance.
  */
-export default class Template extends AbstractTemplate {
+export default class HtmlTemplate extends AbstractTemplate {
 	/**
 	 * @hidden
 	 */
