@@ -120,31 +120,6 @@ export default class Property<V> extends Class {
 	}
 
 	/**
-	 * Maps property value.
-	 *
-	 * If property value is null or undefined, returns null.
-	 * Otherwise, returns the result of mapping function call with property value as argument.
-	 *
-	 * @param callback Mapping function.
-	 * @param scope **callback** call scope. Defaults to property itself.
-	 * @returns Result value.
-	 */
-	map<U>(callback: (value: V) => U, scope?: any): U {
-		return (this._value == null) ? null : callback.call(scope || this, this._value);
-	}
-
-	/**
-	 * Returns a property containing the result of [[map]] method call with the same arguments.
-	 *
-	 * @param callback Mapping function.
-	 * @param scope **callback** call scope. Defaults to property itself.
-	 * @returns Result property.
-	 */
-	$map<U>(callback: (value: V) => U, scope?: any): Property<U> {
-		return new Property(this.map(callback, scope));
-	}
-
-	/**
 	 * Works the same way as [[$map]] but also starts synchronization.
 	 * To stop synchronization, destroy the result property.
 	 * In comparison to [[$$mapObject]] method, doesn't destroy previously assigned values.
@@ -153,7 +128,7 @@ export default class Property<V> extends Class {
 	 * @param scope **callback** call scope. Defaults to property itself.
 	 * @returns Result property.
 	 */
-	$$mapValue<U>(callback: (value: V) => U, scope?: any): Property<U> {
+	mapValue<U>(callback: (value: V) => U, scope?: any): Property<U> {
 		let result = new Property<U>();
 		result.own(new Mapper([this], {
 			target: result,
@@ -172,7 +147,7 @@ export default class Property<V> extends Class {
 	 * @param scope **callback** call scope. Defaults to property itself.
 	 * @returns Result property.
 	 */
-	$$mapObject<U extends Destroyable>(callback: (value: V) => U, scope?: any): Property<U> {
+	mapObject<U extends Destroyable>(callback: (value: V) => U, scope?: any): Property<U> {
 		let result = new Property<U>();
 		result.own(new Mapper([this], {
 			target: result,
