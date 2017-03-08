@@ -2,42 +2,30 @@ var path = require("path"),
 	webpack = require("webpack"),
 	CleanWebpackPlugin = require("clean-webpack-plugin");
 
-var optimize = process.argv.indexOf("--optimize") !== -1;
-
 module.exports = {
 	context: path.resolve(__dirname, "dist/src"),
-	entry: "./index.ts",
+	entry: "./test/all.ts",
 	output: {
-		path: path.resolve(__dirname, "dist"),
-		filename: "jwidget.js",
+		path: path.resolve(__dirname, "dist/test"),
+		filename: "all.js",
 	},
 
-	devtool: optimize ? undefined : "source-map",
+	devtool: "source-map",
 
 	resolve: {
-		extensions: ["", ".webpack.js", ".web.js", ".ts", ".js"]
+		extensions: [".webpack.js", ".web.js", ".ts", ".js"]
 	},
 
 	module: {
-		loaders: [
-			{ test: /\.ts$/, loader: "ts" }
-		],
-
-		preLoaders: [
-			{ test: /\.js$/, loader: optimize ? "webpack-strip-block" : "source-map" }
+		rules: [
+			{ test: /\.ts$/, loader: "ts-loader" },
+			{ test: /\.js$/, loader: "source-map-loader", enforce: "pre" }
 		]
 	},
 
 	plugins: [
 		new CleanWebpackPlugin(["dist"], {
-			exclude: ["src", "package.json"]
+			exclude: [".npmignore", "src", "package.json", "test/bower_components"]
 		})
-	].concat(optimize ? [
-		new webpack.optimize.UglifyJsPlugin({
-			minimize: true,
-			compressor: {
-				warnings: false
-			}
-		})
-	] : [])
+	]
 };
