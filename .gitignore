@@ -1,4 +1,6 @@
 /dist/*
+!/dist/.npmignore
+!/dist/package.json
 !/dist/src
 /guides/endownload/jwidget.zip
 /guides/endownload/plugins

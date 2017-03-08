@@ -1,8 +1,8 @@
 var path = require("path"),
 	webpack = require("webpack"),
-	CleanWebpackPlugin = require('clean-webpack-plugin');
+	CleanWebpackPlugin = require("clean-webpack-plugin");
 
-var optimize = process.argv.indexOf('--optimize') !== -1;
+var optimize = process.argv.indexOf("--optimize") !== -1;
 
 module.exports = {
 	context: path.resolve(__dirname, "dist/src"),
@@ -29,8 +29,8 @@ module.exports = {
 	},
 
 	plugins: [
-		new CleanWebpackPlugin(['dist'], {
-			exclude: ['src']
+		new CleanWebpackPlugin(["dist"], {
+			exclude: ["src", "package.json"]
 		})
 	].concat(optimize ? [
 		new webpack.optimize.UglifyJsPlugin({

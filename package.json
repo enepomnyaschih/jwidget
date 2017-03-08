@@ -1,20 +1,33 @@
 {
-  "name": "jwidget",
+  "name": "jwidget-source",
   "version": "2.0.0",
-  "description": "Object-oriented JavaScript MV-framework",
-  "main": "./dist/jwidget.js",
+  "description": "Object-oriented FrontEnd MV framework (source code)",
+  "homepage": "http://enepomnyaschih.github.io/jwidget",
+  "bugs": {
+    "url": "https://github.com/enepomnyaschih/jwidget/issues",
+    "email": "jwidgetproject@gmail.com"
+  },
+  "license": "LGPL-3.0",
   "author": {
     "name": "Egor Nepomnyaschih",
-    "email": "enepomnyaschih@gmail.com"
+    "email": "enepomnyaschih@gmail.com",
+    "url": "http://enepomnyaschih.livejournal.com"
   },
-  "license": "LGPL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enepomnyaschih/jwidget.git"
+  },
+  "private": true,
   "dependencies": {
+    "@types/jasmine": "^2.5.42",
+    "@types/jquery": "2.0.39",
+    "clean-webpack-plugin": "0.1.14",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.4.1",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-jasmine": "^1.1.0",
     "source-map-loader": "0.1.5",
     "ts-loader": "1.3.3",
-
-    "clean-webpack-plugin": "0.1.14",
-    "webpack-strip-block": "0.1.0",
-
-    "@types/jquery": "2.0.39"
+    "webpack-strip-block": "0.1.0"
   }
 }
