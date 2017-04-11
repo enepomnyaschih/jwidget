@@ -13,7 +13,7 @@ export function createArrayIndexer<T>(source: IArray<T>, config: ICollectionInde
 		new ArrayIndexer<T>(source, config);
 }
 
-export function indexArray<T>(source: IArray<T>, callback: (item: T) => string, scope?: any): IMap<T> {
+export function indexArray<T>(source: IArray<T>, callback: (item: T) => any, scope?: any): IMap<T> {
 	if (!(source instanceof ObservableArray)) {
 		return source.$index(callback, scope);
 	}

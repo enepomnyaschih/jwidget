@@ -308,7 +308,7 @@ export function toSortedComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T
  * @param scope **callback** call scope. Defaults to collection itself.
  * @returns Collection index.
  */
-export function index<T>(map: Dictionary<T>, callback: (item: T, key: string) => string, scope?: any): Dictionary<T> {
+export function index<T>(map: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): Dictionary<T> {
 	var result: Dictionary<T> = {};
 	every(map, function (item, oldKey) {
 		var key = callback.call(scope, item, oldKey);

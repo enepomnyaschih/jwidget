@@ -9,7 +9,7 @@ interface ICollectionIndexerConfig<T> {
 	/**
 	 * Indexing function. Determines item key in map.
 	 */
-	getKey: (item: T) => string;
+	getKey: (item: T) => any;
 
 	/**
 	 * [[getKey]] call scope.

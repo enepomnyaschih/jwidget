@@ -176,7 +176,7 @@ export function toSortedComparing<T extends IClass>(set: Dictionary<T>, compare?
  * @param scope **callback** call scope. Defaults to collection itself.
  * @returns Collection index.
  */
-export function index<T extends IClass>(set: Dictionary<T>, callback: (item: T) => string, scope?: any): Dictionary<T> {
+export function index<T extends IClass>(set: Dictionary<T>, callback: (item: T) => any, scope?: any): Dictionary<T> {
 	var result: Dictionary<T> = {};
 	every(set, function (item) {
 		var key = callback.call(scope, item);

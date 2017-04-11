@@ -14,7 +14,7 @@ export function createSetIndexer<T extends IClass>(source: ISet<T>, config: ICol
 		new SetIndexer<T>(source, config);
 }
 
-export function indexSet<T extends IClass>(source: ISet<T>, callback: (item: T) => string, scope?: any): IMap<T> {
+export function indexSet<T extends IClass>(source: ISet<T>, callback: (item: T) => any, scope?: any): IMap<T> {
 	if (!(source instanceof ObservableSet)) {
 		return source.$index(callback, scope);
 	}

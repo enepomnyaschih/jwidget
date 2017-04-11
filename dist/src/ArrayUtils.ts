@@ -205,7 +205,7 @@ export function toSortedComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: numb
  * @param scope **callback** call scope. Defaults to collection itself.
  * @returns Collection index.
  */
-export function index<T>(arr: T[], callback: (item: T, index: number) => string, scope?: any): Dictionary<T> {
+export function index<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): Dictionary<T> {
 	var result: Dictionary<T> = {};
 	arr.every(function (item, index) {
 		var key = callback.call(scope, item, index);

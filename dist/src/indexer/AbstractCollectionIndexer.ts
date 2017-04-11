@@ -87,7 +87,7 @@ abstract class AbstractCollectionIndexer<T> extends Class implements ICollection
 	/**
 	 * @hidden
 	 */
-	protected _getKey: (item: T) => string;
+	protected _getKey: (item: T) => any;
 
 	/**
 	 * @hidden

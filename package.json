@@ -34,6 +34,7 @@
     "@types/jquery": "2.0.39"
   },
   "scripts": {
-    "setup": "npm install -g bower typescript webpack karma-cli & npm link typescript webpack & bower install & npm install"
+    "setup": "npm install -g bower typescript webpack karma-cli typedoc & npm link typescript webpack & bower install & npm install",
+    "doc": "typedoc --out doc --exclude test --excludePrivate --module commonjs --target ES5 dist/src"
   }
 }

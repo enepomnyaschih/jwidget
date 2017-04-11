@@ -11,7 +11,7 @@ export function createMapIndexer<T>(source: IMap<T>, config: ICollectionIndexerC
 		new MapIndexer<T>(source, config);
 }
 
-export function indexMap<T>(source: IMap<T>, callback: (item: T) => string, scope?: any): IMap<T> {
+export function indexMap<T>(source: IMap<T>, callback: (item: T) => any, scope?: any): IMap<T> {
 	if (!(source instanceof ObservableMap)) {
 		return source.$index(callback, scope);
 	}
