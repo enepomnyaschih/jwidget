@@ -35,6 +35,6 @@
   },
   "scripts": {
     "setup": "npm install -g bower typescript webpack karma-cli typedoc & npm link typescript webpack & bower install & npm install",
-    "doc": "typedoc --out doc --exclude test --excludePrivate --module commonjs --target ES5 dist/src"
+    "doc": "typedoc --out doc --exclude test --excludePrivate --module commonjs --target ES5 --name \"jWidget 2\" dist/src"
   }
 }
