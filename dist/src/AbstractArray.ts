@@ -37,7 +37,7 @@ import * as ArrayUtils from './ArrayUtils';
  *
  * # Array methods
  *
- * **Difference compared to [[JW.IndexedCollection]] is in bold.**
+ * **Difference compared to [[IndexedCollection]] is in bold.**
  *
  * Content retrieving:
  *
