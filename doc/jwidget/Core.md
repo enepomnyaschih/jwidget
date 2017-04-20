@@ -20,27 +20,29 @@ jWidget binding modes. All options have shorthands in Core module, i.e. Binding.
 	Bind invoker to argument.
 
 		// Bind element value to property
-		this.own(jwval(el, property, UPDATE));
+		this.own(val(el, property, UPDATE));
 
 	Always used as default binding. Hence, the next code is equivalent:
 
-		this.own(jwval(el, property));
+		this.own(val(el, property));
 * WATCH = 2
 	Bind argument to invoker.
 
 		// Bind property to element value
-		this.own(jwval(el, property, WATCH));
+		this.own(val(el, property, WATCH));
 
 	Always supplied with a no-argument method, which creates the property automatically.
 
 		// Watch element value
-		const property = this.own(jwval(el));
+		const property = this.own(val(el));
 * TWOWAY = 3
 	Bind invoker and argument to each other.
 	UPDATE-binding is applied first.
 
 		// Assign element value to property and setup two-way binding
-		this.own(jwval(el, property, TWOWAY));
+		this.own(val(el, property, TWOWAY));
+
+Reference: [jwidget/Class.own](Class.md#own), [jwidget/ui/val](ui/val.md).
 
 ## Value test functions
 
@@ -51,6 +53,8 @@ These functions are useful for collection filtering:
 Which is a shorter equivalent for:
 
 	const readValues = values.filter((value) => value != null);
+
+Reference: [jwidget/ICollection.filter](AbstractCollection.md#filter).
 
 ### isUndefined
 
@@ -174,15 +178,15 @@ Function modifies **target** object!
 
 Example 1:
 
-	var x: Dictionary<number> = {   var y: Dictionary<number> = {  // Result = {
-		a: 10,                                                     //     a: 10,
-		b: 20,                          b: 30,                     //     b: 30,
-		c: null,                        c: 40,                     //     c: 40,
-		d: undefined,                   d: 50,                     //     d: 50,
-		e: null                                                    //     e: null,
-										f: 60,                     //     f: 60
-										g: undefined               //
-	};                              };                             // };
+	var x: Dictionary<number> = { |  var y: Dictionary<number> = {  // Result = {
+	    a: 10,                    |                                 //     a: 10,
+	    b: 20,                    |      b: 30,                     //     b: 30,
+	    c: null,                  |      c: 40,                     //     c: 40,
+	    d: undefined,             |      d: 50,                     //     d: 50,
+	    e: null                   |                                 //     e: null,
+	                              |      f: 60,                     //     f: 60
+	                              |      g: undefined               //
+	};                            |  };                             // };
 
 	apply<number>(x, y);
 
@@ -200,6 +204,8 @@ Example 2 (form data preparing):
 			return null;
 		}
 	}
+
+Reference: [jwidget/Dictionary](Dictionary.md).
 
 ### cmp
 
@@ -262,14 +268,14 @@ Example:
 
 	iid(obj: any): number
 
-Returns object unique ID. Returns iid of object if it is an instance of Class,
+Returns object unique ID. Returns iid of object if it is an instance of [jwidget/Class](Class.md),
 else returns the object itself.
 
 ### destroy
 
 	destroy(obj: any): void
 
-Calls object method **destroy** if available. Can be used in mappers configuration:
+Calls object method **destroy** if available. Can be used in mapper configuration:
 
 	const mapper = createMapper(collection, {
 		createItem  : (data: Data) => new View(data),

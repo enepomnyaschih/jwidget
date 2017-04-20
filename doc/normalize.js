@@ -27,9 +27,13 @@ function process(name) {
 	const contents = fs.readFileSync(__dirname + "/" + name + ".md", {encoding: "utf8"});
 	const tokens = name.split("/").slice(0, -1);
 	fs.writeFileSync(__dirname + "/" + name + ".md", contents.replace(/\[(jwidget\/[^\]]+)\](?:\([^\)]+\))?/g, (a, match) => {
-		const subtokens = (mapping[match] || match).split("/");
+		const notation = match.split(".");
+		const cls = notation[0];
+		const member = notation[1];
+		const subtokens = (mapping[cls] || cls).split("/");
 		const index = diff(tokens, subtokens);
-		return "[" + match + "](" + repeat("..", tokens.length - index).concat(subtokens.slice(index)).join("/") + ".md)"
+		return "[" + match + "](" + repeat("..", tokens.length - index).concat(subtokens.slice(index)).join("/") +
+			".md" + (member ? ("#" + member) : "") + ")";
 	}));
 }
 
