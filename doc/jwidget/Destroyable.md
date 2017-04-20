@@ -8,7 +8,7 @@
 
 ## Description
 
-Object which has **destroy** method. Can be aggregated in [[jwidget/Class]] via **own** method.
+Object which has **destroy** method. Can be aggregated in [jwidget/Class](Class.md) via **own** method.
 
 ## Methods
 

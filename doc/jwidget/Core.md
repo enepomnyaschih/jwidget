@@ -8,7 +8,7 @@
 
 ## Description
 
-Core jWidget utilities. Some utilities duplicate the functions of [Underscore.js](http://underscore.org) and [Lodash](https://lodash.com), but still may come in handy if you want to keep dependency list short.
+Core jWidget utilities. Some utilities duplicate the functions of [Underscore.js](http://underscorejs.org) and [Lodash](https://lodash.com), but still may come in handy if you want to keep dependency list short.
 
 ## Enumerations
 
