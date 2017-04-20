@@ -5,10 +5,10 @@ jWidget is an object-oriented TypeScript Model-View framework. Being direct comp
 ### jWidget features
 
 * Base class [jwidget/Class](jwidget/Class.md) for object aggregation.
-* Event class [jwidget/Event] for change notification.
-* Observable property class [jwidget/Property] for basic binding support.
-* Collection classes, algorithms, synchronizers [jwidget/AbstractCollection].
-* Base class [jwidget/Component] for UI component creation and inheritance with HTML templates and full DOM control. Fully compatible with [jQuery](http://jquery.com).
+* Event class [jwidget/Event](jwidget/Event.md) for change notification.
+* Observable property class [jwidget/Property](jwidget/Property.md) for basic binding support.
+* Collection classes, algorithms, synchronizers [jwidget/AbstractCollection](jwidget/AbstractCollection.md).
+* Base class [jwidget/Component](jwidget/Component.md) for UI component creation and inheritance with HTML templates and full DOM control. Fully compatible with [jQuery](http://jquery.com).
 
 jWidget is a pure object-oriented solution which doesn't rely on mystical custom HTML templates and unclear update cycles. Each object simply listens to some events and handles them in very straightforward fashion. Look at the next example:
 
@@ -41,7 +41,7 @@ jWidget is a pure object-oriented solution which doesn't rely on mystical custom
 
 Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes you feel confident that you're able to implement as complicated and big MV application as you would like to. You can be confident to use all well-known OOD patterns and follow OOD [SOLID principles](http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)). Also, you can use static typing capabilities provided by TypeScript in a full scale. Read the [Tutorial](Tutorial1.md) for more examples.
 
-The difference between jWidget and the other Model-View frameworks is the approach of working with properties and collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding is performed explicitly via [jwidget/Property] and its helpers. Instead of special tags-repeaters in HTML templates, you work with collections explicitly using [jwidget/AbstractCollection] and their synchronizers.
+The difference between jWidget and the other Model-View frameworks is the approach of working with properties and collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding is performed explicitly via [jwidget/Property](jwidget/Property.md) and its helpers. Instead of special tags-repeaters in HTML templates, you work with collections explicitly using [jwidget/AbstractCollection](jwidget/AbstractCollection.md) and their synchronizers.
 
 This approach is more effective: data binding is not restricted to model and view communication: all the same practices can be used to bind model objects to each other and view components to each other.
 
@@ -63,12 +63,12 @@ Unfortunately, code documentation tools for TypeScript are not yet mature enough
 
 Core:
 
-- [jwidget/Core] - Core utilities.
-- [jwidget/Class] - Base class for object aggregation.
-- [jwidget/Event] - Event class for change notification.
-- [jwidget/Property] - Observable property for basic binding support.
+- [jwidget/Core](jwidget/Core.md) - Core utilities.
+- [jwidget/Class](jwidget/Class.md) - Base class for object aggregation.
+- [jwidget/Event](jwidget/Event.md) - Event class for change notification.
+- [jwidget/Property](jwidget/Property.md) - Observable property for basic binding support.
 
-Model bindings for [jwidget/Property]:
+Model bindings for [jwidget/Property](jwidget/Property.md):
 
 - JW.Copier
 - JW.Functor
