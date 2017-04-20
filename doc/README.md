@@ -152,14 +152,14 @@ Other tools:
 
 Collection interface & class hierarchy
 
-- [jwidget/AbstractCollection](jwidget/AbstractCollection.md) implements [jwidget/ICollection](jwidget/ICollection.md)
-    - [jwidget/IndexedCollection](jwidget/IndexedCollection.md) implements [jwidget/IIndexedCollection](jwidget/IIndexedCollection.md)
-        - [jwidget/AbstractArray](jwidget/AbstractArray.md) implements [jwidget/IArray](jwidget/IArray.md)
+- [jwidget/AbstractCollection](jwidget/AbstractCollection.md) implements [jwidget/ICollection](jwidget/AbstractCollection.md)
+    - [jwidget/IndexedCollection](jwidget/IndexedCollection.md) implements [jwidget/IIndexedCollection](jwidget/IndexedCollection.md)
+        - [jwidget/AbstractArray](jwidget/AbstractArray.md) implements [jwidget/IArray](jwidget/AbstractArray.md)
             - [jwidget/JWArray](jwidget/JWArray.md)
             - [jwidget/ObservableArray](jwidget/ObservableArray.md)
-        - [jwidget/AbstractMap](jwidget/AbstractMap.md) implements [jwidget/IMap](jwidget/IMap.md)
+        - [jwidget/AbstractMap](jwidget/AbstractMap.md) implements [jwidget/IMap](jwidget/AbstractMap.md)
             - [jwidget/JWMap](jwidget/JWMap.md)
             - [jwidget/ObservableMap](jwidget/ObservableMap.md)
-    - [jwidget/AbstractSet](jwidget/AbstractSet.md) implements [jwidget/ISet](jwidget/ISet.md)
+    - [jwidget/AbstractSet](jwidget/AbstractSet.md) implements [jwidget/ISet](jwidget/AbstractSet.md)
         - [jwidget/JWSet](jwidget/JWSet.md)
         - [jwidget/ObservableSet](jwidget/ObservableSet.md)
