@@ -7,8 +7,8 @@ principles of object-oriented programming and appreciate good application perfor
 ### jWidget features
 
 * Base class [Class](Class.md) for object aggregation
-* Event class JW.Event
-* Observable property class JW.Property
+* Event class [Event](Event.md) for change modification
+* Observable property class [Property](Property.md) for basic binding support
 * Collection classes, algorithms, synchronizers (JW.AbstractCollection)
 * Base class JW.UI.Component for UI components creation and inheritance with HTML templates
 * Application tree structure (parent and child components management)
