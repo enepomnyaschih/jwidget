@@ -7,7 +7,7 @@ jWidget is an object-oriented TypeScript Model-View framework. Being direct comp
 * Base class [jwidget/Class](jwidget/Class.md) for object aggregation.
 * Event class [jwidget/Event](jwidget/Event.md) for change notification.
 * Observable property class [jwidget/Property](jwidget/Property.md) for basic binding support.
-* Collection classes [jwidget/AbstractArray](jwidget/AbstractCollection.md), [jwidget/AbstractMap], [jwidget/AbstractSet] for collection binding support.
+* Collection classes [jwidget/AbstractArray](jwidget/AbstractArray.md), [jwidget/AbstractMap](jwidget/AbstractMap.md), [jwidget/AbstractSet](jwidget/AbstractSet.md) for collection binding support.
 * Base class [jwidget/Component](jwidget/Component.md) for UI component creation and inheritance with HTML templates and full DOM control. Fully compatible with [jQuery](http://jquery.com).
 
 jWidget is a pure object-oriented solution which doesn't rely on mystical custom HTML templates and unclear update cycles. Each object simply listens to some events and handles them in very straightforward fashion. Look at the next example:
@@ -64,80 +64,84 @@ Unfortunately, code documentation tools for TypeScript are not yet mature enough
 Core:
 
 - [jwidget/Core](jwidget/Core.md) - Core utilities.
-- [jwidget/Destroyable] - Interface for a destroyable object.
-- [jwidget/Dictionary] - Interface for a native map.
+- [jwidget/Destroyable](jwidget/Destroyable.md) - Interface for a destroyable object.
+- [jwidget/Dictionary](jwidget/Dictionary.md) - Interface for a native map.
+- [jwidget/Proxy](jwidget/Proxy.md) - Interface for value proxy.
 - [jwidget/Class](jwidget/Class.md) - Base class for object aggregation.
 - [jwidget/Event](jwidget/Event.md) - Event class for change notification.
-- [jwidget/EventAttachment](jwidget/Event.md) - Destroyable event attachment.
+- [jwidget/EventAttachment](jwidget/EventAttachment.md) - Destroyable event attachment.
 - [jwidget/Property](jwidget/Property.md) - Observable property for basic binding support.
-- [jwidget/Component] - Base class for UI component.
-- [jwidget/template] - Annotation for HTML template attachment to a [jwidget/Component] subclass.
+- [jwidget/Component](jwidget/Component.md) - Base class for UI component.
+- [jwidget/template](jwidget/template.md) - Annotation for HTML template attachment to a [jwidget/Component](jwidget/Component.md) subclass.
 
 Model bindings for [jwidget/Property](jwidget/Property.md):
 
-- [jwidget/Copier] - Keeps one property equal to another.
-- [jwidget/Functor] - Keeps one property as a result of the function from several other properties.
-- [jwidget/Mapper] - Keeps one property as a result of the function from several other properties.
-- [jwidget/Updater] - Observes several properties.
-- [jwidget/Switcher] - Observes several properties.
+- [jwidget/Copier](jwidget/Copier.md) - Keeps one property equal to another.
+- [jwidget/Functor](jwidget/Functor.md) - Keeps one property as a result of the function from several other properties.
+- [jwidget/Mapper](jwidget/Mapper.md) - Keeps one property as a result of the function from several other properties.
+- [jwidget/Updater](jwidget/Updater.md) - Observes several properties.
+- [jwidget/Switcher](jwidget/Switcher.md) - Observes several properties.
 
-View bindings for [jwidget/Property]:
+View bindings for [jwidget/Property](jwidget/Property.md):
 
-- [jwidget/ui/attr] - Binds attribute to a property.
-- [jwidget/ui/class] - Binds CSS class to a property.
-- [jwidget/ui/css] - Binds CSS style to a property.
-- [jwidget/ui/html] - Binds inner HTML to a property.
-- [jwidget/ui/on] - Event subscription with aggregation support.
-- [jwidget/ui/prop] - Binds jQuery property to a jWidget property.
-- [jwidget/ui/radio] - Binds radio selection to a property.
-- [jwidget/ui/show] - Binds visibility to a property.
-- [jwidget/ui/text] - Binds inner text to a property.
-- [jwidget/ui/val] - Binds input value to a property.
+- [jwidget/ui/attr](jwidget/ui/attr.md) - Binds attribute to a property.
+- [jwidget/ui/class](jwidget/ui/class.md) - Binds CSS class to a property.
+- [jwidget/ui/css](jwidget/ui/css.md) - Binds CSS style to a property.
+- [jwidget/ui/html](jwidget/ui/html.md) - Binds inner HTML to a property.
+- [jwidget/ui/on](jwidget/ui/on.md) - Event subscription with aggregation support.
+- [jwidget/ui/prop](jwidget/ui/prop.md) - Binds jQuery property to a jWidget property.
+- [jwidget/ui/radio](jwidget/ui/radio.md) - Binds radio selection to a property.
+- [jwidget/ui/show](jwidget/ui/show.md) - Binds visibility to a property.
+- [jwidget/ui/text](jwidget/ui/text.md) - Binds inner text to a property.
+- [jwidget/ui/val](jwidget/ui/val.md) - Binds input value to a property.
 
 Collections:
 
-- [jwidget/AbstractCollection] - Base class for all collections.
-- [jwidget/IndexedCollection] - Base class for indexed collections ([jwidget/AbstractArray] and [jwidget/AbstractMap]).
-- [jwidget/AbstractArray] aka ordered collection.
-- [jwidget/AbstractMap] aka associative array.
-- [jwidget/AbstractSet] aka unordered collection.
+- [jwidget/AbstractCollection](jwidget/AbstractCollection.md) - Base class for all collections. This page provides the overview of jWidget collections.
+- [jwidget/IndexedCollection](jwidget/IndexedCollection.md) - Base class for indexed collections ([jwidget/AbstractArray](jwidget/AbstractArray.md) and [jwidget/AbstractMap](jwidget/AbstractMap.md)).
+- [jwidget/AbstractArray](jwidget/AbstractArray.md) aka ordered collection.
+- [jwidget/AbstractMap](jwidget/AbstractMap.md) aka associative array.
+- [jwidget/AbstractSet](jwidget/AbstractSet.md) aka unordered collection.
 
 Collection synchronizers:
 
-- [jwidget/mapper] - Item mapper.
-- [jwidget/filterer] - Filterer.
-- [jwidget/counter] - Matching item counter.
-- [jwidget/lister] - Converter to a set.
-- [jwidget/indexer] - Converter to a map (indexer).
-- [jwidget/orderer] - Converter to an array (orderer).
-- [jwidget/sortercomparing] - Converter to an array (sorter by comparer).
-- [jwidget/observer] - Observer.
-- [jwidget/inserter/array], [jwidget/inserter/map] - View synchronizers.
-- [jwidget/merger/array] - Array merger.
-- [jwidget/reverser/array] - Array reverser.
+- [jwidget/mapper](jwidget/mapper.md) - Item mapper.
+- [jwidget/filterer](jwidget/filterer.md) - Filterer.
+- [jwidget/counter](jwidget/counter.md) - Matching item counter.
+- [jwidget/lister](jwidget/lister.md) - Converter to a set.
+- [jwidget/indexer](jwidget/indexer.md) - Converter to a map (indexer).
+- [jwidget/orderer](jwidget/orderer.md) - Converter to an array (orderer).
+- [jwidget/sortercomparing](jwidget/sortercomparing.md) - Converter to an array (sorter by comparer).
+- [jwidget/observer](jwidget/observer.md) - Observer.
+- [jwidget/inserter/array](jwidget/inserter/array.md), [jwidget/inserter/map](jwidget/inserter/map.md) - View synchronizers.
+- [jwidget/merger/array](jwidget/merger/array.md) - Array merger.
+- [jwidget/reverser/array](jwidget/reverser/array.md) - Array reverser.
 
 Collection utilities:
 
-- [jwidget/ArrayUtils]
-- [jwidget/MapUtils]
-- [jwidget/SetUtils]
+- [jwidget/ArrayUtils](jwidget/ArrayUtils.md)
+- [jwidget/MapUtils](jwidget/MapUtils.md)
+- [jwidget/SetUtils](jwidget/SetUtils.md)
 
 Other tools:
 
-- [jwidget/HtmlTemplate] - Well-optimized template engine with `jwclass` and `jwid` support.
+- [jwidget/HtmlTemplate](jwidget/HtmlTemplate.md) - Well-optimized template engine with `jwclass` and `jwid` support.
+- [jwidget/Timeout](jwidget/Timeout.md) - Destroyable version of setTimeout.
+- [jwidget/Interval](jwidget/Interval.md) - Destroyable version of setInterval.
+- [jwidget/StringUtils](jwidget/StringUtils.md) - String utilities.
 
 ## Low-level stuff
 
 Collection interface & class hierarchy
 
-- [jwidget/AbstractCollection]<T> implements [jwidget/ICollection]<T>
--- [jwidget/IndexedCollection]<K, T> extends [jwidget/AbstractCollection]<T> implements [jwidget/IIndexedCollection]<K, T>
---- [jwidget/AbstractArray]<T> extends [jwidget/IndexedCollection]<number, T> implements [jwidget/IArray]<T>
----- [jwidget/JWArray]<T> extends [jwidget/AbstractArray]<T>
----- [jwidget/ObservableArray]<T> extends [jwidget/AbstractArray]<T>
---- [jwidget/AbstractMap]<T> extends [jwidget/IndexedCollection]<string, T> implements [jwidget/IMap]<T>
----- [jwidget/JWMap]<T> extends [jwidget/AbstractMap]<T>
----- [jwidget/ObservableMap]<T> extends [jwidget/AbstractMap]<T>
--- [jwidget/AbstractSet]<T extends [jwidget/IClass]> extends [jwidget/AbstractCollection]<T> implements [jwidget/ISet]<T>
---- [jwidget/JWSet]<T extends [jwidget/IClass]> extends [jwidget/AbstractSet]<T>
---- [jwidget/ObservableSet]<T extends [jwidget/IClass]> extends [jwidget/AbstractSet]<T>
+- [jwidget/AbstractCollection](jwidget/AbstractCollection.md)<T> implements [jwidget/ICollection](jwidget/ICollection.md)<T>
+-- [jwidget/IndexedCollection](jwidget/IndexedCollection.md)<K, T> extends [jwidget/AbstractCollection](jwidget/AbstractCollection.md)<T> implements [jwidget/IIndexedCollection](jwidget/IIndexedCollection.md)<K, T>
+--- [jwidget/AbstractArray](jwidget/AbstractArray.md)<T> extends [jwidget/IndexedCollection](jwidget/IndexedCollection.md)<number, T> implements [jwidget/IArray](jwidget/IArray.md)<T>
+---- [jwidget/JWArray](jwidget/JWArray.md)<T> extends [jwidget/AbstractArray](jwidget/AbstractArray.md)<T>
+---- [jwidget/ObservableArray](jwidget/ObservableArray.md)<T> extends [jwidget/AbstractArray](jwidget/AbstractArray.md)<T>
+--- [jwidget/AbstractMap](jwidget/AbstractMap.md)<T> extends [jwidget/IndexedCollection](jwidget/IndexedCollection.md)<string, T> implements [jwidget/IMap](jwidget/IMap.md)<T>
+---- [jwidget/JWMap](jwidget/JWMap.md)<T> extends [jwidget/AbstractMap](jwidget/AbstractMap.md)<T>
+---- [jwidget/ObservableMap](jwidget/ObservableMap.md)<T> extends [jwidget/AbstractMap](jwidget/AbstractMap.md)<T>
+-- [jwidget/AbstractSet](jwidget/AbstractSet.md)<T extends [jwidget/IClass](jwidget/IClass.md)> extends [jwidget/AbstractCollection](jwidget/AbstractCollection.md)<T> implements [jwidget/ISet](jwidget/ISet.md)<T>
+--- [jwidget/JWSet](jwidget/JWSet.md)<T extends [jwidget/IClass](jwidget/IClass.md)> extends [jwidget/AbstractSet](jwidget/AbstractSet.md)<T>
+--- [jwidget/ObservableSet](jwidget/ObservableSet.md)<T extends [jwidget/IClass](jwidget/IClass.md)> extends [jwidget/AbstractSet](jwidget/AbstractSet.md)<T>
