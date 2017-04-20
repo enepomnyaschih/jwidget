@@ -27,12 +27,12 @@ import ISetSpliceResult from './ISetSpliceResult';
 
 /**
  * Set is unordered collection optimized for items adding, removal and search. Unlike
- * array and map, set can contain only [[JW.Class]] instances. Internal set representation is
- * map from [[iid]] to items themselves.
+ * array and map, set can contain only [[IClass]] instances. Internal set representation is
+ * map from [[IClass._iid]] to items themselves.
  *
  * # Set methods
  *
- * **Difference compared to [[JW.AbstractCollection]] is in bold.**
+ * **Difference compared to [[ICollection]] is in bold.**
  *
  * Content retrieving:
  *
@@ -50,23 +50,21 @@ import ISetSpliceResult from './ISetSpliceResult';
  * Returns true if all items match the criteria.
  * * [[some]] - Checks each item by criteria.
  * Returns true if some item matches the criteria.
- * * [[each]] - Iterates items through.
+ * * [[each]], [[forEach]] - Iterates items through.
  * * [[search]] - Finds item by criteria.
  * Returns first item matching the criteria.
- * * [[filter]], [[$filter]], [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * * [[count]], [[$count]], [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]], [[$$mapValues]], [[$$mapObjects]] - Maps collection items.
+ * * [[count]], [[$count]] - Counts the items matching criteria.
+ * * [[map]], [[$map]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * * [[toSorted]], [[$toSorted]],
- * [[toSortedComparing]], [[$toSortedComparing]],
- * [[$$toSortedComparing]] -
+ * * [[toSorted]], [[$toSorted]], [[toSortedComparing]], [[$toSortedComparing]] -
  * Builds array consisting of collection items sorted by indexer or comparer.
- * * [[index]], [[$index]], [[$$index]] - Indexes collection.
+ * * [[index]], [[$index]] - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * * [[toArray]], [[$toArray]], [[$$toArray]] -
+ * * [[toArray]], [[$toArray]] -
  * Builds new array consisting of collection items.
- * * [[toSet]], [[$toSet]], [[$$toSet]] -
+ * * [[toSet]], [[$toSet]] -
  * Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
  * * [[asSet]], [[$asSet]] - Represents collection as set.
@@ -85,24 +83,6 @@ import ISetSpliceResult from './ISetSpliceResult';
  * - **[[splice]], [[trySplice]] - Removes and adds multiple items.**
  * - **[[performSplice]] - Adjusts contents using [[splice]] method.**
  *
- * Synchronizers creation:
- *
- * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
- * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
- * * [[createCounter]] - Creates matching item counter.
- * Extended version of [[$$count]] method.
- * * [[createLister]] - Creates converter to set.
- * Extended version of [[$$toSet]] method.
- * * [[createIndexer]] - Creates converter to map (indexer).
- * Extended version of [[$$index]] method.
- * * [[createOrderer]] - Creates converter to array (orderer).
- * Extended version of [[$$toArray]] method.
- * * [[createSorterComparing]] - Creates converter to array (sorter by comparer).
- * Extended version of [[$$toSortedComparing]] method.
- * * [[createObserver]] - Creates observer.
- *
  * Similar collection creation (for algorithms and synchronizers implementation):
  *
  * * [[createEmpty]] - Creates empty collection of the same type.
@@ -116,16 +96,9 @@ import ISetSpliceResult from './ISetSpliceResult';
  * - **[[equal]] - Checks for equality to array.**
  *
  * All the same algorithms are also available for native JavaScript Object as set,
- * see [[JW.Set]] static methods.
- *
- * @param T Collection item type.
+ * see [[SetUtils]] functions.
  */
 interface ISet<T extends IClass> extends ICollection<T> {
-	/**
-	 * @inheritdoc
-	 */
-	ownItems(): ISet<T>;
-
 	/**
 	 * Returns item map - internal collection representation.
 	 *
@@ -307,6 +280,9 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 */
 	tryClear(): T[];
 
+	/**
+	 * @hidden
+	 */
 	_tryClear(): T[];
 
 	/**
@@ -326,6 +302,9 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 */
 	trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T>;
 
+	/**
+	 * @hidden
+	 */
 	_trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T>;
 
 	/**

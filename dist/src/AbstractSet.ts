@@ -162,7 +162,7 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): ISet<T> {
+	ownItems(): this {
 		super.ownItems();
 		return this;
 	}

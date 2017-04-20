@@ -43,14 +43,6 @@ export default class JWMap<T> extends AbstractMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): JWMap<T> {
-		super.ownItems();
-		return this;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	$getKeys(): IArray<string> {
 		return new JWArray<string>(this.getKeys(), true);
 	}

@@ -28,17 +28,17 @@ import Proxy from './Proxy';
 /**
  * Abstract collection of items of type T with keys of type K.
  *
- * There are 2 indexed collection types:
+ * There are 2 kinds of indexed collections:
  *
- * * [[JW.AbstractArray]] (key is number)
- * * [[JW.AbstractMap]] (key is string)
+ * * [[IArray]] (key is number)
+ * * [[IMap]] (key is string)
  *
  * Please keep the next rule in mind whenever you work with jWidget indexed collections:
  * in arguments, item always goes first and key goes last.
  *
  * # Indexed collection methods
  *
- * **Difference compared to [[JW.AbstractCollection]] is in bold.**
+ * **Difference compared to [[ICollection]] is in bold.**
  *
  * Content retrieving:
  *
@@ -60,7 +60,7 @@ import Proxy from './Proxy';
  * Returns true if all items match the criteria.
  * * [[some]] - Checks each item by criteria.
  * Returns true if some item matches the criteria.
- * * [[each]] - Iterates items through.
+ * * [[each]], [[forEach]] - Iterates items through.
  * * [[search]] - Finds item by criteria.
  * Returns first item matching the criteria.
  * * **[[find]] - Finds item by criteria.
@@ -78,17 +78,13 @@ import Proxy from './Proxy';
  * [[$$toSortedComparing]] -
  * Builds array consisting of collection items sorted by indexer or comparer.
  * * **[[getSortingKeys]], [[$getSortingKeys]],
- * [[getSortingKeysComparing]],
- * [[$getSortingKeysComparing]] -
+ * [[getSortingKeysComparing]], [[$getSortingKeysComparing]] -
  * Returns indexes of collection items sorted by indexer or comparer.**
- * * [[index]], [[$index]],
- * [[$$index]] - Indexes collection.
+ * * [[index]], [[$index]] - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * * [[toArray]], [[$toArray]],
- * [[$$toArray]] - Builds new array consisting of collection items.
+ * * [[toArray]], [[$toArray]] - Builds new array consisting of collection items.
  * * **[[toMap]], [[$toMap]] - Builds new map consisting of collection items.**
- * * [[toSet]], [[$toSet]],
- * [[$$toSet]] - Builds new set consisting of collection items.
+ * * [[toSet]], [[$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
  * * **[[asMap]], [[$asMap]] - Represents collection as map.**
  * * [[asSet]], [[$asSet]] - Represents collection as set.
@@ -101,24 +97,6 @@ import Proxy from './Proxy';
  * * [[removeItems]] - Removes all occurencies of items in collection.
  * * [[clear]], [[$clear]], [[tryClear]] - Clears collection.
  *
- * Synchronizers creation:
- *
- * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
- * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
- * * [[createCounter]] - Creates matching item counter.
- * Extended version of [[$$count]] method.
- * * [[createLister]] - Creates converter to set.
- * Extended version of [[$$toSet]] method.
- * * [[createIndexer]] - Creates converter to map (indexer).
- * Extended version of [[$$index]] method.
- * * [[createOrderer]] - Creates converter to array (orderer).
- * Extended version of [[$$toArray]] method.
- * * [[createSorterComparing]] - Creates converter to array (sorter by comparer).
- * Extended version of [[$$toSortedComparing]] method.
- * * [[createObserver]] - Creates observer.
- *
  * Similar collection creation (for algorithms and synchronizers implementation):
  *
  * * [[createEmpty]] - Creates empty collection of the same type.
@@ -128,18 +106,10 @@ import Proxy from './Proxy';
  *
  * All the same algorithms are also available for native JavaScript collections:
  *
- * * Array, see [[JW.Array]] static methods.
- * * Object as map, see [[JW.Map]] static methods.
- *
- * @param K Collection item key type.
- * @param T Collection item type.
+ * * Array, see [[ArrayUtils]] functions.
+ * * Object as map, see [[MapUtils]] functions.
  */
 interface IIndexedCollection<K, T> extends ICollection<T> {
-	/**
-	 * @inheritdoc
-	 */
-	ownItems(): IIndexedCollection<K, T>;
-
 	/**
 	 * Returns item by key. If item with such key doesn't exist, returns undefined.
 	 */
@@ -241,6 +211,11 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	each(callback: (item: T, key: K) => any, scope?: any): void;
 
 	/**
+	 * @inheritdoc
+	 */
+	forEach(callback: (item: T, key: K) => any, scope?: any): void;
+
+	/**
 	 * Finds item matching criteria.
 	 *
 	 * Returns key of first item for which callback returns !== false.
@@ -284,7 +259,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 * Builds array of item keys, sorted by result of callback call for each item.
 	 *
 	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[JW.cmp]]. Returns item itself by default.
+	 * [[cmp]]. Returns item itself by default.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
@@ -297,7 +272,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 * Builds array of item keys, sorted by result of callback call for each item.
 	 *
 	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[JW.cmp]]. Returns item itself by default.
+	 * [[cmp]]. Returns item itself by default.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
@@ -311,7 +286,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 *
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
+	 * Defaults to [[cmp]]
 	 * @param scope **comparer** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
@@ -325,7 +300,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 *
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
+	 * Defaults to [[cmp]]
 	 * @param scope **comparer** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.

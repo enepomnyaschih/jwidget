@@ -40,7 +40,14 @@ class Class implements IClass {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Aggregates the object. It means that the specified object is automatically destroyed
+	 * on this object destruction. The aggregated objects are destroyed in reverse order.
+	 * Returns the aggregated object, which makes it easy to use in field definition:
+	 *
+	 *     private selected = this.own(new Property(false));
+	 *
+	 * @param obj Object to aggregate.
+	 * @returns obj
 	 */
 	own<T extends Destroyable>(obj: T): T {
 		this._ownagePool = this._ownagePool || [];

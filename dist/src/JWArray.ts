@@ -50,14 +50,6 @@ export default class JWArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): JWArray<T> {
-		super.ownItems();
-		return this;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	$getKeys(): IArray<number> {
 		return new JWArray<number>(this.getKeys(), true);
 	}

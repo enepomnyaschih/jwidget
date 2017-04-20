@@ -174,7 +174,7 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): AbstractMap<T> {
+	ownItems(): this {
 		super.ownItems();
 		return this;
 	}

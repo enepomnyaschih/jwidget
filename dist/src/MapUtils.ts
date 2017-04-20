@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {apply, cmp, cmpCaseSensitive, iid} from './Core';
+import {apply, cmp, iid} from './Core';
 import {isDictionaryEmpty} from './internal';
 import * as ArrayUtils from './ArrayUtils';
 import Dictionary from './Dictionary';
@@ -269,7 +269,7 @@ export function getSortingKeys<T>(map: Dictionary<T>, callback?: (item: T, key: 
  * @returns Sorted item keys array.
  */
 export function getSortingKeysComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string[] {
-	compare = compare || cmpCaseSensitive;
+	compare = compare || cmp;
 	order = order || 1;
 	var pairs: any[] = [];
 	every(map, function (item, key) {

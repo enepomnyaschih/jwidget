@@ -54,14 +54,6 @@ export default class JWSet<T extends IClass> extends AbstractSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): JWSet<T> {
-		super.ownItems();
-		return this;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	$filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
 		return new JWSet<T>(this.filter(callback, scope), true);
 	}

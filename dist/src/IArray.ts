@@ -31,7 +31,7 @@ import Proxy from './Proxy';
  *
  * # Array methods
  *
- * **Difference compared to [[JW.IndexedCollection]] is in bold.**
+ * **Difference compared to [[IIndexedCollection]] is in bold.**
  *
  * Content retrieving:
  *
@@ -58,45 +58,33 @@ import Proxy from './Proxy';
  * Returns true if all items match the criteria.
  * * [[some]] - Checks each item by criteria.
  * Returns true if some item matches the criteria.
- * * [[each]] - Iterates items.
+ * * [[each]], [[forEach]] - Iterates items.
  * * [[search]] - Finds item by criteria.
  * Returns first item matching the criteria.
  * * [[find]] - Finds item by criteria.
  * Returns index of first item matching the criteria.
- * * [[filter]], [[$filter]],
- * [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * * [[count]], [[$count]],
- * [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]],
- * [[$$mapValues]], [[$$mapObjects]] - Maps collection items.
+ * * [[count]], [[$count]] - Counts the items matching criteria.
+ * * [[map]], [[$map]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * * [[toSorted]], [[$toSorted]],
- * [[toSortedComparing]], [[$toSortedComparing]],
- * [[$$toSortedComparing]] -
+ * * [[toSorted]], [[$toSorted]], [[toSortedComparing]], [[$toSortedComparing]] -
  * Builds array consisting of collection items sorted by indexer or comparer.
  * * [[getSortingKeys]], [[$getSortingKeys]],
- * [[getSortingKeysComparing]],
- * [[$getSortingKeysComparing]] -
+ * [[getSortingKeysComparing]], [[$getSortingKeysComparing]] -
  * Returns indexes of collection items sorted by indexer or comparer.
- * * [[index]], [[$index]],
- * [[$$index]] - Indexes collection.
+ * * [[index]], [[$index]] - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * * [[toArray]], [[$toArray]],
- * [[$$toArray]] - Builds new array consisting of collection items.
+ * * [[toArray]], [[$toArray]] - Builds new array consisting of collection items.
  * * [[toMap]], [[$toMap]] - Builds new map consisting of collection items.
- * * [[toSet]], [[$toSet]],
- * [[$$toSet]] - Builds new set consisting of collection items.
+ * * [[toSet]], [[$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
  * * [[asMap]], [[$asMap]] - Represents collection as map.
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  * * **[[backEvery]] - Checks all items by criteria in backward order.**
- * * **[[merge]], [[$merge]],
- * [[$$merge]] - *suitable if array consists of JW.AbstractArray instances only.*
+ * * **[[merge]], [[$merge]] - *suitable if array consists of JW.AbstractArray instances only.*
  * Builds array consisting of items of subarrays in the same order.**
- * * **[[toReversed]], [[$toReversed]],
- * [[$$toReversed]] -
- * Builds array consisting of collection items in reverse order.**
+ * * **[[toReversed]], [[$toReversed]] - Builds array consisting of collection items in reverse order.**
  *
  * Collection modification:
  *
@@ -120,29 +108,6 @@ import Proxy from './Proxy';
  * * **[[performFilter]] - Filters contents using [[splice]]. method.**
  * * **[[performReorder]] - Adjusts contents using [[reorder]]. method.**
  *
- * Synchronizers creation:
- *
- * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
- * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
- * * [[createCounter]] - Creates matching item counter.
- * Extended version of [[$$count]] method.
- * * [[createLister]] - Creates converter to set.
- * Extended version of [[$$toSet]] method.
- * * [[createIndexer]] - Creates converter to map (indexer).
- * Extended version of [[$$index]] method.
- * * [[createOrderer]] - Creates converter to array (orderer).
- * Extended version of [[$$toArray]] method.
- * * [[createSorterComparing]] - Creates converter to array (sorter by comparer).
- * Extended version of [[$$toSortedComparing]] method.
- * * [[createObserver]] - Creates observer.
- * * **[[createInserter]] - Creates view synchronizer with array.**
- * * **[[createMerger]] - Creates arrays merger.
- * Extended version of [[$$merge]] method.**
- * * **[[createReverser]] - Creates array reverser.
- * Extended version of [[$$toReversed]] method.**
- *
  * Similar collection creation (for algorithms and synchronizers implementation):
  *
  * * [[createEmpty]] - Creates empty collection of the same type.
@@ -161,7 +126,7 @@ import Proxy from './Proxy';
  * * **[[equal]] - Checks for equality to another array.**
  *
  * All the same algorithms are also available for native JavaScript Array,
- * see [[JW.Array]] static methods.
+ * see [[ArrayUtils]] functions.
  *
  * @param T Array item type.
  */
@@ -176,11 +141,6 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * if collection contains instances of JW.Class, you are in a good shape.
 	 */
 	getKey: (item: T) => any;
-
-	/**
-	 * @inheritdoc
-	 */
-	ownItems(): IArray<T>;
 
 	/**
 	 * @inheritdoc
@@ -463,7 +423,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param newItems New array contents.
 	 * @param getKey Function which returns unique key of an item in this collection.
 	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then you are in a good shape.
+	 * If collection consists of instances of [[IClass]], then you are in a good shape.
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
@@ -490,7 +450,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param newItems New array contents.
 	 * @param getKey Function which returns unique key of an item in this collection.
 	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then it's all right.
+	 * If collection consists of instances of [[IClass]], then it's all right.
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
@@ -515,7 +475,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 *
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
+	 * Defaults to [[cmp]]
 	 * @param scope **comparer** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns **indexArray** argument of [[reorder]] method.
@@ -533,7 +493,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param newItems New array contents.
 	 * @param getKey Function which returns unique key of an item in this collection.
 	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then you are in a good shape.
+	 * If collection consists of instances of [[IClass]], then you are in a good shape.
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 */
 	performSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): void;
@@ -556,7 +516,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param newItems New array contents.
 	 * @param getKey Function which returns unique key of an item in this collection.
 	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then it's all right.
+	 * If collection consists of instances of [[IClass]], then it's all right.
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 */
 	performReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): void;
@@ -565,7 +525,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * Sorts array by result of **callback** function call for each item.
 	 *
 	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[JW.cmp]]. Returns item itself by default.
+	 * [[cmp]]. Returns item itself by default.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 */
@@ -576,7 +536,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 *
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
+	 * Defaults to [[cmp]]
 	 * @param scope **comparer** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 */
@@ -653,7 +613,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 *
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
+	 * Defaults to [[cmp]]
 	 * @param scope **comparer** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Item index.

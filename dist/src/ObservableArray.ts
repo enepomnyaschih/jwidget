@@ -127,14 +127,6 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): ObservableArray<T> {
-		super.ownItems();
-		return this;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	protected destroyObject() {
 		this.changeEvent.destroy();
 		this.reorderEvent.destroy();

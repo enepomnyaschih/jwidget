@@ -20,20 +20,146 @@
 
 import Dictionary from './Dictionary';
 
-export function isArray(value: any): boolean {
+/**
+ * Checks whether value is undefined.
+ * @returns Value is undefined.
+ */
+export function isUndefined(value: any) {
+	return value === undefined;
+}
+
+/**
+ * Checks whether value is not undefined.
+ * @returns Value is not undefined.
+ */
+export function isDefined(value: any) {
+	return value !== undefined;
+}
+
+/**
+ * Checks whether value is null.
+ * @returns Value is null.
+ */
+export function isNull(value: any) {
+	return value === null;
+}
+
+/**
+ * Checks whether value is not null.
+ * @returns Value is not null.
+ */
+export function isNotNull(value: any) {
+	return value !== null;
+}
+
+/**
+ * Checks whether value is not undefined and null.
+ * @returns Value is not undefined and null.
+ */
+export function isNotNil(value: any) {
+	return value != null;
+}
+
+/**
+ * Checkes whether value is undefined or null.
+ * @returns Value is undefined or null.
+ */
+export function isNil(value: any) {
+	return value == null;
+}
+
+/**
+ * Checks whether value is falsy (`null`, `undefined`, `false`, 0, `NaN` or blank string).
+ * @returns Value is falsy.
+ */
+export function isFalsy(value: any) {
+	return !value;
+}
+
+/**
+ * Checks whether value is truthy (not `null`, `undefined`, `false`, 0, `NaN` or blank string).
+ * @returns Value is not truthy.
+ */
+export function isTruthy(value: any) {
+	return Boolean(value);
+}
+
+/**
+ * Checks whether value is an integer.
+ * @returns Value is an integer.
+ */
+export function isInt(value: any) {
+	return (typeof value === "number") && Math.round(value) === value;
+}
+
+/**
+ * Checks whether value is a number.
+ * @returns Value is a number.
+ */
+export function isNumber(value: any) {
+	return typeof value === "number";
+}
+
+/**
+ * Checks whether value is a string.
+ * @returns Value is a string.
+ */
+export function isString(value: any) {
+	return typeof value === "string";
+}
+
+/**
+ * Checks whether value is a boolean.
+ * @returns Value is a boolean.
+ */
+export function isBoolean(value: any) {
+	return typeof value === "boolean";
+}
+
+/**
+ * Checks whether value is a function.
+ * @returns Value is a function.
+ */
+export function isFunction(value: any) {
+	return typeof value === "function";
+}
+
+/**
+ * Checks whether value is a native JavaScript Array.
+ * @returns Value is an Array.
+ */
+export function isArray(value: any) {
 	return Object.prototype.toString.apply(value) === '[object Array]';
 }
 
+/**
+ * Checks whether value is a regular expression.
+ * @returns Value is a regular expression.
+ */
+export function isRegExp(value: any) {
+	return Object.prototype.toString.apply(value) === '[object RegExp]';
+}
+
+/**
+ * Checks whether value is a date.
+ * @returns Value is a date.
+ */
+export function isDate(value: any) {
+	return Object.prototype.toString.apply(value) === '[object Date]';
+}
+
+/**
+ * Defines default value. Returns `value`, if it is not undefined, else returns `default`.
+ */
 export function def<T>(value: T, defaultValue: T): T {
 	return (value !== undefined) ? value : defaultValue;
 }
 
+/**
+ * Defines default value. Returns `value`, if it is not undefined and null, else returns `default`.
+ */
 export function defn<T>(value: T, defaultValue: T): T {
 	return (value != null) ? value : defaultValue;
-}
-
-export function isNotNil(value: any): boolean {
-	return value != null;
 }
 
 /**
@@ -45,29 +171,29 @@ export function isNotNil(value: any): boolean {
  *
  * Example 1:
  *
- *     var x: JW.Dictionary<number> = {   var y: JW.Dictionary<number> = {  // Result = {
- *         a: 10,                                                           //     a: 10,
- *         b: 20,                             b: 30,                        //     b: 30,
- *         c: null,                           c: 40,                        //     c: 40,
- *         d: undefined,                      d: 50,                        //     d: 50,
- *         e: null                                                          //     e: null,
- *                                            f: 60,                        //     f: 60
- *                                            g: undefined                  //
- *     };                                 };                                // };
+ *     var x: Dictionary<number> = {   var y: Dictionary<number> = {  // Result = {
+ *         a: 10,                                                     //     a: 10,
+ *         b: 20,                          b: 30,                     //     b: 30,
+ *         c: null,                        c: 40,                     //     c: 40,
+ *         d: undefined,                   d: 50,                     //     d: 50,
+ *         e: null                                                    //     e: null,
+ *                                         f: 60,                     //     f: 60
+ *                                         g: undefined               //
+ *     };                              };                             // };
  *
- *     JW.apply<number>(x, y);
+ *     apply<number>(x, y);
  *
  * Example 2 (form data preparing):
  *
- *     class Form extends JW.Class {
- *         data: JW.Dictionary<any>;
+ *     class Form {
+ *         data: Dictionary<any>;
  *
- *         composeData(extraData: JW.Dictionary<any>): JW.Dictionary<any> {
- *             return JW.apply<any>({}, this.getDefaultData(), this.data, extraData);
+ *         composeData(extraData: Dictionary<any>): Dictionary<any> {
+ *             return apply<any>({}, this.getDefaultData(), this.data, extraData);
  *         }
  *
  *         // virtual
- *         getDefaultData(): JW.Dictionary<any> {
+ *         getDefaultData(): Dictionary<any> {
  *             return null;
  *         }
  *     }
@@ -88,126 +214,134 @@ export function apply<T>(target: Dictionary<T>, ...sources: Dictionary<T>[]): Di
 }
 
 /**
- * Universal native types comparer for array sorting.
+ * Universal and sophisticated comparer for array sorting. Broadly speaking, it:
  *
  * - Returns 1, if x > y
  * - Returns -1, if x < y
  * - Returns 0, if x == y
  *
- * You can compare next types: boolean, number, string, Array.
+ * In reality, it supports the next features:
+ *
+ * - Comparing of boolean, number, string values, subarrays
+ * - Determined linear order, even for mixed arrays
+ * - Case insensitive comparing for strings
+ * - Comparing of digit sequences in strings as numbers
  *
  * *Example*
  *
  * Sort by color descending first, and by status ascending last. Both parameters are optional.
  *
- *     rows.sort(function(x, y) {
- *         return JW.cmp(x.color == null, y.color == null) ||
- *               -JW.cmp(x.color, y.color) ||
- *                JW.cmp(x.status == null, y.status == null) ||
- *                JW.cmp(x.status, y.status);
+ *     rows.sort((x, y) => {
+ *         return cmp(x.color == null, y.color == null) ||
+ *               -cmp(x.color, y.color) ||
+ *                cmp(x.status == null, y.status == null) ||
+ *                cmp(x.status, y.status);
  *     });
  */
-export function cmp(x: any, y: any, caseInsensitive?: boolean): number {
-	if (typeof x === "boolean" && typeof y === "boolean") {
-		return x ? (y ? 0 : 1) : (y ? -1 : 0);
+export function cmp(x: any, y: any, config?: CmpConfig): number {
+	const xRank = getTypeRank(x);
+	const yRank = getTypeRank(y);
+	if (xRank !== yRank) {
+		return cmpPrimitives(xRank, yRank);
 	}
-	if (isArray(x) && isArray(y)) {
-		let n = Math.min(x.length, y.length);
-		for (let i = 0; i < n; ++i) {
-			let result = cmp(x[i], y[i], caseInsensitive);
-			if (result) {
-				return result;
-			}
-		}
-		return cmp(x.length, y.length);
+	switch (xRank) {
+		case "array": return cmpArrays(x, y, config);
+		case "boolean": return cmpBooleans(x, y);
+		case "string": return cmpStrings(x, y);
+		default: return cmpPrimitives(x, y);
 	}
-	if (caseInsensitive) {
-		if (typeof x === "string") {
-			x = x.toLowerCase();
-		}
-		if (typeof y === "string") {
-			y = y.toLowerCase();
-		}
-	}
-	if (x > y) return 1;
-	if (x < y) return -1;
-	return 0;
 }
 
 /**
- * Equivalent for `JW.cmp(x, y, false)`. Compares two values ignoring letters case in strings.
+ * [[cmp]] function configuration object.
  */
-export function cmpCaseSensitive(x: any, y: any): number {
-	return cmp(x, y, false);
+export interface CmpConfig {
+	/**
+	 * Ignore case when comparing strings.
+	 */
+	caseInsensitive?: boolean;
+
+	/**
+	 * Compare digit sequences as numbers when comparing strings.
+	 */
+	compareNumbersInStrings?: boolean;
 }
 
-/**
- * Equivalent for `JW.cmp(x, y, true)`. Compares two values ignoring letters case in strings.
- */
-export function cmpCaseInsensitive(x: any, y: any): number {
-	return cmp(x, y, true);
+function getTypeRank(x: any): string {
+	return (x === undefined) ? "0" : (x === null) ? "1" : isArray(x) ? "array" : typeof x;
 }
 
-/**
- * Returns object item by expression. Expression is several words, passed in array of string joined by periods.
- * If **field** is null, undefined or blank string, function will return **obj**.
- *
- * Example 1:
- *
- *     let obj = {
- *         abc: [
- *             {
- *                 qwe: "xyz"
- *             }
- *         ]
- *     };
- *
- *     return JW.get(obj, "abc.0.qwe"); // "xyz"
- *
- *     // Equivalent code
- *     return JW.get(obj, [ "abc", 0, "qwe" ]); // "xyz"
- *
- * Function represents logic of JW.byField and JW.byValue callbacks.
- *
- * Example 2:
- *
- *     let arr = [
- *         {
- *             id   : 1,
- *             name : "First item"
- *         }, {
- *             id   : 2,
- *             name : "Second item"
- *         }
- *     ];
- *
- *     return JW.Array.search(arr, JW.byValue("id", 2)).name; // "Second item"
- *
- * In this example, function JW.get is called inside JW.byValue function implicitly with argument **field** === "id".
- */
-export function get<T>(obj: any, field?: string[], def_?: T): T {
-	if (!field) {
-		return def<T>(obj, def_);
-	}
-	for (let i = 0, l = field.length; i < l; ++i) {
-		let token = field[i];
-		if (token == null || token === "") {
-			continue;
+function cmpPrimitives(x: any, y : any): number {
+	return (x > y) ? 1 : (x < y) ? -1 : 0;
+}
+
+function cmpBooleans(x: boolean, y: boolean): number {
+	return x ? (y ? 0 : 1) : (y ? -1 : 0);
+}
+
+function cmpArrays(x: any[], y: any[], config?: CmpConfig): number {
+	let n = Math.min(x.length, y.length);
+	for (let i = 0; i < n; ++i) {
+		let result = cmp(x[i], y[i], config);
+		if (result) {
+			return result;
 		}
-		if (obj == null) {
-			return def_;
-		}
-		obj = obj[token];
 	}
-	return def(obj, def_);
+	return cmpPrimitives(x.length, y.length);
+}
+
+function cmpStrings(x: string, y: string, config?: CmpConfig): number {
+	x = x || "";
+	y = y || "";
+	if (config && config.caseInsensitive) {
+		x = x.toLowerCase();
+		y = y.toLowerCase();
+	}
+	if (!config || !config.compareNumbersInStrings) {
+		return cmpPrimitives(x, y);
+	}
+	let xIndex = 0;
+	let yIndex = 0;
+	while (true) {
+		let xLength = x.substr(xIndex).search(/\d+/);
+		if (xLength === -1) {
+			xLength = x.length - xIndex;
+		}
+		let yLength = y.substr(yIndex).search(/\d+/);
+		if (yLength === -1) {
+			yLength = y.length - yIndex;
+		}
+		let result = cmpPrimitives(x.substr(xIndex, xLength), y.substr(yIndex, yLength));
+		if (result) {
+			return result;
+		}
+		xIndex += xLength;
+		yIndex += yLength;
+		const xMatches = /^\d+/.exec(x.substr(xIndex));
+		const yMatches = /^\d+/.exec(y.substr(yIndex));
+		if (xMatches == null || yMatches == null) {
+			return cmpBooleans(xMatches != null, yMatches != null);
+		}
+		const xNumber = +xMatches[0];
+		const yNumber = +yMatches[0];
+		result = cmpPrimitives(xNumber, yNumber);
+		if (result) {
+			return result;
+		}
+		xIndex += xMatches[0].length;
+		yIndex += yMatches[0].length;
+	}
 }
 
 /**
- * Assigns object item by expression. Expression is several words, passed in array of string joined by periods.
+ * Returns object item or subitem by path.
+ * Path is a primitive value (object key), or an array of subpaths.
+ * If **path** is null, undefined or empty array, returns **obj**.
+ * If item doesn't exist, returns undefined.
  *
  * Example:
  *
- *     let obj = {
+ *     const obj = {
  *         abc: [
  *             {
  *                 qwe: "xyz"
@@ -215,39 +349,28 @@ export function get<T>(obj: any, field?: string[], def_?: T): T {
  *         ]
  *     };
  *
- *     JW.set(obj, "def", "abc.0.qwe"); // replace "xyz" with "def"
- *
- *     // equivalent code
- *     JW.set(obj, "def", [ "abc", 0, "qwe" ]); // replace "xyz" with "def"
+ *     get(obj, ["abc", 0, "qwe"]); // "xyz"
+ *     get(obj, "abc"); // the array
  */
-export function set(obj: any, value: any, field: any) {
-	if (!field) {
-		return;
+export function get<T>(obj: any, path: any): T {
+	if (path == null) {
+		return obj;
 	}
-	let len = field.length - 1;
-	for (let i = 0; i < len; ++i) {
-		let token = field[i];
-		if (token == null || token === "") {
-			continue;
-		}
-		obj[token] = obj[token] || {};
-		obj = obj[token];
+	if (!isArray(path)) {
+		return (obj && typeof obj === "object") ? obj[path] : undefined;
 	}
-	obj[field[len]] = value;
+	for (let i = 0, l = path.length; i < l; ++i) {
+		obj = get(obj, path[i]);
+	}
+	return obj;
 }
 
 /**
- * Returns object unique ID. Returns iid of object if it is an instance of JW.Class,
+ * Returns object unique ID. Returns iid of object if it is an instance of Class,
  * else returns the object itself.
- *
- * This function is used as default result for JW.AbstractArray#getKey and JW.AbstractMap#getKey, and also for
- * getKey parameter of static methods JW.Array#static-method-detectSplice,
- * JW.Array#static-method-performSplice, JW.Array#static-method-detectReorder,
- * JW.Array#static-method-performReorder, JW.Map#static-method-detectReindex,
- * JW.Map#static-method-performReindex.
  */
 export function iid(obj: any): number {
-	return (obj && typeof obj === "object") ? obj._iid : obj;
+	return obj ? defn<number>(obj._iid, obj) : null;
 }
 
 /**
@@ -265,89 +388,33 @@ export function destroy(obj: any): any {
 }
 
 /**
- * Specifies function call scope.
- *
- * @deprecated Use TypeScript lambda or Underscore's _.bind instead.
+ * Shorthand for [[Binding.UPDATE]].
  */
-export function inScope(func: (...args: any[]) => any, scope: any): () => any {
-	return func ? function () {
-		return func.apply(scope, arguments);
-	} : func;
-}
+export const UPDATE = 1;
 
 /**
- * Returns callback function for collection algorithms. Function returns value of specified field
- * of collection item. Item field is retrieved using JW.get function.
- *
- * **Example (get titles of all collection items):**
- *
- *     let titles = collection.map<string>(JW.byField<string>("title"));
+ * Shorthand for [[Binding.WATCH]].
  */
-export function byField<T>(field?: any): (value: any) => T {
-	return function (item) {
-		return get<T>(item, field);
-	};
-}
+export const WATCH = 2;
 
 /**
- * Returns callback function for collection algorithms. Function checks whether specified field of collection item
- * is equal (===) to specified value. Item field is retrieved using JW.get function.
- *
- * **Example (find item by ID):**
- *
- *     let item = collection.search(JW.byValue("id", id));
+ * Shorthand for [[Binding.TWOWAY]].
  */
-export function byValue(field: any, value: any): (value: any) => boolean {
-	return function (item) {
-		return get(item, field) === value;
-	};
-}
+export const TWOWAY = 3;
 
 /**
- * Returns callback function for collection algorithms. Function calls specified method of collection item
- * with specified arguments and returns the result of this call.
- *
- * **Example (filter tasks that relate to specified on):**
- *
- *     let tasks = collection.filter(JW.byMethod<boolean>("relatesTo", [task]));
- */
-export function byMethod<T>(method: string, args?: any[]): (value: any) => T {
-	args = args || [];
-	return function (value: any): T {
-		return value[method].apply(value, args);
-	};
-}
-
-/**
- * Shorthand for JW.Binding.UPDATE.
- */
-export let UPDATE = 1;
-
-/**
- * Shorthand for JW.Binding.WATCH.
- */
-export let WATCH = 2;
-
-/**
- * Shorthand for JW.Binding.TWOWAY.
- */
-export let TWOWAY = 3;
-
-/**
- * jWidget binding mode. All properties have shorthands in JW namespace.
+ * jWidget binding modes. All properties have shorthands.
  */
 export enum Binding {
 	/**
 	 * Bind invoker to argument.
 	 *
 	 *     // Bind element value to property
-	 *     this.own(el.jwval(property, JW.UPDATE));
+	 *     this.own(jwval(el, property, UPDATE));
 	 *
 	 * Always used as default binding. Hence, the next code is equivalent:
 	 *
-	 *     this.own(el.jwval(property));
-	 *
-	 * Shorthand: JW.UPDATE.
+	 *     this.own(jwval(el, property));
 	 */
 	UPDATE = 1,
 
@@ -355,14 +422,12 @@ export enum Binding {
 	 * Bind argument to invoker.
 	 *
 	 *     // Bind property to element value
-	 *     this.own(el.jwval(property, JW.WATCH));
+	 *     this.own(jwval(el, property, WATCH));
 	 *
 	 * Always supplied with a no-argument method, which creates the property automatically.
 	 *
 	 *     // Watch element value
-	 *     let property = this.own(el.jwval());
-	 *
-	 * Shorthand: JW.WATCH.
+	 *     const property = this.own(jwval(el));
 	 */
 	WATCH = 2,
 
@@ -371,9 +436,7 @@ export enum Binding {
 	 * UPDATE-binding is applied first.
 	 *
 	 *     // Assign element value to property and setup two-way binding
-	 *     this.own(el.jwval(property, JW.TWOWAY));
-	 *
-	 * Shorthand: JW.TWOWAY.
+	 *     this.own(jwval(el, property, TWOWAY));
 	 */
 	TWOWAY = 3
 }

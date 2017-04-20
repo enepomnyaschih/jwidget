@@ -64,7 +64,7 @@ interface IClass extends Destroyable {
 	 * on this object destruction. The aggregated objects are destroyed in reverse order.
 	 * Returns the aggregated object, which makes it easy to use in field definition:
 	 *
-	 * 	private selected = this.own(new Property(false));
+	 *     private selected = this.own(new Property(false));
 	 *
 	 * @param obj Object to aggregate.
 	 * @returns obj
@@ -76,8 +76,8 @@ interface IClass extends Destroyable {
 	 * on this object destruction. The aggregated objects are destroyed in reverse order.
 	 * Returns this object, which makes it easy to use in object instantiation:
 	 *
-	 * 	const items = new ObservableArray();
-	 * 	return new Panel(items).owning(items);
+	 *     const items = new ObservableArray();
+	 *     return new Panel(items).owning(items);
 	 *
 	 * @param obj Object to aggregate.
 	 * @returns this

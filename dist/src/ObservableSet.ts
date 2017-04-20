@@ -107,14 +107,6 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): ObservableSet<T> {
-		super.ownItems();
-		return this;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	protected destroyObject() {
 		this.changeEvent.destroy();
 		this.clearEvent.destroy();

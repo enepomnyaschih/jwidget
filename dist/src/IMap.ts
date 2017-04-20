@@ -29,7 +29,7 @@ import Proxy from './Proxy';
  *
  * # Map methods
  *
- * **Difference compared to [[JW.IndexedCollection]] is in bold.**
+ * **Difference compared to [[IIndexedCollection]] is in bold.**
  *
  * Content retrieving:
  *
@@ -44,7 +44,7 @@ import Proxy from './Proxy';
  * * [[containsItem]] - Does collection contain the item?
  * * [[containsKey]] - Does collection contain the key?
  * * [[keyOf]] - Returns item key. If item is not found, returns undefined.
- * * **[[getJson]] - Returns internal representation of map.**
+ * * **[[getJson]] - Returns internal representation of the map.**
  *
  * Iteration algorithms:
  *
@@ -52,35 +52,26 @@ import Proxy from './Proxy';
  * Returns true if all items match the criteria.
  * * [[some]] - Checks each item by criteria.
  * Returns true if some items matches the criteria.
- * * [[each]] - Iterates items.
+ * * [[each]], [[forEach]] - Iterates items.
  * * [[search]] - Finds item by criteria.
  * Returns first item matching the criteria.
  * * [[find]] - Finds item by criteria.
  * Returns index of first item matching the criteria.
- * * [[filter]], [[$filter]],
- * [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * * [[count]], [[$count]],
- * [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]],
- * [[$$mapValues]], [[$$mapObjects]] - Maps collection items.
+ * * [[count]], [[$count]] - Counts the items matching criteria.
+ * * [[map]], [[$map]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * * [[toSorted]], [[$toSorted]],
- * [[toSortedComparing]], [[$toSortedComparing]],
- * [[$$toSortedComparing]] -
+ * * [[toSorted]], [[$toSorted]], [[toSortedComparing]], [[$toSortedComparing]] -
  * Builds array consisting of collection items sorted by indexer or comparer.
  * * [[getSortingKeys]], [[$getSortingKeys]],
- * [[getSortingKeysComparing]],
- * [[$getSortingKeysComparing]] -
+ * [[getSortingKeysComparing]], [[$getSortingKeysComparing]] -
  * Returns indexes of collection items sorted by indexer or comparer.
- * * [[index]], [[$index]],
- * [[$$index]] - Indexes collection.
+ * * [[index]], [[$index]] - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * * [[toArray]], [[$toArray]],
- * [[$$toArray]] - Builds new array consisting of collection items.
+ * * [[toArray]], [[$toArray]] - Builds new array consisting of collection items.
  * * [[toMap]], [[$toMap]] - Builds new map consisting of collection items.
- * * [[toSet]], [[$toSet]],
- * [[$$toSet]] - Builds new set consisting of collection items.
+ * * [[toSet]], [[$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
  * * [[asMap]], [[$asMap]] - Represents collection as map.
  * * [[asSet]], [[$asSet]] - Represents collection as set.
@@ -96,31 +87,11 @@ import Proxy from './Proxy';
  * * [[removeItem]] - Removes first occurency of an item in collection.
  * * [[removeItems]] - Removes all occurencies of items in collection.
  * * **[[setKey]], [[trySetKey]] - Changes item key.**
- * * [[clear]], [[$clear]],
- * [[tryClear]] - Clears collection.
+ * * [[clear]], [[$clear]], [[tryClear]] - Clears collection.
  * * **[[splice]], [[trySplice]] - Removes and adds bunches of items.**
  * * **[[reindex]], [[tryReindex]] - Changes item keys.**
  * * **[[performSplice]] - Adjusts contents using [[splice]] method.**
  * * **[[performReindex]] - Adjusts contents using [[reindex]] method.**
- *
- * Synchronizers creation:
- *
- * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
- * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
- * * [[createCounter]] - Creates matching item counter.
- * Extended version of [[$$count]] method.
- * * [[createLister]] - Creates converter to set.
- * Extended version of [[$$toSet]] method.
- * * [[createIndexer]] - Creates converter to map (indexer).
- * Extended version of [[$$index]] method.
- * * [[createOrderer]] - Creates converter to array (orderer).
- * Extended version of [[$$toArray]] method.
- * * [[createSorterComparing]] - Creates converter to array (sorter by comparer).
- * Extended version of [[$$toSortedComparing]] method.
- * * [[createObserver]] - Creates observer.
- * * **[[createInserter]] - Creates view synchronizer with map.**
  *
  * Similar collection creation (for algorithms and synchronizers implementation):
  *
@@ -136,9 +107,7 @@ import Proxy from './Proxy';
  * * **[[equal]] - Checks for equality to another map.**
  *
  * All the same algorithms are also available for native JavaScript Object as map,
- * see [[JW.Map]] static methods.
- *
- * @param T Map item type.
+ * see [[MapUtils]] functions.
  */
 interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
@@ -149,11 +118,6 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * if collection contains instances of JW.Class, you are in a good shape.
 	 */
 	getKey: (item: T) => any;
-
-	/**
-	 * @inheritdoc
-	 */
-	ownItems(): IMap<T>;
 
 	/**
 	 * @inheritdoc
@@ -399,7 +363,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * @param newItems New map contents.
 	 * @param getKey Function which returns unique key of an item in this collection.
 	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then you are in a good shape.
+	 * If collection consists of instances of [[IClass]], then you are in a good shape.
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns **keyMap** argument of [[reindex]] method.
 	 * If no method call required, returns undefined.
@@ -419,7 +383,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * @param newItems New map contents.
 	 * @param getKey Function which returns unique key of an item in this collection.
 	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then you are in a good shape.
+	 * If collection consists of instances of [[IClass]], then you are in a good shape.
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 */
 	performReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): void;

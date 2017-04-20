@@ -109,14 +109,6 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): ObservableMap<T> {
-		super.ownItems();
-		return this;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	protected destroyObject() {
 		this.changeEvent.destroy();
 		this.clearEvent.destroy();

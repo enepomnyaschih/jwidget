@@ -198,7 +198,7 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	ownItems(): IArray<T> {
+	ownItems(): this {
 		super.ownItems();
 		return this;
 	}

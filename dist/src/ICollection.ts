@@ -30,26 +30,26 @@ import Property from './Property';
  *
  * There are 3 collection types:
  *
- * * [[JW.AbstractArray]],
- * extends [[JW.IndexedCollection]]
- * * [[JW.AbstractMap]],
- * extends [[JW.IndexedCollection]]
- * * [[JW.AbstractSet]]
+ * * [[IArray]],
+ * extends [[IIndexedCollection]]
+ * * [[IMap]],
+ * extends [[IIndexedCollection]]
+ * * [[ISet]]
  *
- * You can convert collections to each other using methods.
+ * You can convert collections to each other using their methods.
  *
  * Each collection has 2 implementations:
  *
  * * Simple collections:
- * [[JW.Array]],
- * [[JW.Map]],
- * [[JW.Set]]
+ * [[JWArray]],
+ * [[JWMap]],
+ * [[JWSet]]
  * * Observable collection:
- * [[JW.ObservableArray]],
- * [[JW.ObservableMap]],
- * [[JW.ObservableSet]]
+ * [[ObservableArray]],
+ * [[ObservableMap]],
+ * [[ObservableSet]]
  *
- * The difference is that observable collection triggers events about its modifications.
+ * The difference is that the observable collection triggers events about its modifications.
  * It lets you to synchronize view with data on fly in accordance to Model-View architecture.
  *
  * Internally, simple collections are very similar to native JavaScript collections.
@@ -59,77 +59,21 @@ import Property from './Property';
  *
  * The next synchronizers exist to connect observable collections to each other:
  *
- * <table>
- *   <tbody>
- *     <tr>
- *       <td>Synchronizer</td>
- *       <td>Class</td>
- *       <td>Creation methods</td>
- *     </tr>
- *     <tr>
- *       <td>Item mapper</td>
- *       <td>[[JW.AbstractCollection.Mapper]]</td>
- *       <td>[[$$mapValues]], [[$$mapObjects]], [[createMapper]]</td>
- *     </tr>
- *     <tr>
- *       <td>Filterer</td>
- *       <td>[[JW.AbstractCollection.Filterer]]</td>
- *       <td>[[$$filter]], [[createFilterer]]</td>
- *     </tr>
- *     <tr>
- *       <td>Matching item counter</td>
- *       <td>[[JW.AbstractCollection.Counter]]</td>
- *       <td>[[$$count]], [[createCounter]]</td>
- *     </tr>
- *     <tr>
- *       <td>Converter to set</td>
- *       <td>[[JW.AbstractCollection.Lister]]</td>
- *       <td>[[$$toSet]], [[createLister]]</td>
- *     </tr>
- *     <tr>
- *       <td>Converter to map (indexer)</td>
- *       <td>[[JW.AbstractCollection.Indexer]]</td>
- *       <td>[[$$index]], [[createIndexer]]</td>
- *     </tr>
- *     <tr>
- *       <td>Converter to array (orderer)</td>
- *       <td>[[JW.AbstractCollection.Orderer]]</td>
- *       <td>[[$$toArray]], [[createOrderer]]</td>
- *     </tr>
- *     <tr>
- *       <td>Converter to array (sorter by comparer)</td>
- *       <td>[[JW.AbstractCollection.SorterComparing]]</td>
- *       <td>[[$$toSortedComparing]], [[createSorterComparing]]</td>
- *     </tr>
- *     <tr>
- *       <td>Observer</td>
- *       <td>[[JW.AbstractCollection.Observer]]</td>
- *       <td>[[createObserver]]</td>
- *     </tr>
- *     <tr>
- *       <td>View synchronizers</td>
- *       <td>[[JW.abstractarray.Inserter]], [[JW.abstractmap.Inserter]], [[JW.UI.Inserter]]</td>
- *       <td>createInserter</td>
- *     </tr>
- *     <tr>
- *       <td>Arrays merger</td>
- *       <td>[[JW.abstractarray.Merger]]</td>
- *       <td>[[$$merge]], [[createMerger]]</td>
- *     </tr>
- *     <tr>
- *       <td>Array reverser</td>
- *       <td>[[JW.abstractarray.Reverser]]</td>
- *       <td>[[$$toReversed]], [[createReverser]]</td>
- *     </tr>
- *   </tbody>
- * </table>
+ * * [[ICollectionMapper]] - Item mapper
+ * * [[ICollectionFilterer]] - Filterer
+ * * [[ICollectionCounter]] - Counter by filter
+ * * [[ICollectionLister]] - Converter to set
+ * * [[ICollectionIndexer]] - Converter to map (indexer)
+ * * [[ICollectionOrderer]] - Converter to array (orderer)
+ * * [[ICollectionSorterComparing]] - Converter to array (sorter by comparer)
+ * * [[ICollectionObserver]] - Modification observer
+ * * [[IArrayInserter]], [[IMapInserter]] - View synchronizers
+ * * [[IArrayMerger]] - Array merger
+ * * [[IArrayReverser]] - Array reverser
  *
  * Please keep the next rules in mind whenever you work with jWidget collections.
  *
- * 1) null and undefined items are prohibited in jWidget collections.
- * Use "Null Object" pattern if it is neccessary.
- *
- * 2) The majority of collection modification methods have 2 implementations: **tryMethod** and **method**.
+ * 1) The majority of collection modification methods have 2 implementations: **tryMethod** and **method**.
  * These methods perform the same collection modification but return different result.
  * **tryMethod** is introduced for internal use mainly,
  * and *it always returns undefined if collection has not been modified*.
@@ -139,37 +83,27 @@ import Property from './Property';
  * For example, [[clear]] always returns old collection contents.
  * So, if you want to clear collection and destroy all items, [[clear]] method fits better:
  *
- *     JW.Array.each(array.clear(), JW.destroy); // correct
- *     JW.Array.each(array.tryClear(), JW.destroy); // incorrect: 'undefined' exception if array is empty
+ *     ArrayUtils.each(array.clear(), destroy); // correct
+ *     ArrayUtils.each(array.tryClear(), destroy); // incorrect: 'undefined' exception if array is empty
  *
- * 3) Majority of collection returning methods have 3 implementations: **method**, **$method** and **$$method**.
+ * 2) The majority of collection returning methods have 2 implementations: **method** and **$method**.
  * These methods perform the same modification but return the result in different format.
  *
  * * **method** returns native JavaScript collection: Array or Object.
- * * **$method** returns jWidget collection: [[JW.Array]],
- * [[JW.Map]] or [[JW.Set]].
- * * **$$method** returns jWidget collection and starts continuous synchronization with original
- * collection if one is observable. To stop synchronization, destroy the target collection.
+ * * **$method** returns jWidget collection: [[JWArray]],
+ * [[JWMap]] or [[JWSet]].
  *
- * Please use a method that's more convenient in your specific situation.
+ * Please use the method that's more convenient in your specific situation.
  * For example, **$method** is convenient for chaining algorithm method calls.
  * So, previous example can become more readable with [[$clear]] method:
  *
- *     array.$clear().each(JW.destroy);
+ *     array.$clear().each(destroy);
  *
  * But in the next example [[clear]] is still suitable:
  *
  *     set.addAll(array.clear());
  *
- * Whereas **$$method** is a shorthand for synchronizer creation:
- *
- *     this.set = this.own(array.$$toSet());
- *
- * Which is pretty much the same as:
- *
- *     this.set = this.own(array.createLister()).target;
- *
- * 4) It is better if all items in collection are unique. Some methods like
+ * 3) It is better if all items in collection are not null/undefined and are all unique. Some methods like
  * [[performReorder]] require each item to have an unique key.
  * If two items of collection are equal, then their keys are equal as well, so this method won't work correctly.
  *
@@ -190,24 +124,21 @@ import Property from './Property';
  * Returns true if all items match the criteria.
  * * [[some]] - Checks each item by criteria.
  * Returns true if some item matches the criteria.
- * * [[each]] - Iterates items through.
+ * * [[each]], [[forEach]] - Iterates items through.
  * * [[search]] - Finds item by criteria.
  * Returns first item matching the criteria.
- * * [[filter]], [[$filter]], [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
- * * [[count]], [[$count]], [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]], [[$$mapValues]], [[$$mapObjects]] - Maps collection items.
+ * * [[count]], [[$count]] - Counts the items matching criteria.
+ * * [[map]], [[$map]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * * [[toSorted]], [[$toSorted]],
- * [[toSortedComparing]], [[$toSortedComparing]],
- * [[$$toSortedComparing]] -
+ * [[toSortedComparing]], [[$toSortedComparing]] -
  * Builds array consisting of collection items sorted by indexer or comparer.
- * * [[index]], [[$index]], [[$$index]] - Indexes collection.
+ * * [[index]], [[$index]] - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * * [[toArray]], [[$toArray]], [[$$toArray]] -
- * Builds new array consisting of collection items.
- * * [[toSet]], [[$toSet]], [[$$toSet]] -
- * Builds new set consisting of collection items.
+ * * [[toArray]], [[$toArray]] - Builds new array consisting of collection items.
+ * * [[toSet]], [[$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  *
@@ -216,24 +147,6 @@ import Property from './Property';
  * * [[removeItem]] - Removes first occurency of an item in collection.
  * * [[removeItems]] - Removes all occurencies of items in collection.
  * * [[clear]], [[$clear]], [[tryClear]] - Clears collection.
- *
- * Synchronizers creation:
- *
- * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
- * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
- * * [[createCounter]] - Creates matching item counter.
- * Extended version of [[$$count]] method.
- * * [[createLister]] - Creates converter to set.
- * Extended version of [[$$toSet]] method.
- * * [[createIndexer]] - Creates converter to map (indexer).
- * Extended version of [[$$index]] method.
- * * [[createOrderer]] - Creates converter to array (orderer).
- * Extended version of [[$$toArray]] method.
- * * [[createSorterComparing]] - Creates converter to array (sorter by comparer).
- * Extended version of [[$$toSortedComparing]] method.
- * * [[createObserver]] - Creates observer.
  *
  * Similar collection creation (for algorithms and synchronizers implementation):
  *
@@ -244,11 +157,9 @@ import Property from './Property';
  *
  * All the same algorithms are also available for native JavaScript collections:
  *
- * * Array, see [[JW.Array]] static methods.
- * * Object as map, see [[JW.Map]] static methods.
- * * Object as set, see [[JW.Set]] static methods.
- *
- * @param T Collection item type.
+ * * Array, see [[ArrayUtils]] functions.
+ * * Object as map, see [[MapUtils]] functions.
+ * * Object as set, see [[SetUtils]] functions.
  */
 interface ICollection<T> extends IClass {
 	/**
@@ -257,7 +168,7 @@ interface ICollection<T> extends IClass {
 	 * collection, and all items are destroyed on the collection destruction.
 	 * @returns this
 	 */
-	ownItems(): ICollection<T>;
+	ownItems(): this;
 
 	/**
 	 * Returns count of items in collection.
@@ -286,7 +197,7 @@ interface ICollection<T> extends IClass {
 
 	/**
 	 * Removes all occurrences of items in collection.
-	 * **Known issue:** *Works only if T extends JW.Class!*
+	 * **Known issue:** *Works only if T implements IClass!*
 	 */
 	removeItems(items: T[]): void;
 
@@ -333,12 +244,17 @@ interface ICollection<T> extends IClass {
 	some(callback: (item: T) => boolean, scope?: any): boolean;
 
 	/**
+	 * Alias for [[forEach]].
+	 */
+	each(callback: (item: T) => any, scope?: any): void;
+
+	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
 	 * @param callback Callback function.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
-	each(callback: (item: T) => any, scope?: any): void;
+	forEach(callback: (item: T) => any, scope?: any): void;
 
 	/**
 	 * Finds item matching criteria.
@@ -359,7 +275,7 @@ interface ICollection<T> extends IClass {
 	 * Builds array consisting of collection items sorted by result of callback call for each item.
 	 *
 	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[JW.cmp]]. Returns item itself by default.
+	 * [[cmp]]. Returns item itself by default.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
@@ -372,7 +288,7 @@ interface ICollection<T> extends IClass {
 	 * Builds array consisting of collection items sorted by result of callback call for each item.
 	 *
 	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[JW.cmp]]. Returns item itself by default.
+	 * [[cmp]]. Returns item itself by default.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
@@ -386,7 +302,7 @@ interface ICollection<T> extends IClass {
 	 *
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
+	 * Defaults to [[cmp]]
 	 * @param scope **comparer** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
@@ -400,7 +316,7 @@ interface ICollection<T> extends IClass {
 	 *
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
+	 * Defaults to [[cmp]]
 	 * @param scope **comparer** call scope. Defaults to collection itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
@@ -489,7 +405,7 @@ interface ICollection<T> extends IClass {
 	 * This method works usually faster than [[toSet]],
 	 * but please make sure that the returned set
 	 * won't be modified externally, because it can cause strange unexpected bugs.
-	 * Requires T to extend JW.Class.
+	 * Requires T to implement [[IClass]].
 	 */
 	asSet(): Dictionary<T>;
 
@@ -501,7 +417,7 @@ interface ICollection<T> extends IClass {
 	 * This method works usually faster than [[toSet]],
 	 * but please make sure that the returned set
 	 * won't be modified externally, because it can cause strange unexpected bugs.
-	 * Requires T to extend JW.Class.
+	 * Requires T to implement [[IClass]].
 	 */
 	$asSet(): ISet<any>;
 

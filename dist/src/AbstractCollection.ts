@@ -267,7 +267,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * collection, and all items are destroyed on the collection destruction.
 	 * @returns this
 	 */
-	ownItems(): ICollection<T> {
+	ownItems(): this {
 		this._ownsItems = true;
 		return this;
 	}
@@ -350,12 +350,22 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	}
 
 	/**
+	 * Alias for [[forEach]].
+	 */
+	each(callback: (item: T) => any, scope?: any) {
+		this.every((item) => {
+			callback.call(scope || this, item);
+			return true;
+		});
+	}
+
+	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
 	 * @param callback Callback function.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
-	each(callback: (item: T) => any, scope?: any) {
+	forEach(callback: (item: T) => any, scope?: any) {
 		this.every((item) => {
 			callback.call(scope || this, item);
 			return true;

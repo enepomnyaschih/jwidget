@@ -137,14 +137,6 @@ import Proxy from './Proxy';
  */
 abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements IIndexedCollection<K, T> {
 	/**
-	 * @inheritdoc
-	 */
-	ownItems(): IIndexedCollection<K, T> {
-		super.ownItems();
-		return this;
-	}
-
-	/**
 	 * Returns item by key. If item with such key doesn't exist, returns undefined.
 	 */
 	abstract get(key: K): T;

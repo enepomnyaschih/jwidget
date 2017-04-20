@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {cmp, cmpCaseSensitive, def, iid, isArray} from './Core';
+import {cmp, def, iid, isArray} from './Core';
 import ArraySpliceResult from './ArraySpliceResult';
 import Dictionary from './Dictionary';
 import IArraySpliceParams from './IArraySpliceParams';
@@ -166,7 +166,7 @@ export function getSortingKeys<T>(arr: T[], callback?: (item: T, index: number) 
  * @returns Sorted item keys array.
  */
 export function getSortingKeysComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number[]{
-	compare = compare || cmpCaseSensitive;
+	compare = compare || cmp;
 	order = order || 1;
 	var pairs: any[] = [];
 	arr.every(function (item, key) {

@@ -2,6 +2,8 @@
 
 jWidget is an object-oriented TypeScript Model-View framework. Being direct competitor to Backbone, AngularJS and EmberJS, jWidget is a good choice for developers who respect the principles of object-oriented programming and appreciate good application performance.
 
+jWidget 2 is a migration of jWidget framework to the modern toolkit of TypeScript and WebPack.
+
 ### jWidget features
 
 * Base class [jwidget/Class](jwidget/Class.md) for object aggregation.
@@ -10,7 +12,23 @@ jWidget is an object-oriented TypeScript Model-View framework. Being direct comp
 * Collection classes [jwidget/AbstractArray](jwidget/AbstractArray.md), [jwidget/AbstractMap](jwidget/AbstractMap.md), [jwidget/AbstractSet](jwidget/AbstractSet.md) for collection binding support.
 * Base class [jwidget/Component](jwidget/Component.md) for UI component creation and inheritance with HTML templates and full DOM control. Fully compatible with [jQuery](http://jquery.com).
 
-jWidget is a pure object-oriented solution which doesn't rely on mystical custom HTML templates and unclear update cycles. Each object simply listens to some events and handles them in very straightforward fashion. Look at the next example:
+### jWidget advantages
+
+* Clean object-oriented design
+* Great performance
+* Perfectly lines up with the majority of modern front end development tools such as:
+    * NPM (the whole framework can be installed from NPM quickly and efficiently)
+    * TypeScript (of course, since TypeScript was created to fully support OOD)
+    * WebPack (any jWidget application can be built with just WebPack)
+    * Stylus or LESS (common CSS prefix in jWidget template provides a way to shorten your stylesheets greatly)
+
+jWidget is a pure object-oriented solution which doesn't rely on inefficiently complicated HTML templates and unclear update cycles. Each object simply listens to some events and handles them in very straightforward fashion. Look at the next example:
+
+    import Component from "jwidget/Component";
+    import Property from "jwidget/Property";
+    import template from "jwidget/template";
+    import text from "jwidget/ui/text";
+    import val from "jwidget/ui/val";
 
     @template(
         '<div class="greeter">' +
