@@ -135,13 +135,13 @@ Other tools:
 Collection interface & class hierarchy
 
 - [jwidget/AbstractCollection](jwidget/AbstractCollection.md)<T> implements [jwidget/ICollection](jwidget/ICollection.md)<T>
--- [jwidget/IndexedCollection](jwidget/IndexedCollection.md)<K, T> extends [jwidget/AbstractCollection](jwidget/AbstractCollection.md)<T> implements [jwidget/IIndexedCollection](jwidget/IIndexedCollection.md)<K, T>
---- [jwidget/AbstractArray](jwidget/AbstractArray.md)<T> extends [jwidget/IndexedCollection](jwidget/IndexedCollection.md)<number, T> implements [jwidget/IArray](jwidget/IArray.md)<T>
----- [jwidget/JWArray](jwidget/JWArray.md)<T> extends [jwidget/AbstractArray](jwidget/AbstractArray.md)<T>
----- [jwidget/ObservableArray](jwidget/ObservableArray.md)<T> extends [jwidget/AbstractArray](jwidget/AbstractArray.md)<T>
---- [jwidget/AbstractMap](jwidget/AbstractMap.md)<T> extends [jwidget/IndexedCollection](jwidget/IndexedCollection.md)<string, T> implements [jwidget/IMap](jwidget/IMap.md)<T>
----- [jwidget/JWMap](jwidget/JWMap.md)<T> extends [jwidget/AbstractMap](jwidget/AbstractMap.md)<T>
----- [jwidget/ObservableMap](jwidget/ObservableMap.md)<T> extends [jwidget/AbstractMap](jwidget/AbstractMap.md)<T>
--- [jwidget/AbstractSet](jwidget/AbstractSet.md)<T extends [jwidget/IClass](jwidget/IClass.md)> extends [jwidget/AbstractCollection](jwidget/AbstractCollection.md)<T> implements [jwidget/ISet](jwidget/ISet.md)<T>
---- [jwidget/JWSet](jwidget/JWSet.md)<T extends [jwidget/IClass](jwidget/IClass.md)> extends [jwidget/AbstractSet](jwidget/AbstractSet.md)<T>
---- [jwidget/ObservableSet](jwidget/ObservableSet.md)<T extends [jwidget/IClass](jwidget/IClass.md)> extends [jwidget/AbstractSet](jwidget/AbstractSet.md)<T>
+    - [jwidget/IndexedCollection](jwidget/IndexedCollection.md)<K, T> extends [jwidget/AbstractCollection](jwidget/AbstractCollection.md)<T> implements [jwidget/IIndexedCollection](jwidget/IIndexedCollection.md)<K, T>
+        - [jwidget/AbstractArray](jwidget/AbstractArray.md)<T> extends [jwidget/IndexedCollection](jwidget/IndexedCollection.md)<number, T> implements [jwidget/IArray](jwidget/IArray.md)<T>
+            - [jwidget/JWArray](jwidget/JWArray.md)<T> extends [jwidget/AbstractArray](jwidget/AbstractArray.md)<T>
+            - [jwidget/ObservableArray](jwidget/ObservableArray.md)<T> extends [jwidget/AbstractArray](jwidget/AbstractArray.md)<T>
+        - [jwidget/AbstractMap](jwidget/AbstractMap.md)<T> extends [jwidget/IndexedCollection](jwidget/IndexedCollection.md)<string, T> implements [jwidget/IMap](jwidget/IMap.md)<T>
+            - [jwidget/JWMap](jwidget/JWMap.md)<T> extends [jwidget/AbstractMap](jwidget/AbstractMap.md)<T>
+            - [jwidget/ObservableMap](jwidget/ObservableMap.md)<T> extends [jwidget/AbstractMap](jwidget/AbstractMap.md)<T>
+    - [jwidget/AbstractSet](jwidget/AbstractSet.md)<T extends [jwidget/IClass](jwidget/IClass.md)> extends [jwidget/AbstractCollection](jwidget/AbstractCollection.md)<T> implements [jwidget/ISet](jwidget/ISet.md)<T>
+        - [jwidget/JWSet](jwidget/JWSet.md)<T extends [jwidget/IClass](jwidget/IClass.md)> extends [jwidget/AbstractSet](jwidget/AbstractSet.md)<T>
+        - [jwidget/ObservableSet](jwidget/ObservableSet.md)<T extends [jwidget/IClass](jwidget/IClass.md)> extends [jwidget/AbstractSet](jwidget/AbstractSet.md)<T>
