@@ -1,3 +1,3 @@
 # Class
 
-[jwidget/Property](jwidget/Property)
+[jwidget/Property](jwidget/Property.md)
