@@ -25,53 +25,7 @@ import {isDictionaryEmpty} from './internal';
 
 /**
  * Used to notify some objects (clients) about certain events (for example, field value change).
- *
- * **Notice:** Remember to destroy the events and event listeners to prevent side effects.
- *
- * Full example of class that triggers the events:
- *
- *     class Dispatcher extends JW.Class {
- *         private items: any[] = [];
- *
- *         addEvent = this.own(new JW.Event<dispatcher.EventParams>());
- *         removeEvent = this.own(new JW.Event<dispatcher.EventParams>());
- *
- *         addItem(item: any, index: number) {
- *             this.items.splice(index, 0, item);
- *             this.addEvent.trigger({sender: this, item: item, index: index});
- *         }
- *
- *         removeItem(index) {
- *             var item = this.items.splice(index, 1)[0];
- *             this.removeEvent.trigger({sender: this, item: item, index: index});
- *         }
- *     }
- *
- *     module dispatcher {
- *         export interface EventParams {
- *             sender: Dispatcher;
- *             item: any;
- *             index: number;
- *         }
- *     }
- *
- * Full example of event listener:
- *
- *     class Listener extends JW.Class {
- *         constructor(dispatcher: Dispatcher) {
- *             super();
- *             this.own(dispatcher.addEvent.bind(this._onAdd, this));
- *             this.own(dispatcher.removeEvent.bind(this._onRemove, this));
- *         }
- *
- *         _onAdd(params: dispatcher.EventParams) {
- *             console.log(params.item, " item is added at ", params.index);
- *         }
- *
- *         _onRemove(params: dispatcher.EventParams) {
- *             console.log(params.item, " item is removed at ", params.index);
- *         }
- *     }
+ * Remember to destroy the events attachments to prevent side effects.
  */
 class Event<P> extends Class {
 	private _attachments: Dictionary<EventAttachment<P>> = null;
@@ -84,14 +38,13 @@ class Event<P> extends Class {
 	/**
 	 * Starts listening to event.
 	 *
-	 * Whenever the event is triggered with **trigger** method, specified handler function
+	 * Whenever the event is triggered with `trigger` method, specified handler function
 	 * is called in specified scope.
 	 *
-	 * You can stop listening the event by destroying the returned JW.EventAttachment instance.
+	 * You can stop listening the event by destroying the returned EventAttachment instance.
 	 *
-	 * @param callback Event handler function.
-	 * @param scope **callback** call scope.
-	 * @returns Event attachment object.
+	 * @param handler Event handler function.
+	 * @param scope `handler` call scope.
 	 */
 	bind(handler: (params: P) => void, scope?: any): EventAttachment<P> {
 		if (this._attachments === null) {
@@ -104,7 +57,6 @@ class Event<P> extends Class {
 
 	/**
 	 * Stops listening the event with specific handler.
-	 *
 	 * Equivalent to `attachment.destroy()`.
 	 *
 	 * @param attachment Event attachment.
@@ -124,10 +76,6 @@ class Event<P> extends Class {
 
 	/**
 	 * Triggers event, i.e. calls all bound handlers.
-	 *
-	 *     this.myEvent.trigger({sender: this});
-	 *
-	 * This way, we've called all handlers of `myEvent` with argument `{sender: this}`.
 	 *
 	 * @param params Event params.
 	 */

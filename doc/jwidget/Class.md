@@ -7,6 +7,11 @@
 	import IClass from "jwidget/IClass";
 	import Class from "jwidget/Class";
 
+## Hierarchy
+
+* interface IClass extends [jwidget/Destroyable](Destroyable.md)
+* class Class implements IClass
+
 ## Description
 
 The base class of all jWidget classes.
