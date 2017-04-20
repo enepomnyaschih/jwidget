@@ -4,7 +4,7 @@ jWidget is an object-oriented TypeScript Model-View framework. Being direct comp
 
 ### jWidget features
 
-* Base class [jwidget/Class] for object aggregation.
+* Base class [jwidget/Class](jwidget/Class) for object aggregation.
 * Event class [jwidget/Event] for change notification.
 * Observable property class [jwidget/Property] for basic binding support.
 * Collection classes, algorithms, synchronizers [jwidget/AbstractCollection].

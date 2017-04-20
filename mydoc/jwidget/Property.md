@@ -1,3 +1,3 @@
 # Property
 
-[jwidget/Property]
+[jwidget/Class](jwidget/Class)
