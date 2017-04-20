@@ -1,0 +1,3 @@
+# Class
+
+[jwidget/Property]

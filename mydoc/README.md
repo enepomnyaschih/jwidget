@@ -1,86 +1,104 @@
 # What is jWidget?
 
-jWidget is an object-oriented JavaScript Model-View framework.
-Being direct competitor to Backbone, AngularJS and EmberJS, jWidget is a good choice for developers who respect the
-principles of object-oriented programming and appreciate good application performance.
+jWidget is an object-oriented TypeScript Model-View framework. Being direct competitor to Backbone, AngularJS and EmberJS, jWidget is a good choice for developers who respect the principles of object-oriented programming and appreciate good application performance.
 
 ### jWidget features
 
-* Base class [Class](Class.md) for object aggregation
-* Event class [Event](Event.md) for change modification
-* Observable property class [Property](Property.md) for basic binding support
-* Collection classes, algorithms, synchronizers (JW.AbstractCollection)
-* Base class JW.UI.Component for UI components creation and inheritance with HTML templates
-* Application tree structure (parent and child components management)
-* Integration with [jWidget SDK](https://github.com/enepomnyaschih/jwsdk/wiki/) which lets you to extract
-HTML templates into separate files
+* Base class [jwidget/Class] for object aggregation.
+* Event class [jwidget/Event] for change notification.
+* Observable property class [jwidget/Property] for basic binding support.
+* Collection classes, algorithms, synchronizers [jwidget/AbstractCollection].
+* Base class [jwidget/Component] for UI component creation and inheritance with HTML templates and full DOM control. Fully compatible with [jQuery](http://jquery.com).
 
-jWidget is a pure object-oriented solution which doesn't rely on mystic custom HTML templates and unclear
-update cycles. Each object simply listens events and handles them in very straightforward fashion. Look at the next
-example:
+jWidget is a pure object-oriented solution which doesn't rely on mystical custom HTML templates and unclear update cycles. Each object simply listens to some events and handles them in very straightforward fashion. Look at the next example:
 
-    var Greeter = function() {
-        Greeter.{@link JW.Class#_super _super}.call(this);
-        this.name = this.{@link JW.Class#own own}(new JW.Property("guest"));
-    };
+    @template(
+        '<div class="greeter">' +
+            '<p>Your name: <input jwid="name-field"></p>' +
+            '<div jwid="greeting"></div>' +
+        '</div>'
+    )
+    class Greeter extends Component {
+        private name = this.own(new Property("guest"));
 
-    JW.extend(Greeter, JW.UI.Component, {
-        renderNameField: function(el) {
+        protected renderNameField(el: JQuery) {
             // Bind element value to property
-            this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}(this.name));
-
-            // Bind property to element value
-            this.name.{@link JW.Property#bindTo bindTo}(this.{@link JW.Class#own own}(el.{@link jQuery#jwval jwval}()));
+            this.own(val(el, this.name, TWOWAY));
         },
 
-        renderGreeting: function(el) {
+        protected renderGreeting(el: JQuery) {
             // Build greeting message
-            var text = this.{@link JW.Class#own own}(this.name.{@link JW.Property#$$mapValue $$mapValue}(function(name) {
-                return "Hello, " + name + "!";
-            }, this));
+            var text = this.own(this.name.mapValue((name) => "Hello, " + name + "!"));
 
             // Bind element text to message
-            this.{@link JW.Class#own own}(el.{@link jQuery#jwtext jwtext}(text));
+            this.own(text(el, text));
         }
     });
 
-    JW.UI.template(Greeter, {
-        main:
-            '<div class="greeter">' +
-                '<p>Your name: <input jwid="name-field"></p>' +
-                '<div jwid="greeting"></div>' +
-            '</div>'
-    });
+    new Greeter().renderTo("body");
 
-    new Greeter().{@link JW.UI.Component#renderTo renderTo}("body");
+<iframe frameborder="0" width="100%" height="100" src="http://enepomnyaschih.github.io/mt/1.4/greeter.html"></iframe>
 
-<iframe frameborder="0" width="400" height="100" src="http://enepomnyaschih.github.io/mt/1.4/greeter.html"></iframe>
+Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes you feel confident that you're able to implement as complicated and big MV application as you would like to. You can be confident to use all well-known OOD patterns and follow OOD [SOLID principles](http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)). Also, you can use static typing capabilities provided by TypeScript in a full scale. Read the [Tutorial](Tutorial1.md) for more examples.
 
-Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes
-you confident in that you're able to implement as complicated and big MV application as you would like to. You
-can be confident to use all well-known OOD patterns and follow OOD
-<a href="http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)">SOLID principles</a>. Read the
-[tutorial](#!/guide/ensample1) for more examples.
+The difference between jWidget and the other Model-View frameworks is the approach of working with properties and collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding is performed explicitly via [jwidget/Property] and its helpers. Instead of special tags-repeaters in HTML templates, you work with collections explicitly using [jwidget/AbstractCollection] and their synchronizers.
 
-The difference between jWidget and other Model-View frameworks is the approach of working with properties and
-collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding
-is performed explicitly using JW.Property and its helpers. Instead of special tags-repeaters in HTML templates, you work with
-collections explicitly using {@link JW.AbstractCollection collection classes} and their synchronizers.
-
-This approach is more effective: data binding is not constrained by connection between model and view. All the same
-practices are used to bind model objects to each other and to bind view components to each other.
+This approach is more effective: data binding is not restricted to model and view communication: all the same practices can be used to bind model objects to each other and view components to each other.
 
 Project license is LGPL.
 
-Current version: 1.4.5
+Current version: 2.1
 
-<font size="5">[Download jWidget](guides/endownload/jwidget.zip)</font>
+### Installation
 
-<font size="5">[Source code and bug tracker on GitHub](https://github.com/enepomnyaschih/jwidget)</font>
+    npm install --save jwidget
 
-jWidget is available as [Bower](http://bower.io/) package:
+Then you can import its classes directly via ES6 syntax:
 
-    bower install jwidget
+    import Class from "jwidget/Class";
 
-Feel free to contact me by email [jwidgetproject@gmail.com](mailto:jwidgetproject@gmail.com) if you have any questions
-or bug reports.
+### API documentation
+
+Unfortunately, code documentation tools for TypeScript are not yet mature enough to generate comprehensive code documentation, so we've decided to document the API manually as Markdown files at GitHub. Here's documentation index.
+
+Core:
+
+- [jwidget/Core] - Core utilities.
+- [jwidget/Class] - Base class for object aggregation.
+- [jwidget/Event] - Event class for change notification.
+- [jwidget/Property] - Observable property for basic binding support.
+
+Model bindings for [jwidget/Property]:
+
+- JW.Copier
+- JW.Functor
+- JW.Mapper
+- JW.Updater
+- JW.Switcher
+
+Collections:
+
+- JW.AbstractCollection
+- JW.IndexedCollection
+- JW.AbstractArray
+- JW.AbstractMap
+- JW.AbstractSet
+
+Synchronizers:
+
+- Item mapper: JW.AbstractCollection.Mapper
+- Filterer: JW.AbstractCollection.Filterer
+- Matching item counter: JW.AbstractCollection.Counter
+- Converter to set: JW.AbstractCollection.Lister
+- Converter to map (indexer): JW.AbstractCollection.Indexer
+- Converter to array (orderer): JW.AbstractCollection.Orderer
+- Converter to array (sorter by comparer): JW.AbstractCollection.SorterComparing
+- Observer: JW.AbstractCollection.Observer
+- View synchronizers: JW.AbstractArray.Inserter, JW.AbstractMap.Inserter, JW.UI.Inserter
+- Arrays merger: JW.AbstractArray.Merger
+- Array reverser: JW.AbstractArray.Reverser
+
+UI:
+
+- JW.UI.Component
+- {@link jQuery jQuery} extension methods
