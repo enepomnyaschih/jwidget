@@ -170,6 +170,8 @@ Defines default value. Returns `value`, if it is not undefined and null, else re
 
 	apply<T>(target: Dictionary<T>, ...sources: Dictionary<T>[]): Dictionary<T>
 
+Reference: [jwidget/Dictionary](Dictionary.md).
+
 Iterates through objects passed after first argument and copies all their fields into
 **target** object. Returns **target**. Fields of source objects which are undefined will be ignored.
 Empty source objects (undefined, null) will be ignored.
@@ -204,8 +206,6 @@ Example 2 (form data preparing):
 			return null;
 		}
 	}
-
-Reference: [jwidget/Dictionary](Dictionary.md).
 
 ### cmp
 

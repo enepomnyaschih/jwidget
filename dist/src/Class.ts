@@ -23,15 +23,21 @@ import IClass from './IClass';
 
 /**
  * The base class of all jWidget classes.
+ * Introduces object aggregation support.
+ * If you call `a.own(b)`, then **b** is destroyed automatically on **a** destruction.
+ * You can aggregate any object implementing `Destroyable`.
  *
- * See [[IClass]] for details.
+ * See online documentation for details.
  */
 class Class implements IClass {
 	private static _lastIid: number = 0;
 	private _ownagePool: Destroyable[] = null;
 
 	/**
-	 * @inheritdoc
+	 * Instance ID.
+	 *
+	 * Auto-incrementing object unique ID. Each IClass instance has such an identifier.
+	 * Used, say, in AbstractSet as map key for quick item access.
 	 */
 	_iid: number;
 
@@ -42,12 +48,9 @@ class Class implements IClass {
 	/**
 	 * Aggregates the object. It means that the specified object is automatically destroyed
 	 * on this object destruction. The aggregated objects are destroyed in reverse order.
-	 * Returns the aggregated object, which makes it easy to use in field definition:
-	 *
-	 *     private selected = this.own(new Property(false));
+	 * Returns the aggregated object, which makes it easy to use in field definition.
 	 *
 	 * @param obj Object to aggregate.
-	 * @returns obj
 	 */
 	own<T extends Destroyable>(obj: T): T {
 		this._ownagePool = this._ownagePool || [];
@@ -56,7 +59,11 @@ class Class implements IClass {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Aggregates the object. It means that the specified object is automatically destroyed
+	 * on this object destruction. The aggregated objects are destroyed in reverse order.
+	 * Returns this object, which makes it easy to use in object instantiation.
+	 *
+	 * @param obj Object to aggregate.
 	 */
 	owning(obj: Destroyable): this {
 		this.own(obj);
@@ -64,23 +71,9 @@ class Class implements IClass {
 	}
 
 	/**
-	 * Class destructor invocation method. Destroys all aggregated objects and calls #destroyObject method.
+	 * Class destructor invocation method. Destroys all aggregated objects and calls destroyObject method.
 	 * You must call this method explicitly from outside, because JavaScript doesn't support automatic class destructor
 	 * calling.
-	 *
-	 *     const object = new MyClass();
-	 *
-	 *     // ...
-	 *
-	 *     // Once object is not needed anymore, destroy it
-	 *     object.destroy();
-	 *
-	 * Alternatively (and optimally), you should use [[own]] method to aggregate this object inside another one.
-	 *
-	 * You can override [[destroy]] method in a subclass to do some preliminary work before aggregated objects destruction.
-	 * For example, [[Component]] overrides this method to remove child components before their destruction,
-	 * because child components are usually aggregated inside the component. However, in the majority of cases,
-	 * you should override [[destroyObject]] method instead to customize destruction logic.
 	 */
 	destroy() {
 		// TODO: assert(this._ownagePool != null);
@@ -97,14 +90,7 @@ class Class implements IClass {
 	/**
 	 * Class destructor implementation. Called inside [[destroy]] method *after aggregated objects destruction*.
 	 * The logic of class instance destruction should be implemented here. If you override this method,
-	 * remember to call superclass destructor at the end of the method:
-	 *
-	 *     destroyObject: function() {
-	 *         // Release resources
-	 *         ...
-	 *         // Call superclass destructor
-	 *         super.destroyObject();
-	 *     }
+	 * remember to call `super.destroyObject()` at the end of the method.
 	 */
 	protected destroyObject() {}
 }

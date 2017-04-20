@@ -14,6 +14,6 @@ Object which has **destroy** method. Can be aggregated in [jwidget/Class](Class.
 
 ### destroy
 
-destroy(): void
+	destroy(): void
 
 Class destructor invocation method.

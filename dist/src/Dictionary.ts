@@ -18,6 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * Interface for a native JavaScript map.
+ */
 interface Dictionary<T> {
 	[index: string]: T;
 }
