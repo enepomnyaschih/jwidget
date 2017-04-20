@@ -21,7 +21,7 @@
 import Dictionary from './Dictionary';
 
 /**
- * Checks whether value is undefined.
+ * Checks if value is undefined.
  * @returns Value is undefined.
  */
 export function isUndefined(value: any) {
@@ -29,7 +29,7 @@ export function isUndefined(value: any) {
 }
 
 /**
- * Checks whether value is not undefined.
+ * Checks if value is not undefined.
  * @returns Value is not undefined.
  */
 export function isDefined(value: any) {
@@ -37,7 +37,7 @@ export function isDefined(value: any) {
 }
 
 /**
- * Checks whether value is null.
+ * Checks if value is null.
  * @returns Value is null.
  */
 export function isNull(value: any) {
@@ -45,7 +45,7 @@ export function isNull(value: any) {
 }
 
 /**
- * Checks whether value is not null.
+ * Checks if value is not null.
  * @returns Value is not null.
  */
 export function isNotNull(value: any) {
@@ -53,7 +53,7 @@ export function isNotNull(value: any) {
 }
 
 /**
- * Checks whether value is not undefined and null.
+ * Checks if value is not undefined and null.
  * @returns Value is not undefined and null.
  */
 export function isNotNil(value: any) {
@@ -61,7 +61,7 @@ export function isNotNil(value: any) {
 }
 
 /**
- * Checkes whether value is undefined or null.
+ * Checkes if value is undefined or null.
  * @returns Value is undefined or null.
  */
 export function isNil(value: any) {
@@ -69,7 +69,7 @@ export function isNil(value: any) {
 }
 
 /**
- * Checks whether value is falsy (`null`, `undefined`, `false`, 0, `NaN` or blank string).
+ * Checks if value is falsy (`null`, `undefined`, `false`, 0, `NaN` or blank string).
  * @returns Value is falsy.
  */
 export function isFalsy(value: any) {
@@ -77,7 +77,7 @@ export function isFalsy(value: any) {
 }
 
 /**
- * Checks whether value is truthy (not `null`, `undefined`, `false`, 0, `NaN` or blank string).
+ * Checks if value is truthy (not `null`, `undefined`, `false`, 0, `NaN` or blank string).
  * @returns Value is not truthy.
  */
 export function isTruthy(value: any) {
@@ -85,7 +85,7 @@ export function isTruthy(value: any) {
 }
 
 /**
- * Checks whether value is an integer.
+ * Checks if value is an integer.
  * @returns Value is an integer.
  */
 export function isInt(value: any) {
@@ -93,7 +93,7 @@ export function isInt(value: any) {
 }
 
 /**
- * Checks whether value is a number.
+ * Checks if value is a number.
  * @returns Value is a number.
  */
 export function isNumber(value: any) {
@@ -101,7 +101,7 @@ export function isNumber(value: any) {
 }
 
 /**
- * Checks whether value is a string.
+ * Checks if value is a string.
  * @returns Value is a string.
  */
 export function isString(value: any) {
@@ -109,7 +109,7 @@ export function isString(value: any) {
 }
 
 /**
- * Checks whether value is a boolean.
+ * Checks if value is a boolean.
  * @returns Value is a boolean.
  */
 export function isBoolean(value: any) {
@@ -117,7 +117,7 @@ export function isBoolean(value: any) {
 }
 
 /**
- * Checks whether value is a function.
+ * Checks if value is a function.
  * @returns Value is a function.
  */
 export function isFunction(value: any) {
@@ -125,7 +125,7 @@ export function isFunction(value: any) {
 }
 
 /**
- * Checks whether value is a native JavaScript Array.
+ * Checks if value is a native JavaScript Array.
  * @returns Value is an Array.
  */
 export function isArray(value: any) {
@@ -133,7 +133,7 @@ export function isArray(value: any) {
 }
 
 /**
- * Checks whether value is a regular expression.
+ * Checks if value is a regular expression.
  * @returns Value is a regular expression.
  */
 export function isRegExp(value: any) {
@@ -141,7 +141,7 @@ export function isRegExp(value: any) {
 }
 
 /**
- * Checks whether value is a date.
+ * Checks if value is a date.
  * @returns Value is a date.
  */
 export function isDate(value: any) {
@@ -381,7 +381,7 @@ export function iid(obj: any): number {
  *         destroyItem : JW.destroyForcibly
  *     });
  */
-export function destroy(obj: any): any {
+export function destroy(obj: any) {
 	if (obj && typeof obj.destroy === "function") {
 		obj.destroy();
 	}

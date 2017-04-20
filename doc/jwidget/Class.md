@@ -1,3 +1,5 @@
+[Back to index](../README.md)
+
 # Class
 
 ## Consumption
@@ -47,9 +49,11 @@ Instance ID.
 Auto-incremental object unique ID. Each IClass instance has such an identifier.
 Used, say, in [jwidget/AbstractSet](AbstractSet.md) as map key for quick item access.
 
+## Methods
+
 ### own
 
-own<T extends [jwidget/Destroyable](Destroyable.md)>(obj: T): T;
+own<T extends [jwidget/Destroyable](Destroyable.md)>(obj: T): T
 
 Aggregates the object. It means that the specified object is automatically destroyed
 on this object destruction. The aggregated objects are destroyed in reverse order.
@@ -59,7 +63,7 @@ Returns the aggregated object, which makes it easy to use in field definition:
 
 ### owning
 
-owning(obj: [jwidget/Destroyable](Destroyable.md)): this;
+owning(obj: [jwidget/Destroyable](Destroyable.md)): this
 
 Aggregates the object. It means that the specified object is automatically destroyed
 on this object destruction. The aggregated objects are destroyed in reverse order.
