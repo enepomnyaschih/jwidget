@@ -34,7 +34,7 @@
     "@types/jquery": "2.0.39"
   },
   "scripts": {
-    "setup": "npm install -g bower typescript webpack karma-cli typedoc & npm link typescript webpack & bower install & npm install",
-    "doc": "typedoc --out doc --exclude test --excludePrivate --module commonjs --target ES5 --name \"jWidget 2\" --readme DOCINDEX.md dist/src"
+    "setup": "npm install -g bower typescript webpack karma-cli doc & npm link typescript webpack & bower install & npm install",
+    "doc": "node mydoc/normalize.js"
   }
 }
