@@ -35,6 +35,6 @@
   },
   "scripts": {
     "setup": "npm install -g bower typescript webpack karma-cli doc & npm link typescript webpack & bower install & npm install",
-    "doc": "node mydoc/normalize.js"
+    "doc": "node doc/normalize.js"
   }
 }
