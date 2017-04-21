@@ -71,18 +71,10 @@ Starts listening to event.
 Whenever the event is triggered with **trigger** method, specified handler function
 is called in specified scope.
 
-You can stop listening the event by destroying the returned [EventAttachment](#EventAttachment) instance.
+You can stop listening the event by destroying the returned [jwidget/EventAttachment](EventAttachment.md) instance.
 
 * **handler** - Event handler function.
 * **scope** - **handler** call scope.
-
-### unbind
-
-	unbind(attachment: EventAttachment<P>)
-
-Reference: [EventAttachment](#EventAttachment).
-
-Stops listening the event with specific handler. Equivalent to `attachment.destroy()`.
 
 ### purge
 
@@ -105,17 +97,3 @@ This way, we've called all handlers of `myEvent` with argument `{sender: this}`.
 	hasAttachments(): boolean
 
 Checks if the event has attachments.
-
-# EventAttachment
-
-## Consumption
-
-	import EventAttachment from "jwidget/EventAttachment";
-
-## Hierarchy
-
-* class EventAttachment<P> extends [jwidget/Class](Class.md)
-
-## Description
-
-Result of [Event.bind](#bind) method call. Destroy it to unbind the event handler.

@@ -26,49 +26,15 @@ import Event from './Event';
 import Mapper from './Mapper';
 
 /**
- * The observable property. A convenient way to keep an object in sync
- * with another object. Has the next helpers:
- *
- * - [[JW.Copier]] - keeps one property equal to another property
- * - [[JW.Updater]] - watches several properties in order to update something by
- * a callback
- * - [[JW.Functor]] - watches several properties in order to reassign target
- * property value to a callback result
- * - [[JW.Mapper]] - watches several properties in order to recreate and destroy
- * target property value by callbacks
- * - [[JW.Switcher]] - watches a property to initialize and release its value
- *
- * Also, see [[JQuery|jQuery extension methods]].
- *
- * For example, you can use the next algorithm to change localization on fly
- * in your Web application:
- *
- *     let locale: any = {
- *         en: {
- *             hi: "Hi",
- *             bye: "Bye"
- *         },
- *         ru: {
- *             hi: "Привет",
- *             bye: "Пока"
- *         }
- *     };
- *     let language = new JW.Property<string>("en");
- *     let hi = language.$$mapValue<string>((language) => { return locale[language].hi; });
- *     let bye = language.$$mapValue<string>((language) => { return locale[language].bye; });
- *     $("#hi").jwtext(hi);
- *     $("#bye").jwtext(bye);
- *     // Now you can change localization easily
- *     language.set("ru");
- *
- * @param V Property value type.
+ * The observable property. A convenient way to keep an object in sync with another object.
+ * Provides a number of model and view bindings.
  */
 export default class Property<V> extends Class {
 	private _ownsValue = false;
 	private _copier: Copier<V> = null;
 
 	/**
-	 * Property value is changed. Triggered in result of [[set]] method call if the value has been changed.
+	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
 	changeEvent = this.own(new Event<PropertyChangeEventParams<V>>());
 
@@ -95,7 +61,7 @@ export default class Property<V> extends Class {
 	}
 
 	/**
-	 * Changes property value and triggers [[changeEvent]] if the value has been changed.
+	 * Changes property value and triggers `changeEvent` if the value has been changed.
 	 */
 	set(value: V) {
 		if (value === undefined) {
@@ -116,15 +82,14 @@ export default class Property<V> extends Class {
 	 * Makes this property an owner of its value. It means that the value is
 	 * destroyed automatically on reassignment or destruction of the
 	 * property.
-	 * @returns this
 	 */
-	ownValue(): Property<V> {
+	ownValue(): this {
 		this._ownsValue = true;
 		return this;
 	}
 
 	/**
-	 * Binds this property to another property using a [[JW.Copier]].
+	 * Binds this property to another property using a `Copier`.
 	 * Unbinds a previously bound property.
 	 *
 	 * @param source Source property to bind to. Omit to simply unbind.
@@ -140,16 +105,15 @@ export default class Property<V> extends Class {
 	}
 
 	/**
-	 * Works the same way as [[$map]] but also starts synchronization.
-	 * To stop synchronization, destroy the result property.
-	 * In comparison to [[$$mapObject]] method, doesn't destroy previously assigned values.
+	 * Builds a new property containing the result of the callback function called
+	 * on this property value. To stop synchronization, destroy the result property.
+	 * In comparison to `mapObject` method, doesn't destroy the previously assigned target values.
 	 *
 	 * @param callback Mapping function.
-	 * @param scope **callback** call scope. Defaults to property itself.
-	 * @returns Result property.
+	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
 	mapValue<U>(callback: (value: V) => U, scope?: any): Property<U> {
-		let result = new Property<U>();
+		const result = new Property<U>();
 		result.own(new Mapper([this], {
 			target: result,
 			createValue: callback,
@@ -159,16 +123,15 @@ export default class Property<V> extends Class {
 	}
 
 	/**
-	 * Works the same way as [[$map]] but also starts synchronization.
-	 * To stop synchronization, destroy the result property.
-	 * In comparison to [[$$mapValue]] method, destroys previously assigned values.
+	 * Builds a new property containing the result of the callback function called
+	 * on this property value. To stop synchronization, destroy the result property.
+	 * In comparison to `mapObject` method, destroys the previously assigned target values.
 	 *
 	 * @param callback Mapping function.
-	 * @param scope **callback** call scope. Defaults to property itself.
-	 * @returns Result property.
+	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
 	mapObject<U extends Destroyable>(callback: (value: V) => U, scope?: any): Property<U> {
-		let result = new Property<U>();
+		const result = new Property<U>();
 		result.own(new Mapper([this], {
 			target: result,
 			createValue: callback,
@@ -180,9 +143,7 @@ export default class Property<V> extends Class {
 }
 
 /**
- * [[JW.Property]]'s [[JW.Property.changeEvent|changeEvent]] params.
- *
- * @param V Property value type.
+ * `Property.changeEvent` params.
  */
 export interface PropertyChangeEventParams<V> {
 	/**

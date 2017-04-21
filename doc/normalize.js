@@ -33,7 +33,7 @@ function process(name) {
 		const subtokens = (mapping[cls] || cls).split("/");
 		const index = diff(tokens, subtokens);
 		return "[" + match + "](" + repeat("..", tokens.length - index).concat(subtokens.slice(index)).join("/") +
-			".md" + (member ? ("#" + member) : "") + ")";
+			".md" + (member ? ("#" + member.toLowerCase()) : "") + ")";
 	}));
 }
 
