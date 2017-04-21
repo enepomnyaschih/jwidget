@@ -107,7 +107,7 @@ There are 5 ways to add a child component (**note**: examples are not complete -
 		addLabel(value: string) {
 			this.labelViews.add(new LabelView(value));
 		}
-- Define method `render<ChildId>`, where `<ChildId>` is a `jwid` of an element in CamelCase with capitalized first letter. Example: `renderArticle` (renders element with `jwid="article"`). If the method returns an instance of Component, [jwidget/Property](Property.md) or [jwidget/ICollection](AbstractCollection.md), then result will be treated as a child component or a child component collection. Define method `renderRoot` to render the root element, but you can return only [ICollection] there, because it is impossible to replace the root element of the component.
+- Define method `render<ChildId>`, where `<ChildId>` is a `jwid` of an element in CamelCase with capitalized first letter. Example: `renderArticle` (renders element with `jwid="article"`). If the method returns an instance of Component, [jwidget/Property](Property.md) or [jwidget/ICollection](AbstractCollection.md), then result will be treated as a child component or a child component collection. Define method `renderRoot` to render the root element, but you can return only [jwidget/ICollection](AbstractCollection.md) there, because it is impossible to replace the root element of the component.
 
 		renderLabel() {
 			return new LabelView("Hello");
@@ -121,7 +121,7 @@ Reference: [Getting started. Part 1. Model and view](../Tutorial1.md).
 
 ### More about child component collections
 
-It is convenient to use [mapDestroyableColletion](jwidget/mapper/collection#mapdestroyablecollection) method to convert data collections into UI component collections. Thanks to it, view is updated on data update automatically.
+It is convenient to use [mapDestroyableColletion](mapper/collection.md#mapdestroyablecollection) method to convert data collections into UI component collections. Thanks to it, view is updated on data update automatically.
 
 That's the reason why we recommend to use jWidget collections in data model instead of native JavaScript Array and Object: jWidget collections have observable implementations which can be synchronized to each other.
 
@@ -274,7 +274,7 @@ This example describes how to insert child components which have lifetime contro
 
 Each component has several stages of life.
 
-1. Like in all other classes, **constructor** is called first. Usually all fields are defined and assigned to their initial values here, events are created etc. Only component model should be touched here, view is completely ignored. Notice that component is not rendered after construction yet, so it doesn't have fields [el](#el) and [children](#children) assigned, and methods [addArray](#addarray), [addcollection](#addcollection), [addReplaceable](#addreplaceable) won't work. The main reason for that is that we want to give you ability to do something else between component construction and rendering, for example, change some field values and call some methods. Second reason: it is not recommended to call virtual methods in constructor in any object-oriented language. If may result in undesired side effects. You can render the component directly by calling [render](#render), [renderTo](#renderto), [renderAs](#renderas), or by adding this component into another component as a child. For example, component gets rendered immediately after adding into [children](#children) map. You can invoke component rendering multiple times, but it gets rendered only once.
+1. Like in all other classes, **constructor** is called first. Usually all fields are defined and assigned to their initial values here, events are created etc. Only component model should be touched here, view is completely ignored. Notice that component is not rendered after construction yet, so it doesn't have fields [el](#el) and [children](#children) assigned, and methods [addArray](#addarray), [addCollection](#addcollection), [addReplaceable](#addreplaceable) won't work. The main reason for that is that we want to give you ability to do something else between component construction and rendering, for example, change some field values and call some methods. Second reason: it is not recommended to call virtual methods in constructor in any object-oriented language. If may result in undesired side effects. You can render the component directly by calling [render](#render), [renderTo](#renderto), [renderAs](#renderas), or by adding this component into another component as a child. For example, component gets rendered immediately after adding into [children](#children) map. You can invoke component rendering multiple times, but it gets rendered only once.
 1. Method [beforeRender](#beforerender) is called during rendering, after HTML template reading and initialization of all links to this template elements. It is convenient to perform some preliminary action here before child component creation. You are already able to create child components here anyway. Call `super.beforeRender()` at the first line of the method.
 1. All `render<ChildId>` methods are called for HTML template elements, i.e. child component creation is performed. The methods are called in the same order as these `jwid`'s are written in the template.
 1. Method [afterRender](#afterrender) is called at the end of rendering procedure. You should assign all elements' attributes here, create child components, bind event handlers and fill the component with interactivity. Component rendering is finished here. Call `super.afterRender()` at the first line of the method.
@@ -283,7 +283,7 @@ Each component has several stages of life.
 1. Method [unrender](#unrender) is called during component destruction. Everything that was performed during component rendering, i.e. on steps 2-4, should be reverted here. All child components are already removed by framework before this method call, but the components themselves are not destroyed. You must destroy them explicitly unless you use [own](Class.md#own) method to aggregate them. Call `super.unrender()` at the last line of the method.
 1. Method [afterDestroy](#afterdestroy) is called during component destruction. Everything that was performed in component constructor, i.e. on step 1, should be reverted here. Call `super.afterDestroy()` at the last line of the method.
 
-### Intergration with WebPack
+### Integration with WebPack
 
 There's an easy way to attach HTML templates via WebPack. The first example from this topic can be splitted into two files:
 

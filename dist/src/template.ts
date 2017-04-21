@@ -21,7 +21,17 @@
 import Dictionary from './Dictionary';
 import * as DomUtils from './DomUtils';
 
+/**
+ * Defines HTML templates for a `Component` subclass.
+ *
+ * @param template Template HTML string.
+ * @param id Template name to add or override. Defaults to "main".
+ */
 export default function(template: string, id?: string): any;
+
+/**
+ * @param tpls Templates to add or override.
+ */
 export default function(tpls: Dictionary<string>): any;
 export default function(tpl: any, id?: string): any {
 	return function(target: any) {
