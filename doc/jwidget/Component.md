@@ -8,7 +8,7 @@
 
 ## Hierarchy
 
-* class Component extends Class
+* class Component extends [jwidget/Class](Class.md)
 
 ## Description
 
@@ -46,6 +46,8 @@ jWidget has very simple API, but pretty unusual philosophy to build up Model-Vie
 		}
 	}
 
+References: [jwidget/template](template.md), [getElement](#getelement).
+
 Let's find out how HTML template works. Each component has a main template, which is passed into `@template` annotation and defaults to `<div></div>`. You can add more templates - see [jwidget/template](template.md) for details. Subclass inherits superclass templates.
 
 Pay attention to special attributes `jwclass` and `jwid` in the template. `jwclass` is a root CSS class of the component, and `jwid` is a suffix to `jwclass` in this element. So, the next HTML snippet is created in DOM as a result of this component rendering:
@@ -67,13 +69,38 @@ Component can be created by simple construction of component object. After that,
 
 ### Child components
 
-There are 5 ways to add a child component:
+There are 5 ways to add a child component (**note**: examples are not complete - see [Component removal and destruction](#component-removal-and-destruction)):
 
 - Add a child component into [children](#children) map with a key equal to `jwid` of the element to replace with the child component. Usually it is done in [afterRender](#afterrender) method.
+		afterRender() {
+			super.afterRender();
+			this.children.set(new LabelView("Hello"), "label");
+		}
 - Add an easily replaceable child component using [addReplaceable](#addreplaceable) method. Pass an instance of [jwidget/Property](Property.md)`<Component>` there and the framework will provide the synchronization with this property during application running.
+		afterRender() {
+			super.afterRender();
+			this.contentView = new Property(new LabelView("Hello"));
+			this.addReplaceable(this.contentView, "label");
+		}
+		changeLabel(value: string) {
+			this.contentView.set(new LabelView(value));
+		}
 - Add an array of child components into some element using [addArray](#addarray) method. If the passed array is an instance of [jwidget/ObservableArray](ObservableArray.md), then framework will provide the continuous synchronization with this array during application running.
+		afterRender() {
+			super.afterRender();
+			this.labelViews = new JWArray([new LabelView("one"), new LabelView("two")]);
+			this.addArray(this.labelViews, "labels");
+		}
 - Add a collection of child components into some element using [addCollection](#addcollection) method. As opposed to [addArray](#addarray) method, [addCollection](#addcollection) doesn't keep the child component order. A newly added component is always appended to the end. If the passed collection is observable, then framework will provide the continuous synchronization with this collection during application running.
+		afterRender() {
+			super.afterRender();
+			this.labelViews = new JWSet([new LabelView("one"), new LabelView("two")]);
+			this.addCollection(this.labelViews, "labels");
+		}
 - Define method `render<ChildId>`, where `<ChildId>` is a `jwid` of an element in CamelCase with capitalized first letter. Example: `renderArticle` (renders element with `jwid="article"`). If the method returns an instance of Component, [jwidget/Property](Property.md) or [jwidget/ICollection](AbstractCollection.md), then result will be treated as a child component or a child component collection. Define method `renderRoot` to render the root element, but you can return only [ICollection] there, because it is impossible to replace the root element of the component.
+		renderLabel() {
+			return new LabelView("Hello");
+		}
 
 See [More about renderChild methods](#more-about-renderchild-methods) paragraph for details.
 
