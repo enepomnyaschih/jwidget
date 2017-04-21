@@ -84,7 +84,7 @@ Returns this object, which makes it easy to use in object instantiation:
 
 ### destroy
 
-	destroy(): void
+	destroy()
 
 Class destructor invocation method. Destroys all aggregated objects and calls destroyObject method.
 You must call this method explicitly from outside, because JavaScript doesn't support automatic class destructor
@@ -106,7 +106,7 @@ you should override [destroyObject](#destroyObject) method instead to customize 
 
 ## Protected methods
 
-	destroyObject(): void
+	protected destroyObject()
 
 Class destructor implementation. Called inside [destroy](#destroy) method *after aggregated object destruction*.
 The logic of class instance destruction should be implemented here. If you override this method,

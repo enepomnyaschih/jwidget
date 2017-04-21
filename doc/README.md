@@ -123,14 +123,14 @@ Collections:
 
 Collection synchronizers:
 
-- [jwidget/mapper](jwidget/mapper.md) - Item mapper.
-- [jwidget/filterer](jwidget/filterer.md) - Filterer.
-- [jwidget/counter](jwidget/counter.md) - Matching item counter.
-- [jwidget/lister](jwidget/lister.md) - Converter to a set.
-- [jwidget/indexer](jwidget/indexer.md) - Converter to a map (indexer).
-- [jwidget/orderer](jwidget/orderer.md) - Converter to an array (orderer).
-- [jwidget/sortercomparing](jwidget/sortercomparing.md) - Converter to an array (sorter by comparer).
-- [jwidget/observer](jwidget/observer.md) - Observer.
+- [jwidget/mapper/collection](jwidget/mapper/collection.md) - Item mapper.
+- [jwidget/filterer/collection](jwidget/filterer/collection.md) - Filterer.
+- [jwidget/counter/collection](jwidget/counter/collection.md) - Matching item counter.
+- [jwidget/lister/collection](jwidget/lister/collection.md) - Converter to a set.
+- [jwidget/indexer/collection](jwidget/indexer/collection.md) - Converter to a map (indexer).
+- [jwidget/orderer/collection](jwidget/orderer/collection.md) - Converter to an array (orderer).
+- [jwidget/sortercomparing/collection](jwidget/sortercomparing/collection.md) - Converter to an array (sorter by comparer).
+- [jwidget/observer/collection](jwidget/observer/collection.md) - Observer.
 - [jwidget/inserter/array](jwidget/inserter/array.md), [jwidget/inserter/map](jwidget/inserter/map.md) - View synchronizers.
 - [jwidget/merger/array](jwidget/merger/array.md) - Array merger.
 - [jwidget/reverser/array](jwidget/reverser/array.md) - Array reverser.
@@ -148,7 +148,13 @@ Other tools:
 - [jwidget/Interval](jwidget/Interval.md) - Destroyable version of setInterval.
 - [jwidget/StringUtils](jwidget/StringUtils.md) - String utilities.
 
-## Low-level stuff
+References (low level stuff):
+
+- [jwidget/AbstractTemplate](jwidget/AbstractTemplate.md)
+- [jwidget/TemplateOutput](jwidget/TemplateOutput.md)
+- [jwidget/ComponentReplaceable](jwidget/ComponentReplaceable.md)
+- [jwidget/ComponentArray](jwidget/ComponentArray.md)
+- [jwidget/ComponentCollection](jwidget/ComponentCollection.md)
 
 Collection interface & class hierarchy
 
