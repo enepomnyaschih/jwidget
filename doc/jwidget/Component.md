@@ -91,8 +91,11 @@ There are 5 ways to add a child component (**note**: examples are not complete -
 
 		afterRender() {
 			super.afterRender();
-			this.labelViews = new JWArray([new LabelView("one"), new LabelView("two")]);
+			this.labelViews = new ObservableArray([new LabelView("one"), new LabelView("two")]);
 			this.addArray(this.labelViews, "labels");
+		}
+		addLabel(value: string) {
+			this.labelViews.add(new LabelView(value));
 		}
 - Add a collection of child components into some element using [addCollection](#addcollection) method. As opposed to [addArray](#addarray) method, [addCollection](#addcollection) doesn't keep the child component order. A newly added component is always appended to the end. If the passed collection is observable, then framework will provide the continuous synchronization with this collection during application running.
 
@@ -100,6 +103,9 @@ There are 5 ways to add a child component (**note**: examples are not complete -
 			super.afterRender();
 			this.labelViews = new JWSet([new LabelView("one"), new LabelView("two")]);
 			this.addCollection(this.labelViews, "labels");
+		}
+		addLabel(value: string) {
+			this.labelViews.add(new LabelView(value));
 		}
 - Define method `render<ChildId>`, where `<ChildId>` is a `jwid` of an element in CamelCase with capitalized first letter. Example: `renderArticle` (renders element with `jwid="article"`). If the method returns an instance of Component, [jwidget/Property](Property.md) or [jwidget/ICollection](AbstractCollection.md), then result will be treated as a child component or a child component collection. Define method `renderRoot` to render the root element, but you can return only [ICollection] there, because it is impossible to replace the root element of the component.
 
