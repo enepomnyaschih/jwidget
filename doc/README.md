@@ -90,8 +90,7 @@ Core functions and interfaces:
 - [jwidget/Proxy](jwidget/Proxy.md) - Interface for value proxy.
 - [jwidget/Destroyable](jwidget/Destroyable.md) - Interface for a destroyable object.
 - [jwidget/Bindable](jwidget/Bindable.md) - Interface for an event.
-- [jwidget/Watchable](jwidget/Watchable.md) - Interface for a read-only property.
-- [jwidget/IProperty](jwidget/IProperty.md) - Interface for a read-write property.
+- [jwidget/Watchable](jwidget/Watchable.md) - Bindable container for a value.
 
 Core classes and their interfaces:
 
