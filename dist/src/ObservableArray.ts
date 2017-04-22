@@ -34,7 +34,7 @@ import JWMap from './JWMap';
 import JWSet from './JWSet';
 import ObservableMap from './ObservableMap';
 import ObservableSet from './ObservableSet';
-import ObservableProperty from './ObservableProperty';
+import Property from './Property';
 import Proxy from './Proxy';
 import * as ArrayUtils from './ArrayUtils';
 
@@ -47,7 +47,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	/**
 	 * Collection length. **Don't modify manually!**
 	 */
-	length: ObservableProperty<number>;
+	length: Property<number>;
 
 	/**
 	 * Items are removed from array and items are added to array. Triggered in result
@@ -121,7 +121,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 */
 	constructor(items?: T[], adapter?: boolean) {
 		super(items, adapter);
-		this.length = new ObservableProperty<number>(this.getLength());
+		this.length = new Property<number>(true, this.getLength());
 	}
 
 	/**

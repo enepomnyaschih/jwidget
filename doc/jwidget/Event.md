@@ -4,18 +4,20 @@
 
 ## Consumption
 
+	import IEvent from "jwidget/IEvent";
 	import Event from "jwidget/Event";
 
 ## Hierarchy
 
 * interface [jwidget/Destroyable](Destroyable.md)
-	* interface [jwidget/Bindable](Bindable.md)`<P>`
+* interface [jwidget/Bindable](Bindable.md)`<P>`
+	* interface [jwidget/IEvent](IEvent.md)`<P>`
 		* class **jwidget/Event**`<P>`
 		* const [jwidget/dummyEvent](dummyEvent.md)
 
 ## Description
 
-Real implementation of [jwidget/Bindable](Bindable.md) interface.
+Real implementation of [jwidget/IEvent](IEvent.md) interface that calls handler functions on [trigger](IEvent.md#trigger) method call.
 
 Used to notify some objects (clients) about certain events (for example, field value changes). Remember to destroy the event attachments to prevent side effects. It is smart to expose event objects in getters returning [jwidget/Bindable](Bindable.md) to deny direct control over the event by the clients.
 
@@ -77,42 +79,13 @@ Full example of event listener:
 
 Constructs an event.
 
-## Methods
+## Static methods
 
-### bind
+### make
 
-	bind(handler: (params: P) => void, scope?: any): Destroyable
+	make<P>(owner: IClass, observable: boolean): IEvent<P>
 
-* **handler** - Event handler function.
-* **scope** - **handler** call scope.
+* **owner** - An object to aggregate a new event in.
+* **observable** - Determines if a real or dummy event should be used.
 
-Starts listening to the event.
-
-Whenever the event is triggered with [trigger](#trigger) method, the specified handler function
-is called in specified scope.
-
-You can stop listening the event by destroying the returned object.
-
-### trigger
-
-	trigger(params?: P)
-
-* **params** - Event params.
-
-Triggers event, i.e. calls all bound handlers with specified argument.
-
-    this.myEvent.trigger({sender: this});
-
-This way, we've called all handlers of `myEvent` with argument `{sender: this}`.
-
-### hasAttachments
-
-	hasAttachments(): boolean
-
-Checks if the event has attachments.
-
-### destroy
-
-	destroy()
-
-Class destructor invocation method. Unbinds all event handlers. As opposed to the majority of classes, you can call event's **destroy** method multiple times.
+If **observable** argument is true, returns a new instance of **Event** aggregated in the **owner** object. Else returns [jwidget/dummyEvent](dummyEvent.md).

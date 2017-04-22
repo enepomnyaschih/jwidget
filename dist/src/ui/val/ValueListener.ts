@@ -23,7 +23,7 @@
 import {isLifeInput} from '../../internal';
 import Class from '../../Class';
 import IProperty from '../../IProperty';
-import ObservableProperty from '../../ObservableProperty';
+import Property from '../../Property';
 import Watchable from '../../Watchable';
 
 /**
@@ -38,7 +38,7 @@ class ValueListener extends Class {
 	constructor(private el: JQuery, config: ValueListener.Config = {}) {
 		super();
 		this.update = () => this._update();
-		this._target = config.target || this.own(new ObservableProperty<string>());
+		this._target = config.target || this.own(new Property<string>(true));
 		this._simple = config.simple || !isLifeInput(el);
 		this.update();
 		this.el.bind("change", this.update);

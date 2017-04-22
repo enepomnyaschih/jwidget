@@ -1,13 +1,6 @@
 const fs = require("fs");
 
-const mapping = {
-	"jwidget/IClass"             : "jwidget/Class",
-	"jwidget/ICollection"        : "jwidget/AbstractCollection",
-	"jwidget/IIndexedCollection" : "jwidget/IndexedCollection",
-	"jwidget/IArray"             : "jwidget/AbstractArray",
-	"jwidget/IMap"               : "jwidget/AbstractMap",
-	"jwidget/ISet"               : "jwidget/AbstractSet"
-};
+const mapping = {};
 
 function walk(name) {
 	const path = name ? (__dirname + "/" + name) : __dirname;

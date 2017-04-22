@@ -16,11 +16,7 @@
 
 ## Description
 
-A watchable property. A convenient way to keep an object in sync with another object.
-
-Extends [jwidget/Watchable](Watchable.md) interface with [set](#set) method which allows an owner to modify the property value. It is smart to store the property as **IProperty** internally, and expose it as [jwidget/Watchable](Watchable.md) externally to deny direct control over the property by the clients.
-
-See [jwidget/Watchable](Watchable.md) for details about basic functionality.
+Extension of [jwidget/Watchable](Watchable.md) interface with [set](#set) method to modify the property value. It is smart to store the property as **IProperty** internally, and expose it as [jwidget/Watchable](Watchable.md) externally to deny direct control over the property by the clients.
 
 Can be used as a target property in the next model bindings:
 

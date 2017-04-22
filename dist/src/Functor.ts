@@ -18,11 +18,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Class from './Class';
 import Bindable from './Bindable';
+import Class from './Class';
 import IProperty from './IProperty';
+import Property from './Property';
 import Watchable from './Watchable';
-import ObservableProperty from './ObservableProperty';
 
 /**
  * Watches source [[JW.Property|properties]] modification and updates
@@ -76,7 +76,7 @@ class Functor<T> extends Class {
 		config = config || {};
 		this.scope = scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new ObservableProperty<T>() : config.target;
+		this._target = this._targetCreated ? new Property<T>(true) : config.target;
 		this.update();
 		sources.forEach(this.watch, this);
 	}

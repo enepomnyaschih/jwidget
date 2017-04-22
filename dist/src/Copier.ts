@@ -20,8 +20,8 @@
 
 import Class from './Class';
 import IProperty from './IProperty';
+import Property from './Property';
 import Watchable from './Watchable';
-import ObservableProperty from './ObservableProperty';
 
 /**
  * Watches source [[JW.Property]] modification and copies
@@ -62,7 +62,7 @@ class Copier<T> extends Class {
 		super();
 		config = config || {};
 		this._targetCreated = config.target == null;
-		this._target = (config.target == null) ? new ObservableProperty<T>() : config.target;
+		this._target = (config.target == null) ? new Property<T>(source.isObservable()) : config.target;
 		this._update();
 		this.own(source.changeEvent.bind(this._update, this));
 	}

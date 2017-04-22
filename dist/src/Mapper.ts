@@ -18,12 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {isNotNil} from './Core';
-import Class from './Class';
 import Bindable from './Bindable';
+import Class from './Class';
+import {destroy, isNotNil} from './Core';
+import Destroyable from './Destroyable';
 import IProperty from './IProperty';
+import Property from './Property';
 import Watchable from './Watchable';
-import ObservableProperty from './ObservableProperty';
 
 /**
  * Watches source [[JW.Property|properties]] modification and recreates
@@ -168,7 +169,7 @@ class Mapper<T> extends Class {
 		this._destroyValue = config.destroyValue;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new ObservableProperty<T>() : config.target;
+		this._target = this._targetCreated ? new Property<T>(true) : config.target;
 		this._acceptNull = config.acceptNull || false;
 		this._sourceValues = null;
 		this._targetValue = null;
@@ -304,3 +305,32 @@ namespace Mapper {
 }
 
 export default Mapper;
+
+export function mapProperties<U>(properties: Watchable<any>[], callback: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
+	if (!properties.some((property) => property.isObservable())) {
+		const values = properties.map((property) => property.get());
+		return new Property<U>(false, callback.apply(scope, values));
+	}
+	const result = new Property<U>(true);
+	result.own(new Mapper(properties, {
+		target: result,
+		createValue: callback,
+		scope: scope
+	}));
+	return result;
+}
+
+export function mapDestroyableProperties<U extends Destroyable>(properties: Watchable<any>[], callback: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
+	if (!properties.some((property) => property.isObservable())) {
+		const values = properties.map((property) => property.get());
+		return new Property<U>(false, callback.apply(scope, values)).ownValue();
+	}
+	const result = new Property<U>(true);
+	result.own(new Mapper(properties, {
+		target: result,
+		createValue: callback,
+		destroyValue: destroy,
+		scope: scope
+	}));
+	return result;
+}

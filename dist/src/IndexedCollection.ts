@@ -20,10 +20,10 @@
 
 import AbstractCollection from './AbstractCollection';
 import Dictionary from './Dictionary';
-import DimProperty from './DimProperty';
 import IArray from './IArray';
 import IIndexedCollection from './IIndexedCollection';
 import IMap from './IMap';
+import Property from './Property';
 import Proxy from './Proxy';
 import Watchable from './Watchable';
 
@@ -459,7 +459,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 * @inheritdoc
 	 */
 	$count(callback: (item: T, key: K) => boolean, scope?: any): Watchable<number> {
-		return new DimProperty(this.count(callback, scope));
+		return new Property(false, this.count(callback, scope));
 	}
 
 	/**

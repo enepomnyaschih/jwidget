@@ -21,7 +21,7 @@
 import {Binding} from '../../Core';
 import Destroyable from '../../Destroyable';
 import IProperty from '../../IProperty';
-import ObservableProperty from '../../ObservableProperty';
+import Property from '../../Property';
 import RadioBinding from './RadioBinding';
 import RadioListener from './RadioListener';
 import Watchable from '../../Watchable';
@@ -74,7 +74,7 @@ export default function radio(el: JQuery, name: string, property?: any, binding?
 	if (property != null) {
 		return new RadioBinding(el, name, property, binding);
 	}
-	var target = new ObservableProperty<string>();
+	var target = new Property<string>(true);
 	target.own(new RadioListener(el, name, {target: target}));
 	return target;
 }

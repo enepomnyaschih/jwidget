@@ -16,14 +16,9 @@
 
 ## Description
 
-A watchable read-only property. A convenient way to keep an object in sync with another object.
+Read-only container for a value. Provides basic data binding functionality.
 
 Has a sub-interface [jwidget/IProperty](IProperty.md), which exposes [set](#IProperty.md#set) method to modify the property. It is smart to store the property as [jwidget/IProperty](IProperty.md) internally, and expose it as **Watchable** externally to deny direct control over the property by the clients.
-
-Has two implementations:
-
-* [jwidget/ObservableProperty](ObservableProperty.md) - Real implementation that you can use to store a value and trigger events about its modification.
-* [jwidget/DimProperty](DimProperty.md) - A restricted implementation which allows you to store and modify a value, but it never triggers events about value modification.
 
 Can be used as a source property in the next model bindings:
 

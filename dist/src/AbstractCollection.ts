@@ -20,12 +20,12 @@
 
 import Class from './Class';
 import Dictionary from './Dictionary';
-import DimProperty from './DimProperty';
 import IArray from './IArray';
 import IClass from './IClass';
 import ICollection from './ICollection';
 import IMap from './IMap';
 import ISet from './ISet';
+import Property from './Property';
 import Watchable from './Watchable';
 import * as SetUtils from './SetUtils';
 
@@ -620,7 +620,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @returns Number of items.
 	 */
 	$count(callback: (item: T) => boolean, scope?: any): Watchable<number> {
-		return new DimProperty<number>(this.count(callback, scope));
+		return new Property<number>(false, this.count(callback, scope));
 	}
 
 	/**

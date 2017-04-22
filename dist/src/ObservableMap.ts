@@ -33,7 +33,7 @@ import JWMap from './JWMap';
 import JWSet from './JWSet';
 import ObservableArray from './ObservableArray';
 import ObservableSet from './ObservableSet';
-import ObservableProperty from './ObservableProperty';
+import Property from './Property';
 import Proxy from './Proxy';
 import * as ArrayUtils from './ArrayUtils';
 import * as MapUtils from './MapUtils';
@@ -47,7 +47,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	/**
 	 * Collection length. **Don't modify manually!**
 	 */
-	length: ObservableProperty<number>;
+	length: Property<number>;
 
 	/**
 	 * Items are removed from map, items are added to map and items are updated in map.
@@ -103,7 +103,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	 */
 	constructor(items?: Dictionary<T>, adapter?: boolean) {
 		super(items, adapter);
-		this.length = new ObservableProperty<number>(this.getLength());
+		this.length = new Property<number>(true, this.getLength());
 	}
 
 	/**

@@ -22,10 +22,10 @@ import ArrayCounter from './ArrayCounter';
 import IArray from '../../IArray';
 import IArrayCounter from './IArrayCounter';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
-import Watchable from '../../Watchable';
 import ObservableArray from '../../ObservableArray';
 import ObservableArrayCounter from './ObservableArrayCounter';
-import ObservableProperty from '../../ObservableProperty';
+import Property from '../../Property';
+import Watchable from '../../Watchable';
 
 export function createArrayCounter<T>(source: IArray<T>, config: ICollectionCounterConfig<T>): IArrayCounter<T> {
 	return (source instanceof ObservableArray) ?
@@ -37,7 +37,7 @@ export function countArray<T>(source: IArray<T>, callback: (item: T) => boolean,
 	if (!(source instanceof ObservableArray)) {
 		return source.$count(callback, scope);
 	}
-	var result = new ObservableProperty(0);
+	var result = new Property(true, 0);
 	result.own(new ObservableArrayCounter<T>(source, {
 		target: result,
 		filterItem: callback,

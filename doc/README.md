@@ -8,8 +8,8 @@ jWidget 2 is a migration of jWidget framework to a modern toolkit (see [jWidget 
 
 * Base class [jwidget/Class](jwidget/Class.md) for object aggregation.
 * Event class [jwidget/Event](jwidget/Event.md) for change notification.
-* Property class [jwidget/ObservableProperty](jwidget/ObservableProperty.md) for basic binding support.
-* Collection classes [jwidget/ObservableArray](jwidget/ObservableArray.md), [jwidget/ObservableMap](jwidget/ObservableMap.md), [jwidget/ObservableSet](jwidget/ObservableSet.md) for collection binding support.
+* Property class [jwidget/Property](jwidget/Property.md) for basic binding support.
+* Collection classes [jwidget/List](jwidget/List.md), [jwidget/Map](jwidget/Map.md), [jwidget/Set](jwidget/Set.md) for collection binding support.
 * Base class [jwidget/Component](jwidget/Component.md) for UI component creation and inheritance with HTML templates and full DOM control. Fully compatible with [jQuery](http://jquery.com).
 
 ### jWidget advantages
@@ -27,7 +27,7 @@ jWidget 2 is a migration of jWidget framework to a modern toolkit (see [jWidget 
 jWidget is a pure object-oriented solution which doesn't rely on inefficiently complicated HTML templates and unclear update cycles. Each object simply listens to some events and handles them in very straightforward fashion. Look at the next example:
 
     import Component from "jwidget/Component";
-    import ObservableProperty from "jwidget/ObservableProperty";
+    import Property from "jwidget/Property";
     import template from "jwidget/template";
     import text from "jwidget/ui/text";
     import val from "jwidget/ui/val";
@@ -39,7 +39,7 @@ jWidget is a pure object-oriented solution which doesn't rely on inefficiently c
         '</div>'
     )
     class Greeter extends Component {
-        private name = this.own(new ObservableProperty("guest"));
+        private name = this.own(new Property("guest"));
 
         protected renderNameField(el: JQuery) {
             // Bind element value to the property
@@ -57,13 +57,13 @@ jWidget is a pure object-oriented solution which doesn't rely on inefficiently c
 
     new Greeter().renderTo("body");
 
-Reference: [jwidget/Component](jwidget/Component.md), [jwidget/ObservableProperty](jwidget/ObservableProperty.md), [jwidget/template](jwidget/template.md), [jwidget/ui/text](jwidget/ui/text.md), [jwidget/ui/val](jwidget/ui/val.md).
+Reference: [jwidget/Component](jwidget/Component.md), [jwidget/Property](jwidget/Property.md), [jwidget/template](jwidget/template.md), [jwidget/ui/text](jwidget/ui/text.md), [jwidget/ui/val](jwidget/ui/val.md).
 
 <iframe frameborder="0" width="100%" height="100" src="http://enepomnyaschih.github.io/mt/1.4/greeter.html"></iframe>
 
 Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes you feel confident that you're able to implement as complicated and big MV application as you would like to. You can be confident to use all well-known OOD patterns and follow OOD [SOLID principles](http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)). Also, you can use static typing capabilities provided by TypeScript in a full scale. Read the [Tutorial](Tutorial1.md) for more examples.
 
-The difference between jWidget and the other Model-View frameworks is the approach of working with properties and collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding is performed explicitly via [jwidget/ObservableProperty](jwidget/ObservableProperty.md) and its bindings. Instead of special tags-repeaters in HTML templates, you work with collections explicitly using [jwidget/AbstractCollection](jwidget/AbstractCollection.md) and its synchronizers.
+The difference between jWidget and the other Model-View frameworks is the approach of working with properties and collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding is performed explicitly via [jwidget/Property](jwidget/Property.md) and its bindings. Instead of special tags-repeaters in HTML templates, you work with collections explicitly using [jwidget/ICollection](jwidget/AbstractCollection.md) and its synchronizers.
 
 This approach is more efficient: data binding is not restricted to model and view communication: all the same practices can be used to bind model objects to each other and view components to each other.
 
@@ -93,11 +93,11 @@ Core functions and interfaces:
 - [jwidget/Watchable](jwidget/Watchable.md) - Interface for a read-only property.
 - [jwidget/IProperty](jwidget/IProperty.md) - Interface for a read-write property.
 
-Core classes:
+Core classes and their interfaces:
 
-- [jwidget/Class](jwidget/Class.md) - Base class for object aggregation.
-- [jwidget/Event](jwidget/Event.md) - Event class for change notification.
-- [jwidget/ObservableProperty](jwidget/ObservableProperty.md) - Observable property class for basic binding support.
+- [jwidget/Class](jwidget/Class.md), [jwidget/IClass](jwidget/Class.md) - For object aggregation.
+- [jwidget/Event](jwidget/Event.md), [jwidget/IEvent](jwidget/IEvent.md) - For change notification.
+- [jwidget/Property](jwidget/Property.md), [jwidget/IProperty](jwidget/IProperty.md) - For basic binding support.
 - [jwidget/Component](jwidget/Component.md) - Base class for UI component.
 - [jwidget/template](jwidget/template.md) - Annotation supply a [jwidget/Component](jwidget/Component.md) subclass with an HTML template.
 
@@ -157,17 +157,10 @@ Other tools:
 - [jwidget/Interval](jwidget/Interval.md) - Destroyable version of setInterval.
 - [jwidget/StringUtils](jwidget/StringUtils.md) - String utilities.
 
-Optimization tools (lightweight and stupid implementations of the interfaces):
-
-- [jwidget/dummyDestroyable](jwidget/dummyDestroyable.md) - Stupid implementation of [jwidget/Destroyable](jwidget/Destroyable.md).
-- [jwidget/dummyEvent](jwidget/dummyEvent.md) - Stupid implementation of [jwidget/Bindable](jwidget/Bindable.md).
-- [jwidget/DimProperty](jwidget/DimProperty.md) - Stupid implementation of [jwidget/IProperty](jwidget/IProperty.md).
-- [jwidget/DimList](jwidget/DimList.md) - Stupid implementation of [jwidget/IList](jwidget/IList.md).
-- [jwidget/DimMap](jwidget/DimMap.md) - Stupid implementation of [jwidget/IMap](jwidget/AbstractMap.md).
-- [jwidget/DimSet](jwidget/DimSet.md) - Stupid implementation of [jwidget/ISet](jwidget/AbstractSet.md).
-
 References (low level stuff):
 
 - [jwidget/AbstractTemplate](jwidget/AbstractTemplate.md)
+- [jwidget/dummyDestroyable](jwidget/dummyDestroyable.md) - Dummy implementation of [jwidget/Destroyable](jwidget/Destroyable.md).
+- [jwidget/dummyEvent](jwidget/dummyEvent.md) - Dummy implementation of [jwidget/IEvent](jwidget/IEvent.md).
 - [jwidget/TemplateOutput](jwidget/TemplateOutput.md)
 - [jwidget/ValueChangeEventParams](jwidget/ValueChangeEventParams.md)

@@ -22,7 +22,7 @@
 
 import Class from '../../Class';
 import IProperty from '../../IProperty';
-import ObservableProperty from '../../ObservableProperty';
+import Property from '../../Property';
 import Watchable from '../../Watchable';
 
 /**
@@ -35,7 +35,7 @@ class CheckedListener extends Class {
 	constructor(private el: JQuery, config: CheckedListener.Config = {}) {
 		super();
 		this.update = () => this._update();
-		this._target = config.target || this.own(new ObservableProperty<boolean>());
+		this._target = config.target || this.own(new Property<boolean>(true));
 		this._update();
 		this.el.bind("change", this.update);
 	}

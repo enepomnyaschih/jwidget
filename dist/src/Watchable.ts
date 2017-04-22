@@ -23,8 +23,8 @@ import Destroyable from "./Destroyable";
 import ValueChangeEventParams from "./ValueChangeEventParams";
 
 /**
- * The observable property. A convenient way to keep an object in sync with another object.
- * Provides a number of model and view bindings.
+ * Read-only container for a value.
+ * Provides basic data binding functionality.
  */
 interface Watchable<V> extends Destroyable {
 	/**
@@ -58,6 +58,11 @@ interface Watchable<V> extends Destroyable {
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
 	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): Watchable<U>;
+
+	/**
+	 * Checks if this property is observable.
+	 */
+	isObservable(): boolean;
 }
 
 export default Watchable;

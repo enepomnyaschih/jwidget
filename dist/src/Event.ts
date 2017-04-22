@@ -20,15 +20,16 @@
 
 import Destroyable from "./Destroyable";
 import Dictionary from "./Dictionary";
+import dummyEvent from "./dummyEvent";
 import EventAttachment from "./EventAttachment";
-import Bindable from "./Bindable";
-import {isDictionaryEmpty} from "./internal";
+import IClass from "./IClass";
+import IEvent from "./IEvent";
 
 /**
  * Real implementation of `Bindable` interface.
  * Used to notify some objects (clients) about certain events (for example, field value change).
  */
-export default class Event<P> implements Bindable<P> {
+class Event<P> implements IEvent<P> {
 	private _attachments: Dictionary<EventAttachment<P>> = null;
 
 	/**
@@ -75,10 +76,10 @@ export default class Event<P> implements Bindable<P> {
 	}
 
 	/**
-	 * Checks if the event has attachments.
+	 * Checks if this event is real.
 	 */
-	hasAttachments(): boolean {
-		return (this._attachments === null) || isDictionaryEmpty(this._attachments);
+	isObservable() {
+		return true;
 	}
 
 	/**
@@ -89,4 +90,16 @@ export default class Event<P> implements Bindable<P> {
 			delete this._attachments[attachment._iid];
 		}
 	}
+
+	/**
+	 * If `observable` argument is true, returns a new instance of `Event` aggregated in the
+	 * `owner` object. Else returns `dummyEvent`.
+	 * @param owner An object to aggregate a new event in.
+	 * @param observable Determines if a real or dummy event should be used.
+	 */
+	static make<P>(owner: IClass, observable: boolean): IEvent<P> {
+		return observable ? dummyEvent : owner.own(new Event<P>());
+	}
 }
+
+export default Event;

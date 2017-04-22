@@ -23,7 +23,7 @@ import CheckedListener from './CheckedListener';
 import Destroyable from '../../Destroyable';
 import IProperty from '../../IProperty';
 import PropBinding from './PropBinding';
-import ObservableProperty from '../../ObservableProperty';
+import Property from '../../Property';
 import Watchable from '../../Watchable';
 
 /**
@@ -67,7 +67,7 @@ export default function prop(el: JQuery, prop: string, property?: any, binding?:
 		return new PropBinding(el, prop, property, binding);
 	}
 	if (prop === "checked") {
-		var target = new ObservableProperty<boolean>();
+		var target = new Property<boolean>(true);
 		target.own(new CheckedListener(el, {target: target}));
 		return target;
 	}

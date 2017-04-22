@@ -19,29 +19,23 @@
 */
 
 import Destroyable from "./Destroyable";
-import dummyDestroyable from "./dummyDestroyable";
-import IEvent from "./IEvent";
-
-class DummyEvent implements IEvent<any> {
-	bind(handler: (params: any) => void, scope?: any): Destroyable {
-		handler = handler;
-		scope = scope;
-		return dummyDestroyable;
-	}
-
-	destroy(): void {}
-
-	trigger(params?: any): void {
-		params = params;
-	}
-
-	isObservable() {
-		return false;
-	}
-}
+import Bindable from "./Bindable";
 
 /**
- * Dummy implementation of `Bindable<any>` interface.
- * As opposed to `Event`, doesn't really bind the event handlers, just pretends it does that.
+ * Extension of `Bindable` interface with `trigger` method.
  */
-export default <IEvent<any>>(new DummyEvent());
+interface IEvent<P> extends Bindable<P>, Destroyable {
+	/**
+	 * Triggers event, i.e. calls all bound handlers.
+	 * @param params Event params.
+	 */
+	trigger(params?: P): void;
+
+	/**
+	 * Class destructor invocation method. Unbinds all event handlers.
+	 * As opposed to the majority of classes, you can call event's `destroy` method multiple times.
+	 */
+	destroy(): void;
+}
+
+export default IEvent;

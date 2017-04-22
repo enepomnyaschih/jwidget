@@ -21,8 +21,7 @@
 import Destroyable from "./Destroyable";
 
 /**
- * Used to notify some objects (clients) about certain events (for example, field value change).
- * Remember to destroy the event attachments to prevent side effects.
+ * Container for callback functions. Provides basic event listening functionality.
  */
 interface Bindable<P> {
 	/**
@@ -31,12 +30,17 @@ interface Bindable<P> {
 	 * Whenever the event is triggered with `trigger` method, specified handler function
 	 * is called in specified scope.
 	 *
-	 * You can stop listening the event by destroying the returned EventAttachment instance.
+	 * You can stop listening the event by destroying the returned object.
 	 *
 	 * @param handler Event handler function.
 	 * @param scope `handler` call scope.
 	 */
 	bind(handler: (params: P) => void, scope?: any): Destroyable;
+
+	/**
+	 * Checks if this event is real.
+	 */
+	isObservable(): boolean;
 }
 
 export default Bindable;

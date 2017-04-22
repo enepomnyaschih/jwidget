@@ -21,8 +21,7 @@
 import Watchable from "./Watchable";
 
 /**
- * The observable property. A convenient way to keep an object in sync with another object.
- * Provides a number of model and view bindings.
+ * Extension of `Watchable` interface with `set` method to modify the property value.
  */
 interface IProperty<V> extends Watchable<V> {
 	/**
@@ -32,8 +31,7 @@ interface IProperty<V> extends Watchable<V> {
 
 	/**
 	 * Makes this property an owner of its value. It means that the value is
-	 * destroyed automatically on reassignment or destruction of the
-	 * property.
+	 * destroyed automatically on reassignment or destruction of the property.
 	 */
 	ownValue(): this;
 }

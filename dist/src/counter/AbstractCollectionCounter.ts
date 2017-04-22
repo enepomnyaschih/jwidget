@@ -24,8 +24,8 @@ import ICollectionCounter from './ICollectionCounter';
 import ICollectionCounterConfig from './ICollectionCounterConfig';
 import ICollectionCounterReconfig from './ICollectionCounterReconfig';
 import IProperty from '../IProperty';
+import Property from '../Property';
 import Watchable from '../Watchable';
-import ObservableProperty from '../ObservableProperty';
 
 /**
  * Counter for collection items which match the specified filter.
@@ -123,7 +123,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 		this._filterItem = config.filterItem;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new ObservableProperty<number>(0) : config.target;
+		this._target = this._targetCreated ? new Property<number>(true, 0) : config.target;
 		this._target.set(source.count(this._filterItem, this._scope));
 	}
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -19,27 +19,31 @@
 */
 
 import Class from "./Class";
-import {destroy} from './Core';
-import Destroyable from "./Destroyable";
-import dummyEvent from "./dummyEvent";
+import {destroy} from "./Core";
 import Bindable from "./Bindable";
+import Destroyable from "./Destroyable";
+import Event from "./Event";
+import IEvent from "./IEvent";
 import IProperty from "./IProperty";
+import {mapProperties, mapDestroyableProperties} from "./Mapper";
 import ValueChangeEventParams from "./ValueChangeEventParams";
 import Watchable from "./Watchable";
 
 /**
- * Dummy implementation of `IProperty` interface.
- * As opposed to `ObservableProperty`, doesn't really trigger `changeEvent`, just pretends it does that.
+ * Real implementation of `IProperty` interface.
+ * As opposed to `DimProperty`, really triggers `changeEvent` on value modification.
  */
-export default class DimProperty<V> extends Class implements IProperty<V> {
+export default class Property<V> extends Class implements IProperty<V> {
 	private _ownsValue = false;
+	private _changeEvent: IEvent<ValueChangeEventParams<V>>;
 
 	/**
 	 * Constructs a property and sets initial value.
 	 * @param value Initial value.
 	 */
-	constructor(protected value: V = null) {
+	constructor(observable: boolean, protected value: V = null) {
 		super();
+		this._changeEvent = Event.make<ValueChangeEventParams<V>>(this, observable);
 	}
 
 	protected destroyObject() {
@@ -50,10 +54,10 @@ export default class DimProperty<V> extends Class implements IProperty<V> {
 	}
 
 	/**
-	 * Property value is changed. In `DimProperty`, it never gets triggered - this is `dummyEvent`.
+	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
 	get changeEvent(): Bindable<ValueChangeEventParams<V>> {
-		return dummyEvent;
+		return this._changeEvent;
 	}
 
 	/**
@@ -65,7 +69,7 @@ export default class DimProperty<V> extends Class implements IProperty<V> {
 	}
 
 	/**
-	 * Changes property value. In `DimProperty`, it never triggers `changeEvent` - this is `dummyEvent`.
+	 * Changes property value and triggers `changeEvent` if the value has been changed.
 	 * @param value New value to set.
 	 */
 	set(value: V) {
@@ -77,6 +81,7 @@ export default class DimProperty<V> extends Class implements IProperty<V> {
 			return;
 		}
 		this.value = value;
+		this._changeEvent.trigger({ sender: this, value: value, oldValue: oldValue });
 		if (this._ownsValue) {
 			destroy(oldValue);
 		}
@@ -102,7 +107,7 @@ export default class DimProperty<V> extends Class implements IProperty<V> {
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
 	map<U>(callback: (value: V) => U, scope?: any): Watchable<U> {
-		return new DimProperty(callback.call(scope || this, this.value));
+		return mapProperties([this], callback, scope || this);
 	}
 
 	/**
@@ -115,6 +120,13 @@ export default class DimProperty<V> extends Class implements IProperty<V> {
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
 	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): Watchable<U> {
-		return new DimProperty(callback.call(scope || this, this.value)).ownValue();
+		return mapDestroyableProperties([this], callback, scope || this);
+	}
+
+	/**
+	 * Checks if this property is observable.
+	 */
+	isObservable() {
+		return this._changeEvent.isObservable();
 	}
 }
