@@ -2,7 +2,7 @@
 
 jWidget is an object-oriented TypeScript Model-View framework. Being direct competitor to Backbone, AngularJS and EmberJS, jWidget is a good choice for developers who respect the principles of object-oriented programming and appreciate good application performance.
 
-jWidget 2 is a migration of jWidget framework to the modern toolkit (see [jWidget advantages](#jwidget-advantages) below.
+jWidget 2 is a migration of jWidget framework to a modern toolkit (see [jWidget advantages](#jwidget-advantages) below).
 
 ### jWidget features
 
@@ -14,15 +14,15 @@ jWidget 2 is a migration of jWidget framework to the modern toolkit (see [jWidge
 
 ### jWidget advantages
 
-* Clear object-oriented design
-* Great performance
-* Well-thought engine for object life time control
+* Clear object-oriented design.
+* Great performance.
+* Well-thought engine for object life time control.
 * It perfectly lines up with the majority of modern front end development tools such as:
-    * NPM (the whole framework can be installed from NPM quickly and efficiently)
-    * EcmaScript 6 (modules, arrow functions, properties, promises etc.)
-    * TypeScript (of course, since TypeScript was created to fully support OOD)
-    * WebPack (any jWidget application can be built with just WebPack)
-    * Stylus or LESS (common CSS prefix in a jWidget template provides a way to shorten your stylesheets greatly)
+    * [NPM](https://www.npmjs.com/) (the whole framework can be installed from NPM quickly and efficiently)
+    * [EcmaScript 6](http://es6-features.org/) (modules, arrow functions, properties, promises etc.)
+    * [TypeScript](https://www.typescriptlang.org/) (of course, since TypeScript was created to fully support OOD)
+    * [WebPack](https://webpack.github.io/) (any jWidget application can be built with just WebPack)
+    * [Stylus](http://stylus-lang.com/) or [LESS](http://lesscss.org/) (common CSS prefix in a jWidget template provides a way to shorten your stylesheets greatly)
 
 jWidget is a pure object-oriented solution which doesn't rely on inefficiently complicated HTML templates and unclear update cycles. Each object simply listens to some events and handles them in very straightforward fashion. Look at the next example:
 
@@ -57,15 +57,17 @@ jWidget is a pure object-oriented solution which doesn't rely on inefficiently c
 
     new Greeter().renderTo("body");
 
+Reference: [jwidget/Component](jwidget/Component.md), [jwidget/ObservableProperty](jwidget/ObservableProperty.md), [jwidget/template](jwidget/template.md), [jwidget/ui/text](jwidget/ui/text.md), [jwidget/ui/val](jwidget/ui/val.md).
+
 <iframe frameborder="0" width="100%" height="100" src="http://enepomnyaschih.github.io/mt/1.4/greeter.html"></iframe>
 
 Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes you feel confident that you're able to implement as complicated and big MV application as you would like to. You can be confident to use all well-known OOD patterns and follow OOD [SOLID principles](http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)). Also, you can use static typing capabilities provided by TypeScript in a full scale. Read the [Tutorial](Tutorial1.md) for more examples.
 
-The difference between jWidget and the other Model-View frameworks is the approach of working with properties and collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding is performed explicitly via [jwidget/ObservableProperty](jwidget/ObservableProperty.md) and its bindings. Instead of special tags-repeaters in HTML templates, you work with collections explicitly using [jwidget/AbstractCollection](jwidget/AbstractCollection.md) and their synchronizers.
+The difference between jWidget and the other Model-View frameworks is the approach of working with properties and collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding is performed explicitly via [jwidget/ObservableProperty](jwidget/ObservableProperty.md) and its bindings. Instead of special tags-repeaters in HTML templates, you work with collections explicitly using [jwidget/AbstractCollection](jwidget/AbstractCollection.md) and its synchronizers.
 
-This approach is more effective: data binding is not restricted to model and view communication: all the same practices can be used to bind model objects to each other and view components to each other.
+This approach is more efficient: data binding is not restricted to model and view communication: all the same practices can be used to bind model objects to each other and view components to each other.
 
-Project license is LGPL.
+Project license is LGPL v3.
 
 Current version: 2.1
 

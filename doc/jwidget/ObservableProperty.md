@@ -11,8 +11,8 @@
 * interface [jwidget/Destroyable](Destroyable.md)
 	* interface [jwidget/Watchable](Watchable.md)`<V>`
 		* interface [jwidget/IProperty](IProperty.md)`<V>`
-			* class **jwidget/ObservableProperty**`<V>`
-			* class [jwidget/DimProperty](DimProperty.md)`<V>`
+			* class **jwidget/ObservableProperty**`<V>` extends [jwidget/Class](Class.md)
+			* class [jwidget/DimProperty](DimProperty.md)`<V>` extends [jwidget/Class](Class.md)
 
 ## Description
 

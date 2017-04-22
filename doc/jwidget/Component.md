@@ -24,7 +24,7 @@ Features:
 - [jQuery interface](http://api.jquery.com/) for element manipulations.
 - Convenient API for data binding and child component management.
 
-jWidget has very simple API, but pretty unusual philosophy to build up Model-View architecture without a lot of effort. Let's start with examples.
+jWidget component has very simple API, but pretty unusual philosophy to build up Model-View architecture without a lot of effort. Let's start with examples.
 
 ### jWidget UI component example
 
@@ -476,7 +476,7 @@ Add child component array into an element. As opposed to [addCollection](#addcol
 
 If you pass an instance of [jwidget/ObservableArray](ObservableArray.md), then view gets synchronized with this array contents. It is convenient to create "components" array from data array using [mapDestroyableArray](mapper/array.md) method.
 
-**addArray** method returns an object. If you destroy it, the child gets removed from parent component and the synchronization gets stopped. Also, the array is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this array are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/array/IArrayMapper](mapper/array/IArrayMapper.md) or array destruction in [unrender](#unrender) method.
+**addArray** method returns an object. If you destroy it, the children get removed from parent component and the synchronization gets stopped. Also, the array is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this array are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/array/IArrayMapper](mapper/array/IArrayMapper.md) or array destruction in [unrender](#unrender) method.
 
 ### addCollection
 
@@ -491,7 +491,7 @@ Add child component collection into an element. As opposed to [addArray](#addarr
 
 If you pass an instance of observable collection, then view gets synchronized with this collection contents. It is convenient to create "components" collection from data collection using [mapDestroyableCollection](mapper/collection.md) method.
 
-**addCollection** method returns an object. If you destroy it, the child gets removed from parent component and the synchronization gets stopped. Also, the collection is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this collection are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/collection/ICollectionMapper](mapper/collection/ICollectionMapper.md) or collection destruction in [unrender](#unrender) method.
+**addCollection** method returns an object. If you destroy it, the children get removed from parent component and the synchronization gets stopped. Also, the collection is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this collection are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/collection/ICollectionMapper](mapper/collection/ICollectionMapper.md) or collection destruction in [unrender](#unrender) method.
 
 ### using
 

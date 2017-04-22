@@ -16,7 +16,7 @@ The majority of jWidget classes and interfaces inherit these three.
 
 ## Description
 
-Object which has **destroy** method. Can be aggregated in [jwidget/Class](Class.md) via **own** method.
+Object which has [destroy](#destroy) method. Can be aggregated in [jwidget/IClass](Class.md) via **own** method.
 
 ## Methods
 

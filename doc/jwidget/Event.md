@@ -51,7 +51,7 @@ Full example of the class that triggers the events:
 		index: number;
 	}
 
-Reference: [jwidget/Class](Class.md).
+Reference: [jwidget/Class](Class.md), [jwidget/Bindable](Bindable.md).
 
 Full example of event listener:
 
