@@ -74,7 +74,7 @@ export default function radio(el: JQuery, name: string, property?: any, binding?
 	if (property != null) {
 		return new RadioBinding(el, name, property, binding);
 	}
-	var target = new Property<string>(true);
+	var target = new Property<string>();
 	target.own(new RadioListener(el, name, {target: target}));
 	return target;
 }

@@ -34,8 +34,8 @@ Whenever the event is triggered, the specified handler function is called in the
 
 You can stop listening the event by destroying the returned object.
 
-### isObservable
+### isDummy
 
-	isObservable(): boolean
+	isDummy(): boolean
 
-Checks if this event is real.
+Checks if this event is dummy. This knowledge may help you do certain code optimizations.

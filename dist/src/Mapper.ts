@@ -169,7 +169,7 @@ class Mapper<T> extends Class {
 		this._destroyValue = config.destroyValue;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new Property<T>(true) : config.target;
+		this._target = this._targetCreated ? new Property<T>() : config.target;
 		this._acceptNull = config.acceptNull || false;
 		this._sourceValues = null;
 		this._targetValue = null;
@@ -307,11 +307,11 @@ namespace Mapper {
 export default Mapper;
 
 export function mapProperties<U>(properties: Watchable<any>[], callback: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
-	if (!properties.some((property) => property.isObservable())) {
+	if (properties.every((property) => property.isSilent())) {
 		const values = properties.map((property) => property.get());
-		return new Property<U>(false, callback.apply(scope, values));
+		return new Property<U>(callback.apply(scope, values), true);
 	}
-	const result = new Property<U>(true);
+	const result = new Property<U>();
 	result.own(new Mapper(properties, {
 		target: result,
 		createValue: callback,
@@ -321,11 +321,11 @@ export function mapProperties<U>(properties: Watchable<any>[], callback: Mapper.
 }
 
 export function mapDestroyableProperties<U extends Destroyable>(properties: Watchable<any>[], callback: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
-	if (!properties.some((property) => property.isObservable())) {
+	if (properties.every((property) => property.isSilent())) {
 		const values = properties.map((property) => property.get());
-		return new Property<U>(false, callback.apply(scope, values)).ownValue();
+		return new Property<U>(callback.apply(scope, values), true).ownValue();
 	}
-	const result = new Property<U>(true);
+	const result = new Property<U>();
 	result.own(new Mapper(properties, {
 		target: result,
 		createValue: callback,

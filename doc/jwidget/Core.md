@@ -54,7 +54,7 @@ Which is a shorter equivalent for:
 
 	const readValues = values.filter((value) => value != null);
 
-Reference: [jwidget/ICollection.filter](AbstractCollection.md#filter).
+Reference: [jwidget/ICollection.filter](ICollection.md#filter).
 
 ### isUndefined
 

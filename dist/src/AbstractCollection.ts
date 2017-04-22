@@ -620,7 +620,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @returns Number of items.
 	 */
 	$count(callback: (item: T) => boolean, scope?: any): Watchable<number> {
-		return new Property<number>(false, this.count(callback, scope));
+		return new Property<number>(this.count(callback, scope), true);
 	}
 
 	/**

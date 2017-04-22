@@ -63,7 +63,7 @@ Reference: [jwidget/Component](jwidget/Component.md), [jwidget/Property](jwidget
 
 Sure, in Angular and Ember this code would be much shorter, but in jWidget you see clearly how it works. This makes you feel confident that you're able to implement as complicated and big MV application as you would like to. You can be confident to use all well-known OOD patterns and follow OOD [SOLID principles](http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)). Also, you can use static typing capabilities provided by TypeScript in a full scale. Read the [Tutorial](Tutorial1.md) for more examples.
 
-The difference between jWidget and the other Model-View frameworks is the approach of working with properties and collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding is performed explicitly via [jwidget/Property](jwidget/Property.md) and its bindings. Instead of special tags-repeaters in HTML templates, you work with collections explicitly using [jwidget/ICollection](jwidget/AbstractCollection.md) and its synchronizers.
+The difference between jWidget and the other Model-View frameworks is the approach of working with properties and collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding is performed explicitly via [jwidget/Property](jwidget/Property.md) and its bindings. Instead of special tags-repeaters in HTML templates, you work with collections explicitly using [jwidget/ICollection](jwidget/ICollection.md) and its synchronizers.
 
 This approach is more efficient: data binding is not restricted to model and view communication: all the same practices can be used to bind model objects to each other and view components to each other.
 
@@ -95,7 +95,7 @@ Core functions and interfaces:
 
 Core classes and their interfaces:
 
-- [jwidget/Class](jwidget/Class.md), [jwidget/IClass](jwidget/Class.md) - For object aggregation.
+- [jwidget/Class](jwidget/Class.md), [jwidget/IClass](jwidget/IClass.md) - For object aggregation.
 - [jwidget/Event](jwidget/Event.md), [jwidget/IEvent](jwidget/IEvent.md) - For change notification.
 - [jwidget/Property](jwidget/Property.md), [jwidget/IProperty](jwidget/IProperty.md) - For basic binding support.
 - [jwidget/Component](jwidget/Component.md) - Base class for UI component.

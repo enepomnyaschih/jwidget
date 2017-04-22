@@ -38,9 +38,9 @@ interface Bindable<P> {
 	bind(handler: (params: P) => void, scope?: any): Destroyable;
 
 	/**
-	 * Checks if this event is real.
+	 * Checks if this event is dummy. This knowledge may help you do certain code optimizations.
 	 */
-	isObservable(): boolean;
+	isDummy(): boolean;
 }
 
 export default Bindable;

@@ -101,7 +101,7 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 	constructor(items: Dictionary<T>, adapter: boolean);
 	constructor(items?: any, adapter?: boolean) {
 		super(items, adapter);
-		this.length = new Property<number>(true, this.getLength());
+		this.length = new Property<number>(this.getLength());
 	}
 
 	/**

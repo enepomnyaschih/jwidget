@@ -35,7 +35,7 @@ class CheckedListener extends Class {
 	constructor(private el: JQuery, config: CheckedListener.Config = {}) {
 		super();
 		this.update = () => this._update();
-		this._target = config.target || this.own(new Property<boolean>(true));
+		this._target = config.target || this.own(new Property<boolean>());
 		this._update();
 		this.el.bind("change", this.update);
 	}

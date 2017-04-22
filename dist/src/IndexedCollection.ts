@@ -459,7 +459,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 * @inheritdoc
 	 */
 	$count(callback: (item: T, key: K) => boolean, scope?: any): Watchable<number> {
-		return new Property(false, this.count(callback, scope));
+		return new Property(this.count(callback, scope), true);
 	}
 
 	/**

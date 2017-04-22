@@ -76,7 +76,7 @@ class Functor<T> extends Class {
 		config = config || {};
 		this.scope = scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new Property<T>(true) : config.target;
+		this._target = this._targetCreated ? new Property<T>() : config.target;
 		this.update();
 		sources.forEach(this.watch, this);
 	}

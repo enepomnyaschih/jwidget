@@ -37,7 +37,7 @@ export function countArray<T>(source: IArray<T>, callback: (item: T) => boolean,
 	if (!(source instanceof ObservableArray)) {
 		return source.$count(callback, scope);
 	}
-	var result = new Property(true, 0);
+	var result = new Property(0);
 	result.own(new ObservableArrayCounter<T>(source, {
 		target: result,
 		filterItem: callback,

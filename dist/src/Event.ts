@@ -76,10 +76,10 @@ class Event<P> implements IEvent<P> {
 	}
 
 	/**
-	 * Checks if this event is real.
+	 * Checks if this event is dummy. This knowledge may help you do certain code optimizations.
 	 */
-	isObservable() {
-		return true;
+	isDummy() {
+		return false;
 	}
 
 	/**
@@ -92,13 +92,13 @@ class Event<P> implements IEvent<P> {
 	}
 
 	/**
-	 * If `observable` argument is true, returns a new instance of `Event` aggregated in the
+	 * If `dummy` argument is false, returns a new instance of `Event` aggregated in the
 	 * `owner` object. Else returns `dummyEvent`.
 	 * @param owner An object to aggregate a new event in.
-	 * @param observable Determines if a real or dummy event should be used.
+	 * @param dummy Determines if dummy event should be used instead.
 	 */
-	static make<P>(owner: IClass, observable: boolean): IEvent<P> {
-		return observable ? dummyEvent : owner.own(new Event<P>());
+	static make<P>(owner: IClass, dummy: boolean): IEvent<P> {
+		return dummy ? dummyEvent : owner.own(new Event<P>());
 	}
 }
 

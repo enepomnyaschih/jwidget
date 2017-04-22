@@ -30,8 +30,7 @@ import ValueChangeEventParams from "./ValueChangeEventParams";
 import Watchable from "./Watchable";
 
 /**
- * Real implementation of `IProperty` interface.
- * As opposed to `DimProperty`, really triggers `changeEvent` on value modification.
+ * Container for a value. Provides basic data binding functionality.
  */
 export default class Property<V> extends Class implements IProperty<V> {
 	private _ownsValue = false;
@@ -40,10 +39,11 @@ export default class Property<V> extends Class implements IProperty<V> {
 	/**
 	 * Constructs a property and sets initial value.
 	 * @param value Initial value.
+	 * @param silent If true, uses `dummyEvent` implementation for `changeEvent.
 	 */
-	constructor(observable: boolean, protected value: V = null) {
+	constructor(protected value: V = null, silent: boolean = false) {
 		super();
-		this._changeEvent = Event.make<ValueChangeEventParams<V>>(this, observable);
+		this._changeEvent = Event.make<ValueChangeEventParams<V>>(this, silent);
 	}
 
 	protected destroyObject() {
@@ -124,9 +124,9 @@ export default class Property<V> extends Class implements IProperty<V> {
 	}
 
 	/**
-	 * Checks if this property is observable.
+	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
 	 */
-	isObservable() {
-		return this._changeEvent.isObservable();
+	isSilent() {
+		return this._changeEvent.isDummy();
 	}
 }

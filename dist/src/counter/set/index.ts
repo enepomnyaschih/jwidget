@@ -38,7 +38,7 @@ export function countSet<T extends IClass>(source: ISet<T>, callback: (item: T) 
 	if (!(source instanceof ObservableSet)) {
 		return source.$count(callback, scope);
 	}
-	var result = new Property(true, 0);
+	var result = new Property(0);
 	result.own(new ObservableSetCounter<T>(source, {
 		target: result,
 		filterItem: callback,

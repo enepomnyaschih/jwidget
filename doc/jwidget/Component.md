@@ -9,7 +9,7 @@
 ## Hierarchy
 
 * interface [jwidget/Destroyable](Destroyable.md)
-	* interface [jwidget/IClass](Class.md)
+	* interface [jwidget/IClass](IClass.md)
 		* class [jwidget/Class](Class.md)
 			* class **jwidget/Component**
 
@@ -110,7 +110,7 @@ There are 5 ways to add a child component (**note**: examples are not complete -
 		addLabel(value: string) {
 			this.labelViews.add(new LabelView(value));
 		}
-- Define method `render<ChildId>`, where `<ChildId>` is a `jwid` of an element in CamelCase with capitalized first letter. Example: `renderArticle` (renders element with `jwid="article"`). If the method returns an instance of Component, [jwidget/Watchable](Watchable.md) or [jwidget/ICollection](AbstractCollection.md), then result will be treated as a child component or a child component collection. Define method `renderRoot` to render the root element, but you can return only [jwidget/ICollection](AbstractCollection.md) there, because it is impossible to replace the root element of the component.
+- Define method `render<ChildId>`, where `<ChildId>` is a `jwid` of an element in CamelCase with capitalized first letter. Example: `renderArticle` (renders element with `jwid="article"`). If the method returns an instance of Component, [jwidget/Watchable](Watchable.md) or [jwidget/ICollection](ICollection.md), then result will be treated as a child component or a child component collection. Define method `renderRoot` to render the root element, but you can return only [jwidget/ICollection](ICollection.md) there, because it is impossible to replace the root element of the component.
 
 		renderLabel() {
 			return new LabelView("Hello");
@@ -143,8 +143,8 @@ Depending on the returned result of this method, you have the next capabilities:
 
 - If the method returns an instance of Component, then it gets added into [children](#children) map and becomes a child component. This option doesn't work for the root element.
 - If the method returns an instance of [jwidget/Watchable](Watchable.md), then it gets added as an easily replaceable child component via method [addReplaceable](#addreplaceable). This option doesn't work for the root element.
-- If the method returns an instance of [jwidget/IArray](AbstractArray.md), then it gets added as a child array via method [addArray](#addarray).
-- If the method returns an instance of [jwidget/ICollection](AbstractCollection.md), which is not IArray, then it gets added as a child
+- If the method returns an instance of [jwidget/IArray](IArray.md), then it gets added as a child array via method [addArray](#addarray).
+- If the method returns an instance of [jwidget/ICollection](ICollection.md), which is not IArray, then it gets added as a child
 collection via method [addCollection](#addcollection).
 - If the method returns `false` (===), then element gets removed from the HTML document. This option doesn't work for the root element.
 - In any other case, framework doesn't perform any additional actions with the element.
@@ -252,7 +252,7 @@ This example describes how to create and destroy child components by data collec
 		}
 	}
 
-Reference: [jwidget/template](template.md), [jwidget/IArray](AbstractArray.md), [jwidget/Class.own](Class.md#own), [jwidget/mapper/array](mapper/array.md).
+Reference: [jwidget/template](template.md), [jwidget/IArray](IArray.md), [jwidget/Class.own](Class.md#own), [jwidget/mapper/array](mapper/array.md).
 
 **Add existing components as children**
 
@@ -383,7 +383,7 @@ Root element. Field is available from component rendering beginning.
 
 	children: IMap<Component>
 
-Reference: [jwidget/IMap](AbstractMap.md).
+Reference: [jwidget/IMap](IMap.md).
 
 Mutable named child components. Use this map to add child components in place of elements with corresponding `jwid`. Field is available from component rendering beginning.
 
@@ -470,7 +470,7 @@ Pass an instance of [jwidget/Watchable](Watchable.md)`<Component>`. The view get
 * **source** - Child component array.
 * **el** - `jwid` of element to add child components into. Defaults to root element ([el](#el)) of component.
 
-Reference: [jwidget/IArray](AbstractArray.md), [jwidget/Destroyable](Destroyable.md).
+Reference: [jwidget/IArray](IArray.md), [jwidget/Destroyable](Destroyable.md).
 
 Add child component array into an element. As opposed to [addCollection](#addcollection) method, retains component order. However, it works slower and accepts array only.
 
@@ -485,7 +485,7 @@ If you pass an instance of [jwidget/ObservableArray](ObservableArray.md), then v
 * **source** - Child component collection.
 * **el** - `jwid` of element to add child components into. Defaults to root element ([el](#el)) of component.
 
-Reference: [jwidget/ICollection](AbstractCollection.md), [jwidget/Destroyable](Destroyable.md).
+Reference: [jwidget/ICollection](ICollection.md), [jwidget/Destroyable](Destroyable.md).
 
 Add child component collection into an element. As opposed to [addArray](#addarray) method, ignores component order. However, it works faster and accepts any kind of collection, not array only.
 

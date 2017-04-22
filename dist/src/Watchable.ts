@@ -60,9 +60,9 @@ interface Watchable<V> extends Destroyable {
 	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): Watchable<U>;
 
 	/**
-	 * Checks if this property is observable.
+	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
 	 */
-	isObservable(): boolean;
+	isSilent(): boolean;
 }
 
 export default Watchable;

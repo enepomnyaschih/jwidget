@@ -36,7 +36,7 @@ class RadioListener extends Class {
 	constructor(private el: JQuery, name: string, config: RadioListener.Config = {}) {
 		super();
 		this.update = () => this._update();
-		this._target = config.target || this.own(new Property<string>(true));
+		this._target = config.target || this.own(new Property<string>());
 		this._selector = "input[type=radio][name='" + name + "']";
 		this._update();
 		this.el.on("change", this._selector, this.update);

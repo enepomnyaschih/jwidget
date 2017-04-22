@@ -37,7 +37,7 @@ export function countMap<T>(source: IMap<T>, callback: (item: T) => boolean, sco
 	if (!(source instanceof ObservableMap)) {
 		return source.$count(callback, scope);
 	}
-	var result = new Property(true, 0);
+	var result = new Property(0);
 	result.own(new ObservableMapCounter<T>(source, {
 		target: result,
 		filterItem: callback,

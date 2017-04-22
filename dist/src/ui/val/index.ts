@@ -68,7 +68,7 @@ export default function val(el: JQuery, value: any, binding?: any, simple?: any)
 	if (value != null && (typeof value !== "boolean")) {
 		return new ValueBinding(el, value, binding, simple);
 	}
-	var target = new Property<string>(true);
+	var target = new Property<string>();
 	target.own(new ValueListener(el, {target: target, simple: simple}));
 	return target;
 }

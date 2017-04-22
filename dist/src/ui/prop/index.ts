@@ -67,7 +67,7 @@ export default function prop(el: JQuery, prop: string, property?: any, binding?:
 		return new PropBinding(el, prop, property, binding);
 	}
 	if (prop === "checked") {
-		var target = new Property<boolean>(true);
+		var target = new Property<boolean>();
 		target.own(new CheckedListener(el, {target: target}));
 		return target;
 	}

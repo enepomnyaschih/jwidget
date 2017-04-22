@@ -83,9 +83,9 @@ Constructs an event.
 
 ### make
 
-	make<P>(owner: IClass, observable: boolean): IEvent<P>
+	make<P>(owner: IClass, dummy: boolean): IEvent<P>
 
 * **owner** - An object to aggregate a new event in.
-* **observable** - Determines if a real or dummy event should be used.
+* **dummy** - Determines if dummy event should be used instead.
 
-If **observable** argument is true, returns a new instance of **Event** aggregated in the **owner** object. Else returns [jwidget/dummyEvent](dummyEvent.md).
+If **dummy** argument is false, returns a new instance of **Event** aggregated in the **owner** object. Else returns [jwidget/dummyEvent](dummyEvent.md).

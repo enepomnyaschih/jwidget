@@ -121,7 +121,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 */
 	constructor(items?: T[], adapter?: boolean) {
 		super(items, adapter);
-		this.length = new Property<number>(true, this.getLength());
+		this.length = new Property<number>(this.getLength());
 	}
 
 	/**

@@ -35,8 +35,8 @@ class DummyEvent implements IEvent<any> {
 		params = params;
 	}
 
-	isObservable() {
-		return false;
+	isDummy() {
+		return true;
 	}
 }
 

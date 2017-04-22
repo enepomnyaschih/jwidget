@@ -38,7 +38,7 @@ class ValueListener extends Class {
 	constructor(private el: JQuery, config: ValueListener.Config = {}) {
 		super();
 		this.update = () => this._update();
-		this._target = config.target || this.own(new Property<string>(true));
+		this._target = config.target || this.own(new Property<string>());
 		this._simple = config.simple || !isLifeInput(el);
 		this.update();
 		this.el.bind("change", this.update);
