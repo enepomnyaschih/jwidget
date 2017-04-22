@@ -4,23 +4,19 @@
 
 ## Consumption
 
-	import IClass from "jwidget/IClass";
 	import Class from "jwidget/Class";
 
 ## Hierarchy
 
 * interface [jwidget/Destroyable](Destroyable.md)
-	* interface **jwidget/IClass**
+	* interface [jwidget/IClass](IClass.md)
 		* class **jwidget/Class**
 
 The majority of jWidget classes and interfaces inherit these three.
 
 ## Description
 
-The base class of all jWidget classes.
-Introduces object aggregation support.
-If you call `a.own(b)`, then **b** is destroyed automatically on **a** destruction.
-You can aggregate any object implementing [jwidget/Destroyable](Destroyable.md).
+Introduces object aggregation support. If you call `a.own(b)`, then **b** is destroyed automatically on **a** destruction. You can aggregate any object implementing [jwidget/Destroyable](Destroyable.md). Aggregated objects are destroyed in reverse order.
 
 	class Book extends Class {
 		cover = this.own(new Cover());
@@ -44,8 +40,6 @@ Output:
 
 	Destroying cover
 	Destroying book
-
-Aggregated objects are destroyed in reverse order.
 
 ## Constructor
 
