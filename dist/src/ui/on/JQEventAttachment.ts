@@ -20,12 +20,12 @@
 
 /// <reference types="jquery" />
 
-import Class from '../../Class';
+import Destroyable from '../../Destroyable';
 
 /**
  * Result of [[JQuery.jwon|jwon]] method call. Destroy it to unbind event handler.
  */
-class JQEventAttachment extends Class {
+class JQEventAttachment implements Destroyable {
 	private selector: string;
 	private handler: (eventObject: JQueryEventObject) => any;
 
@@ -48,7 +48,6 @@ class JQEventAttachment extends Class {
 	 */
 	constructor(el: JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any, scope?: any)
 	constructor(private el: JQuery, private events: string, selector: any, handler?: any, scope?: any) {
-		super();
 		if (typeof selector === "function" || typeof selector === "boolean") {
 			scope = handler;
 			handler = selector;
@@ -66,9 +65,8 @@ class JQEventAttachment extends Class {
 	/**
 	 * @inheritdoc
 	 */
-	destroyObject() {
+	destroy() {
 		this.el.off(this.events, this.selector, this.handler);
-		super.destroyObject();
 	}
 }
 

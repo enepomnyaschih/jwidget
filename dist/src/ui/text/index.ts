@@ -19,8 +19,8 @@
 */
 
 import IClass from '../../IClass';
-import Property from '../../Property';
 import TextUpdater from './TextUpdater';
+import Watchable from '../../Watchable';
 
 /**
  * Watches string modification and updates inner text of the DOM element.
@@ -33,6 +33,6 @@ import TextUpdater from './TextUpdater';
  *
  * @param property Text value.
  */
-export default function text(el: JQuery, property: Property<string>): IClass {
+export default function text(el: JQuery, property: Watchable<any>): IClass {
 	return new TextUpdater(el, property);
 }

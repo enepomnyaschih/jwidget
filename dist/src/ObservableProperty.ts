@@ -18,61 +18,68 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {destroy} from './Core';
-import Class from './Class';
-import Copier from './Copier';
-import Destroyable from './Destroyable';
-import Event from './Event';
-import Mapper from './Mapper';
+import Class from "./Class";
+import {destroy} from "./Core";
+import Bindable from "./Bindable";
+import Destroyable from "./Destroyable";
+import Event from "./Event";
+import IProperty from "./IProperty";
+import Mapper from "./Mapper";
+import ValueChangeEventParams from "./ValueChangeEventParams";
+import Watchable from "./Watchable";
 
 /**
- * The observable property. A convenient way to keep an object in sync with another object.
- * Provides a number of model and view bindings.
+ * Real implementation of `IProperty` interface.
+ * As opposed to `DimProperty`, really triggers `changeEvent` on value modification.
  */
-export default class Property<V> extends Class {
+export default class ObservableProperty<V> extends Class implements IProperty<V> {
 	private _ownsValue = false;
-	private _copier: Copier<V> = null;
+	private _changeEvent = this.own(new Event<ValueChangeEventParams<V>>());
 
 	/**
-	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
+	 * Constructs a property and sets initial value.
+	 * @param value Initial value.
 	 */
-	changeEvent = this.own(new Event<PropertyChangeEventParams<V>>());
-
-	/**
-	 * @param _value Initial value.
-	 */
-	constructor(protected _value: V = null) {
+	constructor(protected value: V = null) {
 		super();
 	}
 
 	protected destroyObject() {
-		this.bindTo();
 		if (this._ownsValue) {
-			destroy(this._value);
+			destroy(this.value);
 		}
 		super.destroyObject();
 	}
 
 	/**
-	 * Returns property value.
+	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
+	 */
+	get changeEvent(): Bindable<ValueChangeEventParams<V>> {
+		return this._changeEvent;
+	}
+
+	/**
+	 * Returns current property value.
+	 * Think twice before calling this method - probably it makes sense to use some kind of binding instead?
 	 */
 	get(): V {
-		return this._value;
+		return this.value;
 	}
 
 	/**
 	 * Changes property value and triggers `changeEvent` if the value has been changed.
+	 * @param value New value to set.
 	 */
 	set(value: V) {
 		if (value === undefined) {
 			value = null;
 		}
-		let oldValue = this._value;
+		let oldValue = this.value;
 		if (oldValue === value) {
 			return;
 		}
-		this._value = value;
-		this.changeEvent.trigger({ sender: this, value: value, oldValue: oldValue });
+		this.value = value;
+		this._changeEvent.trigger({ sender: this, value: value, oldValue: oldValue });
 		if (this._ownsValue) {
 			destroy(oldValue);
 		}
@@ -89,31 +96,16 @@ export default class Property<V> extends Class {
 	}
 
 	/**
-	 * Binds this property to another property using a `Copier`.
-	 * Unbinds a previously bound property.
-	 *
-	 * @param source Source property to bind to. Omit to simply unbind.
-	 */
-	bindTo<U extends V>(source?: Property<U>) {
-		if (this._copier != null) {
-			this._copier.destroy();
-			this._copier = null;
-		}
-		if (source != null) {
-			this._copier = new Copier<V>(source, { target: this });
-		}
-	}
-
-	/**
 	 * Builds a new property containing the result of the callback function called
 	 * on this property value. To stop synchronization, destroy the result property.
-	 * In comparison to `mapObject` method, doesn't destroy the previously assigned target values.
+	 * In comparison to `mapDestroyable` method, doesn't destroy the previously assigned target values.
+	 * To map multiple properties, use `Mapper`.
 	 *
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	mapValue<U>(callback: (value: V) => U, scope?: any): Property<U> {
-		const result = new Property<U>();
+	map<U>(callback: (value: V) => U, scope?: any): Watchable<U> {
+		const result = new ObservableProperty<U>();
 		result.own(new Mapper([this], {
 			target: result,
 			createValue: callback,
@@ -125,13 +117,14 @@ export default class Property<V> extends Class {
 	/**
 	 * Builds a new property containing the result of the callback function called
 	 * on this property value. To stop synchronization, destroy the result property.
-	 * In comparison to `mapObject` method, destroys the previously assigned target values.
+	 * In comparison to `map` method, destroys the previously assigned target values.
+	 * To map multiple properties, use `Mapper`.
 	 *
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	mapObject<U extends Destroyable>(callback: (value: V) => U, scope?: any): Property<U> {
-		const result = new Property<U>();
+	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): Watchable<U> {
+		const result = new ObservableProperty<U>();
 		result.own(new Mapper([this], {
 			target: result,
 			createValue: callback,
@@ -140,24 +133,4 @@ export default class Property<V> extends Class {
 		}));
 		return result;
 	}
-}
-
-/**
- * `Property.changeEvent` params.
- */
-export interface PropertyChangeEventParams<V> {
-	/**
-	 * Sender property.
-	 */
-	sender: Property<V>;
-
-	/**
-	 * New value.
-	 */
-	value: V;
-
-	/**
-	 * Old value.
-	 */
-	oldValue: V;
 }

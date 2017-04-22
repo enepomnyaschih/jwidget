@@ -19,8 +19,8 @@
 */
 
 import Class from './Class';
-import Event from './Event';
-import Property from './Property';
+import Bindable from './Bindable';
+import Watchable from './Watchable';
 
 /**
  * Watches source [[JW.Property|properties]] modification and calls
@@ -42,7 +42,7 @@ class Updater extends Class {
 	 * @param scope **callback** call scope. Defaults to updater itself.
 	 */
 	constructor(
-		public sources: Property<any>[],
+		public sources: Watchable<any>[],
 		private callback: Updater.Callback,
 		private scope?: any)
 	{
@@ -57,9 +57,8 @@ class Updater extends Class {
 	 * @param event Event.
 	 * @returns this
 	 */
-	bind(event: Event<any>): Updater {
-		this.own(event.bind(this.update, this));
-		return this;
+	bind(event: Bindable<any>): Updater {
+		return this.owning(event.bind(this.update, this));
 	}
 
 	/**
@@ -67,7 +66,7 @@ class Updater extends Class {
 	 * @param property Property.
 	 * @returns this
 	 */
-	watch(property: Property<any>): Updater {
+	watch(property: Watchable<any>): Updater {
 		return this.bind(property.changeEvent);
 	}
 

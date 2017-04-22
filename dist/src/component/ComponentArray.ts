@@ -27,15 +27,9 @@ import * as DomUtils from '../DomUtils';
 import * as SetUtils from '../SetUtils';
 
 /**
- * Child component array wrapper in [[JW.UI.Component]].
- *
- * Returned by [[JW.UI.Component.addArray|addArray]] method. If you'll destroy this object, child components will be removed
- * from parent.
+ * @hidden
  */
 export default class ComponentArray extends Class {
-	/**
-	 * @hidden
-	 */
 	constructor(public parent: Component, public source: IArray<Component>, el: JQuery) {
 		super();
 		SetUtils.add(parent._arrays, this);
@@ -53,17 +47,11 @@ export default class ComponentArray extends Class {
 		this.own(new ComponentInserter(mapper.target, el[0]));
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	destroy() {
 		SetUtils.remove(this.parent._arrays, this);
 		super.destroy();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	_afterAppend() {
 		this.source.each(DomUtils._afterAppend);
 	}

@@ -22,9 +22,10 @@
 
 import {Binding, UPDATE, WATCH} from '../../Core';
 import Class from '../../Class';
-import Property from '../../Property';
+import IProperty from '../../IProperty';
 import ValueListener from './ValueListener';
 import ValueUpdater from './ValueUpdater';
+import Watchable from '../../Watchable';
 
 /**
  * Result of [[JQuery.jwval|jwval]] method call. Destroy it to stop synchronization.
@@ -38,8 +39,14 @@ class ValueBinding extends Class {
 	 * If true, watch-binding listens "change" event only. Defaults to false which enables
 	 * reaction to any real-time field modification.
 	 */
-	constructor(el: JQuery, property: Property<string>, binding: Binding = UPDATE, simple?: boolean) {
+	constructor(el: JQuery, property: Watchable<any>, simple?: boolean);
+	constructor(el: JQuery, property: IProperty<string>, binding: Binding, simple?: boolean);
+	constructor(el: JQuery, property: any, binding: any = UPDATE, simple?: boolean) {
 		super();
+		if (typeof binding === "boolean") {
+			simple = binding;
+			binding = UPDATE;
+		}
 		if (binding & UPDATE) {
 			this.own(new ValueUpdater(el, property));
 		}

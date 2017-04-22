@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Property from '../Property';
+import IProperty from '../IProperty';
 
 /**
  * [[Counter]] configuration.
@@ -40,7 +40,7 @@ interface ICollectionCounterConfig<T> {
 	/**
 	 * Target property. By default, created automatically.
 	 */
-	target?: Property<number>;
+	target?: IProperty<number>;
 }
 
 export default ICollectionCounterConfig;

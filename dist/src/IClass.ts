@@ -32,7 +32,7 @@ interface IClass extends Destroyable {
 	/**
 	 * Instance ID.
 	 *
-	 * Auto-incrementing object unique ID. Each IClass instance has such an identifier.
+	 * Auto-incrementing object unique ID. Each `IClass` instance has such an identifier.
 	 * Used, say, in AbstractSet as map key for quick item access.
 	 */
 	_iid: number;

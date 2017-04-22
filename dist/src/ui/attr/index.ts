@@ -19,8 +19,8 @@
 */
 
 import AttrUpdater from './AttrUpdater';
-import IClass from '../../IClass';
-import Property from '../../Property';
+import Destroyable from '../../Destroyable';
+import Watchable from '../../Watchable';
 
 /**
  * Watches string property modification and updates the specified attribute of the DOM element.
@@ -34,6 +34,6 @@ import Property from '../../Property';
  * @param attr DOM element attribute name.
  * @param property Attribute value.
  */
-export default function attr(el: JQuery, attr: string, property: Property<any>): IClass {
+export default function attr(el: JQuery, attr: string, property: Watchable<any>): Destroyable {
 	return new AttrUpdater(el, attr, property);
 }

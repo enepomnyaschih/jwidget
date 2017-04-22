@@ -28,34 +28,20 @@ import Proxy from '../Proxy';
 import * as MapUtils from '../MapUtils';
 
 /**
- * Mutable named child component map for [[JW.UI.Component]].
- * Use this map to add child components in place of
- * elements with corresponding `jwid`. Field is available from component rendering beginning.
+ * @hidden
  */
 export default class ComponentChildren extends JWMap<Component> {
-	/**
-	 * @hidden
-	 */
 	target: ComponentChildInserter;
 
-	/**
-	 * @hidden
-	 */
 	constructor(public component: Component) {
 		super();
 		this.target = new ComponentChildInserter();
 	}
 
-	/**
-	 * @hidden
-	 */
 	unrender() {
 		this.target.destroy();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	trySet(item: Component, key: string): Proxy<Component> {
 		var result = super.trySet(item, key);
 		if (result === undefined) {
@@ -66,9 +52,6 @@ export default class ComponentChildren extends JWMap<Component> {
 		return result;
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	trySetKey(oldKey: string, newKey: string): Component {
 		var item = super.trySetKey(oldKey, newKey);
 		if (item === undefined) {
@@ -78,9 +61,6 @@ export default class ComponentChildren extends JWMap<Component> {
 		return item;
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	tryRemove(key: string): Component {
 		var item = super.tryRemove(key);
 		if (item === undefined) {
@@ -90,9 +70,6 @@ export default class ComponentChildren extends JWMap<Component> {
 		return item;
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	trySplice(removedKeys: string[], updatedItems: Dictionary<Component>): IMapSpliceResult<Component> {
 		var spliceResult = super.trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
@@ -107,9 +84,6 @@ export default class ComponentChildren extends JWMap<Component> {
 		return spliceResult;
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	tryClear(): Dictionary<Component> {
 		var items = super.tryClear();
 		if (items === undefined) {
@@ -119,9 +93,6 @@ export default class ComponentChildren extends JWMap<Component> {
 		return items;
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
 		var result = super.tryReindex(keyMap);
 		if (result === undefined) {

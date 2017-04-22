@@ -22,9 +22,10 @@
 
 import {Binding, UPDATE, WATCH} from '../../Core';
 import Class from '../../Class';
-import Property from '../../Property';
+import IProperty from '../../IProperty';
 import RadioListener from './RadioListener';
 import RadioUpdater from './RadioUpdater';
+import Watchable from '../../Watchable';
 
 /**
  * Result of [[JQuery.jwradio|jwradio]] method call. Destroy it to stop synchronization.
@@ -36,7 +37,9 @@ class RadioBinding extends Class {
 	 * @param property Property.
 	 * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
 	 */
-	constructor(el: JQuery, name: string, property: Property<string>, binding: Binding = UPDATE) {
+	constructor(el: JQuery, name: string, property: Watchable<any>);
+	constructor(el: JQuery, name: string, property: IProperty<string>, binding: Binding);
+	constructor(el: JQuery, name: string, property: any, binding: any = UPDATE) {
 		super();
 		if (binding & UPDATE) {
 			this.own(new RadioUpdater(el, name, property));

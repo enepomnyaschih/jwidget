@@ -22,31 +22,37 @@
 
 import {isLifeInput} from '../../internal';
 import Class from '../../Class';
-import Property from '../../Property';
+import IProperty from '../../IProperty';
+import ObservableProperty from '../../ObservableProperty';
+import Watchable from '../../Watchable';
 
 /**
  * @deprecated 1.4 Use [[JQuery.jwval|jwval]] instead.
  */
 class ValueListener extends Class {
-	public target: Property<string>;
-	private simple: boolean;
+	private _target: IProperty<string>;
+	private _simple: boolean;
 	private _timer: number;
 	private update: () => void;
 
 	constructor(private el: JQuery, config: ValueListener.Config = {}) {
 		super();
 		this.update = () => this._update();
-		this.target = config.target || this.own(new Property<string>());
-		this.simple = config.simple || !isLifeInput(el);
+		this._target = config.target || this.own(new ObservableProperty<string>());
+		this._simple = config.simple || !isLifeInput(el);
 		this.update();
 		this.el.bind("change", this.update);
-		if (!this.simple) {
+		if (!this._simple) {
 			this._timer = window.setInterval(this.update, 100);
 		}
 	}
 
+	get target(): Watchable<string> {
+		return this._target;
+	}
+
 	destroy() {
-		if (!this.simple) {
+		if (!this._simple) {
 			clearInterval(this._timer);
 		}
 		this.el.unbind("change", this.update);
@@ -54,13 +60,13 @@ class ValueListener extends Class {
 	}
 
 	_update() {
-		this.target.set(this.el.val());
+		this._target.set(this.el.val());
 	}
 }
 
 namespace ValueListener {
 	export interface Config {
-		target?: Property<string>;
+		target?: IProperty<string>;
 		simple?: boolean;
 	}
 }

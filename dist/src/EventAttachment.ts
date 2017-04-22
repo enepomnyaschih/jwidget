@@ -22,17 +22,14 @@ import Class from './Class';
 import Event from './Event';
 
 /**
- * Result of Event `bind` method call. Destroy it to unbind the event handler.
+ * @hidden
  */
-class EventAttachment<P> extends Class {
+export default class EventAttachment<P> extends Class {
 	constructor(private _event: Event<P>, public handler: (params: P) => void, public scope: any) {
 		super();
 	}
 
-	protected destroyObject() {
-		this._event.unbind(this);
-		super.destroyObject();
+	destroy() {
+		this._event._unbind(this);
 	}
 }
-
-export default EventAttachment;

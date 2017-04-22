@@ -21,7 +21,7 @@
 /// <reference types="jquery" />
 
 import Class from '../../Class';
-import Property from '../../Property';
+import Watchable from '../../Watchable';
 
 /**
  * @deprecated 1.4 Use [[JQuery.jwprop|jwprop]] instead.
@@ -32,7 +32,7 @@ class PropUpdater extends Class {
 	 * @param prop Element's property name.
 	 * @param property Source property.
 	 */
-	constructor(private el: JQuery, private prop: string, private property: Property<boolean>) {
+	constructor(private el: JQuery, private prop: string, private property: Watchable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.bind(this._update, this));

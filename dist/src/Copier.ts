@@ -19,7 +19,9 @@
 */
 
 import Class from './Class';
-import Property from './Property';
+import IProperty from './IProperty';
+import Watchable from './Watchable';
+import ObservableProperty from './ObservableProperty';
 
 /**
  * Watches source [[JW.Property]] modification and copies
@@ -50,42 +52,39 @@ import Property from './Property';
  */
 class Copier<T> extends Class {
 	private _targetCreated: boolean;
-
-	/**
-	 * Source property.
-	 */
-	source: Property<T>;
-
-	/**
-	 * Target property.
-	 */
-	target: Property<T>;
+	private _target: IProperty<T>;
 
 	/**
 	 * @param source Source property.
 	 * @param config Configuration.
 	 */
-	constructor(source: Property<T>, config?: Copier.Config<T>) {
+	constructor(public source: Watchable<T>, config?: Copier.Config<T>) {
 		super();
 		config = config || {};
-		this.source = source;
 		this._targetCreated = config.target == null;
-		this.target = (config.target == null) ? new Property<T>() : config.target;
+		this._target = (config.target == null) ? new ObservableProperty<T>() : config.target;
 		this._update();
 		this.own(source.changeEvent.bind(this._update, this));
 	}
 
+	/**
+	 * Target property.
+	 */
+	get target(): Watchable<T> {
+		return this._target;
+	}
+
 	protected destroyObject() {
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this.source = null;
-		this.target = null;
+		this._target = null;
 		super.destroyObject();
 	}
 
 	private _update() {
-		this.target.set(this.source.get());
+		this._target.set(this.source.get());
 	}
 }
 
@@ -99,7 +98,7 @@ namespace Copier {
 		/**
 		 * Target property. By default, created automatically.
 		 */
-		target?: Property<T>;
+		target?: IProperty<T>;
 	}
 }
 

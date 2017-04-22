@@ -19,8 +19,8 @@
 */
 
 import CssUpdater from './CssUpdater';
-import IClass from '../../IClass';
-import Property from '../../Property';
+import Destroyable from '../../Destroyable';
+import Watchable from '../../Watchable';
 
 /**
  * Watches string modification and updates the specified CSS style of the DOM element.
@@ -34,6 +34,6 @@ import Property from '../../Property';
  * @param style CSS style name.
  * @param property Style value.
  */
-export default function css(el: JQuery, style: string, property: Property<any>): IClass {
+export default function css(el: JQuery, style: string, property: Watchable<any>): Destroyable {
 	return new CssUpdater(el, style, property);
 }

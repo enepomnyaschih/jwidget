@@ -21,7 +21,7 @@
 /// <reference types="jquery" />
 
 import Class from '../../Class';
-import Property from '../../Property';
+import Watchable from '../../Watchable';
 
 /**
  * Result of [[JQuery.jwshow|jwshow]] method call. Destroy it to stop synchronization.
@@ -34,7 +34,7 @@ class VisibleUpdater extends Class {
 	 * @param el DOM element.
 	 * @param property Source property.
 	 */
-	constructor(private el: JQuery, private property: Property<boolean>) {
+	constructor(private el: JQuery, private property: Watchable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.bind(this._update, this));

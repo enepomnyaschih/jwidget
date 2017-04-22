@@ -20,8 +20,10 @@
 
 import {isNotNil} from './Core';
 import Class from './Class';
-import Event from './Event';
-import Property from './Property';
+import Bindable from './Bindable';
+import IProperty from './IProperty';
+import Watchable from './Watchable';
+import ObservableProperty from './ObservableProperty';
 
 /**
  * Watches source [[JW.Property|properties]] modification and recreates
@@ -151,18 +153,14 @@ class Mapper<T> extends Class {
 	private _sourceValues: any[];
 	private _targetValue: T;
 	private _targetCreated: boolean;
-
-	/**
-	 * Target property.
-	 */
-	target: Property<T>;
+	private _target: IProperty<T>;
 
 	/**
 	 * @param sources Source properties.
 	 * @param config Configuration.
 	 */
 	constructor(
-		public sources: Property<any>[],
+		public sources: Watchable<any>[],
 		config: Mapper.Config<T>)
 	{
 		super();
@@ -170,7 +168,7 @@ class Mapper<T> extends Class {
 		this._destroyValue = config.destroyValue;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Property<T>() : config.target;
+		this._target = this._targetCreated ? new ObservableProperty<T>() : config.target;
 		this._acceptNull = config.acceptNull || false;
 		this._sourceValues = null;
 		this._targetValue = null;
@@ -178,20 +176,27 @@ class Mapper<T> extends Class {
 		sources.forEach(this.watch, this);
 	}
 
+	/**
+	 * Target property.
+	 */
+	get target(): Watchable<T> {
+		return this._target;
+	}
+
 	protected destroyObject() {
-		let oldValue = this.target.get();
+		const oldValue = this.target.get();
 		if (oldValue === this._targetValue) {
-			this.target.set(null);
+			this._target.set(null);
 		}
 		this._done();
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this.sources = null;
 		this._createValue = null;
 		this._destroyValue = null;
 		this._scope = null;
-		this.target = null;
+		this._target = null;
 		this._sourceValues = null;
 		this._targetValue = null;
 		super.destroyObject();
@@ -203,9 +208,8 @@ class Mapper<T> extends Class {
 	 * @param event Event.
 	 * @returns this
 	 */
-	bind(event: Event<any>): Mapper<T> {
-		this.own(event.bind(this.update, this));
-		return this;
+	bind(event: Bindable<any>): this {
+		return this.owning(event.bind(this.update, this));
 	}
 
 	/**
@@ -214,7 +218,7 @@ class Mapper<T> extends Class {
 	 * @param property Property.
 	 * @returns this
 	 */
-	watch(property: Property<any>): Mapper<T> {
+	watch(property: Watchable<any>): this {
 		return this.bind(property.changeEvent);
 	}
 
@@ -230,7 +234,7 @@ class Mapper<T> extends Class {
 			newValue = null;
 			values = null;
 		}
-		this.target.set(newValue);
+		this._target.set(newValue);
 		this._done();
 		this._targetValue = newValue;
 		this._sourceValues = values;
@@ -271,7 +275,7 @@ namespace Mapper {
 		/**
 		 * Target property. By default, created automatically.
 		 */
-		target?: Property<T>;
+		target?: IProperty<T>;
 
 		/**
 		 * Calculates target property value based on source property values.

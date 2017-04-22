@@ -20,8 +20,8 @@
 
 import ClassNameUpdater from './ClassNameUpdater';
 import ClassUpdater from './ClassUpdater';
-import IClass from '../../IClass';
-import Property from '../../Property';
+import Destroyable from '../../Destroyable';
+import Watchable from '../../Watchable';
 
 /**
  * DOM element CSS class management method.
@@ -37,7 +37,7 @@ import Property from '../../Property';
  * @param cls CSS class name.
  * @param property Boolean property to bind CSS class to.
  */
-export default function cls(el: JQuery, cls: string, property: Property<boolean>): IClass;
+export default function cls(el: JQuery, cls: string, property: Watchable<any>): Destroyable;
 
 /**
  * DOM element CSS class management method.
@@ -56,7 +56,7 @@ export default function cls(el: JQuery, cls: string, property: Property<boolean>
  *
  * @param cls CSS class name.
  */
-export default function cls(el: JQuery, cls: Property<string>): IClass;
-export default function cls(el: JQuery, a: any, b?: any): IClass {
+export default function cls(el: JQuery, cls: Watchable<string>): Destroyable;
+export default function cls(el: JQuery, a: any, b?: any): Destroyable {
 	return (b != null) ? new ClassUpdater(el, a, b) : new ClassNameUpdater(el, a);
 }

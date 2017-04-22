@@ -20,11 +20,12 @@
 
 import AbstractCollection from './AbstractCollection';
 import Dictionary from './Dictionary';
+import DimProperty from './DimProperty';
 import IArray from './IArray';
 import IIndexedCollection from './IIndexedCollection';
 import IMap from './IMap';
-import Property from './Property';
 import Proxy from './Proxy';
+import Watchable from './Watchable';
 
 /**
  * Abstract collection of items of type T with keys of type K.
@@ -457,8 +458,8 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	$count(callback: (item: T, key: K) => boolean, scope?: any): Property<number> {
-		return new Property<number>(this.count(callback, scope));
+	$count(callback: (item: T, key: K) => boolean, scope?: any): Watchable<number> {
+		return new DimProperty(this.count(callback, scope));
 	}
 
 	/**

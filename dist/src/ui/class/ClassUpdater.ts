@@ -21,7 +21,7 @@
 /// <reference types="jquery" />
 
 import Class from '../../Class';
-import Property from '../../Property';
+import Watchable from '../../Watchable';
 
 /**
  * Result of [[JQuery.jwclass|jwclass]] method call. Destroy it to stop synchronization.
@@ -35,7 +35,7 @@ class ClassUpdater extends Class {
 	 * @param cls CSS class name.
 	 * @param property Source property.
 	 */
-	constructor(private el: JQuery, private cls: string, private property: Property<boolean>) {
+	constructor(private el: JQuery, private cls: string, private property: Watchable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.bind(this._update, this));

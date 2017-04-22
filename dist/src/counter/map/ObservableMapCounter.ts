@@ -38,12 +38,12 @@ export default class ObservableMapCounter<T> extends MapCounter<T> {
 
 	private _onSplice(params: MapSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.set(this.target.get() -
+		this._target.set(this._target.get() -
 			MapUtils.count(spliceResult.removedItems, this._filterItem, this._scope) +
 			MapUtils.count(spliceResult.addedItems, this._filterItem, this._scope));
 	}
 
 	private _onClear() {
-		this.target.set(0);
+		this._target.set(0);
 	}
 }

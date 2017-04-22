@@ -36,11 +36,15 @@ class Class implements IClass {
 	/**
 	 * Instance ID.
 	 *
-	 * Auto-incrementing object unique ID. Each IClass instance has such an identifier.
+	 * Auto-incrementing object unique ID. Each `IClass` instance has such an identifier.
 	 * Used, say, in AbstractSet as map key for quick item access.
 	 */
 	_iid: number;
 
+	/**
+	 * Yes, objects of this class can be constructed.
+	 * They can be used as dummy objects or aggregators for other objects.
+	 */
 	constructor() {
 		this._iid = ++Class._lastIid;
 	}
@@ -71,7 +75,7 @@ class Class implements IClass {
 	}
 
 	/**
-	 * Class destructor invocation method. Destroys all aggregated objects and calls destroyObject method.
+	 * Class destructor invocation method. Destroys all aggregated objects and calls `destroyObject` method.
 	 * You must call this method explicitly from outside, because JavaScript doesn't support automatic class destructor
 	 * calling.
 	 */
@@ -88,7 +92,7 @@ class Class implements IClass {
 	}
 
 	/**
-	 * Class destructor implementation. Called inside [[destroy]] method *after aggregated objects destruction*.
+	 * Class destructor implementation. Called inside `destroy` method *after aggregated objects destruction*.
 	 * The logic of class instance destruction should be implemented here. If you override this method,
 	 * remember to call `super.destroyObject()` at the end of the method.
 	 */

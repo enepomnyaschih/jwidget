@@ -9,8 +9,11 @@
 
 ## Hierarchy
 
-* interface IClass extends [jwidget/Destroyable](Destroyable.md)
-* class Class implements IClass
+* interface [jwidget/Destroyable](Destroyable.md)
+	* interface **jwidget/IClass**
+		* class **jwidget/Class**
+
+The majority of jWidget classes and interfaces inherit these three.
 
 ## Description
 
@@ -43,6 +46,18 @@ Output:
 	Destroying book
 
 Aggregated objects are destroyed in reverse order.
+
+## Constructor
+
+	new Class()
+
+Yes, objects of this class can be constructed. They can be used as dummy objects or aggregators for other objects:
+
+	startOperation() {
+		return new Class().owning(new Animation()).owning(new Request());
+	}
+
+Reference: [owning](#owning).
 
 ## Properties
 

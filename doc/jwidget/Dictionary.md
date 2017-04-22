@@ -6,6 +6,10 @@
 
 	import Dictionary from "jwidget/Dictionary";
 
+## Hierarchy
+
+* interface **jwidget/Dictionary**`<T>`
+
 ## Description
 
 Interface for a native JavaScript map.

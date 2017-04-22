@@ -23,8 +23,9 @@
 import {Binding, UPDATE, WATCH} from '../../Core';
 import CheckedListener from './CheckedListener';
 import Class from '../../Class';
+import IProperty from '../../IProperty';
 import PropUpdater from './PropUpdater';
-import Property from '../../Property';
+import Watchable from '../../Watchable';
 
 /**
  * Result of [[JQuery.jwprop|jwprop]] method call. Destroy it to stop synchronization.
@@ -36,7 +37,9 @@ class PropBinding extends Class {
 	 * @param property Property.
 	 * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
 	 */
-	constructor(el: JQuery, prop: string, property: Property<boolean>, binding: Binding = UPDATE) {
+	constructor(el: JQuery, prop: string, property: Watchable<any>);
+	constructor(el: JQuery, prop: string, property: IProperty<boolean>, binding: Binding);
+	constructor(el: JQuery, prop: string, property: any, binding: Binding = UPDATE) {
 		super();
 		if (binding & UPDATE) {
 			this.own(new PropUpdater(el, prop, property));

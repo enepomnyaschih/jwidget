@@ -19,8 +19,10 @@
 */
 
 import Class from './Class';
-import Event from './Event';
-import Property from './Property';
+import Bindable from './Bindable';
+import IProperty from './IProperty';
+import Watchable from './Watchable';
+import ObservableProperty from './ObservableProperty';
 
 /**
  * Watches source [[JW.Property|properties]] modification and updates
@@ -56,11 +58,7 @@ import Property from './Property';
  */
 class Functor<T> extends Class {
 	private _targetCreated: boolean;
-
-	/**
-	 * Target property.
-	 */
-	target: Property<T>;
+	private _target: IProperty<T>;
 
 	/**
 	 * @param sources Source properties.
@@ -69,7 +67,7 @@ class Functor<T> extends Class {
 	 * @param config Configuration.
 	 */
 	constructor(
-		public sources: Property<any>[],
+		public sources: Watchable<any>[],
 		private callback: Functor.Callback<T>,
 		private scope?: any,
 		config?: Functor.Config<T>)
@@ -78,17 +76,24 @@ class Functor<T> extends Class {
 		config = config || {};
 		this.scope = scope || this;
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Property<T>() : config.target;
+		this._target = this._targetCreated ? new ObservableProperty<T>() : config.target;
 		this.update();
 		sources.forEach(this.watch, this);
 	}
 
+	/**
+	 * Target property.
+	 */
+	get target(): Watchable<T> {
+		return this._target;
+	}
+
 	protected destroyObject() {
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this.sources = null;
-		this.target = null;
+		this._target = null;
 		this.callback = null;
 		this.scope = null;
 		super.destroyObject();
@@ -100,9 +105,8 @@ class Functor<T> extends Class {
 	 * @param event Event.
 	 * @returns this
 	 */
-	bind(event: Event<any>): Functor<T> {
-		this.own(event.bind(this.update, this));
-		return this;
+	bind(event: Bindable<any>): this {
+		return this.owning(event.bind(this.update, this));
 	}
 
 	/**
@@ -111,7 +115,7 @@ class Functor<T> extends Class {
 	 * @param property Property.
 	 * @returns this
 	 */
-	watch(property: Property<any>): Functor<T> {
+	watch(property: Watchable<any>): this {
 		return this.bind(property.changeEvent);
 	}
 
@@ -120,7 +124,7 @@ class Functor<T> extends Class {
 	 */
 	update() {
 		var values = this.sources.map((source) => source.get());
-		this.target.set(this.callback.apply(this.scope, values));
+		this._target.set(this.callback.apply(this.scope, values));
 	}
 }
 
@@ -143,7 +147,7 @@ namespace Functor {
 		/**
 		 * Target property. By default, created automatically.
 		 */
-		target?: Property<T>;
+		target?: IProperty<T>;
 	}
 }
 

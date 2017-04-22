@@ -8,29 +8,40 @@
 
 ## Hierarchy
 
-* class Event<P> extends [jwidget/Class](Class.md)
+* interface [jwidget/Destroyable](Destroyable.md)
+	* interface [jwidget/Bindable](Bindable.md)`<P>`
+		* class **jwidget/Event**`<P>`
+		* const [jwidget/dummyEvent](dummyEvent.md)
 
 ## Description
 
-Used to notify some objects (clients) about certain events (for example, field value changes).
-Remember to destroy the event attachments to prevent side effects.
+Real implementation of [jwidget/Bindable](Bindable.md) interface.
 
-Full example of class that triggers the events:
+Used to notify some objects (clients) about certain events (for example, field value changes). Remember to destroy the event attachments to prevent side effects. It is smart to expose event objects in getters returning [jwidget/Bindable](Bindable.md) to deny direct control over the event by the clients.
+
+Full example of the class that triggers the events:
 
 	class Dispatcher extends Class {
-		private items: any[] = [];
+		private _items: any[] = [];
+		private _addEvent = this.own(new Event<DispatcherEventParams>());
+		private _removeEvent = this.own(new Event<DispatcherEventParams>());
 
-		addEvent = this.own(new Event<DispatcherEventParams>());
-		removeEvent = this.own(new Event<DispatcherEventParams>());
+		get addEvent(): Bindable {
+			return this._addEvent;
+		}
+
+		get removeEvent(): Bindable {
+			return this._removeEvent;
+		}
 
 		addItem(item: any, index: number) {
-			this.items.splice(index, 0, item);
-			this.addEvent.trigger({sender: this, item: item, index: index});
+			this._items.splice(index, 0, item);
+			this._addEvent.trigger({sender: this, item: item, index: index});
 		}
 
 		removeItem(index) {
-			var item = this.items.splice(index, 1)[0];
-			this.removeEvent.trigger({sender: this, item: item, index: index});
+			var item = this._items.splice(index, 1)[0];
+			this._removeEvent.trigger({sender: this, item: item, index: index});
 		}
 	}
 
@@ -60,31 +71,33 @@ Full example of event listener:
 		}
 	}
 
+## Constructor
+
+	new Event<P>()
+
+Constructs an event.
+
 ## Methods
 
 ### bind
 
-	bind(handler: (params: P) => void, scope?: any): EventAttachment<P>
-
-Starts listening to event.
-
-Whenever the event is triggered with **trigger** method, specified handler function
-is called in specified scope.
-
-You can stop listening the event by destroying the returned [jwidget/EventAttachment](EventAttachment.md) instance.
+	bind(handler: (params: P) => void, scope?: any): Destroyable
 
 * **handler** - Event handler function.
 * **scope** - **handler** call scope.
 
-### purge
+Starts listening to the event.
 
-	purge()
+Whenever the event is triggered with [trigger](#trigger) method, the specified handler function
+is called in specified scope.
 
-Unbinds all event handlers. Called automatically in event destructor.
+You can stop listening the event by destroying the returned object.
 
 ### trigger
 
 	trigger(params?: P)
+
+* **params** - Event params.
 
 Triggers event, i.e. calls all bound handlers with specified argument.
 
@@ -97,3 +110,9 @@ This way, we've called all handlers of `myEvent` with argument `{sender: this}`.
 	hasAttachments(): boolean
 
 Checks if the event has attachments.
+
+### destroy
+
+	destroy()
+
+Class destructor invocation method. Unbinds all event handlers. As opposed to the majority of classes, you can call event's **destroy** method multiple times.

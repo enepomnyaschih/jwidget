@@ -32,7 +32,7 @@ import JWMap from './JWMap';
 import JWSet from './JWSet';
 import ObservableArray from './ObservableArray';
 import ObservableMap from './ObservableMap';
-import Property from './Property';
+import ObservableProperty from './ObservableProperty';
 import * as ArrayUtils from './ArrayUtils';
 
 /**
@@ -44,7 +44,7 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 	/**
 	 * Collection length. **Don't modify manually!**
 	 */
-	length: Property<number>;
+	length: ObservableProperty<number>;
 
 	/**
 	 * Items are removed from set, items are added to set.
@@ -101,7 +101,7 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 	constructor(items: Dictionary<T>, adapter: boolean);
 	constructor(items?: any, adapter?: boolean) {
 		super(items, adapter);
-		this.length = new Property<number>(this.getLength());
+		this.length = new ObservableProperty<number>(this.getLength());
 	}
 
 	/**

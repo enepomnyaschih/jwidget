@@ -39,12 +39,12 @@ export default class ObservableSetCounter<T extends IClass> extends SetCounter<T
 
 	private _onSplice(params: SetSpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.set(this.target.get() -
+		this._target.set(this._target.get() -
 			ArrayUtils.count(spliceResult.removedItems, this._filterItem, this._scope) +
 			ArrayUtils.count(spliceResult.addedItems, this._filterItem, this._scope));
 	}
 
 	private _onClear() {
-		this.target.set(0);
+		this._target.set(0);
 	}
 }

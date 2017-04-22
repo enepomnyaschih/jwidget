@@ -19,10 +19,12 @@
 */
 
 import {Binding} from '../../Core';
-import IClass from '../../IClass';
-import Property from '../../Property';
+import Destroyable from '../../Destroyable';
+import IProperty from '../../IProperty';
+import ObservableProperty from '../../ObservableProperty';
 import ValueBinding from './ValueBinding';
 import ValueListener from './ValueListener';
+import Watchable from '../../Watchable';
 
 /**
  * DOM element value management method.
@@ -36,7 +38,7 @@ import ValueListener from './ValueListener';
  * @param simple If true, listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-export default function val(el: JQuery, simple?: boolean): Property<string>;
+export default function val(el: JQuery, simple?: boolean): Watchable<string>;
 
 /**
  * DOM element value management method.
@@ -60,12 +62,13 @@ export default function val(el: JQuery, simple?: boolean): Property<string>;
  * @param simple If true, watch-binding listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-export default function val(el: JQuery, value: Property<string>, binding?: Binding, simple?: boolean): IClass;
-export default function val(el: JQuery, value: any, binding?: Binding, simple?: boolean): IClass {
+export default function val(el: JQuery, value: Watchable<any>, simple?: boolean): Destroyable;
+export default function val(el: JQuery, value: IProperty<string>, binding: Binding, simple?: boolean): Destroyable;
+export default function val(el: JQuery, value: any, binding?: any, simple?: any): any {
 	if (value != null && (typeof value !== "boolean")) {
 		return new ValueBinding(el, value, binding, simple);
 	}
-	var target = new Property<string>();
+	var target = new ObservableProperty<string>();
 	target.own(new ValueListener(el, {target: target, simple: simple}));
 	return target;
 }

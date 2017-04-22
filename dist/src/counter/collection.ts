@@ -27,7 +27,7 @@ import AbstractSet from '../AbstractSet';
 import ICollection from '../ICollection';
 import ICollectionCounter from './ICollectionCounter';
 import ICollectionCounterConfig from './ICollectionCounterConfig';
-import Property from '../Property';
+import Watchable from '../Watchable';
 
 export function createCounter<T>(source: ICollection<T>, config: ICollectionCounterConfig<T>): ICollectionCounter<T> {
 	return (source instanceof AbstractArray) ? createArrayCounter(source, config) :
@@ -35,7 +35,7 @@ export function createCounter<T>(source: ICollection<T>, config: ICollectionCoun
 		(source instanceof AbstractSet) ? createSetCounter(source, config) : null;
 }
 
-export function countCollection<T>(source: ICollection<T>, callback: (item: T) => boolean, scope?: any): Property<number> {
+export function countCollection<T>(source: ICollection<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
 	return (source instanceof AbstractArray) ? countArray(source, callback, scope) :
 		(source instanceof AbstractMap) ? countMap(source, callback, scope) :
 		(source instanceof AbstractSet) ? countSet(source, callback, scope) : null;

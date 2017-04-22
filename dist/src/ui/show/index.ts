@@ -19,8 +19,8 @@
 */
 
 import IClass from '../../IClass';
-import Property from '../../Property';
 import VisibleUpdater from './VisibleUpdater';
+import Watchable from '../../Watchable';
 
 /**
  * Watches boolean property modification and updates visibility of the DOM element.
@@ -35,6 +35,6 @@ import VisibleUpdater from './VisibleUpdater';
  *
  * @param property Element visibility.
  */
-export default function show(el: JQuery, property: Property<boolean>): IClass {
+export default function show(el: JQuery, property: Watchable<any>): IClass {
 	return new VisibleUpdater(el, property);
 }

@@ -21,8 +21,8 @@
 /// <reference types="jquery" />
 
 import Class from '../../Class';
-import Property from '../../Property';
 import Switcher from '../../Switcher';
+import Watchable from '../../Watchable';
 
 /**
  * Result of [[JQuery.jwclass|jwclass]] method call. Destroy it to stop synchronization.
@@ -35,7 +35,7 @@ class ClassNameUpdater extends Class {
 	 * @param el DOM element.
 	 * @param property Source property.
 	 */
-	constructor(private el: JQuery, property: Property<string>) {
+	constructor(private el: JQuery, property: Watchable<string>) {
 		super();
 		this.own(new Switcher([property], {
 			init: (value: any) => this.el.addClass(value),

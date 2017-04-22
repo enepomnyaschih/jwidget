@@ -21,13 +21,13 @@
 /// <reference types="jquery" />
 
 import Class from '../../Class';
-import Property from '../../Property';
+import Watchable from '../../Watchable';
 
 /**
  * @deprecated 1.4 Use [[JQuery.jwval|jwval]] instead.
  */
 class ValueUpdater extends Class {
-	constructor(private el: JQuery, private property: Property<string>) {
+	constructor(private el: JQuery, private property: Watchable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.bind(this._update, this));

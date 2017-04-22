@@ -18,9 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Destroyable from '../../Destroyable';
 import HtmlUpdater from './HtmlUpdater';
-import IClass from '../../IClass';
-import Property from '../../Property';
+import Watchable from '../../Watchable';
 
 /**
  * Watches string property modification and updates inner HTML of the DOM element.
@@ -33,6 +33,6 @@ import Property from '../../Property';
  *
  * @param property HTML value.
  */
-export default function html(el: JQuery, property: Property<string>): IClass {
+export default function html(el: JQuery, property: Watchable<any>): Destroyable {
 	return new HtmlUpdater(el, property);
 }

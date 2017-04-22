@@ -152,6 +152,12 @@ Checks if value is a regular expression.
 
 Checks if value is a date.
 
+### isDate
+
+	isWatchable(value: any): boolean
+
+Checks if value fits `Watchable` interface.
+
 ## Other functions
 
 ### def
@@ -273,7 +279,7 @@ else returns the object itself.
 
 ### destroy
 
-	destroy(obj: any): void
+	destroy(obj: any): any
 
 Calls object method **destroy** if available. Can be used in mapper configuration:
 
@@ -282,3 +288,4 @@ Calls object method **destroy** if available. Can be used in mapper configuratio
 		destroyItem : destroy
 	});
 
+Doesn't return anything - `any` return type is specified for easier usage in methods like [jwidget/ArrayUtils.backEvery](ArrayUtils.md#backevery).

@@ -20,7 +20,7 @@
 
 /// <reference types="jquery" />
 
-import {apply, destroy} from './Core';
+import {apply, destroy, isWatchable} from './Core';
 import AbstractArray from './AbstractArray';
 import AbstractCollection from './AbstractCollection';
 import AbstractTemplate from './AbstractTemplate';
@@ -32,11 +32,10 @@ import ComponentReplaceable from './component/ComponentReplaceable';
 import Dictionary from './Dictionary';
 import DomTemplate from './DomTemplate';
 import IArray from './IArray';
-import IClass from './IClass';
 import ICollection from './ICollection';
-import Property from './Property';
 import HtmlTemplate from './HtmlTemplate';
 import TemplateOutput from './TemplateOutput';
+import Watchable from './Watchable';
 import * as DomUtils from './DomUtils';
 import * as MapUtils from './MapUtils';
 import * as SetUtils from './SetUtils';
@@ -105,7 +104,8 @@ export default class Component extends Class {
 	_collections: Dictionary<ComponentCollection> = null;
 
 	/**
-	 * Creates a component instance.
+	 * Yes, objects of this class can be constructed.
+	 * They can be used as dummy components or simple containers.
 	 */
 	constructor() {
 		super();
@@ -264,7 +264,7 @@ export default class Component extends Class {
 				} else {
 					if (result instanceof Component) {
 						this.children.set(result, jwId);
-					} else if (result instanceof Property) {
+					} else if (isWatchable(result)) {
 						this.addReplaceable(result, jwId);
 					} else if (result instanceof AbstractArray) {
 						this.addArray(result, jwId);
@@ -351,7 +351,7 @@ export default class Component extends Class {
 	 * @param component Child component property.
 	 * @param id `jwid` of element to replace.
 	 */
-	addReplaceable(component: Property<Component>, id: string): ComponentReplaceable {
+	addReplaceable(component: Watchable<Component>, id: string): ComponentReplaceable {
 		return new ComponentReplaceable(this, component, id);
 	}
 

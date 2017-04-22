@@ -23,9 +23,10 @@ import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetCounter from './ISetCounter';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
+import Watchable from '../../Watchable';
 import ObservableSet from '../../ObservableSet';
 import ObservableSetCounter from './ObservableSetCounter';
-import Property from '../../Property';
+import ObservableProperty from '../../ObservableProperty';
 
 export function createSetCounter<T extends IClass>(source: ISet<T>, config: ICollectionCounterConfig<T>): ISetCounter<T> {
 	return (source instanceof ObservableSet) ?
@@ -33,11 +34,11 @@ export function createSetCounter<T extends IClass>(source: ISet<T>, config: ICol
 		new SetCounter<T>(source, config);
 }
 
-export function countSet<T extends IClass>(source: ISet<T>, callback: (item: T) => boolean, scope?: any): Property<number> {
+export function countSet<T extends IClass>(source: ISet<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (!(source instanceof ObservableSet)) {
 		return source.$count(callback, scope);
 	}
-	var result = new Property(0);
+	var result = new ObservableProperty(0);
 	result.own(new ObservableSetCounter<T>(source, {
 		target: result,
 		filterItem: callback,

@@ -20,9 +20,11 @@
 
 import {Binding} from '../../Core';
 import CheckedListener from './CheckedListener';
-import IClass from '../../IClass';
+import Destroyable from '../../Destroyable';
+import IProperty from '../../IProperty';
 import PropBinding from './PropBinding';
-import Property from '../../Property';
+import ObservableProperty from '../../ObservableProperty';
+import Watchable from '../../Watchable';
 
 /**
  * DOM element property management method.
@@ -35,7 +37,7 @@ import Property from '../../Property';
  *
  * @param prop Element's property name.
  */
-export default function prop(el: JQuery, prop: string): Property<boolean>;
+export default function prop(el: JQuery, prop: string): Watchable<boolean>;
 
 /**
  * DOM element property management method.
@@ -58,13 +60,14 @@ export default function prop(el: JQuery, prop: string): Property<boolean>;
  * @param property Property value.
  * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
  */
-export default function prop(el: JQuery, prop: string, property: Property<boolean>, binding?: Binding): IClass;
-export default function prop(el: JQuery, prop: string, property?: Property<boolean>, binding?: Binding): IClass {
+export default function prop(el: JQuery, prop: string, property: Watchable<any>): Destroyable;
+export default function prop(el: JQuery, prop: string, property: IProperty<boolean>, binding: Binding): Destroyable;
+export default function prop(el: JQuery, prop: string, property?: any, binding?: Binding): any {
 	if (property != null) {
 		return new PropBinding(el, prop, property, binding);
 	}
 	if (prop === "checked") {
-		var target = new Property<boolean>();
+		var target = new ObservableProperty<boolean>();
 		target.own(new CheckedListener(el, {target: target}));
 		return target;
 	}

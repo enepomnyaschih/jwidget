@@ -18,25 +18,29 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Class from './Class';
-import Dictionary from './Dictionary';
-import EventAttachment from './EventAttachment';
-import {isDictionaryEmpty} from './internal';
+import Destroyable from "./Destroyable";
+import Dictionary from "./Dictionary";
+import EventAttachment from "./EventAttachment";
+import Bindable from "./Bindable";
+import {isDictionaryEmpty} from "./internal";
 
 /**
+ * Real implementation of `Bindable` interface.
  * Used to notify some objects (clients) about certain events (for example, field value change).
- * Remember to destroy the events attachments to prevent side effects.
  */
-class Event<P> extends Class {
+export default class Event<P> implements Bindable<P> {
 	private _attachments: Dictionary<EventAttachment<P>> = null;
 
-	protected destroyObject() {
-		this.purge();
-		super.destroyObject();
+	/**
+	 * Class destructor invocation method. Unbinds all event handlers.
+	 * As opposed to the majority of classes, you can call event's `destroy` method multiple times.
+	 */
+	destroy() {
+		this._attachments = null;
 	}
 
 	/**
-	 * Starts listening to event.
+	 * Starts listening to the event.
 	 *
 	 * Whenever the event is triggered with `trigger` method, specified handler function
 	 * is called in specified scope.
@@ -46,32 +50,13 @@ class Event<P> extends Class {
 	 * @param handler Event handler function.
 	 * @param scope `handler` call scope.
 	 */
-	bind(handler: (params: P) => void, scope?: any): EventAttachment<P> {
+	bind(handler: (params: P) => void, scope?: any): Destroyable {
 		if (this._attachments === null) {
 			this._attachments = {};
 		}
-		let attachment = new EventAttachment<P>(this, handler, scope);
+		const attachment = new EventAttachment<P>(this, handler, scope);
 		this._attachments[attachment._iid] = attachment;
 		return attachment;
-	}
-
-	/**
-	 * Stops listening the event with specific handler.
-	 * Equivalent to `attachment.destroy()`.
-	 *
-	 * @param attachment Event attachment.
-	 */
-	unbind(attachment: EventAttachment<P>) {
-		if (this._attachments !== null) {
-			delete this._attachments[attachment._iid];
-		}
-	}
-
-	/**
-	 * Unbinds all event handlers. Called automatically in event destructor.
-	 */
-	purge() {
-		this._attachments = null;
 	}
 
 	/**
@@ -95,6 +80,13 @@ class Event<P> extends Class {
 	hasAttachments(): boolean {
 		return (this._attachments === null) || isDictionaryEmpty(this._attachments);
 	}
-}
 
-export default Event;
+	/**
+	 * @hidden
+	 */
+	_unbind(attachment: EventAttachment<P>) {
+		if (this._attachments !== null) {
+			delete this._attachments[attachment._iid];
+		}
+	}
+}

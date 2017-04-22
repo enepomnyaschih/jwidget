@@ -39,27 +39,27 @@ export default class ObservableArrayCounter<T> extends ArrayCounter<T> {
 
 	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		var value = this.target.get();
+		var value = this._target.get();
 		spliceResult.removedItemsList.forEach((indexItems) => {
 			value -= ArrayUtils.count(indexItems.items, this._filterItem, this._scope);
 		});
 		spliceResult.addedItemsList.forEach((indexItems) => {
 			value += ArrayUtils.count(indexItems.items, this._filterItem, this._scope);
 		});
-		this.target.set(value);
+		this._target.set(value);
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {
 		var oldFiltered = this._filterItem.call(this._scope, params.oldItem) !== false;
 		var newFiltered = this._filterItem.call(this._scope, params.newItem) !== false;
 		if (oldFiltered && !newFiltered) {
-			this.target.set(this.target.get() - 1);
+			this._target.set(this._target.get() - 1);
 		} else if (!oldFiltered && newFiltered) {
-			this.target.set(this.target.get() + 1);
+			this._target.set(this._target.get() + 1);
 		}
 	}
 
 	private _onClear() {
-		this.target.set(0);
+		this._target.set(0);
 	}
 }

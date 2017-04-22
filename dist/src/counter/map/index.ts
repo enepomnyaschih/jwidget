@@ -22,9 +22,10 @@ import MapCounter from './MapCounter';
 import IMap from '../../IMap';
 import IMapCounter from './IMapCounter';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
+import Watchable from '../../Watchable';
 import ObservableMap from '../../ObservableMap';
 import ObservableMapCounter from './ObservableMapCounter';
-import Property from '../../Property';
+import ObservableProperty from '../../ObservableProperty';
 
 export function createMapCounter<T>(source: IMap<T>, config: ICollectionCounterConfig<T>): IMapCounter<T> {
 	return (source instanceof ObservableMap) ?
@@ -32,11 +33,11 @@ export function createMapCounter<T>(source: IMap<T>, config: ICollectionCounterC
 		new MapCounter<T>(source, config);
 }
 
-export function countMap<T>(source: IMap<T>, callback: (item: T) => boolean, scope?: any): Property<number> {
+export function countMap<T>(source: IMap<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (!(source instanceof ObservableMap)) {
 		return source.$count(callback, scope);
 	}
-	var result = new Property(0);
+	var result = new ObservableProperty(0);
 	result.own(new ObservableMapCounter<T>(source, {
 		target: result,
 		filterItem: callback,

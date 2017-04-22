@@ -20,7 +20,7 @@
 
 import IClass from '../IClass';
 import ICollectionCounterReconfig from './ICollectionCounterReconfig';
-import Property from '../Property';
+import Watchable from '../Watchable';
 
 /**
  * Counter for collection items which match the specified filter.
@@ -92,7 +92,7 @@ interface ICollectionCounter<T> extends IClass {
 	/**
 	 * Target property.
 	 */
-	target: Property<number>;
+	target: Watchable<number>;
 
 	/**
 	 * Changes counter configuration and recounts matching items.

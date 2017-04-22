@@ -20,8 +20,8 @@
 
 import {isNotNil} from './Core';
 import Class from './Class';
-import Event from './Event';
-import Property from './Property';
+import Bindable from './Bindable';
+import Watchable from './Watchable';
 
 /**
  * Watches source [[JW.Property|properties]] modification and calls
@@ -76,7 +76,7 @@ class Switcher extends Class {
 	 * @param config Configuration.
 	 */
 	constructor(
-		public sources: Property<any>[],
+		public sources: Watchable<any>[],
 		config?: Switcher.Config)
 	{
 		super();
@@ -105,9 +105,8 @@ class Switcher extends Class {
 	 * @param event Event.
 	 * @returns this
 	 */
-	bind(event: Event<any>): Switcher {
-		this.own(event.bind(this.update, this));
-		return this;
+	bind(event: Bindable<any>): this {
+		return this.owning(event.bind(this.update, this));
 	}
 
 	/**
@@ -115,7 +114,7 @@ class Switcher extends Class {
 	 * @param property Property.
 	 * @returns this
 	 */
-	watch(property: Property<any>): Switcher {
+	watch(property: Watchable<any>): this {
 		return this.bind(property.changeEvent);
 	}
 

@@ -133,6 +133,16 @@ export function isDate(value: any) {
 }
 
 /**
+ * Checks if value fits `Watchable` interface.
+ */
+export function isWatchable(value: any) {
+	return (typeof value === "object") &&
+		(typeof value.changeEvent === "object") &&
+		(typeof value.changeEvent.bind === "function") &&
+		(typeof value.get === "function");
+}
+
+/**
  * Defines default value. Returns `value`, if it is not undefined, else returns `default`.
  */
 export function def<T>(value: T, defaultValue: T): T {
@@ -302,7 +312,7 @@ export function iid(obj: any): number {
 /**
  * Calls object method **destroy** if available. Can be used in mapper configuration.
  */
-export function destroy(obj: any) {
+export function destroy(obj: any): any {
 	if (obj && typeof obj.destroy === "function") {
 		obj.destroy();
 	}

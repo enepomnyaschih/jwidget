@@ -23,7 +23,9 @@ import ICollection from '../ICollection';
 import ICollectionCounter from './ICollectionCounter';
 import ICollectionCounterConfig from './ICollectionCounterConfig';
 import ICollectionCounterReconfig from './ICollectionCounterReconfig';
-import Property from '../Property';
+import IProperty from '../IProperty';
+import Watchable from '../Watchable';
+import ObservableProperty from '../ObservableProperty';
 
 /**
  * Counter for collection items which match the specified filter.
@@ -105,9 +107,9 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	protected _scope: any;
 
 	/**
-	 * Target property.
+	 * @hidden
 	 */
-	target: Property<number>;
+	protected _target: IProperty<number>;
 
 	/**
 	 * Creates synchronizer.
@@ -121,21 +123,28 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 		this._filterItem = config.filterItem;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Property<number>(0) : config.target;
-		this.target.set(source.count(this._filterItem, this._scope));
+		this._target = this._targetCreated ? new ObservableProperty<number>(0) : config.target;
+		this._target.set(source.count(this._filterItem, this._scope));
+	}
+
+	/**
+	 * Target property.
+	 */
+	get target(): Watchable<number> {
+		return this._target;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this.target.set(0);
+		this._target.set(0);
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this.source = null;
 		this._filterItem = null;
-		this.target = null;
+		this._target = null;
 		this._scope = null;
 		super.destroyObject();
 	}
@@ -155,7 +164,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	 * they must be refiltered.
 	 */
 	recount() {
-		this.target.set(this.source.count(this._filterItem, this._scope));
+		this._target.set(this.source.count(this._filterItem, this._scope));
 	}
 }
 

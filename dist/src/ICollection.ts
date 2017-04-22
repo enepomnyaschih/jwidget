@@ -23,7 +23,7 @@ import IArray from './IArray';
 import IClass from './IClass';
 import IMap from './IMap';
 import ISet from './ISet';
-import Property from './Property';
+import Watchable from './Watchable';
 
 /**
  * Abstract collection.
@@ -463,7 +463,7 @@ interface ICollection<T> extends IClass {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Number of items.
 	 */
-	$count(callback: (item: T) => boolean, scope?: any): Property<number>;
+	$count(callback: (item: T) => boolean, scope?: any): Watchable<number>;
 
 	/**
 	 * Maps collection items.

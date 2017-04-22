@@ -19,10 +19,12 @@
 */
 
 import {Binding} from '../../Core';
-import IClass from '../../IClass';
-import Property from '../../Property';
+import Destroyable from '../../Destroyable';
+import IProperty from '../../IProperty';
+import ObservableProperty from '../../ObservableProperty';
 import RadioBinding from './RadioBinding';
 import RadioListener from './RadioListener';
+import Watchable from '../../Watchable';
 
 /**
  * Radio group value management method.
@@ -41,7 +43,7 @@ import RadioListener from './RadioListener';
  *
  * @param name Radios "name" attribute.
  */
-export default function radio(el: JQuery, name: string): Property<string>;
+export default function radio(el: JQuery, name: string): Watchable<string>;
 
 /**
  * Radio group value management method.
@@ -66,12 +68,13 @@ export default function radio(el: JQuery, name: string): Property<string>;
  * @param property Radio value.
  * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
  */
-export default function radio(el: JQuery, name: string, property: Property<string>, binding?: Binding): IClass;
-export default function radio(el: JQuery, name: string, property?: Property<string>, binding?: Binding): IClass {
+export default function radio(el: JQuery, name: string, property: Watchable<any>): Destroyable;
+export default function radio(el: JQuery, name: string, property: IProperty<string>, binding?: Binding): Destroyable;
+export default function radio(el: JQuery, name: string, property?: any, binding?: Binding): any {
 	if (property != null) {
 		return new RadioBinding(el, name, property, binding);
 	}
-	var target = new Property<string>();
+	var target = new ObservableProperty<string>();
 	target.own(new RadioListener(el, name, {target: target}));
 	return target;
 }

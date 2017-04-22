@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IClass from '../../IClass';
+import Destroyable from '../../Destroyable';
 import JQEventAttachment from './JQEventAttachment';
 
 /**
@@ -55,7 +55,7 @@ import JQEventAttachment from './JQEventAttachment';
  * @param handler A function to execute when the event is triggered. The value `false` is also allowed as a shorthand for a function that simply does `return false`.
  * @param scope Function call scope.
  */
-export default function on(el: JQuery, events: string, handler: (eventObject: JQueryEventObject) => any, scope?: any): IClass;
+export default function on(el: JQuery, events: string, handler: (eventObject: JQueryEventObject) => any, scope?: any): Destroyable;
 
 /**
  * @param events One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".
@@ -63,7 +63,7 @@ export default function on(el: JQuery, events: string, handler: (eventObject: JQ
  * @param handler A function to execute when the event is triggered. The value `false` is also allowed as a shorthand for a function that simply does `return false`.
  * @param scope Function call scope.
  */
-export default function on(el: JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any, scope?: any): IClass;
-export default function on(el: JQuery, events: string, selector: any, handler: any, scope?: any): IClass {
+export default function on(el: JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any, scope?: any): Destroyable;
+export default function on(el: JQuery, events: string, selector: any, handler: any, scope?: any): Destroyable {
 	return new JQEventAttachment(el, events, selector, handler, scope);
 }

@@ -21,7 +21,7 @@
 /// <reference types="jquery" />
 
 import Class from '../../Class';
-import Property from '../../Property';
+import Watchable from '../../Watchable';
 
 /**
  * Use [[JQuery.jwradio|jwradio]] instead.
@@ -29,7 +29,7 @@ import Property from '../../Property';
 class RadioUpdater extends Class {
 	private _selector: string;
 
-	constructor(private el: JQuery, name: string, private property: Property<string>) {
+	constructor(private el: JQuery, name: string, private property: Watchable<any>) {
 		super();
 		this._selector = "input[type=radio][name='" + name + "']";
 		this._update();

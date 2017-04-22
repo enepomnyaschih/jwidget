@@ -8,7 +8,10 @@
 
 ## Hierarchy
 
-* class Component extends [jwidget/Class](Class.md)
+* interface [jwidget/Destroyable](Destroyable.md)
+	* interface [jwidget/IClass](Class.md)
+		* class [jwidget/Class](Class.md)
+			* class **jwidget/Component**
 
 ## Description
 
@@ -77,11 +80,11 @@ There are 5 ways to add a child component (**note**: examples are not complete -
 			super.afterRender();
 			this.children.set(new LabelView("Hello"), "label");
 		}
-- Add an easily replaceable child component using [addReplaceable](#addreplaceable) method. Pass an instance of [jwidget/Property](Property.md)`<Component>` there and the framework will provide the synchronization with this property during application running.
+- Add an easily replaceable child component using [addReplaceable](#addreplaceable) method. Pass an instance of [jwidget/Watchable](Watchable.md)`<Component>` there and the framework will provide the synchronization with this property during application running.
 
 		afterRender() {
 			super.afterRender();
-			this.contentView = new Property(new LabelView("Hello"));
+			this.contentView = new ObservableProperty(new LabelView("Hello"));
 			this.addReplaceable(this.contentView, "label");
 		}
 		changeLabel(value: string) {
@@ -107,7 +110,7 @@ There are 5 ways to add a child component (**note**: examples are not complete -
 		addLabel(value: string) {
 			this.labelViews.add(new LabelView(value));
 		}
-- Define method `render<ChildId>`, where `<ChildId>` is a `jwid` of an element in CamelCase with capitalized first letter. Example: `renderArticle` (renders element with `jwid="article"`). If the method returns an instance of Component, [jwidget/Property](Property.md) or [jwidget/ICollection](AbstractCollection.md), then result will be treated as a child component or a child component collection. Define method `renderRoot` to render the root element, but you can return only [jwidget/ICollection](AbstractCollection.md) there, because it is impossible to replace the root element of the component.
+- Define method `render<ChildId>`, where `<ChildId>` is a `jwid` of an element in CamelCase with capitalized first letter. Example: `renderArticle` (renders element with `jwid="article"`). If the method returns an instance of Component, [jwidget/Watchable](Watchable.md) or [jwidget/ICollection](AbstractCollection.md), then result will be treated as a child component or a child component collection. Define method `renderRoot` to render the root element, but you can return only [jwidget/ICollection](AbstractCollection.md) there, because it is impossible to replace the root element of the component.
 
 		renderLabel() {
 			return new LabelView("Hello");
@@ -139,7 +142,7 @@ You can define method `render<ChildId>` for every element in HTML template that 
 Depending on the returned result of this method, you have the next capabilities:
 
 - If the method returns an instance of Component, then it gets added into [children](#children) map and becomes a child component. This option doesn't work for the root element.
-- If the method returns an instance of [jwidget/Property](Property.md), then it gets added as an easily replaceable child component via method [addReplaceable](#addreplaceable). This option doesn't work for the root element.
+- If the method returns an instance of [jwidget/Watchable](Watchable.md), then it gets added as an easily replaceable child component via method [addReplaceable](#addreplaceable). This option doesn't work for the root element.
 - If the method returns an instance of [jwidget/IArray](AbstractArray.md), then it gets added as a child array via method [addArray](#addarray).
 - If the method returns an instance of [jwidget/ICollection](AbstractCollection.md), which is not IArray, then it gets added as a child
 collection via method [addCollection](#addcollection).
@@ -152,9 +155,9 @@ You can destroy the component via [destroy](Class.md#destroy) method. However yo
 
 - If you have added a component to [children](#children) object, you must remove it via
 [remove](AbstractMap.md#remove) method.
-- Method [addReplaceable](#addreplaceable) returns an instance of [jwidget/component/ComponentReplaceable](component/ComponentReplaceable.md). Its destruction removes the replaceable child.
-- Method [addArray](#addarray) returns an instance of [jwidget/component/ComponentArray](component/ComponentArray.md). Its destruction removes the array.
-- Method [addCollection](#addcollection) returns an instance of [jwidget/component/ComponentCollection](component/ComponentCollection.md). Its destruction removes the collection.
+- Method [addReplaceable](#addreplaceable) returns an object. Its destruction removes the replaceable child.
+- Method [addArray](#addarray) returns an object. Its destruction removes the array.
+- Method [addCollection](#addcollection) returns an object. Its destruction removes the collection.
 
 As soon as child component is removed, you can destroy it:
 
@@ -211,7 +214,7 @@ Reference: [jwidget/template](template.md), [jwidget/Class.own](Class.md#own).
 
 **Create replaceable child component**
 
-This example describes how to create and destroy an easily replaceable child component with `jwid="document"`. Assume that you have a property "document" and want to replace an old document view with a new one on document change.
+This example describes how to create and destroy an easily replaceable child component with `jwid="document"`. Assume that you have an observable property "document" and want to replace an old document view with a new one on document change.
 
 	@template(
 		'<div jwclass="my-component">' +
@@ -219,7 +222,7 @@ This example describes how to create and destroy an easily replaceable child com
 		'</div>'
 	)
 	class MyComponent extends Component {
-		constructor(private document: Property<Document>) {
+		constructor(private document: ObservableProperty<Document>) {
 			super();
 		}
 
@@ -228,7 +231,7 @@ This example describes how to create and destroy an easily replaceable child com
 		}
 	}
 
-Reference: [jwidget/template](template.md), [jwidget/Property](Property.md), [jwidget/Class.own](Class.md#own).
+Reference: [jwidget/template](template.md), [jwidget/ObservableProperty](ObservableProperty.md), [jwidget/Class.own](Class.md#own).
 
 **Create child collection**
 
@@ -261,7 +264,7 @@ This example describes how to insert child components which have lifetime contro
 		'</div>'
 	)
 	class MyComponent extends Component {
-		constructor(private titleBox: Component | Property<Component> | ICollection<Component>) {
+		constructor(private titleBox: Component | Watchable<Component> | ICollection<Component>) {
 			super();
 		}
 
@@ -339,6 +342,26 @@ Also, you need to provide TypeScript compiler with `require` method semantics. J
 			ensure: (paths: string[], callback: (require: <T>(path: string) => T) => void) => void;
 		};
 	}
+
+## Constructor
+
+	new Component()
+
+Yes, objects of this class can be constructed. They can be used as dummy components or simple containers:
+
+	renderLabels: function() {
+		return this.own(this.visible.mapDestroyable((visible) => {
+			if (!visible) {
+				return null; // leave original <div jwid="labels"></div>
+			}
+			// else let's render the labels in a simple container
+			const component = new Component().render();
+			component.addArray(this.labels);
+			return component;
+		}));
+	}
+
+You should not rely on this possibility too much. The best approach is to inherit a new class from **Component** and render the children in its implementation.
 
 ## Properties
 
@@ -427,48 +450,48 @@ Remove element by `jwid`. Element gets removed from DOM and destroyed. It is now
 
 ### addReplaceable
 
-	addReplaceable(component: Property<Component>, id: string): ComponentReplaceable
+	addReplaceable(component: Watchable<Component>, id: string): Destroyable
 
 * **component** - Child component property.
 * **id** - `jwid` of element to replace.
 
-Reference: [jwidget/Property](Property.md), [jwidget/ComponentReplaceable](ComponentReplaceable.md).
+Reference: [jwidget/Watchable](Watchable.md), [jwidget/Destroyable](Destroyable.md).
 
 Add an easily replaceable child component into an element.
 
-Pass an instance of [jwidget/Property](Property.md)`<Component>`. The view gets synchronized with this property. It is convenient to create "component" property from data property using [jwidget/Property.mapObject](Property.md#mapobject) method.
+Pass an instance of [jwidget/Watchable](Watchable.md)`<Component>`. The view gets synchronized with this property. It is convenient to create "component" property from data property using [jwidget/IProperty.mapObject](IProperty.md#mapobject) method.
 
-**addReplaceable** method returns an instance of [jwidget/ComponentReplaceable](ComponentReplaceable.md). This object is purposed for replaceable child removal from parent component. Use [destroy](Class.md#destroy) method to do this. Also, the replaceable is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child component inside this property ain't destroyed automatically. Usually it can be done by corresponding [jwidget/Mapper](Mapper.md) or property destruction in [unrender](#unrender) method.
+**addReplaceable** method returns an object. If you destroy it, the child gets removed from parent component and the synchronization gets stopped. Also, the replaceable is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child component inside this property ain't destroyed automatically. Usually it can be done by corresponding [jwidget/Mapper](Mapper.md) or property destruction in [unrender](#unrender) method.
 
 ### addArray
 
-	addArray(source: IArray<Component>, el?: string | HTMLElement | JQuery): ComponentArray
+	addArray(source: IArray<Component>, el?: string | HTMLElement | JQuery): Destroyable
 
 * **source** - Child component array.
 * **el** - `jwid` of element to add child components into. Defaults to root element ([el](#el)) of component.
 
-Reference: [jwidget/IArray](AbstractArray.md), [jwidget/ComponentArray](ComponentArray.md).
+Reference: [jwidget/IArray](AbstractArray.md), [jwidget/Destroyable](Destroyable.md).
 
 Add child component array into an element. As opposed to [addCollection](#addcollection) method, retains component order. However, it works slower and accepts array only.
 
 If you pass an instance of [jwidget/ObservableArray](ObservableArray.md), then view gets synchronized with this array contents. It is convenient to create "components" array from data array using [mapDestroyableArray](mapper/array.md) method.
 
-**addArray** method returns an instance of [jwidget/ComponentArray](ComponentArray.md). This object is purposed for child component array removal from parent component. Use [destroy](Class.md#destroy) method to do this. Also, the array is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this array are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/array/IArrayMapper](mapper/array/IArrayMapper.md) or array destruction in [unrender](#unrender) method.
+**addArray** method returns an object. If you destroy it, the child gets removed from parent component and the synchronization gets stopped. Also, the array is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this array are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/array/IArrayMapper](mapper/array/IArrayMapper.md) or array destruction in [unrender](#unrender) method.
 
 ### addCollection
 
-	addCollection(source: ICollection<Component>, el?: string | HTMLElement | JQuery): ComponentCollection
+	addCollection(source: ICollection<Component>, el?: string | HTMLElement | JQuery): Destroyable
 
 * **source** - Child component collection.
 * **el** - `jwid` of element to add child components into. Defaults to root element ([el](#el)) of component.
 
-Reference: [jwidget/ICollection](AbstractCollection.md), [jwidget/ComponentCollection](ComponentCollection.md).
+Reference: [jwidget/ICollection](AbstractCollection.md), [jwidget/Destroyable](Destroyable.md).
 
 Add child component collection into an element. As opposed to [addArray](#addarray) method, ignores component order. However, it works faster and accepts any kind of collection, not array only.
 
 If you pass an instance of observable collection, then view gets synchronized with this collection contents. It is convenient to create "components" collection from data collection using [mapDestroyableCollection](mapper/collection.md) method.
 
-**addCollection** method returns an instance of [jwidget/ComponentCollection](ComponentCollection.md). This object is purposed for child component collection removal from parent component. Use [destroy](Class.md#destroy) method to do this. Also, the collection is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this collection are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/collection/ICollectionMapper](mapper/collection/ICollectionMapper.md) or collection destruction in [unrender](#unrender) method.
+**addCollection** method returns an object. If you destroy it, the child gets removed from parent component and the synchronization gets stopped. Also, the collection is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this collection are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/collection/ICollectionMapper](mapper/collection/ICollectionMapper.md) or collection destruction in [unrender](#unrender) method.
 
 ### using
 
