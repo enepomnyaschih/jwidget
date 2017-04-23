@@ -23,8 +23,8 @@
  * to specify item segments to remove.
  */
 interface IIndexCount {
-	index: number;
-	count: number;
+	readonly index: number;
+	readonly count: number;
 
 	/**
 	 * Clones pair.

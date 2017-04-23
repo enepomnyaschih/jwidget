@@ -108,7 +108,7 @@ interface ICollectionFilterer<T> extends IClass {
 	/**
 	 * Target collection.
 	 */
-	target: ICollection<T>;
+	readonly target: ICollection<T>;
 }
 
 export default ICollectionFilterer;

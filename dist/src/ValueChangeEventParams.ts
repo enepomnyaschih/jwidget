@@ -27,17 +27,17 @@ interface ValueChangeEventParams<V> {
 	/**
 	 * Sender property.
 	 */
-	sender: Watchable<V>;
+	readonly sender: Watchable<V>;
 
 	/**
 	 * New value.
 	 */
-	value: V;
+	readonly value: V;
 
 	/**
 	 * Old value.
 	 */
-	oldValue: V;
+	readonly oldValue: V;
 }
 
 export default ValueChangeEventParams;

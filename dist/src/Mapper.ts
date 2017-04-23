@@ -276,23 +276,23 @@ namespace Mapper {
 		/**
 		 * Target property. By default, created automatically.
 		 */
-		target?: IProperty<T>;
+		readonly target?: IProperty<T>;
 
 		/**
 		 * Calculates target property value based on source property values.
 		 */
-		createValue: CreateCallback<T>;
+		readonly createValue: CreateCallback<T>;
 
 		/**
 		 * Destroys target property value.
 		 */
-		destroyValue?: DestroyCallback<T>;
+		readonly destroyValue?: DestroyCallback<T>;
 
 		/**
 		 * [[createValue]] and [[destroyValue]] call scope.
 		 * Defaults to mapper itself.
 		 */
-		scope?: any;
+		readonly scope?: any;
 
 		/**
 		 * If false, functions won't be called if at least one of the source values is null. Target value
@@ -300,7 +300,7 @@ namespace Mapper {
 		 *
 		 * Defaults to false.
 		 */
-		acceptNull?: boolean;
+		readonly acceptNull?: boolean;
 	}
 }
 

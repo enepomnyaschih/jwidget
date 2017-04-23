@@ -85,7 +85,7 @@ interface IArrayReverser<T> extends IClass {
 	/**
 	 * Target array.
 	 */
-	target: IArray<T>;
+	readonly target: IArray<T>;
 }
 
 export default IArrayReverser;

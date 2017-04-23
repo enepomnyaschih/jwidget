@@ -28,12 +28,12 @@ interface IMapMapper<T, U> extends ICollectionMapper<U> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: IMap<U>;
+	readonly target: IMap<U>;
 }
 
 export default IMapMapper;

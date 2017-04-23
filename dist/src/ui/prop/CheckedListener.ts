@@ -56,7 +56,7 @@ class CheckedListener extends Class {
 
 namespace CheckedListener {
 	export interface Config {
-		target?: IProperty<boolean>;
+		readonly target?: IProperty<boolean>;
 	}
 }
 

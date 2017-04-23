@@ -29,7 +29,7 @@ interface IArrayOrderer<T extends IClass> extends ICollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IArray<T>;
+	readonly source: IArray<T>;
 }
 
 export default IArrayOrderer;

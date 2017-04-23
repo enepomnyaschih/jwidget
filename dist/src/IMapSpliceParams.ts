@@ -30,12 +30,12 @@ interface IMapSpliceParams<T> {
 	/**
 	 * Keys of items to remove.
 	 */
-	removedKeys: string[];
+	readonly removedKeys: string[];
 
 	/**
 	 * Items to add/replace.
 	 */
-	updatedItems: Dictionary<T>;
+	readonly updatedItems: Dictionary<T>;
 }
 
 export default IMapSpliceParams;

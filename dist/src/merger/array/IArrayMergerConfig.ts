@@ -29,7 +29,7 @@ interface IArrayMergerConfig<T> {
 	/**
 	 * Target array. By default, created automatically.
 	 */
-	target?: IArray<T>;
+	readonly target?: IArray<T>;
 }
 
 export default IArrayMergerConfig;

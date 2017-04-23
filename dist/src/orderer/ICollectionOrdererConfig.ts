@@ -30,7 +30,7 @@ interface ICollectionOrdererConfig<T extends IClass> {
 	/**
 	 * Target array. By default, created automatically.
 	 */
-	target?: IArray<T>;
+	readonly target?: IArray<T>;
 }
 
 export default ICollectionOrdererConfig;

@@ -25,7 +25,7 @@ interface Proxy<T> {
 	/**
 	 * The proxied value.
 	 */
-	value: T;
+	readonly value: T;
 }
 
 export default Proxy;

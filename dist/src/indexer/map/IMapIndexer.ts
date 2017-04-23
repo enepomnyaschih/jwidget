@@ -28,7 +28,7 @@ interface IMapIndexer<T> extends ICollectionIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 }
 
 export default IMapIndexer;

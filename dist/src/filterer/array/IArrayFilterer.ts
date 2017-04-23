@@ -29,12 +29,12 @@ interface IArrayFilterer<T> extends ICollectionFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: IArray<T>;
+	readonly target: IArray<T>;
 
 	/**
 	 * Changes filterer configuration and refilters target collection.

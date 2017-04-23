@@ -27,29 +27,29 @@ interface ICollectionObserverConfig<T> {
 	/**
 	 * Item is added to collection.
 	 */
-	addItem?: (item: T) => void;
+	readonly addItem?: (item: T) => void;
 
 	/**
 	 * Item is removed from collection.
 	 */
-	removeItem?: (item: T) => void;
+	readonly removeItem?: (item: T) => void;
 
 	/**
 	 * Collection is cleared. By default, calls [[removeItem]] for all collection items.
 	 */
-	clearItems?: (items: T[]) => void;
+	readonly clearItems?: (items: T[]) => void;
 
 	/**
 	 * Collection is changed arbitrarily.
 	 */
-	change?: () => void;
+	readonly change?: () => void;
 
 	/**
 	 * [[addItem]], [[removeItem]],
 	 * [[clearItems]] and [[change]] call scope.
 	 * Defaults to synchronizer itself.
 	 */
-	scope?: any;
+	readonly scope?: any;
 }
 
 export default ICollectionObserverConfig;

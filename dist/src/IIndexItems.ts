@@ -28,8 +28,8 @@ import IIndexCount from './IIndexCount';
  * @param T Item type.
  */
 interface IIndexItems<T> {
-	index: number;
-	items: T[];
+	readonly index: number;
+	readonly items: T[];
 
 	/**
 	 * Converts to "index-count" pair.

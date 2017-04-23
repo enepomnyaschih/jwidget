@@ -208,12 +208,12 @@ export interface CmpConfig {
 	/**
 	 * Ignore case when comparing strings.
 	 */
-	caseInsensitive?: boolean;
+	readonly caseInsensitive?: boolean;
 
 	/**
 	 * Compare digit sequences as numbers when comparing strings.
 	 */
-	compareNumbersInStrings?: boolean;
+	readonly compareNumbersInStrings?: boolean;
 }
 
 function getTypeRank(x: any): string {

@@ -92,7 +92,7 @@ interface ICollectionCounter<T> extends IClass {
 	/**
 	 * Target property.
 	 */
-	target: Watchable<number>;
+	readonly target: Watchable<number>;
 
 	/**
 	 * Changes counter configuration and recounts matching items.

@@ -28,7 +28,7 @@ interface IMapSorterComparing<T> extends ICollectionSorterComparing<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 }
 
 export default IMapSorterComparing;

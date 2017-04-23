@@ -28,12 +28,12 @@ interface IArrayMapper<T, U> extends ICollectionMapper<U> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: IArray<U>;
+	readonly target: IArray<U>;
 }
 
 export default IArrayMapper;

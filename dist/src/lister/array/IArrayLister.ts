@@ -29,7 +29,7 @@ interface IArrayLister<T extends IClass> extends ICollectionLister<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IArray<T>;
+	readonly source: IArray<T>;
 }
 
 export default IArrayLister;

@@ -686,7 +686,7 @@ export interface ArrayEventParams<T> extends CollectionEventParams<T> {
 	/**
 	 * Event sender.
 	 */
-	sender: IArray<T>;
+	readonly sender: IArray<T>;
 }
 
 /**
@@ -696,7 +696,7 @@ export interface ArraySpliceEventParams<T> extends ArrayEventParams<T> {
 	/**
 	 * Result of `splice` method.
 	 */
-	spliceResult: IArraySpliceResult<T>;
+	readonly spliceResult: IArraySpliceResult<T>;
 }
 
 /**
@@ -706,17 +706,17 @@ export interface ArrayMoveEventParams<T> extends ArrayEventParams<T> {
 	/**
 	 * Where item is moved from.
 	 */
-	fromIndex: number;
+	readonly fromIndex: number;
 
 	/**
 	 * Where item is moved to.
 	 */
-	toIndex: number;
+	readonly toIndex: number;
 
 	/**
 	 * The moved item.
 	 */
-	item: T;
+	readonly item: T;
 }
 
 /**
@@ -726,17 +726,17 @@ export interface ArrayReplaceEventParams<T> extends ArrayEventParams<T> {
 	/**
 	 * Index of the replaced item.
 	 */
-	index: number;
+	readonly index: number;
 
 	/**
 	 * Old item.
 	 */
-	oldItem: T;
+	readonly oldItem: T;
 
 	/**
 	 * New item.
 	 */
-	newItem: T;
+	readonly newItem: T;
 }
 
 /**
@@ -746,7 +746,7 @@ export interface ArrayItemsEventParams<T> extends ArrayEventParams<T> {
 	/**
 	 * Old array contents.
 	 */
-	items: T[];
+	readonly items: T[];
 }
 
 /**
@@ -756,5 +756,5 @@ export interface ArrayReorderEventParams<T> extends ArrayItemsEventParams<T> {
 	/**
 	 * Indexes of items in reordered array.
 	 */
-	indexArray: number[];
+	readonly indexArray: number[];
 }

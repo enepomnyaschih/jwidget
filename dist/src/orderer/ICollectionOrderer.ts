@@ -86,7 +86,7 @@ interface ICollectionOrderer<T extends IClass> extends IClass {
 	/**
 	 * Target array.
 	 */
-	target: IArray<T>;
+	readonly target: IArray<T>;
 }
 
 export default ICollectionOrderer;

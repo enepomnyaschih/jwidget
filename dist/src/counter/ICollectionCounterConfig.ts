@@ -29,18 +29,18 @@ interface ICollectionCounterConfig<T> {
 	/**
 	 * Filtering criteria.
 	 */
-	filterItem: (item: T) => boolean;
+	readonly filterItem: (item: T) => boolean;
 
 	/**
 	 * [[filterItem]] call scope.
 	 * Defaults to synchronizer itself.
 	 */
-	scope?: any;
+	readonly scope?: any;
 
 	/**
 	 * Target property. By default, created automatically.
 	 */
-	target?: IProperty<number>;
+	readonly target?: IProperty<number>;
 }
 
 export default ICollectionCounterConfig;

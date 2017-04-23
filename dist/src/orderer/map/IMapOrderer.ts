@@ -29,7 +29,7 @@ interface IMapOrderer<T extends IClass> extends ICollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 }
 
 export default IMapOrderer;

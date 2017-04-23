@@ -123,7 +123,7 @@ interface ICollectionSorterComparing<T> extends IClass {
 	/**
 	 * Target array.
 	 */
-	target: IArray<T>;
+	readonly target: IArray<T>;
 
 	/**
 	 * Resorts target array forcibly. Call this method on sorting factors modification.

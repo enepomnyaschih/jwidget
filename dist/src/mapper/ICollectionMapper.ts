@@ -116,7 +116,7 @@ interface ICollectionMapper<U> extends IClass {
 	/**
 	 * Target collection.
 	 */
-	target: ICollection<U>;
+	readonly target: ICollection<U>;
 }
 
 export default ICollectionMapper;

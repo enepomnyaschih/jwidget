@@ -29,7 +29,7 @@ interface ISetCounter<T extends IClass> extends ICollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 }
 
 export default ISetCounter;

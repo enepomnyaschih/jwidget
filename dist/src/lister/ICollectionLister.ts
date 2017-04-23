@@ -97,7 +97,7 @@ interface ICollectionLister<T extends IClass> extends IClass {
 	/**
 	 * Target set.
 	 */
-	target: ISet<T>;
+	readonly target: ISet<T>;
 }
 
 export default ICollectionLister;

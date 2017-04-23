@@ -29,12 +29,12 @@ interface ISetFilterer<T extends IClass> extends ICollectionFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: ISet<T>;
+	readonly target: ISet<T>;
 }
 
 export default ISetFilterer;

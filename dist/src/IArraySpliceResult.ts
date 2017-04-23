@@ -30,17 +30,17 @@ interface IArraySpliceResult<T> {
 	/**
 	 * Old array contents.
 	 */
-	oldItems: T[];
+	readonly oldItems: T[];
 
 	/**
 	 * Removed item segments.
 	 */
-	removedItemsList: IIndexItems<T>[];
+	readonly removedItemsList: IIndexItems<T>[];
 
 	/**
 	 * @param addedItemsList Added item segments.
 	 */
-	addedItemsList: IIndexItems<T>[];
+	readonly addedItemsList: IIndexItems<T>[];
 
 	/**
 	 * Returns plain array of removed items.

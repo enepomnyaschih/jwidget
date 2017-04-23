@@ -29,7 +29,7 @@ interface ISetIndexer<T extends IClass> extends ICollectionIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 }
 
 export default ISetIndexer;

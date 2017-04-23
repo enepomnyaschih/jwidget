@@ -494,7 +494,7 @@ export function trySplice<T>(arr: T[], removeParamsList: IIndexCount[], addParam
 	for (var i = 0, l = removeParamsList.length; i < l; ++i) {
 		rparams = removeParamsList[i];
 		if (rlast && (rparams.index === rlast.index + rlast.count)) {
-			rlast.count += rparams.count;
+			rlast = new IndexCount(rlast.index, rlast.count + rparams.count);
 		} else {
 			rlast = rparams.clone();
 			optimizedRemoveParamsList.push(rlast);

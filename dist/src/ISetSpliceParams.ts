@@ -28,12 +28,12 @@ interface ISetSpliceParams<T> {
 	/**
 	 * Items to remove.
 	 */
-	removedItems: T[];
+	readonly removedItems: T[];
 
 	/**
 	 * Items to add.
 	 */
-	addedItems: T[];
+	readonly addedItems: T[];
 }
 
 export default ISetSpliceParams;

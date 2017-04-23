@@ -29,7 +29,7 @@ interface ISetObserver<T extends IClass> extends ICollectionObserver {
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 }
 
 export default ISetObserver;

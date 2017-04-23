@@ -29,7 +29,7 @@ interface ISetMapperConfig<T extends IClass, U extends IClass> extends ICollecti
 	/**
 	 * @inheritdoc
 	 */
-	target?: ISet<U>;
+	readonly target?: ISet<U>;
 }
 
 export default ISetMapperConfig;

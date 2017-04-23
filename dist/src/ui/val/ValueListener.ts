@@ -66,8 +66,8 @@ class ValueListener extends Class {
 
 namespace ValueListener {
 	export interface Config {
-		target?: IProperty<string>;
-		simple?: boolean;
+		readonly target?: IProperty<string>;
+		readonly simple?: boolean;
 	}
 }
 

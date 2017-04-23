@@ -27,13 +27,13 @@ interface ICollectionFiltererConfig<T> {
 	/**
 	 * Filtering criteria.
 	 */
-	filterItem: (item: T) => boolean;
+	readonly filterItem: (item: T) => boolean;
 
 	/**
 	 * [[filterItem]] call scope.
 	 * Defaults to synchronizer itself.
 	 */
-	scope?: any;
+	readonly scope?: any;
 }
 
 export default ICollectionFiltererConfig;

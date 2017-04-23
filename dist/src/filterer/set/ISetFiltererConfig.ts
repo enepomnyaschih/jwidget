@@ -29,7 +29,7 @@ interface ISetFiltererConfig<T extends IClass> extends ICollectionFiltererConfig
 	/**
 	 * @inheritdoc
 	 */
-	target?: ISet<T>;
+	readonly target?: ISet<T>;
 }
 
 export default ISetFiltererConfig;

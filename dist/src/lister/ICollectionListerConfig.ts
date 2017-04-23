@@ -30,7 +30,7 @@ interface ICollectionListerConfig<T extends IClass> {
 	/**
 	 * Target set. By default, created automatically.
 	 */
-	target?: ISet<T>;
+	readonly target?: ISet<T>;
 }
 
 export default ICollectionListerConfig;

@@ -29,7 +29,7 @@ interface IMapLister<T extends IClass> extends ICollectionLister<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 }
 
 export default IMapLister;

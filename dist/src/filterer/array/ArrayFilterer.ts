@@ -193,9 +193,10 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 			}
 			if (newFiltered[index] === 0) {
 				if (removeParams === null) {
-					removeParams = new IndexCount(targetIndex, 0);
+					removeParams = new IndexCount(targetIndex, 1);
+				} else {
+					removeParams = new IndexCount(removeParams.index, removeParams.count + 1);
 				}
-				++removeParams.count;
 				this._filtered[index] = 0;
 			} else {
 				flushRemove();

@@ -157,23 +157,23 @@ namespace Switcher {
 		/**
 		 * Value initialization callback.
 		 */
-		init?: Callback;
+		readonly init?: Callback;
 
 		/**
 		 * Value releasing callback.
 		 */
-		done?: Callback;
+		readonly done?: Callback;
 
 		/**
 		 * [[init]] and [[done]] call scope.
 		 * Defaults to switcher itself.
 		 */
-		scope?: any;
+		readonly scope?: any;
 
 		/**
 		 * If false, functions won't be called if at least one of the source values is null.
 		 */
-		acceptNull?: boolean;
+		readonly acceptNull?: boolean;
 	}
 }
 

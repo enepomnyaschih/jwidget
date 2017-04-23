@@ -28,7 +28,7 @@ interface IMapMapperConfig<T, U> extends ICollectionMapperConfig<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	target?: IMap<U>;
+	readonly target?: IMap<U>;
 }
 
 export default IMapMapperConfig;

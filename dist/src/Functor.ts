@@ -147,7 +147,7 @@ namespace Functor {
 		/**
 		 * Target property. By default, created automatically.
 		 */
-		target?: IProperty<T>;
+		readonly target?: IProperty<T>;
 	}
 }
 

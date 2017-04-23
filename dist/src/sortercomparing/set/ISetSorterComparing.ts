@@ -29,7 +29,7 @@ interface ISetSorterComparing<T extends IClass> extends ICollectionSorterCompari
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 }
 
 export default ISetSorterComparing;

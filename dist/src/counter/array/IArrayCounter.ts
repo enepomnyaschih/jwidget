@@ -28,7 +28,7 @@ interface IArrayCounter<T> extends ICollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IArray<T>;
+	readonly source: IArray<T>;
 }
 
 export default IArrayCounter;

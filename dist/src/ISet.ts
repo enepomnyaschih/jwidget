@@ -367,7 +367,7 @@ export interface SetEventParams<T extends IClass> extends CollectionEventParams<
 	/**
 	 * Event sender.
 	 */
-	sender: ISet<T>;
+	readonly sender: ISet<T>;
 }
 
 /**
@@ -377,7 +377,7 @@ export interface SetSpliceEventParams<T extends IClass> extends SetEventParams<T
 	/**
 	 * Result of `splice` method.
 	 */
-	spliceResult: ISetSpliceResult<T>;
+	readonly spliceResult: ISetSpliceResult<T>;
 }
 
 /**
@@ -387,5 +387,5 @@ export interface SetItemsEventParams<T extends IClass> extends SetEventParams<T>
 	/**
 	 * Old set contents.
 	 */
-	items: T[];
+	readonly items: T[];
 }

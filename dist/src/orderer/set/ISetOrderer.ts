@@ -29,7 +29,7 @@ interface ISetOrderer<T extends IClass> extends ICollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 }
 
 export default ISetOrderer;

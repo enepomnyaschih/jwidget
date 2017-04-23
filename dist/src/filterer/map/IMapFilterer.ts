@@ -28,12 +28,12 @@ interface IMapFilterer<T> extends ICollectionFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: IMap<T>;
+	readonly target: IMap<T>;
 }
 
 export default IMapFilterer;

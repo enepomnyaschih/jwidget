@@ -24,8 +24,8 @@
  * @param T Item type.
  */
 interface ISetSpliceResult<T> {
-	removedItems: T[];
-	addedItems: T[];
+	readonly removedItems: T[];
+	readonly addedItems: T[];
 }
 
 export default ISetSpliceResult;

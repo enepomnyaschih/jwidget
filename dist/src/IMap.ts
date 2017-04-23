@@ -448,7 +448,7 @@ export interface MapEventParams<T> extends CollectionEventParams<T> {
 	/**
 	 * Event sender.
 	 */
-	sender: IMap<T>;
+	readonly sender: IMap<T>;
 }
 
 /**
@@ -458,7 +458,7 @@ export interface MapSpliceEventParams<T> extends MapEventParams<T> {
 	/**
 	 * Result of `splice` method.
 	 */
-	spliceResult: IMapSpliceResult<T>;
+	readonly spliceResult: IMapSpliceResult<T>;
 }
 
 /**
@@ -468,7 +468,7 @@ export interface MapReindexEventParams<T> extends MapEventParams<T> {
 	/**
 	 * Map of changed keys.
 	 */
-	keyMap: Dictionary<string>;
+	readonly keyMap: Dictionary<string>;
 }
 
 /**
@@ -478,5 +478,5 @@ export interface MapItemsEventParams<T> extends MapEventParams<T> {
 	/**
 	 * Old map contents.
 	 */
-	items: Dictionary<T>;
+	readonly items: Dictionary<T>;
 }

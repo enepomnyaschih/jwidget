@@ -28,7 +28,7 @@ interface IArrayFiltererConfig<T> extends ICollectionFiltererConfig<T> {
 	/**
 	 * @inheritdoc
 	 */
-	target?: IArray<T>;
+	readonly target?: IArray<T>;
 }
 
 export default IArrayFiltererConfig;

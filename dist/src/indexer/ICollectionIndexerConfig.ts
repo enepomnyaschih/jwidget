@@ -29,18 +29,18 @@ interface ICollectionIndexerConfig<T> {
 	/**
 	 * Indexing function. Determines item key in map.
 	 */
-	getKey: (item: T) => any;
+	readonly getKey: (item: T) => any;
 
 	/**
 	 * [[getKey]] call scope.
 	 * Defaults to synchronizer itself.
 	 */
-	scope?: any;
+	readonly scope?: any;
 
 	/**
 	 * Target map. By default, created automatically.
 	 */
-	target?: IMap<T>;
+	readonly target?: IMap<T>;
 }
 
 export default ICollectionIndexerConfig;

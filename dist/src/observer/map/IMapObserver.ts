@@ -28,7 +28,7 @@ interface IMapObserver<T> extends ICollectionObserver {
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 }
 
 export default IMapObserver;

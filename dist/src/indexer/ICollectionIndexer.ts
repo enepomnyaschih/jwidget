@@ -101,7 +101,7 @@ interface ICollectionIndexer<T> extends IClass {
 	/**
 	 * Target map.
 	 */
-	target: IMap<T>;
+	readonly target: IMap<T>;
 }
 
 export default ICollectionIndexer;

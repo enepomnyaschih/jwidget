@@ -28,12 +28,12 @@ interface IArrayFiltererReconfig<T> {
 	/**
 	 * Filtering criteria.
 	 */
-	filterItem?: (item: T) => boolean;
+	readonly filterItem?: (item: T) => boolean;
 
 	/**
 	 * [[filterItem]] call scope.
 	 */
-	scope?: any;
+	readonly scope?: any;
 }
 
 export default IArrayFiltererReconfig;

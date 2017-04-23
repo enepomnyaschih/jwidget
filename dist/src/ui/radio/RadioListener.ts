@@ -59,7 +59,7 @@ class RadioListener extends Class {
 
 namespace RadioListener {
 	export interface Config {
-		target?: IProperty<string>;
+		readonly target?: IProperty<string>;
 	}
 }
 

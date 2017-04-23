@@ -26,8 +26,8 @@ import Dictionary from './Dictionary';
  * @param T Item type.
  */
 interface IMapSpliceResult<T> {
-	removedItems: Dictionary<T>;
-	addedItems: Dictionary<T>;
+	readonly removedItems: Dictionary<T>;
+	readonly addedItems: Dictionary<T>;
 }
 
 export default IMapSpliceResult;

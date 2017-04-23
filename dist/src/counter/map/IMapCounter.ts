@@ -28,7 +28,7 @@ interface IMapCounter<T> extends ICollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 }
 
 export default IMapCounter;

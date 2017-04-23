@@ -29,12 +29,12 @@ interface ISetMapper<T extends IClass, U extends IClass> extends ICollectionMapp
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: ISet<U>;
+	readonly target: ISet<U>;
 }
 
 export default ISetMapper;

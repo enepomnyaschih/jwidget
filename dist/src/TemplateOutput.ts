@@ -28,12 +28,12 @@ interface TemplateOutput {
 	/**
 	 * The rendered element. In a component, it is claimed as component root element.
 	 */
-	root: HTMLElement;
+	readonly root: HTMLElement;
 
 	/**
 	 * Map from jwid to the elements with this jwid.
 	 */
-	groups: Dictionary<HTMLElement[]>;
+	readonly groups: Dictionary<HTMLElement[]>;
 }
 
 export default TemplateOutput;

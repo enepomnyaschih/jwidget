@@ -29,7 +29,7 @@ interface ISetLister<T extends IClass> extends ICollectionLister<T> {
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 }
 
 export default ISetLister;

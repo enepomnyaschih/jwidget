@@ -28,7 +28,7 @@ interface IArrayMapperConfig<T, U> extends ICollectionMapperConfig<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	target?: IArray<U>;
+	readonly target?: IArray<U>;
 }
 
 export default IArrayMapperConfig;

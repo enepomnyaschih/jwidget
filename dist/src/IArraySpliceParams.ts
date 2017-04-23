@@ -31,12 +31,12 @@ interface IArraySpliceParams<T> {
 	/**
 	 * Segments to remove.
 	 */
-	removeParamsList: IIndexCount[];
+	readonly removeParamsList: IIndexCount[];
 
 	/**
 	 * Segments to add.
 	 */
-	addParamsList: IIndexItems<T>[];
+	readonly addParamsList: IIndexItems<T>[];
 }
 
 export default IArraySpliceParams;

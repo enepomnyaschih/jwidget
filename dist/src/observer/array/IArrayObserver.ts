@@ -28,7 +28,7 @@ interface IArrayObserver<T> extends ICollectionObserver {
 	/**
 	 * @inheritdoc
 	 */
-	source: IArray<T>;
+	readonly source: IArray<T>;
 }
 
 export default IArrayObserver;
