@@ -25,7 +25,7 @@ import MapObserver from './MapObserver';
 import ObservableMapObserver from './ObservableMapObserver';
 
 export function createMapObserver<T>(source: IMap<T>, config: ICollectionObserverConfig<T>): IMapObserver<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new MapObserver<T>(source, config) :
 		new ObservableMapObserver<T>(source, config);
 }

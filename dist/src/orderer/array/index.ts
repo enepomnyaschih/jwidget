@@ -27,13 +27,13 @@ import List from '../../List';
 import ObservableArrayOrderer from './ObservableArrayOrderer';
 
 export function createArrayOrderer<T extends IClass>(source: IArray<T>, config: ICollectionOrdererConfig<T>): IArrayOrderer<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayOrderer<T>(source, config) :
 		new ObservableArrayOrderer<T>(source, config);
 }
 
 export function arrayToArray<T extends IClass>(source: IArray<T>): IArray<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toArray();
 	}
 	var result = new List<T>();

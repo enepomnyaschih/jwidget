@@ -257,7 +257,6 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	protected _ownsItems: Boolean = false;
 	protected _length: IProperty<number>;
 
-
 	constructor(silent: boolean) {
 		super();
 		this._length = this.own(new Property(0, silent));
@@ -266,6 +265,13 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	protected destroyObject(): void {
 		this.tryClear();
 		super.destroyObject();
+	}
+
+	/**
+	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+	 */
+	get silent() {
+		return this.changeEvent.dummy;
 	}
 
 	/**
@@ -298,13 +304,6 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	ownItems(): this {
 		this._ownsItems = true;
 		return this;
-	}
-
-	/**
-	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
-	 */
-	isSilent(): boolean {
-		return this.changeEvent.isDummy();
 	}
 
 	/**

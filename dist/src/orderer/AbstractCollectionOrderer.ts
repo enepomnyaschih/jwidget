@@ -108,7 +108,7 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class impleme
 	constructor(public source: ICollection<T>, config: ICollectionOrdererConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new List<T>(source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
 		this.target.tryAddAll(source.asArray());
 	}
 

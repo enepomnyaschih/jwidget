@@ -23,20 +23,20 @@ import dummyDestroyable from "./dummyDestroyable";
 import IEvent from "./IEvent";
 
 class DummyEvent implements IEvent<any> {
+	get dummy() {
+		return true;
+	}
+
+	destroy(): void {}
+
 	bind(handler: (params: any) => void, scope?: any): Destroyable {
 		handler = handler;
 		scope = scope;
 		return dummyDestroyable;
 	}
 
-	destroy(): void {}
-
 	trigger(params?: any): void {
 		params = params;
-	}
-
-	isDummy() {
-		return true;
 	}
 }
 

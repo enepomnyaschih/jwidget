@@ -46,7 +46,7 @@ export default class MapFilterer<T> extends AbstractCollectionFilterer<T> implem
 	constructor(source: IMap<T>, config: IMapFiltererConfig<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Map<T>(this.source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new Map<T>(this.source.silent) : config.target;
 		this.target.trySetAll(source.filter(this._filterItem, this._scope));
 	}
 

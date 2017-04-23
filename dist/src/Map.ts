@@ -483,7 +483,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 			return undefined;
 		}
 		var removedItem = result.value;
-		if (!this.isSilent()) {
+		if (!this.silent) {
 			var removedItems: Dictionary<T> = {};
 			if (removedItem !== undefined) {
 				removedItems[key] = removedItem;
@@ -515,7 +515,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * Adds or replaces a bunch of items.
 	 */
 	setAll(items: Dictionary<T>) {
-		if (!this.isSilent()) {
+		if (!this.silent) {
 			this.trySetAll(items);
 			return;
 		}
@@ -576,7 +576,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		if (item === undefined) {
 			return undefined;
 		}
-		if (!this.isSilent()) {
+		if (!this.silent) {
 			var spliceResult: IMapSpliceResult<T> = { addedItems: {}, removedItems: MapUtils.single(key, item) };
 			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 			this._changeEvent.trigger({ sender: this });
@@ -600,7 +600,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * Removes a bunch of items from map.
 	 */
 	removeAll(keys: string[]) {
-		if (!this.isSilent()) {
+		if (!this.silent) {
 			this.tryRemoveAll(keys);
 			return;
 		}

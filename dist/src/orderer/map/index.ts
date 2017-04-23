@@ -28,13 +28,13 @@ import List from '../../List';
 import ObservableMapOrderer from './ObservableMapOrderer';
 
 export function createMapOrderer<T extends IClass>(source: IMap<T>, config: ICollectionOrdererConfig<T>): IMapOrderer<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new MapOrderer<T>(source, config) :
 		new ObservableMapOrderer<T>(source, config);
 }
 
 export function mapToArray<T extends IClass>(source: IMap<T>): IArray<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toArray();
 	}
 	var result = new List<T>();

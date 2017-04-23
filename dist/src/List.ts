@@ -972,7 +972,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * Reverses item order in array. Modifies the array itself.
 	 */
 	reverse() {
-		if (this.isSilent()) {
+		if (this.silent) {
 			this._items.reverse();
 			return;
 		}

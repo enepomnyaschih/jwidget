@@ -25,7 +25,7 @@ import ICollectionObserverConfig from '../ICollectionObserverConfig';
 import ObservableArrayObserver from './ObservableArrayObserver';
 
 export function createArrayObserver<T>(source: IArray<T>, config: ICollectionObserverConfig<T>): IArrayObserver<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayObserver<T>(source, config) :
 		new ObservableArrayObserver<T>(source, config);
 }

@@ -27,13 +27,13 @@ import Map from '../../Map';
 import ObservableArrayIndexer from './ObservableArrayIndexer';
 
 export function createArrayIndexer<T>(source: IArray<T>, config: ICollectionIndexerConfig<T>): IArrayIndexer<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayIndexer<T>(source, config) :
 		new ObservableArrayIndexer<T>(source, config);
 }
 
 export function indexArray<T>(source: IArray<T>, callback: (item: T) => any, scope?: any): IMap<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$index(callback, scope);
 	}
 	var result = new Map<T>();

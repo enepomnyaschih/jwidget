@@ -26,7 +26,7 @@ import SetObserver from './SetObserver';
 import ObservableSetObserver from './ObservableSetObserver';
 
 export function createSetObserver<T extends IClass>(source: ISet<T>, config: ICollectionObserverConfig<T>): ISetObserver<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new SetObserver<T>(source, config) :
 		new ObservableSetObserver<T>(source, config);
 }

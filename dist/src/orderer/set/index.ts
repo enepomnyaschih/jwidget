@@ -28,13 +28,13 @@ import ObservableSetOrderer from './ObservableSetOrderer';
 import SetOrderer from './SetOrderer';
 
 export function createSetOrderer<T extends IClass>(source: ISet<T>, config: ICollectionOrdererConfig<T>): ISetOrderer<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new SetOrderer<T>(source, config) :
 		new ObservableSetOrderer<T>(source, config);
 }
 
 export function setToArray<T extends IClass>(source: ISet<T>): IArray<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toArray();
 	}
 	var result = new List<T>();

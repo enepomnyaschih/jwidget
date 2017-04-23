@@ -27,13 +27,13 @@ import ObservableSetFilterer from './ObservableSetFilterer';
 import Set from '../../Set';
 
 export function createSetFilterer<T extends IClass>(source: ISet<T>, config: ISetFiltererConfig<T>): ISetFilterer<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new SetFilterer<T>(source, config) :
 		new ObservableSetFilterer<T>(source, config);
 }
 
 export function filterSet<T extends IClass>(source: ISet<T>, callback: (item: T) => boolean, scope?: any): ISet<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$filter(callback, scope);
 	}
 	var result = new Set<T>();

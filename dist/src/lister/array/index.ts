@@ -28,13 +28,13 @@ import ObservableArrayLister from './ObservableArrayLister';
 import Set from '../../Set';
 
 export function createArrayLister<T extends IClass>(source: IArray<T>, config: ICollectionListerConfig<T>): IArrayLister<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayLister<T>(source, config) :
 		new ObservableArrayLister<T>(source, config);
 }
 
 export function arrayToSet<T extends IClass>(source: IArray<T>): ISet<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toSet();
 	}
 	var result = new Set<T>();

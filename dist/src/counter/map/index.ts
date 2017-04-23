@@ -27,13 +27,13 @@ import Property from '../../Property';
 import Watchable from '../../Watchable';
 
 export function createMapCounter<T>(source: IMap<T>, config: ICollectionCounterConfig<T>): IMapCounter<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new MapCounter<T>(source, config) :
 		new ObservableMapCounter<T>(source, config);
 }
 
 export function countMap<T>(source: IMap<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$count(callback, scope);
 	}
 	var result = new Property(0);

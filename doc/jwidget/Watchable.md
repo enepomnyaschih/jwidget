@@ -52,6 +52,12 @@ Reference: [jwidget/Bindable](Bindable.md), [jwidget/ValueChangeEventParams](Val
 
 Property value is changed. Triggered in result of [set](ObservableProperty.md#set) method call if the value has been changed.
 
+### silent
+
+	readonly silent: boolean
+
+Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
+
 ## Methods
 
 ### get
@@ -79,12 +85,6 @@ Builds a new property containing the result of the callback function called on t
 Reference: [jwidget/Destroyable](Destroyable.md).
 
 Builds a new property containing the result of the callback function called on this property value. To stop synchronization, destroy the result property. In comparison to [map](#map) method, destroys the previously assigned target values. To map multiple properties, use [jwidget/Mapper](Mapper.md).
-
-### isSilent
-
-	isSilent(): boolean
-
-Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
 
 ### destroy
 

@@ -25,7 +25,7 @@ import IArrayInserterConfig from './IArrayInserterConfig';
 import ObservableArrayInserter from './ObservableArrayInserter';
 
 export function createArrayInserter<T>(source: IArray<T>, config: IArrayInserterConfig<T>): IArrayInserter {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayInserter<T>(source, config) :
 		new ObservableArrayInserter<T>(source, config);
 }

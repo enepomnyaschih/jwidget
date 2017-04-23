@@ -28,13 +28,13 @@ import ObservableMapLister from './ObservableMapLister';
 import Set from '../../Set';
 
 export function createMapLister<T extends IClass>(source: IMap<T>, config: ICollectionListerConfig<T>): IMapLister<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new MapLister<T>(source, config) :
 		new ObservableMapLister<T>(source, config);
 }
 
 export function mapToSet<T extends IClass>(source: IMap<T>): ISet<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toSet();
 	}
 	var result = new Set<T>();

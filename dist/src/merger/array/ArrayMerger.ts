@@ -174,10 +174,10 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 	}
 
 	private createTarget(source: IArray<IArray<T>>): IArray<T> {
-		return new List<T>(source.isSilent() && source.every((item) => item.isSilent()));
+		return new List<T>(source.silent && source.every((item) => item.silent));
 	}
 
 	private createMergerBunch(item: IArray<T>): IClass {
-		return item.isSilent() ? new Class() : new Bunch(this.source, this.target, item);
+		return item.silent ? new Class() : new Bunch(this.source, this.target, item);
 	}
 }

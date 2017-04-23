@@ -58,7 +58,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	constructor(source: IArray<T>, config: IArrayFiltererConfig<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new List<T>(this.source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new List<T>(this.source.silent) : config.target;
 		this._splice([], [new IndexItems(0, this.source.getItems())]);
 	}
 

@@ -165,7 +165,7 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 		this._order = config.order || 1;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new List<T>(source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
 		this._splice([], source.asArray());
 	}
 

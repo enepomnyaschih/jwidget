@@ -27,13 +27,13 @@ import Property from '../../Property';
 import Watchable from '../../Watchable';
 
 export function createArrayCounter<T>(source: IArray<T>, config: ICollectionCounterConfig<T>): IArrayCounter<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayCounter<T>(source, config) :
 		new ObservableArrayCounter<T>(source, config);
 }
 
 export function countArray<T>(source: IArray<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$count(callback, scope);
 	}
 	var result = new Property(0);

@@ -26,13 +26,13 @@ import List from '../../List';
 import ObservableArraySorterComparing from './ObservableArraySorterComparing';
 
 export function createArraySorterComparing<T>(source: IArray<T>, config: ICollectionSorterComparingConfig<T>): IArraySorterComparing<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArraySorterComparing<T>(source, config) :
 		new ObservableArraySorterComparing<T>(source, config);
 }
 
 export function sortArrayComparing<T>(source: IArray<T>, callback: (x: T, y: T) => number, scope?: any): IArray<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toSortedComparing(callback, scope);
 	}
 	var result = new List<T>();

@@ -33,6 +33,13 @@ class Event<P> implements IEvent<P> {
 	private _attachments: Dictionary<EventAttachment<P>> = null;
 
 	/**
+	 * Checks if this event is dummy. This knowledge may help you do certain code optimizations.
+	 */
+	get dummy() {
+		return false;
+	}
+
+	/**
 	 * Class destructor invocation method. Unbinds all event handlers.
 	 * As opposed to the majority of classes, you can call event's `destroy` method multiple times.
 	 */
@@ -73,13 +80,6 @@ class Event<P> implements IEvent<P> {
 			var attachment = this._attachments[iid];
 			attachment.handler.call(attachment.scope || attachment, params);
 		}
-	}
-
-	/**
-	 * Checks if this event is dummy. This knowledge may help you do certain code optimizations.
-	 */
-	isDummy() {
-		return false;
 	}
 
 	/**

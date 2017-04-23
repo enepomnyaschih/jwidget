@@ -307,7 +307,7 @@ namespace Mapper {
 export default Mapper;
 
 export function mapProperties<U>(properties: Watchable<any>[], callback: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
-	if (properties.every((property) => property.isSilent())) {
+	if (properties.every((property) => property.silent)) {
 		const values = properties.map((property) => property.get());
 		return new Property<U>(callback.apply(scope, values), true);
 	}
@@ -321,7 +321,7 @@ export function mapProperties<U>(properties: Watchable<any>[], callback: Mapper.
 }
 
 export function mapDestroyableProperties<U extends Destroyable>(properties: Watchable<any>[], callback: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
-	if (properties.every((property) => property.isSilent())) {
+	if (properties.every((property) => property.silent)) {
 		const values = properties.map((property) => property.get());
 		return new Property<U>(callback.apply(scope, values), true).ownValue();
 	}

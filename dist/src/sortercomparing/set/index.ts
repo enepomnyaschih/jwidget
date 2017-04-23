@@ -28,13 +28,13 @@ import ObservableSetSorterComparing from './ObservableSetSorterComparing';
 import SetSorterComparing from './SetSorterComparing';
 
 export function createSetSorterComparing<T extends IClass>(source: ISet<T>, config: ICollectionSorterComparingConfig<T>): ISetSorterComparing<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new SetSorterComparing<T>(source, config) :
 		new ObservableSetSorterComparing<T>(source, config);
 }
 
 export function sortSetComparing<T extends IClass>(source: ISet<T>, callback: (x: T, y: T) => number, scope?: any): IArray<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toSortedComparing(callback, scope);
 	}
 	var result = new List<T>();

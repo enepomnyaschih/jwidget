@@ -28,13 +28,13 @@ import Property from '../../Property';
 import Watchable from '../../Watchable';
 
 export function createSetCounter<T extends IClass>(source: ISet<T>, config: ICollectionCounterConfig<T>): ISetCounter<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new SetCounter<T>(source, config) :
 		new ObservableSetCounter<T>(source, config);
 }
 
 export function countSet<T extends IClass>(source: ISet<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$count(callback, scope);
 	}
 	var result = new Property(0);

@@ -102,7 +102,7 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 	constructor(public source: IArray<T>, config: IArrayReverserConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new List<T>(source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
 		this.target.tryAddAll(this._reverse(source.getItems()));
 	}
 

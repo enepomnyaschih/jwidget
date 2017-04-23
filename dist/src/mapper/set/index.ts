@@ -28,13 +28,13 @@ import Set from '../../Set';
 import SetMapper from './SetMapper';
 
 export function createSetMapper<T extends IClass, U extends IClass>(source: ISet<T>, config: ISetMapperConfig<T, U>): ISetMapper<T, U> {
-	return source.isSilent() ?
+	return source.silent ?
 		new SetMapper<T, U>(source, config) :
 		new ObservableSetMapper<T, U>(source, config);
 }
 
 export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, callback: (item: T) => U, scope?: any): ISet<U> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$map(callback, scope);
 	}
 	var result = new Set<U>();
@@ -47,7 +47,7 @@ export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, call
 }
 
 export function mapDestroyableSet<T extends IClass, U extends IClass>(source: ISet<T>, callback: (item: T) => U, scope?: any): ISet<U> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$map(callback, scope).ownItems();
 	}
 	var result = new Set<U>();

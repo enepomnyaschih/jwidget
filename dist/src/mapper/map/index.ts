@@ -28,13 +28,13 @@ import MapMapper from './MapMapper';
 import ObservableMapMapper from './ObservableMapMapper';
 
 export function createMapMapper<T, U>(source: IMap<T>, config: IMapMapperConfig<T, U>): IMapMapper<T, U> {
-	return source.isSilent() ?
+	return source.silent ?
 		new MapMapper<T, U>(source, config) :
 		new ObservableMapMapper<T, U>(source, config);
 }
 
 export function mapMap<T, U>(source: IMap<T>, callback: (item: T) => U, scope?: any): IMap<U> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$map(callback, scope);
 	}
 	var result = new Map<U>();
@@ -47,7 +47,7 @@ export function mapMap<T, U>(source: IMap<T>, callback: (item: T) => U, scope?: 
 }
 
 export function mapDestroyableMap<T, U extends Destroyable>(source: IMap<T>, callback: (item: T) => U, scope?: any): IMap<U> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$map(callback, scope).ownItems();
 	}
 	var result = new Map<U>();

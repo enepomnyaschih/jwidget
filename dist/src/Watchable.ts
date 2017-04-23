@@ -28,6 +28,11 @@ import ValueChangeEventParams from "./ValueChangeEventParams";
  */
 interface Watchable<V> extends Destroyable {
 	/**
+	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
+	 */
+	readonly silent: boolean;
+
+	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
 	readonly changeEvent: Bindable<ValueChangeEventParams<V>>;
@@ -58,11 +63,6 @@ interface Watchable<V> extends Destroyable {
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
 	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): Watchable<U>;
-
-	/**
-	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
-	 */
-	isSilent(): boolean;
 }
 
 export default Watchable;

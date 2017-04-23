@@ -162,6 +162,11 @@ import Watchable from './Watchable';
  */
 interface ICollection<T> extends IClass {
 	/**
+	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+	 */
+	readonly silent: boolean;
+
+	/**
 	 * Collection length property.
 	 */
 	readonly length: Watchable<number>;
@@ -187,11 +192,6 @@ interface ICollection<T> extends IClass {
 	 * @returns this
 	 */
 	ownItems(): this;
-
-	/**
-	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
-	 */
-	isSilent(): boolean;
 
 	/**
 	 * Checks collection for emptiness.

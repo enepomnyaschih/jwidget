@@ -28,14 +28,14 @@ import ObservableArrayMerger from './ObservableArrayMerger';
 import * as ArrayUtils from '../../ArrayUtils';
 
 export function createArrayMerger<T>(source: IArray<IArray<T>>, config: IArrayMergerConfig<T>): IArrayMerger<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayMerger<T>(source, config) :
 		new ObservableArrayMerger<T>(source, config);
 }
 
 export function mergeArrays<T>(source: IArray<IArray<T>>): IArray<T> {
-	if (source.isSilent()) {
-		if (source.every((item) => item.isSilent())) {
+	if (source.silent) {
+		if (source.every((item) => item.silent)) {
 			return $mergeNoSync(source);
 		}
 		const result = new List<T>();

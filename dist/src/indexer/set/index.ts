@@ -28,13 +28,13 @@ import Map from '../../Map';
 import ObservableSetIndexer from './ObservableSetIndexer';
 
 export function createSetIndexer<T extends IClass>(source: ISet<T>, config: ICollectionIndexerConfig<T>): ISetIndexer<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new SetIndexer<T>(source, config) :
 		new ObservableSetIndexer<T>(source, config);
 }
 
 export function indexSet<T extends IClass>(source: ISet<T>, callback: (item: T) => any, scope?: any): IMap<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$index(callback, scope);
 	}
 	var result = new Map<T>();

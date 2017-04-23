@@ -26,13 +26,13 @@ import Map from '../../Map';
 import ObservableMapIndexer from './ObservableMapIndexer';
 
 export function createMapIndexer<T>(source: IMap<T>, config: ICollectionIndexerConfig<T>): IMapIndexer<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new MapIndexer<T>(source, config) :
 		new ObservableMapIndexer<T>(source, config);
 }
 
 export function indexMap<T>(source: IMap<T>, callback: (item: T) => any, scope?: any): IMap<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$index(callback, scope);
 	}
 	var result = new Map<T>();

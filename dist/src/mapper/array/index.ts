@@ -28,13 +28,13 @@ import List from '../../List';
 import ObservableArrayMapper from './ObservableArrayMapper';
 
 export function createArrayMapper<T, U>(source: IArray<T>, config: IArrayMapperConfig<T, U>): IArrayMapper<T, U> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayMapper<T, U>(source, config) :
 		new ObservableArrayMapper<T, U>(source, config);
 }
 
 export function mapArray<T, U>(source: IArray<T>, callback: (item: T) => U, scope?: any): IArray<U> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$map(callback, scope);
 	}
 	var result = new List<U>();
@@ -47,7 +47,7 @@ export function mapArray<T, U>(source: IArray<T>, callback: (item: T) => U, scop
 }
 
 export function mapDestroyableArray<T, U extends Destroyable>(source: IArray<T>, callback: (item: T) => U, scope?: any): IArray<U> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$map(callback, scope).ownItems();
 	}
 	var result = new List<U>();

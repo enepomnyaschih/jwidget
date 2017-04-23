@@ -25,6 +25,11 @@ import Destroyable from "./Destroyable";
  */
 interface Bindable<P> {
 	/**
+	 * Checks if this event is dummy. This knowledge may help you do certain code optimizations.
+	 */
+	readonly dummy: boolean;
+
+	/**
 	 * Starts listening to the event.
 	 *
 	 * Whenever the event is triggered with `trigger` method, specified handler function
@@ -36,11 +41,6 @@ interface Bindable<P> {
 	 * @param scope `handler` call scope.
 	 */
 	bind(handler: (params: P) => void, scope?: any): Destroyable;
-
-	/**
-	 * Checks if this event is dummy. This knowledge may help you do certain code optimizations.
-	 */
-	isDummy(): boolean;
 }
 
 export default Bindable;

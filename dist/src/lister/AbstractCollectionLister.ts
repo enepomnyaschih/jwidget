@@ -116,7 +116,7 @@ abstract class AbstractCollectionLister<T extends IClass> extends Class implemen
 	constructor(public source: ICollection<T>, config: ICollectionListerConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Set<T>(source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new Set<T>(source.silent) : config.target;
 		this.target.tryAddAll(source.asArray());
 	}
 

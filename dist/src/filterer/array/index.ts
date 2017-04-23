@@ -26,13 +26,13 @@ import List from '../../List';
 import ObservableArrayFilterer from './ObservableArrayFilterer';
 
 export function createArrayFilterer<T>(source: IArray<T>, config: IArrayFiltererConfig<T>): IArrayFilterer<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayFilterer<T>(source, config) :
 		new ObservableArrayFilterer<T>(source, config);
 }
 
 export function filterArray<T>(source: IArray<T>, callback: (item: T) => boolean, scope?: any): IArray<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$filter(callback, scope);
 	}
 	var result = new List<T>();

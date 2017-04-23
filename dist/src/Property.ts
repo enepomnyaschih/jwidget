@@ -54,6 +54,13 @@ export default class Property<V> extends Class implements IProperty<V> {
 	}
 
 	/**
+	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
+	 */
+	get silent() {
+		return this._changeEvent.dummy;
+	}
+
+	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
 	get changeEvent(): Bindable<ValueChangeEventParams<V>> {
@@ -121,12 +128,5 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 */
 	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): Watchable<U> {
 		return mapDestroyableProperties([this], callback, scope || this);
-	}
-
-	/**
-	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
-	 */
-	isSilent() {
-		return this._changeEvent.isDummy();
 	}
 }

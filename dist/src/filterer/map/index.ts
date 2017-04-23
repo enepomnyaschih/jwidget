@@ -26,13 +26,13 @@ import Map from '../../Map';
 import ObservableMapFilterer from './ObservableMapFilterer';
 
 export function createMapFilterer<T>(source: IMap<T>, config: IMapFiltererConfig<T>): IMapFilterer<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new MapFilterer<T>(source, config) :
 		new ObservableMapFilterer<T>(source, config);
 }
 
 export function filterMap<T>(source: IMap<T>, callback: (item: T) => boolean, scope?: any): IMap<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$filter(callback, scope);
 	}
 	var result = new Map<T>();

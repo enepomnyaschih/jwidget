@@ -26,13 +26,13 @@ import List from '../../List';
 import ObservableArrayReverser from './ObservableArrayReverser';
 
 export function createArrayReverser<T>(source: IArray<T>, config: IArrayReverserConfig<T>): IArrayReverser<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new ArrayReverser<T>(source, config) :
 		new ObservableArrayReverser<T>(source, config);
 }
 
 export function reverseArray<T>(source: IArray<T>): IArray<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toReversed();
 	}
 	var result = new List<T>();

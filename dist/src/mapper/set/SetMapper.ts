@@ -53,7 +53,7 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 	constructor(source: ISet<T>, config: ISetMapperConfig<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Set<U>(this.source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new Set<U>(this.source.silent) : config.target;
 		this.target.tryAddAll(this._createItems(source.toArray()));
 	}
 

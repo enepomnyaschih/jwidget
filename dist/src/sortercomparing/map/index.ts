@@ -27,13 +27,13 @@ import List from '../../List';
 import ObservableMapSorterComparing from './ObservableMapSorterComparing';
 
 export function createMapSorterComparing<T>(source: IMap<T>, config: ICollectionSorterComparingConfig<T>): IMapSorterComparing<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new MapSorterComparing<T>(source, config) :
 		new ObservableMapSorterComparing<T>(source, config);
 }
 
 export function sortMapComparing<T>(source: IMap<T>, callback: (x: T, y: T) => number, scope?: any): IArray<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toSortedComparing(callback, scope);
 	}
 	var result = new List<T>();

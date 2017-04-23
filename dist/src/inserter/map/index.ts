@@ -25,7 +25,7 @@ import IMapInserterConfig from './IMapInserterConfig';
 import ObservableMapInserter from './ObservableMapInserter';
 
 export function createMapInserter<T>(source: IMap<T>, config: IMapInserterConfig<T>): IMapInserter {
-	return source.isSilent() ?
+	return source.silent ?
 		new MapInserter<T>(source, config) :
 		new ObservableMapInserter<T>(source, config);
 }

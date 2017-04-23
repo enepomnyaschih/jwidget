@@ -62,7 +62,7 @@ class Copier<T> extends Class {
 		super();
 		config = config || {};
 		this._targetCreated = config.target == null;
-		this._target = (config.target == null) ? new Property<T>(null, source.isSilent()) : config.target;
+		this._target = (config.target == null) ? new Property<T>(null, source.silent) : config.target;
 		this._update();
 		this.own(source.changeEvent.bind(this._update, this));
 	}

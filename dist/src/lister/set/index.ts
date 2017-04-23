@@ -27,13 +27,13 @@ import ObservableSetLister from './ObservableSetLister';
 import Set from '../../Set';
 
 export function createSetLister<T extends IClass>(source: ISet<T>, config: ICollectionListerConfig<T>): ISetLister<T> {
-	return source.isSilent() ?
+	return source.silent ?
 		new SetLister<T>(source, config) :
 		new ObservableSetLister<T>(source, config);
 }
 
 export function setToSet<T extends IClass>(source: ISet<T>): ISet<T> {
-	if (source.isSilent()) {
+	if (source.silent) {
 		return source.$toSet();
 	}
 	var result = new Set<T>();
