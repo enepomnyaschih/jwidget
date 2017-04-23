@@ -306,7 +306,7 @@ export function get<T>(obj: any, path: any): T {
  * else returns the object itself.
  */
 export function iid(obj: any): number {
-	return obj ? defn<number>(obj._iid, obj) : null;
+	return obj ? defn<number>(obj.iid, obj) : null;
 }
 
 /**

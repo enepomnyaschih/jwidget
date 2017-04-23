@@ -62,7 +62,7 @@ export function getFirst<T extends IClass>(set: Dictionary<T>): T {
  * Checks item for existance in collection.
  */
 export function contains<T extends IClass>(set: Dictionary<T>, item: T): boolean {
-	return set.hasOwnProperty(String(item._iid));
+	return set.hasOwnProperty(String(item.iid));
 }
 
 /**
@@ -221,7 +221,7 @@ export function filter<T extends IClass>(set: Dictionary<T>, callback: (item: T)
 	var result: Dictionary<T> = {};
 	every(set, function (item) {
 		if (callback.call(scope, item) !== false) {
-			result[item._iid] = item;
+			result[item.iid] = item;
 		}
 		return true;
 	});
@@ -305,7 +305,7 @@ export function add<T extends IClass>(set: Dictionary<T>, item: T): boolean {
  * In other words, this method may return true or undefined.
  */
 export function tryAdd<T extends IClass>(set: Dictionary<T>, item: T): boolean {
-	var iid = String(item._iid);
+	var iid = String(item.iid);
 	if (set.hasOwnProperty(iid)) {
 		return undefined;
 	}
@@ -355,7 +355,7 @@ export function remove<T extends IClass>(set: Dictionary<T>, item: T): boolean {
  * In other words, this method may return true or undefined.
  */
 export function tryRemove<T extends IClass>(set: Dictionary<T>, item: T): boolean {
-	var iid = String(item._iid);
+	var iid = String(item.iid);
 	if (!set.hasOwnProperty(iid)) {
 		return undefined;
 	}
@@ -448,7 +448,7 @@ export function splice<T extends IClass>(set: Dictionary<T>, removedItems: T[], 
 export function trySplice<T extends IClass>(set: Dictionary<T>, removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
 	var addedItemSet = ArrayUtils.toSet(addedItems);
 	removedItems = removedItems.filter(function (item) {
-		return !addedItemSet.hasOwnProperty(String(item._iid));
+		return !addedItemSet.hasOwnProperty(String(item.iid));
 	});
 	removedItems = tryRemoveAll(set, removedItems);
 	addedItems = tryAddAll(set, addedItems);
@@ -468,7 +468,7 @@ export function detectSplice<T extends IClass>(oldItems: Dictionary<T>, newItemA
 	var removedItems: T[] = [];
 	var addedItems: T[] = [];
 	var newItems: Dictionary<T> = ArrayUtils.index<T>(newItemArray, function (item) {
-		return String(item._iid);
+		return String(item.iid);
 	});
 	for (var key in oldItems) {
 		if (!newItems.hasOwnProperty(key)) {
@@ -506,7 +506,7 @@ export function equal<T extends IClass>(x: Dictionary<T>, y: T[]): boolean {
 		return false;
 	}
 	for (var i = 0, l = y.length; i < l; ++i) {
-		if (!x.hasOwnProperty(String(y[i]._iid))) {
+		if (!x.hasOwnProperty(String(y[i].iid))) {
 			return false;
 		}
 	}
@@ -518,6 +518,6 @@ export function equal<T extends IClass>(x: Dictionary<T>, y: T[]): boolean {
  */
 export function single<T extends IClass>(item: T): Dictionary<T> {
 	var result: Dictionary<T> = {};
-	result[item._iid] = item;
+	result[item.iid] = item;
 	return result;
 }

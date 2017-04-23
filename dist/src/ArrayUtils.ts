@@ -259,7 +259,7 @@ export function toMap<T>(arr: T[]): Dictionary<T> {
  */
 export function toSet<T extends IClass>(arr: T[]): Dictionary<T> {
 	return index(arr, function(item) {
-		return String(item._iid);
+		return String(item.iid);
 	});
 }
 
@@ -414,7 +414,7 @@ export function removeItem<T>(arr: T[], item: T): number {
 export function removeItems<T extends IClass>(arr: T[], items: T[]) {
 	var itemSet = toSet(items);
 	var newItems = arr.filter(function (item: T): boolean {
-		return !itemSet.hasOwnProperty(String(item._iid));
+		return !itemSet.hasOwnProperty(String(item.iid));
 	});
 	performSplice(arr, newItems);
 }

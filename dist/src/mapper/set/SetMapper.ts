@@ -75,7 +75,7 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 	 */
 	protected _getItems(datas: T[]): U[] {
 		return datas.map((data) => {
-			return this._items[data._iid];
+			return this._items[data.iid];
 		}, this);
 	}
 
@@ -88,7 +88,7 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 			var data = datas[i];
 			var item = this._createItem.call(this._scope || this, data);
 			items.push(item);
-			this._items[data._iid] = item;
+			this._items[data.iid] = item;
 		}
 		return items;
 	}
@@ -102,7 +102,7 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 		}
 		for (var i = datas.length - 1; i >= 0; --i) {
 			var data = datas[i];
-			var iid = data._iid;
+			var iid = data.iid;
 			var item = this._items[iid];
 			delete this._items[iid];
 			this._destroyItem.call(this._scope || this, item, data);

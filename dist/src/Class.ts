@@ -39,14 +39,14 @@ class Class implements IClass {
 	 * Auto-incrementing object unique ID. Each `IClass` instance has such an identifier.
 	 * Used, say, in Set as map key for quick item access.
 	 */
-	_iid: number;
+	readonly iid: number;
 
 	/**
 	 * Yes, objects of this class can be constructed.
 	 * They can be used as dummy objects or aggregators for other objects.
 	 */
 	constructor() {
-		this._iid = ++Class._lastIid;
+		this.iid = ++Class._lastIid;
 	}
 
 	/**

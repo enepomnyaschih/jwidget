@@ -677,9 +677,9 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	removeItems(items: T[]) {
 		var itemSet: Dictionary<any> = {};
 		for (var i = 0; i < items.length; ++i) {
-			itemSet[(<any>items[i])._iid] = items[i];
+			itemSet[(<any>items[i]).iid] = items[i];
 		}
-		var newItems = this.filter(function (item: any) { return !itemSet.hasOwnProperty(item._iid); });
+		var newItems = this.filter(function (item: any) { return !itemSet.hasOwnProperty(item.iid); });
 		this.performFilter(newItems);
 	}
 

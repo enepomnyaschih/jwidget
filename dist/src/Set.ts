@@ -239,14 +239,14 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	containsItem(item: T): boolean {
-		return this._json.hasOwnProperty(String(item._iid));
+		return this._json.hasOwnProperty(String(item.iid));
 	}
 
 	/**
 	 * Shorthand to [[containsItem]].
 	 */
 	contains(item: T): boolean {
-		return this._json.hasOwnProperty(String(item._iid));
+		return this._json.hasOwnProperty(String(item.iid));
 	}
 
 	/**

@@ -63,7 +63,7 @@ class Event<P> implements IEvent<P> {
 			this._attachments = {};
 		}
 		const attachment = new EventAttachment<P>(this, handler, scope);
-		this._attachments[attachment._iid] = attachment;
+		this._attachments[attachment.iid] = attachment;
 		return attachment;
 	}
 
@@ -87,7 +87,7 @@ class Event<P> implements IEvent<P> {
 	 */
 	_unbind(attachment: EventAttachment<P>) {
 		if (this._attachments !== null) {
-			delete this._attachments[attachment._iid];
+			delete this._attachments[attachment.iid];
 		}
 	}
 

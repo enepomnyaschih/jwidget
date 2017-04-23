@@ -362,7 +362,7 @@ export function toArray<T>(map: Dictionary<T>): T[] {
  */
 export function toSet<T extends IClass>(map: Dictionary<T>): Dictionary<T> {
 	return index(map, function(item) {
-		return String(item._iid);
+		return String(item.iid);
 	});
 }
 
@@ -535,7 +535,7 @@ export function tryRemoveAll<T>(map: Dictionary<T>, keys: string[]): Dictionary<
 export function removeItems<T extends IClass>(map: Dictionary<T>, items: T[]) {
 	var itemSet = ArrayUtils.toSet(items);
 	var newItems = filter(map, function (item) {
-		return !itemSet.hasOwnProperty(String(item._iid));
+		return !itemSet.hasOwnProperty(String(item.iid));
 	});
 	performSplice(map, newItems);
 }

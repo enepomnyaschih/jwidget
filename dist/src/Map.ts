@@ -19,7 +19,7 @@
 */
 
 import Bindable from './Bindable';
-import {apply, destroy} from './Core';
+import {apply, destroy, iid} from './Core';
 import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
@@ -643,11 +643,9 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	removeItems(items: T[]) {
-		var itemSet = ArrayUtils.index<any>(items, function(item) {
-			return String(item._iid);
-		});
+		var itemSet = ArrayUtils.index(items, iid);
 		var newItems = this.filter(function (item) {
-			return !itemSet.hasOwnProperty((<any>item)._iid);
+			return !itemSet.hasOwnProperty((<any>item).iid);
 		});
 		this.performSplice(newItems);
 	}

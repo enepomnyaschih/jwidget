@@ -35,7 +35,7 @@ interface IClass extends Destroyable {
 	 * Auto-incrementing object unique ID. Each `IClass` instance has such an identifier.
 	 * Used, say, in Set as map key for quick item access.
 	 */
-	_iid: number;
+	readonly iid: number;
 
 	/**
 	 * Aggregates the object. It means that the specified object is automatically destroyed
