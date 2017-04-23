@@ -489,12 +489,12 @@ export function splice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsLi
  */
 export function trySplice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T> {
 	var optimizedRemoveParamsList: IIndexCount[] = [];
-	var rlast: IIndexCount = null;
+	var rlast: IndexCount = null;
 	var rparams: IIndexCount;
 	for (var i = 0, l = removeParamsList.length; i < l; ++i) {
 		rparams = removeParamsList[i];
 		if (rlast && (rparams.index === rlast.index + rlast.count)) {
-			rlast = new IndexCount(rlast.index, rlast.count + rparams.count);
+			rlast.count += rparams.count;
 		} else {
 			rlast = rparams.clone();
 			optimizedRemoveParamsList.push(rlast);

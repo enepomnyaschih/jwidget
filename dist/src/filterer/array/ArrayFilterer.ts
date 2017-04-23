@@ -175,7 +175,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 			return (this._filterItem.call(this._scope, item) !== false) ? 1 : 0;
 		});
 
-		var removeParams: IIndexCount = null;
+		var removeParams: IndexCount = null;
 		var removeParamsList: IIndexCount[] = [];
 
 		function flushRemove() {
@@ -193,10 +193,9 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 			}
 			if (newFiltered[index] === 0) {
 				if (removeParams === null) {
-					removeParams = new IndexCount(targetIndex, 1);
-				} else {
-					removeParams = new IndexCount(removeParams.index, removeParams.count + 1);
+					removeParams = new IndexCount(targetIndex, 0);
 				}
+				++removeParams.count;
 				this._filtered[index] = 0;
 			} else {
 				flushRemove();

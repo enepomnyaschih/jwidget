@@ -227,18 +227,17 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 		var addShift = 0;
 		var removeParamsList: IIndexCount[] = [];
 		var addParamsList: IIndexItems<T>[] = [];
-		var removeParams: IIndexCount = null;
+		var removeParams: IndexCount = null;
 		for (var iTarget = 0, lTarget = this.target.length.get(); iTarget < lTarget; ++iTarget) {
 			var value = this.target.get(iTarget);
 			if (removedItems[ArrayUtils.binarySearch(removedItems, value, this._compare, this._scope, this._order) - 1] === value) {
 				if (!removeParams) {
-					removeParams = new IndexCount(iTarget, 1);
-				} else {
-					removeParams = new IndexCount(removeParams.index, removeParams.count + 1);
+					removeParams = new IndexCount(iTarget, 0);
+					removeParamsList.push(removeParams);
 				}
+				++removeParams.count;
 				--addShift;
 			} else {
-				removeParamsList.push(removeParams);
 				removeParams = null;
 				var addParams = new IndexItems<T>(iTarget + addShift, []);
 				while ((iAdds < addedItems.length) && (this._order * this._compare.call(this._scope, addedItems[iAdds], value) < 0)) {
@@ -252,9 +251,6 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 		}
 		if (iAdds < addedItems.length) {
 			addParamsList.push(new IndexItems<T>(iTarget + addShift, addedItems.slice(iAdds)));
-		}
-		if (removeParams) {
-			removeParamsList.push(removeParams);
 		}
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
