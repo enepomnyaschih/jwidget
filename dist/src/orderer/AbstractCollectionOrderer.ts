@@ -26,6 +26,7 @@ import ICollection from '../ICollection';
 import ICollectionOrderer from './ICollectionOrderer';
 import ICollectionOrdererConfig from './ICollectionOrdererConfig';
 import IndexItems from '../IndexItems';
+import JWArray from '../JWArray';
 import * as SetUtils from '../SetUtils';
 
 /**
@@ -107,7 +108,7 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class impleme
 	constructor(public source: ICollection<T>, config: ICollectionOrdererConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? source.createEmptyArray<T>() : config.target;
+		this.target = this._targetCreated ? new JWArray<T>(source.isSilent()) : config.target;
 		this.target.tryAddAll(source.asArray());
 	}
 

@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ObservableArray, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
+import {ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
+import ObservableArray from '../../ObservableArray';
 import ArrayFilterer from './ArrayFilterer';
 import Dictionary from '../../Dictionary';
 import IArrayFiltererConfig from './IArrayFiltererConfig';
@@ -92,7 +93,7 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 		ArrayUtils.tryReorder(this._filtered, params.indexArray);
 
 		var targetIndex = 0;
-		var indexes = new Array<number>(this.target.getLength());
+		var indexes = new Array<number>(this.target.length.get());
 		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
 			if (this._filtered[sourceIndex] !== 0) {
 				indexes[targetIndexWhichMovesToI[sourceIndex]] = targetIndex++;

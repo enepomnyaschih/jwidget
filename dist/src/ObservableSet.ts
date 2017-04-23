@@ -19,9 +19,9 @@
 */
 
 import {destroy} from './Core';
+import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import AbstractSet from './AbstractSet';
 import Dictionary from './Dictionary';
-import Event from './Event';
 import IArray from './IArray';
 import IClass from './IClass';
 import IMap from './IMap';
@@ -30,9 +30,6 @@ import ISetSpliceResult from './ISetSpliceResult';
 import JWArray from './JWArray';
 import JWMap from './JWMap';
 import JWSet from './JWSet';
-import ObservableArray from './ObservableArray';
-import ObservableMap from './ObservableMap';
-import Property from './Property';
 import * as ArrayUtils from './ArrayUtils';
 
 /**
@@ -41,155 +38,88 @@ import * as ArrayUtils from './ArrayUtils';
  * @param T Collection item type.
  */
 export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
-	/**
-	 * Collection length. **Don't modify manually!**
-	 */
-	length: Property<number>;
-
-	/**
-	 * Items are removed from set, items are added to set.
-	 * Triggered in result of calling:
-	 *
-	 * * [[add]]
-	 * * [[tryAdd]]
-	 * * [[addAll]]
-	 * * [[$addAll]]
-	 * * [[tryAddAll]]
-	 * * [[remove]]
-	 * * [[tryRemove]]
-	 * * [[removeItem]]
-	 * * [[removeAll]]
-	 * * [[$removeAll]]
-	 * * [[tryRemoveAll]]
-	 * * [[removeItems]]
-	 * * [[splice]]
-	 * * [[trySplice]]
-	 * * [[performSplice]]
-	 */
-	spliceEvent: Event<SetSpliceEventParams<T>> = new Event<SetSpliceEventParams<T>>();
-
-	/**
-	 * Set is cleared. Triggered in result of calling:
-	 *
-	 * * [[clear]]
-	 * * [[$clear]]
-	 * * [[tryClear]]
-	 */
-	clearEvent: Event<SetItemsEventParams<T>> = new Event<SetItemsEventParams<T>>();
-
-	/**
-	 * Set is changed. Triggered right after one of events:
-	 *
-	 * * [[spliceEvent]]
-	 * * [[clearEvent]]
-	 */
-	changeEvent: Event<SetEventParams<T>> = new Event<SetEventParams<T>>();
-
-	/**
-	 * @inheritdoc
-	 */
-	constructor();
-
-	/**
-	 * @inheritdoc
-	 */
-	constructor(items: T[]);
-
-	/**
-	 * @inheritdoc
-	 */
-	constructor(items: Dictionary<T>, adapter: boolean);
-	constructor(items?: any, adapter?: boolean) {
-		super(items, adapter);
-		this.length = new Property<number>(this.getLength());
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected destroyObject() {
-		this.changeEvent.destroy();
-		this.clearEvent.destroy();
-		this.spliceEvent.destroy();
-		this.length.destroy();
-		super.destroyObject();
+	constructor(silent?: boolean);
+	constructor(items: T[], silent?: boolean);
+	constructor(json: Dictionary<T>, flags?: CollectionFlags);
+	constructor(a?: any, b?: any) {
+		super(a, b);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
-		return new JWSet<T>(this.filter(callback, scope), true);
+		return new JWSet<T>(this.filter(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
-		return new JWSet<U>(this.map(callback, scope), true);
+		return new JWSet<U>(this.map(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSorted(callback, scope, order), true);
+		return new JWArray<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSortedComparing(compare, scope, order), true);
+		return new JWArray<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T) => string, scope?: any): IMap<T> {
-		return new JWMap<T>(this.index(callback, scope), true);
+		return new JWMap<T>(this.index(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toArray(): IArray<T> {
-		return new JWArray<T>(this.toArray(), true);
+		return new JWArray<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asArray(): IArray<T> {
-		return new JWArray<T>(this.asArray(), true);
+		return new JWArray<T>(this.asArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSet(): ISet<T> {
-		return new JWSet<T>(this.toSet(), true);
+		return new JWSet<T>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$addAll(items: T[]): IArray<T> {
-		return new JWArray<T>(this.addAll(items), true);
+		return new JWArray<T>(this.addAll(items), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$removeAll(items: T[]): IArray<T> {
-		return new JWArray<T>(this.removeAll(items), true);
+		return new JWArray<T>(this.removeAll(items), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$clear(): IArray<T> {
-		return new JWArray<T>(this.clear(), true);
+		return new JWArray<T>(this.clear(), SILENT | ADAPTER);
 	}
 
 	/**
@@ -200,9 +130,9 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 		if (items === undefined) {
 			return undefined;
 		}
-		this.length.set(0);
-		this.clearEvent.trigger({ sender: this, items: items });
-		this.changeEvent.trigger({ sender: this });
+		this._length.set(0);
+		this._clearEvent.trigger({ sender: this, items: items });
+		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(items, destroy);
 		}
@@ -217,70 +147,12 @@ export default class ObservableSet<T extends IClass> extends AbstractSet<T> {
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		this.length.set(this.getLength());
-		this.spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
-		this.changeEvent.trigger({ sender: this });
+		this._length.set(this._length.get());
+		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
+		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(spliceResult.removedItems, destroy);
 		}
 		return spliceResult;
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmpty<U extends IClass>(): ObservableSet<U> {
-		return new ObservableSet<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptyArray<U>(): ObservableArray<U> {
-		return new ObservableArray<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptyMap<U>(): ObservableMap<U> {
-		return new ObservableMap<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptySet<U extends IClass>(): ObservableSet<U> {
-		return new ObservableSet<U>();
-	}
-}
-
-/**
- * [[JW.ObservableSet]] event parameters.
- */
-export interface SetEventParams<T extends IClass> {
-	/**
-	 * Event sender.
-	 */
-	sender: ObservableSet<T>;
-}
-
-/**
- * Parameters of [[JW.ObservableSet]]'s [[JW.ObservableSet.spliceEvent]].
- */
-export interface SetSpliceEventParams<T extends IClass> extends SetEventParams<T> {
-	/**
-	 * Result of [[splice]] method.
-	 */
-	spliceResult: ISetSpliceResult<T>;
-}
-
-/**
- * Parameters of [[JW.ObservableSet]]'s [[JW.ObservableSet.clearEvent]].
- */
-export interface SetItemsEventParams<T extends IClass> extends SetEventParams<T> {
-	/**
-	 * Old set contents.
-	 */
-	items: T[];
 }

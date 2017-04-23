@@ -18,10 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from './Bindable';
 import {apply, destroy} from './Core';
+import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
-import IMap from './IMap';
+import Event from './Event';
+import IEvent from './IEvent';
+import {default as IMap, MapEventParams, MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from './IMap';
 import IMapSpliceParams from './IMapSpliceParams';
 import IMapSpliceResult from './IMapSpliceResult';
 import IndexedCollection from './IndexedCollection';
@@ -38,9 +42,7 @@ import * as MapUtils from './MapUtils';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * [[get]] - Returns collection item by key.
  * * [[getFirst]] - Returns first item in collection.
@@ -146,9 +148,13 @@ import * as MapUtils from './MapUtils';
  * @param T Map item type.
  */
 abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IMap<T> {
-	private json: Dictionary<T>;
-	private _length: number;
-	private _adapter: boolean;
+	protected _adapter: boolean;
+	protected _json: Dictionary<T>;
+
+	protected _spliceEvent  : IEvent<MapSpliceEventParams<T>>;
+	protected _reindexEvent : IEvent<MapReindexEventParams<T>>;
+	protected _clearEvent   : IEvent<MapItemsEventParams<T>>;
+	protected _changeEvent  : IEvent<MapEventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.
@@ -164,11 +170,76 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * @param adapter Set to true to wrap the **items** rather than copying them into
 	 * a new map.
 	 */
-	constructor(json?: Dictionary<T>, adapter?: boolean) {
-		super();
-		this._adapter = Boolean(adapter);
-		this.json = adapter ? json : json ? apply<T>({}, json) : {};
-		this._length = MapUtils.getLength(this.json);
+	constructor(silent?: boolean);
+	constructor(json: Dictionary<T>, flags: CollectionFlags);
+	constructor(a?: any, b?: CollectionFlags) {
+		const valued = (typeof a !== "boolean");
+		const silent = Boolean(valued ? (b & SILENT) : a);
+		const adapter = valued && Boolean(b & ADAPTER);
+		const json: Dictionary<T> = (valued && a) ? a : {};
+
+		super(silent);
+		this._adapter = adapter;
+		this._json = this._adapter ? json : apply<T>({}, json);
+		this._length.set(MapUtils.getLength(this._json));
+
+		this._spliceEvent  = Event.make<MapSpliceEventParams<T>>(this, silent);
+		this._reindexEvent = Event.make<MapReindexEventParams<T>>(this, silent);
+		this._clearEvent   = Event.make<MapItemsEventParams<T>>(this, silent);
+		this._changeEvent  = Event.make<MapEventParams<T>>(this, silent);
+	}
+
+	/**
+	 * Items are removed from map, items are added to map and items are updated in map.
+	 * Triggered in result of calling:
+	 *
+	 * * [[set]]
+	 * * [[trySet]]
+	 * * [[setAll]]
+	 * * [[trySetAll]]
+	 * * [[remove]]
+	 * * [[tryRemove]]
+	 * * [[removeItem]]
+	 * * [[removeAll]]
+	 * * [[tryRemoveAll]]
+	 * * [[removeItems]]
+	 * * [[splice]]
+	 * * [[trySplice]]
+	 * * [[performSplice]]
+	 */
+	get spliceEvent(): Bindable<MapSpliceEventParams<T>> {
+		return this._spliceEvent;
+	}
+
+	/**
+	 * Keys of items are changed in map. Triggered in result of calling:
+	 *
+	 * * [[setKey]]
+	 * * [[trySetKey]]
+	 * * [[reindex]]
+	 * * [[tryReindex]]
+	 * * [[performReindex]]
+	 */
+	get reindexEvent(): Bindable<MapReindexEventParams<T>> {
+		return this._reindexEvent;
+	}
+
+	/**
+	 * Map is cleared. Triggered in result of calling:
+	 *
+	 * * [[clear]]
+	 * * [[$clear]]
+	 * * [[tryClear]]
+	 */
+	get clearEvent(): Bindable<MapItemsEventParams<T>> {
+		return this._clearEvent;
+	}
+
+	/**
+	 * Map is changed. Triggered right after any another event.
+	 */
+	get changeEvent(): Bindable<MapEventParams<T>> {
+		return this._changeEvent;
 	}
 
 	/**
@@ -182,36 +253,29 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	/**
 	 * @inheritdoc
 	 */
-	getLength(): number {
-		return this._length;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	isEmpty(): boolean {
-		return this._length === 0;
+		return this._length.get() === 0;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getFirst(): T {
-		return MapUtils.getFirst(this.json);
+		return MapUtils.getFirst(this._json);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getFirstKey(): string {
-		return MapUtils.getFirstKey(this.json);
+		return MapUtils.getFirstKey(this._json);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	get(key: string): T {
-		return this.json[key];
+		return this._json[key];
 	}
 
 	/**
@@ -220,63 +284,63 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * **Caution: doesn't make a copy - please don't modify.**
 	 */
 	getJson(): Dictionary<T> {
-		return this.json;
+		return this._json;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getKeys(): string[] {
-		return Object.keys(this.json);
+		return Object.keys(this._json);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	containsItem(item: T): boolean {
-		return MapUtils.containsItem(this.json, item);
+		return MapUtils.containsItem(this._json, item);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	every(callback: (item: T, key: string) => boolean, scope?: any): boolean {
-		return MapUtils.every(this.json, callback, scope || this);
+		return MapUtils.every(this._json, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): T[] {
-		return MapUtils.toSorted(this.json, callback, scope || this, order);
+		return MapUtils.toSorted(this._json, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T[] {
-		return MapUtils.toSortedComparing(this.json, compare, scope || this, order);
+		return MapUtils.toSortedComparing(this._json, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): string[] {
-		return MapUtils.getSortingKeys(this.json, callback, scope || this, order);
+		return MapUtils.getSortingKeys(this._json, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string[] {
-		return MapUtils.getSortingKeysComparing(this.json, compare, scope || this, order);
+		return MapUtils.getSortingKeysComparing(this._json, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
-		return MapUtils.filter(this.json, callback, scope || this);
+		return MapUtils.filter(this._json, callback, scope || this);
 	}
 
 	/**
@@ -288,14 +352,14 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * @inheritdoc
 	 */
 	count(callback: (item: T, key: string) => boolean, scope?: any): number {
-		return MapUtils.count(this.json, callback, scope || this);
+		return MapUtils.count(this._json, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	map<U>(callback: (item: T, key: string) => U, scope?: any): Dictionary<U> {
-		return MapUtils.map(this.json, callback, scope || this);
+		return MapUtils.map(this._json, callback, scope || this);
 	}
 
 	/**
@@ -307,14 +371,14 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * @inheritdoc
 	 */
 	toMap(): Dictionary<T> {
-		return apply<T>({}, this.json);
+		return apply<T>({}, this._json);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	asMap(): Dictionary<T> {
-		return this.json;
+		return this._json;
 	}
 
 	/**
@@ -341,12 +405,12 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	}
 
 	protected _trySet(item: T, key: string): Proxy<T> {
-		var result = MapUtils.trySet(this.json, item, key);
+		var result = MapUtils.trySet(this._json, item, key);
 		if (result === undefined) {
 			return undefined;
 		}
 		if (result.value === undefined) {
-			++this._length;
+			this._length.set(this._length.get() + 1);
 		}
 		return result;
 	}
@@ -384,7 +448,7 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 */
 	setKey(oldKey: string, newKey: string): T {
 		this.trySetKey(oldKey, newKey);
-		return this.json[newKey];
+		return this._json[newKey];
 	}
 
 	/**
@@ -393,7 +457,7 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * If collection is not modified, returns undefined.
 	 */
 	trySetKey(oldKey: string, newKey: string): T {
-		return MapUtils.trySetKey(this.json, oldKey, newKey);
+		return MapUtils.trySetKey(this._json, oldKey, newKey);
 	}
 
 	/**
@@ -410,11 +474,11 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	}
 
 	protected _tryRemove(key: string): T {
-		var item = MapUtils.tryRemove(this.json, key);
+		var item = MapUtils.tryRemove(this._json, key);
 		if (item === undefined) {
 			return undefined;
 		}
-		--this._length;
+		this._length.set(this._length.get() - 1);
 		return item;
 	}
 
@@ -493,16 +557,16 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	}
 
 	protected _tryClear(): Dictionary<T> {
-		if (this._length === 0) {
+		if (this._length.get() === 0) {
 			return undefined;
 		}
 		var items: Dictionary<T>;
-		this._length = 0;
+		this._length.set(0);
 		if (this._adapter) {
-			items = MapUtils.tryClear(this.json);
+			items = MapUtils.tryClear(this._json);
 		} else {
-			items = this.json;
-			this.json = {};
+			items = this._json;
+			this._json = {};
 		}
 		return items;
 	}
@@ -534,9 +598,9 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	}
 
 	protected _trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
-		var spliceResult = MapUtils.trySplice(this.json, removedKeys, updatedItems);
+		var spliceResult = MapUtils.trySplice(this._json, removedKeys, updatedItems);
 		if (spliceResult !== undefined) {
-			this._length += MapUtils.getLength(spliceResult.addedItems) - MapUtils.getLength(spliceResult.removedItems);
+			this._length.set(this._length.get() + MapUtils.getLength(spliceResult.addedItems) - MapUtils.getLength(spliceResult.removedItems));
 			return spliceResult;
 		}
 		return undefined;
@@ -561,7 +625,7 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * If collection is not modified, returns undefined.
 	 */
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
-		return MapUtils.tryReindex(this.json, keyMap);
+		return MapUtils.tryReindex(this._json, keyMap);
 	}
 
 	/**
@@ -571,7 +635,7 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
 	detectSplice(newItems: Dictionary<T>): IMapSpliceParams<T> {
-		return MapUtils.detectSplice(this.json, newItems);
+		return MapUtils.detectSplice(this._json, newItems);
 	}
 
 	/**
@@ -587,7 +651,7 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * If no method call required, returns undefined.
 	 */
 	detectReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): Dictionary<string> {
-		return MapUtils.detectReindex(this.json, newItems, getKey || this.getKey, scope || this);
+		return MapUtils.detectReindex(this._json, newItems, getKey || this.getKey, scope || this);
 	}
 
 	/**
@@ -622,20 +686,15 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * @hidden
 	 */
 	getInverted(): Dictionary<string> {
-		return MapUtils.getInverted(<Dictionary<any>>this.json);
+		return MapUtils.getInverted(<Dictionary<any>>this._json);
 	}
 
 	/**
 	 * Checks for equality (===) to another map, item by item.
 	 */
 	equal(map: Dictionary<T>): boolean {
-		return MapUtils.equal(this.json, map);
+		return MapUtils.equal(this._json, map);
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	abstract createEmpty<U>(): AbstractMap<U>;
 }
 
 export default AbstractMap;

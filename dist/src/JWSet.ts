@@ -19,6 +19,7 @@
 */
 
 import AbstractSet from './AbstractSet';
+import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IClass from './IClass';
@@ -33,126 +34,87 @@ import JWMap from './JWMap';
  * @param T Collection item type.
  */
 export default class JWSet<T extends IClass> extends AbstractSet<T> {
-	/**
-	 * @inheritdoc
-	 */
-	constructor();
-
-	/**
-	 * @inheritdoc
-	 */
-	constructor(items: T[]);
-
-	/**
-	 * @inheritdoc
-	 */
-	constructor(items: Dictionary<T>, adapter: boolean);
-	constructor(items?: any, adapter?: boolean) {
-		super(items, adapter);
+	constructor(silent?: boolean);
+	constructor(items: T[], silent?: boolean);
+	constructor(json: Dictionary<T>, flags?: CollectionFlags);
+	constructor(a?: any, b?: any) {
+		super(a, b);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
-		return new JWSet<T>(this.filter(callback, scope), true);
+		return new JWSet<T>(this.filter(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
-		return new JWSet<U>(this.map(callback, scope), true);
+		return new JWSet<U>(this.map(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSorted(callback, scope, order), true);
+		return new JWArray<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSortedComparing(compare, scope, order), true);
+		return new JWArray<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T) => string, scope?: any): IMap<T> {
-		return new JWMap<T>(this.index(callback, scope), true);
+		return new JWMap<T>(this.index(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toArray(): IArray<T> {
-		return new JWArray<T>(this.toArray(), true);
+		return new JWArray<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asArray(): IArray<T> {
-		return new JWArray<T>(this.asArray(), true);
+		return new JWArray<T>(this.asArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSet(): ISet<T> {
-		return new JWSet<T>(this.toSet(), true);
+		return new JWSet<T>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$addAll(items: T[]): IArray<T> {
-		return new JWArray<T>(this.addAll(items), true);
+		return new JWArray<T>(this.addAll(items), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$removeAll(items: T[]): IArray<T> {
-		return new JWArray<T>(this.removeAll(items), true);
+		return new JWArray<T>(this.removeAll(items), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$clear(): IArray<T> {
-		return new JWArray<T>(this.clear(), true);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmpty<U extends IClass>(): JWSet<U> {
-		return new JWSet<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptyArray<U>(): JWArray<U> {
-		return new JWArray<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptyMap<U>(): JWMap<U> {
-		return new JWMap<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptySet<U extends IClass>(): JWSet<U> {
-		return new JWSet<U>();
+		return new JWArray<T>(this.clear(), SILENT | ADAPTER);
 	}
 }

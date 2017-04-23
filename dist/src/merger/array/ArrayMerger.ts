@@ -169,7 +169,7 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 		}
 		var count = 0;
 		for (var i = 0; i < length; ++i) {
-			count += bunches[index + i].getLength();
+			count += bunches[index + i].length.get();
 		}
 		return count;
 	}

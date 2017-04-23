@@ -18,8 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from './Bindable';
 import IArraySpliceParams from './IArraySpliceParams';
 import IArraySpliceResult from './IArraySpliceResult';
+import {CollectionEventParams} from './ICollection';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 import IIndexedCollection from './IIndexedCollection';
@@ -35,9 +37,7 @@ import Proxy from './Proxy';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * [[get]] - Returns collection item by index.
  * * [[getFirst]] - Returns first item in collection.
@@ -132,6 +132,67 @@ import Proxy from './Proxy';
  */
 interface IArray<T> extends IIndexedCollection<number, T> {
 	/**
+	 * Items are removed from array and items are added to array. Triggered in result
+	 * of calling:
+	 *
+	 * * [[add]]
+	 * * [[tryAdd]]
+	 * * [[addAll]]
+	 * * [[tryAddAll]]
+	 * * [[remove]]
+	 * * [[tryRemove]]
+	 * * [[removeItem]]
+	 * * [[pop]]
+	 * * [[removeAll]]
+	 * * [[tryRemoveAll]]
+	 * * [[removeItems]]
+	 * * [[splice]]
+	 * * [[trySplice]]
+	 * * [[performSplice]]
+	 */
+	readonly spliceEvent: Bindable<ArraySpliceEventParams<T>>;
+
+	/**
+	 * Item is replaced in array. Triggered in result of calling:
+	 *
+	 * * [[set]]
+	 * * [[trySet]]
+	 */
+	readonly replaceEvent: Bindable<ArrayReplaceEventParams<T>>;
+
+	/**
+	 * Item is moved in array. Triggered in result of calling:
+	 *
+	 * * [[move]]
+	 * * [[tryMove]]
+	 */
+	readonly moveEvent: Bindable<ArrayMoveEventParams<T>>;
+
+	/**
+	 * Array is cleared. Triggered in result of calling:
+	 * * [[clear]]
+	 * * [[$clear]]
+	 * * [[tryClear]]
+	 */
+	readonly clearEvent: Bindable<ArrayItemsEventParams<T>>;
+
+	/**
+	 * Items are reordered in array. Triggered in result of calling:
+	 *
+	 * * [[reorder]]
+	 * * [[tryReorder]]
+	 * * [[performReorder]]
+	 * * [[sort]]
+	 * * [[sortComparing]]
+	 */
+	readonly reorderEvent: Bindable<ArrayReorderEventParams<T>>;
+
+	/**
+	 * Array is changed. Triggered right after any another event.
+	 */
+	readonly changeEvent: Bindable<ArrayEventParams<T>>;
+
+	/**
 	 * Function which returns unique key of an item in this collection.
 	 * Function is used in [[detectSplice]],
 	 * [[performSplice]],
@@ -141,11 +202,6 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * if collection contains instances of JW.Class, you are in a good shape.
 	 */
 	getKey: (item: T) => any;
-
-	/**
-	 * @inheritdoc
-	 */
-	getLength(): number;
 
 	/**
 	 * @inheritdoc
@@ -619,11 +675,86 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @returns Item index.
 	 */
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmpty<U>(): IArray<U>;
 }
 
 export default IArray;
+
+/**
+ * `IArray` event parameters.
+ */
+export interface ArrayEventParams<T> extends CollectionEventParams<T> {
+	/**
+	 * Event sender.
+	 */
+	sender: IArray<T>;
+}
+
+/**
+ * Parameters of `spliceEvent`.
+ */
+export interface ArraySpliceEventParams<T> extends ArrayEventParams<T> {
+	/**
+	 * Result of `splice` method.
+	 */
+	spliceResult: IArraySpliceResult<T>;
+}
+
+/**
+ * Parameters of `moveEvent`.
+ */
+export interface ArrayMoveEventParams<T> extends ArrayEventParams<T> {
+	/**
+	 * Where item is moved from.
+	 */
+	fromIndex: number;
+
+	/**
+	 * Where item is moved to.
+	 */
+	toIndex: number;
+
+	/**
+	 * The moved item.
+	 */
+	item: T;
+}
+
+/**
+ * Parameters of `replaceEvent`.
+ */
+export interface ArrayReplaceEventParams<T> extends ArrayEventParams<T> {
+	/**
+	 * Index of the replaced item.
+	 */
+	index: number;
+
+	/**
+	 * Old item.
+	 */
+	oldItem: T;
+
+	/**
+	 * New item.
+	 */
+	newItem: T;
+}
+
+/**
+ * Parameters of `clearEvent`.
+ */
+export interface ArrayItemsEventParams<T> extends ArrayEventParams<T> {
+	/**
+	 * Old array contents.
+	 */
+	items: T[];
+}
+
+/**
+ * Parameters of `reorderEvent`.
+ */
+export interface ArrayReorderEventParams<T> extends ArrayItemsEventParams<T> {
+	/**
+	 * Indexes of items in reordered array.
+	 */
+	indexArray: number[];
+}

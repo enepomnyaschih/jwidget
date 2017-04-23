@@ -18,12 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {apply, destroy} from './Core';
+import Bindable from './Bindable';
+import {apply, destroy, iid, isArray} from './Core';
+import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import AbstractCollection from './AbstractCollection';
 import Dictionary from './Dictionary';
+import Event from './Event';
 import IArray from './IArray';
 import IClass from './IClass';
-import ISet from './ISet';
+import IEvent from './IEvent';
+import {default as ISet, SetEventParams, SetItemsEventParams, SetSpliceEventParams} from './ISet';
 import ISetSpliceParams from './ISetSpliceParams';
 import ISetSpliceResult from './ISetSpliceResult';
 import * as ArrayUtils from './ArrayUtils';
@@ -40,9 +44,7 @@ import * as SetUtils from './SetUtils';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * [[getFirst]] - Returns first item in collection.
  * * [[containsItem]] - Does collection contain the item?
@@ -125,38 +127,78 @@ import * as SetUtils from './SetUtils';
  * @param T Collection item type.
  */
 abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
-	private json: Dictionary<T>;
-	private _length: number;
-	private _adapter: boolean;
+	protected _adapter: boolean;
+	protected _json: Dictionary<T>;
 
-	/**
-	 * This constructor should be used to create a new empty set.
-	 */
-	constructor();
+	protected _spliceEvent : IEvent<SetSpliceEventParams<T>>;
+	protected _clearEvent  : IEvent<SetItemsEventParams<T>>;
+	protected _changeEvent : IEvent<SetEventParams<T>>;
 
 	/**
 	 * This constructor should be used to create a new set and copy the items into it.
 	 *
 	 * @param items Initial set contents.
 	 */
-	constructor(items: T[]);
+	constructor(silent?: boolean);
+	constructor(items: T[], silent?: boolean);
+	constructor(json: Dictionary<T>, flags?: CollectionFlags);
+	constructor(a?: any, b?: any) {
+		const valued = (typeof a !== "boolean");
+		const arr = (typeof b === "boolean") || (isArray(a) && b == null);
+		const silent = Boolean(arr ? b : valued ? (b & SILENT) : a);
+		const adapter = !arr && valued && Boolean(b & ADAPTER);
+		const json: Dictionary<T> = (!valued || !a) ? {} : arr ? ArrayUtils.index<T>(a, iid) : a;
+
+		super(silent);
+		this._adapter = adapter;
+		this._json = this._adapter ? json : apply<T>({}, json);
+		this._length.set((!valued || !a) ? 0 : arr ? a.length : SetUtils.getLength(json));
+
+		this._spliceEvent = Event.make<SetSpliceEventParams<T>>(this, silent);
+		this._clearEvent  = Event.make<SetItemsEventParams<T>>(this, silent);
+		this._changeEvent = Event.make<SetEventParams<T>>(this, silent);
+	}
 
 	/**
-	 * This constructor should be used to wrap the **items** rather than copying them
-	 * into a new set. Since set is a map from [[iid]]
-	 * to items, you must pass this map as a first argument.
+	 * Items are removed from set, items are added to set.
+	 * Triggered in result of calling:
 	 *
-	 * @param items Initial set contents.
-	 * @param adapter Used to distinguish the constructor implementations and
-	 * for consistency to other collections. Must be true.
+	 * * [[add]]
+	 * * [[tryAdd]]
+	 * * [[addAll]]
+	 * * [[$addAll]]
+	 * * [[tryAddAll]]
+	 * * [[remove]]
+	 * * [[tryRemove]]
+	 * * [[removeItem]]
+	 * * [[removeAll]]
+	 * * [[$removeAll]]
+	 * * [[tryRemoveAll]]
+	 * * [[removeItems]]
+	 * * [[splice]]
+	 * * [[trySplice]]
+	 * * [[performSplice]]
 	 */
-	constructor(items: Dictionary<T>, adapter: boolean);
-	constructor(items?: any, adapter?: boolean) {
-		super();
-		this._adapter = Boolean(adapter);
-		this.json = this._adapter ? items :
-			items ? ArrayUtils.index(<T[]>items, function(item) { return String(item._iid); }) : {};
-		this._length = SetUtils.getLength(this.json);
+	get spliceEvent(): Bindable<SetSpliceEventParams<T>> {
+		return this._spliceEvent;
+	}
+
+	/**
+	 * Set is cleared. Triggered in result of calling:
+	 *
+	 * * [[clear]]
+	 * * [[$clear]]
+	 * * [[tryClear]]
+	 */
+	get clearEvent(): Bindable<SetItemsEventParams<T>> {
+		return this._clearEvent;
+	}
+
+	/**
+	 * Set is changed. Triggered right after any another event.
+	 */
+	get changeEvent(): Bindable<SetEventParams<T>> {
+		return this._changeEvent;
 	}
 
 	/**
@@ -173,70 +215,63 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * **Caution: doesn't make a copy - please don't modify.**
 	 */
 	getJson(): Dictionary<T> {
-		return this.json;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	getLength(): number {
-		return this._length;
+		return this._json;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	isEmpty(): boolean {
-		return this._length === 0;
+		return this._length.get() === 0;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getFirst(): T {
-		return SetUtils.getFirst(this.json);
+		return SetUtils.getFirst(this._json);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	containsItem(item: T): boolean {
-		return this.json.hasOwnProperty(String(item._iid));
+		return this._json.hasOwnProperty(String(item._iid));
 	}
 
 	/**
 	 * Shorthand to [[containsItem]].
 	 */
 	contains(item: T): boolean {
-		return this.json.hasOwnProperty(String(item._iid));
+		return this._json.hasOwnProperty(String(item._iid));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	every(callback: (item: T) => boolean, scope?: any): boolean {
-		return SetUtils.every(this.json, callback, scope);
+		return SetUtils.every(this._json, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSorted(callback?: (item: T) => any, scope?: any, order?: number): T[] {
-		return SetUtils.toSorted(this.json, callback, scope || this, order);
+		return SetUtils.toSorted(this._json, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[] {
-		return SetUtils.toSortedComparing(this.json, compare, scope || this, order);
+		return SetUtils.toSortedComparing(this._json, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T) => boolean, scope?: any): Dictionary<T> {
-		return SetUtils.filter(this.json, callback, scope);
+		return SetUtils.filter(this._json, callback, scope);
 	}
 
 	/**
@@ -248,14 +283,14 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * @inheritdoc
 	 */
 	count(callback: (item: T) => boolean, scope?: any): number {
-		return SetUtils.count(this.json, callback, scope);
+		return SetUtils.count(this._json, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	map<U extends IClass>(callback: (item: T) => U, scope?: any): Dictionary<U> {
-		return SetUtils.map(this.json, callback, scope);
+		return SetUtils.map(this._json, callback, scope);
 	}
 
 	/**
@@ -267,14 +302,14 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * @inheritdoc
 	 */
 	toSet(): Dictionary<T> {
-		return apply<T>({}, this.json);
+		return apply<T>({}, this._json);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	asSet(): Dictionary<T> {
-		return this.json;
+		return this._json;
 	}
 
 	/**
@@ -419,16 +454,16 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	}
 
 	_tryClear(): T[] {
-		if (this._length === 0) {
+		if (this._length.get() === 0) {
 			return undefined;
 		}
 		var items: T[];
-		this._length = 0;
+		this._length.set(0);
 		if (this._adapter) {
-			items = SetUtils.tryClear(this.json);
+			items = SetUtils.tryClear(this._json);
 		} else {
 			items = this.toArray();
-			this.json = {};
+			this._json = {};
 		}
 		return items;
 	}
@@ -460,9 +495,9 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	}
 
 	_trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
-		var spliceResult = SetUtils.trySplice(this.json, removedItems, addedItems);
+		var spliceResult = SetUtils.trySplice(this._json, removedItems, addedItems);
 		if (spliceResult !== undefined) {
-			this._length += spliceResult.addedItems.length - spliceResult.removedItems.length;
+			this._length.set(this._length.get() + spliceResult.addedItems.length - spliceResult.removedItems.length);
 			return spliceResult;
 		}
 		return undefined;
@@ -475,7 +510,7 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
 	detectSplice(newItems: T[]): ISetSpliceParams<T> {
-		return SetUtils.detectSplice(this.json, newItems);
+		return SetUtils.detectSplice(this._json, newItems);
 	}
 
 	/**
@@ -494,13 +529,8 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * Checks for equality (===) to array, item by item.
 	 */
 	equal(array: T[]): boolean {
-		return SetUtils.equal(this.json, array);
+		return SetUtils.equal(this._json, array);
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	abstract createEmpty<U extends IClass>(): ISet<U>;
 }
 
 export default AbstractSet;

@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ObservableArray, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
+import {ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
+import ObservableArray from '../../ObservableArray';
 import ArrayCounter from './ArrayCounter';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
 import * as ArrayUtils from '../../ArrayUtils';

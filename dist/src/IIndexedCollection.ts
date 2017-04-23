@@ -42,9 +42,7 @@ import Proxy from './Proxy';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * **[[get]] - Returns collection item by key.**
  * * [[getFirst]] - Returns first item in collection
@@ -378,11 +376,6 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 * @inheritdoc
 	 */
 	$map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmpty<U>(): IIndexedCollection<K, U>;
 }
 
 export default IIndexedCollection;

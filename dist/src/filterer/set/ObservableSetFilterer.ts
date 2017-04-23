@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ObservableSet, SetItemsEventParams, SetSpliceEventParams} from '../../ObservableSet';
+import {SetItemsEventParams, SetSpliceEventParams} from '../../ISet';
+import ObservableSet from '../../ObservableSet';
 import IClass from '../../IClass';
 import ISetFiltererConfig from './ISetFiltererConfig';
 import SetFilterer from './SetFilterer';

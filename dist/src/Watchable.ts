@@ -30,7 +30,7 @@ interface Watchable<V> extends Destroyable {
 	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
-	changeEvent: Bindable<ValueChangeEventParams<V>>;
+	readonly changeEvent: Bindable<ValueChangeEventParams<V>>;
 
 	/**
 	 * Returns property value.

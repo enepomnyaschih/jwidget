@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ObservableArray, ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
+import {ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
+import ObservableArray from '../../ObservableArray';
 import Class from '../../Class';
 import IArray from '../../IArray';
 import IndexCount from '../../IndexCount';
@@ -52,7 +53,7 @@ export default class Bunch<T> extends Class {
 			if (bunch === this.bunch) {
 				return index;
 			}
-			index += bunch.getLength();
+			index += bunch.length.get();
 		}
 		console.warn("JW.ObservableArray.Merger object is corrupted");
 		return 0;
@@ -87,7 +88,7 @@ export default class Bunch<T> extends Class {
 		var index = this._getIndex();
 		var bunchIndexArray = params.indexArray;
 		var bunchLength = bunchIndexArray.length;
-		var targetLength = this.target.getLength();
+		var targetLength = this.target.length.get();
 		var targetIndexArray = new Array<number>(targetLength);
 		for (var i = 0; i < index; ++i) {
 			targetIndexArray[i] = i;

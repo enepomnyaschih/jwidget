@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ObservableArray, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
+import {ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
+import ObservableArray from '../../ObservableArray';
 import ArrayReverser from './ArrayReverser';
 import IArrayReverserConfig from './IArrayReverserConfig';
 import IndexCount from '../../IndexCount';
@@ -42,7 +43,7 @@ export default class ObservableArrayReverser<T> extends ArrayReverser<T> {
 
 	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		var oldLength = this.target.getLength();
+		var oldLength = this.target.length.get();
 		var newLength = oldLength;
 
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -71,13 +72,13 @@ export default class ObservableArrayReverser<T> extends ArrayReverser<T> {
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {
-		this.target.trySet(params.newItem, this.target.getLength() - params.index - 1);
+		this.target.trySet(params.newItem, this.target.length.get() - params.index - 1);
 	}
 
 	private _onMove(params: ArrayMoveEventParams<T>) {
 		this.target.tryMove(
-			this.target.getLength() - params.fromIndex - 1,
-			this.target.getLength() - params.toIndex - 1);
+			this.target.length.get() - params.fromIndex - 1,
+			this.target.length.get() - params.toIndex - 1);
 	}
 
 	private _onClear() {

@@ -19,11 +19,10 @@
 */
 
 import {destroy} from './Core';
+import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import AbstractMap from './AbstractMap';
-import Class from './Class';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
-import Event from './Event';
 import IArray from './IArray';
 import IMap from './IMap';
 import IMapSpliceResult from './IMapSpliceResult';
@@ -31,9 +30,6 @@ import ISet from './ISet';
 import JWArray from './JWArray';
 import JWMap from './JWMap';
 import JWSet from './JWSet';
-import ObservableArray from './ObservableArray';
-import ObservableSet from './ObservableSet';
-import Property from './Property';
 import Proxy from './Proxy';
 import * as ArrayUtils from './ArrayUtils';
 import * as MapUtils from './MapUtils';
@@ -45,175 +41,110 @@ import * as MapUtils from './MapUtils';
  */
 export default class ObservableMap<T> extends AbstractMap<T> {
 	/**
-	 * Collection length. **Don't modify manually!**
-	 */
-	length: Property<number>;
-
-	/**
-	 * Items are removed from map, items are added to map and items are updated in map.
-	 * Triggered in result of calling:
-	 *
-	 * * [[set]]
-	 * * [[trySet]]
-	 * * [[setAll]]
-	 * * [[trySetAll]]
-	 * * [[remove]]
-	 * * [[tryRemove]]
-	 * * [[removeItem]]
-	 * * [[removeAll]]
-	 * * [[tryRemoveAll]]
-	 * * [[removeItems]]
-	 * * [[splice]]
-	 * * [[trySplice]]
-	 * * [[performSplice]]
-	 */
-	spliceEvent: Event<MapSpliceEventParams<T>> = new Event<MapSpliceEventParams<T>>();
-
-	/**
-	 * Keys of items are changed in map. Triggered in result of calling:
-	 *
-	 * * [[setKey]]
-	 * * [[trySetKey]]
-	 * * [[reindex]]
-	 * * [[tryReindex]]
-	 * * [[performReindex]]
-	 */
-	reindexEvent: Event<MapReindexEventParams<T>> = new Event<MapReindexEventParams<T>>();
-
-	/**
-	 * Map is cleared. Triggered in result of calling:
-	 *
-	 * * [[clear]]
-	 * * [[$clear]]
-	 * * [[tryClear]]
-	 */
-	clearEvent: Event<MapItemsEventParams<T>> = new Event<MapItemsEventParams<T>>();
-
-	/**
-	 * Map is changed. Triggered right after one of events:
-	 *
-	 * * [[spliceEvent]]
-	 * * [[reindexEvent]]
-	 * * [[clearEvent]]
-	 */
-	changeEvent: Event<MapEventParams<T>> = new Event<MapEventParams<T>>();
-
-	/**
 	 * @inheritdoc
 	 */
-	constructor(items?: Dictionary<T>, adapter?: boolean) {
-		super(items, adapter);
-		this.length = new Property<number>(this.getLength());
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected destroyObject() {
-		this.changeEvent.destroy();
-		this.clearEvent.destroy();
-		this.reindexEvent.destroy();
-		this.spliceEvent.destroy();
-		this.length.destroy();
-		super.destroyObject();
+	constructor(silent?: boolean);
+	constructor(json: Dictionary<T>, flags: CollectionFlags);
+	constructor(a?: any, b?: CollectionFlags) {
+		super(a, b);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getKeys(): IArray<string> {
-		return new JWArray<string>(this.getKeys(), true);
+		return new JWArray<string>(this.getKeys(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSorted(callback, scope, order), true);
+		return new JWArray<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSortedComparing(compare, scope, order), true);
+		return new JWArray<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<string> {
-		return new JWArray<string>(this.getSortingKeys(callback, scope, order), true);
+		return new JWArray<string>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<string> {
-		return new JWArray<string>(this.getSortingKeysComparing(compare, scope, order), true);
+		return new JWArray<string>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T> {
-		return new JWMap<T>(this.filter(callback, scope || this), true);
+		return new JWMap<T>(this.filter(callback, scope || this), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U> {
-		return new JWMap<U>(this.map(callback, scope || this), true);
+		return new JWMap<U>(this.map(callback, scope || this), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T, key: string) => string, scope?: any): IMap<T> {
-		return new JWMap<T>(this.index(callback, scope), true);
+		return new JWMap<T>(this.index(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toArray(): IArray<T> {
-		return new JWArray<T>(this.toArray(), true);
+		return new JWArray<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asArray(): IArray<T> {
-		return new JWArray<T>(this.asArray(), true);
+		return new JWArray<T>(this.asArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toMap(): IMap<T> {
-		return new JWMap<T>(this.toMap(), true);
+		return new JWMap<T>(this.toMap(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asMap(): IMap<T> {
-		return new JWMap<T>(this.asMap(), true);
+		return new JWMap<T>(this.asMap(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSet(): ISet<any> {
-		return new JWSet<any>(this.toSet(), true);
+		return new JWSet<any>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asSet(): ISet<any> {
-		return new JWSet<any>(this.asSet(), true);
+		return new JWSet<any>(this.asSet(), SILENT | ADAPTER);
 	}
 
 	/**
@@ -232,9 +163,9 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 		var addedItems: Dictionary<T> = {};
 		addedItems[key] = item;
 		var spliceResult = { removedItems: removedItems, addedItems: addedItems };
-		this.length.set(this.getLength());
-		this.spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
-		this.changeEvent.trigger({ sender: this });
+		this._length.set(this.length.get());
+		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
+		this._changeEvent.trigger({ sender: this });
 		if (removedItem !== undefined && this._ownsItems) {
 			(<Destroyable><any>removedItem).destroy();
 		}
@@ -256,8 +187,8 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 		if (item === undefined) {
 			return undefined;
 		}
-		this.reindexEvent.trigger({ sender: this, keyMap: MapUtils.single(oldKey, newKey) });
-		this.changeEvent.trigger({ sender: this });
+		this._reindexEvent.trigger({ sender: this, keyMap: MapUtils.single(oldKey, newKey) });
+		this._changeEvent.trigger({ sender: this });
 		return item;
 	}
 
@@ -270,9 +201,9 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 			return undefined;
 		}
 		var spliceResult: IMapSpliceResult<T> = { addedItems: {}, removedItems: MapUtils.single(key, item) };
-		this.length.set(this.getLength());
-		this.spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
-		this.changeEvent.trigger({ sender: this });
+		this._length.set(this._length.get());
+		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
+		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
 			(<Destroyable><any>item).destroy();
 		}
@@ -290,7 +221,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	 * @inheritdoc
 	 */
 	$removeAllVerbose(keys: string[]): IMap<T> {
-		return new JWMap<T>(this.removeAllVerbose(keys), true);
+		return new JWMap<T>(this.removeAllVerbose(keys), SILENT | ADAPTER);
 	}
 
 	/**
@@ -301,9 +232,9 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		this.length.set(this.getLength());
-		this.spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
-		this.changeEvent.trigger({ sender: this });
+		this._length.set(this._length.get());
+		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
+		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(MapUtils.toArray(spliceResult.removedItems), destroy);
 		}
@@ -318,9 +249,9 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 		if (items === undefined) {
 			return undefined;
 		}
-		this.length.set(0);
-		this.clearEvent.trigger({ sender: this, items: items });
-		this.changeEvent.trigger({ sender: this });
+		this._length.set(0);
+		this._clearEvent.trigger({ sender: this, items: items });
+		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(MapUtils.toArray(items), destroy);
 		}
@@ -331,7 +262,7 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 	 * @inheritdoc
 	 */
 	$clear(): IMap<T> {
-		return new JWMap<T>(this.clear(), true);
+		return new JWMap<T>(this.clear(), SILENT | ADAPTER);
 	}
 
 	/**
@@ -342,76 +273,8 @@ export default class ObservableMap<T> extends AbstractMap<T> {
 		if (result === undefined) {
 			return undefined;
 		}
-		this.reindexEvent.trigger({ sender: this, keyMap: result });
-		this.changeEvent.trigger({ sender: this });
+		this._reindexEvent.trigger({ sender: this, keyMap: result });
+		this._changeEvent.trigger({ sender: this });
 		return result;
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmpty<U>(): ObservableMap<U> {
-		return new ObservableMap<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptyArray<U>(): ObservableArray<U> {
-		return new ObservableArray<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptyMap<U>(): ObservableMap<U> {
-		return new ObservableMap<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptySet<U extends Class>(): ObservableSet<U> {
-		return new ObservableSet<U>();
-	}
-}
-
-/**
- * [[JW.ObservableMap]] event parameters.
- */
-export interface MapEventParams<T> {
-	/**
-	 * Event sender.
-	 */
-	sender: ObservableMap<T>;
-}
-
-/**
- * Parameters of [[JW.ObservableMap]]'s [[JW.ObservableMap.spliceEvent]].
- */
-export interface MapSpliceEventParams<T> extends MapEventParams<T> {
-	/**
-	 * Result of [[JW.ObservableMap.splice]] method.
-	 */
-	spliceResult: IMapSpliceResult<T>;
-}
-
-/**
- * Parameters of [[JW.ObservableMap]]'s [[JW.ObservableMap.reindexEvent]].
- */
-export interface MapReindexEventParams<T> extends MapEventParams<T> {
-	/**
-	 * Map of changed keys.
-	 */
-	keyMap: Dictionary<string>;
-}
-
-/**
- * Parameters of [[JW.ObservableMap]]'s [[JW.ObservableMap.clearEvent]].
- */
-export interface MapItemsEventParams<T> extends MapEventParams<T> {
-	/**
-	 * Old map contents.
-	 */
-	items: Dictionary<T>;
 }

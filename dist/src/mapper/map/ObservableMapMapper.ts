@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ObservableMap, MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from '../../ObservableMap';
+import {MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from '../../IMap';
+import ObservableMap from '../../ObservableMap';
 import IMapMapperConfig from './IMapMapperConfig';
 import MapMapper from './MapMapper';
 import * as MapUtils from '../../MapUtils';

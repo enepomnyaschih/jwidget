@@ -18,7 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from './Bindable';
 import Dictionary from './Dictionary';
+import {CollectionEventParams} from './ICollection';
 import IIndexedCollection from './IIndexedCollection';
 import IMapSpliceParams from './IMapSpliceParams';
 import IMapSpliceResult from './IMapSpliceResult';
@@ -33,9 +35,7 @@ import Proxy from './Proxy';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * [[get]] - Returns collection item by key.
  * * [[getFirst]] - Returns first item in collection.
@@ -111,6 +111,51 @@ import Proxy from './Proxy';
  */
 interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
+	 * Items are removed from map, items are added to map and items are updated in map.
+	 * Triggered in result of calling:
+	 *
+	 * * [[set]]
+	 * * [[trySet]]
+	 * * [[setAll]]
+	 * * [[trySetAll]]
+	 * * [[remove]]
+	 * * [[tryRemove]]
+	 * * [[removeItem]]
+	 * * [[removeAll]]
+	 * * [[tryRemoveAll]]
+	 * * [[removeItems]]
+	 * * [[splice]]
+	 * * [[trySplice]]
+	 * * [[performSplice]]
+	 */
+	readonly spliceEvent: Bindable<MapSpliceEventParams<T>>;
+
+	/**
+	 * Keys of items are changed in map. Triggered in result of calling:
+	 *
+	 * * [[setKey]]
+	 * * [[trySetKey]]
+	 * * [[reindex]]
+	 * * [[tryReindex]]
+	 * * [[performReindex]]
+	 */
+	readonly reindexEvent: Bindable<MapReindexEventParams<T>>;
+
+	/**
+	 * Map is cleared. Triggered in result of calling:
+	 *
+	 * * [[clear]]
+	 * * [[$clear]]
+	 * * [[tryClear]]
+	 */
+	readonly clearEvent: Bindable<MapItemsEventParams<T>>;
+
+	/**
+	 * Map is changed. Triggered right after any another event.
+	 */
+	readonly changeEvent: Bindable<MapEventParams<T>>;
+
+	/**
 	 * Function which returns unique key of an item in this collection.
 	 * [[detectReindex]],
 	 * [[performReindex]] algorithms.
@@ -118,11 +163,6 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * if collection contains instances of JW.Class, you are in a good shape.
 	 */
 	getKey: (item: T) => any;
-
-	/**
-	 * @inheritdoc
-	 */
-	getLength(): number;
 
 	/**
 	 * @inheritdoc
@@ -397,11 +437,46 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * Checks for equality (===) to another map, item by item.
 	 */
 	equal(map: Dictionary<T>): boolean;
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmpty<U>(): IMap<U>;
 }
 
 export default IMap;
+
+/**
+ * `IMap` event parameters.
+ */
+export interface MapEventParams<T> extends CollectionEventParams<T> {
+	/**
+	 * Event sender.
+	 */
+	sender: IMap<T>;
+}
+
+/**
+ * Parameters of `spliceEvent`.
+ */
+export interface MapSpliceEventParams<T> extends MapEventParams<T> {
+	/**
+	 * Result of `splice` method.
+	 */
+	spliceResult: IMapSpliceResult<T>;
+}
+
+/**
+ * Parameters of `reindexEvent`.
+ */
+export interface MapReindexEventParams<T> extends MapEventParams<T> {
+	/**
+	 * Map of changed keys.
+	 */
+	keyMap: Dictionary<string>;
+}
+
+/**
+ * Parameters of `clearEvent`.
+ */
+export interface MapItemsEventParams<T> extends MapEventParams<T> {
+	/**
+	 * Old map contents.
+	 */
+	items: Dictionary<T>;
+}

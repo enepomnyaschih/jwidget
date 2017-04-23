@@ -44,9 +44,7 @@ import Watchable from './Watchable';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * **[[get]] - Returns collection item by key.**
  * * [[getFirst]] - Returns first item in collection
@@ -137,6 +135,10 @@ import Watchable from './Watchable';
  * @param T Collection item type.
  */
 abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements IIndexedCollection<K, T> {
+	constructor(silent: boolean) {
+		super(silent);
+	}
+
 	/**
 	 * Returns item by key. If item with such key doesn't exist, returns undefined.
 	 */
@@ -471,11 +473,6 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 * @inheritdoc
 	 */
 	abstract $map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	abstract createEmpty<U>(): IIndexedCollection<K, U>;
 }
 
 export default IndexedCollection;

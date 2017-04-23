@@ -18,10 +18,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from './Bindable';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IClass from './IClass';
-import ICollection from './ICollection';
+import {default as ICollection, CollectionEventParams} from './ICollection';
 import ISetSpliceParams from './ISetSpliceParams';
 import ISetSpliceResult from './ISetSpliceResult';
 
@@ -36,9 +37,7 @@ import ISetSpliceResult from './ISetSpliceResult';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * [[getFirst]] - Returns first item in collection.
  * * [[containsItem]] - Does collection contain the item?
@@ -100,16 +99,47 @@ import ISetSpliceResult from './ISetSpliceResult';
  */
 interface ISet<T extends IClass> extends ICollection<T> {
 	/**
+	 * Items are removed from set, items are added to set.
+	 * Triggered in result of calling:
+	 *
+	 * * [[add]]
+	 * * [[tryAdd]]
+	 * * [[addAll]]
+	 * * [[$addAll]]
+	 * * [[tryAddAll]]
+	 * * [[remove]]
+	 * * [[tryRemove]]
+	 * * [[removeItem]]
+	 * * [[removeAll]]
+	 * * [[$removeAll]]
+	 * * [[tryRemoveAll]]
+	 * * [[removeItems]]
+	 * * [[splice]]
+	 * * [[trySplice]]
+	 * * [[performSplice]]
+	 */
+	readonly spliceEvent: Bindable<SetSpliceEventParams<T>>;
+
+	/**
+	 * Set is cleared. Triggered in result of calling:
+	 *
+	 * * [[clear]]
+	 * * [[$clear]]
+	 * * [[tryClear]]
+	 */
+	readonly clearEvent: Bindable<SetItemsEventParams<T>>;
+
+	/**
+	 * Set is changed. Triggered right after any another event.
+	 */
+	readonly changeEvent: Bindable<SetEventParams<T>>;
+
+	/**
 	 * Returns item map - internal collection representation.
 	 *
 	 * **Caution: doesn't make a copy - please don't modify.**
 	 */
 	getJson(): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	getLength(): number;
 
 	/**
 	 * @inheritdoc
@@ -326,11 +356,36 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * Checks for equality (===) to array, item by item.
 	 */
 	equal(array: T[]): boolean;
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmpty<U extends IClass>(): ISet<U>;
 }
 
 export default ISet;
+
+/**
+ * `ISet` event parameters.
+ */
+export interface SetEventParams<T extends IClass> extends CollectionEventParams<T> {
+	/**
+	 * Event sender.
+	 */
+	sender: ISet<T>;
+}
+
+/**
+ * Parameters of `spliceEvent`.
+ */
+export interface SetSpliceEventParams<T extends IClass> extends SetEventParams<T> {
+	/**
+	 * Result of `splice` method.
+	 */
+	spliceResult: ISetSpliceResult<T>;
+}
+
+/**
+ * Parameters of `clearEvent`.
+ */
+export interface SetItemsEventParams<T extends IClass> extends SetEventParams<T> {
+	/**
+	 * Old set contents.
+	 */
+	items: T[];
+}

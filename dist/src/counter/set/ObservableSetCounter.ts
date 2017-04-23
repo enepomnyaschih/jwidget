@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ObservableSet, SetSpliceEventParams} from '../../ObservableSet';
+import {SetSpliceEventParams} from '../../ISet';
+import ObservableSet from '../../ObservableSet';
 import IClass from '../../IClass';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
 import SetCounter from './SetCounter';

@@ -28,6 +28,7 @@ import IIndexCount from '../IIndexCount';
 import IIndexItems from '../IIndexItems';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
+import JWArray from '../JWArray';
 import * as ArrayUtils from '../ArrayUtils';
 
 /**
@@ -164,7 +165,7 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 		this._order = config.order || 1;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? source.createEmptyArray<T>() : config.target;
+		this.target = this._targetCreated ? new JWArray<T>(source.isSilent()) : config.target;
 		this._splice([], source.asArray());
 	}
 
@@ -227,7 +228,7 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 		var removeParamsList: IIndexCount[] = [];
 		var addParamsList: IIndexItems<T>[] = [];
 		var removeParams: IIndexCount = null;
-		for (var iTarget = 0, lTarget = this.target.getLength(); iTarget < lTarget; ++iTarget) {
+		for (var iTarget = 0, lTarget = this.target.length.get(); iTarget < lTarget; ++iTarget) {
 			var value = this.target.get(iTarget);
 			if (removedItems[ArrayUtils.binarySearch(removedItems, value, this._compare, this._scope, this._order) - 1] === value) {
 				if (!removeParams) {

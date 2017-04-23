@@ -19,16 +19,21 @@
 */
 
 import ArraySpliceResult from './ArraySpliceResult';
+import Bindable from './Bindable';
+import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import Dictionary from './Dictionary';
-import IArray from './IArray';
+import Event from './Event';
+import {default as IArray, ArrayEventParams, ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from './IArray';
 import IArraySpliceParams from './IArraySpliceParams';
 import IArraySpliceResult from './IArraySpliceResult';
+import IEvent from './IEvent';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import IndexedCollection from './IndexedCollection';
 import Proxy from './Proxy';
+import Watchable from './Watchable';
 import * as ArrayUtils from './ArrayUtils';
 
 /**
@@ -41,9 +46,7 @@ import * as ArrayUtils from './ArrayUtils';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * [[get]] - Returns collection item by index.
  * * [[getFirst]] - Returns first item in collection.
@@ -172,7 +175,14 @@ import * as ArrayUtils from './ArrayUtils';
  * @param T Array item type.
  */
 abstract class AbstractArray<T> extends IndexedCollection<number, T> implements IArray<T> {
-	protected items: T[];
+	protected _items: T[];
+
+	protected _spliceEvent  : IEvent<ArraySpliceEventParams<T>>;
+	protected _replaceEvent : IEvent<ArrayReplaceEventParams<T>>;
+	protected _moveEvent    : IEvent<ArrayMoveEventParams<T>>;
+	protected _reorderEvent : IEvent<ArrayReorderEventParams<T>>;
+	protected _clearEvent   : IEvent<ArrayItemsEventParams<T>>;
+	protected _changeEvent  : IEvent<ArrayEventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.
@@ -190,9 +200,101 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @param adapter Set to true to wrap the **items** rather than copying them into
 	 * a new array.
 	 */
-	constructor(items?: T[], adapter?: boolean) {
-		super();
-		this.items = adapter ? items : items ? items.concat() : [];
+	constructor(silent?: boolean);
+	constructor(items: T[], flags?: CollectionFlags);
+	constructor(a?: any, b?: CollectionFlags) {
+		const valued = (typeof a !== "boolean");
+		const silent = Boolean(valued ? (b & SILENT) : a);
+		const adapter = valued && Boolean(b & ADAPTER);
+		const items: T[] = (valued && a) ? a : [];
+
+		super(silent);
+		this._items = adapter ? items : items ? items.concat() : [];
+		this._length.set(this._items.length);
+
+		this._spliceEvent  = Event.make<ArraySpliceEventParams<T>>(this, silent);
+		this._replaceEvent = Event.make<ArrayReplaceEventParams<T>>(this, silent);
+		this._moveEvent    = Event.make<ArrayMoveEventParams<T>>(this, silent);
+		this._reorderEvent = Event.make<ArrayReorderEventParams<T>>(this, silent);
+		this._clearEvent   = Event.make<ArrayItemsEventParams<T>>(this, silent);
+		this._changeEvent  = Event.make<ArrayEventParams<T>>(this, silent);
+	}
+
+	get length(): Watchable<number> {
+		return this._length;
+	}
+
+	/**
+	 * Items are removed from array and items are added to array. Triggered in result
+	 * of calling:
+	 *
+	 * * [[add]]
+	 * * [[tryAdd]]
+	 * * [[addAll]]
+	 * * [[tryAddAll]]
+	 * * [[remove]]
+	 * * [[tryRemove]]
+	 * * [[removeItem]]
+	 * * [[pop]]
+	 * * [[removeAll]]
+	 * * [[tryRemoveAll]]
+	 * * [[removeItems]]
+	 * * [[splice]]
+	 * * [[trySplice]]
+	 * * [[performSplice]]
+	 */
+	get spliceEvent(): Bindable<ArraySpliceEventParams<T>> {
+		return this._spliceEvent;
+	}
+
+	/**
+	 * Item is replaced in array. Triggered in result of calling:
+	 *
+	 * * [[set]]
+	 * * [[trySet]]
+	 */
+	get replaceEvent(): Bindable<ArrayReplaceEventParams<T>> {
+		return this._replaceEvent;
+	}
+
+	/**
+	 * Item is moved in array. Triggered in result of calling:
+	 *
+	 * * [[move]]
+	 * * [[tryMove]]
+	 */
+	get moveEvent(): Bindable<ArrayMoveEventParams<T>> {
+		return this._moveEvent;
+	}
+
+	/**
+	 * Array is cleared. Triggered in result of calling:
+	 * * [[clear]]
+	 * * [[$clear]]
+	 * * [[tryClear]]
+	 */
+	get clearEvent(): Bindable<ArrayItemsEventParams<T>> {
+		return this._clearEvent;
+	}
+
+	/**
+	 * Items are reordered in array. Triggered in result of calling:
+	 *
+	 * * [[reorder]]
+	 * * [[tryReorder]]
+	 * * [[performReorder]]
+	 * * [[sort]]
+	 * * [[sortComparing]]
+	 */
+	get reorderEvent(): Bindable<ArrayReorderEventParams<T>> {
+		return this._reorderEvent;
+	}
+
+	/**
+	 * Array is changed. Triggered right after any another event.
+	 */
+	get changeEvent(): Bindable<ArrayEventParams<T>> {
+		return this._changeEvent;
 	}
 
 	/**
@@ -206,43 +308,36 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	getLength(): number {
-		return this.items.length;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	isEmpty(): boolean {
-		return this.items.length === 0;
+		return this._items.length === 0;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getFirst(): T {
-		return this.items[0];
+		return this._items[0];
 	}
 
 	/**
 	 * Returns the last collection item. If collection is empty, returns undefined.
 	 */
 	getLast(): T {
-		return this.items[this.items.length - 1];
+		return this._items[this._items.length - 1];
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getFirstKey(): number {
-		return (this.items.length !== 0) ? 0 : undefined;
+		return (this._items.length !== 0) ? 0 : undefined;
 	}
 
 	/**
 	 * Returns index of last collection item. If collection is empty, returns undefined.
 	 */
 	getLastKey(): number {
-		var l = this.items.length;
+		var l = this._items.length;
 		return (l !== 0) ? (l - 1) : undefined;
 	}
 
@@ -250,7 +345,7 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @inheritdoc
 	 */
 	get(index: number): T {
-		return this.items[index];
+		return this._items[index];
 	}
 
 	/**
@@ -259,14 +354,14 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * **Caution: doesn't make a copy - please don't modify.**
 	 */
 	getItems(): T[] {
-		return this.items;
+		return this._items;
 	}
 
 	/**
 	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
 	 */
 	getKeys(): number[] {
-		var items = this.items;
+		var items = this._items;
 		var result = new Array<number>(items.length);
 		for (var i = 0, l = items.length; i < l; ++i) {
 			result[i] = i;
@@ -278,49 +373,49 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @inheritdoc
 	 */
 	containsItem(item: T): boolean {
-		return ArrayUtils.containsItem(this.items, item);
+		return ArrayUtils.containsItem(this._items, item);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	every(callback: (item: T, index: number) => boolean, scope?: any): boolean {
-		return this.items.every(callback, scope || this);
+		return this._items.every(callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): T[] {
-		return ArrayUtils.toSorted(this.items, callback, scope || this, order);
+		return ArrayUtils.toSorted(this._items, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): T[] {
-		return ArrayUtils.toSortedComparing(this.items, compare, scope || this, order);
+		return ArrayUtils.toSortedComparing(this._items, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): number[] {
-		return ArrayUtils.getSortingKeys(this.items, callback, scope || this, order);
+		return ArrayUtils.getSortingKeys(this._items, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): number[] {
-		return ArrayUtils.getSortingKeysComparing(this.items, compare, scope || this, order);
+		return ArrayUtils.getSortingKeysComparing(this._items, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T, index: number) => boolean, scope?: any): T[] {
-		return this.items.filter(callback, scope || this);
+		return this._items.filter(callback, scope || this);
 	}
 
 	/**
@@ -332,14 +427,14 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @inheritdoc
 	 */
 	count(callback: (item: T, index: number) => boolean, scope?: any): number {
-		return ArrayUtils.count(this.items, callback, scope || this);
+		return ArrayUtils.count(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	map<U>(callback: (item: T, index: number) => U, scope?: any): U[] {
-		return this.items.map(callback, scope || this);
+		return this._items.map(callback, scope || this);
 	}
 
 	/**
@@ -351,14 +446,14 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @inheritdoc
 	 */
 	toArray(): T[] {
-		return this.items.concat();
+		return this._items.concat();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	asArray(): T[] {
-		return this.items;
+		return this._items;
 	}
 
 	/**
@@ -412,7 +507,7 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 */
 	tryAddAll(items: T[], index?: number): boolean {
 		if (index === undefined) {
-			index = this.items.length;
+			index = this._items.length;
 		}
 		if (this.trySplice([], [new IndexItems<T>(index, items)])) {
 			return true;
@@ -538,7 +633,7 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 */
 	splice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T> {
 		var result = this.trySplice(removeParamsList, addParamsList);
-		return (result !== undefined) ? result : new ArraySpliceResult(this.items.concat(), [], []);
+		return (result !== undefined) ? result : new ArraySpliceResult(this._items.concat(), [], []);
 	}
 
 	/**
@@ -727,7 +822,7 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * Reverses item order in array. Modifies the array itself.
 	 */
 	reverse() {
-		this.items.reverse();
+		this._items.reverse();
 	}
 
 	/**
@@ -787,8 +882,8 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @returns The removed item or undefined.
 	 */
 	pop(): T {
-		if (this.items.length !== 0) {
-			return this.tryRemove(this.items.length - 1);
+		if (this._items.length !== 0) {
+			return this.tryRemove(this._items.length - 1);
 		}
 		return undefined;
 	}
@@ -807,11 +902,6 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @returns Item index.
 	 */
 	abstract binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
-
-	/**
-	 * @inheritdoc
-	 */
-	abstract createEmpty<U>(): IArray<U>;
 }
 
 export default AbstractArray;

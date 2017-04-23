@@ -18,12 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from './Bindable';
 import Class from './Class';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
-import IClass from './IClass';
-import ICollection from './ICollection';
+import {default as ICollection, CollectionEventParams} from './ICollection';
 import IMap from './IMap';
+import IProperty from './IProperty';
 import ISet from './ISet';
 import Property from './Property';
 import Watchable from './Watchable';
@@ -181,9 +182,7 @@ import * as SetUtils from './SetUtils';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * [[getFirst]] - Returns first item in collection.
  * * [[containsItem]] - Does collection contain the item?
@@ -256,11 +255,39 @@ import * as SetUtils from './SetUtils';
  */
 abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	protected _ownsItems: Boolean = false;
+	protected _length: IProperty<number>;
+
+
+	constructor(silent: boolean) {
+		super();
+		this._length = this.own(new Property(0, silent));
+	}
 
 	protected destroyObject(): void {
 		this.tryClear();
 		super.destroyObject();
 	}
+
+	/**
+	 * Collection length property.
+	 */
+	get length(): Watchable<number> {
+		return this._length;
+	}
+
+	/**
+	 * Collection is cleared. Triggered in result of calling:
+	 *
+	 * * [[clear]]
+	 * * [[$clear]]
+	 * * [[tryClear]]
+	 */
+	abstract get clearEvent(): Bindable<CollectionEventParams<T>>;
+
+	/**
+	 * Collection is changed. Triggered right after any another event.
+	 */
+	abstract get changeEvent(): Bindable<CollectionEventParams<T>>;
 
 	/**
 	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
@@ -274,14 +301,18 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	}
 
 	/**
-	 * Returns count of items in collection.
+	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
 	 */
-	abstract getLength(): number;
+	isSilent(): boolean {
+		return this.changeEvent.isDummy();
+	}
 
 	/**
 	 * Checks collection for emptiness.
 	 */
-	abstract isEmpty(): boolean;
+	isEmpty(): boolean {
+		return this.length.get() === 0;
+	}
 
 	/**
 	 * Returns first item in collection. If collection is empty, returns undefined.
@@ -488,7 +519,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * Builds new array consisting of collection items.
 	 */
 	toArray(): T[] {
-		var result: T[] = new Array<T>(this.getLength());
+		var result: T[] = new Array<T>(this.length.get());
 		var index: number = 0;
 		this.every(function (item) {
 			result[index++] = item;
@@ -644,26 +675,6 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @returns Mapped collection.
 	 */
 	abstract $map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
-
-	/**
-	 * Creates empty collection of the same type.
-	 */
-	abstract createEmpty<U>(): ICollection<U>;
-
-	/**
-	 * Creates empty array of the same observability level.
-	 */
-	abstract createEmptyArray<U>(): IArray<U>;
-
-	/**
-	 * Creates empty map of the same observability level.
-	 */
-	abstract createEmptyMap<U>(): IMap<U>;
-
-	/**
-	 * Creates empty set of the same observability level.
-	 */
-	abstract createEmptySet<U extends IClass>(): ISet<U>;
 }
 
 export default AbstractCollection;

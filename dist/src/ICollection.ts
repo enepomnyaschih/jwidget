@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from './Bindable';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IClass from './IClass';
@@ -111,9 +112,7 @@ import Watchable from './Watchable';
  *
  * Content retrieving:
  *
- * * [[getLength]] - Returns count of items in collection.
- * For observable collections, **length** property may come
- * in handy if you want to track collection length dynamically.
+ * * [[length]] - Collection length property.
  * * [[isEmpty]] - Checks collection for emptiness.
  * * [[getFirst]] - Returns first item in collection.
  * * [[containsItem]] - Does collection contain the item?
@@ -163,6 +162,25 @@ import Watchable from './Watchable';
  */
 interface ICollection<T> extends IClass {
 	/**
+	 * Collection length property.
+	 */
+	readonly length: Watchable<number>;
+
+	/**
+	 * Collection is cleared. Triggered in result of calling:
+	 *
+	 * * [[clear]]
+	 * * [[$clear]]
+	 * * [[tryClear]]
+	 */
+	readonly clearEvent: Bindable<CollectionEventParams<T>>;
+
+	/**
+	 * Collection is changed. Triggered right after any another event.
+	 */
+	readonly changeEvent: Bindable<CollectionEventParams<T>>;
+
+	/**
 	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
 	 * this collection. The item is destroyed when it leaves the
 	 * collection, and all items are destroyed on the collection destruction.
@@ -171,9 +189,9 @@ interface ICollection<T> extends IClass {
 	ownItems(): this;
 
 	/**
-	 * Returns count of items in collection.
+	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
 	 */
-	getLength(): number;
+	isSilent(): boolean;
 
 	/**
 	 * Checks collection for emptiness.
@@ -186,7 +204,7 @@ interface ICollection<T> extends IClass {
 	getFirst(): T;
 
 	/**
-	 * Checks item for existance in collection.
+	 * Checks item for existence in collection.
 	 */
 	containsItem(item: T): boolean;
 
@@ -486,26 +504,16 @@ interface ICollection<T> extends IClass {
 	 * @returns Mapped collection.
 	 */
 	$map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
-
-	/**
-	 * Creates empty collection of the same type.
-	 */
-	createEmpty<U>(): ICollection<U>;
-
-	/**
-	 * Creates empty array of the same observability level.
-	 */
-	createEmptyArray<U>(): IArray<U>;
-
-	/**
-	 * Creates empty map of the same observability level.
-	 */
-	createEmptyMap<U>(): IMap<U>;
-
-	/**
-	 * Creates empty set of the same observability level.
-	 */
-	createEmptySet<U extends IClass>(): ISet<U>;
 }
 
 export default ICollection;
+
+/**
+ * `ICollection` event parameters.
+ */
+export interface CollectionEventParams<T> {
+	/**
+	 * Event sender.
+	 */
+	sender: ICollection<T>;
+}

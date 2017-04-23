@@ -23,6 +23,7 @@ import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetFilterer from './ISetFilterer';
 import ISetFiltererConfig from './ISetFiltererConfig';
+import JWSet from '../../JWSet';
 
 /**
  * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Set]].
@@ -46,7 +47,7 @@ export default class SetFilterer<T extends IClass> extends AbstractCollectionFil
 	constructor(source: ISet<T>, config: ISetFiltererConfig<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? this.source.createEmpty<T>() : config.target;
+		this.target = this._targetCreated ? new JWSet<T>(this.source.isSilent()) : config.target;
 		this.target.tryAddAll(source.$toArray().filter(this._filterItem, this._scope));
 	}
 

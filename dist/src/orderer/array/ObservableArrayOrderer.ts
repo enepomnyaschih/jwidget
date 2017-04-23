@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ObservableArray, ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
+import {ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
+import ObservableArray from '../../ObservableArray';
 import ArrayOrderer from './ArrayOrderer';
 import IClass from '../../IClass';
 import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
@@ -51,7 +52,7 @@ export default class ObservableArrayOrderer<T extends IClass> extends ArrayOrder
 		var index = this.target.keyOf(params.oldItem);
 		this.target.trySplice(
 			[new IndexCount(index, 1)],
-			[new IndexItems(this.target.getLength() - 1, [params.newItem])]);
+			[new IndexItems(this.target.length.get() - 1, [params.newItem])]);
 	}
 
 	private _onClear(params: ArrayItemsEventParams<T>) {

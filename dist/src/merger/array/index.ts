@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {SILENT, ADAPTER} from '../../Core';
 import ArrayMerger from './ArrayMerger';
 import IArray from '../../IArray';
 import IArrayMerger from './IArrayMerger';
@@ -58,5 +59,5 @@ export function mergeNoSync<T>(source: IArray<IArray<T>>): T[] {
 }
 
 export function $mergeNoSync<T>(source: IArray<IArray<T>>): IArray<T> {
-	return new JWArray(mergeNoSync(source), true);
+	return new JWArray(mergeNoSync(source), SILENT & ADAPTER);
 }

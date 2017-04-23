@@ -24,6 +24,7 @@ import ICollection from '../ICollection';
 import ICollectionIndexer from './ICollectionIndexer';
 import ICollectionIndexerConfig from './ICollectionIndexerConfig';
 import IMap from '../IMap';
+import JWMap from '../JWMap';
 
 /**
  * Collection indexer.
@@ -131,7 +132,7 @@ abstract class AbstractCollectionIndexer<T> extends Class implements ICollection
 		this._getKey = config.getKey;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? source.createEmptyMap<T>() : config.target;
+		this.target = this._targetCreated ? new JWMap<T>(source.isSilent()) : config.target;
 		this.target.trySetAll(this._index(source.asArray()));
 	}
 

@@ -352,3 +352,31 @@ export enum Binding {
 	 */
 	TWOWAY = 3
 }
+
+/**
+ * Shorthand for CollectionFlags.SILENT.
+ */
+export const SILENT = 1;
+
+/**
+ * Shorthand for CollectionFlags.ADAPTER.
+ */
+export const ADAPTER = 2;
+
+/**
+ * jWidget collection flags. All options have shorthands.
+ */
+export enum CollectionFlags {
+	/**
+	 * If on, uses `dummyEvent` implementation for all collection events.
+	 * Toggle it on only if you know that this collection never gets modified or
+	 * there are no listeners intersted in its modification.
+	 */
+	SILENT = 1,
+
+	/**
+	 * Creates a collection as an adapter over constructor argument.
+	 * If off, creates a copy. Toggle it on only if noone else manages collection contents.
+	 */
+	ADAPTER = 2
+}

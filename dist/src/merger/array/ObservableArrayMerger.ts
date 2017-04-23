@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ObservableArray, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../ObservableArray';
+import {ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
+import ObservableArray from '../../ObservableArray';
 import ArrayMerger from './ArrayMerger';
 import IArray from '../../IArray';
 import IArrayMergerConfig from './IArrayMergerConfig';
@@ -46,7 +47,7 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 		var currentIndex = 0;
 		var indexes = bunches.map(function (bunch) {
 			var index = currentIndex;
-			currentIndex += bunch.getLength();
+			currentIndex += bunch.length.get();
 			return index;
 		}, this);
 		indexes.push(currentIndex);
@@ -76,13 +77,13 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 	private _onReplace(params: ArrayReplaceEventParams<IArray<T>>) {
 		var index = this._count(this.source.getItems(), 0, params.index);
 		this.target.trySplice(
-			[new IndexCount(index, params.oldItem.getLength())],
+			[new IndexCount(index, params.oldItem.length.get())],
 			[new IndexItems<T>(index, params.newItem.getItems())]);
 	}
 
 	private _onMove(params: ArrayMoveEventParams<IArray<T>>) {
-		var count = params.item.getLength();
-		var indexes = new Array<number>(this.target.getLength());
+		var count = params.item.length.get();
+		var indexes = new Array<number>(this.target.length.get());
 		var currentIndex = 0;
 
 		function shiftBunch(bunchLength: number, shift: number) {
@@ -93,25 +94,25 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 		}
 
 		for (var i = 0, l = Math.min(params.fromIndex, params.toIndex); i < l; ++i) {
-			shiftBunch(this.source.get(i).getLength(), 0);
+			shiftBunch(this.source.get(i).length.get(), 0);
 		}
 		if (params.fromIndex <= params.toIndex) {
 			// [1], [2], [3], [4], [5]		[2] move to 3
 			// [1], [3], [4], [2], [5]
 			shiftBunch(count, this._count(this.source.getItems(), params.fromIndex, params.toIndex - params.fromIndex));
 			for (var i = params.fromIndex; i < params.toIndex; ++i) {
-				shiftBunch(this.source.get(i).getLength(), -count);
+				shiftBunch(this.source.get(i).length.get(), -count);
 			}
 		} else {
 			// [1], [2], [3], [4], [5]		[4] move to 1
 			// [1], [4], [2], [3], [5]
 			for (var i = params.toIndex + 1; i <= params.fromIndex; ++i) {
-				shiftBunch(this.source.get(i).getLength(), count);
+				shiftBunch(this.source.get(i).length.get(), count);
 			}
 			shiftBunch(count, -this._count(this.source.getItems(), params.toIndex + 1, params.fromIndex - params.toIndex));
 		}
-		for (var i = Math.max(params.fromIndex, params.toIndex) + 1, l = this.source.getLength(); i < l; ++i) {
-			shiftBunch(this.source.get(i).getLength(), 0);
+		for (var i = Math.max(params.fromIndex, params.toIndex) + 1, l = this.source.length.get(); i < l; ++i) {
+			shiftBunch(this.source.get(i).length.get(), 0);
 		}
 
 		this.target.tryReorder(indexes);
@@ -124,12 +125,12 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 	private _onReorder(params: ArrayReorderEventParams<IArray<T>>) {
 		var oldIndexes = this._getIndexes(params.items);
 		var newIndexes = this._getIndexes(this.source.getItems());
-		var indexes = new Array<number>(this.target.getLength());
+		var indexes = new Array<number>(this.target.length.get());
 		for (var i = 0, l = params.items.length; i < l; ++i) {
 			var bunch = params.items[i];
 			var oldIndex = oldIndexes[i];
 			var newIndex = newIndexes[params.indexArray[i]];
-			for (var j = 0, m = bunch.getLength(); j < m; ++j) {
+			for (var j = 0, m = bunch.length.get(); j < m; ++j) {
 				indexes[oldIndex + j] = newIndex + j;
 			}
 		}

@@ -24,6 +24,7 @@ import ICollection from '../ICollection';
 import ICollectionLister from './ICollectionLister';
 import ICollectionListerConfig from './ICollectionListerConfig';
 import ISet from '../ISet';
+import JWSet from '../JWSet';
 
 /**
  * Converter to set.
@@ -115,7 +116,7 @@ abstract class AbstractCollectionLister<T extends IClass> extends Class implemen
 	constructor(public source: ICollection<T>, config: ICollectionListerConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? source.createEmptySet<T>() : config.target;
+		this.target = this._targetCreated ? new JWSet<T>(source.isSilent()) : config.target;
 		this.target.tryAddAll(source.asArray());
 	}
 

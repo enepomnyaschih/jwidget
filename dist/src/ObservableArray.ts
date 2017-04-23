@@ -18,10 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {destroy} from './Core';
+import {destroy, CollectionFlags, SILENT, ADAPTER} from './Core';
 import AbstractArray from './AbstractArray';
-import Class from './Class';
-import Event from './Event';
 import IArray from './IArray';
 import IArraySpliceParams from './IArraySpliceParams';
 import IArraySpliceResult from './IArraySpliceResult';
@@ -32,9 +30,6 @@ import ISet from './ISet';
 import JWArray from './JWArray';
 import JWMap from './JWMap';
 import JWSet from './JWSet';
-import ObservableMap from './ObservableMap';
-import ObservableSet from './ObservableSet';
-import Property from './Property';
 import Proxy from './Proxy';
 import * as ArrayUtils from './ArrayUtils';
 
@@ -45,207 +40,122 @@ import * as ArrayUtils from './ArrayUtils';
  */
 export default class ObservableArray<T> extends AbstractArray<T> {
 	/**
-	 * Collection length. **Don't modify manually!**
-	 */
-	length: Property<number>;
-
-	/**
-	 * Items are removed from array and items are added to array. Triggered in result
-	 * of calling:
-	 *
-	 * * [[add]]
-	 * * [[tryAdd]]
-	 * * [[addAll]]
-	 * * [[tryAddAll]]
-	 * * [[remove]]
-	 * * [[tryRemove]]
-	 * * [[removeItem]]
-	 * * [[pop]]
-	 * * [[removeAll]]
-	 * * [[tryRemoveAll]]
-	 * * [[removeItems]]
-	 * * [[splice]]
-	 * * [[trySplice]]
-	 * * [[performSplice]]
-	 */
-	spliceEvent: Event<ArraySpliceEventParams<T>> = new Event<ArraySpliceEventParams<T>>();
-
-	/**
-	 * Item is replaced in array. Triggered in result of calling:
-	 *
-	 * * [[set]]
-	 * * [[trySet]]
-	 */
-	replaceEvent: Event<ArrayReplaceEventParams<T>> = new Event<ArrayReplaceEventParams<T>>();
-
-	/**
-	 * Item is moved in array. Triggered in result of calling:
-	 *
-	 * * [[move]]
-	 * * [[tryMove]]
-	 */
-	moveEvent: Event<ArrayMoveEventParams<T>> = new Event<ArrayMoveEventParams<T>>();
-
-	/**
-	 * Array is cleared. Triggered in result of calling:
-	 * * [[clear]]
-	 * * [[$clear]]
-	 * * [[tryClear]]
-	 */
-	clearEvent: Event<ArrayItemsEventParams<T>> = new Event<ArrayItemsEventParams<T>>();
-
-	/**
-	 * Items are reordered in array. Triggered in result of calling:
-	 *
-	 * * [[reorder]]
-	 * * [[tryReorder]]
-	 * * [[performReorder]]
-	 * * [[sort]]
-	 * * [[sortComparing]]
-	 */
-	reorderEvent: Event<ArrayReorderEventParams<T>> = new Event<ArrayReorderEventParams<T>>();
-
-	/**
-	 * Array is changed. Triggered right after one of events:
-	 *
-	 * * [[spliceEvent]]
-	 * * [[replaceEvent]]
-	 * * [[moveEvent]]
-	 * * [[clearEvent]]
-	 * * [[reorderEvent]]
-	 */
-	changeEvent: Event<ArrayEventParams<T>> = new Event<ArrayEventParams<T>>();
-
-	/**
 	 * @inheritdoc
 	 */
-	constructor(items?: T[], adapter?: boolean) {
-		super(items, adapter);
-		this.length = new Property<number>(this.getLength());
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected destroyObject() {
-		this.changeEvent.destroy();
-		this.reorderEvent.destroy();
-		this.clearEvent.destroy();
-		this.moveEvent.destroy();
-		this.replaceEvent.destroy();
-		this.spliceEvent.destroy();
-		this.length.destroy();
-		super.destroyObject();
+	constructor(silent?: boolean);
+	constructor(items: T[], flags?: CollectionFlags);
+	constructor(a?: any, b?: CollectionFlags) {
+		super(a, b);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getKeys(): IArray<number> {
-		return new JWArray<number>(this.getKeys(), true);
+		return new JWArray<number>(this.getKeys(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSorted(callback, scope, order), true);
+		return new JWArray<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSortedComparing(compare, scope, order), true);
+		return new JWArray<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<number> {
-		return new JWArray<number>(this.getSortingKeys(callback, scope, order), true);
+		return new JWArray<number>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<number> {
-		return new JWArray<number>(this.getSortingKeysComparing(compare, scope, order), true);
+		return new JWArray<number>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T, key: number) => string, scope?: any): IMap<T> {
-		return new JWMap<T>(this.index(callback, scope), true);
+		return new JWMap<T>(this.index(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$filter(callback: (item: T, index: number) => boolean, scope?: any): IArray<T> {
-		return new JWArray<T>(this.filter(callback, scope || this), true);
+		return new JWArray<T>(this.filter(callback, scope || this), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U> {
-		return new JWArray<U>(this.map(callback, scope || this), true);
+		return new JWArray<U>(this.map(callback, scope || this), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toArray(): IArray<T> {
-		return new JWArray<T>(this.toArray(), true);
+		return new JWArray<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toMap(): IMap<T> {
-		return new JWMap<T>(this.toMap(), true);
+		return new JWMap<T>(this.toMap(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asMap(): IMap<T> {
-		return new JWMap<T>(this.asMap(), true);
+		return new JWMap<T>(this.asMap(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSet(): ISet<any> {
-		return new JWSet<any>(this.toSet(), true);
+		return new JWSet<any>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asSet(): ISet<any> {
-		return new JWSet<any>(this.asSet(), true);
+		return new JWSet<any>(this.asSet(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$removeAll(index: number, count: number): IArray<T> {
-		return new JWArray<T>(this.removeAll(index, count), true);
+		return new JWArray<T>(this.removeAll(index, count), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	trySet(item: T, index: number): Proxy<T> {
-		var oldItem = ArrayUtils.trySet(this.items, item, index);
+		var oldItem = ArrayUtils.trySet(this._items, item, index);
 		if (oldItem === undefined) {
 			return undefined;
 		}
-		this.replaceEvent.trigger({ sender: this, index: index, oldItem: oldItem.value, newItem: item });
-		this.changeEvent.trigger({ sender: this });
+		this._replaceEvent.trigger({ sender: this, index: index, oldItem: oldItem.value, newItem: item });
+		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
 			(<any>oldItem.value).destroy();
 		}
@@ -256,12 +166,12 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	tryMove(fromIndex: number, toIndex: number): T {
-		var item = ArrayUtils.tryMove(this.items, fromIndex, toIndex);
+		var item = ArrayUtils.tryMove(this._items, fromIndex, toIndex);
 		if (item === undefined) {
 			return undefined;
 		}
-		this.moveEvent.trigger({ sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item });
-		this.changeEvent.trigger({ sender: this });
+		this._moveEvent.trigger({ sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item });
+		this._changeEvent.trigger({ sender: this });
 		return item;
 	}
 
@@ -269,20 +179,20 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	$clear(): IArray<T> {
-		return new JWArray<T>(this.clear(), true);
+		return new JWArray<T>(this.clear(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	tryClear(): T[] {
-		var oldItems = ArrayUtils.tryClear(this.items);
+		var oldItems = ArrayUtils.tryClear(this._items);
 		if (oldItems === undefined) {
 			return undefined;
 		}
-		this.length.set(0);
-		this.clearEvent.trigger({ sender: this, items: oldItems });
-		this.changeEvent.trigger({ sender: this });
+		this._length.set(0);
+		this._clearEvent.trigger({ sender: this, items: oldItems });
+		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(oldItems, destroy);
 		}
@@ -293,13 +203,13 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T> {
-		var result = ArrayUtils.trySplice(this.items, removeParamsList, addParamsList);
+		var result = ArrayUtils.trySplice(this._items, removeParamsList, addParamsList);
 		if (result === undefined) {
 			return undefined;
 		}
-		this.length.set(this.getLength());
-		this.spliceEvent.trigger({ sender: this, spliceResult: result });
-		this.changeEvent.trigger({ sender: this });
+		this._length.set(this._items.length);
+		this._spliceEvent.trigger({ sender: this, spliceResult: result });
+		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(result.getRemovedItems(), destroy);
 		}
@@ -310,12 +220,12 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	tryReorder(indexArray: number[]): T[] {
-		var items = ArrayUtils.tryReorder(this.items, indexArray);
+		var items = ArrayUtils.tryReorder(this._items, indexArray);
 		if (items === undefined) {
 			return undefined;
 		}
-		this.reorderEvent.trigger({ sender: this, indexArray: indexArray, items: items });
-		this.changeEvent.trigger({ sender: this });
+		this._reorderEvent.trigger({ sender: this, indexArray: indexArray, items: items });
+		this._changeEvent.trigger({ sender: this });
 		return items;
 	}
 
@@ -323,7 +233,7 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	reverse() {
-		var length = this.getLength();
+		var length = this.length.get();
 		var indices = new Array<number>(length);
 		for (var i = 0; i < length; ++i) {
 			indices[i] = length - i - 1;
@@ -335,191 +245,83 @@ export default class ObservableArray<T> extends AbstractArray<T> {
 	 * @inheritdoc
 	 */
 	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArraySpliceParams<T> {
-		return ArrayUtils.detectSplice(this.items, newItems, getKey || this.getKey, scope || this);
+		return ArrayUtils.detectSplice(this._items, newItems, getKey || this.getKey, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	detectFilter(newItems: T[]): IIndexCount[]{
-		return ArrayUtils.detectFilter(this.items, newItems);
+		return ArrayUtils.detectFilter(this._items, newItems);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	detectReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): number[] {
-		return ArrayUtils.detectReorder(this.items, newItems, getKey || this.getKey, scope || this);
+		return ArrayUtils.detectReorder(this._items, newItems, getKey || this.getKey, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
-		return ArrayUtils.detectSort(this.items, callback, scope || this, order);
+		return ArrayUtils.detectSort(this._items, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[]{
-		return ArrayUtils.detectSortComparing(this.items, compare, scope || this, order);
+		return ArrayUtils.detectSortComparing(this._items, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toReversed(): T[] {
-		return ArrayUtils.toReversed(this.items);
+		return ArrayUtils.toReversed(this._items);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toReversed(): IArray<T> {
-		return new JWArray(this.toReversed(), true);
+		return new JWArray(this.toReversed(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	equal(arr: T[]): boolean {
-		return ArrayUtils.equal(this.items, arr);
+		return ArrayUtils.equal(this._items, arr);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	collapse(depth: number): any[]{
-		return ArrayUtils.collapse(this.items, depth);
+		return ArrayUtils.collapse(this._items, depth);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	indexOf(item: T): number {
-		return this.items.indexOf(item);
+		return this._items.indexOf(item);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	backEvery(callback: (item: T, index: number) => boolean, scope?: any): boolean {
-		return ArrayUtils.backEvery(this.items, callback, scope);
+		return ArrayUtils.backEvery(this._items, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
-		return ArrayUtils.binarySearch(this.items, value, compare, scope, order);
+		return ArrayUtils.binarySearch(this._items, value, compare, scope, order);
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmpty<U>(): ObservableArray<U> {
-		return new ObservableArray<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptyArray<U>(): ObservableArray<U> {
-		return new ObservableArray<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptyMap<U>(): ObservableMap<U> {
-		return new ObservableMap<U>();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	createEmptySet<U extends Class>(): ObservableSet<U> {
-		return new ObservableSet<U>();
-	}
-}
-
-/**
- * [[JW.ObservableArray]] event parameters.
- */
-export interface ArrayEventParams<T> {
-	/**
-	 * Event sender.
-	 */
-	sender: ObservableArray<T>;
-}
-
-/**
- * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.spliceEvent]].
- */
-export interface ArraySpliceEventParams<T> extends ArrayEventParams<T> {
-	/**
-	 * Result of [[JW.ObservableArray.splice]] method.
-	 */
-	spliceResult: IArraySpliceResult<T>;
-}
-
-/**
- * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.moveEvent]].
- */
-export interface ArrayMoveEventParams<T> extends ArrayEventParams<T> {
-	/**
-	 * Where item is moved from.
-	 */
-	fromIndex: number;
-
-	/**
-	 * Where item is moved to.
-	 */
-	toIndex: number;
-
-	/**
-	 * The moved item.
-	 */
-	item: T;
-}
-
-/**
- * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.replaceEvent]].
- */
-export interface ArrayReplaceEventParams<T> extends ArrayEventParams<T> {
-	/**
-	 * Index of the replaced item.
-	 */
-	index: number;
-
-	/**
-	 * Old item.
-	 */
-	oldItem: T;
-
-	/**
-	 * New item.
-	 */
-	newItem: T;
-}
-
-/**
- * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.clearEvent]].
- */
-export interface ArrayItemsEventParams<T> extends ArrayEventParams<T> {
-	/**
-	 * Old array contents.
-	 */
-	items: T[];
-}
-
-/**
- * Parameters of [[JW.ObservableArray]]'s [[JW.ObservableArray.reorderEvent]].
- */
-export interface ArrayReorderEventParams<T> extends ArrayItemsEventParams<T> {
-	/**
-	 * Indexes of items in reordered array.
-	 */
-	indexArray: number[];
 }

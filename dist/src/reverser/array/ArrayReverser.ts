@@ -22,6 +22,7 @@ import Class from '../../Class';
 import IArray from '../../IArray';
 import IArrayReverser from './IArrayReverser';
 import IArrayReverserConfig from './IArrayReverserConfig';
+import JWArray from '../../JWArray';
 
 /**
  * Array reverser. Builds array containing all items of source array in reversed order.
@@ -101,7 +102,7 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 	constructor(public source: IArray<T>, config: IArrayReverserConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? source.createEmpty<T>() : config.target;
+		this.target = this._targetCreated ? new JWArray<T>(source.isSilent()) : config.target;
 		this.target.tryAddAll(this._reverse(source.getItems()));
 	}
 
