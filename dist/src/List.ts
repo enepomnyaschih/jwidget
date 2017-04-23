@@ -179,14 +179,14 @@ import * as ArrayUtils from './ArrayUtils';
  * @param T Array item type.
  */
 export default class List<T> extends IndexedCollection<number, T> implements IArray<T> {
-	protected _items: T[];
+	private _items: T[];
 
-	protected _spliceEvent  : IEvent<ArraySpliceEventParams<T>>;
-	protected _replaceEvent : IEvent<ArrayReplaceEventParams<T>>;
-	protected _moveEvent    : IEvent<ArrayMoveEventParams<T>>;
-	protected _reorderEvent : IEvent<ArrayReorderEventParams<T>>;
-	protected _clearEvent   : IEvent<ArrayItemsEventParams<T>>;
-	protected _changeEvent  : IEvent<ArrayEventParams<T>>;
+	private _spliceEvent  : IEvent<ArraySpliceEventParams<T>>;
+	private _replaceEvent : IEvent<ArrayReplaceEventParams<T>>;
+	private _moveEvent    : IEvent<ArrayMoveEventParams<T>>;
+	private _reorderEvent : IEvent<ArrayReorderEventParams<T>>;
+	private _clearEvent   : IEvent<ArrayItemsEventParams<T>>;
+	private _changeEvent  : IEvent<ArrayEventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.

@@ -152,13 +152,13 @@ import * as MapUtils from './MapUtils';
  * @param T Map item type.
  */
 class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
-	protected _adapter: boolean;
-	protected _json: Dictionary<T>;
+	private _adapter: boolean;
+	private _json: Dictionary<T>;
 
-	protected _spliceEvent  : IEvent<MapSpliceEventParams<T>>;
-	protected _reindexEvent : IEvent<MapReindexEventParams<T>>;
-	protected _clearEvent   : IEvent<MapItemsEventParams<T>>;
-	protected _changeEvent  : IEvent<MapEventParams<T>>;
+	private _spliceEvent  : IEvent<MapSpliceEventParams<T>>;
+	private _reindexEvent : IEvent<MapReindexEventParams<T>>;
+	private _clearEvent   : IEvent<MapItemsEventParams<T>>;
+	private _changeEvent  : IEvent<MapEventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.
@@ -683,7 +683,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		return items;
 	}
 
-	protected _tryClear(): Dictionary<T> {
+	private _tryClear(): Dictionary<T> {
 		if (this._length.get() === 0) {
 			return undefined;
 		}
@@ -729,7 +729,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		return spliceResult;
 	}
 
-	protected _trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
+	private _trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
 		var spliceResult = MapUtils.trySplice(this._json, removedKeys, updatedItems);
 		if (spliceResult !== undefined) {
 			this._length.set(this._length.get() + MapUtils.getLength(spliceResult.addedItems) - MapUtils.getLength(spliceResult.removedItems));

@@ -130,12 +130,12 @@ import * as SetUtils from './SetUtils';
  * @param T Collection item type.
  */
 class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
-	protected _adapter: boolean;
-	protected _json: Dictionary<T>;
+	private _adapter: boolean;
+	private _json: Dictionary<T>;
 
-	protected _spliceEvent : IEvent<SetSpliceEventParams<T>>;
-	protected _clearEvent  : IEvent<SetItemsEventParams<T>>;
-	protected _changeEvent : IEvent<SetEventParams<T>>;
+	private _spliceEvent : IEvent<SetSpliceEventParams<T>>;
+	private _clearEvent  : IEvent<SetItemsEventParams<T>>;
+	private _changeEvent : IEvent<SetEventParams<T>>;
 
 	/**
 	 * This constructor should be used to create a new set and copy the items into it.
