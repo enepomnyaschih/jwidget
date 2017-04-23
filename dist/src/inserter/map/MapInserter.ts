@@ -33,7 +33,7 @@ import IMapInserterConfig from './IMapInserterConfig';
  * Unlike JW.AbstractCollection.Observer, tracks items keys.
  * Can be used mainly for DOM-element synchronization with map of child elements.
  *
- * Use [[JW.AbstractMap.createInserter|createInserter]] method to create the synchronizer.
+ * Use [[JW.Map.createInserter|createInserter]] method to create the synchronizer.
  *
  *     var inserter = map.createInserter({
  *         addItem: function(el, key) { this.el.find("[elkey=" + key + "]").append(el); },
@@ -79,7 +79,7 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractMap.createInserter|createInserter]] method is preferred instead.
+	 * [[JW.Map.createInserter|createInserter]] method is preferred instead.
 	 *
 	 * @param source Source map.
 	 * @param config Configuration.

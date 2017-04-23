@@ -26,7 +26,7 @@ import IClass from './IClass';
 import IMap from './IMap';
 import ISet from './ISet';
 import List from './List';
-import JWMap from './JWMap';
+import Map from './Map';
 
 /**
  * Simple implementation of [[JW.AbstractSet]].
@@ -73,7 +73,7 @@ export default class JWSet<T extends IClass> extends AbstractSet<T> {
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T) => string, scope?: any): IMap<T> {
-		return new JWMap<T>(this.index(callback, scope), SILENT | ADAPTER);
+		return new Map<T>(this.index(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**

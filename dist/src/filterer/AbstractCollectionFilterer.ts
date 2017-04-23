@@ -94,7 +94,7 @@ import ICollectionFiltererConfig from './ICollectionFiltererConfig';
  * - Target collection must be empty before initialization.
  * - A target collection can be synchronized with one source collection only.
  *
- * [[JW.AbstractMap]]:
+ * [[JW.Map]]:
  *
  * - A target collection can be synchronized with multiple source collections, if keys of all items are different.
  * - You can add items to target collection manually, if their keys differ from source collection keys.

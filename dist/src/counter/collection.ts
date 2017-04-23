@@ -22,7 +22,7 @@ import {createArrayCounter, countArray} from './array';
 import {createMapCounter, countMap} from './map';
 import {createSetCounter, countSet} from './set';
 import List from '../List';
-import AbstractMap from '../AbstractMap';
+import Map from '../Map';
 import AbstractSet from '../AbstractSet';
 import ICollection from '../ICollection';
 import ICollectionCounter from './ICollectionCounter';
@@ -31,12 +31,12 @@ import Watchable from '../Watchable';
 
 export function createCounter<T>(source: ICollection<T>, config: ICollectionCounterConfig<T>): ICollectionCounter<T> {
 	return (source instanceof List) ? createArrayCounter(source, config) :
-		(source instanceof AbstractMap) ? createMapCounter(source, config) :
+		(source instanceof Map) ? createMapCounter(source, config) :
 		(source instanceof AbstractSet) ? createSetCounter(source, config) : null;
 }
 
 export function countCollection<T>(source: ICollection<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
 	return (source instanceof List) ? countArray(source, callback, scope) :
-		(source instanceof AbstractMap) ? countMap(source, callback, scope) :
+		(source instanceof Map) ? countMap(source, callback, scope) :
 		(source instanceof AbstractSet) ? countSet(source, callback, scope) : null;
 }

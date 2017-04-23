@@ -22,20 +22,20 @@ import MapIndexer from './MapIndexer';
 import IMapIndexer from './IMapIndexer';
 import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
 import IMap from '../../IMap';
-import ObservableMap from '../../ObservableMap';
+import Map from '../../Map';
 import ObservableMapIndexer from './ObservableMapIndexer';
 
 export function createMapIndexer<T>(source: IMap<T>, config: ICollectionIndexerConfig<T>): IMapIndexer<T> {
-	return (source instanceof ObservableMap) ?
-		new ObservableMapIndexer<T>(source, config) :
-		new MapIndexer<T>(source, config);
+	return source.isSilent() ?
+		new MapIndexer<T>(source, config) :
+		new ObservableMapIndexer<T>(source, config);
 }
 
 export function indexMap<T>(source: IMap<T>, callback: (item: T) => any, scope?: any): IMap<T> {
-	if (!(source instanceof ObservableMap)) {
+	if (source.isSilent()) {
 		return source.$index(callback, scope);
 	}
-	var result = new ObservableMap<T>();
+	var result = new Map<T>();
 	result.own(new ObservableMapIndexer<T>(source, {
 		target: result,
 		getKey: callback,

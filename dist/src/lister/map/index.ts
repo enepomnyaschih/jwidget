@@ -24,18 +24,17 @@ import ICollectionListerConfig from '../ICollectionListerConfig';
 import IMap from '../../IMap';
 import IMapLister from './IMapLister';
 import ISet from '../../ISet';
-import ObservableMap from '../../ObservableMap';
 import ObservableMapLister from './ObservableMapLister';
 import ObservableSet from '../../ObservableSet';
 
 export function createMapLister<T extends IClass>(source: IMap<T>, config: ICollectionListerConfig<T>): IMapLister<T> {
-	return (source instanceof ObservableMap) ?
-		new ObservableMapLister<T>(source, config) :
-		new MapLister<T>(source, config);
+	return source.isSilent() ?
+		new MapLister<T>(source, config) :
+		new ObservableMapLister<T>(source, config);
 }
 
 export function mapToSet<T extends IClass>(source: IMap<T>): ISet<T> {
-	if (!(source instanceof ObservableMap)) {
+	if (source.isSilent()) {
 		return source.$toSet();
 	}
 	var result = new ObservableSet<T>();

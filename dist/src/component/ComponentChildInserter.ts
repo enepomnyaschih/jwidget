@@ -21,14 +21,18 @@
 import IMapSpliceResult from '../IMapSpliceResult';
 import ComponentChild from './ComponentChild';
 import Dictionary from '../Dictionary';
-import JWMap from '../JWMap';
+import Map from '../Map';
 import Proxy from '../Proxy';
 import * as MapUtils from '../MapUtils';
 
 /**
  * @hidden
  */
-export default class ComponentChildInserter extends JWMap<ComponentChild> {
+export default class ComponentChildInserter extends Map<ComponentChild> {
+	constructor() {
+		super(true);
+	}
+
 	trySet(item: ComponentChild, key: string): Proxy<ComponentChild> {
 		var result = super.trySet(item, key);
 		if (result === undefined) {

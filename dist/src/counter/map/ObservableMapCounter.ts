@@ -19,8 +19,8 @@
 */
 
 import {MapSpliceEventParams} from '../../IMap';
-import ObservableMap from '../../ObservableMap';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
+import IMap from '../../IMap';
 import MapCounter from './MapCounter';
 import * as MapUtils from '../../MapUtils';
 
@@ -31,7 +31,7 @@ export default class ObservableMapCounter<T> extends MapCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableMap<T>, config: ICollectionCounterConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionCounterConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

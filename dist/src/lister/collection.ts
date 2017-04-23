@@ -22,7 +22,7 @@ import {createArrayLister, arrayToSet} from './array';
 import {createMapLister, mapToSet} from './map';
 import {createSetLister, setToSet} from './set';
 import List from '../List';
-import AbstractMap from '../AbstractMap';
+import Map from '../Map';
 import AbstractSet from '../AbstractSet';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
@@ -32,12 +32,12 @@ import ISet from '../ISet';
 
 export function createLister<T extends IClass>(source: ICollection<T>, config: ICollectionListerConfig<T>): ICollectionLister<T> {
 	return (source instanceof List) ? createArrayLister(source, config) :
-		(source instanceof AbstractMap) ? createMapLister(source, config) :
+		(source instanceof Map) ? createMapLister(source, config) :
 		(source instanceof AbstractSet) ? createSetLister(source, config) : null;
 }
 
 export function collectionToSet<T extends IClass>(source: ICollection<T>): ISet<T> {
 	return (source instanceof List) ? arrayToSet(source) :
-		(source instanceof AbstractMap) ? mapToSet(source) :
+		(source instanceof Map) ? mapToSet(source) :
 		(source instanceof AbstractSet) ? setToSet(source) : null;
 }

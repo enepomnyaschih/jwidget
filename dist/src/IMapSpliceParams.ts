@@ -21,8 +21,8 @@
 import Dictionary from './Dictionary';
 
 /**
- * [[JW.AbstractMap.splice]] method arguments.
- * Returned by [[JW.AbstractMap.detectSplice]] method.
+ * [[JW.Map.splice]] method arguments.
+ * Returned by [[JW.Map.detectSplice]] method.
  *
  * @param T Item type.
  */

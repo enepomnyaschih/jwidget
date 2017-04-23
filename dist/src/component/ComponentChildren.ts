@@ -23,18 +23,18 @@ import ComponentChild from './ComponentChild';
 import ComponentChildInserter from './ComponentChildInserter';
 import Dictionary from '../Dictionary';
 import IMapSpliceResult from '../IMapSpliceResult';
-import JWMap from '../JWMap';
+import Map from '../Map';
 import Proxy from '../Proxy';
 import * as MapUtils from '../MapUtils';
 
 /**
  * @hidden
  */
-export default class ComponentChildren extends JWMap<Component> {
+export default class ComponentChildren extends Map<Component> {
 	target: ComponentChildInserter;
 
 	constructor(public component: Component) {
-		super();
+		super(true);
 		this.target = new ComponentChildInserter();
 	}
 

@@ -23,8 +23,8 @@ import IArray from '../../IArray';
 import IArrayIndexer from './IArrayIndexer';
 import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
 import IMap from '../../IMap';
+import Map from '../../Map';
 import ObservableArrayIndexer from './ObservableArrayIndexer';
-import ObservableMap from '../../ObservableMap';
 
 export function createArrayIndexer<T>(source: IArray<T>, config: ICollectionIndexerConfig<T>): IArrayIndexer<T> {
 	return source.isSilent() ?
@@ -36,7 +36,7 @@ export function indexArray<T>(source: IArray<T>, callback: (item: T) => any, sco
 	if (source.isSilent()) {
 		return source.$index(callback, scope);
 	}
-	var result = new ObservableMap<T>();
+	var result = new Map<T>();
 	result.own(new ObservableArrayIndexer<T>(source, {
 		target: result,
 		getKey: callback,

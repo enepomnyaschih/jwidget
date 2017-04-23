@@ -37,7 +37,7 @@ import * as SetUtils from './SetUtils';
  *
  * * [[List]],
  * extends [[JW.IndexedCollection]]
- * * [[JW.AbstractMap]],
+ * * [[JW.Map]],
  * extends [[JW.IndexedCollection]]
  * * [[JW.AbstractSet]]
  *
@@ -113,7 +113,7 @@ import * as SetUtils from './SetUtils';
  *     </tr>
  *     <tr>
  *       <td>View synchronizers</td>
- *       <td>[[JW.List.Inserter]], [[JW.abstractmap.Inserter]], [[JW.UI.Inserter]]</td>
+ *       <td>[[JW.List.Inserter]], [[JW.Map.Inserter]], [[JW.UI.Inserter]]</td>
  *       <td>createInserter</td>
  *     </tr>
  *     <tr>

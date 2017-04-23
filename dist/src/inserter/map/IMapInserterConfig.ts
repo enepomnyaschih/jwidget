@@ -21,7 +21,7 @@
 import Dictionary from '../../Dictionary';
 
 /**
- * [[JW.AbstractMap.Inserter]] configuration.
+ * [[JW.Map.Inserter]] configuration.
  *
  * @param T Collection item type.
  */

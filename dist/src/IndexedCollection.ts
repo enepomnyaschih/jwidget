@@ -33,7 +33,7 @@ import Watchable from './Watchable';
  * There are 2 indexed collection types:
  *
  * * [[JW.List]] (key is number)
- * * [[JW.AbstractMap]] (key is string)
+ * * [[JW.Map]] (key is string)
  *
  * Please keep the next rule in mind whenever you work with jWidget indexed collections:
  * in arguments, item always goes first and key goes last.

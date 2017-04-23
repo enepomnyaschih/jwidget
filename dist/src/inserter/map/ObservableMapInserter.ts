@@ -19,18 +19,18 @@
 */
 
 import {MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from '../../IMap';
-import ObservableMap from '../../ObservableMap';
+import IMap from '../../IMap';
 import IMapInserterConfig from './IMapInserterConfig';
 import MapInserter from './MapInserter';
 
 /**
- * [[JW.AbstractMap.Inserter|Inserter]] implementation for [[JW.ObservableMap]].
+ * [[JW.Map.Inserter|Inserter]] implementation for [[JW.ObservableMap]].
  */
 export default class ObservableMapInserter<T> extends MapInserter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableMap<T>, config?: IMapInserterConfig<T>) {
+	constructor(source: IMap<T>, config?: IMapInserterConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.reindexEvent.bind(this._onReindex, this));

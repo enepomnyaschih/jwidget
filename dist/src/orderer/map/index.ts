@@ -25,17 +25,16 @@ import IMap from '../../IMap';
 import IMapOrderer from './IMapOrderer';
 import MapOrderer from './MapOrderer';
 import List from '../../List';
-import ObservableMap from '../../ObservableMap';
 import ObservableMapOrderer from './ObservableMapOrderer';
 
 export function createMapOrderer<T extends IClass>(source: IMap<T>, config: ICollectionOrdererConfig<T>): IMapOrderer<T> {
-	return (source instanceof ObservableMap) ?
-		new ObservableMapOrderer<T>(source, config) :
-		new MapOrderer<T>(source, config);
+	return source.isSilent() ?
+		new MapOrderer<T>(source, config) :
+		new ObservableMapOrderer<T>(source, config);
 }
 
 export function mapToArray<T extends IClass>(source: IMap<T>): IArray<T> {
-	if (!(source instanceof ObservableMap)) {
+	if (source.isSilent()) {
 		return source.$toArray();
 	}
 	var result = new List<T>();

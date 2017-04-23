@@ -22,7 +22,7 @@ import {createArrayMapper, mapArray, mapDestroyableArray} from './array';
 import {createMapMapper, mapMap, mapDestroyableMap} from './map';
 import {createSetMapper, mapSet, mapDestroyableSet} from './set';
 import List from '../List';
-import AbstractMap from '../AbstractMap';
+import Map from '../Map';
 import AbstractSet from '../AbstractSet';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
@@ -31,18 +31,18 @@ import ICollectionMapperConfig from './ICollectionMapperConfig';
 
 export function createMapper<T extends IClass, U extends IClass>(source: ICollection<T>, config: ICollectionMapperConfig<T, U>): ICollectionMapper<U> {
 	return (source instanceof List) ? createArrayMapper(source, config) :
-		(source instanceof AbstractMap) ? createMapMapper(source, config) :
+		(source instanceof Map) ? createMapMapper(source, config) :
 		(source instanceof AbstractSet) ? createSetMapper(source, config) : null;
 }
 
 export function mapCollection<T extends IClass, U extends IClass>(source: ICollection<T>, callback: (item: T) => U, scope?: any): ICollection<U> {
 	return (source instanceof List) ? mapArray(source, callback, scope) :
-		(source instanceof AbstractMap) ? mapMap(source, callback, scope) :
+		(source instanceof Map) ? mapMap(source, callback, scope) :
 		(source instanceof AbstractSet) ? mapSet(source, callback, scope) : null;
 }
 
 export function mapDestroyableCollection<T extends IClass, U extends IClass>(source: ICollection<T>, callback: (item: T) => U, scope?: any): ICollection<U> {
 	return (source instanceof List) ? mapDestroyableArray(source, callback, scope) :
-		(source instanceof AbstractMap) ? mapDestroyableMap(source, callback, scope) :
+		(source instanceof Map) ? mapDestroyableMap(source, callback, scope) :
 		(source instanceof AbstractSet) ? mapDestroyableSet(source, callback, scope) : null;
 }

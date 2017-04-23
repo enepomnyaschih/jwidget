@@ -19,7 +19,7 @@
 */
 
 import {MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from '../../IMap';
-import ObservableMap from '../../ObservableMap';
+import IMap from '../../IMap';
 import IMapFiltererConfig from './IMapFiltererConfig';
 import MapFilterer from './MapFilterer';
 import * as MapUtils from '../../MapUtils';
@@ -31,7 +31,7 @@ export default class ObservableMapFilterer<T> extends MapFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableMap<T>, config: IMapFiltererConfig<T>) {
+	constructor(source: IMap<T>, config: IMapFiltererConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.reindexEvent.bind(this._onReindex, this));

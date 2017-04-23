@@ -24,11 +24,15 @@ import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import Event from './Event';
+import IArray from './IArray';
 import IEvent from './IEvent';
 import {default as IMap, MapEventParams, MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from './IMap';
 import IMapSpliceParams from './IMapSpliceParams';
 import IMapSpliceResult from './IMapSpliceResult';
 import IndexedCollection from './IndexedCollection';
+import ISet from './ISet';
+import JWSet from './JWSet';
+import List from './List';
 import Proxy from './Proxy';
 import * as ArrayUtils from './ArrayUtils';
 import * as MapUtils from './MapUtils';
@@ -147,7 +151,7 @@ import * as MapUtils from './MapUtils';
  *
  * @param T Map item type.
  */
-abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IMap<T> {
+class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	protected _adapter: boolean;
 	protected _json: Dictionary<T>;
 
@@ -297,6 +301,13 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	/**
 	 * @inheritdoc
 	 */
+	$getKeys(): IArray<string> {
+		return new List<string>(this.getKeys(), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	containsItem(item: T): boolean {
 		return MapUtils.containsItem(this._json, item);
 	}
@@ -318,8 +329,22 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	/**
 	 * @inheritdoc
 	 */
+	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<T> {
+		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T[] {
 		return MapUtils.toSortedComparing(this._json, compare, scope || this, order);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<T> {
+		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
@@ -332,8 +357,22 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	/**
 	 * @inheritdoc
 	 */
+	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<string> {
+		return new List<string>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string[] {
 		return MapUtils.getSortingKeysComparing(this._json, compare, scope || this, order);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<string> {
+		return new List<string>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
@@ -346,7 +385,9 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	/**
 	 * @inheritdoc
 	 */
-	abstract $filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T>;
+	$filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T> {
+		return new Map<T>(this.filter(callback, scope || this), SILENT | ADAPTER);
+	}
 
 	/**
 	 * @inheritdoc
@@ -365,13 +406,43 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	/**
 	 * @inheritdoc
 	 */
-	abstract $map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U>;
+	$map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U> {
+		return new Map<U>(this.map(callback, scope || this), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T, key: string) => string, scope?: any): IMap<T> {
+		return new Map<T>(this.index(callback, scope), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toArray(): IArray<T> {
+		return new List<T>(this.toArray(), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asArray(): IArray<T> {
+		return new List<T>(this.asArray(), SILENT | ADAPTER);
+	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toMap(): Dictionary<T> {
 		return apply<T>({}, this._json);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toMap(): IMap<T> {
+		return new Map<T>(this.toMap(), SILENT | ADAPTER);
 	}
 
 	/**
@@ -389,6 +460,20 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	$toSet(): ISet<any> {
+		return new JWSet<any>(this.toSet(), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asSet(): ISet<any> {
+		return new JWSet<any>(this.asSet(), SILENT | ADAPTER);
+	}
+
+	/**
 	 * Replaces item with specified key. If map doesn't contain such key, new item is added.
 	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
 	 */
@@ -397,14 +482,25 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 		if (result === undefined) {
 			return undefined;
 		}
-		var oldItem = result.value;
-		if (oldItem !== undefined && this._ownsItems) {
-			(<Destroyable><any>oldItem).destroy();
+		var removedItem = result.value;
+		if (!this.isSilent()) {
+			var removedItems: Dictionary<T> = {};
+			if (removedItem !== undefined) {
+				removedItems[key] = removedItem;
+			}
+			var addedItems: Dictionary<T> = {};
+			addedItems[key] = item;
+			var spliceResult = { removedItems: removedItems, addedItems: addedItems };
+			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
+			this._changeEvent.trigger({ sender: this });
+		}
+		if (removedItem !== undefined && this._ownsItems) {
+			(<Destroyable><any>removedItem).destroy();
 		}
 		return result;
 	}
 
-	protected _trySet(item: T, key: string): Proxy<T> {
+	private _trySet(item: T, key: string): Proxy<T> {
 		var result = MapUtils.trySet(this._json, item, key);
 		if (result === undefined) {
 			return undefined;
@@ -419,6 +515,10 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * Adds or replaces a bunch of items.
 	 */
 	setAll(items: Dictionary<T>) {
+		if (!this.isSilent()) {
+			this.trySetAll(items);
+			return;
+		}
 		for (var key in items) {
 			this.trySet(items[key], key);
 		}
@@ -457,7 +557,13 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * If collection is not modified, returns undefined.
 	 */
 	trySetKey(oldKey: string, newKey: string): T {
-		return MapUtils.trySetKey(this._json, oldKey, newKey);
+		const item = MapUtils.trySetKey(this._json, oldKey, newKey);
+		if (item === undefined) {
+			return undefined;
+		}
+		this._reindexEvent.trigger({ sender: this, keyMap: MapUtils.single(oldKey, newKey) });
+		this._changeEvent.trigger({ sender: this });
+		return item;
 	}
 
 	/**
@@ -467,13 +573,21 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 */
 	tryRemove(key: string): T {
 		var item = this._tryRemove(key);
-		if (item !== undefined && this._ownsItems) {
+		if (item === undefined) {
+			return undefined;
+		}
+		if (!this.isSilent()) {
+			var spliceResult: IMapSpliceResult<T> = { addedItems: {}, removedItems: MapUtils.single(key, item) };
+			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
+			this._changeEvent.trigger({ sender: this });
+		}
+		if (this._ownsItems) {
 			(<Destroyable><any>item).destroy();
 		}
 		return item;
 	}
 
-	protected _tryRemove(key: string): T {
+	private _tryRemove(key: string): T {
 		var item = MapUtils.tryRemove(this._json, key);
 		if (item === undefined) {
 			return undefined;
@@ -486,6 +600,10 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * Removes a bunch of items from map.
 	 */
 	removeAll(keys: string[]) {
+		if (!this.isSilent()) {
+			this.tryRemoveAll(keys);
+			return;
+		}
 		for (var i = 0, l = keys.length; i < l; ++i) {
 			this.tryRemove(keys[i]);
 		}
@@ -504,7 +622,9 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * Low-performance alternative to [[removeAll]] with verbose result set.
 	 * @returns The removed items.
 	 */
-	abstract $removeAllVerbose(keys: string[]): IMap<T>;
+	$removeAllVerbose(keys: string[]): IMap<T> {
+		return new Map<T>(this.removeAllVerbose(keys), SILENT | ADAPTER);
+	}
 
 	/**
 	 * Removes a bunch of items from map.
@@ -543,14 +663,21 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	/**
 	 * @inheritdoc
 	 */
-	abstract $clear(): IMap<T>;
+	$clear(): IMap<T> {
+		return new Map<T>(this.clear(), SILENT | ADAPTER);
+	}
 
 	/**
 	 * @inheritdoc
 	 */
 	tryClear(): Dictionary<T> {
 		var items = this._tryClear();
-		if (items !== undefined && this._ownsItems) {
+		if (items === undefined) {
+			return undefined;
+		}
+		this._clearEvent.trigger({ sender: this, items: items });
+		this._changeEvent.trigger({ sender: this });
+		if (this._ownsItems) {
 			ArrayUtils.backEvery(MapUtils.toArray(items), destroy);
 		}
 		return items;
@@ -590,9 +717,14 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * If collection is not modified, returns undefined.
 	 */
 	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
-		var spliceResult = this._trySplice(removedKeys, updatedItems);
-		if ((spliceResult !== undefined) && this._ownsItems) {
-			ArrayUtils.backEvery<T>(MapUtils.toArray(spliceResult.removedItems), destroy);
+		const spliceResult = this._trySplice(removedKeys, updatedItems);
+		if (spliceResult === undefined) {
+			return undefined;
+		}
+		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
+		this._changeEvent.trigger({ sender: this });
+		if (this._ownsItems) {
+			ArrayUtils.backEvery(MapUtils.toArray(spliceResult.removedItems), destroy);
 		}
 		return spliceResult;
 	}
@@ -625,7 +757,13 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	 * If collection is not modified, returns undefined.
 	 */
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
-		return MapUtils.tryReindex(this._json, keyMap);
+		const result = MapUtils.tryReindex(this._json, keyMap);
+		if (result === undefined) {
+			return undefined;
+		}
+		this._reindexEvent.trigger({ sender: this, keyMap: result });
+		this._changeEvent.trigger({ sender: this });
+		return result;
 	}
 
 	/**
@@ -697,4 +835,4 @@ abstract class AbstractMap<T> extends IndexedCollection<string, T> implements IM
 	}
 }
 
-export default AbstractMap;
+export default Map;

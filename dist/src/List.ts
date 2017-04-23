@@ -34,7 +34,7 @@ import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import IndexedCollection from './IndexedCollection';
 import ISet from './ISet';
-import JWMap from './JWMap';
+import Map from './Map';
 import JWSet from './JWSet';
 import Proxy from './Proxy';
 import Watchable from './Watchable';
@@ -454,7 +454,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T, key: number) => string, scope?: any): IMap<T> {
-		return new JWMap<T>(this.index(callback, scope), SILENT | ADAPTER);
+		return new Map<T>(this.index(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
@@ -524,14 +524,14 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @inheritdoc
 	 */
 	$toMap(): IMap<T> {
-		return new JWMap<T>(this.toMap(), SILENT | ADAPTER);
+		return new Map<T>(this.toMap(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asMap(): IMap<T> {
-		return new JWMap<T>(this.asMap(), SILENT | ADAPTER);
+		return new Map<T>(this.asMap(), SILENT | ADAPTER);
 	}
 
 	/**

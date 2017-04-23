@@ -19,7 +19,7 @@
 */
 
 import {MapItemsEventParams, MapSpliceEventParams} from '../../IMap';
-import ObservableMap from '../../ObservableMap';
+import IMap from '../../IMap';
 import ICollectionObserverConfig from '../ICollectionObserverConfig';
 import MapObserver from './MapObserver';
 import * as MapUtils from '../../MapUtils';
@@ -31,7 +31,7 @@ export default class ObservableMapObserver<T> extends MapObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableMap<T>, config: ICollectionObserverConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionObserverConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

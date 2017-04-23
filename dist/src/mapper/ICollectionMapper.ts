@@ -99,7 +99,7 @@ import ICollection from '../ICollection';
  * - Target collection must be empty before initialization.
  * - You can't modify target collection manually and/or create other synchronizers with the same target collection.
  *
- * [[JW.AbstractMap]]:
+ * [[JW.Map]]:
  *
  * - A target collection can be synchronized with multiple source collections, if keys of all items are different.
  * - You can add items to target collection manually, if their keys differ from other collection keys.

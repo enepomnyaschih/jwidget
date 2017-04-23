@@ -23,7 +23,7 @@ import Dictionary from '../../Dictionary';
 import IMap from '../../IMap';
 import IMapMapper from './IMapMapper';
 import IMapMapperConfig from './IMapMapperConfig';
-import JWMap from '../../JWMap';
+import Map from '../../Map';
 
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Map]].
@@ -47,7 +47,7 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 	constructor(source: IMap<T>, config: IMapMapperConfig<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new JWMap<U>(this.source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new Map<U>(this.source.isSilent()) : config.target;
 		this.target.trySetAll(this._createItems(source.getJson()));
 	}
 

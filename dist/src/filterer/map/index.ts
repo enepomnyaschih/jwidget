@@ -22,20 +22,20 @@ import MapFilterer from './MapFilterer';
 import IMap from '../../IMap';
 import IMapFilterer from './IMapFilterer';
 import IMapFiltererConfig from './IMapFiltererConfig';
-import ObservableMap from '../../ObservableMap';
+import Map from '../../Map';
 import ObservableMapFilterer from './ObservableMapFilterer';
 
 export function createMapFilterer<T>(source: IMap<T>, config: IMapFiltererConfig<T>): IMapFilterer<T> {
-	return (source instanceof ObservableMap) ?
-		new ObservableMapFilterer<T>(source, config) :
-		new MapFilterer<T>(source, config);
+	return source.isSilent() ?
+		new MapFilterer<T>(source, config) :
+		new ObservableMapFilterer<T>(source, config);
 }
 
 export function filterMap<T>(source: IMap<T>, callback: (item: T) => boolean, scope?: any): IMap<T> {
-	if (!(source instanceof ObservableMap)) {
+	if (source.isSilent()) {
 		return source.$filter(callback, scope);
 	}
-	var result = new ObservableMap<T>();
+	var result = new Map<T>();
 	result.own(new ObservableMapFilterer<T>(source, {
 		target: result,
 		filterItem: callback,
