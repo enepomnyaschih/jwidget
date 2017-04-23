@@ -23,21 +23,21 @@ import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetMapper from './ISetMapper';
 import ISetMapperConfig from './ISetMapperConfig';
-import ObservableSet from '../../ObservableSet';
 import ObservableSetMapper from './ObservableSetMapper';
+import Set from '../../Set';
 import SetMapper from './SetMapper';
 
 export function createSetMapper<T extends IClass, U extends IClass>(source: ISet<T>, config: ISetMapperConfig<T, U>): ISetMapper<T, U> {
-	return (source instanceof ObservableSet) ?
-		new ObservableSetMapper<T, U>(source, config) :
-		new SetMapper<T, U>(source, config);
+	return source.isSilent() ?
+		new SetMapper<T, U>(source, config) :
+		new ObservableSetMapper<T, U>(source, config);
 }
 
 export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, callback: (item: T) => U, scope?: any): ISet<U> {
-	if (!(source instanceof ObservableSet)) {
+	if (source.isSilent()) {
 		return source.$map(callback, scope);
 	}
-	var result = new ObservableSet<U>();
+	var result = new Set<U>();
 	result.own(new ObservableSetMapper<T, U>(source, {
 		target: result,
 		createItem: callback,
@@ -47,10 +47,10 @@ export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, call
 }
 
 export function mapDestroyableSet<T extends IClass, U extends IClass>(source: ISet<T>, callback: (item: T) => U, scope?: any): ISet<U> {
-	if (!(source instanceof ObservableSet)) {
+	if (source.isSilent()) {
 		return source.$map(callback, scope).ownItems();
 	}
-	var result = new ObservableSet<U>();
+	var result = new Set<U>();
 	result.own(new ObservableSetMapper<T, U>(source, {
 		target: result,
 		createItem: callback,

@@ -19,8 +19,8 @@
 */
 
 /**
- * [[JW.AbstractSet.splice]] method arguments.
- * Returned by [[JW.AbstractSet.detectSplice]] method.
+ * [[JW.Set.splice]] method arguments.
+ * Returned by [[JW.Set.detectSplice]] method.
  *
  * @param T Item type.
  */

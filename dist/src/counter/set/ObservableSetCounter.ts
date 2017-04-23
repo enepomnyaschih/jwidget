@@ -19,9 +19,9 @@
 */
 
 import {SetSpliceEventParams} from '../../ISet';
-import ObservableSet from '../../ObservableSet';
 import IClass from '../../IClass';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
+import ISet from '../../ISet';
 import SetCounter from './SetCounter';
 import * as ArrayUtils from '../../ArrayUtils';
 
@@ -32,7 +32,7 @@ export default class ObservableSetCounter<T extends IClass> extends SetCounter<T
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableSet<T>, config: ICollectionCounterConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionCounterConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

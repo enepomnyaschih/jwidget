@@ -24,18 +24,17 @@ import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfi
 import ISet from '../../ISet';
 import ISetSorterComparing from './ISetSorterComparing';
 import List from '../../List';
-import ObservableSet from '../../ObservableSet';
 import ObservableSetSorterComparing from './ObservableSetSorterComparing';
 import SetSorterComparing from './SetSorterComparing';
 
 export function createSetSorterComparing<T extends IClass>(source: ISet<T>, config: ICollectionSorterComparingConfig<T>): ISetSorterComparing<T> {
-	return (source instanceof ObservableSet) ?
-		new ObservableSetSorterComparing<T>(source, config) :
-		new SetSorterComparing<T>(source, config);
+	return source.isSilent() ?
+		new SetSorterComparing<T>(source, config) :
+		new ObservableSetSorterComparing<T>(source, config);
 }
 
 export function sortSetComparing<T extends IClass>(source: ISet<T>, callback: (x: T, y: T) => number, scope?: any): IArray<T> {
-	if (!(source instanceof ObservableSet)) {
+	if (source.isSilent()) {
 		return source.$toSortedComparing(callback, scope);
 	}
 	var result = new List<T>();

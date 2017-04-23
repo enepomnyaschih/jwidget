@@ -37,7 +37,7 @@ class Class implements IClass {
 	 * Instance ID.
 	 *
 	 * Auto-incrementing object unique ID. Each `IClass` instance has such an identifier.
-	 * Used, say, in AbstractSet as map key for quick item access.
+	 * Used, say, in Set as map key for quick item access.
 	 */
 	_iid: number;
 

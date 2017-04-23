@@ -97,7 +97,7 @@ import ICollection from '../ICollection';
  * - A target collection can be synchronized with multiple source collections, if keys of all items are different.
  * - You can add items to target collection manually, if their keys differ from source collection keys.
  *
- * [[JW.AbstractSet]]:
+ * [[JW.Set]]:
  *
  * - A target collection can be synchronized with multiple source collections, if all items are different.
  * - You can add items to target collection manually, if they differ from source collection items.

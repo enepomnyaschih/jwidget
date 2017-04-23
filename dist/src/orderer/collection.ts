@@ -23,7 +23,7 @@ import {createMapOrderer, mapToArray} from './map';
 import {createSetOrderer, setToArray} from './set';
 import List from '../List';
 import Map from '../Map';
-import AbstractSet from '../AbstractSet';
+import Set from '../Set';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
 import ICollectionOrderer from './ICollectionOrderer';
@@ -33,11 +33,11 @@ import IArray from '../IArray';
 export function createOrderer<T extends IClass>(source: ICollection<T>, config: ICollectionOrdererConfig<T>): ICollectionOrderer<T> {
 	return (source instanceof List) ? createArrayOrderer(source, config) :
 		(source instanceof Map) ? createMapOrderer(source, config) :
-		(source instanceof AbstractSet) ? createSetOrderer(source, config) : null;
+		(source instanceof Set) ? createSetOrderer(source, config) : null;
 }
 
 export function collectionToArray<T extends IClass>(source: ICollection<T>): IArray<T> {
 	return (source instanceof List) ? arrayToArray(source) :
 		(source instanceof Map) ? mapToArray(source) :
-		(source instanceof AbstractSet) ? setToArray(source) : null;
+		(source instanceof Set) ? setToArray(source) : null;
 }

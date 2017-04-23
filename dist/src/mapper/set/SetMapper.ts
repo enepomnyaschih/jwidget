@@ -24,7 +24,7 @@ import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetMapper from './ISetMapper';
 import ISetMapperConfig from './ISetMapperConfig';
-import JWSet from '../../JWSet';
+import Set from '../../Set';
 
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Set]].
@@ -53,7 +53,7 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 	constructor(source: ISet<T>, config: ISetMapperConfig<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new JWSet<U>(this.source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new Set<U>(this.source.isSilent()) : config.target;
 		this.target.tryAddAll(this._createItems(source.toArray()));
 	}
 

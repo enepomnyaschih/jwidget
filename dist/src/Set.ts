@@ -27,9 +27,12 @@ import Event from './Event';
 import IArray from './IArray';
 import IClass from './IClass';
 import IEvent from './IEvent';
+import IMap from './IMap';
 import {default as ISet, SetEventParams, SetItemsEventParams, SetSpliceEventParams} from './ISet';
 import ISetSpliceParams from './ISetSpliceParams';
 import ISetSpliceResult from './ISetSpliceResult';
+import List from './List';
+import Map from './Map';
 import * as ArrayUtils from './ArrayUtils';
 import * as SetUtils from './SetUtils';
 
@@ -126,7 +129,7 @@ import * as SetUtils from './SetUtils';
  *
  * @param T Collection item type.
  */
-abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
+class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	protected _adapter: boolean;
 	protected _json: Dictionary<T>;
 
@@ -263,8 +266,29 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	/**
 	 * @inheritdoc
 	 */
+	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T> {
+		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[] {
 		return SetUtils.toSortedComparing(this._json, compare, scope || this, order);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T> {
+		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T) => string, scope?: any): IMap<T> {
+		return new Map<T>(this.index(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
@@ -277,7 +301,9 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	/**
 	 * @inheritdoc
 	 */
-	abstract $filter(callback: (item: T) => boolean, scope?: any): ISet<T>;
+	$filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
+		return new Set<T>(this.filter(callback, scope), SILENT | ADAPTER);
+	}
 
 	/**
 	 * @inheritdoc
@@ -296,13 +322,36 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	/**
 	 * @inheritdoc
 	 */
-	abstract $map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U>;
+	$map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
+		return new Set<U>(this.map(callback, scope), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toArray(): IArray<T> {
+		return new List<T>(this.toArray(), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asArray(): IArray<T> {
+		return new List<T>(this.asArray(), SILENT | ADAPTER);
+	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSet(): Dictionary<T> {
 		return apply<T>({}, this._json);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSet(): ISet<T> {
+		return new Set<T>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**
@@ -352,7 +401,9 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * Adds multiple items to set, ones that are absent.
 	 * @returns The added items.
 	 */
-	abstract $addAll(items: T[]): IArray<T>;
+	$addAll(items: T[]): IArray<T> {
+		return new List<T>(this.addAll(items), SILENT | ADAPTER);
+	}
 
 	/**
 	 * Adds multiple items to set, ones that are absent.
@@ -407,7 +458,9 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * Removes multiple items from set, ones that are present.
 	 * @returns The removed items.
 	 */
-	abstract $removeAll(items: T[]): IArray<T>;
+	$removeAll(items: T[]): IArray<T> {
+		return new List<T>(this.removeAll(items), SILENT | ADAPTER);
+	}
 
 	/**
 	 * Removes multiple items from set, ones that are present.
@@ -440,14 +493,21 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	/**
 	 * @inheritdoc
 	 */
-	abstract $clear(): IArray<T>;
+	$clear(): IArray<T> {
+		return new List<T>(this.clear(), SILENT | ADAPTER);
+	}
 
 	/**
 	 * @inheritdoc
 	 */
 	tryClear(): T[] {
 		var items = this._tryClear();
-		if (items !== undefined && this._ownsItems) {
+		if (items === undefined) {
+			return undefined;
+		}
+		this._clearEvent.trigger({ sender: this, items: items });
+		this._changeEvent.trigger({ sender: this });
+		if (this._ownsItems) {
 			ArrayUtils.backEvery(items, destroy);
 		}
 		return items;
@@ -487,8 +547,13 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	 * If collection is not modified, returns undefined.
 	 */
 	trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
-		var spliceResult = this._trySplice(removedItems, addedItems);
-		if ((spliceResult !== undefined) && this._ownsItems) {
+		const spliceResult = this._trySplice(removedItems, addedItems);
+		if (spliceResult === undefined) {
+			return undefined;
+		}
+		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
+		this._changeEvent.trigger({ sender: this });
+		if (this._ownsItems) {
 			ArrayUtils.backEvery(spliceResult.removedItems, destroy);
 		}
 		return spliceResult;
@@ -533,4 +598,4 @@ abstract class AbstractSet<T extends IClass> extends AbstractCollection<T> imple
 	}
 }
 
-export default AbstractSet;
+export default Set;

@@ -23,19 +23,18 @@ import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetCounter from './ISetCounter';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
-import ObservableSet from '../../ObservableSet';
 import ObservableSetCounter from './ObservableSetCounter';
 import Property from '../../Property';
 import Watchable from '../../Watchable';
 
 export function createSetCounter<T extends IClass>(source: ISet<T>, config: ICollectionCounterConfig<T>): ISetCounter<T> {
-	return (source instanceof ObservableSet) ?
-		new ObservableSetCounter<T>(source, config) :
-		new SetCounter<T>(source, config);
+	return source.isSilent() ?
+		new SetCounter<T>(source, config) :
+		new ObservableSetCounter<T>(source, config);
 }
 
 export function countSet<T extends IClass>(source: ISet<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
-	if (!(source instanceof ObservableSet)) {
+	if (source.isSilent()) {
 		return source.$count(callback, scope);
 	}
 	var result = new Property(0);

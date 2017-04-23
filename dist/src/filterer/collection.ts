@@ -23,7 +23,7 @@ import {createMapFilterer, filterMap} from './map';
 import {createSetFilterer, filterSet} from './set';
 import List from '../List';
 import Map from '../Map';
-import AbstractSet from '../AbstractSet';
+import Set from '../Set';
 import ICollection from '../ICollection';
 import ICollectionFilterer from './ICollectionFilterer';
 import ICollectionFiltererConfig from './ICollectionFiltererConfig';
@@ -31,11 +31,11 @@ import ICollectionFiltererConfig from './ICollectionFiltererConfig';
 export function createFilterer<T>(source: ICollection<T>, config: ICollectionFiltererConfig<T>): ICollectionFilterer<T> {
 	return (source instanceof List) ? createArrayFilterer(source, config) :
 		(source instanceof Map) ? createMapFilterer(source, config) :
-		(source instanceof AbstractSet) ? createSetFilterer(source, config) : null;
+		(source instanceof Set) ? createSetFilterer(source, config) : null;
 }
 
 export function filterCollection<T>(source: ICollection<T>, callback: (item: T) => boolean, scope?: any): ICollection<T> {
 	return (source instanceof List) ? filterArray(source, callback, scope) :
 		(source instanceof Map) ? filterMap(source, callback, scope) :
-		(source instanceof AbstractSet) ? filterSet(source, callback, scope) : null;
+		(source instanceof Set) ? filterSet(source, callback, scope) : null;
 }

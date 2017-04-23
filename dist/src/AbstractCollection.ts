@@ -39,7 +39,7 @@ import * as SetUtils from './SetUtils';
  * extends [[JW.IndexedCollection]]
  * * [[JW.Map]],
  * extends [[JW.IndexedCollection]]
- * * [[JW.AbstractSet]]
+ * * [[JW.Set]]
  *
  * You can convert collections to each other using methods.
  *

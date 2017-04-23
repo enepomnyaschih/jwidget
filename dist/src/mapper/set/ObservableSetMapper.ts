@@ -19,8 +19,8 @@
 */
 
 import {SetItemsEventParams, SetSpliceEventParams} from '../../ISet';
-import ObservableSet from '../../ObservableSet';
 import IClass from '../../IClass';
+import ISet from '../../ISet';
 import ISetMapperConfig from './ISetMapperConfig';
 import SetMapper from './SetMapper';
 
@@ -31,7 +31,7 @@ export default class ObservableSetMapper<T extends IClass, U extends IClass> ext
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableSet<T>, config: ISetMapperConfig<T, U>) {
+	constructor(source: ISet<T>, config: ISetMapperConfig<T, U>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

@@ -19,7 +19,7 @@
 */
 
 /**
- * [[JW.AbstractSet.splice]] method result.
+ * [[JW.Set.splice]] method result.
  *
  * @param T Item type.
  */

@@ -23,7 +23,7 @@ import {createMapObserver} from './map';
 import {createSetObserver} from './set';
 import List from '../List';
 import Map from '../Map';
-import AbstractSet from '../AbstractSet';
+import Set from '../Set';
 import ICollection from '../ICollection';
 import ICollectionObserver from './ICollectionObserver';
 import ICollectionObserverConfig from './ICollectionObserverConfig';
@@ -31,5 +31,5 @@ import ICollectionObserverConfig from './ICollectionObserverConfig';
 export function createObserver<T>(source: ICollection<T>, config: ICollectionObserverConfig<T>): ICollectionObserver {
 	return (source instanceof List) ? createArrayObserver(source, config) :
 		(source instanceof Map) ? createMapObserver(source, config) :
-		(source instanceof AbstractSet) ? createSetObserver(source, config) : null;
+		(source instanceof Set) ? createSetObserver(source, config) : null;
 }

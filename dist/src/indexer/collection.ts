@@ -23,7 +23,7 @@ import {createMapIndexer, indexMap} from './map';
 import {createSetIndexer, indexSet} from './set';
 import List from '../List';
 import Map from '../Map';
-import AbstractSet from '../AbstractSet';
+import Set from '../Set';
 import ICollection from '../ICollection';
 import ICollectionIndexer from './ICollectionIndexer';
 import ICollectionIndexerConfig from './ICollectionIndexerConfig';
@@ -32,11 +32,11 @@ import IMap from '../IMap';
 export function createIndexer<T>(source: ICollection<T>, config: ICollectionIndexerConfig<T>): ICollectionIndexer<T> {
 	return (source instanceof List) ? createArrayIndexer(source, config) :
 		(source instanceof Map) ? createMapIndexer(source, config) :
-		(source instanceof AbstractSet) ? createSetIndexer(source, config) : null;
+		(source instanceof Set) ? createSetIndexer(source, config) : null;
 }
 
 export function indexCollection<T>(source: ICollection<T>, callback: (item: T) => string, scope?: any): IMap<T> {
 	return (source instanceof List) ? indexArray(source, callback, scope) :
 		(source instanceof Map) ? indexMap(source, callback, scope) :
-		(source instanceof AbstractSet) ? indexSet(source, callback, scope) : null;
+		(source instanceof Set) ? indexSet(source, callback, scope) : null;
 }

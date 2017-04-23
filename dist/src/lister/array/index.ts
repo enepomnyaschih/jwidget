@@ -25,7 +25,7 @@ import IClass from '../../IClass';
 import ICollectionListerConfig from '../ICollectionListerConfig';
 import ISet from '../../ISet';
 import ObservableArrayLister from './ObservableArrayLister';
-import ObservableSet from '../../ObservableSet';
+import Set from '../../Set';
 
 export function createArrayLister<T extends IClass>(source: IArray<T>, config: ICollectionListerConfig<T>): IArrayLister<T> {
 	return source.isSilent() ?
@@ -37,7 +37,7 @@ export function arrayToSet<T extends IClass>(source: IArray<T>): ISet<T> {
 	if (source.isSilent()) {
 		return source.$toSet();
 	}
-	var result = new ObservableSet<T>();
+	var result = new Set<T>();
 	result.own(new ObservableArrayLister<T>(source, {
 		target: result
 	}));

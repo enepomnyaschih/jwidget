@@ -24,18 +24,17 @@ import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
 import ISet from '../../ISet';
 import ISetOrderer from './ISetOrderer';
 import List from '../../List';
-import ObservableSet from '../../ObservableSet';
 import ObservableSetOrderer from './ObservableSetOrderer';
 import SetOrderer from './SetOrderer';
 
 export function createSetOrderer<T extends IClass>(source: ISet<T>, config: ICollectionOrdererConfig<T>): ISetOrderer<T> {
-	return (source instanceof ObservableSet) ?
-		new ObservableSetOrderer<T>(source, config) :
-		new SetOrderer<T>(source, config);
+	return source.isSilent() ?
+		new SetOrderer<T>(source, config) :
+		new ObservableSetOrderer<T>(source, config);
 }
 
 export function setToArray<T extends IClass>(source: ISet<T>): IArray<T> {
-	if (!(source instanceof ObservableSet)) {
+	if (source.isSilent()) {
 		return source.$toArray();
 	}
 	var result = new List<T>();

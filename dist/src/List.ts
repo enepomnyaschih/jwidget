@@ -35,7 +35,7 @@ import IndexItems from './IndexItems';
 import IndexedCollection from './IndexedCollection';
 import ISet from './ISet';
 import Map from './Map';
-import JWSet from './JWSet';
+import Set from './Set';
 import Proxy from './Proxy';
 import Watchable from './Watchable';
 import * as ArrayUtils from './ArrayUtils';
@@ -538,14 +538,14 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @inheritdoc
 	 */
 	$toSet(): ISet<any> {
-		return new JWSet<any>(this.toSet(), SILENT | ADAPTER);
+		return new Set<any>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asSet(): ISet<any> {
-		return new JWSet<any>(this.asSet(), SILENT | ADAPTER);
+		return new Set<any>(this.asSet(), SILENT | ADAPTER);
 	}
 
 	/**

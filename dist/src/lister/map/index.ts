@@ -25,7 +25,7 @@ import IMap from '../../IMap';
 import IMapLister from './IMapLister';
 import ISet from '../../ISet';
 import ObservableMapLister from './ObservableMapLister';
-import ObservableSet from '../../ObservableSet';
+import Set from '../../Set';
 
 export function createMapLister<T extends IClass>(source: IMap<T>, config: ICollectionListerConfig<T>): IMapLister<T> {
 	return source.isSilent() ?
@@ -37,7 +37,7 @@ export function mapToSet<T extends IClass>(source: IMap<T>): ISet<T> {
 	if (source.isSilent()) {
 		return source.$toSet();
 	}
-	var result = new ObservableSet<T>();
+	var result = new Set<T>();
 	result.own(new ObservableMapLister<T>(source, {
 		target: result
 	}));

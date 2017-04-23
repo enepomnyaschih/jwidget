@@ -23,20 +23,20 @@ import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetFilterer from './ISetFilterer';
 import ISetFiltererConfig from './ISetFiltererConfig';
-import ObservableSet from '../../ObservableSet';
 import ObservableSetFilterer from './ObservableSetFilterer';
+import Set from '../../Set';
 
 export function createSetFilterer<T extends IClass>(source: ISet<T>, config: ISetFiltererConfig<T>): ISetFilterer<T> {
-	return (source instanceof ObservableSet) ?
-		new ObservableSetFilterer<T>(source, config) :
-		new SetFilterer<T>(source, config);
+	return source.isSilent() ?
+		new SetFilterer<T>(source, config) :
+		new ObservableSetFilterer<T>(source, config);
 }
 
 export function filterSet<T extends IClass>(source: ISet<T>, callback: (item: T) => boolean, scope?: any): ISet<T> {
-	if (!(source instanceof ObservableSet)) {
+	if (source.isSilent()) {
 		return source.$filter(callback, scope);
 	}
-	var result = new ObservableSet<T>();
+	var result = new Set<T>();
 	result.own(new ObservableSetFilterer<T>(source, {
 		target: result,
 		filterItem: callback,

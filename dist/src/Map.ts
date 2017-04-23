@@ -31,9 +31,9 @@ import IMapSpliceParams from './IMapSpliceParams';
 import IMapSpliceResult from './IMapSpliceResult';
 import IndexedCollection from './IndexedCollection';
 import ISet from './ISet';
-import JWSet from './JWSet';
 import List from './List';
 import Proxy from './Proxy';
+import Set from './Set';
 import * as ArrayUtils from './ArrayUtils';
 import * as MapUtils from './MapUtils';
 
@@ -463,14 +463,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	$toSet(): ISet<any> {
-		return new JWSet<any>(this.toSet(), SILENT | ADAPTER);
+		return new Set<any>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asSet(): ISet<any> {
-		return new JWSet<any>(this.asSet(), SILENT | ADAPTER);
+		return new Set<any>(this.asSet(), SILENT | ADAPTER);
 	}
 
 	/**

@@ -19,9 +19,9 @@
 */
 
 import {SetItemsEventParams, SetSpliceEventParams} from '../../ISet';
-import ObservableSet from '../../ObservableSet';
 import IClass from '../../IClass';
 import ICollectionObserverConfig from '../ICollectionObserverConfig';
+import ISet from '../../ISet';
 import SetObserver from './SetObserver';
 
 /**
@@ -31,7 +31,7 @@ export default class ObservableSetObserver<T extends IClass> extends SetObserver
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableSet<T>, config: ICollectionObserverConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionObserverConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
