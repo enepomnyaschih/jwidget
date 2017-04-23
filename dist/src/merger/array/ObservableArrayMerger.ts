@@ -19,7 +19,6 @@
 */
 
 import {ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
-import ObservableArray from '../../ObservableArray';
 import ArrayMerger from './ArrayMerger';
 import IArray from '../../IArray';
 import IArrayMergerConfig from './IArrayMergerConfig';
@@ -28,13 +27,13 @@ import IndexItems from '../../IndexItems';
 import * as ArrayUtils from '../../ArrayUtils';
 
 /**
- * [[JW.AbstractArray.Merger|Merger]] implementation for [[JW.ObservableArray]].
+ * [[JW.List.Merger|Merger]] implementation for [[JW.ObservableArray]].
  */
 export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableArray<IArray<T>>, config?: IArrayMergerConfig<T>) {
+	constructor(source: IArray<IArray<T>>, config?: IArrayMergerConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

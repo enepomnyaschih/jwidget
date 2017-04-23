@@ -19,20 +19,20 @@
 */
 
 import {ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
-import ObservableArray from '../../ObservableArray';
+import IArray from '../../IArray';
 import ArrayReverser from './ArrayReverser';
 import IArrayReverserConfig from './IArrayReverserConfig';
 import IndexCount from '../../IndexCount';
 import IndexItems from '../../IndexItems';
 
 /**
- * [[JW.AbstractArray.Reverser|Reverser]] implementation for [[JW.ObservableArray]].
+ * [[JW.List.Reverser|Reverser]] implementation for [[JW.ObservableArray]].
  */
 export default class ObservableArrayReverser<T> extends ArrayReverser<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableArray<T>, config?: IArrayReverserConfig<T>) {
+	constructor(source: IArray<T>, config?: IArrayReverserConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

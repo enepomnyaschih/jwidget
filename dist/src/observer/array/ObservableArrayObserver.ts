@@ -19,7 +19,7 @@
 */
 
 import {ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
-import ObservableArray from '../../ObservableArray';
+import IArray from '../../IArray';
 import ArrayObserver from './ArrayObserver';
 import ICollectionObserverConfig from '../ICollectionObserverConfig';
 
@@ -30,7 +30,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableArray<T>, config: ICollectionObserverConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionObserverConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

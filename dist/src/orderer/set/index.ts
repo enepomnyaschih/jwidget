@@ -23,7 +23,7 @@ import IClass from '../../IClass';
 import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
 import ISet from '../../ISet';
 import ISetOrderer from './ISetOrderer';
-import ObservableArray from '../../ObservableArray';
+import List from '../../List';
 import ObservableSet from '../../ObservableSet';
 import ObservableSetOrderer from './ObservableSetOrderer';
 import SetOrderer from './SetOrderer';
@@ -38,7 +38,7 @@ export function setToArray<T extends IClass>(source: ISet<T>): IArray<T> {
 	if (!(source instanceof ObservableSet)) {
 		return source.$toArray();
 	}
-	var result = new ObservableArray<T>();
+	var result = new List<T>();
 	result.own(new ObservableSetOrderer<T>(source, {
 		target: result
 	}));

@@ -21,7 +21,7 @@
 import IArray from '../../IArray';
 
 /**
- * [[JW.AbstractArray.Merger]] configuration.
+ * [[JW.List.Merger]] configuration.
  *
  * @param T Collection item type.
  */

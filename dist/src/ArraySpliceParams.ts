@@ -23,8 +23,8 @@ import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 
 /**
- * [[JW.AbstractArray.splice|splice]] method arguments.
- * Returned by [[JW.AbstractArray.detectSplice|detectSplice]] method.
+ * [[JW.List.splice|splice]] method arguments.
+ * Returned by [[JW.List.detectSplice|detectSplice]] method.
  *
  * @param T Item type.
  */

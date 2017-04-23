@@ -19,7 +19,7 @@
 */
 
 import {ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
-import ObservableArray from '../../ObservableArray';
+import IArray from '../../IArray';
 import ArrayCounter from './ArrayCounter';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
 import * as ArrayUtils from '../../ArrayUtils';
@@ -31,7 +31,7 @@ export default class ObservableArrayCounter<T> extends ArrayCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableArray<T>, config: ICollectionCounterConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionCounterConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

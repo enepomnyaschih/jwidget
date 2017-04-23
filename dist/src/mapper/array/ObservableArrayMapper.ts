@@ -19,7 +19,7 @@
 */
 
 import {ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
-import ObservableArray from '../../ObservableArray';
+import IArray from '../../IArray';
 import ArrayMapper from './ArrayMapper';
 import IArrayMapperConfig from './IArrayMapperConfig';
 import IIndexItems from '../../IIndexItems';
@@ -32,7 +32,7 @@ export default class Mapper<T, U> extends ArrayMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableArray<T>, config: IArrayMapperConfig<T, U>) {
+	constructor(source: IArray<T>, config: IArrayMapperConfig<T, U>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

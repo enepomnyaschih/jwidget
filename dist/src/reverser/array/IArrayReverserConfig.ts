@@ -21,7 +21,7 @@
 import IArray from '../../IArray';
 
 /**
- * [[JW.AbstractArray.Reverser]] configuration.
+ * [[JW.List.Reverser]] configuration.
  *
  * @param T Collection item type.
  */

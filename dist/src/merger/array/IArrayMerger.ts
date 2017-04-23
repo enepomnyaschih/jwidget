@@ -42,7 +42,7 @@ import IClass from '../../IClass';
  *
  *     merger.destroy();
  *
- * Use [[JW.AbstractArray.createMerger|createMerger]] method to create the synchronizer.
+ * Use [[JW.List.createMerger|createMerger]] method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
  *
  * You can pass target array in config option:
@@ -53,7 +53,7 @@ import IClass from '../../IClass';
  *         target: target
  *     });
  *
- * In simple cases, [[JW.AbstractArray.$$merge|$$merge]] shorthand can be used instead. It returns the target array right away:
+ * In simple cases, [[JW.List.$$merge|$$merge]] shorthand can be used instead. It returns the target array right away:
  *
  *     var source = new JW.ObservableArray([
  *         new JW.Array([1, 2, 3]),

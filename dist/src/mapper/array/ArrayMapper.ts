@@ -22,7 +22,7 @@ import AbstractCollectionMapper from '../AbstractCollectionMapper';
 import IArray from '../../IArray';
 import IArrayMapper from './IArrayMapper';
 import IArrayMapperConfig from './IArrayMapperConfig';
-import JWArray from '../../JWArray';
+import List from '../../List';
 
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Array]].
@@ -46,7 +46,7 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 	constructor(source: IArray<T>, config: IArrayMapperConfig<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new JWArray<U>(this.source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new List<U>(this.source.isSilent()) : config.target;
 		this.target.tryAddAll(this._createItems(this.source.getItems()));
 	}
 

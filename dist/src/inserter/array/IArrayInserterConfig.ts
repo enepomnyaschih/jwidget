@@ -19,7 +19,7 @@
 */
 
 /**
- * [[JW.AbstractArray.Inserter]] configuration.
+ * [[JW.List.Inserter]] configuration.
  *
  * @param T Collection item type.
  */

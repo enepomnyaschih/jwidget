@@ -23,8 +23,8 @@ import IIndexItems from './IIndexItems';
 import IndexCount from './IndexCount';
 
 /**
- * "Index-items" pair. Used in [[JW.AbstractArray.splice|splice]] method arguments
- * to specify item segments to insert, and in [[JW.AbstractArray.SpliceResult|SpliceResult]]
+ * "Index-items" pair. Used in [[JW.List.splice|splice]] method arguments
+ * to specify item segments to insert, and in [[JW.List.SpliceResult|SpliceResult]]
  * class to specify removed and added item segments.
  *
  * @param T Item type.

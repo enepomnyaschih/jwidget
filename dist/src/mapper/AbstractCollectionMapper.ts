@@ -96,7 +96,7 @@ import ICollectionMapperConfig from './ICollectionMapperConfig';
  *
  * **Additional rules for different collection types**
  *
- * [[JW.AbstractArray]]:
+ * [[JW.List]]:
  *
  * - Target collection must be empty before initialization.
  * - You can't modify target collection manually and/or create other synchronizers with the same target collection.

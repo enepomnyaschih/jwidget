@@ -21,7 +21,7 @@
 /// <reference types="jquery" />
 
 import {apply, destroy, isWatchable} from './Core';
-import AbstractArray from './AbstractArray';
+import List from './List';
 import AbstractCollection from './AbstractCollection';
 import AbstractTemplate from './AbstractTemplate';
 import Class from './Class';
@@ -256,7 +256,7 @@ export default class Component extends Class {
 			if (typeof (<any>this)[renderMethodName] === "function") {
 				var result = (<any>this)[renderMethodName](element);
 				if (jwId === "root") {
-					if (result instanceof AbstractArray) {
+					if (result instanceof List) {
 						this.addArray(result, jwId);
 					} else if (result instanceof AbstractCollection) {
 						this.addCollection(result, jwId);
@@ -266,7 +266,7 @@ export default class Component extends Class {
 						this.children.set(result, jwId);
 					} else if (isWatchable(result)) {
 						this.addReplaceable(result, jwId);
-					} else if (result instanceof AbstractArray) {
+					} else if (result instanceof List) {
 						this.addArray(result, jwId);
 					} else if (result instanceof AbstractCollection) {
 						this.addCollection(result, jwId);

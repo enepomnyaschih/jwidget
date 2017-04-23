@@ -25,8 +25,7 @@ import IArray from '../../IArray';
 import IArrayMerger from './IArrayMerger';
 import IArrayMergerConfig from './IArrayMergerConfig';
 import IClass from '../../IClass';
-import JWArray from '../../JWArray';
-import ObservableArray from '../../ObservableArray';
+import List from '../../List';
 
 /**
  * Arrays merger. Builds array consisting of all source collections items in the same order.
@@ -49,7 +48,7 @@ import ObservableArray from '../../ObservableArray';
  *
  *     merger.destroy();
  *
- * Use [[JW.AbstractArray.createMerger|createMerger]] method to create the synchronizer.
+ * Use [[JW.List.createMerger|createMerger]] method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
  *
  * You can pass target array in config option:
@@ -60,7 +59,7 @@ import ObservableArray from '../../ObservableArray';
  *         target: target
  *     });
  *
- * In simple cases, [[JW.AbstractArray.$$merge|$$merge]] shorthand can be used instead. It returns the target array right away:
+ * In simple cases, [[JW.List.$$merge|$$merge]] shorthand can be used instead. It returns the target array right away:
  *
  *     var source = new JW.ObservableArray([
  *         new JW.Array([1, 2, 3]),
@@ -107,7 +106,7 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractArray.createMerger|createMerger]] method is preferred instead.
+	 * [[JW.List.createMerger|createMerger]] method is preferred instead.
 	 *
 	 * @param source Source array.
 	 * @param config Configuration.
@@ -175,16 +174,10 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 	}
 
 	private createTarget(source: IArray<IArray<T>>): IArray<T> {
-		if (source instanceof ObservableArray) {
-			return new ObservableArray<T>();
-		}
-		if (source.some((item) => item instanceof ObservableArray)) {
-			return new ObservableArray<T>();
-		}
-		return new JWArray<T>();
+		return new List<T>(source.isSilent() && source.every((item) => item.isSilent()));
 	}
 
 	private createMergerBunch(item: IArray<T>): IClass {
-		return (item instanceof ObservableArray) ? new Bunch(this.source, this.target, item) : new Class();
+		return item.isSilent() ? new Class() : new Bunch(this.source, this.target, item);
 	}
 }

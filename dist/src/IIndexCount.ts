@@ -19,7 +19,7 @@
 */
 
 /**
- * "Index-count" pair. Used in [[JW.AbstractArray.splice|splice]] method arguments
+ * "Index-count" pair. Used in [[JW.List.splice|splice]] method arguments
  * to specify item segments to remove.
  */
 interface IIndexCount {

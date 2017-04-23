@@ -23,7 +23,7 @@ import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfi
 import IMap from '../../IMap';
 import IMapSorterComparing from './IMapSorterComparing';
 import MapSorterComparing from './MapSorterComparing';
-import ObservableArray from '../../ObservableArray';
+import List from '../../List';
 import ObservableMap from '../../ObservableMap';
 import ObservableMapSorterComparing from './ObservableMapSorterComparing';
 
@@ -37,7 +37,7 @@ export function sortMapComparing<T>(source: IMap<T>, callback: (x: T, y: T) => n
 	if (!(source instanceof ObservableMap)) {
 		return source.$toSortedComparing(callback, scope);
 	}
-	var result = new ObservableArray<T>();
+	var result = new List<T>();
 	result.own(new ObservableMapSorterComparing<T>(source, {
 		target: result,
 		compare: callback,

@@ -22,7 +22,7 @@ import AbstractInserter from './ui/AbstractInserter';
 
 /**
  * View synchronizer. Synchronizes DOM element children with the source array. Usually used in conjunction with
- * [[JW.AbstractArray.Mapper]].
+ * [[JW.List.Mapper]].
  *
  *     var data = new JW.ObservableArray(["apple", "banana", "cherry"]);
  *     var elements = data.$$mapValues(function(value) {

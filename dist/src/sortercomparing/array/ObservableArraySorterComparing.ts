@@ -19,7 +19,7 @@
 */
 
 import {ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
-import ObservableArray from '../../ObservableArray';
+import IArray from '../../IArray';
 import ArraySorterComparing from './ArraySorterComparing';
 import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
 
@@ -30,7 +30,7 @@ export default class ObservableArraySorterComparing<T> extends ArraySorterCompar
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableArray<T>, config: ICollectionSorterComparingConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionSorterComparingConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

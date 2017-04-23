@@ -19,7 +19,7 @@
 */
 
 import {ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
-import ObservableArray from '../../ObservableArray';
+import IArray from '../../IArray';
 import ArrayOrderer from './ArrayOrderer';
 import IClass from '../../IClass';
 import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
@@ -34,7 +34,7 @@ export default class ObservableArrayOrderer<T extends IClass> extends ArrayOrder
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableArray<T>, config: ICollectionOrdererConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionOrdererConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

@@ -38,7 +38,7 @@ import IClass from '../../IClass';
  *
  *     reverser.destroy();
  *
- * Use [[JW.AbstractArray.createReverser|createReverser]] method to create the synchronizer.
+ * Use [[JW.List.createReverser|createReverser]] method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
  *
  * You can pass target array in config option:
@@ -49,7 +49,7 @@ import IClass from '../../IClass';
  *         target: target
  *     });
  *
- * In simple cases, [[JW.AbstractArray.$$toReversed|$$toReversed]] shorthand can be used instead. It returns the target array right away:
+ * In simple cases, [[JW.List.$$toReversed|$$toReversed]] shorthand can be used instead. It returns the target array right away:
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
  *     var target = source.$$toReversed();

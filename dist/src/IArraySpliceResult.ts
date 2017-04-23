@@ -22,7 +22,7 @@ import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 
 /**
- * [[JW.AbstractArray.splice|splice]] method result.
+ * [[JW.List.splice|splice]] method result.
  *
  * @param T Item type.
  */
@@ -58,7 +58,7 @@ interface IArraySpliceResult<T> {
 	getRemoveParamsList(): IIndexCount[];
 
 	/**
-	 * Checks if [[JW.AbstractArray.splice|splice]] method call didn't change the array.
+	 * Checks if [[JW.List.splice|splice]] method call didn't change the array.
 	 * @returns Array hasn't been changed.
 	 */
 	isEmpty(): boolean;

@@ -82,7 +82,7 @@ import Proxy from './Proxy';
  * * [[asMap]], [[$asMap]] - Represents collection as map.
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  * * **[[backEvery]] - Checks all items by criteria in backward order.**
- * * **[[merge]], [[$merge]] - *suitable if array consists of JW.AbstractArray instances only.*
+ * * **[[merge]], [[$merge]] - *suitable if array consists of JW.List instances only.*
  * Builds array consisting of items of subarrays in the same order.**
  * * **[[toReversed]], [[$toReversed]] - Builds array consisting of collection items in reverse order.**
  *

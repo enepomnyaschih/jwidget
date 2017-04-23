@@ -35,7 +35,7 @@ import * as SetUtils from './SetUtils';
  *
  * There are 3 collection types:
  *
- * * [[JW.AbstractArray]],
+ * * [[List]],
  * extends [[JW.IndexedCollection]]
  * * [[JW.AbstractMap]],
  * extends [[JW.IndexedCollection]]
@@ -113,17 +113,17 @@ import * as SetUtils from './SetUtils';
  *     </tr>
  *     <tr>
  *       <td>View synchronizers</td>
- *       <td>[[JW.abstractarray.Inserter]], [[JW.abstractmap.Inserter]], [[JW.UI.Inserter]]</td>
+ *       <td>[[JW.List.Inserter]], [[JW.abstractmap.Inserter]], [[JW.UI.Inserter]]</td>
  *       <td>createInserter</td>
  *     </tr>
  *     <tr>
  *       <td>Arrays merger</td>
- *       <td>[[JW.abstractarray.Merger]]</td>
+ *       <td>[[JW.List.Merger]]</td>
  *       <td>[[$$merge]], [[createMerger]]</td>
  *     </tr>
  *     <tr>
  *       <td>Array reverser</td>
- *       <td>[[JW.abstractarray.Reverser]]</td>
+ *       <td>[[JW.List.Reverser]]</td>
  *       <td>[[$$toReversed]], [[createReverser]]</td>
  *     </tr>
  *   </tbody>

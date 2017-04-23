@@ -89,7 +89,7 @@ import ICollectionFiltererConfig from './ICollectionFiltererConfig';
  *
  * **Additional rules for different collection types**
  *
- * [[JW.AbstractArray]]:
+ * [[JW.List]]:
  *
  * - Target collection must be empty before initialization.
  * - A target collection can be synchronized with one source collection only.

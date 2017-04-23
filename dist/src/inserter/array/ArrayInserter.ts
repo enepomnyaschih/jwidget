@@ -30,7 +30,7 @@ import IArrayInserterConfig from './IArrayInserterConfig';
  * (in case if there is more effective clearing algorithm than iterative items deletion).
  * Unlike [[JW.AbstractCollection.Observer|Observer]], tracks items order.
  *
- * Use [[JW.AbstractArray.createinserter|createinserter]] method to create the synchronizer.
+ * Use [[JW.List.createinserter|createinserter]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).
  *
  *     var inserter = array.createInserter({
@@ -74,7 +74,7 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractArray.createInserter|createInserter]] method is preferred instead.
+	 * [[JW.List.createInserter|createInserter]] method is preferred instead.
 	 *
 	 * @param source Source array.
 	 * @param config Configuration.

@@ -20,7 +20,7 @@
 
 import ArraySpliceResult from './ArraySpliceResult';
 import Bindable from './Bindable';
-import {CollectionFlags, SILENT, ADAPTER} from './Core';
+import {destroy, CollectionFlags, SILENT, ADAPTER} from './Core';
 import Dictionary from './Dictionary';
 import Event from './Event';
 import {default as IArray, ArrayEventParams, ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from './IArray';
@@ -29,9 +29,13 @@ import IArraySpliceResult from './IArraySpliceResult';
 import IEvent from './IEvent';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
+import IMap from './IMap';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import IndexedCollection from './IndexedCollection';
+import ISet from './ISet';
+import JWMap from './JWMap';
+import JWSet from './JWSet';
 import Proxy from './Proxy';
 import Watchable from './Watchable';
 import * as ArrayUtils from './ArrayUtils';
@@ -101,7 +105,7 @@ import * as ArrayUtils from './ArrayUtils';
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  * * **[[backEvery]] - Checks all items by criteria in backward order.**
  * * **[[merge]], [[$merge]],
- * [[$$merge]] - *suitable if array consists of JW.AbstractArray instances only.*
+ * [[$$merge]] - *suitable if array consists of List instances only.*
  * Builds array consisting of items of subarrays in the same order.**
  * * **[[toReversed]], [[$toReversed]],
  * [[$$toReversed]] -
@@ -174,7 +178,7 @@ import * as ArrayUtils from './ArrayUtils';
  *
  * @param T Array item type.
  */
-abstract class AbstractArray<T> extends IndexedCollection<number, T> implements IArray<T> {
+export default class List<T> extends IndexedCollection<number, T> implements IArray<T> {
 	protected _items: T[];
 
 	protected _spliceEvent  : IEvent<ArraySpliceEventParams<T>>;
@@ -372,6 +376,13 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	/**
 	 * @inheritdoc
 	 */
+	$getKeys(): IArray<number> {
+		return new List<number>(this.getKeys(), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	containsItem(item: T): boolean {
 		return ArrayUtils.containsItem(this._items, item);
 	}
@@ -393,8 +404,22 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	/**
 	 * @inheritdoc
 	 */
+	$toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<T> {
+		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): T[] {
 		return ArrayUtils.toSortedComparing(this._items, compare, scope || this, order);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<T> {
+		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
@@ -407,8 +432,29 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	/**
 	 * @inheritdoc
 	 */
+	$getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<number> {
+		return new List<number>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): number[] {
 		return ArrayUtils.getSortingKeysComparing(this._items, compare, scope || this, order);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<number> {
+		return new List<number>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T, key: number) => string, scope?: any): IMap<T> {
+		return new JWMap<T>(this.index(callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
@@ -421,7 +467,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $filter(callback: (item: T, index: number) => boolean, scope?: any): IArray<T>;
+	$filter(callback: (item: T, index: number) => boolean, scope?: any): IArray<T> {
+		return new List<T>(this.filter(callback, scope || this), SILENT | ADAPTER);
+	}
 
 	/**
 	 * @inheritdoc
@@ -440,13 +488,22 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U>;
+	$map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U> {
+		return new List<U>(this.map(callback, scope || this), SILENT | ADAPTER);
+	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toArray(): T[] {
 		return this._items.concat();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toArray(): IArray<T> {
+		return new List<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
@@ -461,6 +518,34 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 */
 	$asArray(): IArray<T> {
 		return this;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toMap(): IMap<T> {
+		return new JWMap<T>(this.toMap(), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asMap(): IMap<T> {
+		return new JWMap<T>(this.asMap(), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSet(): ISet<any> {
+		return new JWSet<any>(this.toSet(), SILENT | ADAPTER);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$asSet(): ISet<any> {
+		return new JWSet<any>(this.asSet(), SILENT | ADAPTER);
 	}
 
 	/**
@@ -521,7 +606,18 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 *
 	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
 	 */
-	abstract trySet(item: T, index: number): Proxy<T>;
+	trySet(item: T, index: number): Proxy<T> {
+		const oldProxy = ArrayUtils.trySet(this._items, item, index);
+		if (oldProxy === undefined) {
+			return undefined;
+		}
+		this._replaceEvent.trigger({ sender: this, index: index, oldItem: oldProxy.value, newItem: item });
+		this._changeEvent.trigger({ sender: this });
+		if (this._ownsItems) {
+			(<any>oldProxy.value).destroy();
+		}
+		return oldProxy;
+	}
 
 	/**
 	 * Removes item at specified position.
@@ -556,7 +652,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @param count Count of items to remove.
 	 * @returns The removed items.
 	 */
-	abstract $removeAll(index: number, count: number): IArray<T>;
+	$removeAll(index: number, count: number): IArray<T> {
+		return new List<T>(this.removeAll(index, count), SILENT | ADAPTER);
+	}
 
 	/**
 	 * Removes item range from array.
@@ -604,7 +702,15 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @param toIndex Index to move to.
 	 * @returns The moved item. If collection is not modified, returns undefined.
 	 */
-	abstract tryMove(fromIndex: number, toIndex: number): T;
+	tryMove(fromIndex: number, toIndex: number): T {
+		var item = ArrayUtils.tryMove(this._items, fromIndex, toIndex);
+		if (item === undefined) {
+			return undefined;
+		}
+		this._moveEvent.trigger({ sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item });
+		this._changeEvent.trigger({ sender: this });
+		return item;
+	}
 
 	/**
 	 * @inheritdoc
@@ -617,12 +723,26 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $clear(): IArray<T>;
+	$clear(): IArray<T> {
+		return new List<T>(this.clear(), SILENT | ADAPTER);
+	}
 
 	/**
 	 * @inheritdoc
 	 */
-	abstract tryClear(): T[];
+	tryClear(): T[]{
+		var oldItems = ArrayUtils.tryClear(this._items);
+		if (oldItems === undefined) {
+			return undefined;
+		}
+		this._length.set(0);
+		this._clearEvent.trigger({ sender: this, items: oldItems });
+		this._changeEvent.trigger({ sender: this });
+		if (this._ownsItems) {
+			ArrayUtils.backEvery(oldItems, destroy);
+		}
+		return oldItems;
+	}
 
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
@@ -643,7 +763,19 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. If collection is not modified, returns undefined.
 	 */
-	abstract trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T>;
+	trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T> {
+		var result = ArrayUtils.trySplice(this._items, removeParamsList, addParamsList);
+		if (result === undefined) {
+			return undefined;
+		}
+		this._length.set(this._items.length);
+		this._spliceEvent.trigger({ sender: this, spliceResult: result });
+		this._changeEvent.trigger({ sender: this });
+		if (this._ownsItems) {
+			ArrayUtils.backEvery(result.getRemovedItems(), destroy);
+		}
+		return result;
+	}
 
 	/**
 	 * Reorders array items.
@@ -662,7 +794,15 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * Must contain all indexes from 0 to (length - 1).
 	 * @returns Old array contents. If collection is not modified, returns undefined.
 	 */
-	abstract tryReorder(indexArray: number[]): T[];
+	tryReorder(indexArray: number[]): T[]{
+		var items = ArrayUtils.tryReorder(this._items, indexArray);
+		if (items === undefined) {
+			return undefined;
+		}
+		this._reorderEvent.trigger({ sender: this, indexArray: indexArray, items: items });
+		this._changeEvent.trigger({ sender: this });
+		return items;
+	}
 
 	/**
 	 * Detects [[splice]] method arguments to adjust array contents to **newItems**.
@@ -678,7 +818,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	abstract detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArraySpliceParams<T>;
+	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArraySpliceParams<T> {
+		return ArrayUtils.detectSplice(this._items, newItems, getKey || this.getKey, scope || this);
+	}
 
 	/**
 	 * Detects **removeParamsList** arguments of [[splice]] to adjust array contents to **newItems**.
@@ -690,7 +832,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @returns **removeParamsList** argument of [[splice]] method.
 	 * If no method call required, returns undefined.
 	 */
-	abstract detectFilter(newItems: T[]): IIndexCount[];
+	detectFilter(newItems: T[]): IIndexCount[]{
+		return ArrayUtils.detectFilter(this._items, newItems);
+	}
 
 	/**
 	 * Detects [[reorder]] method arguments to adjust array contents to **newItems**.
@@ -706,7 +850,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
 	 */
-	abstract detectReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): number[];
+	detectReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): number[] {
+		return ArrayUtils.detectReorder(this._items, newItems, getKey || this.getKey, scope || this);
+	}
 
 	/**
 	 * Detects [[reorder]] method arguments to sort array contents by result of
@@ -719,7 +865,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
 	 */
-	abstract detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[];
+	detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
+		return ArrayUtils.detectSort(this._items, callback, scope || this, order);
+	}
 
 	/**
 	 * Detects [[reorder]] method arguments to sort array contents by comparer.
@@ -732,7 +880,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
 	 */
-	abstract detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[];
+	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[]{
+		return ArrayUtils.detectSortComparing(this._items, compare, scope || this, order);
+	}
 
 	/**
 	 * Adjusts array contents to **newItems** using [[detectSplice]] and
@@ -822,7 +972,16 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * Reverses item order in array. Modifies the array itself.
 	 */
 	reverse() {
-		this._items.reverse();
+		if (this.isSilent()) {
+			this._items.reverse();
+			return;
+		}
+		var length = this.length.get();
+		var indices = new Array<number>(length);
+		for (var i = 0; i < length; ++i) {
+			indices[i] = length - i - 1;
+		}
+		this.reorder(indices);
 	}
 
 	/**
@@ -831,7 +990,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 *
 	 * @returns Reversed array.
 	 */
-	abstract toReversed(): T[];
+	toReversed(): T[] {
+		return ArrayUtils.toReversed(this._items);
+	}
 
 	/**
 	 * Builds a new array containing items of this array in reversed order.
@@ -839,7 +1000,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 *
 	 * @returns Reversed array.
 	 */
-	abstract $toReversed(): IArray<T>;
+	$toReversed(): IArray<T> {
+		return new List(this.toReversed(), SILENT | ADAPTER);
+	}
 
 	/**
 	 * Checks for equality (===) to another array, item by item.
@@ -847,7 +1010,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @param arr Another array.
 	 * @returns Arrays are equal.
 	 */
-	abstract equal(arr: T[]): boolean;
+	equal(arr: T[]): boolean {
+		return ArrayUtils.equal(this._items, arr);
+	}
 
 	/**
 	 * Collapses multi-dimentional array.
@@ -855,14 +1020,18 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @param depth Dimentions to collapse.
 	 * @returns Collapsed array.
 	 */
-	abstract collapse(depth: number): any[];
+	collapse(depth: number): any[]{
+		return ArrayUtils.collapse(this._items, depth);
+	}
 
 	/**
 	 * Returns item index in this collection.
 	 *
 	 * @returns Item index. If item doesn't exist, returns -1.
 	 */
-	abstract indexOf(item: T): number;
+	indexOf(item: T): number {
+		return this._items.indexOf(item);
+	}
 
 	/**
 	 * Checks all items against criteria in backward order.
@@ -874,7 +1043,9 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @param callback Criteria callback.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
-	abstract backEvery(callback: (item: T, index: number) => boolean, scope?: any): boolean;
+	backEvery(callback: (item: T, index: number) => boolean, scope?: any): boolean {
+		return ArrayUtils.backEvery(this._items, callback, scope);
+	}
 
 	/**
 	 * Removes last array item. Does nothing if array is empty.
@@ -901,7 +1072,7 @@ abstract class AbstractArray<T> extends IndexedCollection<number, T> implements 
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Item index.
 	 */
-	abstract binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
+	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
+		return ArrayUtils.binarySearch(this._items, value, compare, scope, order);
+	}
 }
-
-export default AbstractArray;

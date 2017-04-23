@@ -23,7 +23,7 @@ import IClass from '../../IClass';
 import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
 import ISet from '../../ISet';
 import ISetSorterComparing from './ISetSorterComparing';
-import ObservableArray from '../../ObservableArray';
+import List from '../../List';
 import ObservableSet from '../../ObservableSet';
 import ObservableSetSorterComparing from './ObservableSetSorterComparing';
 import SetSorterComparing from './SetSorterComparing';
@@ -38,7 +38,7 @@ export function sortSetComparing<T extends IClass>(source: ISet<T>, callback: (x
 	if (!(source instanceof ObservableSet)) {
 		return source.$toSortedComparing(callback, scope);
 	}
-	var result = new ObservableArray<T>();
+	var result = new List<T>();
 	result.own(new ObservableSetSorterComparing<T>(source, {
 		target: result,
 		compare: callback,

@@ -22,7 +22,7 @@ import Class from '../../Class';
 import IArray from '../../IArray';
 import IArrayReverser from './IArrayReverser';
 import IArrayReverserConfig from './IArrayReverserConfig';
-import JWArray from '../../JWArray';
+import List from '../../List';
 
 /**
  * Array reverser. Builds array containing all items of source array in reversed order.
@@ -41,7 +41,7 @@ import JWArray from '../../JWArray';
  *
  *     reverser.destroy();
  *
- * Use [[JW.AbstractArray.createReverser|createReverser]] method to create the synchronizer.
+ * Use [[JW.List.createReverser|createReverser]] method to create the synchronizer.
  * The method will select which synchronizer implementation fits better (simple or observable).
  *
  * You can pass target array in config option:
@@ -52,7 +52,7 @@ import JWArray from '../../JWArray';
  *         target: target
  *     });
  *
- * In simple cases, [[JW.AbstractArray.$$toReversed|$$toReversed]] shorthand can be used instead. It returns the target array right away:
+ * In simple cases, [[JW.List.$$toReversed|$$toReversed]] shorthand can be used instead. It returns the target array right away:
  *
  *     var source = new JW.ObservableArray([1, 2, 3]);
  *     var target = source.$$toReversed();
@@ -94,7 +94,7 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractArray.createReverser|createReverser]] method is preferred instead.
+	 * [[JW.List.createReverser|createReverser]] method is preferred instead.
 	 *
 	 * @param source Source array.
 	 * @param config Configuration.
@@ -102,7 +102,7 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 	constructor(public source: IArray<T>, config: IArrayReverserConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new JWArray<T>(source.isSilent()) : config.target;
+		this.target = this._targetCreated ? new List<T>(source.isSilent()) : config.target;
 		this.target.tryAddAll(this._reverse(source.getItems()));
 	}
 

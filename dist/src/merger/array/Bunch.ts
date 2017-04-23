@@ -19,7 +19,6 @@
 */
 
 import {ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
-import ObservableArray from '../../ObservableArray';
 import Class from '../../Class';
 import IArray from '../../IArray';
 import IndexCount from '../../IndexCount';
@@ -31,9 +30,9 @@ import IndexItems from '../../IndexItems';
 export default class Bunch<T> extends Class {
 	private source: IArray<IArray<T>>;
 	private target: IArray<T>;
-	private bunch: ObservableArray<T>;
+	private bunch: IArray<T>;
 
-	constructor(source: IArray<IArray<T>>, target: IArray<T>, bunch: ObservableArray<T>) {
+	constructor(source: IArray<IArray<T>>, target: IArray<T>, bunch: IArray<T>) {
 		super();
 		this.source = source;
 		this.target = target;

@@ -24,20 +24,20 @@ import Destroyable from '../../Destroyable';
 import IArray from '../../IArray';
 import IArrayMapper from './IArrayMapper';
 import IArrayMapperConfig from './IArrayMapperConfig';
-import ObservableArray from '../../ObservableArray';
+import List from '../../List';
 import ObservableArrayMapper from './ObservableArrayMapper';
 
 export function createArrayMapper<T, U>(source: IArray<T>, config: IArrayMapperConfig<T, U>): IArrayMapper<T, U> {
-	return (source instanceof ObservableArray) ?
-		new ObservableArrayMapper<T, U>(source, config) :
-		new ArrayMapper<T, U>(source, config);
+	return source.isSilent() ?
+		new ArrayMapper<T, U>(source, config) :
+		new ObservableArrayMapper<T, U>(source, config);
 }
 
 export function mapArray<T, U>(source: IArray<T>, callback: (item: T) => U, scope?: any): IArray<U> {
-	if (!(source instanceof ObservableArray)) {
+	if (source.isSilent()) {
 		return source.$map(callback, scope);
 	}
-	var result = new ObservableArray<U>();
+	var result = new List<U>();
 	result.own(new ObservableArrayMapper<T, U>(source, {
 		target: result,
 		createItem: callback,
@@ -47,10 +47,10 @@ export function mapArray<T, U>(source: IArray<T>, callback: (item: T) => U, scop
 }
 
 export function mapDestroyableArray<T, U extends Destroyable>(source: IArray<T>, callback: (item: T) => U, scope?: any): IArray<U> {
-	if (!(source instanceof ObservableArray)) {
+	if (source.isSilent()) {
 		return source.$map(callback, scope).ownItems();
 	}
-	var result = new ObservableArray<U>();
+	var result = new List<U>();
 	result.own(new ObservableArrayMapper<T, U>(source, {
 		target: result,
 		createItem: callback,

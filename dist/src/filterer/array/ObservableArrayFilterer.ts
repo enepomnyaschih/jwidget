@@ -19,7 +19,7 @@
 */
 
 import {ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
-import ObservableArray from '../../ObservableArray';
+import IArray from '../../IArray';
 import ArrayFilterer from './ArrayFilterer';
 import Dictionary from '../../Dictionary';
 import IArrayFiltererConfig from './IArrayFiltererConfig';
@@ -32,7 +32,7 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ObservableArray<T>, config: IArrayFiltererConfig<T>) {
+	constructor(source: IArray<T>, config: IArrayFiltererConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

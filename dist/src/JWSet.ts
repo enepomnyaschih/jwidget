@@ -25,7 +25,7 @@ import IArray from './IArray';
 import IClass from './IClass';
 import IMap from './IMap';
 import ISet from './ISet';
-import JWArray from './JWArray';
+import List from './List';
 import JWMap from './JWMap';
 
 /**
@@ -59,14 +59,14 @@ export default class JWSet<T extends IClass> extends AbstractSet<T> {
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
@@ -80,14 +80,14 @@ export default class JWSet<T extends IClass> extends AbstractSet<T> {
 	 * @inheritdoc
 	 */
 	$toArray(): IArray<T> {
-		return new JWArray<T>(this.toArray(), SILENT | ADAPTER);
+		return new List<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asArray(): IArray<T> {
-		return new JWArray<T>(this.asArray(), SILENT | ADAPTER);
+		return new List<T>(this.asArray(), SILENT | ADAPTER);
 	}
 
 	/**
@@ -101,20 +101,20 @@ export default class JWSet<T extends IClass> extends AbstractSet<T> {
 	 * @inheritdoc
 	 */
 	$addAll(items: T[]): IArray<T> {
-		return new JWArray<T>(this.addAll(items), SILENT | ADAPTER);
+		return new List<T>(this.addAll(items), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$removeAll(items: T[]): IArray<T> {
-		return new JWArray<T>(this.removeAll(items), SILENT | ADAPTER);
+		return new List<T>(this.removeAll(items), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$clear(): IArray<T> {
-		return new JWArray<T>(this.clear(), SILENT | ADAPTER);
+		return new List<T>(this.clear(), SILENT | ADAPTER);
 	}
 }

@@ -21,7 +21,7 @@
 import IIndexCount from './IIndexCount';
 
 /**
- * "Index-count" pair. Used in [[JW.AbstractArray.splice|splice]] method arguments
+ * "Index-count" pair. Used in [[JW.List.splice|splice]] method arguments
  * to specify item segments to remove.
  */
 export default class IndexCount implements IIndexCount {

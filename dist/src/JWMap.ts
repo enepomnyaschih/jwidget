@@ -24,7 +24,7 @@ import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IMap from './IMap';
 import ISet from './ISet';
-import JWArray from './JWArray';
+import List from './List';
 import JWSet from './JWSet';
 
 /**
@@ -46,35 +46,35 @@ export default class JWMap<T> extends AbstractMap<T> {
 	 * @inheritdoc
 	 */
 	$getKeys(): IArray<string> {
-		return new JWArray<string>(this.getKeys(), SILENT | ADAPTER);
+		return new List<string>(this.getKeys(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<T> {
-		return new JWArray<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<string> {
-		return new JWArray<string>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
+		return new List<string>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<string> {
-		return new JWArray<string>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
+		return new List<string>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
 	/**
@@ -102,14 +102,14 @@ export default class JWMap<T> extends AbstractMap<T> {
 	 * @inheritdoc
 	 */
 	$toArray(): IArray<T> {
-		return new JWArray<T>(this.toArray(), SILENT | ADAPTER);
+		return new List<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$asArray(): IArray<T> {
-		return new JWArray<T>(this.asArray(), SILENT | ADAPTER);
+		return new List<T>(this.asArray(), SILENT | ADAPTER);
 	}
 
 	/**
