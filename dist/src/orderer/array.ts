@@ -18,19 +18,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionOrderer from '../AbstractCollectionOrderer';
-import IArray from '../../IArray';
-import IArrayOrderer from './IArrayOrderer';
-import IClass from '../../IClass';
-import ICollectionOrderer from '../ICollectionOrderer';
-import IndexCount from '../../IndexCount';
-import IndexItems from '../../IndexItems';
-import * as ArrayUtils from '../../ArrayUtils';
+import AbstractCollectionOrderer from './AbstractCollectionOrderer';
+import IArray from '../IArray';
+import IClass from '../IClass';
+import IndexCount from '../IndexCount';
+import IndexItems from '../IndexItems';
+import List from '../List';
+import * as ArrayUtils from '../ArrayUtils';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Array]].
  */
-export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOrderer<T> implements IArrayOrderer<T> {
+export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -39,7 +38,7 @@ export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOr
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionOrderer.Config<T>) {
+	constructor(source: IArray<T>, config: AbstractCollectionOrderer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -63,4 +62,15 @@ export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOr
 	private _onClear(params: IArray.ItemsEventParams<T>) {
 		this.target.removeItems(params.items);
 	}
+}
+
+export function arrayToArray<T extends IClass>(source: IArray<T>): IArray<T> {
+	if (source.silent) {
+		return source.$toArray();
+	}
+	var result = new List<T>();
+	result.own(new ArrayOrderer<T>(source, {
+		target: result
+	}));
+	return result;
 }

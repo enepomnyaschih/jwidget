@@ -18,21 +18,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {arrayToArray} from './array';
-import {mapToArray} from './map';
-import {setToArray} from './set';
-import ArrayOrderer from './array/ArrayOrderer';
-import MapOrderer from './map/MapOrderer';
-import SetOrderer from './set/SetOrderer';
+import {default as ArrayOrderer, arrayToArray} from './array';
+import {default as MapOrderer, mapToArray} from './map';
+import {default as SetOrderer, setToArray} from './set';
+import AbstractCollectionOrderer from './AbstractCollectionOrderer';
+import IArray from '../IArray';
+import IClass from '../IClass';
+import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
-import IClass from '../IClass';
-import ICollection from '../ICollection';
-import ICollectionOrderer from './ICollectionOrderer';
-import IArray from '../IArray';
 
-export function createOrderer<T extends IClass>(source: ICollection<T>, config: ICollectionOrderer.Config<T>): ICollectionOrderer<T> {
+export function createOrderer<T extends IClass>(source: ICollection<T>, config: AbstractCollectionOrderer.Config<T>): AbstractCollectionOrderer<T> {
 	return (source instanceof List) ? new ArrayOrderer(source, config) :
 		(source instanceof Map) ? new MapOrderer(source, config) :
 		(source instanceof Set) ? new SetOrderer(source, config) : null;

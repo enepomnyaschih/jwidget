@@ -23,7 +23,6 @@ import Dictionary from '../Dictionary';
 import IArray from '../IArray';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
-import ICollectionOrderer from './ICollectionOrderer';
 import IndexItems from '../IndexItems';
 import List from '../List';
 import * as SetUtils from '../SetUtils';
@@ -89,7 +88,7 @@ import * as SetUtils from '../SetUtils';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionOrderer<T extends IClass> extends Class implements ICollectionOrderer<T> {
+abstract class AbstractCollectionOrderer<T extends IClass> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -104,7 +103,7 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class impleme
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionOrderer.Config<T> = {}) {
+	constructor(readonly source: ICollection<T>, config: AbstractCollectionOrderer.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
@@ -139,3 +138,17 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class impleme
 }
 
 export default AbstractCollectionOrderer;
+
+namespace AbstractCollectionOrderer {
+	/**
+	 * [[JW.AbstractCollection.Orderer]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T extends IClass> {
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IArray<T>;
+	}
+}

@@ -18,17 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionOrderer from '../AbstractCollectionOrderer';
-import IClass from '../../IClass';
-import ICollectionOrderer from '../ICollectionOrderer';
-import ISet from '../../ISet';
-import ISetOrderer from './ISetOrderer';
-import * as ArrayUtils from '../../ArrayUtils';
+import AbstractCollectionOrderer from './AbstractCollectionOrderer';
+import IArray from '../IArray';
+import IClass from '../IClass';
+import ISet from '../ISet';
+import List from '../List';
+import * as ArrayUtils from '../ArrayUtils';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Set]].
  */
-export default class SetOrderer<T extends IClass> extends AbstractCollectionOrderer<T> implements ISetOrderer<T> {
+export default class SetOrderer<T extends IClass> extends AbstractCollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -37,7 +37,7 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionOrderer.Config<T>) {
+	constructor(source: ISet<T>, config: AbstractCollectionOrderer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
@@ -53,4 +53,15 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 	private _onClear(params: ISet.ItemsEventParams<T>) {
 		this.target.removeItems(params.items);
 	}
+}
+
+export function setToArray<T extends IClass>(source: ISet<T>): IArray<T> {
+	if (source.silent) {
+		return source.$toArray();
+	}
+	var result = new List<T>();
+	result.own(new SetOrderer<T>(source, {
+		target: result
+	}));
+	return result;
 }

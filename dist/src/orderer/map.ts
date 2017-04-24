@@ -18,17 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionOrderer from '../AbstractCollectionOrderer';
-import IClass from '../../IClass';
-import ICollectionOrderer from '../ICollectionOrderer';
-import IMap from '../../IMap';
-import IMapOrderer from './IMapOrderer';
-import * as MapUtils from '../../MapUtils';
+import AbstractCollectionOrderer from './AbstractCollectionOrderer';
+import IArray from '../IArray';
+import IClass from '../IClass';
+import IMap from '../IMap';
+import List from '../List';
+import * as MapUtils from '../MapUtils';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Map]].
  */
-export default class MapOrderer<T extends IClass> extends AbstractCollectionOrderer<T> implements IMapOrderer<T> {
+export default class MapOrderer<T extends IClass> extends AbstractCollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -37,7 +37,7 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionOrderer.Config<T>) {
+	constructor(source: IMap<T>, config: AbstractCollectionOrderer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
@@ -54,4 +54,15 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 		this.target.removeItems(
 			MapUtils.toArray(params.items));
 	}
+}
+
+export function mapToArray<T extends IClass>(source: IMap<T>): IArray<T> {
+	if (source.silent) {
+		return source.$toArray();
+	}
+	var result = new List<T>();
+	result.own(new MapOrderer<T>(source, {
+		target: result
+	}));
+	return result;
 }
