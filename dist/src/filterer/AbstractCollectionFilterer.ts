@@ -20,7 +20,6 @@
 
 import Class from '../Class';
 import ICollection from '../ICollection';
-import ICollectionFilterer from './ICollectionFilterer';
 
 /**
  * Collection filterer.
@@ -105,7 +104,7 @@ import ICollectionFilterer from './ICollectionFilterer';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionFilterer<T> extends Class implements ICollectionFilterer<T> {
+abstract class AbstractCollectionFilterer<T> extends Class {
 	/**
 	 * @hidden
 	 */
@@ -128,7 +127,7 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionFilterer.Config<T>) {
+	constructor(readonly source: ICollection<T>, config: AbstractCollectionFilterer.Config<T>) {
 		super();
 		this._test = config.test;
 		this._scope = config.scope || this;
@@ -145,3 +144,23 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 }
 
 export default AbstractCollectionFilterer;
+
+namespace AbstractCollectionFilterer {
+	/**
+	 * [[JW.AbstractCollection.Filterer]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Filtering criteria.
+		 */
+		readonly test: (item: T) => boolean;
+
+		/**
+		 * [[filterItem]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+	}
+}

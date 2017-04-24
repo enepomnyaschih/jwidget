@@ -18,19 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {filterArray} from './array';
-import {filterMap} from './map';
-import {filterSet} from './set';
-import ArrayFilterer from './array/ArrayFilterer';
-import MapFilterer from './map/MapFilterer';
-import SetFilterer from './set/SetFilterer';
+import {default as ArrayFilterer, filterArray} from './array';
+import {default as MapFilterer, filterMap} from './map';
+import {default as SetFilterer, filterSet} from './set';
+import AbstractCollectionFilterer from './AbstractCollectionFilterer';
+import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
-import ICollection from '../ICollection';
-import ICollectionFilterer from './ICollectionFilterer';
 
-export function createFilterer<T>(source: ICollection<T>, config: ICollectionFilterer.Config<T>): ICollectionFilterer<T> {
+export function createFilterer<T>(source: ICollection<T>, config: AbstractCollectionFilterer.Config<T>): AbstractCollectionFilterer<T> {
 	return (source instanceof List) ? new ArrayFilterer(source, config) :
 		(source instanceof Map) ? new MapFilterer(source, config) :
 		(source instanceof Set) ? new SetFilterer(source, config) : null;
