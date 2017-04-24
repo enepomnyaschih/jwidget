@@ -18,41 +18,51 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionLister from '../AbstractCollectionLister';
-import IArray from '../../IArray';
-import IArrayLister from './IArrayLister';
-import IClass from '../../IClass';
-import ICollectionLister from '../ICollectionLister';
+import AbstractCollectionLister from './AbstractCollectionLister';
+import IClass from '../IClass';
+import IMap from '../IMap';
+import ISet from '../ISet';
+import Set from '../Set';
+import * as MapUtils from '../MapUtils';
 
 /**
- * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Array]].
+ * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Map]].
  */
-export default class ArrayLister<T extends IClass> extends AbstractCollectionLister<T> implements IArrayLister<T> {
+export default class MapLister<T extends IClass> extends AbstractCollectionLister<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IArray<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionLister.Config<T>) {
+	constructor(source: IMap<T>, config: AbstractCollectionLister.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.replaceEvent.bind(this._onReplace, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
+		this.target.trySplice(
+			MapUtils.toArray(spliceResult.removedItems),
+			MapUtils.toArray(spliceResult.addedItems));
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
-		this.target.trySplice([params.oldItem], [params.newItem]);
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(
+			MapUtils.toArray(params.items));
 	}
+}
 
-	private _onClear(params: IArray.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(params.items);
+export function mapToSet<T extends IClass>(source: IMap<T>): ISet<T> {
+	if (source.silent) {
+		return source.$toSet();
 	}
+	var result = new Set<T>();
+	result.own(new MapLister<T>(source, {
+		target: result
+	}));
+	return result;
 }

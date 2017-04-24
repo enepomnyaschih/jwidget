@@ -21,7 +21,6 @@
 import Class from '../Class';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
-import ICollectionLister from './ICollectionLister';
 import ISet from '../ISet';
 import Set from '../Set';
 
@@ -97,7 +96,7 @@ import Set from '../Set';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionLister<T extends IClass> extends Class implements ICollectionLister<T> {
+abstract class AbstractCollectionLister<T extends IClass> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -112,7 +111,7 @@ abstract class AbstractCollectionLister<T extends IClass> extends Class implemen
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionLister.Config<T> = {}) {
+	constructor(readonly source: ICollection<T>, config: AbstractCollectionLister.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(source.silent) : config.target;
@@ -132,3 +131,17 @@ abstract class AbstractCollectionLister<T extends IClass> extends Class implemen
 }
 
 export default AbstractCollectionLister;
+
+namespace AbstractCollectionLister {
+	/**
+	 * [[JW.AbstractCollection.Lister]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T extends IClass> {
+		/**
+		 * Target set. By default, created automatically.
+		 */
+		readonly target?: ISet<T>;
+	}
+}

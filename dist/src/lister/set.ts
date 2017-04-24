@@ -18,16 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionLister from '../AbstractCollectionLister';
-import IClass from '../../IClass';
-import ICollectionLister from '../ICollectionLister';
-import ISet from '../../ISet';
-import ISetLister from './ISetLister';
+import AbstractCollectionLister from './AbstractCollectionLister';
+import IClass from '../IClass';
+import ISet from '../ISet';
+import Set from '../Set';
 
 /**
  * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Set]].
  */
-export default class SetLister<T extends IClass> extends AbstractCollectionLister<T> implements ISetLister<T> {
+export default class SetLister<T extends IClass> extends AbstractCollectionLister<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -36,7 +35,7 @@ export default class SetLister<T extends IClass> extends AbstractCollectionListe
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionLister.Config<T>) {
+	constructor(source: ISet<T>, config: AbstractCollectionLister.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
@@ -50,4 +49,15 @@ export default class SetLister<T extends IClass> extends AbstractCollectionListe
 	private _onClear(params: ISet.ItemsEventParams<T>) {
 		this.target.tryRemoveAll(params.items);
 	}
+}
+
+export function setToSet<T extends IClass>(source: ISet<T>): ISet<T> {
+	if (source.silent) {
+		return source.$toSet();
+	}
+	var result = new Set<T>();
+	result.own(new SetLister<T>(source, {
+		target: result
+	}));
+	return result;
 }

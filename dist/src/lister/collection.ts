@@ -18,21 +18,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {arrayToSet} from './array';
-import {mapToSet} from './map';
-import {setToSet} from './set';
-import ArrayLister from './array/ArrayLister';
-import MapLister from './map/MapLister';
-import SetLister from './set/SetLister';
+import {default as ArrayLister, arrayToSet} from './array';
+import {default as MapLister, mapToSet} from './map';
+import {default as SetLister, setToSet} from './set';
+import AbstractCollectionLister from './AbstractCollectionLister';
+import IClass from '../IClass';
+import ICollection from '../ICollection';
+import ISet from '../ISet';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
-import IClass from '../IClass';
-import ICollection from '../ICollection';
-import ICollectionLister from './ICollectionLister';
-import ISet from '../ISet';
 
-export function createLister<T extends IClass>(source: ICollection<T>, config: ICollectionLister.Config<T>): ICollectionLister<T> {
+export function createLister<T extends IClass>(source: ICollection<T>, config: AbstractCollectionLister.Config<T>): AbstractCollectionLister<T> {
 	return (source instanceof List) ? new ArrayLister(source, config) :
 		(source instanceof Map) ? new MapLister(source, config) :
 		(source instanceof Set) ? new SetLister(source, config) : null;
