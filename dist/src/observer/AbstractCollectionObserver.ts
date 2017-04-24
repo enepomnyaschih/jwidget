@@ -20,7 +20,6 @@
 
 import Class from '../Class';
 import ICollection from '../ICollection';
-import ICollectionObserver from './ICollectionObserver';
 
 /**
  * Collection observer. Listens all collection events and reduces them to 2 granular functions:
@@ -61,7 +60,7 @@ import ICollectionObserver from './ICollectionObserver';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionObserver<T> extends Class implements ICollectionObserver {
+abstract class AbstractCollectionObserver<T> extends Class {
 	/**
 	 * @hidden
 	 */
@@ -94,7 +93,7 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionObserver.Config<T>) {
+	constructor(readonly source: ICollection<T>, config: AbstractCollectionObserver.Config<T>) {
 		super();
 		config = config || {};
 		this._add = config.add;
@@ -165,3 +164,39 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 }
 
 export default AbstractCollectionObserver;
+
+namespace AbstractCollectionObserver {
+	/**
+	 * [[JW.AbstractCollection.Observer]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Item is added to collection.
+		 */
+		readonly add?: (item: T) => void;
+
+		/**
+		 * Item is removed from collection.
+		 */
+		readonly remove?: (item: T) => void;
+
+		/**
+		 * Collection is cleared. By default, calls [[removeItem]] for all collection items.
+		 */
+		readonly clear?: (items: T[]) => void;
+
+		/**
+		 * Collection is changed arbitrarily.
+		 */
+		readonly change?: () => void;
+
+		/**
+		 * [[addItem]], [[removeItem]],
+		 * [[clearItems]] and [[change]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+	}
+}

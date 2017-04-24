@@ -18,17 +18,38 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ICollectionObserver from '../ICollectionObserver';
-import IMap from '../../IMap';
+import AbstractCollectionObserver from './AbstractCollectionObserver';
+import IMap from '../IMap';
+import * as MapUtils from '../MapUtils';
 
 /**
  * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Map]].
  */
-interface IMapObserver<T> extends ICollectionObserver {
+export default class MapObserver<T> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
 	readonly source: IMap<T>;
-}
 
-export default IMapObserver;
+	/**
+	 * @inheritdoc
+	 */
+	constructor(source: IMap<T>, config: AbstractCollectionObserver.Config<T>) {
+		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+		if (this._change) {
+			this.own(source.changeEvent.bind(this._onChange, this));
+		}
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._removeItems(MapUtils.toArray(spliceResult.removedItems));
+		this._addItems(MapUtils.toArray(spliceResult.addedItems));
+	}
+
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this._doClearItems(MapUtils.toArray(params.items));
+	}
+}

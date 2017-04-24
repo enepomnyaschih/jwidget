@@ -18,17 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {createArrayObserver} from './array';
-import {createMapObserver} from './map';
-import {createSetObserver} from './set';
+import ArrayObserver from './array';
+import MapObserver from './map';
+import SetObserver from './set';
+import AbstractCollectionObserver from './AbstractCollectionObserver';
+import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
-import ICollection from '../ICollection';
-import ICollectionObserver from './ICollectionObserver';
 
-export function createObserver<T>(source: ICollection<T>, config: ICollectionObserver.Config<T>): ICollectionObserver {
-	return (source instanceof List) ? createArrayObserver(source, config) :
-		(source instanceof Map) ? createMapObserver(source, config) :
-		(source instanceof Set) ? createSetObserver(source, config) : null;
+export function createObserver<T>(source: ICollection<T>, config: AbstractCollectionObserver.Config<T>): AbstractCollectionObserver<T> {
+	return (source instanceof List) ? new ArrayObserver(source, config) :
+		(source instanceof Map) ? new MapObserver(source, config) :
+		(source instanceof Set) ? new SetObserver(source, config) : null;
 }

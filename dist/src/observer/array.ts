@@ -18,15 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionObserver from '../AbstractCollectionObserver';
-import IArray from '../../IArray';
-import IArrayObserver from './IArrayObserver';
-import ICollectionObserver from '../ICollectionObserver';
+import AbstractCollectionObserver from './AbstractCollectionObserver';
+import IArray from '../IArray';
 
 /**
  * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Array]].
  */
-export default class ArrayObserver<T> extends AbstractCollectionObserver<T> implements IArrayObserver<T> {
+export default class ArrayObserver<T> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -35,7 +33,7 @@ export default class ArrayObserver<T> extends AbstractCollectionObserver<T> impl
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionObserver.Config<T>) {
+	constructor(source: IArray<T>, config: AbstractCollectionObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

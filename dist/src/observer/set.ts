@@ -18,16 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionObserver from '../AbstractCollectionObserver';
-import IClass from '../../IClass';
-import ICollectionObserver from '../ICollectionObserver';
-import ISet from '../../ISet';
-import ISetObserver from './ISetObserver';
+import AbstractCollectionObserver from './AbstractCollectionObserver';
+import IClass from '../IClass';
+import ISet from '../ISet';
 
 /**
  * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Set]].
  */
-export default class SetObserver<T extends IClass> extends AbstractCollectionObserver<T> implements ISetObserver<T> {
+export default class SetObserver<T extends IClass> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -36,7 +34,7 @@ export default class SetObserver<T extends IClass> extends AbstractCollectionObs
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionObserver.Config<T>) {
+	constructor(source: ISet<T>, config: AbstractCollectionObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
