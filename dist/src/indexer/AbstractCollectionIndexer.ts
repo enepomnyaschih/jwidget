@@ -21,7 +21,6 @@
 import Class from '../Class';
 import Dictionary from '../Dictionary';
 import ICollection from '../ICollection';
-import ICollectionIndexer from './ICollectionIndexer';
 import IMap from '../IMap';
 import Map from '../Map';
 
@@ -101,7 +100,7 @@ import Map from '../Map';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionIndexer<T> extends Class implements ICollectionIndexer<T> {
+abstract class AbstractCollectionIndexer<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -126,7 +125,7 @@ abstract class AbstractCollectionIndexer<T> extends Class implements ICollection
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionIndexer.Config<T>) {
+	constructor(readonly source: ICollection<T>, config: AbstractCollectionIndexer.Config<T>) {
 		super();
 		this._getKey = config.getKey;
 		this._scope = config.scope || this;
@@ -173,3 +172,28 @@ abstract class AbstractCollectionIndexer<T> extends Class implements ICollection
 }
 
 export default AbstractCollectionIndexer;
+
+namespace AbstractCollectionIndexer {
+	/**
+	 * [[JW.AbstractCollection.Indexer]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Indexing function. Determines item key in map.
+		 */
+		readonly getKey: (item: T) => any;
+
+		/**
+		 * [[getKey]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+
+		/**
+		 * Target map. By default, created automatically.
+		 */
+		readonly target?: IMap<T>;
+	}
+}

@@ -18,20 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {indexArray} from './array';
-import {indexMap} from './map';
-import {indexSet} from './set';
-import ArrayIndexer from './array/ArrayIndexer';
-import MapIndexer from './map/MapIndexer';
-import SetIndexer from './set/SetIndexer';
+import {default as ArrayIndexer, indexArray} from './array';
+import {default as MapIndexer, indexMap} from './map';
+import {default as SetIndexer, indexSet} from './set';
+import AbstractCollectionIndexer from './AbstractCollectionIndexer';
+import ICollection from '../ICollection';
+import IMap from '../IMap';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
-import ICollection from '../ICollection';
-import ICollectionIndexer from './ICollectionIndexer';
-import IMap from '../IMap';
 
-export function createIndexer<T>(source: ICollection<T>, config: ICollectionIndexer.Config<T>): ICollectionIndexer<T> {
+export function createIndexer<T>(source: ICollection<T>, config: AbstractCollectionIndexer.Config<T>): AbstractCollectionIndexer<T> {
 	return (source instanceof List) ? new ArrayIndexer(source, config) :
 		(source instanceof Map) ? new MapIndexer(source, config) :
 		(source instanceof Set) ? new SetIndexer(source, config) : null;
