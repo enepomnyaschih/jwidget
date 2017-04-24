@@ -132,6 +132,23 @@ import Proxy from './Proxy';
  */
 interface IArray<T> extends IIndexedCollection<number, T> {
 	/**
+	 * Returns the last collection item. If collection is empty, returns undefined.
+	 */
+	readonly last: T;
+
+	/**
+	 * Returns index of last collection item. If collection is empty, returns undefined.
+	 */
+	readonly lastKey: number;
+
+	/**
+	 * Item array - internal collection representation.
+	 *
+	 * **Caution: doesn't make a copy - please don't modify.**
+	 */
+	readonly items: T[];
+
+	/**
 	 * Items are removed from array and items are added to array. Triggered in result
 	 * of calling:
 	 *
@@ -206,39 +223,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	isEmpty(): boolean;
-
-	/**
-	 * @inheritdoc
-	 */
-	getFirst(): T;
-
-	/**
-	 * Returns the last collection item. If collection is empty, returns undefined.
-	 */
-	getLast(): T;
-
-	/**
-	 * @inheritdoc
-	 */
-	getFirstKey(): number;
-
-	/**
-	 * Returns index of last collection item. If collection is empty, returns undefined.
-	 */
-	getLastKey(): number;
-
-	/**
-	 * @inheritdoc
-	 */
 	get(index: number): T;
-
-	/**
-	 * Returns item array - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
-	 */
-	getItems(): T[];
 
 	/**
 	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.

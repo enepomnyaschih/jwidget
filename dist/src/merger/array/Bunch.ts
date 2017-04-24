@@ -45,7 +45,7 @@ export default class Bunch<T> extends Class {
 	}
 
 	private _getIndex(): number {
-		var bunches = this.source.getItems();
+		var bunches = this.source.items;
 		var index = 0;
 		for (var i = 0, l = bunches.length; i < l; ++i) {
 			var bunch = bunches[i];

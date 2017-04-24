@@ -140,6 +140,11 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	}
 
 	/**
+	 * Returns key of first collection item. If collection is empty, returns undefined.
+	 */
+	abstract get firstKey(): K;
+
+	/**
 	 * Returns item by key. If item with such key doesn't exist, returns undefined.
 	 */
 	abstract get(key: K): T;
@@ -148,11 +153,6 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 * @inheritdoc
 	 */
 	abstract $clear(): IIndexedCollection<K, T>;
-
-	/**
-	 * Returns key of first collection item. If collection is empty, returns undefined.
-	 */
-	abstract getFirstKey(): K;
 
 	/**
 	 * Returns array of keys of all collection items.

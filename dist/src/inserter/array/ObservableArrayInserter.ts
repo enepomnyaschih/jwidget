@@ -47,7 +47,7 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		// if there is an effective clearing function, just reset the controller
 		if (this._clearItems && (3 * removedItems.length > 2 * oldItems.length)) {
 			this._clearItems.call(this._scope, oldItems);
-			this._addItems(this.source.getItems(), 0);
+			this._addItems(this.source.items, 0);
 			return;
 		}
 
@@ -88,6 +88,6 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 
 	private _onReorder(params: ArrayReorderEventParams<T>) {
 		this._doClearItems(params.items);
-		this._addItems(this.source.getItems(), 0);
+		this._addItems(this.source.items, 0);
 	}
 }

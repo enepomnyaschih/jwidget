@@ -85,14 +85,14 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 		this._removeItem = config.removeItem;
 		this._clearItems = config.clearItems;
 		this._scope = config.scope || this;
-		this._addItems(this.source.getItems(), 0);
+		this._addItems(this.source.items, 0);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this._doClearItems(this.source.getItems());
+		this._doClearItems(this.source.items);
 		this._addItem = null;
 		this._removeItem = null;
 		this._clearItems = null;

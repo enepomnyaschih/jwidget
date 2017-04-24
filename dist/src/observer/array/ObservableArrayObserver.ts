@@ -48,7 +48,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 		if (this._clearItems && (3 * removedItems.length > 2 * oldItems.length)) {
 			// if there is an effective clearing function, just reset the controller
 			this._clearItems.call(this._scope, oldItems);
-			this._addItems(this.source.getItems());
+			this._addItems(this.source.items);
 		} else {
 			// else, splice the elements
 			this._removeItems(removedItems);

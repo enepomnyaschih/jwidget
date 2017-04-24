@@ -53,7 +53,7 @@ export function mergeArrays<T>(source: IArray<IArray<T>>): IArray<T> {
 
 export function mergeNoSync<T>(source: IArray<IArray<T>>): T[] {
 	return ArrayUtils.merge(source.map(function(item: any): any[] {
-		return item.getItems();
+		return item.items;
 	}));
 }
 

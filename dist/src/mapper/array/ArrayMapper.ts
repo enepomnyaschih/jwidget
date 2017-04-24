@@ -47,14 +47,14 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(this.source.silent) : config.target;
-		this.target.tryAddAll(this._createItems(this.source.getItems()));
+		this.target.tryAddAll(this._createItems(this.source.items));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this._destroyItems(this.target.clear(), this.source.getItems());
+		this._destroyItems(this.target.clear(), this.source.items);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}

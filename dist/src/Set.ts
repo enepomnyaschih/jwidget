@@ -131,7 +131,7 @@ import * as SetUtils from './SetUtils';
  */
 class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	private _adapter: boolean;
-	private _json: Dictionary<T>;
+	private _items: Dictionary<T>;
 
 	private _spliceEvent : IEvent<SetSpliceEventParams<T>>;
 	private _clearEvent  : IEvent<SetItemsEventParams<T>>;
@@ -144,22 +144,38 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 */
 	constructor(silent?: boolean);
 	constructor(items: T[], silent?: boolean);
-	constructor(json: Dictionary<T>, flags?: CollectionFlags);
+	constructor(items: Dictionary<T>, flags?: CollectionFlags);
 	constructor(a?: any, b?: any) {
 		const valued = (typeof a !== "boolean");
 		const arr = (typeof b === "boolean") || (isArray(a) && b == null);
 		const silent = Boolean(arr ? b : valued ? (b & SILENT) : a);
 		const adapter = !arr && valued && Boolean(b & ADAPTER);
-		const json: Dictionary<T> = (!valued || !a) ? {} : arr ? ArrayUtils.index<T>(a, iid) : a;
+		const items: Dictionary<T> = (!valued || !a) ? {} : arr ? ArrayUtils.index<T>(a, iid) : a;
 
 		super(silent);
 		this._adapter = adapter;
-		this._json = this._adapter ? json : apply<T>({}, json);
-		this._length.set((!valued || !a) ? 0 : arr ? a.length : SetUtils.getLength(json));
+		this._items = this._adapter ? items : apply<T>({}, items);
+		this._length.set((!valued || !a) ? 0 : arr ? a.length : SetUtils.getLength(items));
 
 		this._spliceEvent = Event.make<SetSpliceEventParams<T>>(this, silent);
 		this._clearEvent  = Event.make<SetItemsEventParams<T>>(this, silent);
 		this._changeEvent = Event.make<SetEventParams<T>>(this, silent);
+	}
+
+	/**
+	 * Returns item map - internal collection representation.
+	 *
+	 * **Caution: doesn't make a copy - please don't modify.**
+	 */
+	get items(): Dictionary<T> {
+		return this._items;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	get first(): T {
+		return SetUtils.getFirst(this._items);
 	}
 
 	/**
@@ -213,54 +229,31 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	}
 
 	/**
-	 * Returns item map - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
-	 */
-	getJson(): Dictionary<T> {
-		return this._json;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	isEmpty(): boolean {
-		return this._length.get() === 0;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	getFirst(): T {
-		return SetUtils.getFirst(this._json);
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	containsItem(item: T): boolean {
-		return this._json.hasOwnProperty(String(item.iid));
+		return this._items.hasOwnProperty(String(item.iid));
 	}
 
 	/**
 	 * Shorthand to [[containsItem]].
 	 */
 	contains(item: T): boolean {
-		return this._json.hasOwnProperty(String(item.iid));
+		return this._items.hasOwnProperty(String(item.iid));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	every(callback: (item: T) => boolean, scope?: any): boolean {
-		return SetUtils.every(this._json, callback, scope);
+		return SetUtils.every(this._items, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSorted(callback?: (item: T) => any, scope?: any, order?: number): T[] {
-		return SetUtils.toSorted(this._json, callback, scope || this, order);
+		return SetUtils.toSorted(this._items, callback, scope || this, order);
 	}
 
 	/**
@@ -274,7 +267,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[] {
-		return SetUtils.toSortedComparing(this._json, compare, scope || this, order);
+		return SetUtils.toSortedComparing(this._items, compare, scope || this, order);
 	}
 
 	/**
@@ -295,7 +288,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T) => boolean, scope?: any): Dictionary<T> {
-		return SetUtils.filter(this._json, callback, scope);
+		return SetUtils.filter(this._items, callback, scope);
 	}
 
 	/**
@@ -309,14 +302,14 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	count(callback: (item: T) => boolean, scope?: any): number {
-		return SetUtils.count(this._json, callback, scope);
+		return SetUtils.count(this._items, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	map<U extends IClass>(callback: (item: T) => U, scope?: any): Dictionary<U> {
-		return SetUtils.map(this._json, callback, scope);
+		return SetUtils.map(this._items, callback, scope);
 	}
 
 	/**
@@ -344,7 +337,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	toSet(): Dictionary<T> {
-		return apply<T>({}, this._json);
+		return apply<T>({}, this._items);
 	}
 
 	/**
@@ -358,7 +351,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	asSet(): Dictionary<T> {
-		return this._json;
+		return this._items;
 	}
 
 	/**
@@ -520,10 +513,10 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 		var items: T[];
 		this._length.set(0);
 		if (this._adapter) {
-			items = SetUtils.tryClear(this._json);
+			items = SetUtils.tryClear(this._items);
 		} else {
 			items = this.toArray();
-			this._json = {};
+			this._items = {};
 		}
 		return items;
 	}
@@ -560,7 +553,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	}
 
 	_trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
-		var spliceResult = SetUtils.trySplice(this._json, removedItems, addedItems);
+		var spliceResult = SetUtils.trySplice(this._items, removedItems, addedItems);
 		if (spliceResult !== undefined) {
 			this._length.set(this._length.get() + spliceResult.addedItems.length - spliceResult.removedItems.length);
 			return spliceResult;
@@ -575,7 +568,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
 	detectSplice(newItems: T[]): ISetSpliceParams<T> {
-		return SetUtils.detectSplice(this._json, newItems);
+		return SetUtils.detectSplice(this._items, newItems);
 	}
 
 	/**
@@ -594,7 +587,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * Checks for equality (===) to array, item by item.
 	 */
 	equal(array: T[]): boolean {
-		return SetUtils.equal(this._json, array);
+		return SetUtils.equal(this._items, array);
 	}
 }
 

@@ -48,14 +48,14 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<U>(this.source.silent) : config.target;
-		this.target.trySetAll(this._createItems(source.getJson()));
+		this.target.trySetAll(this._createItems(source.items));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys()), this.source.getJson());
+		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys()), this.source.items);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}

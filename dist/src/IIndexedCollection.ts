@@ -109,6 +109,11 @@ import Proxy from './Proxy';
  */
 interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
+	 * Returns key of first collection item. If collection is empty, returns undefined.
+	 */
+	readonly firstKey: K;
+
+	/**
 	 * Returns item by key. If item with such key doesn't exist, returns undefined.
 	 */
 	get(key: K): T;
@@ -117,11 +122,6 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 * @inheritdoc
 	 */
 	$clear(): IIndexedCollection<K, T>;
-
-	/**
-	 * Returns key of first collection item. If collection is empty, returns undefined.
-	 */
-	getFirstKey(): K;
 
 	/**
 	 * Returns array of keys of all collection items.

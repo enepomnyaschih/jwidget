@@ -111,6 +111,13 @@ import Proxy from './Proxy';
  */
 interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
+	 * Returns item map - internal collection representation.
+	 *
+	 * **Caution: doesn't make a copy - please don't modify.**
+	 */
+	readonly items: Dictionary<T>;
+
+	/**
 	 * Items are removed from map, items are added to map and items are updated in map.
 	 * Triggered in result of calling:
 	 *
@@ -167,29 +174,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	isEmpty(): boolean;
-
-	/**
-	 * @inheritdoc
-	 */
-	getFirst(): T;
-
-	/**
-	 * @inheritdoc
-	 */
-	getFirstKey(): string;
-
-	/**
-	 * @inheritdoc
-	 */
 	get(key: string): T;
-
-	/**
-	 * Returns item map - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
-	 */
-	getJson(): Dictionary<T>;
 
 	/**
 	 * @inheritdoc

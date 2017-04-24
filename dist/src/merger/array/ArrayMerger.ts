@@ -136,7 +136,7 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 	 * @hidden
 	 */
 	protected _getAllItems(): T[] {
-		return this._merge(this.source.getItems());
+		return this._merge(this.source.items);
 	}
 
 	/**
@@ -146,7 +146,7 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 		var items = new Array<T>(this._count(bunches));
 		var iItems = 0;
 		for (var i = 0, l = bunches.length; i < l; ++i) {
-			var bunch = bunches[i].getItems();
+			var bunch = bunches[i].items;
 			for (var j = 0, m = bunch.length; j < m; ++j) {
 				items[iItems++] = bunch[j];
 			}

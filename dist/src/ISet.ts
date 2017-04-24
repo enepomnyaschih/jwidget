@@ -99,6 +99,13 @@ import ISetSpliceResult from './ISetSpliceResult';
  */
 interface ISet<T extends IClass> extends ICollection<T> {
 	/**
+	 * Returns item map - internal collection representation.
+	 *
+	 * **Caution: doesn't make a copy - please don't modify.**
+	 */
+	readonly items: Dictionary<T>;
+
+	/**
 	 * Items are removed from set, items are added to set.
 	 * Triggered in result of calling:
 	 *
@@ -133,23 +140,6 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * Set is changed. Triggered right after any another event.
 	 */
 	readonly changeEvent: Bindable<SetEventParams<T>>;
-
-	/**
-	 * Returns item map - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
-	 */
-	getJson(): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	isEmpty(): boolean;
-
-	/**
-	 * @inheritdoc
-	 */
-	getFirst(): T;
 
 	/**
 	 * @inheritdoc

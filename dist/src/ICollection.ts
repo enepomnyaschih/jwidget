@@ -172,6 +172,16 @@ interface ICollection<T> extends IClass {
 	readonly length: Watchable<number>;
 
 	/**
+	 * Checks collection for emptiness.
+	 */
+	readonly empty: boolean;
+
+	/**
+	 * Returns the first item in collection. If collection is empty, returns undefined.
+	 */
+	readonly first: T;
+
+	/**
 	 * Collection is cleared. Triggered in result of calling:
 	 *
 	 * * [[clear]]
@@ -192,16 +202,6 @@ interface ICollection<T> extends IClass {
 	 * @returns this
 	 */
 	ownItems(): this;
-
-	/**
-	 * Checks collection for emptiness.
-	 */
-	isEmpty(): boolean;
-
-	/**
-	 * Returns first item in collection. If collection is empty, returns undefined.
-	 */
-	getFirst(): T;
 
 	/**
 	 * Checks item for existence in collection.

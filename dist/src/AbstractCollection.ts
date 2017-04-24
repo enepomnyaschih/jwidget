@@ -282,6 +282,18 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	}
 
 	/**
+	 * Checks collection for emptiness.
+	 */
+	get empty() {
+		return this.length.get() === 0;
+	}
+
+	/**
+	 * Returns first item in collection. If collection is empty, returns undefined.
+	 */
+	abstract get first(): T;
+
+	/**
 	 * Collection is cleared. Triggered in result of calling:
 	 *
 	 * * [[clear]]
@@ -305,18 +317,6 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 		this._ownsItems = true;
 		return this;
 	}
-
-	/**
-	 * Checks collection for emptiness.
-	 */
-	isEmpty(): boolean {
-		return this.length.get() === 0;
-	}
-
-	/**
-	 * Returns first item in collection. If collection is empty, returns undefined.
-	 */
-	abstract getFirst(): T;
 
 	/**
 	 * Checks item for existance in collection.

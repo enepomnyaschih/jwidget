@@ -229,6 +229,44 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	get first(): T {
+		return this._items[0];
+	}
+
+	/**
+	 * Returns the last collection item. If collection is empty, returns undefined.
+	 */
+	get last(): T {
+		return this._items[this._items.length - 1];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	get firstKey(): number {
+		return (this._items.length !== 0) ? 0 : undefined;
+	}
+
+	/**
+	 * Returns index of last collection item. If collection is empty, returns undefined.
+	 */
+	get lastKey(): number {
+		var l = this._items.length;
+		return (l !== 0) ? (l - 1) : undefined;
+	}
+
+	/**
+	 * Returns item array - internal collection representation.
+	 *
+	 * **Caution: doesn't make a copy - please don't modify.**
+	 */
+	get items(): T[] {
+		return this._items;
+	}
+
+	/**
 	 * Items are removed from array and items are added to array. Triggered in result
 	 * of calling:
 	 *
@@ -312,53 +350,8 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	isEmpty(): boolean {
-		return this._items.length === 0;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	getFirst(): T {
-		return this._items[0];
-	}
-
-	/**
-	 * Returns the last collection item. If collection is empty, returns undefined.
-	 */
-	getLast(): T {
-		return this._items[this._items.length - 1];
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	getFirstKey(): number {
-		return (this._items.length !== 0) ? 0 : undefined;
-	}
-
-	/**
-	 * Returns index of last collection item. If collection is empty, returns undefined.
-	 */
-	getLastKey(): number {
-		var l = this._items.length;
-		return (l !== 0) ? (l - 1) : undefined;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	get(index: number): T {
 		return this._items[index];
-	}
-
-	/**
-	 * Returns item array - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
-	 */
-	getItems(): T[] {
-		return this._items;
 	}
 
 	/**

@@ -90,14 +90,14 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 		this._removeItem = config.removeItem;
 		this._scope = config.scope || this;
 		this._clearItems = config.clearItems;
-		this._addItems(this.source.getJson());
+		this._addItems(this.source.items);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	destroyObject() {
-		this._doClearItems(this.source.getJson());
+		this._doClearItems(this.source.items);
 		this._addItem = null;
 		this._removeItem = null;
 		this._clearItems = null;

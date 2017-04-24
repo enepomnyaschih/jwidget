@@ -74,10 +74,10 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<IArray<T>>) {
-		var index = this._count(this.source.getItems(), 0, params.index);
+		var index = this._count(this.source.items, 0, params.index);
 		this.target.trySplice(
 			[new IndexCount(index, params.oldItem.length.get())],
-			[new IndexItems<T>(index, params.newItem.getItems())]);
+			[new IndexItems<T>(index, params.newItem.items)]);
 	}
 
 	private _onMove(params: ArrayMoveEventParams<IArray<T>>) {
@@ -98,7 +98,7 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 		if (params.fromIndex <= params.toIndex) {
 			// [1], [2], [3], [4], [5]		[2] move to 3
 			// [1], [3], [4], [2], [5]
-			shiftBunch(count, this._count(this.source.getItems(), params.fromIndex, params.toIndex - params.fromIndex));
+			shiftBunch(count, this._count(this.source.items, params.fromIndex, params.toIndex - params.fromIndex));
 			for (var i = params.fromIndex; i < params.toIndex; ++i) {
 				shiftBunch(this.source.get(i).length.get(), -count);
 			}
@@ -108,7 +108,7 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 			for (var i = params.toIndex + 1; i <= params.fromIndex; ++i) {
 				shiftBunch(this.source.get(i).length.get(), count);
 			}
-			shiftBunch(count, -this._count(this.source.getItems(), params.toIndex + 1, params.fromIndex - params.toIndex));
+			shiftBunch(count, -this._count(this.source.items, params.toIndex + 1, params.fromIndex - params.toIndex));
 		}
 		for (var i = Math.max(params.fromIndex, params.toIndex) + 1, l = this.source.length.get(); i < l; ++i) {
 			shiftBunch(this.source.get(i).length.get(), 0);
@@ -123,7 +123,7 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 
 	private _onReorder(params: ArrayReorderEventParams<IArray<T>>) {
 		var oldIndexes = this._getIndexes(params.items);
-		var newIndexes = this._getIndexes(this.source.getItems());
+		var newIndexes = this._getIndexes(this.source.items);
 		var indexes = new Array<number>(this.target.length.get());
 		for (var i = 0, l = params.items.length; i < l; ++i) {
 			var bunch = params.items[i];
