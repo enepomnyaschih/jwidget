@@ -18,12 +18,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Class from '../../Class';
-import IArray from '../../IArray';
-import IArrayReverser from './IArrayReverser';
-import IndexCount from '../../IndexCount';
-import IndexItems from '../../IndexItems';
-import List from '../../List';
+import Class from '../Class';
+import IArray from '../IArray';
+import IndexCount from '../IndexCount';
+import IndexItems from '../IndexItems';
+import List from '../List';
 
 /**
  * Array reverser. Builds array containing all items of source array in reversed order.
@@ -85,7 +84,7 @@ import List from '../../List';
  *
  * @param T Array item type.
  */
-export default class ArrayReverser<T> extends Class implements IArrayReverser<T> {
+class ArrayReverser<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -100,7 +99,7 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IArray<T>, config: IArrayReverser.Config<T> = {}) {
+	constructor(readonly source: IArray<T>, config: ArrayReverser.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
@@ -182,4 +181,31 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 		}
 		this.target.tryReorder(indexes);
 	}
+}
+
+export default ArrayReverser;
+
+namespace ArrayReverser {
+	/**
+	 * [[JW.List.Reverser]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IArray<T>;
+	}
+}
+
+export function reverseArray<T>(source: IArray<T>): IArray<T> {
+	if (source.silent) {
+		return source.$toReversed();
+	}
+	var result = new List<T>();
+	result.own(new ArrayReverser<T>(source, {
+		target: result
+	}));
+	return result;
 }
