@@ -18,16 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {mapDestroyableArray} from '../../mapper/array';
-import Bunch from './Bunch';
-import Class from '../../Class';
-import IArray from '../../IArray';
-import IArrayMerger from './IArrayMerger';
-import IClass from '../../IClass';
-import IndexCount from '../../IndexCount';
-import IndexItems from '../../IndexItems';
-import List from '../../List';
-import * as ArrayUtils from '../../ArrayUtils';
+import {SILENT, ADAPTER} from '../Core';
+import {mapDestroyableArray} from '../mapper/array';
+import Class from '../Class';
+import IArray from '../IArray';
+import IClass from '../IClass';
+import IndexCount from '../IndexCount';
+import IndexItems from '../IndexItems';
+import List from '../List';
+import * as ArrayUtils from '../ArrayUtils';
 
 /**
  * Arrays merger. Builds array consisting of all source collections items in the same order.
@@ -97,7 +96,7 @@ import * as ArrayUtils from '../../ArrayUtils';
  *
  * @param T Array item type.
  */
-export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
+class ArrayMerger<T> extends Class {
 	private _targetCreated: boolean;
 	private _bunches: IArray<IClass>;
 
@@ -113,7 +112,7 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IArray<IArray<T>>, config: IArrayMerger.Config<T> = {}) {
+	constructor(readonly source: IArray<IArray<T>>, config: ArrayMerger.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? this._createTarget(source) : config.target;
@@ -265,5 +264,124 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 			}
 		}
 		this.target.tryReorder(indexes);
+	}
+}
+
+export default ArrayMerger;
+
+namespace ArrayMerger {
+	/**
+	 * [[JW.List.Merger]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IArray<T>;
+	}
+}
+
+export function mergeArrays<T>(source: IArray<IArray<T>>): IArray<T> {
+	if (source.silent) {
+		if (source.every((item) => item.silent)) {
+			return $mergeNoSync(source);
+		}
+		const result = new List<T>();
+		result.own(new ArrayMerger<T>(source, {
+			target: result
+		}));
+		return result;
+	}
+	const result = new List<T>();
+	result.own(new ArrayMerger<T>(source, {
+		target: result
+	}));
+	return result;
+}
+
+export function mergeNoSync<T>(source: IArray<IArray<T>>): T[] {
+	return ArrayUtils.merge(source.map(function(item: any): any[] {
+		return item.items;
+	}));
+}
+
+export function $mergeNoSync<T>(source: IArray<IArray<T>>): IArray<T> {
+	return new List(mergeNoSync(source), SILENT & ADAPTER);
+}
+
+class Bunch<T> extends Class {
+	private source: IArray<IArray<T>>;
+	private target: IArray<T>;
+	private bunch: IArray<T>;
+
+	constructor(source: IArray<IArray<T>>, target: IArray<T>, bunch: IArray<T>) {
+		super();
+		this.source = source;
+		this.target = target;
+		this.bunch = bunch;
+		this.own(bunch.spliceEvent.bind(this._onSplice, this));
+		this.own(bunch.replaceEvent.bind(this._onReplace, this));
+		this.own(bunch.moveEvent.bind(this._onMove, this));
+		this.own(bunch.clearEvent.bind(this._onClear, this));
+		this.own(bunch.reorderEvent.bind(this._onReorder, this));
+	}
+
+	private _getIndex(): number {
+		var bunches = this.source.items;
+		var index = 0;
+		for (var i = 0, l = bunches.length; i < l; ++i) {
+			var bunch = bunches[i];
+			if (bunch === this.bunch) {
+				return index;
+			}
+			index += bunch.length.get();
+		}
+		console.warn("JW.ObservableArray.Merger object is corrupted");
+		return 0;
+	}
+
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		var index = this._getIndex();
+		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
+			return new IndexCount(indexItems.index + index, indexItems.items.length);
+		});
+		var addParamsList = spliceResult.addedItemsList.map((indexItems) => {
+			return new IndexItems<T>(indexItems.index + index, indexItems.items.concat());
+		});
+		this.target.trySplice(removeParamsList, addParamsList);
+	}
+
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+		this.target.trySet(params.newItem, this._getIndex() + params.index);
+	}
+
+	private _onMove(params: IArray.MoveEventParams<T>) {
+		var index = this._getIndex();
+		this.target.tryMove(index + params.fromIndex, index + params.toIndex);
+	}
+
+	private _onClear(params: IArray.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(this._getIndex(), params.items.length);
+	}
+
+	private _onReorder(params: IArray.ReorderEventParams<T>) {
+		var index = this._getIndex();
+		var bunchIndexArray = params.indexArray;
+		var bunchLength = bunchIndexArray.length;
+		var targetLength = this.target.length.get();
+		var targetIndexArray = new Array<number>(targetLength);
+		for (var i = 0; i < index; ++i) {
+			targetIndexArray[i] = i;
+		}
+		for (var i = 0; i < bunchLength; ++i) {
+			targetIndexArray[index + i] = index + bunchIndexArray[i];
+		}
+		for (var i = index + bunchLength; i < targetLength; ++i) {
+			targetIndexArray[i] = i;
+		}
+		this.target.tryReorder(targetIndexArray);
 	}
 }
