@@ -20,7 +20,6 @@
 
 import Bindable from "./Bindable";
 import Destroyable from "./Destroyable";
-import ValueChangeEventParams from "./ValueChangeEventParams";
 
 /**
  * Read-only container for a value.
@@ -35,7 +34,7 @@ interface Watchable<V> extends Destroyable {
 	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
-	readonly changeEvent: Bindable<ValueChangeEventParams<V>>;
+	readonly changeEvent: Bindable<Watchable.ChangeEventParams<V>>;
 
 	/**
 	 * Returns property value.
@@ -66,3 +65,25 @@ interface Watchable<V> extends Destroyable {
 }
 
 export default Watchable;
+
+namespace Watchable {
+	/**
+	 * `Watchable.changeEvent` params.
+	 */
+	export interface ChangeEventParams<V> {
+		/**
+		 * Sender property.
+		 */
+		readonly sender: Watchable<V>;
+
+		/**
+		 * New value.
+		 */
+		readonly value: V;
+
+		/**
+		 * Old value.
+		 */
+		readonly oldValue: V;
+	}
+}

@@ -26,7 +26,6 @@ import Event from "./Event";
 import IEvent from "./IEvent";
 import IProperty from "./IProperty";
 import {mapProperties, mapDestroyableProperties} from "./Mapper";
-import ValueChangeEventParams from "./ValueChangeEventParams";
 import Watchable from "./Watchable";
 
 /**
@@ -34,7 +33,7 @@ import Watchable from "./Watchable";
  */
 export default class Property<V> extends Class implements IProperty<V> {
 	private _ownsValue = false;
-	private _changeEvent: IEvent<ValueChangeEventParams<V>>;
+	private _changeEvent: IEvent<Watchable.ChangeEventParams<V>>;
 
 	/**
 	 * Constructs a property and sets initial value.
@@ -43,7 +42,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 */
 	constructor(protected value: V = null, silent: boolean = false) {
 		super();
-		this._changeEvent = Event.make<ValueChangeEventParams<V>>(this, silent);
+		this._changeEvent = Event.make<Watchable.ChangeEventParams<V>>(this, silent);
 	}
 
 	protected destroyObject() {
@@ -63,7 +62,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
-	get changeEvent(): Bindable<ValueChangeEventParams<V>> {
+	get changeEvent(): Bindable<Watchable.ChangeEventParams<V>> {
 		return this._changeEvent;
 	}
 
