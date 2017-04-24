@@ -18,11 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {isDictionaryEmpty} from '../../internal';
-import Class from '../../Class';
-import Dictionary from '../../Dictionary';
-import IMap from '../../IMap';
-import IMapInserter from './IMapInserter';
+import {isDictionaryEmpty} from '../internal';
+import Class from '../Class';
+import Dictionary from '../Dictionary';
+import IMap from '../IMap';
 
 /**
  * View synchronizer with map. Listens all map events and reduces them to 2 granular functions:
@@ -54,7 +53,7 @@ import IMapInserter from './IMapInserter';
  *
  * @param T Map item type.
  */
-export default class MapInserter<T> extends Class implements IMapInserter {
+class MapInserter<T> extends Class {
 	/**
 	 * @hidden
 	 */
@@ -83,7 +82,7 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 	 * @param source Source map.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IMap<T>, config: IMapInserter.Config<T> = {}) {
+	constructor(readonly source: IMap<T>, config: MapInserter.Config<T> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;
@@ -158,5 +157,39 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 
 	private _onClear(params: IMap.ItemsEventParams<T>) {
 		this._doClearItems(params.items);
+	}
+}
+
+export default MapInserter;
+
+namespace MapInserter {
+	/**
+	 * [[JW.Map.Inserter]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Function to call on item adding to specific position in map.
+		 */
+		readonly add?: (item: T, key: string) => void;
+
+		/**
+		 * Function to call on item removing from specific position in map.
+		 */
+		readonly remove?: (item: T, key: string) => void;
+
+		/**
+		 * Function to call on map cleanup.
+		 * By default, calls [[removeItem]] for all map items.
+		 */
+		readonly clear?: (items: Dictionary<T>) => void;
+
+		/**
+		 * [[addItem]], [[removeItem]] and
+		 * [[clearItems]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
 	}
 }

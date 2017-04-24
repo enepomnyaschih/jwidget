@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {createArrayInserter} from '../inserter/array';
+import ArrayInserter from '../inserter/array';
 import Class from '../Class';
 import IArray from '../IArray';
 import * as DomUtils from '../DomUtils';
@@ -33,7 +33,7 @@ export default class AbstractInserter<T> extends Class {
 	 */
 	constructor(source: IArray<T>, readonly el: HTMLElement) {
 		super();
-		this.own(createArrayInserter(source, {
+		this.own(new ArrayInserter(source, {
 			add: this._addItem,
 			remove: this._removeItem,
 			scope: this

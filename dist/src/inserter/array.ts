@@ -18,9 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Class from '../../Class';
-import IArray from '../../IArray';
-import IArrayInserter from './IArrayInserter';
+import Class from '../Class';
+import IArray from '../IArray';
 
 /**
  * View synchronizer with array. Listens all array events and reduces them to 2 granular functions:
@@ -50,7 +49,7 @@ import IArrayInserter from './IArrayInserter';
  *
  * @param T Array item type.
  */
-export default class ArrayInserter<T> extends Class implements IArrayInserter {
+class ArrayInserter<T> extends Class {
 	/**
 	 * @hidden
 	 */
@@ -78,7 +77,7 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IArray<T>, config: IArrayInserter.Config<T> = {}) {
+	constructor(readonly source: IArray<T>, config: ArrayInserter.Config<T> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;
@@ -183,5 +182,38 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	private _onReorder(params: IArray.ReorderEventParams<T>) {
 		this._doClearItems(params.items);
 		this._addItems(this.source.items, 0);
+	}
+}
+
+export default ArrayInserter;
+
+namespace ArrayInserter {
+	/**
+	 * [[JW.List.Inserter]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Function to call on item adding to specific position in array.
+		 */
+		readonly add?: (item: T, index: number) => void;
+
+		/**
+		 * Function to call on item removing from specific position in array.
+		 */
+		readonly remove?: (item: T, index: number) => void;
+
+		/**
+		 * Function to call on array cleanup.
+		 * By default, calls [[removeItem]] for all array items.
+		 */
+		readonly clear?: (items: T[]) => void;
+
+		/**
+		 * [[addItem]], [[removeItem]] and [[clearItems]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
 	}
 }
