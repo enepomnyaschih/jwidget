@@ -79,7 +79,7 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(public source: IArray<T>, config: IArrayInserterConfig<T> = {}) {
+	constructor(readonly source: IArray<T>, config: IArrayInserterConfig<T> = {}) {
 		super();
 		this._addItem = config.addItem;
 		this._removeItem = config.removeItem;
@@ -93,7 +93,6 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	 */
 	protected destroyObject() {
 		this._doClearItems(this.source.getItems());
-		this.source = null;
 		this._addItem = null;
 		this._removeItem = null;
 		this._clearItems = null;

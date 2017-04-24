@@ -76,7 +76,7 @@ class Switcher extends Class {
 	 * @param config Configuration.
 	 */
 	constructor(
-		public sources: Watchable<any>[],
+		readonly sources: Watchable<any>[],
 		config?: Switcher.Config)
 	{
 		super();
@@ -92,7 +92,6 @@ class Switcher extends Class {
 
 	protected destroyObject() {
 		this._doDone();
-		this.sources = null;
 		this._init = null;
 		this._done = null;
 		this._scope = null;

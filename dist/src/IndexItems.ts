@@ -30,7 +30,7 @@ import IndexCount from './IndexCount';
  * @param T Item type.
  */
 export default class IndexItems<T> implements IIndexItems<T> {
-	constructor(public index: number, public items: T[]) {
+	constructor(readonly index: number, readonly items: T[]) {
 	}
 
 	/**

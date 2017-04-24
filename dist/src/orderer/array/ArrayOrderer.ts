@@ -31,7 +31,7 @@ export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOr
 	/**
 	 * @inheritdoc
 	 */
-	public source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc

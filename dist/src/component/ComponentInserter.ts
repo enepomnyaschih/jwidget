@@ -25,11 +25,11 @@ import Component from '../Component';
  * @hidden
  */
 export default class ComponentInserter extends AbstractInserter<Component> {
-	_getElement(item: Component): HTMLElement {
+	protected _getElement(item: Component): HTMLElement {
 		return item.el[0];
 	}
 
-	_addItem(item: Component, index: number) {
+	protected _addItem(item: Component, index: number) {
 		super._addItem(item, index);
 		item._afterAppend();
 	}

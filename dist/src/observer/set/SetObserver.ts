@@ -31,7 +31,7 @@ export default class SetObserver<T extends IClass> extends AbstractCollectionObs
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 
 	/**
 	 * @inheritdoc

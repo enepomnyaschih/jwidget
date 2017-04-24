@@ -95,7 +95,7 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(public source: ICollection<T>, config: ICollectionObserverConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionObserverConfig<T>) {
 		super();
 		config = config || {};
 		this._addItem = config.addItem;
@@ -111,7 +111,6 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 	 */
 	protected destroyObject() {
 		this._doClearItems(this.source.asArray());
-		this.source = null;
 		this._addItem = null;
 		this._removeItem = null;
 		this._clearItems = null;

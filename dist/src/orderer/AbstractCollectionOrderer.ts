@@ -96,7 +96,7 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class impleme
 	/**
 	 * Target array.
 	 */
-	target: IArray<T>;
+	readonly target: IArray<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -105,7 +105,7 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class impleme
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(public source: ICollection<T>, config: ICollectionOrdererConfig<T> = {}) {
+	constructor(readonly source: ICollection<T>, config: ICollectionOrdererConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
@@ -120,8 +120,6 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class impleme
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
-		this.source = null;
-		this.target = null;
 		super.destroyObject();
 	}
 

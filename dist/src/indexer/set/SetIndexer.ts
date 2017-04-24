@@ -31,7 +31,7 @@ export default class SetIndexer<T extends IClass> extends AbstractCollectionInde
 	/**
 	 * @inheritdoc
 	 */
-	public source: ISet<T>;
+	readonly source: ISet<T>;
 
 	/**
 	 * @inheritdoc

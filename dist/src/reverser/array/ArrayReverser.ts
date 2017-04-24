@@ -90,7 +90,7 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 	/**
 	 * Target array.
 	 */
-	target: IArray<T>;
+	readonly target: IArray<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -99,7 +99,7 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(public source: IArray<T>, config: IArrayReverserConfig<T> = {}) {
+	constructor(readonly source: IArray<T>, config: IArrayReverserConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
@@ -114,8 +114,6 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
-		this.source = null;
-		this.target = null;
 		super.destroyObject();
 	}
 

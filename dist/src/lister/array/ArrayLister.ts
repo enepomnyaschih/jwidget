@@ -31,7 +31,7 @@ export default class ArrayLister<T extends IClass> extends AbstractCollectionLis
 	/**
 	 * @inheritdoc
 	 */
-	public source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc

@@ -118,7 +118,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(public source: ICollection<T>, config: ICollectionCounterConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionCounterConfig<T>) {
 		super();
 		this._filterItem = config.filterItem;
 		this._scope = config.scope || this;
@@ -142,7 +142,6 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
-		this.source = null;
 		this._filterItem = null;
 		this._target = null;
 		this._scope = null;

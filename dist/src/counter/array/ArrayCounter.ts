@@ -30,7 +30,7 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> implem
 	/**
 	 * @inheritdoc
 	 */
-	public source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc

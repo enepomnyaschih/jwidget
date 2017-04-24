@@ -102,7 +102,7 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 	/**
 	 * Target array.
 	 */
-	target: IArray<T>;
+	readonly target: IArray<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -111,7 +111,7 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(public source: IArray<IArray<T>>, config: IArrayMergerConfig<T> = {}) {
+	constructor(readonly source: IArray<IArray<T>>, config: IArrayMergerConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? this.createTarget(source) : config.target;
@@ -128,8 +128,6 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
-		this.source = null;
-		this.target = null;
 		this._bunches = null;
 		super.destroyObject();
 	}

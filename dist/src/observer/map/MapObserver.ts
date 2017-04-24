@@ -30,7 +30,7 @@ export default class MapObserver<T> extends AbstractCollectionObserver<T> implem
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc

@@ -34,12 +34,12 @@ export default class SetFilterer<T extends IClass> extends AbstractCollectionFil
 	/**
 	 * @inheritdoc
 	 */
-	source: ISet<T>;
+	readonly source: ISet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: ISet<T>;
+	readonly target: ISet<T>;
 
 	/**
 	 * @inheritdoc

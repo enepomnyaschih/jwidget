@@ -30,11 +30,8 @@ import AbstractInserter from './ui/AbstractInserter';
  *     });
  *     var inserter = new JW.UI.Inserter(elements, document.getElementById("myselect"));
  */
-export default class Inserter extends AbstractInserter<HTMLElement> {
-	/**
-	 * @hidden
-	 */
-	_getElement(item: HTMLElement): HTMLElement {
+export default class DomInserter extends AbstractInserter<HTMLElement> {
+	protected _getElement(item: HTMLElement): HTMLElement {
 		return item;
 	}
 }

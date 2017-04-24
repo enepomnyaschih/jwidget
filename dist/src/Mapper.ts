@@ -161,7 +161,7 @@ class Mapper<T> extends Class {
 	 * @param config Configuration.
 	 */
 	constructor(
-		public sources: Watchable<any>[],
+		readonly sources: Watchable<any>[],
 		config: Mapper.Config<T>)
 	{
 		super();
@@ -193,7 +193,6 @@ class Mapper<T> extends Class {
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
-		this.sources = null;
 		this._createValue = null;
 		this._destroyValue = null;
 		this._scope = null;

@@ -120,7 +120,7 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 	/**
 	 * Target collection.
 	 */
-	target: ICollection<T>;
+	readonly target: ICollection<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -129,7 +129,7 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(public source: ICollection<T>, config: ICollectionFiltererConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionFiltererConfig<T>) {
 		super();
 		this._filterItem = config.filterItem;
 		this._scope = config.scope || this;
@@ -139,9 +139,7 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this.source = null;
 		this._filterItem = null;
-		this.target = null;
 		this._scope = null;
 		super.destroyObject();
 	}

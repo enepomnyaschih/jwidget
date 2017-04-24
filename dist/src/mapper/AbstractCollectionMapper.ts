@@ -133,7 +133,7 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 	/**
 	 * Target collection.
 	 */
-	target: ICollection<U>;
+	readonly target: ICollection<U>;
 
 	/**
 	 * Creates synchronizer.
@@ -142,7 +142,7 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(public source: ICollection<T>, config: ICollectionMapperConfig<T, U>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionMapperConfig<T, U>) {
 		super();
 		this._createItem = config.createItem;
 		this._destroyItem = config.destroyItem;
@@ -153,8 +153,6 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this.source = null;
-		this.target = null;
 		this._createItem = null;
 		this._destroyItem = null;
 		this._scope = null;

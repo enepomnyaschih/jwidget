@@ -31,9 +31,9 @@ import * as MapUtils from '../MapUtils';
  * @hidden
  */
 export default class ComponentChildren extends Map<Component> {
-	target: ComponentChildInserter;
+	private target: ComponentChildInserter;
 
-	constructor(public component: Component) {
+	constructor(private component: Component) {
 		super(true);
 		this.target = new ComponentChildInserter();
 	}

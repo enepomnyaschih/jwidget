@@ -30,7 +30,7 @@ export default class MapIndexer<T> extends AbstractCollectionIndexer<T> implemen
 	/**
 	 * @inheritdoc
 	 */
-	public source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc

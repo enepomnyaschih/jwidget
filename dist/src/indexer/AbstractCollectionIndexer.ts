@@ -118,7 +118,7 @@ abstract class AbstractCollectionIndexer<T> extends Class implements ICollection
 	/**
 	 * Target map.
 	 */
-	target: IMap<T>;
+	readonly target: IMap<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -127,7 +127,7 @@ abstract class AbstractCollectionIndexer<T> extends Class implements ICollection
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(public source: ICollection<T>, config: ICollectionIndexerConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionIndexerConfig<T>) {
 		super();
 		this._getKey = config.getKey;
 		this._scope = config.scope || this;
@@ -144,9 +144,7 @@ abstract class AbstractCollectionIndexer<T> extends Class implements ICollection
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
-		this.source = null;
 		this._getKey = null;
-		this.target = null;
 		this._scope = null;
 		super.destroyObject();
 	}

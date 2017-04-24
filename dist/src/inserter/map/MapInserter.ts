@@ -84,7 +84,7 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 	 * @param source Source map.
 	 * @param config Configuration.
 	 */
-	constructor(public source: IMap<T>, config: IMapInserterConfig<T> = {}) {
+	constructor(readonly source: IMap<T>, config: IMapInserterConfig<T> = {}) {
 		super();
 		this._addItem = config.addItem;
 		this._removeItem = config.removeItem;
@@ -98,7 +98,6 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 	 */
 	destroyObject() {
 		this._doClearItems(this.source.getJson());
-		this.source = null;
 		this._addItem = null;
 		this._removeItem = null;
 		this._clearItems = null;

@@ -30,7 +30,7 @@ export default class ArrayObserver<T> extends AbstractCollectionObserver<T> impl
 	/**
 	 * @inheritdoc
 	 */
-	source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc

@@ -34,12 +34,12 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: IMap<U>;
+	readonly target: IMap<U>;
 
 	/**
 	 * @inheritdoc

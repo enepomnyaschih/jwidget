@@ -30,7 +30,7 @@ export default class MapSorterComparing<T> extends AbstractCollectionSorterCompa
 	/**
 	 * @inheritdoc
 	 */
-	public source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc

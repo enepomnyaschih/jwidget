@@ -31,7 +31,7 @@ export default class AbstractInserter<T> extends Class {
 	 * @param source Source array.
 	 * @param el Parent element.
 	 */
-	constructor(source: IArray<T>, public el: HTMLElement) {
+	constructor(source: IArray<T>, readonly el: HTMLElement) {
 		super();
 		this.own(createArrayInserter(source, {
 			addItem: this._addItem,
@@ -40,18 +40,12 @@ export default class AbstractInserter<T> extends Class {
 		}));
 	}
 
-	/**
-	 * @hidden
-	 */
-	_getElement(item: T): HTMLElement {
+	protected _getElement(item: T): HTMLElement {
 		item = item;
 		throw new SyntaxError("Method not implemented");
 	}
 
-	/**
-	 * @hidden
-	 */
-	_addItem(item: T, index: number) {
+	protected _addItem(item: T, index: number) {
 		var parent = this.el;
 		var anchor = parent.childNodes[index];
 		var child = this._getElement(item);
@@ -62,10 +56,7 @@ export default class AbstractInserter<T> extends Class {
 		}
 	}
 
-	/**
-	 * @hidden
-	 */
-	_removeItem(item: T, index: number) {
+	protected _removeItem(item: T, index: number) {
 		index = index;
 		DomUtils.remove(this._getElement(item));
 	}

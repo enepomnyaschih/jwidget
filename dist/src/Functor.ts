@@ -67,7 +67,7 @@ class Functor<T> extends Class {
 	 * @param config Configuration.
 	 */
 	constructor(
-		public sources: Watchable<any>[],
+		readonly sources: Watchable<any>[],
 		private callback: Functor.Callback<T>,
 		private scope?: any,
 		config?: Functor.Config<T>)
@@ -92,7 +92,6 @@ class Functor<T> extends Class {
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
-		this.sources = null;
 		this._target = null;
 		this.callback = null;
 		this.scope = null;

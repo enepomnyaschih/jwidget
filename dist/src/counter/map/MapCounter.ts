@@ -30,7 +30,7 @@ export default class MapCounter<T> extends AbstractCollectionCounter<T> implemen
 	/**
 	 * @inheritdoc
 	 */
-	public source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc

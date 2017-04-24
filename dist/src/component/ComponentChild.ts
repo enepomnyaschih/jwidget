@@ -26,16 +26,16 @@ import * as DomUtils from '../DomUtils';
  * @hidden
  */
 export default class ComponentChild extends Class {
-	name: string;
-	_el: JQuery;
+	private _name: string;
+	private _el: JQuery;
 
-	constructor(public parent: Component, public child: Component) {
+	constructor(private parent: Component, private child: Component) {
 		super();
 	}
 
 	attach(name: string) {
 		// JW.assertNull(this.name);
-		this.name = name;
+		this._name = name;
 		this._el = this.parent._elements[name];
 		this.parent._initChild(this.child);
 		this.parent._elements[name] = this.child.el;
@@ -45,12 +45,12 @@ export default class ComponentChild extends Class {
 
 	detach() {
 		// JW.assertString(this.name, JW.isNotBlank);
-		if (this.parent._elements[this.name] === this.child.el) {
-			this.parent._elements[this.name] = this._el;
+		if (this.parent._elements[this._name] === this.child.el) {
+			this.parent._elements[this._name] = this._el;
 		}
 		DomUtils.replace(this.child.el[0], this._el[0]);
 		this.parent._doneChild(this.child);
 		this._el = null;
-		this.name = null;
+		this._name = null;
 	}
 }

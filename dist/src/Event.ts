@@ -29,7 +29,7 @@ import IEvent from "./IEvent";
  * Real implementation of `Bindable` interface.
  * Used to notify some objects (clients) about certain events (for example, field value change).
  */
-class Event<P> implements IEvent<P> {
+export default class Event<P> implements IEvent<P> {
 	private _attachments: Dictionary<EventAttachment<P>> = null;
 
 	/**
@@ -101,5 +101,3 @@ class Event<P> implements IEvent<P> {
 		return dummy ? dummyEvent : owner.own(new Event<P>());
 	}
 }
-
-export default Event;

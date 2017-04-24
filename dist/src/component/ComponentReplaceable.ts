@@ -28,7 +28,7 @@ import * as SetUtils from '../SetUtils';
  * @hidden
  */
 export default class ComponentReplaceable extends Class {
-	constructor(public parent: Component, component: Watchable<Component>, public id: string) {
+	constructor(private parent: Component, component: Watchable<Component>, private id: string) {
 		super();
 		SetUtils.add(parent._replaceables, this);
 

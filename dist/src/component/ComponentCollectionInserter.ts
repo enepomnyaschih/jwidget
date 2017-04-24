@@ -30,7 +30,7 @@ import * as DomUtils from '../DomUtils';
 export default class ComponentCollectionInserter extends Class {
 	private len: number = 0;
 
-	constructor(source: ICollection<Component>, public el: HTMLElement) {
+	constructor(source: ICollection<Component>, private el: HTMLElement) {
 		super();
 		this.own(createObserver(source, {
 			addItem: this._addItem,

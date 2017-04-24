@@ -33,12 +33,12 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 	/**
 	 * @inheritdoc
 	 */
-	source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: IArray<U>;
+	readonly target: IArray<U>;
 
 	/**
 	 * @inheritdoc

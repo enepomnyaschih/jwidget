@@ -30,7 +30,7 @@ import * as SetUtils from '../SetUtils';
  * @hidden
  */
 export default class ComponentCollection extends Class {
-	constructor(public parent: Component, public source: ICollection<Component>, el: JQuery) {
+	constructor(private parent: Component, private source: ICollection<Component>, el: JQuery) {
 		super();
 		SetUtils.add(parent._collections, this);
 

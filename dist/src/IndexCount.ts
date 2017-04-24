@@ -25,7 +25,7 @@ import IIndexCount from './IIndexCount';
  * to specify item segments to remove.
  */
 export default class IndexCount implements IIndexCount {
-	constructor(public index: number, public count: number) {
+	constructor(readonly index: number, public count: number) {
 	}
 
 	/**

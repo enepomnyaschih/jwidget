@@ -31,7 +31,7 @@ export default class SetCounter<T extends IClass> extends AbstractCollectionCoun
 	/**
 	 * @inheritdoc
 	 */
-	public source: ISet<T>;
+	readonly source: ISet<T>;
 
 	/**
 	 * @inheritdoc

@@ -31,7 +31,7 @@ export default class MapLister<T extends IClass> extends AbstractCollectionListe
 	/**
 	 * @inheritdoc
 	 */
-	public source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc

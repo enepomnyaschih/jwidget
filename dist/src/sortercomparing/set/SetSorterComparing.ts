@@ -31,7 +31,7 @@ export default class SetSorterComparing<T extends IClass> extends AbstractCollec
 	/**
 	 * @inheritdoc
 	 */
-	public source: ISet<T>;
+	readonly source: ISet<T>;
 
 	/**
 	 * @inheritdoc

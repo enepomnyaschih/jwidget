@@ -42,7 +42,7 @@ class Updater extends Class {
 	 * @param scope **callback** call scope. Defaults to updater itself.
 	 */
 	constructor(
-		public sources: Watchable<any>[],
+		readonly sources: Watchable<any>[],
 		private callback: Updater.Callback,
 		private scope?: any)
 	{

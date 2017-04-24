@@ -58,7 +58,7 @@ class Copier<T> extends Class {
 	 * @param source Source property.
 	 * @param config Configuration.
 	 */
-	constructor(public source: Watchable<T>, config?: Copier.Config<T>) {
+	constructor(readonly source: Watchable<T>, config?: Copier.Config<T>) {
 		super();
 		config = config || {};
 		this._targetCreated = config.target == null;
@@ -78,7 +78,6 @@ class Copier<T> extends Class {
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
-		this.source = null;
 		this._target = null;
 		super.destroyObject();
 	}

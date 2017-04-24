@@ -33,12 +33,12 @@ export default class MapFilterer<T> extends AbstractCollectionFilterer<T> implem
 	/**
 	 * @inheritdoc
 	 */
-	source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: IMap<T>;
+	readonly target: IMap<T>;
 
 	/**
 	 * @inheritdoc

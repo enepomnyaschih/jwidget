@@ -45,12 +45,12 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	/**
 	 * @inheritdoc
 	 */
-	source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	target: IArray<T>;
+	readonly target: IArray<T>;
 
 	/**
 	 * @inheritdoc

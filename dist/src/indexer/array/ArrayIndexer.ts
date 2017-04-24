@@ -30,7 +30,7 @@ export default class ArrayIndexer<T> extends AbstractCollectionIndexer<T> implem
 	/**
 	 * @inheritdoc
 	 */
-	public source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc

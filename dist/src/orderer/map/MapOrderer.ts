@@ -31,7 +31,7 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	/**
 	 * @inheritdoc
 	 */
-	public source: IMap<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc

@@ -150,7 +150,7 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 	/**
 	 * Target array.
 	 */
-	target: IArray<T>;
+	readonly target: IArray<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -159,7 +159,7 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(public source: ICollection<T>, config: ICollectionSorterComparingConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionSorterComparingConfig<T>) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;
@@ -177,8 +177,6 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
-		this.source = null;
-		this.target = null;
 		this._compare = null;
 		this._scope = null;
 		super.destroyObject();

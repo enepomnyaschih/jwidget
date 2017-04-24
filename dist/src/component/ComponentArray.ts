@@ -30,7 +30,7 @@ import * as SetUtils from '../SetUtils';
  * @hidden
  */
 export default class ComponentArray extends Class {
-	constructor(public parent: Component, public source: IArray<Component>, el: JQuery) {
+	constructor(private parent: Component, private source: IArray<Component>, el: JQuery) {
 		super();
 		SetUtils.add(parent._arrays, this);
 

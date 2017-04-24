@@ -104,7 +104,7 @@ abstract class AbstractCollectionLister<T extends IClass> extends Class implemen
 	/**
 	 * Target set.
 	 */
-	target: ISet<T>;
+	readonly target: ISet<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -113,7 +113,7 @@ abstract class AbstractCollectionLister<T extends IClass> extends Class implemen
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(public source: ICollection<T>, config: ICollectionListerConfig<T> = {}) {
+	constructor(readonly source: ICollection<T>, config: ICollectionListerConfig<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(source.silent) : config.target;
@@ -128,8 +128,6 @@ abstract class AbstractCollectionLister<T extends IClass> extends Class implemen
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
-		this.source = null;
-		this.target = null;
 		super.destroyObject();
 	}
 }

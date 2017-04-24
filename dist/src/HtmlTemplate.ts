@@ -34,7 +34,7 @@ export default class HtmlTemplate extends AbstractTemplate {
 	/**
 	 * @param html Input HTML.
 	 */
-	constructor(public html: string) {
+	constructor(readonly html: string) {
 		super();
 	}
 

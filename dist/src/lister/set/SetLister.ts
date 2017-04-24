@@ -31,7 +31,7 @@ export default class SetLister<T extends IClass> extends AbstractCollectionListe
 	/**
 	 * @inheritdoc
 	 */
-	public source: ISet<T>;
+	readonly source: ISet<T>;
 
 	/**
 	 * @inheritdoc

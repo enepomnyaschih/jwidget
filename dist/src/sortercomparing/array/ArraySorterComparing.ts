@@ -30,7 +30,7 @@ export default class ArraySorterComparing<T> extends AbstractCollectionSorterCom
 	/**
 	 * @inheritdoc
 	 */
-	public source: IArray<T>;
+	readonly source: IArray<T>;
 
 	/**
 	 * @inheritdoc

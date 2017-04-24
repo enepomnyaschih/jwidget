@@ -31,7 +31,7 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 	/**
 	 * @inheritdoc
 	 */
-	public source: ISet<T>;
+	readonly source: ISet<T>;
 
 	/**
 	 * @inheritdoc
