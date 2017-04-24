@@ -35,8 +35,8 @@ export function createIndexer<T>(source: ICollection<T>, config: ICollectionInde
 		(source instanceof Set) ? createSetIndexer(source, config) : null;
 }
 
-export function indexCollection<T>(source: ICollection<T>, callback: (item: T) => string, scope?: any): IMap<T> {
-	return (source instanceof List) ? indexArray(source, callback, scope) :
-		(source instanceof Map) ? indexMap(source, callback, scope) :
-		(source instanceof Set) ? indexSet(source, callback, scope) : null;
+export function indexCollection<T>(source: ICollection<T>, getKey: (item: T) => string, scope?: any): IMap<T> {
+	return (source instanceof List) ? indexArray(source, getKey, scope) :
+		(source instanceof Map) ? indexMap(source, getKey, scope) :
+		(source instanceof Set) ? indexSet(source, getKey, scope) : null;
 }

@@ -33,14 +33,14 @@ export function createSetSorterComparing<T extends IClass>(source: ISet<T>, conf
 		new ObservableSetSorterComparing<T>(source, config);
 }
 
-export function sortSetComparing<T extends IClass>(source: ISet<T>, callback: (x: T, y: T) => number, scope?: any): IArray<T> {
+export function sortSetComparing<T extends IClass>(source: ISet<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
 	if (source.silent) {
-		return source.$toSortedComparing(callback, scope);
+		return source.$toSortedComparing(compare, scope);
 	}
 	var result = new List<T>();
 	result.own(new ObservableSetSorterComparing<T>(source, {
 		target: result,
-		compare: callback,
+		compare: compare,
 		scope: scope
 	}));
 	return result;

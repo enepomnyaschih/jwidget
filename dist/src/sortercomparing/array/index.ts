@@ -31,14 +31,14 @@ export function createArraySorterComparing<T>(source: IArray<T>, config: ICollec
 		new ObservableArraySorterComparing<T>(source, config);
 }
 
-export function sortArrayComparing<T>(source: IArray<T>, callback: (x: T, y: T) => number, scope?: any): IArray<T> {
+export function sortArrayComparing<T>(source: IArray<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
 	if (source.silent) {
-		return source.$toSortedComparing(callback, scope);
+		return source.$toSortedComparing(compare, scope);
 	}
 	var result = new List<T>();
 	result.own(new ObservableArraySorterComparing<T>(source, {
 		target: result,
-		compare: callback,
+		compare: compare,
 		scope: scope
 	}));
 	return result;

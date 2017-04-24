@@ -32,14 +32,14 @@ export function createMapSorterComparing<T>(source: IMap<T>, config: ICollection
 		new ObservableMapSorterComparing<T>(source, config);
 }
 
-export function sortMapComparing<T>(source: IMap<T>, callback: (x: T, y: T) => number, scope?: any): IArray<T> {
+export function sortMapComparing<T>(source: IMap<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
 	if (source.silent) {
-		return source.$toSortedComparing(callback, scope);
+		return source.$toSortedComparing(compare, scope);
 	}
 	var result = new List<T>();
 	result.own(new ObservableMapSorterComparing<T>(source, {
 		target: result,
-		compare: callback,
+		compare: compare,
 		scope: scope
 	}));
 	return result;

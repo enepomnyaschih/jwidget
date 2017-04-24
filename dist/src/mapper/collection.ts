@@ -35,14 +35,14 @@ export function createMapper<T extends IClass, U extends IClass>(source: ICollec
 		(source instanceof Set) ? createSetMapper(source, config) : null;
 }
 
-export function mapCollection<T extends IClass, U extends IClass>(source: ICollection<T>, callback: (item: T) => U, scope?: any): ICollection<U> {
-	return (source instanceof List) ? mapArray(source, callback, scope) :
-		(source instanceof Map) ? mapMap(source, callback, scope) :
-		(source instanceof Set) ? mapSet(source, callback, scope) : null;
+export function mapCollection<T extends IClass, U extends IClass>(source: ICollection<T>, map: (item: T) => U, scope?: any): ICollection<U> {
+	return (source instanceof List) ? mapArray(source, map, scope) :
+		(source instanceof Map) ? mapMap(source, map, scope) :
+		(source instanceof Set) ? mapSet(source, map, scope) : null;
 }
 
-export function mapDestroyableCollection<T extends IClass, U extends IClass>(source: ICollection<T>, callback: (item: T) => U, scope?: any): ICollection<U> {
-	return (source instanceof List) ? mapDestroyableArray(source, callback, scope) :
-		(source instanceof Map) ? mapDestroyableMap(source, callback, scope) :
-		(source instanceof Set) ? mapDestroyableSet(source, callback, scope) : null;
+export function mapDestroyableCollection<T extends IClass, U extends IClass>(source: ICollection<T>, create: (item: T) => U, scope?: any): ICollection<U> {
+	return (source instanceof List) ? mapDestroyableArray(source, create, scope) :
+		(source instanceof Map) ? mapDestroyableMap(source, create, scope) :
+		(source instanceof Set) ? mapDestroyableSet(source, create, scope) : null;
 }

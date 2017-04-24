@@ -32,14 +32,14 @@ export function createMapCounter<T>(source: IMap<T>, config: ICollectionCounterC
 		new ObservableMapCounter<T>(source, config);
 }
 
-export function countMap<T>(source: IMap<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
+export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (source.silent) {
-		return source.$count(callback, scope);
+		return source.$count(test, scope);
 	}
 	var result = new Property(0);
 	result.own(new ObservableMapCounter<T>(source, {
 		target: result,
-		test: callback,
+		test: test,
 		scope: scope
 	}));
 	return result;

@@ -33,14 +33,14 @@ export function createSetCounter<T extends IClass>(source: ISet<T>, config: ICol
 		new ObservableSetCounter<T>(source, config);
 }
 
-export function countSet<T extends IClass>(source: ISet<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
+export function countSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (source.silent) {
-		return source.$count(callback, scope);
+		return source.$count(test, scope);
 	}
 	var result = new Property(0);
 	result.own(new ObservableSetCounter<T>(source, {
 		target: result,
-		test: callback,
+		test: test,
 		scope: scope
 	}));
 	return result;

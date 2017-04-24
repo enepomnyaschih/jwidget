@@ -31,14 +31,14 @@ export function createMapFilterer<T>(source: IMap<T>, config: IMapFiltererConfig
 		new ObservableMapFilterer<T>(source, config);
 }
 
-export function filterMap<T>(source: IMap<T>, callback: (item: T) => boolean, scope?: any): IMap<T> {
+export function filterMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): IMap<T> {
 	if (source.silent) {
-		return source.$filter(callback, scope);
+		return source.$filter(test, scope);
 	}
 	var result = new Map<T>();
 	result.own(new ObservableMapFilterer<T>(source, {
 		target: result,
-		test: callback,
+		test: test,
 		scope: scope
 	}));
 	return result;

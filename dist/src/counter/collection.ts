@@ -35,8 +35,8 @@ export function createCounter<T>(source: ICollection<T>, config: ICollectionCoun
 		(source instanceof Set) ? createSetCounter(source, config) : null;
 }
 
-export function countCollection<T>(source: ICollection<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
-	return (source instanceof List) ? countArray(source, callback, scope) :
-		(source instanceof Map) ? countMap(source, callback, scope) :
-		(source instanceof Set) ? countSet(source, callback, scope) : null;
+export function countCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
+	return (source instanceof List) ? countArray(source, test, scope) :
+		(source instanceof Map) ? countMap(source, test, scope) :
+		(source instanceof Set) ? countSet(source, test, scope) : null;
 }

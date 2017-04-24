@@ -31,14 +31,14 @@ export function createMapIndexer<T>(source: IMap<T>, config: ICollectionIndexerC
 		new ObservableMapIndexer<T>(source, config);
 }
 
-export function indexMap<T>(source: IMap<T>, callback: (item: T) => any, scope?: any): IMap<T> {
+export function indexMap<T>(source: IMap<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
 	if (source.silent) {
-		return source.$index(callback, scope);
+		return source.$index(getKey, scope);
 	}
 	var result = new Map<T>();
 	result.own(new ObservableMapIndexer<T>(source, {
 		target: result,
-		getKey: callback,
+		getKey: getKey,
 		scope: scope
 	}));
 	return result;

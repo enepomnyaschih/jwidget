@@ -33,14 +33,14 @@ export function createSetIndexer<T extends IClass>(source: ISet<T>, config: ICol
 		new ObservableSetIndexer<T>(source, config);
 }
 
-export function indexSet<T extends IClass>(source: ISet<T>, callback: (item: T) => any, scope?: any): IMap<T> {
+export function indexSet<T extends IClass>(source: ISet<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
 	if (source.silent) {
-		return source.$index(callback, scope);
+		return source.$index(getKey, scope);
 	}
 	var result = new Map<T>();
 	result.own(new ObservableSetIndexer<T>(source, {
 		target: result,
-		getKey: callback,
+		getKey: getKey,
 		scope: scope
 	}));
 	return result;

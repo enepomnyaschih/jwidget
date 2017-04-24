@@ -32,14 +32,14 @@ export function createArrayIndexer<T>(source: IArray<T>, config: ICollectionInde
 		new ObservableArrayIndexer<T>(source, config);
 }
 
-export function indexArray<T>(source: IArray<T>, callback: (item: T) => any, scope?: any): IMap<T> {
+export function indexArray<T>(source: IArray<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
 	if (source.silent) {
-		return source.$index(callback, scope);
+		return source.$index(getKey, scope);
 	}
 	var result = new Map<T>();
 	result.own(new ObservableArrayIndexer<T>(source, {
 		target: result,
-		getKey: callback,
+		getKey: getKey,
 		scope: scope
 	}));
 	return result;

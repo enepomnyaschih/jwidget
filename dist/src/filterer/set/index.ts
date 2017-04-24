@@ -32,14 +32,14 @@ export function createSetFilterer<T extends IClass>(source: ISet<T>, config: ISe
 		new ObservableSetFilterer<T>(source, config);
 }
 
-export function filterSet<T extends IClass>(source: ISet<T>, callback: (item: T) => boolean, scope?: any): ISet<T> {
+export function filterSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): ISet<T> {
 	if (source.silent) {
-		return source.$filter(callback, scope);
+		return source.$filter(test, scope);
 	}
 	var result = new Set<T>();
 	result.own(new ObservableSetFilterer<T>(source, {
 		target: result,
-		test: callback,
+		test: test,
 		scope: scope
 	}));
 	return result;

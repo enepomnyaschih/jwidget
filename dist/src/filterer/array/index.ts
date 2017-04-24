@@ -31,14 +31,14 @@ export function createArrayFilterer<T>(source: IArray<T>, config: IArrayFilterer
 		new ObservableArrayFilterer<T>(source, config);
 }
 
-export function filterArray<T>(source: IArray<T>, callback: (item: T) => boolean, scope?: any): IArray<T> {
+export function filterArray<T>(source: IArray<T>, test: (item: T) => boolean, scope?: any): IArray<T> {
 	if (source.silent) {
-		return source.$filter(callback, scope);
+		return source.$filter(test, scope);
 	}
 	var result = new List<T>();
 	result.own(new ObservableArrayFilterer<T>(source, {
 		target: result,
-		test: callback,
+		test: test,
 		scope: scope
 	}));
 	return result;

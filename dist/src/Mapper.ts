@@ -147,8 +147,8 @@ import Watchable from './Watchable';
  * @param T Target property value type.
  */
 class Mapper<T> extends Class {
-	private _createValue: Mapper.CreateCallback<T>;
-	private _destroyValue: Mapper.DestroyCallback<T>;
+	private _create: Mapper.CreateCallback<T>;
+	private _destroy: Mapper.DestroyCallback<T>;
 	private _scope: any;
 	private _sourceValues: any[];
 	private _targetValue: T;
@@ -165,8 +165,8 @@ class Mapper<T> extends Class {
 		config: Mapper.Config<T>)
 	{
 		super();
-		this._createValue = config.createValue;
-		this._destroyValue = config.destroyValue;
+		this._create = config.create;
+		this._destroy = config.destroy;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? new Property<T>() : config.target;
@@ -193,8 +193,8 @@ class Mapper<T> extends Class {
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
-		this._createValue = null;
-		this._destroyValue = null;
+		this._create = null;
+		this._destroy = null;
 		this._scope = null;
 		this._target = null;
 		this._sourceValues = null;
@@ -231,7 +231,7 @@ class Mapper<T> extends Class {
 			this._done();
 		}
 		const values = this.sources.map((source) => source.get());
-		const newValue: T = this._createValue.apply(this._scope, values);
+		const newValue: T = this._create.apply(this._scope, values);
 		this._target.set(newValue);
 		if (!this._viaNull) {
 			this._done();
@@ -241,8 +241,8 @@ class Mapper<T> extends Class {
 	}
 
 	private _done() {
-		if (this._destroyValue && this._sourceValues) {
-			this._destroyValue.apply(this._scope, [this._targetValue].concat(this._sourceValues));
+		if (this._destroy && this._sourceValues) {
+			this._destroy.apply(this._scope, [this._targetValue].concat(this._sourceValues));
 		}
 	}
 }
@@ -280,12 +280,12 @@ namespace Mapper {
 		/**
 		 * Calculates target property value based on source property values.
 		 */
-		readonly createValue: CreateCallback<T>;
+		readonly create: CreateCallback<T>;
 
 		/**
 		 * Destroys target property value.
 		 */
-		readonly destroyValue?: DestroyCallback<T>;
+		readonly destroy?: DestroyCallback<T>;
 
 		/**
 		 * [[createValue]] and [[destroyValue]] call scope.
@@ -313,30 +313,30 @@ namespace Mapper {
 
 export default Mapper;
 
-export function mapProperties<U>(properties: Watchable<any>[], callback: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
+export function mapProperties<U>(properties: Watchable<any>[], map: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
 	if (properties.every((property) => property.silent)) {
 		const values = properties.map((property) => property.get());
-		return new Property<U>(callback.apply(scope, values), true);
+		return new Property<U>(map.apply(scope, values), true);
 	}
 	const result = new Property<U>();
 	result.own(new Mapper(properties, {
 		target: result,
-		createValue: callback,
+		create: map,
 		scope: scope
 	}));
 	return result;
 }
 
-export function mapDestroyableProperties<U extends Destroyable>(properties: Watchable<any>[], callback: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
+export function mapDestroyableProperties<U extends Destroyable>(properties: Watchable<any>[], create: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
 	if (properties.every((property) => property.silent)) {
 		const values = properties.map((property) => property.get());
-		return new Property<U>(callback.apply(scope, values), true).ownValue();
+		return new Property<U>(create.apply(scope, values), true).ownValue();
 	}
 	const result = new Property<U>();
 	result.own(new Mapper(properties, {
 		target: result,
-		createValue: callback,
-		destroyValue: destroy,
+		create: create,
+		destroy: destroy,
 		scope: scope
 	}));
 	return result;

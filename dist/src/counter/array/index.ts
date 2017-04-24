@@ -32,14 +32,14 @@ export function createArrayCounter<T>(source: IArray<T>, config: ICollectionCoun
 		new ObservableArrayCounter<T>(source, config);
 }
 
-export function countArray<T>(source: IArray<T>, callback: (item: T) => boolean, scope?: any): Watchable<number> {
+export function countArray<T>(source: IArray<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (source.silent) {
-		return source.$count(callback, scope);
+		return source.$count(test, scope);
 	}
 	var result = new Property(0);
 	result.own(new ObservableArrayCounter<T>(source, {
 		target: result,
-		test: callback,
+		test: test,
 		scope: scope
 	}));
 	return result;

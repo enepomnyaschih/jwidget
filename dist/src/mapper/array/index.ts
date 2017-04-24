@@ -33,27 +33,27 @@ export function createArrayMapper<T, U>(source: IArray<T>, config: IArrayMapperC
 		new ObservableArrayMapper<T, U>(source, config);
 }
 
-export function mapArray<T, U>(source: IArray<T>, callback: (item: T) => U, scope?: any): IArray<U> {
+export function mapArray<T, U>(source: IArray<T>, map: (item: T) => U, scope?: any): IArray<U> {
 	if (source.silent) {
-		return source.$map(callback, scope);
+		return source.$map(map, scope);
 	}
 	var result = new List<U>();
 	result.own(new ObservableArrayMapper<T, U>(source, {
 		target: result,
-		create: callback,
+		create: map,
 		scope: scope
 	}));
 	return result;
 }
 
-export function mapDestroyableArray<T, U extends Destroyable>(source: IArray<T>, callback: (item: T) => U, scope?: any): IArray<U> {
+export function mapDestroyableArray<T, U extends Destroyable>(source: IArray<T>, create: (item: T) => U, scope?: any): IArray<U> {
 	if (source.silent) {
-		return source.$map(callback, scope).ownItems();
+		return source.$map(create, scope).ownItems();
 	}
 	var result = new List<U>();
 	result.own(new ObservableArrayMapper<T, U>(source, {
 		target: result,
-		create: callback,
+		create: create,
 		destroy: destroy,
 		scope: scope
 	}));

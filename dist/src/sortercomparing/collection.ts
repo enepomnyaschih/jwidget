@@ -35,8 +35,8 @@ export function createSorterComparing<T>(source: ICollection<T>, config: ICollec
 		(source instanceof Set) ? createSetSorterComparing(source, config) : null;
 }
 
-export function collectionToArray<T>(source: ICollection<T>, callback: (x: T, y: T) => number, scope?: any): IArray<T> {
-	return (source instanceof List) ? sortArrayComparing(source, callback, scope) :
-		(source instanceof Map) ? sortMapComparing(source, callback, scope) :
-		(source instanceof Set) ? sortSetComparing(source, callback, scope) : null;
+export function collectionToArray<T>(source: ICollection<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
+	return (source instanceof List) ? sortArrayComparing(source, compare, scope) :
+		(source instanceof Map) ? sortMapComparing(source, compare, scope) :
+		(source instanceof Set) ? sortSetComparing(source, compare, scope) : null;
 }

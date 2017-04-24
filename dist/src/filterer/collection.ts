@@ -34,8 +34,8 @@ export function createFilterer<T>(source: ICollection<T>, config: ICollectionFil
 		(source instanceof Set) ? createSetFilterer(source, config) : null;
 }
 
-export function filterCollection<T>(source: ICollection<T>, callback: (item: T) => boolean, scope?: any): ICollection<T> {
-	return (source instanceof List) ? filterArray(source, callback, scope) :
-		(source instanceof Map) ? filterMap(source, callback, scope) :
-		(source instanceof Set) ? filterSet(source, callback, scope) : null;
+export function filterCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): ICollection<T> {
+	return (source instanceof List) ? filterArray(source, test, scope) :
+		(source instanceof Map) ? filterMap(source, test, scope) :
+		(source instanceof Set) ? filterSet(source, test, scope) : null;
 }

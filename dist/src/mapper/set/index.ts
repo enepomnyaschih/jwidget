@@ -33,27 +33,27 @@ export function createSetMapper<T extends IClass, U extends IClass>(source: ISet
 		new ObservableSetMapper<T, U>(source, config);
 }
 
-export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, callback: (item: T) => U, scope?: any): ISet<U> {
+export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, map: (item: T) => U, scope?: any): ISet<U> {
 	if (source.silent) {
-		return source.$map(callback, scope);
+		return source.$map(map, scope);
 	}
 	var result = new Set<U>();
 	result.own(new ObservableSetMapper<T, U>(source, {
 		target: result,
-		create: callback,
+		create: map,
 		scope: scope
 	}));
 	return result;
 }
 
-export function mapDestroyableSet<T extends IClass, U extends IClass>(source: ISet<T>, callback: (item: T) => U, scope?: any): ISet<U> {
+export function mapDestroyableSet<T extends IClass, U extends IClass>(source: ISet<T>, create: (item: T) => U, scope?: any): ISet<U> {
 	if (source.silent) {
-		return source.$map(callback, scope).ownItems();
+		return source.$map(create, scope).ownItems();
 	}
 	var result = new Set<U>();
 	result.own(new ObservableSetMapper<T, U>(source, {
 		target: result,
-		create: callback,
+		create: create,
 		destroy: destroy,
 		scope: scope
 	}));
