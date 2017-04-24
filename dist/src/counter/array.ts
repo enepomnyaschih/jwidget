@@ -18,16 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionCounter from '../AbstractCollectionCounter';
-import IArray from '../../IArray';
-import IArrayCounter from './IArrayCounter';
-import ICollectionCounter from '../ICollectionCounter';
-import * as ArrayUtils from '../../ArrayUtils';
+import AbstractCollectionCounter from './AbstractCollectionCounter';
+import IArray from '../IArray';
+import Property from '../Property';
+import Watchable from '../Watchable';
+import * as ArrayUtils from '../ArrayUtils';
 
 /**
  * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Array]].
  */
-export default class ArrayCounter<T> extends AbstractCollectionCounter<T> implements IArrayCounter<T> {
+export default class ArrayCounter<T> extends AbstractCollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -36,7 +36,7 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> implem
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionCounter.Config<T>) {
+	constructor(source: IArray<T>, config: AbstractCollectionCounter.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -68,4 +68,17 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> implem
 	private _onClear() {
 		this._target.set(0);
 	}
+}
+
+export function countArray<T>(source: IArray<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
+	if (source.silent) {
+		return source.$count(test, scope);
+	}
+	var result = new Property(0);
+	result.own(new ArrayCounter<T>(source, {
+		target: result,
+		test: test,
+		scope: scope
+	}));
+	return result;
 }

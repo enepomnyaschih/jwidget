@@ -18,20 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {countArray} from './array';
-import {countMap} from './map';
-import {countSet} from './set';
-import ArrayCounter from './array/ArrayCounter';
-import MapCounter from './map/MapCounter';
-import SetCounter from './set/SetCounter';
+import {default as ArrayCounter, countArray} from './array';
+import {default as MapCounter, countMap} from './map';
+import {default as SetCounter, countSet} from './set';
+import AbstractCollectionCounter from './AbstractCollectionCounter';
+import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
-import ICollection from '../ICollection';
-import ICollectionCounter from './ICollectionCounter';
 import Watchable from '../Watchable';
 
-export function createCounter<T>(source: ICollection<T>, config: ICollectionCounter.Config<T>): ICollectionCounter<T> {
+export function createCounter<T>(source: ICollection<T>, config: AbstractCollectionCounter.Config<T>): AbstractCollectionCounter<T> {
 	return (source instanceof List) ? new ArrayCounter(source, config) :
 		(source instanceof Map) ? new MapCounter(source, config) :
 		(source instanceof Set) ? new SetCounter(source, config) : null;

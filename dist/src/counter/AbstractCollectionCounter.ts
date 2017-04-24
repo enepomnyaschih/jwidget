@@ -20,7 +20,6 @@
 
 import Class from '../Class';
 import ICollection from '../ICollection';
-import ICollectionCounter from './ICollectionCounter';
 import IProperty from '../IProperty';
 import Property from '../Property';
 import Watchable from '../Watchable';
@@ -91,7 +90,7 @@ import Watchable from '../Watchable';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionCounter<T> extends Class implements ICollectionCounter<T> {
+abstract class AbstractCollectionCounter<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -116,7 +115,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionCounter.Config<T>) {
+	constructor(readonly source: ICollection<T>, config: AbstractCollectionCounter.Config<T>) {
 		super();
 		this._test = config.test;
 		this._scope = config.scope || this;
@@ -150,7 +149,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	 * Changes counter configuration and recounts matching items.
 	 * @param config Options to modify.
 	 */
-	reconfigure(config: ICollectionCounter.Reconfig<T>) {
+	reconfigure(config: AbstractCollectionCounter.Reconfig<T>) {
 		this._test = config.test || this._test;
 		this._scope = config.scope || this._scope;
 		this.recount();
@@ -166,3 +165,46 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 }
 
 export default AbstractCollectionCounter;
+
+namespace AbstractCollectionCounter {
+	/**
+	 * [[Counter]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Filtering criteria.
+		 */
+		readonly test: (item: T) => boolean;
+
+		/**
+		 * [[filterItem]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+
+		/**
+		 * Target property. By default, created automatically.
+		 */
+		readonly target?: IProperty<number>;
+	}
+
+	/**
+	 * [[Counter]]'s [[Counter.reconfigure|reconfigure]] method options.
+	 * All options are optional. If skipped, an option stays the same.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Reconfig<T> {
+		/**
+		 * Filtering criteria.
+		 */
+		readonly test?: (item: T) => boolean;
+
+		/**
+		 * [[filterItem]] call scope.
+		 */
+		readonly scope?: any;
+	}
+}

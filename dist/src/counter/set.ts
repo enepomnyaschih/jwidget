@@ -18,17 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionCounter from '../AbstractCollectionCounter';
-import IClass from '../../IClass';
-import ICollectionCounter from '../ICollectionCounter';
-import ISet from '../../ISet';
-import ISetCounter from './ISetCounter';
-import * as ArrayUtils from '../../ArrayUtils';
+import AbstractCollectionCounter from './AbstractCollectionCounter';
+import IClass from '../IClass';
+import ISet from '../ISet';
+import Property from '../Property';
+import Watchable from '../Watchable';
+import * as ArrayUtils from '../ArrayUtils';
 
 /**
  * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Set]].
  */
-export default class SetCounter<T extends IClass> extends AbstractCollectionCounter<T> implements ISetCounter<T> {
+export default class SetCounter<T extends IClass> extends AbstractCollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -37,7 +37,7 @@ export default class SetCounter<T extends IClass> extends AbstractCollectionCoun
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionCounter.Config<T>) {
+	constructor(source: ISet<T>, config: AbstractCollectionCounter.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
@@ -53,4 +53,17 @@ export default class SetCounter<T extends IClass> extends AbstractCollectionCoun
 	private _onClear() {
 		this._target.set(0);
 	}
+}
+
+export function countSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
+	if (source.silent) {
+		return source.$count(test, scope);
+	}
+	var result = new Property(0);
+	result.own(new SetCounter<T>(source, {
+		target: result,
+		test: test,
+		scope: scope
+	}));
+	return result;
 }

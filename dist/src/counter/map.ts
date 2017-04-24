@@ -18,10 +18,41 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import MapCounter from './MapCounter';
-import IMap from '../../IMap';
-import Property from '../../Property';
-import Watchable from '../../Watchable';
+import AbstractCollectionCounter from './AbstractCollectionCounter';
+import IMap from '../IMap';
+import Property from '../Property';
+import Watchable from '../Watchable';
+import * as MapUtils from '../MapUtils';
+
+/**
+ * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Map]].
+ */
+export default class MapCounter<T> extends AbstractCollectionCounter<T> {
+	/**
+	 * @inheritdoc
+	 */
+	readonly source: IMap<T>;
+
+	/**
+	 * @inheritdoc
+	 */
+	constructor(source: IMap<T>, config: AbstractCollectionCounter.Config<T>) {
+		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._target.set(this._target.get() -
+			MapUtils.count(spliceResult.removedItems, this._test, this._scope) +
+			MapUtils.count(spliceResult.addedItems, this._test, this._scope));
+	}
+
+	private _onClear() {
+		this._target.set(0);
+	}
+}
 
 export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (source.silent) {
