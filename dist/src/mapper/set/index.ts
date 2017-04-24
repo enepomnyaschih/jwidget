@@ -40,7 +40,7 @@ export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, call
 	var result = new Set<U>();
 	result.own(new ObservableSetMapper<T, U>(source, {
 		target: result,
-		createItem: callback,
+		create: callback,
 		scope: scope
 	}));
 	return result;
@@ -53,8 +53,8 @@ export function mapDestroyableSet<T extends IClass, U extends IClass>(source: IS
 	var result = new Set<U>();
 	result.own(new ObservableSetMapper<T, U>(source, {
 		target: result,
-		createItem: callback,
-		destroyItem: destroy,
+		create: callback,
+		destroy: destroy,
 		scope: scope
 	}));
 	return result;

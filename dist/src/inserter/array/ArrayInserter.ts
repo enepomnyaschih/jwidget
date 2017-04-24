@@ -55,17 +55,17 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	/**
 	 * @hidden
 	 */
-	protected _addItem: (item: T, index: number) => void;
+	protected _add: (item: T, index: number) => void;
 
 	/**
 	 * @hidden
 	 */
-	protected _removeItem: (item: T, index: number) => void;
+	protected _remove: (item: T, index: number) => void;
 
 	/**
 	 * @hidden
 	 */
-	protected _clearItems: (items: T[]) => void;
+	protected _clear: (items: T[]) => void;
 
 	/**
 	 * @hidden
@@ -81,9 +81,9 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	 */
 	constructor(readonly source: IArray<T>, config: IArrayInserterConfig<T> = {}) {
 		super();
-		this._addItem = config.addItem;
-		this._removeItem = config.removeItem;
-		this._clearItems = config.clearItems;
+		this._add = config.add;
+		this._remove = config.remove;
+		this._clear = config.clear;
 		this._scope = config.scope || this;
 		this._addItems(this.source.items, 0);
 	}
@@ -93,9 +93,9 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	 */
 	protected destroyObject() {
 		this._doClearItems(this.source.items);
-		this._addItem = null;
-		this._removeItem = null;
-		this._clearItems = null;
+		this._add = null;
+		this._remove = null;
+		this._clear = null;
 		this._scope = null;
 		super.destroyObject();
 	}
@@ -104,11 +104,11 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	 * @hidden
 	 */
 	protected _addItems(items: T[], index: number) {
-		if (!this._addItem) {
+		if (!this._add) {
 			return;
 		}
 		for (var i = 0; i < items.length; ++i) {
-			this._addItem.call(this._scope, items[i], i + index);
+			this._add.call(this._scope, items[i], i + index);
 		}
 	}
 
@@ -116,11 +116,11 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	 * @hidden
 	 */
 	protected _removeItems(items: T[], index: number) {
-		if (!this._removeItem) {
+		if (!this._remove) {
 			return;
 		}
 		for (var i = items.length - 1; i >= 0; --i) {
-			this._removeItem.call(this._scope, items[i], i + index);
+			this._remove.call(this._scope, items[i], i + index);
 		}
 	}
 
@@ -131,8 +131,8 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 		if (items.length === 0) {
 			return;
 		}
-		if (this._clearItems) {
-			this._clearItems.call(this._scope, items);
+		if (this._clear) {
+			this._clear.call(this._scope, items);
 		} else {
 			this._removeItems(items, 0);
 		}

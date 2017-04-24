@@ -41,7 +41,7 @@ export default class ObservableSetFilterer<T extends IClass> extends SetFilterer
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			spliceResult.removedItems,
-			spliceResult.addedItems.filter(this._filterItem, this._scope));
+			spliceResult.addedItems.filter(this._test, this._scope));
 	}
 
 	private _onClear(params: SetItemsEventParams<T>) {

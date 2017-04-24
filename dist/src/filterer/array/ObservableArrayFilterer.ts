@@ -48,7 +48,7 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {
 		var oldFiltered = this._filtered[params.index] !== 0;
-		var newFiltered = this._filterItem.call(this._scope, params.newItem) !== false;
+		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
 		if (!oldFiltered && !newFiltered) {
 			return;
 		}

@@ -40,7 +40,7 @@ export function countSet<T extends IClass>(source: ISet<T>, callback: (item: T) 
 	var result = new Property(0);
 	result.own(new ObservableSetCounter<T>(source, {
 		target: result,
-		filterItem: callback,
+		test: callback,
 		scope: scope
 	}));
 	return result;

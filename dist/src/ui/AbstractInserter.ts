@@ -34,8 +34,8 @@ export default class AbstractInserter<T> extends Class {
 	constructor(source: IArray<T>, readonly el: HTMLElement) {
 		super();
 		this.own(createArrayInserter(source, {
-			addItem: this._addItem,
-			removeItem: this._removeItem,
+			add: this._addItem,
+			remove: this._removeItem,
 			scope: this
 		}));
 	}

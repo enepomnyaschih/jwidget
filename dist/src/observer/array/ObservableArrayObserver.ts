@@ -45,9 +45,9 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.removedItems;
 
-		if (this._clearItems && (3 * removedItems.length > 2 * oldItems.length)) {
+		if (this._clear && (3 * removedItems.length > 2 * oldItems.length)) {
 			// if there is an effective clearing function, just reset the controller
-			this._clearItems.call(this._scope, oldItems);
+			this._clear.call(this._scope, oldItems);
 			this._addItems(this.source.items);
 		} else {
 			// else, splice the elements
@@ -57,11 +57,11 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {
-		if (this._removeItem) {
-			this._removeItem.call(this._scope, params.oldItem);
+		if (this._remove) {
+			this._remove.call(this._scope, params.oldItem);
 		}
-		if (this._addItem) {
-			this._addItem.call(this._scope, params.newItem);
+		if (this._add) {
+			this._add.call(this._scope, params.newItem);
 		}
 	}
 

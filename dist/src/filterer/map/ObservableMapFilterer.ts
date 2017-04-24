@@ -42,7 +42,7 @@ export default class ObservableMapFilterer<T> extends MapFilterer<T> {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			Object.keys(spliceResult.removedItems),
-			MapUtils.filter(spliceResult.addedItems, this._filterItem, this._scope));
+			MapUtils.filter(spliceResult.addedItems, this._test, this._scope));
 	}
 
 	private _onReindex(params: MapReindexEventParams<T>) {

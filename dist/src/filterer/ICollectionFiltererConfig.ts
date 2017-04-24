@@ -27,7 +27,7 @@ interface ICollectionFiltererConfig<T> {
 	/**
 	 * Filtering criteria.
 	 */
-	readonly filterItem: (item: T) => boolean;
+	readonly test: (item: T) => boolean;
 
 	/**
 	 * [[filterItem]] call scope.

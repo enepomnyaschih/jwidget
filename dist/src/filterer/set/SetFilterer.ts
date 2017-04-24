@@ -48,7 +48,7 @@ export default class SetFilterer<T extends IClass> extends AbstractCollectionFil
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(this.source.silent) : config.target;
-		this.target.tryAddAll(source.$toArray().filter(this._filterItem, this._scope));
+		this.target.tryAddAll(source.$toArray().filter(this._test, this._scope));
 	}
 
 	/**

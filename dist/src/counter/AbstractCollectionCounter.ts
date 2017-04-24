@@ -99,7 +99,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	/**
 	 * @hidden
 	 */
-	protected _filterItem: (item: T) => boolean;
+	protected _test: (item: T) => boolean;
 
 	/**
 	 * @hidden
@@ -120,11 +120,11 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	 */
 	constructor(readonly source: ICollection<T>, config: ICollectionCounterConfig<T>) {
 		super();
-		this._filterItem = config.filterItem;
+		this._test = config.test;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? new Property<number>(0) : config.target;
-		this._target.set(source.count(this._filterItem, this._scope));
+		this._target.set(source.count(this._test, this._scope));
 	}
 
 	/**
@@ -142,7 +142,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
-		this._filterItem = null;
+		this._test = null;
 		this._target = null;
 		this._scope = null;
 		super.destroyObject();
@@ -153,7 +153,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	 * @param config Options to modify.
 	 */
 	reconfigure(config: ICollectionCounterReconfig<T>) {
-		this._filterItem = config.filterItem || this._filterItem;
+		this._test = config.test || this._test;
 		this._scope = config.scope || this._scope;
 		this.recount();
 	}
@@ -163,7 +163,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	 * they must be refiltered.
 	 */
 	recount() {
-		this._target.set(this.source.count(this._filterItem, this._scope));
+		this._target.set(this.source.count(this._test, this._scope));
 	}
 }
 

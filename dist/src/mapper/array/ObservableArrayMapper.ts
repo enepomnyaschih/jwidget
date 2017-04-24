@@ -59,9 +59,9 @@ export default class Mapper<T, U> extends ArrayMapper<T, U> {
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {
-		var newItem = this._createItem.call(this._scope, params.newItem);
+		var newItem = this._create.call(this._scope, params.newItem);
 		var oldItem = this.target.trySet(newItem, params.index).value;
-		this._destroyItem.call(this._scope, oldItem, params.oldItem);
+		this._destroy.call(this._scope, oldItem, params.oldItem);
 	}
 
 	private _onMove(params: ArrayMoveEventParams<T>) {

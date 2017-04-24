@@ -28,12 +28,12 @@ interface ICollectionMapperConfig<T, U> {
 	/**
 	 * Mapping function. Creates an item of target collection by item of source collection.
 	 */
-	readonly createItem: (data: T) => U;
+	readonly create: (data: T) => U;
 
 	/**
 	 * Item destructor. Destroys an item of target collection.
 	 */
-	readonly destroyItem?: (item: U, data: T) => void;
+	readonly destroy?: (item: U, data: T) => void;
 
 	/**
 	 * [[createItem]] and [[destroyItem]] call scope.

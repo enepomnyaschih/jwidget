@@ -39,7 +39,7 @@ export function countMap<T>(source: IMap<T>, callback: (item: T) => boolean, sco
 	var result = new Property(0);
 	result.own(new ObservableMapCounter<T>(source, {
 		target: result,
-		filterItem: callback,
+		test: callback,
 		scope: scope
 	}));
 	return result;

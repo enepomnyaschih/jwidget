@@ -40,7 +40,7 @@ export function mapMap<T, U>(source: IMap<T>, callback: (item: T) => U, scope?: 
 	var result = new Map<U>();
 	result.own(new ObservableMapMapper<T, U>(source, {
 		target: result,
-		createItem: callback,
+		create: callback,
 		scope: scope
 	}));
 	return result;
@@ -53,8 +53,8 @@ export function mapDestroyableMap<T, U extends Destroyable>(source: IMap<T>, cal
 	var result = new Map<U>();
 	result.own(new ObservableMapMapper<T, U>(source, {
 		target: result,
-		createItem: callback,
-		destroyItem: destroy,
+		create: callback,
+		destroy: destroy,
 		scope: scope
 	}));
 	return result;

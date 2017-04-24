@@ -39,7 +39,7 @@ export function filterSet<T extends IClass>(source: ISet<T>, callback: (item: T)
 	var result = new Set<T>();
 	result.own(new ObservableSetFilterer<T>(source, {
 		target: result,
-		filterItem: callback,
+		test: callback,
 		scope: scope
 	}));
 	return result;

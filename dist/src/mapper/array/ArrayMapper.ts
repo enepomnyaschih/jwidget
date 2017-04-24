@@ -67,7 +67,7 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 	protected _createItems(datas: T[]): U[] {
 		var items: U[] = [];
 		for (var i = 0, l = datas.length; i < l; ++i) {
-			items.push(this._createItem.call(this._scope, datas[i]));
+			items.push(this._create.call(this._scope, datas[i]));
 		}
 		return items;
 	}
@@ -76,11 +76,11 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 	 * @hidden
 	 */
 	protected _destroyItems(items: U[], datas: T[]) {
-		if (this._destroyItem === undefined) {
+		if (this._destroy === undefined) {
 			return;
 		}
 		for (var i = items.length - 1; i >= 0; --i) {
-			this._destroyItem.call(this._scope, items[i], datas[i]);
+			this._destroy.call(this._scope, items[i], datas[i]);
 		}
 	}
 }

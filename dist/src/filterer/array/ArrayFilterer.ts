@@ -106,7 +106,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
 			var items: T[] = [];
 			var filtered = indexItems.items.map((item) => {
-				if (this._filterItem.call(this._scope, item) === false) {
+				if (this._test.call(this._scope, item) === false) {
 					return 0;
 				}
 				items.push(item);
@@ -127,7 +127,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	 * @param config Options to modify.
 	 */
 	reconfigure(config: IArrayFiltererReconfig<T>) {
-		this._filterItem = def(config.filterItem, this._filterItem);
+		this._test = def(config.filterer, this._test);
 		this._scope = def(config.scope, this._scope);
 		this.refilter();
 	}
@@ -139,7 +139,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	 */
 	refilterAt(sourceIndex: number) {
 		var item = this.source.get(sourceIndex);
-		var good = this._filterItem.call(this._scope, item) !== false;
+		var good = this._test.call(this._scope, item) !== false;
 		var targetIndex = this._countFiltered(0, sourceIndex);
 		if (this._filtered[sourceIndex] === 0) {
 			if (good) {
@@ -172,7 +172,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	 */
 	refilter() {
 		var newFiltered = this.source.map((item) => {
-			return (this._filterItem.call(this._scope, item) !== false) ? 1 : 0;
+			return (this._test.call(this._scope, item) !== false) ? 1 : 0;
 		});
 
 		var removeParams: IndexCount = null;

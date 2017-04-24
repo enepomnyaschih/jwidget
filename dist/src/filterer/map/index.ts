@@ -38,7 +38,7 @@ export function filterMap<T>(source: IMap<T>, callback: (item: T) => boolean, sc
 	var result = new Map<T>();
 	result.own(new ObservableMapFilterer<T>(source, {
 		target: result,
-		filterItem: callback,
+		test: callback,
 		scope: scope
 	}));
 	return result;

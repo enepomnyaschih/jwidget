@@ -45,8 +45,8 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		var removedItems = spliceResult.removedItems;
 
 		// if there is an effective clearing function, just reset the controller
-		if (this._clearItems && (3 * removedItems.length > 2 * oldItems.length)) {
-			this._clearItems.call(this._scope, oldItems);
+		if (this._clear && (3 * removedItems.length > 2 * oldItems.length)) {
+			this._clear.call(this._scope, oldItems);
 			this._addItems(this.source.items, 0);
 			return;
 		}
@@ -65,20 +65,20 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {
-		if (this._removeItem) {
-			this._removeItem.call(this._scope, params.oldItem, params.index);
+		if (this._remove) {
+			this._remove.call(this._scope, params.oldItem, params.index);
 		}
-		if (this._addItem) {
-			this._addItem.call(this._scope, params.newItem, params.index);
+		if (this._add) {
+			this._add.call(this._scope, params.newItem, params.index);
 		}
 	}
 
 	private _onMove(params: ArrayMoveEventParams<T>) {
-		if (this._removeItem) {
-			this._removeItem.call(this._scope, params.item, params.fromIndex);
+		if (this._remove) {
+			this._remove.call(this._scope, params.item, params.fromIndex);
 		}
-		if (this._addItem) {
-			this._addItem.call(this._scope, params.item, params.toIndex);
+		if (this._add) {
+			this._add.call(this._scope, params.item, params.toIndex);
 		}
 	}
 

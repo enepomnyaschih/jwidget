@@ -33,8 +33,8 @@ export default class ComponentCollectionInserter extends Class {
 	constructor(source: ICollection<Component>, private el: HTMLElement) {
 		super();
 		this.own(createObserver(source, {
-			addItem: this._addItem,
-			removeItem: this._removeItem,
+			add: this._addItem,
+			remove: this._removeItem,
 			scope: this
 		}));
 	}

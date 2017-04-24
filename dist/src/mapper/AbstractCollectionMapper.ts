@@ -118,12 +118,12 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 	/**
 	 * @hidden
 	 */
-	protected _createItem: (data: T) => U;
+	protected _create: (data: T) => U;
 
 	/**
 	 * @hidden
 	 */
-	protected _destroyItem: (item: U, data: T) => void;
+	protected _destroy: (item: U, data: T) => void;
 
 	/**
 	 * @hidden
@@ -144,8 +144,8 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 	 */
 	constructor(readonly source: ICollection<T>, config: ICollectionMapperConfig<T, U>) {
 		super();
-		this._createItem = config.createItem;
-		this._destroyItem = config.destroyItem;
+		this._create = config.create;
+		this._destroy = config.destroy;
 		this._scope = config.scope || this;
 	}
 
@@ -153,8 +153,8 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this._createItem = null;
-		this._destroyItem = null;
+		this._create = null;
+		this._destroy = null;
 		this._scope = null;
 		super.destroyObject();
 	}

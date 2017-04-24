@@ -38,7 +38,7 @@ export function filterArray<T>(source: IArray<T>, callback: (item: T) => boolean
 	var result = new List<T>();
 	result.own(new ObservableArrayFilterer<T>(source, {
 		target: result,
-		filterItem: callback,
+		test: callback,
 		scope: scope
 	}));
 	return result;

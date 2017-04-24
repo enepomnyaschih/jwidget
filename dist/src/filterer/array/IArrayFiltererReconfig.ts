@@ -28,7 +28,7 @@ interface IArrayFiltererReconfig<T> {
 	/**
 	 * Filtering criteria.
 	 */
-	readonly filterItem?: (item: T) => boolean;
+	readonly filterer?: (item: T) => boolean;
 
 	/**
 	 * [[filterItem]] call scope.

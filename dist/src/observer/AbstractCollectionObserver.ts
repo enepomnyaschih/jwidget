@@ -66,17 +66,17 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 	/**
 	 * @hidden
 	 */
-	protected _addItem: (item: T) => void;
+	protected _add: (item: T) => void;
 
 	/**
 	 * @hidden
 	 */
-	protected _removeItem: (item: T) => void;
+	protected _remove: (item: T) => void;
 
 	/**
 	 * @hidden
 	 */
-	protected _clearItems: (items: T[]) => void;
+	protected _clear: (items: T[]) => void;
 
 	/**
 	 * @hidden
@@ -98,9 +98,9 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 	constructor(readonly source: ICollection<T>, config: ICollectionObserverConfig<T>) {
 		super();
 		config = config || {};
-		this._addItem = config.addItem;
-		this._removeItem = config.removeItem;
-		this._clearItems = config.clearItems;
+		this._add = config.add;
+		this._remove = config.remove;
+		this._clear = config.clear;
 		this._change = config.change;
 		this._scope = config.scope || this;
 		this._addItems(source.asArray());
@@ -111,9 +111,9 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 	 */
 	protected destroyObject() {
 		this._doClearItems(this.source.asArray());
-		this._addItem = null;
-		this._removeItem = null;
-		this._clearItems = null;
+		this._add = null;
+		this._remove = null;
+		this._clear = null;
 		this._change = null;
 		this._scope = null;
 		super.destroyObject();
@@ -123,11 +123,11 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 	 * @hidden
 	 */
 	protected _addItems(items: T[]) {
-		if (!this._addItem) {
+		if (!this._add) {
 			return;
 		}
 		for (var i = 0, l = items.length; i < l; ++i) {
-			this._addItem.call(this._scope, items[i]);
+			this._add.call(this._scope, items[i]);
 		}
 	}
 
@@ -135,11 +135,11 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 	 * @hidden
 	 */
 	protected _removeItems(items: T[]) {
-		if (!this._removeItem) {
+		if (!this._remove) {
 			return;
 		}
 		for (var i = items.length - 1; i >= 0; --i) {
-			this._removeItem.call(this._scope, items[i]);
+			this._remove.call(this._scope, items[i]);
 		}
 	}
 
@@ -150,8 +150,8 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 		if (items.length === 0) {
 			return;
 		}
-		if (this._clearItems) {
-			this._clearItems.call(this._scope, items);
+		if (this._clear) {
+			this._clear.call(this._scope, items);
 		} else {
 			this._removeItems(items);
 		}

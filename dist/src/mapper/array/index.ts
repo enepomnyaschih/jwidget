@@ -40,7 +40,7 @@ export function mapArray<T, U>(source: IArray<T>, callback: (item: T) => U, scop
 	var result = new List<U>();
 	result.own(new ObservableArrayMapper<T, U>(source, {
 		target: result,
-		createItem: callback,
+		create: callback,
 		scope: scope
 	}));
 	return result;
@@ -53,8 +53,8 @@ export function mapDestroyableArray<T, U extends Destroyable>(source: IArray<T>,
 	var result = new List<U>();
 	result.own(new ObservableArrayMapper<T, U>(source, {
 		target: result,
-		createItem: callback,
-		destroyItem: destroy,
+		create: callback,
+		destroy: destroy,
 		scope: scope
 	}));
 	return result;

@@ -27,17 +27,17 @@ interface ICollectionObserverConfig<T> {
 	/**
 	 * Item is added to collection.
 	 */
-	readonly addItem?: (item: T) => void;
+	readonly add?: (item: T) => void;
 
 	/**
 	 * Item is removed from collection.
 	 */
-	readonly removeItem?: (item: T) => void;
+	readonly remove?: (item: T) => void;
 
 	/**
 	 * Collection is cleared. By default, calls [[removeItem]] for all collection items.
 	 */
-	readonly clearItems?: (items: T[]) => void;
+	readonly clear?: (items: T[]) => void;
 
 	/**
 	 * Collection is changed arbitrarily.

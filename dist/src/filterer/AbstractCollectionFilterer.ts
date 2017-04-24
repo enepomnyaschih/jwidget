@@ -110,7 +110,7 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 	/**
 	 * @hidden
 	 */
-	protected _filterItem: (item: T) => boolean;
+	protected _test: (item: T) => boolean;
 
 	/**
 	 * @hidden
@@ -131,7 +131,7 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 	 */
 	constructor(readonly source: ICollection<T>, config: ICollectionFiltererConfig<T>) {
 		super();
-		this._filterItem = config.filterItem;
+		this._test = config.test;
 		this._scope = config.scope || this;
 	}
 
@@ -139,7 +139,7 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this._filterItem = null;
+		this._test = null;
 		this._scope = null;
 		super.destroyObject();
 	}

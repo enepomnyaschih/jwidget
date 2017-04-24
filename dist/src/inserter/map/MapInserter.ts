@@ -59,17 +59,17 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 	/**
 	 * @hidden
 	 */
-	protected _addItem: (item: T, key: string) => void;
+	protected _add: (item: T, key: string) => void;
 
 	/**
 	 * @hidden
 	 */
-	protected _removeItem: (item: T, key: string) => void;
+	protected _remove: (item: T, key: string) => void;
 
 	/**
 	 * @hidden
 	 */
-	protected _clearItems: (items: Dictionary<T>) => void;
+	protected _clear: (items: Dictionary<T>) => void;
 
 	/**
 	 * @hidden
@@ -86,10 +86,10 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 	 */
 	constructor(readonly source: IMap<T>, config: IMapInserterConfig<T> = {}) {
 		super();
-		this._addItem = config.addItem;
-		this._removeItem = config.removeItem;
+		this._add = config.add;
+		this._remove = config.remove;
 		this._scope = config.scope || this;
-		this._clearItems = config.clearItems;
+		this._clear = config.clear;
 		this._addItems(this.source.items);
 	}
 
@@ -98,9 +98,9 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 	 */
 	destroyObject() {
 		this._doClearItems(this.source.items);
-		this._addItem = null;
-		this._removeItem = null;
-		this._clearItems = null;
+		this._add = null;
+		this._remove = null;
+		this._clear = null;
 		this._scope = null;
 		super.destroyObject();
 	}
@@ -109,11 +109,11 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 	 * @hidden
 	 */
 	protected _addItems(items: Dictionary<T>) {
-		if (!this._addItem) {
+		if (!this._add) {
 			return;
 		}
 		for (var key in items) {
-			this._addItem.call(this._scope, items[key], key);
+			this._add.call(this._scope, items[key], key);
 		}
 	}
 
@@ -121,11 +121,11 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 	 * @hidden
 	 */
 	protected _removeItems(items: Dictionary<T>) {
-		if (!this._removeItem) {
+		if (!this._remove) {
 			return;
 		}
 		for (var key in items) {
-			this._removeItem.call(this._scope, key, items[key]);
+			this._remove.call(this._scope, key, items[key]);
 		}
 	}
 
@@ -136,8 +136,8 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 		if (isDictionaryEmpty(items)) {
 			return;
 		}
-		if (this._clearItems) {
-			this._clearItems.call(this._scope || this, items);
+		if (this._clear) {
+			this._clear.call(this._scope || this, items);
 		} else {
 			this._removeItems(items);
 		}

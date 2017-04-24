@@ -35,11 +35,11 @@ export default class ComponentArray extends Class {
 		SetUtils.add(parent._arrays, this);
 
 		var mapper = this.own(createArrayMapper<Component, Component>(source, {
-			createItem: (child) => {
+			create: (child) => {
 				this.parent._initChild(child);
 				return child;
 			},
-			destroyItem: (child) => {
+			destroy: (child) => {
 				this.parent._doneChild(child);
 			}
 		}));

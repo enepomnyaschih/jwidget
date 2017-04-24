@@ -48,11 +48,11 @@ export default class ObservableMapInserter<T> extends MapInserter<T> {
 		for (var oldKey in keyMap) {
 			var newKey = keyMap[oldKey];
 			var item = this.source.get(newKey);
-			if (this._removeItem) {
-				this._removeItem.call(this._scope, oldKey, item);
+			if (this._remove) {
+				this._remove.call(this._scope, oldKey, item);
 			}
-			if (this._addItem) {
-				this._addItem.call(this._scope, item, newKey);
+			if (this._add) {
+				this._add.call(this._scope, item, newKey);
 			}
 		}
 	}

@@ -29,18 +29,18 @@ interface IMapInserterConfig<T> {
 	/**
 	 * Function to call on item adding to specific position in map.
 	 */
-	readonly addItem?: (item: T, key: string) => void;
+	readonly add?: (item: T, key: string) => void;
 
 	/**
 	 * Function to call on item removing from specific position in map.
 	 */
-	readonly removeItem?: (item: T, key: string) => void;
+	readonly remove?: (item: T, key: string) => void;
 
 	/**
 	 * Function to call on map cleanup.
 	 * By default, calls [[removeItem]] for all map items.
 	 */
-	readonly clearItems?: (items: Dictionary<T>) => void;
+	readonly clear?: (items: Dictionary<T>) => void;
 
 	/**
 	 * [[addItem]], [[removeItem]] and

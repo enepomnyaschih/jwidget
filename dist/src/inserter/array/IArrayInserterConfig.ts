@@ -27,18 +27,18 @@ interface IArrayInserterConfig<T> {
 	/**
 	 * Function to call on item adding to specific position in array.
 	 */
-	readonly addItem?: (item: T, index: number) => void;
+	readonly add?: (item: T, index: number) => void;
 
 	/**
 	 * Function to call on item removing from specific position in array.
 	 */
-	readonly removeItem?: (item: T, index: number) => void;
+	readonly remove?: (item: T, index: number) => void;
 
 	/**
 	 * Function to call on array cleanup.
 	 * By default, calls [[removeItem]] for all array items.
 	 */
-	readonly clearItems?: (items: T[]) => void;
+	readonly clear?: (items: T[]) => void;
 
 	/**
 	 * [[addItem]], [[removeItem]] and [[clearItems]] call scope.

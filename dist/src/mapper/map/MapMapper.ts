@@ -68,7 +68,7 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 	protected _createItems(datas: Dictionary<T>): Dictionary<U> {
 		var items: Dictionary<U> = {};
 		for (var key in datas) {
-			items[key] = this._createItem.call(this._scope, datas[key]);
+			items[key] = this._create.call(this._scope, datas[key]);
 		}
 		return items;
 	}
@@ -77,11 +77,11 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 	 * @hidden
 	 */
 	protected _destroyItems(items: Dictionary<U>, datas: Dictionary<T>) {
-		if (this._destroyItem === undefined) {
+		if (this._destroy === undefined) {
 			return;
 		}
 		for (var key in items) {
-			this._destroyItem.call(this._scope, items[key], datas[key]);
+			this._destroy.call(this._scope, items[key], datas[key]);
 		}
 	}
 }
