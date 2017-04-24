@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {SetItemsEventParams, SetSpliceEventParams} from '../../ISet';
 import IClass from '../../IClass';
 import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
 import ISet from '../../ISet';
@@ -38,14 +37,14 @@ export default class ObservableSetOrderer<T extends IClass> extends SetOrderer<T
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SetSpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			ArrayUtils.toSet(spliceResult.removedItems),
 			ArrayUtils.toSet(spliceResult.addedItems));
 	}
 
-	private _onClear(params: SetItemsEventParams<T>) {
+	private _onClear(params: ISet.ItemsEventParams<T>) {
 		this.target.removeItems(params.items);
 	}
 }

@@ -28,9 +28,7 @@ import IArray from './IArray';
 import IClass from './IClass';
 import IEvent from './IEvent';
 import IMap from './IMap';
-import {default as ISet, SetEventParams, SetItemsEventParams, SetSpliceEventParams} from './ISet';
-import ISetSpliceParams from './ISetSpliceParams';
-import ISetSpliceResult from './ISetSpliceResult';
+import ISet from './ISet';
 import List from './List';
 import Map from './Map';
 import * as ArrayUtils from './ArrayUtils';
@@ -133,9 +131,9 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	private _adapter: boolean;
 	private _items: Dictionary<T>;
 
-	private _spliceEvent : IEvent<SetSpliceEventParams<T>>;
-	private _clearEvent  : IEvent<SetItemsEventParams<T>>;
-	private _changeEvent : IEvent<SetEventParams<T>>;
+	private _spliceEvent : IEvent<ISet.SpliceEventParams<T>>;
+	private _clearEvent  : IEvent<ISet.ItemsEventParams<T>>;
+	private _changeEvent : IEvent<ISet.EventParams<T>>;
 
 	/**
 	 * This constructor should be used to create a new set and copy the items into it.
@@ -157,9 +155,9 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 		this._items = this._adapter ? items : apply<T>({}, items);
 		this._length.set((!valued || !a) ? 0 : arr ? a.length : SetUtils.getLength(items));
 
-		this._spliceEvent = Event.make<SetSpliceEventParams<T>>(this, silent);
-		this._clearEvent  = Event.make<SetItemsEventParams<T>>(this, silent);
-		this._changeEvent = Event.make<SetEventParams<T>>(this, silent);
+		this._spliceEvent = Event.make<ISet.SpliceEventParams<T>>(this, silent);
+		this._clearEvent  = Event.make<ISet.ItemsEventParams<T>>(this, silent);
+		this._changeEvent = Event.make<ISet.EventParams<T>>(this, silent);
 	}
 
 	/**
@@ -198,7 +196,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	get spliceEvent(): Bindable<SetSpliceEventParams<T>> {
+	get spliceEvent(): Bindable<ISet.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
@@ -209,14 +207,14 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	get clearEvent(): Bindable<SetItemsEventParams<T>> {
+	get clearEvent(): Bindable<ISet.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
 	/**
 	 * Set is changed. Triggered right after any another event.
 	 */
-	get changeEvent(): Bindable<SetEventParams<T>> {
+	get changeEvent(): Bindable<ISet.EventParams<T>> {
 		return this._changeEvent;
 	}
 
@@ -527,7 +525,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @param addedItems Items to add.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
+	splice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
 		var spliceResult = this.trySplice(removedItems, addedItems);
 		return (spliceResult !== undefined) ? spliceResult : { addedItems: [], removedItems: [] };
 	}
@@ -539,7 +537,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @returns Splice result.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
+	trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
 		const spliceResult = this._trySplice(removedItems, addedItems);
 		if (spliceResult === undefined) {
 			return undefined;
@@ -552,7 +550,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 		return spliceResult;
 	}
 
-	_trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
+	_trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
 		var spliceResult = SetUtils.trySplice(this._items, removedItems, addedItems);
 		if (spliceResult !== undefined) {
 			this._length.set(this._length.get() + spliceResult.addedItems.length - spliceResult.removedItems.length);
@@ -567,7 +565,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * @param newItems New set contents.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[]): ISetSpliceParams<T> {
+	detectSplice(newItems: T[]): ISet.SpliceParams<T> {
 		return SetUtils.detectSplice(this._items, newItems);
 	}
 

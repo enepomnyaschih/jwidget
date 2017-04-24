@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {SetItemsEventParams, SetSpliceEventParams} from '../../ISet';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetMapperConfig from './ISetMapperConfig';
@@ -37,7 +36,7 @@ export default class ObservableSetMapper<T extends IClass, U extends IClass> ext
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SetSpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var removedDatas = spliceResult.removedItems;
 		var addedDatas = spliceResult.addedItems;
@@ -45,7 +44,7 @@ export default class ObservableSetMapper<T extends IClass, U extends IClass> ext
 		this._destroyItems(removedDatas);
 	}
 
-	private _onClear(params: SetItemsEventParams<T>) {
+	private _onClear(params: ISet.ItemsEventParams<T>) {
 		var datas = params.items;
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);

@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {SetItemsEventParams, SetSpliceEventParams} from '../../ISet';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetFiltererConfig from './ISetFiltererConfig';
@@ -37,14 +36,14 @@ export default class ObservableSetFilterer<T extends IClass> extends SetFilterer
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SetSpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			spliceResult.removedItems,
 			spliceResult.addedItems.filter(this._test, this._scope));
 	}
 
-	private _onClear(params: SetItemsEventParams<T>) {
+	private _onClear(params: ISet.ItemsEventParams<T>) {
 		this.target.tryRemoveAll(params.items);
 	}
 }

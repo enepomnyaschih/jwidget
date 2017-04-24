@@ -23,8 +23,6 @@ import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IClass from './IClass';
 import ICollection from './ICollection';
-import ISetSpliceParams from './ISetSpliceParams';
-import ISetSpliceResult from './ISetSpliceResult';
 
 /**
  * Set is unordered collection optimized for items adding, removal and search. Unlike
@@ -125,7 +123,7 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	readonly spliceEvent: Bindable<SetSpliceEventParams<T>>;
+	readonly spliceEvent: Bindable<ISet.SpliceEventParams<T>>;
 
 	/**
 	 * Set is cleared. Triggered in result of calling:
@@ -134,12 +132,12 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	readonly clearEvent: Bindable<SetItemsEventParams<T>>;
+	readonly clearEvent: Bindable<ISet.ItemsEventParams<T>>;
 
 	/**
 	 * Set is changed. Triggered right after any another event.
 	 */
-	readonly changeEvent: Bindable<SetEventParams<T>>;
+	readonly changeEvent: Bindable<ISet.EventParams<T>>;
 
 	/**
 	 * @inheritdoc
@@ -311,7 +309,7 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * @param addedItems Items to add.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T>;
+	splice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T>;
 
 	/**
 	 * Removes and adds multiple items in set. Universal optimized granular operation of removal/insertion.
@@ -320,12 +318,12 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * @returns Splice result.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T>;
+	trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T>;
 
 	/**
 	 * @hidden
 	 */
-	_trySplice(removedItems: T[], addedItems: T[]): ISetSpliceResult<T>;
+	_trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T>;
 
 	/**
 	 * Detects [[splice]] method arguments to adjust set contents to **newItems**.
@@ -333,7 +331,7 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * @param newItems New set contents.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[]): ISetSpliceParams<T>;
+	detectSplice(newItems: T[]): ISet.SpliceParams<T>;
 
 	/**
 	 * Adjusts set contents to **newItems** using [[detectSplice]] and
@@ -350,32 +348,62 @@ interface ISet<T extends IClass> extends ICollection<T> {
 
 export default ISet;
 
-/**
- * `ISet` event parameters.
- */
-export interface SetEventParams<T extends IClass> extends ICollection.EventParams<T> {
+namespace ISet {
 	/**
-	 * Event sender.
+	 * `ISet` event parameters.
 	 */
-	readonly sender: ISet<T>;
-}
+	export interface EventParams<T extends IClass> extends ICollection.EventParams<T> {
+		/**
+		 * Event sender.
+		 */
+		readonly sender: ISet<T>;
+	}
 
-/**
- * Parameters of `spliceEvent`.
- */
-export interface SetSpliceEventParams<T extends IClass> extends SetEventParams<T> {
 	/**
-	 * Result of `splice` method.
+	 * Parameters of `spliceEvent`.
 	 */
-	readonly spliceResult: ISetSpliceResult<T>;
-}
+	export interface SpliceEventParams<T extends IClass> extends EventParams<T> {
+		/**
+		 * Result of `splice` method.
+		 */
+		readonly spliceResult: SpliceResult<T>;
+	}
 
-/**
- * Parameters of `clearEvent`.
- */
-export interface SetItemsEventParams<T extends IClass> extends SetEventParams<T> {
 	/**
-	 * Old set contents.
+	 * Parameters of `clearEvent`.
 	 */
-	readonly items: T[];
+	export interface ItemsEventParams<T extends IClass> extends EventParams<T> {
+		/**
+		 * Old set contents.
+		 */
+		readonly items: T[];
+	}
+
+	/**
+	 * [[JW.Set.splice]] method arguments.
+	 * Returned by [[JW.Set.detectSplice]] method.
+	 *
+	 * @param T Item type.
+	 */
+	export interface SpliceParams<T> {
+		/**
+		 * Items to remove.
+		 */
+		readonly removedItems: T[];
+
+		/**
+		 * Items to add.
+		 */
+		readonly addedItems: T[];
+	}
+
+	/**
+	 * [[JW.Set.splice]] method result.
+	 *
+	 * @param T Item type.
+	 */
+	export interface SpliceResult<T> {
+		readonly removedItems: T[];
+		readonly addedItems: T[];
+	}
 }

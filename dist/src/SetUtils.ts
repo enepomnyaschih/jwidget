@@ -21,8 +21,7 @@
 import {apply, cmp} from './Core';
 import Dictionary from './Dictionary';
 import IClass from './IClass';
-import ISetSpliceParams from './ISetSpliceParams';
-import ISetSpliceResult from './ISetSpliceResult';
+import ISet from './ISet';
 import * as ArrayUtils from './ArrayUtils';
 
 /**
@@ -433,7 +432,7 @@ export function tryClear<T extends IClass>(set: Dictionary<T>): T[] {
  * @param addedItems Items to add.
  * @returns Splice result. Never returns null or undefined.
  */
-export function splice<T extends IClass>(set: Dictionary<T>, removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
+export function splice<T extends IClass>(set: Dictionary<T>, removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
 	var spliceResult = trySplice(set, removedItems, addedItems);
 	return (spliceResult !== undefined) ? spliceResult : { addedItems: [], removedItems: [] };
 }
@@ -445,7 +444,7 @@ export function splice<T extends IClass>(set: Dictionary<T>, removedItems: T[], 
  * @returns Splice result.
  * If collection is not modified, returns undefined.
  */
-export function trySplice<T extends IClass>(set: Dictionary<T>, removedItems: T[], addedItems: T[]): ISetSpliceResult<T> {
+export function trySplice<T extends IClass>(set: Dictionary<T>, removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
 	var addedItemSet = ArrayUtils.toSet(addedItems);
 	removedItems = removedItems.filter(function (item) {
 		return !addedItemSet.hasOwnProperty(String(item.iid));
@@ -464,7 +463,7 @@ export function trySplice<T extends IClass>(set: Dictionary<T>, removedItems: T[
  * @param newItems New set contents.
  * @returns [[splice]] method arguments. If no method call required, returns undefined.
  */
-export function detectSplice<T extends IClass>(oldItems: Dictionary<T>, newItemArray: T[]): ISetSpliceParams<T> {
+export function detectSplice<T extends IClass>(oldItems: Dictionary<T>, newItemArray: T[]): ISet.SpliceParams<T> {
 	var removedItems: T[] = [];
 	var addedItems: T[] = [];
 	var newItems: Dictionary<T> = ArrayUtils.index<T>(newItemArray, function (item) {

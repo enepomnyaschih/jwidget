@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {SetSpliceEventParams} from '../../ISet';
 import IClass from '../../IClass';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
 import ISet from '../../ISet';
@@ -38,7 +37,7 @@ export default class ObservableSetCounter<T extends IClass> extends SetCounter<T
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: SetSpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._target.set(this._target.get() -
 			ArrayUtils.count(spliceResult.removedItems, this._test, this._scope) +
