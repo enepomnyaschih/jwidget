@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from '../../IMap';
 import IMap from '../../IMap';
 import IMapInserterConfig from './IMapInserterConfig';
 import MapInserter from './MapInserter';
@@ -37,13 +36,13 @@ export default class ObservableMapInserter<T> extends MapInserter<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: MapSpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._removeItems(spliceResult.removedItems);
 		this._addItems(spliceResult.addedItems);
 	}
 
-	private _onReindex(params: MapReindexEventParams<T>) {
+	private _onReindex(params: IMap.ReindexEventParams<T>) {
 		var keyMap = params.keyMap;
 		for (var oldKey in keyMap) {
 			var newKey = keyMap[oldKey];
@@ -57,7 +56,7 @@ export default class ObservableMapInserter<T> extends MapInserter<T> {
 		}
 	}
 
-	private _onClear(params: MapItemsEventParams<T>) {
+	private _onClear(params: IMap.ItemsEventParams<T>) {
 		this._doClearItems(params.items);
 	}
 }

@@ -22,8 +22,6 @@ import Bindable from './Bindable';
 import Dictionary from './Dictionary';
 import ICollection from './ICollection';
 import IIndexedCollection from './IIndexedCollection';
-import IMapSpliceParams from './IMapSpliceParams';
-import IMapSpliceResult from './IMapSpliceResult';
 import Some from './Some';
 
 /**
@@ -135,7 +133,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	readonly spliceEvent: Bindable<MapSpliceEventParams<T>>;
+	readonly spliceEvent: Bindable<IMap.SpliceEventParams<T>>;
 
 	/**
 	 * Keys of items are changed in map. Triggered in result of calling:
@@ -146,7 +144,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * * [[tryReindex]]
 	 * * [[performReindex]]
 	 */
-	readonly reindexEvent: Bindable<MapReindexEventParams<T>>;
+	readonly reindexEvent: Bindable<IMap.ReindexEventParams<T>>;
 
 	/**
 	 * Map is cleared. Triggered in result of calling:
@@ -155,12 +153,12 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	readonly clearEvent: Bindable<MapItemsEventParams<T>>;
+	readonly clearEvent: Bindable<IMap.ItemsEventParams<T>>;
 
 	/**
 	 * Map is changed. Triggered right after any another event.
 	 */
-	readonly changeEvent: Bindable<MapEventParams<T>>;
+	readonly changeEvent: Bindable<IMap.EventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.
@@ -266,14 +264,14 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * Low-performance alternative to [[setAll]] with verbose result set.
 	 * @returns Result of internal [[splice]] method call.
 	 */
-	setAllVerbose(items: Dictionary<T>): IMapSpliceResult<T>;
+	setAllVerbose(items: Dictionary<T>): IMap.SpliceResult<T>;
 
 	/**
 	 * Adds or replaces a bunch of items.
 	 * @returns Result of internal [[splice]] method call.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySetAll(items: Dictionary<T>): IMapSpliceResult<T>;
+	trySetAll(items: Dictionary<T>): IMap.SpliceResult<T>;
 
 	/**
 	 * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it causes an error.
@@ -345,7 +343,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * @param updatedItems Items to add/replace.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T>;
+	splice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T>;
 
 	/**
 	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
@@ -354,7 +352,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * @returns Splice result.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T>;
+	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T>;
 
 	/**
 	 * Changes item keys in map.
@@ -379,7 +377,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * @param newItems New map contents.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: Dictionary<T>): IMapSpliceParams<T>;
+	detectSplice(newItems: Dictionary<T>): IMap.SpliceParams<T>;
 
 	/**
 	 * Detects [[reindex]] method arguments to adjust map contents to **newItems**.
@@ -426,42 +424,72 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 
 export default IMap;
 
-/**
- * `IMap` event parameters.
- */
-export interface MapEventParams<T> extends ICollection.EventParams<T> {
+namespace IMap {
 	/**
-	 * Event sender.
+	 * `IMap` event parameters.
 	 */
-	readonly sender: IMap<T>;
-}
+	export interface EventParams<T> extends ICollection.EventParams<T> {
+		/**
+		 * Event sender.
+		 */
+		readonly sender: IMap<T>;
+	}
 
-/**
- * Parameters of `spliceEvent`.
- */
-export interface MapSpliceEventParams<T> extends MapEventParams<T> {
 	/**
-	 * Result of `splice` method.
+	 * Parameters of `spliceEvent`.
 	 */
-	readonly spliceResult: IMapSpliceResult<T>;
-}
+	export interface SpliceEventParams<T> extends EventParams<T> {
+		/**
+		 * Result of `splice` method.
+		 */
+		readonly spliceResult: SpliceResult<T>;
+	}
 
-/**
- * Parameters of `reindexEvent`.
- */
-export interface MapReindexEventParams<T> extends MapEventParams<T> {
 	/**
-	 * Map of changed keys.
+	 * Parameters of `reindexEvent`.
 	 */
-	readonly keyMap: Dictionary<string>;
-}
+	export interface ReindexEventParams<T> extends EventParams<T> {
+		/**
+		 * Map of changed keys.
+		 */
+		readonly keyMap: Dictionary<string>;
+	}
 
-/**
- * Parameters of `clearEvent`.
- */
-export interface MapItemsEventParams<T> extends MapEventParams<T> {
 	/**
-	 * Old map contents.
+	 * Parameters of `clearEvent`.
 	 */
-	readonly items: Dictionary<T>;
+	export interface ItemsEventParams<T> extends EventParams<T> {
+		/**
+		 * Old map contents.
+		 */
+		readonly items: Dictionary<T>;
+	}
+
+	/**
+	 * [[JW.Map.splice]] method arguments.
+	 * Returned by [[JW.Map.detectSplice]] method.
+	 *
+	 * @param T Item type.
+	 */
+	export interface SpliceParams<T> {
+		/**
+		 * Keys of items to remove.
+		 */
+		readonly removedKeys: string[];
+
+		/**
+		 * Items to add/replace.
+		 */
+		readonly updatedItems: Dictionary<T>;
+	}
+
+	/**
+	 * [[JW.Map.splice]] method result.
+	 *
+	 * @param T Item type.
+	 */
+	export interface SpliceResult<T> {
+		readonly removedItems: Dictionary<T>;
+		readonly addedItems: Dictionary<T>;
+	}
 }

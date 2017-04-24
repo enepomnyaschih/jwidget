@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IMapSpliceResult from '../IMapSpliceResult';
 import ComponentChild from './ComponentChild';
 import Dictionary from '../Dictionary';
 import Map from '../Map';
+import IMap from '../IMap';
 import Some from '../Some';
 import * as MapUtils from '../MapUtils';
 
@@ -65,7 +65,7 @@ export default class ComponentChildInserter extends Map<ComponentChild> {
 		return item;
 	}
 
-	trySplice(removedKeys: string[], updatedItems: Dictionary<ComponentChild>): IMapSpliceResult<ComponentChild> {
+	trySplice(removedKeys: string[], updatedItems: Dictionary<ComponentChild>): IMap.SpliceResult<ComponentChild> {
 		var spliceResult = super.trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return undefined;

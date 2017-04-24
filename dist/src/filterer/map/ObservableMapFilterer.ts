@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from '../../IMap';
 import IMap from '../../IMap';
 import IMapFiltererConfig from './IMapFiltererConfig';
 import MapFilterer from './MapFilterer';
@@ -38,18 +37,18 @@ export default class ObservableMapFilterer<T> extends MapFilterer<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: MapSpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			Object.keys(spliceResult.removedItems),
 			MapUtils.filter(spliceResult.addedItems, this._test, this._scope));
 	}
 
-	private _onReindex(params: MapReindexEventParams<T>) {
+	private _onReindex(params: IMap.ReindexEventParams<T>) {
 		this.target.tryReindex(params.keyMap);
 	}
 
-	private _onClear(params: MapItemsEventParams<T>) {
+	private _onClear(params: IMap.ItemsEventParams<T>) {
 		this.target.tryRemoveAll(Object.keys(params.items));
 	}
 }

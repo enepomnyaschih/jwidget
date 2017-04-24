@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {MapItemsEventParams, MapSpliceEventParams} from '../../IMap';
 import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
 import IMap from '../../IMap';
 import MapIndexer from './MapIndexer';
@@ -37,14 +36,14 @@ export default class ObservableMapIndexer<T> extends MapIndexer<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: MapSpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			this._keys(MapUtils.toArray(spliceResult.removedItems)),
 			this._index(MapUtils.toArray(spliceResult.addedItems)));
 	}
 
-	private _onClear(params: MapItemsEventParams<T>) {
+	private _onClear(params: IMap.ItemsEventParams<T>) {
 		this.target.tryRemoveAll(
 			this._keys(MapUtils.toArray(params.items)));
 	}

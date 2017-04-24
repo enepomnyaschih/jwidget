@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {MapSpliceEventParams} from '../../IMap';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
 import IMap from '../../IMap';
 import MapCounter from './MapCounter';
@@ -37,7 +36,7 @@ export default class ObservableMapCounter<T> extends MapCounter<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: MapSpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._target.set(this._target.get() -
 			MapUtils.count(spliceResult.removedItems, this._test, this._scope) +

@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {MapItemsEventParams, MapSpliceEventParams} from '../../IMap';
 import IMap from '../../IMap';
 import IClass from '../../IClass';
 import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
@@ -38,14 +37,14 @@ export default class ObservableMapOrderer<T extends IClass> extends MapOrderer<T
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: MapSpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			MapUtils.toSet(spliceResult.removedItems),
 			MapUtils.toSet(spliceResult.addedItems));
 	}
 
-	private _onClear(params: MapItemsEventParams<T>) {
+	private _onClear(params: IMap.ItemsEventParams<T>) {
 		this.target.removeItems(
 			MapUtils.toArray(params.items));
 	}

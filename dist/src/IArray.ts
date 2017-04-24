@@ -751,12 +751,12 @@ namespace IArray {
 		/**
 		 * Segments to remove.
 		 */
-		readonly removeParamsList: IArray.IndexCount[];
+		readonly removeParamsList: IndexCount[];
 
 		/**
 		 * Segments to add.
 		 */
-		readonly addParamsList: IArray.IndexItems<T>[];
+		readonly addParamsList: IndexItems<T>[];
 	}
 
 	/**
@@ -773,12 +773,12 @@ namespace IArray {
 		/**
 		 * Removed item segments.
 		 */
-		readonly removedItemsList: IArray.IndexItems<T>[];
+		readonly removedItemsList: IndexItems<T>[];
 
 		/**
 		 * @param addedItemsList Added item segments.
 		 */
-		readonly addedItemsList: IArray.IndexItems<T>[];
+		readonly addedItemsList: IndexItems<T>[];
 
 		/**
 		 * Returns plain array of removed items.
@@ -793,7 +793,7 @@ namespace IArray {
 		/**
 		 * Converts removed item segments to "index-count" pairs.
 		 */
-		readonly removeParamsList: IArray.IndexCount[];
+		readonly removeParamsList: IndexCount[];
 
 		/**
 		 * Checks if [[JW.List.splice|splice]] method call didn't change the array.

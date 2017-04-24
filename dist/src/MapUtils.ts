@@ -23,8 +23,7 @@ import {isDictionaryEmpty} from './internal';
 import * as ArrayUtils from './ArrayUtils';
 import Dictionary from './Dictionary';
 import IClass from './IClass';
-import IMapSpliceParams from './IMapSpliceParams';
-import IMapSpliceResult from './IMapSpliceResult';
+import IMap from './IMap';
 import Some from './Some';
 
 export {isDictionaryEmpty as isEmpty};
@@ -401,7 +400,7 @@ export function setAll<T>(map: Dictionary<T>, items: Dictionary<T>) {
  * Low-performance alternative to [[setAll]] with verbose result set.
  * @returns Result of internal [[splice]] method call.
  */
-export function setAllVerbose<T>(map: Dictionary<T>, items: Dictionary<T>): IMapSpliceResult<T> {
+export function setAllVerbose<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
 	var spliceResult = trySetAll(map, items);
 	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 }
@@ -411,7 +410,7 @@ export function setAllVerbose<T>(map: Dictionary<T>, items: Dictionary<T>): IMap
  * @returns Result of internal [[splice]] method call.
  * If collection is not modified, returns undefined.
  */
-export function trySetAll<T>(map: Dictionary<T>, items: Dictionary<T>): IMapSpliceResult<T> {
+export function trySetAll<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
 	var removedItems: Dictionary<T> = {};
 	var addedItems: Dictionary<T> = {};
 	for (var key in items) {
@@ -570,7 +569,7 @@ export function tryClear<T>(map: Dictionary<T>): Dictionary<T> {
  * @param updatedItems Items to add/replace.
  * @returns Splice result. Never returns null or undefined.
  */
-export function splice<T>(map: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
+export function splice<T>(map: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
 	var spliceResult = trySplice(map, removedKeys, updatedItems);
 	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 }
@@ -582,7 +581,7 @@ export function splice<T>(map: Dictionary<T>, removedKeys: string[], updatedItem
  * @returns Splice result.
  * If collection is not modified, returns undefined.
  */
-export function trySplice<T>(map: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
+export function trySplice<T>(map: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
 	removedKeys = removedKeys.filter(function (key) {
 		return !updatedItems.hasOwnProperty(key);
 	});
@@ -655,7 +654,7 @@ export function tryReindex<T>(map: Dictionary<T>, keyMap: Dictionary<string>): D
  * @param newItems New map contents.
  * @returns [[splice]] method arguments. If no method call required, returns undefined.
  */
-export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>): IMapSpliceParams<T> {
+export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>): IMap.SpliceParams<T> {
 	var removedKeys: string[] = [];
 	var updatedItems: Dictionary<T> = {};
 	for (var key in oldItems) {

@@ -26,9 +26,7 @@ import Dictionary from './Dictionary';
 import Event from './Event';
 import IArray from './IArray';
 import IEvent from './IEvent';
-import {default as IMap, MapEventParams, MapItemsEventParams, MapReindexEventParams, MapSpliceEventParams} from './IMap';
-import IMapSpliceParams from './IMapSpliceParams';
-import IMapSpliceResult from './IMapSpliceResult';
+import IMap from './IMap';
 import IndexedCollection from './IndexedCollection';
 import ISet from './ISet';
 import List from './List';
@@ -155,10 +153,10 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	private _adapter: boolean;
 	private _items: Dictionary<T>;
 
-	private _spliceEvent  : IEvent<MapSpliceEventParams<T>>;
-	private _reindexEvent : IEvent<MapReindexEventParams<T>>;
-	private _clearEvent   : IEvent<MapItemsEventParams<T>>;
-	private _changeEvent  : IEvent<MapEventParams<T>>;
+	private _spliceEvent  : IEvent<IMap.SpliceEventParams<T>>;
+	private _reindexEvent : IEvent<IMap.ReindexEventParams<T>>;
+	private _clearEvent   : IEvent<IMap.ItemsEventParams<T>>;
+	private _changeEvent  : IEvent<IMap.EventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.
@@ -187,10 +185,10 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		this._items = this._adapter ? items : apply<T>({}, items);
 		this._length.set(MapUtils.getLength(this._items));
 
-		this._spliceEvent  = Event.make<MapSpliceEventParams<T>>(this, silent);
-		this._reindexEvent = Event.make<MapReindexEventParams<T>>(this, silent);
-		this._clearEvent   = Event.make<MapItemsEventParams<T>>(this, silent);
-		this._changeEvent  = Event.make<MapEventParams<T>>(this, silent);
+		this._spliceEvent  = Event.make<IMap.SpliceEventParams<T>>(this, silent);
+		this._reindexEvent = Event.make<IMap.ReindexEventParams<T>>(this, silent);
+		this._clearEvent   = Event.make<IMap.ItemsEventParams<T>>(this, silent);
+		this._changeEvent  = Event.make<IMap.EventParams<T>>(this, silent);
 	}
 
 	/**
@@ -234,7 +232,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	get spliceEvent(): Bindable<MapSpliceEventParams<T>> {
+	get spliceEvent(): Bindable<IMap.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
@@ -247,7 +245,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * * [[tryReindex]]
 	 * * [[performReindex]]
 	 */
-	get reindexEvent(): Bindable<MapReindexEventParams<T>> {
+	get reindexEvent(): Bindable<IMap.ReindexEventParams<T>> {
 		return this._reindexEvent;
 	}
 
@@ -258,14 +256,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	get clearEvent(): Bindable<MapItemsEventParams<T>> {
+	get clearEvent(): Bindable<IMap.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
 	/**
 	 * Map is changed. Triggered right after any another event.
 	 */
-	get changeEvent(): Bindable<MapEventParams<T>> {
+	get changeEvent(): Bindable<IMap.EventParams<T>> {
 		return this._changeEvent;
 	}
 
@@ -521,7 +519,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * Low-performance alternative to [[setAll]] with verbose result set.
 	 * @returns Result of internal [[splice]] method call.
 	 */
-	setAllVerbose(items: Dictionary<T>): IMapSpliceResult<T> {
+	setAllVerbose(items: Dictionary<T>): IMap.SpliceResult<T> {
 		var spliceResult = this.trySetAll(items);
 		return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 	}
@@ -531,7 +529,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @returns Result of internal [[splice]] method call.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySetAll(items: Dictionary<T>): IMapSpliceResult<T> {
+	trySetAll(items: Dictionary<T>): IMap.SpliceResult<T> {
 		return this.trySplice([], items);
 	}
 
@@ -570,7 +568,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 			return undefined;
 		}
 		if (!this.silent) {
-			var spliceResult: IMapSpliceResult<T> = { addedItems: {}, removedItems: MapUtils.single(key, item) };
+			var spliceResult: IMap.SpliceResult<T> = { addedItems: {}, removedItems: MapUtils.single(key, item) };
 			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 			this._changeEvent.trigger({ sender: this });
 		}
@@ -695,7 +693,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @param updatedItems Items to add/replace.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
+	splice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
 		var spliceResult = this.trySplice(removedKeys, updatedItems);
 		return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 	}
@@ -707,7 +705,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @returns Splice result.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
+	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
 		const spliceResult = this._trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return undefined;
@@ -720,7 +718,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		return spliceResult;
 	}
 
-	private _trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMapSpliceResult<T> {
+	private _trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
 		var spliceResult = MapUtils.trySplice(this._items, removedKeys, updatedItems);
 		if (spliceResult !== undefined) {
 			this._length.set(this._length.get() + MapUtils.getLength(spliceResult.addedItems) - MapUtils.getLength(spliceResult.removedItems));
@@ -763,7 +761,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @param newItems New map contents.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: Dictionary<T>): IMapSpliceParams<T> {
+	detectSplice(newItems: Dictionary<T>): IMap.SpliceParams<T> {
 		return MapUtils.detectSplice(this._items, newItems);
 	}
 

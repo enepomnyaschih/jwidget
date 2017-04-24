@@ -22,7 +22,7 @@ import Component from '../Component';
 import ComponentChild from './ComponentChild';
 import ComponentChildInserter from './ComponentChildInserter';
 import Dictionary from '../Dictionary';
-import IMapSpliceResult from '../IMapSpliceResult';
+import IMap from '../IMap';
 import Map from '../Map';
 import Some from '../Some';
 import * as MapUtils from '../MapUtils';
@@ -70,7 +70,7 @@ export default class ComponentChildren extends Map<Component> {
 		return item;
 	}
 
-	trySplice(removedKeys: string[], updatedItems: Dictionary<Component>): IMapSpliceResult<Component> {
+	trySplice(removedKeys: string[], updatedItems: Dictionary<Component>): IMap.SpliceResult<Component> {
 		var spliceResult = super.trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return undefined;
