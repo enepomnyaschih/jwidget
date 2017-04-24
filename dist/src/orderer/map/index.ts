@@ -20,25 +20,16 @@
 
 import IArray from '../../IArray';
 import IClass from '../../IClass';
-import ICollectionOrderer from '../ICollectionOrderer';
 import IMap from '../../IMap';
-import IMapOrderer from './IMapOrderer';
 import MapOrderer from './MapOrderer';
 import List from '../../List';
-import ObservableMapOrderer from './ObservableMapOrderer';
-
-export function createMapOrderer<T extends IClass>(source: IMap<T>, config: ICollectionOrderer.Config<T>): IMapOrderer<T> {
-	return source.silent ?
-		new MapOrderer<T>(source, config) :
-		new ObservableMapOrderer<T>(source, config);
-}
 
 export function mapToArray<T extends IClass>(source: IMap<T>): IArray<T> {
 	if (source.silent) {
 		return source.$toArray();
 	}
 	var result = new List<T>();
-	result.own(new ObservableMapOrderer<T>(source, {
+	result.own(new MapOrderer<T>(source, {
 		target: result
 	}));
 	return result;

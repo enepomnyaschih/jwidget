@@ -23,13 +23,10 @@ import ArrayMerger from './ArrayMerger';
 import IArray from '../../IArray';
 import IArrayMerger from './IArrayMerger';
 import List from '../../List';
-import ObservableArrayMerger from './ObservableArrayMerger';
 import * as ArrayUtils from '../../ArrayUtils';
 
 export function createArrayMerger<T>(source: IArray<IArray<T>>, config: IArrayMerger.Config<T>): IArrayMerger<T> {
-	return source.silent ?
-		new ArrayMerger<T>(source, config) :
-		new ObservableArrayMerger<T>(source, config);
+	return new ArrayMerger<T>(source, config);
 }
 
 export function mergeArrays<T>(source: IArray<IArray<T>>): IArray<T> {
@@ -44,7 +41,7 @@ export function mergeArrays<T>(source: IArray<IArray<T>>): IArray<T> {
 		return result;
 	}
 	const result = new List<T>();
-	result.own(new ObservableArrayMerger<T>(source, {
+	result.own(new ArrayMerger<T>(source, {
 		target: result
 	}));
 	return result;

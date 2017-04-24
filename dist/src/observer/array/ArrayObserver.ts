@@ -37,5 +37,40 @@ export default class ArrayObserver<T> extends AbstractCollectionObserver<T> impl
 	 */
 	constructor(source: IArray<T>, config: ICollectionObserver.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.replaceEvent.bind(this._onReplace, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+		if (this._change) {
+			this.own(source.changeEvent.bind(this._onChange, this));
+		}
+	}
+
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		var oldItems = spliceResult.oldItems;
+		var removedItems = spliceResult.removedItems;
+
+		if (this._clear && (3 * removedItems.length > 2 * oldItems.length)) {
+			// if there is an effective clearing function, just reset the controller
+			this._clear.call(this._scope, oldItems);
+			this._addItems(this.source.items);
+		} else {
+			// else, splice the elements
+			this._removeItems(removedItems);
+			this._addItems(spliceResult.addedItems);
+		}
+	}
+
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+		if (this._remove) {
+			this._remove.call(this._scope, params.oldItem);
+		}
+		if (this._add) {
+			this._add.call(this._scope, params.newItem);
+		}
+	}
+
+	private _onClear(params: IArray.ItemsEventParams<T>) {
+		this._doClearItems(params.items);
 	}
 }

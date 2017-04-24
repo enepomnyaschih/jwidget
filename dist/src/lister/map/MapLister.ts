@@ -23,6 +23,7 @@ import IClass from '../../IClass';
 import ICollectionLister from '../ICollectionLister';
 import IMap from '../../IMap';
 import IMapLister from './IMapLister';
+import * as MapUtils from '../../MapUtils';
 
 /**
  * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Map]].
@@ -38,5 +39,19 @@ export default class MapLister<T extends IClass> extends AbstractCollectionListe
 	 */
 	constructor(source: IMap<T>, config: ICollectionLister.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(
+			MapUtils.toArray(spliceResult.removedItems),
+			MapUtils.toArray(spliceResult.addedItems));
+	}
+
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(
+			MapUtils.toArray(params.items));
 	}
 }

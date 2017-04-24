@@ -21,22 +21,14 @@
 import SetFilterer from './SetFilterer';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
-import ISetFilterer from './ISetFilterer';
-import ObservableSetFilterer from './ObservableSetFilterer';
 import Set from '../../Set';
-
-export function createSetFilterer<T extends IClass>(source: ISet<T>, config: ISetFilterer.Config<T>): ISetFilterer<T> {
-	return source.silent ?
-		new SetFilterer<T>(source, config) :
-		new ObservableSetFilterer<T>(source, config);
-}
 
 export function filterSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): ISet<T> {
 	if (source.silent) {
 		return source.$filter(test, scope);
 	}
 	var result = new Set<T>();
-	result.own(new ObservableSetFilterer<T>(source, {
+	result.own(new SetFilterer<T>(source, {
 		target: result,
 		test: test,
 		scope: scope

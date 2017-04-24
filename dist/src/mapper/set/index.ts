@@ -21,23 +21,15 @@
 import {destroy} from '../../Core';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
-import ISetMapper from './ISetMapper';
-import ObservableSetMapper from './ObservableSetMapper';
 import Set from '../../Set';
 import SetMapper from './SetMapper';
-
-export function createSetMapper<T extends IClass, U extends IClass>(source: ISet<T>, config: ISetMapper.Config<T, U>): ISetMapper<T, U> {
-	return source.silent ?
-		new SetMapper<T, U>(source, config) :
-		new ObservableSetMapper<T, U>(source, config);
-}
 
 export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, map: (item: T) => U, scope?: any): ISet<U> {
 	if (source.silent) {
 		return source.$map(map, scope);
 	}
 	var result = new Set<U>();
-	result.own(new ObservableSetMapper<T, U>(source, {
+	result.own(new SetMapper<T, U>(source, {
 		target: result,
 		create: map,
 		scope: scope
@@ -50,7 +42,7 @@ export function mapDestroyableSet<T extends IClass, U extends IClass>(source: IS
 		return source.$map(create, scope).ownItems();
 	}
 	var result = new Set<U>();
-	result.own(new ObservableSetMapper<T, U>(source, {
+	result.own(new SetMapper<T, U>(source, {
 		target: result,
 		create: create,
 		destroy: destroy,

@@ -23,6 +23,9 @@ import IArray from '../../IArray';
 import IArrayOrderer from './IArrayOrderer';
 import IClass from '../../IClass';
 import ICollectionOrderer from '../ICollectionOrderer';
+import IndexCount from '../../IndexCount';
+import IndexItems from '../../IndexItems';
+import * as ArrayUtils from '../../ArrayUtils';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Array]].
@@ -38,5 +41,26 @@ export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOr
 	 */
 	constructor(source: IArray<T>, config: ICollectionOrderer.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.replaceEvent.bind(this._onReplace, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._splice(
+			ArrayUtils.toSet(spliceResult.removedItems),
+			ArrayUtils.toSet(spliceResult.addedItems));
+	}
+
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+		var index = this.target.keyOf(params.oldItem);
+		this.target.trySplice(
+			[new IndexCount(index, 1)],
+			[new IndexItems(this.target.length.get() - 1, [params.newItem])]);
+	}
+
+	private _onClear(params: IArray.ItemsEventParams<T>) {
+		this.target.removeItems(params.items);
 	}
 }

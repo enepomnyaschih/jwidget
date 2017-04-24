@@ -19,24 +19,15 @@
 */
 
 import MapIndexer from './MapIndexer';
-import IMapIndexer from './IMapIndexer';
-import ICollectionIndexer from '../ICollectionIndexer';
 import IMap from '../../IMap';
 import Map from '../../Map';
-import ObservableMapIndexer from './ObservableMapIndexer';
-
-export function createMapIndexer<T>(source: IMap<T>, config: ICollectionIndexer.Config<T>): IMapIndexer<T> {
-	return source.silent ?
-		new MapIndexer<T>(source, config) :
-		new ObservableMapIndexer<T>(source, config);
-}
 
 export function indexMap<T>(source: IMap<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
 	var result = new Map<T>();
-	result.own(new ObservableMapIndexer<T>(source, {
+	result.own(new MapIndexer<T>(source, {
 		target: result,
 		getKey: getKey,
 		scope: scope

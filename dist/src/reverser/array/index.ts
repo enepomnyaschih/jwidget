@@ -22,12 +22,9 @@ import ArrayReverser from './ArrayReverser';
 import IArray from '../../IArray';
 import IArrayReverser from './IArrayReverser';
 import List from '../../List';
-import ObservableArrayReverser from './ObservableArrayReverser';
 
 export function createArrayReverser<T>(source: IArray<T>, config: IArrayReverser.Config<T>): IArrayReverser<T> {
-	return source.silent ?
-		new ArrayReverser<T>(source, config) :
-		new ObservableArrayReverser<T>(source, config);
+	return new ArrayReverser<T>(source, config);
 }
 
 export function reverseArray<T>(source: IArray<T>): IArray<T> {
@@ -35,7 +32,7 @@ export function reverseArray<T>(source: IArray<T>): IArray<T> {
 		return source.$toReversed();
 	}
 	var result = new List<T>();
-	result.own(new ObservableArrayReverser<T>(source, {
+	result.own(new ArrayReverser<T>(source, {
 		target: result
 	}));
 	return result;

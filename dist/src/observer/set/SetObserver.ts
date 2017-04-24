@@ -38,5 +38,20 @@ export default class SetObserver<T extends IClass> extends AbstractCollectionObs
 	 */
 	constructor(source: ISet<T>, config: ICollectionObserver.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+		if (this._change) {
+			this.own(source.changeEvent.bind(this._onChange, this));
+		}
+	}
+
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._removeItems(spliceResult.removedItems);
+		this._addItems(spliceResult.addedItems);
+	}
+
+	private _onClear(params: ISet.ItemsEventParams<T>) {
+		this._doClearItems(params.items);
 	}
 }

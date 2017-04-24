@@ -20,6 +20,7 @@
 
 import {def} from '../../Core';
 import AbstractCollectionFilterer from '../AbstractCollectionFilterer';
+import Dictionary from '../../Dictionary';
 import IArray from '../../IArray';
 import IArrayFilterer from './IArrayFilterer';
 import IndexCount from '../../IndexCount';
@@ -56,66 +57,11 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(this.source.silent) : config.target;
 		this._splice([], [new IndexItems(0, this.source.items)]);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected destroyObject() {
-		this.target.tryClear();
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
-		super.destroyObject();
-	}
-
-	/**
-	 * @hidden
-	 */
-	protected _countFiltered(index: number, count: number): number {
-		var result = 0;
-		for (var i = 0; i < count; ++i) {
-			result += this._filtered[index + i];
-		}
-		return result;
-	}
-
-	/**
-	 * @hidden
-	 */
-	protected _splice(removedItemsList: IArray.IndexItems<T>[], addedItemsList: IArray.IndexItems<T>[]) {
-		var sourceIndex = 0;
-		var targetIndex = 0;
-		var removeParamsList = removedItemsList.map((indexItems) => {
-			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
-			var count = this._countFiltered(indexItems.index, indexItems.items.length);
-			var params = new IndexCount(targetIndex, count);
-			sourceIndex = indexItems.index + indexItems.items.length;
-			targetIndex += count;
-			return params;
-		});
-		ArrayUtils.trySplice(this._filtered, removedItemsList.map((x) => x.toIndexCount()), []);
-
-		var sourceIndex = 0;
-		var targetIndex = 0;
-		var addParamsList = addedItemsList.map((indexItems) => {
-			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
-			var items: T[] = [];
-			var filtered = indexItems.items.map((item) => {
-				if (this._test.call(this._scope, item) === false) {
-					return 0;
-				}
-				items.push(item);
-				return 1;
-			});
-			var params = new IndexItems(targetIndex, items);
-			ArrayUtils.tryAddAll(this._filtered, filtered, indexItems.index);
-			sourceIndex = indexItems.index + filtered.length;
-			targetIndex += items.length;
-			return params;
-		});
-
-		this.target.trySplice(removeParamsList, addParamsList);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.replaceEvent.bind(this._onReplace, this));
+		this.own(source.moveEvent.bind(this._onMove, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+		this.own(source.reorderEvent.bind(this._onReorder, this));
 	}
 
 	/**
@@ -236,5 +182,127 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 
 		this._filtered = newFiltered;
 		this.target.trySplice(removeParamsList, addParamsList);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected destroyObject() {
+		this.target.tryClear();
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		super.destroyObject();
+	}
+
+	/**
+	 * @hidden
+	 */
+	private _countFiltered(index: number, count: number): number {
+		var result = 0;
+		for (var i = 0; i < count; ++i) {
+			result += this._filtered[index + i];
+		}
+		return result;
+	}
+
+	/**
+	 * @hidden
+	 */
+	private _splice(removedItemsList: IArray.IndexItems<T>[], addedItemsList: IArray.IndexItems<T>[]) {
+		var sourceIndex = 0;
+		var targetIndex = 0;
+		var removeParamsList = removedItemsList.map((indexItems) => {
+			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
+			var count = this._countFiltered(indexItems.index, indexItems.items.length);
+			var params = new IndexCount(targetIndex, count);
+			sourceIndex = indexItems.index + indexItems.items.length;
+			targetIndex += count;
+			return params;
+		});
+		ArrayUtils.trySplice(this._filtered, removedItemsList.map((x) => x.toIndexCount()), []);
+
+		var sourceIndex = 0;
+		var targetIndex = 0;
+		var addParamsList = addedItemsList.map((indexItems) => {
+			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
+			var items: T[] = [];
+			var filtered = indexItems.items.map((item) => {
+				if (this._test.call(this._scope, item) === false) {
+					return 0;
+				}
+				items.push(item);
+				return 1;
+			});
+			var params = new IndexItems(targetIndex, items);
+			ArrayUtils.tryAddAll(this._filtered, filtered, indexItems.index);
+			sourceIndex = indexItems.index + filtered.length;
+			targetIndex += items.length;
+			return params;
+		});
+
+		this.target.trySplice(removeParamsList, addParamsList);
+	}
+
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._splice(spliceResult.removedItemsList, spliceResult.addedItemsList);
+	}
+
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+		var oldFiltered = this._filtered[params.index] !== 0;
+		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
+		if (!oldFiltered && !newFiltered) {
+			return;
+		}
+		var index = this._countFiltered(0, params.index);
+		this._filtered[params.index] = newFiltered ? 1 : 0;
+		if (!newFiltered) {
+			this.target.tryRemove(index);
+		} else if (!oldFiltered) {
+			this.target.tryAdd(params.newItem, index);
+		} else {
+			this.target.trySet(params.newItem, index);
+		}
+	}
+
+	private _onMove(params: IArray.MoveEventParams<T>) {
+		if (this._filtered[params.fromIndex] !== 0) {
+			var fromIndex: number, toIndex: number;
+			if (params.fromIndex < params.toIndex) {
+				fromIndex = this._countFiltered(0, params.fromIndex);
+				toIndex = fromIndex + this._countFiltered(params.fromIndex + 1, params.toIndex - params.fromIndex);
+			} else {
+				toIndex = this._countFiltered(0, params.toIndex);
+				fromIndex = toIndex + this._countFiltered(params.toIndex, params.fromIndex - params.toIndex);
+			}
+			this.target.tryMove(fromIndex, toIndex);
+		}
+		ArrayUtils.tryMove(this._filtered, params.fromIndex, params.toIndex);
+	}
+
+	private _onClear() {
+		this.target.tryClear();
+	}
+
+	private _onReorder(params: IArray.ReorderEventParams<T>) {
+		var targetIndex = 0;
+		var targetIndexWhichMovesToI: Dictionary<number> = {};
+		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
+			if (this._filtered[sourceIndex] !== 0) {
+				targetIndexWhichMovesToI[params.indexArray[sourceIndex]] = targetIndex++;
+			}
+		}
+		ArrayUtils.tryReorder(this._filtered, params.indexArray);
+
+		var targetIndex = 0;
+		var indexes = new Array<number>(this.target.length.get());
+		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
+			if (this._filtered[sourceIndex] !== 0) {
+				indexes[targetIndexWhichMovesToI[sourceIndex]] = targetIndex++;
+			}
+		}
+
+		this.target.tryReorder(indexes);
 	}
 }

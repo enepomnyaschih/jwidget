@@ -19,25 +19,16 @@
 */
 
 import MapCounter from './MapCounter';
-import ICollectionCounter from '../ICollectionCounter';
 import IMap from '../../IMap';
-import IMapCounter from './IMapCounter';
-import ObservableMapCounter from './ObservableMapCounter';
 import Property from '../../Property';
 import Watchable from '../../Watchable';
-
-export function createMapCounter<T>(source: IMap<T>, config: ICollectionCounter.Config<T>): IMapCounter<T> {
-	return source.silent ?
-		new MapCounter<T>(source, config) :
-		new ObservableMapCounter<T>(source, config);
-}
 
 export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (source.silent) {
 		return source.$count(test, scope);
 	}
 	var result = new Property(0);
-	result.own(new ObservableMapCounter<T>(source, {
+	result.own(new MapCounter<T>(source, {
 		target: result,
 		test: test,
 		scope: scope

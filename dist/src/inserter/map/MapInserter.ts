@@ -90,6 +90,9 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 		this._scope = config.scope || this;
 		this._clear = config.clear;
 		this._addItems(this.source.items);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.reindexEvent.bind(this._onReindex, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
 	/**
@@ -104,10 +107,7 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 		super.destroyObject();
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _addItems(items: Dictionary<T>) {
+	private _addItems(items: Dictionary<T>) {
 		if (!this._add) {
 			return;
 		}
@@ -116,10 +116,7 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 		}
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _removeItems(items: Dictionary<T>) {
+	private _removeItems(items: Dictionary<T>) {
 		if (!this._remove) {
 			return;
 		}
@@ -128,10 +125,7 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 		}
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _doClearItems(items: Dictionary<T>) {
+	private _doClearItems(items: Dictionary<T>) {
 		if (isDictionaryEmpty(items)) {
 			return;
 		}
@@ -140,5 +134,29 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 		} else {
 			this._removeItems(items);
 		}
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._removeItems(spliceResult.removedItems);
+		this._addItems(spliceResult.addedItems);
+	}
+
+	private _onReindex(params: IMap.ReindexEventParams<T>) {
+		var keyMap = params.keyMap;
+		for (var oldKey in keyMap) {
+			var newKey = keyMap[oldKey];
+			var item = this.source.get(newKey);
+			if (this._remove) {
+				this._remove.call(this._scope, oldKey, item);
+			}
+			if (this._add) {
+				this._add.call(this._scope, item, newKey);
+			}
+		}
+	}
+
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this._doClearItems(params.items);
 	}
 }

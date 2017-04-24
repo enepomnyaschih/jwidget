@@ -23,6 +23,7 @@ import Dictionary from '../../Dictionary';
 import IMap from '../../IMap';
 import IMapMapper from './IMapMapper';
 import Map from '../../Map';
+import * as MapUtils from '../../MapUtils';
 
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Map]].
@@ -48,6 +49,9 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<U>(this.source.silent) : config.target;
 		this.target.trySetAll(this._createItems(source.items));
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.reindexEvent.bind(this._onReindex, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
 	/**
@@ -61,10 +65,7 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 		super.destroyObject();
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _createItems(datas: Dictionary<T>): Dictionary<U> {
+	private _createItems(datas: Dictionary<T>): Dictionary<U> {
 		var items: Dictionary<U> = {};
 		for (var key in datas) {
 			items[key] = this._create.call(this._scope, datas[key]);
@@ -72,15 +73,33 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 		return items;
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _destroyItems(items: Dictionary<U>, datas: Dictionary<T>) {
+	private _destroyItems(items: Dictionary<U>, datas: Dictionary<T>) {
 		if (this._destroy === undefined) {
 			return;
 		}
 		for (var key in items) {
 			this._destroy.call(this._scope, items[key], datas[key]);
 		}
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var sourceResult = params.spliceResult;
+		var removedDatas = sourceResult.removedItems;
+		var addedDatas = sourceResult.addedItems;
+		var targetResult = this.target.trySplice(
+			MapUtils.getRemovedKeys(removedDatas, addedDatas),
+			this._createItems(addedDatas));
+		if (targetResult !== undefined) {
+			this._destroyItems(targetResult.removedItems, removedDatas);
+		}
+	}
+
+	private _onReindex(params: IMap.ReindexEventParams<T>) {
+		this.target.tryReindex(params.keyMap);
+	}
+
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		var datas = params.items;
+		this._destroyItems(this.target.tryRemoveAll(Object.keys(datas)), datas);
 	}
 }

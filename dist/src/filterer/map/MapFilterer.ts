@@ -22,6 +22,7 @@ import AbstractCollectionFilterer from '../AbstractCollectionFilterer';
 import IMap from '../../IMap';
 import IMapFilterer from './IMapFilterer';
 import Map from '../../Map';
+import * as MapUtils from '../../MapUtils';
 
 /**
  * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Map]].
@@ -47,6 +48,9 @@ export default class MapFilterer<T> extends AbstractCollectionFilterer<T> implem
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<T>(this.source.silent) : config.target;
 		this.target.trySetAll(source.filter(this._test, this._scope));
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.reindexEvent.bind(this._onReindex, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
 	/**
@@ -58,5 +62,20 @@ export default class MapFilterer<T> extends AbstractCollectionFilterer<T> implem
 			this.target.destroy();
 		}
 		super.destroyObject();
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(
+			Object.keys(spliceResult.removedItems),
+			MapUtils.filter(spliceResult.addedItems, this._test, this._scope));
+	}
+
+	private _onReindex(params: IMap.ReindexEventParams<T>) {
+		this.target.tryReindex(params.keyMap);
+	}
+
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(Object.keys(params.items));
 	}
 }

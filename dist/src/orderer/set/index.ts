@@ -20,25 +20,16 @@
 
 import IArray from '../../IArray';
 import IClass from '../../IClass';
-import ICollectionOrderer from '../ICollectionOrderer';
 import ISet from '../../ISet';
-import ISetOrderer from './ISetOrderer';
 import List from '../../List';
-import ObservableSetOrderer from './ObservableSetOrderer';
 import SetOrderer from './SetOrderer';
-
-export function createSetOrderer<T extends IClass>(source: ISet<T>, config: ICollectionOrderer.Config<T>): ISetOrderer<T> {
-	return source.silent ?
-		new SetOrderer<T>(source, config) :
-		new ObservableSetOrderer<T>(source, config);
-}
 
 export function setToArray<T extends IClass>(source: ISet<T>): IArray<T> {
 	if (source.silent) {
 		return source.$toArray();
 	}
 	var result = new List<T>();
-	result.own(new ObservableSetOrderer<T>(source, {
+	result.own(new SetOrderer<T>(source, {
 		target: result
 	}));
 	return result;

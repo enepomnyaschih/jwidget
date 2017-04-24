@@ -54,6 +54,8 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<U>(this.source.silent) : config.target;
 		this.target.tryAddAll(this._createItems(source.toArray()));
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
 	/**
@@ -69,19 +71,13 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 		super.destroyObject();
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _getItems(datas: T[]): U[] {
+	private _getItems(datas: T[]): U[] {
 		return datas.map((data) => {
 			return this._items[data.iid];
 		}, this);
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _createItems(datas: T[]): U[] {
+	private _createItems(datas: T[]): U[] {
 		var items: U[] = [];
 		for (var i = 0, l = datas.length; i < l; ++i) {
 			var data = datas[i];
@@ -92,10 +88,7 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 		return items;
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _destroyItems(datas: T[]) {
+	private _destroyItems(datas: T[]) {
 		if (this._destroy === undefined) {
 			return;
 		}
@@ -106,5 +99,19 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 			delete this._items[iid];
 			this._destroy.call(this._scope || this, item, data);
 		}
+	}
+
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		var removedDatas = spliceResult.removedItems;
+		var addedDatas = spliceResult.addedItems;
+		this.target.trySplice(this._getItems(removedDatas), this._createItems(addedDatas));
+		this._destroyItems(removedDatas);
+	}
+
+	private _onClear(params: ISet.ItemsEventParams<T>) {
+		var datas = params.items;
+		this.target.tryRemoveAll(this._getItems(datas));
+		this._destroyItems(datas);
 	}
 }

@@ -38,5 +38,21 @@ export default class ArrayLister<T extends IClass> extends AbstractCollectionLis
 	 */
 	constructor(source: IArray<T>, config: ICollectionLister.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.replaceEvent.bind(this._onReplace, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
+	}
+
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+		this.target.trySplice([params.oldItem], [params.newItem]);
+	}
+
+	private _onClear(params: IArray.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(params.items);
 	}
 }

@@ -21,24 +21,15 @@
 import SetIndexer from './SetIndexer';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
-import ISetIndexer from './ISetIndexer';
-import ICollectionIndexer from '../ICollectionIndexer';
 import IMap from '../../IMap';
 import Map from '../../Map';
-import ObservableSetIndexer from './ObservableSetIndexer';
-
-export function createSetIndexer<T extends IClass>(source: ISet<T>, config: ICollectionIndexer.Config<T>): ISetIndexer<T> {
-	return source.silent ?
-		new SetIndexer<T>(source, config) :
-		new ObservableSetIndexer<T>(source, config);
-}
 
 export function indexSet<T extends IClass>(source: ISet<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
 	var result = new Map<T>();
-	result.own(new ObservableSetIndexer<T>(source, {
+	result.own(new SetIndexer<T>(source, {
 		target: result,
 		getKey: getKey,
 		scope: scope

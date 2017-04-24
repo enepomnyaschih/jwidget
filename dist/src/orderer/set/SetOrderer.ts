@@ -23,6 +23,7 @@ import IClass from '../../IClass';
 import ICollectionOrderer from '../ICollectionOrderer';
 import ISet from '../../ISet';
 import ISetOrderer from './ISetOrderer';
+import * as ArrayUtils from '../../ArrayUtils';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Set]].
@@ -38,5 +39,18 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 	 */
 	constructor(source: ISet<T>, config: ICollectionOrderer.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._splice(
+			ArrayUtils.toSet(spliceResult.removedItems),
+			ArrayUtils.toSet(spliceResult.addedItems));
+	}
+
+	private _onClear(params: ISet.ItemsEventParams<T>) {
+		this.target.removeItems(params.items);
 	}
 }

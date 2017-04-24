@@ -22,6 +22,7 @@ import AbstractCollectionIndexer from '../AbstractCollectionIndexer';
 import ICollectionIndexer from '../ICollectionIndexer';
 import IMap from '../../IMap';
 import IMapIndexer from './IMapIndexer';
+import * as MapUtils from '../../MapUtils';
 
 /**
  * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Map]].
@@ -37,5 +38,19 @@ export default class MapIndexer<T> extends AbstractCollectionIndexer<T> implemen
 	 */
 	constructor(source: IMap<T>, config: ICollectionIndexer.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(
+			this._keys(MapUtils.toArray(spliceResult.removedItems)),
+			this._index(MapUtils.toArray(spliceResult.addedItems)));
+	}
+
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(
+			this._keys(MapUtils.toArray(params.items)));
 	}
 }

@@ -20,25 +20,16 @@
 
 import SetCounter from './SetCounter';
 import IClass from '../../IClass';
-import ICollectionCounter from '../ICollectionCounter';
 import ISet from '../../ISet';
-import ISetCounter from './ISetCounter';
-import ObservableSetCounter from './ObservableSetCounter';
 import Property from '../../Property';
 import Watchable from '../../Watchable';
-
-export function createSetCounter<T extends IClass>(source: ISet<T>, config: ICollectionCounter.Config<T>): ISetCounter<T> {
-	return source.silent ?
-		new SetCounter<T>(source, config) :
-		new ObservableSetCounter<T>(source, config);
-}
 
 export function countSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (source.silent) {
 		return source.$count(test, scope);
 	}
 	var result = new Property(0);
-	result.own(new ObservableSetCounter<T>(source, {
+	result.own(new SetCounter<T>(source, {
 		target: result,
 		test: test,
 		scope: scope

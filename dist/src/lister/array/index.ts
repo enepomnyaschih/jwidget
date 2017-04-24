@@ -20,25 +20,16 @@
 
 import ArrayLister from './ArrayLister';
 import IArray from '../../IArray';
-import IArrayLister from './IArrayLister';
 import IClass from '../../IClass';
-import ICollectionLister from '../ICollectionLister';
 import ISet from '../../ISet';
-import ObservableArrayLister from './ObservableArrayLister';
 import Set from '../../Set';
-
-export function createArrayLister<T extends IClass>(source: IArray<T>, config: ICollectionLister.Config<T>): IArrayLister<T> {
-	return source.silent ?
-		new ArrayLister<T>(source, config) :
-		new ObservableArrayLister<T>(source, config);
-}
 
 export function arrayToSet<T extends IClass>(source: IArray<T>): ISet<T> {
 	if (source.silent) {
 		return source.$toSet();
 	}
 	var result = new Set<T>();
-	result.own(new ObservableArrayLister<T>(source, {
+	result.own(new ArrayLister<T>(source, {
 		target: result
 	}));
 	return result;

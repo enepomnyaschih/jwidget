@@ -22,10 +22,7 @@ import ICollectionObserver from '../ICollectionObserver';
 import IMap from '../../IMap';
 import IMapObserver from './IMapObserver';
 import MapObserver from './MapObserver';
-import ObservableMapObserver from './ObservableMapObserver';
 
 export function createMapObserver<T>(source: IMap<T>, config: ICollectionObserver.Config<T>): IMapObserver<T> {
-	return source.silent ?
-		new MapObserver<T>(source, config) :
-		new ObservableMapObserver<T>(source, config);
+	return new MapObserver<T>(source, config);
 }

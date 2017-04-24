@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {createArrayMapper} from '../mapper/array';
+import ArrayMapper from '../mapper/array/ArrayMapper';
 import Class from '../Class';
 import Component from '../Component';
 import ComponentInserter from './ComponentInserter';
@@ -34,7 +34,7 @@ export default class ComponentArray extends Class {
 		super();
 		SetUtils.add(parent._arrays, this);
 
-		var mapper = this.own(createArrayMapper<Component, Component>(source, {
+		var mapper = this.own(new ArrayMapper<Component, Component>(source, {
 			create: (child) => {
 				this.parent._initChild(child);
 				return child;

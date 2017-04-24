@@ -18,9 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {createArrayMapper, mapArray, mapDestroyableArray} from './array';
-import {createMapMapper, mapMap, mapDestroyableMap} from './map';
-import {createSetMapper, mapSet, mapDestroyableSet} from './set';
+import {mapArray, mapDestroyableArray} from './array';
+import {mapMap, mapDestroyableMap} from './map';
+import {mapSet, mapDestroyableSet} from './set';
+import ArrayMapper from './array/ArrayMapper';
+import MapMapper from './map/MapMapper';
+import SetMapper from './set/SetMapper';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
@@ -29,9 +32,9 @@ import ICollection from '../ICollection';
 import ICollectionMapper from './ICollectionMapper';
 
 export function createMapper<T extends IClass, U extends IClass>(source: ICollection<T>, config: ICollectionMapper.Config<T, U>): ICollectionMapper<U> {
-	return (source instanceof List) ? createArrayMapper(source, config) :
-		(source instanceof Map) ? createMapMapper(source, config) :
-		(source instanceof Set) ? createSetMapper(source, config) : null;
+	return (source instanceof List) ? new ArrayMapper(source, config) :
+		(source instanceof Map) ? new MapMapper(source, config) :
+		(source instanceof Set) ? new SetMapper(source, config) : null;
 }
 
 export function mapCollection<T extends IClass, U extends IClass>(source: ICollection<T>, map: (item: T) => U, scope?: any): ICollection<U> {

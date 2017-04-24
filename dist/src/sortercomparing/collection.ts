@@ -18,9 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {createArraySorterComparing, sortArrayComparing} from './array';
-import {createMapSorterComparing, sortMapComparing} from './map';
-import {createSetSorterComparing, sortSetComparing} from './set';
+import {sortArrayComparing} from './array';
+import {sortMapComparing} from './map';
+import {sortSetComparing} from './set';
+import ArraySorterComparing from './array/ArraySorterComparing';
+import MapSorterComparing from './map/MapSorterComparing';
+import SetSorterComparing from './set/SetSorterComparing';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
@@ -29,9 +32,9 @@ import ICollectionSorterComparing from './ICollectionSorterComparing';
 import IArray from '../IArray';
 
 export function createSorterComparing<T>(source: ICollection<T>, config: ICollectionSorterComparing.Config<T>): ICollectionSorterComparing<T> {
-	return (source instanceof List) ? createArraySorterComparing(source, config) :
-		(source instanceof Map) ? createMapSorterComparing(source, config) :
-		(source instanceof Set) ? createSetSorterComparing(source, config) : null;
+	return (source instanceof List) ? new ArraySorterComparing(source, config) :
+		(source instanceof Map) ? new MapSorterComparing(source, config) :
+		(source instanceof Set) ? new SetSorterComparing(source, config) : null;
 }
 
 export function collectionToArray<T>(source: ICollection<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {

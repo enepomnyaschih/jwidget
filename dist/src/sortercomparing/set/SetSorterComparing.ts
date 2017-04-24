@@ -38,5 +38,16 @@ export default class SetSorterComparing<T extends IClass> extends AbstractCollec
 	 */
 	constructor(source: ISet<T>, config: ICollectionSorterComparing.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._splice(spliceResult.removedItems, spliceResult.addedItems);
+	}
+
+	private _onClear(params: ISet.ItemsEventParams<T>) {
+		this._splice(params.items, []);
 	}
 }

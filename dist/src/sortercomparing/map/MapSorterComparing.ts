@@ -22,6 +22,7 @@ import AbstractCollectionSorterComparing from '../AbstractCollectionSorterCompar
 import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import IMap from '../../IMap';
 import IMapSorterComparing from './IMapSorterComparing';
+import * as MapUtils from '../../MapUtils';
 
 /**
  * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Map]].
@@ -37,5 +38,18 @@ export default class MapSorterComparing<T> extends AbstractCollectionSorterCompa
 	 */
 	constructor(source: IMap<T>, config: ICollectionSorterComparing.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._splice(
+			MapUtils.toArray(spliceResult.removedItems),
+			MapUtils.toArray(spliceResult.addedItems));
+	}
+
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this._splice(MapUtils.toArray(params.items), []);
 	}
 }

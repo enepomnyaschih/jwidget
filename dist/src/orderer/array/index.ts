@@ -20,24 +20,15 @@
 
 import ArrayOrderer from './ArrayOrderer';
 import IArray from '../../IArray';
-import IArrayOrderer from './IArrayOrderer';
 import IClass from '../../IClass';
-import ICollectionOrderer from '../ICollectionOrderer';
 import List from '../../List';
-import ObservableArrayOrderer from './ObservableArrayOrderer';
-
-export function createArrayOrderer<T extends IClass>(source: IArray<T>, config: ICollectionOrderer.Config<T>): IArrayOrderer<T> {
-	return source.silent ?
-		new ArrayOrderer<T>(source, config) :
-		new ObservableArrayOrderer<T>(source, config);
-}
 
 export function arrayToArray<T extends IClass>(source: IArray<T>): IArray<T> {
 	if (source.silent) {
 		return source.$toArray();
 	}
 	var result = new List<T>();
-	result.own(new ObservableArrayOrderer<T>(source, {
+	result.own(new ArrayOrderer<T>(source, {
 		target: result
 	}));
 	return result;

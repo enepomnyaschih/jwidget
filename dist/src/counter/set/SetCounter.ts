@@ -23,6 +23,7 @@ import IClass from '../../IClass';
 import ICollectionCounter from '../ICollectionCounter';
 import ISet from '../../ISet';
 import ISetCounter from './ISetCounter';
+import * as ArrayUtils from '../../ArrayUtils';
 
 /**
  * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Set]].
@@ -38,5 +39,18 @@ export default class SetCounter<T extends IClass> extends AbstractCollectionCoun
 	 */
 	constructor(source: ISet<T>, config: ICollectionCounter.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._target.set(this._target.get() -
+			ArrayUtils.count(spliceResult.removedItems, this._test, this._scope) +
+			ArrayUtils.count(spliceResult.addedItems, this._test, this._scope));
+	}
+
+	private _onClear() {
+		this._target.set(0);
 	}
 }

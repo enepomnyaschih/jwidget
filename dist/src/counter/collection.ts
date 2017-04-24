@@ -18,9 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {createArrayCounter, countArray} from './array';
-import {createMapCounter, countMap} from './map';
-import {createSetCounter, countSet} from './set';
+import {countArray} from './array';
+import {countMap} from './map';
+import {countSet} from './set';
+import ArrayCounter from './array/ArrayCounter';
+import MapCounter from './map/MapCounter';
+import SetCounter from './set/SetCounter';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
@@ -29,9 +32,9 @@ import ICollectionCounter from './ICollectionCounter';
 import Watchable from '../Watchable';
 
 export function createCounter<T>(source: ICollection<T>, config: ICollectionCounter.Config<T>): ICollectionCounter<T> {
-	return (source instanceof List) ? createArrayCounter(source, config) :
-		(source instanceof Map) ? createMapCounter(source, config) :
-		(source instanceof Set) ? createSetCounter(source, config) : null;
+	return (source instanceof List) ? new ArrayCounter(source, config) :
+		(source instanceof Map) ? new MapCounter(source, config) :
+		(source instanceof Set) ? new SetCounter(source, config) : null;
 }
 
 export function countCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {

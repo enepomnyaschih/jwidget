@@ -19,25 +19,16 @@
 */
 
 import IArray from '../../IArray';
-import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import IMap from '../../IMap';
-import IMapSorterComparing from './IMapSorterComparing';
 import MapSorterComparing from './MapSorterComparing';
 import List from '../../List';
-import ObservableMapSorterComparing from './ObservableMapSorterComparing';
-
-export function createMapSorterComparing<T>(source: IMap<T>, config: ICollectionSorterComparing.Config<T>): IMapSorterComparing<T> {
-	return source.silent ?
-		new MapSorterComparing<T>(source, config) :
-		new ObservableMapSorterComparing<T>(source, config);
-}
 
 export function sortMapComparing<T>(source: IMap<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}
 	var result = new List<T>();
-	result.own(new ObservableMapSorterComparing<T>(source, {
+	result.own(new MapSorterComparing<T>(source, {
 		target: result,
 		compare: compare,
 		scope: scope

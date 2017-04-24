@@ -21,23 +21,15 @@
 import {destroy} from '../../Core';
 import Destroyable from '../../Destroyable';
 import IMap from '../../IMap';
-import IMapMapper from './IMapMapper';
 import Map from '../../Map';
 import MapMapper from './MapMapper';
-import ObservableMapMapper from './ObservableMapMapper';
-
-export function createMapMapper<T, U>(source: IMap<T>, config: IMapMapper.Config<T, U>): IMapMapper<T, U> {
-	return source.silent ?
-		new MapMapper<T, U>(source, config) :
-		new ObservableMapMapper<T, U>(source, config);
-}
 
 export function mapMap<T, U>(source: IMap<T>, map: (item: T) => U, scope?: any): IMap<U> {
 	if (source.silent) {
 		return source.$map(map, scope);
 	}
 	var result = new Map<U>();
-	result.own(new ObservableMapMapper<T, U>(source, {
+	result.own(new MapMapper<T, U>(source, {
 		target: result,
 		create: map,
 		scope: scope
@@ -50,7 +42,7 @@ export function mapDestroyableMap<T, U extends Destroyable>(source: IMap<T>, cre
 		return source.$map(create, scope).ownItems();
 	}
 	var result = new Map<U>();
-	result.own(new ObservableMapMapper<T, U>(source, {
+	result.own(new MapMapper<T, U>(source, {
 		target: result,
 		create: create,
 		destroy: destroy,

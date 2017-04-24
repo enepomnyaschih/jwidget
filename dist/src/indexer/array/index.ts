@@ -20,24 +20,15 @@
 
 import ArrayIndexer from './ArrayIndexer';
 import IArray from '../../IArray';
-import IArrayIndexer from './IArrayIndexer';
-import ICollectionIndexer from '../ICollectionIndexer';
 import IMap from '../../IMap';
 import Map from '../../Map';
-import ObservableArrayIndexer from './ObservableArrayIndexer';
-
-export function createArrayIndexer<T>(source: IArray<T>, config: ICollectionIndexer.Config<T>): IArrayIndexer<T> {
-	return source.silent ?
-		new ArrayIndexer<T>(source, config) :
-		new ObservableArrayIndexer<T>(source, config);
-}
 
 export function indexArray<T>(source: IArray<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
 	var result = new Map<T>();
-	result.own(new ObservableArrayIndexer<T>(source, {
+	result.own(new ArrayIndexer<T>(source, {
 		target: result,
 		getKey: getKey,
 		scope: scope

@@ -18,9 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {createArrayLister, arrayToSet} from './array';
-import {createMapLister, mapToSet} from './map';
-import {createSetLister, setToSet} from './set';
+import {arrayToSet} from './array';
+import {mapToSet} from './map';
+import {setToSet} from './set';
+import ArrayLister from './array/ArrayLister';
+import MapLister from './map/MapLister';
+import SetLister from './set/SetLister';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
@@ -30,9 +33,9 @@ import ICollectionLister from './ICollectionLister';
 import ISet from '../ISet';
 
 export function createLister<T extends IClass>(source: ICollection<T>, config: ICollectionLister.Config<T>): ICollectionLister<T> {
-	return (source instanceof List) ? createArrayLister(source, config) :
-		(source instanceof Map) ? createMapLister(source, config) :
-		(source instanceof Set) ? createSetLister(source, config) : null;
+	return (source instanceof List) ? new ArrayLister(source, config) :
+		(source instanceof Map) ? new MapLister(source, config) :
+		(source instanceof Set) ? new SetLister(source, config) : null;
 }
 
 export function collectionToSet<T extends IClass>(source: ICollection<T>): ISet<T> {

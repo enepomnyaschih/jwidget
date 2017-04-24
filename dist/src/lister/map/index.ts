@@ -20,25 +20,16 @@
 
 import MapLister from './MapLister';
 import IClass from '../../IClass';
-import ICollectionLister from '../ICollectionLister';
 import IMap from '../../IMap';
-import IMapLister from './IMapLister';
 import ISet from '../../ISet';
-import ObservableMapLister from './ObservableMapLister';
 import Set from '../../Set';
-
-export function createMapLister<T extends IClass>(source: IMap<T>, config: ICollectionLister.Config<T>): IMapLister<T> {
-	return source.silent ?
-		new MapLister<T>(source, config) :
-		new ObservableMapLister<T>(source, config);
-}
 
 export function mapToSet<T extends IClass>(source: IMap<T>): ISet<T> {
 	if (source.silent) {
 		return source.$toSet();
 	}
 	var result = new Set<T>();
-	result.own(new ObservableMapLister<T>(source, {
+	result.own(new MapLister<T>(source, {
 		target: result
 	}));
 	return result;

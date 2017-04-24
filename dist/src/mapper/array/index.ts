@@ -22,22 +22,14 @@ import {destroy} from '../../Core';
 import ArrayMapper from './ArrayMapper';
 import Destroyable from '../../Destroyable';
 import IArray from '../../IArray';
-import IArrayMapper from './IArrayMapper';
 import List from '../../List';
-import ObservableArrayMapper from './ObservableArrayMapper';
-
-export function createArrayMapper<T, U>(source: IArray<T>, config: IArrayMapper.Config<T, U>): IArrayMapper<T, U> {
-	return source.silent ?
-		new ArrayMapper<T, U>(source, config) :
-		new ObservableArrayMapper<T, U>(source, config);
-}
 
 export function mapArray<T, U>(source: IArray<T>, map: (item: T) => U, scope?: any): IArray<U> {
 	if (source.silent) {
 		return source.$map(map, scope);
 	}
 	var result = new List<U>();
-	result.own(new ObservableArrayMapper<T, U>(source, {
+	result.own(new ArrayMapper<T, U>(source, {
 		target: result,
 		create: map,
 		scope: scope
@@ -50,7 +42,7 @@ export function mapDestroyableArray<T, U extends Destroyable>(source: IArray<T>,
 		return source.$map(create, scope).ownItems();
 	}
 	var result = new List<U>();
-	result.own(new ObservableArrayMapper<T, U>(source, {
+	result.own(new ArrayMapper<T, U>(source, {
 		target: result,
 		create: create,
 		destroy: destroy,

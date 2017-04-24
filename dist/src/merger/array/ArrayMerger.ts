@@ -24,7 +24,10 @@ import Class from '../../Class';
 import IArray from '../../IArray';
 import IArrayMerger from './IArrayMerger';
 import IClass from '../../IClass';
+import IndexCount from '../../IndexCount';
+import IndexItems from '../../IndexItems';
 import List from '../../List';
+import * as ArrayUtils from '../../ArrayUtils';
 
 /**
  * Arrays merger. Builds array consisting of all source collections items in the same order.
@@ -113,9 +116,14 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 	constructor(readonly source: IArray<IArray<T>>, config: IArrayMerger.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? this.createTarget(source) : config.target;
-		this._bunches = mapDestroyableArray(source, (bunch) => this.createMergerBunch(bunch));
+		this.target = this._targetCreated ? this._createTarget(source) : config.target;
+		this._bunches = mapDestroyableArray(source, (bunch) => new Bunch(this.source, this.target, bunch));
 		this.target.tryAddAll(this._getAllItems());
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.replaceEvent.bind(this._onReplace, this));
+		this.own(source.moveEvent.bind(this._onMove, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+		this.own(source.reorderEvent.bind(this._onReorder, this));
 	}
 
 	/**
@@ -131,17 +139,15 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 		super.destroyObject();
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _getAllItems(): T[] {
+	private _createTarget(source: IArray<IArray<T>>): IArray<T> {
+		return new List<T>(source.silent && source.every((item) => item.silent));
+	}
+
+	private _getAllItems(): T[] {
 		return this._merge(this.source.items);
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _merge(bunches: IArray<T>[]): T[] {
+	private _merge(bunches: IArray<T>[]): T[] {
 		var items = new Array<T>(this._count(bunches));
 		var iItems = 0;
 		for (var i = 0, l = bunches.length; i < l; ++i) {
@@ -153,10 +159,7 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 		return items;
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _count(bunches: IArray<T>[], index?: number, length?: number): number {
+	private _count(bunches: IArray<T>[], index?: number, length?: number): number {
 		if (index === undefined) {
 			index = 0;
 		}
@@ -170,11 +173,97 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 		return count;
 	}
 
-	private createTarget(source: IArray<IArray<T>>): IArray<T> {
-		return new List<T>(source.silent && source.every((item) => item.silent));
+	private _getIndexes(bunches: IArray<T>[]): number[] {
+		var currentIndex = 0;
+		var indexes = bunches.map(function (bunch) {
+			var index = currentIndex;
+			currentIndex += bunch.length.get();
+			return index;
+		}, this);
+		indexes.push(currentIndex);
+		return indexes;
 	}
 
-	private createMergerBunch(item: IArray<T>): IClass {
-		return item.silent ? new Class() : new Bunch(this.source, this.target, item);
+	private _onSplice(params: IArray.SpliceEventParams<IArray<T>>) {
+		var spliceResult = params.spliceResult;
+		var indexes = this._getIndexes(spliceResult.oldItems);
+		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
+			return new IndexCount(indexes[indexItems.index], this._count(indexItems.items));
+		}, this);
+		ArrayUtils.backEvery(spliceResult.removedItemsList, (indexItems) => {
+			indexes.splice(indexItems.index, indexItems.items.length);
+			var count = this._count(indexItems.items);
+			for (var i = indexItems.index; i < indexes.length; ++i) {
+				indexes[i] -= count;
+			}
+			return true;
+		}, this);
+		var addParamsList = spliceResult.addedItemsList.map((indexItems) => {
+			return new IndexItems<T>(indexes[indexItems.index], this._merge(indexItems.items));
+		}, this);
+		this.target.trySplice(removeParamsList, addParamsList);
+	}
+
+	private _onReplace(params: IArray.ReplaceEventParams<IArray<T>>) {
+		var index = this._count(this.source.items, 0, params.index);
+		this.target.trySplice(
+			[new IndexCount(index, params.oldItem.length.get())],
+			[new IndexItems<T>(index, params.newItem.items)]);
+	}
+
+	private _onMove(params: IArray.MoveEventParams<IArray<T>>) {
+		var count = params.item.length.get();
+		var indexes = new Array<number>(this.target.length.get());
+		var currentIndex = 0;
+
+		function shiftBunch(bunchLength: number, shift: number) {
+			for (var j = 0; j < bunchLength; ++j) {
+				indexes[currentIndex] = currentIndex + shift;
+				++currentIndex;
+			}
+		}
+
+		for (var i = 0, l = Math.min(params.fromIndex, params.toIndex); i < l; ++i) {
+			shiftBunch(this.source.get(i).length.get(), 0);
+		}
+		if (params.fromIndex <= params.toIndex) {
+			// [1], [2], [3], [4], [5]		[2] move to 3
+			// [1], [3], [4], [2], [5]
+			shiftBunch(count, this._count(this.source.items, params.fromIndex, params.toIndex - params.fromIndex));
+			for (var i = params.fromIndex; i < params.toIndex; ++i) {
+				shiftBunch(this.source.get(i).length.get(), -count);
+			}
+		} else {
+			// [1], [2], [3], [4], [5]		[4] move to 1
+			// [1], [4], [2], [3], [5]
+			for (var i = params.toIndex + 1; i <= params.fromIndex; ++i) {
+				shiftBunch(this.source.get(i).length.get(), count);
+			}
+			shiftBunch(count, -this._count(this.source.items, params.toIndex + 1, params.fromIndex - params.toIndex));
+		}
+		for (var i = Math.max(params.fromIndex, params.toIndex) + 1, l = this.source.length.get(); i < l; ++i) {
+			shiftBunch(this.source.get(i).length.get(), 0);
+		}
+
+		this.target.tryReorder(indexes);
+	}
+
+	private _onClear() {
+		this.target.tryClear();
+	}
+
+	private _onReorder(params: IArray.ReorderEventParams<IArray<T>>) {
+		var oldIndexes = this._getIndexes(params.items);
+		var newIndexes = this._getIndexes(this.source.items);
+		var indexes = new Array<number>(this.target.length.get());
+		for (var i = 0, l = params.items.length; i < l; ++i) {
+			var bunch = params.items[i];
+			var oldIndex = oldIndexes[i];
+			var newIndex = newIndexes[params.indexArray[i]];
+			for (var j = 0, m = bunch.length.get(); j < m; ++j) {
+				indexes[oldIndex + j] = newIndex + j;
+			}
+		}
+		this.target.tryReorder(indexes);
 	}
 }

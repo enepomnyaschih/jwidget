@@ -38,5 +38,19 @@ export default class SetIndexer<T extends IClass> extends AbstractCollectionInde
 	 */
 	constructor(source: ISet<T>, config: ICollectionIndexer.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(
+			this._keys(spliceResult.removedItems),
+			this._index(spliceResult.addedItems));
+	}
+
+	private _onClear(params: ISet.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(
+			this._keys(params.items));
 	}
 }

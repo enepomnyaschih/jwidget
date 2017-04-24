@@ -20,23 +20,14 @@
 
 import ArraySorterComparing from './ArraySorterComparing';
 import IArray from '../../IArray';
-import IArraySorterComparing from './IArraySorterComparing';
-import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import List from '../../List';
-import ObservableArraySorterComparing from './ObservableArraySorterComparing';
-
-export function createArraySorterComparing<T>(source: IArray<T>, config: ICollectionSorterComparing.Config<T>): IArraySorterComparing<T> {
-	return source.silent ?
-		new ArraySorterComparing<T>(source, config) :
-		new ObservableArraySorterComparing<T>(source, config);
-}
 
 export function sortArrayComparing<T>(source: IArray<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}
 	var result = new List<T>();
-	result.own(new ObservableArraySorterComparing<T>(source, {
+	result.own(new ArraySorterComparing<T>(source, {
 		target: result,
 		compare: compare,
 		scope: scope

@@ -37,5 +37,26 @@ export default class ArrayIndexer<T> extends AbstractCollectionIndexer<T> implem
 	 */
 	constructor(source: IArray<T>, config: ICollectionIndexer.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.replaceEvent.bind(this._onReplace, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(
+			this._keys(spliceResult.removedItems),
+			this._index(spliceResult.addedItems));
+	}
+
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+		this.target.trySplice(
+			this._keys([params.oldItem]),
+			this._index([params.newItem]));
+	}
+
+	private _onClear(params: IArray.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(
+			this._keys(params.items));
 	}
 }

@@ -18,9 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {createArrayOrderer, arrayToArray} from './array';
-import {createMapOrderer, mapToArray} from './map';
-import {createSetOrderer, setToArray} from './set';
+import {arrayToArray} from './array';
+import {mapToArray} from './map';
+import {setToArray} from './set';
+import ArrayOrderer from './array/ArrayOrderer';
+import MapOrderer from './map/MapOrderer';
+import SetOrderer from './set/SetOrderer';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
@@ -30,9 +33,9 @@ import ICollectionOrderer from './ICollectionOrderer';
 import IArray from '../IArray';
 
 export function createOrderer<T extends IClass>(source: ICollection<T>, config: ICollectionOrderer.Config<T>): ICollectionOrderer<T> {
-	return (source instanceof List) ? createArrayOrderer(source, config) :
-		(source instanceof Map) ? createMapOrderer(source, config) :
-		(source instanceof Set) ? createSetOrderer(source, config) : null;
+	return (source instanceof List) ? new ArrayOrderer(source, config) :
+		(source instanceof Map) ? new MapOrderer(source, config) :
+		(source instanceof Set) ? new SetOrderer(source, config) : null;
 }
 
 export function collectionToArray<T extends IClass>(source: ICollection<T>): IArray<T> {

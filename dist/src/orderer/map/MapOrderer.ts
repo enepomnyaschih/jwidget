@@ -23,6 +23,7 @@ import IClass from '../../IClass';
 import ICollectionOrderer from '../ICollectionOrderer';
 import IMap from '../../IMap';
 import IMapOrderer from './IMapOrderer';
+import * as MapUtils from '../../MapUtils';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Map]].
@@ -38,5 +39,19 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	 */
 	constructor(source: IMap<T>, config: ICollectionOrderer.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._splice(
+			MapUtils.toSet(spliceResult.removedItems),
+			MapUtils.toSet(spliceResult.addedItems));
+	}
+
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this.target.removeItems(
+			MapUtils.toArray(params.items));
 	}
 }

@@ -20,25 +20,16 @@
 
 import IArray from '../../IArray';
 import IClass from '../../IClass';
-import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import ISet from '../../ISet';
-import ISetSorterComparing from './ISetSorterComparing';
 import List from '../../List';
-import ObservableSetSorterComparing from './ObservableSetSorterComparing';
 import SetSorterComparing from './SetSorterComparing';
-
-export function createSetSorterComparing<T extends IClass>(source: ISet<T>, config: ICollectionSorterComparing.Config<T>): ISetSorterComparing<T> {
-	return source.silent ?
-		new SetSorterComparing<T>(source, config) :
-		new ObservableSetSorterComparing<T>(source, config);
-}
 
 export function sortSetComparing<T extends IClass>(source: ISet<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}
 	var result = new List<T>();
-	result.own(new ObservableSetSorterComparing<T>(source, {
+	result.own(new SetSorterComparing<T>(source, {
 		target: result,
 		compare: compare,
 		scope: scope

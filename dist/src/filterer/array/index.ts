@@ -20,22 +20,14 @@
 
 import ArrayFilterer from './ArrayFilterer';
 import IArray from '../../IArray';
-import IArrayFilterer from './IArrayFilterer';
 import List from '../../List';
-import ObservableArrayFilterer from './ObservableArrayFilterer';
-
-export function createArrayFilterer<T>(source: IArray<T>, config: IArrayFilterer.Config<T>): IArrayFilterer<T> {
-	return source.silent ?
-		new ArrayFilterer<T>(source, config) :
-		new ObservableArrayFilterer<T>(source, config);
-}
 
 export function filterArray<T>(source: IArray<T>, test: (item: T) => boolean, scope?: any): IArray<T> {
 	if (source.silent) {
 		return source.$filter(test, scope);
 	}
 	var result = new List<T>();
-	result.own(new ObservableArrayFilterer<T>(source, {
+	result.own(new ArrayFilterer<T>(source, {
 		target: result,
 		test: test,
 		scope: scope

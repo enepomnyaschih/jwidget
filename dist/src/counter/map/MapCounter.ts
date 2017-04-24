@@ -22,6 +22,7 @@ import AbstractCollectionCounter from '../AbstractCollectionCounter';
 import ICollectionCounter from '../ICollectionCounter';
 import IMap from '../../IMap';
 import IMapCounter from './IMapCounter';
+import * as MapUtils from '../../MapUtils';
 
 /**
  * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Map]].
@@ -37,5 +38,18 @@ export default class MapCounter<T> extends AbstractCollectionCounter<T> implemen
 	 */
 	constructor(source: IMap<T>, config: ICollectionCounter.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._target.set(this._target.get() -
+			MapUtils.count(spliceResult.removedItems, this._test, this._scope) +
+			MapUtils.count(spliceResult.addedItems, this._test, this._scope));
+	}
+
+	private _onClear() {
+		this._target.set(0);
 	}
 }

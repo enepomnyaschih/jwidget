@@ -22,6 +22,7 @@ import AbstractCollectionCounter from '../AbstractCollectionCounter';
 import IArray from '../../IArray';
 import IArrayCounter from './IArrayCounter';
 import ICollectionCounter from '../ICollectionCounter';
+import * as ArrayUtils from '../../ArrayUtils';
 
 /**
  * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Array]].
@@ -37,5 +38,34 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> implem
 	 */
 	constructor(source: IArray<T>, config: ICollectionCounter.Config<T>) {
 		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.replaceEvent.bind(this._onReplace, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		var value = this._target.get();
+		spliceResult.removedItemsList.forEach((indexItems) => {
+			value -= ArrayUtils.count(indexItems.items, this._test, this._scope);
+		});
+		spliceResult.addedItemsList.forEach((indexItems) => {
+			value += ArrayUtils.count(indexItems.items, this._test, this._scope);
+		});
+		this._target.set(value);
+	}
+
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+		var oldFiltered = this._test.call(this._scope, params.oldItem) !== false;
+		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
+		if (oldFiltered && !newFiltered) {
+			this._target.set(this._target.get() - 1);
+		} else if (!oldFiltered && newFiltered) {
+			this._target.set(this._target.get() + 1);
+		}
+	}
+
+	private _onClear() {
+		this._target.set(0);
 	}
 }

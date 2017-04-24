@@ -23,10 +23,7 @@ import ICollectionObserver from '../ICollectionObserver';
 import ISet from '../../ISet';
 import ISetObserver from './ISetObserver';
 import SetObserver from './SetObserver';
-import ObservableSetObserver from './ObservableSetObserver';
 
 export function createSetObserver<T extends IClass>(source: ISet<T>, config: ICollectionObserver.Config<T>): ISetObserver<T> {
-	return source.silent ?
-		new SetObserver<T>(source, config) :
-		new ObservableSetObserver<T>(source, config);
+	return new SetObserver<T>(source, config);
 }

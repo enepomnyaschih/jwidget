@@ -20,24 +20,15 @@
 
 import ArrayCounter from './ArrayCounter';
 import IArray from '../../IArray';
-import IArrayCounter from './IArrayCounter';
-import ICollectionCounter from '../ICollectionCounter';
-import ObservableArrayCounter from './ObservableArrayCounter';
 import Property from '../../Property';
 import Watchable from '../../Watchable';
-
-export function createArrayCounter<T>(source: IArray<T>, config: ICollectionCounter.Config<T>): IArrayCounter<T> {
-	return source.silent ?
-		new ArrayCounter<T>(source, config) :
-		new ObservableArrayCounter<T>(source, config);
-}
 
 export function countArray<T>(source: IArray<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (source.silent) {
 		return source.$count(test, scope);
 	}
 	var result = new Property(0);
-	result.own(new ObservableArrayCounter<T>(source, {
+	result.own(new ArrayCounter<T>(source, {
 		target: result,
 		test: test,
 		scope: scope

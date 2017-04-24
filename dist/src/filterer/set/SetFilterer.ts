@@ -48,6 +48,8 @@ export default class SetFilterer<T extends IClass> extends AbstractCollectionFil
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(this.source.silent) : config.target;
 		this.target.tryAddAll(source.$toArray().filter(this._test, this._scope));
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
 	/**
@@ -59,5 +61,16 @@ export default class SetFilterer<T extends IClass> extends AbstractCollectionFil
 			this.target.destroy();
 		}
 		super.destroyObject();
+	}
+
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(
+			spliceResult.removedItems,
+			spliceResult.addedItems.filter(this._test, this._scope));
+	}
+
+	private _onClear(params: ISet.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(params.items);
 	}
 }
