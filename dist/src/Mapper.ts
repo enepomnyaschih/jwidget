@@ -157,14 +157,16 @@ class Mapper<T> extends Class {
 	private _viaNull: boolean;
 
 	/**
-	 * @param sources Source properties.
+	 * Source property.
+	 */
+	readonly sources: Watchable<any>[]
+
+	/**
 	 * @param config Configuration.
 	 */
-	constructor(
-		readonly sources: Watchable<any>[],
-		config: Mapper.Config<T>)
-	{
+	constructor(config: Mapper.Config<T>) {
 		super();
+		this.sources = config.sources;
 		this._create = config.create;
 		this._destroy = config.destroy;
 		this._scope = config.scope || this;
@@ -174,7 +176,7 @@ class Mapper<T> extends Class {
 		this._sourceValues = null;
 		this._targetValue = null;
 		this.update();
-		sources.forEach(this.watch, this);
+		this.sources.forEach(this.watch, this);
 	}
 
 	/**
@@ -273,6 +275,11 @@ namespace Mapper {
 	 */
 	export interface Config<T> {
 		/**
+		 * Source properties.
+		 */
+		readonly sources: Watchable<any>[];
+
+		/**
 		 * Target property. By default, created automatically.
 		 */
 		readonly target?: IProperty<T>;
@@ -313,13 +320,14 @@ namespace Mapper {
 
 export default Mapper;
 
-export function mapProperties<U>(properties: Watchable<any>[], map: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
-	if (properties.every((property) => property.silent)) {
-		const values = properties.map((property) => property.get());
+export function mapProperties<U>(sources: Watchable<any>[], map: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
+	if (sources.every((source) => source.silent)) {
+		const values = sources.map((source) => source.get());
 		return new Property<U>(map.apply(scope, values), true);
 	}
 	const result = new Property<U>();
-	result.own(new Mapper(properties, {
+	result.own(new Mapper({
+		sources: sources,
 		target: result,
 		create: map,
 		scope: scope
@@ -327,13 +335,14 @@ export function mapProperties<U>(properties: Watchable<any>[], map: Mapper.Creat
 	return result;
 }
 
-export function mapDestroyableProperties<U extends Destroyable>(properties: Watchable<any>[], create: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
-	if (properties.every((property) => property.silent)) {
-		const values = properties.map((property) => property.get());
+export function mapDestroyableProperties<U extends Destroyable>(sources: Watchable<any>[], create: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
+	if (sources.every((source) => source.silent)) {
+		const values = sources.map((source) => source.get());
 		return new Property<U>(create.apply(scope, values), true).ownValue();
 	}
 	const result = new Property<U>();
-	result.own(new Mapper(properties, {
+	result.own(new Mapper({
+		sources: sources,
 		target: result,
 		create: create,
 		destroy: destroy,

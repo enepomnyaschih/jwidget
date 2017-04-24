@@ -55,16 +55,20 @@ class Copier<T> extends Class {
 	private _target: IProperty<T>;
 
 	/**
-	 * @param source Source property.
+	 * Source property.
+	 */
+	readonly source: Watchable<T>;
+
+	/**
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: Watchable<T>, config?: Copier.Config<T>) {
+	constructor(config: Copier.Config<T>) {
 		super();
-		config = config || {};
+		this.source = config.source;
 		this._targetCreated = config.target == null;
-		this._target = (config.target == null) ? new Property<T>(null, source.silent) : config.target;
+		this._target = (config.target == null) ? new Property<T>(null, this.source.silent) : config.target;
 		this._update();
-		this.own(source.changeEvent.bind(this._update, this));
+		this.own(this.source.changeEvent.bind(this._update, this));
 	}
 
 	/**
@@ -94,6 +98,11 @@ namespace Copier {
 	 * @param T Property value type.
 	 */
 	export interface Config<T> {
+		/**
+		 * Source property.
+		 */
+		readonly source: Watchable<T>
+
 		/**
 		 * Target property. By default, created automatically.
 		 */
