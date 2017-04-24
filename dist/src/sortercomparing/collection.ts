@@ -18,20 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {sortArrayComparing} from './array';
-import {sortMapComparing} from './map';
-import {sortSetComparing} from './set';
-import ArraySorterComparing from './array/ArraySorterComparing';
-import MapSorterComparing from './map/MapSorterComparing';
-import SetSorterComparing from './set/SetSorterComparing';
+import {default as ArraySorterComparing, sortArrayComparing} from './array';
+import {default as MapSorterComparing, sortMapComparing} from './map';
+import {default as SetSorterComparing, sortSetComparing} from './set';
+import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
+import IArray from '../IArray';
+import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
-import ICollection from '../ICollection';
-import ICollectionSorterComparing from './ICollectionSorterComparing';
-import IArray from '../IArray';
 
-export function createSorterComparing<T>(source: ICollection<T>, config: ICollectionSorterComparing.Config<T>): ICollectionSorterComparing<T> {
+export function createSorterComparing<T>(source: ICollection<T>, config: AbstractCollectionSorterComparing.Config<T>): AbstractCollectionSorterComparing<T> {
 	return (source instanceof List) ? new ArraySorterComparing(source, config) :
 		(source instanceof Map) ? new MapSorterComparing(source, config) :
 		(source instanceof Set) ? new SetSorterComparing(source, config) : null;

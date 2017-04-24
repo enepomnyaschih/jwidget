@@ -18,11 +18,39 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IArray from '../../IArray';
-import IClass from '../../IClass';
-import ISet from '../../ISet';
-import List from '../../List';
-import SetSorterComparing from './SetSorterComparing';
+import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
+import IArray from '../IArray';
+import IClass from '../IClass';
+import ISet from '../ISet';
+import List from '../List';
+
+/**
+ * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Set]].
+ */
+export default class SetSorterComparing<T extends IClass> extends AbstractCollectionSorterComparing<T> {
+	/**
+	 * @inheritdoc
+	 */
+	readonly source: ISet<T>;
+
+	/**
+	 * @inheritdoc
+	 */
+	constructor(source: ISet<T>, config: AbstractCollectionSorterComparing.Config<T>) {
+		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: ISet.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._splice(spliceResult.removedItems, spliceResult.addedItems);
+	}
+
+	private _onClear(params: ISet.ItemsEventParams<T>) {
+		this._splice(params.items, []);
+	}
+}
 
 export function sortSetComparing<T extends IClass>(source: ISet<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
 	if (source.silent) {

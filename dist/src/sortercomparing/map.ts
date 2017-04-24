@@ -18,16 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionSorterComparing from '../AbstractCollectionSorterComparing';
-import ICollectionSorterComparing from '../ICollectionSorterComparing';
-import IMap from '../../IMap';
-import IMapSorterComparing from './IMapSorterComparing';
-import * as MapUtils from '../../MapUtils';
+import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
+import IArray from '../IArray';
+import IMap from '../IMap';
+import List from '../List';
+import * as MapUtils from '../MapUtils';
 
 /**
  * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Map]].
  */
-export default class MapSorterComparing<T> extends AbstractCollectionSorterComparing<T> implements IMapSorterComparing<T> {
+export default class MapSorterComparing<T> extends AbstractCollectionSorterComparing<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -36,7 +36,7 @@ export default class MapSorterComparing<T> extends AbstractCollectionSorterCompa
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionSorterComparing.Config<T>) {
+	constructor(source: IMap<T>, config: AbstractCollectionSorterComparing.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
@@ -52,4 +52,17 @@ export default class MapSorterComparing<T> extends AbstractCollectionSorterCompa
 	private _onClear(params: IMap.ItemsEventParams<T>) {
 		this._splice(MapUtils.toArray(params.items), []);
 	}
+}
+
+export function sortMapComparing<T>(source: IMap<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
+	if (source.silent) {
+		return source.$toSortedComparing(compare, scope);
+	}
+	var result = new List<T>();
+	result.own(new MapSorterComparing<T>(source, {
+		target: result,
+		compare: compare,
+		scope: scope
+	}));
+	return result;
 }

@@ -22,7 +22,6 @@ import {cmp} from '../Core';
 import Class from '../Class';
 import IArray from '../IArray';
 import ICollection from '../ICollection';
-import ICollectionSorterComparing from './ICollectionSorterComparing';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
@@ -126,7 +125,7 @@ import * as ArrayUtils from '../ArrayUtils';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionSorterComparing<T> extends Class implements ICollectionSorterComparing<T> {
+abstract class AbstractCollectionSorterComparing<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -156,7 +155,7 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionSorterComparing.Config<T>) {
+	constructor(readonly source: ICollection<T>, config: AbstractCollectionSorterComparing.Config<T>) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;
@@ -252,3 +251,34 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 }
 
 export default AbstractCollectionSorterComparing;
+
+namespace AbstractCollectionSorterComparing {
+	/**
+	 * [[JW.AbstractCollection.SorterComparing]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Item comparing callback.
+		 */
+		readonly compare: (x: T, y: T) => number;
+
+		/**
+		 * [[compare]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IArray<T>;
+
+		/**
+		 * Sorting order. Positive number for ascending sorting, negative for descending sorting.
+		 * Defaults to 1.
+		 */
+		readonly order?: number;
+	}
+}

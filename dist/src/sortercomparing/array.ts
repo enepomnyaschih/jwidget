@@ -18,9 +18,42 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ArraySorterComparing from './ArraySorterComparing';
-import IArray from '../../IArray';
-import List from '../../List';
+import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
+import IArray from '../IArray';
+import List from '../List';
+
+/**
+ * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Array]].
+ */
+export default class ArraySorterComparing<T> extends AbstractCollectionSorterComparing<T> {
+	/**
+	 * @inheritdoc
+	 */
+	readonly source: IArray<T>;
+
+	/**
+	 * @inheritdoc
+	 */
+	constructor(source: IArray<T>, config: AbstractCollectionSorterComparing.Config<T>) {
+		super(source, config);
+		this.own(source.spliceEvent.bind(this._onSplice, this));
+		this.own(source.replaceEvent.bind(this._onReplace, this));
+		this.own(source.clearEvent.bind(this._onClear, this));
+	}
+
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
+		var spliceResult = params.spliceResult;
+		this._splice(spliceResult.removedItems, spliceResult.addedItems);
+	}
+
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+		this._splice([params.oldItem], [params.newItem]);
+	}
+
+	private _onClear(params: IArray.ItemsEventParams<T>) {
+		this._splice(params.items, []);
+	}
+}
 
 export function sortArrayComparing<T>(source: IArray<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
 	if (source.silent) {
