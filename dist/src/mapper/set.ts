@@ -18,17 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionMapper from '../AbstractCollectionMapper';
-import Dictionary from '../../Dictionary';
-import IClass from '../../IClass';
-import ISet from '../../ISet';
-import ISetMapper from './ISetMapper';
-import Set from '../../Set';
+import {destroy} from '../Core';
+import AbstractCollectionMapper from './AbstractCollectionMapper';
+import Dictionary from '../Dictionary';
+import IClass from '../IClass';
+import ISet from '../ISet';
+import Set from '../Set';
 
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Set]].
  */
-export default class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMapper<T, U> implements ISetMapper<T, U> {
+class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
@@ -49,7 +49,7 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ISetMapper.Config<T, U>) {
+	constructor(source: ISet<T>, config: SetMapper.Config<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<U>(this.source.silent) : config.target;
@@ -114,4 +114,45 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);
 	}
+}
+
+export default SetMapper;
+
+namespace SetMapper {
+	/**
+	 * @inheritdoc
+	 */
+	export interface Config<T extends IClass, U extends IClass> extends AbstractCollectionMapper.Config<T, U> {
+		/**
+		 * @inheritdoc
+		 */
+		readonly target?: ISet<U>;
+	}
+}
+
+export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, map: (item: T) => U, scope?: any): ISet<U> {
+	if (source.silent) {
+		return source.$map(map, scope);
+	}
+	var result = new Set<U>();
+	result.own(new SetMapper<T, U>(source, {
+		target: result,
+		create: map,
+		scope: scope
+	}));
+	return result;
+}
+
+export function mapDestroyableSet<T extends IClass, U extends IClass>(source: ISet<T>, create: (item: T) => U, scope?: any): ISet<U> {
+	if (source.silent) {
+		return source.$map(create, scope).ownItems();
+	}
+	var result = new Set<U>();
+	result.own(new SetMapper<T, U>(source, {
+		target: result,
+		create: create,
+		destroy: destroy,
+		scope: scope
+	}));
+	return result;
 }

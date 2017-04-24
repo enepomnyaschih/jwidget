@@ -18,16 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionMapper from '../AbstractCollectionMapper';
-import IArray from '../../IArray';
-import IArrayMapper from './IArrayMapper';
-import IndexItems from '../../IndexItems';
-import List from '../../List';
+import {destroy} from '../Core';
+import AbstractCollectionMapper from './AbstractCollectionMapper';
+import Destroyable from '../Destroyable';
+import IArray from '../IArray';
+import IndexItems from '../IndexItems';
+import List from '../List';
 
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Array]].
  */
-export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> implements IArrayMapper<T, U> {
+class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
@@ -43,7 +44,7 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: IArrayMapper.Config<T, U>) {
+	constructor(source: IArray<T>, config: ArrayMapper.Config<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(this.source.silent) : config.target;
@@ -117,4 +118,45 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 	private _onReorder(params: IArray.ReorderEventParams<T>) {
 		this.target.tryReorder(params.indexArray);
 	}
+}
+
+export default ArrayMapper;
+
+namespace ArrayMapper {
+	/**
+	 * @inheritdoc
+	 */
+	export interface Config<T, U> extends AbstractCollectionMapper.Config<T, U> {
+		/**
+		 * @inheritdoc
+		 */
+		readonly target?: IArray<U>;
+	}
+}
+
+export function mapArray<T, U>(source: IArray<T>, map: (item: T) => U, scope?: any): IArray<U> {
+	if (source.silent) {
+		return source.$map(map, scope);
+	}
+	var result = new List<U>();
+	result.own(new ArrayMapper<T, U>(source, {
+		target: result,
+		create: map,
+		scope: scope
+	}));
+	return result;
+}
+
+export function mapDestroyableArray<T, U extends Destroyable>(source: IArray<T>, create: (item: T) => U, scope?: any): IArray<U> {
+	if (source.silent) {
+		return source.$map(create, scope).ownItems();
+	}
+	var result = new List<U>();
+	result.own(new ArrayMapper<T, U>(source, {
+		target: result,
+		create: create,
+		destroy: destroy,
+		scope: scope
+	}));
+	return result;
 }

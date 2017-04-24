@@ -18,17 +18,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionMapper from '../AbstractCollectionMapper';
-import Dictionary from '../../Dictionary';
-import IMap from '../../IMap';
-import IMapMapper from './IMapMapper';
-import Map from '../../Map';
-import * as MapUtils from '../../MapUtils';
+import {destroy} from '../Core';
+import AbstractCollectionMapper from './AbstractCollectionMapper';
+import Destroyable from '../Destroyable';
+import Dictionary from '../Dictionary';
+import IMap from '../IMap';
+import Map from '../Map';
+import * as MapUtils from '../MapUtils';
 
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Map]].
  */
-export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> implements IMapMapper<T, U> {
+class MapMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
@@ -44,7 +45,7 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: IMapMapper.Config<T, U>) {
+	constructor(source: IMap<T>, config: MapMapper.Config<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<U>(this.source.silent) : config.target;
@@ -102,4 +103,45 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 		var datas = params.items;
 		this._destroyItems(this.target.tryRemoveAll(Object.keys(datas)), datas);
 	}
+}
+
+export default MapMapper;
+
+namespace MapMapper {
+	/**
+	 * @inheritdoc
+	 */
+	export interface Config<T, U> extends AbstractCollectionMapper.Config<T, U> {
+		/**
+		 * @inheritdoc
+		 */
+		readonly target?: IMap<U>;
+	}
+}
+
+export function mapMap<T, U>(source: IMap<T>, map: (item: T) => U, scope?: any): IMap<U> {
+	if (source.silent) {
+		return source.$map(map, scope);
+	}
+	var result = new Map<U>();
+	result.own(new MapMapper<T, U>(source, {
+		target: result,
+		create: map,
+		scope: scope
+	}));
+	return result;
+}
+
+export function mapDestroyableMap<T, U extends Destroyable>(source: IMap<T>, create: (item: T) => U, scope?: any): IMap<U> {
+	if (source.silent) {
+		return source.$map(create, scope).ownItems();
+	}
+	var result = new Map<U>();
+	result.own(new MapMapper<T, U>(source, {
+		target: result,
+		create: create,
+		destroy: destroy,
+		scope: scope
+	}));
+	return result;
 }

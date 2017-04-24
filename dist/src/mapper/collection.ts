@@ -18,20 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {mapArray, mapDestroyableArray} from './array';
-import {mapMap, mapDestroyableMap} from './map';
-import {mapSet, mapDestroyableSet} from './set';
-import ArrayMapper from './array/ArrayMapper';
-import MapMapper from './map/MapMapper';
-import SetMapper from './set/SetMapper';
+import {default as ArrayMapper, mapArray, mapDestroyableArray} from './array';
+import {default as MapMapper, mapMap, mapDestroyableMap} from './map';
+import {default as SetMapper, mapSet, mapDestroyableSet} from './set';
+import AbstractCollectionMapper from './AbstractCollectionMapper';
+import IClass from '../IClass';
+import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
-import IClass from '../IClass';
-import ICollection from '../ICollection';
-import ICollectionMapper from './ICollectionMapper';
 
-export function createMapper<T extends IClass, U extends IClass>(source: ICollection<T>, config: ICollectionMapper.Config<T, U>): ICollectionMapper<U> {
+export function createMapper<T extends IClass, U extends IClass>(source: ICollection<T>, config: AbstractCollectionMapper.Config<T, U>): AbstractCollectionMapper<T, U> {
 	return (source instanceof List) ? new ArrayMapper(source, config) :
 		(source instanceof Map) ? new MapMapper(source, config) :
 		(source instanceof Set) ? new SetMapper(source, config) : null;

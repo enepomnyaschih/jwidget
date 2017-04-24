@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ArrayMapper from '../mapper/array/ArrayMapper';
+import ArrayMapper from '../mapper/array';
 import Class from '../Class';
 import Component from '../Component';
 import ComponentInserter from './ComponentInserter';

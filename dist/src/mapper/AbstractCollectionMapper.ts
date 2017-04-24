@@ -20,7 +20,6 @@
 
 import Class from '../Class';
 import ICollection from '../ICollection';
-import ICollectionMapper from './ICollectionMapper';
 
 /**
  * Collection item converter.
@@ -113,7 +112,7 @@ import ICollectionMapper from './ICollectionMapper';
  * @param T Source collection item type.
  * @param U Target collection item type.
  */
-abstract class AbstractCollectionMapper<T, U> extends Class implements ICollectionMapper<U> {
+abstract class AbstractCollectionMapper<T, U> extends Class {
 	/**
 	 * @hidden
 	 */
@@ -141,7 +140,7 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionMapper.Config<T, U>) {
+	constructor(readonly source: ICollection<T>, config: AbstractCollectionMapper.Config<T, U>) {
 		super();
 		this._create = config.create;
 		this._destroy = config.destroy;
@@ -160,3 +159,29 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 }
 
 export default AbstractCollectionMapper;
+
+namespace AbstractCollectionMapper {
+	/**
+	 * [[JW.AbstractCollection.Mapper]] configuration.
+	 *
+	 * @param T Source collection item type.
+	 * @param U Target collection item type.
+	 */
+	export interface Config<T, U> {
+		/**
+		 * Mapping function. Creates an item of target collection by item of source collection.
+		 */
+		readonly create: (data: T) => U;
+
+		/**
+		 * Item destructor. Destroys an item of target collection.
+		 */
+		readonly destroy?: (item: U, data: T) => void;
+
+		/**
+		 * [[createItem]] and [[destroyItem]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+	}
+}
