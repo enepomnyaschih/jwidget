@@ -38,7 +38,7 @@ export default class ArraySpliceResult<T> implements IArraySpliceResult<T> {
 	 * @param removedItemsList Removed item segments.
 	 * @param addedItemsList Added item segments.
 	 */
-	constructor(public oldItems: T[], public removedItemsList: IIndexItems<T>[], public addedItemsList: IIndexItems<T>[]) {
+	constructor(readonly oldItems: T[], readonly removedItemsList: IIndexItems<T>[], readonly addedItemsList: IIndexItems<T>[]) {
 	}
 
 	/**

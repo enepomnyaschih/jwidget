@@ -26,16 +26,19 @@ import TemplateOutput from './TemplateOutput';
  * @hidden
  */
 export default class DomTemplate extends AbstractTemplate {
-	el: HTMLElement;
-	output: TemplateOutput = null;
-	requiresAfterAppend: boolean = true;
-	groups: Dictionary<HTMLElement[]>
+	private el: HTMLElement;
+	private output: TemplateOutput = null;
+	private groups: Dictionary<HTMLElement[]>
 
 	constructor(el: HTMLElement);
 	constructor(el: JQuery);
 	constructor(el: any) {
 		super();
 		this.el = jQuery(el)[0];
+	}
+
+	get requiresAfterAppend(): boolean {
+		return true;
 	}
 
 	createElement(): TemplateOutput {
@@ -53,7 +56,7 @@ export default class DomTemplate extends AbstractTemplate {
 		return this.output;
 	}
 
-	_addElement(id: string, el: HTMLElement, path: number[]) {
+	protected _addElement(id: string, el: HTMLElement, path: number[]) {
 		path = path;
 		this.groups[id] = this.groups[id] || [];
 		this.groups[id].push(el);

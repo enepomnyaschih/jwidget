@@ -33,6 +33,6 @@ export default class ArraySpliceParams<T> implements IArraySpliceParams<T> {
 	 * @param removeParamsList Segments to remove.
 	 * @param addParamsList Segments to add.
 	 */
-	constructor(public removeParamsList: IIndexCount[], public addParamsList: IIndexItems<T>[]) {
+	constructor(readonly removeParamsList: IIndexCount[], readonly addParamsList: IIndexItems<T>[]) {
 	}
 }

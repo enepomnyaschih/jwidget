@@ -28,15 +28,8 @@ import * as DomUtils from './DomUtils';
  * optimize rendering performance.
  */
 export default class HtmlTemplate extends AbstractTemplate {
-	/**
-	 * @hidden
-	 */
-	mirror: HTMLElement = null;
-
-	/**
-	 * @hidden
-	 */
-	groups: Dictionary<number[][]>;
+	private mirror: HTMLElement = null;
+	private groups: Dictionary<number[][]>;
 
 	/**
 	 * @param html Input HTML.
@@ -70,18 +63,12 @@ export default class HtmlTemplate extends AbstractTemplate {
 		return { root: root, groups: groups };
 	}
 
-	/**
-	 * @hidden
-	 */
-	_addElement(id: string, el: HTMLElement, path: number[]) {
+	protected _addElement(id: string, el: HTMLElement, path: number[]) {
 		el = el;
 		this.groups[id] = this.groups[id] || [];
 		this.groups[id].push(path.concat());
 	}
 
-	/**
-	 * @hidden
-	 */
 	private _compile() {
 		if (this.mirror !== null) {
 			return;

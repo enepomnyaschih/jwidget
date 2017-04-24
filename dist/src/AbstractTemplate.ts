@@ -28,48 +28,25 @@ import * as StringUtils from './StringUtils';
  * Abstract HTML template.
  */
 abstract class AbstractTemplate extends Class {
-	/**
-	 * @hidden
-	 */
-	prefixes: string[] = null;
+	private prefixes: string[] = null;
 
-	/**
-	 * The parent IDs of [key] item.
-	 * @hidden
-	 */
-	parentIdMap: Dictionary<Dictionary<boolean>> = null;
+	private parentIdMap: Dictionary<Dictionary<boolean>> = null; // The parent IDs of [key] item.
+	private childIdMap : Dictionary<Dictionary<boolean>> = null; // The child IDs of [key] item.
 
-	/**
-	 * The child IDs of [key] item.
-	 * @hidden
-	 */
-	childIdMap: Dictionary<Dictionary<boolean>> = null;
+	protected ids: string[] = null; // IDs in dependency order.
 
-	/**
-	 * ID's in dependency order.
-	 * @hidden
-	 */
-	ids: string[] = null;
-
-	/**
-	 * @hidden
-	 */
-	requiresAfterAppend: boolean = false;
+	get requiresAfterAppend(): boolean {
+		return false;
+	}
 
 	/**
 	 * Renders the template. See [[TemplateOutput]] for details.
 	 */
 	abstract createElement(): TemplateOutput;
 
-	/**
-	 * @hidden
-	 */
-	abstract _addElement(id: string, el: HTMLElement, path: number[]): void;
+	protected abstract _addElement(id: string, el: HTMLElement, path: number[]): void;
 
-	/**
-	 * @hidden
-	 */
-	_compileAttributes(root: HTMLElement) {
+	protected _compileAttributes(root: HTMLElement) {
 		this.prefixes = StringUtils.parseClass(root.getAttribute("jwclass"));
 		root.removeAttribute("jwclass");
 		for (var i = 0, l = this.prefixes.length; i < l; ++i) {
@@ -106,10 +83,7 @@ abstract class AbstractTemplate extends Class {
 		this.childIdMap = null;
 	}
 
-	/**
-	 * @hidden
-	 */
-	_walkAll(root: HTMLElement) {
+	private _walkAll(root: HTMLElement) {
 		this._walk(root, [], [], (el: HTMLElement, path: number[]): string[] => {
 			var attr = el.getAttribute("jwid");
 			if (!attr) {
@@ -133,10 +107,7 @@ abstract class AbstractTemplate extends Class {
 		this._addElement("root", root, []);
 	}
 
-	/**
-	 * @hidden
-	 */
-	_walk(el: Node, path: number[], parentIds: string[], callback: (el: HTMLElement, path: number[]) => void, scope?: any) {
+	private _walk(el: Node, path: number[], parentIds: string[], callback: (el: HTMLElement, path: number[]) => void, scope?: any) {
 		if (el.nodeType !== 1) { // ELEMENT
 			return;
 		}
@@ -168,10 +139,7 @@ abstract class AbstractTemplate extends Class {
 		path.pop();
 	}
 
-	/**
-	 * @hidden
-	 */
-	_backtrace(id: string) {
+	private _backtrace(id: string) {
 		// if this element has already been processed, skip it
 		var parentIds = this.parentIdMap[id];
 		if (parentIds === undefined) {
