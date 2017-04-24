@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import IArray from '../../IArray';
 import ArrayObserver from './ArrayObserver';
 import ICollectionObserverConfig from '../ICollectionObserverConfig';
@@ -40,7 +39,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 		}
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<T>) {
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.removedItems;
@@ -56,7 +55,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 		}
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<T>) {
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
 		if (this._remove) {
 			this._remove.call(this._scope, params.oldItem);
 		}
@@ -65,7 +64,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 		}
 	}
 
-	private _onClear(params: ArrayItemsEventParams<T>) {
+	private _onClear(params: IArray.ItemsEventParams<T>) {
 		this._doClearItems(params.items);
 	}
 }

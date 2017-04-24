@@ -19,15 +19,14 @@
 */
 
 import {cmp, def, iid, isArray} from './Core';
-import ArraySpliceResult from './ArraySpliceResult';
 import Dictionary from './Dictionary';
-import IArraySpliceParams from './IArraySpliceParams';
-import IArraySpliceResult from './IArraySpliceResult';
+import IArray from './IArray';
 import IClass from './IClass';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
+import ListSpliceResult from './ListSpliceResult';
 import Some from './Some';
 
 /**
@@ -475,9 +474,9 @@ export function tryClear<T>(arr: T[]): T[]{
  * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
  * @returns Splice result. Never returns null or undefined.
  */
-export function splice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T> {
+export function splice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T> {
 	var result = trySplice(arr, removeParamsList, addParamsList);
-	return (result !== undefined) ? result : new ArraySpliceResult<T>(arr.concat(), <IIndexItems<T>[]>[], <IIndexItems<T>[]>[]);
+	return (result !== undefined) ? result : new ListSpliceResult<T>(arr.concat(), <IIndexItems<T>[]>[], <IIndexItems<T>[]>[]);
 }
 
 /**
@@ -487,7 +486,7 @@ export function splice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsLi
  * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
  * @returns Splice result. If collection is not modified, returns undefined.
  */
-export function trySplice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T> {
+export function trySplice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T> {
 	var optimizedRemoveParamsList: IIndexCount[] = [];
 	var rlast: IndexCount = null;
 	var rparams: IIndexCount;
@@ -535,7 +534,7 @@ export function trySplice<T>(arr: T[], removeParamsList: IIndexCount[], addParam
 	}
 	if ((removedItemsList.length !== 0) || (addedItemsList.length !== 0)) {
 		removedItemsList.reverse();
-		return new ArraySpliceResult<T>(oldItems, removedItemsList, addedItemsList);
+		return new ListSpliceResult<T>(oldItems, removedItemsList, addedItemsList);
 	}
 	return undefined;
 }
@@ -583,7 +582,7 @@ export function tryReorder<T>(arr: T[], indexArray: number[]): T[]{
  * @param scope **getKey** call scope. Defaults to collection itself.
  * @returns [[splice]] method arguments. If no method call required, returns undefined.
  */
-export function detectSplice<T>(oldItems: T[], newItems: T[], getKey?: (item: T) => any, scope?: any): IArraySpliceParams<T> {
+export function detectSplice<T>(oldItems: T[], newItems: T[], getKey?: (item: T) => any, scope?: any): IArray.SpliceParams<T> {
 	getKey = getKey || iid;
 	scope = scope || oldItems;
 	var removeParamsList: IIndexCount[] = [];

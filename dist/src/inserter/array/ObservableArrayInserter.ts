@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import IArray from '../../IArray';
 import ArrayInserter from './ArrayInserter';
 import IArrayInserterConfig from './IArrayInserterConfig';
@@ -39,7 +38,7 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		this.own(source.reorderEvent.bind(this._onReorder, this));
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<T>) {
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.removedItems;
@@ -64,7 +63,7 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		}
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<T>) {
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
 		if (this._remove) {
 			this._remove.call(this._scope, params.oldItem, params.index);
 		}
@@ -73,7 +72,7 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		}
 	}
 
-	private _onMove(params: ArrayMoveEventParams<T>) {
+	private _onMove(params: IArray.MoveEventParams<T>) {
 		if (this._remove) {
 			this._remove.call(this._scope, params.item, params.fromIndex);
 		}
@@ -82,11 +81,11 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 		}
 	}
 
-	private _onClear(params: ArrayItemsEventParams<T>) {
+	private _onClear(params: IArray.ItemsEventParams<T>) {
 		this._doClearItems(params.items);
 	}
 
-	private _onReorder(params: ArrayReorderEventParams<T>) {
+	private _onReorder(params: IArray.ReorderEventParams<T>) {
 		this._doClearItems(params.items);
 		this._addItems(this.source.items, 0);
 	}

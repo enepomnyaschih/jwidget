@@ -18,17 +18,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IArraySpliceResult from './IArraySpliceResult';
-import IIndexCount from './IIndexCount';
-import IIndexItems from './IIndexItems';
-import * as ArrayUtils from './ArrayUtils';
+import IArray from "./IArray";
+import IIndexCount from "./IIndexCount";
+import IIndexItems from "./IIndexItems";
+import * as ArrayUtils from "./ArrayUtils";
 
 /**
  * [[JW.List.splice|splice]] method result.
  *
  * @param T Item type.
  */
-export default class ArraySpliceResult<T> implements IArraySpliceResult<T> {
+export default class ListSpliceResult<T> implements IArray.SpliceResult<T> {
 	private _removedItems: T[];
 	private _addedItems: T[];
 	private _removeParamsList: IIndexCount[];

@@ -18,14 +18,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ArraySpliceResult from './ArraySpliceResult';
 import Bindable from './Bindable';
 import {destroy, CollectionFlags, SILENT, ADAPTER} from './Core';
 import Dictionary from './Dictionary';
 import Event from './Event';
-import {default as IArray, ArrayEventParams, ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from './IArray';
-import IArraySpliceParams from './IArraySpliceParams';
-import IArraySpliceResult from './IArraySpliceResult';
+import IArray from './IArray';
 import IEvent from './IEvent';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
@@ -34,6 +31,7 @@ import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import IndexedCollection from './IndexedCollection';
 import ISet from './ISet';
+import ListSpliceResult from './ListSpliceResult';
 import Map from './Map';
 import Set from './Set';
 import Some from './Some';
@@ -181,12 +179,12 @@ import * as ArrayUtils from './ArrayUtils';
 export default class List<T> extends IndexedCollection<number, T> implements IArray<T> {
 	private _items: T[];
 
-	private _spliceEvent  : IEvent<ArraySpliceEventParams<T>>;
-	private _replaceEvent : IEvent<ArrayReplaceEventParams<T>>;
-	private _moveEvent    : IEvent<ArrayMoveEventParams<T>>;
-	private _reorderEvent : IEvent<ArrayReorderEventParams<T>>;
-	private _clearEvent   : IEvent<ArrayItemsEventParams<T>>;
-	private _changeEvent  : IEvent<ArrayEventParams<T>>;
+	private _spliceEvent  : IEvent<IArray.SpliceEventParams<T>>;
+	private _replaceEvent : IEvent<IArray.ReplaceEventParams<T>>;
+	private _moveEvent    : IEvent<IArray.MoveEventParams<T>>;
+	private _reorderEvent : IEvent<IArray.ReorderEventParams<T>>;
+	private _clearEvent   : IEvent<IArray.ItemsEventParams<T>>;
+	private _changeEvent  : IEvent<IArray.EventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.
@@ -216,12 +214,12 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 		this._items = adapter ? items : items ? items.concat() : [];
 		this._length.set(this._items.length);
 
-		this._spliceEvent  = Event.make<ArraySpliceEventParams<T>>(this, silent);
-		this._replaceEvent = Event.make<ArrayReplaceEventParams<T>>(this, silent);
-		this._moveEvent    = Event.make<ArrayMoveEventParams<T>>(this, silent);
-		this._reorderEvent = Event.make<ArrayReorderEventParams<T>>(this, silent);
-		this._clearEvent   = Event.make<ArrayItemsEventParams<T>>(this, silent);
-		this._changeEvent  = Event.make<ArrayEventParams<T>>(this, silent);
+		this._spliceEvent  = Event.make<IArray.SpliceEventParams<T>>(this, silent);
+		this._replaceEvent = Event.make<IArray.ReplaceEventParams<T>>(this, silent);
+		this._moveEvent    = Event.make<IArray.MoveEventParams<T>>(this, silent);
+		this._reorderEvent = Event.make<IArray.ReorderEventParams<T>>(this, silent);
+		this._clearEvent   = Event.make<IArray.ItemsEventParams<T>>(this, silent);
+		this._changeEvent  = Event.make<IArray.EventParams<T>>(this, silent);
 	}
 
 	get length(): Watchable<number> {
@@ -285,7 +283,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	get spliceEvent(): Bindable<ArraySpliceEventParams<T>> {
+	get spliceEvent(): Bindable<IArray.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
@@ -295,7 +293,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[set]]
 	 * * [[trySet]]
 	 */
-	get replaceEvent(): Bindable<ArrayReplaceEventParams<T>> {
+	get replaceEvent(): Bindable<IArray.ReplaceEventParams<T>> {
 		return this._replaceEvent;
 	}
 
@@ -305,7 +303,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[move]]
 	 * * [[tryMove]]
 	 */
-	get moveEvent(): Bindable<ArrayMoveEventParams<T>> {
+	get moveEvent(): Bindable<IArray.MoveEventParams<T>> {
 		return this._moveEvent;
 	}
 
@@ -315,7 +313,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	get clearEvent(): Bindable<ArrayItemsEventParams<T>> {
+	get clearEvent(): Bindable<IArray.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
@@ -328,14 +326,14 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[sort]]
 	 * * [[sortComparing]]
 	 */
-	get reorderEvent(): Bindable<ArrayReorderEventParams<T>> {
+	get reorderEvent(): Bindable<IArray.ReorderEventParams<T>> {
 		return this._reorderEvent;
 	}
 
 	/**
 	 * Array is changed. Triggered right after any another event.
 	 */
-	get changeEvent(): Bindable<ArrayEventParams<T>> {
+	get changeEvent(): Bindable<IArray.EventParams<T>> {
 		return this._changeEvent;
 	}
 
@@ -744,9 +742,9 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T> {
+	splice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T> {
 		var result = this.trySplice(removeParamsList, addParamsList);
-		return (result !== undefined) ? result : new ArraySpliceResult(this._items.concat(), [], []);
+		return (result !== undefined) ? result : new ListSpliceResult(this._items.concat(), [], []);
 	}
 
 	/**
@@ -756,7 +754,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. If collection is not modified, returns undefined.
 	 */
-	trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T> {
+	trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T> {
 		var result = ArrayUtils.trySplice(this._items, removeParamsList, addParamsList);
 		if (result === undefined) {
 			return undefined;
@@ -811,7 +809,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArraySpliceParams<T> {
+	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArray.SpliceParams<T> {
 		return ArrayUtils.detectSplice(this._items, newItems, getKey || this.getKey, scope || this);
 	}
 

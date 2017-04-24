@@ -188,12 +188,12 @@ interface ICollection<T> extends IClass {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	readonly clearEvent: Bindable<CollectionEventParams<T>>;
+	readonly clearEvent: Bindable<ICollection.EventParams<T>>;
 
 	/**
 	 * Collection is changed. Triggered right after any another event.
 	 */
-	readonly changeEvent: Bindable<CollectionEventParams<T>>;
+	readonly changeEvent: Bindable<ICollection.EventParams<T>>;
 
 	/**
 	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
@@ -508,12 +508,14 @@ interface ICollection<T> extends IClass {
 
 export default ICollection;
 
-/**
- * `ICollection` event parameters.
- */
-export interface CollectionEventParams<T> {
+namespace ICollection {
 	/**
-	 * Event sender.
+	 * `ICollection` event parameters.
 	 */
-	sender: ICollection<T>;
+	export interface EventParams<T> {
+		/**
+		 * Event sender.
+		 */
+		sender: ICollection<T>;
+	}
 }

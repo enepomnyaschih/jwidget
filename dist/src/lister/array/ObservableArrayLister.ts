@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import IArray from '../../IArray';
 import ArrayLister from './ArrayLister';
 import IClass from '../../IClass';
@@ -38,16 +37,16 @@ export default class ObservableArrayLister<T extends IClass> extends ArrayLister
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<T>) {
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<T>) {
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
 		this.target.trySplice([params.oldItem], [params.newItem]);
 	}
 
-	private _onClear(params: ArrayItemsEventParams<T>) {
+	private _onClear(params: IArray.ItemsEventParams<T>) {
 		this.target.tryRemoveAll(params.items);
 	}
 }

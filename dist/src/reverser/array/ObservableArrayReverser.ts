@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import IArray from '../../IArray';
 import ArrayReverser from './ArrayReverser';
 import IArrayReverserConfig from './IArrayReverserConfig';
@@ -41,7 +40,7 @@ export default class ObservableArrayReverser<T> extends ArrayReverser<T> {
 		this.own(source.reorderEvent.bind(this._onReorder, this));
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<T>) {
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldLength = this.target.length.get();
 		var newLength = oldLength;
@@ -71,11 +70,11 @@ export default class ObservableArrayReverser<T> extends ArrayReverser<T> {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<T>) {
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
 		this.target.trySet(params.newItem, this.target.length.get() - params.index - 1);
 	}
 
-	private _onMove(params: ArrayMoveEventParams<T>) {
+	private _onMove(params: IArray.MoveEventParams<T>) {
 		this.target.tryMove(
 			this.target.length.get() - params.fromIndex - 1,
 			this.target.length.get() - params.toIndex - 1);
@@ -85,7 +84,7 @@ export default class ObservableArrayReverser<T> extends ArrayReverser<T> {
 		this.target.tryClear();
 	}
 
-	private _onReorder(params: ArrayReorderEventParams<T>) {
+	private _onReorder(params: IArray.ReorderEventParams<T>) {
 		var indexArray = params.indexArray;
 		var length = indexArray.length;
 		var indexes = new Array<number>(indexArray.length);

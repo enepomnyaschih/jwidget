@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import ArrayMerger from './ArrayMerger';
 import IArray from '../../IArray';
 import IArrayMergerConfig from './IArrayMergerConfig';
@@ -53,7 +52,7 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 		return indexes;
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<IArray<T>>) {
+	private _onSplice(params: IArray.SpliceEventParams<IArray<T>>) {
 		var spliceResult = params.spliceResult;
 		var indexes = this._getIndexes(spliceResult.oldItems);
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -73,14 +72,14 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<IArray<T>>) {
+	private _onReplace(params: IArray.ReplaceEventParams<IArray<T>>) {
 		var index = this._count(this.source.items, 0, params.index);
 		this.target.trySplice(
 			[new IndexCount(index, params.oldItem.length.get())],
 			[new IndexItems<T>(index, params.newItem.items)]);
 	}
 
-	private _onMove(params: ArrayMoveEventParams<IArray<T>>) {
+	private _onMove(params: IArray.MoveEventParams<IArray<T>>) {
 		var count = params.item.length.get();
 		var indexes = new Array<number>(this.target.length.get());
 		var currentIndex = 0;
@@ -121,7 +120,7 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 		this.target.tryClear();
 	}
 
-	private _onReorder(params: ArrayReorderEventParams<IArray<T>>) {
+	private _onReorder(params: IArray.ReorderEventParams<IArray<T>>) {
 		var oldIndexes = this._getIndexes(params.items);
 		var newIndexes = this._getIndexes(this.source.items);
 		var indexes = new Array<number>(this.target.length.get());

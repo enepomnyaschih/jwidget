@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import IArray from '../../IArray';
 import ArrayFilterer from './ArrayFilterer';
 import Dictionary from '../../Dictionary';
@@ -41,12 +40,12 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 		this.own(source.reorderEvent.bind(this._onReorder, this));
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<T>) {
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.removedItemsList, spliceResult.addedItemsList);
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<T>) {
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
 		var oldFiltered = this._filtered[params.index] !== 0;
 		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
 		if (!oldFiltered && !newFiltered) {
@@ -63,7 +62,7 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 		}
 	}
 
-	private _onMove(params: ArrayMoveEventParams<T>) {
+	private _onMove(params: IArray.MoveEventParams<T>) {
 		if (this._filtered[params.fromIndex] !== 0) {
 			var fromIndex: number, toIndex: number;
 			if (params.fromIndex < params.toIndex) {
@@ -82,7 +81,7 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 		this.target.tryClear();
 	}
 
-	private _onReorder(params: ArrayReorderEventParams<T>) {
+	private _onReorder(params: IArray.ReorderEventParams<T>) {
 		var targetIndex = 0;
 		var targetIndexWhichMovesToI: Dictionary<number> = {};
 		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {

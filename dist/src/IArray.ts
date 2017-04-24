@@ -19,9 +19,7 @@
 */
 
 import Bindable from './Bindable';
-import IArraySpliceParams from './IArraySpliceParams';
-import IArraySpliceResult from './IArraySpliceResult';
-import {CollectionEventParams} from './ICollection';
+import ICollection from './ICollection';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 import IIndexedCollection from './IIndexedCollection';
@@ -167,7 +165,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	readonly spliceEvent: Bindable<ArraySpliceEventParams<T>>;
+	readonly spliceEvent: Bindable<IArray.SpliceEventParams<T>>;
 
 	/**
 	 * Item is replaced in array. Triggered in result of calling:
@@ -175,7 +173,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[set]]
 	 * * [[trySet]]
 	 */
-	readonly replaceEvent: Bindable<ArrayReplaceEventParams<T>>;
+	readonly replaceEvent: Bindable<IArray.ReplaceEventParams<T>>;
 
 	/**
 	 * Item is moved in array. Triggered in result of calling:
@@ -183,7 +181,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[move]]
 	 * * [[tryMove]]
 	 */
-	readonly moveEvent: Bindable<ArrayMoveEventParams<T>>;
+	readonly moveEvent: Bindable<IArray.MoveEventParams<T>>;
 
 	/**
 	 * Array is cleared. Triggered in result of calling:
@@ -191,7 +189,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	readonly clearEvent: Bindable<ArrayItemsEventParams<T>>;
+	readonly clearEvent: Bindable<IArray.ItemsEventParams<T>>;
 
 	/**
 	 * Items are reordered in array. Triggered in result of calling:
@@ -202,12 +200,12 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[sort]]
 	 * * [[sortComparing]]
 	 */
-	readonly reorderEvent: Bindable<ArrayReorderEventParams<T>>;
+	readonly reorderEvent: Bindable<IArray.ReorderEventParams<T>>;
 
 	/**
 	 * Array is changed. Triggered right after any another event.
 	 */
-	readonly changeEvent: Bindable<ArrayEventParams<T>>;
+	readonly changeEvent: Bindable<IArray.EventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.
@@ -426,7 +424,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T>;
+	splice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T>;
 
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
@@ -435,7 +433,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. If collection is not modified, returns undefined.
 	 */
-	trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArraySpliceResult<T>;
+	trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T>;
 
 	/**
 	 * Reorders array items.
@@ -468,7 +466,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArraySpliceParams<T>;
+	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArray.SpliceParams<T>;
 
 	/**
 	 * Detects **removeParamsList** arguments of [[splice]] to adjust array contents to **newItems**.
@@ -664,82 +662,145 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 
 export default IArray;
 
-/**
- * `IArray` event parameters.
- */
-export interface ArrayEventParams<T> extends CollectionEventParams<T> {
+namespace IArray {
 	/**
-	 * Event sender.
+	 * `IArray` event parameters.
 	 */
-	readonly sender: IArray<T>;
-}
-
-/**
- * Parameters of `spliceEvent`.
- */
-export interface ArraySpliceEventParams<T> extends ArrayEventParams<T> {
-	/**
-	 * Result of `splice` method.
-	 */
-	readonly spliceResult: IArraySpliceResult<T>;
-}
-
-/**
- * Parameters of `moveEvent`.
- */
-export interface ArrayMoveEventParams<T> extends ArrayEventParams<T> {
-	/**
-	 * Where item is moved from.
-	 */
-	readonly fromIndex: number;
+	export interface EventParams<T> extends ICollection.EventParams<T> {
+		/**
+		 * Event sender.
+		 */
+		readonly sender: IArray<T>;
+	}
 
 	/**
-	 * Where item is moved to.
+	 * Parameters of `spliceEvent`.
 	 */
-	readonly toIndex: number;
+	export interface SpliceEventParams<T> extends EventParams<T> {
+		/**
+		 * Result of `splice` method.
+		 */
+		readonly spliceResult: SpliceResult<T>;
+	}
 
 	/**
-	 * The moved item.
+	 * Parameters of `moveEvent`.
 	 */
-	readonly item: T;
-}
+	export interface MoveEventParams<T> extends EventParams<T> {
+		/**
+		 * Where item is moved from.
+		 */
+		readonly fromIndex: number;
 
-/**
- * Parameters of `replaceEvent`.
- */
-export interface ArrayReplaceEventParams<T> extends ArrayEventParams<T> {
-	/**
-	 * Index of the replaced item.
-	 */
-	readonly index: number;
+		/**
+		 * Where item is moved to.
+		 */
+		readonly toIndex: number;
+
+		/**
+		 * The moved item.
+		 */
+		readonly item: T;
+	}
 
 	/**
-	 * Old item.
+	 * Parameters of `replaceEvent`.
 	 */
-	readonly oldItem: T;
+	export interface ReplaceEventParams<T> extends EventParams<T> {
+		/**
+		 * Index of the replaced item.
+		 */
+		readonly index: number;
+
+		/**
+		 * Old item.
+		 */
+		readonly oldItem: T;
+
+		/**
+		 * New item.
+		 */
+		readonly newItem: T;
+	}
 
 	/**
-	 * New item.
+	 * Parameters of `clearEvent`.
 	 */
-	readonly newItem: T;
-}
+	export interface ItemsEventParams<T> extends EventParams<T> {
+		/**
+		 * Old array contents.
+		 */
+		readonly items: T[];
+	}
 
-/**
- * Parameters of `clearEvent`.
- */
-export interface ArrayItemsEventParams<T> extends ArrayEventParams<T> {
 	/**
-	 * Old array contents.
+	 * Parameters of `reorderEvent`.
 	 */
-	readonly items: T[];
-}
+	export interface ReorderEventParams<T> extends ItemsEventParams<T> {
+		/**
+		 * Indexes of items in reordered array.
+		 */
+		readonly indexArray: number[];
+	}
 
-/**
- * Parameters of `reorderEvent`.
- */
-export interface ArrayReorderEventParams<T> extends ArrayItemsEventParams<T> {
 	/**
-	 * Indexes of items in reordered array.
+	 * [[JW.List.splice|splice]] method arguments.
+	 * Returned by [[JW.List.detectSplice|detectSplice]] method.
+	 *
+	 * @param T Item type.
 	 */
-	readonly indexArray: number[];
+	export interface SpliceParams<T> {
+		/**
+		 * Segments to remove.
+		 */
+		readonly removeParamsList: IIndexCount[];
+
+		/**
+		 * Segments to add.
+		 */
+		readonly addParamsList: IIndexItems<T>[];
+	}
+
+	/**
+	 * [[JW.List.splice|splice]] method result.
+	 *
+	 * @param T Item type.
+	 */
+	export interface SpliceResult<T> {
+		/**
+		 * Old array contents.
+		 */
+		readonly oldItems: T[];
+
+		/**
+		 * Removed item segments.
+		 */
+		readonly removedItemsList: IIndexItems<T>[];
+
+		/**
+		 * @param addedItemsList Added item segments.
+		 */
+		readonly addedItemsList: IIndexItems<T>[];
+
+		/**
+		 * Returns plain array of removed items.
+		 */
+		readonly removedItems: T[];
+
+		/**
+		 * Returns plain array of added items.
+		 */
+		readonly addedItems: T[];
+
+		/**
+		 * Converts removed item segments to "index-count" pairs.
+		 */
+		readonly removeParamsList: IIndexCount[];
+
+		/**
+		 * Checks if [[JW.List.splice|splice]] method call didn't change the array.
+		 * @returns Array hasn't been changed.
+		 */
+		readonly empty: boolean;
+	}
 }

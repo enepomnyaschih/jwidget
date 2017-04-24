@@ -22,7 +22,7 @@ import Bindable from './Bindable';
 import Class from './Class';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
-import {default as ICollection, CollectionEventParams} from './ICollection';
+import ICollection from './ICollection';
 import IMap from './IMap';
 import IProperty from './IProperty';
 import ISet from './ISet';
@@ -300,12 +300,12 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	abstract get clearEvent(): Bindable<CollectionEventParams<T>>;
+	abstract get clearEvent(): Bindable<ICollection.EventParams<T>>;
 
 	/**
 	 * Collection is changed. Triggered right after any another event.
 	 */
-	abstract get changeEvent(): Bindable<CollectionEventParams<T>>;
+	abstract get changeEvent(): Bindable<ICollection.EventParams<T>>;
 
 	/**
 	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in

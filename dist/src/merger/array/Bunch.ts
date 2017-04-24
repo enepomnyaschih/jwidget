@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import Class from '../../Class';
 import IArray from '../../IArray';
 import IndexCount from '../../IndexCount';
@@ -58,7 +57,7 @@ export default class Bunch<T> extends Class {
 		return 0;
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<T>) {
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var index = this._getIndex();
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -70,20 +69,20 @@ export default class Bunch<T> extends Class {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<T>) {
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
 		this.target.trySet(params.newItem, this._getIndex() + params.index);
 	}
 
-	private _onMove(params: ArrayMoveEventParams<T>) {
+	private _onMove(params: IArray.MoveEventParams<T>) {
 		var index = this._getIndex();
 		this.target.tryMove(index + params.fromIndex, index + params.toIndex);
 	}
 
-	private _onClear(params: ArrayItemsEventParams<T>) {
+	private _onClear(params: IArray.ItemsEventParams<T>) {
 		this.target.tryRemoveAll(this._getIndex(), params.items.length);
 	}
 
-	private _onReorder(params: ArrayReorderEventParams<T>) {
+	private _onReorder(params: IArray.ReorderEventParams<T>) {
 		var index = this._getIndex();
 		var bunchIndexArray = params.indexArray;
 		var bunchLength = bunchIndexArray.length;

@@ -22,7 +22,7 @@ import Bindable from './Bindable';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IClass from './IClass';
-import {default as ICollection, CollectionEventParams} from './ICollection';
+import ICollection from './ICollection';
 import ISetSpliceParams from './ISetSpliceParams';
 import ISetSpliceResult from './ISetSpliceResult';
 
@@ -353,7 +353,7 @@ export default ISet;
 /**
  * `ISet` event parameters.
  */
-export interface SetEventParams<T extends IClass> extends CollectionEventParams<T> {
+export interface SetEventParams<T extends IClass> extends ICollection.EventParams<T> {
 	/**
 	 * Event sender.
 	 */

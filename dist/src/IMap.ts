@@ -20,7 +20,7 @@
 
 import Bindable from './Bindable';
 import Dictionary from './Dictionary';
-import {CollectionEventParams} from './ICollection';
+import ICollection from './ICollection';
 import IIndexedCollection from './IIndexedCollection';
 import IMapSpliceParams from './IMapSpliceParams';
 import IMapSpliceResult from './IMapSpliceResult';
@@ -429,7 +429,7 @@ export default IMap;
 /**
  * `IMap` event parameters.
  */
-export interface MapEventParams<T> extends CollectionEventParams<T> {
+export interface MapEventParams<T> extends ICollection.EventParams<T> {
 	/**
 	 * Event sender.
 	 */

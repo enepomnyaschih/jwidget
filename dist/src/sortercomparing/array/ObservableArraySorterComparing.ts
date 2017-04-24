@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayItemsEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import IArray from '../../IArray';
 import ArraySorterComparing from './ArraySorterComparing';
 import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
@@ -37,16 +36,16 @@ export default class ObservableArraySorterComparing<T> extends ArraySorterCompar
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<T>) {
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<T>) {
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
 		this._splice([params.oldItem], [params.newItem]);
 	}
 
-	private _onClear(params: ArrayItemsEventParams<T>) {
+	private _onClear(params: IArray.ItemsEventParams<T>) {
 		this._splice(params.items, []);
 	}
 }

@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayItemsEventParams, ArrayMoveEventParams, ArrayReorderEventParams, ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import IArray from '../../IArray';
 import ArrayMapper from './ArrayMapper';
 import IArrayMapperConfig from './IArrayMapperConfig';
@@ -41,7 +40,7 @@ export default class Mapper<T, U> extends ArrayMapper<T, U> {
 		this.own(source.reorderEvent.bind(this._onReorder, this));
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<T>) {
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var sourceResult = params.spliceResult;
 		var sourceAddedItemsList = sourceResult.addedItemsList;
 		var targetAddParamsList: IIndexItems<U>[] = [];
@@ -58,21 +57,21 @@ export default class Mapper<T, U> extends ArrayMapper<T, U> {
 		}
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<T>) {
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
 		var newItem = this._create.call(this._scope, params.newItem);
 		var oldItem = this.target.trySet(newItem, params.index).value;
 		this._destroy.call(this._scope, oldItem, params.oldItem);
 	}
 
-	private _onMove(params: ArrayMoveEventParams<T>) {
+	private _onMove(params: IArray.MoveEventParams<T>) {
 		this.target.tryMove(params.fromIndex, params.toIndex);
 	}
 
-	private _onClear(params: ArrayItemsEventParams<T>) {
+	private _onClear(params: IArray.ItemsEventParams<T>) {
 		this._destroyItems(this.target.tryClear(), params.items);
 	}
 
-	private _onReorder(params: ArrayReorderEventParams<T>) {
+	private _onReorder(params: IArray.ReorderEventParams<T>) {
 		this.target.tryReorder(params.indexArray);
 	}
 }

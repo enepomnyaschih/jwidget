@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ArrayReplaceEventParams, ArraySpliceEventParams} from '../../IArray';
 import IArray from '../../IArray';
 import ArrayCounter from './ArrayCounter';
 import ICollectionCounterConfig from '../ICollectionCounterConfig';
@@ -38,7 +37,7 @@ export default class ObservableArrayCounter<T> extends ArrayCounter<T> {
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: ArraySpliceEventParams<T>) {
+	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var value = this._target.get();
 		spliceResult.removedItemsList.forEach((indexItems) => {
@@ -50,7 +49,7 @@ export default class ObservableArrayCounter<T> extends ArrayCounter<T> {
 		this._target.set(value);
 	}
 
-	private _onReplace(params: ArrayReplaceEventParams<T>) {
+	private _onReplace(params: IArray.ReplaceEventParams<T>) {
 		var oldFiltered = this._test.call(this._scope, params.oldItem) !== false;
 		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
 		if (oldFiltered && !newFiltered) {
