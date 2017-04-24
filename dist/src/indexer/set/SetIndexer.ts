@@ -20,7 +20,7 @@
 
 import AbstractCollectionIndexer from '../AbstractCollectionIndexer';
 import IClass from '../../IClass';
-import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
+import ICollectionIndexer from '../ICollectionIndexer';
 import ISet from '../../ISet';
 import ISetIndexer from './ISetIndexer';
 
@@ -36,7 +36,7 @@ export default class SetIndexer<T extends IClass> extends AbstractCollectionInde
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionIndexerConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionIndexer.Config<T>) {
 		super(source, config);
 	}
 }

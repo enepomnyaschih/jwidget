@@ -20,7 +20,7 @@
 
 import IArray from '../../IArray';
 import ArrayInserter from './ArrayInserter';
-import IArrayInserterConfig from './IArrayInserterConfig';
+import IArrayInserter from './IArrayInserter';
 
 /**
  * [[JW.List.Inserter|Inserter]] implementation for [[JW.ObservableArray]].
@@ -29,7 +29,7 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config?: IArrayInserterConfig<T>) {
+	constructor(source: IArray<T>, config?: IArrayInserter.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

@@ -20,7 +20,7 @@
 
 import AbstractCollectionObserver from '../AbstractCollectionObserver';
 import IClass from '../../IClass';
-import ICollectionObserverConfig from '../ICollectionObserverConfig';
+import ICollectionObserver from '../ICollectionObserver';
 import ISet from '../../ISet';
 import ISetObserver from './ISetObserver';
 
@@ -36,7 +36,7 @@ export default class SetObserver<T extends IClass> extends AbstractCollectionObs
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionObserverConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionObserver.Config<T>) {
 		super(source, config);
 	}
 }

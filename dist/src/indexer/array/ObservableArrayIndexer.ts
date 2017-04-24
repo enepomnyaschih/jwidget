@@ -20,7 +20,7 @@
 
 import IArray from '../../IArray';
 import ArrayIndexer from './ArrayIndexer';
-import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
+import ICollectionIndexer from '../ICollectionIndexer';
 
 /**
  * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.ObservableArray]].
@@ -29,7 +29,7 @@ export default class ObservableArrayIndexer<T> extends ArrayIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionIndexerConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionIndexer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

@@ -21,11 +21,10 @@
 import MapFilterer from './MapFilterer';
 import IMap from '../../IMap';
 import IMapFilterer from './IMapFilterer';
-import IMapFiltererConfig from './IMapFiltererConfig';
 import Map from '../../Map';
 import ObservableMapFilterer from './ObservableMapFilterer';
 
-export function createMapFilterer<T>(source: IMap<T>, config: IMapFiltererConfig<T>): IMapFilterer<T> {
+export function createMapFilterer<T>(source: IMap<T>, config: IMapFilterer.Config<T>): IMapFilterer<T> {
 	return source.silent ?
 		new MapFilterer<T>(source, config) :
 		new ObservableMapFilterer<T>(source, config);

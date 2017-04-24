@@ -21,7 +21,7 @@
 import AbstractCollectionCounter from '../AbstractCollectionCounter';
 import IArray from '../../IArray';
 import IArrayCounter from './IArrayCounter';
-import ICollectionCounterConfig from '../ICollectionCounterConfig';
+import ICollectionCounter from '../ICollectionCounter';
 
 /**
  * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Array]].
@@ -35,7 +35,7 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> implem
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionCounterConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionCounter.Config<T>) {
 		super(source, config);
 	}
 }

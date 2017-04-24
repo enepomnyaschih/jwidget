@@ -38,3 +38,15 @@ interface ISetFilterer<T extends IClass> extends ICollectionFilterer<T> {
 }
 
 export default ISetFilterer;
+
+namespace ISetFilterer {
+	/**
+	 * @inheritdoc
+	 */
+	export interface Config<T extends IClass> extends ICollectionFilterer.Config<T> {
+		/**
+		 * @inheritdoc
+		 */
+		readonly target?: ISet<T>;
+	}
+}

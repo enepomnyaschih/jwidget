@@ -22,7 +22,6 @@ import AbstractCollectionFilterer from '../AbstractCollectionFilterer';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetFilterer from './ISetFilterer';
-import ISetFiltererConfig from './ISetFiltererConfig';
 import Set from '../../Set';
 
 /**
@@ -44,7 +43,7 @@ export default class SetFilterer<T extends IClass> extends AbstractCollectionFil
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ISetFiltererConfig<T>) {
+	constructor(source: ISet<T>, config: ISetFilterer.Config<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(this.source.silent) : config.target;

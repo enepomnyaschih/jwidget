@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
+import ICollectionIndexer from '../ICollectionIndexer';
 import IMap from '../../IMap';
 import MapIndexer from './MapIndexer';
 import * as MapUtils from '../../MapUtils';
@@ -30,7 +30,7 @@ export default class ObservableMapIndexer<T> extends MapIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionIndexerConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionIndexer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

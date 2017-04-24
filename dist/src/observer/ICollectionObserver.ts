@@ -63,3 +63,39 @@ interface ICollectionObserver extends IClass {
 }
 
 export default ICollectionObserver;
+
+namespace ICollectionObserver {
+	/**
+	 * [[JW.AbstractCollection.Observer]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Item is added to collection.
+		 */
+		readonly add?: (item: T) => void;
+
+		/**
+		 * Item is removed from collection.
+		 */
+		readonly remove?: (item: T) => void;
+
+		/**
+		 * Collection is cleared. By default, calls [[removeItem]] for all collection items.
+		 */
+		readonly clear?: (items: T[]) => void;
+
+		/**
+		 * Collection is changed arbitrarily.
+		 */
+		readonly change?: () => void;
+
+		/**
+		 * [[addItem]], [[removeItem]],
+		 * [[clearItems]] and [[change]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+	}
+}

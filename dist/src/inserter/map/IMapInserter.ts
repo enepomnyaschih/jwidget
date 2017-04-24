@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Dictionary from '../../Dictionary';
 import IClass from '../../IClass';
 
 /**
@@ -54,3 +55,35 @@ interface IMapInserter extends IClass {
 }
 
 export default IMapInserter;
+
+namespace IMapInserter {
+	/**
+	 * [[JW.Map.Inserter]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Function to call on item adding to specific position in map.
+		 */
+		readonly add?: (item: T, key: string) => void;
+
+		/**
+		 * Function to call on item removing from specific position in map.
+		 */
+		readonly remove?: (item: T, key: string) => void;
+
+		/**
+		 * Function to call on map cleanup.
+		 * By default, calls [[removeItem]] for all map items.
+		 */
+		readonly clear?: (items: Dictionary<T>) => void;
+
+		/**
+		 * [[addItem]], [[removeItem]] and
+		 * [[clearItems]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+	}
+}

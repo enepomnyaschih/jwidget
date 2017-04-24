@@ -22,7 +22,6 @@ import AbstractCollectionMapper from '../AbstractCollectionMapper';
 import Dictionary from '../../Dictionary';
 import IMap from '../../IMap';
 import IMapMapper from './IMapMapper';
-import IMapMapperConfig from './IMapMapperConfig';
 import Map from '../../Map';
 
 /**
@@ -44,7 +43,7 @@ export default class MapMapper<T, U> extends AbstractCollectionMapper<T, U> impl
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: IMapMapperConfig<T, U>) {
+	constructor(source: IMap<T>, config: IMapMapper.Config<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<U>(this.source.silent) : config.target;

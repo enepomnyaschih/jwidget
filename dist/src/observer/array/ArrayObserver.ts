@@ -21,7 +21,7 @@
 import AbstractCollectionObserver from '../AbstractCollectionObserver';
 import IArray from '../../IArray';
 import IArrayObserver from './IArrayObserver';
-import ICollectionObserverConfig from '../ICollectionObserverConfig';
+import ICollectionObserver from '../ICollectionObserver';
 
 /**
  * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Array]].
@@ -35,7 +35,7 @@ export default class ArrayObserver<T> extends AbstractCollectionObserver<T> impl
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionObserverConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionObserver.Config<T>) {
 		super(source, config);
 	}
 }

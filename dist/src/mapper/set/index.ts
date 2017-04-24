@@ -22,12 +22,11 @@ import {destroy} from '../../Core';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetMapper from './ISetMapper';
-import ISetMapperConfig from './ISetMapperConfig';
 import ObservableSetMapper from './ObservableSetMapper';
 import Set from '../../Set';
 import SetMapper from './SetMapper';
 
-export function createSetMapper<T extends IClass, U extends IClass>(source: ISet<T>, config: ISetMapperConfig<T, U>): ISetMapper<T, U> {
+export function createSetMapper<T extends IClass, U extends IClass>(source: ISet<T>, config: ISetMapper.Config<T, U>): ISetMapper<T, U> {
 	return source.silent ?
 		new SetMapper<T, U>(source, config) :
 		new ObservableSetMapper<T, U>(source, config);

@@ -19,7 +19,7 @@
 */
 
 import IMap from '../../IMap';
-import IMapMapperConfig from './IMapMapperConfig';
+import IMapMapper from './IMapMapper';
 import MapMapper from './MapMapper';
 import * as MapUtils from '../../MapUtils';
 
@@ -30,7 +30,7 @@ export default class ObservableMapMapper<T, U> extends MapMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: IMapMapperConfig<T, U>) {
+	constructor(source: IMap<T>, config: IMapMapper.Config<T, U>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.reindexEvent.bind(this._onReindex, this));

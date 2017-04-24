@@ -23,7 +23,6 @@ import Class from '../../Class';
 import Dictionary from '../../Dictionary';
 import IMap from '../../IMap';
 import IMapInserter from './IMapInserter';
-import IMapInserterConfig from './IMapInserterConfig';
 
 /**
  * View synchronizer with map. Listens all map events and reduces them to 2 granular functions:
@@ -84,7 +83,7 @@ export default class MapInserter<T> extends Class implements IMapInserter {
 	 * @param source Source map.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IMap<T>, config: IMapInserterConfig<T> = {}) {
+	constructor(readonly source: IMap<T>, config: IMapInserter.Config<T> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;

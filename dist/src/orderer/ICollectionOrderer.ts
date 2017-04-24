@@ -90,3 +90,17 @@ interface ICollectionOrderer<T extends IClass> extends IClass {
 }
 
 export default ICollectionOrderer;
+
+namespace ICollectionOrderer {
+	/**
+	 * [[JW.AbstractCollection.Orderer]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T extends IClass> {
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IArray<T>;
+	}
+}

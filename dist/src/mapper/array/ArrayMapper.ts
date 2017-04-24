@@ -21,7 +21,6 @@
 import AbstractCollectionMapper from '../AbstractCollectionMapper';
 import IArray from '../../IArray';
 import IArrayMapper from './IArrayMapper';
-import IArrayMapperConfig from './IArrayMapperConfig';
 import List from '../../List';
 
 /**
@@ -43,7 +42,7 @@ export default class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> im
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: IArrayMapperConfig<T, U>) {
+	constructor(source: IArray<T>, config: IArrayMapper.Config<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(this.source.silent) : config.target;

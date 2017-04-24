@@ -22,12 +22,12 @@ import SetIndexer from './SetIndexer';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetIndexer from './ISetIndexer';
-import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
+import ICollectionIndexer from '../ICollectionIndexer';
 import IMap from '../../IMap';
 import Map from '../../Map';
 import ObservableSetIndexer from './ObservableSetIndexer';
 
-export function createSetIndexer<T extends IClass>(source: ISet<T>, config: ICollectionIndexerConfig<T>): ISetIndexer<T> {
+export function createSetIndexer<T extends IClass>(source: ISet<T>, config: ICollectionIndexer.Config<T>): ISetIndexer<T> {
 	return source.silent ?
 		new SetIndexer<T>(source, config) :
 		new ObservableSetIndexer<T>(source, config);

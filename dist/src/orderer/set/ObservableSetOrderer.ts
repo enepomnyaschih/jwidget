@@ -19,7 +19,7 @@
 */
 
 import IClass from '../../IClass';
-import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
+import ICollectionOrderer from '../ICollectionOrderer';
 import ISet from '../../ISet';
 import SetOrderer from './SetOrderer';
 import * as ArrayUtils from '../../ArrayUtils';
@@ -31,7 +31,7 @@ export default class ObservableSetOrderer<T extends IClass> extends SetOrderer<T
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionOrdererConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionOrderer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

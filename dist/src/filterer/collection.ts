@@ -26,9 +26,8 @@ import Map from '../Map';
 import Set from '../Set';
 import ICollection from '../ICollection';
 import ICollectionFilterer from './ICollectionFilterer';
-import ICollectionFiltererConfig from './ICollectionFiltererConfig';
 
-export function createFilterer<T>(source: ICollection<T>, config: ICollectionFiltererConfig<T>): ICollectionFilterer<T> {
+export function createFilterer<T>(source: ICollection<T>, config: ICollectionFilterer.Config<T>): ICollectionFilterer<T> {
 	return (source instanceof List) ? createArrayFilterer(source, config) :
 		(source instanceof Map) ? createMapFilterer(source, config) :
 		(source instanceof Set) ? createSetFilterer(source, config) : null;

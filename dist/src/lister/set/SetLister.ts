@@ -20,7 +20,7 @@
 
 import AbstractCollectionLister from '../AbstractCollectionLister';
 import IClass from '../../IClass';
-import ICollectionListerConfig from '../ICollectionListerConfig';
+import ICollectionLister from '../ICollectionLister';
 import ISet from '../../ISet';
 import ISetLister from './ISetLister';
 
@@ -36,7 +36,7 @@ export default class SetLister<T extends IClass> extends AbstractCollectionListe
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionListerConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionLister.Config<T>) {
 		super(source, config);
 	}
 }

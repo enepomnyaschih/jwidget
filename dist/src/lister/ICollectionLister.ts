@@ -101,3 +101,17 @@ interface ICollectionLister<T extends IClass> extends IClass {
 }
 
 export default ICollectionLister;
+
+namespace ICollectionLister {
+	/**
+	 * [[JW.AbstractCollection.Lister]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T extends IClass> {
+		/**
+		 * Target set. By default, created automatically.
+		 */
+		readonly target?: ISet<T>;
+	}
+}

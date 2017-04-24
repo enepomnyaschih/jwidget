@@ -19,7 +19,7 @@
 */
 
 import IClass from '../../IClass';
-import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
+import ICollectionIndexer from '../ICollectionIndexer';
 import ISet from '../../ISet';
 import SetIndexer from './SetIndexer';
 
@@ -30,7 +30,7 @@ export default class ObservableSetIndexer<T extends IClass> extends SetIndexer<T
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionIndexerConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionIndexer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

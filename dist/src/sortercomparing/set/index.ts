@@ -20,14 +20,14 @@
 
 import IArray from '../../IArray';
 import IClass from '../../IClass';
-import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
+import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import ISet from '../../ISet';
 import ISetSorterComparing from './ISetSorterComparing';
 import List from '../../List';
 import ObservableSetSorterComparing from './ObservableSetSorterComparing';
 import SetSorterComparing from './SetSorterComparing';
 
-export function createSetSorterComparing<T extends IClass>(source: ISet<T>, config: ICollectionSorterComparingConfig<T>): ISetSorterComparing<T> {
+export function createSetSorterComparing<T extends IClass>(source: ISet<T>, config: ICollectionSorterComparing.Config<T>): ISetSorterComparing<T> {
 	return source.silent ?
 		new SetSorterComparing<T>(source, config) :
 		new ObservableSetSorterComparing<T>(source, config);

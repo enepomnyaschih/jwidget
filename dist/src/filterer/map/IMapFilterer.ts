@@ -37,3 +37,15 @@ interface IMapFilterer<T> extends ICollectionFilterer<T> {
 }
 
 export default IMapFilterer;
+
+namespace IMapFilterer {
+	/**
+	 * @inheritdoc
+	 */
+	export interface Config<T> extends ICollectionFilterer.Config<T> {
+		/**
+		 * @inheritdoc
+		 */
+		readonly target?: IMap<T>;
+	}
+}

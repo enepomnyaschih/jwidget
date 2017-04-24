@@ -22,12 +22,11 @@ import {destroy} from '../../Core';
 import Destroyable from '../../Destroyable';
 import IMap from '../../IMap';
 import IMapMapper from './IMapMapper';
-import IMapMapperConfig from './IMapMapperConfig';
 import Map from '../../Map';
 import MapMapper from './MapMapper';
 import ObservableMapMapper from './ObservableMapMapper';
 
-export function createMapMapper<T, U>(source: IMap<T>, config: IMapMapperConfig<T, U>): IMapMapper<T, U> {
+export function createMapMapper<T, U>(source: IMap<T>, config: IMapMapper.Config<T, U>): IMapMapper<T, U> {
 	return source.silent ?
 		new MapMapper<T, U>(source, config) :
 		new ObservableMapMapper<T, U>(source, config);

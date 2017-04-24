@@ -19,7 +19,7 @@
 */
 
 import IClass from '../../IClass';
-import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
+import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import ISet from '../../ISet';
 import SetSorterComparing from './SetSorterComparing';
 
@@ -30,7 +30,7 @@ export default class ObservableSetSorterComparing<T extends IClass> extends SetS
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionSorterComparingConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionSorterComparing.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

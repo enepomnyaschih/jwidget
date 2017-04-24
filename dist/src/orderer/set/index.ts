@@ -20,14 +20,14 @@
 
 import IArray from '../../IArray';
 import IClass from '../../IClass';
-import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
+import ICollectionOrderer from '../ICollectionOrderer';
 import ISet from '../../ISet';
 import ISetOrderer from './ISetOrderer';
 import List from '../../List';
 import ObservableSetOrderer from './ObservableSetOrderer';
 import SetOrderer from './SetOrderer';
 
-export function createSetOrderer<T extends IClass>(source: ISet<T>, config: ICollectionOrdererConfig<T>): ISetOrderer<T> {
+export function createSetOrderer<T extends IClass>(source: ISet<T>, config: ICollectionOrderer.Config<T>): ISetOrderer<T> {
 	return source.silent ?
 		new SetOrderer<T>(source, config) :
 		new ObservableSetOrderer<T>(source, config);

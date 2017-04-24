@@ -22,7 +22,6 @@ import Class from '../Class';
 import Dictionary from '../Dictionary';
 import ICollection from '../ICollection';
 import ICollectionIndexer from './ICollectionIndexer';
-import ICollectionIndexerConfig from './ICollectionIndexerConfig';
 import IMap from '../IMap';
 import Map from '../Map';
 
@@ -127,7 +126,7 @@ abstract class AbstractCollectionIndexer<T> extends Class implements ICollection
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionIndexerConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionIndexer.Config<T>) {
 		super();
 		this._getKey = config.getKey;
 		this._scope = config.scope || this;

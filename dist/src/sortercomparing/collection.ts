@@ -26,10 +26,9 @@ import Map from '../Map';
 import Set from '../Set';
 import ICollection from '../ICollection';
 import ICollectionSorterComparing from './ICollectionSorterComparing';
-import ICollectionSorterComparingConfig from './ICollectionSorterComparingConfig';
 import IArray from '../IArray';
 
-export function createSorterComparing<T>(source: ICollection<T>, config: ICollectionSorterComparingConfig<T>): ICollectionSorterComparing<T> {
+export function createSorterComparing<T>(source: ICollection<T>, config: ICollectionSorterComparing.Config<T>): ICollectionSorterComparing<T> {
 	return (source instanceof List) ? createArraySorterComparing(source, config) :
 		(source instanceof Map) ? createMapSorterComparing(source, config) :
 		(source instanceof Set) ? createSetSorterComparing(source, config) : null;

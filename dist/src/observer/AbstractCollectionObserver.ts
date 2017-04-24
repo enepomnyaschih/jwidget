@@ -21,7 +21,6 @@
 import Class from '../Class';
 import ICollection from '../ICollection';
 import ICollectionObserver from './ICollectionObserver';
-import ICollectionObserverConfig from './ICollectionObserverConfig';
 
 /**
  * Collection observer. Listens all collection events and reduces them to 2 granular functions:
@@ -95,7 +94,7 @@ abstract class AbstractCollectionObserver<T> extends Class implements ICollectio
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionObserverConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionObserver.Config<T>) {
 		super();
 		config = config || {};
 		this._add = config.add;

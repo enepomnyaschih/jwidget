@@ -19,7 +19,6 @@
 */
 
 import IArray from '../../IArray';
-import IArrayFiltererReconfig from './IArrayFiltererReconfig';
 import ICollectionFilterer from '../ICollectionFilterer';
 
 /**
@@ -40,7 +39,7 @@ interface IArrayFilterer<T> extends ICollectionFilterer<T> {
 	 * Changes filterer configuration and refilters target collection.
 	 * @param config Options to modify.
 	 */
-	reconfigure(config: IArrayFiltererReconfig<T>): void;
+	reconfigure(config: IArrayFilterer.Reconfig<T>): void;
 
 	/**
 	 * Refilters target collection item. Call this method when collection item properties change the way that
@@ -64,3 +63,33 @@ interface IArrayFilterer<T> extends ICollectionFilterer<T> {
 }
 
 export default IArrayFilterer;
+
+namespace IArrayFilterer {
+	/**
+	 * @inheritdoc
+	 */
+	export interface Config<T> extends ICollectionFilterer.Config<T> {
+		/**
+		 * @inheritdoc
+		 */
+		readonly target?: IArray<T>;
+	}
+
+	/**
+	 * [[Filterer]]'s [[Filterer.reconfigure|reconfigure]] method options.
+	 * All options are optional. If skipped, an option stays the same.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Reconfig<T> {
+		/**
+		 * Filtering criteria.
+		 */
+		readonly filterer?: (item: T) => boolean;
+
+		/**
+		 * [[filterItem]] call scope.
+		 */
+		readonly scope?: any;
+	}
+}

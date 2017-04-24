@@ -22,7 +22,7 @@ import AbstractCollectionOrderer from '../AbstractCollectionOrderer';
 import IArray from '../../IArray';
 import IArrayOrderer from './IArrayOrderer';
 import IClass from '../../IClass';
-import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
+import ICollectionOrderer from '../ICollectionOrderer';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Array]].
@@ -36,7 +36,7 @@ export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOr
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionOrdererConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionOrderer.Config<T>) {
 		super(source, config);
 	}
 }

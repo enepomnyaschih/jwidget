@@ -21,7 +21,7 @@
 import IArray from '../../IArray';
 import ArrayOrderer from './ArrayOrderer';
 import IClass from '../../IClass';
-import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
+import ICollectionOrderer from '../ICollectionOrderer';
 import IndexCount from '../../IndexCount';
 import IndexItems from '../../IndexItems';
 import * as ArrayUtils from '../../ArrayUtils';
@@ -33,7 +33,7 @@ export default class ObservableArrayOrderer<T extends IClass> extends ArrayOrder
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionOrdererConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionOrderer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

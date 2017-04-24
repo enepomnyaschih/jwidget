@@ -105,3 +105,28 @@ interface ICollectionIndexer<T> extends IClass {
 }
 
 export default ICollectionIndexer;
+
+namespace ICollectionIndexer {
+	/**
+	 * [[JW.AbstractCollection.Indexer]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Indexing function. Determines item key in map.
+		 */
+		readonly getKey: (item: T) => any;
+
+		/**
+		 * [[getKey]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+
+		/**
+		 * Target map. By default, created automatically.
+		 */
+		readonly target?: IMap<T>;
+	}
+}

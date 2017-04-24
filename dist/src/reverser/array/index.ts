@@ -21,11 +21,10 @@
 import ArrayReverser from './ArrayReverser';
 import IArray from '../../IArray';
 import IArrayReverser from './IArrayReverser';
-import IArrayReverserConfig from './IArrayReverserConfig';
 import List from '../../List';
 import ObservableArrayReverser from './ObservableArrayReverser';
 
-export function createArrayReverser<T>(source: IArray<T>, config: IArrayReverserConfig<T>): IArrayReverser<T> {
+export function createArrayReverser<T>(source: IArray<T>, config: IArrayReverser.Config<T>): IArrayReverser<T> {
 	return source.silent ?
 		new ArrayReverser<T>(source, config) :
 		new ObservableArrayReverser<T>(source, config);

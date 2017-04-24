@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionObserver from '../AbstractCollectionObserver';
-import ICollectionObserverConfig from '../ICollectionObserverConfig';
+import ICollectionObserver from '../ICollectionObserver';
 import IMap from '../../IMap';
 import IMapObserver from './IMapObserver';
 
@@ -35,7 +35,7 @@ export default class MapObserver<T> extends AbstractCollectionObserver<T> implem
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionObserverConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionObserver.Config<T>) {
 		super(source, config);
 	}
 }

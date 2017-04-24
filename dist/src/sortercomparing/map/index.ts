@@ -19,14 +19,14 @@
 */
 
 import IArray from '../../IArray';
-import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
+import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import IMap from '../../IMap';
 import IMapSorterComparing from './IMapSorterComparing';
 import MapSorterComparing from './MapSorterComparing';
 import List from '../../List';
 import ObservableMapSorterComparing from './ObservableMapSorterComparing';
 
-export function createMapSorterComparing<T>(source: IMap<T>, config: ICollectionSorterComparingConfig<T>): IMapSorterComparing<T> {
+export function createMapSorterComparing<T>(source: IMap<T>, config: ICollectionSorterComparing.Config<T>): IMapSorterComparing<T> {
 	return source.silent ?
 		new MapSorterComparing<T>(source, config) :
 		new ObservableMapSorterComparing<T>(source, config);

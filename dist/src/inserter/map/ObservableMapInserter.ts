@@ -19,7 +19,7 @@
 */
 
 import IMap from '../../IMap';
-import IMapInserterConfig from './IMapInserterConfig';
+import IMapInserter from './IMapInserter';
 import MapInserter from './MapInserter';
 
 /**
@@ -29,7 +29,7 @@ export default class ObservableMapInserter<T> extends MapInserter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config?: IMapInserterConfig<T>) {
+	constructor(source: IMap<T>, config?: IMapInserter.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.reindexEvent.bind(this._onReindex, this));

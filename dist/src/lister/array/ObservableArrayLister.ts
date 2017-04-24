@@ -21,7 +21,7 @@
 import IArray from '../../IArray';
 import ArrayLister from './ArrayLister';
 import IClass from '../../IClass';
-import ICollectionListerConfig from '../ICollectionListerConfig';
+import ICollectionLister from '../ICollectionLister';
 
 /**
  * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.ObservableArray]].
@@ -30,7 +30,7 @@ export default class ObservableArrayLister<T extends IClass> extends ArrayLister
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionListerConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionLister.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

@@ -21,11 +21,11 @@
 import ArraySorterComparing from './ArraySorterComparing';
 import IArray from '../../IArray';
 import IArraySorterComparing from './IArraySorterComparing';
-import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
+import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import List from '../../List';
 import ObservableArraySorterComparing from './ObservableArraySorterComparing';
 
-export function createArraySorterComparing<T>(source: IArray<T>, config: ICollectionSorterComparingConfig<T>): IArraySorterComparing<T> {
+export function createArraySorterComparing<T>(source: IArray<T>, config: ICollectionSorterComparing.Config<T>): IArraySorterComparing<T> {
 	return source.silent ?
 		new ArraySorterComparing<T>(source, config) :
 		new ObservableArraySorterComparing<T>(source, config);

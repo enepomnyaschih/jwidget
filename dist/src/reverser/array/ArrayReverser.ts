@@ -21,7 +21,6 @@
 import Class from '../../Class';
 import IArray from '../../IArray';
 import IArrayReverser from './IArrayReverser';
-import IArrayReverserConfig from './IArrayReverserConfig';
 import List from '../../List';
 
 /**
@@ -99,7 +98,7 @@ export default class ArrayReverser<T> extends Class implements IArrayReverser<T>
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IArray<T>, config: IArrayReverserConfig<T> = {}) {
+	constructor(readonly source: IArray<T>, config: IArrayReverser.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;

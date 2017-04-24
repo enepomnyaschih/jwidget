@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IArray from '../../IArray';
 import ArrayFilterer from './ArrayFilterer';
 import Dictionary from '../../Dictionary';
-import IArrayFiltererConfig from './IArrayFiltererConfig';
+import IArray from '../../IArray';
+import IArrayFilterer from './IArrayFilterer';
 import * as ArrayUtils from '../../ArrayUtils';
 
 /**
@@ -31,7 +31,7 @@ export default class ObservableArrayFilterer<T> extends ArrayFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: IArrayFiltererConfig<T>) {
+	constructor(source: IArray<T>, config: IArrayFilterer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

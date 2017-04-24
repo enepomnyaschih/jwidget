@@ -22,11 +22,11 @@ import ArrayOrderer from './ArrayOrderer';
 import IArray from '../../IArray';
 import IArrayOrderer from './IArrayOrderer';
 import IClass from '../../IClass';
-import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
+import ICollectionOrderer from '../ICollectionOrderer';
 import List from '../../List';
 import ObservableArrayOrderer from './ObservableArrayOrderer';
 
-export function createArrayOrderer<T extends IClass>(source: IArray<T>, config: ICollectionOrdererConfig<T>): IArrayOrderer<T> {
+export function createArrayOrderer<T extends IClass>(source: IArray<T>, config: ICollectionOrderer.Config<T>): IArrayOrderer<T> {
 	return source.silent ?
 		new ArrayOrderer<T>(source, config) :
 		new ObservableArrayOrderer<T>(source, config);

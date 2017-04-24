@@ -21,10 +21,10 @@
 import ArrayObserver from './ArrayObserver';
 import IArray from '../../IArray';
 import IArrayObserver from './IArrayObserver';
-import ICollectionObserverConfig from '../ICollectionObserverConfig';
+import ICollectionObserver from '../ICollectionObserver';
 import ObservableArrayObserver from './ObservableArrayObserver';
 
-export function createArrayObserver<T>(source: IArray<T>, config: ICollectionObserverConfig<T>): IArrayObserver<T> {
+export function createArrayObserver<T>(source: IArray<T>, config: ICollectionObserver.Config<T>): IArrayObserver<T> {
 	return source.silent ?
 		new ArrayObserver<T>(source, config) :
 		new ObservableArrayObserver<T>(source, config);

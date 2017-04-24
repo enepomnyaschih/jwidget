@@ -21,7 +21,7 @@
 import AbstractCollectionSorterComparing from '../AbstractCollectionSorterComparing';
 import IArray from '../../IArray';
 import IArraySorterComparing from './IArraySorterComparing';
-import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
+import ICollectionSorterComparing from '../ICollectionSorterComparing';
 
 /**
  * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Array]].
@@ -35,7 +35,7 @@ export default class ArraySorterComparing<T> extends AbstractCollectionSorterCom
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionSorterComparingConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionSorterComparing.Config<T>) {
 		super(source, config);
 	}
 }

@@ -19,7 +19,7 @@
 */
 
 import IMap from '../../IMap';
-import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
+import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import MapSorterComparing from './MapSorterComparing';
 import * as MapUtils from '../../MapUtils';
 
@@ -30,7 +30,7 @@ export default class SorterComparing<T> extends MapSorterComparing<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionSorterComparingConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionSorterComparing.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

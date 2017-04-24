@@ -21,12 +21,12 @@
 import ArrayCounter from './ArrayCounter';
 import IArray from '../../IArray';
 import IArrayCounter from './IArrayCounter';
-import ICollectionCounterConfig from '../ICollectionCounterConfig';
+import ICollectionCounter from '../ICollectionCounter';
 import ObservableArrayCounter from './ObservableArrayCounter';
 import Property from '../../Property';
 import Watchable from '../../Watchable';
 
-export function createArrayCounter<T>(source: IArray<T>, config: ICollectionCounterConfig<T>): IArrayCounter<T> {
+export function createArrayCounter<T>(source: IArray<T>, config: ICollectionCounter.Config<T>): IArrayCounter<T> {
 	return source.silent ?
 		new ArrayCounter<T>(source, config) :
 		new ObservableArrayCounter<T>(source, config);

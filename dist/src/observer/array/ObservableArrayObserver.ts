@@ -20,7 +20,7 @@
 
 import IArray from '../../IArray';
 import ArrayObserver from './ArrayObserver';
-import ICollectionObserverConfig from '../ICollectionObserverConfig';
+import ICollectionObserver from '../ICollectionObserver';
 
 /**
  * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.ObservableArray]].
@@ -29,7 +29,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionObserverConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

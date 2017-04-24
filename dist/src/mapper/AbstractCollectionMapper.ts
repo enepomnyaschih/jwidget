@@ -21,7 +21,6 @@
 import Class from '../Class';
 import ICollection from '../ICollection';
 import ICollectionMapper from './ICollectionMapper';
-import ICollectionMapperConfig from './ICollectionMapperConfig';
 
 /**
  * Collection item converter.
@@ -142,7 +141,7 @@ abstract class AbstractCollectionMapper<T, U> extends Class implements ICollecti
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionMapperConfig<T, U>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionMapper.Config<T, U>) {
 		super();
 		this._create = config.create;
 		this._destroy = config.destroy;

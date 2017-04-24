@@ -20,7 +20,7 @@
 
 import AbstractCollectionOrderer from '../AbstractCollectionOrderer';
 import IClass from '../../IClass';
-import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
+import ICollectionOrderer from '../ICollectionOrderer';
 import IMap from '../../IMap';
 import IMapOrderer from './IMapOrderer';
 
@@ -36,7 +36,7 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionOrdererConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionOrderer.Config<T>) {
 		super(source, config);
 	}
 }

@@ -97,3 +97,17 @@ interface IArrayMerger<T> extends IClass {
 }
 
 export default IArrayMerger;
+
+namespace IArrayMerger {
+	/**
+	 * [[JW.List.Merger]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IArray<T>;
+	}
+}

@@ -19,7 +19,7 @@
 */
 
 import IMap from '../../IMap';
-import IMapFiltererConfig from './IMapFiltererConfig';
+import IMapFilterer from './IMapFilterer';
 import MapFilterer from './MapFilterer';
 import * as MapUtils from '../../MapUtils';
 
@@ -30,7 +30,7 @@ export default class ObservableMapFilterer<T> extends MapFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: IMapFiltererConfig<T>) {
+	constructor(source: IMap<T>, config: IMapFilterer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.reindexEvent.bind(this._onReindex, this));

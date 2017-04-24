@@ -22,7 +22,6 @@ import Class from '../Class';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
 import ICollectionLister from './ICollectionLister';
-import ICollectionListerConfig from './ICollectionListerConfig';
 import ISet from '../ISet';
 import Set from '../Set';
 
@@ -113,7 +112,7 @@ abstract class AbstractCollectionLister<T extends IClass> extends Class implemen
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionListerConfig<T> = {}) {
+	constructor(readonly source: ICollection<T>, config: ICollectionLister.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(source.silent) : config.target;

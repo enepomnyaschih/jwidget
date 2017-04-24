@@ -20,7 +20,7 @@
 
 import IArray from '../../IArray';
 import ArrayMapper from './ArrayMapper';
-import IArrayMapperConfig from './IArrayMapperConfig';
+import IArrayMapper from './IArrayMapper';
 import IndexItems from '../../IndexItems';
 
 /**
@@ -30,7 +30,7 @@ export default class Mapper<T, U> extends ArrayMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: IArrayMapperConfig<T, U>) {
+	constructor(source: IArray<T>, config: IArrayMapper.Config<T, U>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

@@ -23,7 +23,6 @@ import Bunch from './Bunch';
 import Class from '../../Class';
 import IArray from '../../IArray';
 import IArrayMerger from './IArrayMerger';
-import IArrayMergerConfig from './IArrayMergerConfig';
 import IClass from '../../IClass';
 import List from '../../List';
 
@@ -111,7 +110,7 @@ export default class ArrayMerger<T> extends Class implements IArrayMerger<T> {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IArray<IArray<T>>, config: IArrayMergerConfig<T> = {}) {
+	constructor(readonly source: IArray<IArray<T>>, config: IArrayMerger.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? this.createTarget(source) : config.target;

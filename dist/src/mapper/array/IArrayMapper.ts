@@ -37,3 +37,15 @@ interface IArrayMapper<T, U> extends ICollectionMapper<U> {
 }
 
 export default IArrayMapper;
+
+namespace IArrayMapper {
+	/**
+	 * @inheritdoc
+	 */
+	export interface Config<T, U> extends ICollectionMapper.Config<T, U> {
+		/**
+		 * @inheritdoc
+		 */
+		readonly target?: IArray<U>;
+	}
+}

@@ -112,3 +112,23 @@ interface ICollectionFilterer<T> extends IClass {
 }
 
 export default ICollectionFilterer;
+
+namespace ICollectionFilterer {
+	/**
+	 * [[JW.AbstractCollection.Filterer]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Filtering criteria.
+		 */
+		readonly test: (item: T) => boolean;
+
+		/**
+		 * [[filterItem]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+	}
+}

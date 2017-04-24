@@ -19,7 +19,7 @@
 */
 
 import IClass from '../IClass';
-import ICollectionCounterReconfig from './ICollectionCounterReconfig';
+import IProperty from '../IProperty';
 import Watchable from '../Watchable';
 
 /**
@@ -98,7 +98,7 @@ interface ICollectionCounter<T> extends IClass {
 	 * Changes counter configuration and recounts matching items.
 	 * @param config Options to modify.
 	 */
-	reconfigure(config: ICollectionCounterReconfig<T>): void;
+	reconfigure(config: ICollectionCounter.Reconfig<T>): void;
 
 	/**
 	 * Recounts matching items. Call this method when collection item properties change the way that
@@ -108,3 +108,46 @@ interface ICollectionCounter<T> extends IClass {
 }
 
 export default ICollectionCounter;
+
+namespace ICollectionCounter {
+	/**
+	 * [[Counter]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Filtering criteria.
+		 */
+		readonly test: (item: T) => boolean;
+
+		/**
+		 * [[filterItem]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+
+		/**
+		 * Target property. By default, created automatically.
+		 */
+		readonly target?: IProperty<number>;
+	}
+
+	/**
+	 * [[Counter]]'s [[Counter.reconfigure|reconfigure]] method options.
+	 * All options are optional. If skipped, an option stays the same.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Reconfig<T> {
+		/**
+		 * Filtering criteria.
+		 */
+		readonly test?: (item: T) => boolean;
+
+		/**
+		 * [[filterItem]] call scope.
+		 */
+		readonly scope?: any;
+	}
+}

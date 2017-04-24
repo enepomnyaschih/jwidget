@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ICollectionCounterConfig from '../ICollectionCounterConfig';
+import ICollectionCounter from '../ICollectionCounter';
 import IMap from '../../IMap';
 import MapCounter from './MapCounter';
 import * as MapUtils from '../../MapUtils';
@@ -30,7 +30,7 @@ export default class ObservableMapCounter<T> extends MapCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionCounterConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionCounter.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

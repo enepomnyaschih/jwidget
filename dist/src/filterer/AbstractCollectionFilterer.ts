@@ -21,7 +21,6 @@
 import Class from '../Class';
 import ICollection from '../ICollection';
 import ICollectionFilterer from './ICollectionFilterer';
-import ICollectionFiltererConfig from './ICollectionFiltererConfig';
 
 /**
  * Collection filterer.
@@ -129,7 +128,7 @@ abstract class AbstractCollectionFilterer<T> extends Class implements ICollectio
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionFiltererConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionFilterer.Config<T>) {
 		super();
 		this._test = config.test;
 		this._scope = config.scope || this;

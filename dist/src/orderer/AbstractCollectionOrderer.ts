@@ -24,7 +24,6 @@ import IArray from '../IArray';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
 import ICollectionOrderer from './ICollectionOrderer';
-import ICollectionOrdererConfig from './ICollectionOrdererConfig';
 import IndexItems from '../IndexItems';
 import List from '../List';
 import * as SetUtils from '../SetUtils';
@@ -105,7 +104,7 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class impleme
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionOrdererConfig<T> = {}) {
+	constructor(readonly source: ICollection<T>, config: ICollectionOrderer.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;

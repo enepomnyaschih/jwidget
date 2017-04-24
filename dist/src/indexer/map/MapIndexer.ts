@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionIndexer from '../AbstractCollectionIndexer';
-import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
+import ICollectionIndexer from '../ICollectionIndexer';
 import IMap from '../../IMap';
 import IMapIndexer from './IMapIndexer';
 
@@ -35,7 +35,7 @@ export default class MapIndexer<T> extends AbstractCollectionIndexer<T> implemen
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionIndexerConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionIndexer.Config<T>) {
 		super(source, config);
 	}
 }

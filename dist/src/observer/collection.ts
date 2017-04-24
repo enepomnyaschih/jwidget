@@ -26,9 +26,8 @@ import Map from '../Map';
 import Set from '../Set';
 import ICollection from '../ICollection';
 import ICollectionObserver from './ICollectionObserver';
-import ICollectionObserverConfig from './ICollectionObserverConfig';
 
-export function createObserver<T>(source: ICollection<T>, config: ICollectionObserverConfig<T>): ICollectionObserver {
+export function createObserver<T>(source: ICollection<T>, config: ICollectionObserver.Config<T>): ICollectionObserver {
 	return (source instanceof List) ? createArrayObserver(source, config) :
 		(source instanceof Map) ? createMapObserver(source, config) :
 		(source instanceof Set) ? createSetObserver(source, config) : null;

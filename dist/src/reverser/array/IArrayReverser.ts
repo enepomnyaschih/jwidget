@@ -89,3 +89,17 @@ interface IArrayReverser<T> extends IClass {
 }
 
 export default IArrayReverser;
+
+namespace IArrayReverser {
+	/**
+	 * [[JW.List.Reverser]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IArray<T>;
+	}
+}

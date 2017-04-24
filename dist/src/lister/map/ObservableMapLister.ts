@@ -19,7 +19,7 @@
 */
 
 import IClass from '../../IClass';
-import ICollectionListerConfig from '../ICollectionListerConfig';
+import ICollectionLister from '../ICollectionLister';
 import IMap from '../../IMap';
 import MapLister from './MapLister';
 import * as MapUtils from '../../MapUtils';
@@ -31,7 +31,7 @@ export default class ObservableMapLister<T extends IClass> extends MapLister<T> 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionListerConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionLister.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

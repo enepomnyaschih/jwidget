@@ -26,10 +26,9 @@ import Map from '../Map';
 import Set from '../Set';
 import ICollection from '../ICollection';
 import ICollectionIndexer from './ICollectionIndexer';
-import ICollectionIndexerConfig from './ICollectionIndexerConfig';
 import IMap from '../IMap';
 
-export function createIndexer<T>(source: ICollection<T>, config: ICollectionIndexerConfig<T>): ICollectionIndexer<T> {
+export function createIndexer<T>(source: ICollection<T>, config: ICollectionIndexer.Config<T>): ICollectionIndexer<T> {
 	return (source instanceof List) ? createArrayIndexer(source, config) :
 		(source instanceof Map) ? createMapIndexer(source, config) :
 		(source instanceof Set) ? createSetIndexer(source, config) : null;

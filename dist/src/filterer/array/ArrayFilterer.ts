@@ -22,8 +22,6 @@ import {def} from '../../Core';
 import AbstractCollectionFilterer from '../AbstractCollectionFilterer';
 import IArray from '../../IArray';
 import IArrayFilterer from './IArrayFilterer';
-import IArrayFiltererConfig from './IArrayFiltererConfig';
-import IArrayFiltererReconfig from './IArrayFiltererReconfig';
 import IndexCount from '../../IndexCount';
 import IndexItems from '../../IndexItems';
 import List from '../../List';
@@ -53,7 +51,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: IArrayFiltererConfig<T>) {
+	constructor(source: IArray<T>, config: IArrayFilterer.Config<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(this.source.silent) : config.target;
@@ -124,7 +122,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	 * Changes filterer configuration and refilters target collection.
 	 * @param config Options to modify.
 	 */
-	reconfigure(config: IArrayFiltererReconfig<T>) {
+	reconfigure(config: IArrayFilterer.Reconfig<T>) {
 		this._test = def(config.filterer, this._test);
 		this._scope = def(config.scope, this._scope);
 		this.refilter();

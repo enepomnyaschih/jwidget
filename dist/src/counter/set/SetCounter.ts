@@ -20,7 +20,7 @@
 
 import AbstractCollectionCounter from '../AbstractCollectionCounter';
 import IClass from '../../IClass';
-import ICollectionCounterConfig from '../ICollectionCounterConfig';
+import ICollectionCounter from '../ICollectionCounter';
 import ISet from '../../ISet';
 import ISetCounter from './ISetCounter';
 
@@ -36,7 +36,7 @@ export default class SetCounter<T extends IClass> extends AbstractCollectionCoun
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionCounterConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionCounter.Config<T>) {
 		super(source, config);
 	}
 }

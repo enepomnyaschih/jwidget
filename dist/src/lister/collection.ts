@@ -27,10 +27,9 @@ import Set from '../Set';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
 import ICollectionLister from './ICollectionLister';
-import ICollectionListerConfig from './ICollectionListerConfig';
 import ISet from '../ISet';
 
-export function createLister<T extends IClass>(source: ICollection<T>, config: ICollectionListerConfig<T>): ICollectionLister<T> {
+export function createLister<T extends IClass>(source: ICollection<T>, config: ICollectionLister.Config<T>): ICollectionLister<T> {
 	return (source instanceof List) ? createArrayLister(source, config) :
 		(source instanceof Map) ? createMapLister(source, config) :
 		(source instanceof Set) ? createSetLister(source, config) : null;

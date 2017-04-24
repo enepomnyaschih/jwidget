@@ -20,13 +20,13 @@
 
 import SetLister from './SetLister';
 import IClass from '../../IClass';
-import ICollectionListerConfig from '../ICollectionListerConfig';
+import ICollectionLister from '../ICollectionLister';
 import ISet from '../../ISet';
 import ISetLister from './ISetLister';
 import ObservableSetLister from './ObservableSetLister';
 import Set from '../../Set';
 
-export function createSetLister<T extends IClass>(source: ISet<T>, config: ICollectionListerConfig<T>): ISetLister<T> {
+export function createSetLister<T extends IClass>(source: ISet<T>, config: ICollectionLister.Config<T>): ISetLister<T> {
 	return source.silent ?
 		new SetLister<T>(source, config) :
 		new ObservableSetLister<T>(source, config);

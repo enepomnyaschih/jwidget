@@ -18,13 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ICollectionObserverConfig from '../ICollectionObserverConfig';
+import ICollectionObserver from '../ICollectionObserver';
 import IMap from '../../IMap';
 import IMapObserver from './IMapObserver';
 import MapObserver from './MapObserver';
 import ObservableMapObserver from './ObservableMapObserver';
 
-export function createMapObserver<T>(source: IMap<T>, config: ICollectionObserverConfig<T>): IMapObserver<T> {
+export function createMapObserver<T>(source: IMap<T>, config: ICollectionObserver.Config<T>): IMapObserver<T> {
 	return source.silent ?
 		new MapObserver<T>(source, config) :
 		new ObservableMapObserver<T>(source, config);

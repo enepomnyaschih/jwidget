@@ -20,7 +20,7 @@
 
 import AbstractCollectionOrderer from '../AbstractCollectionOrderer';
 import IClass from '../../IClass';
-import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
+import ICollectionOrderer from '../ICollectionOrderer';
 import ISet from '../../ISet';
 import ISetOrderer from './ISetOrderer';
 
@@ -36,7 +36,7 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionOrdererConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionOrderer.Config<T>) {
 		super(source, config);
 	}
 }

@@ -37,3 +37,15 @@ interface IMapMapper<T, U> extends ICollectionMapper<U> {
 }
 
 export default IMapMapper;
+
+namespace IMapMapper {
+	/**
+	 * @inheritdoc
+	 */
+	export interface Config<T, U> extends ICollectionMapper.Config<T, U> {
+		/**
+		 * @inheritdoc
+		 */
+		readonly target?: IMap<U>;
+	}
+}

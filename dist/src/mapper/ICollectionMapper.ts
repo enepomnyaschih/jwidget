@@ -120,3 +120,29 @@ interface ICollectionMapper<U> extends IClass {
 }
 
 export default ICollectionMapper;
+
+namespace ICollectionMapper {
+	/**
+	 * [[JW.AbstractCollection.Mapper]] configuration.
+	 *
+	 * @param T Source collection item type.
+	 * @param U Target collection item type.
+	 */
+	export interface Config<T, U> {
+		/**
+		 * Mapping function. Creates an item of target collection by item of source collection.
+		 */
+		readonly create: (data: T) => U;
+
+		/**
+		 * Item destructor. Destroys an item of target collection.
+		 */
+		readonly destroy?: (item: U, data: T) => void;
+
+		/**
+		 * [[createItem]] and [[destroyItem]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+	}
+}

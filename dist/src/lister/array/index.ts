@@ -22,12 +22,12 @@ import ArrayLister from './ArrayLister';
 import IArray from '../../IArray';
 import IArrayLister from './IArrayLister';
 import IClass from '../../IClass';
-import ICollectionListerConfig from '../ICollectionListerConfig';
+import ICollectionLister from '../ICollectionLister';
 import ISet from '../../ISet';
 import ObservableArrayLister from './ObservableArrayLister';
 import Set from '../../Set';
 
-export function createArrayLister<T extends IClass>(source: IArray<T>, config: ICollectionListerConfig<T>): IArrayLister<T> {
+export function createArrayLister<T extends IClass>(source: IArray<T>, config: ICollectionLister.Config<T>): IArrayLister<T> {
 	return source.silent ?
 		new ArrayLister<T>(source, config) :
 		new ObservableArrayLister<T>(source, config);

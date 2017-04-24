@@ -26,10 +26,9 @@ import Map from '../Map';
 import Set from '../Set';
 import ICollection from '../ICollection';
 import ICollectionCounter from './ICollectionCounter';
-import ICollectionCounterConfig from './ICollectionCounterConfig';
 import Watchable from '../Watchable';
 
-export function createCounter<T>(source: ICollection<T>, config: ICollectionCounterConfig<T>): ICollectionCounter<T> {
+export function createCounter<T>(source: ICollection<T>, config: ICollectionCounter.Config<T>): ICollectionCounter<T> {
 	return (source instanceof List) ? createArrayCounter(source, config) :
 		(source instanceof Map) ? createMapCounter(source, config) :
 		(source instanceof Set) ? createSetCounter(source, config) : null;

@@ -21,7 +21,6 @@
 import AbstractCollectionFilterer from '../AbstractCollectionFilterer';
 import IMap from '../../IMap';
 import IMapFilterer from './IMapFilterer';
-import IMapFiltererConfig from './IMapFiltererConfig';
 import Map from '../../Map';
 
 /**
@@ -43,7 +42,7 @@ export default class MapFilterer<T> extends AbstractCollectionFilterer<T> implem
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: IMapFiltererConfig<T>) {
+	constructor(source: IMap<T>, config: IMapFilterer.Config<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<T>(this.source.silent) : config.target;

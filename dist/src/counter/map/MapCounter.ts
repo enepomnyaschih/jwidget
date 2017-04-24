@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionCounter from '../AbstractCollectionCounter';
-import ICollectionCounterConfig from '../ICollectionCounterConfig';
+import ICollectionCounter from '../ICollectionCounter';
 import IMap from '../../IMap';
 import IMapCounter from './IMapCounter';
 
@@ -35,7 +35,7 @@ export default class MapCounter<T> extends AbstractCollectionCounter<T> implemen
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionCounterConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionCounter.Config<T>) {
 		super(source, config);
 	}
 }

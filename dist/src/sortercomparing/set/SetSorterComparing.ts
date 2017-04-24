@@ -20,7 +20,7 @@
 
 import AbstractCollectionSorterComparing from '../AbstractCollectionSorterComparing';
 import IClass from '../../IClass';
-import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
+import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import ISet from '../../ISet';
 import ISetSorterComparing from './ISetSorterComparing';
 
@@ -36,7 +36,7 @@ export default class SetSorterComparing<T extends IClass> extends AbstractCollec
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionSorterComparingConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionSorterComparing.Config<T>) {
 		super(source, config);
 	}
 }

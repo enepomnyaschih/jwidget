@@ -38,3 +38,15 @@ interface ISetMapper<T extends IClass, U extends IClass> extends ICollectionMapp
 }
 
 export default ISetMapper;
+
+namespace ISetMapper {
+	/**
+	 * @inheritdoc
+	 */
+	export interface Config<T extends IClass, U extends IClass> extends ICollectionMapper.Config<T, U> {
+		/**
+		 * @inheritdoc
+		 */
+		readonly target?: ISet<U>;
+	}
+}

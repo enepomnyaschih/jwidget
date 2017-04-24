@@ -20,7 +20,7 @@
 
 import IClass from '../../IClass';
 import ISet from '../../ISet';
-import ISetFiltererConfig from './ISetFiltererConfig';
+import ISetFilterer from './ISetFilterer';
 import SetFilterer from './SetFilterer';
 
 /**
@@ -30,7 +30,7 @@ export default class ObservableSetFilterer<T extends IClass> extends SetFilterer
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ISetFiltererConfig<T>) {
+	constructor(source: ISet<T>, config: ISetFilterer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

@@ -20,14 +20,14 @@
 
 import MapLister from './MapLister';
 import IClass from '../../IClass';
-import ICollectionListerConfig from '../ICollectionListerConfig';
+import ICollectionLister from '../ICollectionLister';
 import IMap from '../../IMap';
 import IMapLister from './IMapLister';
 import ISet from '../../ISet';
 import ObservableMapLister from './ObservableMapLister';
 import Set from '../../Set';
 
-export function createMapLister<T extends IClass>(source: IMap<T>, config: ICollectionListerConfig<T>): IMapLister<T> {
+export function createMapLister<T extends IClass>(source: IMap<T>, config: ICollectionLister.Config<T>): IMapLister<T> {
 	return source.silent ?
 		new MapLister<T>(source, config) :
 		new ObservableMapLister<T>(source, config);

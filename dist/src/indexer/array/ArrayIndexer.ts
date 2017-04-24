@@ -21,7 +21,7 @@
 import AbstractCollectionIndexer from '../AbstractCollectionIndexer';
 import IArray from '../../IArray';
 import IArrayIndexer from './IArrayIndexer';
-import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
+import ICollectionIndexer from '../ICollectionIndexer';
 
 /**
  * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Array]].
@@ -35,7 +35,7 @@ export default class ArrayIndexer<T> extends AbstractCollectionIndexer<T> implem
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionIndexerConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionIndexer.Config<T>) {
 		super(source, config);
 	}
 }

@@ -27,9 +27,8 @@ import Set from '../Set';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
 import ICollectionMapper from './ICollectionMapper';
-import ICollectionMapperConfig from './ICollectionMapperConfig';
 
-export function createMapper<T extends IClass, U extends IClass>(source: ICollection<T>, config: ICollectionMapperConfig<T, U>): ICollectionMapper<U> {
+export function createMapper<T extends IClass, U extends IClass>(source: ICollection<T>, config: ICollectionMapper.Config<T, U>): ICollectionMapper<U> {
 	return (source instanceof List) ? createArrayMapper(source, config) :
 		(source instanceof Map) ? createMapMapper(source, config) :
 		(source instanceof Set) ? createSetMapper(source, config) : null;

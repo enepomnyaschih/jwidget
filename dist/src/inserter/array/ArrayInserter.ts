@@ -21,7 +21,6 @@
 import Class from '../../Class';
 import IArray from '../../IArray';
 import IArrayInserter from './IArrayInserter';
-import IArrayInserterConfig from './IArrayInserterConfig';
 
 /**
  * View synchronizer with array. Listens all array events and reduces them to 2 granular functions:
@@ -79,7 +78,7 @@ export default class ArrayInserter<T> extends Class implements IArrayInserter {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IArray<T>, config: IArrayInserterConfig<T> = {}) {
+	constructor(readonly source: IArray<T>, config: IArrayInserter.Config<T> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;

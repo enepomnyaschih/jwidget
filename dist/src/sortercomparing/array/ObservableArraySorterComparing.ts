@@ -20,7 +20,7 @@
 
 import IArray from '../../IArray';
 import ArraySorterComparing from './ArraySorterComparing';
-import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
+import ICollectionSorterComparing from '../ICollectionSorterComparing';
 
 /**
  * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.ObservableArray]].
@@ -29,7 +29,7 @@ export default class ObservableArraySorterComparing<T> extends ArraySorterCompar
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionSorterComparingConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionSorterComparing.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

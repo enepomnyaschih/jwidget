@@ -23,11 +23,10 @@ import ArrayMapper from './ArrayMapper';
 import Destroyable from '../../Destroyable';
 import IArray from '../../IArray';
 import IArrayMapper from './IArrayMapper';
-import IArrayMapperConfig from './IArrayMapperConfig';
 import List from '../../List';
 import ObservableArrayMapper from './ObservableArrayMapper';
 
-export function createArrayMapper<T, U>(source: IArray<T>, config: IArrayMapperConfig<T, U>): IArrayMapper<T, U> {
+export function createArrayMapper<T, U>(source: IArray<T>, config: IArrayMapper.Config<T, U>): IArrayMapper<T, U> {
 	return source.silent ?
 		new ArrayMapper<T, U>(source, config) :
 		new ObservableArrayMapper<T, U>(source, config);

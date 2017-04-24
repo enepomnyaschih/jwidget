@@ -23,7 +23,6 @@ import Class from '../Class';
 import IArray from '../IArray';
 import ICollection from '../ICollection';
 import ICollectionSorterComparing from './ICollectionSorterComparing';
-import ICollectionSorterComparingConfig from './ICollectionSorterComparingConfig';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
@@ -157,7 +156,7 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionSorterComparingConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionSorterComparing.Config<T>) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;

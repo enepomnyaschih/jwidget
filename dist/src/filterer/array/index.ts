@@ -21,11 +21,10 @@
 import ArrayFilterer from './ArrayFilterer';
 import IArray from '../../IArray';
 import IArrayFilterer from './IArrayFilterer';
-import IArrayFiltererConfig from './IArrayFiltererConfig';
 import List from '../../List';
 import ObservableArrayFilterer from './ObservableArrayFilterer';
 
-export function createArrayFilterer<T>(source: IArray<T>, config: IArrayFiltererConfig<T>): IArrayFilterer<T> {
+export function createArrayFilterer<T>(source: IArray<T>, config: IArrayFilterer.Config<T>): IArrayFilterer<T> {
 	return source.silent ?
 		new ArrayFilterer<T>(source, config) :
 		new ObservableArrayFilterer<T>(source, config);

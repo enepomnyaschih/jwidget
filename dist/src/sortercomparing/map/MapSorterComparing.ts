@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionSorterComparing from '../AbstractCollectionSorterComparing';
-import ICollectionSorterComparingConfig from '../ICollectionSorterComparingConfig';
+import ICollectionSorterComparing from '../ICollectionSorterComparing';
 import IMap from '../../IMap';
 import IMapSorterComparing from './IMapSorterComparing';
 
@@ -35,7 +35,7 @@ export default class MapSorterComparing<T> extends AbstractCollectionSorterCompa
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionSorterComparingConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionSorterComparing.Config<T>) {
 		super(source, config);
 	}
 }

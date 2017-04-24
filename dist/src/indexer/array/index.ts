@@ -21,12 +21,12 @@
 import ArrayIndexer from './ArrayIndexer';
 import IArray from '../../IArray';
 import IArrayIndexer from './IArrayIndexer';
-import ICollectionIndexerConfig from '../ICollectionIndexerConfig';
+import ICollectionIndexer from '../ICollectionIndexer';
 import IMap from '../../IMap';
 import Map from '../../Map';
 import ObservableArrayIndexer from './ObservableArrayIndexer';
 
-export function createArrayIndexer<T>(source: IArray<T>, config: ICollectionIndexerConfig<T>): IArrayIndexer<T> {
+export function createArrayIndexer<T>(source: IArray<T>, config: ICollectionIndexer.Config<T>): IArrayIndexer<T> {
 	return source.silent ?
 		new ArrayIndexer<T>(source, config) :
 		new ObservableArrayIndexer<T>(source, config);

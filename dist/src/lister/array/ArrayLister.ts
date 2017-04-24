@@ -22,7 +22,7 @@ import AbstractCollectionLister from '../AbstractCollectionLister';
 import IArray from '../../IArray';
 import IArrayLister from './IArrayLister';
 import IClass from '../../IClass';
-import ICollectionListerConfig from '../ICollectionListerConfig';
+import ICollectionLister from '../ICollectionLister';
 
 /**
  * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Array]].
@@ -36,7 +36,7 @@ export default class ArrayLister<T extends IClass> extends AbstractCollectionLis
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ICollectionListerConfig<T>) {
+	constructor(source: IArray<T>, config: ICollectionLister.Config<T>) {
 		super(source, config);
 	}
 }

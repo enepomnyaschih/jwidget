@@ -21,8 +21,6 @@
 import Class from '../Class';
 import ICollection from '../ICollection';
 import ICollectionCounter from './ICollectionCounter';
-import ICollectionCounterConfig from './ICollectionCounterConfig';
-import ICollectionCounterReconfig from './ICollectionCounterReconfig';
 import IProperty from '../IProperty';
 import Property from '../Property';
 import Watchable from '../Watchable';
@@ -118,7 +116,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: ICollectionCounterConfig<T>) {
+	constructor(readonly source: ICollection<T>, config: ICollectionCounter.Config<T>) {
 		super();
 		this._test = config.test;
 		this._scope = config.scope || this;
@@ -152,7 +150,7 @@ abstract class AbstractCollectionCounter<T> extends Class implements ICollection
 	 * Changes counter configuration and recounts matching items.
 	 * @param config Options to modify.
 	 */
-	reconfigure(config: ICollectionCounterReconfig<T>) {
+	reconfigure(config: ICollectionCounter.Reconfig<T>) {
 		this._test = config.test || this._test;
 		this._scope = config.scope || this._scope;
 		this.recount();

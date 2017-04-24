@@ -22,11 +22,10 @@ import SetFilterer from './SetFilterer';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetFilterer from './ISetFilterer';
-import ISetFiltererConfig from './ISetFiltererConfig';
 import ObservableSetFilterer from './ObservableSetFilterer';
 import Set from '../../Set';
 
-export function createSetFilterer<T extends IClass>(source: ISet<T>, config: ISetFiltererConfig<T>): ISetFilterer<T> {
+export function createSetFilterer<T extends IClass>(source: ISet<T>, config: ISetFilterer.Config<T>): ISetFilterer<T> {
 	return source.silent ?
 		new SetFilterer<T>(source, config) :
 		new ObservableSetFilterer<T>(source, config);

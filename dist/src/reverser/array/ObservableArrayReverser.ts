@@ -20,7 +20,7 @@
 
 import IArray from '../../IArray';
 import ArrayReverser from './ArrayReverser';
-import IArrayReverserConfig from './IArrayReverserConfig';
+import IArrayReverser from './IArrayReverser';
 import IndexCount from '../../IndexCount';
 import IndexItems from '../../IndexItems';
 
@@ -31,7 +31,7 @@ export default class ObservableArrayReverser<T> extends ArrayReverser<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config?: IArrayReverserConfig<T>) {
+	constructor(source: IArray<T>, config?: IArrayReverser.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

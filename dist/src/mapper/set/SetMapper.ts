@@ -23,7 +23,6 @@ import Dictionary from '../../Dictionary';
 import IClass from '../../IClass';
 import ISet from '../../ISet';
 import ISetMapper from './ISetMapper';
-import ISetMapperConfig from './ISetMapperConfig';
 import Set from '../../Set';
 
 /**
@@ -50,7 +49,7 @@ export default class SetMapper<T extends IClass, U extends IClass> extends Abstr
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ISetMapperConfig<T, U>) {
+	constructor(source: ISet<T>, config: ISetMapper.Config<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<U>(this.source.silent) : config.target;

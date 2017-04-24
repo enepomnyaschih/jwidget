@@ -20,7 +20,7 @@
 
 import ArrayMerger from './ArrayMerger';
 import IArray from '../../IArray';
-import IArrayMergerConfig from './IArrayMergerConfig';
+import IArrayMerger from './IArrayMerger';
 import IndexCount from '../../IndexCount';
 import IndexItems from '../../IndexItems';
 import * as ArrayUtils from '../../ArrayUtils';
@@ -32,7 +32,7 @@ export default class ObservableArrayMerger<T> extends ArrayMerger<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<IArray<T>>, config?: IArrayMergerConfig<T>) {
+	constructor(source: IArray<IArray<T>>, config?: IArrayMerger.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));

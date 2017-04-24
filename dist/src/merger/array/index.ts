@@ -22,12 +22,11 @@ import {SILENT, ADAPTER} from '../../Core';
 import ArrayMerger from './ArrayMerger';
 import IArray from '../../IArray';
 import IArrayMerger from './IArrayMerger';
-import IArrayMergerConfig from './IArrayMergerConfig';
 import List from '../../List';
 import ObservableArrayMerger from './ObservableArrayMerger';
 import * as ArrayUtils from '../../ArrayUtils';
 
-export function createArrayMerger<T>(source: IArray<IArray<T>>, config: IArrayMergerConfig<T>): IArrayMerger<T> {
+export function createArrayMerger<T>(source: IArray<IArray<T>>, config: IArrayMerger.Config<T>): IArrayMerger<T> {
 	return source.silent ?
 		new ArrayMerger<T>(source, config) :
 		new ObservableArrayMerger<T>(source, config);

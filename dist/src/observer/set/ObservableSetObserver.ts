@@ -19,7 +19,7 @@
 */
 
 import IClass from '../../IClass';
-import ICollectionObserverConfig from '../ICollectionObserverConfig';
+import ICollectionObserver from '../ICollectionObserver';
 import ISet from '../../ISet';
 import SetObserver from './SetObserver';
 
@@ -30,7 +30,7 @@ export default class ObservableSetObserver<T extends IClass> extends SetObserver
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: ICollectionObserverConfig<T>) {
+	constructor(source: ISet<T>, config: ICollectionObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.clearEvent.bind(this._onClear, this));

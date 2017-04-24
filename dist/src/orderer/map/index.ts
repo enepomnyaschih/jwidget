@@ -20,14 +20,14 @@
 
 import IArray from '../../IArray';
 import IClass from '../../IClass';
-import ICollectionOrdererConfig from '../ICollectionOrdererConfig';
+import ICollectionOrderer from '../ICollectionOrderer';
 import IMap from '../../IMap';
 import IMapOrderer from './IMapOrderer';
 import MapOrderer from './MapOrderer';
 import List from '../../List';
 import ObservableMapOrderer from './ObservableMapOrderer';
 
-export function createMapOrderer<T extends IClass>(source: IMap<T>, config: ICollectionOrdererConfig<T>): IMapOrderer<T> {
+export function createMapOrderer<T extends IClass>(source: IMap<T>, config: ICollectionOrderer.Config<T>): IMapOrderer<T> {
 	return source.silent ?
 		new MapOrderer<T>(source, config) :
 		new ObservableMapOrderer<T>(source, config);

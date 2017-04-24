@@ -20,7 +20,7 @@
 
 import AbstractCollectionLister from '../AbstractCollectionLister';
 import IClass from '../../IClass';
-import ICollectionListerConfig from '../ICollectionListerConfig';
+import ICollectionLister from '../ICollectionLister';
 import IMap from '../../IMap';
 import IMapLister from './IMapLister';
 
@@ -36,7 +36,7 @@ export default class MapLister<T extends IClass> extends AbstractCollectionListe
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: ICollectionListerConfig<T>) {
+	constructor(source: IMap<T>, config: ICollectionLister.Config<T>) {
 		super(source, config);
 	}
 }

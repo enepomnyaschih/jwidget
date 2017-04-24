@@ -27,10 +27,9 @@ import Set from '../Set';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
 import ICollectionOrderer from './ICollectionOrderer';
-import ICollectionOrdererConfig from './ICollectionOrdererConfig';
 import IArray from '../IArray';
 
-export function createOrderer<T extends IClass>(source: ICollection<T>, config: ICollectionOrdererConfig<T>): ICollectionOrderer<T> {
+export function createOrderer<T extends IClass>(source: ICollection<T>, config: ICollectionOrderer.Config<T>): ICollectionOrderer<T> {
 	return (source instanceof List) ? createArrayOrderer(source, config) :
 		(source instanceof Map) ? createMapOrderer(source, config) :
 		(source instanceof Set) ? createSetOrderer(source, config) : null;

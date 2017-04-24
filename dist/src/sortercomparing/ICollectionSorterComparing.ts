@@ -132,3 +132,34 @@ interface ICollectionSorterComparing<T> extends IClass {
 }
 
 export default ICollectionSorterComparing;
+
+namespace ICollectionSorterComparing {
+	/**
+	 * [[JW.AbstractCollection.SorterComparing]] configuration.
+	 *
+	 * @param T Collection item type.
+	 */
+	export interface Config<T> {
+		/**
+		 * Item comparing callback.
+		 */
+		readonly compare: (x: T, y: T) => number;
+
+		/**
+		 * [[compare]] call scope.
+		 * Defaults to synchronizer itself.
+		 */
+		readonly scope?: any;
+
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IArray<T>;
+
+		/**
+		 * Sorting order. Positive number for ascending sorting, negative for descending sorting.
+		 * Defaults to 1.
+		 */
+		readonly order?: number;
+	}
+}
