@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {isNotNil} from './Core';
 import Class from './Class';
 import Bindable from './Bindable';
 import Watchable from './Watchable';
@@ -68,7 +67,6 @@ class Switcher extends Class {
 	private _init: Switcher.Callback;
 	private _done: Switcher.Callback;
 	private _scope: any;
-	private _acceptNull: boolean;
 	private _sourceValues: any[];
 
 	/**
@@ -84,7 +82,6 @@ class Switcher extends Class {
 		this._init = config.init;
 		this._done = config.done;
 		this._scope = config.scope || this;
-		this._acceptNull = config.acceptNull || false;
 		this._sourceValues = null;
 		this._doInit();
 		sources.forEach(this.watch, this);
@@ -126,9 +123,8 @@ class Switcher extends Class {
 	}
 
 	private _doInit() {
-		const values = this.sources.map((source) => source.get());
-		this._sourceValues = (this._acceptNull || values.every(isNotNil)) ? values : null;
-		if (this._sourceValues && this._init) {
+		this._sourceValues = this.sources.map((source) => source.get());
+		if (this._init) {
 			this._init.apply(this._scope, this._sourceValues);
 		}
 	}
@@ -168,11 +164,6 @@ namespace Switcher {
 		 * Defaults to switcher itself.
 		 */
 		readonly scope?: any;
-
-		/**
-		 * If false, functions won't be called if at least one of the source values is null.
-		 */
-		readonly acceptNull?: boolean;
 	}
 }
 

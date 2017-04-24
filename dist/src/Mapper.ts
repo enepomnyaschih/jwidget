@@ -20,7 +20,7 @@
 
 import Bindable from './Bindable';
 import Class from './Class';
-import {destroy, isNotNil} from './Core';
+import {destroy} from './Core';
 import Destroyable from './Destroyable';
 import IProperty from './IProperty';
 import Property from './Property';
@@ -150,11 +150,11 @@ class Mapper<T> extends Class {
 	private _createValue: Mapper.CreateCallback<T>;
 	private _destroyValue: Mapper.DestroyCallback<T>;
 	private _scope: any;
-	private _acceptNull: boolean;
 	private _sourceValues: any[];
 	private _targetValue: T;
 	private _targetCreated: boolean;
 	private _target: IProperty<T>;
+	private _viaNull: boolean;
 
 	/**
 	 * @param sources Source properties.
@@ -170,7 +170,7 @@ class Mapper<T> extends Class {
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? new Property<T>() : config.target;
-		this._acceptNull = config.acceptNull || false;
+		this._viaNull = config.viaNull || false;
 		this._sourceValues = null;
 		this._targetValue = null;
 		this.update();
@@ -223,19 +223,19 @@ class Mapper<T> extends Class {
 	}
 
 	/**
-	 * Updates target property focibly.
+	 * Updates target property forcibly.
 	 */
 	update() {
-		let values = this.sources.map((source) => source.get());
-		let newValue: T;
-		if (this._acceptNull || values.every(isNotNil)) {
-			newValue = this._createValue.apply(this._scope, values);
-		} else {
-			newValue = null;
-			values = null;
+		if (this._viaNull) {
+			this._target.set(null);
+			this._done();
 		}
+		const values = this.sources.map((source) => source.get());
+		const newValue: T = this._createValue.apply(this._scope, values);
 		this._target.set(newValue);
-		this._done();
+		if (!this._viaNull) {
+			this._done();
+		}
 		this._targetValue = newValue;
 		this._sourceValues = values;
 	}
@@ -294,12 +294,20 @@ namespace Mapper {
 		readonly scope?: any;
 
 		/**
-		 * If false, functions won't be called if at least one of the source values is null. Target value
-		 * is resetted to null in this case.
+		 * Reverses mapper updating flow. Default flow is:
 		 *
-		 * Defaults to false.
+		 * 1. Create a new value.
+		 * 2. Reassign target property.
+		 * 3. Destroy the old value.
+		 *
+		 * Setting this option to true changes the flow the next way:
+		 *
+		 * 1. Set target value to null.
+		 * 2. Destroy the old value.
+		 * 3. Create a new value.
+		 * 4. Assign target property.
 		 */
-		readonly acceptNull?: boolean;
+		readonly viaNull?: boolean;
 	}
 }
 
