@@ -45,23 +45,23 @@ interface IArraySpliceResult<T> {
 	/**
 	 * Returns plain array of removed items.
 	 */
-	getRemovedItems(): T[];
+	readonly removedItems: T[];
 
 	/**
 	 * Returns plain array of added items.
 	 */
-	getAddedItems(): T[];
+	readonly addedItems: T[];
 
 	/**
 	 * Converts removed item segments to "index-count" pairs.
 	 */
-	getRemoveParamsList(): IIndexCount[];
+	readonly removeParamsList: IIndexCount[];
 
 	/**
 	 * Checks if [[JW.List.splice|splice]] method call didn't change the array.
 	 * @returns Array hasn't been changed.
 	 */
-	isEmpty(): boolean;
+	readonly empty: boolean;
 }
 
 export default IArraySpliceResult;

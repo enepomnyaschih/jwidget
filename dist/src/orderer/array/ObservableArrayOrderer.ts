@@ -44,8 +44,8 @@ export default class ObservableArrayOrderer<T extends IClass> extends ArrayOrder
 	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
-			ArrayUtils.toSet(spliceResult.getRemovedItems()),
-			ArrayUtils.toSet(spliceResult.getAddedItems()));
+			ArrayUtils.toSet(spliceResult.removedItems),
+			ArrayUtils.toSet(spliceResult.addedItems));
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {

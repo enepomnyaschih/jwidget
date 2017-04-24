@@ -40,8 +40,8 @@ export default class ObservableArrayIndexer<T> extends ArrayIndexer<T> {
 	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
-			this._keys(spliceResult.getRemovedItems()),
-			this._index(spliceResult.getAddedItems()));
+			this._keys(spliceResult.removedItems),
+			this._index(spliceResult.addedItems));
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {

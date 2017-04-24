@@ -42,7 +42,7 @@ export default class ObservableArrayInserter<T> extends ArrayInserter<T> {
 	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldItems = spliceResult.oldItems;
-		var removedItems = spliceResult.getRemovedItems();
+		var removedItems = spliceResult.removedItems;
 
 		// if there is an effective clearing function, just reset the controller
 		if (this._clearItems && (3 * removedItems.length > 2 * oldItems.length)) {

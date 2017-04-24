@@ -39,7 +39,7 @@ export default class ObservableArraySorterComparing<T> extends ArraySorterCompar
 
 	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this._splice(spliceResult.getRemovedItems(), spliceResult.getAddedItems());
+		this._splice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {

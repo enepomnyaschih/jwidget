@@ -50,7 +50,7 @@ export default class Mapper<T, U> extends ArrayMapper<T, U> {
 			targetAddParamsList.push(new IndexItems(
 				addParams.index, this._createItems(addParams.items)));
 		}
-		var targetResult = this.target.trySplice(sourceResult.getRemoveParamsList(), targetAddParamsList);
+		var targetResult = this.target.trySplice(sourceResult.removeParamsList, targetAddParamsList);
 		var sourceRemovedItemsList = sourceResult.removedItemsList;
 		var targetRemovedItemsList = targetResult.removedItemsList;
 		for (var i = targetRemovedItemsList.length - 1; i >= 0; --i) {

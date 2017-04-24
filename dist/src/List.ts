@@ -772,7 +772,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 		this._spliceEvent.trigger({ sender: this, spliceResult: result });
 		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			ArrayUtils.backEvery(result.getRemovedItems(), destroy);
+			ArrayUtils.backEvery(result.removedItems, destroy);
 		}
 		return result;
 	}

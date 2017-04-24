@@ -29,9 +29,9 @@ import * as ArrayUtils from './ArrayUtils';
  * @param T Item type.
  */
 export default class ArraySpliceResult<T> implements IArraySpliceResult<T> {
-	private removedItems: T[];
-	private addedItems: T[];
-	private removeParamsList: IIndexCount[];
+	private _removedItems: T[];
+	private _addedItems: T[];
+	private _removeParamsList: IIndexCount[];
 
 	/**
 	 * @param oldItems Old array contents.
@@ -44,42 +44,42 @@ export default class ArraySpliceResult<T> implements IArraySpliceResult<T> {
 	/**
 	 * Returns plain array of removed items.
 	 */
-	getRemovedItems(): T[]{
-		if (!this.removedItems) {
-			this.removedItems = ArrayUtils.merge(this.removedItemsList.map(function (indexItems) {
+	get removedItems(): T[]{
+		if (!this._removedItems) {
+			this._removedItems = ArrayUtils.merge(this.removedItemsList.map(function (indexItems) {
 				return indexItems.items;
 			}));
 		}
-		return this.removedItems;
+		return this._removedItems;
 	}
 
 	/**
 	 * Returns plain array of added items.
 	 */
-	getAddedItems(): T[]{
-		if (!this.addedItems) {
-			this.addedItems = ArrayUtils.merge(this.addedItemsList.map(function (indexItems) {
+	get addedItems(): T[]{
+		if (!this._addedItems) {
+			this._addedItems = ArrayUtils.merge(this.addedItemsList.map(function (indexItems) {
 				return indexItems.items;
 			}));
 		}
-		return this.addedItems;
+		return this._addedItems;
 	}
 
 	/**
 	 * Converts removed item segments to "index-count" pairs.
 	 */
-	getRemoveParamsList(): IIndexCount[]{
-		if (!this.removeParamsList) {
-			this.removeParamsList = this.removedItemsList.map((x) => x.toIndexCount());
+	get removeParamsList(): IIndexCount[]{
+		if (!this._removeParamsList) {
+			this._removeParamsList = this.removedItemsList.map((x) => x.toIndexCount());
 		}
-		return this.removeParamsList;
+		return this._removeParamsList;
 	}
 
 	/**
 	 * Checks if [[JW.List.splice|splice]] method call didn't change the array.
 	 * @returns Array hasn't been changed.
 	 */
-	isEmpty(): boolean {
+	get empty(): boolean {
 		return (this.removedItemsList.length === 0) && (this.addedItemsList.length === 0);
 	}
 }

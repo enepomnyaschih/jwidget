@@ -43,7 +43,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldItems = spliceResult.oldItems;
-		var removedItems = spliceResult.getRemovedItems();
+		var removedItems = spliceResult.removedItems;
 
 		if (this._clearItems && (3 * removedItems.length > 2 * oldItems.length)) {
 			// if there is an effective clearing function, just reset the controller
@@ -52,7 +52,7 @@ export default class ObservableArrayObserver<T> extends ArrayObserver<T> {
 		} else {
 			// else, splice the elements
 			this._removeItems(removedItems);
-			this._addItems(spliceResult.getAddedItems());
+			this._addItems(spliceResult.addedItems);
 		}
 	}
 

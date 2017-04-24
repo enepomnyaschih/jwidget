@@ -40,7 +40,7 @@ export default class ObservableArrayLister<T extends IClass> extends ArrayLister
 
 	private _onSplice(params: ArraySpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(spliceResult.getRemovedItems(), spliceResult.getAddedItems());
+		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
 	private _onReplace(params: ArrayReplaceEventParams<T>) {
