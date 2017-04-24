@@ -52,56 +52,22 @@ import * as StringUtils from './StringUtils';
  * - Convenient API for data binding and child component management.
  */
 export default class Component extends Class {
-	/**
-	 * Parent component. Field is available from component rendering beginning.
-	 */
-	parent: Component = null;
+	private _parent: Component = null;
+	private _el: JQuery = null;
+	private _children: ComponentChildren = null;
 
-	/**
-	 * @hidden
-	 */
-	wasAfterAppend: boolean = false;
+	private _wasAfterAppend: boolean = false;
+	private _template: AbstractTemplate = null;
 
-	/**
-	 * Root element. Field is available from component rendering beginning.
-	 */
-	el: JQuery = null;
-
-	/**
-	 * Mutable named child components. Use this map to add child components in place of
-	 * elements with corresponding `jwid`. Field is available from component rendering beginning.
-	 */
-	children: ComponentChildren = null;
+	private __elements     : Dictionary<JQuery> = null;
+	private __replaceables : Dictionary<ComponentReplaceable> = null;
+	private __arrays       : Dictionary<ComponentArray> = null;
+	private __collections  : Dictionary<ComponentCollection> = null;
 
 	/**
 	 * Map from template ID to the template. Templates are defined by `template` annotation.
 	 */
-	templates: Dictionary<AbstractTemplate>;
-
-	/**
-	 * @hidden
-	 */
-	_template: AbstractTemplate = null;
-
-	/**
-	 * @hidden
-	 */
-	_elements: Dictionary<JQuery> = null;
-
-	/**
-	 * @hidden
-	 */
-	_replaceables: Dictionary<ComponentReplaceable> = null;
-
-	/**
-	 * @hidden
-	 */
-	_arrays: Dictionary<ComponentArray> = null;
-
-	/**
-	 * @hidden
-	 */
-	_collections: Dictionary<ComponentCollection> = null;
+	readonly templates: Dictionary<AbstractTemplate>;
 
 	/**
 	 * Yes, objects of this class can be constructed.
@@ -116,33 +82,83 @@ export default class Component extends Class {
 	}
 
 	/**
+	 * Parent component. The property is available from component rendering beginning.
+	 */
+	get parent() {
+		return this._parent;
+	}
+
+	/**
+	 * Root element. Field is available from component rendering beginning.
+	 */
+	get el() {
+		return this._el;
+	}
+
+	/**
+	 * Mutable named child components. Use this map to add child components in place of
+	 * elements with corresponding `jwid`. Field is available from component rendering beginning.
+	 */
+	get children() {
+		return this._children;
+	}
+
+	/**
+	 * @hidden
+	 */
+	get _elements() {
+		return this.__elements;
+	}
+
+	/**
+	 * @hidden
+	 */
+	get _replaceables() {
+		return this.__replaceables;
+	}
+
+	/**
+	 * @hidden
+	 */
+	get _arrays() {
+		return this.__arrays;
+	}
+
+	/**
+	 * @hidden
+	 */
+	get _collections() {
+		return this.__collections;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	destroy() {
-		if (this.parent) {
+		if (this._parent) {
 			throw new Error("JW.UI.Component.destroy must be used for root and detached components only");
 		}
-		if (this.wasAfterAppend) {
+		if (this._wasAfterAppend) {
 			this.releaseDom();
 		}
-		if (this.el) {
-			DomUtils.remove(this.el[0]);
-			SetUtils.each(this._collections, destroy);
-			this._collections = null;
-			SetUtils.each(this._arrays, destroy);
-			this._arrays = null;
-			SetUtils.each(this._replaceables, destroy);
-			this._replaceables = null;
+		if (this._el) {
+			DomUtils.remove(this._el[0]);
+			SetUtils.each(this.__collections, destroy);
+			this.__collections = null;
+			SetUtils.each(this.__arrays, destroy);
+			this.__arrays = null;
+			SetUtils.each(this.__replaceables, destroy);
+			this.__replaceables = null;
 
-			this.children.unrender();
+			this._children.unrender();
 			this.unrender();
 
-			this.children.destroy();
-			this.children = null;
-			this.el.remove();
+			this._children.destroy();
+			this._children = null;
+			this._el.remove();
 		}
-		this._elements = null;
-		this.el = null;
+		this.__elements = null;
+		this._el = null;
 		this.afterDestroy();
 		super.destroy();
 	}
@@ -226,30 +242,30 @@ export default class Component extends Class {
 	 * child components.
 	 */
 	render(): this {
-		if (this.el) {
+		if (this._el) {
 			return this;
 		}
 		var output = this.createElement();
-		this.el = jQuery(output.root);
-		this._elements = MapUtils.map(output.groups, function(x) { return jQuery(x); });
-		this.children = new ComponentChildren(this);
-		this._replaceables = {};
-		this._arrays = {};
-		this._collections = {};
+		this._el = jQuery(output.root);
+		this.__elements = MapUtils.map(output.groups, function(x) { return jQuery(x); });
+		this._children = new ComponentChildren(this);
+		this.__replaceables = {};
+		this.__arrays = {};
+		this.__collections = {};
 		this.beforeRender();
-		var elements = apply({}, this._elements);
+		var elements = apply({}, this.__elements);
 		for (var jwId in elements) {
 			var element = elements[jwId];
 			var aliveElements = Array.prototype.filter.call(element, (el: HTMLElement) => {
-				return DomUtils.inEl(el, this.el[0]);
+				return DomUtils.inEl(el, this._el[0]);
 			});
 			if (aliveElements.length === 0) {
-				delete this._elements[jwId];
+				delete this.__elements[jwId];
 				continue;
 			}
 			if (aliveElements.length !== element.length) {
 				element = jQuery(aliveElements);
-				this._elements[jwId] = element;
+				this.__elements[jwId] = element;
 			}
 			var jwIdCamel = StringUtils.camel(jwId);
 			var renderMethodName = "render" + StringUtils.capitalize(jwIdCamel);
@@ -263,7 +279,7 @@ export default class Component extends Class {
 					}
 				} else {
 					if (result instanceof Component) {
-						this.children.set(result, jwId);
+						this._children.set(result, jwId);
 					} else if (isWatchable(result)) {
 						this.addReplaceable(result, jwId);
 					} else if (result instanceof List) {
@@ -291,7 +307,7 @@ export default class Component extends Class {
 	 */
 	renderTo(el: string | HTMLElement | JQuery): this {
 		this.render();
-		jQuery(el)[0].appendChild(this.el[0]);
+		jQuery(el)[0].appendChild(this._el[0]);
 		this._afterAppend();
 		return this;
 	}
@@ -304,7 +320,7 @@ export default class Component extends Class {
 	 */
 	renderAs(el: string | HTMLElement | JQuery): this {
 		this.render();
-		DomUtils.replace(jQuery(el)[0], this.el[0], true);
+		DomUtils.replace(jQuery(el)[0], this._el[0], true);
 		this._afterAppend();
 		return this;
 	}
@@ -316,10 +332,10 @@ export default class Component extends Class {
 	 * See online documentation for details.
 	 */
 	remove(): this {
-		if (this.parent) {
+		if (this._parent) {
 			throw new Error("JW.UI.Component.remove must be used for root components only");
 		}
-		DomUtils.remove(this.el[0]);
+		DomUtils.remove(this._el[0]);
 		return this;
 	}
 
@@ -328,7 +344,7 @@ export default class Component extends Class {
 	 * @param id `jwid` of the element.
 	 */
 	getElement(id: string): JQuery {
-		return this._elements[id];
+		return this.__elements[id];
 	}
 
 	/**
@@ -336,12 +352,12 @@ export default class Component extends Class {
 	 * @param id `jwid` of the element.
 	 */
 	removeElement(id: string): this {
-		var el = this._elements[id];
+		var el = this.__elements[id];
 		if (!el) {
 			return this;
 		}
 		el.remove();
-		delete this._elements[id];
+		delete this.__elements[id];
 		return this;
 	}
 
@@ -381,20 +397,20 @@ export default class Component extends Class {
 	 * @hidden
 	 */
 	_afterAppend() {
-		if (this.wasAfterAppend || !this.el) {
+		if (this._wasAfterAppend || !this._el) {
 			return;
 		}
-		if (this.parent && !this.parent.wasAfterAppend) {
+		if (this._parent && !this._parent._wasAfterAppend) {
 			return;
 		}
-		if (!this.parent && !DomUtils.inDom(this.el[0])) {
+		if (!this._parent && !DomUtils.inDom(this._el[0])) {
 			return;
 		}
-		this.wasAfterAppend = true;
+		this._wasAfterAppend = true;
 		this.afterAppend();
-		this.children.each(DomUtils._afterAppend);
-		SetUtils.each<ComponentArray>(this._arrays, DomUtils._afterAppend);
-		SetUtils.each<ComponentCollection>(this._collections, DomUtils._afterAppend);
+		this._children.each(DomUtils._afterAppend);
+		SetUtils.each<ComponentArray>(this.__arrays, DomUtils._afterAppend);
+		SetUtils.each<ComponentCollection>(this.__collections, DomUtils._afterAppend);
 	}
 
 	/**
@@ -402,21 +418,21 @@ export default class Component extends Class {
 	 */
 	_initChild(component: Component) {
 		component.render();
-		component.parent = this;
+		component._parent = this;
 	}
 
 	/**
 	 * @hidden
 	 */
 	_doneChild(component: Component) {
-		component.parent = null;
+		component._parent = null;
 	}
 
 	/**
 	 * @hidden
 	 */
 	_getContainerElement(el?: any) {
-		return (el === undefined) ? this.el :
-			(typeof el === "string") ? this._elements[el] : jQuery(el);
+		return (el === undefined) ? this._el :
+			(typeof el === "string") ? this.__elements[el] : jQuery(el);
 	}
 }
