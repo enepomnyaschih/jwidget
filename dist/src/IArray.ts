@@ -20,8 +20,6 @@
 
 import Bindable from './Bindable';
 import ICollection from './ICollection';
-import IIndexCount from './IIndexCount';
-import IIndexItems from './IIndexItems';
 import IIndexedCollection from './IIndexedCollection';
 import Some from './Some';
 
@@ -424,7 +422,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T>;
+	splice(removeParamsList: IArray.IndexCount[], addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T>;
 
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
@@ -433,7 +431,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. If collection is not modified, returns undefined.
 	 */
-	trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T>;
+	trySplice(removeParamsList: IArray.IndexCount[], addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T>;
 
 	/**
 	 * Reorders array items.
@@ -478,7 +476,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @returns **removeParamsList** argument of [[splice]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectFilter(newItems: T[]): IIndexCount[];
+	detectFilter(newItems: T[]): IArray.IndexCount[];
 
 	/**
 	 * Detects [[reorder]] method arguments to adjust array contents to **newItems**.
@@ -753,12 +751,12 @@ namespace IArray {
 		/**
 		 * Segments to remove.
 		 */
-		readonly removeParamsList: IIndexCount[];
+		readonly removeParamsList: IArray.IndexCount[];
 
 		/**
 		 * Segments to add.
 		 */
-		readonly addParamsList: IIndexItems<T>[];
+		readonly addParamsList: IArray.IndexItems<T>[];
 	}
 
 	/**
@@ -775,12 +773,12 @@ namespace IArray {
 		/**
 		 * Removed item segments.
 		 */
-		readonly removedItemsList: IIndexItems<T>[];
+		readonly removedItemsList: IArray.IndexItems<T>[];
 
 		/**
 		 * @param addedItemsList Added item segments.
 		 */
-		readonly addedItemsList: IIndexItems<T>[];
+		readonly addedItemsList: IArray.IndexItems<T>[];
 
 		/**
 		 * Returns plain array of removed items.
@@ -795,12 +793,48 @@ namespace IArray {
 		/**
 		 * Converts removed item segments to "index-count" pairs.
 		 */
-		readonly removeParamsList: IIndexCount[];
+		readonly removeParamsList: IArray.IndexCount[];
 
 		/**
 		 * Checks if [[JW.List.splice|splice]] method call didn't change the array.
 		 * @returns Array hasn't been changed.
 		 */
 		readonly empty: boolean;
+	}
+
+	/**
+	 * "Index-count" pair. Used in [[JW.List.splice|splice]] method arguments
+	 * to specify item segments to remove.
+	 */
+	export interface IndexCount {
+		readonly index: number;
+		readonly count: number;
+
+		/**
+		 * Clones pair.
+		 */
+		clone(): IndexCount;
+	}
+
+	/**
+	 * "Index-items" pair. Used in [[JW.List.splice|splice]] method arguments
+	 * to specify item segments to insert, and in [[JW.List.SpliceResult|SpliceResult]]
+	 * class to specify removed and added item segments.
+	 *
+	 * @param T Item type.
+	 */
+	export interface IndexItems<T> {
+		readonly index: number;
+		readonly items: T[];
+
+		/**
+		 * Converts to "index-count" pair.
+		 */
+		toIndexCount(): IndexCount;
+
+		/**
+		 * Clones pair.
+		 */
+		clone(): IndexItems<T>;
 	}
 }

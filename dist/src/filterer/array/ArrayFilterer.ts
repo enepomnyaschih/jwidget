@@ -24,8 +24,6 @@ import IArray from '../../IArray';
 import IArrayFilterer from './IArrayFilterer';
 import IArrayFiltererConfig from './IArrayFiltererConfig';
 import IArrayFiltererReconfig from './IArrayFiltererReconfig';
-import IIndexCount from '../../IIndexCount';
-import IIndexItems from '../../IIndexItems';
 import IndexCount from '../../IndexCount';
 import IndexItems from '../../IndexItems';
 import List from '../../List';
@@ -87,7 +85,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 	/**
 	 * @hidden
 	 */
-	protected _splice(removedItemsList: IIndexItems<T>[], addedItemsList: IIndexItems<T>[]) {
+	protected _splice(removedItemsList: IArray.IndexItems<T>[], addedItemsList: IArray.IndexItems<T>[]) {
 		var sourceIndex = 0;
 		var targetIndex = 0;
 		var removeParamsList = removedItemsList.map((indexItems) => {
@@ -176,7 +174,7 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 		});
 
 		var removeParams: IndexCount = null;
-		var removeParamsList: IIndexCount[] = [];
+		var removeParamsList: IArray.IndexCount[] = [];
 
 		function flushRemove() {
 			if (removeParams !== null) {
@@ -206,8 +204,8 @@ export default class ArrayFilterer<T> extends AbstractCollectionFilterer<T> impl
 
 		flushRemove();
 
-		var addParams: IIndexItems<T> = null;
-		var addParamsList: IIndexItems<T>[] = [];
+		var addParams: IArray.IndexItems<T> = null;
+		var addParamsList: IArray.IndexItems<T>[] = [];
 
 		function flushAdd() {
 			if (addParams !== null) {

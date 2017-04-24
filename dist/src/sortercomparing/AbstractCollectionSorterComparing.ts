@@ -24,8 +24,6 @@ import IArray from '../IArray';
 import ICollection from '../ICollection';
 import ICollectionSorterComparing from './ICollectionSorterComparing';
 import ICollectionSorterComparingConfig from './ICollectionSorterComparingConfig';
-import IIndexCount from '../IIndexCount';
-import IIndexItems from '../IIndexItems';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
@@ -223,8 +221,8 @@ abstract class AbstractCollectionSorterComparing<T> extends Class implements ICo
 
 		var iAdds = 0;
 		var addShift = 0;
-		var removeParamsList: IIndexCount[] = [];
-		var addParamsList: IIndexItems<T>[] = [];
+		var removeParamsList: IArray.IndexCount[] = [];
+		var addParamsList: IArray.IndexItems<T>[] = [];
 		var removeParams: IndexCount = null;
 		for (var iTarget = 0, lTarget = this.target.length.get(); iTarget < lTarget; ++iTarget) {
 			var value = this.target.get(iTarget);

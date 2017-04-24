@@ -19,8 +19,6 @@
 */
 
 import IArray from "./IArray";
-import IIndexCount from "./IIndexCount";
-import IIndexItems from "./IIndexItems";
 import * as ArrayUtils from "./ArrayUtils";
 
 /**
@@ -31,14 +29,16 @@ import * as ArrayUtils from "./ArrayUtils";
 export default class ListSpliceResult<T> implements IArray.SpliceResult<T> {
 	private _removedItems: T[];
 	private _addedItems: T[];
-	private _removeParamsList: IIndexCount[];
+	private _removeParamsList: IArray.IndexCount[];
 
 	/**
 	 * @param oldItems Old array contents.
 	 * @param removedItemsList Removed item segments.
 	 * @param addedItemsList Added item segments.
 	 */
-	constructor(readonly oldItems: T[], readonly removedItemsList: IIndexItems<T>[], readonly addedItemsList: IIndexItems<T>[]) {
+	constructor(readonly oldItems: T[],
+		readonly removedItemsList: IArray.IndexItems<T>[],
+		readonly addedItemsList: IArray.IndexItems<T>[]) {
 	}
 
 	/**
@@ -68,7 +68,7 @@ export default class ListSpliceResult<T> implements IArray.SpliceResult<T> {
 	/**
 	 * Converts removed item segments to "index-count" pairs.
 	 */
-	get removeParamsList(): IIndexCount[]{
+	get removeParamsList(): IArray.IndexCount[]{
 		if (!this._removeParamsList) {
 			this._removeParamsList = this.removedItemsList.map((x) => x.toIndexCount());
 		}

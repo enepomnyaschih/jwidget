@@ -18,20 +18,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IIndexCount from './IIndexCount';
+import IArray from './IArray';
 
 /**
  * "Index-count" pair. Used in [[JW.List.splice|splice]] method arguments
  * to specify item segments to remove.
  */
-export default class IndexCount implements IIndexCount {
+export default class IndexCount implements IArray.IndexCount {
 	constructor(readonly index: number, public count: number) {
 	}
 
 	/**
 	 * Clones pair.
 	 */
-	clone(): IIndexCount {
+	clone(): IArray.IndexCount {
 		return new IndexCount(this.index, this.count);
 	}
 }

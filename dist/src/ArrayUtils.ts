@@ -22,8 +22,6 @@ import {cmp, def, iid, isArray} from './Core';
 import Dictionary from './Dictionary';
 import IArray from './IArray';
 import IClass from './IClass';
-import IIndexCount from './IIndexCount';
-import IIndexItems from './IIndexItems';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import ListSpliceResult from './ListSpliceResult';
@@ -474,9 +472,12 @@ export function tryClear<T>(arr: T[]): T[]{
  * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
  * @returns Splice result. Never returns null or undefined.
  */
-export function splice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T> {
+export function splice<T>(arr: T[],
+		removeParamsList: IArray.IndexCount[],
+		addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T> {
 	var result = trySplice(arr, removeParamsList, addParamsList);
-	return (result !== undefined) ? result : new ListSpliceResult<T>(arr.concat(), <IIndexItems<T>[]>[], <IIndexItems<T>[]>[]);
+	return (result !== undefined) ? result :
+		new ListSpliceResult<T>(arr.concat(), <IArray.IndexItems<T>[]>[], <IArray.IndexItems<T>[]>[]);
 }
 
 /**
@@ -486,10 +487,12 @@ export function splice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsLi
  * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
  * @returns Splice result. If collection is not modified, returns undefined.
  */
-export function trySplice<T>(arr: T[], removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T> {
-	var optimizedRemoveParamsList: IIndexCount[] = [];
+export function trySplice<T>(arr: T[],
+		removeParamsList: IArray.IndexCount[],
+		addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T> {
+	var optimizedRemoveParamsList: IArray.IndexCount[] = [];
 	var rlast: IndexCount = null;
-	var rparams: IIndexCount;
+	var rparams: IArray.IndexCount;
 	for (var i = 0, l = removeParamsList.length; i < l; ++i) {
 		rparams = removeParamsList[i];
 		if (rlast && (rparams.index === rlast.index + rlast.count)) {
@@ -501,8 +504,8 @@ export function trySplice<T>(arr: T[], removeParamsList: IIndexCount[], addParam
 	}
 
 	var optimizedAddParamsList = [];
-	var alast: IIndexItems<T> = null;
-	var aparams: IIndexItems<T>;
+	var alast: IArray.IndexItems<T> = null;
+	var aparams: IArray.IndexItems<T>;
 	for (var i = 0, l = addParamsList.length; i < l; ++i) {
 		aparams = addParamsList[i];
 		if (alast && (aparams.index === alast.index + alast.items.length)) {
@@ -582,11 +585,12 @@ export function tryReorder<T>(arr: T[], indexArray: number[]): T[]{
  * @param scope **getKey** call scope. Defaults to collection itself.
  * @returns [[splice]] method arguments. If no method call required, returns undefined.
  */
-export function detectSplice<T>(oldItems: T[], newItems: T[], getKey?: (item: T) => any, scope?: any): IArray.SpliceParams<T> {
+export function detectSplice<T>(oldItems: T[], newItems: T[],
+		getKey?: (item: T) => any, scope?: any): IArray.SpliceParams<T> {
 	getKey = getKey || iid;
 	scope = scope || oldItems;
-	var removeParamsList: IIndexCount[] = [];
-	var addParamsList: IIndexItems<T>[] = [];
+	var removeParamsList: IArray.IndexCount[] = [];
+	var addParamsList: IArray.IndexItems<T>[] = [];
 	var oldIndexMap: Dictionary<number> = {};
 	for (var i = 0, l = oldItems.length; i < l; ++i) {
 		oldIndexMap[getKey.call(scope, oldItems[i])] = i;
@@ -646,8 +650,8 @@ export function detectSplice<T>(oldItems: T[], newItems: T[], getKey?: (item: T)
  * @returns **removeParamsList** argument of [[splice]] method.
  * If no method call required, returns undefined.
  */
-export function detectFilter<T>(oldItems: T[], newItems: T[]): IIndexCount[] {
-	var removeParamsList: IIndexCount[] = [];
+export function detectFilter<T>(oldItems: T[], newItems: T[]): IArray.IndexCount[] {
+	var removeParamsList: IArray.IndexCount[] = [];
 	var oldIndex = 0;
 	var oldLength = oldItems.length;
 	var newLength = newItems.length;

@@ -21,7 +21,6 @@
 import IArray from '../../IArray';
 import ArrayMapper from './ArrayMapper';
 import IArrayMapperConfig from './IArrayMapperConfig';
-import IIndexItems from '../../IIndexItems';
 import IndexItems from '../../IndexItems';
 
 /**
@@ -43,7 +42,7 @@ export default class Mapper<T, U> extends ArrayMapper<T, U> {
 	private _onSplice(params: IArray.SpliceEventParams<T>) {
 		var sourceResult = params.spliceResult;
 		var sourceAddedItemsList = sourceResult.addedItemsList;
-		var targetAddParamsList: IIndexItems<U>[] = [];
+		var targetAddParamsList: IArray.IndexItems<U>[] = [];
 		for (var i = 0, l = sourceAddedItemsList.length; i < l; ++i) {
 			var addParams = sourceAddedItemsList[i];
 			targetAddParamsList.push(new IndexItems(

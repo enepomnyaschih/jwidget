@@ -24,8 +24,6 @@ import Dictionary from './Dictionary';
 import Event from './Event';
 import IArray from './IArray';
 import IEvent from './IEvent';
-import IIndexCount from './IIndexCount';
-import IIndexItems from './IIndexItems';
 import IMap from './IMap';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
@@ -742,7 +740,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T> {
+	splice(removeParamsList: IArray.IndexCount[], addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T> {
 		var result = this.trySplice(removeParamsList, addParamsList);
 		return (result !== undefined) ? result : new ListSpliceResult(this._items.concat(), [], []);
 	}
@@ -754,7 +752,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. If collection is not modified, returns undefined.
 	 */
-	trySplice(removeParamsList: IIndexCount[], addParamsList: IIndexItems<T>[]): IArray.SpliceResult<T> {
+	trySplice(removeParamsList: IArray.IndexCount[], addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T> {
 		var result = ArrayUtils.trySplice(this._items, removeParamsList, addParamsList);
 		if (result === undefined) {
 			return undefined;
@@ -823,7 +821,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @returns **removeParamsList** argument of [[splice]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectFilter(newItems: T[]): IIndexCount[]{
+	detectFilter(newItems: T[]): IArray.IndexCount[]{
 		return ArrayUtils.detectFilter(this._items, newItems);
 	}
 

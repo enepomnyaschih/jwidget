@@ -18,8 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IIndexCount from './IIndexCount';
-import IIndexItems from './IIndexItems';
+import IArray from './IArray';
 import IndexCount from './IndexCount';
 
 /**
@@ -29,21 +28,21 @@ import IndexCount from './IndexCount';
  *
  * @param T Item type.
  */
-export default class IndexItems<T> implements IIndexItems<T> {
+export default class IndexItems<T> implements IArray.IndexItems<T> {
 	constructor(readonly index: number, readonly items: T[]) {
 	}
 
 	/**
 	 * Converts to "index-count" pair.
 	 */
-	toIndexCount(): IIndexCount {
+	toIndexCount(): IArray.IndexCount {
 		return new IndexCount(this.index, this.items.length);
 	}
 
 	/**
 	 * Clones pair.
 	 */
-	clone(): IIndexItems<T> {
+	clone(): IArray.IndexItems<T> {
 		return new IndexItems<T>(this.index, this.items.concat());
 	}
 }
