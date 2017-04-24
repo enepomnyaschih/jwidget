@@ -415,7 +415,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @returns Found item or undefined.
 	 */
 	search(callback: (item: T) => boolean, scope?: any): T {
-		var result: T;
+		let result: T;
 		this.every((item) => {
 			if (callback.call(scope || this, item) !== false) {
 				result = item;
@@ -490,9 +490,9 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @returns Collection index.
 	 */
 	index(callback: (item: T) => string, scope?: any): Dictionary<T> {
-		var result: Dictionary<T> = {};
+		let result: Dictionary<T> = {};
 		this.every((item) => {
-			var key: string = callback.call(scope || this, item);
+			const key: string = callback.call(scope || this, item);
 			if (key != null) {
 				result[key] = item;
 			}
@@ -518,8 +518,8 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * Builds new array consisting of collection items.
 	 */
 	toArray(): T[] {
-		var result: T[] = new Array<T>(this.length.get());
-		var index: number = 0;
+		const result: T[] = new Array<T>(this.length.get());
+		let index: number = 0;
 		this.every(function (item) {
 			result[index++] = item;
 			return true;
@@ -541,7 +541,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * Requires T to extend JW.Class.
 	 */
 	toSet(): Dictionary<T> {
-		var result: Dictionary<any> = {};
+		const result: Dictionary<any> = {};
 		this.every(function (item) {
 			SetUtils.add(result, item);
 			return true;

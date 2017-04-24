@@ -126,7 +126,7 @@ class Switcher extends Class {
 	}
 
 	private _doInit() {
-		let values = this.sources.map((source) => source.get());
+		const values = this.sources.map((source) => source.get());
 		this._sourceValues = (this._acceptNull || values.every(isNotNil)) ? values : null;
 		if (this._sourceValues && this._init) {
 			this._init.apply(this._scope, this._sourceValues);

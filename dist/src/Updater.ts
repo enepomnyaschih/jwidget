@@ -74,7 +74,7 @@ class Updater extends Class {
 	 * Calls function focibly.
 	 */
 	update() {
-		let values = this.sources.map((source) => source.get());
+		const values = this.sources.map((source) => source.get());
 		this.callback.apply(this.scope, values);
 	}
 }

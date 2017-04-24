@@ -229,7 +229,7 @@ function cmpBooleans(x: boolean, y: boolean): number {
 }
 
 function cmpArrays(x: any[], y: any[], config?: CmpConfig): number {
-	let n = Math.min(x.length, y.length);
+	const n = Math.min(x.length, y.length);
 	for (let i = 0; i < n; ++i) {
 		let result = cmp(x[i], y[i], config);
 		if (result) {
@@ -260,9 +260,9 @@ function cmpStrings(x: string, y: string, config?: CmpConfig): number {
 		if (yLength === -1) {
 			yLength = y.length - yIndex;
 		}
-		let result = cmpPrimitives(x.substr(xIndex, xLength), y.substr(yIndex, yLength));
-		if (result) {
-			return result;
+		const result1 = cmpPrimitives(x.substr(xIndex, xLength), y.substr(yIndex, yLength));
+		if (result1) {
+			return result1;
 		}
 		xIndex += xLength;
 		yIndex += yLength;
@@ -273,9 +273,9 @@ function cmpStrings(x: string, y: string, config?: CmpConfig): number {
 		}
 		const xNumber = +xMatches[0];
 		const yNumber = +yMatches[0];
-		result = cmpPrimitives(xNumber, yNumber);
-		if (result) {
-			return result;
+		const result2 = cmpPrimitives(xNumber, yNumber);
+		if (result2) {
+			return result2;
 		}
 		xIndex += xMatches[0].length;
 		yIndex += yMatches[0].length;

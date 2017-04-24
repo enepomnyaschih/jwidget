@@ -49,7 +49,7 @@ abstract class AbstractTemplate extends Class {
 	protected _compileAttributes(root: HTMLElement) {
 		this.prefixes = StringUtils.parseClass(root.getAttribute("jwclass"));
 		root.removeAttribute("jwclass");
-		for (var i = 0, l = this.prefixes.length; i < l; ++i) {
+		for (let i = 0, l = this.prefixes.length; i < l; ++i) {
 			DomUtils.addClass(root, this.prefixes[i]);
 		}
 
@@ -64,7 +64,7 @@ abstract class AbstractTemplate extends Class {
 		this._backtrace("root");
 
 		// check for trash
-		var remainingIds = Object.keys(this.parentIdMap);
+		let remainingIds = Object.keys(this.parentIdMap);
 		if (remainingIds.length !== 0) {
 			// some ID's may not have been backtraced if they are assigned to the root element,
 			// so we must backtrace them to make sure that everything is processed
@@ -85,19 +85,19 @@ abstract class AbstractTemplate extends Class {
 
 	private _walkAll(root: HTMLElement) {
 		this._walk(root, [], [], (el: HTMLElement, path: number[]): string[] => {
-			var attr = el.getAttribute("jwid");
+			const attr = el.getAttribute("jwid");
 			if (!attr) {
 				return null;
 			}
-			var ids = StringUtils.parseClass(attr);
+			const ids = StringUtils.parseClass(attr);
 			el.removeAttribute("jwid");
-			var l = ids.length;
+			const l = ids.length;
 			if (l === 0) {
 				return null;
 			}
-			for (var i = 0; i < l; ++i) {
-				var id = ids[i];
-				for (var j = 0, n = this.prefixes.length; j < n; ++j) {
+			for (let i = 0; i < l; ++i) {
+				const id = ids[i];
+				for (let j = 0, n = this.prefixes.length; j < n; ++j) {
 					DomUtils.addClass(el, this.prefixes[j] + "-" + id);
 				}
 				this._addElement(id, el, path);
@@ -111,17 +111,17 @@ abstract class AbstractTemplate extends Class {
 		if (el.nodeType !== 1) { // ELEMENT
 			return;
 		}
-		var childIds: string[] = callback.call(scope, el, path);
+		let childIds: string[] = callback.call(scope, el, path);
 		if (path.length === 0) {
 			childIds = childIds || [];
 			childIds.push("root");
 		}
 		if (childIds !== null) {
-			for (var i = 0, l = childIds.length; i < l; ++i) {
-				var childId = childIds[i];
+			for (let i = 0, l = childIds.length; i < l; ++i) {
+				const childId = childIds[i];
 				this.parentIdMap[childId] = this.parentIdMap[childId] || {};
-				for (var j = 0, m = parentIds.length; j < m; ++j) {
-					var parentId = parentIds[j]
+				for (let j = 0, m = parentIds.length; j < m; ++j) {
+					const parentId = parentIds[j]
 					this.childIdMap[parentId] = this.childIdMap[parentId] || {};
 					this.parentIdMap[childId][parentId] = true;
 					this.childIdMap[parentId][childId] = true;
@@ -129,9 +129,9 @@ abstract class AbstractTemplate extends Class {
 			}
 			parentIds = childIds;
 		}
-		var index = path.length;
+		const index = path.length;
 		path.push(0);
-		var childNodes = el.childNodes;
+		const childNodes = el.childNodes;
 		for (var i = 0, l = childNodes.length; i < l; ++i) {
 			path[index] = i;
 			this._walk(childNodes[i], path, parentIds, callback, scope);
@@ -141,13 +141,13 @@ abstract class AbstractTemplate extends Class {
 
 	private _backtrace(id: string) {
 		// if this element has already been processed, skip it
-		var parentIds = this.parentIdMap[id];
+		const parentIds = this.parentIdMap[id];
 		if (parentIds === undefined) {
 			return;
 		}
 
 		// if this element still has parents, skip it
-		for (var parentId in parentIds) {
+		for (let parentId in parentIds) {
 			if (this.parentIdMap.hasOwnProperty(parentId)) {
 				return;
 			}
@@ -157,8 +157,8 @@ abstract class AbstractTemplate extends Class {
 		this.ids.push(id);
 
 		// traverse into children
-		var childIds = this.childIdMap[id];
-		for (var childId in childIds) {
+		const childIds = this.childIdMap[id];
+		for (let childId in childIds) {
 			this._backtrace(childId);
 		}
 	}

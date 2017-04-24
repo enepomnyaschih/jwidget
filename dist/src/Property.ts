@@ -83,7 +83,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 		if (value === undefined) {
 			value = null;
 		}
-		let oldValue = this.value;
+		const oldValue = this.value;
 		if (oldValue === value) {
 			return;
 		}

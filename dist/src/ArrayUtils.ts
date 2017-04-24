@@ -72,7 +72,7 @@ export function keyOf<T>(arr: T[], item: T): number {
  * @returns Found item key or undefined.
  */
 export function find<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number {
-	var result: number;
+	let result: number;
 	arr.every(function (item, index) {
 		if (callback.call(scope, item, index) !== false) {
 			result = index;
@@ -95,7 +95,7 @@ export function find<T>(arr: T[], callback: (item: T, index: number) => boolean,
  * @returns Found item or undefined.
  */
 export function search<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): T {
-	var result: T;
+	let result: T;
 	arr.every(function (item, index) {
 		if (callback.call(scope, item, index) !== false) {
 			result = item;
@@ -116,7 +116,7 @@ export function search<T>(arr: T[], callback: (item: T, index: number) => boolea
  * @returns Number of items.
  */
 export function count<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number {
-	var result = 0;
+	let result = 0;
 	arr.every(function (item, index) {
 		if (callback.call(scope, item, index) !== false) {
 			++result;
@@ -140,7 +140,7 @@ export function count<T>(arr: T[], callback: (item: T, index: number) => boolean
 export function getSortingKeys<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
 	callback = callback || function (x) { return x; };
 	order = order || 1;
-	var pairs: any[] = [];
+	const pairs: any[] = [];
 	arr.every(function (item, key) {
 		pairs.push([key, callback.call(scope, item, key)]);
 		return true;
@@ -168,7 +168,7 @@ export function getSortingKeys<T>(arr: T[], callback?: (item: T, index: number) 
 export function getSortingKeysComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number[]{
 	compare = compare || cmp;
 	order = order || 1;
-	var pairs: any[] = [];
+	const pairs: any[] = [];
 	arr.every(function (item, key) {
 		pairs.push([key, item]);
 		return true;
@@ -226,9 +226,9 @@ export function toSortedComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: numb
  * @returns Collection index.
  */
 export function index<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): Dictionary<T> {
-	var result: Dictionary<T> = {};
+	const result: Dictionary<T> = {};
 	arr.every(function (item, index) {
-		var key = callback.call(scope, item, index);
+		const key = callback.call(scope, item, index);
 		if (key != null) {
 			result[key] = item;
 		}
@@ -243,7 +243,7 @@ export function index<T>(arr: T[], callback: (item: T, index: number) => any, sc
  * Builds new map consisting of collection items.
  */
 export function toMap<T>(arr: T[]): Dictionary<T> {
-	var result:Dictionary<T> = {};
+	const result:Dictionary<T> = {};
 	arr.every(function (v, k) {
 		result[k] = v;
 		return true;
