@@ -24,7 +24,7 @@ import {CollectionEventParams} from './ICollection';
 import IIndexedCollection from './IIndexedCollection';
 import IMapSpliceParams from './IMapSpliceParams';
 import IMapSpliceResult from './IMapSpliceResult';
-import Proxy from './Proxy';
+import Some from './Some';
 
 /**
  * Map is unordered collection. Each item has its own string key.
@@ -253,9 +253,9 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 
 	/**
 	 * Replaces item with specified key. If map doesn't contain such key, new item is added.
-	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
+	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, key: string): Proxy<T>;
+	trySet(item: T, key: string): Some<T>;
 
 	/**
 	 * Adds or replaces a bunch of items.

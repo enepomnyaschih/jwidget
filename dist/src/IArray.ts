@@ -25,7 +25,7 @@ import {CollectionEventParams} from './ICollection';
 import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 import IIndexedCollection from './IIndexedCollection';
-import Proxy from './Proxy';
+import Some from './Some';
 
 /**
  * Array is ordered collection. Each item of array has an index. Index of first item is 0,
@@ -342,9 +342,9 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * Replaces item at specified position.
 	 * If array doesn't contain such index, it will demolish the application.
 	 *
-	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
+	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, index: number): Proxy<T>;
+	trySet(item: T, index: number): Some<T>;
 
 	/**
 	 * Removes item at specified position.

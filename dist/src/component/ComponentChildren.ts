@@ -24,7 +24,7 @@ import ComponentChildInserter from './ComponentChildInserter';
 import Dictionary from '../Dictionary';
 import IMapSpliceResult from '../IMapSpliceResult';
 import Map from '../Map';
-import Proxy from '../Proxy';
+import Some from '../Some';
 import * as MapUtils from '../MapUtils';
 
 /**
@@ -42,7 +42,7 @@ export default class ComponentChildren extends Map<Component> {
 		this.target.destroy();
 	}
 
-	trySet(item: Component, key: string): Proxy<Component> {
+	trySet(item: Component, key: string): Some<Component> {
 		var result = super.trySet(item, key);
 		if (result === undefined) {
 			return undefined;

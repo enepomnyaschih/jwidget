@@ -32,7 +32,7 @@ import IMapSpliceResult from './IMapSpliceResult';
 import IndexedCollection from './IndexedCollection';
 import ISet from './ISet';
 import List from './List';
-import Proxy from './Proxy';
+import Some from './Some';
 import Set from './Set';
 import * as ArrayUtils from './ArrayUtils';
 import * as MapUtils from './MapUtils';
@@ -468,9 +468,9 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 
 	/**
 	 * Replaces item with specified key. If map doesn't contain such key, new item is added.
-	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
+	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, key: string): Proxy<T> {
+	trySet(item: T, key: string): Some<T> {
 		var result = this._trySet(item, key);
 		if (result === undefined) {
 			return undefined;
@@ -493,7 +493,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		return result;
 	}
 
-	private _trySet(item: T, key: string): Proxy<T> {
+	private _trySet(item: T, key: string): Some<T> {
 		var result = MapUtils.trySet(this._items, item, key);
 		if (result === undefined) {
 			return undefined;

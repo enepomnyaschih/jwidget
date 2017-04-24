@@ -23,7 +23,7 @@ import IArray from './IArray';
 import ICollection from './ICollection';
 import IMap from './IMap';
 import Watchable from './Watchable';
-import Proxy from './Proxy';
+import Some from './Some';
 
 /**
  * Abstract collection of items of type T with keys of type K.
@@ -154,9 +154,9 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 * * Array will be broken.
 	 * * Map will add a new item.
 	 *
-	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
+	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, key: K): Proxy<T>;
+	trySet(item: T, key: K): Some<T>;
 
 	/**
 	 * Replaces item with specified key. If collection doesn't contain such key:

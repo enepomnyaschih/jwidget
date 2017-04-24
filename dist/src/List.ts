@@ -36,7 +36,7 @@ import IndexedCollection from './IndexedCollection';
 import ISet from './ISet';
 import Map from './Map';
 import Set from './Set';
-import Proxy from './Proxy';
+import Some from './Some';
 import Watchable from './Watchable';
 import * as ArrayUtils from './ArrayUtils';
 
@@ -597,9 +597,9 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * Replaces item at specified position.
 	 * If array doesn't contain such index, it will demolish the application.
 	 *
-	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
+	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, index: number): Proxy<T> {
+	trySet(item: T, index: number): Some<T> {
 		const oldProxy = ArrayUtils.trySet(this._items, item, index);
 		if (oldProxy === undefined) {
 			return undefined;

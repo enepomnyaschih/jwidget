@@ -22,7 +22,7 @@ import IMapSpliceResult from '../IMapSpliceResult';
 import ComponentChild from './ComponentChild';
 import Dictionary from '../Dictionary';
 import Map from '../Map';
-import Proxy from '../Proxy';
+import Some from '../Some';
 import * as MapUtils from '../MapUtils';
 
 /**
@@ -33,7 +33,7 @@ export default class ComponentChildInserter extends Map<ComponentChild> {
 		super(true);
 	}
 
-	trySet(item: ComponentChild, key: string): Proxy<ComponentChild> {
+	trySet(item: ComponentChild, key: string): Some<ComponentChild> {
 		var result = super.trySet(item, key);
 		if (result === undefined) {
 			return undefined;

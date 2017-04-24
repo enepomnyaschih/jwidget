@@ -24,7 +24,7 @@ import IArray from './IArray';
 import IIndexedCollection from './IIndexedCollection';
 import IMap from './IMap';
 import Property from './Property';
-import Proxy from './Proxy';
+import Some from './Some';
 import Watchable from './Watchable';
 
 /**
@@ -195,9 +195,9 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 * * Array will be broken.
 	 * * Map will add a new item.
 	 *
-	 * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
+	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	abstract trySet(item: T, key: K): Proxy<T>;
+	abstract trySet(item: T, key: K): Some<T>;
 
 	/**
 	 * Replaces item with specified key. If collection doesn't contain such key:

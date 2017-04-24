@@ -28,7 +28,7 @@ import IIndexCount from './IIndexCount';
 import IIndexItems from './IIndexItems';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
-import Proxy from './Proxy';
+import Some from './Some';
 
 /**
  * Returns the last collection item. If collection is empty, returns undefined.
@@ -339,9 +339,9 @@ export function set<T>(arr: T[], item: T, index: number): T {
  * Replaces item at specified position.
  * If array doesn't contain such index, it will demolish the application.
  *
- * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
+ * @returns The replaced item. If collection is not modified, returns undefined.
  */
-export function trySet<T>(arr: T[], item: T, index: number): Proxy<T> {
+export function trySet<T>(arr: T[], item: T, index: number): Some<T> {
 	var oldItem = arr[index];
 	if (item !== oldItem) {
 		arr[index] = item;

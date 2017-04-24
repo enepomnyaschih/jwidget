@@ -25,7 +25,7 @@ import Dictionary from './Dictionary';
 import IClass from './IClass';
 import IMapSpliceParams from './IMapSpliceParams';
 import IMapSpliceResult from './IMapSpliceResult';
-import Proxy from './Proxy';
+import Some from './Some';
 
 export {isDictionaryEmpty as isEmpty};
 
@@ -377,9 +377,9 @@ export function set<T>(map: Dictionary<T>, item: T, key: string): T {
 
 /**
  * Replaces item with specified key. If map doesn't contain such key, new item is added.
- * @returns Proxy of the replaced item. If collection is not modified, returns undefined.
+ * @returns The replaced item. If collection is not modified, returns undefined.
  */
-export function trySet<T>(map: Dictionary<T>, item: T, key: string): Proxy<T> {
+export function trySet<T>(map: Dictionary<T>, item: T, key: string): Some<T> {
 	var oldItem = map[key];
 	if (oldItem === item) {
 		return undefined;
