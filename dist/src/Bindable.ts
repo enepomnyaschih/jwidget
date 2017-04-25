@@ -20,13 +20,13 @@
 
 import Listenable from "./Listenable";
 import Destroyable from "./Destroyable";
-import DestroyableWatchable from "./DestroyableWatchable";
+import DestroyableBindable from "./DestroyableBindable";
 
 /**
  * Read-only container for a value.
  * Provides basic data binding functionality.
  */
-interface Watchable<V> {
+interface Bindable<V> {
 	/**
 	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
 	 */
@@ -35,7 +35,7 @@ interface Watchable<V> {
 	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
-	readonly changeEvent: Listenable<Watchable.ChangeEventParams<V>>;
+	readonly changeEvent: Listenable<Bindable.ChangeEventParams<V>>;
 
 	/**
 	 * Returns property value.
@@ -51,7 +51,7 @@ interface Watchable<V> {
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	map<U>(callback: (value: V) => U, scope?: any): DestroyableWatchable<U>;
+	map<U>(callback: (value: V) => U, scope?: any): DestroyableBindable<U>;
 
 	/**
 	 * Builds a new property containing the result of the callback function called
@@ -62,20 +62,20 @@ interface Watchable<V> {
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): DestroyableWatchable<U>;
+	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): DestroyableBindable<U>;
 }
 
-export default Watchable;
+export default Bindable;
 
-namespace Watchable {
+namespace Bindable {
 	/**
-	 * `Watchable.changeEvent` params.
+	 * `Bindable.changeEvent` params.
 	 */
 	export interface ChangeEventParams<V> {
 		/**
 		 * Sender property.
 		 */
-		readonly sender: Watchable<V>;
+		readonly sender: Bindable<V>;
 
 		/**
 		 * New value.

@@ -22,7 +22,7 @@ import {default as ListCounter, countList} from './list';
 import {default as MapCounter, countMap} from './map';
 import {default as SetCounter, countSet} from './set';
 import AbstractCollectionCounter from './AbstractCollectionCounter';
-import DestroyableWatchable from '../DestroyableWatchable';
+import DestroyableBindable from '../DestroyableBindable';
 import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
@@ -34,7 +34,7 @@ export function createCounter<T>(source: ICollection<T>, config: AbstractCollect
 		(source instanceof Set) ? new SetCounter(source, config) : null;
 }
 
-export function countCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): DestroyableWatchable<number> {
+export function countCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): DestroyableBindable<number> {
 	return (source instanceof List) ? countList(source, test, scope) :
 		(source instanceof Map) ? countMap(source, test, scope) :
 		(source instanceof Set) ? countSet(source, test, scope) : null;

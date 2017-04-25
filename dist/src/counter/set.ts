@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionCounter from './AbstractCollectionCounter';
-import DestroyableWatchable from '../DestroyableWatchable';
+import DestroyableBindable from '../DestroyableBindable';
 import IClass from '../IClass';
 import ISet from '../ISet';
 import Property from '../Property';
@@ -55,7 +55,7 @@ export default class SetCounter<T extends IClass> extends AbstractCollectionCoun
 	}
 }
 
-export function countSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): DestroyableWatchable<number> {
+export function countSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

@@ -22,7 +22,7 @@
 
 import Class from '../Class';
 import Destroyable from '../Destroyable';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 /**
  * Result of [[JQuery.jwhtml|jwhtml]] method call. Destroy it to stop synchronization.
@@ -35,7 +35,7 @@ class HtmlUpdater extends Class {
 	 * @param el DOM element.
 	 * @param property Source property.
 	 */
-	constructor(private el: JQuery, private property: Watchable<any>) {
+	constructor(private el: JQuery, private property: Bindable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.listen(this._update, this));
@@ -57,6 +57,6 @@ class HtmlUpdater extends Class {
  *
  * @param property HTML value.
  */
-export default function html(el: JQuery, property: Watchable<any>): Destroyable {
+export default function html(el: JQuery, property: Bindable<any>): Destroyable {
 	return new HtmlUpdater(el, property);
 }

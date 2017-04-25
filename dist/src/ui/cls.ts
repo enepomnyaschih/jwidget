@@ -23,10 +23,10 @@
 import Class from '../Class';
 import Destroyable from '../Destroyable';
 import Switcher from '../Switcher';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 class ClassNameUpdater extends Class {
-	constructor(private el: JQuery, property: Watchable<string>) {
+	constructor(private el: JQuery, property: Bindable<string>) {
 		super();
 		this.own(new Switcher([property], {
 			init: (value: any) => this.el.addClass(value),
@@ -36,7 +36,7 @@ class ClassNameUpdater extends Class {
 }
 
 class ClassUpdater extends Class {
-	constructor(private el: JQuery, private cls: string, private property: Watchable<any>) {
+	constructor(private el: JQuery, private cls: string, private property: Bindable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.listen(this._update, this));
@@ -61,7 +61,7 @@ class ClassUpdater extends Class {
  * @param cls CSS class name.
  * @param property Boolean property to bind CSS class to.
  */
-export default function cls(el: JQuery, cls: string, property: Watchable<any>): Destroyable;
+export default function cls(el: JQuery, cls: string, property: Bindable<any>): Destroyable;
 
 /**
  * DOM element CSS class management method.
@@ -80,7 +80,7 @@ export default function cls(el: JQuery, cls: string, property: Watchable<any>): 
  *
  * @param cls CSS class name.
  */
-export default function cls(el: JQuery, cls: Watchable<string>): Destroyable;
+export default function cls(el: JQuery, cls: Bindable<string>): Destroyable;
 export default function cls(el: JQuery, a: any, b?: any): Destroyable {
 	return (b != null) ? new ClassUpdater(el, a, b) : new ClassNameUpdater(el, a);
 }

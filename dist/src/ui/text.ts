@@ -22,10 +22,10 @@
 
 import Class from '../Class';
 import Destroyable from '../Destroyable';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 class TextUpdater extends Class {
-	constructor(private el: JQuery, private property: Watchable<any>) {
+	constructor(private el: JQuery, private property: Bindable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.listen(this._update, this));
@@ -47,6 +47,6 @@ class TextUpdater extends Class {
  *
  * @param property Text value.
  */
-export default function text(el: JQuery, property: Watchable<any>): Destroyable {
+export default function text(el: JQuery, property: Bindable<any>): Destroyable {
 	return new TextUpdater(el, property);
 }

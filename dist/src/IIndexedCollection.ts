@@ -22,7 +22,7 @@ import Dictionary from './Dictionary';
 import IList from './IList';
 import ICollection from './ICollection';
 import IMap from './IMap';
-import Watchable from './Watchable';
+import Bindable from './Bindable';
 import Some from './Some';
 
 /**
@@ -365,7 +365,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$count(callback: (item: T, key: K) => boolean, scope?: any): Watchable<number>;
+	$count(callback: (item: T, key: K) => boolean, scope?: any): Bindable<number>;
 
 	/**
 	 * @inheritdoc

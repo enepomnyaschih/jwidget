@@ -133,9 +133,9 @@ export function isDate(value: any) {
 }
 
 /**
- * Checks if value fits `Watchable` interface.
+ * Checks if value fits `Bindable` interface.
  */
-export function isWatchable(value: any) {
+export function isBindable(value: any) {
 	return (typeof value === "object") &&
 		(typeof value.changeEvent === "object") &&
 		(typeof value.changeEvent.bind === "function") &&

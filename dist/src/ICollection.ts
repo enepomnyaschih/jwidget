@@ -24,7 +24,7 @@ import IList from './IList';
 import IClass from './IClass';
 import IMap from './IMap';
 import ISet from './ISet';
-import Watchable from './Watchable';
+import Bindable from './Bindable';
 
 /**
  * Abstract collection.
@@ -169,7 +169,7 @@ interface ICollection<T> extends IClass {
 	/**
 	 * Collection length property.
 	 */
-	readonly length: Watchable<number>;
+	readonly length: Bindable<number>;
 
 	/**
 	 * Checks collection for emptiness.
@@ -469,7 +469,7 @@ interface ICollection<T> extends IClass {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Number of items.
 	 */
-	$count(callback: (item: T) => boolean, scope?: any): Watchable<number>;
+	$count(callback: (item: T) => boolean, scope?: any): Bindable<number>;
 
 	/**
 	 * Maps collection items.

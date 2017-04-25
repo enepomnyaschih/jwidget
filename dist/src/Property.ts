@@ -22,19 +22,19 @@ import Class from "./Class";
 import {destroy} from "./Core";
 import Listenable from "./Listenable";
 import Destroyable from "./Destroyable";
-import DestroyableWatchable from "./DestroyableWatchable";
+import DestroyableBindable from "./DestroyableBindable";
 import Event from "./Event";
 import IEvent from "./IEvent";
 import IProperty from "./IProperty";
 import {mapProperties, mapDestroyableProperties} from "./Mapper";
-import Watchable from "./Watchable";
+import Bindable from "./Bindable";
 
 /**
  * Container for a value. Provides basic data binding functionality.
  */
 export default class Property<V> extends Class implements IProperty<V> {
 	private _ownsValue = false;
-	private _changeEvent: IEvent<Watchable.ChangeEventParams<V>>;
+	private _changeEvent: IEvent<Bindable.ChangeEventParams<V>>;
 
 	/**
 	 * Constructs a property and sets initial value.
@@ -43,7 +43,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 */
 	constructor(protected value: V = null, silent: boolean = false) {
 		super();
-		this._changeEvent = Event.make<Watchable.ChangeEventParams<V>>(this, silent);
+		this._changeEvent = Event.make<Bindable.ChangeEventParams<V>>(this, silent);
 	}
 
 	protected destroyObject() {
@@ -63,7 +63,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
-	get changeEvent(): Listenable<Watchable.ChangeEventParams<V>> {
+	get changeEvent(): Listenable<Bindable.ChangeEventParams<V>> {
 		return this._changeEvent;
 	}
 
@@ -113,7 +113,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	map<U>(callback: (value: V) => U, scope?: any): DestroyableWatchable<U> {
+	map<U>(callback: (value: V) => U, scope?: any): DestroyableBindable<U> {
 		return mapProperties([this], callback, scope || this);
 	}
 
@@ -126,7 +126,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): DestroyableWatchable<U> {
+	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): DestroyableBindable<U> {
 		return mapDestroyableProperties([this], callback, scope || this);
 	}
 }

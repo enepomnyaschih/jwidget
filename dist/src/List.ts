@@ -33,7 +33,7 @@ import ListSpliceResult from './ListSpliceResult';
 import Map from './Map';
 import Set from './Set';
 import Some from './Some';
-import Watchable from './Watchable';
+import Bindable from './Bindable';
 import * as ArrayUtils from './ArrayUtils';
 
 /**
@@ -220,7 +220,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 		this._changeEvent  = Event.make<IList.EventParams<T>>(this, silent);
 	}
 
-	get length(): Watchable<number> {
+	get length(): Bindable<number> {
 		return this._length;
 	}
 

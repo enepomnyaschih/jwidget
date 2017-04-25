@@ -20,7 +20,7 @@
 
 /// <reference types="jquery" />
 
-import {apply, destroy, isWatchable} from './Core';
+import {apply, destroy, isBindable} from './Core';
 import List from './List';
 import AbstractCollection from './AbstractCollection';
 import AbstractTemplate from './AbstractTemplate';
@@ -35,7 +35,7 @@ import IList from './IList';
 import ICollection from './ICollection';
 import HtmlTemplate from './HtmlTemplate';
 import TemplateOutput from './TemplateOutput';
-import Watchable from './Watchable';
+import Bindable from './Bindable';
 import * as DomUtils from './DomUtils';
 import * as DictionaryUtils from './DictionaryUtils';
 import * as SetUtils from './SetUtils';
@@ -280,7 +280,7 @@ export default class Component extends Class {
 				} else {
 					if (result instanceof Component) {
 						this._children.set(result, jwId);
-					} else if (isWatchable(result)) {
+					} else if (isBindable(result)) {
 						this.addReplaceable(result, jwId);
 					} else if (result instanceof List) {
 						this.addList(result, jwId);
@@ -367,7 +367,7 @@ export default class Component extends Class {
 	 * @param component Child component property.
 	 * @param id `jwid` of element to replace.
 	 */
-	addReplaceable(component: Watchable<Component>, id: string): ComponentReplaceable {
+	addReplaceable(component: Bindable<Component>, id: string): ComponentReplaceable {
 		return new ComponentReplaceable(this, component, id);
 	}
 

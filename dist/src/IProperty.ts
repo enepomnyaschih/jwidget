@@ -18,12 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableWatchable from "./DestroyableWatchable";
+import DestroyableBindable from "./DestroyableBindable";
 
 /**
- * Extension of `DestroyableWatchable` interface with `set` method to modify the property value.
+ * Extension of `DestroyableBindable` interface with `set` method to modify the property value.
  */
-interface IProperty<V> extends DestroyableWatchable<V> {
+interface IProperty<V> extends DestroyableBindable<V> {
 	/**
 	 * Changes property value and triggers `changeEvent` if the value has been changed.
 	 */

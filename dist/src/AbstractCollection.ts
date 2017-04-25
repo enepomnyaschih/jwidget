@@ -27,7 +27,7 @@ import IMap from './IMap';
 import IProperty from './IProperty';
 import ISet from './ISet';
 import Property from './Property';
-import Watchable from './Watchable';
+import Bindable from './Bindable';
 import * as SetUtils from './SetUtils';
 
 /**
@@ -277,7 +277,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	/**
 	 * Collection length property.
 	 */
-	get length(): Watchable<number> {
+	get length(): Bindable<number> {
 		return this._length;
 	}
 
@@ -635,7 +635,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Number of items.
 	 */
-	$count(callback: (item: T) => boolean, scope?: any): Watchable<number> {
+	$count(callback: (item: T) => boolean, scope?: any): Bindable<number> {
 		return new Property<number>(this.count(callback, scope), true);
 	}
 

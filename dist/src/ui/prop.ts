@@ -23,13 +23,13 @@
 import {Binding, UPDATE, WATCH} from '../Core';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
-import DestroyableWatchable from '../DestroyableWatchable';
+import DestroyableBindable from '../DestroyableBindable';
 import IProperty from '../IProperty';
 import Property from '../Property';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 class PropBinding extends Class {
-	constructor(el: JQuery, prop: string, property: Watchable<any>);
+	constructor(el: JQuery, prop: string, property: Bindable<any>);
 	constructor(el: JQuery, prop: string, property: IProperty<boolean>, binding: Binding);
 	constructor(el: JQuery, prop: string, property: any, binding: Binding = UPDATE) {
 		super();
@@ -43,7 +43,7 @@ class PropBinding extends Class {
 }
 
 class PropUpdater extends Class {
-	constructor(private el: JQuery, private prop: string, private property: Watchable<any>) {
+	constructor(private el: JQuery, private prop: string, private property: Bindable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.listen(this._update, this));
@@ -69,7 +69,7 @@ class CheckedListener extends Class {
 		this.el.bind("change", this.update);
 	}
 
-	get target(): Watchable<boolean> {
+	get target(): Bindable<boolean> {
 		return this._target;
 	}
 
@@ -100,7 +100,7 @@ namespace CheckedListener {
  *
  * @param prop Element's property name.
  */
-export default function prop(el: JQuery, prop: string): DestroyableWatchable<boolean>;
+export default function prop(el: JQuery, prop: string): DestroyableBindable<boolean>;
 
 /**
  * DOM element property management method.
@@ -123,7 +123,7 @@ export default function prop(el: JQuery, prop: string): DestroyableWatchable<boo
  * @param property Property value.
  * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
  */
-export default function prop(el: JQuery, prop: string, property: Watchable<any>): Destroyable;
+export default function prop(el: JQuery, prop: string, property: Bindable<any>): Destroyable;
 export default function prop(el: JQuery, prop: string, property: IProperty<boolean>, binding: Binding): Destroyable;
 export default function prop(el: JQuery, prop: string, property?: any, binding?: Binding): Destroyable {
 	if (property != null) {

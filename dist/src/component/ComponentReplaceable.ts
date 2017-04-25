@@ -20,7 +20,7 @@
 
 import Class from '../Class';
 import Component from '../Component';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 import Switcher from '../Switcher';
 import * as SetUtils from '../SetUtils';
 
@@ -28,7 +28,7 @@ import * as SetUtils from '../SetUtils';
  * @hidden
  */
 export default class ComponentReplaceable extends Class {
-	constructor(private parent: Component, component: Watchable<Component>, private id: string) {
+	constructor(private parent: Component, component: Bindable<Component>, private id: string) {
 		super();
 		SetUtils.add(parent._replaceables, this);
 

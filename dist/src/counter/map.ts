@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionCounter from './AbstractCollectionCounter';
-import DestroyableWatchable from '../DestroyableWatchable';
+import DestroyableBindable from '../DestroyableBindable';
 import IMap from '../IMap';
 import Property from '../Property';
 import * as DictionaryUtils from '../DictionaryUtils';
@@ -54,7 +54,7 @@ export default class MapCounter<T> extends AbstractCollectionCounter<T> {
 	}
 }
 
-export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): DestroyableWatchable<number> {
+export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

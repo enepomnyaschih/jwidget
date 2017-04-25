@@ -22,10 +22,10 @@
 
 import Class from '../Class';
 import Destroyable from '../Destroyable';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 class CssUpdater extends Class {
-	constructor(private el: JQuery, private style: string, private property: Watchable<any>) {
+	constructor(private el: JQuery, private style: string, private property: Bindable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.listen(this._update, this));
@@ -48,6 +48,6 @@ class CssUpdater extends Class {
  * @param style CSS style name.
  * @param property Style value.
  */
-export default function css(el: JQuery, style: string, property: Watchable<any>): Destroyable {
+export default function css(el: JQuery, style: string, property: Bindable<any>): Destroyable {
 	return new CssUpdater(el, style, property);
 }

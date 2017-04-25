@@ -19,14 +19,14 @@
 */
 
 import Destroyable from "./Destroyable";
-import Watchable from "./Watchable";
+import Bindable from "./Bindable";
 
 /**
- * Extension of `Watchable` interface with `destroy` method.
- * If some method returns `DestroyableWatchable`, probably it wants you to take
+ * Extension of `Bindable` interface with `destroy` method.
+ * If some method returns `DestroyableBindable`, probably it wants you to take
  * control over this object life time.
  */
-interface DestroyableWatchable<V> extends Destroyable, Watchable<V> {
+interface DestroyableBindable<V> extends Destroyable, Bindable<V> {
 }
 
-export default DestroyableWatchable;
+export default DestroyableBindable;

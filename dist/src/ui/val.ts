@@ -23,14 +23,14 @@
 import {Binding, UPDATE, WATCH} from '../Core';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
-import DestroyableWatchable from '../DestroyableWatchable';
+import DestroyableBindable from '../DestroyableBindable';
 import {isLifeInput} from '../DomUtils';
 import IProperty from '../IProperty';
 import Property from '../Property';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 class ValueBinding extends Class {
-	constructor(el: JQuery, property: Watchable<any>, simple?: boolean);
+	constructor(el: JQuery, property: Bindable<any>, simple?: boolean);
 	constructor(el: JQuery, property: IProperty<string>, binding: Binding, simple?: boolean);
 	constructor(el: JQuery, property: any, binding: any = UPDATE, simple?: boolean) {
 		super();
@@ -48,7 +48,7 @@ class ValueBinding extends Class {
 }
 
 class ValueUpdater extends Class {
-	constructor(private el: JQuery, private property: Watchable<any>) {
+	constructor(private el: JQuery, private property: Bindable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.listen(this._update, this));
@@ -77,7 +77,7 @@ class ValueListener extends Class {
 		}
 	}
 
-	get target(): Watchable<string> {
+	get target(): Bindable<string> {
 		return this._target;
 	}
 
@@ -113,7 +113,7 @@ namespace ValueListener {
  * @param simple If true, listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-export default function val(el: JQuery, simple?: boolean): DestroyableWatchable<string>;
+export default function val(el: JQuery, simple?: boolean): DestroyableBindable<string>;
 
 /**
  * DOM element value management method.
@@ -137,7 +137,7 @@ export default function val(el: JQuery, simple?: boolean): DestroyableWatchable<
  * @param simple If true, watch-binding listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-export default function val(el: JQuery, value: Watchable<any>, simple?: boolean): Destroyable;
+export default function val(el: JQuery, value: Bindable<any>, simple?: boolean): Destroyable;
 export default function val(el: JQuery, value: IProperty<string>, binding: Binding, simple?: boolean): Destroyable;
 export default function val(el: JQuery, value: any, binding?: any, simple?: any): Destroyable {
 	if (value != null && (typeof value !== "boolean")) {

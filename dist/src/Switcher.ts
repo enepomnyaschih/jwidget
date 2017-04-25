@@ -20,7 +20,7 @@
 
 import Class from './Class';
 import Listenable from './Listenable';
-import Watchable from './Watchable';
+import Bindable from './Bindable';
 
 /**
  * Watches source [[JW.Property|properties]] modification and calls
@@ -74,7 +74,7 @@ class Switcher extends Class {
 	 * @param config Configuration.
 	 */
 	constructor(
-		readonly sources: Watchable<any>[],
+		readonly sources: Bindable<any>[],
 		config?: Switcher.Config)
 	{
 		super();
@@ -84,7 +84,7 @@ class Switcher extends Class {
 		this._scope = config.scope || this;
 		this._sourceValues = null;
 		this._doInit();
-		sources.forEach(this.watch, this);
+		sources.forEach(this.bind, this);
 	}
 
 	protected destroyObject() {
@@ -101,7 +101,7 @@ class Switcher extends Class {
 	 * @param event Event.
 	 * @returns this
 	 */
-	bind(event: Listenable<any>): this {
+	listen(event: Listenable<any>): this {
 		return this.owning(event.listen(this.update, this));
 	}
 
@@ -110,8 +110,8 @@ class Switcher extends Class {
 	 * @param property Property.
 	 * @returns this
 	 */
-	watch(property: Watchable<any>): this {
-		return this.bind(property.changeEvent);
+	bind(property: Bindable<any>): this {
+		return this.listen(property.changeEvent);
 	}
 
 	/**

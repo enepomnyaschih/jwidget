@@ -22,7 +22,7 @@ import Class from '../Class';
 import ICollection from '../ICollection';
 import IProperty from '../IProperty';
 import Property from '../Property';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 /**
  * Counter for collection items which match the specified filter.
@@ -127,7 +127,7 @@ abstract class AbstractCollectionCounter<T> extends Class {
 	/**
 	 * Target property.
 	 */
-	get target(): Watchable<number> {
+	get target(): Bindable<number> {
 		return this._target;
 	}
 

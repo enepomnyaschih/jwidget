@@ -22,10 +22,10 @@
 
 import Class from '../Class';
 import Destroyable from '../Destroyable';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 class AttrUpdater extends Class {
-	constructor(private el: JQuery, private attr: string, private property: Watchable<any>) {
+	constructor(private el: JQuery, private attr: string, private property: Bindable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.listen(this._update, this));
@@ -48,6 +48,6 @@ class AttrUpdater extends Class {
  * @param attr DOM element attribute name.
  * @param property Attribute value.
  */
-export default function attr(el: JQuery, attr: string, property: Watchable<any>): Destroyable {
+export default function attr(el: JQuery, attr: string, property: Bindable<any>): Destroyable {
 	return new AttrUpdater(el, attr, property);
 }

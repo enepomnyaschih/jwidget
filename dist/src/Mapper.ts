@@ -22,10 +22,10 @@ import Listenable from './Listenable';
 import Class from './Class';
 import {destroy} from './Core';
 import Destroyable from './Destroyable';
-import DestroyableWatchable from './DestroyableWatchable';
+import DestroyableBindable from './DestroyableBindable';
 import IProperty from './IProperty';
 import Property from './Property';
-import Watchable from './Watchable';
+import Bindable from './Bindable';
 
 /**
  * Watches source [[JW.Property|properties]] modification and recreates
@@ -160,7 +160,7 @@ class Mapper<T> extends Class {
 	/**
 	 * Source property.
 	 */
-	readonly sources: Watchable<any>[]
+	readonly sources: Bindable<any>[]
 
 	/**
 	 * @param config Configuration.
@@ -177,13 +177,13 @@ class Mapper<T> extends Class {
 		this._sourceValues = null;
 		this._targetValue = null;
 		this.update();
-		this.sources.forEach(this.watch, this);
+		this.sources.forEach(this.bind, this);
 	}
 
 	/**
 	 * Target property.
 	 */
-	get target(): Watchable<T> {
+	get target(): Bindable<T> {
 		return this._target;
 	}
 
@@ -221,7 +221,7 @@ class Mapper<T> extends Class {
 	 * @param property Property.
 	 * @returns this
 	 */
-	watch(property: Watchable<any>): this {
+	bind(property: Bindable<any>): this {
 		return this.listen(property.changeEvent);
 	}
 
@@ -278,7 +278,7 @@ namespace Mapper {
 		/**
 		 * Source properties.
 		 */
-		readonly sources: Watchable<any>[];
+		readonly sources: Bindable<any>[];
 
 		/**
 		 * Target property. By default, created automatically.
@@ -321,7 +321,7 @@ namespace Mapper {
 
 export default Mapper;
 
-export function mapProperties<U>(sources: Watchable<any>[], map: Mapper.CreateCallback<U>, scope?: any): DestroyableWatchable<U> {
+export function mapProperties<U>(sources: Bindable<any>[], map: Mapper.CreateCallback<U>, scope?: any): DestroyableBindable<U> {
 	if (sources.every((source) => source.silent)) {
 		const values = sources.map((source) => source.get());
 		return new Property<U>(map.apply(scope, values), true);
@@ -337,7 +337,7 @@ export function mapProperties<U>(sources: Watchable<any>[], map: Mapper.CreateCa
 }
 
 export function mapDestroyableProperties<U extends Destroyable>(
-		sources: Watchable<any>[], create: Mapper.CreateCallback<U>, scope?: any): DestroyableWatchable<U> {
+		sources: Bindable<any>[], create: Mapper.CreateCallback<U>, scope?: any): DestroyableBindable<U> {
 	if (sources.every((source) => source.silent)) {
 		const values = sources.map((source) => source.get());
 		return new Property<U>(create.apply(scope, values), true).ownValue();

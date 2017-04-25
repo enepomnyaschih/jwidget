@@ -22,10 +22,10 @@
 
 import Class from '../Class';
 import Destroyable from '../Destroyable';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 class VisibleUpdater extends Class {
-	constructor(private el: JQuery, private property: Watchable<any>) {
+	constructor(private el: JQuery, private property: Bindable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.listen(this._update, this));
@@ -49,6 +49,6 @@ class VisibleUpdater extends Class {
  *
  * @param property Element visibility.
  */
-export default function show(el: JQuery, property: Watchable<any>): Destroyable {
+export default function show(el: JQuery, property: Bindable<any>): Destroyable {
 	return new VisibleUpdater(el, property);
 }

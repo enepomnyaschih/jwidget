@@ -21,7 +21,7 @@
 import Class from './Class';
 import IProperty from './IProperty';
 import Property from './Property';
-import Watchable from './Watchable';
+import Bindable from './Bindable';
 
 /**
  * Watches source [[JW.Property]] modification and copies
@@ -57,7 +57,7 @@ class Copier<T> extends Class {
 	/**
 	 * Source property.
 	 */
-	readonly source: Watchable<T>;
+	readonly source: Bindable<T>;
 
 	/**
 	 * @param config Configuration.
@@ -74,7 +74,7 @@ class Copier<T> extends Class {
 	/**
 	 * Target property.
 	 */
-	get target(): Watchable<T> {
+	get target(): Bindable<T> {
 		return this._target;
 	}
 
@@ -101,7 +101,7 @@ namespace Copier {
 		/**
 		 * Source property.
 		 */
-		readonly source: Watchable<T>
+		readonly source: Bindable<T>
 
 		/**
 		 * Target property. By default, created automatically.

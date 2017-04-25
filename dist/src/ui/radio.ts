@@ -23,13 +23,13 @@
 import {Binding, UPDATE, WATCH} from '../Core';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
-import DestroyableWatchable from '../DestroyableWatchable';
+import DestroyableBindable from '../DestroyableBindable';
 import IProperty from '../IProperty';
 import Property from '../Property';
-import Watchable from '../Watchable';
+import Bindable from '../Bindable';
 
 class RadioBinding extends Class {
-	constructor(el: JQuery, name: string, property: Watchable<any>);
+	constructor(el: JQuery, name: string, property: Bindable<any>);
 	constructor(el: JQuery, name: string, property: IProperty<string>, binding: Binding);
 	constructor(el: JQuery, name: string, property: any, binding: any = UPDATE) {
 		super();
@@ -45,7 +45,7 @@ class RadioBinding extends Class {
 class RadioUpdater extends Class {
 	private _selector: string;
 
-	constructor(private el: JQuery, name: string, private property: Watchable<any>) {
+	constructor(private el: JQuery, name: string, private property: Bindable<any>) {
 		super();
 		this._selector = "input[type=radio][name='" + name + "']";
 		this._update();
@@ -84,7 +84,7 @@ class RadioListener extends Class {
 		super.destroy();
 	}
 
-	get target(): Watchable<string> {
+	get target(): Bindable<string> {
 		return this._target;
 	}
 
@@ -117,7 +117,7 @@ namespace RadioListener {
  *
  * @param name Radios "name" attribute.
  */
-export default function radio(el: JQuery, name: string): DestroyableWatchable<string>;
+export default function radio(el: JQuery, name: string): DestroyableBindable<string>;
 
 /**
  * Radio group value management method.
@@ -142,7 +142,7 @@ export default function radio(el: JQuery, name: string): DestroyableWatchable<st
  * @param property Radio value.
  * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
  */
-export default function radio(el: JQuery, name: string, property: Watchable<any>): Destroyable;
+export default function radio(el: JQuery, name: string, property: Bindable<any>): Destroyable;
 export default function radio(el: JQuery, name: string, property: IProperty<string>, binding?: Binding): Destroyable;
 export default function radio(el: JQuery, name: string, property?: any, binding?: Binding): Destroyable {
 	if (property != null) {
