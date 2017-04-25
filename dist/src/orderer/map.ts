@@ -60,9 +60,8 @@ export function mapToList<T extends IClass>(source: IMap<T>): IList<T> {
 	if (source.silent) {
 		return source.toList();
 	}
-	var result = new List<T>();
-	result.own(new MapOrderer<T>(source, {
+	const result = new List<T>();
+	return result.owning(new MapOrderer<T>(source, {
 		target: result
 	}));
-	return result;
 }

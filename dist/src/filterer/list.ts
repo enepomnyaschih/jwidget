@@ -342,11 +342,10 @@ export function filterList<T>(source: IList<T>, test: (item: T) => boolean, scop
 	if (source.silent) {
 		return source.$filter(test, scope);
 	}
-	var result = new List<T>();
-	result.own(new ListFilterer<T>(source, {
+	const result = new List<T>();
+	return result.owning(new ListFilterer<T>(source, {
 		target: result,
 		test: test,
 		scope: scope
 	}));
-	return result;
 }

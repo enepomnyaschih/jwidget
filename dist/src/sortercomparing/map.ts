@@ -58,11 +58,10 @@ export function sortMapComparing<T>(source: IMap<T>, compare: (x: T, y: T) => nu
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}
-	var result = new List<T>();
-	result.own(new MapSorterComparing<T>(source, {
+	const result = new List<T>();
+	return result.owning(new MapSorterComparing<T>(source, {
 		target: result,
 		compare: compare,
 		scope: scope
 	}));
-	return result;
 }

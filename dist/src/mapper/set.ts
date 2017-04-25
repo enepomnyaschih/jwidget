@@ -134,25 +134,23 @@ export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, map:
 	if (source.silent) {
 		return source.$map(map, scope);
 	}
-	var result = new Set<U>();
-	result.own(new SetMapper<T, U>(source, {
+	const result = new Set<U>();
+	return result.owning(new SetMapper<T, U>(source, {
 		target: result,
 		create: map,
 		scope: scope
 	}));
-	return result;
 }
 
 export function mapDestroyableSet<T extends IClass, U extends IClass>(source: ISet<T>, create: (item: T) => U, scope?: any): ISet<U> {
 	if (source.silent) {
 		return source.$map(create, scope).ownItems();
 	}
-	var result = new Set<U>();
-	result.own(new SetMapper<T, U>(source, {
+	const result = new Set<U>();
+	return result.owning(new SetMapper<T, U>(source, {
 		target: result,
 		create: create,
 		destroy: destroy,
 		scope: scope
 	}));
-	return result;
 }

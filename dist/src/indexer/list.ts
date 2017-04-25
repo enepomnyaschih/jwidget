@@ -65,11 +65,10 @@ export function indexList<T>(source: IList<T>, getKey: (item: T) => any, scope?:
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
-	var result = new Map<T>();
-	result.own(new ListIndexer<T>(source, {
+	const result = new Map<T>();
+	return result.owning(new ListIndexer<T>(source, {
 		target: result,
 		getKey: getKey,
 		scope: scope
 	}));
-	return result;
 }

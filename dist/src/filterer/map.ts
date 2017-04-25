@@ -97,11 +97,10 @@ export function filterMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?
 	if (source.silent) {
 		return source.$filter(test, scope);
 	}
-	var result = new Map<T>();
-	result.own(new MapFilterer<T>(source, {
+	const result = new Map<T>();
+	return result.owning(new MapFilterer<T>(source, {
 		target: result,
 		test: test,
 		scope: scope
 	}));
-	return result;
 }

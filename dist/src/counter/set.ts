@@ -59,11 +59,10 @@ export function countSet<T extends IClass>(source: ISet<T>, test: (item: T) => b
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}
-	var result = new Property(0);
-	result.own(new SetCounter<T>(source, {
+	const result = new Property(0);
+	return result.owning(new SetCounter<T>(source, {
 		target: result,
 		test: test,
 		scope: scope
 	}));
-	return result;
 }

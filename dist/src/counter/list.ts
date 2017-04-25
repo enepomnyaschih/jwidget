@@ -74,11 +74,10 @@ export function countList<T>(source: IList<T>, test: (item: T) => boolean, scope
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}
-	var result = new Property(0);
-	result.own(new ListCounter<T>(source, {
+	const result = new Property(0);
+	return result.owning(new ListCounter<T>(source, {
 		target: result,
 		test: test,
 		scope: scope
 	}));
-	return result;
 }

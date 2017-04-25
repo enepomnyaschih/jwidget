@@ -34,7 +34,7 @@ export default class ComponentCollection extends Class {
 		super();
 		SetUtils.add(parent._collections, this);
 
-		var mapper = this.own(createMapper<Component, Component>(source, {
+		const mapper = this.own(createMapper<Component, Component>(source, {
 			create: (child) => {
 				this.parent._initChild(child);
 				return child;

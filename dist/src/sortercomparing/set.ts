@@ -56,11 +56,10 @@ export function sortSetComparing<T extends IClass>(source: ISet<T>, compare: (x:
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}
-	var result = new List<T>();
-	result.own(new SetSorterComparing<T>(source, {
+	const result = new List<T>();
+	return result.owning(new SetSorterComparing<T>(source, {
 		target: result,
 		compare: compare,
 		scope: scope
 	}));
-	return result;
 }

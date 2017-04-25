@@ -92,11 +92,10 @@ export function filterSet<T extends IClass>(source: ISet<T>, test: (item: T) => 
 	if (source.silent) {
 		return source.$filter(test, scope);
 	}
-	var result = new Set<T>();
-	result.own(new SetFilterer<T>(source, {
+	const result = new Set<T>();
+	return result.owning(new SetFilterer<T>(source, {
 		target: result,
 		test: test,
 		scope: scope
 	}));
-	return result;
 }

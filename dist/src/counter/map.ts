@@ -58,11 +58,10 @@ export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?:
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}
-	var result = new Property(0);
-	result.own(new MapCounter<T>(source, {
+	const result = new Property(0);
+	return result.owning(new MapCounter<T>(source, {
 		target: result,
 		test: test,
 		scope: scope
 	}));
-	return result;
 }

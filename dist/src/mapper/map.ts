@@ -123,25 +123,23 @@ export function mapMap<T, U>(source: IMap<T>, map: (item: T) => U, scope?: any):
 	if (source.silent) {
 		return source.$map(map, scope);
 	}
-	var result = new Map<U>();
-	result.own(new MapMapper<T, U>(source, {
+	const result = new Map<U>();
+	return result.owning(new MapMapper<T, U>(source, {
 		target: result,
 		create: map,
 		scope: scope
 	}));
-	return result;
 }
 
 export function mapDestroyableMap<T, U extends Destroyable>(source: IMap<T>, create: (item: T) => U, scope?: any): IMap<U> {
 	if (source.silent) {
 		return source.$map(create, scope).ownItems();
 	}
-	var result = new Map<U>();
-	result.own(new MapMapper<T, U>(source, {
+	const result = new Map<U>();
+	return result.owning(new MapMapper<T, U>(source, {
 		target: result,
 		create: create,
 		destroy: destroy,
 		scope: scope
 	}));
-	return result;
 }

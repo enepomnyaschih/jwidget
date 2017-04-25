@@ -295,10 +295,9 @@ export function mergeLists<T>(source: IList<IList<T>>): IList<T> {
 		return result;
 	}
 	const result = new List<T>();
-	result.own(new ListMerger<T>(source, {
+	return result.owning(new ListMerger<T>(source, {
 		target: result
 	}));
-	return result;
 }
 
 export function mergeNoSync<T>(source: IList<IList<T>>): T[] {

@@ -59,11 +59,10 @@ export function sortListComparing<T>(source: IList<T>, compare: (x: T, y: T) => 
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}
-	var result = new List<T>();
-	result.own(new ListSorterComparing<T>(source, {
+	const result = new List<T>();
+	return result.owning(new ListSorterComparing<T>(source, {
 		target: result,
 		compare: compare,
 		scope: scope
 	}));
-	return result;
 }

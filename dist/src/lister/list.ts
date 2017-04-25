@@ -61,9 +61,8 @@ export function listToSet<T extends IClass>(source: IList<T>): ISet<T> {
 	if (source.silent) {
 		return source.$toSet();
 	}
-	var result = new Set<T>();
-	result.own(new ListLister<T>(source, {
+	const result = new Set<T>();
+	return result.owning(new ListLister<T>(source, {
 		target: result
 	}));
-	return result;
 }

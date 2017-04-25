@@ -60,9 +60,8 @@ export function mapToSet<T extends IClass>(source: IMap<T>): ISet<T> {
 	if (source.silent) {
 		return source.$toSet();
 	}
-	var result = new Set<T>();
-	result.own(new MapLister<T>(source, {
+	const result = new Set<T>();
+	return result.owning(new MapLister<T>(source, {
 		target: result
 	}));
-	return result;
 }

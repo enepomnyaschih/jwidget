@@ -138,25 +138,23 @@ export function mapList<T, U>(source: IList<T>, map: (item: T) => U, scope?: any
 	if (source.silent) {
 		return source.$map(map, scope);
 	}
-	var result = new List<U>();
-	result.own(new ListMapper<T, U>(source, {
+	const result = new List<U>();
+	return result.owning(new ListMapper<T, U>(source, {
 		target: result,
 		create: map,
 		scope: scope
 	}));
-	return result;
 }
 
 export function mapDestroyableList<T, U extends Destroyable>(source: IList<T>, create: (item: T) => U, scope?: any): IList<U> {
 	if (source.silent) {
 		return source.$map(create, scope).ownItems();
 	}
-	var result = new List<U>();
-	result.own(new ListMapper<T, U>(source, {
+	const result = new List<U>();
+	return result.owning(new ListMapper<T, U>(source, {
 		target: result,
 		create: create,
 		destroy: destroy,
 		scope: scope
 	}));
-	return result;
 }

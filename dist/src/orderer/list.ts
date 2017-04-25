@@ -68,9 +68,8 @@ export function listToList<T extends IClass>(source: IList<T>): IList<T> {
 	if (source.silent) {
 		return source.toList();
 	}
-	var result = new List<T>();
-	result.own(new ListOrderer<T>(source, {
+	const result = new List<T>();
+	return result.owning(new ListOrderer<T>(source, {
 		target: result
 	}));
-	return result;
 }

@@ -130,9 +130,8 @@ export default function prop(el: JQuery, prop: string, property?: any, binding?:
 		return new PropBinding(el, prop, property, binding);
 	}
 	if (prop === "checked") {
-		var target = new Property<boolean>();
-		target.own(new CheckedListener(el, {target: target}));
-		return target;
+		const target = new Property<boolean>();
+		return target.owning(new CheckedListener(el, {target: target}));
 	}
 	throw new Error("Invalid argument");
 }

@@ -59,9 +59,8 @@ export function setToList<T extends IClass>(source: ISet<T>): IList<T> {
 	if (source.silent) {
 		return source.toList();
 	}
-	var result = new List<T>();
-	result.own(new SetOrderer<T>(source, {
+	const result = new List<T>();
+	return result.owning(new SetOrderer<T>(source, {
 		target: result
 	}));
-	return result;
 }

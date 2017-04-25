@@ -327,13 +327,12 @@ export function mapProperties<U>(sources: Bindable<any>[], map: Mapper.CreateCal
 		return new Property<U>(map.apply(scope, values), true);
 	}
 	const result = new Property<U>();
-	result.own(new Mapper({
+	return result.owning(new Mapper({
 		sources: sources,
 		target: result,
 		create: map,
 		scope: scope
 	}));
-	return result;
 }
 
 export function mapDestroyableProperties<U extends Destroyable>(
@@ -343,12 +342,11 @@ export function mapDestroyableProperties<U extends Destroyable>(
 		return new Property<U>(create.apply(scope, values), true).ownValue();
 	}
 	const result = new Property<U>();
-	result.own(new Mapper({
+	return result.owning(new Mapper({
 		sources: sources,
 		target: result,
 		create: create,
 		destroy: destroy,
 		scope: scope
 	}));
-	return result;
 }
