@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {defn, isArray} from './Core';
+import {defn, isArray} from './index';
 
 /**
  * Escapes special HTML symbols.

@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {isArray} from "../Core";
+import {isArray} from "../index";
 
 export default function() {
 	it("should return true for array", function() {

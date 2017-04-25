@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {apply} from './Core';
+import {apply} from './index';
 import Class from './Class';
 import Component from './Component';
 import Dictionary from './Dictionary';

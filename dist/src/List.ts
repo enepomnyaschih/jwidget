@@ -19,7 +19,7 @@
 */
 
 import Listenable from './Listenable';
-import {destroy, CollectionFlags, SILENT, ADAPTER} from './Core';
+import {destroy, CollectionFlags, SILENT, ADAPTER} from './index';
 import Dictionary from './Dictionary';
 import Event from './Event';
 import IList from './IList';

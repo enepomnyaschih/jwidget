@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {SILENT, ADAPTER} from '../Core';
+import {SILENT, ADAPTER} from '../index';
 import {mapDestroyableList} from '../mapper/list';
 import Class from '../Class';
 import IList from '../IList';

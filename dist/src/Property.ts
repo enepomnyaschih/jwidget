@@ -19,7 +19,7 @@
 */
 
 import Class from "./Class";
-import {destroy} from "./Core";
+import {destroy} from "./index";
 import Listenable from "./Listenable";
 import Destroyable from "./Destroyable";
 import DestroyableBindable from "./DestroyableBindable";

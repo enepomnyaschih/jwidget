@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {apply, cmp} from './Core';
+import {apply, cmp} from './index';
 import Dictionary from './Dictionary';
 import IClass from './IClass';
 import ISet from './ISet';

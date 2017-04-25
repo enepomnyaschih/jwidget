@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {cmp, def, iid, isArray} from './Core';
+import {cmp, def, iid, isArray} from './index';
 import Dictionary from './Dictionary';
 import IList from './IList';
 import IClass from './IClass';

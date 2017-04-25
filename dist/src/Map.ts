@@ -19,8 +19,8 @@
 */
 
 import Listenable from './Listenable';
-import {apply, destroy, iid} from './Core';
-import {CollectionFlags, SILENT, ADAPTER} from './Core';
+import {apply, destroy, iid} from './index';
+import {CollectionFlags, SILENT, ADAPTER} from './index';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import Event from './Event';

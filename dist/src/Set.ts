@@ -19,8 +19,8 @@
 */
 
 import Listenable from './Listenable';
-import {apply, destroy, iid, isArray} from './Core';
-import {CollectionFlags, SILENT, ADAPTER} from './Core';
+import {apply, destroy, iid, isArray} from './index';
+import {CollectionFlags, SILENT, ADAPTER} from './index';
 import AbstractCollection from './AbstractCollection';
 import Dictionary from './Dictionary';
 import Event from './Event';

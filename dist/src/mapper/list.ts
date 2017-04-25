@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {destroy} from '../Core';
+import {destroy} from '../index';
 import AbstractCollectionMapper from './AbstractCollectionMapper';
 import Destroyable from '../Destroyable';
 import IList from '../IList';

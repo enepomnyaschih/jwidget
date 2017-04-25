@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {apply, cmp, iid} from './Core';
+import {apply, cmp, iid} from './index';
 import {isDictionaryEmpty} from './internal';
 import * as ArrayUtils from './ArrayUtils';
 import Dictionary from './Dictionary';

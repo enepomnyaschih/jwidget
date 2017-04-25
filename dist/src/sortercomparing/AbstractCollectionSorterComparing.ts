@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {cmp} from '../Core';
+import {cmp} from '../index';
 import Class from '../Class';
 import IList from '../IList';
 import ICollection from '../ICollection';

@@ -20,7 +20,7 @@
 
 /// <reference types="jquery" />
 
-import {apply, destroy, isBindable} from './Core';
+import {apply, destroy, isBindable} from './index';
 import List from './List';
 import AbstractCollection from './AbstractCollection';
 import AbstractTemplate from './AbstractTemplate';

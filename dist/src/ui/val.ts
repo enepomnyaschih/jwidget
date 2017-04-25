@@ -20,7 +20,7 @@
 
 /// <reference types="jquery" />
 
-import {Binding, UPDATE, WATCH} from '../Core';
+import {Binding, UPDATE, WATCH} from '../index';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
 import DestroyableBindable from '../DestroyableBindable';

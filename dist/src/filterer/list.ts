@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {def} from '../Core';
+import {def} from '../index';
 import AbstractCollectionFilterer from './AbstractCollectionFilterer';
 import Dictionary from '../Dictionary';
 import IList from '../IList';

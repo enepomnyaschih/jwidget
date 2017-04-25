@@ -20,7 +20,7 @@
 
 import Listenable from './Listenable';
 import Class from './Class';
-import {destroy} from './Core';
+import {destroy} from './index';
 import Destroyable from './Destroyable';
 import DestroyableBindable from './DestroyableBindable';
 import IProperty from './IProperty';
