@@ -552,8 +552,10 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		if (item === undefined) {
 			return undefined;
 		}
-		this._reindexEvent.trigger({ sender: this, keyMap: DictionaryUtils.single(oldKey, newKey) });
-		this._changeEvent.trigger({ sender: this });
+		if (!this.silent) {
+			this._reindexEvent.trigger({ sender: this, keyMap: DictionaryUtils.single(oldKey, newKey) });
+			this._changeEvent.trigger({ sender: this });
+		}
 		return item;
 	}
 
