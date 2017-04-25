@@ -469,35 +469,27 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
 	trySet(item: T, key: string): Some<T> {
-		var result = this._trySet(item, key);
+		const result = DictionaryUtils.trySet(this._items, item, key);
 		if (result === undefined) {
 			return undefined;
 		}
-		var removedItem = result.value;
+		const removedItem = result.value;
+		if (removedItem === undefined) {
+			this._length.set(this._length.get() + 1);
+		}
 		if (!this.silent) {
-			var removedItems: Dictionary<T> = {};
+			const removedItems: Dictionary<T> = {};
 			if (removedItem !== undefined) {
 				removedItems[key] = removedItem;
 			}
-			var addedItems: Dictionary<T> = {};
+			const addedItems: Dictionary<T> = {};
 			addedItems[key] = item;
-			var spliceResult = { removedItems: removedItems, addedItems: addedItems };
+			const spliceResult = { removedItems: removedItems, addedItems: addedItems };
 			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 			this._changeEvent.trigger({ sender: this });
 		}
 		if (removedItem !== undefined && this._ownsItems) {
 			(<Destroyable><any>removedItem).destroy();
-		}
-		return result;
-	}
-
-	private _trySet(item: T, key: string): Some<T> {
-		var result = DictionaryUtils.trySet(this._items, item, key);
-		if (result === undefined) {
-			return undefined;
-		}
-		if (result.value === undefined) {
-			this._length.set(this._length.get() + 1);
 		}
 		return result;
 	}
@@ -565,27 +557,19 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * If collection is not modified, returns undefined.
 	 */
 	tryRemove(key: string): T {
-		var item = this._tryRemove(key);
+		const item = DictionaryUtils.tryRemove(this._items, key);
 		if (item === undefined) {
 			return undefined;
 		}
+		this._length.set(this._length.get() - 1);
 		if (!this.silent) {
-			var spliceResult: IMap.SpliceResult<T> = { addedItems: {}, removedItems: DictionaryUtils.single(key, item) };
+			const spliceResult: IMap.SpliceResult<T> = { addedItems: {}, removedItems: DictionaryUtils.single(key, item) };
 			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 			this._changeEvent.trigger({ sender: this });
 		}
 		if (this._ownsItems) {
 			(<Destroyable><any>item).destroy();
 		}
-		return item;
-	}
-
-	private _tryRemove(key: string): T {
-		var item = DictionaryUtils.tryRemove(this._items, key);
-		if (item === undefined) {
-			return undefined;
-		}
-		this._length.set(this._length.get() - 1);
 		return item;
 	}
 
@@ -597,7 +581,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 			this.tryRemoveAll(keys);
 			return;
 		}
-		for (var i = 0, l = keys.length; i < l; ++i) {
+		for (let i = 0, l = keys.length; i < l; ++i) {
 			this.tryRemove(keys[i]);
 		}
 	}
@@ -607,7 +591,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @returns The removed items.
 	 */
 	removeAllVerbose(keys: string[]): Dictionary<T> {
-		var items = this.tryRemoveAll(keys);
+		const items = this.tryRemoveAll(keys);
 		return (items !== undefined) ? items : {};
 	}
 
@@ -625,7 +609,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * If collection is not modified, returns undefined.
 	 */
 	tryRemoveAll(keys: string[]): Dictionary<T> {
-		var spliceResult = this.trySplice(keys, {});
+		const spliceResult = this.trySplice(keys, {});
 		if (spliceResult !== undefined) {
 			return spliceResult.removedItems;
 		}
@@ -636,8 +620,8 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	removeItems(items: T[]) {
-		var itemSet = ArrayUtils.index(items, iid);
-		var newItems = this.filter(function (item) {
+		const itemSet = ArrayUtils.index(items, iid);
+		const newItems = this.filter(function (item) {
 			return !itemSet.hasOwnProperty((<any>item).iid);
 		});
 		this.performSplice(newItems);
@@ -647,7 +631,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	clear(): Dictionary<T> {
-		var result = this.tryClear();
+		const result = this.tryClear();
 		return (result !== undefined) ? result : {};
 	}
 
@@ -662,29 +646,21 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	tryClear(): Dictionary<T> {
-		var items = this._tryClear();
-		if (items === undefined) {
-			return undefined;
-		}
-		this._clearEvent.trigger({ sender: this, items: items });
-		this._changeEvent.trigger({ sender: this });
-		if (this._ownsItems) {
-			ArrayUtils.backEvery(DictionaryUtils.toArray(items), destroy);
-		}
-		return items;
-	}
-
-	private _tryClear(): Dictionary<T> {
 		if (this._length.get() === 0) {
 			return undefined;
 		}
-		var items: Dictionary<T>;
+		let items: Dictionary<T>;
 		this._length.set(0);
 		if (this._adapter) {
 			items = DictionaryUtils.tryClear(this._items);
 		} else {
 			items = this._items;
 			this._items = {};
+		}
+		this._clearEvent.trigger({ sender: this, items: items });
+		this._changeEvent.trigger({ sender: this });
+		if (this._ownsItems) {
+			ArrayUtils.backEvery(DictionaryUtils.toArray(items), destroy);
 		}
 		return items;
 	}
@@ -708,25 +684,17 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * If collection is not modified, returns undefined.
 	 */
 	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
-		const spliceResult = this._trySplice(removedKeys, updatedItems);
+		const spliceResult = DictionaryUtils.trySplice(this._items, removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return undefined;
 		}
+		this._length.set(this._length.get() + DictionaryUtils.getLength(spliceResult.addedItems) - DictionaryUtils.getLength(spliceResult.removedItems));
 		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(DictionaryUtils.toArray(spliceResult.removedItems), destroy);
 		}
 		return spliceResult;
-	}
-
-	private _trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
-		var spliceResult = DictionaryUtils.trySplice(this._items, removedKeys, updatedItems);
-		if (spliceResult !== undefined) {
-			this._length.set(this._length.get() + DictionaryUtils.getLength(spliceResult.addedItems) - DictionaryUtils.getLength(spliceResult.removedItems));
-			return spliceResult;
-		}
-		return undefined;
 	}
 
 	/**
