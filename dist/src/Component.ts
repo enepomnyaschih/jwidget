@@ -25,7 +25,7 @@ import List from './List';
 import AbstractCollection from './AbstractCollection';
 import AbstractTemplate from './AbstractTemplate';
 import Class from './Class';
-import ComponentArray from './component/ComponentArray';
+import ComponentList from './component/ComponentList';
 import ComponentChildren from './component/ComponentChildren';
 import ComponentCollection from './component/ComponentCollection';
 import ComponentReplaceable from './component/ComponentReplaceable';
@@ -61,7 +61,7 @@ export default class Component extends Class {
 
 	private __elements     : Dictionary<JQuery> = null;
 	private __replaceables : Dictionary<ComponentReplaceable> = null;
-	private __arrays       : Dictionary<ComponentArray> = null;
+	private __arrays       : Dictionary<ComponentList> = null;
 	private __collections  : Dictionary<ComponentCollection> = null;
 
 	/**
@@ -273,7 +273,7 @@ export default class Component extends Class {
 				var result = (<any>this)[renderMethodName](element);
 				if (jwId === "root") {
 					if (result instanceof List) {
-						this.addArray(result, jwId);
+						this.addList(result, jwId);
 					} else if (result instanceof AbstractCollection) {
 						this.addCollection(result, jwId);
 					}
@@ -283,7 +283,7 @@ export default class Component extends Class {
 					} else if (isWatchable(result)) {
 						this.addReplaceable(result, jwId);
 					} else if (result instanceof List) {
-						this.addArray(result, jwId);
+						this.addList(result, jwId);
 					} else if (result instanceof AbstractCollection) {
 						this.addCollection(result, jwId);
 					} else if (result === false) {
@@ -378,8 +378,8 @@ export default class Component extends Class {
 	 * @param source Child component array.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addArray(source: IList<Component>, el?: string | HTMLElement | JQuery): ComponentArray {
-		return new ComponentArray(this, source, this._getContainerElement(el));
+	addList(source: IList<Component>, el?: string | HTMLElement | JQuery): ComponentList {
+		return new ComponentList(this, source, this._getContainerElement(el));
 	}
 
 	/**
@@ -409,7 +409,7 @@ export default class Component extends Class {
 		this._wasAfterAppend = true;
 		this.afterAppend();
 		this._children.each(DomUtils._afterAppend);
-		SetUtils.each<ComponentArray>(this.__arrays, DomUtils._afterAppend);
+		SetUtils.each<ComponentList>(this.__arrays, DomUtils._afterAppend);
 		SetUtils.each<ComponentCollection>(this.__collections, DomUtils._afterAppend);
 	}
 
