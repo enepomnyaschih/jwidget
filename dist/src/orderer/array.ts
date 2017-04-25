@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
-import IArray from '../IArray';
+import IList from '../IList';
 import IClass from '../IClass';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
@@ -33,38 +33,38 @@ export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOr
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IArray<T>;
+	readonly source: IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: AbstractCollectionOrderer.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionOrderer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			ArrayUtils.toSet(spliceResult.removedItems),
 			ArrayUtils.toSet(spliceResult.addedItems));
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		var index = this.target.keyOf(params.oldItem);
 		this.target.trySplice(
 			[new IndexCount(index, 1)],
 			[new IndexItems(this.target.length.get() - 1, [params.newItem])]);
 	}
 
-	private _onClear(params: IArray.ItemsEventParams<T>) {
+	private _onClear(params: IList.ItemsEventParams<T>) {
 		this.target.removeItems(params.items);
 	}
 }
 
-export function arrayToArray<T extends IClass>(source: IArray<T>): IArray<T> {
+export function arrayToArray<T extends IClass>(source: IList<T>): IList<T> {
 	if (source.silent) {
 		return source.$toArray();
 	}

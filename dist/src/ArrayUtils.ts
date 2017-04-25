@@ -20,7 +20,7 @@
 
 import {cmp, def, iid, isArray} from './Core';
 import Dictionary from './Dictionary';
-import IArray from './IArray';
+import IList from './IList';
 import IClass from './IClass';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
@@ -473,11 +473,11 @@ export function tryClear<T>(arr: T[]): T[]{
  * @returns Splice result. Never returns null or undefined.
  */
 export function splice<T>(arr: T[],
-		removeParamsList: IArray.IndexCount[],
-		addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T> {
+		removeParamsList: IList.IndexCount[],
+		addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T> {
 	var result = trySplice(arr, removeParamsList, addParamsList);
 	return (result !== undefined) ? result :
-		new ListSpliceResult<T>(arr.concat(), <IArray.IndexItems<T>[]>[], <IArray.IndexItems<T>[]>[]);
+		new ListSpliceResult<T>(arr.concat(), <IList.IndexItems<T>[]>[], <IList.IndexItems<T>[]>[]);
 }
 
 /**
@@ -488,11 +488,11 @@ export function splice<T>(arr: T[],
  * @returns Splice result. If collection is not modified, returns undefined.
  */
 export function trySplice<T>(arr: T[],
-		removeParamsList: IArray.IndexCount[],
-		addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T> {
-	var optimizedRemoveParamsList: IArray.IndexCount[] = [];
+		removeParamsList: IList.IndexCount[],
+		addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T> {
+	var optimizedRemoveParamsList: IList.IndexCount[] = [];
 	var rlast: IndexCount = null;
-	var rparams: IArray.IndexCount;
+	var rparams: IList.IndexCount;
 	for (var i = 0, l = removeParamsList.length; i < l; ++i) {
 		rparams = removeParamsList[i];
 		if (rlast && (rparams.index === rlast.index + rlast.count)) {
@@ -504,8 +504,8 @@ export function trySplice<T>(arr: T[],
 	}
 
 	var optimizedAddParamsList = [];
-	var alast: IArray.IndexItems<T> = null;
-	var aparams: IArray.IndexItems<T>;
+	var alast: IList.IndexItems<T> = null;
+	var aparams: IList.IndexItems<T>;
 	for (var i = 0, l = addParamsList.length; i < l; ++i) {
 		aparams = addParamsList[i];
 		if (alast && (aparams.index === alast.index + alast.items.length)) {
@@ -586,11 +586,11 @@ export function tryReorder<T>(arr: T[], indexArray: number[]): T[]{
  * @returns [[splice]] method arguments. If no method call required, returns undefined.
  */
 export function detectSplice<T>(oldItems: T[], newItems: T[],
-		getKey?: (item: T) => any, scope?: any): IArray.SpliceParams<T> {
+		getKey?: (item: T) => any, scope?: any): IList.SpliceParams<T> {
 	getKey = getKey || iid;
 	scope = scope || oldItems;
-	var removeParamsList: IArray.IndexCount[] = [];
-	var addParamsList: IArray.IndexItems<T>[] = [];
+	var removeParamsList: IList.IndexCount[] = [];
+	var addParamsList: IList.IndexItems<T>[] = [];
 	var oldIndexMap: Dictionary<number> = {};
 	for (var i = 0, l = oldItems.length; i < l; ++i) {
 		oldIndexMap[getKey.call(scope, oldItems[i])] = i;
@@ -650,8 +650,8 @@ export function detectSplice<T>(oldItems: T[], newItems: T[],
  * @returns **removeParamsList** argument of [[splice]] method.
  * If no method call required, returns undefined.
  */
-export function detectFilter<T>(oldItems: T[], newItems: T[]): IArray.IndexCount[] {
-	var removeParamsList: IArray.IndexCount[] = [];
+export function detectFilter<T>(oldItems: T[], newItems: T[]): IList.IndexCount[] {
+	var removeParamsList: IList.IndexCount[] = [];
 	var oldIndex = 0;
 	var oldLength = oldItems.length;
 	var newLength = newItems.length;

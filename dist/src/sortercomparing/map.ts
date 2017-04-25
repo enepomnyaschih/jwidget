@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
-import IArray from '../IArray';
+import IList from '../IList';
 import IMap from '../IMap';
 import List from '../List';
 import * as MapUtils from '../MapUtils';
@@ -54,7 +54,7 @@ export default class MapSorterComparing<T> extends AbstractCollectionSorterCompa
 	}
 }
 
-export function sortMapComparing<T>(source: IMap<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
+export function sortMapComparing<T>(source: IMap<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}

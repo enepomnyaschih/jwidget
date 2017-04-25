@@ -22,7 +22,7 @@ import {default as ArraySorterComparing, sortArrayComparing} from './array';
 import {default as MapSorterComparing, sortMapComparing} from './map';
 import {default as SetSorterComparing, sortSetComparing} from './set';
 import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
-import IArray from '../IArray';
+import IList from '../IList';
 import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
@@ -34,7 +34,7 @@ export function createSorterComparing<T>(source: ICollection<T>, config: Abstrac
 		(source instanceof Set) ? new SetSorterComparing(source, config) : null;
 }
 
-export function collectionToArray<T>(source: ICollection<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
+export function collectionToArray<T>(source: ICollection<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
 	return (source instanceof List) ? sortArrayComparing(source, compare, scope) :
 		(source instanceof Map) ? sortMapComparing(source, compare, scope) :
 		(source instanceof Set) ? sortSetComparing(source, compare, scope) : null;

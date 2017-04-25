@@ -24,7 +24,7 @@ import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import AbstractCollection from './AbstractCollection';
 import Dictionary from './Dictionary';
 import Event from './Event';
-import IArray from './IArray';
+import IList from './IList';
 import IClass from './IClass';
 import IEvent from './IEvent';
 import IMap from './IMap';
@@ -257,7 +257,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T> {
+	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T> {
 		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
 	}
 
@@ -271,7 +271,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T> {
+	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T> {
 		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
@@ -320,14 +320,14 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toArray(): IArray<T> {
+	$toArray(): IList<T> {
 		return new List<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$asArray(): IArray<T> {
+	$asArray(): IList<T> {
 		return new List<T>(this.asArray(), SILENT | ADAPTER);
 	}
 
@@ -392,7 +392,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * Adds multiple items to set, ones that are absent.
 	 * @returns The added items.
 	 */
-	$addAll(items: T[]): IArray<T> {
+	$addAll(items: T[]): IList<T> {
 		return new List<T>(this.addAll(items), SILENT | ADAPTER);
 	}
 
@@ -449,7 +449,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * Removes multiple items from set, ones that are present.
 	 * @returns The removed items.
 	 */
-	$removeAll(items: T[]): IArray<T> {
+	$removeAll(items: T[]): IList<T> {
 		return new List<T>(this.removeAll(items), SILENT | ADAPTER);
 	}
 
@@ -484,7 +484,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$clear(): IArray<T> {
+	$clear(): IList<T> {
 		return new List<T>(this.clear(), SILENT | ADAPTER);
 	}
 

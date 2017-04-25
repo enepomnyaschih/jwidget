@@ -21,7 +21,7 @@
 import {def} from '../Core';
 import AbstractCollectionFilterer from './AbstractCollectionFilterer';
 import Dictionary from '../Dictionary';
-import IArray from '../IArray';
+import IList from '../IList';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
@@ -41,17 +41,17 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IArray<T>;
+	readonly source: IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	readonly target: IArray<T>;
+	readonly target: IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ArrayFilterer.Config<T>) {
+	constructor(source: IList<T>, config: ArrayFilterer.Config<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(this.source.silent) : config.target;
@@ -117,7 +117,7 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 		});
 
 		var removeParams: IndexCount = null;
-		var removeParamsList: IArray.IndexCount[] = [];
+		var removeParamsList: IList.IndexCount[] = [];
 
 		function flushRemove() {
 			if (removeParams !== null) {
@@ -147,8 +147,8 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 
 		flushRemove();
 
-		var addParams: IArray.IndexItems<T> = null;
-		var addParamsList: IArray.IndexItems<T>[] = [];
+		var addParams: IList.IndexItems<T> = null;
+		var addParamsList: IList.IndexItems<T>[] = [];
 
 		function flushAdd() {
 			if (addParams !== null) {
@@ -208,7 +208,7 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 	/**
 	 * @hidden
 	 */
-	private _splice(removedItemsList: IArray.IndexItems<T>[], addedItemsList: IArray.IndexItems<T>[]) {
+	private _splice(removedItemsList: IList.IndexItems<T>[], addedItemsList: IList.IndexItems<T>[]) {
 		var sourceIndex = 0;
 		var targetIndex = 0;
 		var removeParamsList = removedItemsList.map((indexItems) => {
@@ -243,12 +243,12 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.removedItemsList, spliceResult.addedItemsList);
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		var oldFiltered = this._filtered[params.index] !== 0;
 		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
 		if (!oldFiltered && !newFiltered) {
@@ -265,7 +265,7 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 		}
 	}
 
-	private _onMove(params: IArray.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveEventParams<T>) {
 		if (this._filtered[params.fromIndex] !== 0) {
 			var fromIndex: number, toIndex: number;
 			if (params.fromIndex < params.toIndex) {
@@ -284,7 +284,7 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 		this.target.tryClear();
 	}
 
-	private _onReorder(params: IArray.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderEventParams<T>) {
 		var targetIndex = 0;
 		var targetIndexWhichMovesToI: Dictionary<number> = {};
 		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
@@ -316,7 +316,7 @@ namespace ArrayFilterer {
 		/**
 		 * @inheritdoc
 		 */
-		readonly target?: IArray<T>;
+		readonly target?: IList<T>;
 	}
 
 	/**
@@ -338,7 +338,7 @@ namespace ArrayFilterer {
 	}
 }
 
-export function filterArray<T>(source: IArray<T>, test: (item: T) => boolean, scope?: any): IArray<T> {
+export function filterArray<T>(source: IList<T>, test: (item: T) => boolean, scope?: any): IList<T> {
 	if (source.silent) {
 		return source.$filter(test, scope);
 	}

@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionLister from './AbstractCollectionLister';
-import IArray from '../IArray';
+import IList from '../IList';
 import IClass from '../IClass';
 import ISet from '../ISet';
 import Set from '../Set';
@@ -31,33 +31,33 @@ export default class ArrayLister<T extends IClass> extends AbstractCollectionLis
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IArray<T>;
+	readonly source: IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: AbstractCollectionLister.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionLister.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		this.target.trySplice([params.oldItem], [params.newItem]);
 	}
 
-	private _onClear(params: IArray.ItemsEventParams<T>) {
+	private _onClear(params: IList.ItemsEventParams<T>) {
 		this.target.tryRemoveAll(params.items);
 	}
 }
 
-export function arrayToSet<T extends IClass>(source: IArray<T>): ISet<T> {
+export function arrayToSet<T extends IClass>(source: IList<T>): ISet<T> {
 	if (source.silent) {
 		return source.$toSet();
 	}

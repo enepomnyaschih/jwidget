@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
-import IArray from '../IArray';
+import IList from '../IList';
 import List from '../List';
 
 /**
@@ -29,33 +29,33 @@ export default class ArraySorterComparing<T> extends AbstractCollectionSorterCom
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IArray<T>;
+	readonly source: IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: AbstractCollectionSorterComparing.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionSorterComparing.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		this._splice([params.oldItem], [params.newItem]);
 	}
 
-	private _onClear(params: IArray.ItemsEventParams<T>) {
+	private _onClear(params: IList.ItemsEventParams<T>) {
 		this._splice(params.items, []);
 	}
 }
 
-export function sortArrayComparing<T>(source: IArray<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
+export function sortArrayComparing<T>(source: IList<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}

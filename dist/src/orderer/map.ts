@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
-import IArray from '../IArray';
+import IList from '../IList';
 import IClass from '../IClass';
 import IMap from '../IMap';
 import List from '../List';
@@ -56,7 +56,7 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	}
 }
 
-export function mapToArray<T extends IClass>(source: IMap<T>): IArray<T> {
+export function mapToArray<T extends IClass>(source: IMap<T>): IList<T> {
 	if (source.silent) {
 		return source.$toArray();
 	}

@@ -19,7 +19,7 @@
 */
 
 import Class from '../Class';
-import IArray from '../IArray';
+import IList from '../IList';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
@@ -90,7 +90,7 @@ class ArrayReverser<T> extends Class {
 	/**
 	 * Target array.
 	 */
-	readonly target: IArray<T>;
+	readonly target: IList<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -99,7 +99,7 @@ class ArrayReverser<T> extends Class {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IArray<T>, config: ArrayReverser.Config<T> = {}) {
+	constructor(readonly source: IList<T>, config: ArrayReverser.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
@@ -128,7 +128,7 @@ class ArrayReverser<T> extends Class {
 		return items;
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldLength = this.target.length.get();
 		var newLength = oldLength;
@@ -158,11 +158,11 @@ class ArrayReverser<T> extends Class {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		this.target.trySet(params.newItem, this.target.length.get() - params.index - 1);
 	}
 
-	private _onMove(params: IArray.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveEventParams<T>) {
 		this.target.tryMove(
 			this.target.length.get() - params.fromIndex - 1,
 			this.target.length.get() - params.toIndex - 1);
@@ -172,7 +172,7 @@ class ArrayReverser<T> extends Class {
 		this.target.tryClear();
 	}
 
-	private _onReorder(params: IArray.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderEventParams<T>) {
 		var indexArray = params.indexArray;
 		var length = indexArray.length;
 		var indexes = new Array<number>(indexArray.length);
@@ -195,11 +195,11 @@ namespace ArrayReverser {
 		/**
 		 * Target array. By default, created automatically.
 		 */
-		readonly target?: IArray<T>;
+		readonly target?: IList<T>;
 	}
 }
 
-export function reverseArray<T>(source: IArray<T>): IArray<T> {
+export function reverseArray<T>(source: IList<T>): IList<T> {
 	if (source.silent) {
 		return source.$toReversed();
 	}

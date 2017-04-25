@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
-import IArray from '../IArray';
+import IList from '../IList';
 import IClass from '../IClass';
 import ISet from '../ISet';
 import List from '../List';
@@ -55,7 +55,7 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 	}
 }
 
-export function setToArray<T extends IClass>(source: ISet<T>): IArray<T> {
+export function setToArray<T extends IClass>(source: ISet<T>): IList<T> {
 	if (source.silent) {
 		return source.$toArray();
 	}

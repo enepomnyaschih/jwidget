@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
-import IArray from '../IArray';
+import IList from '../IList';
 import IClass from '../IClass';
 import ISet from '../ISet';
 import List from '../List';
@@ -52,7 +52,7 @@ export default class SetSorterComparing<T extends IClass> extends AbstractCollec
 	}
 }
 
-export function sortSetComparing<T extends IClass>(source: ISet<T>, compare: (x: T, y: T) => number, scope?: any): IArray<T> {
+export function sortSetComparing<T extends IClass>(source: ISet<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}

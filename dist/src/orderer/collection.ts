@@ -22,7 +22,7 @@ import {default as ArrayOrderer, arrayToArray} from './array';
 import {default as MapOrderer, mapToArray} from './map';
 import {default as SetOrderer, setToArray} from './set';
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
-import IArray from '../IArray';
+import IList from '../IList';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
 import List from '../List';
@@ -35,7 +35,7 @@ export function createOrderer<T extends IClass>(source: ICollection<T>, config: 
 		(source instanceof Set) ? new SetOrderer(source, config) : null;
 }
 
-export function collectionToArray<T extends IClass>(source: ICollection<T>): IArray<T> {
+export function collectionToArray<T extends IClass>(source: ICollection<T>): IList<T> {
 	return (source instanceof List) ? arrayToArray(source) :
 		(source instanceof Map) ? mapToArray(source) :
 		(source instanceof Set) ? setToArray(source) : null;

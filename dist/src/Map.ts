@@ -24,7 +24,7 @@ import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import Event from './Event';
-import IArray from './IArray';
+import IList from './IList';
 import IEvent from './IEvent';
 import IMap from './IMap';
 import IndexedCollection from './IndexedCollection';
@@ -292,7 +292,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$getKeys(): IArray<string> {
+	$getKeys(): IList<string> {
 		return new List<string>(this.getKeys(), SILENT | ADAPTER);
 	}
 
@@ -320,7 +320,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<T> {
+	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<T> {
 		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
 	}
 
@@ -334,7 +334,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<T> {
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<T> {
 		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
@@ -348,7 +348,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IArray<string> {
+	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<string> {
 		return new List<string>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
 	}
 
@@ -362,7 +362,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IArray<string> {
+	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<string> {
 		return new List<string>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
@@ -411,14 +411,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toArray(): IArray<T> {
+	$toArray(): IList<T> {
 		return new List<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$asArray(): IArray<T> {
+	$asArray(): IList<T> {
 		return new List<T>(this.asArray(), SILENT | ADAPTER);
 	}
 

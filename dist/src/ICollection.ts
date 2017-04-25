@@ -20,7 +20,7 @@
 
 import Bindable from './Bindable';
 import Dictionary from './Dictionary';
-import IArray from './IArray';
+import IList from './IList';
 import IClass from './IClass';
 import IMap from './IMap';
 import ISet from './ISet';
@@ -31,7 +31,7 @@ import Watchable from './Watchable';
  *
  * There are 3 collection types:
  *
- * * [[IArray]],
+ * * [[IList]],
  * extends [[IIndexedCollection]]
  * * [[IMap]],
  * extends [[IIndexedCollection]]
@@ -68,9 +68,9 @@ import Watchable from './Watchable';
  * * [[ICollectionOrderer]] - Converter to array (orderer)
  * * [[ICollectionSorterComparing]] - Converter to array (sorter by comparer)
  * * [[ICollectionObserver]] - Modification observer
- * * [[IArrayInserter]], [[IMapInserter]] - View synchronizers
- * * [[IArrayMerger]] - Array merger
- * * [[IArrayReverser]] - Array reverser
+ * * [[IListInserter]], [[IMapInserter]] - View synchronizers
+ * * [[IListMerger]] - Array merger
+ * * [[IListReverser]] - Array reverser
  *
  * Please keep the next rules in mind whenever you work with jWidget collections.
  *
@@ -311,7 +311,7 @@ interface ICollection<T> extends IClass {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
 	 */
-	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T>;
+	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * Converts collection to sorted array.
@@ -339,7 +339,7 @@ interface ICollection<T> extends IClass {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T>;
+	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * Indexes collection.
@@ -375,7 +375,7 @@ interface ICollection<T> extends IClass {
 	 *
 	 * Builds new array consisting of collection items.
 	 */
-	$toArray(): IArray<T>;
+	$toArray(): IList<T>;
 
 	/**
 	 * Converts collection to set.
@@ -413,7 +413,7 @@ interface ICollection<T> extends IClass {
 	 * but please make sure that the returned array
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	$asArray(): IArray<T>;
+	$asArray(): IList<T>;
 
 	/**
 	 * Represents collection as set.

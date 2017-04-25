@@ -22,7 +22,7 @@ import Bindable from './Bindable';
 import {destroy, CollectionFlags, SILENT, ADAPTER} from './Core';
 import Dictionary from './Dictionary';
 import Event from './Event';
-import IArray from './IArray';
+import IList from './IList';
 import IEvent from './IEvent';
 import IMap from './IMap';
 import IndexCount from './IndexCount';
@@ -174,15 +174,15 @@ import * as ArrayUtils from './ArrayUtils';
  *
  * @param T Array item type.
  */
-export default class List<T> extends IndexedCollection<number, T> implements IArray<T> {
+export default class List<T> extends IndexedCollection<number, T> implements IList<T> {
 	private _items: T[];
 
-	private _spliceEvent  : IEvent<IArray.SpliceEventParams<T>>;
-	private _replaceEvent : IEvent<IArray.ReplaceEventParams<T>>;
-	private _moveEvent    : IEvent<IArray.MoveEventParams<T>>;
-	private _reorderEvent : IEvent<IArray.ReorderEventParams<T>>;
-	private _clearEvent   : IEvent<IArray.ItemsEventParams<T>>;
-	private _changeEvent  : IEvent<IArray.EventParams<T>>;
+	private _spliceEvent  : IEvent<IList.SpliceEventParams<T>>;
+	private _replaceEvent : IEvent<IList.ReplaceEventParams<T>>;
+	private _moveEvent    : IEvent<IList.MoveEventParams<T>>;
+	private _reorderEvent : IEvent<IList.ReorderEventParams<T>>;
+	private _clearEvent   : IEvent<IList.ItemsEventParams<T>>;
+	private _changeEvent  : IEvent<IList.EventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.
@@ -212,12 +212,12 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 		this._items = adapter ? items : items ? items.concat() : [];
 		this._length.set(this._items.length);
 
-		this._spliceEvent  = Event.make<IArray.SpliceEventParams<T>>(this, silent);
-		this._replaceEvent = Event.make<IArray.ReplaceEventParams<T>>(this, silent);
-		this._moveEvent    = Event.make<IArray.MoveEventParams<T>>(this, silent);
-		this._reorderEvent = Event.make<IArray.ReorderEventParams<T>>(this, silent);
-		this._clearEvent   = Event.make<IArray.ItemsEventParams<T>>(this, silent);
-		this._changeEvent  = Event.make<IArray.EventParams<T>>(this, silent);
+		this._spliceEvent  = Event.make<IList.SpliceEventParams<T>>(this, silent);
+		this._replaceEvent = Event.make<IList.ReplaceEventParams<T>>(this, silent);
+		this._moveEvent    = Event.make<IList.MoveEventParams<T>>(this, silent);
+		this._reorderEvent = Event.make<IList.ReorderEventParams<T>>(this, silent);
+		this._clearEvent   = Event.make<IList.ItemsEventParams<T>>(this, silent);
+		this._changeEvent  = Event.make<IList.EventParams<T>>(this, silent);
 	}
 
 	get length(): Watchable<number> {
@@ -281,7 +281,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	get spliceEvent(): Bindable<IArray.SpliceEventParams<T>> {
+	get spliceEvent(): Bindable<IList.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
@@ -291,7 +291,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[set]]
 	 * * [[trySet]]
 	 */
-	get replaceEvent(): Bindable<IArray.ReplaceEventParams<T>> {
+	get replaceEvent(): Bindable<IList.ReplaceEventParams<T>> {
 		return this._replaceEvent;
 	}
 
@@ -301,7 +301,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[move]]
 	 * * [[tryMove]]
 	 */
-	get moveEvent(): Bindable<IArray.MoveEventParams<T>> {
+	get moveEvent(): Bindable<IList.MoveEventParams<T>> {
 		return this._moveEvent;
 	}
 
@@ -311,7 +311,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	get clearEvent(): Bindable<IArray.ItemsEventParams<T>> {
+	get clearEvent(): Bindable<IList.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
@@ -324,14 +324,14 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * * [[sort]]
 	 * * [[sortComparing]]
 	 */
-	get reorderEvent(): Bindable<IArray.ReorderEventParams<T>> {
+	get reorderEvent(): Bindable<IList.ReorderEventParams<T>> {
 		return this._reorderEvent;
 	}
 
 	/**
 	 * Array is changed. Triggered right after any another event.
 	 */
-	get changeEvent(): Bindable<IArray.EventParams<T>> {
+	get changeEvent(): Bindable<IList.EventParams<T>> {
 		return this._changeEvent;
 	}
 
@@ -365,7 +365,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$getKeys(): IArray<number> {
+	$getKeys(): IList<number> {
 		return new List<number>(this.getKeys(), SILENT | ADAPTER);
 	}
 
@@ -393,7 +393,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<T> {
+	$toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): IList<T> {
 		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
 	}
 
@@ -407,7 +407,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<T> {
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<T> {
 		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
@@ -421,7 +421,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): IArray<number> {
+	$getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): IList<number> {
 		return new List<number>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
 	}
 
@@ -435,7 +435,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IArray<number> {
+	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number> {
 		return new List<number>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
 	}
 
@@ -456,7 +456,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T, index: number) => boolean, scope?: any): IArray<T> {
+	$filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T> {
 		return new List<T>(this.filter(callback, scope || this), SILENT | ADAPTER);
 	}
 
@@ -477,7 +477,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U> {
+	$map<U>(callback: (item: T, index: number) => U, scope?: any): IList<U> {
 		return new List<U>(this.map(callback, scope || this), SILENT | ADAPTER);
 	}
 
@@ -491,7 +491,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$toArray(): IArray<T> {
+	$toArray(): IList<T> {
 		return new List<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
@@ -505,7 +505,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$asArray(): IArray<T> {
+	$asArray(): IList<T> {
 		return this;
 	}
 
@@ -641,7 +641,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @param count Count of items to remove.
 	 * @returns The removed items.
 	 */
-	$removeAll(index: number, count: number): IArray<T> {
+	$removeAll(index: number, count: number): IList<T> {
 		return new List<T>(this.removeAll(index, count), SILENT | ADAPTER);
 	}
 
@@ -712,7 +712,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	/**
 	 * @inheritdoc
 	 */
-	$clear(): IArray<T> {
+	$clear(): IList<T> {
 		return new List<T>(this.clear(), SILENT | ADAPTER);
 	}
 
@@ -740,7 +740,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removeParamsList: IArray.IndexCount[], addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T> {
+	splice(removeParamsList: IList.IndexCount[], addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T> {
 		var result = this.trySplice(removeParamsList, addParamsList);
 		return (result !== undefined) ? result : new ListSpliceResult(this._items.concat(), [], []);
 	}
@@ -752,7 +752,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. If collection is not modified, returns undefined.
 	 */
-	trySplice(removeParamsList: IArray.IndexCount[], addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T> {
+	trySplice(removeParamsList: IList.IndexCount[], addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T> {
 		var result = ArrayUtils.trySplice(this._items, removeParamsList, addParamsList);
 		if (result === undefined) {
 			return undefined;
@@ -807,7 +807,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArray.SpliceParams<T> {
+	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IList.SpliceParams<T> {
 		return ArrayUtils.detectSplice(this._items, newItems, getKey || this.getKey, scope || this);
 	}
 
@@ -821,7 +821,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 * @returns **removeParamsList** argument of [[splice]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectFilter(newItems: T[]): IArray.IndexCount[]{
+	detectFilter(newItems: T[]): IList.IndexCount[]{
 		return ArrayUtils.detectFilter(this._items, newItems);
 	}
 
@@ -989,7 +989,7 @@ export default class List<T> extends IndexedCollection<number, T> implements IAr
 	 *
 	 * @returns Reversed array.
 	 */
-	$toReversed(): IArray<T> {
+	$toReversed(): IList<T> {
 		return new List(this.toReversed(), SILENT | ADAPTER);
 	}
 

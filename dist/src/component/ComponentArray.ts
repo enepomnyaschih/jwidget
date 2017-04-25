@@ -22,7 +22,7 @@ import ArrayMapper from '../mapper/array';
 import Class from '../Class';
 import Component from '../Component';
 import ComponentInserter from './ComponentInserter';
-import IArray from '../IArray';
+import IList from '../IList';
 import * as DomUtils from '../DomUtils';
 import * as SetUtils from '../SetUtils';
 
@@ -30,7 +30,7 @@ import * as SetUtils from '../SetUtils';
  * @hidden
  */
 export default class ComponentArray extends Class {
-	constructor(private parent: Component, private source: IArray<Component>, el: JQuery) {
+	constructor(private parent: Component, private source: IList<Component>, el: JQuery) {
 		super();
 		SetUtils.add(parent._arrays, this);
 

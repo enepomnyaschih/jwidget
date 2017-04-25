@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionCounter from './AbstractCollectionCounter';
-import IArray from '../IArray';
+import IList from '../IList';
 import Property from '../Property';
 import Watchable from '../Watchable';
 import * as ArrayUtils from '../ArrayUtils';
@@ -31,19 +31,19 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IArray<T>;
+	readonly source: IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: AbstractCollectionCounter.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionCounter.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var value = this._target.get();
 		spliceResult.removedItemsList.forEach((indexItems) => {
@@ -55,7 +55,7 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> {
 		this._target.set(value);
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		var oldFiltered = this._test.call(this._scope, params.oldItem) !== false;
 		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
 		if (oldFiltered && !newFiltered) {
@@ -70,7 +70,7 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> {
 	}
 }
 
-export function countArray<T>(source: IArray<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
+export function countArray<T>(source: IList<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
 	if (source.silent) {
 		return source.$count(test, scope);
 	}

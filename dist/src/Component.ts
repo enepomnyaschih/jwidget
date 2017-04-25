@@ -31,7 +31,7 @@ import ComponentCollection from './component/ComponentCollection';
 import ComponentReplaceable from './component/ComponentReplaceable';
 import Dictionary from './Dictionary';
 import DomTemplate from './DomTemplate';
-import IArray from './IArray';
+import IList from './IList';
 import ICollection from './ICollection';
 import HtmlTemplate from './HtmlTemplate';
 import TemplateOutput from './TemplateOutput';
@@ -378,7 +378,7 @@ export default class Component extends Class {
 	 * @param source Child component array.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addArray(source: IArray<Component>, el?: string | HTMLElement | JQuery): ComponentArray {
+	addArray(source: IList<Component>, el?: string | HTMLElement | JQuery): ComponentArray {
 		return new ComponentArray(this, source, this._getContainerElement(el));
 	}
 

@@ -21,7 +21,7 @@
 import {destroy} from '../Core';
 import AbstractCollectionMapper from './AbstractCollectionMapper';
 import Destroyable from '../Destroyable';
-import IArray from '../IArray';
+import IList from '../IList';
 import IndexItems from '../IndexItems';
 import List from '../List';
 
@@ -34,17 +34,17 @@ class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IArray<T>;
+	readonly source: IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	readonly target: IArray<U>;
+	readonly target: IList<U>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: ArrayMapper.Config<T, U>) {
+	constructor(source: IList<T>, config: ArrayMapper.Config<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(this.source.silent) : config.target;
@@ -84,10 +84,10 @@ class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> {
 		}
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var sourceResult = params.spliceResult;
 		var sourceAddedItemsList = sourceResult.addedItemsList;
-		var targetAddParamsList: IArray.IndexItems<U>[] = [];
+		var targetAddParamsList: IList.IndexItems<U>[] = [];
 		for (var i = 0, l = sourceAddedItemsList.length; i < l; ++i) {
 			var addParams = sourceAddedItemsList[i];
 			targetAddParamsList.push(new IndexItems(
@@ -101,21 +101,21 @@ class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> {
 		}
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		var newItem = this._create.call(this._scope, params.newItem);
 		var oldItem = this.target.trySet(newItem, params.index).value;
 		this._destroy.call(this._scope, oldItem, params.oldItem);
 	}
 
-	private _onMove(params: IArray.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveEventParams<T>) {
 		this.target.tryMove(params.fromIndex, params.toIndex);
 	}
 
-	private _onClear(params: IArray.ItemsEventParams<T>) {
+	private _onClear(params: IList.ItemsEventParams<T>) {
 		this._destroyItems(this.target.tryClear(), params.items);
 	}
 
-	private _onReorder(params: IArray.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderEventParams<T>) {
 		this.target.tryReorder(params.indexArray);
 	}
 }
@@ -130,11 +130,11 @@ namespace ArrayMapper {
 		/**
 		 * @inheritdoc
 		 */
-		readonly target?: IArray<U>;
+		readonly target?: IList<U>;
 	}
 }
 
-export function mapArray<T, U>(source: IArray<T>, map: (item: T) => U, scope?: any): IArray<U> {
+export function mapArray<T, U>(source: IList<T>, map: (item: T) => U, scope?: any): IList<U> {
 	if (source.silent) {
 		return source.$map(map, scope);
 	}
@@ -147,7 +147,7 @@ export function mapArray<T, U>(source: IArray<T>, map: (item: T) => U, scope?: a
 	return result;
 }
 
-export function mapDestroyableArray<T, U extends Destroyable>(source: IArray<T>, create: (item: T) => U, scope?: any): IArray<U> {
+export function mapDestroyableArray<T, U extends Destroyable>(source: IList<T>, create: (item: T) => U, scope?: any): IList<U> {
 	if (source.silent) {
 		return source.$map(create, scope).ownItems();
 	}

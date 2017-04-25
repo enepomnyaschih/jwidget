@@ -19,7 +19,7 @@
 */
 
 import Dictionary from './Dictionary';
-import IArray from './IArray';
+import IList from './IList';
 import ICollection from './ICollection';
 import IMap from './IMap';
 import Watchable from './Watchable';
@@ -30,7 +30,7 @@ import Some from './Some';
  *
  * There are 2 kinds of indexed collections:
  *
- * * [[IArray]] (key is number)
+ * * [[IList]] (key is number)
  * * [[IMap]] (key is string)
  *
  * Please keep the next rule in mind whenever you work with jWidget indexed collections:
@@ -131,7 +131,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * Returns array of keys of all collection items.
 	 */
-	$getKeys(): IArray<K>;
+	$getKeys(): IList<K>;
 
 	/**
 	 * Checks existance of item with specified key in collection.
@@ -239,7 +239,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T, key: K) => any, scope?: any, order?: number): IArray<T>;
+	$toSorted(callback?: (item: T, key: K) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
@@ -249,7 +249,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IArray<T>;
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * Returns keys of sorted items.
@@ -275,7 +275,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
 	 */
-	$getSortingKeys(callback?: (item: T, key: K) => any, scope?: any, order?: number): IArray<K>;
+	$getSortingKeys(callback?: (item: T, key: K) => any, scope?: any, order?: number): IList<K>;
 
 	/**
 	 * Returns keys of sorted items.
@@ -303,7 +303,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
 	 */
-	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IArray<K>;
+	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IList<K>;
 
 	/**
 	 * @inheritdoc

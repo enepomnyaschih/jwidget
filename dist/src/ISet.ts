@@ -20,7 +20,7 @@
 
 import Bindable from './Bindable';
 import Dictionary from './Dictionary';
-import IArray from './IArray';
+import IList from './IList';
 import IClass from './IClass';
 import ICollection from './ICollection';
 
@@ -232,7 +232,7 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * Adds multiple items to set, ones that are absent.
 	 * @returns The added items.
 	 */
-	$addAll(items: T[]): IArray<T>;
+	$addAll(items: T[]): IList<T>;
 
 	/**
 	 * Adds multiple items to set, ones that are absent.
@@ -269,7 +269,7 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * Removes multiple items from set, ones that are present.
 	 * @returns The removed items.
 	 */
-	$removeAll(items: T[]): IArray<T>;
+	$removeAll(items: T[]): IList<T>;
 
 	/**
 	 * Removes multiple items from set, ones that are present.
@@ -291,7 +291,7 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$clear(): IArray<T>;
+	$clear(): IList<T>;
 
 	/**
 	 * @inheritdoc

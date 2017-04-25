@@ -21,7 +21,7 @@
 import {SILENT, ADAPTER} from '../Core';
 import {mapDestroyableArray} from '../mapper/array';
 import Class from '../Class';
-import IArray from '../IArray';
+import IList from '../IList';
 import IClass from '../IClass';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
@@ -98,12 +98,12 @@ import * as ArrayUtils from '../ArrayUtils';
  */
 class ArrayMerger<T> extends Class {
 	private _targetCreated: boolean;
-	private _bunches: IArray<IClass>;
+	private _bunches: IList<IClass>;
 
 	/**
 	 * Target array.
 	 */
-	readonly target: IArray<T>;
+	readonly target: IList<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -112,7 +112,7 @@ class ArrayMerger<T> extends Class {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IArray<IArray<T>>, config: ArrayMerger.Config<T> = {}) {
+	constructor(readonly source: IList<IList<T>>, config: ArrayMerger.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? this._createTarget(source) : config.target;
@@ -138,7 +138,7 @@ class ArrayMerger<T> extends Class {
 		super.destroyObject();
 	}
 
-	private _createTarget(source: IArray<IArray<T>>): IArray<T> {
+	private _createTarget(source: IList<IList<T>>): IList<T> {
 		return new List<T>(source.silent && source.every((item) => item.silent));
 	}
 
@@ -146,7 +146,7 @@ class ArrayMerger<T> extends Class {
 		return this._merge(this.source.items);
 	}
 
-	private _merge(bunches: IArray<T>[]): T[] {
+	private _merge(bunches: IList<T>[]): T[] {
 		var items = new Array<T>(this._count(bunches));
 		var iItems = 0;
 		for (var i = 0, l = bunches.length; i < l; ++i) {
@@ -158,7 +158,7 @@ class ArrayMerger<T> extends Class {
 		return items;
 	}
 
-	private _count(bunches: IArray<T>[], index?: number, length?: number): number {
+	private _count(bunches: IList<T>[], index?: number, length?: number): number {
 		if (index === undefined) {
 			index = 0;
 		}
@@ -172,7 +172,7 @@ class ArrayMerger<T> extends Class {
 		return count;
 	}
 
-	private _getIndexes(bunches: IArray<T>[]): number[] {
+	private _getIndexes(bunches: IList<T>[]): number[] {
 		var currentIndex = 0;
 		var indexes = bunches.map(function (bunch) {
 			var index = currentIndex;
@@ -183,7 +183,7 @@ class ArrayMerger<T> extends Class {
 		return indexes;
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<IArray<T>>) {
+	private _onSplice(params: IList.SpliceEventParams<IList<T>>) {
 		var spliceResult = params.spliceResult;
 		var indexes = this._getIndexes(spliceResult.oldItems);
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -203,14 +203,14 @@ class ArrayMerger<T> extends Class {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<IArray<T>>) {
+	private _onReplace(params: IList.ReplaceEventParams<IList<T>>) {
 		var index = this._count(this.source.items, 0, params.index);
 		this.target.trySplice(
 			[new IndexCount(index, params.oldItem.length.get())],
 			[new IndexItems<T>(index, params.newItem.items)]);
 	}
 
-	private _onMove(params: IArray.MoveEventParams<IArray<T>>) {
+	private _onMove(params: IList.MoveEventParams<IList<T>>) {
 		var count = params.item.length.get();
 		var indexes = new Array<number>(this.target.length.get());
 		var currentIndex = 0;
@@ -251,7 +251,7 @@ class ArrayMerger<T> extends Class {
 		this.target.tryClear();
 	}
 
-	private _onReorder(params: IArray.ReorderEventParams<IArray<T>>) {
+	private _onReorder(params: IList.ReorderEventParams<IList<T>>) {
 		var oldIndexes = this._getIndexes(params.items);
 		var newIndexes = this._getIndexes(this.source.items);
 		var indexes = new Array<number>(this.target.length.get());
@@ -279,11 +279,11 @@ namespace ArrayMerger {
 		/**
 		 * Target array. By default, created automatically.
 		 */
-		readonly target?: IArray<T>;
+		readonly target?: IList<T>;
 	}
 }
 
-export function mergeArrays<T>(source: IArray<IArray<T>>): IArray<T> {
+export function mergeArrays<T>(source: IList<IList<T>>): IList<T> {
 	if (source.silent) {
 		if (source.every((item) => item.silent)) {
 			return $mergeNoSync(source);
@@ -301,22 +301,22 @@ export function mergeArrays<T>(source: IArray<IArray<T>>): IArray<T> {
 	return result;
 }
 
-export function mergeNoSync<T>(source: IArray<IArray<T>>): T[] {
+export function mergeNoSync<T>(source: IList<IList<T>>): T[] {
 	return ArrayUtils.merge(source.map(function(item: any): any[] {
 		return item.items;
 	}));
 }
 
-export function $mergeNoSync<T>(source: IArray<IArray<T>>): IArray<T> {
+export function $mergeNoSync<T>(source: IList<IList<T>>): IList<T> {
 	return new List(mergeNoSync(source), SILENT & ADAPTER);
 }
 
 class Bunch<T> extends Class {
-	private source: IArray<IArray<T>>;
-	private target: IArray<T>;
-	private bunch: IArray<T>;
+	private source: IList<IList<T>>;
+	private target: IList<T>;
+	private bunch: IList<T>;
 
-	constructor(source: IArray<IArray<T>>, target: IArray<T>, bunch: IArray<T>) {
+	constructor(source: IList<IList<T>>, target: IList<T>, bunch: IList<T>) {
 		super();
 		this.source = source;
 		this.target = target;
@@ -342,7 +342,7 @@ class Bunch<T> extends Class {
 		return 0;
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var index = this._getIndex();
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -354,20 +354,20 @@ class Bunch<T> extends Class {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		this.target.trySet(params.newItem, this._getIndex() + params.index);
 	}
 
-	private _onMove(params: IArray.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveEventParams<T>) {
 		var index = this._getIndex();
 		this.target.tryMove(index + params.fromIndex, index + params.toIndex);
 	}
 
-	private _onClear(params: IArray.ItemsEventParams<T>) {
+	private _onClear(params: IList.ItemsEventParams<T>) {
 		this.target.tryRemoveAll(this._getIndex(), params.items.length);
 	}
 
-	private _onReorder(params: IArray.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderEventParams<T>) {
 		var index = this._getIndex();
 		var bunchIndexArray = params.indexArray;
 		var bunchLength = bunchIndexArray.length;

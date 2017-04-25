@@ -20,7 +20,7 @@
 
 import ArrayInserter from '../inserter/array';
 import Class from '../Class';
-import IArray from '../IArray';
+import IList from '../IList';
 import * as DomUtils from '../DomUtils';
 
 /**
@@ -31,7 +31,7 @@ export default class AbstractInserter<T> extends Class {
 	 * @param source Source array.
 	 * @param el Parent element.
 	 */
-	constructor(source: IArray<T>, readonly el: HTMLElement) {
+	constructor(source: IList<T>, readonly el: HTMLElement) {
 		super();
 		this.own(new ArrayInserter(source, {
 			add: this._addItem,

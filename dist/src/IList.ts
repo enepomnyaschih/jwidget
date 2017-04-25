@@ -126,7 +126,7 @@ import Some from './Some';
  *
  * @param T Array item type.
  */
-interface IArray<T> extends IIndexedCollection<number, T> {
+interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * Returns the last collection item. If collection is empty, returns undefined.
 	 */
@@ -163,7 +163,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	readonly spliceEvent: Bindable<IArray.SpliceEventParams<T>>;
+	readonly spliceEvent: Bindable<IList.SpliceEventParams<T>>;
 
 	/**
 	 * Item is replaced in array. Triggered in result of calling:
@@ -171,7 +171,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[set]]
 	 * * [[trySet]]
 	 */
-	readonly replaceEvent: Bindable<IArray.ReplaceEventParams<T>>;
+	readonly replaceEvent: Bindable<IList.ReplaceEventParams<T>>;
 
 	/**
 	 * Item is moved in array. Triggered in result of calling:
@@ -179,7 +179,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[move]]
 	 * * [[tryMove]]
 	 */
-	readonly moveEvent: Bindable<IArray.MoveEventParams<T>>;
+	readonly moveEvent: Bindable<IList.MoveEventParams<T>>;
 
 	/**
 	 * Array is cleared. Triggered in result of calling:
@@ -187,7 +187,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	readonly clearEvent: Bindable<IArray.ItemsEventParams<T>>;
+	readonly clearEvent: Bindable<IList.ItemsEventParams<T>>;
 
 	/**
 	 * Items are reordered in array. Triggered in result of calling:
@@ -198,12 +198,12 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * * [[sort]]
 	 * * [[sortComparing]]
 	 */
-	readonly reorderEvent: Bindable<IArray.ReorderEventParams<T>>;
+	readonly reorderEvent: Bindable<IList.ReorderEventParams<T>>;
 
 	/**
 	 * Array is changed. Triggered right after any another event.
 	 */
-	readonly changeEvent: Bindable<IArray.EventParams<T>>;
+	readonly changeEvent: Bindable<IList.EventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.
@@ -264,7 +264,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T, index: number) => boolean, scope?: any): IArray<T>;
+	$filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T>;
 
 	/**
 	 * @inheritdoc
@@ -279,7 +279,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$map<U>(callback: (item: T, index: number) => U, scope?: any): IArray<U>;
+	$map<U>(callback: (item: T, index: number) => U, scope?: any): IList<U>;
 
 	/**
 	 * @inheritdoc
@@ -294,7 +294,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$asArray(): IArray<T>;
+	$asArray(): IList<T>;
 
 	/**
 	 * Inserts an item to array.
@@ -366,7 +366,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param count Count of items to remove.
 	 * @returns The removed items.
 	 */
-	$removeAll(index: number, count: number): IArray<T>;
+	$removeAll(index: number, count: number): IList<T>;
 
 	/**
 	 * Removes item range from array.
@@ -408,7 +408,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$clear(): IArray<T>;
+	$clear(): IList<T>;
 
 	/**
 	 * @inheritdoc
@@ -422,7 +422,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removeParamsList: IArray.IndexCount[], addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T>;
+	splice(removeParamsList: IList.IndexCount[], addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T>;
 
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
@@ -431,7 +431,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. If collection is not modified, returns undefined.
 	 */
-	trySplice(removeParamsList: IArray.IndexCount[], addParamsList: IArray.IndexItems<T>[]): IArray.SpliceResult<T>;
+	trySplice(removeParamsList: IList.IndexCount[], addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T>;
 
 	/**
 	 * Reorders array items.
@@ -464,7 +464,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IArray.SpliceParams<T>;
+	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IList.SpliceParams<T>;
 
 	/**
 	 * Detects **removeParamsList** arguments of [[splice]] to adjust array contents to **newItems**.
@@ -476,7 +476,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 * @returns **removeParamsList** argument of [[splice]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectFilter(newItems: T[]): IArray.IndexCount[];
+	detectFilter(newItems: T[]): IList.IndexCount[];
 
 	/**
 	 * Detects [[reorder]] method arguments to adjust array contents to **newItems**.
@@ -598,7 +598,7 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	 *
 	 * @returns Reversed array.
 	 */
-	$toReversed(): IArray<T>;
+	$toReversed(): IList<T>;
 
 	/**
 	 * Checks for equality (===) to another array, item by item.
@@ -658,17 +658,17 @@ interface IArray<T> extends IIndexedCollection<number, T> {
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
 }
 
-export default IArray;
+export default IList;
 
-namespace IArray {
+namespace IList {
 	/**
-	 * `IArray` event parameters.
+	 * `IList` event parameters.
 	 */
 	export interface EventParams<T> extends ICollection.EventParams<T> {
 		/**
 		 * Event sender.
 		 */
-		readonly sender: IArray<T>;
+		readonly sender: IList<T>;
 	}
 
 	/**

@@ -19,7 +19,7 @@
 */
 
 import Class from '../Class';
-import IArray from '../IArray';
+import IList from '../IList';
 
 /**
  * View synchronizer with array. Listens all array events and reduces them to 2 granular functions:
@@ -77,7 +77,7 @@ class ArrayInserter<T> extends Class {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IArray<T>, config: ArrayInserter.Config<T> = {}) {
+	constructor(readonly source: IList<T>, config: ArrayInserter.Config<T> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;
@@ -132,7 +132,7 @@ class ArrayInserter<T> extends Class {
 		}
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.removedItems;
@@ -157,7 +157,7 @@ class ArrayInserter<T> extends Class {
 		}
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		if (this._remove) {
 			this._remove.call(this._scope, params.oldItem, params.index);
 		}
@@ -166,7 +166,7 @@ class ArrayInserter<T> extends Class {
 		}
 	}
 
-	private _onMove(params: IArray.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveEventParams<T>) {
 		if (this._remove) {
 			this._remove.call(this._scope, params.item, params.fromIndex);
 		}
@@ -175,11 +175,11 @@ class ArrayInserter<T> extends Class {
 		}
 	}
 
-	private _onClear(params: IArray.ItemsEventParams<T>) {
+	private _onClear(params: IList.ItemsEventParams<T>) {
 		this._doClearItems(params.items);
 	}
 
-	private _onReorder(params: IArray.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderEventParams<T>) {
 		this._doClearItems(params.items);
 		this._addItems(this.source.items, 0);
 	}

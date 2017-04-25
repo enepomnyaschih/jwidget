@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IArray from "./IArray";
+import IList from "./IList";
 import * as ArrayUtils from "./ArrayUtils";
 
 /**
@@ -26,10 +26,10 @@ import * as ArrayUtils from "./ArrayUtils";
  *
  * @param T Item type.
  */
-export default class ListSpliceResult<T> implements IArray.SpliceResult<T> {
+export default class ListSpliceResult<T> implements IList.SpliceResult<T> {
 	private _removedItems: T[];
 	private _addedItems: T[];
-	private _removeParamsList: IArray.IndexCount[];
+	private _removeParamsList: IList.IndexCount[];
 
 	/**
 	 * @param oldItems Old array contents.
@@ -37,8 +37,8 @@ export default class ListSpliceResult<T> implements IArray.SpliceResult<T> {
 	 * @param addedItemsList Added item segments.
 	 */
 	constructor(readonly oldItems: T[],
-		readonly removedItemsList: IArray.IndexItems<T>[],
-		readonly addedItemsList: IArray.IndexItems<T>[]) {
+		readonly removedItemsList: IList.IndexItems<T>[],
+		readonly addedItemsList: IList.IndexItems<T>[]) {
 	}
 
 	/**
@@ -68,7 +68,7 @@ export default class ListSpliceResult<T> implements IArray.SpliceResult<T> {
 	/**
 	 * Converts removed item segments to "index-count" pairs.
 	 */
-	get removeParamsList(): IArray.IndexCount[]{
+	get removeParamsList(): IList.IndexCount[]{
 		if (!this._removeParamsList) {
 			this._removeParamsList = this.removedItemsList.map((x) => x.toIndexCount());
 		}

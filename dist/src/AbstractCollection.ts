@@ -21,7 +21,7 @@
 import Bindable from './Bindable';
 import Class from './Class';
 import Dictionary from './Dictionary';
-import IArray from './IArray';
+import IList from './IList';
 import ICollection from './ICollection';
 import IMap from './IMap';
 import IProperty from './IProperty';
@@ -450,7 +450,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
 	 */
-	abstract $toSorted(callback?: (item: T) => any, scope?: any, order?: number): IArray<T>;
+	abstract $toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * Converts collection to sorted array.
@@ -478,7 +478,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
 	 */
-	abstract $toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IArray<T>;
+	abstract $toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * Indexes collection.
@@ -532,7 +532,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 *
 	 * Builds new array consisting of collection items.
 	 */
-	abstract $toArray(): IArray<T>;
+	abstract $toArray(): IList<T>;
 
 	/**
 	 * Converts collection to set.
@@ -579,7 +579,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * but please make sure that the returned array
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	abstract $asArray(): IArray<T>;
+	abstract $asArray(): IList<T>;
 
 	/**
 	 * Represents collection as set.

@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionObserver from './AbstractCollectionObserver';
-import IArray from '../IArray';
+import IList from '../IList';
 
 /**
  * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Array]].
@@ -28,12 +28,12 @@ export default class ArrayObserver<T> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IArray<T>;
+	readonly source: IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: AbstractCollectionObserver.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -43,7 +43,7 @@ export default class ArrayObserver<T> extends AbstractCollectionObserver<T> {
 		}
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.removedItems;
@@ -59,7 +59,7 @@ export default class ArrayObserver<T> extends AbstractCollectionObserver<T> {
 		}
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		if (this._remove) {
 			this._remove.call(this._scope, params.oldItem);
 		}
@@ -68,7 +68,7 @@ export default class ArrayObserver<T> extends AbstractCollectionObserver<T> {
 		}
 	}
 
-	private _onClear(params: IArray.ItemsEventParams<T>) {
+	private _onClear(params: IList.ItemsEventParams<T>) {
 		this._doClearItems(params.items);
 	}
 }

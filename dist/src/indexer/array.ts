@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionIndexer from './AbstractCollectionIndexer';
-import IArray from '../IArray';
+import IList from '../IList';
 import IMap from '../IMap';
 import Map from '../Map';
 
@@ -30,38 +30,38 @@ export default class ArrayIndexer<T> extends AbstractCollectionIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IArray<T>;
+	readonly source: IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IArray<T>, config: AbstractCollectionIndexer.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionIndexer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
 	}
 
-	private _onSplice(params: IArray.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			this._keys(spliceResult.removedItems),
 			this._index(spliceResult.addedItems));
 	}
 
-	private _onReplace(params: IArray.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		this.target.trySplice(
 			this._keys([params.oldItem]),
 			this._index([params.newItem]));
 	}
 
-	private _onClear(params: IArray.ItemsEventParams<T>) {
+	private _onClear(params: IList.ItemsEventParams<T>) {
 		this.target.tryRemoveAll(
 			this._keys(params.items));
 	}
 }
 
-export function indexArray<T>(source: IArray<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
+export function indexArray<T>(source: IList<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}

@@ -20,7 +20,7 @@
 
 import Class from '../Class';
 import Dictionary from '../Dictionary';
-import IArray from '../IArray';
+import IList from '../IList';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
 import IndexItems from '../IndexItems';
@@ -94,7 +94,7 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class {
 	/**
 	 * Target array.
 	 */
-	readonly target: IArray<T>;
+	readonly target: IList<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -149,6 +149,6 @@ namespace AbstractCollectionOrderer {
 		/**
 		 * Target array. By default, created automatically.
 		 */
-		readonly target?: IArray<T>;
+		readonly target?: IList<T>;
 	}
 }

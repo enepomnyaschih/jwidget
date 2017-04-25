@@ -20,7 +20,7 @@
 
 import {cmp} from '../Core';
 import Class from '../Class';
-import IArray from '../IArray';
+import IList from '../IList';
 import ICollection from '../ICollection';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
@@ -146,7 +146,7 @@ abstract class AbstractCollectionSorterComparing<T> extends Class {
 	/**
 	 * Target array.
 	 */
-	readonly target: IArray<T>;
+	readonly target: IList<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -219,8 +219,8 @@ abstract class AbstractCollectionSorterComparing<T> extends Class {
 
 		var iAdds = 0;
 		var addShift = 0;
-		var removeParamsList: IArray.IndexCount[] = [];
-		var addParamsList: IArray.IndexItems<T>[] = [];
+		var removeParamsList: IList.IndexCount[] = [];
+		var addParamsList: IList.IndexItems<T>[] = [];
 		var removeParams: IndexCount = null;
 		for (var iTarget = 0, lTarget = this.target.length.get(); iTarget < lTarget; ++iTarget) {
 			var value = this.target.get(iTarget);
@@ -273,7 +273,7 @@ namespace AbstractCollectionSorterComparing {
 		/**
 		 * Target array. By default, created automatically.
 		 */
-		readonly target?: IArray<T>;
+		readonly target?: IList<T>;
 
 		/**
 		 * Sorting order. Positive number for ascending sorting, negative for descending sorting.

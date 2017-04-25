@@ -20,7 +20,7 @@
 
 import AbstractCollection from './AbstractCollection';
 import Dictionary from './Dictionary';
-import IArray from './IArray';
+import IList from './IList';
 import IIndexedCollection from './IIndexedCollection';
 import IMap from './IMap';
 import Property from './Property';
@@ -162,7 +162,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * Returns array of keys of all collection items.
 	 */
-	abstract $getKeys(): IArray<K>;
+	abstract $getKeys(): IList<K>;
 
 	/**
 	 * Checks existance of item with specified key in collection.
@@ -315,7 +315,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $toSorted(callback?: (item: T, key: K) => any, scope?: any, order?: number): IArray<T>;
+	abstract $toSorted(callback?: (item: T, key: K) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
@@ -325,7 +325,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $toSortedComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IArray<T>;
+	abstract $toSortedComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * Returns keys of sorted items.
@@ -351,7 +351,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
 	 */
-	abstract $getSortingKeys(callback?: (item: T, key: K) => any, scope?: any, order?: number): IArray<K>;
+	abstract $getSortingKeys(callback?: (item: T, key: K) => any, scope?: any, order?: number): IList<K>;
 
 	/**
 	 * Returns keys of sorted items.
@@ -379,7 +379,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted item keys array.
 	 */
-	abstract $getSortingKeysComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IArray<K>;
+	abstract $getSortingKeysComparing(compare?: (t1: T, t2: T, k1: K, k2: K) => number, scope?: any, order?: number): IList<K>;
 
 	/**
 	 * @inheritdoc
