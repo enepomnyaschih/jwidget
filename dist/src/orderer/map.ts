@@ -56,7 +56,7 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	}
 }
 
-export function mapToArray<T extends IClass>(source: IMap<T>): IList<T> {
+export function mapToList<T extends IClass>(source: IMap<T>): IList<T> {
 	if (source.silent) {
 		return source.toList();
 	}
