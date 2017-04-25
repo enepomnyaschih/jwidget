@@ -20,12 +20,13 @@
 
 import Bindable from "./Bindable";
 import Destroyable from "./Destroyable";
+import DestroyableWatchable from "./DestroyableWatchable";
 
 /**
  * Read-only container for a value.
  * Provides basic data binding functionality.
  */
-interface Watchable<V> extends Destroyable {
+interface Watchable<V> {
 	/**
 	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
 	 */
@@ -50,7 +51,7 @@ interface Watchable<V> extends Destroyable {
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	map<U>(callback: (value: V) => U, scope?: any): Watchable<U>;
+	map<U>(callback: (value: V) => U, scope?: any): DestroyableWatchable<U>;
 
 	/**
 	 * Builds a new property containing the result of the callback function called
@@ -61,7 +62,7 @@ interface Watchable<V> extends Destroyable {
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): Watchable<U>;
+	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): DestroyableWatchable<U>;
 }
 
 export default Watchable;

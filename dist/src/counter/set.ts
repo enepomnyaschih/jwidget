@@ -19,10 +19,10 @@
 */
 
 import AbstractCollectionCounter from './AbstractCollectionCounter';
+import DestroyableWatchable from '../DestroyableWatchable';
 import IClass from '../IClass';
 import ISet from '../ISet';
 import Property from '../Property';
-import Watchable from '../Watchable';
 import * as ArrayUtils from '../ArrayUtils';
 
 /**
@@ -55,9 +55,9 @@ export default class SetCounter<T extends IClass> extends AbstractCollectionCoun
 	}
 }
 
-export function countSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
+export function countSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): DestroyableWatchable<number> {
 	if (source.silent) {
-		return source.$count(test, scope);
+		return new Property(source.count(test, scope), true);
 	}
 	var result = new Property(0);
 	result.own(new SetCounter<T>(source, {

@@ -22,6 +22,7 @@ import Class from "./Class";
 import {destroy} from "./Core";
 import Bindable from "./Bindable";
 import Destroyable from "./Destroyable";
+import DestroyableWatchable from "./DestroyableWatchable";
 import Event from "./Event";
 import IEvent from "./IEvent";
 import IProperty from "./IProperty";
@@ -112,7 +113,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	map<U>(callback: (value: V) => U, scope?: any): Watchable<U> {
+	map<U>(callback: (value: V) => U, scope?: any): DestroyableWatchable<U> {
 		return mapProperties([this], callback, scope || this);
 	}
 
@@ -125,7 +126,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): Watchable<U> {
+	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): DestroyableWatchable<U> {
 		return mapDestroyableProperties([this], callback, scope || this);
 	}
 }

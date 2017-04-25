@@ -19,9 +19,9 @@
 */
 
 import AbstractCollectionCounter from './AbstractCollectionCounter';
+import DestroyableWatchable from '../DestroyableWatchable';
 import IMap from '../IMap';
 import Property from '../Property';
-import Watchable from '../Watchable';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
@@ -54,9 +54,9 @@ export default class MapCounter<T> extends AbstractCollectionCounter<T> {
 	}
 }
 
-export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
+export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): DestroyableWatchable<number> {
 	if (source.silent) {
-		return source.$count(test, scope);
+		return new Property(source.count(test, scope), true);
 	}
 	var result = new Property(0);
 	result.own(new MapCounter<T>(source, {

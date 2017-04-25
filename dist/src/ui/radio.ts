@@ -23,6 +23,7 @@
 import {Binding, UPDATE, WATCH} from '../Core';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
+import DestroyableWatchable from '../DestroyableWatchable';
 import IProperty from '../IProperty';
 import Property from '../Property';
 import Watchable from '../Watchable';
@@ -116,7 +117,7 @@ namespace RadioListener {
  *
  * @param name Radios "name" attribute.
  */
-export default function radio(el: JQuery, name: string): Watchable<string>;
+export default function radio(el: JQuery, name: string): DestroyableWatchable<string>;
 
 /**
  * Radio group value management method.
@@ -143,7 +144,7 @@ export default function radio(el: JQuery, name: string): Watchable<string>;
  */
 export default function radio(el: JQuery, name: string, property: Watchable<any>): Destroyable;
 export default function radio(el: JQuery, name: string, property: IProperty<string>, binding?: Binding): Destroyable;
-export default function radio(el: JQuery, name: string, property?: any, binding?: Binding): any {
+export default function radio(el: JQuery, name: string, property?: any, binding?: Binding): Destroyable {
 	if (property != null) {
 		return new RadioBinding(el, name, property, binding);
 	}

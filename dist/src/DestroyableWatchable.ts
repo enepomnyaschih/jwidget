@@ -18,22 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableWatchable from "./DestroyableWatchable";
+import Destroyable from "./Destroyable";
+import Watchable from "./Watchable";
 
 /**
- * Extension of `DestroyableWatchable` interface with `set` method to modify the property value.
+ * Extension of `Watchable` interface with `destroy` method.
+ * If some method returns `DestroyableWatchable`, probably it wants you to take
+ * control over this object life time.
  */
-interface IProperty<V> extends DestroyableWatchable<V> {
-	/**
-	 * Changes property value and triggers `changeEvent` if the value has been changed.
-	 */
-	set(value: V): void;
-
-	/**
-	 * Makes this property an owner of its value. It means that the value is
-	 * destroyed automatically on reassignment or destruction of the property.
-	 */
-	ownValue(): this;
+interface DestroyableWatchable<V> extends Destroyable, Watchable<V> {
 }
 
-export default IProperty;
+export default DestroyableWatchable;

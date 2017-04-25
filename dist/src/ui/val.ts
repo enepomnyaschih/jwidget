@@ -23,6 +23,7 @@
 import {Binding, UPDATE, WATCH} from '../Core';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
+import DestroyableWatchable from '../DestroyableWatchable';
 import {isLifeInput} from '../DomUtils';
 import IProperty from '../IProperty';
 import Property from '../Property';
@@ -112,7 +113,7 @@ namespace ValueListener {
  * @param simple If true, listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-export default function val(el: JQuery, simple?: boolean): Watchable<string>;
+export default function val(el: JQuery, simple?: boolean): DestroyableWatchable<string>;
 
 /**
  * DOM element value management method.
@@ -138,7 +139,7 @@ export default function val(el: JQuery, simple?: boolean): Watchable<string>;
  */
 export default function val(el: JQuery, value: Watchable<any>, simple?: boolean): Destroyable;
 export default function val(el: JQuery, value: IProperty<string>, binding: Binding, simple?: boolean): Destroyable;
-export default function val(el: JQuery, value: any, binding?: any, simple?: any): any {
+export default function val(el: JQuery, value: any, binding?: any, simple?: any): Destroyable {
 	if (value != null && (typeof value !== "boolean")) {
 		return new ValueBinding(el, value, binding, simple);
 	}

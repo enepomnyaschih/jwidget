@@ -23,6 +23,7 @@
 import {Binding, UPDATE, WATCH} from '../Core';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
+import DestroyableWatchable from '../DestroyableWatchable';
 import IProperty from '../IProperty';
 import Property from '../Property';
 import Watchable from '../Watchable';
@@ -99,7 +100,7 @@ namespace CheckedListener {
  *
  * @param prop Element's property name.
  */
-export default function prop(el: JQuery, prop: string): Watchable<boolean>;
+export default function prop(el: JQuery, prop: string): DestroyableWatchable<boolean>;
 
 /**
  * DOM element property management method.
@@ -124,7 +125,7 @@ export default function prop(el: JQuery, prop: string): Watchable<boolean>;
  */
 export default function prop(el: JQuery, prop: string, property: Watchable<any>): Destroyable;
 export default function prop(el: JQuery, prop: string, property: IProperty<boolean>, binding: Binding): Destroyable;
-export default function prop(el: JQuery, prop: string, property?: any, binding?: Binding): any {
+export default function prop(el: JQuery, prop: string, property?: any, binding?: Binding): Destroyable {
 	if (property != null) {
 		return new PropBinding(el, prop, property, binding);
 	}

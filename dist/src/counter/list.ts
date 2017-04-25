@@ -21,7 +21,7 @@
 import AbstractCollectionCounter from './AbstractCollectionCounter';
 import IList from '../IList';
 import Property from '../Property';
-import Watchable from '../Watchable';
+import DestroyableWatchable from '../DestroyableWatchable';
 import * as ArrayUtils from '../ArrayUtils';
 
 /**
@@ -70,9 +70,9 @@ export default class ListCounter<T> extends AbstractCollectionCounter<T> {
 	}
 }
 
-export function countList<T>(source: IList<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
+export function countList<T>(source: IList<T>, test: (item: T) => boolean, scope?: any): DestroyableWatchable<number> {
 	if (source.silent) {
-		return source.$count(test, scope);
+		return new Property(source.count(test, scope), true);
 	}
 	var result = new Property(0);
 	result.own(new ListCounter<T>(source, {

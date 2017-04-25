@@ -22,6 +22,7 @@ import Bindable from './Bindable';
 import Class from './Class';
 import {destroy} from './Core';
 import Destroyable from './Destroyable';
+import DestroyableWatchable from './DestroyableWatchable';
 import IProperty from './IProperty';
 import Property from './Property';
 import Watchable from './Watchable';
@@ -320,7 +321,7 @@ namespace Mapper {
 
 export default Mapper;
 
-export function mapProperties<U>(sources: Watchable<any>[], map: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
+export function mapProperties<U>(sources: Watchable<any>[], map: Mapper.CreateCallback<U>, scope?: any): DestroyableWatchable<U> {
 	if (sources.every((source) => source.silent)) {
 		const values = sources.map((source) => source.get());
 		return new Property<U>(map.apply(scope, values), true);
@@ -335,7 +336,8 @@ export function mapProperties<U>(sources: Watchable<any>[], map: Mapper.CreateCa
 	return result;
 }
 
-export function mapDestroyableProperties<U extends Destroyable>(sources: Watchable<any>[], create: Mapper.CreateCallback<U>, scope?: any): Watchable<U> {
+export function mapDestroyableProperties<U extends Destroyable>(
+		sources: Watchable<any>[], create: Mapper.CreateCallback<U>, scope?: any): DestroyableWatchable<U> {
 	if (sources.every((source) => source.silent)) {
 		const values = sources.map((source) => source.get());
 		return new Property<U>(create.apply(scope, values), true).ownValue();
