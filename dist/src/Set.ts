@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 import {apply, destroy, iid, isArray} from './Core';
 import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import AbstractCollection from './AbstractCollection';
@@ -196,7 +196,7 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	get spliceEvent(): Bindable<ISet.SpliceEventParams<T>> {
+	get spliceEvent(): Listenable<ISet.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
@@ -207,14 +207,14 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	get clearEvent(): Bindable<ISet.ItemsEventParams<T>> {
+	get clearEvent(): Listenable<ISet.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
 	/**
 	 * Set is changed. Triggered right after any another event.
 	 */
-	get changeEvent(): Bindable<ISet.EventParams<T>> {
+	get changeEvent(): Listenable<ISet.EventParams<T>> {
 		return this._changeEvent;
 	}
 

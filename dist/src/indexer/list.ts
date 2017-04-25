@@ -37,9 +37,9 @@ export default class ListIndexer<T> extends AbstractCollectionIndexer<T> {
 	 */
 	constructor(source: IList<T>, config: AbstractCollectionIndexer.Config<T>) {
 		super(source, config);
-		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.replaceEvent.bind(this._onReplace, this));
-		this.own(source.clearEvent.bind(this._onClear, this));
+		this.own(source.spliceEvent.listen(this._onSplice, this));
+		this.own(source.replaceEvent.listen(this._onReplace, this));
+		this.own(source.clearEvent.listen(this._onClear, this));
 	}
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {

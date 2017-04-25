@@ -19,7 +19,7 @@
 */
 
 import Class from './Class';
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 import Watchable from './Watchable';
 
 /**
@@ -101,8 +101,8 @@ class Switcher extends Class {
 	 * @param event Event.
 	 * @returns this
 	 */
-	bind(event: Bindable<any>): this {
-		return this.owning(event.bind(this.update, this));
+	bind(event: Listenable<any>): this {
+		return this.owning(event.listen(this.update, this));
 	}
 
 	/**

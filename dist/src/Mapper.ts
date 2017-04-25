@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 import Class from './Class';
 import {destroy} from './Core';
 import Destroyable from './Destroyable';
@@ -211,8 +211,8 @@ class Mapper<T> extends Class {
 	 * @param event Event.
 	 * @returns this
 	 */
-	bind(event: Bindable<any>): this {
-		return this.owning(event.bind(this.update, this));
+	listen(event: Listenable<any>): this {
+		return this.owning(event.listen(this.update, this));
 	}
 
 	/**
@@ -222,7 +222,7 @@ class Mapper<T> extends Class {
 	 * @returns this
 	 */
 	watch(property: Watchable<any>): this {
-		return this.bind(property.changeEvent);
+		return this.listen(property.changeEvent);
 	}
 
 	/**

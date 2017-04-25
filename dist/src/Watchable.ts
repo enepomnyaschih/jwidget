@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from "./Bindable";
+import Listenable from "./Listenable";
 import Destroyable from "./Destroyable";
 import DestroyableWatchable from "./DestroyableWatchable";
 
@@ -35,7 +35,7 @@ interface Watchable<V> {
 	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
-	readonly changeEvent: Bindable<Watchable.ChangeEventParams<V>>;
+	readonly changeEvent: Listenable<Watchable.ChangeEventParams<V>>;
 
 	/**
 	 * Returns property value.

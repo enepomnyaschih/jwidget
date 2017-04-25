@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 import Dictionary from './Dictionary';
 import IList from './IList';
 import IClass from './IClass';
@@ -123,7 +123,7 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	readonly spliceEvent: Bindable<ISet.SpliceEventParams<T>>;
+	readonly spliceEvent: Listenable<ISet.SpliceEventParams<T>>;
 
 	/**
 	 * Set is cleared. Triggered in result of calling:
@@ -132,12 +132,12 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	readonly clearEvent: Bindable<ISet.ItemsEventParams<T>>;
+	readonly clearEvent: Listenable<ISet.ItemsEventParams<T>>;
 
 	/**
 	 * Set is changed. Triggered right after any another event.
 	 */
-	readonly changeEvent: Bindable<ISet.EventParams<T>>;
+	readonly changeEvent: Listenable<ISet.EventParams<T>>;
 
 	/**
 	 * @inheritdoc

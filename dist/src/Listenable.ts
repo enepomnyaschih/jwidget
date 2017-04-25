@@ -23,7 +23,7 @@ import Destroyable from "./Destroyable";
 /**
  * Container for callback functions. Provides basic event listening functionality.
  */
-interface Bindable<P> {
+interface Listenable<P> {
 	/**
 	 * Checks if this event is dummy. This knowledge may help you do certain code optimizations.
 	 */
@@ -40,7 +40,7 @@ interface Bindable<P> {
 	 * @param handler Event handler function.
 	 * @param scope `handler` call scope.
 	 */
-	bind(handler: (params: P) => void, scope?: any): Destroyable;
+	listen(handler: (params: P) => void, scope?: any): Destroyable;
 }
 
-export default Bindable;
+export default Listenable;

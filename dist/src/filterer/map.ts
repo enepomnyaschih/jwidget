@@ -47,9 +47,9 @@ class MapFilterer<T> extends AbstractCollectionFilterer<T> {
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<T>(this.source.silent) : config.target;
 		this.target.trySetAll(source.filter(this._test, this._scope));
-		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.reindexEvent.bind(this._onReindex, this));
-		this.own(source.clearEvent.bind(this._onClear, this));
+		this.own(source.spliceEvent.listen(this._onSplice, this));
+		this.own(source.reindexEvent.listen(this._onReindex, this));
+		this.own(source.clearEvent.listen(this._onClear, this));
 	}
 
 	/**

@@ -39,8 +39,8 @@ export default class SetCounter<T extends IClass> extends AbstractCollectionCoun
 	 */
 	constructor(source: ISet<T>, config: AbstractCollectionCounter.Config<T>) {
 		super(source, config);
-		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.clearEvent.bind(this._onClear, this));
+		this.own(source.spliceEvent.listen(this._onSplice, this));
+		this.own(source.clearEvent.listen(this._onClear, this));
 	}
 
 	private _onSplice(params: ISet.SpliceEventParams<T>) {

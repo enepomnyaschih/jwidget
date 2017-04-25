@@ -36,10 +36,10 @@ export default class SetObserver<T extends IClass> extends AbstractCollectionObs
 	 */
 	constructor(source: ISet<T>, config: AbstractCollectionObserver.Config<T>) {
 		super(source, config);
-		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.clearEvent.bind(this._onClear, this));
+		this.own(source.spliceEvent.listen(this._onSplice, this));
+		this.own(source.clearEvent.listen(this._onClear, this));
 		if (this._change) {
-			this.own(source.changeEvent.bind(this._onChange, this));
+			this.own(source.changeEvent.listen(this._onChange, this));
 		}
 	}
 

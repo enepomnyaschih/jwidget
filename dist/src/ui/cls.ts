@@ -39,7 +39,7 @@ class ClassUpdater extends Class {
 	constructor(private el: JQuery, private cls: string, private property: Watchable<any>) {
 		super();
 		this._update();
-		this.own(property.changeEvent.bind(this._update, this));
+		this.own(property.changeEvent.listen(this._update, this));
 	}
 
 	private _update() {

@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 import ICollection from './ICollection';
 import IIndexedCollection from './IIndexedCollection';
 import Some from './Some';
@@ -163,7 +163,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	readonly spliceEvent: Bindable<IList.SpliceEventParams<T>>;
+	readonly spliceEvent: Listenable<IList.SpliceEventParams<T>>;
 
 	/**
 	 * Item is replaced in array. Triggered in result of calling:
@@ -171,7 +171,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 * * [[set]]
 	 * * [[trySet]]
 	 */
-	readonly replaceEvent: Bindable<IList.ReplaceEventParams<T>>;
+	readonly replaceEvent: Listenable<IList.ReplaceEventParams<T>>;
 
 	/**
 	 * Item is moved in array. Triggered in result of calling:
@@ -179,7 +179,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 * * [[move]]
 	 * * [[tryMove]]
 	 */
-	readonly moveEvent: Bindable<IList.MoveEventParams<T>>;
+	readonly moveEvent: Listenable<IList.MoveEventParams<T>>;
 
 	/**
 	 * Array is cleared. Triggered in result of calling:
@@ -187,7 +187,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	readonly clearEvent: Bindable<IList.ItemsEventParams<T>>;
+	readonly clearEvent: Listenable<IList.ItemsEventParams<T>>;
 
 	/**
 	 * Items are reordered in array. Triggered in result of calling:
@@ -198,12 +198,12 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 * * [[sort]]
 	 * * [[sortComparing]]
 	 */
-	readonly reorderEvent: Bindable<IList.ReorderEventParams<T>>;
+	readonly reorderEvent: Listenable<IList.ReorderEventParams<T>>;
 
 	/**
 	 * Array is changed. Triggered right after any another event.
 	 */
-	readonly changeEvent: Bindable<IList.EventParams<T>>;
+	readonly changeEvent: Listenable<IList.EventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.

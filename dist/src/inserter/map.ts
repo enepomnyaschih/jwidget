@@ -89,9 +89,9 @@ class MapInserter<T> extends Class {
 		this._scope = config.scope || this;
 		this._clear = config.clear;
 		this._addItems(this.source.items);
-		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.reindexEvent.bind(this._onReindex, this));
-		this.own(source.clearEvent.bind(this._onClear, this));
+		this.own(source.spliceEvent.listen(this._onSplice, this));
+		this.own(source.reindexEvent.listen(this._onReindex, this));
+		this.own(source.clearEvent.listen(this._onClear, this));
 	}
 
 	/**

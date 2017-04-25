@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 import Dictionary from './Dictionary';
 import ICollection from './ICollection';
 import IIndexedCollection from './IIndexedCollection';
@@ -133,7 +133,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	readonly spliceEvent: Bindable<IMap.SpliceEventParams<T>>;
+	readonly spliceEvent: Listenable<IMap.SpliceEventParams<T>>;
 
 	/**
 	 * Keys of items are changed in map. Triggered in result of calling:
@@ -144,7 +144,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * * [[tryReindex]]
 	 * * [[performReindex]]
 	 */
-	readonly reindexEvent: Bindable<IMap.ReindexEventParams<T>>;
+	readonly reindexEvent: Listenable<IMap.ReindexEventParams<T>>;
 
 	/**
 	 * Map is cleared. Triggered in result of calling:
@@ -153,12 +153,12 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	readonly clearEvent: Bindable<IMap.ItemsEventParams<T>>;
+	readonly clearEvent: Listenable<IMap.ItemsEventParams<T>>;
 
 	/**
 	 * Map is changed. Triggered right after any another event.
 	 */
-	readonly changeEvent: Bindable<IMap.EventParams<T>>;
+	readonly changeEvent: Listenable<IMap.EventParams<T>>;
 
 	/**
 	 * Function which returns unique key of an item in this collection.

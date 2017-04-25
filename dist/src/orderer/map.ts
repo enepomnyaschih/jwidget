@@ -39,8 +39,8 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	 */
 	constructor(source: IMap<T>, config: AbstractCollectionOrderer.Config<T>) {
 		super(source, config);
-		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.clearEvent.bind(this._onClear, this));
+		this.own(source.spliceEvent.listen(this._onSplice, this));
+		this.own(source.clearEvent.listen(this._onClear, this));
 	}
 
 	private _onSplice(params: IMap.SpliceEventParams<T>) {

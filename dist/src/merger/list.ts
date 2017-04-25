@@ -118,11 +118,11 @@ class ListMerger<T> extends Class {
 		this.target = this._targetCreated ? this._createTarget(source) : config.target;
 		this._bunches = mapDestroyableList(source, (bunch) => new Bunch(this.source, this.target, bunch));
 		this.target.tryAddAll(this._getAllItems());
-		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.replaceEvent.bind(this._onReplace, this));
-		this.own(source.moveEvent.bind(this._onMove, this));
-		this.own(source.clearEvent.bind(this._onClear, this));
-		this.own(source.reorderEvent.bind(this._onReorder, this));
+		this.own(source.spliceEvent.listen(this._onSplice, this));
+		this.own(source.replaceEvent.listen(this._onReplace, this));
+		this.own(source.moveEvent.listen(this._onMove, this));
+		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.reorderEvent.listen(this._onReorder, this));
 	}
 
 	/**
@@ -321,11 +321,11 @@ class Bunch<T> extends Class {
 		this.source = source;
 		this.target = target;
 		this.bunch = bunch;
-		this.own(bunch.spliceEvent.bind(this._onSplice, this));
-		this.own(bunch.replaceEvent.bind(this._onReplace, this));
-		this.own(bunch.moveEvent.bind(this._onMove, this));
-		this.own(bunch.clearEvent.bind(this._onClear, this));
-		this.own(bunch.reorderEvent.bind(this._onReorder, this));
+		this.own(bunch.spliceEvent.listen(this._onSplice, this));
+		this.own(bunch.replaceEvent.listen(this._onReplace, this));
+		this.own(bunch.moveEvent.listen(this._onMove, this));
+		this.own(bunch.clearEvent.listen(this._onClear, this));
+		this.own(bunch.reorderEvent.listen(this._onReorder, this));
 	}
 
 	private _getIndex(): number {

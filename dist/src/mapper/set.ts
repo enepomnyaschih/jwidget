@@ -54,8 +54,8 @@ class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMa
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<U>(this.source.silent) : config.target;
 		this.target.tryAddAll(this._createItems(source.toArray()));
-		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.clearEvent.bind(this._onClear, this));
+		this.own(source.spliceEvent.listen(this._onSplice, this));
+		this.own(source.clearEvent.listen(this._onClear, this));
 	}
 
 	/**

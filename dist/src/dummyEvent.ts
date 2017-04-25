@@ -29,7 +29,7 @@ class DummyEvent implements IEvent<any> {
 
 	destroy(): void {}
 
-	bind(handler: (params: any) => void, scope?: any): Destroyable {
+	listen(handler: (params: any) => void, scope?: any): Destroyable {
 		handler = handler;
 		scope = scope;
 		return dummyDestroyable;
@@ -41,7 +41,7 @@ class DummyEvent implements IEvent<any> {
 }
 
 /**
- * Dummy implementation of `Bindable<any>` interface.
+ * Dummy implementation of `Listenable<any>` interface.
  * As opposed to `Event`, doesn't really bind the event handlers, just pretends it does that.
  */
 export default <IEvent<any>>(new DummyEvent());

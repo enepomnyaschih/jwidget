@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 import {destroy, CollectionFlags, SILENT, ADAPTER} from './Core';
 import Dictionary from './Dictionary';
 import Event from './Event';
@@ -281,7 +281,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	get spliceEvent(): Bindable<IList.SpliceEventParams<T>> {
+	get spliceEvent(): Listenable<IList.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
@@ -291,7 +291,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * * [[set]]
 	 * * [[trySet]]
 	 */
-	get replaceEvent(): Bindable<IList.ReplaceEventParams<T>> {
+	get replaceEvent(): Listenable<IList.ReplaceEventParams<T>> {
 		return this._replaceEvent;
 	}
 
@@ -301,7 +301,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * * [[move]]
 	 * * [[tryMove]]
 	 */
-	get moveEvent(): Bindable<IList.MoveEventParams<T>> {
+	get moveEvent(): Listenable<IList.MoveEventParams<T>> {
 		return this._moveEvent;
 	}
 
@@ -311,7 +311,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	get clearEvent(): Bindable<IList.ItemsEventParams<T>> {
+	get clearEvent(): Listenable<IList.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
@@ -324,14 +324,14 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * * [[sort]]
 	 * * [[sortComparing]]
 	 */
-	get reorderEvent(): Bindable<IList.ReorderEventParams<T>> {
+	get reorderEvent(): Listenable<IList.ReorderEventParams<T>> {
 		return this._reorderEvent;
 	}
 
 	/**
 	 * Array is changed. Triggered right after any another event.
 	 */
-	get changeEvent(): Bindable<IList.EventParams<T>> {
+	get changeEvent(): Listenable<IList.EventParams<T>> {
 		return this._changeEvent;
 	}
 

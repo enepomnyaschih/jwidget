@@ -104,11 +104,11 @@ class ListReverser<T> extends Class {
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
 		this.target.tryAddAll(this._reverse(source.items));
-		this.own(source.spliceEvent.bind(this._onSplice, this));
-		this.own(source.replaceEvent.bind(this._onReplace, this));
-		this.own(source.moveEvent.bind(this._onMove, this));
-		this.own(source.clearEvent.bind(this._onClear, this));
-		this.own(source.reorderEvent.bind(this._onReorder, this));
+		this.own(source.spliceEvent.listen(this._onSplice, this));
+		this.own(source.replaceEvent.listen(this._onReplace, this));
+		this.own(source.moveEvent.listen(this._onMove, this));
+		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.reorderEvent.listen(this._onReorder, this));
 	}
 
 	/**

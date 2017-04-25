@@ -20,7 +20,7 @@
 
 import Class from "./Class";
 import {destroy} from "./Core";
-import Bindable from "./Bindable";
+import Listenable from "./Listenable";
 import Destroyable from "./Destroyable";
 import DestroyableWatchable from "./DestroyableWatchable";
 import Event from "./Event";
@@ -63,7 +63,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
-	get changeEvent(): Bindable<Watchable.ChangeEventParams<V>> {
+	get changeEvent(): Listenable<Watchable.ChangeEventParams<V>> {
 		return this._changeEvent;
 	}
 

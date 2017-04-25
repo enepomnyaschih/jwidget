@@ -19,12 +19,12 @@
 */
 
 import Destroyable from "./Destroyable";
-import Bindable from "./Bindable";
+import Listenable from "./Listenable";
 
 /**
- * Extension of `Bindable` interface with `trigger` method.
+ * Extension of `Listenable` interface with `trigger` method.
  */
-interface IEvent<P> extends Bindable<P>, Destroyable {
+interface IEvent<P> extends Listenable<P>, Destroyable {
 	/**
 	 * Triggers event, i.e. calls all bound handlers.
 	 * @param params Event params.

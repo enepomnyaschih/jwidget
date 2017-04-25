@@ -26,7 +26,7 @@ import IClass from "./IClass";
 import IEvent from "./IEvent";
 
 /**
- * Real implementation of `Bindable` interface.
+ * Real implementation of `Listenable` interface.
  * Used to notify some objects (clients) about certain events (for example, field value change).
  */
 export default class Event<P> implements IEvent<P> {
@@ -58,7 +58,7 @@ export default class Event<P> implements IEvent<P> {
 	 * @param handler Event handler function.
 	 * @param scope `handler` call scope.
 	 */
-	bind(handler: (params: P) => void, scope?: any): Destroyable {
+	listen(handler: (params: P) => void, scope?: any): Destroyable {
 		if (this._attachments === null) {
 			this._attachments = {};
 		}

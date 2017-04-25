@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 import Dictionary from './Dictionary';
 import IList from './IList';
 import IClass from './IClass';
@@ -188,12 +188,12 @@ interface ICollection<T> extends IClass {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	readonly clearEvent: Bindable<ICollection.EventParams<T>>;
+	readonly clearEvent: Listenable<ICollection.EventParams<T>>;
 
 	/**
 	 * Collection is changed. Triggered right after any another event.
 	 */
-	readonly changeEvent: Bindable<ICollection.EventParams<T>>;
+	readonly changeEvent: Listenable<ICollection.EventParams<T>>;
 
 	/**
 	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in

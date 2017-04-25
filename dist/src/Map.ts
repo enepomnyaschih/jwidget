@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 import {apply, destroy, iid} from './Core';
 import {CollectionFlags, SILENT, ADAPTER} from './Core';
 import Destroyable from './Destroyable';
@@ -232,7 +232,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * * [[trySplice]]
 	 * * [[performSplice]]
 	 */
-	get spliceEvent(): Bindable<IMap.SpliceEventParams<T>> {
+	get spliceEvent(): Listenable<IMap.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
@@ -245,7 +245,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * * [[tryReindex]]
 	 * * [[performReindex]]
 	 */
-	get reindexEvent(): Bindable<IMap.ReindexEventParams<T>> {
+	get reindexEvent(): Listenable<IMap.ReindexEventParams<T>> {
 		return this._reindexEvent;
 	}
 
@@ -256,14 +256,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * * [[$clear]]
 	 * * [[tryClear]]
 	 */
-	get clearEvent(): Bindable<IMap.ItemsEventParams<T>> {
+	get clearEvent(): Listenable<IMap.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
 	/**
 	 * Map is changed. Triggered right after any another event.
 	 */
-	get changeEvent(): Bindable<IMap.EventParams<T>> {
+	get changeEvent(): Listenable<IMap.EventParams<T>> {
 		return this._changeEvent;
 	}
 
