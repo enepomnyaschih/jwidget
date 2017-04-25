@@ -23,7 +23,7 @@ import Dictionary from '../Dictionary';
 import Map from '../Map';
 import IMap from '../IMap';
 import Some from '../Some';
-import * as MapUtils from '../MapUtils';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * @hidden
@@ -70,8 +70,8 @@ export default class ComponentChildInserter extends Map<ComponentChild> {
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		MapUtils.each(spliceResult.removedItems, this._detach, this);
-		MapUtils.each(spliceResult.addedItems, this._attach, this);
+		DictionaryUtils.each(spliceResult.removedItems, this._detach, this);
+		DictionaryUtils.each(spliceResult.addedItems, this._attach, this);
 		return spliceResult;
 	}
 
@@ -80,7 +80,7 @@ export default class ComponentChildInserter extends Map<ComponentChild> {
 		if (items === undefined) {
 			return undefined;
 		}
-		MapUtils.each(items, this._detach, this);
+		DictionaryUtils.each(items, this._detach, this);
 		return items;
 	}
 

@@ -21,7 +21,7 @@
 import AbstractCollectionFilterer from './AbstractCollectionFilterer';
 import IMap from '../IMap';
 import Map from '../Map';
-import * as MapUtils from '../MapUtils';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Map]].
@@ -67,7 +67,7 @@ class MapFilterer<T> extends AbstractCollectionFilterer<T> {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			Object.keys(spliceResult.removedItems),
-			MapUtils.filter(spliceResult.addedItems, this._test, this._scope));
+			DictionaryUtils.filter(spliceResult.addedItems, this._test, this._scope));
 	}
 
 	private _onReindex(params: IMap.ReindexEventParams<T>) {

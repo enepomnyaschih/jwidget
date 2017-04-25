@@ -81,10 +81,10 @@ import Some from './Some';
  * * [[index]], [[$index]] - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
  * * [[toArray]], [[$toArray]] - Builds new array consisting of collection items.
- * * **[[toMap]], [[$toMap]] - Builds new map consisting of collection items.**
+ * * **[[toDictionary]], [[toMap]] - Builds new map consisting of collection items.**
  * * [[toSet]], [[$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * **[[asMap]], [[$asMap]] - Represents collection as map.**
+ * * **[[asDictionary]], [[asMap]] - Represents collection as map.**
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  *
  * Collection modification:
@@ -105,7 +105,7 @@ import Some from './Some';
  * All the same algorithms are also available for native JavaScript collections:
  *
  * * Array, see [[ArrayUtils]] functions.
- * * Object as map, see [[MapUtils]] functions.
+ * * Object as map, see [[DictionaryUtils]] functions.
  */
 interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
@@ -320,32 +320,32 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 *
 	 * Builds new map consisting of collection items.
 	 */
-	toMap(): Dictionary<T>;
+	toDictionary(): Dictionary<T>;
 
 	/**
 	 * Converts collection to map.
 	 *
 	 * Builds new map consisting of collection items.
 	 */
-	$toMap(): IMap<T>;
+	toMap(): IMap<T>;
 
 	/**
 	 * Represents collection as map.
 	 *
-	 * If this collection is map, returns it immediately. Else, executes [[toMap]] method.
-	 * This method works usually faster than [[toMap]], but please make sure that the returned map
+	 * If this collection is map, returns it immediately. Else, executes [[toDictionary]] method.
+	 * This method works usually faster than [[toDictionary]], but please make sure that the returned map
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	asMap(): Dictionary<T>;
+	asDictionary(): Dictionary<T>;
 
 	/**
 	 * Represents collection as map.
 	 *
-	 * If this collection is map, returns it immediately. Else, executes [[toMap]] method.
-	 * This method works usually faster than [[toMap]], but please make sure that the returned map
+	 * If this collection is map, returns it immediately. Else, executes [[toDictionary]] method.
+	 * This method works usually faster than [[toDictionary]], but please make sure that the returned map
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	$asMap(): IMap<T>;
+	asMap(): IMap<T>;
 
 	/**
 	 * @inheritdoc

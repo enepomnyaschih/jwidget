@@ -25,7 +25,7 @@ import Dictionary from '../Dictionary';
 import IMap from '../IMap';
 import Map from '../Map';
 import Some from '../Some';
-import * as MapUtils from '../MapUtils';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * @hidden
@@ -77,10 +77,10 @@ export default class ComponentChildren extends Map<Component> {
 		}
 		var removedItems = spliceResult.removedItems;
 		var addedItems = spliceResult.addedItems;
-		var children = MapUtils.map(addedItems, (item) => {
+		var children = DictionaryUtils.map(addedItems, (item) => {
 			return new ComponentChild(this.component, item);
 		}, this);
-		this.target.trySplice(MapUtils.getRemovedKeys(removedItems, addedItems), children);
+		this.target.trySplice(DictionaryUtils.getRemovedKeys(removedItems, addedItems), children);
 		return spliceResult;
 	}
 

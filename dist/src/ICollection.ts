@@ -157,7 +157,7 @@ import Watchable from './Watchable';
  * All the same algorithms are also available for native JavaScript collections:
  *
  * * Array, see [[ArrayUtils]] functions.
- * * Object as map, see [[MapUtils]] functions.
+ * * Object as map, see [[DictionaryUtils]] functions.
  * * Object as set, see [[SetUtils]] functions.
  */
 interface ICollection<T> extends IClass {

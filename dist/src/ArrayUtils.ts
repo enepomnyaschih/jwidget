@@ -239,7 +239,7 @@ export function index<T>(arr: T[], callback: (item: T, index: number) => any, sc
  *
  * Builds new map consisting of collection items.
  */
-export function toMap<T>(arr: T[]): Dictionary<T> {
+export function toDictionary<T>(arr: T[]): Dictionary<T> {
 	const result:Dictionary<T> = {};
 	arr.every(function (v, k) {
 		result[k] = v;

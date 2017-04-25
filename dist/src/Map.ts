@@ -33,7 +33,7 @@ import List from './List';
 import Some from './Some';
 import Set from './Set';
 import * as ArrayUtils from './ArrayUtils';
-import * as MapUtils from './MapUtils';
+import * as DictionaryUtils from './DictionaryUtils';
 
 /**
  * Map is unordered collection. Each item has its own string key.
@@ -87,11 +87,11 @@ import * as MapUtils from './MapUtils';
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
  * * [[toArray]], [[$toArray]],
  * [[$$toArray]] - Builds new array consisting of collection items.
- * * [[toMap]], [[$toMap]] - Builds new map consisting of collection items.
+ * * [[toDictionary]], [[toMap]] - Builds new map consisting of collection items.
  * * [[toSet]], [[$toSet]],
  * [[$$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asMap]], [[$asMap]] - Represents collection as map.
+ * * [[asDictionary]], [[asMap]] - Represents collection as map.
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  *
  * Collection modification:
@@ -183,7 +183,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		super(silent);
 		this._adapter = adapter;
 		this._items = this._adapter ? items : apply<T>({}, items);
-		this._length.set(MapUtils.getLength(this._items));
+		this._length.set(DictionaryUtils.getLength(this._items));
 
 		this._spliceEvent  = Event.make<IMap.SpliceEventParams<T>>(this, silent);
 		this._reindexEvent = Event.make<IMap.ReindexEventParams<T>>(this, silent);
@@ -195,14 +195,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	get first(): T {
-		return MapUtils.getFirst(this._items);
+		return DictionaryUtils.getFirst(this._items);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	get firstKey(): string {
-		return MapUtils.getFirstKey(this._items);
+		return DictionaryUtils.getFirstKey(this._items);
 	}
 
 	/**
@@ -300,21 +300,21 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	containsItem(item: T): boolean {
-		return MapUtils.containsItem(this._items, item);
+		return DictionaryUtils.containsItem(this._items, item);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	every(callback: (item: T, key: string) => boolean, scope?: any): boolean {
-		return MapUtils.every(this._items, callback, scope || this);
+		return DictionaryUtils.every(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): T[] {
-		return MapUtils.toSorted(this._items, callback, scope || this, order);
+		return DictionaryUtils.toSorted(this._items, callback, scope || this, order);
 	}
 
 	/**
@@ -328,7 +328,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T[] {
-		return MapUtils.toSortedComparing(this._items, compare, scope || this, order);
+		return DictionaryUtils.toSortedComparing(this._items, compare, scope || this, order);
 	}
 
 	/**
@@ -342,7 +342,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): string[] {
-		return MapUtils.getSortingKeys(this._items, callback, scope || this, order);
+		return DictionaryUtils.getSortingKeys(this._items, callback, scope || this, order);
 	}
 
 	/**
@@ -356,7 +356,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string[] {
-		return MapUtils.getSortingKeysComparing(this._items, compare, scope || this, order);
+		return DictionaryUtils.getSortingKeysComparing(this._items, compare, scope || this, order);
 	}
 
 	/**
@@ -370,7 +370,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
-		return MapUtils.filter(this._items, callback, scope || this);
+		return DictionaryUtils.filter(this._items, callback, scope || this);
 	}
 
 	/**
@@ -384,14 +384,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	count(callback: (item: T, key: string) => boolean, scope?: any): number {
-		return MapUtils.count(this._items, callback, scope || this);
+		return DictionaryUtils.count(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	map<U>(callback: (item: T, key: string) => U, scope?: any): Dictionary<U> {
-		return MapUtils.map(this._items, callback, scope || this);
+		return DictionaryUtils.map(this._items, callback, scope || this);
 	}
 
 	/**
@@ -425,28 +425,28 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toMap(): Dictionary<T> {
+	toDictionary(): Dictionary<T> {
 		return apply<T>({}, this._items);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$toMap(): IMap<T> {
-		return new Map<T>(this.toMap(), SILENT | ADAPTER);
+	toMap(): IMap<T> {
+		return new Map<T>(this.toDictionary(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	asMap(): Dictionary<T> {
+	asDictionary(): Dictionary<T> {
 		return this._items;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$asMap(): IMap<T> {
+	asMap(): IMap<T> {
 		return this;
 	}
 
@@ -492,7 +492,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	}
 
 	private _trySet(item: T, key: string): Some<T> {
-		var result = MapUtils.trySet(this._items, item, key);
+		var result = DictionaryUtils.trySet(this._items, item, key);
 		if (result === undefined) {
 			return undefined;
 		}
@@ -548,11 +548,11 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * If collection is not modified, returns undefined.
 	 */
 	trySetKey(oldKey: string, newKey: string): T {
-		const item = MapUtils.trySetKey(this._items, oldKey, newKey);
+		const item = DictionaryUtils.trySetKey(this._items, oldKey, newKey);
 		if (item === undefined) {
 			return undefined;
 		}
-		this._reindexEvent.trigger({ sender: this, keyMap: MapUtils.single(oldKey, newKey) });
+		this._reindexEvent.trigger({ sender: this, keyMap: DictionaryUtils.single(oldKey, newKey) });
 		this._changeEvent.trigger({ sender: this });
 		return item;
 	}
@@ -568,7 +568,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 			return undefined;
 		}
 		if (!this.silent) {
-			var spliceResult: IMap.SpliceResult<T> = { addedItems: {}, removedItems: MapUtils.single(key, item) };
+			var spliceResult: IMap.SpliceResult<T> = { addedItems: {}, removedItems: DictionaryUtils.single(key, item) };
 			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 			this._changeEvent.trigger({ sender: this });
 		}
@@ -579,7 +579,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	}
 
 	private _tryRemove(key: string): T {
-		var item = MapUtils.tryRemove(this._items, key);
+		var item = DictionaryUtils.tryRemove(this._items, key);
 		if (item === undefined) {
 			return undefined;
 		}
@@ -667,7 +667,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		this._clearEvent.trigger({ sender: this, items: items });
 		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			ArrayUtils.backEvery(MapUtils.toArray(items), destroy);
+			ArrayUtils.backEvery(DictionaryUtils.toArray(items), destroy);
 		}
 		return items;
 	}
@@ -679,7 +679,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		var items: Dictionary<T>;
 		this._length.set(0);
 		if (this._adapter) {
-			items = MapUtils.tryClear(this._items);
+			items = DictionaryUtils.tryClear(this._items);
 		} else {
 			items = this._items;
 			this._items = {};
@@ -713,15 +713,15 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 		this._changeEvent.trigger({ sender: this });
 		if (this._ownsItems) {
-			ArrayUtils.backEvery(MapUtils.toArray(spliceResult.removedItems), destroy);
+			ArrayUtils.backEvery(DictionaryUtils.toArray(spliceResult.removedItems), destroy);
 		}
 		return spliceResult;
 	}
 
 	private _trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
-		var spliceResult = MapUtils.trySplice(this._items, removedKeys, updatedItems);
+		var spliceResult = DictionaryUtils.trySplice(this._items, removedKeys, updatedItems);
 		if (spliceResult !== undefined) {
-			this._length.set(this._length.get() + MapUtils.getLength(spliceResult.addedItems) - MapUtils.getLength(spliceResult.removedItems));
+			this._length.set(this._length.get() + DictionaryUtils.getLength(spliceResult.addedItems) - DictionaryUtils.getLength(spliceResult.removedItems));
 			return spliceResult;
 		}
 		return undefined;
@@ -746,7 +746,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * If collection is not modified, returns undefined.
 	 */
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
-		const result = MapUtils.tryReindex(this._items, keyMap);
+		const result = DictionaryUtils.tryReindex(this._items, keyMap);
 		if (result === undefined) {
 			return undefined;
 		}
@@ -762,7 +762,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
 	detectSplice(newItems: Dictionary<T>): IMap.SpliceParams<T> {
-		return MapUtils.detectSplice(this._items, newItems);
+		return DictionaryUtils.detectSplice(this._items, newItems);
 	}
 
 	/**
@@ -778,7 +778,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * If no method call required, returns undefined.
 	 */
 	detectReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): Dictionary<string> {
-		return MapUtils.detectReindex(this._items, newItems, getKey || this.getKey, scope || this);
+		return DictionaryUtils.detectReindex(this._items, newItems, getKey || this.getKey, scope || this);
 	}
 
 	/**
@@ -813,14 +813,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @hidden
 	 */
 	getInverted(): Dictionary<string> {
-		return MapUtils.getInverted(<Dictionary<any>>this._items);
+		return DictionaryUtils.getInverted(<Dictionary<any>>this._items);
 	}
 
 	/**
 	 * Checks for equality (===) to another map, item by item.
 	 */
 	equal(map: Dictionary<T>): boolean {
-		return MapUtils.equal(this._items, map);
+		return DictionaryUtils.equal(this._items, map);
 	}
 }
 

@@ -72,10 +72,10 @@ import Some from './Some';
  * * [[index]], [[$index]] - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
  * * [[toArray]], [[$toArray]] - Builds new array consisting of collection items.
- * * [[toMap]], [[$toMap]] - Builds new map consisting of collection items.
+ * * [[toDictionary]], [[toMap]] - Builds new map consisting of collection items.
  * * [[toSet]], [[$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asMap]], [[$asMap]] - Represents collection as map.
+ * * [[asDictionary]], [[asMap]] - Represents collection as map.
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  * * **[[backEvery]] - Checks all items by criteria in backward order.**
  * * **[[merge]], [[$merge]] - *suitable if array consists of JW.List instances only.*

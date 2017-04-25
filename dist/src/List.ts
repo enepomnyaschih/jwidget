@@ -93,11 +93,11 @@ import * as ArrayUtils from './ArrayUtils';
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
  * * [[toArray]], [[$toArray]],
  * [[$$toArray]] - Builds new array consisting of collection items.
- * * [[toMap]], [[$toMap]] - Builds new map consisting of collection items.
+ * * [[toDictionary]], [[toMap]] - Builds new map consisting of collection items.
  * * [[toSet]], [[$toSet]],
  * [[$$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asMap]], [[$asMap]] - Represents collection as map.
+ * * [[asDictionary]], [[asMap]] - Represents collection as map.
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  * * **[[backEvery]] - Checks all items by criteria in backward order.**
  * * **[[merge]], [[$merge]],
@@ -512,15 +512,15 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	$toMap(): IMap<T> {
-		return new Map<T>(this.toMap(), SILENT | ADAPTER);
+	toMap(): IMap<T> {
+		return new Map<T>(this.toDictionary(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$asMap(): IMap<T> {
-		return new Map<T>(this.asMap(), SILENT | ADAPTER);
+	asMap(): IMap<T> {
+		return new Map<T>(this.asDictionary(), SILENT | ADAPTER);
 	}
 
 	/**

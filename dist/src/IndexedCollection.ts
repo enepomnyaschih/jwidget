@@ -86,11 +86,11 @@ import Watchable from './Watchable';
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
  * * [[toArray]], [[$toArray]],
  * [[$$toArray]] - Builds new array consisting of collection items.
- * * **[[toMap]], [[$toMap]] - Builds new map consisting of collection items.**
+ * * **[[toDictionary]], [[toMap]] - Builds new map consisting of collection items.**
  * * [[toSet]], [[$toSet]],
  * [[$$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * **[[asMap]], [[$asMap]] - Represents collection as map.**
+ * * **[[asDictionary]], [[asMap]] - Represents collection as map.**
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  *
  * Collection modification:
@@ -406,7 +406,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 *
 	 * Builds new map consisting of collection items.
 	 */
-	toMap(): Dictionary<T> {
+	toDictionary(): Dictionary<T> {
 		var result: Dictionary<T> = {};
 		this.every(function (v, k) {
 			result[String(k)] = v;
@@ -420,27 +420,27 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 *
 	 * Builds new map consisting of collection items.
 	 */
-	abstract $toMap(): IMap<T>;
+	abstract toMap(): IMap<T>;
 
 	/**
 	 * Represents collection as map.
 	 *
-	 * If this collection is map, returns it immediately. Else, executes [[toMap]] method.
-	 * This method works usually faster than [[toMap]], but please make sure that the returned map
+	 * If this collection is map, returns it immediately. Else, executes [[toDictionary]] method.
+	 * This method works usually faster than [[toDictionary]], but please make sure that the returned map
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	asMap(): Dictionary<T> {
-		return this.toMap();
+	asDictionary(): Dictionary<T> {
+		return this.toDictionary();
 	}
 
 	/**
 	 * Represents collection as map.
 	 *
-	 * If this collection is map, returns it immediately. Else, executes [[toMap]] method.
-	 * This method works usually faster than [[toMap]], but please make sure that the returned map
+	 * If this collection is map, returns it immediately. Else, executes [[toDictionary]] method.
+	 * This method works usually faster than [[toDictionary]], but please make sure that the returned map
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	abstract $asMap(): IMap<T>;
+	abstract asMap(): IMap<T>;
 
 	/**
 	 * @inheritdoc

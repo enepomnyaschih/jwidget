@@ -23,7 +23,7 @@ import IList from '../IList';
 import IClass from '../IClass';
 import IMap from '../IMap';
 import List from '../List';
-import * as MapUtils from '../MapUtils';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Map]].
@@ -46,13 +46,13 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
-			MapUtils.toSet(spliceResult.removedItems),
-			MapUtils.toSet(spliceResult.addedItems));
+			DictionaryUtils.toSet(spliceResult.removedItems),
+			DictionaryUtils.toSet(spliceResult.addedItems));
 	}
 
 	private _onClear(params: IMap.ItemsEventParams<T>) {
 		this.target.removeItems(
-			MapUtils.toArray(params.items));
+			DictionaryUtils.toArray(params.items));
 	}
 }
 

@@ -20,7 +20,7 @@
 
 import AbstractCollectionObserver from './AbstractCollectionObserver';
 import IMap from '../IMap';
-import * as MapUtils from '../MapUtils';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Map]].
@@ -45,11 +45,11 @@ export default class MapObserver<T> extends AbstractCollectionObserver<T> {
 
 	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this._removeItems(MapUtils.toArray(spliceResult.removedItems));
-		this._addItems(MapUtils.toArray(spliceResult.addedItems));
+		this._removeItems(DictionaryUtils.toArray(spliceResult.removedItems));
+		this._addItems(DictionaryUtils.toArray(spliceResult.addedItems));
 	}
 
 	private _onClear(params: IMap.ItemsEventParams<T>) {
-		this._doClearItems(MapUtils.toArray(params.items));
+		this._doClearItems(DictionaryUtils.toArray(params.items));
 	}
 }

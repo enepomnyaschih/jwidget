@@ -24,7 +24,7 @@ import Destroyable from '../Destroyable';
 import Dictionary from '../Dictionary';
 import IMap from '../IMap';
 import Map from '../Map';
-import * as MapUtils from '../MapUtils';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Map]].
@@ -88,7 +88,7 @@ class MapMapper<T, U> extends AbstractCollectionMapper<T, U> {
 		var removedDatas = sourceResult.removedItems;
 		var addedDatas = sourceResult.addedItems;
 		var targetResult = this.target.trySplice(
-			MapUtils.getRemovedKeys(removedDatas, addedDatas),
+			DictionaryUtils.getRemovedKeys(removedDatas, addedDatas),
 			this._createItems(addedDatas));
 		if (targetResult !== undefined) {
 			this._destroyItems(targetResult.removedItems, removedDatas);

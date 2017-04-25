@@ -68,10 +68,10 @@ import Some from './Some';
  * * [[index]], [[$index]] - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
  * * [[toArray]], [[$toArray]] - Builds new array consisting of collection items.
- * * [[toMap]], [[$toMap]] - Builds new map consisting of collection items.
+ * * [[toDictionary]], [[toMap]] - Builds new map consisting of collection items.
  * * [[toSet]], [[$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asMap]], [[$asMap]] - Represents collection as map.
+ * * [[asDictionary]], [[asMap]] - Represents collection as map.
  * * [[asSet]], [[$asSet]] - Represents collection as set.
  *
  * Collection modification:
@@ -105,7 +105,7 @@ import Some from './Some';
  * * **[[equal]] - Checks for equality to another map.**
  *
  * All the same algorithms are also available for native JavaScript Object as map,
- * see [[MapUtils]] functions.
+ * see [[DictionaryUtils]] functions.
  */
 interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
@@ -237,17 +237,17 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	toMap(): Dictionary<T>;
+	toDictionary(): Dictionary<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	asMap(): Dictionary<T>;
+	asDictionary(): Dictionary<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$asMap(): IMap<T>;
+	asMap(): IMap<T>;
 
 	/**
 	 * Replaces item with specified key. If map doesn't contain such key, new item is added.

@@ -37,7 +37,7 @@ import HtmlTemplate from './HtmlTemplate';
 import TemplateOutput from './TemplateOutput';
 import Watchable from './Watchable';
 import * as DomUtils from './DomUtils';
-import * as MapUtils from './MapUtils';
+import * as DictionaryUtils from './DictionaryUtils';
 import * as SetUtils from './SetUtils';
 import * as StringUtils from './StringUtils';
 
@@ -247,7 +247,7 @@ export default class Component extends Class {
 		}
 		var output = this.createElement();
 		this._el = jQuery(output.root);
-		this.__elements = MapUtils.map(output.groups, function(x) { return jQuery(x); });
+		this.__elements = DictionaryUtils.map(output.groups, function(x) { return jQuery(x); });
 		this._children = new ComponentChildren(this);
 		this.__replaceables = {};
 		this.__arrays = {};

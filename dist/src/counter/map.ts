@@ -22,7 +22,7 @@ import AbstractCollectionCounter from './AbstractCollectionCounter';
 import IMap from '../IMap';
 import Property from '../Property';
 import Watchable from '../Watchable';
-import * as MapUtils from '../MapUtils';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Map]].
@@ -45,8 +45,8 @@ export default class MapCounter<T> extends AbstractCollectionCounter<T> {
 	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._target.set(this._target.get() -
-			MapUtils.count(spliceResult.removedItems, this._test, this._scope) +
-			MapUtils.count(spliceResult.addedItems, this._test, this._scope));
+			DictionaryUtils.count(spliceResult.removedItems, this._test, this._scope) +
+			DictionaryUtils.count(spliceResult.addedItems, this._test, this._scope));
 	}
 
 	private _onClear() {

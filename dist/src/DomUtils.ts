@@ -23,7 +23,7 @@ import Class from './Class';
 import Component from './Component';
 import Dictionary from './Dictionary';
 import HtmlTemplate from './HtmlTemplate';
-import * as MapUtils from './MapUtils';
+import * as DictionaryUtils from './DictionaryUtils';
 
 /**
  * Some code is taken from jQuery. We are not happy with standard jQuery.parseHtml, because it is slow.
@@ -74,7 +74,7 @@ export function template(cls: any, tpls: Dictionary<string>) {
 	if (cls !== Component && !Component.prototype.templates) {
 		template(Component, {main: '<div></div>'});
 	}
-	var templates = MapUtils.map(tpls, function(html) {
+	var templates = DictionaryUtils.map(tpls, function(html) {
 		return new HtmlTemplate(html);
 	});
 	if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls) {

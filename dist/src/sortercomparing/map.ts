@@ -22,7 +22,7 @@ import AbstractCollectionSorterComparing from './AbstractCollectionSorterCompari
 import IList from '../IList';
 import IMap from '../IMap';
 import List from '../List';
-import * as MapUtils from '../MapUtils';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Map]].
@@ -45,12 +45,12 @@ export default class MapSorterComparing<T> extends AbstractCollectionSorterCompa
 	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
-			MapUtils.toArray(spliceResult.removedItems),
-			MapUtils.toArray(spliceResult.addedItems));
+			DictionaryUtils.toArray(spliceResult.removedItems),
+			DictionaryUtils.toArray(spliceResult.addedItems));
 	}
 
 	private _onClear(params: IMap.ItemsEventParams<T>) {
-		this._splice(MapUtils.toArray(params.items), []);
+		this._splice(DictionaryUtils.toArray(params.items), []);
 	}
 }
 
