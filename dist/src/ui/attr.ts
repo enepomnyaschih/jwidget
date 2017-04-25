@@ -20,21 +20,11 @@
 
 /// <reference types="jquery" />
 
-import Class from '../../Class';
-import Watchable from '../../Watchable';
+import Class from '../Class';
+import Destroyable from '../Destroyable';
+import Watchable from '../Watchable';
 
-/**
- * Result of [[JQuery.jwattr|jwattr]] method call. Destroy it to stop synchronization.
- *
- * Was used as a standalone class before jWidget 1.4.
- * As of jWidget 1.4, [[JQuery.jwattr|jwattr]] is an easier alternative.
- */
 class AttrUpdater extends Class {
-	/**
-	 * @param el DOM element.
-	 * @param attr Element's attribute name.
-	 * @param property Source property.
-	 */
 	constructor(private el: JQuery, private attr: string, private property: Watchable<any>) {
 		super();
 		this._update();
@@ -46,4 +36,18 @@ class AttrUpdater extends Class {
 	}
 }
 
-export default AttrUpdater;
+/**
+ * Watches string property modification and updates the specified attribute of the DOM element.
+ * Returns [[JW.UI.AttrUpdater]] instance. Destroy it to stop synchronization.
+ *
+ *     // Bind "title" attribute to title property value
+ *     this.own(el.jwattr("title", title));
+ *
+ * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwattr.html"></iframe>
+ *
+ * @param attr DOM element attribute name.
+ * @param property Attribute value.
+ */
+export default function attr(el: JQuery, attr: string, property: Watchable<any>): Destroyable {
+	return new AttrUpdater(el, attr, property);
+}

@@ -20,30 +20,33 @@
 
 /// <reference types="jquery" />
 
-import Class from '../../Class';
-import Watchable from '../../Watchable';
+import Class from '../Class';
+import Destroyable from '../Destroyable';
+import Watchable from '../Watchable';
 
-/**
- * Result of [[JQuery.jwclass|jwclass]] method call. Destroy it to stop synchronization.
- *
- * Was used as a standalone class before jWidget 1.4.
- * As of jWidget 1.4, [[JQuery.jwclass|jwclass]] is an easier alternative.
- */
-class ClassUpdater extends Class {
-	/**
-	 * @param el DOM element.
-	 * @param cls CSS class name.
-	 * @param property Source property.
-	 */
-	constructor(private el: JQuery, private cls: string, private property: Watchable<any>) {
+class TextUpdater extends Class {
+	constructor(private el: JQuery, private property: Watchable<any>) {
 		super();
 		this._update();
 		this.own(property.changeEvent.bind(this._update, this));
 	}
 
 	private _update() {
-		this.el.toggleClass(this.cls, !!this.property.get());
+		this.el[0].textContent = this.property.get();
 	}
 }
 
-export default ClassUpdater;
+/**
+ * Watches string modification and updates inner text of the DOM element.
+ * Returns [[JW.UI.TextUpdater]] instance. Destroy it to stop synchronization.
+ *
+ *     // Bind inner text to property value
+ *     this.own(el.jwtext(text));
+ *
+ * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwtext.html"></iframe>
+ *
+ * @param property Text value.
+ */
+export default function text(el: JQuery, property: Watchable<any>): Destroyable {
+	return new TextUpdater(el, property);
+}

@@ -18,13 +18,75 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Binding} from '../../Core';
-import CheckedListener from './CheckedListener';
-import Destroyable from '../../Destroyable';
-import IProperty from '../../IProperty';
-import PropBinding from './PropBinding';
-import Property from '../../Property';
-import Watchable from '../../Watchable';
+/// <reference types="jquery" />
+
+import {Binding, UPDATE, WATCH} from '../Core';
+import Class from '../Class';
+import Destroyable from '../Destroyable';
+import IProperty from '../IProperty';
+import Property from '../Property';
+import Watchable from '../Watchable';
+
+class PropBinding extends Class {
+	constructor(el: JQuery, prop: string, property: Watchable<any>);
+	constructor(el: JQuery, prop: string, property: IProperty<boolean>, binding: Binding);
+	constructor(el: JQuery, prop: string, property: any, binding: Binding = UPDATE) {
+		super();
+		if (binding & UPDATE) {
+			this.own(new PropUpdater(el, prop, property));
+		}
+		if (prop === "checked" && (binding & WATCH)) {
+			this.own(new CheckedListener(el, {target: property}));
+		}
+	}
+}
+
+class PropUpdater extends Class {
+	constructor(private el: JQuery, private prop: string, private property: Watchable<any>) {
+		super();
+		this._update();
+		this.own(property.changeEvent.bind(this._update, this));
+	}
+
+	private _update() {
+		this.el.prop(this.prop, this.property.get());
+		if (this.prop === "checked") {
+			this.el.change();
+		}
+	}
+}
+
+class CheckedListener extends Class {
+	private _target: IProperty<boolean>;
+	private update: () => void;
+
+	constructor(private el: JQuery, config: CheckedListener.Config = {}) {
+		super();
+		this.update = () => this._update();
+		this._target = config.target || this.own(new Property<boolean>());
+		this._update();
+		this.el.bind("change", this.update);
+	}
+
+	get target(): Watchable<boolean> {
+		return this._target;
+	}
+
+	protected destroyObject() {
+		this.el.unbind("change", this.update);
+		super.destroy();
+	}
+
+	private _update() {
+		this._target.set(this.el.prop("checked"));
+	}
+}
+
+namespace CheckedListener {
+	export interface Config {
+		readonly target?: IProperty<boolean>;
+	}
+}
 
 /**
  * DOM element property management method.

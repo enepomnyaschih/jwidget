@@ -18,13 +18,86 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Binding} from '../../Core';
-import Destroyable from '../../Destroyable';
-import IProperty from '../../IProperty';
-import Property from '../../Property';
-import RadioBinding from './RadioBinding';
-import RadioListener from './RadioListener';
-import Watchable from '../../Watchable';
+/// <reference types="jquery" />
+
+import {Binding, UPDATE, WATCH} from '../Core';
+import Class from '../Class';
+import Destroyable from '../Destroyable';
+import IProperty from '../IProperty';
+import Property from '../Property';
+import Watchable from '../Watchable';
+
+class RadioBinding extends Class {
+	constructor(el: JQuery, name: string, property: Watchable<any>);
+	constructor(el: JQuery, name: string, property: IProperty<string>, binding: Binding);
+	constructor(el: JQuery, name: string, property: any, binding: any = UPDATE) {
+		super();
+		if (binding & UPDATE) {
+			this.own(new RadioUpdater(el, name, property));
+		}
+		if (binding & WATCH) {
+			this.own(new RadioListener(el, name, {target: property}));
+		}
+	}
+}
+
+class RadioUpdater extends Class {
+	private _selector: string;
+
+	constructor(private el: JQuery, name: string, private property: Watchable<any>) {
+		super();
+		this._selector = "input[type=radio][name='" + name + "']";
+		this._update();
+		this.own(property.changeEvent.bind(this._update, this));
+	}
+
+	private _update() {
+		var value = this.property.get();
+		if (value != null) {
+			var els = this.el.find(this._selector + "[value='" + value + "']");
+			if (els.length !== 0) {
+				els.prop("checked", true).change();
+				return;
+			}
+		}
+		this.el.find(this._selector + ":checked").prop("checked", false).change();
+	}
+}
+
+class RadioListener extends Class {
+	private _target: IProperty<string>;
+	private _selector: string;
+	private update: () => void;
+
+	constructor(private el: JQuery, name: string, config: RadioListener.Config = {}) {
+		super();
+		this.update = () => this._update();
+		this._target = config.target || this.own(new Property<string>());
+		this._selector = "input[type=radio][name='" + name + "']";
+		this._update();
+		this.el.on("change", this._selector, this.update);
+	}
+
+	destroy() {
+		this.el.off("change", this._selector, this.update);
+		super.destroy();
+	}
+
+	get target(): Watchable<string> {
+		return this._target;
+	}
+
+	private _update() {
+		var radio = this.el.find(this._selector + ":checked");
+		this._target.set((radio.length !== 0) ? radio.attr("value") : null);
+	}
+}
+
+namespace RadioListener {
+	export interface Config {
+		readonly target?: IProperty<string>;
+	}
+}
 
 /**
  * Radio group value management method.

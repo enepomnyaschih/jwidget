@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ListInserter from '../inserter/list';
-import Class from '../Class';
-import IList from '../IList';
-import * as DomUtils from '../DomUtils';
+import ListInserter from './inserter/list';
+import Class from './Class';
+import IList from './IList';
+import * as DomUtils from './DomUtils';
 
 /**
  * Abstract view synchronizer. See [[Inserter]] for details.

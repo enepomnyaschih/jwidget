@@ -18,10 +18,34 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ClassNameUpdater from './ClassNameUpdater';
-import ClassUpdater from './ClassUpdater';
-import Destroyable from '../../Destroyable';
-import Watchable from '../../Watchable';
+/// <reference types="jquery" />
+
+import Class from '../Class';
+import Destroyable from '../Destroyable';
+import Switcher from '../Switcher';
+import Watchable from '../Watchable';
+
+class ClassNameUpdater extends Class {
+	constructor(private el: JQuery, property: Watchable<string>) {
+		super();
+		this.own(new Switcher([property], {
+			init: (value: any) => this.el.addClass(value),
+			done: (value: any) => this.el.removeClass(value)
+		}));
+	}
+}
+
+class ClassUpdater extends Class {
+	constructor(private el: JQuery, private cls: string, private property: Watchable<any>) {
+		super();
+		this._update();
+		this.own(property.changeEvent.bind(this._update, this));
+	}
+
+	private _update() {
+		this.el.toggleClass(this.cls, !!this.property.get());
+	}
+}
 
 /**
  * DOM element CSS class management method.

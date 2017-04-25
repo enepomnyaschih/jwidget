@@ -18,8 +18,35 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Destroyable from '../../Destroyable';
-import JQEventAttachment from './JQEventAttachment';
+/// <reference types="jquery" />
+
+import Destroyable from '../Destroyable';
+
+class JQEventAttachment implements Destroyable {
+	private selector: string;
+	private handler: (eventObject: JQueryEventObject) => any;
+
+	constructor(el: JQuery, events: string, handler: (eventObject: JQueryEventObject) => any, scope?: any)
+	constructor(el: JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any, scope?: any)
+	constructor(private el: JQuery, private events: string, selector: any, handler?: any, scope?: any) {
+		if (typeof selector === "function" || typeof selector === "boolean") {
+			scope = handler;
+			handler = selector;
+			selector = null;
+		}
+		this.selector = selector;
+		if (scope && typeof handler === "function") {
+			this.handler = (eventObject) => handler.call(scope || this, eventObject, this);
+		} else {
+			this.handler = handler;
+		}
+		el.on(events, this.selector, this.handler);
+	}
+
+	destroy() {
+		this.el.off(this.events, this.selector, this.handler);
+	}
+}
 
 /**
  * Attaches handler to an event. jWidget extension for <a href="http://api.jquery.com/on/" target="_blank">on</a>

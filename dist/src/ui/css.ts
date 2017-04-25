@@ -20,21 +20,11 @@
 
 /// <reference types="jquery" />
 
-import Class from '../../Class';
-import Watchable from '../../Watchable';
+import Class from '../Class';
+import Destroyable from '../Destroyable';
+import Watchable from '../Watchable';
 
-/**
- * Result of [[JQuery.jwcss|jwcss]] method call. Destroy it to stop synchronization.
- *
- * Was used as a standalone class before jWidget 1.4.
- * As of jWidget 1.4, [[JQuery.jwcss|jwcss]] is an easier alternative.
- */
 class CssUpdater extends Class {
-	/**
-	 * @param el DOM element.
-	 * @param style CSS style name.
-	 * @param property Source property.
-	 */
 	constructor(private el: JQuery, private style: string, private property: Watchable<any>) {
 		super();
 		this._update();
@@ -46,4 +36,18 @@ class CssUpdater extends Class {
 	}
 }
 
-export default CssUpdater;
+/**
+ * Watches string modification and updates the specified CSS style of the DOM element.
+ * Returns [[JW.UI.CssUpdater]] instance. Destroy it to stop synchronization.
+ *
+ *     // Bind background color style to color property value
+ *     this.own(el.jwcss("background-color", color));
+ *
+ * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwcss.html"></iframe>
+ *
+ * @param style CSS style name.
+ * @param property Style value.
+ */
+export default function css(el: JQuery, style: string, property: Watchable<any>): Destroyable {
+	return new CssUpdater(el, style, property);
+}

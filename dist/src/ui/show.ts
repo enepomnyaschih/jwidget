@@ -20,13 +20,11 @@
 
 /// <reference types="jquery" />
 
-import Class from '../../Class';
-import Watchable from '../../Watchable';
+import Class from '../Class';
+import Destroyable from '../Destroyable';
+import Watchable from '../Watchable';
 
-/**
- * @deprecated 1.4 Use [[JQuery.jwval|jwval]] instead.
- */
-class ValueUpdater extends Class {
+class VisibleUpdater extends Class {
 	constructor(private el: JQuery, private property: Watchable<any>) {
 		super();
 		this._update();
@@ -34,8 +32,23 @@ class ValueUpdater extends Class {
 	}
 
 	private _update() {
-		this.el.val(this.property.get());
+		this.el.css("display", this.property.get() ? "" : "none");
 	}
 }
 
-export default ValueUpdater;
+/**
+ * Watches boolean property modification and updates visibility of the DOM element.
+ * To make element invisible, sets "display: none" inline style. To make
+ * element visible, removes "display" inline style. Make sure that element is visible according to your CSS rules.
+ * Returns [[JW.UI.VisibleUpdater]] instance. Destroy it to stop synchronization.
+ *
+ *     // Bind element visibility to property value
+ *     this.own(el.jwshow(checked));
+ *
+ * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="215" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwshow.html"></iframe>
+ *
+ * @param property Element visibility.
+ */
+export default function show(el: JQuery, property: Watchable<any>): Destroyable {
+	return new VisibleUpdater(el, property);
+}

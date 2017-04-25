@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractInserter from '../ui/AbstractInserter';
+import AbstractInserter from '../AbstractInserter';
 import Component from '../Component';
 
 /**
