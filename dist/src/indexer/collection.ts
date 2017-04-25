@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ArrayIndexer, indexArray} from './array';
+import {default as ListIndexer, indexList} from './list';
 import {default as MapIndexer, indexMap} from './map';
 import {default as SetIndexer, indexSet} from './set';
 import AbstractCollectionIndexer from './AbstractCollectionIndexer';
@@ -29,13 +29,13 @@ import Map from '../Map';
 import Set from '../Set';
 
 export function createIndexer<T>(source: ICollection<T>, config: AbstractCollectionIndexer.Config<T>): AbstractCollectionIndexer<T> {
-	return (source instanceof List) ? new ArrayIndexer(source, config) :
+	return (source instanceof List) ? new ListIndexer(source, config) :
 		(source instanceof Map) ? new MapIndexer(source, config) :
 		(source instanceof Set) ? new SetIndexer(source, config) : null;
 }
 
 export function indexCollection<T>(source: ICollection<T>, getKey: (item: T) => string, scope?: any): IMap<T> {
-	return (source instanceof List) ? indexArray(source, getKey, scope) :
+	return (source instanceof List) ? indexList(source, getKey, scope) :
 		(source instanceof Map) ? indexMap(source, getKey, scope) :
 		(source instanceof Set) ? indexSet(source, getKey, scope) : null;
 }

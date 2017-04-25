@@ -18,16 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionLister from './AbstractCollectionLister';
+import AbstractCollectionObserver from './AbstractCollectionObserver';
 import IList from '../IList';
-import IClass from '../IClass';
-import ISet from '../ISet';
-import Set from '../Set';
 
 /**
- * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Array]].
+ * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Array]].
  */
-export default class ArrayLister<T extends IClass> extends AbstractCollectionLister<T> {
+export default class ListObserver<T> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -36,34 +33,42 @@ export default class ArrayLister<T extends IClass> extends AbstractCollectionLis
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractCollectionLister.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
+		if (this._change) {
+			this.own(source.changeEvent.bind(this._onChange, this));
+		}
 	}
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
+		var oldItems = spliceResult.oldItems;
+		var removedItems = spliceResult.removedItems;
+
+		if (this._clear && (3 * removedItems.length > 2 * oldItems.length)) {
+			// if there is an effective clearing function, just reset the controller
+			this._clear.call(this._scope, oldItems);
+			this._addItems(this.source.items);
+		} else {
+			// else, splice the elements
+			this._removeItems(removedItems);
+			this._addItems(spliceResult.addedItems);
+		}
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		this.target.trySplice([params.oldItem], [params.newItem]);
+		if (this._remove) {
+			this._remove.call(this._scope, params.oldItem);
+		}
+		if (this._add) {
+			this._add.call(this._scope, params.newItem);
+		}
 	}
 
 	private _onClear(params: IList.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(params.items);
+		this._doClearItems(params.items);
 	}
-}
-
-export function arrayToSet<T extends IClass>(source: IList<T>): ISet<T> {
-	if (source.silent) {
-		return source.$toSet();
-	}
-	var result = new Set<T>();
-	result.own(new ArrayLister<T>(source, {
-		target: result
-	}));
-	return result;
 }

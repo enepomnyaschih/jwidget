@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ArrayObserver from './array';
+import ListObserver from './list';
 import MapObserver from './map';
 import SetObserver from './set';
 import AbstractCollectionObserver from './AbstractCollectionObserver';
@@ -28,7 +28,7 @@ import Map from '../Map';
 import Set from '../Set';
 
 export function createObserver<T>(source: ICollection<T>, config: AbstractCollectionObserver.Config<T>): AbstractCollectionObserver<T> {
-	return (source instanceof List) ? new ArrayObserver(source, config) :
+	return (source instanceof List) ? new ListObserver(source, config) :
 		(source instanceof Map) ? new MapObserver(source, config) :
 		(source instanceof Set) ? new SetObserver(source, config) : null;
 }

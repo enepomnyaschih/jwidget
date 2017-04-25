@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ArrayMapper, mapArray, mapDestroyableArray} from './array';
+import {default as ListMapper, mapList, mapDestroyableList} from './list';
 import {default as MapMapper, mapMap, mapDestroyableMap} from './map';
 import {default as SetMapper, mapSet, mapDestroyableSet} from './set';
 import AbstractCollectionMapper from './AbstractCollectionMapper';
@@ -29,19 +29,19 @@ import Map from '../Map';
 import Set from '../Set';
 
 export function createMapper<T extends IClass, U extends IClass>(source: ICollection<T>, config: AbstractCollectionMapper.Config<T, U>): AbstractCollectionMapper<T, U> {
-	return (source instanceof List) ? new ArrayMapper(source, config) :
+	return (source instanceof List) ? new ListMapper(source, config) :
 		(source instanceof Map) ? new MapMapper(source, config) :
 		(source instanceof Set) ? new SetMapper(source, config) : null;
 }
 
 export function mapCollection<T extends IClass, U extends IClass>(source: ICollection<T>, map: (item: T) => U, scope?: any): ICollection<U> {
-	return (source instanceof List) ? mapArray(source, map, scope) :
+	return (source instanceof List) ? mapList(source, map, scope) :
 		(source instanceof Map) ? mapMap(source, map, scope) :
 		(source instanceof Set) ? mapSet(source, map, scope) : null;
 }
 
 export function mapDestroyableCollection<T extends IClass, U extends IClass>(source: ICollection<T>, create: (item: T) => U, scope?: any): ICollection<U> {
-	return (source instanceof List) ? mapDestroyableArray(source, create, scope) :
+	return (source instanceof List) ? mapDestroyableList(source, create, scope) :
 		(source instanceof Map) ? mapDestroyableMap(source, create, scope) :
 		(source instanceof Set) ? mapDestroyableSet(source, create, scope) : null;
 }

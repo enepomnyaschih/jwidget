@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ArrayCounter, countArray} from './array';
+import {default as ListCounter, countList} from './list';
 import {default as MapCounter, countMap} from './map';
 import {default as SetCounter, countSet} from './set';
 import AbstractCollectionCounter from './AbstractCollectionCounter';
@@ -29,13 +29,13 @@ import Set from '../Set';
 import Watchable from '../Watchable';
 
 export function createCounter<T>(source: ICollection<T>, config: AbstractCollectionCounter.Config<T>): AbstractCollectionCounter<T> {
-	return (source instanceof List) ? new ArrayCounter(source, config) :
+	return (source instanceof List) ? new ListCounter(source, config) :
 		(source instanceof Map) ? new MapCounter(source, config) :
 		(source instanceof Set) ? new SetCounter(source, config) : null;
 }
 
 export function countCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
-	return (source instanceof List) ? countArray(source, test, scope) :
+	return (source instanceof List) ? countList(source, test, scope) :
 		(source instanceof Map) ? countMap(source, test, scope) :
 		(source instanceof Set) ? countSet(source, test, scope) : null;
 }

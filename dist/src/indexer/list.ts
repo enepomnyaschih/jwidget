@@ -18,18 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionOrderer from './AbstractCollectionOrderer';
+import AbstractCollectionIndexer from './AbstractCollectionIndexer';
 import IList from '../IList';
-import IClass from '../IClass';
-import IndexCount from '../IndexCount';
-import IndexItems from '../IndexItems';
-import List from '../List';
-import * as ArrayUtils from '../ArrayUtils';
+import IMap from '../IMap';
+import Map from '../Map';
 
 /**
- * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Array]].
+ * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Array]].
  */
-export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOrderer<T> {
+export default class ListIndexer<T> extends AbstractCollectionIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -38,7 +35,7 @@ export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOr
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractCollectionOrderer.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionIndexer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -47,30 +44,32 @@ export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOr
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this._splice(
-			ArrayUtils.toSet(spliceResult.removedItems),
-			ArrayUtils.toSet(spliceResult.addedItems));
+		this.target.trySplice(
+			this._keys(spliceResult.removedItems),
+			this._index(spliceResult.addedItems));
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		var index = this.target.keyOf(params.oldItem);
 		this.target.trySplice(
-			[new IndexCount(index, 1)],
-			[new IndexItems(this.target.length.get() - 1, [params.newItem])]);
+			this._keys([params.oldItem]),
+			this._index([params.newItem]));
 	}
 
 	private _onClear(params: IList.ItemsEventParams<T>) {
-		this.target.removeItems(params.items);
+		this.target.tryRemoveAll(
+			this._keys(params.items));
 	}
 }
 
-export function arrayToArray<T extends IClass>(source: IList<T>): IList<T> {
+export function indexList<T>(source: IList<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
 	if (source.silent) {
-		return source.toList();
+		return source.$index(getKey, scope);
 	}
-	var result = new List<T>();
-	result.own(new ArrayOrderer<T>(source, {
-		target: result
+	var result = new Map<T>();
+	result.own(new ListIndexer<T>(source, {
+		target: result,
+		getKey: getKey,
+		scope: scope
 	}));
 	return result;
 }

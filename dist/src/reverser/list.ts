@@ -84,7 +84,7 @@ import List from '../List';
  *
  * @param T Array item type.
  */
-class ArrayReverser<T> extends Class {
+class ListReverser<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -99,7 +99,7 @@ class ArrayReverser<T> extends Class {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IList<T>, config: ArrayReverser.Config<T> = {}) {
+	constructor(readonly source: IList<T>, config: ListReverser.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
@@ -183,9 +183,9 @@ class ArrayReverser<T> extends Class {
 	}
 }
 
-export default ArrayReverser;
+export default ListReverser;
 
-namespace ArrayReverser {
+namespace ListReverser {
 	/**
 	 * [[JW.List.Reverser]] configuration.
 	 *
@@ -199,12 +199,12 @@ namespace ArrayReverser {
 	}
 }
 
-export function reverseArray<T>(source: IList<T>): IList<T> {
+export function reverseList<T>(source: IList<T>): IList<T> {
 	if (source.silent) {
 		return source.$toReversed();
 	}
 	var result = new List<T>();
-	result.own(new ArrayReverser<T>(source, {
+	result.own(new ListReverser<T>(source, {
 		target: result
 	}));
 	return result;

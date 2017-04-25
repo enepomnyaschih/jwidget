@@ -18,13 +18,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionObserver from './AbstractCollectionObserver';
+import AbstractCollectionOrderer from './AbstractCollectionOrderer';
 import IList from '../IList';
+import IClass from '../IClass';
+import IndexCount from '../IndexCount';
+import IndexItems from '../IndexItems';
+import List from '../List';
+import * as ArrayUtils from '../ArrayUtils';
 
 /**
- * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Array]].
+ * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Array]].
  */
-export default class ArrayObserver<T> extends AbstractCollectionObserver<T> {
+export default class ListOrderer<T extends IClass> extends AbstractCollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -33,42 +38,39 @@ export default class ArrayObserver<T> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractCollectionObserver.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionOrderer.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
 		this.own(source.clearEvent.bind(this._onClear, this));
-		if (this._change) {
-			this.own(source.changeEvent.bind(this._onChange, this));
-		}
 	}
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		var oldItems = spliceResult.oldItems;
-		var removedItems = spliceResult.removedItems;
-
-		if (this._clear && (3 * removedItems.length > 2 * oldItems.length)) {
-			// if there is an effective clearing function, just reset the controller
-			this._clear.call(this._scope, oldItems);
-			this._addItems(this.source.items);
-		} else {
-			// else, splice the elements
-			this._removeItems(removedItems);
-			this._addItems(spliceResult.addedItems);
-		}
+		this._splice(
+			ArrayUtils.toSet(spliceResult.removedItems),
+			ArrayUtils.toSet(spliceResult.addedItems));
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		if (this._remove) {
-			this._remove.call(this._scope, params.oldItem);
-		}
-		if (this._add) {
-			this._add.call(this._scope, params.newItem);
-		}
+		var index = this.target.keyOf(params.oldItem);
+		this.target.trySplice(
+			[new IndexCount(index, 1)],
+			[new IndexItems(this.target.length.get() - 1, [params.newItem])]);
 	}
 
 	private _onClear(params: IList.ItemsEventParams<T>) {
-		this._doClearItems(params.items);
+		this.target.removeItems(params.items);
 	}
+}
+
+export function listToList<T extends IClass>(source: IList<T>): IList<T> {
+	if (source.silent) {
+		return source.toList();
+	}
+	var result = new List<T>();
+	result.own(new ListOrderer<T>(source, {
+		target: result
+	}));
+	return result;
 }

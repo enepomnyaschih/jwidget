@@ -18,16 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionCounter from './AbstractCollectionCounter';
+import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
 import IList from '../IList';
-import Property from '../Property';
-import Watchable from '../Watchable';
-import * as ArrayUtils from '../ArrayUtils';
+import List from '../List';
 
 /**
- * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Array]].
+ * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Array]].
  */
-export default class ArrayCounter<T> extends AbstractCollectionCounter<T> {
+export default class ListSorterComparing<T> extends AbstractCollectionSorterComparing<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -36,7 +34,7 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractCollectionCounter.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionSorterComparing.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -45,39 +43,26 @@ export default class ArrayCounter<T> extends AbstractCollectionCounter<T> {
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		var value = this._target.get();
-		spliceResult.removedItemsList.forEach((indexItems) => {
-			value -= ArrayUtils.count(indexItems.items, this._test, this._scope);
-		});
-		spliceResult.addedItemsList.forEach((indexItems) => {
-			value += ArrayUtils.count(indexItems.items, this._test, this._scope);
-		});
-		this._target.set(value);
+		this._splice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		var oldFiltered = this._test.call(this._scope, params.oldItem) !== false;
-		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
-		if (oldFiltered && !newFiltered) {
-			this._target.set(this._target.get() - 1);
-		} else if (!oldFiltered && newFiltered) {
-			this._target.set(this._target.get() + 1);
-		}
+		this._splice([params.oldItem], [params.newItem]);
 	}
 
-	private _onClear() {
-		this._target.set(0);
+	private _onClear(params: IList.ItemsEventParams<T>) {
+		this._splice(params.items, []);
 	}
 }
 
-export function countArray<T>(source: IList<T>, test: (item: T) => boolean, scope?: any): Watchable<number> {
+export function sortListComparing<T>(source: IList<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
 	if (source.silent) {
-		return source.$count(test, scope);
+		return source.$toSortedComparing(compare, scope);
 	}
-	var result = new Property(0);
-	result.own(new ArrayCounter<T>(source, {
+	var result = new List<T>();
+	result.own(new ListSorterComparing<T>(source, {
 		target: result,
-		test: test,
+		compare: compare,
 		scope: scope
 	}));
 	return result;

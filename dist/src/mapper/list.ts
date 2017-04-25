@@ -28,7 +28,7 @@ import List from '../List';
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Array]].
  */
-class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> {
+class ListMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
@@ -44,7 +44,7 @@ class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: ArrayMapper.Config<T, U>) {
+	constructor(source: IList<T>, config: ListMapper.Config<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(this.source.silent) : config.target;
@@ -120,9 +120,9 @@ class ArrayMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	}
 }
 
-export default ArrayMapper;
+export default ListMapper;
 
-namespace ArrayMapper {
+namespace ListMapper {
 	/**
 	 * @inheritdoc
 	 */
@@ -134,12 +134,12 @@ namespace ArrayMapper {
 	}
 }
 
-export function mapArray<T, U>(source: IList<T>, map: (item: T) => U, scope?: any): IList<U> {
+export function mapList<T, U>(source: IList<T>, map: (item: T) => U, scope?: any): IList<U> {
 	if (source.silent) {
 		return source.$map(map, scope);
 	}
 	var result = new List<U>();
-	result.own(new ArrayMapper<T, U>(source, {
+	result.own(new ListMapper<T, U>(source, {
 		target: result,
 		create: map,
 		scope: scope
@@ -147,12 +147,12 @@ export function mapArray<T, U>(source: IList<T>, map: (item: T) => U, scope?: an
 	return result;
 }
 
-export function mapDestroyableArray<T, U extends Destroyable>(source: IList<T>, create: (item: T) => U, scope?: any): IList<U> {
+export function mapDestroyableList<T, U extends Destroyable>(source: IList<T>, create: (item: T) => U, scope?: any): IList<U> {
 	if (source.silent) {
 		return source.$map(create, scope).ownItems();
 	}
 	var result = new List<U>();
-	result.own(new ArrayMapper<T, U>(source, {
+	result.own(new ListMapper<T, U>(source, {
 		target: result,
 		create: create,
 		destroy: destroy,

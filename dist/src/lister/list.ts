@@ -18,15 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionIndexer from './AbstractCollectionIndexer';
+import AbstractCollectionLister from './AbstractCollectionLister';
 import IList from '../IList';
-import IMap from '../IMap';
-import Map from '../Map';
+import IClass from '../IClass';
+import ISet from '../ISet';
+import Set from '../Set';
 
 /**
- * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Array]].
+ * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Array]].
  */
-export default class ArrayIndexer<T> extends AbstractCollectionIndexer<T> {
+export default class ListLister<T extends IClass> extends AbstractCollectionLister<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -35,7 +36,7 @@ export default class ArrayIndexer<T> extends AbstractCollectionIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractCollectionIndexer.Config<T>) {
+	constructor(source: IList<T>, config: AbstractCollectionLister.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -44,32 +45,25 @@ export default class ArrayIndexer<T> extends AbstractCollectionIndexer<T> {
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(
-			this._keys(spliceResult.removedItems),
-			this._index(spliceResult.addedItems));
+		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		this.target.trySplice(
-			this._keys([params.oldItem]),
-			this._index([params.newItem]));
+		this.target.trySplice([params.oldItem], [params.newItem]);
 	}
 
 	private _onClear(params: IList.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(
-			this._keys(params.items));
+		this.target.tryRemoveAll(params.items);
 	}
 }
 
-export function indexArray<T>(source: IList<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
+export function listToSet<T extends IClass>(source: IList<T>): ISet<T> {
 	if (source.silent) {
-		return source.$index(getKey, scope);
+		return source.$toSet();
 	}
-	var result = new Map<T>();
-	result.own(new ArrayIndexer<T>(source, {
-		target: result,
-		getKey: getKey,
-		scope: scope
+	var result = new Set<T>();
+	result.own(new ListLister<T>(source, {
+		target: result
 	}));
 	return result;
 }

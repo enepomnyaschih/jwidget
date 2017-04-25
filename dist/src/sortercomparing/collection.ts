@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ArraySorterComparing, sortArrayComparing} from './array';
+import {default as ListSorterComparing, sortListComparing} from './list';
 import {default as MapSorterComparing, sortMapComparing} from './map';
 import {default as SetSorterComparing, sortSetComparing} from './set';
 import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
@@ -29,13 +29,13 @@ import Map from '../Map';
 import Set from '../Set';
 
 export function createSorterComparing<T>(source: ICollection<T>, config: AbstractCollectionSorterComparing.Config<T>): AbstractCollectionSorterComparing<T> {
-	return (source instanceof List) ? new ArraySorterComparing(source, config) :
+	return (source instanceof List) ? new ListSorterComparing(source, config) :
 		(source instanceof Map) ? new MapSorterComparing(source, config) :
 		(source instanceof Set) ? new SetSorterComparing(source, config) : null;
 }
 
-export function collectionToArray<T>(source: ICollection<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
-	return (source instanceof List) ? sortArrayComparing(source, compare, scope) :
+export function sortCollectionComparing<T>(source: ICollection<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
+	return (source instanceof List) ? sortListComparing(source, compare, scope) :
 		(source instanceof Map) ? sortMapComparing(source, compare, scope) :
 		(source instanceof Set) ? sortSetComparing(source, compare, scope) : null;
 }

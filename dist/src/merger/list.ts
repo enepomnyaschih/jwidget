@@ -19,7 +19,7 @@
 */
 
 import {SILENT, ADAPTER} from '../Core';
-import {mapDestroyableArray} from '../mapper/array';
+import {mapDestroyableList} from '../mapper/list';
 import Class from '../Class';
 import IList from '../IList';
 import IClass from '../IClass';
@@ -96,7 +96,7 @@ import * as ArrayUtils from '../ArrayUtils';
  *
  * @param T Array item type.
  */
-class ArrayMerger<T> extends Class {
+class ListMerger<T> extends Class {
 	private _targetCreated: boolean;
 	private _bunches: IList<IClass>;
 
@@ -112,11 +112,11 @@ class ArrayMerger<T> extends Class {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IList<IList<T>>, config: ArrayMerger.Config<T> = {}) {
+	constructor(readonly source: IList<IList<T>>, config: ListMerger.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? this._createTarget(source) : config.target;
-		this._bunches = mapDestroyableArray(source, (bunch) => new Bunch(this.source, this.target, bunch));
+		this._bunches = mapDestroyableList(source, (bunch) => new Bunch(this.source, this.target, bunch));
 		this.target.tryAddAll(this._getAllItems());
 		this.own(source.spliceEvent.bind(this._onSplice, this));
 		this.own(source.replaceEvent.bind(this._onReplace, this));
@@ -267,9 +267,9 @@ class ArrayMerger<T> extends Class {
 	}
 }
 
-export default ArrayMerger;
+export default ListMerger;
 
-namespace ArrayMerger {
+namespace ListMerger {
 	/**
 	 * [[JW.List.Merger]] configuration.
 	 *
@@ -283,19 +283,19 @@ namespace ArrayMerger {
 	}
 }
 
-export function mergeArrays<T>(source: IList<IList<T>>): IList<T> {
+export function mergeLists<T>(source: IList<IList<T>>): IList<T> {
 	if (source.silent) {
 		if (source.every((item) => item.silent)) {
 			return $mergeNoSync(source);
 		}
 		const result = new List<T>();
-		result.own(new ArrayMerger<T>(source, {
+		result.own(new ListMerger<T>(source, {
 			target: result
 		}));
 		return result;
 	}
 	const result = new List<T>();
-	result.own(new ArrayMerger<T>(source, {
+	result.own(new ListMerger<T>(source, {
 		target: result
 	}));
 	return result;

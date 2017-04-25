@@ -30,7 +30,7 @@ import * as ArrayUtils from '../ArrayUtils';
 /**
  * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Array]].
  */
-class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
+class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 	private _targetCreated: boolean;
 
 	/**
@@ -51,7 +51,7 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: ArrayFilterer.Config<T>) {
+	constructor(source: IList<T>, config: ListFilterer.Config<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(this.source.silent) : config.target;
@@ -67,7 +67,7 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 	 * Changes filterer configuration and refilters target collection.
 	 * @param config Options to modify.
 	 */
-	reconfigure(config: ArrayFilterer.Reconfig<T>) {
+	reconfigure(config: ListFilterer.Reconfig<T>) {
 		this._test = def(config.filterer, this._test);
 		this._scope = def(config.scope, this._scope);
 		this.refilter();
@@ -306,9 +306,9 @@ class ArrayFilterer<T> extends AbstractCollectionFilterer<T> {
 	}
 }
 
-export default ArrayFilterer;
+export default ListFilterer;
 
-namespace ArrayFilterer {
+namespace ListFilterer {
 	/**
 	 * @inheritdoc
 	 */
@@ -338,12 +338,12 @@ namespace ArrayFilterer {
 	}
 }
 
-export function filterArray<T>(source: IList<T>, test: (item: T) => boolean, scope?: any): IList<T> {
+export function filterList<T>(source: IList<T>, test: (item: T) => boolean, scope?: any): IList<T> {
 	if (source.silent) {
 		return source.$filter(test, scope);
 	}
 	var result = new List<T>();
-	result.own(new ArrayFilterer<T>(source, {
+	result.own(new ListFilterer<T>(source, {
 		target: result,
 		test: test,
 		scope: scope

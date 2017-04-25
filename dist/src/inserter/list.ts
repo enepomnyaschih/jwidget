@@ -49,7 +49,7 @@ import IList from '../IList';
  *
  * @param T Array item type.
  */
-class ArrayInserter<T> extends Class {
+class ListInserter<T> extends Class {
 	/**
 	 * @hidden
 	 */
@@ -77,7 +77,7 @@ class ArrayInserter<T> extends Class {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IList<T>, config: ArrayInserter.Config<T> = {}) {
+	constructor(readonly source: IList<T>, config: ListInserter.Config<T> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;
@@ -185,9 +185,9 @@ class ArrayInserter<T> extends Class {
 	}
 }
 
-export default ArrayInserter;
+export default ListInserter;
 
-namespace ArrayInserter {
+namespace ListInserter {
 	/**
 	 * [[JW.List.Inserter]] configuration.
 	 *

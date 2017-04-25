@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ArrayFilterer, filterArray} from './array';
+import {default as ListFilterer, filterList} from './list';
 import {default as MapFilterer, filterMap} from './map';
 import {default as SetFilterer, filterSet} from './set';
 import AbstractCollectionFilterer from './AbstractCollectionFilterer';
@@ -28,13 +28,13 @@ import Map from '../Map';
 import Set from '../Set';
 
 export function createFilterer<T>(source: ICollection<T>, config: AbstractCollectionFilterer.Config<T>): AbstractCollectionFilterer<T> {
-	return (source instanceof List) ? new ArrayFilterer(source, config) :
+	return (source instanceof List) ? new ListFilterer(source, config) :
 		(source instanceof Map) ? new MapFilterer(source, config) :
 		(source instanceof Set) ? new SetFilterer(source, config) : null;
 }
 
 export function filterCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): ICollection<T> {
-	return (source instanceof List) ? filterArray(source, test, scope) :
+	return (source instanceof List) ? filterList(source, test, scope) :
 		(source instanceof Map) ? filterMap(source, test, scope) :
 		(source instanceof Set) ? filterSet(source, test, scope) : null;
 }
