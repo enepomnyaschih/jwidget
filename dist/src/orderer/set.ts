@@ -57,7 +57,7 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 
 export function setToArray<T extends IClass>(source: ISet<T>): IList<T> {
 	if (source.silent) {
-		return source.$toArray();
+		return source.toList();
 	}
 	var result = new List<T>();
 	result.own(new SetOrderer<T>(source, {

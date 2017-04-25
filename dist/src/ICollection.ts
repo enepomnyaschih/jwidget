@@ -375,7 +375,7 @@ interface ICollection<T> extends IClass {
 	 *
 	 * Builds new array consisting of collection items.
 	 */
-	$toArray(): IList<T>;
+	toList(): IList<T>;
 
 	/**
 	 * Converts collection to set.
@@ -413,19 +413,7 @@ interface ICollection<T> extends IClass {
 	 * but please make sure that the returned array
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	$asArray(): IList<T>;
-
-	/**
-	 * Represents collection as set.
-	 *
-	 * If this collection is set, returns it immediately.
-	 * Else, executes [[toSet]] method.
-	 * This method works usually faster than [[toSet]],
-	 * but please make sure that the returned set
-	 * won't be modified externally, because it can cause strange unexpected bugs.
-	 * Requires T to implement [[IClass]].
-	 */
-	asSet(): Dictionary<T>;
+	asList(): IList<T>;
 
 	/**
 	 * Represents collection as set.

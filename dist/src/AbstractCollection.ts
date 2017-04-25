@@ -532,7 +532,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 *
 	 * Builds new array consisting of collection items.
 	 */
-	abstract $toArray(): IList<T>;
+	abstract toList(): IList<T>;
 
 	/**
 	 * Converts collection to set.
@@ -579,21 +579,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * but please make sure that the returned array
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	abstract $asArray(): IList<T>;
-
-	/**
-	 * Represents collection as set.
-	 *
-	 * If this collection is set, returns it immediately.
-	 * Else, executes [[toSet]] method.
-	 * This method works usually faster than [[toSet]],
-	 * but please make sure that the returned set
-	 * won't be modified externally, because it can cause strange unexpected bugs.
-	 * Requires T to extend JW.Class.
-	 */
-	asSet(): Dictionary<T> {
-		return this.toSet();
-	}
+	abstract asList(): IList<T>;
 
 	/**
 	 * Represents collection as set.

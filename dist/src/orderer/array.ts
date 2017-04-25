@@ -66,7 +66,7 @@ export default class ArrayOrderer<T extends IClass> extends AbstractCollectionOr
 
 export function arrayToArray<T extends IClass>(source: IList<T>): IList<T> {
 	if (source.silent) {
-		return source.$toArray();
+		return source.toList();
 	}
 	var result = new List<T>();
 	result.own(new ArrayOrderer<T>(source, {

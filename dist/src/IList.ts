@@ -294,7 +294,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$asArray(): IList<T>;
+	asList(): IList<T>;
 
 	/**
 	 * Inserts an item to array.

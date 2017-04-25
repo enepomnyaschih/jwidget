@@ -411,14 +411,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toArray(): IList<T> {
+	toList(): IList<T> {
 		return new List<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$asArray(): IList<T> {
+	asList(): IList<T> {
 		return new List<T>(this.asArray(), SILENT | ADAPTER);
 	}
 
@@ -461,7 +461,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	$asSet(): ISet<any> {
-		return new Set<any>(this.asSet(), SILENT | ADAPTER);
+		return new Set<any>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**

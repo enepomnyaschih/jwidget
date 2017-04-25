@@ -491,7 +491,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	$toArray(): IList<T> {
+	toList(): IList<T> {
 		return new List<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
@@ -505,7 +505,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	$asArray(): IList<T> {
+	asList(): IList<T> {
 		return this;
 	}
 
@@ -534,7 +534,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	$asSet(): ISet<any> {
-		return new Set<any>(this.asSet(), SILENT | ADAPTER);
+		return new Set<any>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**

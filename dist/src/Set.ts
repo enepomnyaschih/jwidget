@@ -320,14 +320,14 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toArray(): IList<T> {
+	toList(): IList<T> {
 		return new List<T>(this.toArray(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$asArray(): IList<T> {
+	asList(): IList<T> {
 		return new List<T>(this.asArray(), SILENT | ADAPTER);
 	}
 
@@ -343,13 +343,6 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	 */
 	$toSet(): ISet<T> {
 		return new Set<T>(this.toSet(), SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	asSet(): Dictionary<T> {
-		return this._items;
 	}
 
 	/**

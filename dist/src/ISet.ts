@@ -202,11 +202,6 @@ interface ISet<T extends IClass> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	asSet(): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	$asSet(): ISet<T>;
 
 	/**
