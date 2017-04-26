@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {iid} from '../index';
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
 import IList from '../IList';
 import IClass from '../IClass';
@@ -46,8 +47,8 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
-			DictionaryUtils.toSet(spliceResult.removedItems),
-			DictionaryUtils.toSet(spliceResult.addedItems));
+			DictionaryUtils.index(spliceResult.removedItems, iid),
+			DictionaryUtils.index(spliceResult.addedItems, iid));
 	}
 
 	private _onClear(params: IMap.ItemsEventParams<T>) {

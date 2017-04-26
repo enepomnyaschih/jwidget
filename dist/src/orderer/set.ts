@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {iid} from '../index';
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
 import IList from '../IList';
 import IClass from '../IClass';
@@ -46,8 +47,8 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 	private _onSplice(params: ISet.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
-			ArrayUtils.toSet(spliceResult.removedItems),
-			ArrayUtils.toSet(spliceResult.addedItems));
+			ArrayUtils.index(spliceResult.removedItems, iid),
+			ArrayUtils.index(spliceResult.addedItems, iid));
 	}
 
 	private _onClear(params: ISet.ItemsEventParams<T>) {

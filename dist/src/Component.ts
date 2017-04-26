@@ -38,7 +38,6 @@ import TemplateOutput from './TemplateOutput';
 import Bindable from './Bindable';
 import * as DomUtils from './DomUtils';
 import * as DictionaryUtils from './DictionaryUtils';
-import * as SetUtils from './SetUtils';
 import * as StringUtils from './StringUtils';
 
 /**
@@ -143,11 +142,11 @@ export default class Component extends Class {
 		}
 		if (this._el) {
 			DomUtils.remove(this._el[0]);
-			SetUtils.each(this.__collections, destroy);
+			DictionaryUtils.each(this.__collections, destroy);
 			this.__collections = null;
-			SetUtils.each(this.__arrays, destroy);
+			DictionaryUtils.each(this.__arrays, destroy);
 			this.__arrays = null;
-			SetUtils.each(this.__replaceables, destroy);
+			DictionaryUtils.each(this.__replaceables, destroy);
 			this.__replaceables = null;
 
 			this._children.unrender();
@@ -409,8 +408,8 @@ export default class Component extends Class {
 		this._wasAfterAppend = true;
 		this.afterAppend();
 		this._children.each(DomUtils._afterAppend);
-		SetUtils.each<ComponentList>(this.__arrays, DomUtils._afterAppend);
-		SetUtils.each<ComponentCollection>(this.__collections, DomUtils._afterAppend);
+		DictionaryUtils.each<ComponentList>(this.__arrays, DomUtils._afterAppend);
+		DictionaryUtils.each<ComponentCollection>(this.__collections, DomUtils._afterAppend);
 	}
 
 	/**

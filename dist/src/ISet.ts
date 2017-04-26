@@ -61,10 +61,10 @@ import Listenable from './Listenable';
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
  * * [[toArray]], [[$toArray]] -
  * Builds new array consisting of collection items.
- * * [[toSet]], [[$toSet]] -
+ * * [[toSet]], [[toSet]] -
  * Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asSet]], [[$asSet]] - Represents collection as set.
+ * * [[asSet]], [[asSet]] - Represents collection as set.
  *
  * Collection modification:
  *
@@ -192,17 +192,12 @@ interface ISet<T extends Identifiable> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSet(): Dictionary<T>;
+	toSet(): ISet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSet(): ISet<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$asSet(): ISet<T>;
+	asSet(): ISet<T>;
 
 	/**
 	 * Adds an item to set if one is absent.

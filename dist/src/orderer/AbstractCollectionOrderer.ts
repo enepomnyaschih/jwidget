@@ -25,7 +25,7 @@ import IClass from '../IClass';
 import ICollection from '../ICollection';
 import IndexItems from '../IndexItems';
 import List from '../List';
-import * as SetUtils from '../SetUtils';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * Converter to array (orderer). Converts source collection to array.
@@ -126,10 +126,10 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class {
 	 */
 	protected _splice(removedItemsSet: Dictionary<T>, addedItemsSet: Dictionary<T>) {
 		var filteredItems = this.target.filter((item) => {
-			return !SetUtils.contains(removedItemsSet, item) || SetUtils.contains(addedItemsSet, item);
+			return !removedItemsSet.hasOwnProperty(String(item.iid)) || !addedItemsSet.hasOwnProperty(String(item.iid));
 		});
-		var addedItems = SetUtils.toArray(addedItemsSet).filter((item) => {
-			return !SetUtils.contains(removedItemsSet, item);
+		var addedItems = DictionaryUtils.toArray(addedItemsSet).filter((item) => {
+			return !removedItemsSet.hasOwnProperty(String(item.iid));
 		});
 		this.target.trySplice(
 			this.target.detectFilter(filteredItems) || [],

@@ -59,7 +59,7 @@ export default class ListLister<T extends Identifiable> extends AbstractCollecti
 
 export function listToSet<T extends Identifiable>(source: IList<T>): ISet<T> {
 	if (source.silent) {
-		return source.$toSet();
+		return source.toSet();
 	}
 	const result = new Set<T>();
 	return result.owning(new ListLister<T>(source, {

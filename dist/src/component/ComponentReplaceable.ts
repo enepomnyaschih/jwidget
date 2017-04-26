@@ -22,7 +22,6 @@ import Class from '../Class';
 import Component from '../Component';
 import Bindable from '../Bindable';
 import Switcher from '../Switcher';
-import * as SetUtils from '../SetUtils';
 
 /**
  * @hidden
@@ -30,7 +29,7 @@ import * as SetUtils from '../SetUtils';
 export default class ComponentReplaceable extends Class {
 	constructor(private parent: Component, component: Bindable<Component>, private id: string) {
 		super();
-		SetUtils.add(parent._replaceables, this);
+		parent._replaceables[this.iid] = this;
 
 		this.own(new Switcher([component], {
 			init: (child: Component) => {
@@ -43,7 +42,7 @@ export default class ComponentReplaceable extends Class {
 	}
 
 	destroy() {
-		SetUtils.remove(this.parent._replaceables, this);
+		delete this.parent._replaceables[this.iid];
 		super.destroy();
 	}
 }

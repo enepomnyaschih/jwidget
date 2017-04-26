@@ -249,18 +249,6 @@ export function toDictionary<T>(arr: T[]): Dictionary<T> {
 }
 
 /**
- * Converts collection to set.
- *
- * Builds new set consisting of collection items.
- * Requires T to extend JW.Class.
- */
-export function toSet<T extends Identifiable>(arr: T[]): Dictionary<T> {
-	return index(arr, function(item) {
-		return String(item.iid);
-	});
-}
-
-/**
  * Inserts an item to array.
  *
  * @param item Item to insert.
@@ -409,7 +397,7 @@ export function removeItem<T>(arr: T[], item: T): number {
  * **Known issue:** *Works only if T extends JW.Class!*
  */
 export function removeItems<T extends Identifiable>(arr: T[], items: T[]) {
-	var itemSet = toSet(items);
+	var itemSet = index(items, iid);
 	var newItems = arr.filter(function (item: T): boolean {
 		return !itemSet.hasOwnProperty(String(item.iid));
 	});

@@ -137,9 +137,9 @@ import Bindable from './Bindable';
  * * [[index]], [[$index]] - Indexes collection.
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
  * * [[toArray]], [[$toArray]] - Builds new array consisting of collection items.
- * * [[toSet]], [[$toSet]] - Builds new set consisting of collection items.
+ * * [[toSet]], [[toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asSet]], [[$asSet]] - Represents collection as set.
+ * * [[asSet]], [[asSet]] - Represents collection as set.
  *
  * Collection modification:
  *
@@ -383,15 +383,7 @@ interface ICollection<T> extends IClass {
 	 * Builds new set consisting of collection items.
 	 * Requires T to extend JW.Class.
 	 */
-	toSet(): Dictionary<T>;
-
-	/**
-	 * Converts collection to set.
-	 *
-	 * Builds new set consisting of collection items.
-	 * Requires T to extend JW.Class.
-	 */
-	$toSet(): ISet<any>;
+	toSet(): ISet<any>;
 
 	/**
 	 * Represents collection as array.
@@ -425,7 +417,7 @@ interface ICollection<T> extends IClass {
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 * Requires T to implement [[IClass]].
 	 */
-	$asSet(): ISet<any>;
+	asSet(): ISet<any>;
 
 	/**
 	 * Filters collection by criteria.

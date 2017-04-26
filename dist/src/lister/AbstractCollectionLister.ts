@@ -59,7 +59,7 @@ import Set from '../Set';
  *         target: set
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$$toSet|$$toSet]] shorthand can be used instead.
+ * In simple cases, [[JW.AbstractCollection.$toSet|$toSet]] shorthand can be used instead.
  * It returns the target set right away:
  *
  *     // Create two dummy collection items
@@ -68,7 +68,7 @@ import Set from '../Set';
  *
  *     // Initialize collections
  *     var array = new JW.ObservableArray<JW.Class>([x]);
- *     var set = array.$$toSet();
+ *     var set = array.$toSet();
  *
  *     assert.ok(set.contains(x));
  *     assert.ok(!set.contains(y));

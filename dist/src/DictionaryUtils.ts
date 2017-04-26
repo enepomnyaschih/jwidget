@@ -354,18 +354,6 @@ export function toArray<T>(map: Dictionary<T>): T[] {
 }
 
 /**
- * Converts collection to set.
- *
- * Builds new set consisting of collection items.
- * Requires T to extend JW.Class.
- */
-export function toSet<T extends Identifiable>(map: Dictionary<T>): Dictionary<T> {
-	return index(map, function(item) {
-		return String(item.iid);
-	});
-}
-
-/**
  * Replaces item with specified key. If map doesn't contain such key, new item is added.
  * @returns The replaced item.
  */
@@ -532,7 +520,7 @@ export function tryRemoveAll<T>(map: Dictionary<T>, keys: string[]): Dictionary<
  * **Known issue:** *Works only if T extends JW.Class!*
  */
 export function removeItems<T extends Identifiable>(map: Dictionary<T>, items: T[]) {
-	var itemSet = ArrayUtils.toSet(items);
+	var itemSet = ArrayUtils.index(items, iid);
 	var newItems = filter(map, function (item) {
 		return !itemSet.hasOwnProperty(String(item.iid));
 	});

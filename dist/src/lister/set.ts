@@ -53,7 +53,7 @@ export default class SetLister<T extends Identifiable> extends AbstractCollectio
 
 export function setToSet<T extends Identifiable>(source: ISet<T>): ISet<T> {
 	if (source.silent) {
-		return source.$toSet();
+		return source.toSet();
 	}
 	const result = new Set<T>();
 	return result.owning(new SetLister<T>(source, {

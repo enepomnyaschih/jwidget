@@ -24,7 +24,6 @@ import Component from '../Component';
 import ComponentCollectionInserter from './ComponentCollectionInserter';
 import ICollection from '../ICollection';
 import * as DomUtils from '../DomUtils';
-import * as SetUtils from '../SetUtils';
 
 /**
  * @hidden
@@ -32,7 +31,7 @@ import * as SetUtils from '../SetUtils';
 export default class ComponentCollection extends Class {
 	constructor(private parent: Component, private source: ICollection<Component>, el: JQuery) {
 		super();
-		SetUtils.add(parent._collections, this);
+		parent._collections[this.iid] = this;
 
 		const mapper = this.own(createMapper<Component, Component>(source, {
 			create: (child) => {
@@ -48,7 +47,7 @@ export default class ComponentCollection extends Class {
 	}
 
 	destroy() {
-		SetUtils.remove(this.parent._collections, this);
+		delete this.parent._collections[this.iid];
 		super.destroy();
 	}
 

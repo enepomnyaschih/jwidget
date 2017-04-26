@@ -58,7 +58,7 @@ export default class MapLister<T extends Identifiable> extends AbstractCollectio
 
 export function mapToSet<T extends Identifiable>(source: IMap<T>): ISet<T> {
 	if (source.silent) {
-		return source.$toSet();
+		return source.toSet();
 	}
 	const result = new Set<T>();
 	return result.owning(new MapLister<T>(source, {

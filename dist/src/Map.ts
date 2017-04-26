@@ -88,11 +88,11 @@ import * as DictionaryUtils from './DictionaryUtils';
  * * [[toArray]], [[$toArray]],
  * [[$$toArray]] - Builds new array consisting of collection items.
  * * [[toDictionary]], [[toMap]] - Builds new map consisting of collection items.
- * * [[toSet]], [[$toSet]],
- * [[$$toSet]] - Builds new set consisting of collection items.
+ * * [[toSet]], [[toSet]],
+ * [[$toSet]] - Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
  * * [[asDictionary]], [[asMap]] - Represents collection as map.
- * * [[asSet]], [[$asSet]] - Represents collection as set.
+ * * [[asSet]], [[asSet]] - Represents collection as set.
  *
  * Collection modification:
  *
@@ -121,7 +121,7 @@ import * as DictionaryUtils from './DictionaryUtils';
  * * [[createCounter]] - Creates matching item counter.
  * Extended version of [[$$count]] method.
  * * [[createLister]] - Creates converter to set.
- * Extended version of [[$$toSet]] method.
+ * Extended version of [[$toSet]] method.
  * * [[createIndexer]] - Creates converter to map (indexer).
  * Extended version of [[$$index]] method.
  * * [[createOrderer]] - Creates converter to array (orderer).
@@ -453,14 +453,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$toSet(): ISet<any> {
+	toSet(): ISet<any> {
 		return new Set<any>(this.toSet(), SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$asSet(): ISet<any> {
+	asSet(): ISet<any> {
 		return new Set<any>(this.toSet(), SILENT | ADAPTER);
 	}
 

@@ -28,7 +28,6 @@ import IProperty from './IProperty';
 import ISet from './ISet';
 import Property from './Property';
 import Bindable from './Bindable';
-import * as SetUtils from './SetUtils';
 
 /**
  * Abstract collection.
@@ -89,7 +88,7 @@ import * as SetUtils from './SetUtils';
  *     <tr>
  *       <td>Converter to set</td>
  *       <td>[[JW.AbstractCollection.Lister]]</td>
- *       <td>[[$$toSet]], [[createLister]]</td>
+ *       <td>[[$toSet]], [[createLister]]</td>
  *     </tr>
  *     <tr>
  *       <td>Converter to map (indexer)</td>
@@ -168,7 +167,7 @@ import * as SetUtils from './SetUtils';
  *
  * Whereas **$$method** is a shorthand for synchronizer creation:
  *
- *     this.set = this.own(array.$$toSet());
+ *     this.set = this.own(array.$toSet());
  *
  * Which is pretty much the same as:
  *
@@ -209,10 +208,10 @@ import * as SetUtils from './SetUtils';
  * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
  * * [[toArray]], [[$toArray]], [[$$toArray]] -
  * Builds new array consisting of collection items.
- * * [[toSet]], [[$toSet]], [[$$toSet]] -
+ * * [[toSet]], [[toSet]], [[$toSet]] -
  * Builds new set consisting of collection items.
  * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asSet]], [[$asSet]] - Represents collection as set.
+ * * [[asSet]], [[asSet]] - Represents collection as set.
  *
  * Collection modification:
  *
@@ -229,7 +228,7 @@ import * as SetUtils from './SetUtils';
  * * [[createCounter]] - Creates matching item counter.
  * Extended version of [[$$count]] method.
  * * [[createLister]] - Creates converter to set.
- * Extended version of [[$$toSet]] method.
+ * Extended version of [[$toSet]] method.
  * * [[createIndexer]] - Creates converter to map (indexer).
  * Extended version of [[$$index]] method.
  * * [[createOrderer]] - Creates converter to array (orderer).
@@ -540,22 +539,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * Builds new set consisting of collection items.
 	 * Requires T to extend JW.Class.
 	 */
-	toSet(): Dictionary<T> {
-		const result: Dictionary<any> = {};
-		this.every(function (item) {
-			SetUtils.add(result, item);
-			return true;
-		});
-		return result;
-	}
-
-	/**
-	 * Converts collection to set.
-	 *
-	 * Builds new set consisting of collection items.
-	 * Requires T to extend JW.Class.
-	 */
-	abstract $toSet(): ISet<any>;
+	abstract toSet(): ISet<any>;
 
 	/**
 	 * Represents collection as array.
@@ -591,7 +575,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 * Requires T to extend JW.Class.
 	 */
-	abstract $asSet(): ISet<any>;
+	abstract asSet(): ISet<any>;
 
 	/**
 	 * Filters collection by criteria.

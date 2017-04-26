@@ -24,7 +24,6 @@ import Component from '../Component';
 import ComponentInserter from './ComponentInserter';
 import IList from '../IList';
 import * as DomUtils from '../DomUtils';
-import * as SetUtils from '../SetUtils';
 
 /**
  * @hidden
@@ -32,7 +31,7 @@ import * as SetUtils from '../SetUtils';
 export default class ComponentList extends Class {
 	constructor(private parent: Component, private source: IList<Component>, el: JQuery) {
 		super();
-		SetUtils.add(parent._arrays, this);
+		parent._arrays[this.iid] = this;
 
 		const mapper = this.own(new ListMapper<Component, Component>(source, {
 			create: (child) => {
@@ -48,7 +47,7 @@ export default class ComponentList extends Class {
 	}
 
 	destroy() {
-		SetUtils.remove(this.parent._arrays, this);
+		delete this.parent._arrays[this.iid];
 		super.destroy();
 	}
 
