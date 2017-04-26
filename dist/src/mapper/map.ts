@@ -121,7 +121,7 @@ namespace MapMapper {
 
 export function mapMap<T, U>(source: IMap<T>, map: (item: T) => U, scope?: any): IMap<U> {
 	if (source.silent) {
-		return source.$map(map, scope);
+		return source.map(map, scope);
 	}
 	const result = new Map<U>();
 	return result.owning(new MapMapper<T, U>(source, {
@@ -133,7 +133,7 @@ export function mapMap<T, U>(source: IMap<T>, map: (item: T) => U, scope?: any):
 
 export function mapDestroyableMap<T, U extends Destroyable>(source: IMap<T>, create: (item: T) => U, scope?: any): IMap<U> {
 	if (source.silent) {
-		return source.$map(create, scope).ownItems();
+		return source.map(create, scope).ownItems();
 	}
 	const result = new Map<U>();
 	return result.owning(new MapMapper<T, U>(source, {

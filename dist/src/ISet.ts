@@ -53,7 +53,7 @@ import Listenable from './Listenable';
  * * [[filter]], [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]] - Maps collection items.
+ * * [[map]], [[map]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * * [[toSorted]], [[$toSorted]], [[toSortedComparing]], [[$toSortedComparing]] -
  * Builds array consisting of collection items sorted by indexer or comparer.
@@ -177,7 +177,7 @@ interface ISet<T extends Identifiable> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$map<U extends Identifiable>(callback: (item: T) => U, scope?: any): ISet<U>;
+	map<U extends Identifiable>(callback: (item: T) => U, scope?: any): ISet<U>;
 
 	/**
 	 * @inheritdoc

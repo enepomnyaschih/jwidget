@@ -25,7 +25,7 @@ import AbstractInserter from './AbstractInserter';
  * [[JW.List.Mapper]].
  *
  *     var data = new JW.ObservableArray(["apple", "banana", "cherry"]);
- *     var elements = data.$$mapValues(function(value) {
+ *     var elements = data.$mapValues(function(value) {
  *         return jQuery('<option />').text(value)[0];
  *     });
  *     var inserter = new JW.UI.Inserter(elements, document.getElementById("myselect"));

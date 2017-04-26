@@ -132,7 +132,7 @@ namespace SetMapper {
 
 export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, map: (item: T) => U, scope?: any): ISet<U> {
 	if (source.silent) {
-		return source.$map(map, scope);
+		return source.map(map, scope);
 	}
 	const result = new Set<U>();
 	return result.owning(new SetMapper<T, U>(source, {
@@ -144,7 +144,7 @@ export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, map:
 
 export function mapDestroyableSet<T extends IClass, U extends IClass>(source: ISet<T>, create: (item: T) => U, scope?: any): ISet<U> {
 	if (source.silent) {
-		return source.$map(create, scope).ownItems();
+		return source.map(create, scope).ownItems();
 	}
 	const result = new Set<U>();
 	return result.owning(new SetMapper<T, U>(source, {

@@ -64,11 +64,11 @@ import ICollection from '../ICollection';
  *         scope: this
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$$mapValues|$$mapValues]]
- * and [[JW.AbstractCollection.$$mapObjects|$$mapObjects]] shorthands can be used instead.
+ * In simple cases, [[JW.AbstractCollection.$mapValues|$mapValues]]
+ * and [[JW.AbstractCollection.$mapObjects|$mapObjects]] shorthands can be used instead.
  * They return the target collection right away:
  *
- *     var viewCollection = dataCollection.$$mapObjects<View>((data) => {
+ *     var viewCollection = dataCollection.$mapObjects<View>((data) => {
  *         return new View(this, data);
  *     }, this);
  *

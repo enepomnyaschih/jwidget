@@ -73,7 +73,7 @@ import Bindable from './Bindable';
  *     <tr>
  *       <td>Item mapper</td>
  *       <td>[[JW.AbstractCollection.Mapper]]</td>
- *       <td>[[$$mapValues]], [[$$mapObjects]], [[createMapper]]</td>
+ *       <td>[[$mapValues]], [[$mapObjects]], [[createMapper]]</td>
  *     </tr>
  *     <tr>
  *       <td>Filterer</td>
@@ -198,7 +198,7 @@ import Bindable from './Bindable';
  * * [[filter]], [[$filter]], [[$$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]], [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]], [[$$mapValues]], [[$$mapObjects]] - Maps collection items.
+ * * [[map]], [[map]], [[$mapValues]], [[$mapObjects]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * * [[toSorted]], [[$toSorted]],
  * [[toSortedComparing]], [[$toSortedComparing]],
@@ -222,7 +222,7 @@ import Bindable from './Bindable';
  * Synchronizers creation:
  *
  * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
+ * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
  * * [[createFilterer]] - Creates filterer.
  * Extended version of [[$$filter]] method.
  * * [[createCounter]] - Creates matching item counter.
@@ -621,7 +621,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Mapped collection.
 	 */
-	abstract $map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
+	abstract map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
 }
 
 export default AbstractCollection;

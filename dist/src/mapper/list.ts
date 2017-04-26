@@ -136,7 +136,7 @@ namespace ListMapper {
 
 export function mapList<T, U>(source: IList<T>, map: (item: T) => U, scope?: any): IList<U> {
 	if (source.silent) {
-		return source.$map(map, scope);
+		return source.map(map, scope);
 	}
 	const result = new List<U>();
 	return result.owning(new ListMapper<T, U>(source, {
@@ -148,7 +148,7 @@ export function mapList<T, U>(source: IList<T>, map: (item: T) => U, scope?: any
 
 export function mapDestroyableList<T, U extends Destroyable>(source: IList<T>, create: (item: T) => U, scope?: any): IList<U> {
 	if (source.silent) {
-		return source.$map(create, scope).ownItems();
+		return source.map(create, scope).ownItems();
 	}
 	const result = new List<U>();
 	return result.owning(new ListMapper<T, U>(source, {

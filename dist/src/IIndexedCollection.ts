@@ -68,8 +68,8 @@ import Some from './Some';
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]],
  * [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]],
- * [[$$mapValues]], [[$$mapObjects]] - Maps collection items.
+ * * [[map]], [[map]],
+ * [[$mapValues]], [[$mapObjects]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * * [[toSorted]], [[$toSorted]],
  * [[toSortedComparing]], [[$toSortedComparing]],
@@ -365,7 +365,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
+	map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
 }
 
 export default IIndexedCollection;

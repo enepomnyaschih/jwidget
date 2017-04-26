@@ -58,7 +58,7 @@ import Some from './Some';
  * * [[filter]], [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]] - Maps collection items.
+ * * [[map]], [[map]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * * [[toSorted]], [[$toSorted]], [[toSortedComparing]], [[$toSortedComparing]] -
  * Builds array consisting of collection items sorted by indexer or comparer.
@@ -222,7 +222,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U>;
+	map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U>;
 
 	/**
 	 * @inheritdoc

@@ -70,8 +70,8 @@ import Bindable from './Bindable';
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]],
  * [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]],
- * [[$$mapValues]], [[$$mapObjects]] - Maps collection items.
+ * * [[map]], [[map]],
+ * [[$mapValues]], [[$mapObjects]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * * [[toSorted]], [[$toSorted]],
  * [[toSortedComparing]], [[$toSortedComparing]],
@@ -104,7 +104,7 @@ import Bindable from './Bindable';
  * Synchronizers creation:
  *
  * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
+ * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
  * * [[createFilterer]] - Creates filterer.
  * Extended version of [[$$filter]] method.
  * * [[createCounter]] - Creates matching item counter.
@@ -462,7 +462,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
+	abstract map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
 }
 
 export default IndexedCollection;

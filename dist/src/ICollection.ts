@@ -129,7 +129,7 @@ import Bindable from './Bindable';
  * * [[filter]], [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]] - Maps collection items.
+ * * [[map]], [[map]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * * [[toSorted]], [[$toSorted]],
  * [[toSortedComparing]], [[$toSortedComparing]] -
@@ -461,7 +461,7 @@ interface ICollection<T> extends IClass {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Mapped collection.
 	 */
-	$map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
+	map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
 }
 
 export default ICollection;

@@ -74,12 +74,12 @@ import Bindable from './Bindable';
  *     assert.strictEqual("1 apples", target.get());
  *     mapper.destroy();
  *
- * In simple cases, [[JW.Property.$$mapValue|$$mapValue]] and
- * [[JW.Property.$$mapObject|$$mapObject]] shorthand methods
+ * In simple cases, [[JW.Property.$mapValue|$mapValue]] and
+ * [[JW.Property.$mapObject|$mapObject]] shorthand methods
  * can be used instead. They return the target property right away:
  *
  *     let source = new JW.Property<number>(1);
- *     let target = source.$$mapValue((value) => { return value + " apples"; });
+ *     let target = source.$mapValue((value) => { return value + " apples"; });
  *     assert.strictEqual("1 apples", target.get());
  *     target.destroy();
  *
@@ -102,7 +102,7 @@ import Bindable from './Bindable';
  *         }
  *
  *         renderDocument(): any {
- *             return this.own(this.document.$$mapObject((document) => {
+ *             return this.own(this.document.$mapObject((document) => {
  *                 return new MyDocumentView(document);
  *             }));
  *         }
@@ -129,7 +129,7 @@ import Bindable from './Bindable';
  *
  *         constructor() {
  *             super();
- *             this.own(this.selectedFolder.$$mapObject((folder) => {
+ *             this.own(this.selectedFolder.$mapObject((folder) => {
  *                 return new JW.Mapper<FileView>([folder.selectedFile], {
  *                     target: this.fileView,
  *                     createValue: (file: File) => {

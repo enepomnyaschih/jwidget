@@ -71,8 +71,8 @@ import * as DictionaryUtils from './DictionaryUtils';
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]],
  * [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[$map]],
- * [[$$mapValues]], [[$$mapObjects]] - Maps collection items.
+ * * [[map]], [[map]],
+ * [[$mapValues]], [[$mapObjects]] - Maps collection items.
  * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
  * * [[toSorted]], [[$toSorted]],
  * [[toSortedComparing]], [[$toSortedComparing]],
@@ -115,7 +115,7 @@ import * as DictionaryUtils from './DictionaryUtils';
  * Synchronizers creation:
  *
  * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$$mapValues]] and [[$$mapObjects]] methods.
+ * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
  * * [[createFilterer]] - Creates filterer.
  * Extended version of [[$$filter]] method.
  * * [[createCounter]] - Creates matching item counter.
@@ -383,7 +383,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U> {
+	map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U> {
 		return new Map<U>(DictionaryUtils.map(this._items, callback, scope || this), SILENT | ADAPTER);
 	}
 
