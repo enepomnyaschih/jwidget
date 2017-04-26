@@ -588,19 +588,6 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	abstract count(callback: (item: T) => boolean, scope?: any): number;
 
 	/**
-	 * Counts the items matching criteria.
-	 *
-	 * Returns the number of items for which callback returns !== false.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Number of items.
-	 */
-	$count(callback: (item: T) => boolean, scope?: any): Bindable<number> {
-		return new Property<number>(this.count(callback, scope), true);
-	}
-
-	/**
 	 * Maps collection items.
 	 *
 	 * Builds new collection of the same type, containing results of callback call for each collection item.

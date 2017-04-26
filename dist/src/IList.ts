@@ -354,15 +354,6 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 *
 	 * @param index Index of first item to remove.
 	 * @param count Count of items to remove.
-	 * @returns The removed items.
-	 */
-	$removeAll(index: number, count: number): IList<T>;
-
-	/**
-	 * Removes item range from array.
-	 *
-	 * @param index Index of first item to remove.
-	 * @param count Count of items to remove.
 	 * @returns The removed items. If collection is not modified, returns undefined.
 	 */
 	tryRemoveAll(index: number, count: number): T[];

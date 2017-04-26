@@ -582,14 +582,6 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	}
 
 	/**
-	 * Low-performance alternative to [[removeAll]] with verbose result set.
-	 * @returns The removed items.
-	 */
-	$removeAllVerbose(keys: string[]): IMap<T> {
-		return new Map<T>(this.removeAllVerbose(keys), SILENT | ADAPTER);
-	}
-
-	/**
 	 * Removes a bunch of items from map.
 	 * @returns The removed items.
 	 * If collection is not modified, returns undefined.

@@ -363,14 +363,6 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	/**
 	 * Adds multiple items to set, ones that are absent.
 	 * @returns The added items.
-	 */
-	$addAll(items: T[]): IList<T> {
-		return new List<T>(this.addAll(items), SILENT | ADAPTER);
-	}
-
-	/**
-	 * Adds multiple items to set, ones that are absent.
-	 * @returns The added items.
 	 * If collection is not modified, returns undefined.
 	 */
 	tryAddAll(items: T[]): T[] {
@@ -415,14 +407,6 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	removeAll(items: T[]): T[] {
 		var result = this.tryRemoveAll(items);
 		return (result !== undefined) ? result : [];
-	}
-
-	/**
-	 * Removes multiple items from set, ones that are present.
-	 * @returns The removed items.
-	 */
-	$removeAll(items: T[]): IList<T> {
-		return new List<T>(this.removeAll(items), SILENT | ADAPTER);
 	}
 
 	/**

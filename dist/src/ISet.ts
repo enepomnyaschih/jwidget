@@ -21,7 +21,6 @@
 import Dictionary from './Dictionary';
 import Identifiable from './Identifiable';
 import ICollection from './ICollection';
-import IList from './IList';
 import Listenable from './Listenable';
 
 /**
@@ -211,12 +210,6 @@ interface ISet<T extends Identifiable> extends ICollection<T> {
 	/**
 	 * Adds multiple items to set, ones that are absent.
 	 * @returns The added items.
-	 */
-	$addAll(items: T[]): IList<T>;
-
-	/**
-	 * Adds multiple items to set, ones that are absent.
-	 * @returns The added items.
 	 * If collection is not modified, returns undefined.
 	 */
 	tryAddAll(items: T[]): T[];
@@ -244,12 +237,6 @@ interface ISet<T extends Identifiable> extends ICollection<T> {
 	 * @returns The removed items.
 	 */
 	removeAll(items: T[]): T[];
-
-	/**
-	 * Removes multiple items from set, ones that are present.
-	 * @returns The removed items.
-	 */
-	$removeAll(items: T[]): IList<T>;
 
 	/**
 	 * Removes multiple items from set, ones that are present.

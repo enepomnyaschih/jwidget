@@ -23,9 +23,7 @@ import Dictionary from './Dictionary';
 import IList from './IList';
 import IIndexedCollection from './IIndexedCollection';
 import IMap from './IMap';
-import Property from './Property';
 import Some from './Some';
-import Bindable from './Bindable';
 
 /**
  * Abstract collection of items of type T with keys of type K.
@@ -446,13 +444,6 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 * @inheritdoc
 	 */
 	abstract count(callback: (item: T, key: K) => boolean, scope?: any): number;
-
-	/**
-	 * @inheritdoc
-	 */
-	$count(callback: (item: T, key: K) => boolean, scope?: any): Bindable<number> {
-		return new Property(this.count(callback, scope), true);
-	}
 
 	/**
 	 * @inheritdoc

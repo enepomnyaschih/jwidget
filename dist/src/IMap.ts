@@ -295,12 +295,6 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	removeAllVerbose(keys: string[]): Dictionary<T>;
 
 	/**
-	 * Low-performance alternative to [[removeAll]] with verbose result set.
-	 * @returns The removed items.
-	 */
-	$removeAllVerbose(keys: string[]): IMap<T>;
-
-	/**
 	 * Removes a bunch of items from map.
 	 * @returns The removed items.
 	 * If collection is not modified, returns undefined.

@@ -625,17 +625,6 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 *
 	 * @param index Index of first item to remove.
 	 * @param count Count of items to remove.
-	 * @returns The removed items.
-	 */
-	$removeAll(index: number, count: number): IList<T> {
-		return new List<T>(this.removeAll(index, count), SILENT | ADAPTER);
-	}
-
-	/**
-	 * Removes item range from array.
-	 *
-	 * @param index Index of first item to remove.
-	 * @param count Count of items to remove.
 	 * @returns The removed items. If collection is not modified, returns undefined.
 	 */
 	tryRemoveAll(index: number, count: number): T[]{
