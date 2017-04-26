@@ -616,21 +616,6 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	clear(): Dictionary<T> {
-		const result = this.tryClear();
-		return (result !== undefined) ? result : {};
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$clear(): IMap<T> {
-		return new Map<T>(this.clear(), SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	tryClear(): Dictionary<T> {
 		if (this._length.get() === 0) {
 			return undefined;

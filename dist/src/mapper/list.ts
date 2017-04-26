@@ -60,7 +60,7 @@ class ListMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this._destroyItems(this.target.clear(), this.source.items);
+		this._destroyItems(this.target.tryClear() || [], this.source.items);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}

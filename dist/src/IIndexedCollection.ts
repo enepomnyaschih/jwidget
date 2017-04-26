@@ -119,11 +119,6 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	get(key: K): T;
 
 	/**
-	 * @inheritdoc
-	 */
-	$clear(): IIndexedCollection<K, T>;
-
-	/**
 	 * Returns array of keys of all collection items.
 	 */
 	getKeys(): K[];

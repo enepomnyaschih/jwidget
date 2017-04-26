@@ -315,16 +315,6 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	clear(): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$clear(): IMap<T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	tryClear(): Dictionary<T>;
 
 	/**

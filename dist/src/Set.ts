@@ -448,21 +448,6 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	/**
 	 * @inheritdoc
 	 */
-	clear(): T[] {
-		var items = this.tryClear();
-		return (items !== undefined) ? items : [];
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$clear(): IList<T> {
-		return new List<T>(this.clear(), SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	tryClear(): T[] {
 		var items = this._tryClear();
 		if (items === undefined) {

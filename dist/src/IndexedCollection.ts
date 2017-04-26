@@ -150,11 +150,6 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	abstract get(key: K): T;
 
 	/**
-	 * @inheritdoc
-	 */
-	abstract $clear(): IIndexedCollection<K, T>;
-
-	/**
 	 * Returns array of keys of all collection items.
 	 */
 	abstract getKeys(): K[];

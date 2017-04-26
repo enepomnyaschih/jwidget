@@ -226,18 +226,6 @@ interface ICollection<T> extends IClass {
 	tryClear(): any;
 
 	/**
-	 * Clears collection.
-	 * @returns Old collection contents. Never returns null or undefined.
-	 */
-	clear(): any;
-
-	/**
-	 * Clears collection.
-	 * @returns Old collection contents. Never returns null or undefined.
-	 */
-	$clear(): ICollection<T>;
-
-	/**
 	 * Matches all items against criteria.
 	 *
 	 * Returns true if callback returns !== false for all collection items.

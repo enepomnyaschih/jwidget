@@ -393,16 +393,6 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	clear(): T[];
-
-	/**
-	 * @inheritdoc
-	 */
-	$clear(): IList<T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	tryClear(): T[];
 
 	/**

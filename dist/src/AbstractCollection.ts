@@ -340,18 +340,6 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	abstract tryClear(): any;
 
 	/**
-	 * Clears collection.
-	 * @returns Old collection contents. Never returns null or undefined.
-	 */
-	abstract clear(): any;
-
-	/**
-	 * Clears collection.
-	 * @returns Old collection contents. Never returns null or undefined.
-	 */
-	abstract $clear(): ICollection<T>;
-
-	/**
 	 * Matches all items against criteria.
 	 *
 	 * Returns true if callback returns !== false for all collection items.
