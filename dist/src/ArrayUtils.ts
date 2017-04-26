@@ -20,8 +20,8 @@
 
 import {cmp, def, iid, isArray} from './index';
 import Dictionary from './Dictionary';
+import Identifiable from './Identifiable';
 import IList from './IList';
-import IClass from './IClass';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import ListSpliceResult from './ListSpliceResult';
@@ -254,7 +254,7 @@ export function toDictionary<T>(arr: T[]): Dictionary<T> {
  * Builds new set consisting of collection items.
  * Requires T to extend JW.Class.
  */
-export function toSet<T extends IClass>(arr: T[]): Dictionary<T> {
+export function toSet<T extends Identifiable>(arr: T[]): Dictionary<T> {
 	return index(arr, function(item) {
 		return String(item.iid);
 	});
@@ -408,7 +408,7 @@ export function removeItem<T>(arr: T[], item: T): number {
  * Removes all occurrences of items in collection.
  * **Known issue:** *Works only if T extends JW.Class!*
  */
-export function removeItems<T extends IClass>(arr: T[], items: T[]) {
+export function removeItems<T extends Identifiable>(arr: T[], items: T[]) {
 	var itemSet = toSet(items);
 	var newItems = arr.filter(function (item: T): boolean {
 		return !itemSet.hasOwnProperty(String(item.iid));

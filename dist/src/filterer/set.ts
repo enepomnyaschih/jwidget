@@ -19,14 +19,14 @@
 */
 
 import AbstractCollectionFilterer from './AbstractCollectionFilterer';
-import IClass from '../IClass';
+import Identifiable from '../Identifiable';
 import ISet from '../ISet';
 import Set from '../Set';
 
 /**
  * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Set]].
  */
-class SetFilterer<T extends IClass> extends AbstractCollectionFilterer<T> {
+class SetFilterer<T extends Identifiable> extends AbstractCollectionFilterer<T> {
 	private _targetCreated: boolean;
 
 	/**
@@ -80,7 +80,7 @@ namespace SetFilterer {
 	/**
 	 * @inheritdoc
 	 */
-	export interface Config<T extends IClass> extends AbstractCollectionFilterer.Config<T> {
+	export interface Config<T extends Identifiable> extends AbstractCollectionFilterer.Config<T> {
 		/**
 		 * @inheritdoc
 		 */
@@ -88,7 +88,7 @@ namespace SetFilterer {
 	}
 }
 
-export function filterSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): ISet<T> {
+export function filterSet<T extends Identifiable>(source: ISet<T>, test: (item: T) => boolean, scope?: any): ISet<T> {
 	if (source.silent) {
 		return source.$filter(test, scope);
 	}

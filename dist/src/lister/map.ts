@@ -19,7 +19,7 @@
 */
 
 import AbstractCollectionLister from './AbstractCollectionLister';
-import IClass from '../IClass';
+import Identifiable from '../Identifiable';
 import IMap from '../IMap';
 import ISet from '../ISet';
 import Set from '../Set';
@@ -28,7 +28,7 @@ import * as DictionaryUtils from '../DictionaryUtils';
 /**
  * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Map]].
  */
-export default class MapLister<T extends IClass> extends AbstractCollectionLister<T> {
+export default class MapLister<T extends Identifiable> extends AbstractCollectionLister<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -56,7 +56,7 @@ export default class MapLister<T extends IClass> extends AbstractCollectionListe
 	}
 }
 
-export function mapToSet<T extends IClass>(source: IMap<T>): ISet<T> {
+export function mapToSet<T extends Identifiable>(source: IMap<T>): ISet<T> {
 	if (source.silent) {
 		return source.$toSet();
 	}

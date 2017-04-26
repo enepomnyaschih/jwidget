@@ -1,4 +1,4 @@
-﻿/*!
+/*!
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,21 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {newIid} from './index';
-import Destroyable from './Destroyable';
-import Event from './Event';
-import Identifiable from './Identifiable';
-
 /**
- * @hidden
+ * An object which has unique `iid` value assigned via core `newIid` method.
+ * Makes this object viable for efficient storage in `ISet`.
  */
-export default class EventAttachment<P> implements Destroyable, Identifiable {
-	readonly iid = newIid();
-
-	constructor(private _event: Event<P>, readonly handler: (params: P) => void, readonly scope: any) {
-	}
-
-	destroy() {
-		this._event._unbind(this);
-	}
+interface Identifiable {
+	/**
+	 * Unique auto-incrementing instance ID.
+	 */
+	readonly iid: number;
 }
+
+export default Identifiable;

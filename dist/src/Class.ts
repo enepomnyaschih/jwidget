@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {newIid} from './index';
 import Destroyable from './Destroyable';
 import IClass from './IClass';
 
@@ -30,7 +31,6 @@ import IClass from './IClass';
  * See online documentation for details.
  */
 class Class implements IClass {
-	private static _lastIid: number = 0;
 	private _ownagePool: Destroyable[] = null;
 
 	/**
@@ -39,15 +39,7 @@ class Class implements IClass {
 	 * Auto-incrementing object unique ID. Each `IClass` instance has such an identifier.
 	 * Used, say, in Set as map key for quick item access.
 	 */
-	readonly iid: number;
-
-	/**
-	 * Yes, objects of this class can be constructed.
-	 * They can be used as dummy objects or aggregators for other objects.
-	 */
-	constructor() {
-		this.iid = ++Class._lastIid;
-	}
+	readonly iid = newIid();
 
 	/**
 	 * Aggregates the object. It means that the specified object is automatically destroyed

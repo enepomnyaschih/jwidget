@@ -19,6 +19,7 @@
 */
 
 import Destroyable from './Destroyable';
+import Identifiable from './Identifiable';
 
 /**
  * The base class of all jWidget classes.
@@ -28,15 +29,7 @@ import Destroyable from './Destroyable';
  *
  * See online documentation for details.
  */
-interface IClass extends Destroyable {
-	/**
-	 * Instance ID.
-	 *
-	 * Auto-incrementing object unique ID. Each `IClass` instance has such an identifier.
-	 * Used, say, in Set as map key for quick item access.
-	 */
-	readonly iid: number;
-
+interface IClass extends Destroyable, Identifiable {
 	/**
 	 * Aggregates the object. It means that the specified object is automatically destroyed
 	 * on this object destruction. The aggregated objects are destroyed in reverse order.

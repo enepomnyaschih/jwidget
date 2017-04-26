@@ -22,7 +22,7 @@ import {apply, cmp, iid} from './index';
 import {isDictionaryEmpty} from './internal';
 import * as ArrayUtils from './ArrayUtils';
 import Dictionary from './Dictionary';
-import IClass from './IClass';
+import Identifiable from './Identifiable';
 import IMap from './IMap';
 import Some from './Some';
 
@@ -359,7 +359,7 @@ export function toArray<T>(map: Dictionary<T>): T[] {
  * Builds new set consisting of collection items.
  * Requires T to extend JW.Class.
  */
-export function toSet<T extends IClass>(map: Dictionary<T>): Dictionary<T> {
+export function toSet<T extends Identifiable>(map: Dictionary<T>): Dictionary<T> {
 	return index(map, function(item) {
 		return String(item.iid);
 	});
@@ -531,7 +531,7 @@ export function tryRemoveAll<T>(map: Dictionary<T>, keys: string[]): Dictionary<
  * Removes all occurrences of items in collection.
  * **Known issue:** *Works only if T extends JW.Class!*
  */
-export function removeItems<T extends IClass>(map: Dictionary<T>, items: T[]) {
+export function removeItems<T extends Identifiable>(map: Dictionary<T>, items: T[]) {
 	var itemSet = ArrayUtils.toSet(items);
 	var newItems = filter(map, function (item) {
 		return !itemSet.hasOwnProperty(String(item.iid));

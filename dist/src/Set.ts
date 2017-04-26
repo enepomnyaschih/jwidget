@@ -24,8 +24,8 @@ import {CollectionFlags, SILENT, ADAPTER} from './index';
 import AbstractCollection from './AbstractCollection';
 import Dictionary from './Dictionary';
 import Event from './Event';
+import Identifiable from './Identifiable';
 import IList from './IList';
-import IClass from './IClass';
 import IEvent from './IEvent';
 import IMap from './IMap';
 import ISet from './ISet';
@@ -127,7 +127,7 @@ import * as SetUtils from './SetUtils';
  *
  * @param T Collection item type.
  */
-class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
+class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<T> {
 	private _adapter: boolean;
 	private _items: Dictionary<T>;
 
@@ -306,14 +306,14 @@ class Set<T extends IClass> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	map<U extends IClass>(callback: (item: T) => U, scope?: any): Dictionary<U> {
+	map<U extends Identifiable>(callback: (item: T) => U, scope?: any): Dictionary<U> {
 		return SetUtils.map(this._items, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$map<U extends IClass>(callback: (item: T) => U, scope?: any): ISet<U> {
+	$map<U extends Identifiable>(callback: (item: T) => U, scope?: any): ISet<U> {
 		return new Set<U>(this.map(callback, scope), SILENT | ADAPTER);
 	}
 

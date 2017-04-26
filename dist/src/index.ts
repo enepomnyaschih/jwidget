@@ -301,6 +301,15 @@ export function get<T>(obj: any, path: any): T {
 	return obj;
 }
 
+let _lastIid = 0;
+
+/**
+ * Returns a new auto-incrementing instance identifier for `Identifiable` interface.
+ */
+export function newIid() {
+	return ++_lastIid;
+}
+
 /**
  * Returns object unique ID. Returns iid of object if it is an instance of Class,
  * else returns the object itself.

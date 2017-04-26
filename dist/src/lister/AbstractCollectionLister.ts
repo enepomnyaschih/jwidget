@@ -19,7 +19,7 @@
 */
 
 import Class from '../Class';
-import IClass from '../IClass';
+import Identifiable from '../Identifiable';
 import ICollection from '../ICollection';
 import ISet from '../ISet';
 import Set from '../Set';
@@ -96,7 +96,7 @@ import Set from '../Set';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionLister<T extends IClass> extends Class {
+abstract class AbstractCollectionLister<T extends Identifiable> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -138,7 +138,7 @@ namespace AbstractCollectionLister {
 	 *
 	 * @param T Collection item type.
 	 */
-	export interface Config<T extends IClass> {
+	export interface Config<T extends Identifiable> {
 		/**
 		 * Target set. By default, created automatically.
 		 */

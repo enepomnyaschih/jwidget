@@ -18,9 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Class from './Class';
+import Destroyable from './Destroyable';
 
-abstract class BaseTimeout extends Class {
+abstract class BaseTimeout implements Destroyable {
 	private _timeout: number;
 
 	/**
@@ -31,7 +31,6 @@ abstract class BaseTimeout extends Class {
 	constructor(callback: () => any, delay?: number);
 	constructor(callback: () => any, scope: any, delay?: number);
 	constructor(callback: () => any, scope?: any, delay?: number) {
-		super();
 		if ((scope != null) && (typeof scope === "object")) {
 			callback = callback.bind(scope);
 		} else if (typeof scope === "number") {
@@ -41,9 +40,8 @@ abstract class BaseTimeout extends Class {
 		this._timeout = init(callback, delay);
 	}
 
-	protected destroyObject() {
+	destroy() {
 		this._done(this._timeout);
-		super.destroyObject();
 	}
 
 	protected abstract _init(callback: () => any, delay?: number): number;

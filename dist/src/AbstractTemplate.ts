@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Class from './Class';
 import Dictionary from './Dictionary';
 import TemplateOutput from './TemplateOutput';
 import * as DomUtils from './DomUtils';
@@ -27,7 +26,7 @@ import * as StringUtils from './StringUtils';
 /**
  * Abstract HTML template.
  */
-abstract class AbstractTemplate extends Class {
+abstract class AbstractTemplate {
 	private prefixes: string[] = null;
 
 	private parentIdMap: Dictionary<Dictionary<boolean>> = null; // The parent IDs of [key] item.

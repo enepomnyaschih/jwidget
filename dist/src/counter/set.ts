@@ -20,7 +20,7 @@
 
 import AbstractCollectionCounter from './AbstractCollectionCounter';
 import DestroyableBindable from '../DestroyableBindable';
-import IClass from '../IClass';
+import Identifiable from '../Identifiable';
 import ISet from '../ISet';
 import Property from '../Property';
 import * as ArrayUtils from '../ArrayUtils';
@@ -28,7 +28,7 @@ import * as ArrayUtils from '../ArrayUtils';
 /**
  * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Set]].
  */
-export default class SetCounter<T extends IClass> extends AbstractCollectionCounter<T> {
+export default class SetCounter<T extends Identifiable> extends AbstractCollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -55,7 +55,7 @@ export default class SetCounter<T extends IClass> extends AbstractCollectionCoun
 	}
 }
 
-export function countSet<T extends IClass>(source: ISet<T>, test: (item: T) => boolean, scope?: any): DestroyableBindable<number> {
+export function countSet<T extends Identifiable>(source: ISet<T>, test: (item: T) => boolean, scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}
