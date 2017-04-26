@@ -315,7 +315,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	tryClear(): Dictionary<T>;
+	clear(): Dictionary<T>;
 
 	/**
 	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.

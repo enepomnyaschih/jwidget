@@ -690,7 +690,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	tryClear(): T[]{
+	clear(): T[]{
 		var oldItems = ArrayUtils.tryClear(this._items);
 		if (oldItems === undefined) {
 			return undefined;

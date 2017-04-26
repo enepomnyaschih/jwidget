@@ -262,7 +262,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	}
 
 	protected destroyObject(): void {
-		this.tryClear();
+		this.clear();
 		super.destroyObject();
 	}
 
@@ -337,7 +337,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * Clears collection.
 	 * @returns Old collection contents. If not modified - undefined.
 	 */
-	abstract tryClear(): any;
+	abstract clear(): any;
 
 	/**
 	 * Matches all items against criteria.

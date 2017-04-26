@@ -60,7 +60,7 @@ class ListMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this._destroyItems(this.target.tryClear() || [], this.source.items);
+		this._destroyItems(this.target.clear() || [], this.source.items);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -112,7 +112,7 @@ class ListMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	}
 
 	private _onClear(params: IList.ItemsEventParams<T>) {
-		this._destroyItems(this.target.tryClear(), params.items);
+		this._destroyItems(this.target.clear(), params.items);
 	}
 
 	private _onReorder(params: IList.ReorderEventParams<T>) {

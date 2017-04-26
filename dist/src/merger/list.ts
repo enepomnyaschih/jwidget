@@ -129,7 +129,7 @@ class ListMerger<T> extends Class {
 	 * @inheritdoc
 	 */
 	destroyObject() {
-		this.target.tryClear();
+		this.target.clear();
 		this._bunches.destroy();
 		if (this._targetCreated) {
 			this.target.destroy();
@@ -248,7 +248,7 @@ class ListMerger<T> extends Class {
 	}
 
 	private _onClear() {
-		this.target.tryClear();
+		this.target.clear();
 	}
 
 	private _onReorder(params: IList.ReorderEventParams<IList<T>>) {

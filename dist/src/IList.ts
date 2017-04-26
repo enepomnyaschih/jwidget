@@ -393,7 +393,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	tryClear(): T[];
+	clear(): T[];
 
 	/**
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.

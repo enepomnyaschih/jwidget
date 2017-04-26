@@ -223,7 +223,7 @@ interface ICollection<T> extends IClass {
 	 * Clears collection.
 	 * @returns Old collection contents. If not modified - undefined.
 	 */
-	tryClear(): any;
+	clear(): any;
 
 	/**
 	 * Matches all items against criteria.

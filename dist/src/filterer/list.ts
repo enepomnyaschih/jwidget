@@ -187,7 +187,7 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this.target.tryClear();
+		this.target.clear();
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -281,7 +281,7 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 	}
 
 	private _onClear() {
-		this.target.tryClear();
+		this.target.clear();
 	}
 
 	private _onReorder(params: IList.ReorderEventParams<T>) {

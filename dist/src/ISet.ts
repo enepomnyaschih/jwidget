@@ -266,7 +266,7 @@ interface ISet<T extends Identifiable> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	tryClear(): T[];
+	clear(): T[];
 
 	/**
 	 * @hidden

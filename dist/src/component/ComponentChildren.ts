@@ -84,12 +84,12 @@ export default class ComponentChildren extends Map<Component> {
 		return spliceResult;
 	}
 
-	tryClear(): Dictionary<Component> {
-		var items = super.tryClear();
+	clear(): Dictionary<Component> {
+		var items = super.clear();
 		if (items === undefined) {
 			return undefined;
 		}
-		this.target.tryClear();
+		this.target.clear();
 		return items;
 	}
 

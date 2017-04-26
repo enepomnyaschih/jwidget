@@ -115,7 +115,7 @@ class ListReverser<T> extends Class {
 	 * @inheritdoc
 	 */
 	destroyObject() {
-		this.target.tryClear();
+		this.target.clear();
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -169,7 +169,7 @@ class ListReverser<T> extends Class {
 	}
 
 	private _onClear() {
-		this.target.tryClear();
+		this.target.clear();
 	}
 
 	private _onReorder(params: IList.ReorderEventParams<T>) {

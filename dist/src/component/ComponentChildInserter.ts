@@ -75,8 +75,8 @@ export default class ComponentChildInserter extends Map<ComponentChild> {
 		return spliceResult;
 	}
 
-	tryClear(): Dictionary<ComponentChild> {
-		var items = super.tryClear();
+	clear(): Dictionary<ComponentChild> {
+		var items = super.clear();
 		if (items === undefined) {
 			return undefined;
 		}
