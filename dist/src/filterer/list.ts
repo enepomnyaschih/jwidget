@@ -340,7 +340,7 @@ namespace ListFilterer {
 
 export function filterList<T>(source: IList<T>, test: (item: T) => boolean, scope?: any): IList<T> {
 	if (source.silent) {
-		return source.$filter(test, scope);
+		return source.filter(test, scope);
 	}
 	const result = new List<T>();
 	return result.owning(new ListFilterer<T>(source, {

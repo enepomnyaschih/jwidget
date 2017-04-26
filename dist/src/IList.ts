@@ -59,7 +59,7 @@ import Some from './Some';
  * Returns first item matching the criteria.
  * * [[find]] - Finds item by criteria.
  * Returns index of first item matching the criteria.
- * * [[filter]], [[$filter]] - Filters collection by criteria.
+ * * [[filter]], [[filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]] - Counts the items matching criteria.
  * * [[map]], [[map]] - Maps collection items.
@@ -259,7 +259,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T>;
+	filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T>;
 
 	/**
 	 * @inheritdoc

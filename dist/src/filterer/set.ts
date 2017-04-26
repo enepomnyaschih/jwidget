@@ -90,7 +90,7 @@ namespace SetFilterer {
 
 export function filterSet<T extends Identifiable>(source: ISet<T>, test: (item: T) => boolean, scope?: any): ISet<T> {
 	if (source.silent) {
-		return source.$filter(test, scope);
+		return source.filter(test, scope);
 	}
 	const result = new Set<T>();
 	return result.owning(new SetFilterer<T>(source, {

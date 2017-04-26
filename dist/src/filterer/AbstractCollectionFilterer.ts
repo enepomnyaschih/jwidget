@@ -56,11 +56,11 @@ import ICollection from '../ICollection';
  *         scope: this
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$$filter|$$filter]] shorthand can be used instead.
+ * In simple cases, [[JW.AbstractCollection.$filter|$filter]] shorthand can be used instead.
  * It returns the target collection right away:
  *
  *     var source = new JW.ObservableArray<number>([1, 2, 3]);
- *     var target = source.$$filter(function(x) { return x % 2 === 1; });
+ *     var target = source.$filter(function(x) { return x % 2 === 1; });
  *     assert.ok(target.equal([1, 3]));
  *
  *     source.addAll([4, 7, 1, 6]);

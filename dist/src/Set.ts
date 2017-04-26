@@ -60,7 +60,7 @@ import * as DictionaryUtils from './DictionaryUtils';
  * * [[each]] - Iterates items through.
  * * [[search]] - Finds item by criteria.
  * Returns first item matching the criteria.
- * * [[filter]], [[$filter]], [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[filter]], [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]], [[$$count]] - Counts the items matching criteria.
  * * [[map]], [[map]], [[$mapValues]], [[$mapObjects]] - Maps collection items.
@@ -97,7 +97,7 @@ import * as DictionaryUtils from './DictionaryUtils';
  * * [[createMapper]] - Creates item mapper.
  * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
  * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
+ * Extended version of [[$filter]] method.
  * * [[createCounter]] - Creates matching item counter.
  * Extended version of [[$$count]] method.
  * * [[createLister]] - Creates converter to set.
@@ -285,7 +285,7 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
+	filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
 		return new Set<T>(DictionaryUtils.filter(this._items, callback, scope), SILENT | ADAPTER);
 	}
 

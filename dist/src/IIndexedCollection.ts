@@ -63,8 +63,8 @@ import Some from './Some';
  * Returns first item matching the criteria.
  * * **[[find]] - Finds item by criteria.
  * Returns key of first item matching the criteria.**
- * * [[filter]], [[$filter]],
- * [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[filter]],
+ * [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]],
  * [[$$count]] - Counts the items matching criteria.
@@ -350,7 +350,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
+	filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
 
 	/**
 	 * @inheritdoc

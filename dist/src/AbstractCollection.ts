@@ -78,7 +78,7 @@ import Bindable from './Bindable';
  *     <tr>
  *       <td>Filterer</td>
  *       <td>[[JW.AbstractCollection.Filterer]]</td>
- *       <td>[[$$filter]], [[createFilterer]]</td>
+ *       <td>[[$filter]], [[createFilterer]]</td>
  *     </tr>
  *     <tr>
  *       <td>Matching item counter</td>
@@ -195,7 +195,7 @@ import Bindable from './Bindable';
  * * [[each]] - Iterates items through.
  * * [[search]] - Finds item by criteria.
  * Returns first item matching the criteria.
- * * [[filter]], [[$filter]], [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[filter]], [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]], [[$$count]] - Counts the items matching criteria.
  * * [[map]], [[map]], [[$mapValues]], [[$mapObjects]] - Maps collection items.
@@ -224,7 +224,7 @@ import Bindable from './Bindable';
  * * [[createMapper]] - Creates item mapper.
  * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
  * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
+ * Extended version of [[$filter]] method.
  * * [[createCounter]] - Creates matching item counter.
  * Extended version of [[$$count]] method.
  * * [[createLister]] - Creates converter to set.
@@ -586,7 +586,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Filtered collection.
 	 */
-	abstract $filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
+	abstract filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
 
 	/**
 	 * Counts the items matching criteria.

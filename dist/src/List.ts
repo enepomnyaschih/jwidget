@@ -72,8 +72,8 @@ import * as ArrayUtils from './ArrayUtils';
  * Returns first item matching the criteria.
  * * [[find]] - Finds item by criteria.
  * Returns index of first item matching the criteria.
- * * [[filter]], [[$filter]],
- * [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[filter]],
+ * [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]],
  * [[$$count]] - Counts the items matching criteria.
@@ -134,7 +134,7 @@ import * as ArrayUtils from './ArrayUtils';
  * * [[createMapper]] - Creates item mapper.
  * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
  * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
+ * Extended version of [[$filter]] method.
  * * [[createCounter]] - Creates matching item counter.
  * Extended version of [[$$count]] method.
  * * [[createLister]] - Creates converter to set.
@@ -449,7 +449,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T> {
+	filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T> {
 		return new List<T>(this._items.filter(callback, scope || this), SILENT | ADAPTER);
 	}
 

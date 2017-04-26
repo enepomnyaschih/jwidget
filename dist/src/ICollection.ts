@@ -126,7 +126,7 @@ import Bindable from './Bindable';
  * * [[each]], [[forEach]] - Iterates items through.
  * * [[search]] - Finds item by criteria.
  * Returns first item matching the criteria.
- * * [[filter]], [[$filter]] - Filters collection by criteria.
+ * * [[filter]], [[filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]] - Counts the items matching criteria.
  * * [[map]], [[map]] - Maps collection items.
@@ -428,7 +428,7 @@ interface ICollection<T> extends IClass {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Filtered collection.
 	 */
-	$filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
+	filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
 
 	/**
 	 * Counts the items matching criteria.

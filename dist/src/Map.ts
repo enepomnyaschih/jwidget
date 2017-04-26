@@ -66,8 +66,8 @@ import * as DictionaryUtils from './DictionaryUtils';
  * Returns first item matching the criteria.
  * * [[find]] - Finds item by criteria.
  * Returns index of first item matching the criteria.
- * * [[filter]], [[$filter]],
- * [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[filter]],
+ * [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]],
  * [[$$count]] - Counts the items matching criteria.
@@ -117,7 +117,7 @@ import * as DictionaryUtils from './DictionaryUtils';
  * * [[createMapper]] - Creates item mapper.
  * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
  * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
+ * Extended version of [[$filter]] method.
  * * [[createCounter]] - Creates matching item counter.
  * Extended version of [[$$count]] method.
  * * [[createLister]] - Creates converter to set.
@@ -369,7 +369,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T> {
+	filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T> {
 		return new Map<T>(DictionaryUtils.filter(this._items, callback, scope || this), SILENT | ADAPTER);
 	}
 

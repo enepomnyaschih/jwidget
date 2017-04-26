@@ -95,7 +95,7 @@ namespace MapFilterer {
 
 export function filterMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): IMap<T> {
 	if (source.silent) {
-		return source.$filter(test, scope);
+		return source.filter(test, scope);
 	}
 	const result = new Map<T>();
 	return result.owning(new MapFilterer<T>(source, {

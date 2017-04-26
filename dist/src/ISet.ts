@@ -50,7 +50,7 @@ import Listenable from './Listenable';
  * * [[each]], [[forEach]] - Iterates items through.
  * * [[search]] - Finds item by criteria.
  * Returns first item matching the criteria.
- * * [[filter]], [[$filter]] - Filters collection by criteria.
+ * * [[filter]], [[filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]] - Counts the items matching criteria.
  * * [[map]], [[map]] - Maps collection items.
@@ -167,7 +167,7 @@ interface ISet<T extends Identifiable> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$filter(callback: (item: T) => boolean, scope?: any): ISet<T>;
+	filter(callback: (item: T) => boolean, scope?: any): ISet<T>;
 
 	/**
 	 * @inheritdoc

@@ -65,8 +65,8 @@ import Bindable from './Bindable';
  * Returns first item matching the criteria.
  * * **[[find]] - Finds item by criteria.
  * Returns key of first item matching the criteria.**
- * * [[filter]], [[$filter]],
- * [[$$filter]] - Filters collection by criteria.
+ * * [[filter]], [[filter]],
+ * [[$filter]] - Filters collection by criteria.
  * Builds new collection of the same type, consisting of items matching the criteria.
  * * [[count]], [[$count]],
  * [[$$count]] - Counts the items matching criteria.
@@ -106,7 +106,7 @@ import Bindable from './Bindable';
  * * [[createMapper]] - Creates item mapper.
  * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
  * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$$filter]] method.
+ * Extended version of [[$filter]] method.
  * * [[createCounter]] - Creates matching item counter.
  * Extended version of [[$$count]] method.
  * * [[createLister]] - Creates converter to set.
@@ -445,7 +445,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract $filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
+	abstract filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
 
 	/**
 	 * @inheritdoc
