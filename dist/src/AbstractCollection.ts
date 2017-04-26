@@ -586,17 +586,6 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Filtered collection.
 	 */
-	abstract filter(callback: (item: T) => boolean, scope?: any): any;
-
-	/**
-	 * Filters collection by criteria.
-	 *
-	 * Builds new collection of the same type, consisting of items for which callback returns !== false.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Filtered collection.
-	 */
 	abstract $filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
 
 	/**
@@ -622,17 +611,6 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	$count(callback: (item: T) => boolean, scope?: any): Bindable<number> {
 		return new Property<number>(this.count(callback, scope), true);
 	}
-
-	/**
-	 * Maps collection items.
-	 *
-	 * Builds new collection of the same type, containing results of callback call for each collection item.
-	 *
-	 * @param callback Mapping function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Mapped collection.
-	 */
-	abstract map<U>(callback: (item: T) => U, scope?: any): any;
 
 	/**
 	 * Maps collection items.

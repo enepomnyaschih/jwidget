@@ -212,22 +212,12 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	$filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
 	count(callback: (item: T, key: string) => boolean, scope?: any): number;
-
-	/**
-	 * @inheritdoc
-	 */
-	map<U>(callback: (item: T, key: string) => U, scope?: any): Dictionary<U>;
 
 	/**
 	 * @inheritdoc

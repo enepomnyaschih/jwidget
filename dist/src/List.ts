@@ -449,15 +449,8 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T, index: number) => boolean, scope?: any): T[] {
-		return this._items.filter(callback, scope || this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	$filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T> {
-		return new List<T>(this.filter(callback, scope || this), SILENT | ADAPTER);
+		return new List<T>(this._items.filter(callback, scope || this), SILENT | ADAPTER);
 	}
 
 	/**
@@ -470,15 +463,8 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, index: number) => U, scope?: any): U[] {
-		return this._items.map(callback, scope || this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	$map<U>(callback: (item: T, index: number) => U, scope?: any): IList<U> {
-		return new List<U>(this.map(callback, scope || this), SILENT | ADAPTER);
+		return new List<U>(this._items.map(callback, scope || this), SILENT | ADAPTER);
 	}
 
 	/**
@@ -668,7 +654,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 		for (var i = 0; i < items.length; ++i) {
 			itemSet[(<any>items[i]).iid] = items[i];
 		}
-		var newItems = this.filter(function (item: any) { return !itemSet.hasOwnProperty(item.iid); });
+		var newItems = this._items.filter(function (item: any) { return !itemSet.hasOwnProperty(item.iid); });
 		this.performFilter(newItems);
 	}
 

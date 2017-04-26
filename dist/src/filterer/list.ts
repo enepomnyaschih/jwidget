@@ -112,7 +112,7 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 	 * they must be refiltered.
 	 */
 	refilter() {
-		var newFiltered = this.source.map((item) => {
+		var newFiltered = this.source.items.map((item) => {
 			return (this._test.call(this._scope, item) !== false) ? 1 : 0;
 		});
 

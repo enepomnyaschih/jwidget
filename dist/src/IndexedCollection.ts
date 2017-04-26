@@ -445,11 +445,6 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract filter(callback: (item: T, key: K) => boolean, scope?: any): any;
-
-	/**
-	 * @inheritdoc
-	 */
 	abstract $filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
 
 	/**
@@ -463,11 +458,6 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	$count(callback: (item: T, key: K) => boolean, scope?: any): Bindable<number> {
 		return new Property(this.count(callback, scope), true);
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	abstract map<U>(callback: (item: T, key: K) => U, scope?: any): any;
 
 	/**
 	 * @inheritdoc

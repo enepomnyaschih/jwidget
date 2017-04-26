@@ -301,7 +301,7 @@ export function mergeLists<T>(source: IList<IList<T>>): IList<T> {
 }
 
 export function mergeNoSync<T>(source: IList<IList<T>>): T[] {
-	return ArrayUtils.merge(source.map(function(item: any): any[] {
+	return ArrayUtils.merge(source.items.map(function(item: any): any[] {
 		return item.items;
 	}));
 }

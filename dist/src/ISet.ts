@@ -167,22 +167,12 @@ interface ISet<T extends Identifiable> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T) => boolean, scope?: any): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
 	$filter(callback: (item: T) => boolean, scope?: any): ISet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
 	count(callback: (item: T) => boolean, scope?: any): number;
-
-	/**
-	 * @inheritdoc
-	 */
-	map<U extends Identifiable>(callback: (item: T) => U, scope?: any): Dictionary<U>;
 
 	/**
 	 * @inheritdoc

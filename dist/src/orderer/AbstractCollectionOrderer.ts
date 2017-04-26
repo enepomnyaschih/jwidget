@@ -125,7 +125,7 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class {
 	 * @hidden
 	 */
 	protected _splice(removedItemsSet: Dictionary<T>, addedItemsSet: Dictionary<T>) {
-		var filteredItems = this.target.filter((item) => {
+		var filteredItems = this.target.items.filter((item) => {
 			return !removedItemsSet.hasOwnProperty(String(item.iid)) || !addedItemsSet.hasOwnProperty(String(item.iid));
 		});
 		var addedItems = DictionaryUtils.toArray(addedItemsSet).filter((item) => {

@@ -369,15 +369,8 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
-		return DictionaryUtils.filter(this._items, callback, scope || this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	$filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T> {
-		return new Map<T>(this.filter(callback, scope || this), SILENT | ADAPTER);
+		return new Map<T>(DictionaryUtils.filter(this._items, callback, scope || this), SILENT | ADAPTER);
 	}
 
 	/**
@@ -390,15 +383,8 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, key: string) => U, scope?: any): Dictionary<U> {
-		return DictionaryUtils.map(this._items, callback, scope || this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	$map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U> {
-		return new Map<U>(this.map(callback, scope || this), SILENT | ADAPTER);
+		return new Map<U>(DictionaryUtils.map(this._items, callback, scope || this), SILENT | ADAPTER);
 	}
 
 	/**
@@ -621,7 +607,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 */
 	removeItems(items: T[]) {
 		const itemSet = ArrayUtils.index(items, iid);
-		const newItems = this.filter(function (item) {
+		const newItems = DictionaryUtils.filter(this._items, function (item) {
 			return !itemSet.hasOwnProperty((<any>item).iid);
 		});
 		this.performSplice(newItems);

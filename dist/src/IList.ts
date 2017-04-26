@@ -259,22 +259,12 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T, index: number) => boolean, scope?: any): T[];
-
-	/**
-	 * @inheritdoc
-	 */
 	$filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
 	count(callback: (item: T, index: number) => boolean, scope?: any): number;
-
-	/**
-	 * @inheritdoc
-	 */
-	map<U>(callback: (item: T, index: number) => U, scope?: any): U[];
 
 	/**
 	 * @inheritdoc

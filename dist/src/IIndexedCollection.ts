@@ -350,11 +350,6 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T, key: K) => boolean, scope?: any): any;
-
-	/**
-	 * @inheritdoc
-	 */
 	$filter(callback: (item: T, key: K) => boolean, scope?: any): IIndexedCollection<K, T>;
 
 	/**
@@ -366,11 +361,6 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 * @inheritdoc
 	 */
 	$count(callback: (item: T, key: K) => boolean, scope?: any): Bindable<number>;
-
-	/**
-	 * @inheritdoc
-	 */
-	map<U>(callback: (item: T, key: K) => U, scope?: any): any;
 
 	/**
 	 * @inheritdoc

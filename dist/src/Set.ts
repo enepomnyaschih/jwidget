@@ -285,15 +285,8 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T) => boolean, scope?: any): Dictionary<T> {
-		return DictionaryUtils.filter(this._items, callback, scope);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	$filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
-		return new Set<T>(this.filter(callback, scope), SILENT | ADAPTER);
+		return new Set<T>(DictionaryUtils.filter(this._items, callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
@@ -306,15 +299,8 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	/**
 	 * @inheritdoc
 	 */
-	map<U extends Identifiable>(callback: (item: T) => U, scope?: any): Dictionary<U> {
-		return DictionaryUtils.map(this._items, callback, scope);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	$map<U extends Identifiable>(callback: (item: T) => U, scope?: any): ISet<U> {
-		return new Set<U>(this.map(callback, scope), SILENT | ADAPTER);
+		return new Set<U>(DictionaryUtils.map(this._items, callback, scope), SILENT | ADAPTER);
 	}
 
 	/**
