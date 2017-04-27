@@ -601,8 +601,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	removeItems(items: T[]) {
-		const itemSet = new VidSet<T>(this.getKey);
-		items.forEach(itemSet.add, itemSet);
+		const itemSet = VidSet.fromArray<T>(items, this.getKey);
 		const newItems = DictionaryUtils.filter(this._items, function (item) {
 			return !itemSet.contains(item);
 		});

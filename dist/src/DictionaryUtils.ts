@@ -518,8 +518,7 @@ export function tryRemoveAll<T>(map: Dictionary<T>, keys: string[]): Dictionary<
  * **Known issue:** *Works only if T extends JW.Class!*
  */
 export function removeItems<T>(map: Dictionary<T>, items: T[], getKey?: (item: T) => string) {
-	const itemSet = new VidSet<T>(getKey);
-	items.forEach(itemSet.add, itemSet);
+	const itemSet = VidSet.fromArray<T>(items, getKey);
 	const newItems = filter(map, function (item) {
 		return !itemSet.contains(item);
 	});

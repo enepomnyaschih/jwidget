@@ -397,8 +397,7 @@ export function removeItem<T>(arr: T[], item: T): number {
  * **Known issue:** *Works only if T extends JW.Class!*
  */
 export function removeItems<T>(arr: T[], items: T[], getKey?: (item: T) => string) {
-	const itemSet = new VidSet<T>(getKey);
-	items.forEach(itemSet.add, itemSet);
+	const itemSet = VidSet.fromArray<T>(items, getKey);
 	const newItems = arr.filter(function (item: T): boolean {
 		return !itemSet.contains(item);
 	});

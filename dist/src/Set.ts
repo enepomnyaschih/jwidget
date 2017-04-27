@@ -156,11 +156,8 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 		const silent: boolean = c || false;
 
 		super(silent, b || vid);
-		this._items = new VidSet<T>(this.getKey);
-		for (let i = 0; i < length; ++i) {
-			this._items.add(items[i]);
-		}
-		this._length.set(length);
+		this._items = VidSet.fromArray<T>(items, this.getKey);
+		this._length.set(items.length);
 		this._spliceEvent = Event.make<ISet.SpliceEventParams<T>>(this, silent);
 		this._clearEvent  = Event.make<ISet.ItemsEventParams<T>>(this, silent);
 		this._changeEvent = Event.make<ISet.EventParams<T>>(this, silent);
