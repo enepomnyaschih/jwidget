@@ -434,25 +434,17 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	clear(): T[] {
-		var items = this._tryClear();
-		if (items === undefined) {
-			return undefined;
-		}
-		this._clearEvent.trigger({ sender: this, items: items });
-		this._changeEvent.trigger({ sender: this });
-		if (this._ownsItems) {
-			ArrayUtils.backEvery(items, destroy);
-		}
-		return items;
-	}
-
-	_tryClear(): T[] {
 		if (this._length.get() === 0) {
 			return undefined;
 		}
 		const items: T[] = this._items.values.concat();
 		this._items.clear();
 		this._length.set(0);
+		this._clearEvent.trigger({ sender: this, items: items });
+		this._changeEvent.trigger({ sender: this });
+		if (this._ownsItems) {
+			ArrayUtils.backEvery(items, destroy);
+		}
 		return items;
 	}
 
@@ -487,7 +479,7 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 		return spliceResult;
 	}
 
-	_trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
+	private _trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
 		const addedItemSet = VidSet.fromArray<T>(addedItems, this.getKey);
 		removedItems = removedItems.filter(function (item) {
 			return !addedItemSet.contains(item);
@@ -502,7 +494,7 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 		return spliceResult;
 	}
 
-	_tryRemoveAll(items: T[]): T[] {
+	private _tryRemoveAll(items: T[]): T[] {
 		const removedItems: T[] = [];
 		for (let i = 0, l = items.length; i < l; ++i) {
 			const item = items[i];
@@ -516,11 +508,11 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 		return undefined;
 	}
 
-	_tryRemove(item: T): boolean {
+	private _tryRemove(item: T): boolean {
 		return this._items.remove(item) || undefined;
 	}
 
-	_tryAddAll(items: T[]): T[] {
+	private _tryAddAll(items: T[]): T[] {
 		const addedItems: T[] = [];
 		for (let i = 0, l = items.length; i < l; ++i) {
 			const item = items[i];
@@ -534,7 +526,7 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 		return undefined;
 	}
 
-	_tryAdd(item: T): boolean {
+	private _tryAdd(item: T): boolean {
 		return this._items.add(item) || undefined;
 	}
 

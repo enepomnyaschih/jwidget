@@ -252,11 +252,6 @@ interface ISet<T> extends ICollection<T> {
 	clear(): T[];
 
 	/**
-	 * @hidden
-	 */
-	_tryClear(): T[];
-
-	/**
 	 * Removes and adds multiple items in set. Universal optimized granular operation of removal/insertion.
 	 * @param removedItems Items to remove.
 	 * @param addedItems Items to add.
@@ -272,11 +267,6 @@ interface ISet<T> extends ICollection<T> {
 	 * If collection is not modified, returns undefined.
 	 */
 	trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T>;
-
-	/**
-	 * @hidden
-	 */
-	_trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T>;
 
 	/**
 	 * Detects [[splice]] method arguments to adjust set contents to **newItems**.
