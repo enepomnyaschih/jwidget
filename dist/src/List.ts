@@ -194,11 +194,11 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	constructor(items: T[], flags?: CollectionFlags);
 	constructor(items: T[], getKey: (item: T) => string, flags?: CollectionFlags);
 	constructor(a?: any, b?: any, c?: CollectionFlags) {
-		if (typeof a === "number") {
-			c = a;
+		if (typeof a === "boolean") {
+			c = a ? SILENT : 0;
 			a = null;
-		} else if (typeof a === "function") {
-			c = b;
+		} else if (typeof a === "function" || (a == null && typeof b === "boolean")) {
+			c = b ? SILENT : 0;
 			b = a;
 			a = null;
 		} else if (typeof b === "number") {

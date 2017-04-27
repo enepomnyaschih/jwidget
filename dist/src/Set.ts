@@ -144,7 +144,7 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 		if (typeof a === "boolean") {
 			c = a;
 			a = null;
-		} else if (typeof a === "function") {
+		} else if (typeof a === "function" || (a == null && typeof b === "boolean")) {
 			c = b;
 			b = a;
 			a = null;
