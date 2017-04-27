@@ -18,8 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Dictionary from './Dictionary';
-import Identifiable from './Identifiable';
 import ICollection from './ICollection';
 import Listenable from './Listenable';
 
@@ -94,13 +92,11 @@ import Listenable from './Listenable';
  * All the same algorithms are also available for native JavaScript Object as set,
  * see [[SetUtils]] functions.
  */
-interface ISet<T extends Identifiable> extends ICollection<T> {
+interface ISet<T> extends ICollection<T> {
 	/**
-	 * Returns item map - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
+	 * All set items. Please note that this is a getter - the internal representation of `Set` is different.
 	 */
-	readonly items: Dictionary<T>;
+	readonly items: T[];
 
 	/**
 	 * Items are removed from set, items are added to set.
@@ -176,7 +172,7 @@ interface ISet<T extends Identifiable> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	map<U extends Identifiable>(callback: (item: T) => U, scope?: any): ISet<U>;
+	map<U>(callback: (item: T) => U, scope?: any): ISet<U>;
 
 	/**
 	 * @inheritdoc
@@ -309,7 +305,7 @@ namespace ISet {
 	/**
 	 * `ISet` event parameters.
 	 */
-	export interface EventParams<T extends Identifiable> extends ICollection.EventParams<T> {
+	export interface EventParams<T> extends ICollection.EventParams<T> {
 		/**
 		 * Event sender.
 		 */
@@ -319,7 +315,7 @@ namespace ISet {
 	/**
 	 * Parameters of `spliceEvent`.
 	 */
-	export interface SpliceEventParams<T extends Identifiable> extends EventParams<T> {
+	export interface SpliceEventParams<T> extends EventParams<T> {
 		/**
 		 * Result of `splice` method.
 		 */
@@ -329,7 +325,7 @@ namespace ISet {
 	/**
 	 * Parameters of `clearEvent`.
 	 */
-	export interface ItemsEventParams<T extends Identifiable> extends EventParams<T> {
+	export interface ItemsEventParams<T> extends EventParams<T> {
 		/**
 		 * Old set contents.
 		 */

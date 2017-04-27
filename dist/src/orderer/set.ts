@@ -18,13 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {iid} from '../index';
+import {VidSet} from '../internal';
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
 import IList from '../IList';
 import IClass from '../IClass';
 import ISet from '../ISet';
 import List from '../List';
-import * as ArrayUtils from '../ArrayUtils';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Set]].
@@ -47,8 +46,8 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 	private _onSplice(params: ISet.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
-			ArrayUtils.index(spliceResult.removedItems, iid),
-			ArrayUtils.index(spliceResult.addedItems, iid));
+			VidSet.fromArray<T>(spliceResult.removedItems, this.source.getKey),
+			VidSet.fromArray<T>(spliceResult.addedItems, this.source.getKey));
 	}
 
 	private _onClear(params: ISet.ItemsEventParams<T>) {

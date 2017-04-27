@@ -19,8 +19,8 @@
 */
 
 import {destroy} from '../index';
+import {VidMap} from '../internal';
 import AbstractCollectionMapper from './AbstractCollectionMapper';
-import Dictionary from '../Dictionary';
 import IClass from '../IClass';
 import ISet from '../ISet';
 import Set from '../Set';
@@ -34,7 +34,7 @@ class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMa
 	/**
 	 * @hidden
 	 */
-	protected _items: Dictionary<U> = {};
+	protected _items: VidMap<T, U>;
 
 	/**
 	 * @inheritdoc
@@ -51,6 +51,7 @@ class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMa
 	 */
 	constructor(source: ISet<T>, config: SetMapper.Config<T, U>) {
 		super(source, config);
+		this._items = new VidMap<T, U>(source.getKey);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<U>(this.source.silent) : config.target;
 		this.target.tryAddAll(this._createItems(source.toArray()));
@@ -72,9 +73,7 @@ class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMa
 	}
 
 	private _getItems(datas: T[]): U[] {
-		return datas.map((data) => {
-			return this._items[data.iid];
-		}, this);
+		return datas.map((data) => this._items.get(data));
 	}
 
 	private _createItems(datas: T[]): U[] {
@@ -83,7 +82,7 @@ class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMa
 			var data = datas[i];
 			var item = this._create.call(this._scope || this, data);
 			items.push(item);
-			this._items[data.iid] = item;
+			this._items.put(data, item);
 		}
 		return items;
 	}
@@ -94,9 +93,7 @@ class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMa
 		}
 		for (var i = datas.length - 1; i >= 0; --i) {
 			var data = datas[i];
-			var iid = data.iid;
-			var item = this._items[iid];
-			delete this._items[iid];
+			var item = this._items.remove(data);
 			this._destroy.call(this._scope || this, item, data);
 		}
 	}

@@ -22,20 +22,19 @@ import {default as ListLister, listToSet} from './list';
 import {default as MapLister, mapToSet} from './map';
 import {default as SetLister, setToSet} from './set';
 import AbstractCollectionLister from './AbstractCollectionLister';
-import Identifiable from '../Identifiable';
 import ICollection from '../ICollection';
 import ISet from '../ISet';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createLister<T extends Identifiable>(source: ICollection<T>, config: AbstractCollectionLister.Config<T>): AbstractCollectionLister<T> {
+export function createLister<T>(source: ICollection<T>, config: AbstractCollectionLister.Config<T>): AbstractCollectionLister<T> {
 	return (source instanceof List) ? new ListLister(source, config) :
 		(source instanceof Map) ? new MapLister(source, config) :
 		(source instanceof Set) ? new SetLister(source, config) : null;
 }
 
-export function collectionToSet<T extends Identifiable>(source: ICollection<T>): ISet<T> {
+export function collectionToSet<T>(source: ICollection<T>): ISet<T> {
 	return (source instanceof List) ? listToSet(source) :
 		(source instanceof Map) ? mapToSet(source) :
 		(source instanceof Set) ? setToSet(source) : null;

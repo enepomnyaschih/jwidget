@@ -256,7 +256,10 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	protected _ownsItems: Boolean = false;
 	protected _length: IProperty<number>;
 
-	constructor(silent: boolean) {
+	/**
+	 * @param getKey Identifies an item in this collection for optimization of some algorithms.
+	 */
+	constructor(silent: boolean, readonly getKey: (item: T) => string) {
 		super();
 		this._length = this.own(new Property(0, silent));
 	}

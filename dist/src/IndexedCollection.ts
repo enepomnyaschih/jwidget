@@ -133,8 +133,8 @@ import Some from './Some';
  * @param T Collection item type.
  */
 abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements IIndexedCollection<K, T> {
-	constructor(silent: boolean) {
-		super(silent);
+	constructor(silent: boolean, getKey: (item: T) => string) {
+		super(silent, getKey);
 	}
 
 	/**

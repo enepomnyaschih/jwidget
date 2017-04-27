@@ -20,7 +20,7 @@
 
 import Listenable from './Listenable';
 import {destroy, CollectionFlags, SILENT, ADAPTER} from './index';
-import Dictionary from './Dictionary';
+import {vid} from './internal';
 import Event from './Event';
 import IList from './IList';
 import IEvent from './IEvent';
@@ -185,30 +185,31 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	private _changeEvent  : IEvent<IList.EventParams<T>>;
 
 	/**
-	 * Function which returns unique key of an item in this collection.
-	 * Function is used in [[detectSplice]],
-	 * [[performSplice]],
-	 * [[detectReorder]],
-	 * [[performReorder]] algorithms.
-	 * Defaults to [[iid]], so
-	 * if collection contains instances of JW.Class, you are in a good shape.
-	 */
-	getKey: (item: T) => any;
-
-	/**
 	 * @param items Initial array contents.
 	 * @param adapter Set to true to wrap the **items** rather than copying them into
 	 * a new array.
 	 */
 	constructor(silent?: boolean);
+	constructor(getKey: (item: T) => string, silent?: boolean);
 	constructor(items: T[], flags?: CollectionFlags);
-	constructor(a?: any, b?: CollectionFlags) {
-		const valued = (typeof a !== "boolean");
-		const silent = Boolean(valued ? (b & SILENT) : a);
-		const adapter = valued && Boolean(b & ADAPTER);
-		const items: T[] = (valued && a) ? a : [];
+	constructor(items: T[], getKey: (item: T) => string, flags?: CollectionFlags);
+	constructor(a?: any, b?: any, c?: CollectionFlags) {
+		if (typeof a === "number") {
+			c = a;
+			a = null;
+		} else if (typeof a === "function") {
+			c = b;
+			b = a;
+			a = null;
+		} else if (typeof b === "number") {
+			c = b;
+			b = null;
+		}
+		const items: T[] = a;
+		const silent = Boolean(c & SILENT);
+		const adapter = (items != null) && Boolean(c & ADAPTER);
 
-		super(silent);
+		super(silent, b || vid);
 		this._items = adapter ? items : items ? items.concat() : [];
 		this._length.set(this._items.length);
 
@@ -499,28 +500,28 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	toMap(): IMap<T> {
-		return new Map<T>(this.toDictionary(), SILENT | ADAPTER);
+		return new Map<T>(this.toDictionary(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	asMap(): IMap<T> {
-		return new Map<T>(this.asDictionary(), SILENT | ADAPTER);
+		return new Map<T>(this.asDictionary(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	toSet(): ISet<any> {
-		return new Set<any>(this.toSet(), SILENT | ADAPTER);
+	toSet(): ISet<T> {
+		return new Set<T>(this.toArray(), this.getKey, true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	asSet(): ISet<any> {
-		return new Set<any>(this.toSet(), SILENT | ADAPTER);
+	asSet(): ISet<T> {
+		return new Set<T>(this.toArray(), this.getKey, true);
 	}
 
 	/**
@@ -639,11 +640,8 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	removeItems(items: T[]) {
-		var itemSet: Dictionary<any> = {};
-		for (var i = 0; i < items.length; ++i) {
-			itemSet[(<any>items[i]).iid] = items[i];
-		}
-		var newItems = this._items.filter(function (item: any) { return !itemSet.hasOwnProperty(item.iid); });
+		const itemSet = new Set(items);
+		const newItems = this._items.filter((item) => !itemSet.contains(item));
 		this.performFilter(newItems);
 	}
 
@@ -767,8 +765,8 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IList.SpliceParams<T> {
-		return ArrayUtils.detectSplice(this._items, newItems, getKey || this.getKey, scope || this);
+	detectSplice(newItems: T[]): IList.SpliceParams<T> {
+		return ArrayUtils.detectSplice(this._items, newItems, this.getKey);
 	}
 
 	/**
@@ -799,8 +797,8 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): number[] {
-		return ArrayUtils.detectReorder(this._items, newItems, getKey || this.getKey, scope || this);
+	detectReorder(newItems: T[]): number[] {
+		return ArrayUtils.detectReorder(this._items, newItems, this.getKey);
 	}
 
 	/**
@@ -846,8 +844,8 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * If collection consists of instances of JW.Class, then you are in a good shape.
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 */
-	performSplice(newItems: T[], getKey?: (item: T) => any, scope?: any) {
-		var params = this.detectSplice(newItems, getKey || this.getKey, scope || this);
+	performSplice(newItems: T[]) {
+		var params = this.detectSplice(newItems);
 		if (params !== undefined) {
 			this.trySplice(params.removeParamsList, params.addParamsList);
 		}
@@ -879,8 +877,8 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * If collection consists of instances of JW.Class, then it's all right.
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 */
-	performReorder(newItems: T[], getKey?: (item: T) => any, scope?: any) {
-		var indexArray = this.detectReorder(newItems, getKey || this.getKey, scope || this);
+	performReorder(newItems: T[]) {
+		var indexArray = this.detectReorder(newItems);
 		if (indexArray !== undefined) {
 			this.tryReorder(indexArray);
 		}

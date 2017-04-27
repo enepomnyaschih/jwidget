@@ -19,12 +19,10 @@
 */
 
 import Listenable from './Listenable';
-import {apply, destroy, iid, isArray} from './index';
-import {CollectionFlags, SILENT, ADAPTER} from './index';
+import {destroy, SILENT, ADAPTER} from './index';
+import {vid, VidSet} from './internal';
 import AbstractCollection from './AbstractCollection';
-import Dictionary from './Dictionary';
 import Event from './Event';
-import Identifiable from './Identifiable';
 import IList from './IList';
 import IEvent from './IEvent';
 import IMap from './IMap';
@@ -32,7 +30,6 @@ import ISet from './ISet';
 import List from './List';
 import Map from './Map';
 import * as ArrayUtils from './ArrayUtils';
-import * as DictionaryUtils from './DictionaryUtils';
 
 /**
  * Set is unordered collection optimized for items adding, removal and search. Unlike
@@ -127,9 +124,8 @@ import * as DictionaryUtils from './DictionaryUtils';
  *
  * @param T Collection item type.
  */
-class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<T> {
-	private _adapter: boolean;
-	private _items: Dictionary<T>;
+class Set<T> extends AbstractCollection<T> implements ISet<T> {
+	private _items: VidSet<T>
 
 	private _spliceEvent : IEvent<ISet.SpliceEventParams<T>>;
 	private _clearEvent  : IEvent<ISet.ItemsEventParams<T>>;
@@ -141,20 +137,30 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	 * @param items Initial set contents.
 	 */
 	constructor(silent?: boolean);
+	constructor(getKey: (item: T) => string, silent?: boolean);
 	constructor(items: T[], silent?: boolean);
-	constructor(items: Dictionary<T>, flags?: CollectionFlags);
-	constructor(a?: any, b?: any) {
-		const valued = (typeof a !== "boolean");
-		const arr = (typeof b === "boolean") || (isArray(a) && b == null);
-		const silent = Boolean(arr ? b : valued ? (b & SILENT) : a);
-		const adapter = !arr && valued && Boolean(b & ADAPTER);
-		const items: Dictionary<T> = (!valued || !a) ? {} : arr ? ArrayUtils.index<T>(a, iid) : a;
+	constructor(items: T[], getKey: (item: T) => string, silent?: boolean);
+	constructor(a?: any, b?: any, c?: boolean) {
+		if (typeof a === "boolean") {
+			c = a;
+			a = null;
+		} else if (typeof a === "function") {
+			c = b;
+			b = a;
+			a = null;
+		} else if (typeof b === "boolean") {
+			c = b;
+			b = null;
+		}
+		const items: T[] = a || [];
+		const silent: boolean = c || false;
 
-		super(silent);
-		this._adapter = adapter;
-		this._items = this._adapter ? items : apply<T>({}, items);
-		this._length.set((!valued || !a) ? 0 : arr ? a.length : DictionaryUtils.getLength(items));
-
+		super(silent, b || vid);
+		this._items = new VidSet<T>(this.getKey);
+		for (let i = 0; i < length; ++i) {
+			this._items.add(items[i]);
+		}
+		this._length.set(length);
 		this._spliceEvent = Event.make<ISet.SpliceEventParams<T>>(this, silent);
 		this._clearEvent  = Event.make<ISet.ItemsEventParams<T>>(this, silent);
 		this._changeEvent = Event.make<ISet.EventParams<T>>(this, silent);
@@ -165,15 +171,20 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	 *
 	 * **Caution: doesn't make a copy - please don't modify.**
 	 */
-	get items(): Dictionary<T> {
-		return this._items;
+	get items(): T[] {
+		return this._items.values;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	get first(): T {
-		return DictionaryUtils.getFirst(this._items);
+		let result: T;
+		this._items.every((item) => {
+			result = item;
+			return false;
+		});
+		return result;
 	}
 
 	/**
@@ -230,28 +241,28 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	 * @inheritdoc
 	 */
 	containsItem(item: T): boolean {
-		return this._items.hasOwnProperty(String(item.iid));
+		return this._items.contains(item);
 	}
 
 	/**
 	 * Shorthand to [[containsItem]].
 	 */
 	contains(item: T): boolean {
-		return this._items.hasOwnProperty(String(item.iid));
+		return this._items.contains(item);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	every(callback: (item: T) => boolean, scope?: any): boolean {
-		return DictionaryUtils.every(this._items, callback, scope);
+		return this._items.every(callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSorted(callback?: (item: T) => any, scope?: any, order?: number): T[] {
-		return DictionaryUtils.toSorted(this._items, callback, scope || this, order);
+		return ArrayUtils.toSorted(this._items.values, callback, scope || this, order);
 	}
 
 	/**
@@ -265,7 +276,7 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	 * @inheritdoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[] {
-		return DictionaryUtils.toSortedComparing(this._items, compare, scope || this, order);
+		return ArrayUtils.toSortedComparing(this._items.values, compare, scope || this, order);
 	}
 
 	/**
@@ -286,21 +297,21 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
-		return new Set<T>(DictionaryUtils.filter(this._items, callback, scope), SILENT | ADAPTER);
+		return new Set<T>(this._items.values.filter(callback, scope), true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	count(callback: (item: T) => boolean, scope?: any): number {
-		return DictionaryUtils.count(this._items, callback, scope);
+		return ArrayUtils.count(this._items.values, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	map<U extends Identifiable>(callback: (item: T) => U, scope?: any): ISet<U> {
-		return new Set<U>(DictionaryUtils.map(this._items, callback, scope), SILENT | ADAPTER);
+	map<U>(callback: (item: T) => U, scope?: any): ISet<U> {
+		return new Set<U>(this._items.values.map(callback, scope), true);
 	}
 
 	/**
@@ -321,7 +332,7 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	 * @inheritdoc
 	 */
 	toSet(): ISet<T> {
-		return new Set<T>(this._items, SILENT);
+		return new Set<T>(this._items.values, true);
 	}
 
 	/**
@@ -449,14 +460,9 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 		if (this._length.get() === 0) {
 			return undefined;
 		}
-		var items: T[];
+		const items: T[] = this._items.values.concat();
+		this._items.clear();
 		this._length.set(0);
-		items = this.toArray();
-		if (this._adapter) {
-			DictionaryUtils.tryClear(this._items);
-		} else {
-			this._items = {};
-		}
 		return items;
 	}
 
@@ -492,9 +498,9 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	}
 
 	_trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
-		var addedItemSet = ArrayUtils.index(addedItems, iid);
+		const addedItemSet = VidSet.fromArray<T>(addedItems, this.getKey);
 		removedItems = removedItems.filter(function (item) {
-			return !addedItemSet.hasOwnProperty(String(item.iid));
+			return !addedItemSet.contains(item);
 		});
 		removedItems = this._tryRemoveAll(removedItems);
 		addedItems = this._tryAddAll(addedItems);
@@ -521,12 +527,7 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	}
 
 	_tryRemove(item: T): boolean {
-		const iid = String(item.iid);
-		if (!this._items.hasOwnProperty(iid)) {
-			return undefined;
-		}
-		delete this._items[iid];
-		return true;
+		return this._items.remove(item) || undefined;
 	}
 
 	_tryAddAll(items: T[]): T[] {
@@ -544,12 +545,7 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	}
 
 	_tryAdd(item: T): boolean {
-		const iid = String(item.iid);
-		if (this._items.hasOwnProperty(iid)) {
-			return undefined;
-		}
-		this._items[iid] = item;
-		return true;
+		return this._items.add(item) || undefined;
 	}
 
 	/**
@@ -559,19 +555,21 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
 	 */
 	detectSplice(newItemArray: T[]): ISet.SpliceParams<T> {
-		var removedItems: T[] = [];
-		var addedItems: T[] = [];
-		var newItems: Dictionary<T> = ArrayUtils.index<T>(newItemArray, function (item) {
-			return String(item.iid);
-		});
-		for (var key in this._items) {
-			if (!newItems.hasOwnProperty(key)) {
-				removedItems.push(this._items[key]);
+		const removedItems: T[] = [];
+		const addedItems: T[] = [];
+		const oldItems = this._items;
+		const newItems = VidSet.fromArray<T>(newItemArray);
+		const oldItemArray = this._items.values;
+		for (let i = 0, l = oldItemArray.length; i < l; ++i) {
+			const item = oldItemArray[i];
+			if (!newItems.contains(item)) {
+				removedItems.push(item);
 			}
 		}
-		for (var key in newItems) {
-			if (!this._items.hasOwnProperty(key)) {
-				addedItems.push(newItems[key]);
+		for (let i = 0, l = newItemArray.length; i < l; ++i) {
+			const item = newItemArray[i];
+			if (!oldItems.contains(item)) {
+				addedItems.push(item);
 			}
 		}
 		if ((removedItems.length !== 0) || (addedItems.length !== 0)) {
@@ -600,7 +598,7 @@ class Set<T extends Identifiable> extends AbstractCollection<T> implements ISet<
 			return false;
 		}
 		for (let i = 0, l = array.length; i < l; ++i) {
-			if (!this._items.hasOwnProperty(String(array[i].iid))) {
+			if (!this._items.contains(array[i])) {
 				return false;
 			}
 		}

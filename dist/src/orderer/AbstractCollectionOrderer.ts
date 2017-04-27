@@ -18,14 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {VidSet} from '../internal';
 import Class from '../Class';
-import Dictionary from '../Dictionary';
 import IList from '../IList';
 import IClass from '../IClass';
 import ICollection from '../ICollection';
 import IndexItems from '../IndexItems';
 import List from '../List';
-import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
  * Converter to array (orderer). Converts source collection to array.
@@ -124,12 +123,12 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class {
 	/**
 	 * @hidden
 	 */
-	protected _splice(removedItemsSet: Dictionary<T>, addedItemsSet: Dictionary<T>) {
-		var filteredItems = this.target.items.filter((item) => {
-			return !removedItemsSet.hasOwnProperty(String(item.iid)) || !addedItemsSet.hasOwnProperty(String(item.iid));
+	protected _splice(removedItemsSet: VidSet<T>, addedItemsSet: VidSet<T>) {
+		const filteredItems = this.target.items.filter((item) => {
+			return !removedItemsSet.contains(item) || !addedItemsSet.contains(item);
 		});
-		var addedItems = DictionaryUtils.toArray(addedItemsSet).filter((item) => {
-			return !removedItemsSet.hasOwnProperty(String(item.iid));
+		const addedItems = addedItemsSet.values.filter((item) => {
+			return !removedItemsSet.contains(item);
 		});
 		this.target.trySplice(
 			this.target.detectFilter(filteredItems) || [],

@@ -311,14 +311,6 @@ export function newIid() {
 }
 
 /**
- * Returns object unique ID. Returns iid of object if it is an instance of Class,
- * else returns the object itself.
- */
-export function iid(obj: any): number {
-	return obj ? defn<number>(obj.iid, obj) : null;
-}
-
-/**
  * Calls object method **destroy** if available. Can be used in mapper configuration.
  */
 export function destroy(obj: any): any {

@@ -18,9 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {cmp, def, iid, isArray} from './index';
+import {cmp, def, isArray} from './index';
+import {VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
-import Identifiable from './Identifiable';
 import IList from './IList';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
@@ -396,10 +396,11 @@ export function removeItem<T>(arr: T[], item: T): number {
  * Removes all occurrences of items in collection.
  * **Known issue:** *Works only if T extends JW.Class!*
  */
-export function removeItems<T extends Identifiable>(arr: T[], items: T[]) {
-	var itemSet = index(items, iid);
-	var newItems = arr.filter(function (item: T): boolean {
-		return !itemSet.hasOwnProperty(String(item.iid));
+export function removeItems<T>(arr: T[], items: T[], getKey?: (item: T) => string) {
+	const itemSet = new VidSet<T>(getKey);
+	items.forEach(itemSet.add, itemSet);
+	const newItems = arr.filter(function (item: T): boolean {
+		return !itemSet.contains(item);
 	});
 	performSplice(arr, newItems);
 }
@@ -574,14 +575,12 @@ export function tryReorder<T>(arr: T[], indexArray: number[]): T[]{
  * @returns [[splice]] method arguments. If no method call required, returns undefined.
  */
 export function detectSplice<T>(oldItems: T[], newItems: T[],
-		getKey?: (item: T) => any, scope?: any): IList.SpliceParams<T> {
-	getKey = getKey || iid;
-	scope = scope || oldItems;
+		getKey?: (item: T) => string): IList.SpliceParams<T> {
 	var removeParamsList: IList.IndexCount[] = [];
 	var addParamsList: IList.IndexItems<T>[] = [];
-	var oldIndexMap: Dictionary<number> = {};
+	var oldIndexMap = new VidMap<T, number>(getKey);
 	for (var i = 0, l = oldItems.length; i < l; ++i) {
-		oldIndexMap[getKey.call(scope, oldItems[i])] = i;
+		oldIndexMap.put(oldItems[i], i);
 	}
 	var nextOldIndex = 0;
 	var offset = 0;
@@ -610,8 +609,7 @@ export function detectSplice<T>(oldItems: T[], newItems: T[],
 
 	for (var newIndex = 0, l = newItems.length; newIndex < l; ++newIndex) {
 		var item = newItems[newIndex];
-		var key = getKey.call(scope, item);
-		var oldIndex = oldIndexMap[key];
+		var oldIndex = oldIndexMap.get(item);
 		if ((oldIndex === undefined) || (oldIndex < nextOldIndex)) {
 			buffer(item);
 		} else {
@@ -674,16 +672,14 @@ export function detectFilter<T>(oldItems: T[], newItems: T[]): IList.IndexCount[
  * @returns **indexArray** argument of [[reorder]] method.
  * If no method call required, returns undefined.
  */
-export function detectReorder<T>(oldItems: T[], newItems: T[], getKey?: (item: T) => any, scope?: any): number[] {
-	getKey = getKey || iid;
-	scope = scope || oldItems;
+export function detectReorder<T>(oldItems: T[], newItems: T[], getKey?: (item: T) => string): number[] {
 	var indexArray: number[] = [];
-	var newIndexMap: Dictionary<number> = {};
+	var newIndexMap = new VidMap<T, number>(getKey);
 	for (var i = 0, l = newItems.length; i < l; ++i) {
-		newIndexMap[getKey.call(scope, newItems[i])] = i;
+		newIndexMap.put(newItems[i], i);
 	}
 	for (var i = 0, l = oldItems.length; i < l; ++i) {
-		indexArray.push(newIndexMap[getKey.call(scope, oldItems[i])]);
+		indexArray.push(newIndexMap.get(oldItems[i]));
 	}
 	if (!isIdentity(indexArray)) {
 		return indexArray;
@@ -742,8 +738,8 @@ export function detectSortComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: nu
  * If collection consists of instances of JW.Class, then you are in a good shape.
  * @param scope **getKey** call scope. Defaults to collection itself.
  */
-export function performSplice<T>(arr: T[], newItems: T[], getKey?: (item: T) => any, scope?: any) {
-	var params = detectSplice(arr, newItems, getKey, scope);
+export function performSplice<T>(arr: T[], newItems: T[], getKey?: (item: T) => string) {
+	var params = detectSplice(arr, newItems, getKey);
 	if (params !== undefined) {
 		trySplice(arr, params.removeParamsList, params.addParamsList);
 	}
@@ -775,8 +771,8 @@ export function performFilter<T>(arr: T[], newItems: T[]) {
  * If collection consists of instances of JW.Class, then it's all right.
  * @param scope **getKey** call scope. Defaults to collection itself.
  */
-export function performReorder<T>(arr: T[], newItems: T[], getKey?: (item: T) => any, scope?: any) {
-	var indexArray = detectReorder(arr, newItems, getKey, scope);
+export function performReorder<T>(arr: T[], newItems: T[], getKey?: (item: T) => string) {
+	var indexArray = detectReorder(arr, newItems, getKey);
 	if (indexArray !== undefined) {
 		tryReorder(arr, indexArray);
 	}

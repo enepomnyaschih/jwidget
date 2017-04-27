@@ -19,8 +19,8 @@
 */
 
 import Listenable from './Listenable';
-import {apply, destroy, iid} from './index';
-import {CollectionFlags, SILENT, ADAPTER} from './index';
+import {apply, destroy, CollectionFlags, SILENT, ADAPTER} from './index';
+import {vid, VidSet} from './internal';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import Event from './Event';
@@ -159,28 +159,31 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	private _changeEvent  : IEvent<IMap.EventParams<T>>;
 
 	/**
-	 * Function which returns unique key of an item in this collection.
-	 * [[detectReindex]],
-	 * [[performReindex]] algorithms.
-	 * Defaults to [[iid]], so
-	 * if collection contains instances of JW.Class, you are in a good shape.
-	 */
-	getKey: (item: T) => any;
-
-	/**
 	 * @param json Initial map contents.
 	 * @param adapter Set to true to wrap the **items** rather than copying them into
 	 * a new map.
 	 */
 	constructor(silent?: boolean);
-	constructor(items: Dictionary<T>, flags: CollectionFlags);
-	constructor(a?: any, b?: CollectionFlags) {
-		const valued = (typeof a !== "boolean");
-		const silent = Boolean(valued ? (b & SILENT) : a);
-		const adapter = valued && Boolean(b & ADAPTER);
-		const items: Dictionary<T> = (valued && a) ? a : {};
+	constructor(getKey: (item: T) => string, silent?: boolean);
+	constructor(items: Dictionary<T>, flags?: CollectionFlags);
+	constructor(items: Dictionary<T>, getKey: (item: T) => string, flags?: CollectionFlags);
+	constructor(a?: any, b?: any, c?: CollectionFlags) {
+		if (typeof a === "number") {
+			c = a;
+			a = null;
+		} else if (typeof a === "function") {
+			c = b;
+			b = a;
+			a = null;
+		} else if (typeof b === "number") {
+			c = b;
+			b = null;
+		}
+		const items: Dictionary<T> = a;
+		const silent = Boolean(c & SILENT);
+		const adapter = (items != null) && Boolean(c & ADAPTER);
 
-		super(silent);
+		super(silent, b || vid);
 		this._adapter = adapter;
 		this._items = this._adapter ? items : apply<T>({}, items);
 		this._length.set(DictionaryUtils.getLength(this._items));
@@ -398,14 +401,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	toList(): IList<T> {
-		return new List<T>(this.toArray(), SILENT | ADAPTER);
+		return new List<T>(this.toArray(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	asList(): IList<T> {
-		return new List<T>(this.asArray(), SILENT | ADAPTER);
+		return new List<T>(this.asArray(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -419,7 +422,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	toMap(): IMap<T> {
-		return new Map<T>(this.toDictionary(), SILENT | ADAPTER);
+		return new Map<T>(this.toDictionary(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -439,15 +442,15 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSet(): ISet<any> {
-		return new Set<any>(this.toSet(), SILENT | ADAPTER);
+	toSet(): ISet<T> {
+		return new Set<T>(this.toArray(), this.getKey, true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	asSet(): ISet<any> {
-		return new Set<any>(this.toSet(), SILENT | ADAPTER);
+	asSet(): ISet<T> {
+		return new Set<T>(this.toArray(), this.getKey, true);
 	}
 
 	/**
@@ -598,9 +601,10 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	removeItems(items: T[]) {
-		const itemSet = ArrayUtils.index(items, iid);
+		const itemSet = new VidSet<T>(this.getKey);
+		items.forEach(itemSet.add, itemSet);
 		const newItems = DictionaryUtils.filter(this._items, function (item) {
-			return !itemSet.hasOwnProperty((<any>item).iid);
+			return !itemSet.contains(item);
 		});
 		this.performSplice(newItems);
 	}
@@ -710,8 +714,8 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @returns **keyMap** argument of [[reindex]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): Dictionary<string> {
-		return DictionaryUtils.detectReindex(this._items, newItems, getKey || this.getKey, scope || this);
+	detectReindex(newItems: Dictionary<T>): Dictionary<string> {
+		return DictionaryUtils.detectReindex(this._items, newItems, this.getKey);
 	}
 
 	/**
@@ -735,8 +739,8 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * If collection consists of instances of JW.Class, then you are in a good shape.
 	 * @param scope **getKey** call scope. Defaults to collection itself.
 	 */
-	performReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any) {
-		var keyMap = this.detectReindex(newItems, getKey, scope);
+	performReindex(newItems: Dictionary<T>) {
+		var keyMap = this.detectReindex(newItems);
 		if (keyMap !== undefined) {
 			this.tryReindex(keyMap);
 		}

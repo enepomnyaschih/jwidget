@@ -19,7 +19,6 @@
 */
 
 import AbstractCollectionLister from './AbstractCollectionLister';
-import Identifiable from '../Identifiable';
 import IList from '../IList';
 import ISet from '../ISet';
 import Set from '../Set';
@@ -27,7 +26,7 @@ import Set from '../Set';
 /**
  * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Array]].
  */
-export default class ListLister<T extends Identifiable> extends AbstractCollectionLister<T> {
+export default class ListLister<T> extends AbstractCollectionLister<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -57,7 +56,7 @@ export default class ListLister<T extends Identifiable> extends AbstractCollecti
 	}
 }
 
-export function listToSet<T extends Identifiable>(source: IList<T>): ISet<T> {
+export function listToSet<T>(source: IList<T>): ISet<T> {
 	if (source.silent) {
 		return source.toSet();
 	}

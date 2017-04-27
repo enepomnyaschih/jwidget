@@ -18,11 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {apply, cmp, iid} from './index';
-import {isDictionaryEmpty} from './internal';
-import * as ArrayUtils from './ArrayUtils';
+import {apply, cmp} from './index';
+import {isDictionaryEmpty, VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
-import Identifiable from './Identifiable';
 import IMap from './IMap';
 import Some from './Some';
 
@@ -519,10 +517,11 @@ export function tryRemoveAll<T>(map: Dictionary<T>, keys: string[]): Dictionary<
  * Removes all occurrences of items in collection.
  * **Known issue:** *Works only if T extends JW.Class!*
  */
-export function removeItems<T extends Identifiable>(map: Dictionary<T>, items: T[]) {
-	var itemSet = ArrayUtils.index(items, iid);
-	var newItems = filter(map, function (item) {
-		return !itemSet.hasOwnProperty(String(item.iid));
+export function removeItems<T>(map: Dictionary<T>, items: T[], getKey?: (item: T) => string) {
+	const itemSet = new VidSet<T>(getKey);
+	items.forEach(itemSet.add, itemSet);
+	const newItems = filter(map, function (item) {
+		return !itemSet.contains(item);
 	});
 	performSplice(map, newItems);
 }
@@ -674,16 +673,14 @@ export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>
  * @returns **keyMap** argument of [[reindex]] method.
  * If no method call required, returns undefined.
  */
-export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): Dictionary<string> {
-	getKey = getKey || iid;
-	scope = scope || oldItems;
-	var newItemKeys: Dictionary<string> = {};
+export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => string): Dictionary<string> {
+	const newItemKeys = new VidMap<T, string>(getKey)
 	for (var key in newItems) {
-		newItemKeys[getKey.call(scope, newItems[key])] = key;
+		newItemKeys.put(newItems[key], key);
 	}
 	var keyMap: Dictionary<string> = {};
 	for (var oldKey in oldItems) {
-		var newKey = newItemKeys[getKey.call(scope, oldItems[oldKey])];
+		var newKey = newItemKeys.get(oldItems[oldKey]);
 		if (oldKey !== newKey) {
 			keyMap[oldKey] = newKey;
 		}
@@ -715,8 +712,8 @@ export function performSplice<T>(map: Dictionary<T>, newItems: Dictionary<T>) {
  * If collection consists of instances of JW.Class, then you are in a good shape.
  * @param scope **getKey** call scope. Defaults to collection itself.
  */
-export function performReindex<T>(map: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any) {
-	var keyMap = detectReindex(map, newItems, getKey, scope);
+export function performReindex<T>(map: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => string) {
+	var keyMap = detectReindex(map, newItems, getKey);
 	if (keyMap !== undefined) {
 		tryReindex(map, keyMap);
 	}

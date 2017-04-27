@@ -167,6 +167,11 @@ interface ICollection<T> extends IClass {
 	readonly silent: boolean;
 
 	/**
+	 * Identifies an item in this collection for optimization of some algorithms.
+	 */
+	readonly getKey: (item: T) => string;
+
+	/**
 	 * Collection length property.
 	 */
 	readonly length: Bindable<number>;

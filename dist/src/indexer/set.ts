@@ -19,7 +19,6 @@
 */
 
 import AbstractCollectionIndexer from './AbstractCollectionIndexer';
-import Identifiable from '../Identifiable';
 import IMap from '../IMap';
 import ISet from '../ISet';
 import Map from '../Map';
@@ -27,7 +26,7 @@ import Map from '../Map';
 /**
  * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Set]].
  */
-export default class SetIndexer<T extends Identifiable> extends AbstractCollectionIndexer<T> {
+export default class SetIndexer<T> extends AbstractCollectionIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -55,7 +54,7 @@ export default class SetIndexer<T extends Identifiable> extends AbstractCollecti
 	}
 }
 
-export function indexSet<T extends Identifiable>(source: ISet<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
+export function indexSet<T>(source: ISet<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
