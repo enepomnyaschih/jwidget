@@ -373,7 +373,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	containsItem(item: T): boolean {
+	contains(item: T): boolean {
 		return ArrayUtils.containsItem(this._items, item);
 	}
 

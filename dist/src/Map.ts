@@ -302,7 +302,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	containsItem(item: T): boolean {
+	contains(item: T): boolean {
 		return DictionaryUtils.containsItem(this._items, item);
 	}
 

@@ -229,7 +229,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	containsItem(item: T): boolean;
+	contains(item: T): boolean;
 
 	/**
 	 * @inheritdoc

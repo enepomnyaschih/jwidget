@@ -211,7 +211,7 @@ interface ICollection<T> extends IClass {
 	/**
 	 * Checks item for existence in collection.
 	 */
-	containsItem(item: T): boolean;
+	contains(item: T): boolean;
 
 	/**
 	 * Removes first occurrence of an item in collection.

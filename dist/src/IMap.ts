@@ -182,7 +182,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	containsItem(item: T): boolean;
+	contains(item: T): boolean;
 
 	/**
 	 * @inheritdoc

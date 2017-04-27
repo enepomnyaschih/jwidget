@@ -137,7 +137,7 @@ interface ISet<T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	containsItem(item: T): boolean;
+	contains(item: T): boolean;
 
 	/**
 	 * Shorthand to [[containsItem]].

@@ -237,13 +237,6 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	containsItem(item: T): boolean {
-		return this._items.contains(item);
-	}
-
-	/**
-	 * Shorthand to [[containsItem]].
-	 */
 	contains(item: T): boolean {
 		return this._items.contains(item);
 	}

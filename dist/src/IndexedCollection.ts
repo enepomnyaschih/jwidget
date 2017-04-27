@@ -167,7 +167,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	containsItem(item: T): boolean {
+	contains(item: T): boolean {
 		return !this.every(function (v: T): boolean {
 			return item !== v;
 		});

@@ -323,7 +323,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	/**
 	 * Checks item for existance in collection.
 	 */
-	abstract containsItem(item: T): boolean;
+	abstract contains(item: T): boolean;
 
 	/**
 	 * Removes first occurrence of an item in collection.

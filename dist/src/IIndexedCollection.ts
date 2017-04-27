@@ -135,7 +135,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	containsItem(item: T): boolean;
+	contains(item: T): boolean;
 
 	/**
 	 * Returns key of item in collection. If such item doesn't exist, returns undefined.
