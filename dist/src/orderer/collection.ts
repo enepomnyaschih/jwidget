@@ -23,19 +23,18 @@ import {default as MapOrderer, mapToList} from './map';
 import {default as SetOrderer, setToList} from './set';
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
 import IList from '../IList';
-import IClass from '../IClass';
 import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createOrderer<T extends IClass>(source: ICollection<T>, config: AbstractCollectionOrderer.Config<T>): AbstractCollectionOrderer<T> {
+export function createOrderer<T>(source: ICollection<T>, config: AbstractCollectionOrderer.Config<T>): AbstractCollectionOrderer<T> {
 	return (source instanceof List) ? new ListOrderer(source, config) :
 		(source instanceof Map) ? new MapOrderer(source, config) :
 		(source instanceof Set) ? new SetOrderer(source, config) : null;
 }
 
-export function collectionToList<T extends IClass>(source: ICollection<T>): IList<T> {
+export function collectionToList<T>(source: ICollection<T>): IList<T> {
 	return (source instanceof List) ? listToList(source) :
 		(source instanceof Map) ? mapToList(source) :
 		(source instanceof Set) ? setToList(source) : null;

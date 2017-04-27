@@ -59,7 +59,7 @@ export function mapToSet<T>(source: IMap<T>): ISet<T> {
 	if (source.silent) {
 		return source.toSet();
 	}
-	const result = new Set<T>();
+	const result = new Set<T>(source.getKey);
 	return result.owning(new MapLister<T>(source, {
 		target: result
 	}));

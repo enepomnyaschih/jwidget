@@ -21,7 +21,6 @@
 import {VidSet} from '../internal';
 import Class from '../Class';
 import IList from '../IList';
-import IClass from '../IClass';
 import ICollection from '../ICollection';
 import IndexItems from '../IndexItems';
 import List from '../List';
@@ -87,7 +86,7 @@ import List from '../List';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionOrderer<T extends IClass> extends Class {
+abstract class AbstractCollectionOrderer<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -105,7 +104,7 @@ abstract class AbstractCollectionOrderer<T extends IClass> extends Class {
 	constructor(readonly source: ICollection<T>, config: AbstractCollectionOrderer.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
+		this.target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
 		this.target.tryAddAll(source.asArray());
 	}
 
@@ -144,7 +143,7 @@ namespace AbstractCollectionOrderer {
 	 *
 	 * @param T Collection item type.
 	 */
-	export interface Config<T extends IClass> {
+	export interface Config<T> {
 		/**
 		 * Target array. By default, created automatically.
 		 */

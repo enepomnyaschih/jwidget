@@ -21,14 +21,14 @@
 import {destroy} from '../index';
 import {VidMap} from '../internal';
 import AbstractCollectionMapper from './AbstractCollectionMapper';
-import IClass from '../IClass';
+import Destroyable from '../Destroyable';
 import ISet from '../ISet';
 import Set from '../Set';
 
 /**
  * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Set]].
  */
-class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMapper<T, U> {
+class SetMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
@@ -53,7 +53,7 @@ class SetMapper<T extends IClass, U extends IClass> extends AbstractCollectionMa
 		super(source, config);
 		this._items = new VidMap<T, U>(source.getKey);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Set<U>(this.source.silent) : config.target;
+		this.target = this._targetCreated ? new Set<U>(config.getKey, this.source.silent) : config.target;
 		this.target.tryAddAll(this._createItems(source.toArray()));
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -119,7 +119,7 @@ namespace SetMapper {
 	/**
 	 * @inheritdoc
 	 */
-	export interface Config<T extends IClass, U extends IClass> extends AbstractCollectionMapper.Config<T, U> {
+	export interface Config<T, U> extends AbstractCollectionMapper.Config<T, U> {
 		/**
 		 * @inheritdoc
 		 */
@@ -127,11 +127,12 @@ namespace SetMapper {
 	}
 }
 
-export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, map: (item: T) => U, scope?: any): ISet<U> {
+export function mapSet<T, U>(source: ISet<T>,
+		map: (item: T) => U, scope?: any, getKey?: (item: U) => string): ISet<U> {
 	if (source.silent) {
-		return source.map(map, scope);
+		return source.map(map, scope, getKey);
 	}
-	const result = new Set<U>();
+	const result = new Set<U>(getKey);
 	return result.owning(new SetMapper<T, U>(source, {
 		target: result,
 		create: map,
@@ -139,11 +140,12 @@ export function mapSet<T extends IClass, U extends IClass>(source: ISet<T>, map:
 	}));
 }
 
-export function mapDestroyableSet<T extends IClass, U extends IClass>(source: ISet<T>, create: (item: T) => U, scope?: any): ISet<U> {
+export function mapDestroyableSet<T, U extends Destroyable>(source: ISet<T>,
+		create: (item: T) => U, scope?: any, getKey?: (item: U) => string): ISet<U> {
 	if (source.silent) {
-		return source.map(create, scope).ownItems();
+		return source.map(create, scope, getKey).ownItems();
 	}
-	const result = new Set<U>();
+	const result = new Set<U>(getKey);
 	return result.owning(new SetMapper<T, U>(source, {
 		target: result,
 		create: create,

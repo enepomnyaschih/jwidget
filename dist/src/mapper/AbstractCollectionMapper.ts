@@ -183,5 +183,10 @@ namespace AbstractCollectionMapper {
 		 * Defaults to synchronizer itself.
 		 */
 		readonly scope?: any;
+
+		/**
+		 * Identifies an item in the auto-created target collection for optimization of some algorithms.
+		 */
+		readonly getKey?: (item: U) => string;
 	}
 }

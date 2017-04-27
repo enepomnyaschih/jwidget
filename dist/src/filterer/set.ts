@@ -44,7 +44,7 @@ class SetFilterer<T> extends AbstractCollectionFilterer<T> {
 	constructor(source: ISet<T>, config: SetFilterer.Config<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Set<T>(this.source.silent) : config.target;
+		this.target = this._targetCreated ? new Set<T>(source.getKey, this.source.silent) : config.target;
 		this.target.tryAddAll(source.toList().items.filter(this._test, this._scope));
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -91,7 +91,7 @@ export function filterSet<T>(source: ISet<T>, test: (item: T) => boolean, scope?
 	if (source.silent) {
 		return source.filter(test, scope);
 	}
-	const result = new Set<T>();
+	const result = new Set<T>(source.getKey);
 	return result.owning(new SetFilterer<T>(source, {
 		target: result,
 		test: test,

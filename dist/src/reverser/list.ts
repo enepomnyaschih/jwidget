@@ -102,7 +102,7 @@ class ListReverser<T> extends Class {
 	constructor(readonly source: IList<T>, config: ListReverser.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new List<T>(source.silent) : config.target;
+		this.target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
 		this.target.tryAddAll(this._reverse(source.items));
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
@@ -203,7 +203,7 @@ export function reverseList<T>(source: IList<T>): IList<T> {
 	if (source.silent) {
 		return source.$toReversed();
 	}
-	const result = new List<T>();
+	const result = new List<T>(source.getKey);
 	return result.owning(new ListReverser<T>(source, {
 		target: result
 	}));

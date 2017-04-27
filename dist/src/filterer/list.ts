@@ -54,7 +54,7 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 	constructor(source: IList<T>, config: ListFilterer.Config<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new List<T>(this.source.silent) : config.target;
+		this.target = this._targetCreated ? new List<T>(this.source.getKey, this.source.silent) : config.target;
 		this._splice([], [new IndexItems(0, this.source.items)]);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
@@ -342,7 +342,7 @@ export function filterList<T>(source: IList<T>, test: (item: T) => boolean, scop
 	if (source.silent) {
 		return source.filter(test, scope);
 	}
-	const result = new List<T>();
+	const result = new List<T>(source.getKey);
 	return result.owning(new ListFilterer<T>(source, {
 		target: result,
 		test: test,

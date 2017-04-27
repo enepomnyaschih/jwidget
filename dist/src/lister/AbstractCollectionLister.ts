@@ -113,7 +113,7 @@ abstract class AbstractCollectionLister<T> extends Class {
 	constructor(readonly source: ICollection<T>, config: AbstractCollectionLister.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Set<T>(source.silent) : config.target;
+		this.target = this._targetCreated ? new Set<T>(source.getKey, source.silent) : config.target;
 		this.target.tryAddAll(source.asArray());
 	}
 

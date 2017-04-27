@@ -58,7 +58,7 @@ export function indexSet<T>(source: ISet<T>, getKey: (item: T) => any, scope?: a
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
-	const result = new Map<T>();
+	const result = new Map<T>(source.getKey);
 	return result.owning(new SetIndexer<T>(source, {
 		target: result,
 		getKey: getKey,

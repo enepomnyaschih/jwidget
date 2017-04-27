@@ -48,7 +48,7 @@ class MapMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	constructor(source: IMap<T>, config: MapMapper.Config<T, U>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Map<U>(this.source.silent) : config.target;
+		this.target = this._targetCreated ? new Map<U>(config.getKey, this.source.silent) : config.target;
 		this.target.trySetAll(this._createItems(source.items));
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.reindexEvent.listen(this._onReindex, this));
@@ -119,11 +119,12 @@ namespace MapMapper {
 	}
 }
 
-export function mapMap<T, U>(source: IMap<T>, map: (item: T) => U, scope?: any): IMap<U> {
+export function mapMap<T, U>(source: IMap<T>,
+		map: (item: T) => U, scope?: any, getKey?: (item: U) => string): IMap<U> {
 	if (source.silent) {
-		return source.map(map, scope);
+		return source.map(map, scope, getKey);
 	}
-	const result = new Map<U>();
+	const result = new Map<U>(getKey);
 	return result.owning(new MapMapper<T, U>(source, {
 		target: result,
 		create: map,
@@ -131,11 +132,12 @@ export function mapMap<T, U>(source: IMap<T>, map: (item: T) => U, scope?: any):
 	}));
 }
 
-export function mapDestroyableMap<T, U extends Destroyable>(source: IMap<T>, create: (item: T) => U, scope?: any): IMap<U> {
+export function mapDestroyableMap<T, U extends Destroyable>(source: IMap<T>,
+		create: (item: T) => U, scope?: any, getKey?: (item: U) => string): IMap<U> {
 	if (source.silent) {
-		return source.map(create, scope).ownItems();
+		return source.map(create, scope, getKey).ownItems();
 	}
-	const result = new Map<U>();
+	const result = new Map<U>(getKey);
 	return result.owning(new MapMapper<T, U>(source, {
 		target: result,
 		create: create,

@@ -58,7 +58,7 @@ export function indexMap<T>(source: IMap<T>, getKey: (item: T) => any, scope?: a
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
-	const result = new Map<T>();
+	const result = new Map<T>(source.getKey);
 	return result.owning(new MapIndexer<T>(source, {
 		target: result,
 		getKey: getKey,

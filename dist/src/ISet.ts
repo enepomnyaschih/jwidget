@@ -172,7 +172,7 @@ interface ISet<T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T) => U, scope?: any): ISet<U>;
+	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ISet<U>;
 
 	/**
 	 * @inheritdoc

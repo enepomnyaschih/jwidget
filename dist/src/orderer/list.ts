@@ -21,7 +21,6 @@
 import {VidSet} from '../internal';
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
 import IList from '../IList';
-import IClass from '../IClass';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
@@ -29,7 +28,7 @@ import List from '../List';
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Array]].
  */
-export default class ListOrderer<T extends IClass> extends AbstractCollectionOrderer<T> {
+export default class ListOrderer<T> extends AbstractCollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -64,11 +63,11 @@ export default class ListOrderer<T extends IClass> extends AbstractCollectionOrd
 	}
 }
 
-export function listToList<T extends IClass>(source: IList<T>): IList<T> {
+export function listToList<T>(source: IList<T>): IList<T> {
 	if (source.silent) {
 		return source.toList();
 	}
-	const result = new List<T>();
+	const result = new List<T>(source.getKey);
 	return result.owning(new ListOrderer<T>(source, {
 		target: result
 	}));

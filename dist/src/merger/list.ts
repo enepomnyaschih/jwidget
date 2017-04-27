@@ -22,7 +22,6 @@ import {SILENT, ADAPTER} from '../index';
 import {mapDestroyableList} from '../mapper/list';
 import Class from '../Class';
 import IList from '../IList';
-import IClass from '../IClass';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
@@ -98,7 +97,7 @@ import * as ArrayUtils from '../ArrayUtils';
  */
 class ListMerger<T> extends Class {
 	private _targetCreated: boolean;
-	private _bunches: IList<IClass>;
+	private _bunches: IList<Bunch<T>>;
 
 	/**
 	 * Target array.
@@ -115,7 +114,7 @@ class ListMerger<T> extends Class {
 	constructor(readonly source: IList<IList<T>>, config: ListMerger.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? this._createTarget(source) : config.target;
+		this.target = this._targetCreated ? this._createTarget(source, config.getKey) : config.target;
 		this._bunches = mapDestroyableList(source, (bunch) => new Bunch(this.source, this.target, bunch));
 		this.target.tryAddAll(this._getAllItems());
 		this.own(source.spliceEvent.listen(this._onSplice, this));
@@ -138,8 +137,8 @@ class ListMerger<T> extends Class {
 		super.destroyObject();
 	}
 
-	private _createTarget(source: IList<IList<T>>): IList<T> {
-		return new List<T>(source.silent && source.every((item) => item.silent));
+	private _createTarget(source: IList<IList<T>>, getKey: (item: T) => string): IList<T> {
+		return new List<T>(getKey, source.silent && source.every((item) => item.silent));
 	}
 
 	private _getAllItems(): T[] {
@@ -280,34 +279,30 @@ namespace ListMerger {
 		 * Target array. By default, created automatically.
 		 */
 		readonly target?: IList<T>;
+
+		/**
+		 * Identifies an item in the auto-created target collection for optimization of some algorithms.
+		 */
+		readonly getKey?: (item: T) => string;
 	}
 }
 
-export function mergeLists<T>(source: IList<IList<T>>): IList<T> {
-	if (source.silent) {
-		if (source.every((item) => item.silent)) {
-			return $mergeNoSync(source);
-		}
-		const result = new List<T>();
-		result.own(new ListMerger<T>(source, {
-			target: result
-		}));
-		return result;
+export function mergeLists<T>(source: IList<IList<T>>, getKey?: (item: T) => string): IList<T> {
+	if (source.silent && source.every((item) => item.silent)) {
+		return $mergeNoSync(source, getKey);
 	}
-	const result = new List<T>();
+	const result = new List<T>(getKey);
 	return result.owning(new ListMerger<T>(source, {
 		target: result
 	}));
 }
 
 export function mergeNoSync<T>(source: IList<IList<T>>): T[] {
-	return ArrayUtils.merge(source.items.map(function(item: any): any[] {
-		return item.items;
-	}));
+	return ArrayUtils.merge(source.items.map((item) => item.items));
 }
 
-export function $mergeNoSync<T>(source: IList<IList<T>>): IList<T> {
-	return new List(mergeNoSync(source), SILENT & ADAPTER);
+export function $mergeNoSync<T>(source: IList<IList<T>>, getKey?: (item: T) => string): IList<T> {
+	return new List(mergeNoSync(source), getKey, SILENT & ADAPTER);
 }
 
 class Bunch<T> extends Class {

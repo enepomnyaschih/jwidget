@@ -21,7 +21,6 @@
 import {VidSet} from '../internal';
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
 import IList from '../IList';
-import IClass from '../IClass';
 import IMap from '../IMap';
 import List from '../List';
 import * as DictionaryUtils from '../DictionaryUtils';
@@ -29,7 +28,7 @@ import * as DictionaryUtils from '../DictionaryUtils';
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Map]].
  */
-export default class MapOrderer<T extends IClass> extends AbstractCollectionOrderer<T> {
+export default class MapOrderer<T> extends AbstractCollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -57,11 +56,11 @@ export default class MapOrderer<T extends IClass> extends AbstractCollectionOrde
 	}
 }
 
-export function mapToList<T extends IClass>(source: IMap<T>): IList<T> {
+export function mapToList<T>(source: IMap<T>): IList<T> {
 	if (source.silent) {
 		return source.toList();
 	}
-	const result = new List<T>();
+	const result = new List<T>(source.getKey);
 	return result.owning(new MapOrderer<T>(source, {
 		target: result
 	}));

@@ -45,7 +45,7 @@ class MapFilterer<T> extends AbstractCollectionFilterer<T> {
 	constructor(source: IMap<T>, config: MapFilterer.Config<T>) {
 		super(source, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Map<T>(this.source.silent) : config.target;
+		this.target = this._targetCreated ? new Map<T>(source.getKey, this.source.silent) : config.target;
 		this.target.trySetAll(DictionaryUtils.filter(source.items, this._test, this._scope));
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.reindexEvent.listen(this._onReindex, this));
@@ -97,7 +97,7 @@ export function filterMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?
 	if (source.silent) {
 		return source.filter(test, scope);
 	}
-	const result = new Map<T>();
+	const result = new Map<T>(source.getKey);
 	return result.owning(new MapFilterer<T>(source, {
 		target: result,
 		test: test,

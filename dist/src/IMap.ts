@@ -222,7 +222,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U>;
+	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => string): IMap<U>;
 
 	/**
 	 * @inheritdoc

@@ -296,7 +296,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	$getKeys(): IList<string> {
-		return new List<string>(this.getKeys(), SILENT | ADAPTER);
+		return new List<string>(this.getKeys(), String, SILENT | ADAPTER);
 	}
 
 	/**
@@ -324,7 +324,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSorted(callback, scope, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -338,7 +338,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSortedComparing(compare, scope, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -352,7 +352,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<string> {
-		return new List<string>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
+		return new List<string>(this.getSortingKeys(callback, scope, order), String, SILENT | ADAPTER);
 	}
 
 	/**
@@ -366,14 +366,14 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<string> {
-		return new List<string>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
+		return new List<string>(this.getSortingKeysComparing(compare, scope, order), String, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T> {
-		return new Map<T>(DictionaryUtils.filter(this._items, callback, scope || this), SILENT | ADAPTER);
+		return new Map<T>(DictionaryUtils.filter(this._items, callback, scope || this), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -386,15 +386,15 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, key: string) => U, scope?: any): IMap<U> {
-		return new Map<U>(DictionaryUtils.map(this._items, callback, scope || this), SILENT | ADAPTER);
+	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => string): IMap<U> {
+		return new Map<U>(DictionaryUtils.map(this._items, callback, scope || this), getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T, key: string) => string, scope?: any): IMap<T> {
-		return new Map<T>(this.index(callback, scope), SILENT | ADAPTER);
+		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**

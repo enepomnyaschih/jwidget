@@ -20,14 +20,13 @@
 
 import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
 import IList from '../IList';
-import IClass from '../IClass';
 import ISet from '../ISet';
 import List from '../List';
 
 /**
  * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Set]].
  */
-export default class SetSorterComparing<T extends IClass> extends AbstractCollectionSorterComparing<T> {
+export default class SetSorterComparing<T> extends AbstractCollectionSorterComparing<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -52,11 +51,11 @@ export default class SetSorterComparing<T extends IClass> extends AbstractCollec
 	}
 }
 
-export function sortSetComparing<T extends IClass>(source: ISet<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
+export function sortSetComparing<T>(source: ISet<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(compare, scope);
 	}
-	const result = new List<T>();
+	const result = new List<T>(source.getKey);
 	return result.owning(new SetSorterComparing<T>(source, {
 		target: result,
 		compare: compare,

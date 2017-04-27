@@ -266,7 +266,7 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSorted(callback, scope, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -280,21 +280,21 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSortedComparing(compare, scope, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T) => string, scope?: any): IMap<T> {
-		return new Map<T>(this.index(callback, scope), SILENT | ADAPTER);
+		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
-		return new Set<T>(this._items.values.filter(callback, scope), true);
+		return new Set<T>(this._items.values.filter(callback, scope), this.getKey, true);
 	}
 
 	/**
@@ -307,29 +307,29 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T) => U, scope?: any): ISet<U> {
-		return new Set<U>(this._items.values.map(callback, scope), true);
+	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ISet<U> {
+		return new Set<U>(this._items.values.map(callback, scope), getKey, true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toList(): IList<T> {
-		return new List<T>(this.toArray(), SILENT | ADAPTER);
+		return new List<T>(this.toArray(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	asList(): IList<T> {
-		return new List<T>(this.asArray(), SILENT | ADAPTER);
+		return new List<T>(this.asArray(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	toSet(): ISet<T> {
-		return new Set<T>(this._items.values, true);
+		return new Set<T>(this._items.values, this.getKey, true);
 	}
 
 	/**

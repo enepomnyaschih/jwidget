@@ -269,7 +269,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, index: number) => U, scope?: any): IList<U>;
+	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => string): IList<U>;
 
 	/**
 	 * @inheritdoc

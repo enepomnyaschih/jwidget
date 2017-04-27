@@ -21,14 +21,13 @@
 import {VidSet} from '../internal';
 import AbstractCollectionOrderer from './AbstractCollectionOrderer';
 import IList from '../IList';
-import IClass from '../IClass';
 import ISet from '../ISet';
 import List from '../List';
 
 /**
  * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Set]].
  */
-export default class SetOrderer<T extends IClass> extends AbstractCollectionOrderer<T> {
+export default class SetOrderer<T> extends AbstractCollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -55,11 +54,11 @@ export default class SetOrderer<T extends IClass> extends AbstractCollectionOrde
 	}
 }
 
-export function setToList<T extends IClass>(source: ISet<T>): IList<T> {
+export function setToList<T>(source: ISet<T>): IList<T> {
 	if (source.silent) {
 		return source.toList();
 	}
-	const result = new List<T>();
+	const result = new List<T>(source.getKey);
 	return result.owning(new SetOrderer<T>(source, {
 		target: result
 	}));

@@ -19,13 +19,12 @@
 */
 
 import AbstractCollectionObserver from './AbstractCollectionObserver';
-import IClass from '../IClass';
 import ISet from '../ISet';
 
 /**
  * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Set]].
  */
-export default class SetObserver<T extends IClass> extends AbstractCollectionObserver<T> {
+export default class SetObserver<T> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */

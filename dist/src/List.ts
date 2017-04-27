@@ -20,7 +20,7 @@
 
 import Listenable from './Listenable';
 import {destroy, CollectionFlags, SILENT, ADAPTER} from './index';
-import {vid} from './internal';
+import {vid, VidSet} from './internal';
 import Event from './Event';
 import IList from './IList';
 import IEvent from './IEvent';
@@ -367,7 +367,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	$getKeys(): IList<number> {
-		return new List<number>(this.getKeys(), SILENT | ADAPTER);
+		return new List<number>(this.getKeys(), String, SILENT | ADAPTER);
 	}
 
 	/**
@@ -395,7 +395,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	$toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSorted(callback, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSorted(callback, scope, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -409,7 +409,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSortedComparing(compare, scope, order), SILENT | ADAPTER);
+		return new List<T>(this.toSortedComparing(compare, scope, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -423,7 +423,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	$getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): IList<number> {
-		return new List<number>(this.getSortingKeys(callback, scope, order), SILENT | ADAPTER);
+		return new List<number>(this.getSortingKeys(callback, scope, order), String, SILENT | ADAPTER);
 	}
 
 	/**
@@ -437,21 +437,21 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number> {
-		return new List<number>(this.getSortingKeysComparing(compare, scope, order), SILENT | ADAPTER);
+		return new List<number>(this.getSortingKeysComparing(compare, scope, order), String, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	$index(callback: (item: T, key: number) => string, scope?: any): IMap<T> {
-		return new Map<T>(this.index(callback, scope), SILENT | ADAPTER);
+		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T> {
-		return new List<T>(this._items.filter(callback, scope || this), SILENT | ADAPTER);
+		return new List<T>(this._items.filter(callback, scope || this), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -464,8 +464,8 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, index: number) => U, scope?: any): IList<U> {
-		return new List<U>(this._items.map(callback, scope || this), SILENT | ADAPTER);
+	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => string): IList<U> {
+		return new List<U>(this._items.map(callback, scope || this), getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -479,7 +479,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	toList(): IList<T> {
-		return new List<T>(this.toArray(), SILENT | ADAPTER);
+		return new List<T>(this.toArray(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -640,7 +640,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @inheritdoc
 	 */
 	removeItems(items: T[]) {
-		const itemSet = new Set(items);
+		const itemSet = VidSet.fromArray<T>(items, this.getKey);
 		const newItems = this._items.filter((item) => !itemSet.contains(item));
 		this.performFilter(newItems);
 	}
@@ -948,7 +948,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @returns Reversed array.
 	 */
 	$toReversed(): IList<T> {
-		return new List(this.toReversed(), SILENT | ADAPTER);
+		return new List(this.toReversed(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
