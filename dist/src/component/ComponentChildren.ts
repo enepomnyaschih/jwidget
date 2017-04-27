@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {iidStr} from '../index';
 import Component from '../Component';
 import ComponentChild from './ComponentChild';
 import ComponentChildInserter from './ComponentChildInserter';
@@ -34,7 +35,7 @@ export default class ComponentChildren extends Map<Component> {
 	private target: ComponentChildInserter;
 
 	constructor(private component: Component) {
-		super(true);
+		super(iidStr, true);
 		this.target = new ComponentChildInserter();
 	}
 

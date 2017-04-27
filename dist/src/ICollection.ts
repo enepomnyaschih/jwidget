@@ -443,7 +443,7 @@ interface ICollection<T> extends IClass {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Mapped collection.
 	 */
-	map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
+	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ICollection<U>;
 }
 
 export default ICollection;

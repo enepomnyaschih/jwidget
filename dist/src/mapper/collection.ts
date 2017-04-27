@@ -34,14 +34,16 @@ export function createMapper<T, U>(source: ICollection<T>, config: AbstractColle
 		(source instanceof Set) ? new SetMapper(source, config) : null;
 }
 
-export function mapCollection<T, U>(source: ICollection<T>, map: (item: T) => U, scope?: any): ICollection<U> {
-	return (source instanceof List) ? mapList(source, map, scope) :
-		(source instanceof Map) ? mapMap(source, map, scope) :
-		(source instanceof Set) ? mapSet(source, map, scope) : null;
+export function mapCollection<T, U>(source: ICollection<T>,
+		map: (item: T) => U, scope?: any, getKey?: (item: U) => string): ICollection<U> {
+	return (source instanceof List) ? mapList(source, map, scope, getKey) :
+		(source instanceof Map) ? mapMap(source, map, scope, getKey) :
+		(source instanceof Set) ? mapSet(source, map, scope, getKey) : null;
 }
 
-export function mapDestroyableCollection<T, U extends Destroyable>(source: ICollection<T>, create: (item: T) => U, scope?: any): ICollection<U> {
-	return (source instanceof List) ? mapDestroyableList(source, create, scope) :
-		(source instanceof Map) ? mapDestroyableMap(source, create, scope) :
-		(source instanceof Set) ? mapDestroyableSet(source, create, scope) : null;
+export function mapDestroyableCollection<T, U extends Destroyable>(source: ICollection<T>,
+		create: (item: T) => U, scope?: any, getKey?: (item: U) => string): ICollection<U> {
+	return (source instanceof List) ? mapDestroyableList(source, create, scope, getKey) :
+		(source instanceof Map) ? mapDestroyableMap(source, create, scope, getKey) :
+		(source instanceof Set) ? mapDestroyableSet(source, create, scope, getKey) : null;
 }

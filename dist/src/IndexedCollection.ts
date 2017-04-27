@@ -448,7 +448,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	/**
 	 * @inheritdoc
 	 */
-	abstract map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
+	abstract map<U>(callback: (item: T, key: K) => U, scope?: any, getKey?: (item: U) => string): IIndexedCollection<K, U>;
 }
 
 export default IndexedCollection;

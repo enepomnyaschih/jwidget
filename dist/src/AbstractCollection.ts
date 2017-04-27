@@ -599,7 +599,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Mapped collection.
 	 */
-	abstract map<U>(callback: (item: T) => U, scope?: any): ICollection<U>;
+	abstract map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ICollection<U>;
 }
 
 export default AbstractCollection;

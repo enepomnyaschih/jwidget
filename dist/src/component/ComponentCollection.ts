@@ -40,7 +40,8 @@ export default class ComponentCollection extends Class {
 			},
 			destroy: (child) => {
 				this.parent._doneChild(child);
-			}
+			},
+			getKey: source.getKey
 		}));
 
 		this.own(new ComponentCollectionInserter(mapper.target, el[0]));

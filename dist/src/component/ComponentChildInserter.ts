@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {iidStr} from '../index';
 import ComponentChild from './ComponentChild';
 import Dictionary from '../Dictionary';
 import Map from '../Map';
@@ -30,7 +31,7 @@ import * as DictionaryUtils from '../DictionaryUtils';
  */
 export default class ComponentChildInserter extends Map<ComponentChild> {
 	constructor() {
-		super(true);
+		super(iidStr, true);
 	}
 
 	trySet(item: ComponentChild, key: string): Some<ComponentChild> {

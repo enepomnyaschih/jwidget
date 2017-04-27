@@ -19,6 +19,7 @@
 */
 
 import Dictionary from './Dictionary';
+import Identifiable from './Identifiable';
 
 /**
  * Checks if value is undefined.
@@ -308,6 +309,14 @@ let _lastIid = 0;
  */
 export function newIid() {
 	return ++_lastIid;
+}
+
+/**
+ * Returns object `iid` converted to a string. Can be used as `getKey` implementation
+ * for collections consisting of `Identifiable` objects only.
+ */
+export function iidStr(obj: Identifiable) {
+	return (obj === undefined) ? "u" : (obj === null) ? "n" : String(obj.iid);
 }
 
 /**

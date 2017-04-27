@@ -18,15 +18,19 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {newIid} from '../index';
 import Component from '../Component';
+import Identifiable from '../Identifiable';
 import * as DomUtils from '../DomUtils';
 
 /**
  * @hidden
  */
-export default class ComponentChild {
+export default class ComponentChild implements Identifiable {
 	private _name: string;
 	private _el: JQuery;
+
+	readonly iid = newIid();
 
 	constructor(private parent: Component, private child: Component) {}
 

@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {SILENT, ADAPTER} from '../index';
+import {iidStr, SILENT, ADAPTER} from '../index';
 import {mapDestroyableList} from '../mapper/list';
 import Class from '../Class';
 import IList from '../IList';
@@ -115,7 +115,8 @@ class ListMerger<T> extends Class {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? this._createTarget(source, config.getKey) : config.target;
-		this._bunches = mapDestroyableList(source, (bunch) => new Bunch(this.source, this.target, bunch));
+		this._bunches = mapDestroyableList<IList<T>, Bunch<T>>(source,
+			(bunch) => new Bunch<T>(this.source, this.target, bunch), null, iidStr);
 		this.target.tryAddAll(this._getAllItems());
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));

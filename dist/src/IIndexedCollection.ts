@@ -354,7 +354,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, key: K) => U, scope?: any): IIndexedCollection<K, U>;
+	map<U>(callback: (item: T, key: K) => U, scope?: any, getKey?: (item: U) => string): IIndexedCollection<K, U>;
 }
 
 export default IIndexedCollection;
