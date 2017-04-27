@@ -376,7 +376,7 @@ interface ICollection<T> extends IClass {
 	 * Builds new set consisting of collection items.
 	 * Requires T to extend JW.Class.
 	 */
-	toSet(): ISet<any>;
+	toSet(): ISet<T>;
 
 	/**
 	 * Represents collection as array.
@@ -410,7 +410,7 @@ interface ICollection<T> extends IClass {
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 * Requires T to implement [[IClass]].
 	 */
-	asSet(): ISet<any>;
+	asSet(): ISet<T>;
 
 	/**
 	 * Filters collection by criteria.

@@ -530,7 +530,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * Builds new set consisting of collection items.
 	 * Requires T to extend JW.Class.
 	 */
-	abstract toSet(): ISet<any>;
+	abstract toSet(): ISet<T>;
 
 	/**
 	 * Represents collection as array.
@@ -566,7 +566,7 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 * Requires T to extend JW.Class.
 	 */
-	abstract asSet(): ISet<any>;
+	abstract asSet(): ISet<T>;
 
 	/**
 	 * Filters collection by criteria.

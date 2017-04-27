@@ -160,7 +160,7 @@ class Mapper<T> extends Class {
 	/**
 	 * Source property.
 	 */
-	readonly sources: Bindable<any>[]
+	readonly sources: Bindable<any>[];
 
 	/**
 	 * @param config Configuration.
