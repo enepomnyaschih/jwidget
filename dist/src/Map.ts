@@ -18,7 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollection from './AbstractCollection';
+import Bindable from './Bindable';
+import Class from './Class';
 import Listenable from './Listenable';
 import {apply, destroy, CollectionFlags, SILENT, ADAPTER} from './index';
 import {vid, VidSet} from './internal';
@@ -28,8 +29,10 @@ import Event from './Event';
 import IList from './IList';
 import IEvent from './IEvent';
 import IMap from './IMap';
+import IProperty from './IProperty';
 import ISet from './ISet';
 import List from './List';
+import Property from './Property';
 import Some from './Some';
 import Set from './Set';
 import * as ArrayUtils from './ArrayUtils';
@@ -149,7 +152,9 @@ import * as DictionaryUtils from './DictionaryUtils';
  *
  * @param T Map item type.
  */
-class Map<T> extends AbstractCollection<T> implements IMap<T> {
+class Map<T> extends Class implements IMap<T> {
+	private _ownsItems: Boolean = false;
+	private _length: IProperty<number>;
 	private _adapter: boolean;
 	private _items: Dictionary<T>;
 
@@ -157,6 +162,11 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	private _reindexEvent : IEvent<IMap.ReindexEventParams<T>>;
 	private _clearEvent   : IEvent<IMap.ItemsEventParams<T>>;
 	private _changeEvent  : IEvent<IMap.EventParams<T>>;
+
+	/**
+	 * Identifies an item in this collection for optimization of some algorithms.
+	 */
+	readonly getKey: (item: T) => string;
 
 	/**
 	 * @param json Initial map contents.
@@ -168,6 +178,7 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	constructor(items: Dictionary<T>, flags?: CollectionFlags);
 	constructor(items: Dictionary<T>, getKey: (item: T) => string, flags?: CollectionFlags);
 	constructor(a?: any, b?: any, c?: CollectionFlags) {
+		super();
 		if (typeof a === "boolean") {
 			c = a ? SILENT : 0;
 			a = null;
@@ -183,10 +194,11 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 		const silent = Boolean(c & SILENT);
 		const adapter = (items != null) && Boolean(c & ADAPTER);
 
-		super(silent, b || vid);
+		this.getKey = b || vid;
+
 		this._adapter = adapter;
 		this._items = this._adapter ? items : apply<T>({}, items);
-		this._length.set(DictionaryUtils.getLength(this._items));
+		this._length = this.own(new Property(DictionaryUtils.getLength(this._items), silent));
 
 		this._spliceEvent  = Event.make<IMap.SpliceEventParams<T>>(this, silent);
 		this._reindexEvent = Event.make<IMap.ReindexEventParams<T>>(this, silent);
@@ -194,8 +206,34 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 		this._changeEvent  = Event.make<IMap.EventParams<T>>(this, silent);
 	}
 
+	protected destroyObject(): void {
+		this.clear();
+		super.destroyObject();
+	}
+
 	/**
-	 * @inheritdoc
+	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+	 */
+	get silent() {
+		return this.changeEvent.dummy;
+	}
+
+	/**
+	 * Collection length property.
+	 */
+	get length(): Bindable<number> {
+		return this._length;
+	}
+
+	/**
+	 * Checks collection for emptiness.
+	 */
+	get empty() {
+		return this.length.get() === 0;
+	}
+
+	/**
+	 * Returns first item in collection. If collection is empty, returns undefined.
 	 */
 	get first(): T {
 		return DictionaryUtils.getFirst(this._items);
@@ -271,10 +309,13 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
+	 * this collection. The item is destroyed when it leaves the
+	 * collection, and all items are destroyed on the collection destruction.
+	 * @returns this
 	 */
 	ownItems(): this {
-		super.ownItems();
+		this._ownsItems = true;
 		return this;
 	}
 
@@ -324,9 +365,7 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	 * Returns key of item in collection. If such item doesn't exist, returns undefined.
 	 */
 	keyOf(item: T): string {
-		return this.find(function (v: T): boolean {
-			return item === v;
-		});
+		return DictionaryUtils.keyOf(this._items, item);
 	}
 
 	/**
@@ -340,19 +379,24 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	some(callback: (item: T, key: string) => boolean, scope?: any): boolean {
-		return !this.every(function (item: T, key: string): boolean {
-			return callback.call(scope, item, key) === false;
-		});
+		return DictionaryUtils.some(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	each(callback: (item: T, key: string) => any, scope?: any) {
-		this.every(function (item: T, key: string): boolean {
-			callback.call(scope, item, key);
-			return true;
-		});
+		DictionaryUtils.each(this._items, callback, scope || this);
+	}
+
+	/**
+	 * Iterates collection items. Calls specified function for all items.
+	 *
+	 * @param callback Callback function.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 */
+	forEach(callback: (item: T, key: string) => any, scope?: any): void {
+		DictionaryUtils.each(this._items, callback, scope || this);
 	}
 
 	/**
@@ -367,30 +411,14 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	 * @returns Found item key or undefined.
 	 */
 	find(callback: (item: T, key: string) => boolean, scope?: any): string {
-		let result: string;
-		this.every(function (item: T, key: string): boolean {
-			if (callback.call(scope, item, key) !== false) {
-				result = key;
-				return false;
-			}
-			return true;
-		});
-		return result;
+		return DictionaryUtils.find(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	search(callback: (item: T, key: string) => boolean, scope: any = null): T {
-		let result: T;
-		this.every(function (item: T, key: string): boolean {
-			if (callback.call(scope, item, key) !== false) {
-				result = item;
-				return false;
-			}
-			return true;
-		});
-		return result;
+	search(callback: (item: T, key: string) => boolean, scope?: any): T {
+		return DictionaryUtils.search(this._items, callback, scope || this);
 	}
 
 	/**
@@ -474,15 +502,7 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	index(callback: (item: T, key: string) => string, scope?: any): Dictionary<T> {
-		var result: Dictionary<T> = {};
-		this.every(function (item, key) {
-			var k: string = callback.call(scope, item, key);
-			if (k != null) {
-				result[k] = item;
-			}
-			return true;
-		});
-		return result;
+		return DictionaryUtils.index(this._items, callback, scope || this);
 	}
 
 	/**
@@ -490,6 +510,15 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	 */
 	$index(callback: (item: T, key: string) => string, scope?: any): IMap<T> {
 		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
+	}
+
+	/**
+	 * Converts collection to array.
+	 *
+	 * Builds new array consisting of collection items.
+	 */
+	toArray(): T[] {
+		return DictionaryUtils.toArray(this._items);
 	}
 
 	/**
@@ -502,8 +531,8 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	asList(): IList<T> {
-		return new List<T>(this.asArray(), this.getKey, SILENT | ADAPTER);
+	toSet(): ISet<T> {
+		return new Set<T>(this.toArray(), this.getKey, true);
 	}
 
 	/**
@@ -514,24 +543,50 @@ class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	}
 
 	/**
+	 * Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately.
+	 * Else, executes [[toArray]] method.
+	 * This method works usually faster than [[toArray]],
+	 * but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 */
+	asArray(): T[] {
+		return this.toArray();
+	}
+
+	/**
+	 * Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately.
+	 * Else, executes [[toArray]] method.
+	 * This method works usually faster than [[toArray]],
+	 * but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 */
+	asList(): IList<T> {
+		return this.toList();
+	}
+
+	/**
+	 * Represents collection as set.
+	 *
+	 * If this collection is set, returns it immediately.
+	 * Else, executes [[toSet]] method.
+	 * This method works usually faster than [[toSet]],
+	 * but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 * Requires T to extend JW.Class.
+	 */
+	asSet(): ISet<T> {
+		return this.toSet();
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	asDictionary(): Dictionary<T> {
 		return this._items;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	toSet(): ISet<T> {
-		return new Set<T>(this.toArray(), this.getKey, true);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	asSet(): ISet<T> {
-		return new Set<T>(this.toArray(), this.getKey, true);
 	}
 
 	/**

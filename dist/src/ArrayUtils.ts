@@ -90,15 +90,7 @@ export function find<T>(arr: T[], callback: (item: T, index: number) => boolean,
  * @returns Found item or undefined.
  */
 export function search<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): T {
-	let result: T;
-	arr.every(function (item, index) {
-		if (callback.call(scope, item, index) !== false) {
-			result = item;
-			return false;
-		}
-		return true;
-	});
-	return result;
+	return arr[find(arr, callback, scope)];
 }
 
 /**

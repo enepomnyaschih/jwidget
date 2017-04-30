@@ -22,7 +22,6 @@
 
 import {apply, destroy, isBindable} from './index';
 import List from './List';
-import AbstractCollection from './AbstractCollection';
 import AbstractTemplate from './AbstractTemplate';
 import Class from './Class';
 import ComponentList from './component/ComponentList';
@@ -34,6 +33,8 @@ import DomTemplate from './DomTemplate';
 import IList from './IList';
 import ICollection from './ICollection';
 import HtmlTemplate from './HtmlTemplate';
+import Map from './Map';
+import Set from './Set';
 import TemplateOutput from './TemplateOutput';
 import Bindable from './Bindable';
 import * as DomUtils from './DomUtils';
@@ -273,7 +274,7 @@ export default class Component extends Class {
 				if (jwId === "root") {
 					if (result instanceof List) {
 						this.addList(result, jwId);
-					} else if (result instanceof AbstractCollection) {
+					} else if (result instanceof Map || result instanceof Set) {
 						this.addCollection(result, jwId);
 					}
 				} else {
@@ -283,7 +284,7 @@ export default class Component extends Class {
 						this.addReplaceable(result, jwId);
 					} else if (result instanceof List) {
 						this.addList(result, jwId);
-					} else if (result instanceof AbstractCollection) {
+					} else if (result instanceof Map || result instanceof Set) {
 						this.addCollection(result, jwId);
 					} else if (result === false) {
 						this.removeElement(jwId);

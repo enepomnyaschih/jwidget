@@ -18,17 +18,21 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from './Bindable';
 import Listenable from './Listenable';
 import {destroy, SILENT, ADAPTER} from './index';
 import {vid, VidSet} from './internal';
-import AbstractCollection from './AbstractCollection';
+import Class from './Class';
+import Dictionary from './Dictionary';
 import Event from './Event';
 import IList from './IList';
 import IEvent from './IEvent';
 import IMap from './IMap';
+import IProperty from './IProperty';
 import ISet from './ISet';
 import List from './List';
 import Map from './Map';
+import Property from './Property';
 import * as ArrayUtils from './ArrayUtils';
 
 /**
@@ -124,12 +128,19 @@ import * as ArrayUtils from './ArrayUtils';
  *
  * @param T Collection item type.
  */
-class Set<T> extends AbstractCollection<T> implements ISet<T> {
+class Set<T> extends Class implements ISet<T> {
+	private _ownsItems: Boolean = false;
+	private _length: IProperty<number>;
 	private _items: VidSet<T>
 
 	private _spliceEvent : IEvent<ISet.SpliceEventParams<T>>;
 	private _clearEvent  : IEvent<ISet.ItemsEventParams<T>>;
 	private _changeEvent : IEvent<ISet.EventParams<T>>;
+
+	/**
+	 * Identifies an item in this collection for optimization of some algorithms.
+	 */
+	readonly getKey: (item: T) => string;
 
 	/**
 	 * This constructor should be used to create a new set and copy the items into it.
@@ -141,6 +152,7 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	constructor(items: T[], silent?: boolean);
 	constructor(items: T[], getKey: (item: T) => string, silent?: boolean);
 	constructor(a?: any, b?: any, c?: boolean) {
+		super();
 		if (typeof a === "boolean") {
 			c = a;
 			a = null;
@@ -155,12 +167,40 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 		const items: T[] = a || [];
 		const silent: boolean = c || false;
 
-		super(silent, b || vid);
+		this.getKey = b || vid;
+
 		this._items = VidSet.fromArray<T>(items, this.getKey);
-		this._length.set(items.length);
+		this._length = this.own(new Property(items.length, silent));
+
 		this._spliceEvent = Event.make<ISet.SpliceEventParams<T>>(this, silent);
 		this._clearEvent  = Event.make<ISet.ItemsEventParams<T>>(this, silent);
 		this._changeEvent = Event.make<ISet.EventParams<T>>(this, silent);
+	}
+
+	protected destroyObject(): void {
+		this.clear();
+		super.destroyObject();
+	}
+
+	/**
+	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+	 */
+	get silent() {
+		return this.changeEvent.dummy;
+	}
+
+	/**
+	 * Collection length property.
+	 */
+	get length(): Bindable<number> {
+		return this._length;
+	}
+
+	/**
+	 * Checks collection for emptiness.
+	 */
+	get empty() {
+		return this.length.get() === 0;
 	}
 
 	/**
@@ -173,7 +213,7 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Returns first item in collection. If collection is empty, returns undefined.
 	 */
 	get first(): T {
 		let result: T;
@@ -230,7 +270,7 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	 * @inheritdoc
 	 */
 	ownItems(): this {
-		super.ownItems();
+		this._ownsItems = true;
 		return this;
 	}
 
@@ -253,6 +293,65 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	 */
 	every(callback: (item: T) => boolean, scope?: any): boolean {
 		return this._items.every(callback, scope);
+	}
+
+	/**
+	 * Matches each item against criteria.
+	 *
+	 * Returns true if callback returns !== false for some collection item.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param callback Criteria callback.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 */
+	some(callback: (item: T) => boolean, scope?: any): boolean {
+		return !this._items.every((item) => {
+			return callback.call(scope || this, item) === false;
+		});
+	}
+
+	/**
+	 * Alias for [[forEach]].
+	 */
+	each(callback: (item: T) => any, scope?: any) {
+		this._items.every((item) => {
+			callback.call(scope || this, item);
+			return true;
+		});
+	}
+
+	/**
+	 * Iterates collection items. Calls specified function for all items.
+	 *
+	 * @param callback Callback function.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 */
+	forEach(callback: (item: T) => any, scope?: any) {
+		this.each(callback, scope);
+	}
+
+	/**
+	 * Finds item matching criteria.
+	 *
+	 * Returns first item for which callback returns !== false.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param callback Criteria callback.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @returns Found item or undefined.
+	 */
+	search(callback: (item: T) => boolean, scope?: any): T {
+		let result: T;
+		this._items.every((item) => {
+			if (callback.call(scope || this, item) !== false) {
+				result = item;
+				return false;
+			}
+			return true;
+		});
+		return result;
 	}
 
 	/**
@@ -281,6 +380,27 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	 */
 	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T> {
 		return new List<T>(this.toSortedComparing(compare, scope, order), this.getKey, SILENT | ADAPTER);
+	}
+
+	/**
+	 * Indexes collection.
+	 *
+	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+	 *
+	 * @param callback Indexer function.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @returns Collection index.
+	 */
+	index(callback: (item: T) => string, scope?: any): Dictionary<T> {
+		const result: Dictionary<T> = {};
+		this._items.every((item) => {
+			const key: string = callback.call(scope || this, item);
+			if (key != null) {
+				result[key] = item;
+			}
+			return true;
+		});
+		return result;
 	}
 
 	/**
@@ -314,6 +434,13 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
+	toArray(): T[] {
+		return this._items.values.concat();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	toList(): IList<T> {
 		return new List<T>(this.toArray(), this.getKey, SILENT | ADAPTER);
 	}
@@ -321,15 +448,34 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	asList(): IList<T> {
-		return new List<T>(this.asArray(), this.getKey, SILENT | ADAPTER);
+	toSet(): ISet<T> {
+		return new Set<T>(this._items.values, this.getKey, true);
 	}
 
 	/**
-	 * @inheritdoc
+	 * Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately.
+	 * Else, executes [[toArray]] method.
+	 * This method works usually faster than [[toArray]],
+	 * but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
 	 */
-	toSet(): ISet<T> {
-		return new Set<T>(this._items.values, this.getKey, true);
+	asArray(): T[] {
+		return this.toArray();
+	}
+
+	/**
+	 * Represents collection as array.
+	 *
+	 * If this collection is array, returns it immediately.
+	 * Else, executes [[toArray]] method.
+	 * This method works usually faster than [[toArray]],
+	 * but please make sure that the returned array
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 */
+	asList(): IList<T> {
+		return this.toList();
 	}
 
 	/**

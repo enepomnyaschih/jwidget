@@ -21,17 +21,19 @@
 import Listenable from './Listenable';
 import {destroy, CollectionFlags, SILENT, ADAPTER} from './index';
 import {vid, VidSet} from './internal';
-import AbstractCollection from './AbstractCollection';
+import Class from './Class';
 import Dictionary from './Dictionary';
 import Event from './Event';
 import IList from './IList';
 import IEvent from './IEvent';
 import IMap from './IMap';
+import IProperty from './IProperty';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import ISet from './ISet';
 import ListSpliceResult from './ListSpliceResult';
 import Map from './Map';
+import Property from './Property';
 import Set from './Set';
 import Some from './Some';
 import Bindable from './Bindable';
@@ -175,7 +177,9 @@ import * as ArrayUtils from './ArrayUtils';
  *
  * @param T Array item type.
  */
-export default class List<T> extends AbstractCollection<T> implements IList<T> {
+export default class List<T> extends Class implements IList<T> {
+	private _ownsItems: Boolean = false;
+	private _length: IProperty<number>;
 	private _items: T[];
 
 	private _spliceEvent  : IEvent<IList.SpliceEventParams<T>>;
@@ -184,6 +188,11 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	private _reorderEvent : IEvent<IList.ReorderEventParams<T>>;
 	private _clearEvent   : IEvent<IList.ItemsEventParams<T>>;
 	private _changeEvent  : IEvent<IList.EventParams<T>>;
+
+	/**
+	 * Identifies an item in this collection for optimization of some algorithms.
+	 */
+	readonly getKey: (item: T) => string;
 
 	/**
 	 * @param items Initial array contents.
@@ -195,6 +204,7 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	constructor(items: T[], flags?: CollectionFlags);
 	constructor(items: T[], getKey: (item: T) => string, flags?: CollectionFlags);
 	constructor(a?: any, b?: any, c?: CollectionFlags) {
+		super();
 		if (typeof a === "boolean") {
 			c = a ? SILENT : 0;
 			a = null;
@@ -210,9 +220,10 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 		const silent = Boolean(c & SILENT);
 		const adapter = (items != null) && Boolean(c & ADAPTER);
 
-		super(silent, b || vid);
+		this.getKey = b || vid;
+
 		this._items = adapter ? items : items ? items.concat() : [];
-		this._length.set(this._items.length);
+		this._length = this.own(new Property(this._items.length, silent));
 
 		this._spliceEvent  = Event.make<IList.SpliceEventParams<T>>(this, silent);
 		this._replaceEvent = Event.make<IList.ReplaceEventParams<T>>(this, silent);
@@ -222,12 +233,34 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 		this._changeEvent  = Event.make<IList.EventParams<T>>(this, silent);
 	}
 
+	protected destroyObject(): void {
+		this.clear();
+		super.destroyObject();
+	}
+
+	/**
+	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+	 */
+	get silent() {
+		return this.changeEvent.dummy;
+	}
+
+	/**
+	 * Collection length property.
+	 */
 	get length(): Bindable<number> {
 		return this._length;
 	}
 
 	/**
-	 * @inheritdoc
+	 * Checks collection for emptiness.
+	 */
+	get empty() {
+		return this.length.get() === 0;
+	}
+
+	/**
+	 * Returns first item in collection. If collection is empty, returns undefined.
 	 */
 	get first(): T {
 		return this._items[0];
@@ -331,10 +364,13 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
+	 * this collection. The item is destroyed when it leaves the
+	 * collection, and all items are destroyed on the collection destruction.
+	 * @returns this
 	 */
 	ownItems(): this {
-		super.ownItems();
+		this._ownsItems = true;
 		return this;
 	}
 
@@ -353,7 +389,7 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Checks item for existance in collection.
 	 */
 	contains(item: T): boolean {
 		return ArrayUtils.contains(this._items, item);
@@ -370,19 +406,24 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	 * @inheritdoc
 	 */
 	some(callback: (item: T, index: number) => boolean, scope?: any): boolean {
-		return !this.every(function (item: T, index: number): boolean {
-			return callback.call(scope, item, index) === false;
-		});
+		return this._items.some(callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	each(callback: (item: T, index: number) => any, scope?: any) {
-		this.every(function (item: T, index: number): boolean {
-			callback.call(scope, item, index);
-			return true;
-		});
+		this._items.forEach(callback, scope || this);
+	}
+
+	/**
+	 * Iterates collection items. Calls specified function for all items.
+	 *
+	 * @param callback Callback function.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 */
+	forEach(callback: (item: T, index: number) => any, scope?: any): void {
+		this._items.forEach(callback, scope || this);
 	}
 
 	/**
@@ -397,30 +438,14 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	 * @returns Found item key or undefined.
 	 */
 	find(callback: (item: T, index: number) => boolean, scope?: any): number {
-		let result: number;
-		this.every(function (item: T, index: number): boolean {
-			if (callback.call(scope, item, index) !== false) {
-				result = index;
-				return false;
-			}
-			return true;
-		});
-		return result;
+		return ArrayUtils.find(this._items, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	search(callback: (item: T, index: number) => boolean, scope: any = null): T {
-		let result: T;
-		this.every(function (item: T, index: number): boolean {
-			if (callback.call(scope, item, index) !== false) {
-				result = item;
-				return false;
-			}
-			return true;
-		});
-		return result;
+		return ArrayUtils.search(this._items, callback, scope);
 	}
 
 	/**
@@ -483,15 +508,7 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	 * @inheritdoc
 	 */
 	index(callback: (item: T, index: number) => string, scope?: any): Dictionary<T> {
-		var result: Dictionary<T> = {};
-		this.every(function (item, index) {
-			var k: string = callback.call(scope, item, index);
-			if (k != null) {
-				result[k] = item;
-			}
-			return true;
-		});
-		return result;
+		return ArrayUtils.index(this._items, callback, scope);
 	}
 
 	/**
@@ -539,6 +556,13 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	/**
 	 * @inheritdoc
 	 */
+	toSet(): ISet<T> {
+		return new Set<T>(this.toArray(), this.getKey, true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	asArray(): T[] {
 		return this._items;
 	}
@@ -551,17 +575,17 @@ export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	toSet(): ISet<T> {
-		return new Set<T>(this.toArray(), this.getKey, true);
-	}
-
-	/**
-	 * @inheritdoc
+	 * Represents collection as set.
+	 *
+	 * If this collection is set, returns it immediately.
+	 * Else, executes [[toSet]] method.
+	 * This method works usually faster than [[toSet]],
+	 * but please make sure that the returned set
+	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 * Requires T to extend JW.Class.
 	 */
 	asSet(): ISet<T> {
-		return new Set<T>(this.toArray(), this.getKey, true);
+		return this.toSet();
 	}
 
 	/**
