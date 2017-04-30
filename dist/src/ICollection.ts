@@ -18,13 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Listenable from './Listenable';
+import Bindable from './Bindable';
 import Dictionary from './Dictionary';
-import IList from './IList';
 import IClass from './IClass';
+import IList from './IList';
 import IMap from './IMap';
 import ISet from './ISet';
-import Bindable from './Bindable';
+import Listenable from './Listenable';
 
 /**
  * Abstract collection.
@@ -207,6 +207,11 @@ interface ICollection<T> extends IClass {
 	 * @returns this
 	 */
 	ownItems(): this;
+
+	/**
+	 * Returns a full copy of this collection.
+	 */
+	clone(): ICollection<T>;
 
 	/**
 	 * Checks item for existence in collection.

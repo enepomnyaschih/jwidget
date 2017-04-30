@@ -103,7 +103,7 @@ class ListMapper<T, U> extends AbstractCollectionMapper<T, U> {
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		var newItem = this._create.call(this._scope, params.newItem);
-		var oldItem = this.target.tryPut(params.index, newItem).value;
+		var oldItem = this.target.trySet(params.index, newItem).value;
 		this._destroy.call(this._scope, oldItem, params.oldItem);
 	}
 

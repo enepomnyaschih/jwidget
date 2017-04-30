@@ -235,6 +235,13 @@ class Set<T> extends AbstractCollection<T> implements ISet<T> {
 	}
 
 	/**
+	 * Returns a full copy of this object.
+	 */
+	clone(): ISet<T> {
+		return new Set<T>(this.items, this.getKey, this.silent);
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	contains(item: T): boolean {

@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import AbstractCollection from './AbstractCollection';
 import Listenable from './Listenable';
 import {apply, destroy, CollectionFlags, SILENT, ADAPTER} from './index';
 import {vid, VidSet} from './internal';
@@ -27,7 +28,6 @@ import Event from './Event';
 import IList from './IList';
 import IEvent from './IEvent';
 import IMap from './IMap';
-import IndexedCollection from './IndexedCollection';
 import ISet from './ISet';
 import List from './List';
 import Some from './Some';
@@ -149,7 +149,7 @@ import * as DictionaryUtils from './DictionaryUtils';
  *
  * @param T Map item type.
  */
-class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
+class Map<T> extends AbstractCollection<T> implements IMap<T> {
 	private _adapter: boolean;
 	private _items: Dictionary<T>;
 
@@ -279,6 +279,13 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	}
 
 	/**
+	 * Returns a full copy of this object.
+	 */
+	clone(): IMap<T> {
+		return new Map<T>(this.items, this.getKey, this.silent ? SILENT : 0);
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	get(key: string): T {
@@ -303,7 +310,23 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @inheritdoc
 	 */
 	contains(item: T): boolean {
-		return DictionaryUtils.containsItem(this._items, item);
+		return DictionaryUtils.contains(this._items, item);
+	}
+
+	/**
+	 * Checks existance of item with specified key in collection.
+	 */
+	containsKey(key: string): boolean {
+		return this.get(key) !== undefined;
+	}
+
+	/**
+	 * Returns key of item in collection. If such item doesn't exist, returns undefined.
+	 */
+	keyOf(item: T): string {
+		return this.find(function (v: T): boolean {
+			return item === v;
+		});
 	}
 
 	/**
@@ -311,6 +334,63 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 */
 	every(callback: (item: T, key: string) => boolean, scope?: any): boolean {
 		return DictionaryUtils.every(this._items, callback, scope || this);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	some(callback: (item: T, key: string) => boolean, scope?: any): boolean {
+		return !this.every(function (item: T, key: string): boolean {
+			return callback.call(scope, item, key) === false;
+		});
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	each(callback: (item: T, key: string) => any, scope?: any) {
+		this.every(function (item: T, key: string): boolean {
+			callback.call(scope, item, key);
+			return true;
+		});
+	}
+
+	/**
+	 * Finds item matching criteria.
+	 *
+	 * Returns key of first item for which callback returns !== false.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param callback Criteria callback.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @returns Found item key or undefined.
+	 */
+	find(callback: (item: T, key: string) => boolean, scope?: any): string {
+		let result: string;
+		this.every(function (item: T, key: string): boolean {
+			if (callback.call(scope, item, key) !== false) {
+				result = key;
+				return false;
+			}
+			return true;
+		});
+		return result;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	search(callback: (item: T, key: string) => boolean, scope: any = null): T {
+		let result: T;
+		this.every(function (item: T, key: string): boolean {
+			if (callback.call(scope, item, key) !== false) {
+				result = item;
+				return false;
+			}
+			return true;
+		});
+		return result;
 	}
 
 	/**
@@ -393,6 +473,21 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
+	index(callback: (item: T, key: string) => string, scope?: any): Dictionary<T> {
+		var result: Dictionary<T> = {};
+		this.every(function (item, key) {
+			var k: string = callback.call(scope, item, key);
+			if (k != null) {
+				result[k] = item;
+			}
+			return true;
+		});
+		return result;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	$index(callback: (item: T, key: string) => string, scope?: any): IMap<T> {
 		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
@@ -421,22 +516,8 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toMap(): IMap<T> {
-		return new Map<T>(this.toDictionary(), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	asDictionary(): Dictionary<T> {
 		return this._items;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	asMap(): IMap<T> {
-		return this;
 	}
 
 	/**
@@ -481,6 +562,19 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 			(<Destroyable><any>removedItem).destroy();
 		}
 		return result;
+	}
+
+	/**
+	 * Replaces item with specified key. If collection doesn't contain such key:
+	 *
+	 * * Array will be broken.
+	 * * Map will add a new item.
+	 *
+	 * @returns The replaced item.
+	 */
+	put(key: string, item: T): T {
+		const result = this.tryPut(key, item);
+		return (result !== undefined) ? result.value : this.get(key);
 	}
 
 	/**
@@ -560,6 +654,29 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 			(<Destroyable><any>item).destroy();
 		}
 		return item;
+	}
+
+	/**
+	 * Removes item with specified key. If collection doesn't contain such key:
+	 *
+	 * * Array will be broken.
+	 * * Map will add a new item.
+	 *
+	 * @returns The removed item.
+	 */
+	remove(key: string): T {
+		return this.tryRemove(key);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	removeItem(item: T): string {
+		var key = this.keyOf(item);
+		if (key !== undefined) {
+			this.tryRemove(key);
+		}
+		return key;
 	}
 
 	/**

@@ -21,7 +21,7 @@
 import Listenable from './Listenable';
 import Dictionary from './Dictionary';
 import ICollection from './ICollection';
-import IIndexedCollection from './IIndexedCollection';
+import IList from './IList';
 import Some from './Some';
 
 /**
@@ -107,13 +107,18 @@ import Some from './Some';
  * All the same algorithms are also available for native JavaScript Object as map,
  * see [[DictionaryUtils]] functions.
  */
-interface IMap<T> extends IIndexedCollection<string, T> {
+interface IMap<T> extends ICollection<T> {
 	/**
 	 * Returns item map - internal collection representation.
 	 *
 	 * **Caution: doesn't make a copy - please don't modify.**
 	 */
 	readonly items: Dictionary<T>;
+
+	/**
+	 * Returns key of first collection item. If collection is empty, returns undefined.
+	 */
+	readonly firstKey: string;
 
 	/**
 	 * Items are removed from map, items are added to map and items are updated in map.
@@ -161,28 +166,29 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	readonly changeEvent: Listenable<IMap.EventParams<T>>;
 
 	/**
-	 * Function which returns unique key of an item in this collection.
-	 * [[detectReindex]],
-	 * [[performReindex]] algorithms.
-	 * Defaults to [[iid]], so
-	 * if collection contains instances of JW.Class, you are in a good shape.
-	 */
-	getKey: (item: T) => any;
-
-	/**
-	 * @inheritdoc
+	 * Returns item by key. If item with such key doesn't exist, returns undefined.
 	 */
 	get(key: string): T;
 
 	/**
-	 * @inheritdoc
+	 * Returns array of all map keys.
 	 */
 	getKeys(): string[];
 
 	/**
-	 * @inheritdoc
+	 * Returns array of all map keys.
 	 */
-	contains(item: T): boolean;
+	$getKeys(): IList<string>;
+
+	/**
+	 * Checks existance of item with specified key in collection.
+	 */
+	containsKey(key: string): boolean;
+
+	/**
+	 * Returns key of item in collection. If such item doesn't exist, returns undefined.
+	 */
+	keyOf(item: T): string;
 
 	/**
 	 * @inheritdoc
@@ -192,7 +198,45 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
+	some(callback: (item: T, key: string) => boolean, scope?: any): boolean;
+
+	/**
+	 * @inheritdoc
+	 */
+	each(callback: (item: T, key: string) => any, scope?: any): void;
+
+	/**
+	 * @inheritdoc
+	 */
+	forEach(callback: (item: T, key: string) => any, scope?: any): void;
+
+	/**
+	 * Finds item matching criteria.
+	 *
+	 * Returns key of first item for which callback returns !== false.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param callback Criteria callback.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @returns Found item key or undefined.
+	 */
+	find(callback: (item: T, key: string) => boolean, scope?: any): string;
+
+	/**
+	 * @inheritdoc
+	 */
+	search(callback: (item: T, key: string) => boolean, scope: any): T;
+
+	/**
+	 * @inheritdoc
+	 */
 	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): T[];
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
@@ -202,12 +246,54 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * @inheritdoc
 	 */
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<T>;
+
+	/**
+	 * @inheritdoc
+	 */
 	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): string[];
+
+	/**
+	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by result of callback call for each item.
+	 *
+	 * @param callback Indexer function. Must return a comparable value, compatible with
+	 * [[cmp]]. Returns item itself by default.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+	 * @returns Sorted item keys array.
+	 */
+	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<string>;
 
 	/**
 	 * @inheritdoc
 	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string[];
+
+	/**
+	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by comparer.
+	 *
+	 * @param compare Comparer function. Should return positive value if t1 > t2;
+	 * negative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to [[cmp]]
+	 * @param scope **comparer** call scope. Defaults to collection itself.
+	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+	 * @returns Sorted item keys array.
+	 */
+	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<string>;
+
+	/**
+	 * @inheritdoc
+	 */
+	index(callback: (item: T, key: string) => string, scope?: any): Dictionary<T>;
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T, key: string) => string, scope?: any): IMap<T>;
 
 	/**
 	 * @inheritdoc
@@ -235,15 +321,20 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	asDictionary(): Dictionary<T>;
 
 	/**
-	 * @inheritdoc
-	 */
-	asMap(): IMap<T>;
-
-	/**
 	 * Replaces item with specified key. If map doesn't contain such key, new item is added.
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
 	tryPut(key: string, item: T): Some<T>;
+
+	/**
+	 * Replaces item with specified key. If collection doesn't contain such key:
+	 *
+	 * * Array will be broken.
+	 * * Map will add a new item.
+	 *
+	 * @returns The replaced item.
+	 */
+	put(key: string, item: T): T;
 
 	/**
 	 * Adds or replaces a bunch of items.
@@ -282,6 +373,16 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * If collection is not modified, returns undefined.
 	 */
 	tryRemove(key: string): T;
+
+	/**
+	 * Removes item with specified key. If collection doesn't contain such key:
+	 *
+	 * * Array will be broken.
+	 * * Map will add a new item.
+	 *
+	 * @returns The removed item.
+	 */
+	remove(index: string): T;
 
 	/**
 	 * Removes a bunch of items from map.

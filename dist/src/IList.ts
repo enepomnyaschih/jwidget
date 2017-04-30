@@ -18,9 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Dictionary from './Dictionary';
 import Listenable from './Listenable';
 import ICollection from './ICollection';
-import IIndexedCollection from './IIndexedCollection';
+import IMap from './IMap';
 import Some from './Some';
 
 /**
@@ -126,7 +127,7 @@ import Some from './Some';
  *
  * @param T Array item type.
  */
-interface IList<T> extends IIndexedCollection<number, T> {
+interface IList<T> extends ICollection<T> {
 	/**
 	 * Returns the last collection item. If collection is empty, returns undefined.
 	 */
@@ -135,7 +136,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * Returns index of last collection item. If collection is empty, returns undefined.
 	 */
-	readonly lastKey: number;
+	readonly lastIndex: number;
 
 	/**
 	 * Item array - internal collection representation.
@@ -206,30 +207,14 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	readonly changeEvent: Listenable<IList.EventParams<T>>;
 
 	/**
-	 * Function which returns unique key of an item in this collection.
-	 * Function is used in [[detectSplice]],
-	 * [[performSplice]],
-	 * [[detectReorder]],
-	 * [[performReorder]] algorithms.
-	 * Defaults to [[iid]], so
-	 * if collection contains instances of JW.Class, you are in a good shape.
+	 * Returns a full copy of this collection.
 	 */
-	getKey: (item: T) => any;
+	clone(): IList<T>;
 
 	/**
-	 * @inheritdoc
+	 * Returns item by index. If item with such index doesn't exist, returns undefined.
 	 */
 	get(index: number): T;
-
-	/**
-	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
-	 */
-	getKeys(): number[];
-
-	/**
-	 * @inheritdoc
-	 */
-	contains(item: T): boolean;
 
 	/**
 	 * @inheritdoc
@@ -239,7 +224,45 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): T[];
+	some(callback: (item: T, index: number) => boolean, scope?: any): boolean;
+
+	/**
+	 * @inheritdoc
+	 */
+	each(callback: (item: T, index: number) => any, scope?: any): void;
+
+	/**
+	 * @inheritdoc
+	 */
+	forEach(callback: (item: T, index: number) => any, scope?: any): void;
+
+	/**
+	 * Finds item matching criteria.
+	 *
+	 * Returns key of first item for which callback returns !== false.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param callback Criteria callback.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @returns Found item key or undefined.
+	 */
+	find(callback: (item: T, index: number) => boolean, scope?: any): number;
+
+	/**
+	 * @inheritdoc
+	 */
+	search(callback: (item: T, index: number) => boolean, scope: any): T;
+
+	/**
+	 * @inheritdoc
+	 */
+	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): T[];
+
+	/**
+	 * @inheritdoc
+	 */
+	$toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
@@ -249,12 +272,54 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	/**
 	 * @inheritdoc
 	 */
-	getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): number[];
+	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): number[];
+	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[];
+
+	/**
+	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by result of callback call for each item.
+	 *
+	 * @param callback Indexer function. Must return a comparable value, compatible with
+	 * [[cmp]]. Returns item itself by default.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+	 * @returns Sorted item keys array.
+	 */
+	$getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<number>;
+
+	/**
+	 * @inheritdoc
+	 */
+	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): number[];
+
+	/**
+	 * Returns keys of sorted items.
+	 *
+	 * Builds array of item keys, sorted by comparer.
+	 *
+	 * @param compare Comparer function. Should return positive value if t1 > t2;
+	 * negative value if t1 < t2; 0 if t1 == t2.
+	 * Defaults to [[cmp]]
+	 * @param scope **comparer** call scope. Defaults to collection itself.
+	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+	 * @returns Sorted item keys array.
+	 */
+	$getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number>;
+
+	/**
+	 * @inheritdoc
+	 */
+	index(callback: (item: T, index: number) => string, scope?: any): Dictionary<T>;
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T, index: number) => string, scope?: any): IMap<T>;
 
 	/**
 	 * @inheritdoc
@@ -270,21 +335,6 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 * @inheritdoc
 	 */
 	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => string): IList<U>;
-
-	/**
-	 * @inheritdoc
-	 */
-	toArray(): T[];
-
-	/**
-	 * @inheritdoc
-	 */
-	asArray(): T[];
-
-	/**
-	 * @inheritdoc
-	 */
-	asList(): IList<T>;
 
 	/**
 	 * Inserts an item to array.
@@ -330,7 +380,17 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 *
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	tryPut(index: number, item: T): Some<T>;
+	trySet(index: number, item: T): Some<T>;
+
+	/**
+	 * Replaces item with specified key. If collection doesn't contain such key:
+	 *
+	 * * Array will be broken.
+	 * * Map will add a new item.
+	 *
+	 * @returns The replaced item.
+	 */
+	set(index: number, item: T): T;
 
 	/**
 	 * Removes item at specified position.
@@ -339,6 +399,16 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 * @returns The removed item. If collection is not modified, returns undefined.
 	 */
 	tryRemove(index: number): T;
+
+	/**
+	 * Removes item with specified key. If collection doesn't contain such key:
+	 *
+	 * * Array will be broken.
+	 * * Map will add a new item.
+	 *
+	 * @returns The removed item.
+	 */
+	remove(index: number): T;
 
 	/**
 	 * Removes item range from array.

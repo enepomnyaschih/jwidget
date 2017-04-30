@@ -320,6 +320,8 @@ abstract class AbstractCollection<T> extends Class implements ICollection<T> {
 		return this;
 	}
 
+	abstract clone(): ICollection<T>;
+
 	/**
 	 * Checks item for existance in collection.
 	 */

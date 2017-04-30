@@ -45,14 +45,14 @@ export default class ListOrderer<T> extends AbstractCollectionOrderer<T> {
 	}
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
-		var spliceResult = params.spliceResult;
+		const spliceResult = params.spliceResult;
 		this._splice(
 			VidSet.fromArray<T>(spliceResult.removedItems, this.source.getKey),
 			VidSet.fromArray<T>(spliceResult.addedItems, this.source.getKey));
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		var index = this.target.keyOf(params.oldItem);
+		const index = this.target.indexOf(params.oldItem);
 		this.target.trySplice(
 			[new IndexCount(index, 1)],
 			[new IndexItems(this.target.length.get() - 1, [params.newItem])]);

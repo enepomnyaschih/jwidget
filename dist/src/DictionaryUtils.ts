@@ -58,7 +58,7 @@ export function getLength<T>(map: Dictionary<T>): number {
 /**
  * Checks item for existance in collection.
  */
-export function containsItem<T>(map: Dictionary<T>, item: T): boolean {
+export function contains<T>(map: Dictionary<T>, item: T): boolean {
 	return !every(map, function (v) {
 		return item !== v;
 	});

@@ -35,6 +35,13 @@ export function getLast<T>(arr: T[]): T {
 }
 
 /**
+ * Returns the last collection item. If collection is empty, returns undefined.
+ */
+export function getLastIndex<T>(arr: T[]): number {
+	return (arr.length !== 0) ? (arr.length - 1) : undefined;
+}
+
+/**
  * Checks collection for emptiness.
  */
 export function isEmpty<T>(arr: T[]): boolean {
@@ -44,17 +51,8 @@ export function isEmpty<T>(arr: T[]): boolean {
 /**
  * Checks item for existance in collection.
  */
-export function containsItem<T>(arr: T[], item: T): boolean {
+export function contains<T>(arr: T[], item: T): boolean {
 	return arr.indexOf(item) !== -1;
-}
-
-/**
- * Returns index of item in collection. If such item doesn't exist, returns undefined.
- */
-export function keyOf<T>(arr: T[], item: T): number {
-	return find(arr, function (v) {
-		return item === v;
-	});
 }
 
 /**
@@ -134,7 +132,7 @@ export function count<T>(arr: T[], callback: (item: T, index: number) => boolean
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
  * @returns Sorted item keys array.
  */
-export function getSortingKeys<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
+export function getSortingIndices<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
 	callback = callback || function (x) { return x; };
 	order = order || 1;
 	const pairs: any[] = [];
@@ -162,7 +160,7 @@ export function getSortingKeys<T>(arr: T[], callback?: (item: T, index: number) 
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
  * @returns Sorted item keys array.
  */
-export function getSortingKeysComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number[]{
+export function getSortingIndicesComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number[]{
 	compare = compare || cmp;
 	order = order || 1;
 	const pairs: any[] = [];
@@ -190,7 +188,7 @@ export function getSortingKeysComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1
  * @returns Sorted array.
  */
 export function toSorted<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): T[]{
-	return getSortingKeys(arr, callback, scope, order).map(function (index): T {
+	return getSortingIndices(arr, callback, scope, order).map(function (index): T {
 		return arr[index];
 	});
 }
@@ -208,7 +206,7 @@ export function toSorted<T>(arr: T[], callback?: (item: T, index: number) => any
  * @returns Sorted array.
  */
 export function toSortedComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T[]{
-	return getSortingKeysComparing(arr, compare, scope, order).map(function (index): T {
+	return getSortingIndicesComparing(arr, compare, scope, order).map(function (index): T {
 		return arr[index];
 	});
 }
@@ -229,20 +227,6 @@ export function index<T>(arr: T[], callback: (item: T, index: number) => any, sc
 		if (key != null) {
 			result[key] = item;
 		}
-		return true;
-	});
-	return result;
-}
-
-/**
- * Converts collection to map.
- *
- * Builds new map consisting of collection items.
- */
-export function toDictionary<T>(arr: T[]): Dictionary<T> {
-	const result:Dictionary<T> = {};
-	arr.every(function (v, k) {
-		result[k] = v;
 		return true;
 	});
 	return result;
@@ -385,8 +369,8 @@ export function tryRemoveAll<T>(arr: T[], index: number, count: number): T[]{
  * Removes first occurrence of an item in collection.
  */
 export function removeItem<T>(arr: T[], item: T): number {
-	var key = keyOf(arr, item);
-	if (key !== undefined) {
+	var key = arr.indexOf(item);
+	if (key !== -1) {
 		tryRemove(arr, key);
 	}
 	return key;
@@ -401,7 +385,8 @@ export function removeItems<T>(arr: T[], items: T[], getKey?: (item: T) => strin
 	const newItems = arr.filter(function (item: T): boolean {
 		return !itemSet.contains(item);
 	});
-	performSplice(arr, newItems);
+	clear(arr);
+	addAll(arr, newItems);
 }
 
 /**
@@ -698,7 +683,7 @@ export function detectReorder<T>(oldItems: T[], newItems: T[], getKey?: (item: T
  * If no method call required, returns undefined.
  */
 export function detectSort<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
-	var keys = getSortingKeys(arr, callback, scope, order);
+	var keys = getSortingIndices(arr, callback, scope, order);
 	if (!isIdentity(keys)) {
 		return invert(keys);
 	}
@@ -717,64 +702,11 @@ export function detectSort<T>(arr: T[], callback?: (item: T, index: number) => a
  * If no method call required, returns undefined.
  */
 export function detectSortComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[] {
-	var keys = getSortingKeysComparing(arr, compare, scope, order);
+	var keys = getSortingIndicesComparing(arr, compare, scope, order);
 	if (!isIdentity(keys)) {
 		return invert(keys);
 	}
 	return undefined;
-}
-
-/**
- * Adjusts array contents to **newItems** using [[detectSplice]] and
- * [[splice]] methods.
- * All items must have unique **getKey** export function result.
- * If items don't have unique key, probably [[detectFilter]] method may help,
- * because it doesn't require item uniquiness.
- *
- * @param newItems New array contents.
- * @param getKey Function which returns unique key of an item in this collection.
- * Defaults to [[getKey]].
- * If collection consists of instances of JW.Class, then you are in a good shape.
- * @param scope **getKey** call scope. Defaults to collection itself.
- */
-export function performSplice<T>(arr: T[], newItems: T[], getKey?: (item: T) => string) {
-	var params = detectSplice(arr, newItems, getKey);
-	if (params !== undefined) {
-		trySplice(arr, params.removeParamsList, params.addParamsList);
-	}
-}
-
-/**
- * Adjusts array contents to **newItems** using [[detectFilter]] and
- * [[splice]] methods.
- * Only removes items.
- * Doesn't assume items insertion - try [[detectSplice]] if that's the case.
- * In advantage to [[detectSplice]], doesn't require item uniquiness.
- *
- * @param newItems New array contents.
- */
-export function performFilter<T>(arr: T[], newItems: T[]) {
-	var params = detectFilter(arr, newItems);
-	if (params !== undefined) {
-		trySplice(arr, params, []);
-	}
-}
-
-/**
- * Adjusts array contents to **newItems** using [[detectReorder]] and
- * [[reorder]] methods.
- *
- * @param newItems New array contents.
- * @param getKey Function which returns unique key of an item in this collection.
- * Defaults to [[getKey]].
- * If collection consists of instances of JW.Class, then it's all right.
- * @param scope **getKey** call scope. Defaults to collection itself.
- */
-export function performReorder<T>(arr: T[], newItems: T[], getKey?: (item: T) => string) {
-	var indexArray = detectReorder(arr, newItems, getKey);
-	if (indexArray !== undefined) {
-		tryReorder(arr, indexArray);
-	}
 }
 
 /**

@@ -21,13 +21,14 @@
 import Listenable from './Listenable';
 import {destroy, CollectionFlags, SILENT, ADAPTER} from './index';
 import {vid, VidSet} from './internal';
+import AbstractCollection from './AbstractCollection';
+import Dictionary from './Dictionary';
 import Event from './Event';
 import IList from './IList';
 import IEvent from './IEvent';
 import IMap from './IMap';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
-import IndexedCollection from './IndexedCollection';
 import ISet from './ISet';
 import ListSpliceResult from './ListSpliceResult';
 import Map from './Map';
@@ -174,7 +175,7 @@ import * as ArrayUtils from './ArrayUtils';
  *
  * @param T Array item type.
  */
-export default class List<T> extends IndexedCollection<number, T> implements IList<T> {
+export default class List<T> extends AbstractCollection<T> implements IList<T> {
 	private _items: T[];
 
 	private _spliceEvent  : IEvent<IList.SpliceEventParams<T>>;
@@ -240,16 +241,9 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	get firstKey(): number {
-		return (this._items.length !== 0) ? 0 : undefined;
-	}
-
-	/**
 	 * Returns index of last collection item. If collection is empty, returns undefined.
 	 */
-	get lastKey(): number {
+	get lastIndex(): number {
 		var l = this._items.length;
 		return (l !== 0) ? (l - 1) : undefined;
 	}
@@ -345,6 +339,13 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	}
 
 	/**
+	 * Returns a full copy of this object.
+	 */
+	clone(): IList<T> {
+		return new List<T>(this.items, this.getKey, this.silent ? SILENT : 0);
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	get(index: number): T {
@@ -352,29 +353,10 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	}
 
 	/**
-	 * Returns array of indexes of all collection items, i.e. array `[0, 1, ... , length - 1]`.
-	 */
-	getKeys(): number[] {
-		var items = this._items;
-		var result = new Array<number>(items.length);
-		for (var i = 0, l = items.length; i < l; ++i) {
-			result[i] = i;
-		}
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$getKeys(): IList<number> {
-		return new List<number>(this.getKeys(), String, SILENT | ADAPTER);
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	contains(item: T): boolean {
-		return ArrayUtils.containsItem(this._items, item);
+		return ArrayUtils.contains(this._items, item);
 	}
 
 	/**
@@ -387,14 +369,71 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): T[] {
+	some(callback: (item: T, index: number) => boolean, scope?: any): boolean {
+		return !this.every(function (item: T, index: number): boolean {
+			return callback.call(scope, item, index) === false;
+		});
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	each(callback: (item: T, index: number) => any, scope?: any) {
+		this.every(function (item: T, index: number): boolean {
+			callback.call(scope, item, index);
+			return true;
+		});
+	}
+
+	/**
+	 * Finds item matching criteria.
+	 *
+	 * Returns key of first item for which callback returns !== false.
+	 *
+	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+	 *
+	 * @param callback Criteria callback.
+	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @returns Found item key or undefined.
+	 */
+	find(callback: (item: T, index: number) => boolean, scope?: any): number {
+		let result: number;
+		this.every(function (item: T, index: number): boolean {
+			if (callback.call(scope, item, index) !== false) {
+				result = index;
+				return false;
+			}
+			return true;
+		});
+		return result;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	search(callback: (item: T, index: number) => boolean, scope: any = null): T {
+		let result: T;
+		this.every(function (item: T, index: number): boolean {
+			if (callback.call(scope, item, index) !== false) {
+				result = item;
+				return false;
+			}
+			return true;
+		});
+		return result;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): T[] {
 		return ArrayUtils.toSorted(this._items, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T, key: number) => any, scope?: any, order?: number): IList<T> {
+	$toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<T> {
 		return new List<T>(this.toSorted(callback, scope, order), this.getKey, SILENT | ADAPTER);
 	}
 
@@ -415,35 +454,50 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	/**
 	 * @inheritdoc
 	 */
-	getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): number[] {
-		return ArrayUtils.getSortingKeys(this._items, callback, scope || this, order);
+	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[] {
+		return ArrayUtils.getSortingIndices(this._items, callback, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$getSortingKeys(callback?: (item: T, key: number) => any, scope?: any, order?: number): IList<number> {
-		return new List<number>(this.getSortingKeys(callback, scope, order), String, SILENT | ADAPTER);
+	$getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<number> {
+		return new List<number>(this.getSortingIndices(callback, scope, order), String, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): number[] {
-		return ArrayUtils.getSortingKeysComparing(this._items, compare, scope || this, order);
+	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): number[] {
+		return ArrayUtils.getSortingIndicesComparing(this._items, compare, scope || this, order);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number> {
-		return new List<number>(this.getSortingKeysComparing(compare, scope, order), String, SILENT | ADAPTER);
+	$getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number> {
+		return new List<number>(this.getSortingIndicesComparing(compare, scope, order), String, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$index(callback: (item: T, key: number) => string, scope?: any): IMap<T> {
+	index(callback: (item: T, index: number) => string, scope?: any): Dictionary<T> {
+		var result: Dictionary<T> = {};
+		this.every(function (item, index) {
+			var k: string = callback.call(scope, item, index);
+			if (k != null) {
+				result[k] = item;
+			}
+			return true;
+		});
+		return result;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$index(callback: (item: T, index: number) => string, scope?: any): IMap<T> {
 		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
@@ -494,20 +548,6 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 */
 	asList(): IList<T> {
 		return this;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	toMap(): IMap<T> {
-		return new Map<T>(this.toDictionary(), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	asMap(): IMap<T> {
-		return new Map<T>(this.asDictionary(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -582,7 +622,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 *
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	tryPut(index: number, item: T): Some<T> {
+	trySet(index: number, item: T): Some<T> {
 		const oldProxy = ArrayUtils.trySet(this._items, index, item);
 		if (oldProxy === undefined) {
 			return undefined;
@@ -593,6 +633,19 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 			(<any>oldProxy.value).destroy();
 		}
 		return oldProxy;
+	}
+
+	/**
+	 * Replaces item with specified key. If collection doesn't contain such key:
+	 *
+	 * * Array will be broken.
+	 * * Map will add a new item.
+	 *
+	 * @returns The replaced item.
+	 */
+	set(index: number, item: T): T {
+		const result = this.trySet(index, item);
+		return (result !== undefined) ? result.value : this.get(index);
 	}
 
 	/**
@@ -607,6 +660,29 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 			return result[0];
 		}
 		return undefined;
+	}
+
+	/**
+	 * Removes item with specified key. If collection doesn't contain such key:
+	 *
+	 * * Array will be broken.
+	 * * Map will add a new item.
+	 *
+	 * @returns The removed item.
+	 */
+	remove(index: number): T {
+		return this.tryRemove(index);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	removeItem(item: T): number {
+		var key = this.indexOf(item);
+		if (key !== -1) {
+			this.tryRemove(key);
+		}
+		return key;
 	}
 
 	/**
