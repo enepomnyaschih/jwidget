@@ -355,8 +355,8 @@ export function toArray<T>(map: Dictionary<T>): T[] {
  * Replaces item with specified key. If map doesn't contain such key, new item is added.
  * @returns The replaced item.
  */
-export function set<T>(map: Dictionary<T>, key: string, item: T): T {
-	var result = trySet(map, key, item);
+export function put<T>(map: Dictionary<T>, key: string, item: T): T {
+	var result = tryPut(map, key, item);
 	return (result !== undefined) ? result.value : map[key];
 }
 
@@ -364,7 +364,7 @@ export function set<T>(map: Dictionary<T>, key: string, item: T): T {
  * Replaces item with specified key. If map doesn't contain such key, new item is added.
  * @returns The replaced item. If collection is not modified, returns undefined.
  */
-export function trySet<T>(map: Dictionary<T>, key: string, item: T): Some<T> {
+export function tryPut<T>(map: Dictionary<T>, key: string, item: T): Some<T> {
 	var oldItem = map[key];
 	if (oldItem === item) {
 		return undefined;
@@ -376,7 +376,7 @@ export function trySet<T>(map: Dictionary<T>, key: string, item: T): Some<T> {
 /**
  * Adds or replaces a bunch of items.
  */
-export function setAll<T>(map: Dictionary<T>, items: Dictionary<T>) {
+export function putAll<T>(map: Dictionary<T>, items: Dictionary<T>) {
 	for (var key in items) {
 		map[key] = items[key];
 	}
@@ -386,8 +386,8 @@ export function setAll<T>(map: Dictionary<T>, items: Dictionary<T>) {
  * Low-performance alternative to [[setAll]] with verbose result set.
  * @returns Result of internal [[splice]] method call.
  */
-export function setAllVerbose<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
-	var spliceResult = trySetAll(map, items);
+export function putAllVerbose<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
+	var spliceResult = tryPutAll(map, items);
 	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 }
 
@@ -396,12 +396,12 @@ export function setAllVerbose<T>(map: Dictionary<T>, items: Dictionary<T>): IMap
  * @returns Result of internal [[splice]] method call.
  * If collection is not modified, returns undefined.
  */
-export function trySetAll<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
+export function tryPutAll<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
 	var removedItems: Dictionary<T> = {};
 	var addedItems: Dictionary<T> = {};
 	for (var key in items) {
 		var item = items[key];
-		var oldItem = trySet(map, key, item);
+		var oldItem = tryPut(map, key, item);
 		if (oldItem === undefined) {
 			continue;
 		}
@@ -572,7 +572,7 @@ export function trySplice<T>(map: Dictionary<T>, removedKeys: string[], updatedI
 		return !updatedItems.hasOwnProperty(key);
 	});
 	var removedItems = tryRemoveAll(map, removedKeys);
-	var spliceResult = trySetAll(map, updatedItems);
+	var spliceResult = tryPutAll(map, updatedItems);
 	if (spliceResult !== undefined) {
 		apply(spliceResult.removedItems, removedItems);
 		return spliceResult;

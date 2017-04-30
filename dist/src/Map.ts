@@ -458,7 +458,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
 	tryPut(key: string, item: T): Some<T> {
-		const result = DictionaryUtils.trySet(this._items, key, item);
+		const result = DictionaryUtils.tryPut(this._items, key, item);
 		if (result === undefined) {
 			return undefined;
 		}
