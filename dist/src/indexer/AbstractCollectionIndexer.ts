@@ -131,7 +131,7 @@ abstract class AbstractCollectionIndexer<T> extends Class {
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<T>(source.getKey, source.silent) : config.target;
-		this.target.trySetAll(this._index(source.asArray()));
+		this.target.tryPutAll(this._index(source.asArray()));
 	}
 
 	/**

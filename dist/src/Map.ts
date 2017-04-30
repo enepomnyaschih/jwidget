@@ -486,9 +486,9 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	/**
 	 * Adds or replaces a bunch of items.
 	 */
-	setAll(items: Dictionary<T>) {
+	putAll(items: Dictionary<T>) {
 		if (!this.silent) {
-			this.trySetAll(items);
+			this.tryPutAll(items);
 			return;
 		}
 		for (var key in items) {
@@ -500,8 +500,8 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * Low-performance alternative to [[setAll]] with verbose result set.
 	 * @returns Result of internal [[splice]] method call.
 	 */
-	setAllVerbose(items: Dictionary<T>): IMap.SpliceResult<T> {
-		var spliceResult = this.trySetAll(items);
+	putAllVerbose(items: Dictionary<T>): IMap.SpliceResult<T> {
+		var spliceResult = this.tryPutAll(items);
 		return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 	}
 
@@ -510,7 +510,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * @returns Result of internal [[splice]] method call.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySetAll(items: Dictionary<T>): IMap.SpliceResult<T> {
+	tryPutAll(items: Dictionary<T>): IMap.SpliceResult<T> {
 		return this.trySplice([], items);
 	}
 

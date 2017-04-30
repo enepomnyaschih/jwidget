@@ -49,7 +49,7 @@ class MapMapper<T, U> extends AbstractCollectionMapper<T, U> {
 		super(source, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<U>(config.getKey, this.source.silent) : config.target;
-		this.target.trySetAll(this._createItems(source.items));
+		this.target.tryPutAll(this._createItems(source.items));
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.reindexEvent.listen(this._onReindex, this));
 		this.own(source.clearEvent.listen(this._onClear, this));

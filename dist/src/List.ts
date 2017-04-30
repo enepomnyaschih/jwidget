@@ -583,7 +583,7 @@ export default class List<T> extends IndexedCollection<number, T> implements ILi
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
 	tryPut(index: number, item: T): Some<T> {
-		const oldProxy = ArrayUtils.trySet(this._items, item, index);
+		const oldProxy = ArrayUtils.trySet(this._items, index, item);
 		if (oldProxy === undefined) {
 			return undefined;
 		}

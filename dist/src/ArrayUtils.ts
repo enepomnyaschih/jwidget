@@ -315,8 +315,8 @@ export function tryAddAll<T>(arr: T[], items: T[], index?: number): boolean {
  *
  * @returns The replaced item.
  */
-export function set<T>(arr: T[], item: T, index: number): T {
-	var result = trySet(arr, item, index);
+export function set<T>(arr: T[], index: number, item: T): T {
+	var result = trySet(arr, index, item);
 	return (result !== undefined) ? result.value : arr[index];
 }
 
@@ -326,7 +326,7 @@ export function set<T>(arr: T[], item: T, index: number): T {
  *
  * @returns The replaced item. If collection is not modified, returns undefined.
  */
-export function trySet<T>(arr: T[], item: T, index: number): Some<T> {
+export function trySet<T>(arr: T[], index: number, item: T): Some<T> {
 	var oldItem = arr[index];
 	if (item !== oldItem) {
 		arr[index] = item;

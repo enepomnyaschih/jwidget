@@ -248,20 +248,20 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	/**
 	 * Adds or replaces a bunch of items.
 	 */
-	setAll(items: Dictionary<T>): void;
+	putAll(items: Dictionary<T>): void;
 
 	/**
 	 * Low-performance alternative to [[setAll]] with verbose result set.
 	 * @returns Result of internal [[splice]] method call.
 	 */
-	setAllVerbose(items: Dictionary<T>): IMap.SpliceResult<T>;
+	putAllVerbose(items: Dictionary<T>): IMap.SpliceResult<T>;
 
 	/**
 	 * Adds or replaces a bunch of items.
 	 * @returns Result of internal [[splice]] method call.
 	 * If collection is not modified, returns undefined.
 	 */
-	trySetAll(items: Dictionary<T>): IMap.SpliceResult<T>;
+	tryPutAll(items: Dictionary<T>): IMap.SpliceResult<T>;
 
 	/**
 	 * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it causes an error.
