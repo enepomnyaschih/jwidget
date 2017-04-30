@@ -43,13 +43,13 @@ export default class ComponentChildren extends Map<Component> {
 		this.target.destroy();
 	}
 
-	trySet(item: Component, key: string): Some<Component> {
-		var result = super.trySet(item, key);
+	tryPut(key: string, item: Component): Some<Component> {
+		var result = super.tryPut(key, item);
 		if (result === undefined) {
 			return undefined;
 		}
 		var child = new ComponentChild(this.component, item);
-		this.target.trySet(child, key);
+		this.target.tryPut(key, child);
 		return result;
 	}
 

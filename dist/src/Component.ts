@@ -278,7 +278,7 @@ export default class Component extends Class {
 					}
 				} else {
 					if (result instanceof Component) {
-						this._children.set(result, jwId);
+						this._children.put(jwId, result);
 					} else if (isBindable(result)) {
 						this.addReplaceable(result, jwId);
 					} else if (result instanceof List) {

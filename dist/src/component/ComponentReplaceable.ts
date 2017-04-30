@@ -33,7 +33,7 @@ export default class ComponentReplaceable extends Class {
 
 		this.own(new Switcher([component], {
 			init: (child: Component) => {
-				this.parent.children.set(child, this.id);
+				this.parent.children.put(this.id, child);
 			},
 			done: () => {
 				this.parent.children.remove(this.id);

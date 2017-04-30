@@ -261,7 +261,7 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 		} else if (!oldFiltered) {
 			this.target.tryAdd(params.newItem, index);
 		} else {
-			this.target.trySet(params.newItem, index);
+			this.target.tryPut(index, params.newItem);
 		}
 	}
 

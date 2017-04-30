@@ -330,7 +330,7 @@ interface IList<T> extends IIndexedCollection<number, T> {
 	 *
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, index: number): Some<T>;
+	tryPut(index: number, item: T): Some<T>;
 
 	/**
 	 * Removes item at specified position.

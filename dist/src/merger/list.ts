@@ -350,7 +350,7 @@ class Bunch<T> extends Class {
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		this.target.trySet(params.newItem, this._getIndex() + params.index);
+		this.target.tryPut(this._getIndex() + params.index, params.newItem);
 	}
 
 	private _onMove(params: IList.MoveEventParams<T>) {

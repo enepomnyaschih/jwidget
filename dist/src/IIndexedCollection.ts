@@ -150,7 +150,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 *
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, key: K): Some<T>;
+	tryPut(key: K, item: T): Some<T>;
 
 	/**
 	 * Replaces item with specified key. If collection doesn't contain such key:
@@ -160,7 +160,7 @@ interface IIndexedCollection<K, T> extends ICollection<T> {
 	 *
 	 * @returns The replaced item.
 	 */
-	set(item: T, key: K): T;
+	put(key: K, item: T): T;
 
 	/**
 	 * Removes item with specified key. If collection doesn't contain such key:

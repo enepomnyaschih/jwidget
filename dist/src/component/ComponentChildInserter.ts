@@ -34,8 +34,8 @@ export default class ComponentChildInserter extends Map<ComponentChild> {
 		super(iidStr, true);
 	}
 
-	trySet(item: ComponentChild, key: string): Some<ComponentChild> {
-		var result = super.trySet(item, key);
+	tryPut(key: string, item: ComponentChild): Some<ComponentChild> {
+		var result = super.tryPut(key, item);
 		if (result === undefined) {
 			return undefined;
 		}

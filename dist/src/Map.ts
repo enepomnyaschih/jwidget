@@ -457,8 +457,8 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 	 * Replaces item with specified key. If map doesn't contain such key, new item is added.
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, key: string): Some<T> {
-		const result = DictionaryUtils.trySet(this._items, item, key);
+	tryPut(key: string, item: T): Some<T> {
+		const result = DictionaryUtils.trySet(this._items, key, item);
 		if (result === undefined) {
 			return undefined;
 		}
@@ -492,7 +492,7 @@ class Map<T> extends IndexedCollection<string, T> implements IMap<T> {
 			return;
 		}
 		for (var key in items) {
-			this.trySet(items[key], key);
+			this.tryPut(key, items[key]);
 		}
 	}
 

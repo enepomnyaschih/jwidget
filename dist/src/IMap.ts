@@ -243,7 +243,7 @@ interface IMap<T> extends IIndexedCollection<string, T> {
 	 * Replaces item with specified key. If map doesn't contain such key, new item is added.
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	trySet(item: T, key: string): Some<T>;
+	tryPut(key: string, item: T): Some<T>;
 
 	/**
 	 * Adds or replaces a bunch of items.

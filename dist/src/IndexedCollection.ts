@@ -190,7 +190,7 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 *
 	 * @returns The replaced item. If collection is not modified, returns undefined.
 	 */
-	abstract trySet(item: T, key: K): Some<T>;
+	abstract tryPut(key: K, item: T): Some<T>;
 
 	/**
 	 * Replaces item with specified key. If collection doesn't contain such key:
@@ -200,8 +200,8 @@ abstract class IndexedCollection<K, T> extends AbstractCollection<T> implements 
 	 *
 	 * @returns The replaced item.
 	 */
-	set(item: T, key: K): T {
-		var result = this.trySet(item, key);
+	put(key: K, item: T): T {
+		const result = this.tryPut(key, item);
 		return (result !== undefined) ? result.value : this.get(key);
 	}
 

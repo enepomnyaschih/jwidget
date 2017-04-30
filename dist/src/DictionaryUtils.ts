@@ -355,8 +355,8 @@ export function toArray<T>(map: Dictionary<T>): T[] {
  * Replaces item with specified key. If map doesn't contain such key, new item is added.
  * @returns The replaced item.
  */
-export function set<T>(map: Dictionary<T>, item: T, key: string): T {
-	var result = trySet(map, item, key);
+export function set<T>(map: Dictionary<T>, key: string, item: T): T {
+	var result = trySet(map, key, item);
 	return (result !== undefined) ? result.value : map[key];
 }
 
@@ -364,7 +364,7 @@ export function set<T>(map: Dictionary<T>, item: T, key: string): T {
  * Replaces item with specified key. If map doesn't contain such key, new item is added.
  * @returns The replaced item. If collection is not modified, returns undefined.
  */
-export function trySet<T>(map: Dictionary<T>, item: T, key: string): Some<T> {
+export function trySet<T>(map: Dictionary<T>, key: string, item: T): Some<T> {
 	var oldItem = map[key];
 	if (oldItem === item) {
 		return undefined;
@@ -401,7 +401,7 @@ export function trySetAll<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.Spl
 	var addedItems: Dictionary<T> = {};
 	for (var key in items) {
 		var item = items[key];
-		var oldItem = trySet(map, item, key);
+		var oldItem = trySet(map, key, item);
 		if (oldItem === undefined) {
 			continue;
 		}

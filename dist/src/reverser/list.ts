@@ -159,7 +159,7 @@ class ListReverser<T> extends Class {
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		this.target.trySet(params.newItem, this.target.length.get() - params.index - 1);
+		this.target.tryPut(this.target.length.get() - params.index - 1, params.newItem);
 	}
 
 	private _onMove(params: IList.MoveEventParams<T>) {
