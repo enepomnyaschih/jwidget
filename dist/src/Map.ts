@@ -512,6 +512,10 @@ class Map<T> extends Class implements IMap<T> {
 		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
+	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U {
+		return DictionaryUtils.reduce<T, U>(this.items, callback, initial);
+	}
+
 	/**
 	 * Converts collection to array.
 	 *

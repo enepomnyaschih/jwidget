@@ -446,6 +446,8 @@ interface ICollection<T> extends IClass {
 	 * @returns Mapped collection.
 	 */
 	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ICollection<U>;
+
+	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U;
 }
 
 export default ICollection;

@@ -539,6 +539,10 @@ export default class List<T> extends Class implements IList<T> {
 		return new List<U>(this._items.map(callback, scope || this), getKey, SILENT | ADAPTER);
 	}
 
+	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U {
+		return this.items.reduce<U>(callback, initial);
+	}
+
 	/**
 	 * @inheritdoc
 	 */

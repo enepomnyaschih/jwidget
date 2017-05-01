@@ -697,6 +697,8 @@ interface IList<T> extends ICollection<T> {
 	 * @returns Item index.
 	 */
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
+
+	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
 }
 
 export default IList;

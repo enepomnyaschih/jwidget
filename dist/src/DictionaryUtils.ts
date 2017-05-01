@@ -778,3 +778,10 @@ export function getInverted(map: Dictionary<string>): Dictionary<string> {
 	}
 	return result;
 }
+
+export function reduce<T, U>(map: Dictionary<T>, callback: (accumulator: U, item: T, key: string) => U, value: U): U {
+	for (let key in map) {
+		value = callback(value, map[key], key);
+	}
+	return value;
+}

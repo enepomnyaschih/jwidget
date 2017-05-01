@@ -431,6 +431,10 @@ class Set<T> extends Class implements ISet<T> {
 		return new Set<U>(this._items.values.map(callback, scope), getKey, true);
 	}
 
+	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U {
+		return this._items.values.reduce<U>(callback, initial);
+	}
+
 	/**
 	 * @inheritdoc
 	 */

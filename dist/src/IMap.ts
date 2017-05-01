@@ -490,6 +490,8 @@ interface IMap<T> extends ICollection<T> {
 	 * Checks for equality (===) to another map, item by item.
 	 */
 	equal(map: Dictionary<T>): boolean;
+
+	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
 }
 
 export default IMap;
