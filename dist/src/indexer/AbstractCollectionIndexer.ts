@@ -106,7 +106,7 @@ abstract class AbstractCollectionIndexer<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	protected _getKey: (item: T) => any;
+	protected _getKey: (item: T) => string;
 
 	/**
 	 * @hidden
@@ -183,7 +183,7 @@ namespace AbstractCollectionIndexer {
 		/**
 		 * Indexing function. Determines item key in map.
 		 */
-		readonly getKey: (item: T) => any;
+		readonly getKey: (item: T) => string;
 
 		/**
 		 * [[getKey]] call scope.

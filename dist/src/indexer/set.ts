@@ -54,7 +54,7 @@ export default class SetIndexer<T> extends AbstractCollectionIndexer<T> {
 	}
 }
 
-export function indexSet<T>(source: ISet<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
+export function indexSet<T>(source: ISet<T>, getKey: (item: T) => string, scope?: any): IMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}

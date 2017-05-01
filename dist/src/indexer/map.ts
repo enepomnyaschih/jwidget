@@ -54,7 +54,7 @@ export default class MapIndexer<T> extends AbstractCollectionIndexer<T> {
 	}
 }
 
-export function indexMap<T>(source: IMap<T>, getKey: (item: T) => any, scope?: any): IMap<T> {
+export function indexMap<T>(source: IMap<T>, getKey: (item: T) => string, scope?: any): IMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
