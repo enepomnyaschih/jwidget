@@ -86,7 +86,7 @@ export function keyOf<T>(map: Dictionary<T>, item: T): string {
 export function every<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
 	scope = scope || map;
 	for (var key in map) {
-		if (callback.call(scope, map[key], key) === false) {
+		if (!callback.call(scope, map[key], key)) {
 			return false;
 		}
 	}
@@ -105,7 +105,7 @@ export function every<T>(map: Dictionary<T>, callback: (item: T, key: string) =>
  */
 export function some<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
 	return !every(map, function (item, key) {
-		return callback.call(scope, item, key) === false;
+		return !callback.call(scope, item, key);
 	});
 }
 
@@ -136,7 +136,7 @@ export function each<T>(map: Dictionary<T>, callback: (item: T, key: string) => 
 export function findKey<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): string {
 	var result: string;
 	every(map, function (item, key) {
-		if (callback.call(scope, item, key) !== false) {
+		if (callback.call(scope, item, key)) {
 			result = key;
 			return false;
 		}
@@ -159,7 +159,7 @@ export function findKey<T>(map: Dictionary<T>, callback: (item: T, key: string) 
 export function find<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): T {
 	var result: T;
 	every(map, function (item, key) {
-		if (callback.call(scope, item, key) !== false) {
+		if (callback.call(scope, item, key)) {
 			result = item;
 			return false;
 		}
@@ -180,7 +180,7 @@ export function find<T>(map: Dictionary<T>, callback: (item: T, key: string) => 
 export function filter<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
 	var result: Dictionary<T> = {};
 	every(map, function (item: T, key: string): boolean {
-		if (callback.call(scope, item, key) !== false) {
+		if (callback.call(scope, item, key)) {
 			result[key] = item;
 		}
 		return true;
@@ -200,7 +200,7 @@ export function filter<T>(map: Dictionary<T>, callback: (item: T, key: string) =
 export function count<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): number {
 	var result = 0;
 	every(map, function (item: T, key: string): boolean {
-		if (callback.call(scope, item, key) !== false) {
+		if (callback.call(scope, item, key)) {
 			++result;
 		}
 		return true;

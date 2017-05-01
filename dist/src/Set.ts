@@ -307,7 +307,7 @@ class Set<T> extends Class implements ISet<T> {
 	 */
 	some(callback: (item: T) => boolean, scope?: any): boolean {
 		return !this._items.every((item) => {
-			return callback.call(scope || this, item) === false;
+			return !callback.call(scope || this, item);
 		});
 	}
 
@@ -345,7 +345,7 @@ class Set<T> extends Class implements ISet<T> {
 	find(callback: (item: T) => boolean, scope?: any): T {
 		let result: T;
 		this._items.every((item) => {
-			if (callback.call(scope || this, item) !== false) {
+			if (callback.call(scope || this, item)) {
 				result = item;
 				return false;
 			}

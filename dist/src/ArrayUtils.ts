@@ -69,7 +69,7 @@ export function contains<T>(arr: T[], item: T): boolean {
 export function findIndex<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number {
 	let result: number;
 	arr.every(function (item, index) {
-		if (callback.call(scope, item, index) !== false) {
+		if (callback.call(scope, item, index)) {
 			result = index;
 			return false;
 		}
@@ -105,7 +105,7 @@ export function find<T>(arr: T[], callback: (item: T, index: number) => boolean,
 export function count<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number {
 	let result = 0;
 	arr.every(function (item, index) {
-		if (callback.call(scope, item, index) !== false) {
+		if (callback.call(scope, item, index)) {
 			++result;
 		}
 		return true;
@@ -791,7 +791,7 @@ export function collapse(arr: any[], depth?: number): any[]{
  */
 export function backEvery<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): boolean {
 	for (var i = arr.length - 1; i >= 0; --i) {
-		if (callback.call(scope || arr, arr[i], i) === false) {
+		if (!callback.call(scope || arr, arr[i], i)) {
 			return false;
 		}
 	}

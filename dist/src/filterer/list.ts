@@ -80,7 +80,7 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 	 */
 	refilterAt(sourceIndex: number) {
 		var item = this.source.get(sourceIndex);
-		var good = this._test.call(this._scope, item) !== false;
+		var good = this._test.call(this._scope, item);
 		var targetIndex = this._countFiltered(0, sourceIndex);
 		if (this._filtered[sourceIndex] === 0) {
 			if (good) {
@@ -113,7 +113,7 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 	 */
 	refilter() {
 		var newFiltered = this.source.items.map((item) => {
-			return (this._test.call(this._scope, item) !== false) ? 1 : 0;
+			return this._test.call(this._scope, item) ? 1 : 0;
 		});
 
 		var removeParams: IndexCount = null;
@@ -227,7 +227,7 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
 			var items: T[] = [];
 			var filtered = indexItems.items.map((item) => {
-				if (this._test.call(this._scope, item) === false) {
+				if (!this._test.call(this._scope, item)) {
 					return 0;
 				}
 				items.push(item);
@@ -250,7 +250,7 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		var oldFiltered = this._filtered[params.index] !== 0;
-		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
+		var newFiltered = this._test.call(this._scope, params.newItem);
 		if (!oldFiltered && !newFiltered) {
 			return;
 		}

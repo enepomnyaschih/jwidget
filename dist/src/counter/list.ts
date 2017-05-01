@@ -56,8 +56,8 @@ export default class ListCounter<T> extends AbstractCollectionCounter<T> {
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		var oldFiltered = this._test.call(this._scope, params.oldItem) !== false;
-		var newFiltered = this._test.call(this._scope, params.newItem) !== false;
+		var oldFiltered = this._test.call(this._scope, params.oldItem);
+		var newFiltered = this._test.call(this._scope, params.newItem);
 		if (oldFiltered && !newFiltered) {
 			this._target.set(this._target.get() - 1);
 		} else if (!oldFiltered && newFiltered) {
