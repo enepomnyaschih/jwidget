@@ -918,13 +918,6 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * @hidden
-	 */
-	getInverted(): Dictionary<string> {
-		return DictionaryUtils.getInverted(<Dictionary<any>>this._items);
-	}
-
-	/**
 	 * Checks for equality (===) to another map, item by item.
 	 */
 	equal(map: Dictionary<T>): boolean {

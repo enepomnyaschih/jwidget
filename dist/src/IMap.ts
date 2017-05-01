@@ -487,11 +487,6 @@ interface IMap<T> extends ICollection<T> {
 	performReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): void;
 
 	/**
-	 * @hidden
-	 */
-	getInverted(): Dictionary<string>;
-
-	/**
 	 * Checks for equality (===) to another map, item by item.
 	 */
 	equal(map: Dictionary<T>): boolean;
