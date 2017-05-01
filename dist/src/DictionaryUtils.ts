@@ -68,7 +68,7 @@ export function contains<T>(map: Dictionary<T>, item: T): boolean {
  * Returns key of item in collection. If such item doesn't exist, returns undefined.
  */
 export function keyOf<T>(map: Dictionary<T>, item: T): string {
-	return find(map, function (v) {
+	return findKey(map, function (v) {
 		return item === v;
 	});
 }
@@ -133,7 +133,7 @@ export function each<T>(map: Dictionary<T>, callback: (item: T, key: string) => 
  * @param scope **callback** call scope. Defaults to collection itself.
  * @returns Found item key or undefined.
  */
-export function find<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): string {
+export function findKey<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): string {
 	var result: string;
 	every(map, function (item, key) {
 		if (callback.call(scope, item, key) !== false) {
@@ -156,7 +156,7 @@ export function find<T>(map: Dictionary<T>, callback: (item: T, key: string) => 
  * @param scope **callback** call scope. Defaults to collection itself.
  * @returns Found item or undefined.
  */
-export function search<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): T {
+export function find<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): T {
 	var result: T;
 	every(map, function (item, key) {
 		if (callback.call(scope, item, key) !== false) {

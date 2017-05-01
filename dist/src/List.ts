@@ -437,15 +437,15 @@ export default class List<T> extends Class implements IList<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	find(callback: (item: T, index: number) => boolean, scope?: any): number {
-		return ArrayUtils.find(this._items, callback, scope);
+	findIndex(callback: (item: T, index: number) => boolean, scope?: any): number {
+		return ArrayUtils.findIndex(this._items, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	search(callback: (item: T, index: number) => boolean, scope: any = null): T {
-		return ArrayUtils.search(this._items, callback, scope);
+	find(callback: (item: T, index: number) => boolean, scope: any = null): T {
+		return ArrayUtils.find(this._items, callback, scope);
 	}
 
 	/**

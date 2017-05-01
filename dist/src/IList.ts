@@ -247,12 +247,12 @@ interface IList<T> extends ICollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	find(callback: (item: T, index: number) => boolean, scope?: any): number;
+	findIndex(callback: (item: T, index: number) => boolean, scope?: any): number;
 
 	/**
 	 * @inheritdoc
 	 */
-	search(callback: (item: T, index: number) => boolean, scope: any): T;
+	find(callback: (item: T, index: number) => boolean, scope: any): T;
 
 	/**
 	 * @inheritdoc

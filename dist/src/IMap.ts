@@ -221,12 +221,12 @@ interface IMap<T> extends ICollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	find(callback: (item: T, key: string) => boolean, scope?: any): string;
+	findIndex(callback: (item: T, key: string) => boolean, scope?: any): string;
 
 	/**
 	 * @inheritdoc
 	 */
-	search(callback: (item: T, key: string) => boolean, scope: any): T;
+	find(callback: (item: T, key: string) => boolean, scope: any): T;
 
 	/**
 	 * @inheritdoc

@@ -283,7 +283,7 @@ interface ICollection<T> extends IClass {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item or undefined.
 	 */
-	search(callback: (item: T) => boolean, scope?: any): T;
+	find(callback: (item: T) => boolean, scope?: any): T;
 
 	/**
 	 * Converts collection to sorted array.

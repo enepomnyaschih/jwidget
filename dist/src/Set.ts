@@ -342,7 +342,7 @@ class Set<T> extends Class implements ISet<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item or undefined.
 	 */
-	search(callback: (item: T) => boolean, scope?: any): T {
+	find(callback: (item: T) => boolean, scope?: any): T {
 		let result: T;
 		this._items.every((item) => {
 			if (callback.call(scope || this, item) !== false) {

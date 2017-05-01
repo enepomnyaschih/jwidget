@@ -66,7 +66,7 @@ export function contains<T>(arr: T[], item: T): boolean {
  * @param scope **callback** call scope. Defaults to collection itself.
  * @returns Found item key or undefined.
  */
-export function find<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number {
+export function findIndex<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number {
 	let result: number;
 	arr.every(function (item, index) {
 		if (callback.call(scope, item, index) !== false) {
@@ -89,8 +89,8 @@ export function find<T>(arr: T[], callback: (item: T, index: number) => boolean,
  * @param scope **callback** call scope. Defaults to collection itself.
  * @returns Found item or undefined.
  */
-export function search<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): T {
-	return arr[find(arr, callback, scope)];
+export function find<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): T {
+	return arr[findIndex(arr, callback, scope)];
 }
 
 /**
