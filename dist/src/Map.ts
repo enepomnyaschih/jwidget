@@ -576,7 +576,6 @@ class Map<T> extends Class implements IMap<T> {
 	 * This method works usually faster than [[toSet]],
 	 * but please make sure that the returned set
 	 * won't be modified externally, because it can cause strange unexpected bugs.
-	 * Requires T to extend JW.Class.
 	 */
 	asSet(): ISet<T> {
 		return this.toSet();

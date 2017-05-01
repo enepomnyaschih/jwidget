@@ -525,7 +525,6 @@ export function tryRemoveAll<T>(map: Dictionary<T>, keys: string[]): Dictionary<
 
 /**
  * Removes all occurrences of items in collection.
- * **Known issue:** *Works only if T extends JW.Class!*
  */
 export function removeItems<T>(map: Dictionary<T>, items: T[], getKey?: (item: T) => string) {
 	const itemSet = VidSet.fromArray<T>(items, getKey);

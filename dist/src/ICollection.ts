@@ -225,7 +225,6 @@ interface ICollection<T> extends IClass {
 
 	/**
 	 * Removes all occurrences of items in collection.
-	 * **Known issue:** *Works only if T implements IClass!*
 	 */
 	removeItems(items: T[]): void;
 
@@ -379,7 +378,6 @@ interface ICollection<T> extends IClass {
 	 * Converts collection to set.
 	 *
 	 * Builds new set consisting of collection items.
-	 * Requires T to extend JW.Class.
 	 */
 	toSet(): ISet<T>;
 
@@ -413,7 +411,6 @@ interface ICollection<T> extends IClass {
 	 * This method works usually faster than [[toSet]],
 	 * but please make sure that the returned set
 	 * won't be modified externally, because it can cause strange unexpected bugs.
-	 * Requires T to implement [[IClass]].
 	 */
 	asSet(): ISet<T>;
 

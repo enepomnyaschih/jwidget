@@ -370,7 +370,6 @@ export function removeItem<T>(arr: T[], item: T): number {
 
 /**
  * Removes all occurrences of items in collection.
- * **Known issue:** *Works only if T extends JW.Class!*
  */
 export function removeItems<T>(arr: T[], items: T[], getKey?: (item: T) => string) {
 	const itemSet = VidSet.fromArray<T>(items, getKey);
