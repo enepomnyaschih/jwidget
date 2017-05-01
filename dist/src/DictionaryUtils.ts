@@ -123,6 +123,16 @@ export function each<T>(map: Dictionary<T>, callback: (item: T, key: string) => 
 }
 
 /**
+ * Iterates collection items. Calls specified function for all items.
+ *
+ * @param callback Callback function.
+ * @param scope **callback** call scope. Defaults to collection itself.
+ */
+export function forEach<T>(map: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any) {
+	each(map, callback, scope);
+}
+
+/**
  * Finds item matching criteria.
  *
  * Returns key of first item for which callback returns !== false.
