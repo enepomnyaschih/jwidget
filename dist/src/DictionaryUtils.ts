@@ -19,7 +19,7 @@
 */
 
 import {apply, cmp} from './index';
-import {isDictionaryEmpty, VidMap, VidSet} from './internal';
+import {cmpPrimitives, identity, isDictionaryEmpty, VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
 import IMap from './IMap';
 import Some from './Some';
@@ -784,4 +784,55 @@ export function reduce<T, U>(map: Dictionary<T>, callback: (accumulator: U, item
 		value = callback(value, map[key], key);
 	}
 	return value;
+}
+
+export function max<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): T {
+	return map[maxKey(map, callback, scope, order)];
+}
+
+export function maxKey<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): string {
+	callback = callback || identity;
+	scope = scope || map;
+	let result: string;
+	let max: any;
+	for (let key in map) {
+		const item: any = callback.call(scope, map[key], key);
+		if ((result === undefined) || (order > 0 && max < item) || (order < 0 && max > item)) {
+			result = key;
+			max = item;
+		}
+	}
+	return result;
+}
+
+export function maxComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): T {
+	return map[maxKeyComparing(map, compare, scope, order)];
+}
+
+export function maxKeyComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): string {
+	compare = compare || cmpPrimitives;
+	scope = scope || map;
+	let result: string;
+	for (let key in map) {
+		if (order * compare.call(scope, map[result], map[key], result, key) < 0) {
+			result = key;
+		}
+	}
+	return result;
+}
+
+export function min<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): T {
+	return max(map, callback, scope, -order);
+}
+
+export function minKey<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): string {
+	return maxKey(map, callback, scope, -order);
+}
+
+export function minComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): T {
+	return maxComparing(map, compare, scope, -order);
+}
+
+export function minKeyComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): string {
+	return maxKeyComparing(map, compare, scope, -order);
 }

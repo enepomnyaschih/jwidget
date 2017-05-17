@@ -699,6 +699,22 @@ interface IList<T> extends ICollection<T> {
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
 
 	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
+
+	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
+
+	maxIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
+
+	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T;
+
+	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number;
+
+	min(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
+
+	minIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
+
+	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T;
+
+	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number;
 }
 
 export default IList;

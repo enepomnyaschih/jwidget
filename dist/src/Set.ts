@@ -435,6 +435,22 @@ class Set<T> extends Class implements ISet<T> {
 		return this._items.values.reduce<U>(callback, initial);
 	}
 
+	max(callback?: (item: T) => any, scope?: any, order?: number): T {
+		return ArrayUtils.max(this._items.values, callback, scope, order);
+	}
+
+	maxComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T {
+		return ArrayUtils.maxComparing(this._items.values, compare, scope, order);
+	}
+
+	min(callback?: (item: T) => any, scope?: any, order?: number): T {
+		return ArrayUtils.min(this._items.values, callback, scope, order);
+	}
+
+	minComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T {
+		return ArrayUtils.minComparing(this._items.values, compare, scope, order);
+	}
+
 	/**
 	 * @inheritdoc
 	 */

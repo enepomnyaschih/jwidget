@@ -19,7 +19,7 @@
 */
 
 import {cmp, def, isArray} from './index';
-import {VidMap, VidSet} from './internal';
+import {cmpPrimitives, identity, VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
 import IList from './IList';
 import IndexCount from './IndexCount';
@@ -125,7 +125,7 @@ export function count<T>(arr: T[], callback: (item: T, index: number) => boolean
  * @returns Sorted item keys array.
  */
 export function getSortingIndices<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
-	callback = callback || function (x) { return x; };
+	callback = callback || identity;
 	order = order || 1;
 	const pairs: any[] = [];
 	arr.every(function (item, key) {
@@ -905,7 +905,7 @@ export function pop<T>(arr: T[]): T {
  * @returns Item index.
  */
 export function binarySearch<T>(arr: T[], value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
-	compare = compare || function (x, y) { return (x < y) ? -1 : (x > y) ? 1 : 0 };
+	compare = compare || cmpPrimitives;
 	scope = scope || arr;
 	order = order || 1;
 	var length = arr.length;
@@ -922,4 +922,61 @@ export function binarySearch<T>(arr: T[], value: T, compare?: (t1: T, t2: T) => 
 		step >>= 1;
 	}
 	return index;
+}
+
+export function max<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T {
+	return arr[maxIndex(arr, callback, scope, order)];
+}
+
+export function maxIndex<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number {
+	if (arr.length === 0) {
+		return -1;
+	}
+	callback = callback || identity;
+	scope = scope || arr;
+	let result = 0;
+	let max: any = callback.call(scope, arr[0]);
+	for (let i = 1, l = arr.length; i < l; ++i) {
+		const item: any = callback.call(scope, arr[i], i);
+		if ((order > 0 && max < item) || (order < 0 && max > item)) {
+			result = i;
+			max = item;
+		}
+	}
+	return result;
+}
+
+export function maxComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T {
+	return arr[maxIndexComparing(arr, compare, scope, order)];
+}
+
+export function maxIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number {
+	if (arr.length === 0) {
+		return -1;
+	}
+	compare = compare || cmpPrimitives;
+	scope = scope || arr;
+	let result = 0;
+	for (let i = 1, l = arr.length; i < l; ++i) {
+		if (order * compare.call(scope, arr[result], arr[i], result, i) < 0) {
+			result = i;
+		}
+	}
+	return result;
+}
+
+export function min<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T {
+	return max(arr, callback, scope, -order);
+}
+
+export function minIndex<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number {
+	return maxIndex(arr, callback, scope, -order);
+}
+
+export function minComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T {
+	return maxComparing(arr, compare, scope, -order);
+}
+
+export function minIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number {
+	return maxIndexComparing(arr, compare, scope, -order);
 }

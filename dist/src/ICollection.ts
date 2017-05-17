@@ -448,6 +448,14 @@ interface ICollection<T> extends IClass {
 	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ICollection<U>;
 
 	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U;
+
+	max(callback?: (item: T) => any, scope?: any, order?: number): T;
+
+	maxComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T;
+
+	min(callback?: (item: T) => any, scope?: any, order?: number): T;
+
+	minComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T;
 }
 
 export default ICollection;

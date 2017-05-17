@@ -492,6 +492,22 @@ interface IMap<T> extends ICollection<T> {
 	equal(map: Dictionary<T>): boolean;
 
 	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
+
+	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
+
+	maxKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
+
+	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T;
+
+	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string;
+
+	min(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
+
+	minKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
+
+	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T;
+
+	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string;
 }
 
 export default IMap;

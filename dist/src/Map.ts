@@ -516,6 +516,38 @@ class Map<T> extends Class implements IMap<T> {
 		return DictionaryUtils.reduce<T, U>(this.items, callback, initial);
 	}
 
+	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T {
+		return DictionaryUtils.max(this._items, callback, scope, order);
+	}
+
+	maxKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string {
+		return DictionaryUtils.maxKey(this._items, callback, scope, order);
+	}
+
+	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T {
+		return DictionaryUtils.maxComparing(this._items, compare, scope, order);
+	}
+
+	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string {
+		return DictionaryUtils.maxKeyComparing(this._items, compare, scope, order);
+	}
+
+	min(callback?: (item: T, key: string) => any, scope?: any, order?: number): T {
+		return DictionaryUtils.min(this._items, callback, scope, order);
+	}
+
+	minKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string {
+		return DictionaryUtils.minKey(this._items, callback, scope, order);
+	}
+
+	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T {
+		return DictionaryUtils.minComparing(this._items, compare, scope, order);
+	}
+
+	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string {
+		return DictionaryUtils.minKeyComparing(this._items, compare, scope, order);
+	}
+
 	/**
 	 * Converts collection to array.
 	 *

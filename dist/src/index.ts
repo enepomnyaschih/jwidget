@@ -20,6 +20,7 @@
 
 import Dictionary from './Dictionary';
 import Identifiable from './Identifiable';
+import {cmpPrimitives} from './internal';
 
 /**
  * Checks if value is undefined.
@@ -219,10 +220,6 @@ export interface CmpConfig {
 
 function getTypeRank(x: any): string {
 	return (x === undefined) ? "0" : (x === null) ? "1" : isArray(x) ? "array" : typeof x;
-}
-
-function cmpPrimitives(x: any, y : any): number {
-	return (x > y) ? 1 : (x < y) ? -1 : 0;
 }
 
 function cmpBooleans(x: boolean, y: boolean): number {

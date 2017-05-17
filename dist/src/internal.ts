@@ -28,6 +28,14 @@ export function isDictionaryEmpty<T>(dict: Dictionary<T>) {
 	return true;
 }
 
+export function identity<T>(x: T): T {
+	return x;
+}
+
+export function cmpPrimitives(x: any, y : any): number {
+	return (x > y) ? 1 : (x < y) ? -1 : 0;
+}
+
 export function isLifeInput(el: JQuery): boolean;
 
 export function isLifeInput(el: Element): boolean;

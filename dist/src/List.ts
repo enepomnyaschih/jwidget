@@ -543,6 +543,38 @@ export default class List<T> extends Class implements IList<T> {
 		return this.items.reduce<U>(callback, initial);
 	}
 
+	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T {
+		return ArrayUtils.max(this._items, callback, scope, order);
+	}
+
+	maxIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number {
+		return ArrayUtils.maxIndex(this._items, callback, scope, order);
+	}
+
+	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T {
+		return ArrayUtils.maxComparing(this._items, compare, scope, order);
+	}
+
+	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number {
+		return ArrayUtils.maxIndexComparing(this._items, compare, scope, order);
+	}
+
+	min(callback?: (item: T, index: number) => any, scope?: any, order?: number): T {
+		return ArrayUtils.min(this._items, callback, scope, order);
+	}
+
+	minIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number {
+		return ArrayUtils.minIndex(this._items, callback, scope, order);
+	}
+
+	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T {
+		return ArrayUtils.minComparing(this._items, compare, scope, order);
+	}
+
+	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number {
+		return ArrayUtils.minIndexComparing(this._items, compare, scope, order);
+	}
+
 	/**
 	 * @inheritdoc
 	 */
