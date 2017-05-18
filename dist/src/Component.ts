@@ -24,10 +24,10 @@ import {apply, destroy, isBindable} from './index';
 import List from './List';
 import AbstractTemplate from './AbstractTemplate';
 import Class from './Class';
-import ComponentList from './component/ComponentList';
+import ComponentBindable from './component/ComponentBindable';
 import ComponentChildren from './component/ComponentChildren';
 import ComponentCollection from './component/ComponentCollection';
-import ComponentReplaceable from './component/ComponentReplaceable';
+import ComponentList from './component/ComponentList';
 import Dictionary from './Dictionary';
 import DomTemplate from './DomTemplate';
 import IList from './IList';
@@ -59,10 +59,10 @@ export default class Component extends Class {
 	private _wasAfterAppend: boolean = false;
 	private _template: AbstractTemplate = null;
 
-	private __elements     : Dictionary<JQuery> = null;
-	private __replaceables : Dictionary<ComponentReplaceable> = null;
-	private __arrays       : Dictionary<ComponentList> = null;
-	private __collections  : Dictionary<ComponentCollection> = null;
+	private __elements    : Dictionary<JQuery> = null;
+	private __bindables   : Dictionary<ComponentBindable> = null;
+	private __arrays      : Dictionary<ComponentList> = null;
+	private __collections : Dictionary<ComponentCollection> = null;
 
 	/**
 	 * Map from template ID to the template. Templates are defined by `template` annotation.
@@ -113,8 +113,8 @@ export default class Component extends Class {
 	/**
 	 * @hidden
 	 */
-	get _replaceables() {
-		return this.__replaceables;
+	get _bindables() {
+		return this.__bindables;
 	}
 
 	/**
@@ -147,8 +147,8 @@ export default class Component extends Class {
 			this.__collections = null;
 			DictionaryUtils.each(this.__arrays, destroy);
 			this.__arrays = null;
-			DictionaryUtils.each(this.__replaceables, destroy);
-			this.__replaceables = null;
+			DictionaryUtils.each(this.__bindables, destroy);
+			this.__bindables = null;
 
 			this._children.unrender();
 			this.unrender();
@@ -249,7 +249,7 @@ export default class Component extends Class {
 		this._el = jQuery(output.root);
 		this.__elements = DictionaryUtils.map(output.groups, function(x) { return jQuery(x); });
 		this._children = new ComponentChildren(this);
-		this.__replaceables = {};
+		this.__bindables = {};
 		this.__arrays = {};
 		this.__collections = {};
 		this.beforeRender();
@@ -281,7 +281,7 @@ export default class Component extends Class {
 					if (result instanceof Component) {
 						this._children.put(jwId, result);
 					} else if (isBindable(result)) {
-						this.addReplaceable(result, jwId);
+						this.addBindable(result, jwId);
 					} else if (result instanceof List) {
 						this.addList(result, jwId);
 					} else if (result instanceof Map || result instanceof Set) {
@@ -367,8 +367,8 @@ export default class Component extends Class {
 	 * @param component Child component property.
 	 * @param id `jwid` of element to replace.
 	 */
-	addReplaceable(component: Bindable<Component>, id: string): ComponentReplaceable {
-		return new ComponentReplaceable(this, component, id);
+	addBindable(component: Bindable<Component>, id: string): ComponentBindable {
+		return new ComponentBindable(this, component, id);
 	}
 
 	/**

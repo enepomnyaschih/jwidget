@@ -26,10 +26,10 @@ import Switcher from '../Switcher';
 /**
  * @hidden
  */
-export default class ComponentReplaceable extends Class {
+export default class ComponentBindable extends Class {
 	constructor(private parent: Component, component: Bindable<Component>, private id: string) {
 		super();
-		parent._replaceables[this.iid] = this;
+		parent._bindables[this.iid] = this;
 
 		this.own(new Switcher([component], {
 			init: (child: Component) => {
@@ -42,7 +42,7 @@ export default class ComponentReplaceable extends Class {
 	}
 
 	destroy() {
-		delete this.parent._replaceables[this.iid];
+		delete this.parent._bindables[this.iid];
 		super.destroy();
 	}
 }
