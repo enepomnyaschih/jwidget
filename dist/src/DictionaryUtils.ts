@@ -19,12 +19,18 @@
 */
 
 import {apply, cmp} from './index';
-import {cmpPrimitives, identity, isDictionaryEmpty, VidMap, VidSet} from './internal';
+import {cmpPrimitives, identity, VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
 import IMap from './IMap';
 import Some from './Some';
 
-export {isDictionaryEmpty as isEmpty};
+export function isEmpty<T>(dict: Dictionary<T>) {
+	for (let key in dict) {
+		key = key; // suppress unused variable error
+		return false;
+	}
+	return true;
+}
 
 /**
  * Returns first item in collection. If collection is empty, returns undefined.
@@ -421,7 +427,7 @@ export function tryPutAll<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.Spl
 		}
 		addedItems[key] = item;
 	}
-	if (!isDictionaryEmpty(removedItems) || !isDictionaryEmpty(addedItems)) {
+	if (!isEmpty(removedItems) || !isEmpty(addedItems)) {
 		return { removedItems: removedItems, addedItems: addedItems };
 	}
 	return undefined;
@@ -517,7 +523,7 @@ export function tryRemoveAll<T>(map: Dictionary<T>, keys: string[]): Dictionary<
 			items[key] = item;
 		}
 	}
-	if (!isDictionaryEmpty(items)) {
+	if (!isEmpty(items)) {
 		return items;
 	}
 	return undefined;
@@ -548,7 +554,7 @@ export function clear<T>(map: Dictionary<T>): Dictionary<T> {
  * @returns Old collection contents. If not modified - undefined.
  */
 export function tryClear<T>(map: Dictionary<T>): Dictionary<T> {
-	if (isDictionaryEmpty(map)) {
+	if (isEmpty(map)) {
 		return undefined;
 	}
 	var items: Dictionary<T> = apply({}, map);
@@ -633,7 +639,7 @@ export function tryReindex<T>(map: Dictionary<T>, keyMap: Dictionary<string>): D
 		}
 	}
 
-	if (isDictionaryEmpty(sanitizedKeyMap)) {
+	if (isEmpty(sanitizedKeyMap)) {
 		return undefined;
 	}
 	for (var i = 0, l = removedKeys.length; i < l; ++i) {
@@ -663,7 +669,7 @@ export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>
 			updatedItems[key] = item;
 		}
 	}
-	if ((removedKeys.length !== 0) || !isDictionaryEmpty(updatedItems)) {
+	if ((removedKeys.length !== 0) || !isEmpty(updatedItems)) {
 		return { removedKeys: removedKeys, updatedItems: updatedItems };
 	}
 	return undefined;
@@ -693,7 +699,7 @@ export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T
 			keyMap[oldKey] = newKey;
 		}
 	}
-	if (!isDictionaryEmpty(keyMap)) {
+	if (!isEmpty(keyMap)) {
 		return keyMap;
 	}
 	return undefined;

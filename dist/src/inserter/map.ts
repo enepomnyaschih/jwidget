@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {isDictionaryEmpty} from '../internal';
+import {isEmpty} from '../DictionaryUtils';
 import Class from '../Class';
 import Dictionary from '../Dictionary';
 import IMap from '../IMap';
@@ -125,7 +125,7 @@ class MapInserter<T> extends Class {
 	}
 
 	private _doClearItems(items: Dictionary<T>) {
-		if (isDictionaryEmpty(items)) {
+		if (isEmpty(items)) {
 			return;
 		}
 		if (this._clear) {
