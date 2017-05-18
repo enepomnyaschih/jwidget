@@ -18,44 +18,49 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionLister from './AbstractCollectionLister';
+import AbstractConverterToSet from './AbstractConverterToSet';
+import IMap from '../IMap';
 import ISet from '../ISet';
 import Set from '../Set';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
- * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Set]].
+ * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Map]].
  */
-export default class SetLister<T> extends AbstractCollectionLister<T> {
+export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ISet<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: AbstractCollectionLister.Config<T>) {
+	constructor(source: IMap<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
+		this.target.trySplice(
+			DictionaryUtils.toArray(spliceResult.removedItems),
+			DictionaryUtils.toArray(spliceResult.addedItems));
 	}
 
-	private _onClear(params: ISet.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(params.items);
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this.target.tryRemoveAll(
+			DictionaryUtils.toArray(params.items));
 	}
 }
 
-export function setToSet<T>(source: ISet<T>): ISet<T> {
+export function mapToSet<T>(source: IMap<T>): ISet<T> {
 	if (source.silent) {
 		return source.toSet();
 	}
 	const result = new Set<T>(source.getKey);
-	return result.owning(new SetLister<T>(source, {
+	return result.owning(new MapConverterToSet<T>(source, {
 		target: result
 	}));
 }

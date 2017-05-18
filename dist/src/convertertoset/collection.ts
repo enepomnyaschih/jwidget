@@ -18,24 +18,30 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ListLister, listToSet} from './list';
-import {default as MapLister, mapToSet} from './map';
-import {default as SetLister, setToSet} from './set';
-import AbstractCollectionLister from './AbstractCollectionLister';
+import {default as ListConverterToSet, listToSet} from './list';
+import {default as MapConverterToSet, mapToSet} from './map';
+import {default as SetConverterToSet, setToSet} from './set';
+import AbstractConverterToSet from './AbstractConverterToSet';
 import ICollection from '../ICollection';
 import ISet from '../ISet';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createLister<T>(source: ICollection<T>, config: AbstractCollectionLister.Config<T>): AbstractCollectionLister<T> {
-	return (source instanceof List) ? new ListLister(source, config) :
-		(source instanceof Map) ? new MapLister(source, config) :
-		(source instanceof Set) ? new SetLister(source, config) : null;
+export function createConverterToSet<T>(source: ICollection<T>, config: AbstractConverterToSet.Config<T>): AbstractConverterToSet<T> {
+	return (source instanceof List) ? new ListConverterToSet(source, config) :
+		(source instanceof Map) ? new MapConverterToSet(source, config) :
+		(source instanceof Set) ? new SetConverterToSet(source, config) : null;
 }
 
 export function collectionToSet<T>(source: ICollection<T>): ISet<T> {
 	return (source instanceof List) ? listToSet(source) :
 		(source instanceof Map) ? mapToSet(source) :
 		(source instanceof Set) ? setToSet(source) : null;
+}
+
+export function collectionAsSet<T>(source: ICollection<T>): ISet<T> {
+	return (source instanceof List) ? listToSet(source) :
+		(source instanceof Map) ? mapToSet(source) :
+		(source instanceof Set) ? source : null;
 }

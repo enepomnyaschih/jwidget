@@ -18,24 +18,30 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ListOrderer, listToList} from './list';
-import {default as MapOrderer, mapToList} from './map';
-import {default as SetOrderer, setToList} from './set';
-import AbstractCollectionOrderer from './AbstractCollectionOrderer';
+import {default as ListConverterToList, listToList} from './list';
+import {default as MapConverterToList, mapToList} from './map';
+import {default as SetConverterToList, setToList} from './set';
+import AbstractConverterToList from './AbstractConverterToList';
 import IList from '../IList';
 import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createOrderer<T>(source: ICollection<T>, config: AbstractCollectionOrderer.Config<T>): AbstractCollectionOrderer<T> {
-	return (source instanceof List) ? new ListOrderer(source, config) :
-		(source instanceof Map) ? new MapOrderer(source, config) :
-		(source instanceof Set) ? new SetOrderer(source, config) : null;
+export function createConverterToList<T>(source: ICollection<T>, config: AbstractConverterToList.Config<T>): AbstractConverterToList<T> {
+	return (source instanceof List) ? new ListConverterToList(source, config) :
+		(source instanceof Map) ? new MapConverterToList(source, config) :
+		(source instanceof Set) ? new SetConverterToList(source, config) : null;
 }
 
 export function collectionToList<T>(source: ICollection<T>): IList<T> {
 	return (source instanceof List) ? listToList(source) :
+		(source instanceof Map) ? mapToList(source) :
+		(source instanceof Set) ? setToList(source) : null;
+}
+
+export function collectionAsList<T>(source: ICollection<T>): IList<T> {
+	return (source instanceof List) ? source :
 		(source instanceof Map) ? mapToList(source) :
 		(source instanceof Set) ? setToList(source) : null;
 }

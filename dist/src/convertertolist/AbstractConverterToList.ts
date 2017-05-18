@@ -86,7 +86,7 @@ import List from '../List';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionOrderer<T> extends Class {
+abstract class AbstractConverterToList<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -101,7 +101,7 @@ abstract class AbstractCollectionOrderer<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractCollectionOrderer.Config<T> = {}) {
+	constructor(readonly source: ICollection<T>, config: AbstractConverterToList.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
@@ -135,9 +135,9 @@ abstract class AbstractCollectionOrderer<T> extends Class {
 	}
 }
 
-export default AbstractCollectionOrderer;
+export default AbstractConverterToList;
 
-namespace AbstractCollectionOrderer {
+namespace AbstractConverterToList {
 	/**
 	 * [[JW.AbstractCollection.Orderer]] configuration.
 	 *

@@ -19,47 +19,49 @@
 */
 
 import {VidSet} from '../internal';
-import AbstractCollectionOrderer from './AbstractCollectionOrderer';
+import AbstractConverterToList from './AbstractConverterToList';
 import IList from '../IList';
-import ISet from '../ISet';
+import IMap from '../IMap';
 import List from '../List';
+import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
- * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Set]].
+ * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Map]].
  */
-export default class SetOrderer<T> extends AbstractCollectionOrderer<T> {
+export default class MapConverterToList<T> extends AbstractConverterToList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ISet<T>;
+	readonly source: IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: AbstractCollectionOrderer.Config<T>) {
+	constructor(source: IMap<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
-			VidSet.fromArray<T>(spliceResult.removedItems, this.source.getKey),
-			VidSet.fromArray<T>(spliceResult.addedItems, this.source.getKey));
+			VidSet.fromDictionary<T>(spliceResult.removedItems, this.source.getKey),
+			VidSet.fromDictionary<T>(spliceResult.addedItems, this.source.getKey));
 	}
 
-	private _onClear(params: ISet.ItemsEventParams<T>) {
-		this.target.removeItems(params.items);
+	private _onClear(params: IMap.ItemsEventParams<T>) {
+		this.target.removeItems(
+			DictionaryUtils.toArray(params.items));
 	}
 }
 
-export function setToList<T>(source: ISet<T>): IList<T> {
+export function mapToList<T>(source: IMap<T>): IList<T> {
 	if (source.silent) {
 		return source.toList();
 	}
 	const result = new List<T>(source.getKey);
-	return result.owning(new SetOrderer<T>(source, {
+	return result.owning(new MapConverterToList<T>(source, {
 		target: result
 	}));
 }

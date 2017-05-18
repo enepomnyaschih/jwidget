@@ -95,7 +95,7 @@ import Set from '../Set';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionLister<T> extends Class {
+abstract class AbstractConverterToSet<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -110,7 +110,7 @@ abstract class AbstractCollectionLister<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractCollectionLister.Config<T> = {}) {
+	constructor(readonly source: ICollection<T>, config: AbstractConverterToSet.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(source.getKey, source.silent) : config.target;
@@ -129,9 +129,9 @@ abstract class AbstractCollectionLister<T> extends Class {
 	}
 }
 
-export default AbstractCollectionLister;
+export default AbstractConverterToSet;
 
-namespace AbstractCollectionLister {
+namespace AbstractConverterToSet {
 	/**
 	 * [[JW.AbstractCollection.Lister]] configuration.
 	 *

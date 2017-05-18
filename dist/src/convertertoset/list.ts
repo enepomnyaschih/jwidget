@@ -18,17 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {VidSet} from '../internal';
-import AbstractCollectionOrderer from './AbstractCollectionOrderer';
+import AbstractConverterToSet from './AbstractConverterToSet';
 import IList from '../IList';
-import IndexCount from '../IndexCount';
-import IndexItems from '../IndexItems';
-import List from '../List';
+import ISet from '../ISet';
+import Set from '../Set';
 
 /**
- * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Array]].
+ * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Array]].
  */
-export default class ListOrderer<T> extends AbstractCollectionOrderer<T> {
+export default class ListConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -37,7 +35,7 @@ export default class ListOrderer<T> extends AbstractCollectionOrderer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractCollectionOrderer.Config<T>) {
+	constructor(source: IList<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
@@ -45,30 +43,25 @@ export default class ListOrderer<T> extends AbstractCollectionOrderer<T> {
 	}
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
-		const spliceResult = params.spliceResult;
-		this._splice(
-			VidSet.fromArray<T>(spliceResult.removedItems, this.source.getKey),
-			VidSet.fromArray<T>(spliceResult.addedItems, this.source.getKey));
+		var spliceResult = params.spliceResult;
+		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		const index = this.target.indexOf(params.oldItem);
-		this.target.trySplice(
-			[new IndexCount(index, 1)],
-			[new IndexItems(this.target.length.get() - 1, [params.newItem])]);
+		this.target.trySplice([params.oldItem], [params.newItem]);
 	}
 
 	private _onClear(params: IList.ItemsEventParams<T>) {
-		this.target.removeItems(params.items);
+		this.target.tryRemoveAll(params.items);
 	}
 }
 
-export function listToList<T>(source: IList<T>): IList<T> {
+export function listToSet<T>(source: IList<T>): ISet<T> {
 	if (source.silent) {
-		return source.toList();
+		return source.toSet();
 	}
-	const result = new List<T>(source.getKey);
-	return result.owning(new ListOrderer<T>(source, {
+	const result = new Set<T>(source.getKey);
+	return result.owning(new ListConverterToSet<T>(source, {
 		target: result
 	}));
 }
