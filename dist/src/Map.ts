@@ -410,7 +410,7 @@ class Map<T> extends Class implements IMap<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	findIndex(callback: (item: T, key: string) => boolean, scope?: any): string {
+	findKey(callback: (item: T, key: string) => boolean, scope?: any): string {
 		return DictionaryUtils.findKey(this._items, callback, scope || this);
 	}
 

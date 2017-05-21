@@ -222,7 +222,7 @@ interface IMap<T> extends ICollection<T>, DestroyableReadOnlyMap<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	findIndex(callback: (item: T, key: string) => boolean, scope?: any): string;
+	findKey(callback: (item: T, key: string) => boolean, scope?: any): string;
 
 	/**
 	 * @inheritdoc
