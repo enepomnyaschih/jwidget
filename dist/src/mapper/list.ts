@@ -20,7 +20,7 @@
 
 import {destroy} from '../index';
 import AbstractCollectionMapper from './AbstractCollectionMapper';
-import Destroyable from '../Destroyable';
+import Destructor from '../Destructor';
 import IList from '../IList';
 import IndexItems from '../IndexItems';
 import List from '../List';
@@ -44,8 +44,8 @@ class ListMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: ListMapper.Config<T, U>) {
-		super(source, config);
+	constructor(source: IList<T>, create: (sourceValue: T) => U, config: ListMapper.FullConfig<T, U> = {}) {
+		super(source, create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(config.getKey, this.source.silent) : config.target;
 		this.target.tryAddAll(this._createItems(this.source.items));
@@ -126,7 +126,7 @@ namespace ListMapper {
 	/**
 	 * @inheritdoc
 	 */
-	export interface Config<T, U> extends AbstractCollectionMapper.Config<T, U> {
+	export interface FullConfig<T, U> extends AbstractCollectionMapper.Config<T, U> {
 		/**
 		 * @inheritdoc
 		 */
@@ -134,29 +134,26 @@ namespace ListMapper {
 	}
 }
 
-export function mapList<T, U>(source: IList<T>,
-		map: (item: T) => U, scope?: any, getKey?: (item: U) => string): IList<U> {
-	if (source.silent) {
-		return source.map(map, scope, getKey);
+export function mapList<T, U>(source: IList<T>, create: (sourceValue: T) => U,
+		config: AbstractCollectionMapper.Config<T, U> = {}): IList<U> {
+	if (!source.silent) {
+		const target = new List<U>(config.getKey);
+		return target.owning(new ListMapper<T, U>(source, create, {
+			target,
+			destroy: config.destroy,
+			scope: config.scope,
+			getKey: config.getKey
+		}));
 	}
-	const result = new List<U>(getKey);
-	return result.owning(new ListMapper<T, U>(source, {
-		target: result,
-		create: map,
-		scope: scope
-	}));
-}
-
-export function mapDestroyableList<T, U extends Destroyable>(source: IList<T>,
-		create: (item: T) => U, scope?: any, getKey?: (item: U) => string): IList<U> {
-	if (source.silent) {
-		return source.map(create, scope, getKey).ownItems();
+	const target = source.map(create, config.scope, config.getKey);
+	if (config.destroy === destroy) {
+		target.ownItems();
+	} else if (config.destroy) {
+		const sourceValues = source.items.concat();
+		target.own(new Destructor(() => target.backEvery((item, index) => {
+			config.destroy.call(config.scope, item, sourceValues[index]);
+			return true;
+		})));
 	}
-	const result = new List<U>(getKey);
-	return result.owning(new ListMapper<T, U>(source, {
-		target: result,
-		create: create,
-		destroy: destroy,
-		scope: scope
-	}));
+	return target;
 }

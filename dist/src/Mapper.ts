@@ -21,8 +21,8 @@
 import Listenable from './Listenable';
 import Class from './Class';
 import {destroy} from './index';
-import Destroyable from './Destroyable';
 import DestroyableBindable from './DestroyableBindable';
+import Destructor from './Destructor';
 import IProperty from './IProperty';
 import Property from './Property';
 import Bindable from './Bindable';
@@ -165,14 +165,15 @@ class Mapper<T> extends Class {
 	/**
 	 * @param config Configuration.
 	 */
-	constructor(config: Mapper.Config<T>) {
+	constructor(sources: Bindable<any>[], create: Mapper.CreateCallback<T>, config: Mapper.FullConfig<T> = {}) {
 		super();
-		this.sources = config.sources;
-		this._create = config.create;
+		this.sources = sources;
+		this._create = create;
 		this._destroy = config.destroy;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new Property<T>() : config.target;
+		this._target = this._targetCreated ?
+			new Property<T>(null, this.sources.every((source) => source.silent)) : config.target;
 		this._viaNull = config.viaNull || false;
 		this._sourceValues = null;
 		this._targetValue = null;
@@ -269,27 +270,7 @@ namespace Mapper {
 		(targetValue: T, ...sourceValues: any[]): any;
 	}
 
-	/**
-	 * [[JW.Mapper]] configuration.
-	 *
-	 * @param T Target property value type.
-	 */
 	export interface Config<T> {
-		/**
-		 * Source properties.
-		 */
-		readonly sources: Bindable<any>[];
-
-		/**
-		 * Target property. By default, created automatically.
-		 */
-		readonly target?: IProperty<T>;
-
-		/**
-		 * Calculates target property value based on source property values.
-		 */
-		readonly create: CreateCallback<T>;
-
 		/**
 		 * Destroys target property value.
 		 */
@@ -317,36 +298,40 @@ namespace Mapper {
 		 */
 		readonly viaNull?: boolean;
 	}
+
+	/**
+	 * [[JW.Mapper]] configuration.
+	 *
+	 * @param T Target property value type.
+	 */
+	export interface FullConfig<T> extends Config<T> {
+		/**
+		 * Target property. By default, created automatically.
+		 */
+		readonly target?: IProperty<T>;
+	}
 }
 
 export default Mapper;
 
-export function mapProperties<U>(sources: Bindable<any>[], map: Mapper.CreateCallback<U>, scope?: any): DestroyableBindable<U> {
-	if (sources.every((source) => source.silent)) {
-		const values = sources.map((source) => source.get());
-		return new Property<U>(map.apply(scope, values), true);
+export function mapProperties<T>(sources: Bindable<any>[], create: Mapper.CreateCallback<T>,
+		config: Mapper.Config<T> = {}): DestroyableBindable<T> {
+	if (!sources.every((source) => source.silent)) {
+		const target = new Property<T>();
+		return target.owning(new Mapper(sources, create, {
+			target,
+			destroy: config.destroy,
+			scope: config.scope,
+			viaNull: config.viaNull
+		}));
 	}
-	const result = new Property<U>();
-	return result.owning(new Mapper({
-		sources: sources,
-		target: result,
-		create: map,
-		scope: scope
-	}));
-}
-
-export function mapDestroyableProperties<U extends Destroyable>(
-		sources: Bindable<any>[], create: Mapper.CreateCallback<U>, scope?: any): DestroyableBindable<U> {
-	if (sources.every((source) => source.silent)) {
-		const values = sources.map((source) => source.get());
-		return new Property<U>(create.apply(scope, values), true).ownValue();
+	const sourceValues = sources.map((source) => source.get());
+	const targetValue = create.apply(config.scope, sourceValues);
+	const target = new Property<T>(targetValue, true);
+	if (config.destroy === destroy) {
+		target.ownValue();
+	} else if (config.destroy) {
+		target.own(new Destructor(() => config.destroy.apply(config.scope, [targetValue].concat(sourceValues))));
 	}
-	const result = new Property<U>();
-	return result.owning(new Mapper({
-		sources: sources,
-		target: result,
-		create: create,
-		destroy: destroy,
-		scope: scope
-	}));
+	return target;
 }

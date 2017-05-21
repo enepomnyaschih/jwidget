@@ -116,11 +116,6 @@ abstract class AbstractCollectionMapper<T, U> extends Class {
 	/**
 	 * @hidden
 	 */
-	protected _create: (data: T) => U;
-
-	/**
-	 * @hidden
-	 */
 	protected _destroy: (item: U, data: T) => void;
 
 	/**
@@ -140,9 +135,9 @@ abstract class AbstractCollectionMapper<T, U> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractCollectionMapper.Config<T, U>) {
+	constructor(readonly source: ICollection<T>, protected _create: (data: T) => U,
+			config: AbstractCollectionMapper.Config<T, U> = {}) {
 		super();
-		this._create = config.create;
 		this._destroy = config.destroy;
 		this._scope = config.scope || this;
 	}
@@ -161,6 +156,10 @@ abstract class AbstractCollectionMapper<T, U> extends Class {
 export default AbstractCollectionMapper;
 
 namespace AbstractCollectionMapper {
+	export interface DestroyCallback<T, U> {
+		(targetValue: U, sourceValue: T): any;
+	}
+
 	/**
 	 * [[JW.AbstractCollection.Mapper]] configuration.
 	 *
@@ -169,14 +168,9 @@ namespace AbstractCollectionMapper {
 	 */
 	export interface Config<T, U> {
 		/**
-		 * Mapping function. Creates an item of target collection by item of source collection.
-		 */
-		readonly create: (data: T) => U;
-
-		/**
 		 * Item destructor. Destroys an item of target collection.
 		 */
-		readonly destroy?: (item: U, data: T) => void;
+		readonly destroy?: DestroyCallback<T, U>;
 
 		/**
 		 * [[createItem]] and [[destroyItem]] call scope.

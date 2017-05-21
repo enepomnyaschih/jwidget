@@ -20,7 +20,7 @@
 
 import {destroy} from '../index';
 import AbstractCollectionMapper from './AbstractCollectionMapper';
-import Destroyable from '../Destroyable';
+import Destructor from '../Destructor';
 import Dictionary from '../Dictionary';
 import IMap from '../IMap';
 import Map from '../Map';
@@ -45,8 +45,8 @@ class MapMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: MapMapper.Config<T, U>) {
-		super(source, config);
+	constructor(source: IMap<T>, create: (data: T) => U, config: MapMapper.FullConfig<T, U> = {}) {
+		super(source, create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<U>(config.getKey, this.source.silent) : config.target;
 		this.target.tryPutAll(this._createItems(source.items));
@@ -111,7 +111,7 @@ namespace MapMapper {
 	/**
 	 * @inheritdoc
 	 */
-	export interface Config<T, U> extends AbstractCollectionMapper.Config<T, U> {
+	export interface FullConfig<T, U> extends AbstractCollectionMapper.Config<T, U> {
 		/**
 		 * @inheritdoc
 		 */
@@ -119,29 +119,25 @@ namespace MapMapper {
 	}
 }
 
-export function mapMap<T, U>(source: IMap<T>,
-		map: (item: T) => U, scope?: any, getKey?: (item: U) => string): IMap<U> {
-	if (source.silent) {
-		return source.map(map, scope, getKey);
+export function mapMap<T, U>(source: IMap<T>, create: (sourceValue: T) => U,
+		config: AbstractCollectionMapper.Config<T, U> = {}): IMap<U> {
+	if (!source.silent) {
+		const target = new Map<U>(config.getKey);
+		return target.owning(new MapMapper<T, U>(source, create, {
+			target,
+			destroy: config.destroy,
+			scope: config.scope
+		}));
 	}
-	const result = new Map<U>(getKey);
-	return result.owning(new MapMapper<T, U>(source, {
-		target: result,
-		create: map,
-		scope: scope
-	}));
-}
-
-export function mapDestroyableMap<T, U extends Destroyable>(source: IMap<T>,
-		create: (item: T) => U, scope?: any, getKey?: (item: U) => string): IMap<U> {
-	if (source.silent) {
-		return source.map(create, scope, getKey).ownItems();
+	const target = source.map(create, config.scope, config.getKey);
+	if (config.destroy === destroy) {
+		target.ownItems();
+	} else if (config.destroy) {
+		const sourceValues = DictionaryUtils.clone(source.items);
+		target.own(new Destructor(() => target.every((item, key) => {
+			config.destroy.call(config.scope, item, sourceValues[key]);
+			return true;
+		})));
 	}
-	const result = new Map<U>(getKey);
-	return result.owning(new MapMapper<T, U>(source, {
-		target: result,
-		create: create,
-		destroy: destroy,
-		scope: scope
-	}));
+	return target;
 }

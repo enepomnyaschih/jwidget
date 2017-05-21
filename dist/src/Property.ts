@@ -21,12 +21,11 @@
 import Class from "./Class";
 import {destroy} from "./index";
 import Listenable from "./Listenable";
-import Destroyable from "./Destroyable";
 import DestroyableBindable from "./DestroyableBindable";
 import Event from "./Event";
 import IEvent from "./IEvent";
 import IProperty from "./IProperty";
-import {mapProperties, mapDestroyableProperties} from "./Mapper";
+import {default as Mapper, mapProperties} from "./Mapper";
 import Bindable from "./Bindable";
 
 /**
@@ -113,20 +112,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 * @param callback Mapping function.
 	 * @param scope `callback` call scope. Defaults to the property itself.
 	 */
-	map<U>(callback: (value: V) => U, scope?: any): DestroyableBindable<U> {
-		return mapProperties([this], callback, scope || this);
-	}
-
-	/**
-	 * Builds a new property containing the result of the callback function called
-	 * on this property value. To stop synchronization, destroy the result property.
-	 * In comparison to `map` method, destroys the previously assigned target values.
-	 * To map multiple properties, use `Mapper`.
-	 *
-	 * @param callback Mapping function.
-	 * @param scope `callback` call scope. Defaults to the property itself.
-	 */
-	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): DestroyableBindable<U> {
-		return mapDestroyableProperties([this], callback, scope || this);
+	map<U>(create: (value: V) => U, config?: Mapper.Config<U>): DestroyableBindable<U> {
+		return mapProperties([this], create, config);
 	}
 }

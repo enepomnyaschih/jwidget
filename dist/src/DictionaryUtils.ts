@@ -79,6 +79,14 @@ export function keyOf<T>(map: Dictionary<T>, item: T): string {
 	});
 }
 
+export function clone<T>(map: Dictionary<T>): Dictionary<T> {
+	const result: Dictionary<T> = {};
+	for (let key in map) {
+		result[key] = map[key];
+	}
+	return result;
+}
+
 /**
  * Matches all items against criteria.
  *

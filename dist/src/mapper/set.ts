@@ -21,7 +21,7 @@
 import {destroy} from '../index';
 import {VidMap} from '../internal';
 import AbstractCollectionMapper from './AbstractCollectionMapper';
-import Destroyable from '../Destroyable';
+import Destructor from '../Destructor';
 import ISet from '../ISet';
 import Set from '../Set';
 
@@ -49,8 +49,8 @@ class SetMapper<T, U> extends AbstractCollectionMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: SetMapper.Config<T, U>) {
-		super(source, config);
+	constructor(source: ISet<T>, create: (data: T) => U, config: SetMapper.FullConfig<T, U> = {}) {
+		super(source, create, config);
 		this._items = new VidMap<T, U>(source.getKey);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<U>(config.getKey, this.source.silent) : config.target;
@@ -119,7 +119,7 @@ namespace SetMapper {
 	/**
 	 * @inheritdoc
 	 */
-	export interface Config<T, U> extends AbstractCollectionMapper.Config<T, U> {
+	export interface FullConfig<T, U> extends AbstractCollectionMapper.Config<T, U> {
 		/**
 		 * @inheritdoc
 		 */
@@ -127,29 +127,25 @@ namespace SetMapper {
 	}
 }
 
-export function mapSet<T, U>(source: ISet<T>,
-		map: (item: T) => U, scope?: any, getKey?: (item: U) => string): ISet<U> {
-	if (source.silent) {
-		return source.map(map, scope, getKey);
+export function mapSet<T, U>(source: ISet<T>, create: (sourceValue: T) => U,
+		config: AbstractCollectionMapper.Config<T, U> = {}): ISet<U> {
+	if (!source.silent) {
+		const target = new Set<U>(config.getKey);
+		return target.owning(new SetMapper<T, U>(source, create, {
+			target,
+			destroy: config.destroy,
+			scope: config.scope
+		}));
 	}
-	const result = new Set<U>(getKey);
-	return result.owning(new SetMapper<T, U>(source, {
-		target: result,
-		create: map,
-		scope: scope
-	}));
-}
-
-export function mapDestroyableSet<T, U extends Destroyable>(source: ISet<T>,
-		create: (item: T) => U, scope?: any, getKey?: (item: U) => string): ISet<U> {
-	if (source.silent) {
-		return source.map(create, scope, getKey).ownItems();
+	const target = source.map(create, config.scope, config.getKey);
+	if (config.destroy === destroy) {
+		target.ownItems();
+	} else if (config.destroy) {
+		const items = new VidMap<T, U>(source.getKey);
+		target.own(new Destructor(() => items.every((item, key) => {
+			config.destroy.call(config.scope, item, key);
+			return true;
+		})));
 	}
-	const result = new Set<U>(getKey);
-	return result.owning(new SetMapper<T, U>(source, {
-		target: result,
-		create: create,
-		destroy: destroy,
-		scope: scope
-	}));
+	return target;
 }

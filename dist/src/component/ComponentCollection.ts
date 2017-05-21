@@ -33,11 +33,10 @@ export default class ComponentCollection extends Class {
 		super();
 		parent._collections[this.iid] = this;
 
-		const mapper = this.own(createMapper<Component, Component>(source, {
-			create: (child) => {
-				this.parent._initChild(child);
-				return child;
-			},
+		const mapper = this.own(createMapper<Component, Component>(source, (child) => {
+			this.parent._initChild(child);
+			return child;
+		}, {
 			destroy: (child) => {
 				this.parent._doneChild(child);
 			},
