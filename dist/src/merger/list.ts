@@ -294,10 +294,8 @@ export function mergeLists<T>(source: IList<IList<T>>, getKey?: (item: T) => str
 	if (source.silent && source.every((item) => item.silent)) {
 		return $mergeNoSync(source, getKey);
 	}
-	const result = new List<T>(getKey);
-	return result.owning(new ListMerger<T>(source, {
-		target: result
-	}));
+	const target = new List<T>(getKey);
+	return target.owning(new ListMerger<T>(source, {target}));
 }
 
 export function mergeNoSync<T>(source: IList<IList<T>>): T[] {

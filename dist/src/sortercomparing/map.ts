@@ -36,7 +36,7 @@ export default class MapSorterComparing<T> extends AbstractCollectionSorterCompa
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: AbstractCollectionSorterComparing.Config<T>) {
+	constructor(source: IMap<T>, config?: AbstractCollectionSorterComparing.FullConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -54,14 +54,15 @@ export default class MapSorterComparing<T> extends AbstractCollectionSorterCompa
 	}
 }
 
-export function sortMapComparing<T>(source: IMap<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
+export function sortMapComparing<T>(source: IMap<T>, config?: AbstractCollectionSorterComparing.Config<T>): IList<T> {
 	if (source.silent) {
-		return source.$toSortedComparing(compare, scope);
+		return source.$toSortedComparing(config.compare, config.scope, config.order);
 	}
-	const result = new List<T>(source.getKey);
-	return result.owning(new MapSorterComparing<T>(source, {
-		target: result,
-		compare: compare,
-		scope: scope
+	const target = new List<T>(source.getKey);
+	return target.owning(new MapSorterComparing<T>(source, {
+		target,
+		compare: config.compare,
+		scope: config.scope,
+		order: config.order
 	}));
 }

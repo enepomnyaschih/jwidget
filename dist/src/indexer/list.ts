@@ -35,8 +35,9 @@ export default class ListIndexer<T> extends AbstractCollectionIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractCollectionIndexer.Config<T>) {
-		super(source, config);
+	constructor(source: IList<T>, getKey: (item: T) => string,
+			config?: AbstractCollectionIndexer.Config<T>) {
+		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -65,10 +66,6 @@ export function indexList<T>(source: IList<T>, getKey: (item: T) => string, scop
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
-	const result = new Map<T>(source.getKey);
-	return result.owning(new ListIndexer<T>(source, {
-		target: result,
-		getKey: getKey,
-		scope: scope
-	}));
+	const target = new Map<T>(source.getKey);
+	return target.owning(new ListIndexer<T>(source, getKey, {target, scope}));
 }

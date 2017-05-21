@@ -28,14 +28,16 @@ import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createSorterComparing<T>(source: ICollection<T>, config: AbstractCollectionSorterComparing.Config<T>): AbstractCollectionSorterComparing<T> {
+export function createSorterComparing<T>(source: ICollection<T>,
+		config?: AbstractCollectionSorterComparing.FullConfig<T>): AbstractCollectionSorterComparing<T> {
 	return (source instanceof List) ? new ListSorterComparing(source, config) :
 		(source instanceof Map) ? new MapSorterComparing(source, config) :
 		(source instanceof Set) ? new SetSorterComparing(source, config) : null;
 }
 
-export function sortCollectionComparing<T>(source: ICollection<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
-	return (source instanceof List) ? sortListComparing(source, compare, scope) :
-		(source instanceof Map) ? sortMapComparing(source, compare, scope) :
-		(source instanceof Set) ? sortSetComparing(source, compare, scope) : null;
+export function sortCollectionComparing<T>(source: ICollection<T>,
+		config?: AbstractCollectionSorterComparing.Config<T>): IList<T> {
+	return (source instanceof List) ? sortListComparing(source, config) :
+		(source instanceof Map) ? sortMapComparing(source, config) :
+		(source instanceof Set) ? sortSetComparing(source, config) : null;
 }

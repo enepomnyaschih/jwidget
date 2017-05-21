@@ -60,8 +60,6 @@ export function listToSet<T>(source: IList<T>): ISet<T> {
 	if (source.silent) {
 		return source.toSet();
 	}
-	const result = new Set<T>(source.getKey);
-	return result.owning(new ListConverterToSet<T>(source, {
-		target: result
-	}));
+	const target = new Set<T>(source.getKey);
+	return target.owning(new ListConverterToSet<T>(source, {target}));
 }

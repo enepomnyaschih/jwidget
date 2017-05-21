@@ -27,10 +27,10 @@ import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createFilterer<T>(source: ICollection<T>, config: AbstractCollectionFilterer.Config<T>): AbstractCollectionFilterer<T> {
-	return (source instanceof List) ? new ListFilterer(source, config) :
-		(source instanceof Map) ? new MapFilterer(source, config) :
-		(source instanceof Set) ? new SetFilterer(source, config) : null;
+export function createFilterer<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): AbstractCollectionFilterer<T> {
+	return (source instanceof List) ? new ListFilterer(source, test, {scope}) :
+		(source instanceof Map) ? new MapFilterer(source, test, {scope}) :
+		(source instanceof Set) ? new SetFilterer(source, test, {scope}) : null;
 }
 
 export function filterCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): ICollection<T> {

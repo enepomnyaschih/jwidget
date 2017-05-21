@@ -35,8 +35,9 @@ export default class MapIndexer<T> extends AbstractCollectionIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: AbstractCollectionIndexer.Config<T>) {
-		super(source, config);
+	constructor(source: IMap<T>, getKey: (item: T) => string,
+			config?: AbstractCollectionIndexer.Config<T>) {
+		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
 	}
@@ -58,10 +59,6 @@ export function indexMap<T>(source: IMap<T>, getKey: (item: T) => string, scope?
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
-	const result = new Map<T>(source.getKey);
-	return result.owning(new MapIndexer<T>(source, {
-		target: result,
-		getKey: getKey,
-		scope: scope
-	}));
+	const target = new Map<T>(source.getKey);
+	return target.owning(new MapIndexer<T>(source, getKey, {target, scope}));
 }

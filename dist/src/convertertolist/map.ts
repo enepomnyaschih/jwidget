@@ -60,8 +60,6 @@ export function mapToList<T>(source: IMap<T>): IList<T> {
 	if (source.silent) {
 		return source.toList();
 	}
-	const result = new List<T>(source.getKey);
-	return result.owning(new MapConverterToList<T>(source, {
-		target: result
-	}));
+	const target = new List<T>(source.getKey);
+	return target.owning(new MapConverterToList<T>(source, {target}));
 }

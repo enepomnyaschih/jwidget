@@ -96,11 +96,6 @@ abstract class AbstractCollectionCounter<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	protected _test: (item: T) => boolean;
-
-	/**
-	 * @hidden
-	 */
 	protected _scope: any;
 
 	/**
@@ -115,9 +110,9 @@ abstract class AbstractCollectionCounter<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractCollectionCounter.Config<T>) {
+	constructor(readonly source: ICollection<T>, protected _test: (item: T) => boolean,
+			config: AbstractCollectionCounter.Config = {}) {
 		super();
-		this._test = config.test;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? new Property<number>(0) : config.target;
@@ -172,12 +167,7 @@ namespace AbstractCollectionCounter {
 	 *
 	 * @param T Collection item type.
 	 */
-	export interface Config<T> {
-		/**
-		 * Filtering criteria.
-		 */
-		readonly test: (item: T) => boolean;
-
+	export interface Config {
 		/**
 		 * [[filterItem]] call scope.
 		 * Defaults to synchronizer itself.

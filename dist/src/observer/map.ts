@@ -38,9 +38,6 @@ export default class MapObserver<T> extends AbstractCollectionObserver<T> {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
-		if (this._change) {
-			this.own(source.changeEvent.listen(this._onChange, this));
-		}
 	}
 
 	private _onSplice(params: IMap.SpliceEventParams<T>) {

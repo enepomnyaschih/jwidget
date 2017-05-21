@@ -42,8 +42,9 @@ class MapFilterer<T> extends AbstractCollectionFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: MapFilterer.Config<T>) {
-		super(source, config);
+	constructor(source: IMap<T>, test: (item: T) => boolean,
+			config: MapFilterer.Config<T> = {}) {
+		super(source, test, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<T>(source.getKey, this.source.silent) : config.target;
 		this.target.tryPutAll(DictionaryUtils.filter(source.items, this._test, this._scope));
@@ -85,7 +86,7 @@ namespace MapFilterer {
 	/**
 	 * @inheritdoc
 	 */
-	export interface Config<T> extends AbstractCollectionFilterer.Config<T> {
+	export interface Config<T> extends AbstractCollectionFilterer.Config {
 		/**
 		 * @inheritdoc
 		 */
@@ -97,10 +98,6 @@ export function filterMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?
 	if (source.silent) {
 		return source.filter(test, scope);
 	}
-	const result = new Map<T>(source.getKey);
-	return result.owning(new MapFilterer<T>(source, {
-		target: result,
-		test: test,
-		scope: scope
-	}));
+	const target = new Map<T>(source.getKey);
+	return target.owning(new MapFilterer<T>(source, test, {target, scope}));
 }

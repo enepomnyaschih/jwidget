@@ -36,8 +36,9 @@ export default class MapCounter<T> extends AbstractCollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: AbstractCollectionCounter.Config<T>) {
-		super(source, config);
+	constructor(source: IMap<T>, test: (item: T) => boolean,
+			config?: AbstractCollectionCounter.Config) {
+		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
 	}
@@ -58,10 +59,6 @@ export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?:
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}
-	const result = new Property(0);
-	return result.owning(new MapCounter<T>(source, {
-		target: result,
-		test: test,
-		scope: scope
-	}));
+	const target = new Property(0);
+	return target.owning(new MapCounter<T>(source, test, {target, scope}));
 }

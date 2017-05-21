@@ -35,7 +35,7 @@ export default class SetSorterComparing<T> extends AbstractCollectionSorterCompa
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: AbstractCollectionSorterComparing.Config<T>) {
+	constructor(source: ISet<T>, config?: AbstractCollectionSorterComparing.FullConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -51,14 +51,15 @@ export default class SetSorterComparing<T> extends AbstractCollectionSorterCompa
 	}
 }
 
-export function sortSetComparing<T>(source: ISet<T>, compare: (x: T, y: T) => number, scope?: any): IList<T> {
+export function sortSetComparing<T>(source: ISet<T>, config?: AbstractCollectionSorterComparing.Config<T>): IList<T> {
 	if (source.silent) {
-		return source.$toSortedComparing(compare, scope);
+		return source.$toSortedComparing(config.compare, config.scope, config.order);
 	}
-	const result = new List<T>(source.getKey);
-	return result.owning(new SetSorterComparing<T>(source, {
-		target: result,
-		compare: compare,
-		scope: scope
+	const target = new List<T>(source.getKey);
+	return target.owning(new SetSorterComparing<T>(source, {
+		target,
+		compare: config.compare,
+		scope: config.scope,
+		order: config.order
 	}));
 }

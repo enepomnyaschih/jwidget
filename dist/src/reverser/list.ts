@@ -203,8 +203,6 @@ export function reverseList<T>(source: IList<T>): IList<T> {
 	if (source.silent) {
 		return source.$toReversed();
 	}
-	const result = new List<T>(source.getKey);
-	return result.owning(new ListReverser<T>(source, {
-		target: result
-	}));
+	const target = new List<T>(source.getKey);
+	return target.owning(new ListReverser<T>(source, {target}));
 }

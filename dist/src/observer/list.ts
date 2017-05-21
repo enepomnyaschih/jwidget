@@ -38,9 +38,6 @@ export default class ListObserver<T> extends AbstractCollectionObserver<T> {
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
-		if (this._change) {
-			this.own(source.changeEvent.listen(this._onChange, this));
-		}
 	}
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {

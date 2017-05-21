@@ -35,8 +35,9 @@ export default class SetIndexer<T> extends AbstractCollectionIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: AbstractCollectionIndexer.Config<T>) {
-		super(source, config);
+	constructor(source: ISet<T>, getKey: (item: T) => string,
+			config?: AbstractCollectionIndexer.Config<T>) {
+		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
 	}
@@ -58,10 +59,6 @@ export function indexSet<T>(source: ISet<T>, getKey: (item: T) => string, scope?
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}
-	const result = new Map<T>(source.getKey);
-	return result.owning(new SetIndexer<T>(source, {
-		target: result,
-		getKey: getKey,
-		scope: scope
-	}));
+	const target = new Map<T>(source.getKey);
+	return target.owning(new SetIndexer<T>(source, getKey, {target, scope}));
 }

@@ -51,8 +51,9 @@ class ListFilterer<T> extends AbstractCollectionFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: ListFilterer.Config<T>) {
-		super(source, config);
+	constructor(source: IList<T>, test: (item: T) => boolean,
+			config: ListFilterer.FullConfig<T> = {}) {
+		super(source, test, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(this.source.getKey, this.source.silent) : config.target;
 		this._splice([], [new IndexItems(0, this.source.items)]);
@@ -312,7 +313,7 @@ namespace ListFilterer {
 	/**
 	 * @inheritdoc
 	 */
-	export interface Config<T> extends AbstractCollectionFilterer.Config<T> {
+	export interface FullConfig<T> extends AbstractCollectionFilterer.Config {
 		/**
 		 * @inheritdoc
 		 */
@@ -342,10 +343,6 @@ export function filterList<T>(source: IList<T>, test: (item: T) => boolean, scop
 	if (source.silent) {
 		return source.filter(test, scope);
 	}
-	const result = new List<T>(source.getKey);
-	return result.owning(new ListFilterer<T>(source, {
-		target: result,
-		test: test,
-		scope: scope
-	}));
+	const target = new List<T>(source.getKey);
+	return target.owning(new ListFilterer<T>(source, test, {target, scope}));
 }

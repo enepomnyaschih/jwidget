@@ -28,10 +28,11 @@ import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createIndexer<T>(source: ICollection<T>, config: AbstractCollectionIndexer.Config<T>): AbstractCollectionIndexer<T> {
-	return (source instanceof List) ? new ListIndexer(source, config) :
-		(source instanceof Map) ? new MapIndexer(source, config) :
-		(source instanceof Set) ? new SetIndexer(source, config) : null;
+export function createIndexer<T>(source: ICollection<T>, getKey: (item: T) => string,
+		config?: AbstractCollectionIndexer.Config<T>): AbstractCollectionIndexer<T> {
+	return (source instanceof List) ? new ListIndexer(source, getKey, config) :
+		(source instanceof Map) ? new MapIndexer(source, getKey, config) :
+		(source instanceof Set) ? new SetIndexer(source, getKey, config) : null;
 }
 
 export function indexCollection<T>(source: ICollection<T>, getKey: (item: T) => string, scope?: any): IMap<T> {

@@ -155,7 +155,7 @@ abstract class AbstractCollectionSorterComparing<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractCollectionSorterComparing.Config<T>) {
+	constructor(readonly source: ICollection<T>, config: AbstractCollectionSorterComparing.FullConfig<T> = {}) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;
@@ -262,7 +262,7 @@ namespace AbstractCollectionSorterComparing {
 		/**
 		 * Item comparing callback.
 		 */
-		readonly compare: (x: T, y: T) => number;
+		readonly compare?: (x: T, y: T) => number;
 
 		/**
 		 * [[compare]] call scope.
@@ -271,14 +271,17 @@ namespace AbstractCollectionSorterComparing {
 		readonly scope?: any;
 
 		/**
-		 * Target array. By default, created automatically.
-		 */
-		readonly target?: IList<T>;
-
-		/**
 		 * Sorting order. Positive number for ascending sorting, negative for descending sorting.
 		 * Defaults to 1.
 		 */
 		readonly order?: number;
+	}
+
+	export interface FullConfig<T> extends Config<T> {
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IList<T>;
+
 	}
 }

@@ -106,11 +106,6 @@ abstract class AbstractCollectionIndexer<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	protected _getKey: (item: T) => string;
-
-	/**
-	 * @hidden
-	 */
 	protected _scope: any;
 
 	/**
@@ -125,9 +120,9 @@ abstract class AbstractCollectionIndexer<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractCollectionIndexer.Config<T>) {
+	constructor(readonly source: ICollection<T>, protected _getKey: (item: T) => string,
+			config: AbstractCollectionIndexer.Config<T> = {}) {
 		super();
-		this._getKey = config.getKey;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<T>(source.getKey, source.silent) : config.target;
@@ -180,11 +175,6 @@ namespace AbstractCollectionIndexer {
 	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
-		/**
-		 * Indexing function. Determines item key in map.
-		 */
-		readonly getKey: (item: T) => string;
-
 		/**
 		 * [[getKey]] call scope.
 		 * Defaults to synchronizer itself.

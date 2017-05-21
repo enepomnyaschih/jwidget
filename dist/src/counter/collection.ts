@@ -28,10 +28,11 @@ import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createCounter<T>(source: ICollection<T>, config: AbstractCollectionCounter.Config<T>): AbstractCollectionCounter<T> {
-	return (source instanceof List) ? new ListCounter(source, config) :
-		(source instanceof Map) ? new MapCounter(source, config) :
-		(source instanceof Set) ? new SetCounter(source, config) : null;
+export function createCounter<T>(source: ICollection<T>, test: (item: T) => boolean,
+		config?: AbstractCollectionCounter.Config): AbstractCollectionCounter<T> {
+	return (source instanceof List) ? new ListCounter(source, test, config) :
+		(source instanceof Map) ? new MapCounter(source, test, config) :
+		(source instanceof Set) ? new SetCounter(source, test, config) : null;
 }
 
 export function countCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): DestroyableBindable<number> {

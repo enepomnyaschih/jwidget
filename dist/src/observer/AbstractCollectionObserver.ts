@@ -79,11 +79,6 @@ abstract class AbstractCollectionObserver<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	protected _change: () => void;
-
-	/**
-	 * @hidden
-	 */
 	protected _scope: any;
 
 	/**
@@ -95,11 +90,9 @@ abstract class AbstractCollectionObserver<T> extends Class {
 	 */
 	constructor(readonly source: ICollection<T>, config: AbstractCollectionObserver.Config<T>) {
 		super();
-		config = config || {};
 		this._add = config.add;
 		this._remove = config.remove;
 		this._clear = config.clear;
-		this._change = config.change;
 		this._scope = config.scope || this;
 		this._addItems(source.asArray());
 	}
@@ -112,7 +105,6 @@ abstract class AbstractCollectionObserver<T> extends Class {
 		this._add = null;
 		this._remove = null;
 		this._clear = null;
-		this._change = null;
 		this._scope = null;
 		super.destroyObject();
 	}
@@ -154,13 +146,6 @@ abstract class AbstractCollectionObserver<T> extends Class {
 			this._removeItems(items);
 		}
 	}
-
-	/**
-	 * @hidden
-	 */
-	protected _onChange() {
-		this._change.call(this._scope);
-	}
 }
 
 export default AbstractCollectionObserver;
@@ -186,11 +171,6 @@ namespace AbstractCollectionObserver {
 		 * Collection is cleared. By default, calls [[removeItem]] for all collection items.
 		 */
 		readonly clear?: (items: T[]) => void;
-
-		/**
-		 * Collection is changed arbitrarily.
-		 */
-		readonly change?: () => void;
 
 		/**
 		 * [[addItem]], [[removeItem]],

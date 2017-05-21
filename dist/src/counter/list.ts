@@ -36,8 +36,9 @@ export default class ListCounter<T> extends AbstractCollectionCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractCollectionCounter.Config<T>) {
-		super(source, config);
+	constructor(source: IList<T>, test: (item: T) => boolean,
+			config?: AbstractCollectionCounter.Config) {
+		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -74,10 +75,6 @@ export function countList<T>(source: IList<T>, test: (item: T) => boolean, scope
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}
-	const result = new Property(0);
-	return result.owning(new ListCounter<T>(source, {
-		target: result,
-		test: test,
-		scope: scope
-	}));
+	const target = new Property(0);
+	return target.owning(new ListCounter<T>(source, test, {target, scope}));
 }
