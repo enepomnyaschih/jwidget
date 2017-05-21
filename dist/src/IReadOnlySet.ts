@@ -18,8 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ICollection from './ICollection';
-import IReadOnlySet from './IReadOnlySet';
+import IReadOnlyCollection from './IReadOnlyCollection';
+import ISet from './ISet';
 import Listenable from './Listenable';
 
 /**
@@ -93,7 +93,7 @@ import Listenable from './Listenable';
  * All the same algorithms are also available for native JavaScript Object as set,
  * see [[SetUtils]] functions.
  */
-interface ISet<T> extends ICollection<T>, IReadOnlySet<T> {
+interface IReadOnlySet<T> extends IReadOnlyCollection<T> {
 	/**
 	 * All set items. Please note that this is a getter - the internal representation of `Set` is different.
 	 */
@@ -197,157 +197,6 @@ interface ISet<T> extends ICollection<T>, IReadOnlySet<T> {
 	 * Checks for equality (===) to array, item by item.
 	 */
 	equal(array: T[]): boolean;
-
-	/**
-	 * Adds an item to set if one is absent.
-	 * @returns Item is added successfully. False if item is already present.
-	 */
-	add(item: T): boolean;
-
-	/**
-	 * Adds an item to set if one is absent.
-	 * @returns Item is added successfully. If collection is not modified, returns undefined.
-	 * In other words, this method may return true or undefined.
-	 */
-	tryAdd(item: T): boolean;
-
-	/**
-	 * Adds multiple items to set, ones that are absent.
-	 * @returns The added items.
-	 */
-	addAll(items: T[]): T[];
-
-	/**
-	 * Adds multiple items to set, ones that are absent.
-	 * @returns The added items.
-	 * If collection is not modified, returns undefined.
-	 */
-	tryAddAll(items: T[]): T[];
-
-	/**
-	 * Removes an item from set if one is present.
-	 * @returns Item is removed successfully. Returns false if item is already absent.
-	 */
-	remove(item: T): boolean;
-
-	/**
-	 * Removes an item from set if one is present.
-	 * @returns Item is removed successfully. If collection is not modified, returns undefined.
-	 * In other words, this method may return true or undefined.
-	 */
-	tryRemove(item: T): boolean;
-
-	/**
-	 * @inheritdoc
-	 */
-	removeItem(item: T): void;
-
-	/**
-	 * Removes multiple items from set, ones that are present.
-	 * @returns The removed items.
-	 */
-	removeAll(items: T[]): T[];
-
-	/**
-	 * Removes multiple items from set, ones that are present.
-	 * @returns The removed items.
-	 * If collection is not modified, returns undefined.
-	 */
-	tryRemoveAll(items: T[]): T[];
-
-	/**
-	 * @inheritdoc
-	 */
-	removeItems(items: T[]): void;
-
-	/**
-	 * @inheritdoc
-	 */
-	clear(): T[];
-
-	/**
-	 * Removes and adds multiple items in set. Universal optimized granular operation of removal/insertion.
-	 * @param removedItems Items to remove.
-	 * @param addedItems Items to add.
-	 * @returns Splice result. Never returns null or undefined.
-	 */
-	splice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T>;
-
-	/**
-	 * Removes and adds multiple items in set. Universal optimized granular operation of removal/insertion.
-	 * @param removedItems Items to remove.
-	 * @param addedItems Items to add.
-	 * @returns Splice result.
-	 * If collection is not modified, returns undefined.
-	 */
-	trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T>;
-
-	/**
-	 * Adjusts set contents to **newItems** using [[detectSplice]] and
-	 * [[splice]] methods.
-	 * @param newItems New set contents.
-	 */
-	performSplice(newItems: T[]): void;
 }
 
-export default ISet;
-
-namespace ISet {
-	/**
-	 * `ISet` event parameters.
-	 */
-	export interface EventParams<T> extends ICollection.EventParams<T> {
-		/**
-		 * Event sender.
-		 */
-		readonly sender: ISet<T>;
-	}
-
-	/**
-	 * Parameters of `spliceEvent`.
-	 */
-	export interface SpliceEventParams<T> extends EventParams<T> {
-		/**
-		 * Result of `splice` method.
-		 */
-		readonly spliceResult: SpliceResult<T>;
-	}
-
-	/**
-	 * Parameters of `clearEvent`.
-	 */
-	export interface ItemsEventParams<T> extends EventParams<T> {
-		/**
-		 * Old set contents.
-		 */
-		readonly items: T[];
-	}
-
-	/**
-	 * [[JW.Set.splice]] method arguments.
-	 * Returned by [[JW.Set.detectSplice]] method.
-	 *
-	 * @param T Item type.
-	 */
-	export interface SpliceParams<T> {
-		/**
-		 * Items to remove.
-		 */
-		readonly removedItems: T[];
-
-		/**
-		 * Items to add.
-		 */
-		readonly addedItems: T[];
-	}
-
-	/**
-	 * [[JW.Set.splice]] method result.
-	 *
-	 * @param T Item type.
-	 */
-	export interface SpliceResult<T> {
-		readonly removedItems: T[];
-		readonly addedItems: T[];
-	}
-}
+export default IReadOnlySet;

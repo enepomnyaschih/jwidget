@@ -18,13 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Bindable from './Bindable';
-import Dictionary from './Dictionary';
 import IClass from './IClass';
-import IList from './IList';
-import IMap from './IMap';
-import ISet from './ISet';
-import Listenable from './Listenable';
+import IReadOnlyCollection from './IReadOnlyCollection';
 
 /**
  * Abstract collection.
@@ -160,46 +155,7 @@ import Listenable from './Listenable';
  * * Object as map, see [[DictionaryUtils]] functions.
  * * Object as set, see [[SetUtils]] functions.
  */
-interface ICollection<T> extends IClass {
-	/**
-	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
-	 */
-	readonly silent: boolean;
-
-	/**
-	 * Identifies an item in this collection for optimization of some algorithms.
-	 */
-	readonly getKey: (item: T) => string;
-
-	/**
-	 * Collection length property.
-	 */
-	readonly length: Bindable<number>;
-
-	/**
-	 * Checks collection for emptiness.
-	 */
-	readonly empty: boolean;
-
-	/**
-	 * Returns the first item in collection. If collection is empty, returns undefined.
-	 */
-	readonly first: T;
-
-	/**
-	 * Collection is cleared. Triggered in result of calling:
-	 *
-	 * * [[clear]]
-	 * * [[$clear]]
-	 * * [[tryClear]]
-	 */
-	readonly clearEvent: Listenable<ICollection.EventParams<T>>;
-
-	/**
-	 * Collection is changed. Triggered right after any another event.
-	 */
-	readonly changeEvent: Listenable<ICollection.EventParams<T>>;
-
+interface ICollection<T> extends IClass, IReadOnlyCollection<T> {
 	/**
 	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
 	 * this collection. The item is destroyed when it leaves the
@@ -207,16 +163,6 @@ interface ICollection<T> extends IClass {
 	 * @returns this
 	 */
 	ownItems(): this;
-
-	/**
-	 * Returns a full copy of this collection.
-	 */
-	clone(): ICollection<T>;
-
-	/**
-	 * Checks item for existence in collection.
-	 */
-	contains(item: T): boolean;
 
 	/**
 	 * Removes first occurrence of an item in collection.
@@ -233,229 +179,6 @@ interface ICollection<T> extends IClass {
 	 * @returns Old collection contents. If not modified - undefined.
 	 */
 	clear(): any;
-
-	/**
-	 * Matches all items against criteria.
-	 *
-	 * Returns true if callback returns !== false for all collection items.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 */
-	every(callback: (item: T) => boolean, scope?: any): boolean;
-
-	/**
-	 * Matches each item against criteria.
-	 *
-	 * Returns true if callback returns !== false for some collection item.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 */
-	some(callback: (item: T) => boolean, scope?: any): boolean;
-
-	/**
-	 * Alias for [[forEach]].
-	 */
-	each(callback: (item: T) => any, scope?: any): void;
-
-	/**
-	 * Iterates collection items. Calls specified function for all items.
-	 *
-	 * @param callback Callback function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 */
-	forEach(callback: (item: T) => any, scope?: any): void;
-
-	/**
-	 * Finds item matching criteria.
-	 *
-	 * Returns first item for which callback returns !== false.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Found item or undefined.
-	 */
-	find(callback: (item: T) => boolean, scope?: any): T;
-
-	/**
-	 * Converts collection to sorted array.
-	 *
-	 * Builds array consisting of collection items sorted by result of callback call for each item.
-	 *
-	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[cmp]]. Returns item itself by default.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted array.
-	 */
-	toSorted(callback?: (item: T) => any, scope?: any, order?: number): T[];
-
-	/**
-	 * Converts collection to sorted array.
-	 *
-	 * Builds array consisting of collection items sorted by result of callback call for each item.
-	 *
-	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[cmp]]. Returns item itself by default.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted array.
-	 */
-	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T>;
-
-	/**
-	 * Converts collection to sorted array.
-	 *
-	 * Builds array consisting of collection items sorted by comparer.
-	 *
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[cmp]]
-	 * @param scope **comparer** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted array.
-	 */
-	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[];
-
-	/**
-	 * Converts collection to sorted array.
-	 *
-	 * Builds array consisting of collection items sorted by comparer.
-	 *
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[cmp]]
-	 * @param scope **comparer** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted array.
-	 */
-	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T>;
-
-	/**
-	 * Indexes collection.
-	 *
-	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
-	 *
-	 * @param callback Indexer function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Collection index.
-	 */
-	index(callback: (item: T) => string, scope?: any): Dictionary<T>;
-
-	/**
-	 * Indexes collection.
-	 *
-	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
-	 *
-	 * @param callback Indexer function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Collection index.
-	 */
-	$index(callback: (item: T) => string, scope?: any): IMap<T>;
-
-	/**
-	 * Converts collection to array.
-	 *
-	 * Builds new array consisting of collection items.
-	 */
-	toArray(): T[];
-
-	/**
-	 * Converts collection to array.
-	 *
-	 * Builds new array consisting of collection items.
-	 */
-	toList(): IList<T>;
-
-	/**
-	 * Converts collection to set.
-	 *
-	 * Builds new set consisting of collection items.
-	 */
-	toSet(): ISet<T>;
-
-	/**
-	 * Represents collection as array.
-	 *
-	 * If this collection is array, returns it immediately.
-	 * Else, executes [[toArray]] method.
-	 * This method works usually faster than [[toArray]],
-	 * but please make sure that the returned array
-	 * won't be modified externally, because it can cause strange unexpected bugs.
-	 */
-	asArray(): T[];
-
-	/**
-	 * Represents collection as array.
-	 *
-	 * If this collection is array, returns it immediately.
-	 * Else, executes [[toArray]] method.
-	 * This method works usually faster than [[toArray]],
-	 * but please make sure that the returned array
-	 * won't be modified externally, because it can cause strange unexpected bugs.
-	 */
-	asList(): IList<T>;
-
-	/**
-	 * Represents collection as set.
-	 *
-	 * If this collection is set, returns it immediately.
-	 * Else, executes [[toSet]] method.
-	 * This method works usually faster than [[toSet]],
-	 * but please make sure that the returned set
-	 * won't be modified externally, because it can cause strange unexpected bugs.
-	 */
-	asSet(): ISet<T>;
-
-	/**
-	 * Filters collection by criteria.
-	 *
-	 * Builds new collection of the same type, consisting of items for which callback returns !== false.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Filtered collection.
-	 */
-	filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
-
-	/**
-	 * Counts the items matching criteria.
-	 *
-	 * Returns the number of items for which callback returns !== false.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Number of items.
-	 */
-	count(callback: (item: T) => boolean, scope?: any): number;
-
-	/**
-	 * Maps collection items.
-	 *
-	 * Builds new collection of the same type, containing results of callback call for each collection item.
-	 *
-	 * @param callback Mapping function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Mapped collection.
-	 */
-	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ICollection<U>;
-
-	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U;
-
-	max(callback?: (item: T) => any, scope?: any, order?: number): T;
-
-	maxComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T;
-
-	min(callback?: (item: T) => any, scope?: any, order?: number): T;
-
-	minComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T;
 }
 
 export default ICollection;
