@@ -22,7 +22,7 @@ import Dictionary from './Dictionary';
 import Listenable from './Listenable';
 import IList from './IList';
 import IMap from './IMap';
-import IReadOnlyCollection from './IReadOnlyCollection';
+import ReadOnlyCollection from './ReadOnlyCollection';
 
 /**
  * Array is ordered collection. Each item of array has an index. Index of first item is 0,
@@ -127,7 +127,7 @@ import IReadOnlyCollection from './IReadOnlyCollection';
  *
  * @param T Array item type.
  */
-interface IReadOnlyList<T> extends IReadOnlyCollection<T> {
+interface ReadOnlyList<T> extends ReadOnlyCollection<T> {
 	/**
 	 * Returns the last collection item. If collection is empty, returns undefined.
 	 */
@@ -491,4 +491,4 @@ interface IReadOnlyList<T> extends IReadOnlyCollection<T> {
 	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number;
 }
 
-export default IReadOnlyList;
+export default ReadOnlyList;

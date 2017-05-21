@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import DestroyableReadOnlyList from './DestroyableReadOnlyList';
 import Dictionary from './Dictionary';
 import ICollection from './ICollection';
 import IMap from './IMap';
-import IReadOnlyList from './IReadOnlyList';
 import Listenable from './Listenable';
 import Some from './Some';
 
@@ -128,7 +128,7 @@ import Some from './Some';
  *
  * @param T Array item type.
  */
-interface IList<T> extends ICollection<T>, IReadOnlyList<T> {
+interface IList<T> extends ICollection<T>, DestroyableReadOnlyList<T> {
 	/**
 	 * Returns the last collection item. If collection is empty, returns undefined.
 	 */

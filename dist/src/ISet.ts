@@ -18,8 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import DestroyableReadOnlySet from './DestroyableReadOnlySet';
 import ICollection from './ICollection';
-import IReadOnlySet from './IReadOnlySet';
 import Listenable from './Listenable';
 
 /**
@@ -93,7 +93,7 @@ import Listenable from './Listenable';
  * All the same algorithms are also available for native JavaScript Object as set,
  * see [[SetUtils]] functions.
  */
-interface ISet<T> extends ICollection<T>, IReadOnlySet<T> {
+interface ISet<T> extends ICollection<T>, DestroyableReadOnlySet<T> {
 	/**
 	 * All set items. Please note that this is a getter - the internal representation of `Set` is different.
 	 */

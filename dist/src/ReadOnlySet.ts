@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IReadOnlyCollection from './IReadOnlyCollection';
+import ReadOnlyCollection from './ReadOnlyCollection';
 import ISet from './ISet';
 import Listenable from './Listenable';
 
@@ -93,7 +93,7 @@ import Listenable from './Listenable';
  * All the same algorithms are also available for native JavaScript Object as set,
  * see [[SetUtils]] functions.
  */
-interface IReadOnlySet<T> extends IReadOnlyCollection<T> {
+interface ReadOnlySet<T> extends ReadOnlyCollection<T> {
 	/**
 	 * All set items. Please note that this is a getter - the internal representation of `Set` is different.
 	 */
@@ -199,4 +199,4 @@ interface IReadOnlySet<T> extends IReadOnlyCollection<T> {
 	equal(array: T[]): boolean;
 }
 
-export default IReadOnlySet;
+export default ReadOnlySet;

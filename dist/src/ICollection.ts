@@ -18,8 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import DestroyableReadOnlyCollection from './DestroyableReadOnlyCollection';
 import IClass from './IClass';
-import IReadOnlyCollection from './IReadOnlyCollection';
 
 /**
  * Abstract collection.
@@ -155,7 +155,7 @@ import IReadOnlyCollection from './IReadOnlyCollection';
  * * Object as map, see [[DictionaryUtils]] functions.
  * * Object as set, see [[SetUtils]] functions.
  */
-interface ICollection<T> extends IClass, IReadOnlyCollection<T> {
+interface ICollection<T> extends IClass, DestroyableReadOnlyCollection<T> {
 	/**
 	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
 	 * this collection. The item is destroyed when it leaves the

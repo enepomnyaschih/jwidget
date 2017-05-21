@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import DestroyableReadOnlyMap from './DestroyableReadOnlyMap';
 import Dictionary from './Dictionary';
 import ICollection from './ICollection';
 import IList from './IList';
-import IReadOnlyMap from './IReadOnlyMap';
 import Listenable from './Listenable';
 import Some from './Some';
 
@@ -108,7 +108,7 @@ import Some from './Some';
  * All the same algorithms are also available for native JavaScript Object as map,
  * see [[DictionaryUtils]] functions.
  */
-interface IMap<T> extends ICollection<T>, IReadOnlyMap<T> {
+interface IMap<T> extends ICollection<T>, DestroyableReadOnlyMap<T> {
 	/**
 	 * Returns item map - internal collection representation.
 	 *

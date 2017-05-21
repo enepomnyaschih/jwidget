@@ -160,7 +160,7 @@ import Listenable from './Listenable';
  * * Object as map, see [[DictionaryUtils]] functions.
  * * Object as set, see [[SetUtils]] functions.
  */
-interface IReadOnlyCollection<T> {
+interface ReadOnlyCollection<T> {
 	/**
 	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
 	 */
@@ -434,4 +434,4 @@ interface IReadOnlyCollection<T> {
 	minComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T;
 }
 
-export default IReadOnlyCollection;
+export default ReadOnlyCollection;
