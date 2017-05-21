@@ -18,13 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionObserver from './AbstractCollectionObserver';
+import AbstractObserver from './AbstractObserver';
 import IList from '../IList';
 
 /**
- * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Array]].
+ * [[JW.Abstract.Observer|Observer]] implementation for [[JW.Array]].
  */
-export default class ListObserver<T> extends AbstractCollectionObserver<T> {
+export default class ListObserver<T> extends AbstractObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -33,7 +33,7 @@ export default class ListObserver<T> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractCollectionObserver.Config<T>) {
+	constructor(source: IList<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));

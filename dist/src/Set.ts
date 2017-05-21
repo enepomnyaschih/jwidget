@@ -42,7 +42,7 @@ import * as ArrayUtils from './ArrayUtils';
  *
  * # Set methods
  *
- * **Difference compared to [[JW.AbstractCollection]] is in bold.**
+ * **Difference compared to [[JW.Abstract]] is in bold.**
  *
  * Content retrieving:
  *

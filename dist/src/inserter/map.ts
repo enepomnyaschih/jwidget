@@ -28,7 +28,7 @@ import IMap from '../IMap';
  * item is added with specific key and item is removed with specific key. In optimization purposes,
  * you can define a third function: map is cleared
  * (in case if there is more effective clearing algorithm than iterative items deletion).
- * Unlike JW.AbstractCollection.Observer, tracks items keys.
+ * Unlike JW.Abstract.Observer, tracks items keys.
  * Can be used mainly for DOM-element synchronization with map of child elements.
  *
  * Use [[JW.Map.createInserter|createInserter]] method to create the synchronizer.

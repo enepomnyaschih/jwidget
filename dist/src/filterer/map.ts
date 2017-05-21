@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionFilterer from './AbstractCollectionFilterer';
+import AbstractFilterer from './AbstractFilterer';
 import IMap from '../IMap';
 import Map from '../Map';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
- * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Map]].
+ * [[JW.Abstract.Filterer|Filterer]] implementation for [[JW.Map]].
  */
-class MapFilterer<T> extends AbstractCollectionFilterer<T> {
+class MapFilterer<T> extends AbstractFilterer<T> {
 	private _targetCreated: boolean;
 
 	/**
@@ -86,7 +86,7 @@ namespace MapFilterer {
 	/**
 	 * @inheritdoc
 	 */
-	export interface Config<T> extends AbstractCollectionFilterer.Config {
+	export interface Config<T> extends AbstractFilterer.Config {
 		/**
 		 * @inheritdoc
 		 */

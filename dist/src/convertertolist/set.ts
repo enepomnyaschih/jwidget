@@ -25,7 +25,7 @@ import ISet from '../ISet';
 import List from '../List';
 
 /**
- * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Set]].
+ * [[JW.Abstract.Orderer|Orderer]] implementation for [[JW.Set]].
  */
 export default class SetConverterToList<T> extends AbstractConverterToList<T> {
 	/**

@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionSorterComparing from './AbstractCollectionSorterComparing';
+import AbstractSorterComparing from './AbstractSorterComparing';
 import IList from '../IList';
 import ISet from '../ISet';
 import List from '../List';
 
 /**
- * [[JW.AbstractCollection.SorterComparing|SorterComparing]] implementation for [[JW.Set]].
+ * [[JW.Abstract.SorterComparing|SorterComparing]] implementation for [[JW.Set]].
  */
-export default class SetSorterComparing<T> extends AbstractCollectionSorterComparing<T> {
+export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -35,7 +35,7 @@ export default class SetSorterComparing<T> extends AbstractCollectionSorterCompa
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config?: AbstractCollectionSorterComparing.FullConfig<T>) {
+	constructor(source: ISet<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -51,7 +51,7 @@ export default class SetSorterComparing<T> extends AbstractCollectionSorterCompa
 	}
 }
 
-export function sortSetComparing<T>(source: ISet<T>, config?: AbstractCollectionSorterComparing.Config<T>): IList<T> {
+export function sortSetComparing<T>(source: ISet<T>, config?: AbstractSorterComparing.Config<T>): IList<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(config.compare, config.scope, config.order);
 	}

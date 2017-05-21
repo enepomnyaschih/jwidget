@@ -18,16 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionCounter from './AbstractCollectionCounter';
+import AbstractCounter from './AbstractCounter';
 import DestroyableBindable from '../DestroyableBindable';
 import ISet from '../ISet';
 import Property from '../Property';
 import * as ArrayUtils from '../ArrayUtils';
 
 /**
- * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Set]].
+ * [[JW.Abstract.Counter|Counter]] implementation for [[JW.Set]].
  */
-export default class SetCounter<T> extends AbstractCollectionCounter<T> {
+export default class SetCounter<T> extends AbstractCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -37,7 +37,7 @@ export default class SetCounter<T> extends AbstractCollectionCounter<T> {
 	 * @inheritdoc
 	 */
 	constructor(source: ISet<T>, test: (item: T) => boolean,
-			config?: AbstractCollectionCounter.Config) {
+			config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));

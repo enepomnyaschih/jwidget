@@ -23,7 +23,7 @@ import ISet from '../ISet';
 import Set from '../Set';
 
 /**
- * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Set]].
+ * [[JW.Abstract.Lister|Lister]] implementation for [[JW.Set]].
  */
 export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**

@@ -25,7 +25,7 @@ import Set from '../Set';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
- * [[JW.AbstractCollection.Lister|Lister]] implementation for [[JW.Map]].
+ * [[JW.Abstract.Lister|Lister]] implementation for [[JW.Map]].
  */
 export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**

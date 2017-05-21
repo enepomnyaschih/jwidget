@@ -66,7 +66,7 @@ import * as ArrayUtils from '../ArrayUtils';
  *
  *     sorter.destroy();
  *
- * Use [[JW.AbstractCollection.createSorterComparing|createSorterComparing]] method to create the synchronizer.
+ * Use [[JW.Abstract.createSorterComparing|createSorterComparing]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).
  *
  * You can pass target array in config option:
@@ -80,7 +80,7 @@ import * as ArrayUtils from '../ArrayUtils';
  *         scope: this
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$$toSortedComparing|$$toSortedComparing]] shorthand can be used instead.
+ * In simple cases, [[JW.Abstract.$$toSortedComparing|$$toSortedComparing]] shorthand can be used instead.
  * It returns the target array right away:
  *
  *     var source = new JW.ObservableArray<Item>([
@@ -125,7 +125,7 @@ import * as ArrayUtils from '../ArrayUtils';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionSorterComparing<T> extends Class {
+abstract class AbstractSorterComparing<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -150,12 +150,12 @@ abstract class AbstractCollectionSorterComparing<T> extends Class {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractCollection.createSorterComparing|createSorterComparing]] method is preferred instead.
+	 * [[JW.Abstract.createSorterComparing|createSorterComparing]] method is preferred instead.
 	 *
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractCollectionSorterComparing.FullConfig<T> = {}) {
+	constructor(readonly source: ICollection<T>, config: AbstractSorterComparing.FullConfig<T> = {}) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;
@@ -250,11 +250,11 @@ abstract class AbstractCollectionSorterComparing<T> extends Class {
 	}
 }
 
-export default AbstractCollectionSorterComparing;
+export default AbstractSorterComparing;
 
-namespace AbstractCollectionSorterComparing {
+namespace AbstractSorterComparing {
 	/**
-	 * [[JW.AbstractCollection.SorterComparing]] configuration.
+	 * [[JW.Abstract.SorterComparing]] configuration.
 	 *
 	 * @param T Collection item type.
 	 */

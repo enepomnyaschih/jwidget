@@ -48,7 +48,7 @@ import Set from '../Set';
  *
  * **Notice:** All items of source collection must be different (i.e. have unique _iid).
  *
- * Use [[JW.AbstractCollection.createLister|createLister]] method to create the synchronizer.
+ * Use [[JW.Abstract.createLister|createLister]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).
  *
  * You can pass target collection in config option:
@@ -58,7 +58,7 @@ import Set from '../Set';
  *         target: set
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$toSet|$toSet]] shorthand can be used instead.
+ * In simple cases, [[JW.Abstract.$toSet|$toSet]] shorthand can be used instead.
  * It returns the target set right away:
  *
  *     // Create two dummy collection items
@@ -105,7 +105,7 @@ abstract class AbstractConverterToSet<T> extends Class {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractCollection.createLister|createLister]] method is preferred instead.
+	 * [[JW.Abstract.createLister|createLister]] method is preferred instead.
 	 *
 	 * @param source Source collection.
 	 * @param config Configuration.
@@ -133,7 +133,7 @@ export default AbstractConverterToSet;
 
 namespace AbstractConverterToSet {
 	/**
-	 * [[JW.AbstractCollection.Lister]] configuration.
+	 * [[JW.Abstract.Lister]] configuration.
 	 *
 	 * @param T Collection item type.
 	 */

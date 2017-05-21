@@ -19,7 +19,7 @@
 */
 
 import {destroy} from '../index';
-import AbstractCollectionMapper from './AbstractCollectionMapper';
+import AbstractMapper from './AbstractMapper';
 import Destructor from '../Destructor';
 import Dictionary from '../Dictionary';
 import IMap from '../IMap';
@@ -27,9 +27,9 @@ import Map from '../Map';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
- * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Map]].
+ * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Map]].
  */
-class MapMapper<T, U> extends AbstractCollectionMapper<T, U> {
+class MapMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
@@ -111,7 +111,7 @@ namespace MapMapper {
 	/**
 	 * @inheritdoc
 	 */
-	export interface FullConfig<T, U> extends AbstractCollectionMapper.Config<T, U> {
+	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
 		 * @inheritdoc
 		 */
@@ -120,7 +120,7 @@ namespace MapMapper {
 }
 
 export function mapMap<T, U>(source: IMap<T>, create: (sourceValue: T) => U,
-		config: AbstractCollectionMapper.Config<T, U> = {}): IMap<U> {
+		config: AbstractMapper.Config<T, U> = {}): IMap<U> {
 	if (!source.silent) {
 		const target = new Map<U>(config.getKey);
 		return target.owning(new MapMapper<T, U>(source, create, {

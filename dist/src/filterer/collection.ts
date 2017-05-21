@@ -21,13 +21,13 @@
 import {default as ListFilterer, filterList} from './list';
 import {default as MapFilterer, filterMap} from './map';
 import {default as SetFilterer, filterSet} from './set';
-import AbstractCollectionFilterer from './AbstractCollectionFilterer';
+import AbstractFilterer from './AbstractFilterer';
 import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createFilterer<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): AbstractCollectionFilterer<T> {
+export function createFilterer<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): AbstractFilterer<T> {
 	return (source instanceof List) ? new ListFilterer(source, test, {scope}) :
 		(source instanceof Map) ? new MapFilterer(source, test, {scope}) :
 		(source instanceof Set) ? new SetFilterer(source, test, {scope}) : null;

@@ -26,7 +26,7 @@ import List from '../List';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
- * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Map]].
+ * [[JW.Abstract.Orderer|Orderer]] implementation for [[JW.Map]].
  */
 export default class MapConverterToList<T> extends AbstractConverterToList<T> {
 	/**

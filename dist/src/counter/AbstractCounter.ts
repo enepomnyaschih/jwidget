@@ -42,7 +42,7 @@ import Bindable from '../Bindable';
  *
  *     counter.destroy();
  *
- * Use [[JW.AbstractCollection.createCounter|createCounter]] method to create the synchronizer.
+ * Use [[JW.Abstract.createCounter|createCounter]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).
  *
  * You can pass target property in config option:
@@ -55,7 +55,7 @@ import Bindable from '../Bindable';
  *         scope: this
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$$count|$$count]] shorthand can be used instead.
+ * In simple cases, [[JW.Abstract.$$count|$$count]] shorthand can be used instead.
  * It returns the target property right away:
  *
  *     var source = new JW.ObservableArray<number>([1, 2, 3]);
@@ -67,7 +67,7 @@ import Bindable from '../Bindable';
  *
  *     target.destroy();
  *
- * You may use [[JW.AbstractCollection.Filterer|Filterer]] instead
+ * You may use [[JW.Abstract.Filterer|Filterer]] instead
  * of counter, but counter works much faster because it doesn't create a filtered collection.
  *
  *     var source = new JW.ObservableArray();
@@ -90,7 +90,7 @@ import Bindable from '../Bindable';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionCounter<T> extends Class {
+abstract class AbstractCounter<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -105,13 +105,13 @@ abstract class AbstractCollectionCounter<T> extends Class {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractCollection.createCounter|createCounter]] method is preferred instead.
+	 * [[JW.Abstract.createCounter|createCounter]] method is preferred instead.
 	 *
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
 	constructor(readonly source: ICollection<T>, protected _test: (item: T) => boolean,
-			config: AbstractCollectionCounter.Config = {}) {
+			config: AbstractCounter.Config = {}) {
 		super();
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
@@ -144,7 +144,7 @@ abstract class AbstractCollectionCounter<T> extends Class {
 	 * Changes counter configuration and recounts matching items.
 	 * @param config Options to modify.
 	 */
-	reconfigure(config: AbstractCollectionCounter.Reconfig<T>) {
+	reconfigure(config: AbstractCounter.Reconfig<T>) {
 		this._test = config.test || this._test;
 		this._scope = config.scope || this._scope;
 		this.recount();
@@ -159,9 +159,9 @@ abstract class AbstractCollectionCounter<T> extends Class {
 	}
 }
 
-export default AbstractCollectionCounter;
+export default AbstractCounter;
 
-namespace AbstractCollectionCounter {
+namespace AbstractCounter {
 	/**
 	 * [[Counter]] configuration.
 	 *

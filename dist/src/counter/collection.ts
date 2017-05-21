@@ -21,7 +21,7 @@
 import {default as ListCounter, countList} from './list';
 import {default as MapCounter, countMap} from './map';
 import {default as SetCounter, countSet} from './set';
-import AbstractCollectionCounter from './AbstractCollectionCounter';
+import AbstractCounter from './AbstractCounter';
 import DestroyableBindable from '../DestroyableBindable';
 import ICollection from '../ICollection';
 import List from '../List';
@@ -29,7 +29,7 @@ import Map from '../Map';
 import Set from '../Set';
 
 export function createCounter<T>(source: ICollection<T>, test: (item: T) => boolean,
-		config?: AbstractCollectionCounter.Config): AbstractCollectionCounter<T> {
+		config?: AbstractCounter.Config): AbstractCounter<T> {
 	return (source instanceof List) ? new ListCounter(source, test, config) :
 		(source instanceof Map) ? new MapCounter(source, test, config) :
 		(source instanceof Set) ? new SetCounter(source, test, config) : null;

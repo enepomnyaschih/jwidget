@@ -19,7 +19,7 @@
 */
 
 import {def} from '../index';
-import AbstractCollectionFilterer from './AbstractCollectionFilterer';
+import AbstractFilterer from './AbstractFilterer';
 import Dictionary from '../Dictionary';
 import IList from '../IList';
 import IndexCount from '../IndexCount';
@@ -28,9 +28,9 @@ import List from '../List';
 import * as ArrayUtils from '../ArrayUtils';
 
 /**
- * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Array]].
+ * [[JW.Abstract.Filterer|Filterer]] implementation for [[JW.Array]].
  */
-class ListFilterer<T> extends AbstractCollectionFilterer<T> {
+class ListFilterer<T> extends AbstractFilterer<T> {
 	private _targetCreated: boolean;
 
 	/**
@@ -313,7 +313,7 @@ namespace ListFilterer {
 	/**
 	 * @inheritdoc
 	 */
-	export interface FullConfig<T> extends AbstractCollectionFilterer.Config {
+	export interface FullConfig<T> extends AbstractFilterer.Config {
 		/**
 		 * @inheritdoc
 		 */

@@ -54,7 +54,7 @@ import Map from '../Map';
  *
  * **Notice:** All items of source collection must have different (unique) string keys.
  *
- * Use [[JW.AbstractCollection.createFilterer|createFilterer]] method to create the synchronizer.
+ * Use [[JW.Abstract.createFilterer|createFilterer]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).
  *
  * You can pass target map in config option:
@@ -66,7 +66,7 @@ import Map from '../Map';
  *         scope: this
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$$index|$$index]] shorthand can be used instead.
+ * In simple cases, [[JW.Abstract.$$index|$$index]] shorthand can be used instead.
  * It returns the target map right away:
  *
  *     var array = new JW.ObservableArray<Item>([{id: 9, label: "The item"}]);
@@ -100,7 +100,7 @@ import Map from '../Map';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionIndexer<T> extends Class {
+abstract class AbstractIndexer<T> extends Class {
 	private _targetCreated: boolean;
 
 	/**
@@ -115,13 +115,13 @@ abstract class AbstractCollectionIndexer<T> extends Class {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractCollection.createIndexer|createIndexer]] method is preferred instead.
+	 * [[JW.Abstract.createIndexer|createIndexer]] method is preferred instead.
 	 *
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
 	constructor(readonly source: ICollection<T>, protected _getKey: (item: T) => string,
-			config: AbstractCollectionIndexer.Config<T> = {}) {
+			config: AbstractIndexer.Config<T> = {}) {
 		super();
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
@@ -166,11 +166,11 @@ abstract class AbstractCollectionIndexer<T> extends Class {
 	}
 }
 
-export default AbstractCollectionIndexer;
+export default AbstractIndexer;
 
-namespace AbstractCollectionIndexer {
+namespace AbstractIndexer {
 	/**
-	 * [[JW.AbstractCollection.Indexer]] configuration.
+	 * [[JW.Abstract.Indexer]] configuration.
 	 *
 	 * @param T Collection item type.
 	 */

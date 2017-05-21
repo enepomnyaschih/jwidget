@@ -18,16 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionCounter from './AbstractCollectionCounter';
+import AbstractCounter from './AbstractCounter';
 import DestroyableBindable from '../DestroyableBindable';
 import IMap from '../IMap';
 import Property from '../Property';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
- * [[JW.AbstractCollection.Counter|Counter]] implementation for [[JW.Map]].
+ * [[JW.Abstract.Counter|Counter]] implementation for [[JW.Map]].
  */
-export default class MapCounter<T> extends AbstractCollectionCounter<T> {
+export default class MapCounter<T> extends AbstractCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -37,7 +37,7 @@ export default class MapCounter<T> extends AbstractCollectionCounter<T> {
 	 * @inheritdoc
 	 */
 	constructor(source: IMap<T>, test: (item: T) => boolean,
-			config?: AbstractCollectionCounter.Config) {
+			config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));

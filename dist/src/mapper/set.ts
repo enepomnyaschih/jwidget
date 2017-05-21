@@ -20,15 +20,15 @@
 
 import {destroy} from '../index';
 import {VidMap} from '../internal';
-import AbstractCollectionMapper from './AbstractCollectionMapper';
+import AbstractMapper from './AbstractMapper';
 import Destructor from '../Destructor';
 import ISet from '../ISet';
 import Set from '../Set';
 
 /**
- * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Set]].
+ * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Set]].
  */
-class SetMapper<T, U> extends AbstractCollectionMapper<T, U> {
+class SetMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
@@ -119,7 +119,7 @@ namespace SetMapper {
 	/**
 	 * @inheritdoc
 	 */
-	export interface FullConfig<T, U> extends AbstractCollectionMapper.Config<T, U> {
+	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
 		 * @inheritdoc
 		 */
@@ -128,7 +128,7 @@ namespace SetMapper {
 }
 
 export function mapSet<T, U>(source: ISet<T>, create: (sourceValue: T) => U,
-		config: AbstractCollectionMapper.Config<T, U> = {}): ISet<U> {
+		config: AbstractMapper.Config<T, U> = {}): ISet<U> {
 	if (!source.silent) {
 		const target = new Set<U>(config.getKey);
 		return target.owning(new SetMapper<T, U>(source, create, {

@@ -18,14 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionObserver from './AbstractCollectionObserver';
+import AbstractObserver from './AbstractObserver';
 import IMap from '../IMap';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
- * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Map]].
+ * [[JW.Abstract.Observer|Observer]] implementation for [[JW.Map]].
  */
-export default class MapObserver<T> extends AbstractCollectionObserver<T> {
+export default class MapObserver<T> extends AbstractObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -34,7 +34,7 @@ export default class MapObserver<T> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: AbstractCollectionObserver.Config<T>) {
+	constructor(source: IMap<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));

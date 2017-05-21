@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionIndexer from './AbstractCollectionIndexer';
+import AbstractIndexer from './AbstractIndexer';
 import IList from '../IList';
 import IMap from '../IMap';
 import Map from '../Map';
 
 /**
- * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Array]].
+ * [[JW.Abstract.Indexer|Indexer]] implementation for [[JW.Array]].
  */
-export default class ListIndexer<T> extends AbstractCollectionIndexer<T> {
+export default class ListIndexer<T> extends AbstractIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -36,7 +36,7 @@ export default class ListIndexer<T> extends AbstractCollectionIndexer<T> {
 	 * @inheritdoc
 	 */
 	constructor(source: IList<T>, getKey: (item: T) => string,
-			config?: AbstractCollectionIndexer.Config<T>) {
+			config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));

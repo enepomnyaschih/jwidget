@@ -18,14 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionFilterer from './AbstractCollectionFilterer';
+import AbstractFilterer from './AbstractFilterer';
 import ISet from '../ISet';
 import Set from '../Set';
 
 /**
- * [[JW.AbstractCollection.Filterer|Filterer]] implementation for [[JW.Set]].
+ * [[JW.Abstract.Filterer|Filterer]] implementation for [[JW.Set]].
  */
-class SetFilterer<T> extends AbstractCollectionFilterer<T> {
+class SetFilterer<T> extends AbstractFilterer<T> {
 	private _targetCreated: boolean;
 
 	/**
@@ -80,7 +80,7 @@ namespace SetFilterer {
 	/**
 	 * @inheritdoc
 	 */
-	export interface Config<T> extends AbstractCollectionFilterer.Config {
+	export interface Config<T> extends AbstractFilterer.Config {
 		/**
 		 * @inheritdoc
 		 */

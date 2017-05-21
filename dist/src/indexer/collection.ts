@@ -21,7 +21,7 @@
 import {default as ListIndexer, indexList} from './list';
 import {default as MapIndexer, indexMap} from './map';
 import {default as SetIndexer, indexSet} from './set';
-import AbstractCollectionIndexer from './AbstractCollectionIndexer';
+import AbstractIndexer from './AbstractIndexer';
 import ICollection from '../ICollection';
 import IMap from '../IMap';
 import List from '../List';
@@ -29,7 +29,7 @@ import Map from '../Map';
 import Set from '../Set';
 
 export function createIndexer<T>(source: ICollection<T>, getKey: (item: T) => string,
-		config?: AbstractCollectionIndexer.Config<T>): AbstractCollectionIndexer<T> {
+		config?: AbstractIndexer.Config<T>): AbstractIndexer<T> {
 	return (source instanceof List) ? new ListIndexer(source, getKey, config) :
 		(source instanceof Map) ? new MapIndexer(source, getKey, config) :
 		(source instanceof Set) ? new SetIndexer(source, getKey, config) : null;

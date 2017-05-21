@@ -26,7 +26,7 @@ import IList from '../IList';
  * item is added into specific position and item is removed from specific position. In optimization purposes,
  * you can define a third function: array is cleared
  * (in case if there is more effective clearing algorithm than iterative items deletion).
- * Unlike [[JW.AbstractCollection.Observer|Observer]], tracks items order.
+ * Unlike [[JW.Abstract.Observer|Observer]], tracks items order.
  *
  * Use [[JW.List.createinserter|createinserter]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).

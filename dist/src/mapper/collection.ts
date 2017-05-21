@@ -21,21 +21,21 @@
 import {default as ListMapper, mapList} from './list';
 import {default as MapMapper, mapMap} from './map';
 import {default as SetMapper, mapSet} from './set';
-import AbstractCollectionMapper from './AbstractCollectionMapper';
+import AbstractMapper from './AbstractMapper';
 import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
 export function createMapper<T, U>(source: ICollection<T>, create: (sourceValue: T) => U,
-		config?: AbstractCollectionMapper.Config<T, U>): AbstractCollectionMapper<T, U> {
+		config?: AbstractMapper.Config<T, U>): AbstractMapper<T, U> {
 	return (source instanceof List) ? new ListMapper(source, create, config) :
 		(source instanceof Map) ? new MapMapper(source, create, config) :
 		(source instanceof Set) ? new SetMapper(source, create, config) : null;
 }
 
 export function mapCollection<T, U>(source: ICollection<T>, create: (item: T) => U,
-		config?: AbstractCollectionMapper.Config<T, U>): ICollection<U> {
+		config?: AbstractMapper.Config<T, U>): ICollection<U> {
 	return (source instanceof List) ? mapList(source, create, config) :
 		(source instanceof Map) ? mapMap(source, create, config) :
 		(source instanceof Set) ? mapSet(source, create, config) : null;

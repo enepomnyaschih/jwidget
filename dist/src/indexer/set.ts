@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionIndexer from './AbstractCollectionIndexer';
+import AbstractIndexer from './AbstractIndexer';
 import IMap from '../IMap';
 import ISet from '../ISet';
 import Map from '../Map';
 
 /**
- * [[JW.AbstractCollection.Indexer|Indexer]] implementation for [[JW.Set]].
+ * [[JW.Abstract.Indexer|Indexer]] implementation for [[JW.Set]].
  */
-export default class SetIndexer<T> extends AbstractCollectionIndexer<T> {
+export default class SetIndexer<T> extends AbstractIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -36,7 +36,7 @@ export default class SetIndexer<T> extends AbstractCollectionIndexer<T> {
 	 * @inheritdoc
 	 */
 	constructor(source: ISet<T>, getKey: (item: T) => string,
-			config?: AbstractCollectionIndexer.Config<T>) {
+			config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));

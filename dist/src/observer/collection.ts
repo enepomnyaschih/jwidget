@@ -21,13 +21,13 @@
 import ListObserver from './list';
 import MapObserver from './map';
 import SetObserver from './set';
-import AbstractCollectionObserver from './AbstractCollectionObserver';
+import AbstractObserver from './AbstractObserver';
 import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
 
-export function createObserver<T>(source: ICollection<T>, config: AbstractCollectionObserver.Config<T>): AbstractCollectionObserver<T> {
+export function createObserver<T>(source: ICollection<T>, config: AbstractObserver.Config<T>): AbstractObserver<T> {
 	return (source instanceof List) ? new ListObserver(source, config) :
 		(source instanceof Map) ? new MapObserver(source, config) :
 		(source instanceof Set) ? new SetObserver(source, config) : null;

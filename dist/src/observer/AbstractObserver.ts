@@ -34,7 +34,7 @@ import ICollection from '../ICollection';
  *         scope: this
  *     });
  *
- * Use [[JW.AbstractCollection.createObserver|createObserver]] method to create the synchronizer.
+ * Use [[JW.Abstract.createObserver|createObserver]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).
  *
  * Just another observer use case: if you have an abstract collection on input (and you don't know whether it is
@@ -60,7 +60,7 @@ import ICollection from '../ICollection';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionObserver<T> extends Class {
+abstract class AbstractObserver<T> extends Class {
 	/**
 	 * @hidden
 	 */
@@ -83,12 +83,12 @@ abstract class AbstractCollectionObserver<T> extends Class {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractCollection.createObserver|createObserver]] method is preferred instead.
+	 * [[JW.Abstract.createObserver|createObserver]] method is preferred instead.
 	 *
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractCollectionObserver.Config<T>) {
+	constructor(readonly source: ICollection<T>, config: AbstractObserver.Config<T>) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;
@@ -148,11 +148,11 @@ abstract class AbstractCollectionObserver<T> extends Class {
 	}
 }
 
-export default AbstractCollectionObserver;
+export default AbstractObserver;
 
-namespace AbstractCollectionObserver {
+namespace AbstractObserver {
 	/**
-	 * [[JW.AbstractCollection.Observer]] configuration.
+	 * [[JW.Abstract.Observer]] configuration.
 	 *
 	 * @param T Collection item type.
 	 */

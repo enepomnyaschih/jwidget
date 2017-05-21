@@ -18,13 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCollectionObserver from './AbstractCollectionObserver';
+import AbstractObserver from './AbstractObserver';
 import ISet from '../ISet';
 
 /**
- * [[JW.AbstractCollection.Observer|Observer]] implementation for [[JW.Set]].
+ * [[JW.Abstract.Observer|Observer]] implementation for [[JW.Set]].
  */
-export default class SetObserver<T> extends AbstractCollectionObserver<T> {
+export default class SetObserver<T> extends AbstractObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
@@ -33,7 +33,7 @@ export default class SetObserver<T> extends AbstractCollectionObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: AbstractCollectionObserver.Config<T>) {
+	constructor(source: ISet<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));

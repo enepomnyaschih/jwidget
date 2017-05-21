@@ -26,7 +26,7 @@ import IndexItems from '../IndexItems';
 import List from '../List';
 
 /**
- * [[JW.AbstractCollection.Orderer|Orderer]] implementation for [[JW.Array]].
+ * [[JW.Abstract.Orderer|Orderer]] implementation for [[JW.Array]].
  */
 export default class ListConverterToList<T> extends AbstractConverterToList<T> {
 	/**

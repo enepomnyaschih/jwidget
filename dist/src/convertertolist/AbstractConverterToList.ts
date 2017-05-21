@@ -45,7 +45,7 @@ import List from '../List';
  *
  * **Notice:** All items of source collection must be different.
  *
- * Use [[JW.AbstractCollection.createOrderer|createOrderer]] method to create the synchronizer.
+ * Use [[JW.Abstract.createOrderer|createOrderer]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).
  *
  * You can pass target array in config option:
@@ -55,7 +55,7 @@ import List from '../List';
  *         target: array
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$$toArray|$$toArray]] shorthand can be used instead.
+ * In simple cases, [[JW.Abstract.$$toArray|$$toArray]] shorthand can be used instead.
  * It returns the target array right away:
  *
  *     var map = new JW.ObservableMap<string>({a: "A", b: "B"});
@@ -96,7 +96,7 @@ abstract class AbstractConverterToList<T> extends Class {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractCollection.createOrderer|createOrderer]] method is preferred instead.
+	 * [[JW.Abstract.createOrderer|createOrderer]] method is preferred instead.
 	 *
 	 * @param source Source collection.
 	 * @param config Configuration.
@@ -139,7 +139,7 @@ export default AbstractConverterToList;
 
 namespace AbstractConverterToList {
 	/**
-	 * [[JW.AbstractCollection.Orderer]] configuration.
+	 * [[JW.Abstract.Orderer]] configuration.
 	 *
 	 * @param T Collection item type.
 	 */

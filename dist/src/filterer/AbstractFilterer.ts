@@ -43,7 +43,7 @@ import ICollection from '../ICollection';
  *
  *     filterer.destroy();
  *
- * Use [[JW.AbstractCollection.createFilterer|createFilterer]] method to create the synchronizer.
+ * Use [[JW.Abstract.createFilterer|createFilterer]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).
  *
  * You can pass target collection in config option:
@@ -56,7 +56,7 @@ import ICollection from '../ICollection';
  *         scope: this
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$filter|$filter]] shorthand can be used instead.
+ * In simple cases, [[JW.Abstract.$filter|$filter]] shorthand can be used instead.
  * It returns the target collection right away:
  *
  *     var source = new JW.ObservableArray<number>([1, 2, 3]);
@@ -104,7 +104,7 @@ import ICollection from '../ICollection';
  *
  * @param T Collection item type.
  */
-abstract class AbstractCollectionFilterer<T> extends Class {
+abstract class AbstractFilterer<T> extends Class {
 	/**
 	 * @hidden
 	 */
@@ -117,13 +117,13 @@ abstract class AbstractCollectionFilterer<T> extends Class {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractCollection.createFilterer|createFilterer]] method is preferred instead.
+	 * [[JW.Abstract.createFilterer|createFilterer]] method is preferred instead.
 	 *
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
 	constructor(readonly source: ICollection<T>, protected _test: (item: T) => boolean,
-			config: AbstractCollectionFilterer.Config = {}) {
+			config: AbstractFilterer.Config = {}) {
 		super();
 		this._scope = config.scope || this;
 	}
@@ -138,11 +138,11 @@ abstract class AbstractCollectionFilterer<T> extends Class {
 	}
 }
 
-export default AbstractCollectionFilterer;
+export default AbstractFilterer;
 
-namespace AbstractCollectionFilterer {
+namespace AbstractFilterer {
 	/**
-	 * [[JW.AbstractCollection.Filterer]] configuration.
+	 * [[JW.Abstract.Filterer]] configuration.
 	 *
 	 * @param T Collection item type.
 	 */

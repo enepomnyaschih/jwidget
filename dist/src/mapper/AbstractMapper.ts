@@ -51,7 +51,7 @@ import ICollection from '../ICollection';
  *     });
  *     var viewCollection = mapper.target;
  *
- * Use [[JW.AbstractCollection.createMapper|createMapper]] method to create the synchronizer.
+ * Use [[JW.Abstract.createMapper|createMapper]] method to create the synchronizer.
  * The method selects a synchronizer implementation which fits better (simple or observable).
  *
  * You can pass target collection in config option:
@@ -64,8 +64,8 @@ import ICollection from '../ICollection';
  *         scope: this
  *     });
  *
- * In simple cases, [[JW.AbstractCollection.$mapValues|$mapValues]]
- * and [[JW.AbstractCollection.$mapObjects|$mapObjects]] shorthands can be used instead.
+ * In simple cases, [[JW.Abstract.$mapValues|$mapValues]]
+ * and [[JW.Abstract.$mapObjects|$mapObjects]] shorthands can be used instead.
  * They return the target collection right away:
  *
  *     var viewCollection = dataCollection.$mapObjects<View>((data) => {
@@ -112,7 +112,7 @@ import ICollection from '../ICollection';
  * @param T Source collection item type.
  * @param U Target collection item type.
  */
-abstract class AbstractCollectionMapper<T, U> extends Class {
+abstract class AbstractMapper<T, U> extends Class {
 	/**
 	 * @hidden
 	 */
@@ -130,13 +130,13 @@ abstract class AbstractCollectionMapper<T, U> extends Class {
 
 	/**
 	 * Creates synchronizer.
-	 * [[JW.AbstractCollection.createMapper|createMapper]] method is preferred instead.
+	 * [[JW.Abstract.createMapper|createMapper]] method is preferred instead.
 	 *
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
 	constructor(readonly source: ICollection<T>, protected _create: (data: T) => U,
-			config: AbstractCollectionMapper.Config<T, U> = {}) {
+			config: AbstractMapper.Config<T, U> = {}) {
 		super();
 		this._destroy = config.destroy;
 		this._scope = config.scope || this;
@@ -153,15 +153,15 @@ abstract class AbstractCollectionMapper<T, U> extends Class {
 	}
 }
 
-export default AbstractCollectionMapper;
+export default AbstractMapper;
 
-namespace AbstractCollectionMapper {
+namespace AbstractMapper {
 	export interface DestroyCallback<T, U> {
 		(targetValue: U, sourceValue: T): any;
 	}
 
 	/**
-	 * [[JW.AbstractCollection.Mapper]] configuration.
+	 * [[JW.Abstract.Mapper]] configuration.
 	 *
 	 * @param T Source collection item type.
 	 * @param U Target collection item type.

@@ -19,16 +19,16 @@
 */
 
 import {destroy} from '../index';
-import AbstractCollectionMapper from './AbstractCollectionMapper';
+import AbstractMapper from './AbstractMapper';
 import Destructor from '../Destructor';
 import IList from '../IList';
 import IndexItems from '../IndexItems';
 import List from '../List';
 
 /**
- * [[JW.AbstractCollection.Mapper|Mapper]] implementation for [[JW.Array]].
+ * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Array]].
  */
-class ListMapper<T, U> extends AbstractCollectionMapper<T, U> {
+class ListMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
@@ -126,7 +126,7 @@ namespace ListMapper {
 	/**
 	 * @inheritdoc
 	 */
-	export interface FullConfig<T, U> extends AbstractCollectionMapper.Config<T, U> {
+	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
 		 * @inheritdoc
 		 */
@@ -135,7 +135,7 @@ namespace ListMapper {
 }
 
 export function mapList<T, U>(source: IList<T>, create: (sourceValue: T) => U,
-		config: AbstractCollectionMapper.Config<T, U> = {}): IList<U> {
+		config: AbstractMapper.Config<T, U> = {}): IList<U> {
 	if (!source.silent) {
 		const target = new List<U>(config.getKey);
 		return target.owning(new ListMapper<T, U>(source, create, {
