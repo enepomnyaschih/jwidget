@@ -19,9 +19,10 @@
 */
 
 import AbstractIndexer from './AbstractIndexer';
-import IMap from '../IMap';
+import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
 import ISet from '../ISet';
 import Map from '../Map';
+import ReadOnlySet from '../ReadOnlySet';
 
 /**
  * [[JW.Abstract.Indexer|Indexer]] implementation for [[JW.Set]].
@@ -30,12 +31,12 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ISet<T>;
+	readonly source: ReadOnlySet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, getKey: (item: T) => string,
+	constructor(source: ReadOnlySet<T>, getKey: (item: T) => string,
 			config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
@@ -55,7 +56,8 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
 	}
 }
 
-export function indexSet<T>(source: ISet<T>, getKey: (item: T) => string, scope?: any): IMap<T> {
+export function indexSet<T>(source: ReadOnlySet<T>, getKey: (item: T) => string,
+		scope?: any): DestroyableReadOnlyMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}

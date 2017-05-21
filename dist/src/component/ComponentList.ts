@@ -22,14 +22,14 @@ import ListMapper from '../mapper/list';
 import Class from '../Class';
 import Component from '../Component';
 import ComponentInserter from './ComponentInserter';
-import IList from '../IList';
+import ReadOnlyList from '../ReadOnlyList';
 import * as DomUtils from '../DomUtils';
 
 /**
  * @hidden
  */
 export default class ComponentList extends Class {
-	constructor(private parent: Component, private source: IList<Component>, el: JQuery) {
+	constructor(private parent: Component, private source: ReadOnlyList<Component>, el: JQuery) {
 		super();
 		parent._arrays[this.iid] = this;
 

@@ -22,25 +22,25 @@ import {default as ListConverterToList, listToList} from './list';
 import {default as MapConverterToList, mapToList} from './map';
 import {default as SetConverterToList, setToList} from './set';
 import AbstractConverterToList from './AbstractConverterToList';
-import IList from '../IList';
-import ICollection from '../ICollection';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import List from '../List';
 import Map from '../Map';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
 
-export function createConverterToList<T>(source: ICollection<T>, config: AbstractConverterToList.Config<T>): AbstractConverterToList<T> {
+export function createConverterToList<T>(source: ReadOnlyCollection<T>, config: AbstractConverterToList.Config<T>): AbstractConverterToList<T> {
 	return (source instanceof List) ? new ListConverterToList(source, config) :
 		(source instanceof Map) ? new MapConverterToList(source, config) :
 		(source instanceof Set) ? new SetConverterToList(source, config) : null;
 }
 
-export function collectionToList<T>(source: ICollection<T>): IList<T> {
+export function collectionToList<T>(source: ReadOnlyCollection<T>): DestroyableReadOnlyList<T> {
 	return (source instanceof List) ? listToList(source) :
 		(source instanceof Map) ? mapToList(source) :
 		(source instanceof Set) ? setToList(source) : null;
 }
 
-export function collectionAsList<T>(source: ICollection<T>): IList<T> {
+export function collectionAsList<T>(source: ReadOnlyCollection<T>): DestroyableReadOnlyList<T> {
 	return (source instanceof List) ? source :
 		(source instanceof Map) ? mapToList(source) :
 		(source instanceof Set) ? setToList(source) : null;

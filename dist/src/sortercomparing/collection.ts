@@ -22,21 +22,21 @@ import {default as ListSorterComparing, sortListComparing} from './list';
 import {default as MapSorterComparing, sortMapComparing} from './map';
 import {default as SetSorterComparing, sortSetComparing} from './set';
 import AbstractSorterComparing from './AbstractSorterComparing';
-import IList from '../IList';
-import ICollection from '../ICollection';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import List from '../List';
 import Map from '../Map';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
 
-export function createSorterComparing<T>(source: ICollection<T>,
+export function createSorterComparing<T>(source: ReadOnlyCollection<T>,
 		config?: AbstractSorterComparing.FullConfig<T>): AbstractSorterComparing<T> {
 	return (source instanceof List) ? new ListSorterComparing(source, config) :
 		(source instanceof Map) ? new MapSorterComparing(source, config) :
 		(source instanceof Set) ? new SetSorterComparing(source, config) : null;
 }
 
-export function sortCollectionComparing<T>(source: ICollection<T>,
-		config?: AbstractSorterComparing.Config<T>): IList<T> {
+export function sortCollectionComparing<T>(source: ReadOnlyCollection<T>,
+		config?: AbstractSorterComparing.Config<T>): DestroyableReadOnlyList<T> {
 	return (source instanceof List) ? sortListComparing(source, config) :
 		(source instanceof Map) ? sortMapComparing(source, config) :
 		(source instanceof Set) ? sortSetComparing(source, config) : null;

@@ -22,12 +22,13 @@ import ListObserver from './list';
 import MapObserver from './map';
 import SetObserver from './set';
 import AbstractObserver from './AbstractObserver';
-import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
 
-export function createObserver<T>(source: ICollection<T>, config: AbstractObserver.Config<T>): AbstractObserver<T> {
+export function createObserver<T>(source: ReadOnlyCollection<T>,
+		config: AbstractObserver.Config<T>): AbstractObserver<T> {
 	return (source instanceof List) ? new ListObserver(source, config) :
 		(source instanceof Map) ? new MapObserver(source, config) :
 		(source instanceof Set) ? new SetObserver(source, config) : null;

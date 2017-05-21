@@ -19,7 +19,9 @@
 */
 
 import AbstractFilterer from './AbstractFilterer';
+import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
 import ISet from '../ISet';
+import ReadOnlySet from '../ReadOnlySet';
 import Set from '../Set';
 
 /**
@@ -31,7 +33,7 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ISet<T>;
+	readonly source: ReadOnlySet<T>;
 
 	/**
 	 * @inheritdoc
@@ -41,7 +43,7 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, test: (item: T) => boolean,
+	constructor(source: ReadOnlySet<T>, test: (item: T) => boolean,
 			config: SetFilterer.Config<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
@@ -88,7 +90,8 @@ namespace SetFilterer {
 	}
 }
 
-export function filterSet<T>(source: ISet<T>, test: (item: T) => boolean, scope?: any): ISet<T> {
+export function filterSet<T>(source: ReadOnlySet<T>, test: (item: T) => boolean,
+		scope?: any): DestroyableReadOnlySet<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

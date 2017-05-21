@@ -19,8 +19,10 @@
 */
 
 import AbstractIndexer from './AbstractIndexer';
+import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
 import IMap from '../IMap';
 import Map from '../Map';
+import ReadOnlyMap from '../ReadOnlyMap';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
@@ -30,12 +32,12 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IMap<T>;
+	readonly source: ReadOnlyMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, getKey: (item: T) => string,
+	constructor(source: ReadOnlyMap<T>, getKey: (item: T) => string,
 			config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
@@ -55,7 +57,8 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 	}
 }
 
-export function indexMap<T>(source: IMap<T>, getKey: (item: T) => string, scope?: any): IMap<T> {
+export function indexMap<T>(source: ReadOnlyMap<T>, getKey: (item: T) => string,
+		scope?: any): DestroyableReadOnlyMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}

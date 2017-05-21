@@ -19,9 +19,10 @@
 */
 
 import AbstractSorterComparing from './AbstractSorterComparing';
-import IList from '../IList';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import IMap from '../IMap';
 import List from '../List';
+import ReadOnlyMap from '../ReadOnlyMap';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
@@ -31,12 +32,12 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IMap<T>;
+	readonly source: ReadOnlyMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config?: AbstractSorterComparing.FullConfig<T>) {
+	constructor(source: ReadOnlyMap<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -54,7 +55,8 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	}
 }
 
-export function sortMapComparing<T>(source: IMap<T>, config?: AbstractSorterComparing.Config<T>): IList<T> {
+export function sortMapComparing<T>(source: ReadOnlyMap<T>,
+		config?: AbstractSorterComparing.Config<T>): DestroyableReadOnlyList<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(config.compare, config.scope, config.order);
 	}

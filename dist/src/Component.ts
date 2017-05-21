@@ -30,8 +30,8 @@ import ComponentCollection from './component/ComponentCollection';
 import ComponentList from './component/ComponentList';
 import Dictionary from './Dictionary';
 import DomTemplate from './DomTemplate';
-import IList from './IList';
-import ICollection from './ICollection';
+import ReadOnlyList from './ReadOnlyList';
+import ReadOnlyCollection from './ReadOnlyCollection';
 import HtmlTemplate from './HtmlTemplate';
 import Map from './Map';
 import Set from './Set';
@@ -378,7 +378,7 @@ export default class Component extends Class {
 	 * @param source Child component array.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addList(source: IList<Component>, el?: string | HTMLElement | JQuery): ComponentList {
+	addList(source: ReadOnlyList<Component>, el?: string | HTMLElement | JQuery): ComponentList {
 		return new ComponentList(this, source, this._getContainerElement(el));
 	}
 
@@ -389,7 +389,7 @@ export default class Component extends Class {
 	 * @param components Child component collection.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addCollection(source: ICollection<Component>, el?: string | HTMLElement | JQuery): ComponentCollection {
+	addCollection(source: ReadOnlyCollection<Component>, el?: string | HTMLElement | JQuery): ComponentCollection {
 		return new ComponentCollection(this, source, this._getContainerElement(el));
 	}
 

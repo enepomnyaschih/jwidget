@@ -22,6 +22,7 @@ import AbstractCounter from './AbstractCounter';
 import DestroyableBindable from '../DestroyableBindable';
 import IMap from '../IMap';
 import Property from '../Property';
+import ReadOnlyMap from '../ReadOnlyMap';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
@@ -31,12 +32,12 @@ export default class MapCounter<T> extends AbstractCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IMap<T>;
+	readonly source: ReadOnlyMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, test: (item: T) => boolean,
+	constructor(source: ReadOnlyMap<T>, test: (item: T) => boolean,
 			config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
@@ -55,7 +56,8 @@ export default class MapCounter<T> extends AbstractCounter<T> {
 	}
 }
 
-export function countMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): DestroyableBindable<number> {
+export function countMap<T>(source: ReadOnlyMap<T>, test: (item: T) => boolean,
+		scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

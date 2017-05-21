@@ -19,8 +19,10 @@
 */
 
 import AbstractFilterer from './AbstractFilterer';
+import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
 import IMap from '../IMap';
 import Map from '../Map';
+import ReadOnlyMap from '../ReadOnlyMap';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
@@ -32,7 +34,7 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IMap<T>;
+	readonly source: ReadOnlyMap<T>;
 
 	/**
 	 * @inheritdoc
@@ -42,7 +44,7 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, test: (item: T) => boolean,
+	constructor(source: ReadOnlyMap<T>, test: (item: T) => boolean,
 			config: MapFilterer.Config<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
@@ -94,7 +96,7 @@ namespace MapFilterer {
 	}
 }
 
-export function filterMap<T>(source: IMap<T>, test: (item: T) => boolean, scope?: any): IMap<T> {
+export function filterMap<T>(source: ReadOnlyMap<T>, test: (item: T) => boolean, scope?: any): DestroyableReadOnlyMap<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

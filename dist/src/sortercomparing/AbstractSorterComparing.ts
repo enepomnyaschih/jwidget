@@ -21,10 +21,10 @@
 import {cmp} from '../index';
 import Class from '../Class';
 import IList from '../IList';
-import ICollection from '../ICollection';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 import * as ArrayUtils from '../ArrayUtils';
 
 /**
@@ -155,7 +155,7 @@ abstract class AbstractSorterComparing<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractSorterComparing.FullConfig<T> = {}) {
+	constructor(readonly source: ReadOnlyCollection<T>, config: AbstractSorterComparing.FullConfig<T> = {}) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;

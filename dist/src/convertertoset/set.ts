@@ -19,7 +19,9 @@
 */
 
 import AbstractConverterToSet from './AbstractConverterToSet';
+import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
 import ISet from '../ISet';
+import ReadOnlySet from '../ReadOnlySet';
 import Set from '../Set';
 
 /**
@@ -29,12 +31,12 @@ export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ISet<T>;
+	readonly source: ReadOnlySet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: AbstractConverterToSet.Config<T>) {
+	constructor(source: ReadOnlySet<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -50,7 +52,7 @@ export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 	}
 }
 
-export function setToSet<T>(source: ISet<T>): ISet<T> {
+export function setToSet<T>(source: ReadOnlySet<T>): DestroyableReadOnlySet<T> {
 	if (source.silent) {
 		return source.toSet();
 	}

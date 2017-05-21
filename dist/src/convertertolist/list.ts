@@ -20,10 +20,12 @@
 
 import {VidSet} from '../internal';
 import AbstractConverterToList from './AbstractConverterToList';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import IList from '../IList';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
+import ReadOnlyList from '../ReadOnlyList';
 
 /**
  * [[JW.Abstract.Orderer|Orderer]] implementation for [[JW.Array]].
@@ -32,12 +34,12 @@ export default class ListConverterToList<T> extends AbstractConverterToList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IList<T>;
+	readonly source: ReadOnlyList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractConverterToList.Config<T>) {
+	constructor(source: ReadOnlyList<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
@@ -63,7 +65,7 @@ export default class ListConverterToList<T> extends AbstractConverterToList<T> {
 	}
 }
 
-export function listToList<T>(source: IList<T>): IList<T> {
+export function listToList<T>(source: ReadOnlyList<T>): DestroyableReadOnlyList<T> {
 	if (source.silent) {
 		return source.toList();
 	}

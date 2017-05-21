@@ -19,9 +19,10 @@
 */
 
 import AbstractIndexer from './AbstractIndexer';
+import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
 import IList from '../IList';
-import IMap from '../IMap';
 import Map from '../Map';
+import ReadOnlyList from '../ReadOnlyList';
 
 /**
  * [[JW.Abstract.Indexer|Indexer]] implementation for [[JW.Array]].
@@ -30,12 +31,12 @@ export default class ListIndexer<T> extends AbstractIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IList<T>;
+	readonly source: ReadOnlyList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, getKey: (item: T) => string,
+	constructor(source: ReadOnlyList<T>, getKey: (item: T) => string,
 			config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
@@ -62,7 +63,8 @@ export default class ListIndexer<T> extends AbstractIndexer<T> {
 	}
 }
 
-export function indexList<T>(source: IList<T>, getKey: (item: T) => string, scope?: any): IMap<T> {
+export function indexList<T>(source: ReadOnlyList<T>, getKey: (item: T) => string,
+		scope?: any): DestroyableReadOnlyMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}

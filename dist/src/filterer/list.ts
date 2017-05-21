@@ -20,11 +20,13 @@
 
 import {def} from '../index';
 import AbstractFilterer from './AbstractFilterer';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import Dictionary from '../Dictionary';
 import IList from '../IList';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
+import ReadOnlyList from '../ReadOnlyList';
 import * as ArrayUtils from '../ArrayUtils';
 
 /**
@@ -41,7 +43,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IList<T>;
+	readonly source: ReadOnlyList<T>;
 
 	/**
 	 * @inheritdoc
@@ -51,7 +53,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, test: (item: T) => boolean,
+	constructor(source: ReadOnlyList<T>, test: (item: T) => boolean,
 			config: ListFilterer.FullConfig<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
@@ -339,7 +341,8 @@ namespace ListFilterer {
 	}
 }
 
-export function filterList<T>(source: IList<T>, test: (item: T) => boolean, scope?: any): IList<T> {
+export function filterList<T>(source: ReadOnlyList<T>, test: (item: T) => boolean,
+		scope?: any): DestroyableReadOnlyList<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

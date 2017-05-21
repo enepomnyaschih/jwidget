@@ -20,9 +20,10 @@
 
 import {VidSet} from '../internal';
 import AbstractConverterToList from './AbstractConverterToList';
-import IList from '../IList';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import IMap from '../IMap';
 import List from '../List';
+import ReadOnlyMap from '../ReadOnlyMap';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
@@ -32,12 +33,12 @@ export default class MapConverterToList<T> extends AbstractConverterToList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IMap<T>;
+	readonly source: ReadOnlyMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: AbstractConverterToList.Config<T>) {
+	constructor(source: ReadOnlyMap<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -56,7 +57,7 @@ export default class MapConverterToList<T> extends AbstractConverterToList<T> {
 	}
 }
 
-export function mapToList<T>(source: IMap<T>): IList<T> {
+export function mapToList<T>(source: ReadOnlyMap<T>): DestroyableReadOnlyList<T> {
 	if (source.silent) {
 		return source.toList();
 	}

@@ -20,9 +20,9 @@
 
 import Class from '../Class';
 import Dictionary from '../Dictionary';
-import ICollection from '../ICollection';
 import IMap from '../IMap';
 import Map from '../Map';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 
 /**
  * Collection indexer.
@@ -120,7 +120,7 @@ abstract class AbstractIndexer<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, protected _getKey: (item: T) => string,
+	constructor(readonly source: ReadOnlyCollection<T>, protected _getKey: (item: T) => string,
 			config: AbstractIndexer.Config<T> = {}) {
 		super();
 		this._scope = config.scope || this;

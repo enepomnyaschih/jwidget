@@ -19,9 +19,10 @@
 */
 
 import AbstractSorterComparing from './AbstractSorterComparing';
-import IList from '../IList';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import ISet from '../ISet';
 import List from '../List';
+import ReadOnlySet from '../ReadOnlySet';
 
 /**
  * [[JW.Abstract.SorterComparing|SorterComparing]] implementation for [[JW.Set]].
@@ -30,12 +31,12 @@ export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ISet<T>;
+	readonly source: ReadOnlySet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config?: AbstractSorterComparing.FullConfig<T>) {
+	constructor(source: ReadOnlySet<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -51,7 +52,8 @@ export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
 	}
 }
 
-export function sortSetComparing<T>(source: ISet<T>, config?: AbstractSorterComparing.Config<T>): IList<T> {
+export function sortSetComparing<T>(source: ReadOnlySet<T>,
+		config?: AbstractSorterComparing.Config<T>): DestroyableReadOnlyList<T> {
 	if (source.silent) {
 		return source.$toSortedComparing(config.compare, config.scope, config.order);
 	}

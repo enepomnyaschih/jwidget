@@ -20,10 +20,12 @@
 
 import {destroy} from '../index';
 import AbstractMapper from './AbstractMapper';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import Destructor from '../Destructor';
 import IList from '../IList';
 import IndexItems from '../IndexItems';
 import List from '../List';
+import ReadOnlyList from '../ReadOnlyList';
 
 /**
  * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Array]].
@@ -34,7 +36,7 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IList<T>;
+	readonly source: ReadOnlyList<T>;
 
 	/**
 	 * @inheritdoc
@@ -44,7 +46,7 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, create: (sourceValue: T) => U, config: ListMapper.FullConfig<T, U> = {}) {
+	constructor(source: ReadOnlyList<T>, create: (sourceValue: T) => U, config: ListMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(config.getKey, this.source.silent) : config.target;
@@ -134,8 +136,8 @@ namespace ListMapper {
 	}
 }
 
-export function mapList<T, U>(source: IList<T>, create: (sourceValue: T) => U,
-		config: AbstractMapper.Config<T, U> = {}): IList<U> {
+export function mapList<T, U>(source: ReadOnlyList<T>, create: (sourceValue: T) => U,
+		config: AbstractMapper.Config<T, U> = {}): DestroyableReadOnlyList<U> {
 	if (!source.silent) {
 		const target = new List<U>(config.getKey);
 		return target.owning(new ListMapper<T, U>(source, create, {

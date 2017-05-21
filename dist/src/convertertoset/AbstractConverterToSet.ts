@@ -19,8 +19,8 @@
 */
 
 import Class from '../Class';
-import ICollection from '../ICollection';
 import ISet from '../ISet';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
 
 /**
@@ -110,7 +110,7 @@ abstract class AbstractConverterToSet<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractConverterToSet.Config<T> = {}) {
+	constructor(readonly source: ReadOnlyCollection<T>, config: AbstractConverterToSet.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(source.getKey, source.silent) : config.target;

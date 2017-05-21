@@ -20,9 +20,10 @@
 
 import {VidSet} from '../internal';
 import AbstractConverterToList from './AbstractConverterToList';
-import IList from '../IList';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import ISet from '../ISet';
 import List from '../List';
+import ReadOnlySet from '../ReadOnlySet';
 
 /**
  * [[JW.Abstract.Orderer|Orderer]] implementation for [[JW.Set]].
@@ -31,12 +32,12 @@ export default class SetConverterToList<T> extends AbstractConverterToList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ISet<T>;
+	readonly source: ReadOnlySet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: AbstractConverterToList.Config<T>) {
+	constructor(source: ReadOnlySet<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -54,7 +55,7 @@ export default class SetConverterToList<T> extends AbstractConverterToList<T> {
 	}
 }
 
-export function setToList<T>(source: ISet<T>): IList<T> {
+export function setToList<T>(source: ReadOnlySet<T>): DestroyableReadOnlyList<T> {
 	if (source.silent) {
 		return source.toList();
 	}

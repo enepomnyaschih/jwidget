@@ -20,7 +20,7 @@
 
 import ListInserter from './inserter/list';
 import Class from './Class';
-import IList from './IList';
+import ReadOnlyList from './ReadOnlyList';
 import * as DomUtils from './DomUtils';
 
 /**
@@ -31,7 +31,7 @@ export default class AbstractInserter<T> extends Class {
 	 * @param source Source array.
 	 * @param el Parent element.
 	 */
-	constructor(source: IList<T>, readonly el: HTMLElement) {
+	constructor(source: ReadOnlyList<T>, readonly el: HTMLElement) {
 		super();
 		this.own(new ListInserter(source, {
 			add: this._addItem,

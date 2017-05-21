@@ -19,8 +19,9 @@
 */
 
 import AbstractConverterToSet from './AbstractConverterToSet';
+import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
 import IMap from '../IMap';
-import ISet from '../ISet';
+import ReadOnlyMap from '../ReadOnlyMap';
 import Set from '../Set';
 import * as DictionaryUtils from '../DictionaryUtils';
 
@@ -31,12 +32,12 @@ export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IMap<T>;
+	readonly source: ReadOnlyMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, config: AbstractConverterToSet.Config<T>) {
+	constructor(source: ReadOnlyMap<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -55,7 +56,7 @@ export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 	}
 }
 
-export function mapToSet<T>(source: IMap<T>): ISet<T> {
+export function mapToSet<T>(source: ReadOnlyMap<T>): DestroyableReadOnlySet<T> {
 	if (source.silent) {
 		return source.toSet();
 	}

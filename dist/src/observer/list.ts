@@ -20,6 +20,7 @@
 
 import AbstractObserver from './AbstractObserver';
 import IList from '../IList';
+import ReadOnlyList from '../ReadOnlyList';
 
 /**
  * [[JW.Abstract.Observer|Observer]] implementation for [[JW.Array]].
@@ -28,12 +29,12 @@ export default class ListObserver<T> extends AbstractObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IList<T>;
+	readonly source: ReadOnlyList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IList<T>, config: AbstractObserver.Config<T>) {
+	constructor(source: ReadOnlyList<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));

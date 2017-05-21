@@ -21,10 +21,12 @@
 import {destroy, iidStr, SILENT, ADAPTER} from '../index';
 import {mapList} from '../mapper/list';
 import Class from '../Class';
+import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import IList from '../IList';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
+import ReadOnlyList from '../ReadOnlyList';
 import * as ArrayUtils from '../ArrayUtils';
 
 /**
@@ -97,7 +99,7 @@ import * as ArrayUtils from '../ArrayUtils';
  */
 class ListMerger<T> extends Class {
 	private _targetCreated: boolean;
-	private _bunches: IList<Bunch<T>>;
+	private _bunches: DestroyableReadOnlyList<Bunch<T>>;
 
 	/**
 	 * Target array.
@@ -111,11 +113,11 @@ class ListMerger<T> extends Class {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: IList<IList<T>>, config: ListMerger.Config<T> = {}) {
+	constructor(readonly source: ReadOnlyList<ReadOnlyList<T>>, config: ListMerger.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? this._createTarget(source, config.getKey) : config.target;
-		this._bunches = mapList<IList<T>, Bunch<T>>(source, (bunch) => new Bunch<T>(this.source, this.target, bunch), {
+		this._bunches = mapList<ReadOnlyList<T>, Bunch<T>>(source, (bunch) => new Bunch<T>(this.source, this.target, bunch), {
 			destroy,
 			getKey: iidStr
 		});
@@ -140,7 +142,7 @@ class ListMerger<T> extends Class {
 		super.destroyObject();
 	}
 
-	private _createTarget(source: IList<IList<T>>, getKey: (item: T) => string): IList<T> {
+	private _createTarget(source: ReadOnlyList<ReadOnlyList<T>>, getKey: (item: T) => string): IList<T> {
 		return new List<T>(getKey, source.silent && source.every((item) => item.silent));
 	}
 
@@ -148,7 +150,7 @@ class ListMerger<T> extends Class {
 		return this._merge(this.source.items);
 	}
 
-	private _merge(bunches: IList<T>[]): T[] {
+	private _merge(bunches: ReadOnlyList<T>[]): T[] {
 		var items = new Array<T>(this._count(bunches));
 		var iItems = 0;
 		for (var i = 0, l = bunches.length; i < l; ++i) {
@@ -160,7 +162,7 @@ class ListMerger<T> extends Class {
 		return items;
 	}
 
-	private _count(bunches: IList<T>[], index?: number, length?: number): number {
+	private _count(bunches: ReadOnlyList<T>[], index?: number, length?: number): number {
 		if (index === undefined) {
 			index = 0;
 		}
@@ -174,7 +176,7 @@ class ListMerger<T> extends Class {
 		return count;
 	}
 
-	private _getIndexes(bunches: IList<T>[]): number[] {
+	private _getIndexes(bunches: ReadOnlyList<T>[]): number[] {
 		var currentIndex = 0;
 		var indexes = bunches.map(function (bunch) {
 			var index = currentIndex;
@@ -185,7 +187,7 @@ class ListMerger<T> extends Class {
 		return indexes;
 	}
 
-	private _onSplice(params: IList.SpliceEventParams<IList<T>>) {
+	private _onSplice(params: IList.SpliceEventParams<ReadOnlyList<T>>) {
 		var spliceResult = params.spliceResult;
 		var indexes = this._getIndexes(spliceResult.oldItems);
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -205,14 +207,14 @@ class ListMerger<T> extends Class {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IList.ReplaceEventParams<IList<T>>) {
+	private _onReplace(params: IList.ReplaceEventParams<ReadOnlyList<T>>) {
 		var index = this._count(this.source.items, 0, params.index);
 		this.target.trySplice(
 			[new IndexCount(index, params.oldItem.length.get())],
 			[new IndexItems<T>(index, params.newItem.items)]);
 	}
 
-	private _onMove(params: IList.MoveEventParams<IList<T>>) {
+	private _onMove(params: IList.MoveEventParams<ReadOnlyList<T>>) {
 		var count = params.item.length.get();
 		var indexes = new Array<number>(this.target.length.get());
 		var currentIndex = 0;
@@ -253,7 +255,7 @@ class ListMerger<T> extends Class {
 		this.target.clear();
 	}
 
-	private _onReorder(params: IList.ReorderEventParams<IList<T>>) {
+	private _onReorder(params: IList.ReorderEventParams<ReadOnlyList<T>>) {
 		var oldIndexes = this._getIndexes(params.items);
 		var newIndexes = this._getIndexes(this.source.items);
 		var indexes = new Array<number>(this.target.length.get());
@@ -290,7 +292,8 @@ namespace ListMerger {
 	}
 }
 
-export function mergeLists<T>(source: IList<IList<T>>, getKey?: (item: T) => string): IList<T> {
+export function mergeLists<T>(source: ReadOnlyList<ReadOnlyList<T>>,
+		getKey?: (item: T) => string): DestroyableReadOnlyList<T> {
 	if (source.silent && source.every((item) => item.silent)) {
 		return $mergeNoSync(source, getKey);
 	}
@@ -298,20 +301,21 @@ export function mergeLists<T>(source: IList<IList<T>>, getKey?: (item: T) => str
 	return target.owning(new ListMerger<T>(source, {target}));
 }
 
-export function mergeNoSync<T>(source: IList<IList<T>>): T[] {
+export function mergeNoSync<T>(source: ReadOnlyList<ReadOnlyList<T>>): T[] {
 	return ArrayUtils.merge(source.items.map((item) => item.items));
 }
 
-export function $mergeNoSync<T>(source: IList<IList<T>>, getKey?: (item: T) => string): IList<T> {
+export function $mergeNoSync<T>(source: ReadOnlyList<ReadOnlyList<T>>,
+		getKey?: (item: T) => string): DestroyableReadOnlyList<T> {
 	return new List(mergeNoSync(source), getKey, SILENT & ADAPTER);
 }
 
 class Bunch<T> extends Class {
-	private source: IList<IList<T>>;
+	private source: ReadOnlyList<ReadOnlyList<T>>;
 	private target: IList<T>;
-	private bunch: IList<T>;
+	private bunch: ReadOnlyList<T>;
 
-	constructor(source: IList<IList<T>>, target: IList<T>, bunch: IList<T>) {
+	constructor(source: ReadOnlyList<ReadOnlyList<T>>, target: IList<T>, bunch: ReadOnlyList<T>) {
 		super();
 		this.source = source;
 		this.target = target;

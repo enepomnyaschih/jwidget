@@ -19,7 +19,7 @@
 */
 
 import Class from '../Class';
-import ICollection from '../ICollection';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 
 /**
  * Collection filterer.
@@ -113,7 +113,7 @@ abstract class AbstractFilterer<T> extends Class {
 	/**
 	 * Target collection.
 	 */
-	readonly target: ICollection<T>;
+	readonly target: ReadOnlyCollection<T>;
 
 	/**
 	 * Creates synchronizer.
@@ -122,7 +122,7 @@ abstract class AbstractFilterer<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, protected _test: (item: T) => boolean,
+	constructor(readonly source: ReadOnlyCollection<T>, protected _test: (item: T) => boolean,
 			config: AbstractFilterer.Config = {}) {
 		super();
 		this._scope = config.scope || this;

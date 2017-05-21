@@ -22,20 +22,21 @@ import {default as ListMapper, mapList} from './list';
 import {default as MapMapper, mapMap} from './map';
 import {default as SetMapper, mapSet} from './set';
 import AbstractMapper from './AbstractMapper';
-import ICollection from '../ICollection';
+import DestroyableReadOnlyCollection from '../DestroyableReadOnlyCollection';
 import List from '../List';
 import Map from '../Map';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
 
-export function createMapper<T, U>(source: ICollection<T>, create: (sourceValue: T) => U,
+export function createMapper<T, U>(source: ReadOnlyCollection<T>, create: (sourceValue: T) => U,
 		config?: AbstractMapper.Config<T, U>): AbstractMapper<T, U> {
 	return (source instanceof List) ? new ListMapper(source, create, config) :
 		(source instanceof Map) ? new MapMapper(source, create, config) :
 		(source instanceof Set) ? new SetMapper(source, create, config) : null;
 }
 
-export function mapCollection<T, U>(source: ICollection<T>, create: (item: T) => U,
-		config?: AbstractMapper.Config<T, U>): ICollection<U> {
+export function mapCollection<T, U>(source: ReadOnlyCollection<T>, create: (item: T) => U,
+		config?: AbstractMapper.Config<T, U>): DestroyableReadOnlyCollection<U> {
 	return (source instanceof List) ? mapList(source, create, config) :
 		(source instanceof Map) ? mapMap(source, create, config) :
 		(source instanceof Set) ? mapSet(source, create, config) : null;

@@ -23,19 +23,20 @@ import {default as MapCounter, countMap} from './map';
 import {default as SetCounter, countSet} from './set';
 import AbstractCounter from './AbstractCounter';
 import DestroyableBindable from '../DestroyableBindable';
-import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
 
-export function createCounter<T>(source: ICollection<T>, test: (item: T) => boolean,
+export function createCounter<T>(source: ReadOnlyCollection<T>, test: (item: T) => boolean,
 		config?: AbstractCounter.Config): AbstractCounter<T> {
 	return (source instanceof List) ? new ListCounter(source, test, config) :
 		(source instanceof Map) ? new MapCounter(source, test, config) :
 		(source instanceof Set) ? new SetCounter(source, test, config) : null;
 }
 
-export function countCollection<T>(source: ICollection<T>, test: (item: T) => boolean, scope?: any): DestroyableBindable<number> {
+export function countCollection<T>(source: ReadOnlyCollection<T>, test: (item: T) => boolean,
+		scope?: any): DestroyableBindable<number> {
 	return (source instanceof List) ? countList(source, test, scope) :
 		(source instanceof Map) ? countMap(source, test, scope) :
 		(source instanceof Set) ? countSet(source, test, scope) : null;

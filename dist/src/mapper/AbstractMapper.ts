@@ -19,7 +19,7 @@
 */
 
 import Class from '../Class';
-import ICollection from '../ICollection';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 
 /**
  * Collection item converter.
@@ -126,7 +126,7 @@ abstract class AbstractMapper<T, U> extends Class {
 	/**
 	 * Target collection.
 	 */
-	readonly target: ICollection<U>;
+	readonly target: ReadOnlyCollection<U>;
 
 	/**
 	 * Creates synchronizer.
@@ -135,7 +135,7 @@ abstract class AbstractMapper<T, U> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, protected _create: (data: T) => U,
+	constructor(readonly source: ReadOnlyCollection<T>, protected _create: (data: T) => U,
 			config: AbstractMapper.Config<T, U> = {}) {
 		super();
 		this._destroy = config.destroy;

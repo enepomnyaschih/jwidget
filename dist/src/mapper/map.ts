@@ -20,10 +20,12 @@
 
 import {destroy} from '../index';
 import AbstractMapper from './AbstractMapper';
+import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
 import Destructor from '../Destructor';
 import Dictionary from '../Dictionary';
 import IMap from '../IMap';
 import Map from '../Map';
+import ReadOnlyMap from '../ReadOnlyMap';
 import * as DictionaryUtils from '../DictionaryUtils';
 
 /**
@@ -35,7 +37,7 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: IMap<T>;
+	readonly source: ReadOnlyMap<T>;
 
 	/**
 	 * @inheritdoc
@@ -45,7 +47,7 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: IMap<T>, create: (data: T) => U, config: MapMapper.FullConfig<T, U> = {}) {
+	constructor(source: ReadOnlyMap<T>, create: (data: T) => U, config: MapMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<U>(config.getKey, this.source.silent) : config.target;
@@ -119,8 +121,8 @@ namespace MapMapper {
 	}
 }
 
-export function mapMap<T, U>(source: IMap<T>, create: (sourceValue: T) => U,
-		config: AbstractMapper.Config<T, U> = {}): IMap<U> {
+export function mapMap<T, U>(source: ReadOnlyMap<T>, create: (sourceValue: T) => U,
+		config: AbstractMapper.Config<T, U> = {}): DestroyableReadOnlyMap<U> {
 	if (!source.silent) {
 		const target = new Map<U>(config.getKey);
 		return target.owning(new MapMapper<T, U>(source, create, {

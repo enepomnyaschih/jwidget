@@ -22,6 +22,7 @@ import AbstractCounter from './AbstractCounter';
 import DestroyableBindable from '../DestroyableBindable';
 import ISet from '../ISet';
 import Property from '../Property';
+import ReadOnlySet from '../ReadOnlySet';
 import * as ArrayUtils from '../ArrayUtils';
 
 /**
@@ -31,12 +32,12 @@ export default class SetCounter<T> extends AbstractCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ISet<T>;
+	readonly source: ReadOnlySet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, test: (item: T) => boolean,
+	constructor(source: ReadOnlySet<T>, test: (item: T) => boolean,
 			config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
@@ -55,7 +56,8 @@ export default class SetCounter<T> extends AbstractCounter<T> {
 	}
 }
 
-export function countSet<T>(source: ISet<T>, test: (item: T) => boolean, scope?: any): DestroyableBindable<number> {
+export function countSet<T>(source: ReadOnlySet<T>, test: (item: T) => boolean,
+		scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

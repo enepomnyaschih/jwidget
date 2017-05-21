@@ -18,11 +18,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from '../Bindable';
 import Class from '../Class';
-import ICollection from '../ICollection';
 import IProperty from '../IProperty';
 import Property from '../Property';
-import Bindable from '../Bindable';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 
 /**
  * Counter for collection items which match the specified filter.
@@ -110,7 +110,7 @@ abstract class AbstractCounter<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, protected _test: (item: T) => boolean,
+	constructor(readonly source: ReadOnlyCollection<T>, protected _test: (item: T) => boolean,
 			config: AbstractCounter.Config = {}) {
 		super();
 		this._scope = config.scope || this;

@@ -19,7 +19,7 @@
 */
 
 import Class from '../Class';
-import ICollection from '../ICollection';
+import ReadOnlyCollection from '../ReadOnlyCollection';
 
 /**
  * Collection observer. Listens all collection events and reduces them to 2 granular functions:
@@ -88,7 +88,7 @@ abstract class AbstractObserver<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ICollection<T>, config: AbstractObserver.Config<T>) {
+	constructor(readonly source: ReadOnlyCollection<T>, config: AbstractObserver.Config<T>) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;

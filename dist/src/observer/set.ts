@@ -20,6 +20,7 @@
 
 import AbstractObserver from './AbstractObserver';
 import ISet from '../ISet';
+import ReadOnlySet from '../ReadOnlySet';
 
 /**
  * [[JW.Abstract.Observer|Observer]] implementation for [[JW.Set]].
@@ -28,12 +29,12 @@ export default class SetObserver<T> extends AbstractObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ISet<T>;
+	readonly source: ReadOnlySet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ISet<T>, config: AbstractObserver.Config<T>) {
+	constructor(source: ReadOnlySet<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
