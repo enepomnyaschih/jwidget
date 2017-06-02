@@ -33,7 +33,8 @@ import Bindable from "./Bindable";
  */
 export default class Property<V> extends Class implements IProperty<V> {
 	private _ownsValue = false;
-	private _changeEvent: IEvent<Bindable.ChangeEventParams<V>>;
+
+	protected _changeEvent: IEvent<Bindable.ChangeEventParams<V>>;
 
 	/**
 	 * Constructs a property and sets initial value.

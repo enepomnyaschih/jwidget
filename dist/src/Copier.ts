@@ -62,11 +62,11 @@ class Copier<T> extends Class {
 	/**
 	 * @param config Configuration.
 	 */
-	constructor(config: Copier.Config<T>) {
+	constructor(source: Bindable<T>, target?: IProperty<T>) {
 		super();
-		this.source = config.source;
-		this._targetCreated = config.target == null;
-		this._target = (config.target == null) ? new Property<T>(null, this.source.silent) : config.target;
+		this.source = source;
+		this._targetCreated = target == null;
+		this._target = (target == null) ? new Property<T>(null, this.source.silent) : target;
 		this._update();
 		this.own(this.source.changeEvent.listen(this._update, this));
 	}
@@ -88,25 +88,6 @@ class Copier<T> extends Class {
 
 	private _update() {
 		this._target.set(this.source.get());
-	}
-}
-
-namespace Copier {
-	/**
-	 * [[JW.Copier]] configuration.
-	 *
-	 * @param T Property value type.
-	 */
-	export interface Config<T> {
-		/**
-		 * Source property.
-		 */
-		readonly source: Bindable<T>
-
-		/**
-		 * Target property. By default, created automatically.
-		 */
-		readonly target?: IProperty<T>;
 	}
 }
 

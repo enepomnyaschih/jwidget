@@ -21,6 +21,7 @@
 import Dictionary from './Dictionary';
 import Identifiable from './Identifiable';
 import {cmpPrimitives} from './internal';
+export {identity} from './internal';
 
 /**
  * Checks if value is undefined.
