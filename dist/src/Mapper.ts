@@ -18,14 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Listenable from './Listenable';
+import * as ArrayUtils from './ArrayUtils';
+import Bindable from './Bindable';
 import Class from './Class';
-import {destroy} from './index';
 import DestroyableBindable from './DestroyableBindable';
 import Destructor from './Destructor';
+import {destroy} from './index';
 import IProperty from './IProperty';
+import Listenable from './Listenable';
 import Property from './Property';
-import Bindable from './Bindable';
+import Reducer from './Reducer';
 
 /**
  * Watches source [[JW.Property|properties]] modification and recreates
@@ -158,16 +160,10 @@ class Mapper<T> extends Class {
 	private _viaNull: boolean;
 
 	/**
-	 * Source property.
-	 */
-	readonly sources: Bindable<any>[];
-
-	/**
 	 * @param config Configuration.
 	 */
-	constructor(sources: Bindable<any>[], create: Mapper.CreateCallback<T>, config: Mapper.FullConfig<T> = {}) {
+	constructor(readonly sources: Bindable<any>[], create: Mapper.CreateCallback<T>, config: Mapper.FullConfig<T> = {}) {
 		super();
-		this.sources = sources;
 		this._create = create;
 		this._destroy = config.destroy;
 		this._scope = config.scope || this;
@@ -310,23 +306,59 @@ namespace Mapper {
 		 */
 		readonly target?: IProperty<T>;
 	}
+
+	export class ByReducer<T> extends Class {
+		private _target: IProperty<T>;
+
+		/**
+		 * @param config Configuration.
+		 */
+		constructor(readonly sources: Bindable<any>[], readonly reducer: Reducer<any, T>, target?: IProperty<T>) {
+			super();
+			this._target = target || this.own(new Property<T>());
+			this._update();
+			this.sources.forEach(this._bind, this);
+		}
+
+		/**
+		 * Target property.
+		 */
+		get target(): Bindable<T> {
+			return this._target;
+		}
+
+		private _update() {
+			const values = this.sources.map((source) => source.get());
+			this._target.set(ArrayUtils.reduce(values, this.reducer));
+		}
+
+		private _bind(property: Bindable<any>): this {
+			return this.owning(property.changeEvent.listen(this._update, this));
+		}
+	}
 }
 
 export default Mapper;
 
-export function mapProperties<T>(sources: Bindable<any>[], create: Mapper.CreateCallback<T>,
-		config: Mapper.Config<T> = {}): DestroyableBindable<T> {
+export function mapProperties<T>(sources: Bindable<any>[], reducer: Reducer<any, T>): DestroyableBindable<T>;
+export function mapProperties<T>(sources: Bindable<any>[],
+		create: Mapper.CreateCallback<T>, config?: Mapper.Config<T>): DestroyableBindable<T>;
+export function mapProperties<T>(sources: Bindable<any>[],
+		reducer: Reducer<any, T> | Mapper.CreateCallback<T>, config: Mapper.Config<T> = {}): DestroyableBindable<T> {
 	if (!sources.every((source) => source.silent)) {
 		const target = new Property<T>();
-		return target.owning(new Mapper(sources, create, {
+		return target.owning((typeof reducer === "function") ? new Mapper(sources, reducer, {
 			target,
 			destroy: config.destroy,
 			scope: config.scope,
 			viaNull: config.viaNull
-		}));
+		}) : new Mapper.ByReducer(sources, reducer));
 	}
 	const sourceValues = sources.map((source) => source.get());
-	const targetValue = create.apply(config.scope, sourceValues);
+	if (typeof reducer !== "function") {
+		return new Property<T>(ArrayUtils.reduce(sourceValues, reducer), true);
+	}
+	const targetValue = reducer.apply(config.scope, sourceValues);
 	const target = new Property<T>(targetValue, true);
 	if (config.destroy === destroy) {
 		target.ownValue();

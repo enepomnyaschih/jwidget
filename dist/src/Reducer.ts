@@ -25,91 +25,79 @@ interface Reducer<T, U> {
 
 export default Reducer;
 
-export const sum: Reducer<number, number> = {
+export const sum: Reducer<any, number> = {
 	initial: 0,
-	callback(accumulator: number, item: number) {
-		return accumulator + item;
+	callback(accumulator: number, item: any) {
+		return accumulator + Number(item);
 	}
 };
 
-export const production: Reducer<number, number> = {
+export const production: Reducer<any, number> = {
 	initial: 1,
-	callback(accumulator: number, item: number) {
-		return accumulator * item;
+	callback(accumulator: number, item: any) {
+		return accumulator * Number(item);
 	}
 };
 
-export const numericAnd: Reducer<number, number> = {
+export const numericAnd: Reducer<any, number> = {
 	initial: 0x001FFFFFFFFFFFFF,
-	callback(accumulator: number, item: number) {
-		return accumulator & item;
+	callback(accumulator: number, item: any) {
+		return accumulator & Number(item);
 	}
 };
 
-export const numericOr: Reducer<number, number> = {
+export const numericOr: Reducer<any, number> = {
 	initial: 0,
-	callback(accumulator: number, item: number) {
-		return accumulator | item;
+	callback(accumulator: number, item: any) {
+		return accumulator | Number(item);
 	}
 };
 
-export const numericXor: Reducer<number, number> = {
+export const numericXor: Reducer<any, number> = {
 	initial: 0,
-	callback(accumulator: number, item: number) {
-		return accumulator ^ item;
+	callback(accumulator: number, item: any) {
+		return accumulator ^ Number(item);
 	}
 };
 
-export const max: Reducer<number, number> = {
+export const max: Reducer<any, number> = {
 	initial: Number.NEGATIVE_INFINITY,
-	callback(accumulator: number, item: number) {
-		return Math.max(accumulator, item);
+	callback(accumulator: number, item: any) {
+		return Math.max(accumulator, Number(item));
 	}
 };
 
-export const min: Reducer<number, number> = {
+export const min: Reducer<any, number> = {
 	initial: Number.POSITIVE_INFINITY,
-	callback(accumulator: number, item: number) {
-		return Math.min(accumulator, item);
+	callback(accumulator: number, item: any) {
+		return Math.min(accumulator, Number(item));
 	}
 };
 
-export const concat: Reducer<string, string> = {
+export const concat: Reducer<any, string> = {
 	initial: "",
-	callback(accumulator: string, item: string) {
-		return accumulator + item;
+	callback(accumulator: string, item: any) {
+		return accumulator + String(item);
 	}
 };
 
-export const and: Reducer<boolean, boolean> = {
+export const and: Reducer<any, boolean> = {
 	initial: true,
-	callback(accumulator: boolean, item: boolean) {
-		return accumulator && item;
+	callback(accumulator: boolean, item: any) {
+		return accumulator && Boolean(item);
 	}
 };
 
-export const or: Reducer<boolean, boolean> = {
+export const or: Reducer<any, boolean> = {
 	initial: false,
-	callback(accumulator: boolean, item: boolean) {
-		return accumulator || item;
+	callback(accumulator: boolean, item: any) {
+		return accumulator || Boolean(item);
 	}
 };
 
-export const xor: Reducer<boolean, boolean> = {
+export const xor: Reducer<any, boolean> = {
 	initial: false,
-	callback(accumulator: boolean, item: boolean) {
-		return accumulator !== item;
+	callback(accumulator: boolean, item: any) {
+		return accumulator !== Boolean(item);
 	}
 };
-
-export interface ReduceState<T, U> {
-	value: U;
-	callback(accumulator: U, item: T): U;
-}
-
-export function initReduceState<T, U>(reducer: Reducer<T, U>): ReduceState<T, U> {
-	return {
-		value: (typeof reducer.initial === "function") ? reducer.initial() : reducer.initial,
-		callback: reducer.callback
-	};
-}

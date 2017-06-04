@@ -19,11 +19,10 @@
 */
 
 import {apply, cmp} from './index';
-import {cmpPrimitives, identity, VidMap, VidSet} from './internal';
+import {cmpPrimitives, identity, initReduceState, VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
 import IMap from './IMap';
 import Reducer from './Reducer';
-import {initReduceState} from './Reducer';
 import Some from './Some';
 
 export function isEmpty<T>(dict: Dictionary<T>) {

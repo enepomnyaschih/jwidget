@@ -19,6 +19,7 @@
 */
 
 import Dictionary from './Dictionary';
+import Reducer from './Reducer';
 
 export function identity<T>(x: T): T {
 	return x;
@@ -26,6 +27,18 @@ export function identity<T>(x: T): T {
 
 export function cmpPrimitives(x: any, y : any): number {
 	return (x > y) ? 1 : (x < y) ? -1 : 0;
+}
+
+export interface ReduceState<T, U> {
+	value: U;
+	callback(accumulator: U, item: T): U;
+}
+
+export function initReduceState<T, U>(reducer: Reducer<T, U>): ReduceState<T, U> {
+	return {
+		value: (typeof reducer.initial === "function") ? reducer.initial() : reducer.initial,
+		callback: reducer.callback
+	};
 }
 
 let vidWarning = true;

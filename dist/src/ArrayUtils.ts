@@ -19,14 +19,13 @@
 */
 
 import {cmp, def, isArray} from './index';
-import {cmpPrimitives, identity, VidMap, VidSet} from './internal';
+import {cmpPrimitives, identity, initReduceState, VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
 import IList from './IList';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import ListSpliceResult from './ListSpliceResult';
 import Reducer from './Reducer';
-import {initReduceState} from './Reducer';
 import Some from './Some';
 
 /**
