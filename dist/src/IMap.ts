@@ -23,6 +23,7 @@ import Dictionary from './Dictionary';
 import ICollection from './ICollection';
 import IList from './IList';
 import Listenable from './Listenable';
+import Reducer from './Reducer';
 import Some from './Some';
 
 /**
@@ -348,6 +349,7 @@ interface IMap<T> extends ICollection<T>, DestroyableReadOnlyMap<T> {
 	 */
 	equal(map: Dictionary<T>): boolean;
 
+	reduce<U>(reducer: Reducer<T, U>): U;
 	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
 
 	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;

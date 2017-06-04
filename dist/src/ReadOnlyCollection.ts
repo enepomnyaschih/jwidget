@@ -25,6 +25,7 @@ import IList from './IList';
 import IMap from './IMap';
 import ISet from './ISet';
 import Listenable from './Listenable';
+import Reducer from './Reducer';
 
 /**
  * Abstract collection.
@@ -423,6 +424,7 @@ interface ReadOnlyCollection<T> {
 	 */
 	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ICollection<U>;
 
+	reduce<U>(reducer: Reducer<T, U>): U;
 	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U;
 
 	max(callback?: (item: T) => any, scope?: any, order?: number): T;

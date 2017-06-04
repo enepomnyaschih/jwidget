@@ -25,6 +25,8 @@ import IList from './IList';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import ListSpliceResult from './ListSpliceResult';
+import Reducer from './Reducer';
+import {initReduceState} from './Reducer';
 import Some from './Some';
 
 /**
@@ -922,6 +924,17 @@ export function binarySearch<T>(arr: T[], value: T, compare?: (t1: T, t2: T) => 
 		step >>= 1;
 	}
 	return index;
+}
+
+export function reduce<T, U>(arr: T[], reducer: Reducer<T, U>): U;
+export function reduce<T, U>(arr: T[], callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
+export function reduce<T, U>(arr: T[],
+		reducer: Reducer<T, U> | ((accumulator: U, item: T, index: number) => U), initial?: U): U {
+	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
+		value: initial,
+		callback: reducer
+	};
+	return arr.reduce(callback, value);
 }
 
 export function max<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T {

@@ -33,6 +33,7 @@ import ISet from './ISet';
 import List from './List';
 import Map from './Map';
 import Property from './Property';
+import Reducer from './Reducer';
 import * as ArrayUtils from './ArrayUtils';
 
 /**
@@ -431,8 +432,12 @@ class Set<T> extends Class implements ISet<T> {
 		return new Set<U>(this._items.values.map(callback, scope), getKey, true);
 	}
 
-	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U {
-		return this._items.values.reduce<U>(callback, initial);
+	reduce<U>(reducer: Reducer<T, U>): U;
+	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U;
+	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, item: T) => U), initial?: U): U {
+		return (typeof reducer === "function") ?
+			this._items.values.reduce<U>(reducer, initial) :
+			ArrayUtils.reduce<T, U>(this._items.values, reducer);
 	}
 
 	max(callback?: (item: T) => any, scope?: any, order?: number): T {

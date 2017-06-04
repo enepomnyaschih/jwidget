@@ -23,6 +23,7 @@ import Listenable from './Listenable';
 import IList from './IList';
 import IMap from './IMap';
 import ReadOnlyCollection from './ReadOnlyCollection';
+import Reducer from './Reducer';
 
 /**
  * Array is ordered collection. Each item of array has an index. Index of first item is 0,
@@ -472,6 +473,7 @@ interface ReadOnlyList<T> extends ReadOnlyCollection<T> {
 	 */
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
 
+	reduce<U>(reducer: Reducer<T, U>): U;
 	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
 
 	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;

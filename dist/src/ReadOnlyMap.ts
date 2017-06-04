@@ -23,6 +23,7 @@ import Dictionary from './Dictionary';
 import IList from './IList';
 import IMap from './IMap';
 import ReadOnlyCollection from './ReadOnlyCollection';
+import Reducer from './Reducer';
 
 /**
  * Map is unordered collection. Each item has its own string key.
@@ -347,6 +348,7 @@ interface ReadOnlyMap<T> extends ReadOnlyCollection<T> {
 	 */
 	equal(map: Dictionary<T>): boolean;
 
+	reduce<U>(reducer: Reducer<T, U>): U;
 	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
 
 	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;

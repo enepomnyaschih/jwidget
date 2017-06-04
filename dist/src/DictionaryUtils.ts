@@ -22,6 +22,8 @@ import {apply, cmp} from './index';
 import {cmpPrimitives, identity, VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
 import IMap from './IMap';
+import Reducer from './Reducer';
+import {initReduceState} from './Reducer';
 import Some from './Some';
 
 export function isEmpty<T>(dict: Dictionary<T>) {
@@ -793,7 +795,14 @@ export function getInverted(map: Dictionary<string>): Dictionary<string> {
 	return result;
 }
 
-export function reduce<T, U>(map: Dictionary<T>, callback: (accumulator: U, item: T, key: string) => U, value: U): U {
+export function reduce<T, U>(map: Dictionary<T>, reducer: Reducer<T, U>): U;
+export function reduce<T, U>(map: Dictionary<T>, callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
+export function reduce<T, U>(map: Dictionary<T>,
+		reducer: Reducer<T, U> | ((accumulator: U, item: T, key: string) => U), initial?: U): U {
+	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
+		value: initial,
+		callback: reducer
+	};
 	for (let key in map) {
 		value = callback(value, map[key], key);
 	}

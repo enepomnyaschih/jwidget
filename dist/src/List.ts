@@ -34,6 +34,7 @@ import ISet from './ISet';
 import ListSpliceResult from './ListSpliceResult';
 import Map from './Map';
 import Property from './Property';
+import Reducer from './Reducer';
 import Set from './Set';
 import Some from './Some';
 import Bindable from './Bindable';
@@ -539,8 +540,12 @@ export default class List<T> extends Class implements IList<T> {
 		return new List<U>(this._items.map(callback, scope || this), getKey, SILENT | ADAPTER);
 	}
 
-	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U {
-		return this.items.reduce<U>(callback, initial);
+	reduce<U>(reducer: Reducer<T, U>): U;
+	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
+	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, item: T, index: number) => U), initial?: U): U {
+		return (typeof reducer === "function") ?
+			this.items.reduce<U>(reducer, initial) :
+			ArrayUtils.reduce<T, U>(this.items, reducer);
 	}
 
 	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T {

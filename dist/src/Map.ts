@@ -33,6 +33,7 @@ import IProperty from './IProperty';
 import ISet from './ISet';
 import List from './List';
 import Property from './Property';
+import Reducer from './Reducer';
 import Some from './Some';
 import Set from './Set';
 import * as ArrayUtils from './ArrayUtils';
@@ -512,8 +513,12 @@ class Map<T> extends Class implements IMap<T> {
 		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
-	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U {
-		return DictionaryUtils.reduce<T, U>(this.items, callback, initial);
+	reduce<U>(reducer: Reducer<T, U>): U;
+	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
+	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, item: T, key: string) => U), initial?: U): U {
+		return (typeof reducer === "function") ?
+			DictionaryUtils.reduce<T, U>(this.items, reducer, initial) :
+			DictionaryUtils.reduce<T, U>(this.items, reducer);
 	}
 
 	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T {

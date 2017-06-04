@@ -23,6 +23,7 @@ import Dictionary from './Dictionary';
 import ICollection from './ICollection';
 import IMap from './IMap';
 import Listenable from './Listenable';
+import Reducer from './Reducer';
 import Some from './Some';
 
 /**
@@ -473,6 +474,7 @@ interface IList<T> extends ICollection<T>, DestroyableReadOnlyList<T> {
 	 */
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
 
+	reduce<U>(reducer: Reducer<T, U>): U;
 	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
 
 	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
