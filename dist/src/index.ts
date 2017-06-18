@@ -136,16 +136,6 @@ export function isDate(value: any) {
 }
 
 /**
- * Checks if value fits `Bindable` interface.
- */
-export function isBindable(value: any) {
-	return (typeof value === "object") &&
-		(typeof value.changeEvent === "object") &&
-		(typeof value.changeEvent.bind === "function") &&
-		(typeof value.get === "function");
-}
-
-/**
  * Defines default value. Returns `value`, if it is not undefined, else returns `default`.
  */
 export function def<T>(value: T, defaultValue: T): T {

@@ -20,7 +20,7 @@
 
 /// <reference types="jquery" />
 
-import {apply, destroy, isBindable} from './index';
+import {apply, destroy} from './index';
 import List from './List';
 import AbstractTemplate from './AbstractTemplate';
 import Class from './Class';
@@ -34,6 +34,7 @@ import ReadOnlyList from './ReadOnlyList';
 import ReadOnlyCollection from './ReadOnlyCollection';
 import HtmlTemplate from './HtmlTemplate';
 import Map from './Map';
+import Property from './Property';
 import Set from './Set';
 import TemplateOutput from './TemplateOutput';
 import Bindable from './Bindable';
@@ -280,7 +281,7 @@ export default class Component extends Class {
 				} else {
 					if (result instanceof Component) {
 						this._children.put(jwId, result);
-					} else if (isBindable(result)) {
+					} else if (result instanceof Property) {
 						this.addBindable(result, jwId);
 					} else if (result instanceof List) {
 						this.addList(result, jwId);

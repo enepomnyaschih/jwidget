@@ -29,7 +29,7 @@ abstract class AbstractRestProvider<C> {
 	private urlBuilder: (action: string) => string;
 	private settings: JQueryAjaxSettings;
 
-	constructor(config?: AbstractRestProviderConfig) {
+	constructor(config?: AbstractRestProvider.Config) {
 		config = config || {};
 		this.mock = config.mock || {};
 		this.url = config.url || "${action}";
@@ -101,9 +101,11 @@ abstract class AbstractRestProvider<C> {
 
 export default AbstractRestProvider;
 
-export interface AbstractRestProviderConfig {
-	url?: string;
-	urlBuilder?: (action: string) => string;
-	mock?: Dictionary<string>;
-	settings?: JQueryAjaxSettings;
+namespace AbstractRestProvider {
+	export interface Config {
+		url?: string;
+		urlBuilder?: (action: string) => string;
+		mock?: Dictionary<string>;
+		settings?: JQueryAjaxSettings;
+	}
 }
