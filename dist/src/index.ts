@@ -59,7 +59,7 @@ export function isNotNil(value: any) {
 }
 
 /**
- * Checkes if value is undefined or null.
+ * Checks if value is undefined or null.
  */
 export function isNil(value: any) {
 	return value == null;
@@ -151,10 +151,10 @@ export function defn<T>(value: T, defaultValue: T): T {
 
 /**
  * Iterates through objects passed after first argument and copies all their fields into
- * **target** object. Returns **target**. Fields of source objects which are undefined will be ignored.
- * Empty source objects (undefined, null) will be ignored.
+ * `target` object. Returns `target`. Undefined source object fields are ignored.
+ * Null and undefined source objects are be ignored.
  *
- * Function modifies **target** object!
+ * Function modifies `target` object!
  */
 export function apply<T>(target: Dictionary<T>, ...sources: Dictionary<T>[]): Dictionary<T> {
 	for (var i = 0; i < sources.length; ++i) {
@@ -274,7 +274,7 @@ function cmpStrings(x: string, y: string, config?: CmpConfig): number {
 /**
  * Returns object item or subitem by path.
  * Path is a primitive value (object key), or an array of subpaths.
- * If **path** is null, undefined or empty array, returns **obj**.
+ * If `path` is null, undefined or empty array, returns `obj`.
  * If item doesn't exist, returns undefined.
  */
 export function get<T>(obj: any, path: any): T {
@@ -300,7 +300,7 @@ export function newIid() {
 }
 
 /**
- * Returns object `iid` converted to a string. Can be used as `getKey` implementation
+ * Returns object `iid` converted to a string. Can be used as efficient `getKey` implementation
  * for collections consisting of `Identifiable` objects only.
  */
 export function iidStr(obj: Identifiable) {
@@ -308,7 +308,7 @@ export function iidStr(obj: Identifiable) {
 }
 
 /**
- * Calls object method **destroy** if available. Can be used in mapper configuration.
+ * Calls object method `destroy` if available. Can be used in mapper configuration.
  */
 export function destroy(obj: any): any {
 	if (obj && typeof obj.destroy === "function") {

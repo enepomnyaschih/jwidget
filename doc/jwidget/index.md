@@ -1,10 +1,10 @@
 [Back to index](../README.md)
 
-# Core
+# Core utilities
 
 ## Consumption
 
-	import * as Core from "jwidget/Core";
+	import * as JW from "jwidget";
 
 ## Description
 
@@ -14,19 +14,21 @@ Core jWidget utilities. Some utilities duplicate the functions of [Underscore.js
 
 ### Binding
 
-jWidget binding modes. All options have shorthands in Core module, i.e. Binding.UPDATE can be imported separately as {UPDATE}.
+jWidget binding modes. All options have shorthands, i.e. Binding.UPDATE can be imported separately as {UPDATE}.
 
 * UPDATE = 1
-	Bind invoker to argument.
+	Bind element attribute to property.
 
 		// Bind element value to property
 		this.own(val(el, property, UPDATE));
 
-	Always used as default binding. Hence, the next code is equivalent:
+	Always used as default binding. Hence, the next code is almost equivalent:
 
 		this.own(val(el, property));
+
+	Please prefer the second approach, because the first one takes [jwidget/IProperty](IProperty.md) as an argument whereas [jwidget/Bindable](Bindable.md) is enough for the second one.
 * WATCH = 2
-	Bind argument to invoker.
+	Bind property to element attribute.
 
 		// Bind property to element value
 		this.own(val(el, property, WATCH));
@@ -36,13 +38,22 @@ jWidget binding modes. All options have shorthands in Core module, i.e. Binding.
 		// Watch element value
 		const property = this.own(val(el));
 * TWOWAY = 3
-	Bind invoker and argument to each other.
+	Bind element attribute and property to each other.
 	UPDATE-binding is applied first.
 
 		// Assign element value to property and setup two-way binding
 		this.own(val(el, property, TWOWAY));
 
-Reference: [jwidget/Class.own](Class.md#own), [jwidget/ui/val](ui/val.md).
+Reference: [jwidget/IClass.own](IClass.md#own), [jwidget/ui/val](ui/val.md).
+
+### CollectionFlags
+
+jWidget collection flags. All options have shorthands, i.e. CollectionFlags.SILENT can be imported separately as {SILENT}.
+
+* SILENT = 1
+	Creates a silent collection, which means that it never triggers modification events. Silent collections work a little bit faster and consume less memory. Useful for collections that never get modified or observed.
+* ADAPTER = 2
+	Creates an adapter for an existing array or dictionary, which means that it uses the same object as a container for the collection contents instead of creating a new container. Note that you should not modify the original array or dictionary in this case, because it may break the collection consistency.
 
 ## Value test functions
 
@@ -54,8 +65,6 @@ Which is a shorter equivalent for:
 
 	const readValues = values.filter((value) => value != null);
 
-Reference: [jwidget/ICollection.filter](ICollection.md#filter).
-
 ### isUndefined
 
 	isUndefined(value: any): boolean
@@ -66,7 +75,7 @@ Checks if value is undefined.
 
 	isDefined(value: any): boolean
 
-Checks if value is defined.
+Checks if value is not undefined.
 
 ### isNull
 
@@ -84,7 +93,7 @@ Checks if value is not null.
 
 	isNil(value: any): boolean
 
-Checkes if value is undefined or null.
+Checks if value is undefined or null.
 
 ### isNotNil
 
@@ -152,12 +161,6 @@ Checks if value is a regular expression.
 
 Checks if value is a date.
 
-### isDate
-
-	isWatchable(value: any): boolean
-
-Checks if value fits `Watchable` interface.
-
 ## Other functions
 
 ### def
@@ -179,12 +182,10 @@ Defines default value. Returns `value`, if it is not undefined and null, else re
 Reference: [jwidget/Dictionary](Dictionary.md).
 
 Iterates through objects passed after first argument and copies all their fields into
-**target** object. Returns **target**. Fields of source objects which are undefined will be ignored.
-Empty source objects (undefined, null) will be ignored.
+`target` object. Returns `target`. Undefined source object fields are ignored.
+Null and undefined source objects are ignored.
 
-Function modifies **target** object!
-
-Example 1:
+Function modifies `target` object!
 
 	var x: Dictionary<number> = { |  var y: Dictionary<number> = {  // Result = {
 	    a: 10,                    |                                 //     a: 10,
@@ -198,24 +199,9 @@ Example 1:
 
 	apply<number>(x, y);
 
-Example 2 (form data preparing):
-
-	class Form {
-		data: Dictionary<any>;
-
-		composeData(extraData: Dictionary<any>): Dictionary<any> {
-			return apply<any>({}, this.getDefaultData(), this.data, extraData);
-		}
-
-		// virtual
-		getDefaultData(): Dictionary<any> {
-			return null;
-		}
-	}
-
 ### cmp
 
-	cmp(x: any, y: any, config?: CmpConfig): number
+	cmp(x: any, y: any, config?: Config): number
 
 Universal and sophisticated comparer for array sorting. Broadly speaking, it:
 
@@ -241,7 +227,7 @@ Sort by color descending first, and by status ascending last. Both parameters ar
 			   cmp(x.status, y.status);
 	});
 
-Configuration options:
+**Config**
 
 * caseInsensitive: boolean = false
 	Ignore case when comparing strings.
@@ -254,7 +240,7 @@ Configuration options:
 
 Returns object item or subitem by path.
 Path is a primitive value (object key), or an array of subpaths.
-If **path** is null, undefined or empty array, returns **obj**.
+If `path` is null, undefined or empty array, returns `obj`.
 If item doesn't exist, returns undefined.
 
 Example:
@@ -270,22 +256,23 @@ Example:
 	get(obj, ["abc", 0, "qwe"]); // "xyz"
 	get(obj, "abc"); // the array
 
-### iid
+### iidStr
 
-	iid(obj: any): number
+	iidStr(obj: Identifiable): string
 
-Returns object unique ID. Returns iid of object if it is an instance of [jwidget/Class](Class.md),
-else returns the object itself.
+Reference: [jwidget/Identifiable](Identifiable.md).
+
+Returns object `iid` converted to a string. Can be used as `getKey` implementation
+for collections consisting of `Identifiable` objects only.
 
 ### destroy
 
 	destroy(obj: any): any
 
-Calls object method **destroy** if available. Can be used in mapper configuration:
+Calls object method `destroy` if available. Can be used in mapper configuration.
 
-	const mapper = createMapper(collection, {
-		createItem  : (data: Data) => new View(data),
-		destroyItem : destroy
-	});
+	const views = mapList(models, (model) => new View(model), {destroy});
+
+Reference: [jwidget/mapper/list](mapper/list.md).
 
 Doesn't return anything - `any` return type is specified for easier usage in methods like [jwidget/ArrayUtils.backEvery](ArrayUtils.md#backevery).

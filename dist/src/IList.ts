@@ -121,7 +121,6 @@ import Some from './Some';
  * * **[[detectReorder]] - Detects [[reorder]] method arguments to adjust contents.**
  * * **[[detectSort]] - Detects [[reorder]] method arguments to sort by indexer.**
  * * **[[detectSortComparing]] - Detects [[reorder]] method arguments to sort by comparer.**
- * * **[[collapse]] - Collapses multi-dimensional array.**
  * * **[[equal]] - Checks for equality to another array.**
  *
  * All the same algorithms are also available for native JavaScript Array,
@@ -431,14 +430,6 @@ interface IList<T> extends ICollection<T>, DestroyableReadOnlyList<T> {
 	 * @returns Arrays are equal.
 	 */
 	equal(arr: T[]): boolean;
-
-	/**
-	 * Collapses multi-dimentional array.
-	 *
-	 * @param depth Dimentions to collapse.
-	 * @returns Collapsed array.
-	 */
-	collapse(depth: number): any[];
 
 	/**
 	 * Returns item index in this collection.

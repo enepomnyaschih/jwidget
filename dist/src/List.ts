@@ -170,7 +170,6 @@ import * as ArrayUtils from './ArrayUtils';
  * * **[[detectReorder]] - Detects [[reorder]] method arguments to adjust contents.**
  * * **[[detectSort]] - Detects [[reorder]] method arguments to sort by indexer.**
  * * **[[detectSortComparing]] - Detects [[reorder]] method arguments to sort by comparer.**
- * * **[[collapse]] - Collapses multi-dimensional array.**
  * * **[[equal]] - Checks for equality to another array.**
  *
  * All the same algorithms are also available for native JavaScript Array,
@@ -1099,16 +1098,6 @@ export default class List<T> extends Class implements IList<T> {
 	 */
 	equal(arr: T[]): boolean {
 		return ArrayUtils.equal(this._items, arr);
-	}
-
-	/**
-	 * Collapses multi-dimentional array.
-	 *
-	 * @param depth Dimentions to collapse.
-	 * @returns Collapsed array.
-	 */
-	collapse(depth: number): any[]{
-		return ArrayUtils.collapse(this._items, depth);
 	}
 
 	/**

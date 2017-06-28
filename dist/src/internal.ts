@@ -29,6 +29,14 @@ export function cmpPrimitives(x: any, y : any): number {
 	return (x > y) ? 1 : (x < y) ? -1 : 0;
 }
 
+export function countMerged(arrays: any[][]): number {
+	var result = 0;
+	for (var i = 0, l = arrays.length; i < l; ++i) {
+		result += arrays[i].length;
+	}
+	return result;
+}
+
 export interface ReduceState<T, U> {
 	value: U;
 	callback(accumulator: U, item: T): U;
