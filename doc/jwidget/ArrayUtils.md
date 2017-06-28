@@ -2,6 +2,19 @@
 
 # Array utilities
 
+[](BEGIN_INDEX)
+[getLast](#getlast)
+[isEmpty](#isempty)
+[contains](#contains)
+[find](#find)
+[findIndex](#findindex)
+[count](#count)
+[getSortingIndices](#getsortingindices)
+[getSortingIndicesComparing](#getsortingindicescomparing)
+[toSorted](#tosorted)
+[toSortedComparing](#tosortedcomparing)
+[](END_INDEX)
+
 ## Consumption
 
 	import * as ArrayUtils from "jwidget/ArrayUtils";
@@ -9,8 +22,6 @@
 ## Description
 
 jWidget utilities for native JavaScript arrays. Some utilities duplicate the functions of [Underscore.js](http://underscorejs.org) and [Lodash](https://lodash.com), but still may come in handy if you want to keep dependency list short.
-
-## Getter functions
 
 ### getLast
 
@@ -24,8 +35,6 @@ Returns the last array item. If array is empty, returns undefined.
 
 Checks if array is empty.
 
-## Search functions
-
 ### contains
 
 	contains<T>(arr: T[], item: T): boolean
@@ -38,7 +47,7 @@ Checks if the item exists in array.
 
 Finds an item matching criteria.
 
-Returns the first item for which callback returns [truthy](index.md#isTruthy) value.
+Returns the first item for which callback returns [truthy](index.md#istruthy) value.
 
 Algorithms iterates items consequently, and stops after the first item matching the criteria.
 
@@ -48,11 +57,9 @@ Algorithms iterates items consequently, and stops after the first item matching 
 
 Finds an item matching criteria.
 
-Returns index of the first item for which callback returns [truthy](index.md#isTruthy) value.
+Returns index of the first item for which callback returns [truthy](index.md#istruthy) value.
 
 Algorithms iterates items consequently, and stops after the first item matching the criteria.
-
-## Iteration functions
 
 ### count
 
@@ -60,7 +67,7 @@ Algorithms iterates items consequently, and stops after the first item matching 
 
 Counts items matching criteria.
 
-Returns the number of items for which callback returns [truthy](index.md#isTruthy) value.
+Returns the number of items for which callback returns [truthy](index.md#istruthy) value.
 
 ### getSortingIndices
 
