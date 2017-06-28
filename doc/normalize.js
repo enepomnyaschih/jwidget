@@ -65,7 +65,7 @@ function buildIndex(contents, lf) {
 	while (match = regexp.exec(contents)) {
 		titles.push(match[1]);
 	}
-	return lf + titles.map((title) => "[" + title + "](#" + title.toLowerCase() + ")").join(lf) + lf;
+	return lf + titles.map((title) => "* [" + title + "](#" + title.toLowerCase() + ")").join(lf) + lf;
 }
 
 walk();

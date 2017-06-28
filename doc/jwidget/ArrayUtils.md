@@ -3,16 +3,16 @@
 # Array utilities
 
 [](BEGIN_INDEX)
-[getLast](#getlast)
-[isEmpty](#isempty)
-[contains](#contains)
-[find](#find)
-[findIndex](#findindex)
-[count](#count)
-[getSortingIndices](#getsortingindices)
-[getSortingIndicesComparing](#getsortingindicescomparing)
-[toSorted](#tosorted)
-[toSortedComparing](#tosortedcomparing)
+* [getLast](#getlast)
+* [isEmpty](#isempty)
+* [contains](#contains)
+* [find](#find)
+* [findIndex](#findindex)
+* [count](#count)
+* [getSortingIndices](#getsortingindices)
+* [getSortingIndicesComparing](#getsortingindicescomparing)
+* [toSorted](#tosorted)
+* [toSortedComparing](#tosortedcomparing)
 [](END_INDEX)
 
 ## Consumption
