@@ -7,13 +7,13 @@
     * [template](#template)
     * [isElement](#iselement)
     * [isTextInput](#istextinput)
-    * [insert](#insert)
-    * [remove](#remove)
-    * [parseHtml](#parsehtml)
-    * [hasClass](#hasclass)
-    * [addClass](#addclass)
     * [inDom](#indom)
     * [inEl](#inel)
+    * [hasClass](#hasclass)
+    * [addClass](#addclass)
+    * [parseHtml](#parsehtml)
+    * [insert](#insert)
+    * [remove](#remove)
     * [replace](#replace)
 [](END_INDEX)
 
@@ -58,23 +58,17 @@ Checks if the element is a text input, i.e. one of:
 * `<input type="url">`
 * `<textarea></textarea>`
 
-### insert
+### inDom
 
-    insert(parent: Node, child: Node, index?: number)
+    inDom(el: HTMLElement): boolean
 
-Inserts element as a child at specified position.
+Checks if current HTML document body contains the specified element.
 
-### remove
+### inEl
 
-    remove(el: Node)
+    inEl(descendantEl: HTMLElement, ancestorEl: HTMLElement): boolean
 
-Removes element from DOM.
-
-### parseHtml
-
-    parseHtml(html: string): HTMLElement
-
-Parses HTML and builds a new DOM element. Doesn't perform any validation, but works much faster than jQuery alternatives. Use it only if you are author of this HTML code.
+Checks recursively if one HTML element is a descendant of another element.
 
 ### hasClass
 
@@ -88,17 +82,23 @@ Checks if element contains the specified CSS class name.
 
 Add the specified CSS class name to element unless it already contains it.
 
-### inDom
+### parseHtml
 
-    inDom(el: HTMLElement): boolean
+    parseHtml(html: string): HTMLElement
 
-Checks if current HTML document body contains the specified element.
+Parses HTML and builds a new DOM element. Doesn't perform any validation, but works much faster than jQuery alternatives. Use it only if you are author of this HTML code.
 
-### inEl
+### insert
 
-    inEl(descendantEl: HTMLElement, ancestorEl: HTMLElement): boolean
+    insert(parent: Node, child: Node, index?: number)
 
-Checks recursively if one HTML element is a descendant of another element.
+Inserts element as a child at specified position.
+
+### remove
+
+    remove(el: Node)
+
+Removes element from DOM.
 
 ### replace
 
