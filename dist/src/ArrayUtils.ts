@@ -91,6 +91,174 @@ export function findIndex<T>(arr: T[], callback: (item: T, index: number) => boo
 }
 
 /**
+ * Determines index of the first item which is more (or less if `order` < 0) than the specified value by `compare` function,
+ * using binary search. Array must be sorted by `compare` function.
+ * Can be used for item insertion easily.
+ * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
+ *
+ * @param arr Sorted array.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2.
+ * Defaults to `cmp`.
+ * @param scope `comparer` call scope. Defaults to array itself.
+ * @param order Sorting order. Positive number if array is sorted ascending, negative if descending.
+ * @returns Item index.
+ */
+export function binarySearch<T>(arr: T[], value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
+	compare = compare || cmp;
+	scope = scope || arr;
+	order = order || 1;
+	var length = arr.length;
+	var len2 = length >> 1;
+	var step = 1;
+	while (step <= len2) {
+		step <<= 1;
+	}
+	var index = 0;
+	while (step) {
+		if ((index + step <= length) && (order * compare.call(scope, value, arr[index + step - 1]) >= 0)) {
+			index += step;
+		}
+		step >>= 1;
+	}
+	return index;
+}
+
+/**
+ * Returns the array item which callback returns the highest (or lowest) value for.
+ *
+ * @param arr Array.
+ * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to array itself.
+ * @param order Pass positive order to find the highest value, and negative to find the lowest one.
+ * @returns Array item.
+ */
+export function max<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T {
+	return arr[maxIndex(arr, callback, scope, order)];
+}
+
+/**
+ * Returns index of the array item which callback returns the highest (or lowest) value for.
+ *
+ * @param arr Array.
+ * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to array itself.
+ * @param order Pass positive order to find the highest value, and negative to find the lowest one.
+ * @returns Item index.
+ */
+export function maxIndex<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number {
+	if (arr.length === 0) {
+		return -1;
+	}
+	callback = callback || identity;
+	scope = scope || arr;
+	let result = 0;
+	let max: any = callback.call(scope, arr[0]);
+	for (let i = 1, l = arr.length; i < l; ++i) {
+		const item: any = callback.call(scope, arr[i], i);
+		const diff = cmp(item, max);
+		if ((order > 0 && diff > 0) || (order < 0 && diff < 0)) {
+			result = i;
+			max = item;
+		}
+	}
+	return result;
+}
+
+/**
+ * Returns the highest (or lowest) array item in terms of the specified comparer function.
+ *
+ * @param arr Array.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `compare` call scope. Defaults to array itself.
+ * @param order Pass positive order to find the highest value, and negative to find the lowest one.
+ * @returns Array item.
+ */
+export function maxComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T {
+	return arr[maxIndexComparing(arr, compare, scope, order)];
+}
+
+/**
+ * Returns index of the highest (or lowest) array item in terms of the specified comparer function.
+ *
+ * @param arr Array.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `compare` call scope. Defaults to array itself.
+ * @param order Pass positive order to find the highest value, and negative to find the lowest one.
+ * @returns Item index.
+ */
+export function maxIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number {
+	if (arr.length === 0) {
+		return -1;
+	}
+	compare = compare || cmp;
+	scope = scope || arr;
+	let result = 0;
+	for (let i = 1, l = arr.length; i < l; ++i) {
+		if (order * compare.call(scope, arr[result], arr[i], result, i) < 0) {
+			result = i;
+		}
+	}
+	return result;
+}
+
+/**
+ * Returns the array item which callback returns the lowest (or highest) value for.
+ *
+ * @param arr Array.
+ * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to array itself.
+ * @param order Pass positive order to find the lowest value, and negative to find the highest one.
+ * @returns Array item.
+ */
+export function min<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T {
+	return max(arr, callback, scope, -order);
+}
+
+/**
+ * Returns index of the array item which callback returns the lowest (or highest) value for.
+ *
+ * @param arr Array.
+ * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to array itself.
+ * @param order Pass positive order to find the lowest value, and negative to find the highest one.
+ * @returns Item index.
+ */
+export function minIndex<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number {
+	return maxIndex(arr, callback, scope, -order);
+}
+
+/**
+ * Returns the lowest (or highest) array item in terms of the specified comparer function.
+ *
+ * @param arr Array.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `compare` call scope. Defaults to array itself.
+ * @param order Pass positive order to find the lowest value, and negative to find the highest one.
+ * @returns Array item.
+ */
+export function minComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T {
+	return maxComparing(arr, compare, scope, -order);
+}
+
+/**
+ * Returns index of the lowest (or highest) array item in terms of the specified comparer function.
+ *
+ * @param arr Array.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `compare` call scope. Defaults to array itself.
+ * @param order Pass positive order to find the lowest value, and negative to find the highest one.
+ * @returns Item index.
+ */
+export function minIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number {
+	return maxIndexComparing(arr, compare, scope, -order);
+}
+
+/**
  * Counts the items matching criteria.
  *
  * Returns the number of items for which callback returns truthy value.
@@ -204,6 +372,19 @@ export function toSortedComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: numb
 }
 
 /**
+ * Builds a new array containing items of this array in reversed order.
+ * Current array is not modified.
+ *
+ * @param arrays Array.
+ * @returns Reversed array.
+ */
+export function toReversed<T>(arr: T[]): T[] {
+	var result = arr.concat();
+	result.reverse();
+	return result;
+}
+
+/**
  * Indexes collection.
  *
  * Builds and returns a new map by rule: key is the result of the indexer function call,
@@ -225,6 +406,35 @@ export function index<T>(arr: T[], callback: (item: T, index: number) => string,
 		return true;
 	});
 	return result;
+}
+
+/**
+ * Applies a function against an accumulator and each item in the array (from left to right)
+ * to reduce it to a single value.
+ *
+ * @param arr Array.
+ * @param reducer Standard reducer. See `jwidget/Reducer` for examples.
+ * @returns Final accumulator value.
+ */
+export function reduce<T, U>(arr: T[], reducer: Reducer<T, U>): U;
+
+/**
+ * Applies a function against an accumulator and each item in the array (from left to right)
+ * to reduce it to a single value.
+ *
+ * @param arr Array.
+ * @param callback Function to execute on each item in the array.
+ * @param initial Value to use as the first argument to the first call of the callback.
+ * @returns Final accumulator value.
+ */
+export function reduce<T, U>(arr: T[], callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
+export function reduce<T, U>(arr: T[],
+		reducer: Reducer<T, U> | ((accumulator: U, item: T, index: number) => U), initial?: U): U {
+	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
+		value: initial,
+		callback: reducer
+	};
+	return arr.reduce(callback, value);
 }
 
 /**
@@ -252,7 +462,7 @@ export function addAll<T>(arr: T[], items: T[], index?: number) {
 }
 
 /**
- * Inserts item range to array.
+ * The same as `addAll`, but returns undefined if the array stays unmodified. Else returns true.
  *
  * @param arr Array.
  * @param items Items to insert.
@@ -355,7 +565,7 @@ export function tryRemoveAll<T>(arr: T[], index: number, count: number): T[]{
  *
  * @param arr Array.
  * @param item Item to remove.
- * @returns Index of the removed item.
+ * @returns Index of the removed item or -1.
  */
 export function removeItem<T>(arr: T[], item: T): number {
 	const index = arr.indexOf(item);
@@ -519,7 +729,7 @@ export function trySplice<T>(arr: T[],
  * Reorders array items.
  *
  * @param arr Array.
- * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
+ * @param indexArray Index array. Item with index `i` is moved to index `indexArray[i]`.
  * Must contain all indexes from 0 to (length - 1).
  */
 export function reorder<T>(arr: T[], indexArray: number[]) {
@@ -547,16 +757,48 @@ export function tryReorder<T>(arr: T[], indexArray: number[]): T[]{
 }
 
 /**
+ * Sorts array by the result of `callback` function call for each item.
+ *
+ * @param arr Array.
+ * @param callback Indexer function. Must return a comparable value, compatible with
+ * `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to array itself.
+ * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+ */
+export function sort<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number) {
+	var indexArray = detectSort(arr, callback, scope, order);
+	if (indexArray !== undefined) {
+		tryReorder(arr, indexArray);
+	}
+}
+
+/**
+ * Sorts array by comparer.
+ *
+ * @param arr Array.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `comparer` call scope. Defaults to array itself.
+ * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+ */
+export function sortComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number) {
+	var indexArray = detectSortComparing(arr, compare, scope, order);
+	if (indexArray !== undefined) {
+		tryReorder(arr, indexArray);
+	}
+}
+
+/**
  * Detects `splice` method arguments to adjust array contents to `newItems`.
  * Determines item ranges neccessary to be removed and inserted.
- * All items must have unique `getKey` export function result.
+ * All items must have unique `getKey` function result.
  * If items don't have unique key, probably `detectFilter` method may help,
  * because it doesn't require item uniquiness.
  *
  * @param oldItems Old array contents.
  * @param newItems New array contents.
  * @param getKey Function which returns unique key of an item in this array.
- * By default, distinguishes primitive values and `Identifiable` objects.
+ * By default, identifies primitive values and `Identifiable` objects.
  * @returns `splice` method arguments. If no method call required, returns undefined.
  */
 export function detectSplice<T>(oldItems: T[], newItems: T[],
@@ -653,7 +895,7 @@ export function detectFilter<T>(oldItems: T[], newItems: T[]): IList.IndexCount[
  * @param oldItems Old array contents.
  * @param newItems New array contents.
  * @param getKey Function which returns unique key of an item in this array.
- * By default, distinguishes primitive values and `Identifiable` objects.
+ * By default, identifies primitive values and `Identifiable` objects.
  * @returns `indexArray` argument of `reorder` method.
  * If no method call required, returns undefined.
  */
@@ -711,38 +953,6 @@ export function detectSortComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: nu
 }
 
 /**
- * Sorts array by the result of `callback` export function call for each item.
- *
- * @param arr Array.
- * @param callback Indexer function. Must return a comparable value, compatible with
- * `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- */
-export function sort<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number) {
-	var indexArray = detectSort(arr, callback, scope, order);
-	if (indexArray !== undefined) {
-		tryReorder(arr, indexArray);
-	}
-}
-
-/**
- * Sorts array by comparer.
- *
- * @param arr Array.
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `comparer` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- */
-export function sortComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number) {
-	var indexArray = detectSortComparing(arr, compare, scope, order);
-	if (indexArray !== undefined) {
-		tryReorder(arr, indexArray);
-	}
-}
-
-/**
  * Checks two arrays for equality, item by item (===).
  *
  * @param x First array.
@@ -787,7 +997,7 @@ export function backEvery<T>(arr: T[], callback: (item: T, index: number) => boo
 }
 
 /**
- * Checks if every item in array is equal to its index: array[i] === i.
+ * Checks if every item in array is equal to its index: `array[i] === i`.
  *
  * @param arr Array.
  * @returns Every item is equal to its index.
@@ -802,7 +1012,7 @@ export function isIdentity(arr: number[]): boolean {
 }
 
 /**
- * Builds a new array by the rule: result[array[i]] === i.
+ * Builds a new array by the rule: `result[array[i]] === i`.
  *
  * @param arr Array.
  * @returns The inverted array.
@@ -828,214 +1038,4 @@ export function merge<T>(arrays: T[][]): T[] {
 		result.push.apply(result, arrays[i]);
 	}
 	return result;
-}
-
-/**
- * Builds a new array containing items of this array in reversed order.
- * Current array is not modified.
- *
- * @param arrays Array.
- * @returns Reversed array.
- */
-export function toReversed<T>(arr: T[]): T[] {
-	var result = arr.concat();
-	result.reverse();
-	return result;
-}
-
-/**
- * Determines index of the first item which is more (or less if `order` < 0) than the specified value by `compare` function,
- * using binary search. Array must be sorted by `compare` function.
- * Can be used for item insertion easily.
- * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
- *
- * @param arr Sorted array.
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2.
- * Defaults to `cmp`.
- * @param scope `comparer` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Item index.
- */
-export function binarySearch<T>(arr: T[], value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
-	compare = compare || cmp;
-	scope = scope || arr;
-	order = order || 1;
-	var length = arr.length;
-	var len2 = length >> 1;
-	var step = 1;
-	while (step <= len2) {
-		step <<= 1;
-	}
-	var index = 0;
-	while (step) {
-		if ((index + step <= length) && (order * compare.call(scope, value, arr[index + step - 1]) >= 0)) {
-			index += step;
-		}
-		step >>= 1;
-	}
-	return index;
-}
-
-/**
- * Applies a function against an accumulator and each item in the array (from left to right)
- * to reduce it to a single value.
- *
- * @param arr Array.
- * @param reducer Standard reducer. See `jwidget/Reducer` for examples.
- * @returns Final accumulator value.
- */
-export function reduce<T, U>(arr: T[], reducer: Reducer<T, U>): U;
-
-/**
- * Applies a function against an accumulator and each item in the array (from left to right)
- * to reduce it to a single value.
- *
- * @param arr Array.
- * @param callback Function to execute on each item in the array.
- * @param initial Value to use as the first argument to the first call of the callback.
- * @returns Final accumulator value.
- */
-export function reduce<T, U>(arr: T[], callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
-export function reduce<T, U>(arr: T[],
-		reducer: Reducer<T, U> | ((accumulator: U, item: T, index: number) => U), initial?: U): U {
-	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
-		value: initial,
-		callback: reducer
-	};
-	return arr.reduce(callback, value);
-}
-
-/**
- * Returns the array item which callback returns the highest (or lowest) value for.
- *
- * @param arr Array.
- * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Pass positive order to find the highest value, and negative to find the lowest one.
- * @returns Array item.
- */
-export function max<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T {
-	return arr[maxIndex(arr, callback, scope, order)];
-}
-
-/**
- * Returns index of the array item which callback returns the highest (or lowest) value for.
- *
- * @param arr Array.
- * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Pass positive order to find the highest value, and negative to find the lowest one.
- * @returns Item index.
- */
-export function maxIndex<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number {
-	if (arr.length === 0) {
-		return -1;
-	}
-	callback = callback || identity;
-	scope = scope || arr;
-	let result = 0;
-	let max: any = callback.call(scope, arr[0]);
-	for (let i = 1, l = arr.length; i < l; ++i) {
-		const item: any = callback.call(scope, arr[i], i);
-		const diff = cmp(item, max);
-		if ((order > 0 && diff > 0) || (order < 0 && diff < 0)) {
-			result = i;
-			max = item;
-		}
-	}
-	return result;
-}
-
-/**
- * Returns the highest (or lowest) array item in terms of the specified comparer function.
- *
- * @param arr Array.
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `compare` call scope. Defaults to array itself.
- * @param order Pass positive order to find the highest value, and negative to find the lowest one.
- * @returns Array item.
- */
-export function maxComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T {
-	return arr[maxIndexComparing(arr, compare, scope, order)];
-}
-
-/**
- * Returns index of the highest (or lowest) array item in terms of the specified comparer function.
- *
- * @param arr Array.
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `compare` call scope. Defaults to array itself.
- * @param order Pass positive order to find the highest value, and negative to find the lowest one.
- * @returns Item index.
- */
-export function maxIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number {
-	if (arr.length === 0) {
-		return -1;
-	}
-	compare = compare || cmp;
-	scope = scope || arr;
-	let result = 0;
-	for (let i = 1, l = arr.length; i < l; ++i) {
-		if (order * compare.call(scope, arr[result], arr[i], result, i) < 0) {
-			result = i;
-		}
-	}
-	return result;
-}
-
-/**
- * Returns the array item which callback returns the lowest (or highest) value for.
- *
- * @param arr Array.
- * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Pass positive order to find the lowest value, and negative to find the highest one.
- * @returns Array item.
- */
-export function min<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T {
-	return max(arr, callback, scope, -order);
-}
-
-/**
- * Returns index of the array item which callback returns the lowest (or highest) value for.
- *
- * @param arr Array.
- * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Pass positive order to find the lowest value, and negative to find the highest one.
- * @returns Item index.
- */
-export function minIndex<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number {
-	return maxIndex(arr, callback, scope, -order);
-}
-
-/**
- * Returns the lowest (or highest) array item in terms of the specified comparer function.
- *
- * @param arr Array.
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `compare` call scope. Defaults to array itself.
- * @param order Pass positive order to find the lowest value, and negative to find the highest one.
- * @returns Array item.
- */
-export function minComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T {
-	return maxComparing(arr, compare, scope, -order);
-}
-
-/**
- * Returns index of the lowest (or highest) array item in terms of the specified comparer function.
- *
- * @param arr Array.
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `compare` call scope. Defaults to array itself.
- * @param order Pass positive order to find the lowest value, and negative to find the highest one.
- * @returns Item index.
- */
-export function minIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number {
-	return maxIndexComparing(arr, compare, scope, -order);
 }
