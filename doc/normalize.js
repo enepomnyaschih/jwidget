@@ -80,7 +80,7 @@ function buildIndex(contents, lf) {
 	}
 	return lf + groups.map((group) => {
 		return "* **" + group.title + "**" + lf +
-			group.subtitles.map((subtitle) => "** [" + subtitle + "](#" + subtitle.toLowerCase() + ")").join(lf);
+			group.subtitles.map((subtitle) => "    * [" + subtitle + "](#" + subtitle.toLowerCase() + ")").join(lf);
 	}).join(lf) + lf;
 }
 
