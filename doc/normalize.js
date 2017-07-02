@@ -59,13 +59,29 @@ function repeat(value, count) {
 }
 
 function buildIndex(contents, lf) {
-	const titles = [];
-	const regexp = new RegExp(lf + "### (\\w+)" + lf, "g");
+	const groups = [];
+	const regexp = new RegExp(lf + "##(#?) ([^\\r\\n]+)" + lf, "g");
 	let match;
+	let title = "", subtitles;
 	while (match = regexp.exec(contents)) {
-		titles.push(match[1]);
+		if (!match[1]) {
+			title = match[2];
+			subtitles = null;
+		} else {
+			if (!subtitles) {
+				subtitles = [];
+				groups.push({
+					title: title,
+					subtitles: subtitles
+				});
+			}
+			subtitles.push(match[2]);
+		}
 	}
-	return lf + titles.map((title) => "* [" + title + "](#" + title.toLowerCase() + ")").join(lf) + lf;
+	return lf + groups.map((group) => {
+		return "* **" + group.title + "**" + lf +
+			group.subtitles.map((subtitle) => "** [" + subtitle + "](#" + subtitle.toLowerCase() + ")").join(lf);
+	}).join(lf) + lf;
 }
 
 walk();
