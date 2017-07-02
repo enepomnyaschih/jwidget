@@ -313,23 +313,16 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Alias for [[forEach]].
-	 */
-	each(callback: (item: T) => any, scope?: any) {
-		this._items.every((item) => {
-			callback.call(scope || this, item);
-			return true;
-		});
-	}
-
-	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
 	 * @param callback Callback function.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
 	forEach(callback: (item: T) => any, scope?: any) {
-		this.each(callback, scope);
+		this._items.every((item) => {
+			callback.call(scope || this, item);
+			return true;
+		});
 	}
 
 	/**

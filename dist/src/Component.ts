@@ -144,11 +144,11 @@ export default class Component extends Class {
 		}
 		if (this._el) {
 			DomUtils.remove(this._el[0]);
-			DictionaryUtils.each(this.__collections, destroy);
+			DictionaryUtils.forEach(this.__collections, destroy);
 			this.__collections = null;
-			DictionaryUtils.each(this.__arrays, destroy);
+			DictionaryUtils.forEach(this.__arrays, destroy);
 			this.__arrays = null;
-			DictionaryUtils.each(this.__bindables, destroy);
+			DictionaryUtils.forEach(this.__bindables, destroy);
 			this.__bindables = null;
 
 			this._children.unrender();
@@ -409,9 +409,9 @@ export default class Component extends Class {
 		}
 		this._wasAfterAppend = true;
 		this.afterAppend();
-		this._children.each(DomUtils._afterAppend);
-		DictionaryUtils.each<ComponentList>(this.__arrays, DomUtils._afterAppend);
-		DictionaryUtils.each<ComponentCollection>(this.__collections, DomUtils._afterAppend);
+		this._children.forEach(DomUtils._afterAppend);
+		DictionaryUtils.forEach<ComponentList>(this.__arrays, DomUtils._afterAppend);
+		DictionaryUtils.forEach<ComponentCollection>(this.__collections, DomUtils._afterAppend);
 	}
 
 	/**

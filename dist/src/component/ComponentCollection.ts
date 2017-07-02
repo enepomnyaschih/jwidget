@@ -52,6 +52,6 @@ export default class ComponentCollection extends Class {
 	}
 
 	_afterAppend() {
-		this.source.each(DomUtils._afterAppend);
+		this.source.forEach(DomUtils._afterAppend);
 	}
 }

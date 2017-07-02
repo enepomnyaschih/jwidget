@@ -326,7 +326,7 @@ namespace Router {
 				});
 			}
 
-			DictionaryUtils.each(this._expanded, (expanded, route) => {
+			DictionaryUtils.forEach(this._expanded, (expanded, route) => {
 				this.own(expanded.changeEvent.listen((params) => {
 					if (params.value && !this._updating) {
 						this.router.redirect(route);

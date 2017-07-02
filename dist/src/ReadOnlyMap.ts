@@ -204,11 +204,6 @@ interface ReadOnlyMap<T> extends ReadOnlyCollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	each(callback: (item: T, key: string) => any, scope?: any): void;
-
-	/**
-	 * @inheritdoc
-	 */
 	forEach(callback: (item: T, key: string) => any, scope?: any): void;
 
 	/**

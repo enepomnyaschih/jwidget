@@ -230,11 +230,6 @@ interface IList<T> extends ICollection<T>, DestroyableReadOnlyList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	each(callback: (item: T, index: number) => any, scope?: any): void;
-
-	/**
-	 * @inheritdoc
-	 */
 	forEach(callback: (item: T, index: number) => any, scope?: any): void;
 
 	/**

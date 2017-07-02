@@ -71,8 +71,8 @@ export default class ComponentChildInserter extends Map<ComponentChild> {
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		DictionaryUtils.each(spliceResult.removedItems, this._detach, this);
-		DictionaryUtils.each(spliceResult.addedItems, this._attach, this);
+		DictionaryUtils.forEach(spliceResult.removedItems, this._detach, this);
+		DictionaryUtils.forEach(spliceResult.addedItems, this._attach, this);
 		return spliceResult;
 	}
 
@@ -81,7 +81,7 @@ export default class ComponentChildInserter extends Map<ComponentChild> {
 		if (items === undefined) {
 			return undefined;
 		}
-		DictionaryUtils.each(items, this._detach, this);
+		DictionaryUtils.forEach(items, this._detach, this);
 		return items;
 	}
 

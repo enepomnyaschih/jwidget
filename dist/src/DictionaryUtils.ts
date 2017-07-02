@@ -25,6 +25,50 @@ import IMap from './IMap';
 import Reducer from './Reducer';
 import Some from './Some';
 
+/**
+ * Returns some item in dictionary.
+ *
+ * @param dict Dictionary.
+ * @returns Some item. If dictionary is empty, returns undefined.
+ */
+export function getFirst<T>(dict: Dictionary<T>): T {
+	return dict[getFirstKey(dict)];
+}
+
+/**
+ * Returns some key in item.
+ *
+ * @param dict Dictionary.
+ * @returns Some item. If dictionary is empty, returns undefined.
+ */
+export function getFirstKey<T>(dict: Dictionary<T>): string {
+	for (var key in dict) {
+		return key;
+	}
+	return undefined;
+}
+
+/**
+ * Returns count of items in dictionary.
+ *
+ * @param dict Dictionary.
+ * @returns Count of items.
+ */
+export function getLength<T>(dict: Dictionary<T>): number {
+	var length = 0;
+	for (var key in dict) {
+		key = key;
+		++length;
+	}
+	return length;
+}
+
+/**
+ * Checks if dictionary is empty.
+ *
+ * @param dict Dictionary.
+ * @returns Dictionary has no keys/items.
+ */
 export function isEmpty<T>(dict: Dictionary<T>) {
 	for (let key in dict) {
 		key = key; // suppress unused variable error
@@ -34,156 +78,46 @@ export function isEmpty<T>(dict: Dictionary<T>) {
 }
 
 /**
- * Returns first item in collection. If collection is empty, returns undefined.
+ * Checks if the item exists in dictionary.
+ *
+ * @param dict Dictionary.
+ * @param item Item to find.
+ * @returns Item exists in dictionary.
  */
-export function getFirst<T>(map: Dictionary<T>): T {
-	return map[getFirstKey(map)];
-}
-
-/**
- * Returns key of first collection item. If collection is empty, returns undefined.
- */
-export function getFirstKey<T>(map: Dictionary<T>): string {
-	for (var key in map) {
-		return key;
-	}
-	return undefined;
-}
-
-/**
- * Returns count of items in collection.
- */
-export function getLength<T>(map: Dictionary<T>): number {
-	var length = 0;
-	for (var key in map) {
-		key = key;
-		++length;
-	}
-	return length;
-}
-
-/**
- * Checks item for existance in collection.
- */
-export function contains<T>(map: Dictionary<T>, item: T): boolean {
-	return !every(map, function (v) {
+export function contains<T>(dict: Dictionary<T>, item: T): boolean {
+	return !every(dict, function (v) {
 		return item !== v;
 	});
 }
 
 /**
- * Returns key of item in collection. If such item doesn't exist, returns undefined.
+ * Returns key of item in dictionary.
+ *
+ * @param dict Dictionary.
+ * @param item Item to find.
+ * @returns Key of item. If item doesn't exist, returns undefined.
  */
-export function keyOf<T>(map: Dictionary<T>, item: T): string {
-	return findKey(map, function (v) {
+export function keyOf<T>(dict: Dictionary<T>, item: T): string {
+	return findKey(dict, function (v) {
 		return item === v;
 	});
 }
 
-export function clone<T>(map: Dictionary<T>): Dictionary<T> {
-	const result: Dictionary<T> = {};
-	for (let key in map) {
-		result[key] = map[key];
-	}
-	return result;
-}
-
-/**
- * Matches all items against criteria.
- *
- * Returns true if callback returns !== false for all collection items.
- *
- * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
- *
- * @param callback Criteria callback.
- * @param scope **callback** call scope. Defaults to collection itself.
- */
-export function every<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
-	scope = scope || map;
-	for (var key in map) {
-		if (!callback.call(scope, map[key], key)) {
-			return false;
-		}
-	}
-	return true;
-}
-
-/**
- * Matches each item against criteria.
- *
- * Returns true if callback returns !== false for some collection item.
- *
- * Algorithms iterates items sequentially, and stops after first item matching the criteria.
- *
- * @param callback Criteria callback.
- * @param scope **callback** call scope. Defaults to collection itself.
- */
-export function some<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
-	return !every(map, function (item, key) {
-		return !callback.call(scope, item, key);
-	});
-}
-
-/**
- * Iterates collection items. Calls specified function for all items.
- *
- * @param callback Callback function.
- * @param scope **callback** call scope. Defaults to collection itself.
- */
-export function each<T>(map: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any) {
-	every(map, function (item, key) {
-		callback.call(scope, item, key);
-		return true;
-	});
-}
-
-/**
- * Iterates collection items. Calls specified function for all items.
- *
- * @param callback Callback function.
- * @param scope **callback** call scope. Defaults to collection itself.
- */
-export function forEach<T>(map: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any) {
-	each(map, callback, scope);
-}
-
 /**
  * Finds item matching criteria.
  *
- * Returns key of first item for which callback returns !== false.
+ * Returns the first item for which callback returns truthy value.
  *
- * Algorithms iterates items sequentially, and stops after first item matching the criteria.
+ * Algorithms iterates items consequently, and stops after first item matching the criteria.
  *
+ * @param dict Dictionary.
  * @param callback Criteria callback.
- * @param scope **callback** call scope. Defaults to collection itself.
- * @returns Found item key or undefined.
- */
-export function findKey<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): string {
-	var result: string;
-	every(map, function (item, key) {
-		if (callback.call(scope, item, key)) {
-			result = key;
-			return false;
-		}
-		return true;
-	});
-	return result;
-}
-
-/**
- * Finds item matching criteria.
- *
- * Returns first item for which callback returns !== false.
- *
- * Algorithms iterates items sequentially, and stops after first item matching the criteria.
- *
- * @param callback Criteria callback.
- * @param scope **callback** call scope. Defaults to collection itself.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
  * @returns Found item or undefined.
  */
-export function find<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): T {
+export function find<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): T {
 	var result: T;
-	every(map, function (item, key) {
+	every(dict, function (item, key) {
 		if (callback.call(scope, item, key)) {
 			result = item;
 			return false;
@@ -194,17 +128,235 @@ export function find<T>(map: Dictionary<T>, callback: (item: T, key: string) => 
 }
 
 /**
- * Filters collection by criteria.
+ * Finds item matching criteria.
  *
- * Builds new collection of the same type, consisting of items for which callback returns !== false.
+ * Returns key of first item for which callback returns truthy value.
  *
+ * Algorithms iterates items consequently, and stops after the first item matching the criteria.
+ *
+ * @param dict Dictionary.
  * @param callback Criteria callback.
- * @param scope **callback** call scope. Defaults to collection itself.
- * @returns Filtered collection.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @returns Found item key or undefined.
  */
-export function filter<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
+export function findKey<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): string {
+	var result: string;
+	every(dict, function (item, key) {
+		if (callback.call(scope, item, key)) {
+			result = key;
+			return false;
+		}
+		return true;
+	});
+	return result;
+}
+
+/**
+ * Returns the dictionary item which callback returns the highest (or lowest) value for.
+ *
+ * @param dict Dictionary.
+ * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @param order Pass positive order to find the highest value, and negative to find the lowest one.
+ * @returns Dictionary item.
+ */
+export function max<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): T {
+	return dict[maxKey(dict, callback, scope, order)];
+}
+
+/**
+ * Returns key of the dictionary item which callback returns the highest (or lowest) value for.
+ *
+ * @param dict Dictionary.
+ * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @param order Pass positive order to find the highest value, and negative to find the lowest one.
+ * @returns Item key.
+ */
+export function maxKey<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): string {
+	callback = callback || identity;
+	scope = scope || dict;
+	let result: string;
+	let max: any;
+	for (let key in dict) {
+		const item: any = callback.call(scope, dict[key], key);
+		if ((result === undefined) || (order > 0 && max < item) || (order < 0 && max > item)) {
+			result = key;
+			max = item;
+		}
+	}
+	return result;
+}
+
+/**
+ * Returns the highest (or lowest) dictionary item in terms of the specified comparer function.
+ *
+ * @param dict Dictionary.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `compare` call scope. Defaults to dictionary itself.
+ * @param order Pass positive order to find the highest value, and negative to find the lowest one.
+ * @returns Dictionary item.
+ */
+export function maxComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): T {
+	return dict[maxKeyComparing(dict, compare, scope, order)];
+}
+
+/**
+ * Returns key of the highest (or lowest) dictionary item in terms of the specified comparer function.
+ *
+ * @param dict Dictionary.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `compare` call scope. Defaults to dictionary itself.
+ * @param order Pass positive order to find the highest value, and negative to find the lowest one.
+ * @returns Item key.
+ */
+export function maxKeyComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): string {
+	compare = compare || cmpPrimitives;
+	scope = scope || dict;
+	let result: string;
+	for (let key in dict) {
+		if (order * compare.call(scope, dict[result], dict[key], result, key) < 0) {
+			result = key;
+		}
+	}
+	return result;
+}
+
+/**
+ * Returns the dictionary item which callback returns the lowest (or highest) value for.
+ *
+ * @param dict Dictionary.
+ * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @param order Pass positive order to find the lowest value, and negative to find the highest one.
+ * @returns Dictionary item.
+ */
+export function min<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): T {
+	return max(dict, callback, scope, -order);
+}
+
+/**
+ * Returns index of the dictionary item which callback returns the lowest (or highest) value for.
+ *
+ * @param dict Dictionary.
+ * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @param order Pass positive order to find the lowest value, and negative to find the highest one.
+ * @returns Item key.
+ */
+export function minKey<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): string {
+	return maxKey(dict, callback, scope, -order);
+}
+
+/**
+ * Returns the lowest (or highest) dictionary item in terms of the specified comparer function.
+ *
+ * @param dict Dictionary.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `compare` call scope. Defaults to dictionary itself.
+ * @param order Pass positive order to find the lowest value, and negative to find the highest one.
+ * @returns Dictionary item.
+ */
+export function minComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): T {
+	return maxComparing(dict, compare, scope, -order);
+}
+
+/**
+ * Returns index of the lowest (or highest) dictionary item in terms of the specified comparer function.
+ *
+ * @param dict Dictionary.
+ * @param compare Comparer function. Should return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `compare` call scope. Defaults to dictionary itself.
+ * @param order Pass positive order to find the lowest value, and negative to find the highest one.
+ * @returns Item key.
+ */
+export function minKeyComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): string {
+	return maxKeyComparing(dict, compare, scope, -order);
+}
+
+/**
+ * Returns a shallow copy of the dictionary.
+ *
+ * @param dict Dictionary.
+ * @returns Shallow copy of dictionary.
+ */
+export function clone<T>(dict: Dictionary<T>): Dictionary<T> {
+	const result: Dictionary<T> = {};
+	for (let key in dict) {
+		result[key] = dict[key];
+	}
+	return result;
+}
+
+/**
+ * Matches all items against criteria.
+ *
+ * Returns true if callback returns truthy value for all dictionary items.
+ *
+ * Algorithms iterates items consequently, and stops after the first item not matching the criteria.
+ *
+ * @param dict Dictionary.
+ * @param callback Criteria callback.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ */
+export function every<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
+	scope = scope || dict;
+	for (var key in dict) {
+		if (!callback.call(scope, dict[key], key)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
+ * Matches each item against criteria.
+ *
+ * Returns true if callback returns truthy value for some dictionary item.
+ *
+ * Algorithms iterates items consequently, and stops after the first item matching the criteria.
+ *
+ * @param dict Dictionary.
+ * @param callback Criteria callback.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ */
+export function some<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
+	return !every(dict, function (item, key) {
+		return !callback.call(scope, item, key);
+	});
+}
+
+/**
+ * Iterates dictionary items. Calls specified function for all items.
+ *
+ * @param dict Dictionary.
+ * @param callback Callback function.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ */
+export function forEach<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any) {
+	every(dict, function (item, key) {
+		callback.call(scope, item, key);
+		return true;
+	});
+}
+
+/**
+ * Filters dictionary by criteria.
+ *
+ * Builds new dictionary, consisting of items for which callback returns thuthy value.
+ *
+ * @param dict Dictionary.
+ * @param callback Criteria callback.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @returns Filtered dictionary.
+ */
+export function filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
 	var result: Dictionary<T> = {};
-	every(map, function (item: T, key: string): boolean {
+	every(dict, function (item: T, key: string): boolean {
 		if (callback.call(scope, item, key)) {
 			result[key] = item;
 		}
@@ -216,15 +368,16 @@ export function filter<T>(map: Dictionary<T>, callback: (item: T, key: string) =
 /**
  * Counts the items matching criteria.
  *
- * Returns the number of items for which callback returns !== false.
+ * Returns the number of items for which callback returns thuthy value.
  *
+ * @param dict Dictionary.
  * @param callback Criteria callback.
- * @param scope **callback** call scope. Defaults to collection itself.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
  * @returns Number of items.
  */
-export function count<T>(map: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): number {
+export function count<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): number {
 	var result = 0;
-	every(map, function (item: T, key: string): boolean {
+	every(dict, function (item: T, key: string): boolean {
 		if (callback.call(scope, item, key)) {
 			++result;
 		}
@@ -234,17 +387,18 @@ export function count<T>(map: Dictionary<T>, callback: (item: T, key: string) =>
 }
 
 /**
- * Maps collection items.
+ * Maps dictionary items.
  *
- * Builds new collection of the same type, containing results of callback call for each collection item.
+ * Builds new dictionary, containing results of callback call for each dictionary item.
  *
+ * @param dict Dictionary.
  * @param callback Mapping function.
- * @param scope **callback** call scope. Defaults to collection itself.
- * @returns Mapped collection.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @returns Mapped dictionary.
  */
-export function map<T, U>(map: Dictionary<T>, callback: (item: T, key: string) => U, scope?: any): Dictionary<U> {
+export function map<T, U>(dict: Dictionary<T>, callback: (item: T, key: string) => U, scope?: any): Dictionary<U> {
 	var result: Dictionary<U> = {};
-	every(map, function (item: T, key: string): boolean {
+	every(dict, function (item: T, key: string): boolean {
 		result[key] = callback.call(scope, item, key);
 		return true;
 	});
@@ -254,19 +408,20 @@ export function map<T, U>(map: Dictionary<T>, callback: (item: T, key: string) =
 /**
  * Returns keys of sorted items.
  *
- * Builds array of item keys, sorted by result of callback call for each item.
+ * Builds array of item keys, sorted by the result of callback call for each item.
  *
+ * @param dict Dictionary.
  * @param callback Indexer function. Must return a comparable value, compatible with
- * [[JW.cmp]]. Returns item itself by default.
- * @param scope **callback** call scope. Defaults to collection itself.
+ * `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Sorted item keys array.
+ * @returns Array of indices.
  */
-export function getSortingKeys<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order?: number): string[] {
+export function getSortingKeys<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order?: number): string[] {
 	callback = callback || function (x) { return x; };
 	order = order || 1;
 	var pairs: any[] = [];
-	every(map, function (item, key) {
+	every(dict, function (item, key) {
 		pairs.push([key, callback.call(scope, item, key)]);
 		return true;
 	});
@@ -279,22 +434,22 @@ export function getSortingKeys<T>(map: Dictionary<T>, callback?: (item: T, key: 
 }
 
 /**
- * Returns keys of sorted items.
+ * Returns indices of sorted items.
  *
- * Builds array of item keys, sorted by comparer.
+ * Builds array of item indices, sorted by comparer.
  *
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2.
- * Defaults to [[JW.cmp]]
- * @param scope **comparer** call scope. Defaults to collection itself.
+ * @param dict Dictionary.
+ * @param compare Comparer function. Must return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `comparer` call scope. Defaults to dictionary itself.
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Sorted item keys array.
+ * @returns Array of indices.
  */
-export function getSortingKeysComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string[] {
+export function getSortingKeysComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string[] {
 	compare = compare || cmp;
 	order = order || 1;
 	var pairs: any[] = [];
-	every(map, function (item, key) {
+	every(dict, function (item, key) {
 		pairs.push([key, item]);
 		return true;
 	}, scope);
@@ -307,52 +462,68 @@ export function getSortingKeysComparing<T>(map: Dictionary<T>, compare?: (t1: T,
 }
 
 /**
- * Converts collection to sorted array.
+ * Builds and returns a new array consisting of dictionary items sorted by the result of
+ * callback call for each item.
  *
- * Builds array consisting of collection items sorted by result of callback call for each item.
- *
+ * @param dict Dictionary.
  * @param callback Indexer function. Must return a comparable value, compatible with
- * [[JW.cmp]]. Returns item itself by default.
- * @param scope **callback** call scope. Defaults to collection itself.
+ * `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to array itself.
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
  * @returns Sorted array.
  */
-export function toSorted<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order?: number): T[] {
-	return getSortingKeys(map, callback, scope, order).map(function (key): T {
-		return map[key];
+export function toSorted<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order?: number): T[] {
+	return getSortingKeys(dict, callback, scope, order).map(function (key): T {
+		return dict[key];
 	});
 }
 
 /**
- * Converts collection to sorted array.
+ * Builds and returns a new array consisting of dictionary items sorted by comparer.
  *
- * Builds array consisting of collection items sorted by comparer.
- *
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2.
- * Defaults to [[JW.cmp]]
- * @param scope **comparer** call scope. Defaults to collection itself.
+ * @param dict Dictionary.
+ * @param compare Comparer function. Must return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `comparer` call scope. Defaults to array itself.
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
  * @returns Sorted array.
  */
-export function toSortedComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T[] {
-	return getSortingKeysComparing(map, compare, scope, order).map(function (key): T {
-		return map[key];
+export function toSortedComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T[] {
+	return getSortingKeysComparing(dict, compare, scope, order).map(function (key): T {
+		return dict[key];
 	});
 }
 
 /**
- * Indexes collection.
+ * Converts dictionary to array.
  *
- * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
+ * Builds new array consisting of dictionary items in arbitrary order.
  *
+ * @param dict Dictionary.
+ * @returns Dictionary items.
+ */
+export function toArray<T>(dict: Dictionary<T>): T[] {
+	var result: T[] = [];
+	every(dict, function (item) {
+		result.push(item);
+		return true;
+	});
+	return result;
+}
+
+/**
+ * Indexes dictionary items.
+ *
+ * Builds new dictionary by rule: key is the result of indexer function call, value is the corresponding item.
+ *
+ * @param dict Dictionary.
  * @param callback Indexer function.
- * @param scope **callback** call scope. Defaults to collection itself.
- * @returns Collection index.
+ * @param scope `callback` call scope. Defaults to array itself.
+ * @returns Dictionary index.
  */
-export function index<T>(map: Dictionary<T>, callback: (item: T, key: string) => string, scope?: any): Dictionary<T> {
+export function index<T>(dict: Dictionary<T>, callback: (item: T, key: string) => string, scope?: any): Dictionary<T> {
 	var result: Dictionary<T> = {};
-	every(map, function (item, oldKey) {
+	every(dict, function (item, oldKey) {
 		var key = callback.call(scope, item, oldKey);
 		if (key != null) {
 			result[key] = item;
@@ -363,70 +534,276 @@ export function index<T>(map: Dictionary<T>, callback: (item: T, key: string) =>
 }
 
 /**
- * Converts collection to array.
+ * Applies a function against an accumulator and each item in the dictionary (from left to right)
+ * to reduce it to a single value.
  *
- * Builds new array consisting of collection items.
+ * @param dict Dictionary.
+ * @param reducer Standard reducer. See `jwidget/Reducer` for examples.
+ * @returns Final accumulator value.
  */
-export function toArray<T>(map: Dictionary<T>): T[] {
-	var result: T[] = [];
-	every(map, function (item) {
-		result.push(item);
-		return true;
+export function reduce<T, U>(dict: Dictionary<T>, reducer: Reducer<T, U>): U;
+
+/**
+ * Applies a function against an accumulator and each item in the dictionary (from left to right)
+ * to reduce it to a single value.
+ *
+ * @param dict Dictionary.
+ * @param callback Function to execute on each item in the dictionary.
+ * @param initial Value to use as the first argument to the first call of the callback.
+ * @returns Final accumulator value.
+ */
+export function reduce<T, U>(dict: Dictionary<T>, callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
+export function reduce<T, U>(dict: Dictionary<T>,
+		reducer: Reducer<T, U> | ((accumulator: U, item: T, key: string) => U), initial?: U): U {
+	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
+		value: initial,
+		callback: reducer
+	};
+	for (let key in dict) {
+		value = callback(value, dict[key], key);
+	}
+	return value;
+}
+
+/**
+ * Replaces item with specified key. If dictionary doesn't contain such key, new item is added.
+ *
+ * @param dict Dictionary.
+ * @param key Key.
+ * @param item Item.
+ * @returns The replaced item.
+ */
+export function put<T>(dict: Dictionary<T>, key: string, item: T): T {
+	var result = tryPut(dict, key, item);
+	return (result !== undefined) ? result.value : dict[key];
+}
+
+/**
+ * Adds or replaces a bunch of items.
+ *
+ * @param dict Dictionary.
+ * @param items Items with corresponding keys.
+ */
+export function putAll<T>(dict: Dictionary<T>, items: Dictionary<T>) {
+	for (var key in items) {
+		dict[key] = items[key];
+	}
+}
+
+/**
+ * Low-performance alternative to `putAll` with verbose result set.
+ *
+ * @param dict Dictionary.
+ * @param items Items with corresponding keys.
+ * @returns Result of internal `splice` method call. Nevers returns null or undefined.
+ */
+export function putAllVerbose<T>(dict: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
+	var spliceResult = tryPutAll(dict, items);
+	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
+}
+
+/**
+ * Removes item with specified key if it exists in dictionary.
+ *
+ * @param dict Dictionary.
+ * @param key Key of item to remove.
+ * @returns The removed dictionary item.
+ */
+export function remove<T>(dict: Dictionary<T>, key: string): T {
+	return tryRemove(dict, key);
+}
+
+/**
+ * Removes a bunch of items from dictionary.
+ *
+ * @param dict Dictionary.
+ * @param keys Keys of items to remove.
+ */
+export function removeAll<T>(dict: Dictionary<T>, keys: string[]) {
+	for (var i = 0, l = keys.length; i < l; ++i) {
+		var key = keys[i];
+		delete dict[key];
+	}
+}
+
+/**
+ * Low-performance alternative to `removeAll` with verbose result set.
+ *
+ * @param dict Dictionary.
+ * @param keys Keys of items to remove.
+ * @returns The removed items. Never returns null or undefined.
+ */
+export function removeAllVerbose<T>(dict: Dictionary<T>, keys: string[]): Dictionary<T> {
+	var items = tryRemoveAll(dict, keys);
+	return (items !== undefined) ? items : {};
+}
+
+/**
+ * Removes an item from the dictionary.
+ *
+ * @param dict Dictionary.
+ * @param item Item to remove.
+ * @returns Item key in the dictionary.
+ */
+export function removeItem<T>(dict: Dictionary<T>, item: T): string {
+	var key = keyOf(dict, item);
+	if (key !== undefined) {
+		tryRemove(dict, key);
+	}
+	return key;
+}
+
+/**
+ * Removes all occurrences of items in dictionary.
+ *
+ * @param dict Dictionary.
+ * @param items Items to remove.
+ * @param getKey Function which returns unique key of an item in this dictionary.
+ * By default, identifies primitive values and `Identifiable` objects.
+ */
+export function removeItems<T>(dict: Dictionary<T>, items: T[], getKey?: (item: T) => string) {
+	const itemSet = VidSet.fromArray<T>(items, getKey);
+	const newItems = filter(dict, function (item) {
+		return !itemSet.contains(item);
 	});
+	tryClear(dict);
+	tryPutAll(dict, newItems);
+}
+
+/**
+ * Changes item key in dictionary. If dictionary doesn't contain `oldKey` or contains `newKey`, it causes an error.
+ *
+ * @param dict Dictionary.
+ * @param oldKey Old item key.
+ * @param newKey New item key.
+ * @returns The moved item.
+ */
+export function setKey<T>(dict: Dictionary<T>, oldKey: string, newKey: string): T {
+	var item = trySetKey(dict, oldKey, newKey);
+	return (item !== undefined) ? item : dict[newKey];
+}
+
+/**
+ * Clears dictionary.
+ *
+ * @param dict Dictionary.
+ * @returns Old dictionary contents. Never returns null or undefined.
+ */
+export function clear<T>(dict: Dictionary<T>): Dictionary<T> {
+	var result = tryClear(dict);
+	return (result !== undefined) ? result : {};
+}
+
+/**
+ * Removes and adds bunches of items in dictionary. Universal optimized granular operation of removal/insertion.
+ *
+ * @param dict Dictionary.
+ * @param removedKeys Keys of items to remove.
+ * @param updatedItems Items to add/replace.
+ * @returns Splice result. Never returns null or undefined.
+ */
+export function splice<T>(dict: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
+	var spliceResult = trySplice(dict, removedKeys, updatedItems);
+	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
+}
+
+/**
+ * Changes item keys in dictionary.
+ *
+ * @param dict Dictionary.
+ * @param keyMap Key mapping. Item with key `x` will gain key `keyMap[x]`.
+ * It is enough to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
+ * @returns Map of changed keys. Never returns null or undefined.
+ */
+export function reindex<T>(dict: Dictionary<T>, keyMap: Dictionary<string>): Dictionary<string> {
+	var result = tryReindex(dict, keyMap);
+	return (result !== undefined) ? result : {};
+}
+
+/**
+ * Checks two dictionaries for equality, item by item (===).
+ *
+ * @param x First dictionary.
+ * @param y Second dictionary.
+ * @returns Arrays are equal.
+ */
+export function equal<T>(x: Dictionary<T>, y: Dictionary<T>): boolean {
+	if (x === y) {
+		return true;
+	}
+	var length = getLength(y);
+	for (var key in x) {
+		if ((--length < 0) || (x[key] !== y[key])) {
+			return false;
+		}
+	}
+	return length === 0;
+}
+
+/**
+ * Based on the removed and added items during dictionary splice, returns keys which
+ * were effectively removed, not replaced by other items.
+ *
+ * @param removedItems Removed items.
+ * @param addedItems Added items.
+ * @returns Effectively removed keys.
+ */
+export function getRemovedKeys<T>(removedItems: Dictionary<T>, addedItems: Dictionary<T>): string[] {
+	var removedKeys: string[] = [];
+	for (var key in removedItems) {
+		if (!addedItems.hasOwnProperty(key)) {
+			removedKeys.push(key);
+		}
+	}
+	return removedKeys;
+}
+
+/**
+ * Creates a new dictionary by rule: `result[dict[key]] === key`.
+ *
+ * @param dict Dictionary.
+ * @returns The inverted dictionary.
+ */
+export function getInverted(dict: Dictionary<string>): Dictionary<string> {
+	// JW.assertMap(dict, JW.assertString);
+	var result: Dictionary<string> = {};
+	for (var key in dict) {
+		// JW.assertUndefined(result[dict[key]]);
+		result[dict[key]] = key;
+	}
 	return result;
 }
 
 /**
- * Replaces item with specified key. If map doesn't contain such key, new item is added.
- * @returns The replaced item.
+ * Replaces item with specified key. If dictionary doesn't contain such key, new item is added.
+ *
+ * @param dict Dictionary.
+ * @param key Key.
+ * @param item Item.
+ * @returns The replaced item. If dictionary is not modified, returns undefined.
  */
-export function put<T>(map: Dictionary<T>, key: string, item: T): T {
-	var result = tryPut(map, key, item);
-	return (result !== undefined) ? result.value : map[key];
-}
-
-/**
- * Replaces item with specified key. If map doesn't contain such key, new item is added.
- * @returns The replaced item. If collection is not modified, returns undefined.
- */
-export function tryPut<T>(map: Dictionary<T>, key: string, item: T): Some<T> {
-	var oldItem = map[key];
+export function tryPut<T>(dict: Dictionary<T>, key: string, item: T): Some<T> {
+	var oldItem = dict[key];
 	if (oldItem === item) {
 		return undefined;
 	}
-	map[key] = item;
+	dict[key] = item;
 	return { value: oldItem };
 }
 
 /**
  * Adds or replaces a bunch of items.
+ *
+ * @param dict Dictionary.
+ * @param items Items with corresponding keys.
+ * @returns Result of internal `splice` method call. If dictionary is not modified, returns undefined.
  */
-export function putAll<T>(map: Dictionary<T>, items: Dictionary<T>) {
-	for (var key in items) {
-		map[key] = items[key];
-	}
-}
-
-/**
- * Low-performance alternative to [[setAll]] with verbose result set.
- * @returns Result of internal [[splice]] method call.
- */
-export function putAllVerbose<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
-	var spliceResult = tryPutAll(map, items);
-	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
-}
-
-/**
- * Adds or replaces a bunch of items.
- * @returns Result of internal [[splice]] method call.
- * If collection is not modified, returns undefined.
- */
-export function tryPutAll<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
+export function tryPutAll<T>(dict: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
 	var removedItems: Dictionary<T> = {};
 	var addedItems: Dictionary<T> = {};
 	for (var key in items) {
 		var item = items[key];
-		var oldItem = tryPut(map, key, item);
+		var oldItem = tryPut(dict, key, item);
 		if (oldItem === undefined) {
 			continue;
 		}
@@ -443,91 +820,32 @@ export function tryPutAll<T>(map: Dictionary<T>, items: Dictionary<T>): IMap.Spl
 }
 
 /**
- * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it causes an error.
- * @returns The moved item.
+ * Removes item with specified key if it exists in dictionary.
+ *
+ * @param dict Dictionary.
+ * @param key Key of item to remove.
+ * @returns Old dictionary item. If dictionary is not modified, returns undefined.
  */
-export function setKey<T>(map: Dictionary<T>, oldKey: string, newKey: string): T {
-	var item = trySetKey(map, oldKey, newKey);
-	return (item !== undefined) ? item : map[newKey];
-}
-
-/**
- * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it causes an error.
- * @returns The moved item.
- * If collection is not modified, returns undefined.
- */
-export function trySetKey<T>(map: Dictionary<T>, oldKey: string, newKey: string): T {
-	if (oldKey === newKey) {
-		return undefined;
-	}
-	var item = map[oldKey];
-	delete map[oldKey];
-	map[newKey] = item;
-	return item;
-}
-
-/**
- * Removes an item from the map.
- * @returns Old item key in the map.
- */
-export function removeItem<T>(map: Dictionary<T>, item: T): string {
-	var key = keyOf(map, item);
-	if (key !== undefined) {
-		tryRemove(map, key);
-	}
-	return key;
-}
-
-/**
- * Removes item with specified key if it exists in map.
- * @returns Old collection item.
- */
-export function remove<T>(map: Dictionary<T>, key: string): T {
-	return tryRemove(map, key);
-}
-
-/**
- * Removes item with specified key if it exists in map.
- * @returns Old collection item.
- * If collection is not modified, returns undefined.
- */
-export function tryRemove<T>(map: Dictionary<T>, key: string): T {
-	var item = map[key];
+export function tryRemove<T>(dict: Dictionary<T>, key: string): T {
+	var item = dict[key];
 	if (item !== undefined) {
-		delete map[key];
+		delete dict[key];
 	}
 	return item;
 }
 
 /**
- * Removes a bunch of items from map.
+ * Removes a bunch of items from dictionary.
+ *
+ * @param dict Dictionary.
+ * @param keys Keys of items to remove.
+ * @returns The removed items. If dictionary is not modified, returns undefined.
  */
-export function removeAll<T>(map: Dictionary<T>, keys: string[]) {
-	for (var i = 0, l = keys.length; i < l; ++i) {
-		var key = keys[i];
-		delete map[key];
-	}
-}
-
-/**
- * Low-performance alternative to [[removeAll]] with verbose result set.
- * @returns The removed items.
- */
-export function removeAllVerbose<T>(map: Dictionary<T>, keys: string[]): Dictionary<T> {
-	var items = tryRemoveAll(map, keys);
-	return (items !== undefined) ? items : {};
-}
-
-/**
- * Removes a bunch of items from map.
- * @returns The removed items.
- * If collection is not modified, returns undefined.
- */
-export function tryRemoveAll<T>(map: Dictionary<T>, keys: string[]): Dictionary<T> {
+export function tryRemoveAll<T>(dict: Dictionary<T>, keys: string[]): Dictionary<T> {
 	var items: Dictionary<T> = {};
 	for (var i = 0, l = keys.length; i < l; ++i) {
 		var key = keys[i];
-		var item = tryRemove(map, key);
+		var item = tryRemove(dict, key);
 		if (item !== undefined) {
 			items[key] = item;
 		}
@@ -539,64 +857,54 @@ export function tryRemoveAll<T>(map: Dictionary<T>, keys: string[]): Dictionary<
 }
 
 /**
- * Removes all occurrences of items in collection.
+ * Changes item key in dictionary. If dictionary doesn't contain `oldKey` or contains `newKey`, it causes an error.
+ *
+ * @param dict Dictionary.
+ * @param oldKey Old item key.
+ * @param newKey New item key.
+ * @returns The moved item. If dictionary is not modified, returns undefined.
  */
-export function removeItems<T>(map: Dictionary<T>, items: T[], getKey?: (item: T) => string) {
-	const itemSet = VidSet.fromArray<T>(items, getKey);
-	const newItems = filter(map, function (item) {
-		return !itemSet.contains(item);
-	});
-	performSplice(map, newItems);
-}
-
-/**
- * Clears collection.
- * @returns Old collection contents. Never returns null or undefined.
- */
-export function clear<T>(map: Dictionary<T>): Dictionary<T> {
-	var result = tryClear(map);
-	return (result !== undefined) ? result : {};
-}
-
-/**
- * Clears collection.
- * @returns Old collection contents. If not modified - undefined.
- */
-export function tryClear<T>(map: Dictionary<T>): Dictionary<T> {
-	if (isEmpty(map)) {
+export function trySetKey<T>(dict: Dictionary<T>, oldKey: string, newKey: string): T {
+	if (oldKey === newKey) {
 		return undefined;
 	}
-	var items: Dictionary<T> = apply({}, map);
+	var item = dict[oldKey];
+	delete dict[oldKey];
+	dict[newKey] = item;
+	return item;
+}
+
+/**
+ * Clears dictionary.
+ *
+ * @param dict Dictionary.
+ * @returns Old dictionary contents. If not modified, returns undefined.
+ */
+export function tryClear<T>(dict: Dictionary<T>): Dictionary<T> {
+	if (isEmpty(dict)) {
+		return undefined;
+	}
+	var items: Dictionary<T> = apply({}, dict);
 	for (var key in items) {
-		delete map[key];
+		delete dict[key];
 	}
 	return items;
 }
 
 /**
- * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
+ * Removes and adds bunches of items in dictionary. Universal optimized granular operation of removal/insertion.
+ *
+ * @param dict Dictionary.
  * @param removedKeys Keys of items to remove.
  * @param updatedItems Items to add/replace.
- * @returns Splice result. Never returns null or undefined.
+ * @returns Splice result. If dictionary is not modified, returns undefined.
  */
-export function splice<T>(map: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
-	var spliceResult = trySplice(map, removedKeys, updatedItems);
-	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
-}
-
-/**
- * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
- * @param removedKeys Keys of items to remove.
- * @param updatedItems Items to add/replace.
- * @returns Splice result.
- * If collection is not modified, returns undefined.
- */
-export function trySplice<T>(map: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
+export function trySplice<T>(dict: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
 	removedKeys = removedKeys.filter(function (key) {
 		return !updatedItems.hasOwnProperty(key);
 	});
-	var removedItems = tryRemoveAll(map, removedKeys);
-	var spliceResult = tryPutAll(map, updatedItems);
+	var removedItems = tryRemoveAll(dict, removedKeys);
+	var spliceResult = tryPutAll(dict, updatedItems);
 	if (spliceResult !== undefined) {
 		apply(spliceResult.removedItems, removedItems);
 		return spliceResult;
@@ -608,28 +916,18 @@ export function trySplice<T>(map: Dictionary<T>, removedKeys: string[], updatedI
 }
 
 /**
- * Changes item keys in map.
- * @param keyMap Key map. Item with key x will gain key keyMap[x].
+ * Changes item keys in dictionary.
+ *
+ * @param dict Dictionary.
+ * @param keyMap Key mapping. Item with key `x` will gain key `keyMap[x]`.
  * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
- * @returns Map of changed keys. Never returns null or undefined.
+ * @returns Map of changed keys. If dictionary is not modified, returns undefined.
  */
-export function reindex<T>(map: Dictionary<T>, keyMap: Dictionary<string>): Dictionary<string> {
-	var result = tryReindex(map, keyMap);
-	return (result !== undefined) ? result : {};
-}
-
-/**
- * Changes item keys in map.
- * @param keyMap Key map. Item with key x will gain key keyMap[x].
- * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
- * @returns Map of changed keys.
- * If collection is not modified, returns undefined.
- */
-export function tryReindex<T>(map: Dictionary<T>, keyMap: Dictionary<string>): Dictionary<string> {
+export function tryReindex<T>(dict: Dictionary<T>, keyMap: Dictionary<string>): Dictionary<string> {
 	var sanitizedKeyMap: Dictionary<string> = {};
 	for (var oldKey in keyMap) {
 		var newKey = keyMap[oldKey];
-		if ((newKey === undefined) || (newKey === oldKey) || (map[oldKey] === undefined)) {
+		if ((newKey === undefined) || (newKey === oldKey) || (dict[oldKey] === undefined)) {
 			continue;
 		}
 		sanitizedKeyMap[oldKey] = newKey;
@@ -642,7 +940,7 @@ export function tryReindex<T>(map: Dictionary<T>, keyMap: Dictionary<string>): D
 		var newKey = sanitizedKeyMap[oldKey];
 		// JW.assertUndefined(updatedItems[newKey]);
 		sanitizedKeyMap[oldKey] = newKey;
-		updatedItems[newKey] = map[oldKey];
+		updatedItems[newKey] = dict[oldKey];
 		if (backKeyMap[oldKey] === undefined) {
 			removedKeys.push(oldKey);
 		}
@@ -652,17 +950,19 @@ export function tryReindex<T>(map: Dictionary<T>, keyMap: Dictionary<string>): D
 		return undefined;
 	}
 	for (var i = 0, l = removedKeys.length; i < l; ++i) {
-		delete map[removedKeys[i]];
+		delete dict[removedKeys[i]];
 	}
-	apply(map, updatedItems);
+	apply(dict, updatedItems);
 	return sanitizedKeyMap;
 }
 
 /**
- * Detects [[splice]] method arguments to adjust map contents to **newItems**.
+ * Detects `splice` method arguments to adjust dictionary contents to `newItems`.
  * Determines which item bunches should be removed and which ones should be inserted/replaced, and their keys.
- * @param newItems New map contents.
- * @returns [[splice]] method arguments. If no method call required, returns undefined.
+ *
+ * @param oldItems Old dictionary contents.
+ * @param newItems New dictionary contents.
+ * @returns `splice` method arguments. If no method call required, returns undefined.
  */
 export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>): IMap.SpliceParams<T> {
 	var removedKeys: string[] = [];
@@ -685,16 +985,15 @@ export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>
 }
 
 /**
- * Detects [[reindex]] method arguments to adjust map contents to **newItems**.
+ * Detects `reindex` method arguments to adjust dictionary contents to `newItems`.
  * Determines which keys should be assigned to all items.
- * If **newItems** contents differ from current map contents, the map will be broken.
- * @param newItems New map contents.
- * @param getKey Function which returns unique key of an item in this collection.
- * Defaults to [[getKey]].
- * If collection consists of instances of JW.Class, then you are in a good shape.
- * @param scope **getKey** call scope. Defaults to collection itself.
- * @returns **keyMap** argument of [[reindex]] method.
- * If no method call required, returns undefined.
+ * If `newItems` contents differ from current dictionary contents, the dictionary will be broken.
+ *
+ * @param oldItems Old dictionary contents.
+ * @param newItems New dictionary contents.
+ * @param getKey Function which returns unique key of an item in this dictionary.
+ * By default, identifies primitive values and `Identifiable` objects.
+ * @returns `keyMap` argument of `reindex` method. If no method call required, returns undefined.
  */
 export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => string): Dictionary<string> {
 	const newItemKeys = new VidMap<T, string>(getKey)
@@ -712,149 +1011,4 @@ export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T
 		return keyMap;
 	}
 	return undefined;
-}
-
-/**
- * Adjusts map contents to **newItems** using [[detectSplice]] and
- * [[splice]] methods.
- * @param newItems New map contents.
- */
-export function performSplice<T>(map: Dictionary<T>, newItems: Dictionary<T>) {
-	var params = detectSplice(map, newItems);
-	if (params !== undefined) {
-		trySplice(map, params.removedKeys, params.updatedItems);
-	}
-}
-
-/**
- * Adjusts map contents to **newItems** using [[detectReindex]] and
- * [[reindex]] methods.
- * @param newItems New map contents.
- * @param getKey Function which returns unique key of an item in this collection.
- * Defaults to [[getKey]].
- * If collection consists of instances of JW.Class, then you are in a good shape.
- * @param scope **getKey** call scope. Defaults to collection itself.
- */
-export function performReindex<T>(map: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => string) {
-	var keyMap = detectReindex(map, newItems, getKey);
-	if (keyMap !== undefined) {
-		tryReindex(map, keyMap);
-	}
-}
-
-/**
- * Checks for equality (===) to another map, item by item.
- */
-export function equal<T>(x: Dictionary<T>, y: Dictionary<T>): boolean {
-	if (x === y) {
-		return true;
-	}
-	var length = getLength(y);
-	for (var key in x) {
-		if ((--length < 0) || (x[key] !== y[key])) {
-			return false;
-		}
-	}
-	return length === 0;
-}
-
-/**
- * Creates a new map containing a single item.
- */
-export function single<T>(key: string, item: T): Dictionary<T> {
-	var result: Dictionary<T> = {};
-	result[key] = item;
-	return result;
-}
-
-/**
- * Given all removed and added items during map splice, returns keys which
- * were effectively removed, not replaced by other items.
- */
-export function getRemovedKeys<T>(removedItems: Dictionary<T>, addedItems: Dictionary<T>): string[] {
-	var removedKeys: string[] = [];
-	for (var key in removedItems) {
-		if (!addedItems.hasOwnProperty(key)) {
-			removedKeys.push(key);
-		}
-	}
-	return removedKeys;
-}
-
-/**
- * Creates a new map by rule: result[map[key]] === key.
- */
-export function getInverted(map: Dictionary<string>): Dictionary<string> {
-	// JW.assertMap(map, JW.assertString);
-	var result: Dictionary<string> = {};
-	for (var key in map) {
-		// JW.assertUndefined(result[map[key]]);
-		result[map[key]] = key;
-	}
-	return result;
-}
-
-export function reduce<T, U>(map: Dictionary<T>, reducer: Reducer<T, U>): U;
-export function reduce<T, U>(map: Dictionary<T>, callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
-export function reduce<T, U>(map: Dictionary<T>,
-		reducer: Reducer<T, U> | ((accumulator: U, item: T, key: string) => U), initial?: U): U {
-	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
-		value: initial,
-		callback: reducer
-	};
-	for (let key in map) {
-		value = callback(value, map[key], key);
-	}
-	return value;
-}
-
-export function max<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): T {
-	return map[maxKey(map, callback, scope, order)];
-}
-
-export function maxKey<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): string {
-	callback = callback || identity;
-	scope = scope || map;
-	let result: string;
-	let max: any;
-	for (let key in map) {
-		const item: any = callback.call(scope, map[key], key);
-		if ((result === undefined) || (order > 0 && max < item) || (order < 0 && max > item)) {
-			result = key;
-			max = item;
-		}
-	}
-	return result;
-}
-
-export function maxComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): T {
-	return map[maxKeyComparing(map, compare, scope, order)];
-}
-
-export function maxKeyComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): string {
-	compare = compare || cmpPrimitives;
-	scope = scope || map;
-	let result: string;
-	for (let key in map) {
-		if (order * compare.call(scope, map[result], map[key], result, key) < 0) {
-			result = key;
-		}
-	}
-	return result;
-}
-
-export function min<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): T {
-	return max(map, callback, scope, -order);
-}
-
-export function minKey<T>(map: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): string {
-	return maxKey(map, callback, scope, -order);
-}
-
-export function minComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): T {
-	return maxComparing(map, compare, scope, -order);
-}
-
-export function minKeyComparing<T>(map: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): string {
-	return maxKeyComparing(map, compare, scope, -order);
 }

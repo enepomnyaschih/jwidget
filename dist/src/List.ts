@@ -410,13 +410,6 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	each(callback: (item: T, index: number) => any, scope?: any) {
-		this._items.forEach(callback, scope || this);
-	}
-
-	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
 	 * @param callback Callback function.

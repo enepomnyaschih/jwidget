@@ -92,7 +92,7 @@ Checks if array is empty.
 
 	contains<T>(arr: T[], item: T): boolean
 
-Checks if the item exists in array.
+Checks if the item exists in array, i.e. if `arr.indexOf(item)` doesn't return -1.
 
 ### find
 

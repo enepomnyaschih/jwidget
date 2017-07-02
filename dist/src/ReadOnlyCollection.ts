@@ -236,11 +236,6 @@ interface ReadOnlyCollection<T> {
 	some(callback: (item: T) => boolean, scope?: any): boolean;
 
 	/**
-	 * Alias for [[forEach]].
-	 */
-	each(callback: (item: T) => any, scope?: any): void;
-
-	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
 	 * @param callback Callback function.

@@ -229,11 +229,6 @@ interface ReadOnlyList<T> extends ReadOnlyCollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	each(callback: (item: T, index: number) => any, scope?: any): void;
-
-	/**
-	 * @inheritdoc
-	 */
 	forEach(callback: (item: T, index: number) => any, scope?: any): void;
 
 	/**

@@ -384,20 +384,13 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	each(callback: (item: T, key: string) => any, scope?: any) {
-		DictionaryUtils.each(this._items, callback, scope || this);
-	}
-
-	/**
 	 * Iterates collection items. Calls specified function for all items.
 	 *
 	 * @param callback Callback function.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
 	forEach(callback: (item: T, key: string) => any, scope?: any): void {
-		DictionaryUtils.each(this._items, callback, scope || this);
+		DictionaryUtils.forEach(this._items, callback, scope || this);
 	}
 
 	/**
@@ -723,7 +716,7 @@ class Map<T> extends Class implements IMap<T> {
 			return undefined;
 		}
 		if (!this.silent) {
-			this._reindexEvent.trigger({ sender: this, keyMap: DictionaryUtils.single(oldKey, newKey) });
+			this._reindexEvent.trigger({ sender: this, keyMap: {[oldKey]: newKey} });
 			this._changeEvent.trigger({ sender: this });
 		}
 		return item;
@@ -741,7 +734,7 @@ class Map<T> extends Class implements IMap<T> {
 		}
 		this._length.set(this._length.get() - 1);
 		if (!this.silent) {
-			const spliceResult: IMap.SpliceResult<T> = { addedItems: {}, removedItems: DictionaryUtils.single(key, item) };
+			const spliceResult: IMap.SpliceResult<T> = { addedItems: {}, removedItems: {[key]: item} };
 			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
 			this._changeEvent.trigger({ sender: this });
 		}

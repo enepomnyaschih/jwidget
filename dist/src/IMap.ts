@@ -205,11 +205,6 @@ interface IMap<T> extends ICollection<T>, DestroyableReadOnlyMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	each(callback: (item: T, key: string) => any, scope?: any): void;
-
-	/**
-	 * @inheritdoc
-	 */
 	forEach(callback: (item: T, key: string) => any, scope?: any): void;
 
 	/**
