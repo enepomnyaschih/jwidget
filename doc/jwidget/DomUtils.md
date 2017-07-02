@@ -111,4 +111,4 @@ If `attrs` is true, it retains element `id` and `class`, i.e.:
 * assigns `insertEl.id` to `removeEl.id` if one is defined;
 * adds all CSS class names of `removeEl` to `insertEl`.
 
-This is how root element of [jWidget/Component] is enhanced when inserted to another Component as a child.
+This is how root element of [jwidget/Component](Component.md) is enhanced when inserted to another Component as a child.
