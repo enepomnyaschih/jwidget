@@ -279,293 +279,6 @@ export function minKeyComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T,
 }
 
 /**
- * Returns a shallow copy of the dictionary.
- *
- * @param dict Dictionary.
- * @returns Shallow copy of dictionary.
- */
-export function clone<T>(dict: Dictionary<T>): Dictionary<T> {
-	const result: Dictionary<T> = {};
-	for (let key in dict) {
-		result[key] = dict[key];
-	}
-	return result;
-}
-
-/**
- * Matches all items against criteria.
- *
- * Returns true if callback returns truthy value for all dictionary items.
- *
- * Algorithms iterates items consequently, and stops after the first item not matching the criteria.
- *
- * @param dict Dictionary.
- * @param callback Criteria callback.
- * @param scope `callback` call scope. Defaults to dictionary itself.
- */
-export function every<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
-	scope = scope || dict;
-	for (var key in dict) {
-		if (!callback.call(scope, dict[key], key)) {
-			return false;
-		}
-	}
-	return true;
-}
-
-/**
- * Matches each item against criteria.
- *
- * Returns true if callback returns truthy value for some dictionary item.
- *
- * Algorithms iterates items consequently, and stops after the first item matching the criteria.
- *
- * @param dict Dictionary.
- * @param callback Criteria callback.
- * @param scope `callback` call scope. Defaults to dictionary itself.
- */
-export function some<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
-	return !every(dict, function (item, key) {
-		return !callback.call(scope, item, key);
-	});
-}
-
-/**
- * Iterates dictionary items. Calls specified function for all items.
- *
- * @param dict Dictionary.
- * @param callback Callback function.
- * @param scope `callback` call scope. Defaults to dictionary itself.
- */
-export function forEach<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any) {
-	every(dict, function (item, key) {
-		callback.call(scope, item, key);
-		return true;
-	});
-}
-
-/**
- * Filters dictionary by criteria.
- *
- * Builds new dictionary, consisting of items for which callback returns thuthy value.
- *
- * @param dict Dictionary.
- * @param callback Criteria callback.
- * @param scope `callback` call scope. Defaults to dictionary itself.
- * @returns Filtered dictionary.
- */
-export function filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
-	var result: Dictionary<T> = {};
-	every(dict, function (item: T, key: string): boolean {
-		if (callback.call(scope, item, key)) {
-			result[key] = item;
-		}
-		return true;
-	});
-	return result;
-}
-
-/**
- * Counts the items matching criteria.
- *
- * Returns the number of items for which callback returns thuthy value.
- *
- * @param dict Dictionary.
- * @param callback Criteria callback.
- * @param scope `callback` call scope. Defaults to dictionary itself.
- * @returns Number of items.
- */
-export function count<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): number {
-	var result = 0;
-	every(dict, function (item: T, key: string): boolean {
-		if (callback.call(scope, item, key)) {
-			++result;
-		}
-		return true;
-	});
-	return result;
-}
-
-/**
- * Maps dictionary items.
- *
- * Builds new dictionary, containing results of callback call for each dictionary item.
- *
- * @param dict Dictionary.
- * @param callback Mapping function.
- * @param scope `callback` call scope. Defaults to dictionary itself.
- * @returns Mapped dictionary.
- */
-export function map<T, U>(dict: Dictionary<T>, callback: (item: T, key: string) => U, scope?: any): Dictionary<U> {
-	var result: Dictionary<U> = {};
-	every(dict, function (item: T, key: string): boolean {
-		result[key] = callback.call(scope, item, key);
-		return true;
-	});
-	return result;
-}
-
-/**
- * Returns keys of sorted items.
- *
- * Builds array of item keys, sorted by the result of callback call for each item.
- *
- * @param dict Dictionary.
- * @param callback Indexer function. Must return a comparable value, compatible with
- * `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to dictionary itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Array of indices.
- */
-export function getSortingKeys<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order?: number): string[] {
-	callback = callback || function (x) { return x; };
-	order = order || 1;
-	var pairs: any[] = [];
-	every(dict, function (item, key) {
-		pairs.push([key, callback.call(scope, item, key)]);
-		return true;
-	});
-	pairs.sort(function (x, y) {
-		return order * cmp(x[1], y[1]);
-	});
-	return pairs.map(function (pair) {
-		return pair[0];
-	});
-}
-
-/**
- * Returns indices of sorted items.
- *
- * Builds array of item indices, sorted by comparer.
- *
- * @param dict Dictionary.
- * @param compare Comparer function. Must return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `comparer` call scope. Defaults to dictionary itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Array of indices.
- */
-export function getSortingKeysComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string[] {
-	compare = compare || cmp;
-	order = order || 1;
-	var pairs: any[] = [];
-	every(dict, function (item, key) {
-		pairs.push([key, item]);
-		return true;
-	}, scope);
-	pairs.sort(function (x, y) {
-		return order * compare.call(scope, x[1], y[1], x[0], y[0]);
-	});
-	return pairs.map(function (pair) {
-		return pair[0];
-	});
-}
-
-/**
- * Builds and returns a new array consisting of dictionary items sorted by the result of
- * callback call for each item.
- *
- * @param dict Dictionary.
- * @param callback Indexer function. Must return a comparable value, compatible with
- * `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Sorted array.
- */
-export function toSorted<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order?: number): T[] {
-	return getSortingKeys(dict, callback, scope, order).map(function (key): T {
-		return dict[key];
-	});
-}
-
-/**
- * Builds and returns a new array consisting of dictionary items sorted by comparer.
- *
- * @param dict Dictionary.
- * @param compare Comparer function. Must return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `comparer` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Sorted array.
- */
-export function toSortedComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T[] {
-	return getSortingKeysComparing(dict, compare, scope, order).map(function (key): T {
-		return dict[key];
-	});
-}
-
-/**
- * Converts dictionary to array.
- *
- * Builds new array consisting of dictionary items in arbitrary order.
- *
- * @param dict Dictionary.
- * @returns Dictionary items.
- */
-export function toArray<T>(dict: Dictionary<T>): T[] {
-	var result: T[] = [];
-	every(dict, function (item) {
-		result.push(item);
-		return true;
-	});
-	return result;
-}
-
-/**
- * Indexes dictionary items.
- *
- * Builds new dictionary by rule: key is the result of indexer function call, value is the corresponding item.
- *
- * @param dict Dictionary.
- * @param callback Indexer function.
- * @param scope `callback` call scope. Defaults to array itself.
- * @returns Dictionary index.
- */
-export function index<T>(dict: Dictionary<T>, callback: (item: T, key: string) => string, scope?: any): Dictionary<T> {
-	var result: Dictionary<T> = {};
-	every(dict, function (item, oldKey) {
-		var key = callback.call(scope, item, oldKey);
-		if (key != null) {
-			result[key] = item;
-		}
-		return true;
-	}, scope);
-	return result;
-}
-
-/**
- * Applies a function against an accumulator and each item in the dictionary (from left to right)
- * to reduce it to a single value.
- *
- * @param dict Dictionary.
- * @param reducer Standard reducer. See `jwidget/Reducer` for examples.
- * @returns Final accumulator value.
- */
-export function reduce<T, U>(dict: Dictionary<T>, reducer: Reducer<T, U>): U;
-
-/**
- * Applies a function against an accumulator and each item in the dictionary (from left to right)
- * to reduce it to a single value.
- *
- * @param dict Dictionary.
- * @param callback Function to execute on each item in the dictionary.
- * @param initial Value to use as the first argument to the first call of the callback.
- * @returns Final accumulator value.
- */
-export function reduce<T, U>(dict: Dictionary<T>, callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
-export function reduce<T, U>(dict: Dictionary<T>,
-		reducer: Reducer<T, U> | ((accumulator: U, item: T, key: string) => U), initial?: U): U {
-	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
-		value: initial,
-		callback: reducer
-	};
-	for (let key in dict) {
-		value = callback(value, dict[key], key);
-	}
-	return value;
-}
-
-/**
  * Replaces item with specified key. If dictionary doesn't contain such key, new item is added.
  *
  * @param dict Dictionary.
@@ -721,11 +434,298 @@ export function reindex<T>(dict: Dictionary<T>, keyMap: Dictionary<string>): Dic
 }
 
 /**
+ * Returns a shallow copy of the dictionary.
+ *
+ * @param dict Dictionary.
+ * @returns Shallow copy of dictionary.
+ */
+export function clone<T>(dict: Dictionary<T>): Dictionary<T> {
+	const result: Dictionary<T> = {};
+	for (let key in dict) {
+		result[key] = dict[key];
+	}
+	return result;
+}
+
+/**
+ * Matches all items against criteria.
+ *
+ * Returns true if callback returns truthy value for all dictionary items.
+ *
+ * Algorithms iterates items consequently, and stops after the first item not matching the criteria.
+ *
+ * @param dict Dictionary.
+ * @param callback Criteria callback.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ */
+export function every<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
+	scope = scope || dict;
+	for (var key in dict) {
+		if (!callback.call(scope, dict[key], key)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
+ * Matches each item against criteria.
+ *
+ * Returns true if callback returns truthy value for some dictionary item.
+ *
+ * Algorithms iterates items consequently, and stops after the first item matching the criteria.
+ *
+ * @param dict Dictionary.
+ * @param callback Criteria callback.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ */
+export function some<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
+	return !every(dict, function (item, key) {
+		return !callback.call(scope, item, key);
+	});
+}
+
+/**
+ * Iterates dictionary items. Calls specified function for all items.
+ *
+ * @param dict Dictionary.
+ * @param callback Callback function.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ */
+export function forEach<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any) {
+	every(dict, function (item, key) {
+		callback.call(scope, item, key);
+		return true;
+	});
+}
+
+/**
+ * Filters dictionary by criteria.
+ *
+ * Builds new dictionary, consisting of items for which callback returns thuthy value.
+ *
+ * @param dict Dictionary.
+ * @param callback Criteria callback.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @returns Filtered dictionary.
+ */
+export function filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
+	var result: Dictionary<T> = {};
+	every(dict, function (item: T, key: string): boolean {
+		if (callback.call(scope, item, key)) {
+			result[key] = item;
+		}
+		return true;
+	});
+	return result;
+}
+
+/**
+ * Counts the items matching criteria.
+ *
+ * Returns the number of items for which callback returns thuthy value.
+ *
+ * @param dict Dictionary.
+ * @param callback Criteria callback.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @returns Number of items.
+ */
+export function count<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): number {
+	var result = 0;
+	every(dict, function (item: T, key: string): boolean {
+		if (callback.call(scope, item, key)) {
+			++result;
+		}
+		return true;
+	});
+	return result;
+}
+
+/**
+ * Maps dictionary items.
+ *
+ * Builds new dictionary, containing results of callback call for each dictionary item.
+ *
+ * @param dict Dictionary.
+ * @param callback Mapping function.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @returns Mapped dictionary.
+ */
+export function map<T, U>(dict: Dictionary<T>, callback: (item: T, key: string) => U, scope?: any): Dictionary<U> {
+	var result: Dictionary<U> = {};
+	every(dict, function (item: T, key: string): boolean {
+		result[key] = callback.call(scope, item, key);
+		return true;
+	});
+	return result;
+}
+
+/**
+ * Returns keys of sorted items.
+ *
+ * Builds array of item keys, sorted by the result of callback call for each item.
+ *
+ * @param dict Dictionary.
+ * @param callback Indexer function. Must return a comparable value, compatible with
+ * `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to dictionary itself.
+ * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+ * @returns Array of indices.
+ */
+export function getSortingKeys<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order?: number): string[] {
+	callback = callback || function (x) { return x; };
+	order = order || 1;
+	var pairs: any[] = [];
+	every(dict, function (item, key) {
+		pairs.push([key, callback.call(scope, item, key)]);
+		return true;
+	});
+	pairs.sort(function (x, y) {
+		return order * cmp(x[1], y[1]);
+	});
+	return pairs.map(function (pair) {
+		return pair[0];
+	});
+}
+
+/**
+ * Returns keys of sorted items.
+ *
+ * Builds array of item keys, sorted by comparer.
+ *
+ * @param dict Dictionary.
+ * @param compare Comparer function. Must return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `comparer` call scope. Defaults to dictionary itself.
+ * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+ * @returns Array of keys.
+ */
+export function getSortingKeysComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string[] {
+	compare = compare || cmp;
+	order = order || 1;
+	var pairs: any[] = [];
+	every(dict, function (item, key) {
+		pairs.push([key, item]);
+		return true;
+	}, scope);
+	pairs.sort(function (x, y) {
+		return order * compare.call(scope, x[1], y[1], x[0], y[0]);
+	});
+	return pairs.map(function (pair) {
+		return pair[0];
+	});
+}
+
+/**
+ * Builds and returns a new array consisting of dictionary items sorted by the result of
+ * callback call for each item.
+ *
+ * @param dict Dictionary.
+ * @param callback Indexer function. Must return a comparable value, compatible with
+ * `cmp`. Returns item itself by default.
+ * @param scope `callback` call scope. Defaults to array itself.
+ * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+ * @returns Sorted array.
+ */
+export function toSorted<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order?: number): T[] {
+	return getSortingKeys(dict, callback, scope, order).map(function (key): T {
+		return dict[key];
+	});
+}
+
+/**
+ * Builds and returns a new array consisting of dictionary items sorted by comparer.
+ *
+ * @param dict Dictionary.
+ * @param compare Comparer function. Must return positive value if t1 > t2;
+ * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
+ * @param scope `comparer` call scope. Defaults to array itself.
+ * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+ * @returns Sorted array.
+ */
+export function toSortedComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T[] {
+	return getSortingKeysComparing(dict, compare, scope, order).map(function (key): T {
+		return dict[key];
+	});
+}
+
+/**
+ * Converts dictionary to array.
+ *
+ * Builds new array consisting of dictionary items in arbitrary order.
+ *
+ * @param dict Dictionary.
+ * @returns Dictionary items.
+ */
+export function toArray<T>(dict: Dictionary<T>): T[] {
+	var result: T[] = [];
+	every(dict, function (item) {
+		result.push(item);
+		return true;
+	});
+	return result;
+}
+
+/**
+ * Indexes dictionary items.
+ *
+ * Builds new dictionary by rule: key is the result of indexer function call, value is the corresponding item.
+ *
+ * @param dict Dictionary.
+ * @param callback Indexer function.
+ * @param scope `callback` call scope. Defaults to array itself.
+ * @returns Dictionary index.
+ */
+export function index<T>(dict: Dictionary<T>, callback: (item: T, key: string) => string, scope?: any): Dictionary<T> {
+	var result: Dictionary<T> = {};
+	every(dict, function (item, oldKey) {
+		var key = callback.call(scope, item, oldKey);
+		if (key != null) {
+			result[key] = item;
+		}
+		return true;
+	}, scope);
+	return result;
+}
+
+/**
+ * Applies a function against an accumulator and each item in the dictionary (from left to right)
+ * to reduce it to a single value.
+ *
+ * @param dict Dictionary.
+ * @param reducer Standard reducer. See `jwidget/Reducer` for examples.
+ * @returns Final accumulator value.
+ */
+export function reduce<T, U>(dict: Dictionary<T>, reducer: Reducer<T, U>): U;
+
+/**
+ * Applies a function against an accumulator and each item in the dictionary (from left to right)
+ * to reduce it to a single value.
+ *
+ * @param dict Dictionary.
+ * @param callback Function to execute on each item in the dictionary.
+ * @param initial Value to use as the first argument to the first call of the callback.
+ * @returns Final accumulator value.
+ */
+export function reduce<T, U>(dict: Dictionary<T>, callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
+export function reduce<T, U>(dict: Dictionary<T>,
+		reducer: Reducer<T, U> | ((accumulator: U, item: T, key: string) => U), initial?: U): U {
+	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
+		value: initial,
+		callback: reducer
+	};
+	for (let key in dict) {
+		value = callback(value, dict[key], key);
+	}
+	return value;
+}
+
+/**
  * Checks two dictionaries for equality, item by item (===).
  *
  * @param x First dictionary.
  * @param y Second dictionary.
- * @returns Arrays are equal.
+ * @returns Dictionaries are equal.
  */
 export function equal<T>(x: Dictionary<T>, y: Dictionary<T>): boolean {
 	if (x === y) {
@@ -738,40 +738,6 @@ export function equal<T>(x: Dictionary<T>, y: Dictionary<T>): boolean {
 		}
 	}
 	return length === 0;
-}
-
-/**
- * Based on the removed and added items during dictionary splice, returns keys which
- * were effectively removed, not replaced by other items.
- *
- * @param removedItems Removed items.
- * @param addedItems Added items.
- * @returns Effectively removed keys.
- */
-export function getRemovedKeys<T>(removedItems: Dictionary<T>, addedItems: Dictionary<T>): string[] {
-	var removedKeys: string[] = [];
-	for (var key in removedItems) {
-		if (!addedItems.hasOwnProperty(key)) {
-			removedKeys.push(key);
-		}
-	}
-	return removedKeys;
-}
-
-/**
- * Creates a new dictionary by rule: `result[dict[key]] === key`.
- *
- * @param dict Dictionary.
- * @returns The inverted dictionary.
- */
-export function getInverted(dict: Dictionary<string>): Dictionary<string> {
-	// JW.assertMap(dict, JW.assertString);
-	var result: Dictionary<string> = {};
-	for (var key in dict) {
-		// JW.assertUndefined(result[dict[key]]);
-		result[dict[key]] = key;
-	}
-	return result;
 }
 
 /**
@@ -1011,4 +977,38 @@ export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T
 		return keyMap;
 	}
 	return undefined;
+}
+
+/**
+ * Based on the removed and added items during dictionary splice, returns keys which
+ * were effectively removed, not replaced by other items.
+ *
+ * @param removedItems Removed items.
+ * @param addedItems Added items.
+ * @returns Effectively removed keys.
+ */
+export function getRemovedKeys<T>(removedItems: Dictionary<T>, addedItems: Dictionary<T>): string[] {
+	var removedKeys: string[] = [];
+	for (var key in removedItems) {
+		if (!addedItems.hasOwnProperty(key)) {
+			removedKeys.push(key);
+		}
+	}
+	return removedKeys;
+}
+
+/**
+ * Creates a new dictionary by rule: `result[dict[key]] === key`.
+ *
+ * @param dict Dictionary.
+ * @returns The inverted dictionary.
+ */
+export function getInverted(dict: Dictionary<string>): Dictionary<string> {
+	// JW.assertMap(dict, JW.assertString);
+	var result: Dictionary<string> = {};
+	for (var key in dict) {
+		// JW.assertUndefined(result[dict[key]]);
+		result[dict[key]] = key;
+	}
+	return result;
 }

@@ -3,10 +3,10 @@
 # Array utilities
 
 [](BEGIN_INDEX)
-* **Getter methods**
+* **Getter functions**
     * [getLast](#getlast)
     * [isEmpty](#isempty)
-* **Item search methods**
+* **Item search functions**
     * [contains](#contains)
     * [find](#find)
     * [findIndex](#findindex)
@@ -19,16 +19,7 @@
     * [minIndex](#minindex)
     * [minComparing](#mincomparing)
     * [minIndexComparing](#minindexcomparing)
-* **Immutable array algorithms**
-    * [count](#count)
-    * [getSortingIndices](#getsortingindices)
-    * [getSortingIndicesComparing](#getsortingindicescomparing)
-    * [toSorted](#tosorted)
-    * [toSortedComparing](#tosortedcomparing)
-    * [toReversed](#toreversed)
-    * [index](#index)
-    * [reduce](#reduce)
-* **Array modification methods**
+* **Array modification functions**
     * [add](#add)
     * [addAll](#addall)
     * [set](#set)
@@ -42,7 +33,15 @@
     * [reorder](#reorder)
     * [sort](#sort)
     * [sortComparing](#sortcomparing)
-* **Other methods**
+* **Other functions**
+    * [count](#count)
+    * [getSortingIndices](#getsortingindices)
+    * [getSortingIndicesComparing](#getsortingindicescomparing)
+    * [toSorted](#tosorted)
+    * [toSortedComparing](#tosortedcomparing)
+    * [toReversed](#toreversed)
+    * [index](#index)
+    * [reduce](#reduce)
     * [equal](#equal)
     * [backEvery](#backevery)
     * [isIdentity](#isidentity)
@@ -56,7 +55,7 @@
     * [tryClear](#tryclear)
     * [trySplice](#trysplice)
     * [tryReorder](#tryreorder)
-* **Low-level array analysing methods (primarily for internal usage)**
+* **Low-level array analysing functions (primarily for internal usage)**
     * [detectSplice](#detectsplice)
     * [detectFilter](#detectfilter)
     * [detectReorder](#detectreorder)
@@ -72,7 +71,7 @@
 
 jWidget utilities for native JavaScript arrays. Some utilities duplicate the functions of [Underscore.js](http://underscorejs.org) and [Lodash](https://lodash.com), but still may come in handy if you want to keep dependency list short.
 
-## Getter methods
+## Getter functions
 
 ### getLast
 
@@ -86,7 +85,7 @@ Returns the last array item. If array is empty, returns undefined.
 
 Checks if array is empty.
 
-## Item search methods
+## Item search functions
 
 ### contains
 
@@ -118,7 +117,7 @@ Algorithms iterates items consequently, and stops after the first item matching 
 
 	binarySearch<T>(arr: T[], value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number
 
-Determines index of the first item which is more (or less if `order` < 0) than the specified value by `compare` function, using binary search. Array must be sorted by `compare` function. Can be used for item insertion easily. If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
+Determines index of the first item which is more (or less if `order` < 0) than the specified value by `compare` function, using binary search. Array must be sorted by `compare` function. Can be used for item insertion easily. If you want to use this function for item removal, you must look at previous item and compare it to `value` first.
 
 Comparer function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to [cmp](index.md#cmp).
 
@@ -204,92 +203,7 @@ Comparer function must return positive value if t1 > t2; negative value if t1 < 
 
 Pass positive `order` to find the lowest value, and negative to find the highest one.
 
-## Immutable array algorithms
-
-### count
-
-	count<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number
-
-Counts items matching criteria.
-
-Returns the number of items for which callback returns [truthy](index.md#istruthy) value.
-
-### getSortingIndices
-
-	getSortingIndices<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]
-
-Returns indices of sorted items.
-
-Builds array of item indices, sorted by the result of callback call for each item.
-
-Callback function must return a comparable value, compatible with [cmp](index.md#cmp). Returns item itself by default.
-
-Pass positive order for ascending sorting, negative order for descending sorting.
-
-### getSortingIndicesComparing
-
-	getSortingIndicesComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number[]
-
-Returns indices of sorted items.
-
-Builds array of item indices, sorted by comparer.
-
-Comparer function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to [cmp](index.md#cmp).
-
-Pass positive order for ascending sorting, negative order for descending sorting.
-
-### toSorted
-
-	toSorted<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): T[]
-
-Builds and returns a new array consisting of original array items sorted by the result of callback call for each item.
-
-Callback function must return a comparable value, compatible with [cmp](index.md#cmp). Returns item itself by default.
-
-Pass positive order for ascending sorting, negative order for descending sorting.
-
-As opposed to [sort](#sort), does not modify the array.
-
-### toSortedComparing
-
-	toSortedComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T[]
-
-Builds and returns a new array consisting of original array items sorted by comparer.
-
-Comparer function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to [cmp](index.md#cmp).
-
-Pass positive order for ascending sorting, negative order for descending sorting.
-
-As opposed to [sortComparing](#sortComparing), does not modify the array.
-
-### toReversed
-
-	toReversed<T>(arr: T[]): T[]
-
-Builds a new array containing items of this array in reversed order.
-
-As opposed to `arr.reverse()`, does not modify the array.
-
-### index
-
-	index<T>(arr: T[], callback: (item: T, index: number) => string, scope?: any): Dictionary<T>
-
-Reference: [jwidget/Dictionary](Dictionary.md).
-
-Indexes collection.
-
-Builds and returns a new map by rule: key is the result of the indexer function call, value is the corresponding item.
-
-### reduce
-
-	reduce<T, U>(arr: T[], reducer: Reducer<T, U>): U
-	reduce<T, U>(arr: T[], callback: (accumulator: U, item: T, index: number) => U, initial: U): U
-
-Reference: [jwidget/Reducer](Reducer.md).
-
-Applies a function against an accumulator and each item in the array (from left to right) to reduce it to a single value. Compared to standard `arr.reduce`, also supports [jwidget/Reducer](Reducer.md) as an argument.
-
-## Array modification methods
+## Array modification functions
 
 ### add
 
@@ -407,7 +321,90 @@ Sorts array by comparer.
 
 Pass positive order for ascending sorting, negative order for descending sorting.
 
-## Other methods
+## Other functions
+
+### count
+
+	count<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number
+
+Counts items matching criteria.
+
+Returns the number of items for which callback returns [truthy](index.md#istruthy) value.
+
+### getSortingIndices
+
+	getSortingIndices<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]
+
+Returns indices of sorted items.
+
+Builds array of item indices, sorted by the result of callback call for each item.
+
+Callback function must return a comparable value, compatible with [cmp](index.md#cmp). Returns item itself by default.
+
+Pass positive order for ascending sorting, negative order for descending sorting.
+
+### getSortingIndicesComparing
+
+	getSortingIndicesComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number[]
+
+Returns indices of sorted items.
+
+Builds array of item indices, sorted by comparer.
+
+Comparer function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to [cmp](index.md#cmp).
+
+Pass positive order for ascending sorting, negative order for descending sorting.
+
+### toSorted
+
+	toSorted<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): T[]
+
+Builds and returns a new array consisting of original array items sorted by the result of callback call for each item.
+
+Callback function must return a comparable value, compatible with [cmp](index.md#cmp). Returns item itself by default.
+
+Pass positive order for ascending sorting, negative order for descending sorting.
+
+As opposed to [sort](#sort), does not modify the array.
+
+### toSortedComparing
+
+	toSortedComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T[]
+
+Builds and returns a new array consisting of original array items sorted by comparer.
+
+Comparer function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to [cmp](index.md#cmp).
+
+Pass positive order for ascending sorting, negative order for descending sorting.
+
+As opposed to [sortComparing](#sortComparing), does not modify the array.
+
+### toReversed
+
+	toReversed<T>(arr: T[]): T[]
+
+Builds a new array containing items of this array in reversed order.
+
+As opposed to `arr.reverse()`, does not modify the array.
+
+### index
+
+	index<T>(arr: T[], callback: (item: T, index: number) => string, scope?: any): Dictionary<T>
+
+Reference: [jwidget/Dictionary](Dictionary.md).
+
+Indexes collection.
+
+Builds and returns a new map by rule: key is the result of the indexer function call, value is the corresponding item.
+
+### reduce
+
+	reduce<T, U>(arr: T[], reducer: Reducer<T, U>): U
+	reduce<T, U>(arr: T[], callback: (accumulator: U, item: T, index: number) => U, initial: U): U
+
+Reference: [jwidget/Reducer](Reducer.md).
+
+Applies a function against an accumulator and each item in the array (from left to right) to reduce it to a single value. Compared to standard `arr.reduce`, also supports [jwidget/Reducer](Reducer.md) as an argument.
 
 ### equal
 
@@ -487,7 +484,7 @@ The same as [splice](#splice), but returns undefined if the array stays unmodifi
 
 The same as [reorder](#reorder), but returns undefined if the array stays unmodified. Else returns old array contents.
 
-## Low-level array analysing methods (primarily for internal usage)
+## Low-level array analysing functions (primarily for internal usage)
 
 ### detectSplice
 
