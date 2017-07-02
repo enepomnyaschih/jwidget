@@ -147,7 +147,7 @@ export function hasClass(el: HTMLElement, cls: string): boolean {
 }
 
 /**
- * Add the specified CSS class name to element unless it already contains it.
+ * Adds the specified CSS class name to element unless it already contains it.
  *
  * @param el HTML element.
  * @param cls Single CSS class name.

@@ -80,7 +80,7 @@ Checks if element contains the specified CSS class name.
 
     addClass(el: HTMLElement, cls: string)
 
-Add the specified CSS class name to element unless it already contains it.
+Adds the specified CSS class name to element unless it already contains it.
 
 ### parseHtml
 
@@ -111,4 +111,4 @@ If `attrs` is true, it retains element `id` and `class`, i.e.:
 * assigns `insertEl.id` to `removeEl.id` if one is defined;
 * adds all CSS class names of `removeEl` to `insertEl`.
 
-This is how [jWidget/Component]'s root element is enhanced when inserted to another Component as a child.
+This is how root element of [jWidget/Component] is enhanced when inserted to another Component as a child.
