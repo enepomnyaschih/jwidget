@@ -24,7 +24,7 @@ import {Binding, UPDATE, WATCH} from '../index';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
 import DestroyableBindable from '../DestroyableBindable';
-import {isLifeInput} from '../DomUtils';
+import {isTextInput} from '../DomUtils';
 import IProperty from '../IProperty';
 import Property from '../Property';
 import Bindable from '../Bindable';
@@ -69,7 +69,7 @@ class ValueListener extends Class {
 		super();
 		this.update = () => this._update();
 		this._target = config.target || this.own(new Property<string>());
-		this._simple = config.simple || !isLifeInput(el);
+		this._simple = config.simple || !isTextInput(el);
 		this.update();
 		this.el.bind("change", this.update);
 		if (!this._simple) {

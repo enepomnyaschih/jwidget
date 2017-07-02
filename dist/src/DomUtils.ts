@@ -28,10 +28,8 @@ import * as DictionaryUtils from './DictionaryUtils';
 /**
  * Some code is taken from jQuery. We are not happy with standard jQuery.parseHtml, because it is slow.
  * We implement an own parseHtml which omits a good bunch of useless manupulations.
- *
- * @hidden
  */
-var wrapMap: Dictionary<any[]> = {
+const wrapMap: Dictionary<any[]> = {
 	option: [1, "<select multiple='multiple'>", "</select>"],
 	thead: [1, "<table>", "</table>"],
 	col: [2, "<table><colgroup>", "</colgroup></table>"],
@@ -40,47 +38,28 @@ var wrapMap: Dictionary<any[]> = {
 	_default: [0, "", ""]
 };
 
-/**
- * @hidden
- */
-var rtagName = /^<([\w:]+)/;
+const rtagName = /^<([\w:]+)/;
+
+let _fragment: DocumentFragment = null;
 
 /**
- * @hidden
- */
-var _fragment: DocumentFragment = null;
-
-/**
- * Defines HTML templates for specified [[JW.UI.Component]] subclass.
+ * Defines HTML templates for specified `Component` subclass.
+ * See `template` for details.
  *
- * You can define multiple templates for any subclass of [[JW.UI.Component]]. Each template has a name.
- * You can get component template via [[JW.UI.Component.templates|templates]] dictionary.
- *
- * Templates are inherited along with component classes.
- *
- * Each component class has at least one template, its name is `main`. This is the main template which is
- * used to render the component. By default, `main` equals to `<div></div>`.
- * Usually, `main` template is enough for the majority of components. This template is applied automatically,
- * unlike other templates which should be applied manually.
- *
- * This function is called automatically if you attach `jw.html` files via
- * <a href="https://github.com/enepomnyaschih/jwsdk/wiki" target="_blank">jWidget SDK</a>. See
- * "Getting started. Part 7. Project infrastructure" guide for details.
- *
- * @param cls [[JW.UI.Component]] subclass.
+ * @param cls `Component` subclass.
  * @param tpls Templates to add or override.
  */
 export function template(cls: any, tpls: Dictionary<string>) {
 	if (cls !== Component && !Component.prototype.templates) {
 		template(Component, {main: '<div></div>'});
 	}
-	var templates = DictionaryUtils.map(tpls, function(html) {
+	const templates = DictionaryUtils.map(tpls, function(html) {
 		return new HtmlTemplate(html);
 	});
 	if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls) {
 		apply(cls.prototype.Templates.prototype, templates);
 	} else {
-		var __ = function() { }
+		const __ = function() { }
 		__.prototype = (cls.prototype.Templates || Class).prototype;
 		cls.prototype.Templates = function() { };
 		cls.prototype.Templates.prototype = new (<typeof Object>__)();
@@ -91,44 +70,44 @@ export function template(cls: any, tpls: Dictionary<string>) {
 }
 
 /**
- * Checks if v is a <a href="http://api.jquery.com/" target="_blank">jQuery</a> element.
+ * Checks if value is a jQuery element.
  */
-export function isElement(v: any): boolean {
-	return v instanceof jQuery.fn.init;
+export function isElement(value: any): boolean {
+	return value instanceof jQuery.fn.init;
 }
 
-/**
- * @hidden
- */
-export function preventDefault(event: JQueryEventObject) {
-	event.preventDefault();
-}
+const lifeInputTags = ["text", "password", "email", "number", "search", "tel", "url"];
 
 /**
- * @hidden
+ * Checks if the element is a text input.
+ *
+ * @param el Element.
+ * @returns Element is a text input.
  */
-export function isLifeInput(el: JQuery): boolean;
+export function isTextInput(el: JQuery): boolean;
 
 /**
- * @hidden
+ * Checks if the element is a text input.
+ *
+ * @param el Element.
+ * @returns Element is a text input.
  */
-export function isLifeInput(el: Element): boolean;
-
-/**
- * @hidden
- */
-export function isLifeInput(el: any): boolean {
-	var $el: JQuery = jQuery(el);
-	var tagName = $el[0].tagName.toLowerCase();
+export function isTextInput(el: Element): boolean;
+export function isTextInput(el: any): boolean {
+	const $el: JQuery = jQuery(el);
+	const tagName = $el[0].tagName.toLowerCase();
 	if (tagName === "input") {
-		var type = $el.attr("type");
-		return (type === "text") || (type !== "password");
+		return lifeInputTags.indexOf($el.attr("type").toLowerCase()) !== -1;
 	}
 	return tagName === "textarea";
 }
 
 /**
- * @hidden
+ * Inserts element as a child at specified position.
+ *
+ * @param parent Element to insert into.
+ * @param child Element to insert.
+ * @param index Position to insert at.
  */
 export function insert(parent: Node, child: Node, index?: number) {
 	if ((index == null) || (index >= parent.childNodes.length)) {
@@ -139,7 +118,9 @@ export function insert(parent: Node, child: Node, index?: number) {
 }
 
 /**
- * @hidden
+ * Removes element from DOM.
+ *
+ * @param el Element to remove.
  */
 export function remove(el: Node) {
 	if (el.parentNode) {
@@ -148,7 +129,10 @@ export function remove(el: Node) {
 }
 
 /**
- * @hidden
+ * Parses HTML and builds a new DOM element.
+ *
+ * @param html HTML code to parse.
+ * @returns New HTML element.
  */
 export function parseHtml(html: string): HTMLElement {
 	if (_fragment) {
@@ -168,14 +152,21 @@ export function parseHtml(html: string): HTMLElement {
 }
 
 /**
- * @hidden
+ * Checks if element contains the specified CSS class name.
+ *
+ * @param el HTML element.
+ * @param cls Single CSS class name.
+ * @return Element contains this CSS class name.
  */
 export function hasClass(el: HTMLElement, cls: string): boolean {
 	return (" " + el.className + " ").indexOf(cls) !== -1;
 }
 
 /**
- * @hidden
+ * Add the specified CSS class name to element unless it already contains it.
+ *
+ * @param el HTML element.
+ * @param cls Single CSS class name.
  */
 export function addClass(el: HTMLElement, cls: string) {
 	if (!el.className) {
@@ -186,7 +177,10 @@ export function addClass(el: HTMLElement, cls: string) {
 }
 
 /**
- * @hidden
+ * Checks if current HTML document body contains the specified element.
+ *
+ * @param el HTML element.
+ * @returns Element is in DOM.
  */
 export function inDom(el: HTMLElement): boolean {
 	while (el) {
@@ -199,20 +193,28 @@ export function inDom(el: HTMLElement): boolean {
 }
 
 /**
- * @hidden
+ * Checks recursively if one HTML element is a descendant of another element.
+ *
+ * @param descendantEl Descendant HTML element to check.
+ * @param ancestorEl Ancestor HTML element to check.
+ * @returns Element is a descendant of another element.
  */
-export function inEl(childEl: HTMLElement, parentEl: HTMLElement): boolean {
-	while (childEl) {
-		if (childEl === parentEl) {
+export function inEl(descendantEl: HTMLElement, ancestorEl: HTMLElement): boolean {
+	while (descendantEl) {
+		if (descendantEl === ancestorEl) {
 			return true;
 		}
-		childEl = childEl.parentElement;
+		descendantEl = descendantEl.parentElement;
 	}
 	return false;
 }
 
 /**
- * @hidden
+ * Replaces one HTML element with another.
+ *
+ * @param removeEl Element to replace.
+ * @param insertEl Element to replace `removeEl` with.
+ * @param attrs If true, retains element `id` and `class`
  */
 export function replace(removeEl: HTMLElement, insertEl: HTMLElement, attrs?: boolean) {
 	var parentEl = removeEl.parentNode;
@@ -230,9 +232,6 @@ export function replace(removeEl: HTMLElement, insertEl: HTMLElement, attrs?: bo
 	}
 }
 
-/**
- * @hidden
- */
 export function _afterAppend(child: { _afterAppend: () => void }) {
 	child._afterAppend();
 }
