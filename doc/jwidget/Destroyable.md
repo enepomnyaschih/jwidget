@@ -9,7 +9,7 @@
 ## Hierarchy
 
 * interface **jwidget/Destroyable**
-** The majority of jWidget classes implement this interface
+    * The majority of jWidget classes implement this interface
 
 ## Description
 
