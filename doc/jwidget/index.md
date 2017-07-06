@@ -2,6 +2,40 @@
 
 # Core utilities
 
+# Identifiable
+
+[](BEGIN_INDEX)
+* **Enumerations**
+    * [Binding](#binding)
+    * [CollectionFlags](#collectionflags)
+* **Value test functions**
+    * [isUndefined](#isundefined)
+    * [isDefined](#isdefined)
+    * [isNull](#isnull)
+    * [isNotNull](#isnotnull)
+    * [isNil](#isnil)
+    * [isNotNil](#isnotnil)
+    * [isFalsy](#isfalsy)
+    * [isTruthy](#istruthy)
+    * [isInt](#isint)
+    * [isNumber](#isnumber)
+    * [isString](#isstring)
+    * [isBoolean](#isboolean)
+    * [isFunction](#isfunction)
+    * [isArray](#isarray)
+    * [isRegExp](#isregexp)
+    * [isDate](#isdate)
+* **Other functions**
+    * [def](#def)
+    * [defn](#defn)
+    * [apply](#apply)
+    * [cmp](#cmp)
+    * [get](#get)
+    * [newIid](#newiid)
+    * [iidStr](#iidstr)
+    * [destroy](#destroy)
+[](END_INDEX)
+
 ## Consumption
 
 	import * as JW from "jwidget";
@@ -255,6 +289,12 @@ Example:
 
 	get(obj, ["abc", 0, "qwe"]); // "xyz"
 	get(obj, "abc"); // the array
+
+### newIid
+
+	newIid(): number
+
+Returns a new auto-incrementing instance identifier for [jwidget/Identifiable](Identifiable.md) interface.
 
 ### iidStr
 

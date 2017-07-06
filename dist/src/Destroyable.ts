@@ -19,7 +19,7 @@
 */
 
 /**
- * Object which has **destroy** method. Can be aggregated in [[IClass]] via [[IClass.own]] method.
+ * Object which has `destroy` method. Can be aggregated in `IClass` via `own` method.
  */
 interface Destroyable {
 	/**

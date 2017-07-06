@@ -83,7 +83,7 @@ Converts hyphen-style to camelStyle.
 
 Converts camelStyle to hyphen-style.
 
-    hyphen('iLoveJs')  // ''i-love-js
+    hyphen('iLoveJs')  // 'i-love-js'
 
 ### parseClass
 

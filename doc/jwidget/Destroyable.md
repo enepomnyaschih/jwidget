@@ -9,14 +9,11 @@
 ## Hierarchy
 
 * interface **jwidget/Destroyable**
-	* interface [jwidget/IClass](IClass.md)
-		* class [jwidget/Class](Class.md)
-
-The majority of jWidget classes and interfaces inherit these three.
+** The majority of jWidget classes implement this interface
 
 ## Description
 
-Object which has [destroy](#destroy) method. Can be aggregated in [jwidget/IClass](IClass.md) via **own** method.
+Object which has [destroy](#destroy) method. Can be aggregated in [jwidget/IClass](IClass.md) via [own](IClass.md#own) method.
 
 ## Methods
 
