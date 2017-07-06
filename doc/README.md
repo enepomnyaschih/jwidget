@@ -33,25 +33,25 @@ jWidget is a truly object-oriented solution which doesn't rely on inefficient an
     import val from "jwidget/ui/val";
 
     @template(
-        '<div class="greeter">' +
+        '<div jwclass="greeter">' +
             '<p>Your name: <input jwid="name-field"></p>' +
             '<div jwid="greeting"></div>' +
         '</div>'
     )
     class Greeter extends Component {
-        private name = this.own(new Property("guest"));
+        private name = new Property("guest");
 
         protected renderNameField(el: JQuery) {
             // Bind element value to the property
-            this.own(val(el, this.name, TWOWAY));
+            val(el, this.name, TWOWAY);
         },
 
         protected renderGreeting(el: JQuery) {
             // Build greeting message by the property
-            const text = this.own(this.name.map((name) => "Hello, " + name + "!"));
+            const text = this.name.map((name) => "Hello, " + name + "!");
 
             // Bind element text to the message
-            this.own(text(el, text));
+            text(el, text);
         }
     });
 
