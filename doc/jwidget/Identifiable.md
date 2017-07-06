@@ -7,7 +7,7 @@
 ## Hierarchy
 
 * interface **jwidget/Identifiable**
-** interface [jwidget/IClass](IClass.md)
+    * interface [jwidget/IClass](IClass.md)
 
 ## Description
 
