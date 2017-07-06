@@ -26,6 +26,7 @@ jWidget 2 is a migration of original jWidget framework to a modern toolkit inclu
 
 jWidget is a truly object-oriented solution which doesn't rely on inefficient and complicated HTML templates and unclear update cycles. Each object simply listens to some events and handles them in very straightforward fashion. Look at the next example:
 
+    import {TWOWAY} from "jwidget";
     import Component from "jwidget/Component";
     import Property from "jwidget/Property";
     import template from "jwidget/template";
@@ -48,10 +49,10 @@ jWidget is a truly object-oriented solution which doesn't rely on inefficient an
 
         protected renderGreeting(el: JQuery) {
             // Build greeting message by the property
-            const text = this.name.map((name) => "Hello, " + name + "!");
+            const message = this.name.map((name) => "Hello, " + name + "!");
 
             // Bind element text to the message
-            text(el, text);
+            text(el, message);
         }
     });
 

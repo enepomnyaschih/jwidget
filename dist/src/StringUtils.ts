@@ -49,33 +49,9 @@ export function htmlDecode(str: string): string {
 }
 
 /**
- * Removes script tags from HTML.
- *
- * @deprecated Doesn't line up with other jWidget functions.
- */
-export function removeScripts(target: string): string {
-	target = String(target);
-	var result: string[] = [];
-	var index = 0;
-	while (true) {
-		var from = target.indexOf("<script", index);
-		if (from === -1) {
-			break;
-		}
-		result.push(target.substr(index, from - index));
-		index = target.indexOf("</script>", from) + 9;
-		if (index === -1) {
-			return result.join("");
-		}
-	}
-	result.push(target.substr(index));
-	return result.join("");
-}
-
-/**
  * Shortens the string to specified length. If string is short enough, it stays the same.
- * Otherwise it is cutted and **ellipsis** substring is appended so that the result string length
- * equals to **length**.
+ * Otherwise it is cutted and `ellipsis` substring is appended so that the resulting string length
+ * equals to `length`.
  *
  * @param str Input string.
  * @param length Maximum length of resulting string.
@@ -92,17 +68,15 @@ export function ellipsis(str: string, length: number, ellipsis?: string): string
 }
 
 /**
- * Prepends string with specified symbol at the beginning to adjust to specified length.
+ * Prepends string with specified symbol at the beginning to adjust it to specified length.
  * If string is long enough, it stays the same.
- *
- *     JW.strings.prepend("123", 5, "0")  // "00123"
  *
  * @param str Input string.
  * @param length Minimum length of resulting string.
  * @param ch Symbol to prepend.
  * @returns Result string.
  */
-export function prepend(str: string, length: number, ch: string): string {
+export function pad(str: string, length: number, ch: string): string {
 	str = String(str);
 	var buf: string[] = [];
 	length -= str.length;
@@ -141,17 +115,6 @@ export function hyphen(str: string): string {
 }
 
 /**
- * Removes whitespace symbols at begin and end of string.
- *
- *     JW.strings.trim("\t\tI love JS!    ")  // "I love JS!"
- *
- * @deprecated Use JavaScript native **trim** method instead.
- */
-export function trim(target: string): string {
-	return String(target).replace(/^\s*/, "").replace(/\s*$/, "");
-}
-
-/**
  * Parses CSS class string and returns array of CSS class names.
  * Supports strings, untrimmed strings, space-separated strings, arrays
  * and subarrays.
@@ -169,7 +132,7 @@ export function parseClass(str: any): string[] {
 		return result;
 	}
 	if (typeof str === "string") {
-		str = trim(str);
+		str = str.trim();
 		if (str === "") {
 			return [];
 		}
