@@ -100,6 +100,8 @@ Returns property value. Think twice before calling this method - probably it mak
 * **create** - Mapping function.
 * **config** - Configuration options.
 
+Reference: [jwidget/DestroyableBindable](DestroyableBindable.md).
+
 Builds a new property containing the result of the callback function called on this property value. To stop synchronization, destroy the resulting property. To map multiple properties, use [jwidget/Mapper](Mapper.md).
 
 **Example 1.** Double number.
@@ -134,7 +136,9 @@ Pass **destroy** callback to destroy the previously mapped values.
 	import {destroy} from "jwidget";
 	import Bindable from "jwidget/Bindable";
 	import Component from "jwidget/Component";
+	import template from "jwidget/template";
 
+	@template('<div><div jwid="report"></div></div>')
 	class App extends Component {
 		constructor(private report: Bindable<Report>) {}
 
