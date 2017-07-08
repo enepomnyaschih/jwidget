@@ -17,7 +17,7 @@
 
 ## Description
 
-Real implementation of [jwidget/IEvent](IEvent.md) interface that calls handler functions on [trigger](IEvent.md#trigger) method call.
+Real implementation of [jwidget/IEvent](IEvent.md) interface that calls handler functions on [trigger](#trigger) method call.
 
 Used to notify some objects (clients) about certain events (for example, field value changes). Remember to destroy the event attachments to prevent side effects. It is smart to expose event objects in getters returning [jwidget/Bindable](Bindable.md) to deny direct control over the event by the clients.
 

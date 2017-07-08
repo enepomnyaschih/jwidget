@@ -273,7 +273,7 @@ namespace Mapper {
 		readonly destroy?: DestroyCallback<T>;
 
 		/**
-		 * [[createValue]] and [[destroyValue]] call scope.
+		 * `create` and `destroy` call scope.
 		 * Defaults to mapper itself.
 		 */
 		readonly scope?: any;

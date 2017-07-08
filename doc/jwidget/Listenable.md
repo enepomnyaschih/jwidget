@@ -17,7 +17,7 @@
 
 Container for callback functions. Provides basic event listening functionality.
 
-Has a sub-interface [jwidget/IEvent](IEvent.md), which exposes [trigger](#IEvent.md#trigger) method to trigger the event. It is smart to store the event as [jwidget/IEvent](IEvent.md) internally, and expose it as **Bindable** externally to deny direct control over the event by the clients.
+Has a sub-interface [jwidget/IEvent](IEvent.md), which exposes [trigger](#Event.md#trigger) method to trigger the event. It is smart to store the event as [jwidget/IEvent](IEvent.md) internally, and expose it as **Listenable** externally to deny direct control over the event by the clients.
 
 	class Example {
 		private _changeEvent = new Event<number>();
@@ -28,7 +28,7 @@ Has a sub-interface [jwidget/IEvent](IEvent.md), which exposes [trigger](#IEvent
 
 		// ...
 
-			// We can't trigger public changeEvent, but can trigger private _changeEvent
+			// We can't trigger public changeEvent, but we can trigger private _changeEvent
 			this._changeEvent.trigger(value);
 
 		// ...
