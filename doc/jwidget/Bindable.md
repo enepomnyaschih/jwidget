@@ -99,20 +99,6 @@ Returns property value. Think twice before calling this method - probably it mak
 
 * **create** - Mapping function.
 * **config** - Configuration options.
-	* **destroy**?: (targetValue: U, sourceValue: V) => any - Destroys target property value.
-	* **scope**?: any - **create** and **destroy** call scope.
-	* **viaNull**?: boolean - Reverses mapper updating flow. Default flow is:
-
-		1. Create a new value.
-		2. Reassign target property.
-		3. Destroy the old value.
-
-		Setting this option to true changes the flow the next way:
-
-		1. Set target value to null.
-		2. Destroy the old value.
-		3. Create a new value.
-		4. Assign target property.
 
 Builds a new property containing the result of the callback function called on this property value. To stop synchronization, destroy the resulting property. To map multiple properties, use [jwidget/Mapper](Mapper.md).
 
@@ -123,6 +109,23 @@ Builds a new property containing the result of the callback function called on t
 	console.log(double.get()); // 6
 	num.set(5);
 	console.log(double.get()); // 10
+
+Configuration options:
+
+* **destroy**?: (targetValue: U, sourceValue: V) => any - Destroys target property value.
+* **scope**?: any - **create** and **destroy** call scope.
+* **viaNull**?: boolean - Reverses mapper updating flow. Default flow is:
+
+	1. Create a new value.
+	2. Reassign target property.
+	3. Destroy the old value.
+
+	Setting this option to true changes the flow the next way:
+
+	1. Set target value to null.
+	2. Destroy the old value.
+	3. Create a new value.
+	4. Assign target property.
 
 Pass **destroy** callback to destroy the previously mapped values.
 
