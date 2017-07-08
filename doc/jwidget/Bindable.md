@@ -1,15 +1,24 @@
 [Back to index](../README.md)
 
-# Watchable
+# Bindable
+
+[](BEGIN_INDEX)
+* **Properties**
+    * [changeEvent](#changeevent)
+    * [silent](#silent)
+* **Methods**
+    * [get](#get)
+    * [map](#map)
+[](END_INDEX)
 
 ## Consumption
 
-	import Watchable from "jwidget/Watchable";
+	import Bindable from "jwidget/Bindable";
 
 ## Hierarchy
 
-* interface [jwidget/Destroyable](Destroyable.md)
-	* interface **jwidget/Watchable**`<V>`
+* interface **jwidget/Bindable**`<V>`
+	* interface [jwidget/DestroyableBindable](DestroyableBindable.md)`<V>`
 		* interface [jwidget/IProperty](IProperty.md)`<V>`
 			* class [jwidget/ObservableProperty](ObservableProperty.md)`<V>` extends [jwidget/Class](Class.md)
 			* class [jwidget/DimProperty](DimProperty.md)`<V>` extends [jwidget/Class](Class.md)
@@ -18,17 +27,30 @@
 
 Read-only container for a value. Provides basic data binding functionality.
 
-Has a sub-interface [jwidget/IProperty](IProperty.md), which exposes [set](#IProperty.md#set) method to modify the property. It is smart to store the property as [jwidget/IProperty](IProperty.md) internally, and expose it as **Watchable** externally to deny direct control over the property by the clients.
+Has a sub-interface [jwidget/IProperty](IProperty.md), which exposes [set](#Property.md#set) method to modify the property. It is sometimes smart to store the property as [jwidget/IProperty](IProperty.md) internally, and expose it as **Bindable** externally to deny direct control over the property by the clients.
 
-Can be used as a source property in the next model bindings:
+	class Example {
+		private _size = new Property<number>(0);
+
+		get size(): Bindable<number> {
+			return this._size;
+		}
+
+		// ...
+
+			// We can't set public size, but can set private _size
+			this._size.set(value);
+
+		// ...
+	}
+
+**Bindable** can be used as a source property in the next model bindings:
 
 - [jwidget/Copier](Copier.md) - Keeps one property equal to another.
-- [jwidget/Functor](Functor.md) - Keeps one property as a result of the function from several other properties.
 - [jwidget/Mapper](Mapper.md) - Keeps one property as a result of the function from several other properties.
-- [jwidget/Updater](Updater.md) - Observes several properties.
 - [jwidget/Switcher](Switcher.md) - Observes several properties.
 
-Also, can be used as a source property in the next view bindings:
+Also, it can be used as a source property in the next view bindings:
 
 - [jwidget/ui/attr](ui/attr.md) - Binds attribute to a property.
 - [jwidget/ui/class](ui/class.md) - Binds CSS class to a property.
@@ -46,11 +68,17 @@ All bindings are independent - you can implement your own bindings if you want.
 
 ### changeEvent
 
-	changeEvent: Bindable<ValueChangeEventParams<V>>
+	readonly changeEvent: Listenable<Bindable.ChangeEventParams<V>>
 
-Reference: [jwidget/Bindable](Bindable.md), [jwidget/ValueChangeEventParams](ValueChangeEventParams.md).
+Reference: [jwidget/Listenable](Listenable.md).
 
-Property value is changed. Triggered in result of [set](ObservableProperty.md#set) method call if the value has been changed.
+Property value is changed. Triggered in result of [set](IProperty.md#set) method call if the value has been changed.
+
+Parameters:
+
+* sender: **Bindable**<V>
+* oldValue: V
+* value: V
 
 ### silent
 
@@ -64,30 +92,41 @@ Checks if this property never triggers events. This knowledge may help you do ce
 
 	get(): V
 
-Returns current property value. Think twice before calling this method - probably it makes sense to use some kind of binding instead?
+Returns property value. Think twice before calling this method - probably it makes sense to use some kind of binding instead?
 
 ### map
 
-	map<U>(callback: (value: V) => U, scope?: any): Watchable<U>
+	map<U>(create: (value: V) => U, config?: Mapper.Config<U>): DestroyableBindable<U>;
 
-* **callback** - Mapping function.
-* **scope** - **callback** call scope. Defaults to the property itself.
+* **create** - Mapping function.
+* **config** - Configuration options.
 
-Builds a new property containing the result of the callback function called on this property value. To stop synchronization, destroy the result property. In comparison to [mapDestroyable](#mapdestroyable) method, doesn't destroy the previously assigned target values. To map multiple properties, use [jwidget/Mapper](Mapper.md).
+Reference: [Mapper.Config](#Mapper.md#config)
 
-### mapDestroyable
+Builds a new property containing the result of the callback function called on this property value. To stop synchronization, destroy the resulting property. To map multiple properties, use [jwidget/Mapper](Mapper.md).
 
-	mapDestroyable<U extends Destroyable>(callback: (value: V) => U, scope?: any): Watchable<U>
+**Example 1.** Double number.
 
-* **callback** - Mapping function.
-* **scope** - **callback** call scope. Defaults to the property itself.
+	const num = new Property<number>(3);
+	const double = num.map((value) => 2 * value);
+	console.log(double.get()); // 6
+	num.set(5);
+	console.log(double.get()); // 10
 
-Reference: [jwidget/Destroyable](Destroyable.md).
+Pass [destroy](Mapper.md#destroy) callback to destroy the previously mapped values.
 
-Builds a new property containing the result of the callback function called on this property value. To stop synchronization, destroy the result property. In comparison to [map](#map) method, destroys the previously assigned target values. To map multiple properties, use [jwidget/Mapper](Mapper.md).
+**Example 2.** Typical bindable model mapping to UI component.
 
-### destroy
+	import {destroy} from "jwidget";
+	import Bindable from "jwidget/Bindable";
+	import Component from "jwidget/Component";
 
-	destroy(): void
+	class App extends Component {
+		constructor(private report: Bindable<Report>) {}
 
-Class destructor invocation method.
+		protected renderReport() {
+			return this.own(report.map((report) => new ReportView(report), {destroy}));
+		}
+	}
+
+Reference: [destroy](index.md#destroy), [own](Class.md#own), [jwidget/Component](Component.md).

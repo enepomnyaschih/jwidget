@@ -44,12 +44,11 @@ interface Bindable<V> {
 
 	/**
 	 * Builds a new property containing the result of the callback function called
-	 * on this property value. To stop synchronization, destroy the result property.
-	 * In comparison to `mapObject` method, doesn't destroy the previously assigned target values.
+	 * on this property value. To stop synchronization, destroy the resulting property.
 	 * To map multiple properties, use `Mapper`.
 	 *
-	 * @param callback Mapping function.
-	 * @param scope `callback` call scope. Defaults to the property itself.
+	 * @param create Mapping function.
+	 * @param config Configuration options.
 	 */
 	map<U>(create: (value: V) => U, config?: Mapper.Config<U>): DestroyableBindable<U>;
 }
