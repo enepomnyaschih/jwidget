@@ -99,9 +99,9 @@ Returns property value. Think twice before calling this method - probably it mak
 
 * **create** - Mapping function.
 * **config** - Configuration options.
-	* destroy?: (targetValue: U, sourceValue: V) => any - Destroys target property value.
-	* scope?: any - **create** and **destroy** call scope.
-	* viaNull?: boolean - Reverses mapper updating flow. Default flow is:
+	* **destroy**?: (targetValue: U, sourceValue: V) => any - Destroys target property value.
+	* **scope**?: any - **create** and **destroy** call scope.
+	* **viaNull**?: boolean - Reverses mapper updating flow. Default flow is:
 
 		1. Create a new value.
 		2. Reassign target property.
