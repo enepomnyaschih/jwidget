@@ -211,6 +211,20 @@ export default function() {
 				done();
 			}, 5 * DELAY / 2);
 		});
+		it("should not destroy the chained promise on base promise destruction", function(done: () => any) {
+			const timeout = new Timeout(DELAY, 1).then((result) => {
+				expect(result).toBe(1);
+				return new Timeout(DELAY, 2);
+			});
+			timeout.then((result) => {
+				expect(result).toBe(2);
+				return new Timeout(DELAY, 3);
+			}, fail).then((result) => {
+				expect(result).toBe(3);
+				done();
+			}, fail);
+			setTimeout(() => timeout.destroy(), 5 * DELAY / 2);
+		});
 		it("should combine with simple value", function(done: () => any) {
 			const timeout = new Timeout(DELAY, 1).then((result) => {
 				expect(result).toBe(1);
@@ -243,6 +257,32 @@ export default function() {
 				done();
 			}, fail);
 			setTimeout(() => timeout.destroy(), 3 * DELAY / 2);
+		});
+		it("should destroy the promise after chained native promise", function(done: () => any) {
+			const timeout = new Timeout(DELAY, 1).then((result) => {
+				expect(result).toBe(1);
+				return new Promise((resolve) => {
+					setTimeout(() => resolve(2), DELAY)
+				});
+			}).then((result) => {
+				expect(result).toBe(2);
+				return new Timeout(1000, 3);
+			}, fail).then(fail, fail);
+			setTimeout(() => timeout.destroy(), 5 * DELAY / 2);
+			setTimeout(done, 7 * DELAY / 2);
+		});
+		it("should destroy the promise after chained native promise during native promise", function(done: () => any) {
+			const timeout = new Timeout(DELAY, 1).then((result) => {
+				expect(result).toBe(1);
+				return new Promise((resolve) => {
+					setTimeout(() => resolve(2), DELAY)
+				});
+			}).then((result) => {
+				expect(result).toBe(2);
+				return new Timeout(1000, 3);
+			}, fail).then(fail, fail);
+			setTimeout(() => timeout.destroy(), 3 * DELAY / 2);
+			setTimeout(done, 7 * DELAY / 2);
 		});
 		it("should combine with native failed promises", function(done: () => any) {
 			const timeout = new Timeout(DELAY, 1).then((result) => {

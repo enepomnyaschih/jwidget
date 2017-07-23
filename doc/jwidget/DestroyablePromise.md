@@ -10,74 +10,96 @@
 
 * interface [jwidget/Destroyable](Destroyable.md)
 	* interface **jwidget/DestroyablePromise**`<T>`
-		* class [jwidget/ChainedDestroyablePromise](IProperty.md)`<T>`
-		* class [jwidget/HttpRequest](Property.md)`<T>`
+		* class [jwidget/AbstractDestroyablePromise](AbstractDestroyablePromise.md)`<T>`
 
 ## Description
 
-Extension of native Promise with [destroy](Destroyable.md#destroy) method. If some method returns **DestroyablePromise**, probably it establishes some kind of cancellable asynchronous operation and wants you to take control over its life time. Destroying the **DestroyablePromise** instance cancels the operation, so that neither **onFulfilled** nor **onRejected** callback gets called.
+Extension of native [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with [destroy](Destroyable.md#destroy) method. If some method returns **DestroyablePromise**, probably it establishes some kind of cancellable asynchronous operation and wants you to take control over its life time. Destroying the **DestroyablePromise** instance cancels the operation, so that neither **onFulfilled** nor **onRejected** callback gets called.
 
-The next example demonstrates **DestroyablePromise** implementation for native setTimeout function.
+**Example 1.** DestroyablePromise implementation for native setTimeout function.
 
-	import ChainedDestroyablePromise from "jwidget/ChainedDestroyablePromise";
-	import DestroyablePromise from "jwidget/DestroyablePromise";
+	import AbstractDestroyablePromise from "jwidget/AbstractDestroyablePromise";
 
-	class Timeout implements DestroyablePromise<any> {
-		readonly native: Promise<T>;
+	class Timeout extends AbstractDestroyablePromise<any> {
 		private timeout: number;
 
-		constructor(ms?: number) {
-			this.native = new Promise<any>((resolve) => {
-				this.timeout = setTimeout(resolve, ms);
-			});
+		constructor(ms: number) {
+			let timeout;
+			super(new Promise((resolve) => {
+				// TypeScript disallows direct access to `this` before return from `super` call
+				timeout = setTimeout(resolve, ms);
+			}));
+			this.timeout = timeout;
 		}
 
-		destroy() {
+		destroyObject() {
 			clearTimeout(this.timeout);
-		}
-
-		// Typical implementation of `then` and `catch` methods - use it as the pattern.
-		then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => U | Thenable<U>): DestroyablePromise<U>;
-		then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => void): DestroyablePromise<U>;
-		then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => any): DestroyablePromise<U> {
-			return new ChainedDestroyablePromise(this.native.then(onFulfilled, onRejected), this);
-		}
-
-		catch<U>(onRejected?: (error: any) => U | Thenable<U>): DestroyablePromise<U> {
-			return new ChainedDestroyablePromise(this.native.catch(onRejected), this);
+			super.destroyObject();
 		}
 	}
 
-References: [jwidget/ChainedDestroyablePromise];
+[jwidget/AbstractDestroyablePromise](AbstractDestroyablePromise.md) provides a built-in implementation for promise chaining via [then](#then) and [catch](#catch) methods.
 
-Please note that neither **DestroyablePromise** implementation can extend native Promise, because it is prohibited by language specification. So the promise engine can not understand if you want to chain **DestroyablePromise** instances. You must return [native](#native) Promise to chain it properly.
+Please note that **DestroyablePromise** implementation can not extend native Promise, because it is prohibited by ECMAScript specification. So you can not chain native Promise with **DestroyablePromise**, because native Promise won't treat **DestroyablePromise** as a Promise to chain with. However, you can freely chain **DestroyablePromise** with both **DestroyablePromise** and native Promise.
 
-	new HttpRequest($.get("/user")).then(function(user) {
-		return new HttpRequest($.get(`/user/${user.id}/profile`)).native; // Required for chaining
+**Example 2.** DestroyablePromise chaining.
+
+	const chain = new HttpRequest($.get("/user")).then(function(user) {
+		return new HttpRequest($.get(`/user/${user.id}/profile`));
+	}).then(function(profile) {
+		return new Promise(function(resolve) {
+			setTimeout(resolve, 1000);
+		});
+	}).then(function() {
+		return new HttpRequest($.get("/done"));
+	}).catch(function(error) {
+		console.error(error);
 	});
 
+	// ...later
+	chain.destroy();
 
+Please keep in mind that destroying the chain during the standard Promise waiting won't result in operation cancelling. In the example above, if you destroy the chain during any of three HTTP requests, it will cancel the request and interrupt the chain. If you destroy the chain during setTimeout operation, it will wait for timeout completion, but the chain won't progress further on. So, to make sure that the promise destruction works properly, please wrap all your promises with **DestroyablePromise**.
 
-In some cases, binding destruction is not obligatory. In the next example, the component binds a property to its own element, so garbage collector will take everything away on component destruction anyway. So, it doesn't make much sense to aggregate the binding explicitly.
+Destroying the chained promise will result in cancelling of all promises/operations **before** the end of this chain. So, in the example above, if you continue the chain from `chain` instance, and destroy the `chain` object after the third HTTP request completion, it won't do any impact. To cancel the chained operations, destroy the last promise in this chain.
 
-**Example 2.** Typical binding to own DOM element.
+jWidget provides a bunch of built-in **DestroyablePromise** implementations for you to work with:
 
-	import Component from "jwidget/Component";
-	import template from "jwidget/template";
-	import val from "jwidget/ui/val";
+* [jwidget/HttpRequest](HttpRequest.md) - Destroyable wrapper around [jQuery.ajax](http://api.jquery.com/jquery.ajax/).
+* [jwidget/AllPromise](AllPromise.md) - Destroyable wrapper around [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all).
+* [jwidget/RacePromise](RacePromise.md) - Destroyable wrapper around [Promise.race](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race).
 
-	@template('<div><input type="text" jwid="input"></div>')
-	class App extends Component {
-		renderInput(el: JQuery) {
-			// el is a child element, so the binding won't
-			// take effect after component destruction even without "own" call
-			const value = val(el);
+## Properties
 
-			// logs all input value updates to console
-			value.map((value) => console.log(value));
-		}
-	}
+### native
 
-## Members
+	readonly native: Promise<T>
 
-See the inherited members in [jwidget/Destroyable](Destroyable.md) and [jwidget/Bindable](Bindable.md).
+Native Promise instance this **DestroyablePromise** is wrapped around.
+
+## Methods
+
+See the inherited methods in [jwidget/Destroyable](Destroyable.md).
+
+### then
+
+	then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => U | Thenable<U>): DestroyablePromise<U>;
+	then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => void): DestroyablePromise<U>;
+
+Reference: [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+Works the same way as native Promise's [then](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then) method with two differences:
+
+* Supports **DestroyablePromise** as callback result for chaining.
+* Returns **DestroyablePromise** instance which destroys the whole chain.
+
+### catch
+
+	catch<U>(onRejected?: (error: any) => U | Thenable<U>): DestroyablePromise<U>
+
+Reference: [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+Works the same way as native Promise's [catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch) method with two differences:
+
+* Supports **DestroyablePromise** as callback result for chaining.
+* Returns **DestroyablePromise** instance which destroys the whole chain.

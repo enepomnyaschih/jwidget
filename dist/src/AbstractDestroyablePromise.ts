@@ -46,10 +46,11 @@ class ChainedDestroyablePromise<T> extends AbstractDestroyablePromise<T> {
 		super(native);
 	}
 
-	destroy() {
+	protected destroyObject() {
 		if (this.baseDestroyable) {
 			this.baseDestroyable.destroy();
 		}
+		super.destroyObject();
 	}
 
 	// These methods use private stuff, so they must be present in the body
