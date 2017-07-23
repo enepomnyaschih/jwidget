@@ -32,11 +32,13 @@ Extension of native [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaS
 			this.timeout = timeout;
 		}
 
-		destroyObject() {
+		protected destroyObject() {
 			clearTimeout(this.timeout);
 			super.destroyObject();
 		}
 	}
+
+Reference: [destroyObject](Class.md#destroyobject).
 
 [jwidget/AbstractDestroyablePromise](AbstractDestroyablePromise.md) provides a built-in implementation for promise chaining via [then](#then) and [catch](#catch) methods.
 
@@ -45,12 +47,15 @@ Please note that **DestroyablePromise** implementation can not extend native Pro
 **Example 2.** DestroyablePromise chaining.
 
 	const chain = new HttpRequest($.get("/user")).then(function(user) {
+		// Chain DestroyablePromise with another DestroyablePromise
 		return new HttpRequest($.get(`/user/${user.id}/profile`));
 	}).then(function(profile) {
+		// Chain DestroyablePromise with native Promise
 		return new Promise(function(resolve) {
 			setTimeout(resolve, 1000);
 		});
 	}).then(function() {
+		// Further chaining with DestroyablePromise is allowed
 		return new HttpRequest($.get("/done"));
 	}).catch(function(error) {
 		console.error(error);
