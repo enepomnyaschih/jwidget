@@ -64,7 +64,7 @@ Please note that **DestroyablePromise** implementation can not extend native Pro
 
 Please keep in mind that destroying the chain during the standard Promise waiting won't result in operation cancelling. In the example above, if you destroy the chain during any of three HTTP requests, it will cancel the request and interrupt the chain. If you destroy the chain during setTimeout operation, the chain won't progress further on, but the timeout promise will still get resolved in time. So, to make sure that the promise destruction works properly, please wrap all your promises with **DestroyablePromise**.
 
-Destroying the chained promise will result in cancelling of all promises/operations **before** the end of this chain, **not after**. So, in the next example, `chain` object destruction won't do any impact.
+Destroying the chained promise will result in cancelling of all promises/operations **before** the end of this chain, **not after**. So, in the third case below, `chain` object destruction won't do any impact.
 
 **Example 3.** Chain destruction logic demonstration.
 
@@ -80,16 +80,16 @@ Destroying the chained promise will result in cancelling of all promises/operati
 		console.log("Fail!")
 	});
 
-	// This test would cancel the chain properly
+	// Case 1: This test would cancel the chain properly
 	setTimeout(() => chain.destroy(), 500);
 
-	// This too
+	// Case 2: This too
 	setTimeout(() => chain.destroy(), 1500);
 
-	// But not this one, because `chain` object would already be resolved
+	// Case 3: This test would fail, because `chain` object would already be resolved
 	setTimeout(() => chain.destroy(), 2500); // no impact
 
-	// The best way to fix the problem is to destroy the whole chain
+	// Case 4: The best way to fix the problem is to destroy the whole chain
 	setTimeout(() => nextChain.destroy(), 2500);
 
 jWidget provides a bunch of built-in **DestroyablePromise** implementations for you to work with:
