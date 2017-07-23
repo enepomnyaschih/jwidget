@@ -46,18 +46,16 @@ Please note that **DestroyablePromise** implementation can not extend native Pro
 
 **Example 2.** DestroyablePromise chaining.
 
-	const chain = new HttpRequest($.get("/user")).then(function(user) {
+	const chain = new HttpRequest($.get("/user")).then((user) => {
 		// Chain DestroyablePromise with another DestroyablePromise
 		return new HttpRequest($.get(`/user/${user.id}/profile`));
-	}).then(function(profile) {
+	}).then((profile) => {
 		// Chain DestroyablePromise with native Promise
-		return new Promise(function(resolve) {
-			setTimeout(resolve, 1000);
-		});
-	}).then(function() {
+		return new Promise((resolve) => setTimeout(resolve, 1000));
+	}).then(() => {
 		// Further chaining with DestroyablePromise is allowed
 		return new HttpRequest($.get("/done"));
-	}).catch(function(error) {
+	}).catch((error) => {
 		console.error(error);
 	});
 
@@ -83,19 +81,16 @@ Destroying the chained promise will result in cancelling of all promises/operati
 	});
 
 	// This test would cancel the chain properly
-	setTimeout(function() {
-		chain.destroy();
-	}, 1500);
+	setTimeout(() => chain.destroy(), 500);
 
-	// This test would fail, because `chain` object would already be resolved
-	setTimeout(function() {
-		chain.destroy(); // no impact
-	}, 2500);
+	// This too
+	setTimeout(() => chain.destroy(), 1500);
+
+	// But not this one, because `chain` object would already be resolved
+	setTimeout(() => chain.destroy(), 2500); // no impact
 
 	// The best way to fix the problem is to destroy the whole chain
-	setTimeout(function() {
-		nextChain.destroy();
-	}, 2500);
+	setTimeout(() => nextChain.destroy(), 2500);
 
 jWidget provides a bunch of built-in **DestroyablePromise** implementations for you to work with:
 
