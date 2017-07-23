@@ -19,5 +19,7 @@
 */
 
 import isArray from "./Core";
+import DestroyablePromise from "./DestroyablePromise";
 
 describe("isArray", isArray);
+describe("DestroyablePromise", DestroyablePromise);

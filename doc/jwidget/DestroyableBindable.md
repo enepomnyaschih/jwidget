@@ -8,7 +8,7 @@
 
 ## Hierarchy
 
-* interface [jwidget/Destroyable](Destroyable.md)`<V>`
+* interface [jwidget/Destroyable](Destroyable.md)
 * interface [jwidget/Bindable](Bindable.md)`<V>`
 	* interface **jwidget/DestroyableBindable**`<V>`
 		* interface [jwidget/IProperty](IProperty.md)`<V>`

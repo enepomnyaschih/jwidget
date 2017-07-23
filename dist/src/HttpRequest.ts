@@ -18,15 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ChainedDestroyablePromise from "./ChainedDestroyablePromise";
-import DestroyablePromise from "./DestroyablePromise";
+import AbstractDestroyablePromise from "./AbstractDestroyablePromise";
 
-export default class HttpRequest<T> implements DestroyablePromise<T> {
+export default class HttpRequest<T> extends AbstractDestroyablePromise<T> {
 	private aborted = false;
-	private _native: Promise<T>;
 
 	constructor(private xhr?: JQueryXHR, private factory?: (response: any) => T) {
-		this._native = new Promise<T>((resolve, reject) => {
+		super(new Promise<T>((resolve, reject) => {
 			if (!this.xhr) {
 				reject();
 			}
@@ -37,25 +35,11 @@ export default class HttpRequest<T> implements DestroyablePromise<T> {
 					reject(request);
 				}
 			});
-		});
-	}
-
-	get native() {
-		return this._native;
+		}));
 	}
 
 	destroy() {
 		this.aborted = true;
 		this.xhr.abort();
-	}
-
-	then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => U | Thenable<U>): DestroyablePromise<U>;
-	then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => void): DestroyablePromise<U>;
-	then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => any): DestroyablePromise<U> {
-		return new ChainedDestroyablePromise(this._native.then(onFulfilled, onRejected), this);
-	}
-
-	catch<U>(onRejected?: (error: any) => U | Thenable<U>): DestroyablePromise<U> {
-		return new ChainedDestroyablePromise(this._native.catch(onRejected), this);
 	}
 }
