@@ -69,11 +69,11 @@ Destroying the chained promise will result in cancelling of all promises/operati
 **Example 3.** Chain destruction logic demonstration.
 
 	const chain = new Timeout(1000).then(function() {
-		return Timeout(1000);
+		return new Timeout(1000);
 	});
 
 	const nextChain = chain.then(function() {
-		return Timeout(1000);
+		return new Timeout(1000);
 	});
 
 	nextChain.then(function() {
