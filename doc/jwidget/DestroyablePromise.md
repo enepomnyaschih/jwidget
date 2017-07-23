@@ -116,8 +116,6 @@ See the inherited methods in [jwidget/Destroyable](Destroyable.md).
 	then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => U | Thenable<U>): DestroyablePromise<U>;
 	then<U>(onFulfilled?: (value: T) => U | Thenable<U>, onRejected?: (error: any) => void): DestroyablePromise<U>;
 
-Reference: [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
-
 Works the same way as native Promise's [then](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then) method with two differences:
 
 * Supports **DestroyablePromise** as callback result for chaining.
@@ -126,8 +124,6 @@ Works the same way as native Promise's [then](https://developer.mozilla.org/en-U
 ### catch
 
 	catch<U>(onRejected?: (error: any) => U | Thenable<U>): DestroyablePromise<U>
-
-Reference: [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 Works the same way as native Promise's [catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch) method with two differences:
 
