@@ -105,7 +105,7 @@ jWidget provides a bunch of built-in **DestroyablePromise** implementations for 
 
 	readonly native: Promise<T>
 
-Native Promise instance this **DestroyablePromise** is wrapped around.
+Native [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) instance this **DestroyablePromise** is wrapped around.
 
 ## Methods
 
