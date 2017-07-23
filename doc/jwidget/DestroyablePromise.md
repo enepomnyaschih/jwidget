@@ -64,7 +64,7 @@ Please note that **DestroyablePromise** implementation can not extend native Pro
 	// ...later
 	chain.destroy();
 
-Please keep in mind that destroying the chain during the standard Promise waiting won't result in operation cancelling. In the example above, if you destroy the chain during any of three HTTP requests, it will cancel the request and interrupt the chain. If you destroy the chain during setTimeout operation, it will wait for timeout completion, but the chain won't progress further on. So, to make sure that the promise destruction works properly, please wrap all your promises with **DestroyablePromise**.
+Please keep in mind that destroying the chain during the standard Promise waiting won't result in operation cancelling. In the example above, if you destroy the chain during any of three HTTP requests, it will cancel the request and interrupt the chain. If you destroy the chain during setTimeout operation, the chain won't progress further on, but the timeout promise will still get resolved in time. So, to make sure that the promise destruction works properly, please wrap all your promises with **DestroyablePromise**.
 
 Destroying the chained promise will result in cancelling of all promises/operations **before** the end of this chain. So, in the example above, if you continue the chain from `chain` instance, and destroy the `chain` object after the third HTTP request completion, it won't do any impact. To cancel the chained operations, destroy the last promise in this chain.
 
