@@ -18,14 +18,21 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import BaseTimeout from './BaseTimeout';
+import AbstractDestroyablePromise from "../AbstractDestroyablePromise";
 
-export default class Timeout extends BaseTimeout {
-	protected _init(callback: () => any, delay?: number): number {
-		return setTimeout(callback, delay);
+export default class Timeout extends AbstractDestroyablePromise<number> {
+	private timeout: number;
+
+	constructor(ms: number) {
+		let timeout;
+		super(new Promise((resolve) => {
+			timeout = setTimeout(resolve, ms);
+		}));
+		this.timeout = timeout;
 	}
 
-	protected _done(timeout: number): void {
-		clearTimeout(timeout);
+	protected destroyObject() {
+		clearTimeout(this.timeout);
+		super.destroyObject();
 	}
 }

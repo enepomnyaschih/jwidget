@@ -9,10 +9,11 @@
 ## Hierarchy
 
 * interface [jwidget/Destroyable](Destroyable.md)
+* interface [jwidget/Identifiable](Destroyable.md)
 	* interface [jwidget/IClass](IClass.md)
 		* class **jwidget/Class**
 
-The majority of jWidget classes and interfaces inherit these three.
+The majority of jWidget classes and interfaces inherit these four.
 
 ## Description
 
@@ -45,59 +46,29 @@ Output:
 
 	new Class()
 
-Yes, objects of this class can be constructed. They can be used as dummy objects or aggregators for other objects:
+Constructs **Class** instance. Usually contructor is called in subclass, but you can also create pure **Class** instances as dummy objects or aggregators for other objects. By destroying the object returned from the next method you cancel both animation and request.
 
 	startOperation() {
-		return new Class().owning(new Animation()).owning(new Request());
+		return new Class().
+			owning(new Animation()).
+			owning(new Request());
 	}
 
 Reference: [owning](#owning).
 
 ## Properties
 
-### _iid
-
-	_iid: number
-
-Instance ID.
-
-Auto-incrementing object unique ID. Each IClass instance has such an identifier.
-Used, say, in [jwidget/AbstractSet](AbstractSet.md) as map key for quick item access.
+See inherited properties in [jwidget/Identifiable].
 
 ## Methods
 
-### own
-
-	own<T extends Destroyable>(obj: T): T
-
-Reference: [jwidget/Destroyable](Destroyable.md).
-
-Aggregates the object. It means that the specified object is automatically destroyed
-on this object destruction. The aggregated objects are destroyed in reverse order.
-Returns the aggregated object, which makes it easy to use in field definition:
-
-	private selected = this.own(new Property(false));
-
-### owning
-
-	owning(obj: Destroyable): this
-
-Reference: [jwidget/Destroyable](Destroyable.md).
-
-Aggregates the object. It means that the specified object is automatically destroyed
-on this object destruction. The aggregated objects are destroyed in reverse order.
-Returns this object, which makes it easy to use in object instantiation:
-
-	const items = new ObservableArray();
-	return new Panel(items).owning(items);
+See inherited methods in [jwidget/IClass].
 
 ### destroy
 
 	destroy()
 
-Class destructor invocation method. Destroys all aggregated objects and calls destroyObject method.
-You must call this method explicitly from outside, because JavaScript doesn't support automatic class destructor
-calling.
+Class destructor invocation method. Destroys all aggregated objects and calls destroyObject method. You must call this method explicitly from outside, because JavaScript doesn't support automatic class destructor calling.
 
 	const object = new MyClass();
 
@@ -108,14 +79,15 @@ calling.
 
 Alternatively (and optimally), you should use [own](#own) method to aggregate this object inside another one.
 
-You can override `destroy` method in a subclass to do some preliminary work before aggregated object destruction.
-For example, [jwidget/Component](Component.md) overrides this method to remove child components before their destruction,
-because child components are usually aggregated inside the component. However, in the majority of cases,
-you should override [destroyObject](#destroyObject) method instead to customize destruction logic.
+Unlike the other [jwidget/Destroyable] subclasses, **Class** subclasses are not recommended to override `destroy` method directly. Instead, please use [destroyObject](#destroyobject) if you want the aggregated objects to be already destroyed.
+
+You can override `destroy` method in a subclass to do some preliminary work before aggregated object destruction. For example, [jwidget/Component](Component.md) overrides this method to remove child components before their destruction, because child components are usually aggregated inside the component. However, in the majority of cases, you should override [destroyObject](#destroyobject) method instead to customize destruction logic.
 
 ## Protected methods
 
-	protected destroyObject()
+### destroyObject
+
+	destroyObject()
 
 Class destructor implementation. Called inside [destroy](#destroy) method *after aggregated object destruction*.
 The logic of class instance destruction should be implemented here. If you override this method,

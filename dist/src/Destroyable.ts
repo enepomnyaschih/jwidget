@@ -23,7 +23,7 @@
  */
 interface Destroyable {
 	/**
-	 * Class destructor invocation method.
+	 * Class destructor.
 	 */
 	destroy(): void;
 }

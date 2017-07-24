@@ -160,25 +160,30 @@ Routing:
 - [jwidget/hash](jwidget/hash.md) - Property instance bound to window.location.hash.
 - [jwidget/Router](jwidget/Router.md) - URL router.
 
+AJAX and promises:
+
+- [jwidget/AbstractRestProvider](jwidget/AbstractRestProvider.md) - Abstract provider for HTTP requests to RESTful API.
+- [jwidget/HttpRequest](jwidget/HttpRequest.md) - Destroyable wrapper around [jqXHR](http://api.jquery.com/jquery.ajax/).
+* [jwidget/AllPromise](AllPromise.md) - Destroyable wrapper around [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all).
+* [jwidget/RacePromise](RacePromise.md) - Destroyable wrapper around [Promise.race](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race).
+- [jwidget/Timeout](jwidget/Timeout.md) - Destroyable wrapper around setTimeout.
+
 Other destroyable adapters:
 
 - [jwidget/Destructor](jwidget/Destructor.md) - Being aggregated, extends object destruction logic.
-- [jwidget/Timeout](jwidget/Timeout.md) - Destroyable version of setTimeout.
 - [jwidget/Interval](jwidget/Interval.md) - Destroyable version of setInterval.
-- [jwidget/HttpRequest](jwidget/HttpRequest.md) - Destroyable version of [jqXHR](http://api.jquery.com/jquery.ajax/).
-- [jwidget/AbstractRestProvider](jwidget/AbstractRestProvider.md) - Abstract provider for HTTP requests to RESTful API.
 
 Other tools:
 
-- [jwidget/HtmlTemplate](jwidget/HtmlTemplate.md) - Well-optimized template engine with `jwclass` and `jwid` support.
 - [jwidget/DomInserter](jwidget/DomInserter.md) - Provides a way to synchronize view to model without [jwidget/Component](jwidget/Component.md) creation.
 - [jwidget/DomTemplate](jwidget/DomTemplate.md) - Provides a way to reuse an existing DOM structure in a new [jwidget/Component](jwidget/Component.md) instance.
+- [jwidget/HtmlTemplate](jwidget/HtmlTemplate.md) - Well-optimized template engine with `jwclass` and `jwid` support.
 - [jwidget/Reducer](jwidget/Reducer.md) - Various commonly used arguments for [reduce](jwidget/ReadOnlyCollection.md#reduce) method calls.
 
 References (low level stuff):
 
-- [jwidget/AbstractTemplate](jwidget/AbstractTemplate.md)
-- [jwidget/ChainedDestroyablePromise](jwidget/ChainedDestroyablePromise.md) - Adapter for destroyable promise chaining.
+- [jwidget/AbstractDestroyablePromise] - Abstract implementation of [jwidget/DestroyablePromise].
+- [jwidget/AbstractTemplate](jwidget/AbstractTemplate.md) - Abstract template for [jwidget/Component].
 - [jwidget/dummyDestroyable](jwidget/dummyDestroyable.md) - Dummy implementation of [jwidget/Destroyable](jwidget/Destroyable.md).
 - [jwidget/dummyEvent](jwidget/dummyEvent.md) - Dummy implementation of [jwidget/IEvent](jwidget/IEvent.md).
 - [jwidget/IndexCount](jwidget/IndexCount.md) - Number pair for various [jwidget/List](jwidget/List.md) methods.

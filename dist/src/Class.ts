@@ -23,7 +23,6 @@ import Destroyable from './Destroyable';
 import IClass from './IClass';
 
 /**
- * The base class of all jWidget classes.
  * Introduces object aggregation support.
  * If you call `a.own(b)`, then **b** is destroyed automatically on **a** destruction.
  * You can aggregate any object implementing `Destroyable`.

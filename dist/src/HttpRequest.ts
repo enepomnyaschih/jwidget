@@ -25,21 +25,22 @@ export default class HttpRequest<T> extends AbstractDestroyablePromise<T> {
 
 	constructor(private xhr?: JQueryXHR, private factory?: (response: any) => T) {
 		super(new Promise<T>((resolve, reject) => {
-			if (!this.xhr) {
+			if (!xhr) {
 				reject();
 			}
-			this.xhr.then((response) => {
-				resolve(this.factory ? this.factory(response) : response);
+			xhr.then((response) => {
+				resolve(factory ? factory(response) : response);
 			}, (request) => {
-				if (!this.aborted) {
+				if (!this || !this.aborted) {
 					reject(request);
 				}
 			});
 		}));
 	}
 
-	destroy() {
+	protected destroyObject() {
 		this.aborted = true;
 		this.xhr.abort();
+		super.destroyObject()
 	}
 }

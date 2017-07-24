@@ -62,6 +62,8 @@ Please note that **DestroyablePromise** implementation can not extend native Pro
 	// ...later
 	chain.destroy();
 
+Reference: [jwidget/HttpRequest].
+
 Please keep in mind that destroying the chain during the standard Promise waiting won't result in operation cancelling. In the example above, if you destroy the chain during any of three HTTP requests, it will cancel the request and interrupt the chain. If you destroy the chain during setTimeout operation, the chain won't progress further on, but the timeout promise will still get resolved in time. So, to make sure that the promise destruction works properly, please wrap all your promises with **DestroyablePromise**.
 
 Destroying the chained promise will result in cancelling of all promises/operations **before** the end of this chain, **not after**. So, in the third case below, `chain` object destruction won't do any impact.
@@ -95,7 +97,7 @@ Destroying the chained promise will result in cancelling of all promises/operati
 jWidget provides a bunch of built-in **DestroyablePromise** implementations for you to work with:
 
 * [jwidget/Timeout](Timeout.md) - Destroyable wrapper around setTimeout.
-* [jwidget/HttpRequest](HttpRequest.md) - Destroyable wrapper around [jQuery.ajax](http://api.jquery.com/jquery.ajax/).
+* [jwidget/HttpRequest](HttpRequest.md) - Destroyable wrapper around [jqXHR](http://api.jquery.com/jquery.ajax/).
 * [jwidget/AllPromise](AllPromise.md) - Destroyable wrapper around [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all).
 * [jwidget/RacePromise](RacePromise.md) - Destroyable wrapper around [Promise.race](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race).
 

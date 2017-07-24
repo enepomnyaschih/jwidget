@@ -18,14 +18,28 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import BaseTimeout from './BaseTimeout';
+import Destroyable from './Destroyable';
 
-export default class Interval extends BaseTimeout {
-	protected _init(callback: () => any, delay?: number): number {
-		return setInterval(callback, delay);
+export default class Interval implements Destroyable {
+	private interval: number;
+
+	/**
+	 * @param callback Timeout callback function.
+	 * @param scope Call scope of callback.
+	 * @param ms Timeout delay in milliseconds.
+	 */
+	constructor(callback: () => any, ms?: number);
+	constructor(callback: () => any, scope: any, ms?: number);
+	constructor(callback: () => any, scope?: any, ms?: number) {
+		if ((scope != null) && (typeof scope === "object")) {
+			callback = callback.bind(scope);
+		} else if (typeof scope === "number") {
+			ms = scope;
+		}
+		this.interval = setInterval(callback, ms);
 	}
 
-	protected _done(timeout: number): void {
-		clearInterval(timeout);
+	destroy() {
+		clearInterval(this.interval);
 	}
 }

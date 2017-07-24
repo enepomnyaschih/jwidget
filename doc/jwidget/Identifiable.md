@@ -16,8 +16,12 @@ Makes this object viable for efficient storage in `ISet`.
 
 ## Methods
 
+## Properties
+
 ### iid
 
-	iid(): void
+	readonly iid: number
 
-Unique auto-incrementing instance ID.
+Instance ID.
+
+Auto-incrementing object unique ID. Each [jwidget/Class] instance has such an identifier.

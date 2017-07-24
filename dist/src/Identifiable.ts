@@ -24,7 +24,7 @@
  */
 interface Identifiable {
 	/**
-	 * Unique auto-incrementing instance ID.
+	 * Auto-incrementing object unique ID.
 	 */
 	readonly iid: number;
 }
