@@ -2,8 +2,6 @@
 
 # Core utilities
 
-# Identifiable
-
 [](BEGIN_INDEX)
 * **Enumerations**
     * [Binding](#binding)
@@ -316,3 +314,7 @@ Calls object method `destroy` if available. Can be used in mapper configuration.
 Reference: [jwidget/mapper/list](mapper/list.md).
 
 Doesn't return anything - `any` return type is specified for easier usage in methods like [jwidget/ArrayUtils.backEvery](ArrayUtils.md#backevery).
+
+### test (2)
+
+This is a test.
