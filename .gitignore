@@ -2,6 +2,9 @@
 !/dist/.npmignore
 !/dist/package.json
 !/dist/src
+/docgen/classes.json
+/docgen/dist/*
+/docgen/node_modules/*
 /guides/endownload/jwidget.zip
 /guides/endownload/plugins
 /guides/endownload/**/*.js

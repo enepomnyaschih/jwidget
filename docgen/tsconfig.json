@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "sourceMap": true,
+        "module": "commonjs",
+        "target": "es5",
+        "alwaysStrict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "declaration": true
+    },
+    "include": [
+        "gens/**/*",
+        "model/**/*",
+        "gen.ts"
+    ],
+    "exclude": []
+}

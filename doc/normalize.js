@@ -1,3 +1,68 @@
+/*
+interface Class {
+	typevars: string[];
+	super?: string[];
+}
+*/
+
+const classes = {
+	Destroyable: {},
+	Identifiable: {},
+	Listenable: {
+		typevars: ['P']
+	},
+	Bindable: {
+		typevars: ['V']
+	},
+	DestroyableBindable: {},
+	DestroyablePromise: {},
+	Class: {},
+	Event: {},
+	Property: {},
+	IClass: {},
+	IEvent: {},
+	IProperty: {},
+	Component: {},
+	Copier: {},
+	Mapper: {},
+	Switcher: {},
+	ReadOnlyCollection: {},
+	ReadOnlyList: {},
+	ReadOnlyMap: {},
+	ReadOnlySet: {},
+	DestroyableReadOnlyCollection: {},
+	DestroyableReadOnlyList: {},
+	DestroyableReadOnlyMap: {},
+	DestroyableReadOnlySet: {},
+	ICollection: {},
+	IList: {},
+	IMap: {},
+	ISet: {},
+	List: {},
+	Map: {},
+	Set: {},
+	Router: {},
+	AbstractRestProvider: {},
+	HttpRequest: {},
+	AllPromise: {},
+	RacePromise: {},
+	Timeout: {},
+	Destructor: {},
+	Interval: {},
+	DomInserter: {},
+	DomTemplate: {},
+	HtmlTemplate: {},
+	Reducer: {},
+	AbstractDestroyablePromise: {},
+	AbstractTemplate: {},
+	dummyDestroyable: {},
+	dummyEvent: {},
+	IndexCount: {},
+	IndexItems: {},
+	ListSpliceResult: {},
+	TemplateOutput: {}
+};
+
 const fs = require("fs");
 
 const mapping = {};

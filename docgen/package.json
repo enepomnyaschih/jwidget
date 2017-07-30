@@ -1,0 +1,22 @@
+{
+  "name": "decgen",
+  "version": "0.0.1",
+  "description": "Simple TypeScript doc gen",
+  "license": "LGPL-3.0",
+  "author": {
+    "name": "Egor Nepomnyaschih",
+    "email": "enepomnyaschih@gmail.com",
+    "url": "http://enepomnyaschih.livejournal.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enepomnyaschih/jwidget.git"
+  },
+  "private": true,
+  "dependencies": {
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.15"
+  }
+}
