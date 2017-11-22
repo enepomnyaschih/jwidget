@@ -2,6 +2,10 @@
 
 # IProperty
 
+* **Methods**
+	* [set](#set)
+	* [ownValue](#ownvalue)
+
 ## Consumption
 
 	import IProperty from "jwidget/IProperty";
@@ -9,10 +13,10 @@
 ## Hierarchy
 
 * interface [jwidget/Destroyable](Destroyable.md)
-	* interface [jwidget/Watchable](Watchable.md)`<V>`
+* interface [jwidget/Bindable](Bindable.md)`<V>`
+	* interface [jwidget/DestroyableBindable](DestroyableBindable.md)`<V>`
 		* interface **jwidget/IProperty**`<V>`
-			* class [jwidget/ObservableProperty](ObservableProperty.md)`<V>` extends [jwidget/Class](Class.md)
-			* class [jwidget/DimProperty](DimProperty.md)`<V>` extends [jwidget/Class](Class.md)
+			* class [jwidget/Property](Property.md)`<V>`
 
 ## Description
 

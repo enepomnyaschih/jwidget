@@ -2,6 +2,9 @@
 
 # Some
 
+* **Properties**
+	* [value](#value)
+
 ## Consumption
 
 	import Some from "jwidget/Some";

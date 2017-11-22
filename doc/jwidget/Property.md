@@ -2,15 +2,22 @@
 
 # Property
 
+
+
 ## Consumption
 
 	import Property from "jwidget/Property";
 
 ## Hierarchy
 
-* class [jwidget/Class](Class.md)
-* interface [jwidget/IProperty](IProperty.md)`<V>`
-	* class **jwidget/Property**`<V>`
+* interface [jwidget/Destroyable](Destroyable.md)
+* interface [jwidget/Identifiable](Identifiable.md)
+	* interface [jwidget/IClass](IClass.md)
+		* class [jwidget/Class](Class.md)
+* interface [jwidget/Bindable](Bindable.md)`<V>`
+	* interface [jwidget/DestroyableBindable](DestroyableBindable.md)`<V>`
+		* interface [jwidget/IProperty](IProperty.md)`<V>`
+			* class **jwidget/Property**`<V>`
 
 ## Description
 

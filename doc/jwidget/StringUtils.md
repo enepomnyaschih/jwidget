@@ -2,17 +2,15 @@
 
 # String utilities
 
-[](BEGIN_INDEX)
 * **Functions**
-    * [htmlEncode](#htmlencode)
-    * [htmlDecode](#htmldecode)
-    * [ellipsis](#ellipsis)
-    * [pad](#pad)
-    * [capitalize](#capitalize)
-    * [camel](#camel)
-    * [hyphen](#hyphen)
-    * [parseClass](#parseclass)
-[](END_INDEX)
+	* [htmlEncode](#htmlencode)
+	* [htmlDecode](#htmldecode)
+	* [ellipsis](#ellipsis)
+	* [pad](#pad)
+	* [capitalize](#capitalize)
+	* [camel](#camel)
+	* [hyphen](#hyphen)
+	* [parseClass](#parseclass)
 
 ## Consumption
 

@@ -2,20 +2,11 @@
 
 # template
 
+
+
 ## Consumption
 
-	import template from "jwidget/template";
-
-## Semantics
-
-function(template: string, id?: string): any
-
-* **template** - Template HTML string.
-* **id** - Template name to add or override. Defaults to "main".
-
-function(tpls: Dictionary<string>): any;
-
-* **tpls** - Templates to add or override.
+	import * as template from "jwidget/template";
 
 ## Description
 
@@ -28,3 +19,14 @@ Templates are inherited along with component classes.
 Each component class has at least one template, its name is `main`. This is the main template which is used to render the component. By default, `main` equals to `<div></div>`. Usually, `main` template is enough for the majority of components. This template is applied automatically, unlike other templates which should be applied manually.
 
 With WebPack, you can easily extract the templates to separate HTML files. See [Integration with WebPack](Component.md#integration-with-webpack).
+
+## Semantics
+
+	function(template: string, id?: string): any
+
+* **template** - Template HTML string.
+* **id** - Template name to add or override. Defaults to "main".
+
+	function(tpls: Dictionary<string>): any;
+
+* **tpls** - Templates to add or override.

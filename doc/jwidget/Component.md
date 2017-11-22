@@ -2,6 +2,41 @@
 
 # Component
 
+* ****
+	* [jWidget UI component example](#jwidget ui component example)
+	* [Component creation in code](#component creation in code)
+	* [Child components](#child components)
+	* [More about child component collections](#more about child component collections)
+	* [More about renderChild methods](#more about renderchild methods)
+	* [Component removal and destruction](#component removal and destruction)
+	* [Common practices in child component management](#common practices in child component management)
+	* [Component life stages](#component life stages)
+	* [Integration with WebPack](#integration with webpack)
+* **Properties**
+	* [parent](#parent)
+	* [el](#el)
+	* [children](#children)
+	* [templates](#templates)
+* **Methods**
+	* [render](#render)
+	* [renderTo](#renderto)
+	* [renderAs](#renderas)
+	* [remove](#remove)
+	* [getElement](#getelement)
+	* [removeElement](#removeelement)
+	* [addReplaceable](#addreplaceable)
+	* [addArray](#addarray)
+	* [addCollection](#addcollection)
+	* [using](#using)
+* **Protected methods**
+	* [beforeRender](#beforerender)
+	* [afterRender](#afterrender)
+	* [afterAppend](#afterappend)
+	* [releaseDom](#releasedom)
+	* [unrender](#unrender)
+	* [afterDestroy](#afterdestroy)
+	* [createElement](#createelement)
+
 ## Consumption
 
 	import Component from "jwidget/Component";
@@ -9,6 +44,7 @@
 ## Hierarchy
 
 * interface [jwidget/Destroyable](Destroyable.md)
+* interface [jwidget/Identifiable](Identifiable.md)
 	* interface [jwidget/IClass](IClass.md)
 		* class [jwidget/Class](Class.md)
 			* class **jwidget/Component**

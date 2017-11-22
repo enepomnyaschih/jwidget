@@ -2,6 +2,11 @@
 
 # Class
 
+* **Methods**
+	* [destroy](#destroy)
+* **Protected methods**
+	* [destroyObject](#destroyobject)
+
 ## Consumption
 
 	import Class from "jwidget/Class";
@@ -9,11 +14,9 @@
 ## Hierarchy
 
 * interface [jwidget/Destroyable](Destroyable.md)
-* interface [jwidget/Identifiable](Destroyable.md)
+* interface [jwidget/Identifiable](Identifiable.md)
 	* interface [jwidget/IClass](IClass.md)
 		* class **jwidget/Class**
-
-The majority of jWidget classes and interfaces inherit these four.
 
 ## Description
 
@@ -58,11 +61,11 @@ Reference: [owning](#owning).
 
 ## Properties
 
-See inherited properties in [jwidget/Identifiable].
+See inherited properties in [jwidget/Identifiable](Identifiable.md).
 
 ## Methods
 
-See inherited methods in [jwidget/IClass].
+See inherited methods in [jwidget/IClass](IClass.md).
 
 ### destroy
 
@@ -79,7 +82,7 @@ Class destructor invocation method. Destroys all aggregated objects and calls de
 
 Alternatively (and optimally), you should use [own](#own) method to aggregate this object inside another one.
 
-Unlike the other [jwidget/Destroyable] subclasses, **Class** subclasses are not recommended to override `destroy` method directly. Instead, please use [destroyObject](#destroyobject) if you want the aggregated objects to be already destroyed.
+Unlike the other [jwidget/Destroyable](Destroyable.md) subclasses, **Class** subclasses are not recommended to override `destroy` method directly. Instead, please use [destroyObject](#destroyobject) if you want the aggregated objects to be already destroyed.
 
 You can override `destroy` method in a subclass to do some preliminary work before aggregated object destruction. For example, [jwidget/Component](Component.md) overrides this method to remove child components before their destruction, because child components are usually aggregated inside the component. However, in the majority of cases, you should override [destroyObject](#destroyobject) method instead to customize destruction logic.
 

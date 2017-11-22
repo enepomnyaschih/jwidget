@@ -2,6 +2,11 @@
 
 # Listenable
 
+* **Properties**
+	* [dummy](#dummy)
+* **Methods**
+	* [listen](#listen)
+
 ## Consumption
 
 	import Listenable from "jwidget/Listenable";
@@ -11,7 +16,6 @@
 * interface **jwidget/Listenable**`<P>`
 	* interface [jwidget/IEvent](IEvent.md)`<P>`
 		* class [jwidget/Event](Event.md)`<P>`
-		* const [jwidget/dummyEvent](dummyEvent.md)
 
 ## Description
 

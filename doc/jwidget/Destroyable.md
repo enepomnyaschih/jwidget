@@ -2,13 +2,16 @@
 
 # Destroyable
 
+* **Methods**
+	* [destroy](#destroy)
+
 ## Consumption
 
 	import Destroyable from "jwidget/Destroyable";
 
 ## Hierarchy
 
-The majority of jWidget classes implement this interface
+* interface **jwidget/Destroyable**
 
 ## Description
 

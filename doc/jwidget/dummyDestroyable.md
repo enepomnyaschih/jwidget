@@ -2,14 +2,11 @@
 
 # dummyDestroyable
 
+
+
 ## Consumption
 
-	import dummyDestroyable from "jwidget/dummyDestroyable";
-
-## Hierarchy
-
-* interface [jwidget/Destroyable](Destroyable.md)
-	* const **jwidget/dummyDestroyable**
+	import * as dummyDestroyable from "jwidget/dummyDestroyable";
 
 ## Description
 

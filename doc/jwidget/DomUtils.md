@@ -2,20 +2,18 @@
 
 # DOM utilities
 
-[](BEGIN_INDEX)
 * **Functions**
-    * [template](#template)
-    * [isElement](#iselement)
-    * [isTextInput](#istextinput)
-    * [inDom](#indom)
-    * [inEl](#inel)
-    * [hasClass](#hasclass)
-    * [addClass](#addclass)
-    * [parseHtml](#parsehtml)
-    * [insert](#insert)
-    * [remove](#remove)
-    * [replace](#replace)
-[](END_INDEX)
+	* [template](#template)
+	* [isElement](#iselement)
+	* [isTextInput](#istextinput)
+	* [inDom](#indom)
+	* [inEl](#inel)
+	* [hasClass](#hasclass)
+	* [addClass](#addclass)
+	* [parseHtml](#parsehtml)
+	* [insert](#insert)
+	* [remove](#remove)
+	* [replace](#replace)
 
 ## Consumption
 

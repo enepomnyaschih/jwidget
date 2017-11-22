@@ -37,9 +37,9 @@ abstract class AbstractRestProvider<C> {
 		this.settings = config.settings;
 	}
 
-	abstract getHeaders(context: C): Dictionary<string>;
+	abstract getHeaders(config: C): Dictionary<string>;
 
-	abstract getContentType(context: C): string;
+	abstract getContentType(config: C): string;
 
 	getUrl(action: string | string[], type: string = "GET") {
 		if (typeof action !== 'string') {
@@ -80,18 +80,18 @@ abstract class AbstractRestProvider<C> {
 		});
 	}
 
-	private send<T>(type: string, action: string | string[], data: any, context: C,
+	private send<T>(type: string, action: string | string[], data: any, config: C,
 			factory?: (response: any) => T, settings?: JQueryAjaxSettings): DestroyablePromise<T> {
 		const url = this.getUrl(action, type);
 		if (url === null) {
 			return new HttpRequest<T>();
 		}
 		const contentType = (settings && settings.contentType != null) ?
-			settings.contentType : this.getContentType(context);
+			settings.contentType : this.getContentType(config);
 		settings = $.extend({}, this.settings, settings, {
 			url: url,
 			type: type,
-			headers: this.getHeaders(context),
+			headers: this.getHeaders(config),
 			contentType: contentType,
 			data: (contentType === "application/json" && data != null) ? JSON.stringify(data) : data
 		});

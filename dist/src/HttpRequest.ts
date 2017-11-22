@@ -23,7 +23,7 @@ import AbstractDestroyablePromise from "./AbstractDestroyablePromise";
 export default class HttpRequest<T> extends AbstractDestroyablePromise<T> {
 	private aborted = false;
 
-	constructor(private xhr?: JQueryXHR, private factory?: (response: any) => T) {
+	constructor(private xhr?: JQueryXHR, factory?: (response: any) => T) {
 		super(new Promise<T>((resolve, reject) => {
 			if (!xhr) {
 				reject();

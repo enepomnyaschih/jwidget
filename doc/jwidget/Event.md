@@ -2,18 +2,19 @@
 
 # Event
 
+* **Static methods**
+	* [make](#make)
+
 ## Consumption
 
-	import IEvent from "jwidget/IEvent";
 	import Event from "jwidget/Event";
 
 ## Hierarchy
 
+* interface [jwidget/Listenable](Listenable.md)`<P>`
 * interface [jwidget/Destroyable](Destroyable.md)
-* interface [jwidget/Bindable](Bindable.md)`<P>`
 	* interface [jwidget/IEvent](IEvent.md)`<P>`
 		* class **jwidget/Event**`<P>`
-		* const [jwidget/dummyEvent](dummyEvent.md)
 
 ## Description
 

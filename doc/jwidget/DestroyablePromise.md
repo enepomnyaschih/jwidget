@@ -2,6 +2,12 @@
 
 # DestroyablePromise
 
+* **Properties**
+	* [native](#native)
+* **Methods**
+	* [then](#then)
+	* [catch](#catch)
+
 ## Consumption
 
 	import DestroyablePromise from "jwidget/DestroyablePromise";
@@ -10,7 +16,9 @@
 
 * interface [jwidget/Destroyable](Destroyable.md)
 	* interface **jwidget/DestroyablePromise**`<T>`
-		* class [jwidget/AbstractDestroyablePromise](AbstractDestroyablePromise.md)`<T>`
+		* abstract class [jwidget/AbstractDestroyablePromise](AbstractDestroyablePromise.md)`<T>`
+			* class [jwidget/HttpRequest](HttpRequest.md)`<T>`
+			* class [jwidget/Timeout](Timeout.md)
 
 ## Description
 
@@ -62,7 +70,7 @@ Please note that **DestroyablePromise** implementation can not extend native Pro
 	// ...later
 	chain.destroy();
 
-Reference: [jwidget/HttpRequest].
+Reference: [jwidget/HttpRequest](HttpRequest.md).
 
 Please keep in mind that destroying the chain during the standard Promise waiting won't result in operation cancelling. In the example above, if you destroy the chain during any of three HTTP requests, it will cancel the request and interrupt the chain. If you destroy the chain during setTimeout operation, the chain won't progress further on, but the timeout promise will still get resolved in time. So, to make sure that the promise destruction works properly, please wrap all your promises with **DestroyablePromise**.
 

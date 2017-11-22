@@ -2,17 +2,11 @@
 
 # dummyEvent
 
+
+
 ## Consumption
 
-	import dummyEvent from "jwidget/dummyEvent";
-
-## Hierarchy
-
-* interface [jwidget/Destroyable](Destroyable.md)
-* interface [jwidget/Bindable](Bindable.md)`<P>`
-	* interface [jwidget/IEvent](IEvent.md)`<P>`
-		* class [jwidget/Event](Event.md)`<P>`
-		* const **jwidget/dummyEvent**(dummyEvent.md)
+	import * as dummyEvent from "jwidget/dummyEvent";
 
 ## Description
 

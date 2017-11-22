@@ -2,6 +2,10 @@
 
 # IClass
 
+* **Methods**
+	* [own](#own)
+	* [owning](#owning)
+
 ## Consumption
 
 	import IClass from "jwidget/IClass";
@@ -9,11 +13,10 @@
 ## Hierarchy
 
 * interface [jwidget/Destroyable](Destroyable.md)
-* interface [jwidget/Identifiable](Destroyable.md)
+* interface [jwidget/Identifiable](Identifiable.md)
 	* interface **jwidget/IClass**
 		* class [jwidget/Class](Class.md)
-
-The majority of jWidget classes and interfaces inherit these four.
+		* interface [jwidget/ICollection](ICollection.md)`<T>`
 
 ## Description
 
@@ -21,11 +24,11 @@ Interface of [jwidget/Class](Class.md) - see it for details.
 
 ## Properties
 
-See inherited properties in [jwidget/Identifiable].
+See inherited properties in [jwidget/Identifiable](Identifiable.md).
 
 ## Methods
 
-See inherited methods in [jwidget/Destroyable].
+See inherited methods in [jwidget/Destroyable](Destroyable.md).
 
 ### own
 

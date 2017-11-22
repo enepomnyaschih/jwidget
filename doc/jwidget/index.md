@@ -2,41 +2,40 @@
 
 # Core utilities
 
-[](BEGIN_INDEX)
 * **Enumerations**
-    * [Binding](#binding)
-    * [CollectionFlags](#collectionflags)
+	* [Binding](#binding)
+	* [CollectionFlags](#collectionflags)
 * **Value test functions**
-    * [isUndefined](#isundefined)
-    * [isDefined](#isdefined)
-    * [isNull](#isnull)
-    * [isNotNull](#isnotnull)
-    * [isNil](#isnil)
-    * [isNotNil](#isnotnil)
-    * [isFalsy](#isfalsy)
-    * [isTruthy](#istruthy)
-    * [isInt](#isint)
-    * [isNumber](#isnumber)
-    * [isString](#isstring)
-    * [isBoolean](#isboolean)
-    * [isFunction](#isfunction)
-    * [isArray](#isarray)
-    * [isRegExp](#isregexp)
-    * [isDate](#isdate)
+	* [isUndefined](#isundefined)
+	* [isDefined](#isdefined)
+	* [isNull](#isnull)
+	* [isNotNull](#isnotnull)
+	* [isNil](#isnil)
+	* [isNotNil](#isnotnil)
+	* [isFalsy](#isfalsy)
+	* [isTruthy](#istruthy)
+	* [isInt](#isint)
+	* [isNumber](#isnumber)
+	* [isString](#isstring)
+	* [isBoolean](#isboolean)
+	* [isFunction](#isfunction)
+	* [isArray](#isarray)
+	* [isRegExp](#isregexp)
+	* [isDate](#isdate)
 * **Other functions**
-    * [def](#def)
-    * [defn](#defn)
-    * [apply](#apply)
-    * [cmp](#cmp)
-    * [get](#get)
-    * [newIid](#newiid)
-    * [iidStr](#iidstr)
-    * [destroy](#destroy)
-[](END_INDEX)
+	* [def](#def)
+	* [defn](#defn)
+	* [apply](#apply)
+	* [cmp](#cmp)
+	* [get](#get)
+	* [newIid](#newiid)
+	* [iidStr](#iidstr)
+	* [destroy](#destroy)
+	* [test (2)](#test (2))
 
 ## Consumption
 
-	import * as JW from "jwidget";
+	import * as CoreUtils from "jwidget";
 
 ## Description
 

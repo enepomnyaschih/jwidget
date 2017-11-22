@@ -2,14 +2,12 @@
 
 # Bindable
 
-[](BEGIN_INDEX)
 * **Properties**
-    * [changeEvent](#changeevent)
-    * [silent](#silent)
+	* [changeEvent](#changeevent)
+	* [silent](#silent)
 * **Methods**
-    * [get](#get)
-    * [map](#map)
-[](END_INDEX)
+	* [get](#get)
+	* [map](#map)
 
 ## Consumption
 

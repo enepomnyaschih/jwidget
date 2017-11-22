@@ -92,8 +92,8 @@ Utilities:
 
 Core interfaces:
 
-- [jwidget/Destroyable](jwidget/Destroyable.md) - Provides the object with a destructor.
-- [jwidget/Identifiable](jwidget/Identifiable.md) - Provides the object with an unique identifier.
+- [jwidget/Destroyable](jwidget/Destroyable.md) - Provides an object with a destructor.
+- [jwidget/Identifiable](jwidget/Identifiable.md) - Provides an object with an unique identifier.
 - [jwidget/Listenable](jwidget/Listenable.md) - Interface for an event.
 - [jwidget/Bindable](jwidget/Bindable.md) - Interface for a bindable property.
 - [jwidget/DestroyableBindable](jwidget/DestroyableBindable.md) - Interface for a destroyable bindable property.

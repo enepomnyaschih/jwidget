@@ -2,17 +2,20 @@
 
 # IEvent
 
+* **Methods**
+	* [trigger](#trigger)
+	* [destroy](#destroy)
+
 ## Consumption
 
 	import IEvent from "jwidget/IEvent";
 
 ## Hierarchy
 
+* interface [jwidget/Listenable](Listenable.md)`<P>`
 * interface [jwidget/Destroyable](Destroyable.md)
-* interface [jwidget/Bindable](Bindable.md)`<P>`
 	* interface **jwidget/IEvent**`<P>`
 		* class [jwidget/Event](Event.md)`<P>`
-		* const [jwidget/dummyEvent](dummyEvent.md)
 
 ## Description
 
