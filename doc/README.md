@@ -148,12 +148,12 @@ Collection synchronizers:
 - [jwidget/counter/list](jwidget/counter/list.md), [/map](jwidget/counter/map.md), [/set](jwidget/counter/collection.md), [/collection](jwidget/counter/collection.md) - Matching item counter.
 - [jwidget/indexer/list](jwidget/indexer/list.md), [/map](jwidget/indexer/map.md), [/set](jwidget/indexer/collection.md), [/collection](jwidget/indexer/collection.md) - Converter to a map (indexer).
 - [jwidget/convertertoset/list](jwidget/convertertoset/list.md), [/map](jwidget/convertertoset/map.md), [/set](jwidget/convertertoset/collection.md), [/collection](jwidget/convertertoset/collection.md) - Converter to a set.
-- [jwidget/convertertolist/list](jwidget/convertertolist/list.md), [/map](jwidget/convertertolist/map.md), [/set](jwidget/convertertolist/collection.md), [/collection](jwidget/convertertolist/collection.md) - Converter to an array (orderer).
-- [jwidget/sortercomparing/list](jwidget/sortercomparing/list.md), [/map](jwidget/sortercomparing/map.md), [/set](jwidget/sortercomparing/collection.md), [/collection](jwidget/sortercomparing/collection.md) - Converter to an array (sorter by comparer).
+- [jwidget/convertertolist/list](jwidget/convertertolist/list.md), [/map](jwidget/convertertolist/map.md), [/set](jwidget/convertertolist/collection.md), [/collection](jwidget/convertertolist/collection.md) - Converter to an list (orderer).
+- [jwidget/sortercomparing/list](jwidget/sortercomparing/list.md), [/map](jwidget/sortercomparing/map.md), [/set](jwidget/sortercomparing/collection.md), [/collection](jwidget/sortercomparing/collection.md) - Converter to an list (sorter by comparer).
 - [jwidget/observer/list](jwidget/observer/list.md), [/map](jwidget/observer/map.md), [/set](jwidget/observer/collection.md), [/collection](jwidget/observer/collection.md) - Content observer.
-- [jwidget/inserter/array](jwidget/inserter/array.md), [jwidget/inserter/map](jwidget/inserter/map.md) - View synchronizers.
-- [jwidget/merger/array](jwidget/merger/array.md) - Array merger.
-- [jwidget/reverser/array](jwidget/reverser/array.md) - Array reverser.
+- [jwidget/inserter/list](jwidget/inserter/array.md), [jwidget/inserter/map](jwidget/inserter/map.md) - View synchronizers.
+- [jwidget/merger/list](jwidget/merger/array.md) - List merger.
+- [jwidget/reverser/list](jwidget/reverser/array.md) - List reverser.
 
 Routing:
 

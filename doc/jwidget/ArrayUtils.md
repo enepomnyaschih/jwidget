@@ -81,7 +81,7 @@ Returns the last array item. If array is empty, returns undefined.
 
 	isEmpty<T>(arr: T[]): boolean
 
-Checks if array is empty.
+Checks if array is empty, i.e. has zero length.
 
 ## Item search functions
 

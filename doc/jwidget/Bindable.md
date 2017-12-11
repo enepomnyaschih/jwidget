@@ -24,7 +24,7 @@
 
 Read-only container for a value. Provides basic data binding functionality.
 
-Has a sub-interface [jwidget/IProperty](IProperty.md), which exposes [set](#Property.md#set) method to modify the property. It is sometimes smart to store the property as [jwidget/IProperty](IProperty.md) internally, and expose it as **Bindable** externally to deny direct control over the property by the clients.
+Has a sub-interface [jwidget/IProperty](IProperty.md), which exposes [set](#IProperty.md#set) method to modify the property. It is sometimes smart to store the property as [jwidget/IProperty](IProperty.md) internally, and expose it as **Bindable** externally to deny direct control over the property by the clients.
 
 	class Example {
 		private _size = new Property<number>(0);
@@ -145,4 +145,4 @@ Pass **destroy** callback to destroy the previously mapped values.
 		}
 	}
 
-Reference: [destroy](index.md#destroy), [own](Class.md#own), [jwidget/Component](Component.md).
+Reference: [destroy](index.md#destroy), [own](IClass.md#own), [jwidget/Component](Component.md).

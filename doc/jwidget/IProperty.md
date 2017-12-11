@@ -20,21 +20,13 @@
 
 ## Description
 
-Extension of [jwidget/Watchable](Watchable.md) interface with [set](#set) method to modify the property value. It is smart to store the property as **IProperty** internally, and expose it as [jwidget/Watchable](Watchable.md) externally to deny direct control over the property by the clients.
+Extension of [jwidget/DestroyableBindable](Watchable.md) interface with [set](#set) method to modify the property value. It is smart to store the property as **IProperty** internally, and expose it as [jwidget/Bindable](Watchable.md) or [jwidget/DestroyableBindable] externally to deny direct control over the property by clients.
 
-Can be used as a target property in the next model bindings:
+Can be used as a target property in [jwidget/Copier](Copier.md) and [jwidget/Mapper](Mapper.md) model bindings.
 
-- [jwidget/Copier](Copier.md) - Keeps one property equal to another.
-- [jwidget/Functor](Functor.md) - Keeps one property as a result of the function from several other properties.
-- [jwidget/Mapper](Mapper.md) - Keeps one property as a result of the function from several other properties.
+Also, can be used as a target property in [jwidget/ui/prop](ui/prop.md), [jwidget/ui/radio](ui/radio.md) and [jwidget/ui/val](ui/val.md) view bindings.
 
-Also, can be used as a target property in the next view bindings:
-
-- [jwidget/ui/prop](ui/prop.md) - Binds jQuery property to a jWidget property and/or vice versa.
-- [jwidget/ui/radio](ui/radio.md) - Binds radio selection to a property and/or vice versa.
-- [jwidget/ui/val](ui/val.md) - Binds input value to a property and/or vice versa.
-
-All bindings are independent - you can implement your own bindings if you want.
+All bindings are independent - you can implement your own binding if you want.
 
 ## Methods
 

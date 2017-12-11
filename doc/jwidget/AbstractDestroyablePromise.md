@@ -21,6 +21,4 @@
 
 ## Description
 
-## Members
-
-See the inherited members in [jwidget/Destroyable](Destroyable.md) and [jwidget/Bindable](Bindable.md).
+See [jwidget/DestroyablePromise] for details.

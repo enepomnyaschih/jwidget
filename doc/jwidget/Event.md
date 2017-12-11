@@ -18,16 +18,16 @@
 
 ## Description
 
-Real implementation of [jwidget/IEvent](IEvent.md) interface that calls handler functions on [trigger](#trigger) method call.
+Real implementation of [jwidget/IEvent](IEvent.md) interface that calls handler functions on [trigger](#trigger) method call (as opposed to [jwidget/dummyEvent] which doesn't).
 
-Used to notify some objects (clients) about certain events (for example, field value changes). Remember to destroy the event attachments to prevent side effects. It is smart to expose event objects in getters returning [jwidget/Bindable](Bindable.md) to deny direct control over the event by the clients.
+Used to notify some objects (listeners) about certain events (for example, field value changes). Remember to destroy the event attachments to prevent side effects. It is smart to expose event objects in getters returning [jwidget/Bindable](Bindable.md) to deny direct control over the event by the listeners.
 
-Full example of the class that triggers the events:
+Full example of class that triggers the events:
 
 	class Dispatcher extends Class {
 		private _items: any[] = [];
-		private _addEvent = this.own(new Event<DispatcherEventParams>());
-		private _removeEvent = this.own(new Event<DispatcherEventParams>());
+		private _addEvent = new Event<DispatcherEventParams>();
+		private _removeEvent = new Event<DispatcherEventParams>();
 
 		get addEvent(): Bindable {
 			return this._addEvent;
@@ -39,17 +39,16 @@ Full example of the class that triggers the events:
 
 		addItem(item: any, index: number) {
 			this._items.splice(index, 0, item);
-			this._addEvent.trigger({sender: this, item: item, index: index});
+			this._addEvent.trigger({item, index});
 		}
 
 		removeItem(index) {
-			var item = this._items.splice(index, 1)[0];
-			this._removeEvent.trigger({sender: this, item: item, index: index});
+			const item = this._items.splice(index, 1)[0];
+			this._removeEvent.trigger({item, index});
 		}
 	}
 
 	interface DispatcherEventParams {
-		sender: Dispatcher;
 		item: any;
 		index: number;
 	}

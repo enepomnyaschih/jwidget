@@ -41,6 +41,8 @@ import Bindable from './Bindable';
 import * as DomUtils from './DomUtils';
 import * as DictionaryUtils from './DictionaryUtils';
 import * as StringUtils from './StringUtils';
+import IMap from "./IMap";
+import Destroyable from "./Destroyable";
 
 /**
  * Base class of UI component.
@@ -60,10 +62,10 @@ export default class Component extends Class {
 	private _wasAfterAppend: boolean = false;
 	private _template: AbstractTemplate = null;
 
-	private __elements    : Dictionary<JQuery> = null;
-	private __bindables   : Dictionary<ComponentBindable> = null;
-	private __arrays      : Dictionary<ComponentList> = null;
-	private __collections : Dictionary<ComponentCollection> = null;
+	private __elements: Dictionary<JQuery> = null;
+	private __bindables: Dictionary<ComponentBindable> = null;
+	private __arrays: Dictionary<ComponentList> = null;
+	private __collections: Dictionary<ComponentCollection> = null;
 
 	/**
 	 * Map from template ID to the template. Templates are defined by `template` annotation.
@@ -100,7 +102,7 @@ export default class Component extends Class {
 	 * Mutable named child components. Use this map to add child components in place of
 	 * elements with corresponding `jwid`. Field is available from component rendering beginning.
 	 */
-	get children() {
+	get children(): IMap<Component> {
 		return this._children;
 	}
 
@@ -133,7 +135,7 @@ export default class Component extends Class {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	destroy() {
 		if (this._parent) {
@@ -234,7 +236,7 @@ export default class Component extends Class {
 	using(value: string | AbstractTemplate | HTMLElement | JQuery): this {
 		this._template =
 			(typeof value === "string") ? new HtmlTemplate(value) :
-			(value instanceof HtmlTemplate) ? value : new DomTemplate(<any>value);
+				(value instanceof HtmlTemplate) ? value : new DomTemplate(<any>value);
 		return this;
 	}
 
@@ -246,18 +248,20 @@ export default class Component extends Class {
 		if (this._el) {
 			return this;
 		}
-		var output = this.createElement();
+		const output = this.createElement();
 		this._el = jQuery(output.root);
-		this.__elements = DictionaryUtils.map(output.groups, function(x) { return jQuery(x); });
+		this.__elements = DictionaryUtils.map(output.groups, function (x) {
+			return jQuery(x);
+		});
 		this._children = new ComponentChildren(this);
 		this.__bindables = {};
 		this.__arrays = {};
 		this.__collections = {};
 		this.beforeRender();
-		var elements = apply({}, this.__elements);
-		for (var jwId in elements) {
-			var element = elements[jwId];
-			var aliveElements = Array.prototype.filter.call(element, (el: HTMLElement) => {
+		const elements = apply({}, this.__elements);
+		for (const jwId in elements) {
+			let element = elements[jwId];
+			const aliveElements = Array.prototype.filter.call(element, (el: HTMLElement) => {
 				return DomUtils.inEl(el, this._el[0]);
 			});
 			if (aliveElements.length === 0) {
@@ -268,10 +272,10 @@ export default class Component extends Class {
 				element = jQuery(aliveElements);
 				this.__elements[jwId] = element;
 			}
-			var jwIdCamel = StringUtils.camel(jwId);
-			var renderMethodName = "render" + StringUtils.capitalize(jwIdCamel);
+			const jwIdCamel = StringUtils.camel(jwId);
+			const renderMethodName = "render" + StringUtils.capitalize(jwIdCamel);
 			if (typeof (<any>this)[renderMethodName] === "function") {
-				var result = (<any>this)[renderMethodName](element);
+				const result = (<any>this)[renderMethodName](element);
 				if (jwId === "root") {
 					if (result instanceof List) {
 						this.addList(result, jwId);
@@ -302,7 +306,7 @@ export default class Component extends Class {
 
 	/**
 	 * Renders component into an element. Use it to render root component only: its children must be rendered
-	 * using `children`, `addArray`, `addCollection`, `addReplaceable` members.
+	 * using `children`, `addList`, `addCollection`, `addBindable` members.
 	 *
 	 * @param el Element to render component into.
 	 */
@@ -315,7 +319,7 @@ export default class Component extends Class {
 
 	/**
 	 * Render component in place of an element. Use it to render root component only: its children must be rendered
-	 * using `children`, `addArray`, `addCollection`, `addReplaceable` members.
+	 * using `children`, `addList`, `addCollection`, `addBindable` members.
 	 *
 	 * @param el Element to render component in place of.
 	 */
@@ -329,8 +333,6 @@ export default class Component extends Class {
 	/**
 	 * Remove the component from DOM. Can be used for root component only (which was added via `renderTo` or `renderAs`
 	 * method). All child components should be removed using `children` map or owning object deletion.
-	 *
-	 * See online documentation for details.
 	 */
 	remove(): this {
 		if (this._parent) {
@@ -344,16 +346,16 @@ export default class Component extends Class {
 	 * Get element by its `jwid`.
 	 * @param id `jwid` of the element.
 	 */
-	getElement(id: string): JQuery {
+	getElement(id: string) {
 		return this.__elements[id];
 	}
 
 	/**
-	 * Remove element by `jwid`. Element gets removed from DOM and destroyed. It is now impossible to get it by `getElement` method.
+	 * Remove element by `jwid`. Element gets removed from DOM and destroyed. It is then impossible to get it by `getElement` method.
 	 * @param id `jwid` of the element.
 	 */
 	removeElement(id: string): this {
-		var el = this.__elements[id];
+		const el = this.__elements[id];
 		if (!el) {
 			return this;
 		}
@@ -363,23 +365,23 @@ export default class Component extends Class {
 	}
 
 	/**
-	 * Add an easily replaceable child component into an element.
+	 * Adds child component and synchronizes the component with the bindable.
 	 *
-	 * @param component Child component property.
+	 * @param component Child component bindable.
 	 * @param id `jwid` of element to replace.
 	 */
-	addBindable(component: Bindable<Component>, id: string): ComponentBindable {
+	addBindable(component: Bindable<Component>, id: string): Destroyable {
 		return new ComponentBindable(this, component, id);
 	}
 
 	/**
-	 * Add child component array into an element. As opposed to `addCollection` method, keeps
-	 * component order. However, it works slower and accepts array only.
+	 * Adds list of child components and synchronizes the component with it. As opposed to `addCollection` method,
+	 * keeps component order. However, it works slower and accepts list only.
 	 *
-	 * @param source Child component array.
+	 * @param source Child component list.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addList(source: ReadOnlyList<Component>, el?: string | HTMLElement | JQuery): ComponentList {
+	addList(source: ReadOnlyList<Component>, el?: string | HTMLElement | JQuery): Destroyable {
 		return new ComponentList(this, source, this._getContainerElement(el));
 	}
 
@@ -387,10 +389,10 @@ export default class Component extends Class {
 	 * Add child component collection into an element. As opposed to `addArray` method, ignores
 	 * component order. However, it works faster and accepts any kind of collection, not array only.
 	 *
-	 * @param components Child component collection.
+	 * @param source Child component collection.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addCollection(source: ReadOnlyCollection<Component>, el?: string | HTMLElement | JQuery): ComponentCollection {
+	addCollection(source: ReadOnlyCollection<Component>, el?: string | HTMLElement | JQuery): Destroyable {
 		return new ComponentCollection(this, source, this._getContainerElement(el));
 	}
 

@@ -110,8 +110,8 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 * In comparison to `mapDestroyable` method, doesn't destroy the previously assigned target values.
 	 * To map multiple properties, use `Mapper`.
 	 *
-	 * @param callback Mapping function.
-	 * @param scope `callback` call scope. Defaults to the property itself.
+	 * @param create Mapping function.
+	 * @param config Mapping configuration.
 	 */
 	map<U>(create: (value: V) => U, config?: Mapper.Config<U>): DestroyableBindable<U> {
 		return mapProperties([this], create, config);

@@ -64,9 +64,6 @@ jWidget component has very simple API, but pretty unusual philosophy to build up
 
 ### jWidget UI component example
 
-	import Component from "jwidget/Component";
-	import template from "jwidget/template";
-
 	@template(
 		'<div jwclass="my-component">' +
 			'<div jwid="hello-message"></div>' +
@@ -85,7 +82,7 @@ jWidget component has very simple API, but pretty unusual philosophy to build up
 		}
 	}
 
-References: [jwidget/template](template.md), [getElement](#getelement).
+Reference: [jwidget/template](template.md), [getElement](#getelement).
 
 Let's find out how HTML template works. Each component has a main template, which is passed into `@template` annotation and defaults to `<div></div>`. You can add more templates - see [jwidget/template](template.md) for details. Subclass inherits superclass templates.
 
@@ -328,9 +325,6 @@ There's an easy way to attach HTML templates via WebPack. The first example from
 
 **MyComponent.ts**
 
-	import Component from "jwidget/Component";
-	import template from "jwidget/template";
-
 	@template(require<string>("./MyComponent.jw.html"))
 	class MyComponent extends Component {
 		constructor(private message: string, private link: string) {
@@ -383,19 +377,24 @@ Also, you need to provide TypeScript compiler with `require` method semantics. J
 
 	new Component()
 
-Yes, objects of this class can be constructed. They can be used as dummy components or simple containers:
+Yes, objects of this class can be constructed. They can be used as dummy components or simple containers. For example, here's a common pattern for [jwidget/Bindable]<[jwidget/ReadonlyList]<**Component**>> rendering:
 
-	renderLabels: function() {
-		return this.own(this.visible.mapDestroyable((visible) => {
-			if (!visible) {
-				return null; // leave original <div jwid="labels"></div>
-			}
-			// else let's render the labels in a simple container
-			const component = new Component().render();
-			component.addArray(this.labels);
-			return component;
-		}));
+	@template('<div><div jwid="labels"></div></div>')
+	class Container extends Component {
+		constructor(private labels: Bindable<ReadonlyList<Component>>) {
+			super();
+		}
+
+		renderLabels: function() {
+			return this.own(this.labels.map((labels) => {
+				const component = new Component().render();
+				component.addList(this.labels);
+				return component;
+			}));
+		}
 	}
+
+Reference: [jwidget/template], [jwidget/Bindable.map], [jwidget/ReadonlyList], [destroy](index.md#destroy).
 
 You should not rely on this possibility too much. The best approach is to inherit a new class from **Component** and render the children in its implementation.
 
@@ -439,7 +438,7 @@ Map from template ID to the template. Templates are defined by [jwidget/template
 
 Renders the component. Call this method to initialize references to all elements of component and create child components. This method is called automatically in the next cases:
 
-- One of methods `renderTo`, `renderAs` is called.
+- One of methods [renderTo](#renderto), [renderAs](#renderas) is called.
 - The component is added into another component as a child.
 
 Feel free to call component rendering multiple times: it gets rendered only once.
@@ -450,7 +449,7 @@ Feel free to call component rendering multiple times: it gets rendered only once
 
 * **el** - Element to render component into.
 
-Renders component into an element. Use it to render root component only: its children must be rendered using [children](#children), [addArray](#addarray), [addCollection](#addcollection), [addReplaceable](#addreplaceable) members.
+Renders component into an element. Use it to render root component only: its children must be rendered using [children](#children), [addList](#addlist), [addCollection](#addcollection), [addBindable](#addbindable) members.
 
 ### renderAs
 
@@ -458,7 +457,7 @@ Renders component into an element. Use it to render root component only: its chi
 
 * **el** - Element to render component in place of.
 
-Render component in place of an element. Use it to render root component only: its children must be rendered using [children](#children), [addArray](#addarray), [addCollection](#addcollection), [addReplaceable](#addreplaceable)  members.
+Render component in place of an element. Use it to render root component only: its children must be rendered using [children](#children), [addList](#addlist), [addCollection](#addcollection), [addBindable](#addbindable) members.
 
 ### remove
 
@@ -482,52 +481,64 @@ Gets element by its `jwid`.
 
 * **id** - `jwid` of the element.
 
-Remove element by `jwid`. Element gets removed from DOM and destroyed. It is now impossible to get it by `getElement` method.
+Remove element by `jwid`. Element gets removed from DOM and destroyed. It is then impossible to get it by `getElement` method.
 
-### addReplaceable
+### addBindable
 
-	addReplaceable(component: Watchable<Component>, id: string): Destroyable
+	addBindable(component: Bindable<Component>, id: string): Destroyable
 
-* **component** - Child component property.
+* **component** - Child component bindable.
 * **id** - `jwid` of element to replace.
 
-Reference: [jwidget/Watchable](Watchable.md), [jwidget/Destroyable](Destroyable.md).
+Reference: [jwidget/Bindable](Bindable.md), [jwidget/Destroyable](Destroyable.md).
 
-Add an easily replaceable child component into an element.
+Adds child component and synchronizes the component with the bindable. On every bindable change, removes the child and adds another one. Equivalent to returning a [jwidget/Bindable]<**Component**> instance in rendering method. It is convenient to create "component" bindable from data bindable using [jwidget/Bindable.map](IProperty.md#mapobject) method:
 
-Pass an instance of [jwidget/Watchable](Watchable.md)`<Component>`. The view gets synchronized with this property. It is convenient to create "component" property from data property using [jwidget/IProperty.mapObject](IProperty.md#mapobject) method.
+	afterRender() {
+		super.afterRender();
+		const bindable = this.own(this.user.avatar.map((avatar) => new AvatarView(avatar), {destroy}));
+		this.addBindable(bindable, "avatar");
+	}
 
-**addReplaceable** method returns an object. If you destroy it, the child gets removed from parent component and the synchronization gets stopped. Also, the replaceable is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child component inside this property ain't destroyed automatically. Usually it can be done by corresponding [jwidget/Mapper](Mapper.md) or property destruction in [unrender](#unrender) method.
+**addBindable** method returns an object. If you destroy it, the child gets removed from parent component and the synchronization gets stopped. Also, the bindable is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child component inside this property is not destroyed automatically. Usually it can be done by corresponding [jwidget/Mapper](Mapper.md) or property destruction in [unrender](#unrender) method or via [own](IClass.md#own).
 
-### addArray
+### addList
 
-	addArray(source: IArray<Component>, el?: string | HTMLElement | JQuery): Destroyable
+	addList(source: ReadonlyList<Component>, el?: string | HTMLElement | JQuery): Destroyable
 
-* **source** - Child component array.
+* **source** - Child component list.
 * **el** - `jwid` of element to add child components into. Defaults to root element ([el](#el)) of component.
 
-Reference: [jwidget/IArray](IArray.md), [jwidget/Destroyable](Destroyable.md).
+Reference: [jwidget/ReadonlyList](IArray.md), [jwidget/Destroyable](Destroyable.md).
 
-Add child component array into an element. As opposed to [addCollection](#addcollection) method, retains component order. However, it works slower and accepts array only.
+Adds list of child components and synchronizes the component with it. On every list change, adds or removes corresponding children. Equivalent to returning a [jwidget/List]<**Component**> instance in rendering method. As opposed to [addCollection](#addcollection) method, retains component order. However, it works slower and accepts list only. It is convenient to create "source" list from data list using [jwidget/mapper/list.mapList](mapper/array.md) utility:
 
-If you pass an instance of [jwidget/ObservableArray](ObservableArray.md), then view gets synchronized with this array contents. It is convenient to create "components" array from data array using [mapDestroyableArray](mapper/array.md) method.
+	afterRender() {
+		super.afterRender();
+		const list = this.own(mapList(this.users, (user) => new UserView(user), {destroy}));
+		this.addList(list, "users");
+	}
 
-**addArray** method returns an object. If you destroy it, the children get removed from parent component and the synchronization gets stopped. Also, the array is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this array are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/array/IArrayMapper](mapper/array/IArrayMapper.md) or array destruction in [unrender](#unrender) method.
+**addList** method returns an object. If you destroy it, the children get removed from parent component and the synchronization gets stopped. Also, the list is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this list are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/list](mapper/array/IArrayMapper.md) or list destruction in [unrender](#unrender) method or via [own](IClass.md#own).
 
 ### addCollection
 
-	addCollection(source: ICollection<Component>, el?: string | HTMLElement | JQuery): Destroyable
+	addCollection(source: ReadonlyCollection<Component>, el?: string | HTMLElement | JQuery): Destroyable
 
 * **source** - Child component collection.
 * **el** - `jwid` of element to add child components into. Defaults to root element ([el](#el)) of component.
 
 Reference: [jwidget/ICollection](ICollection.md), [jwidget/Destroyable](Destroyable.md).
 
-Add child component collection into an element. As opposed to [addArray](#addarray) method, ignores component order. However, it works faster and accepts any kind of collection, not array only.
+Adds collection of child components and synchronizes the component with it. On every collection change, adds or removes corresponding children. Equivalent to returning a [jwidget/List]<**Component**> instance in rendering method. As opposed to [addCollection](#addcollection) method, ignores component order. However, it works faster and accepts any kind of collection, not list only. It is convenient to create "source" collection from data collection using [jwidget/mapper.mapCollection](mapper/array.md) utility:
 
-If you pass an instance of observable collection, then view gets synchronized with this collection contents. It is convenient to create "components" collection from data collection using [mapDestroyableCollection](mapper/collection.md) method.
+	afterRender() {
+		super.afterRender();
+		const collection = this.own(mapCollection(this.users, (user) => new UserView(user), {destroy}));
+		this.addCollection(collection, "users");
+	}
 
-**addCollection** method returns an object. If you destroy it, the children get removed from parent component and the synchronization gets stopped. Also, the collection is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this collection are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/collection/ICollectionMapper](mapper/collection/ICollectionMapper.md) or collection destruction in [unrender](#unrender) method.
+**addCollection** method returns an object. If you destroy it, the children get removed from parent component and the synchronization gets stopped. Also, the collection is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this collection are not destroyed automatically. Usually it can be done by corresponding mapper or collection destruction in [unrender](#unrender) method or via [own](IClass.md#own).
 
 ### using
 
@@ -537,12 +548,12 @@ If you pass an instance of observable collection, then view gets synchronized wi
 
 Reference: [jwidget/AbstractTemplate](AbstractTemplate.md).
 
-Selects component rendering strategy. This method is needed only in very rare cases. By default, component is rendered outside of DOM based on `main` HTML template specified by [jwidget/template](template.md) annotation. You can change this by passing one of the next values into using method of the component:
+Selects component rendering strategy. This method is needed only in very rare cases. By default, component is rendered outside of DOM based on `main` HTML template specified by [jwidget/template](template.md) annotation. You can change this by passing one of the next values into **using** method of the component:
 
 - [jwidget/AbstractTemplate](AbstractTemplate.md) or **string** - use this template explicitly for rendering.
 - **HTMLElement** or **JQuery** - build component on top of existing DOM element. Special attributes `jwclass` and `jwid` get processed in the usual way.
 
-**Disclaimer:** We strongly encourage you to use the standard rendering strategy via [jwidget/template](template.md), or at least create [jwidget/HtmlTemplate](HtmlTemplate.md) instances to store your HTML templates. They work 3 times faster compared to raw HTML rendering thanks to preliminary compilation and node cloning method.
+**Disclaimer:** We strongly encourage you to use standard rendering strategy via [jwidget/template](template.md), or at least create [jwidget/HtmlTemplate](HtmlTemplate.md) instances to store your HTML templates. They work 3 times faster compared to raw HTML rendering thanks to preliminary compilation and node cloning method.
 
 ## Protected methods
 

@@ -44,17 +44,17 @@ export default class ComponentChildren extends Map<Component> {
 	}
 
 	tryPut(key: string, item: Component): Some<Component> {
-		var result = super.tryPut(key, item);
+		const result = super.tryPut(key, item);
 		if (result === undefined) {
 			return undefined;
 		}
-		var child = new ComponentChild(this.component, item);
+		const child = new ComponentChild(this.component, item);
 		this.target.tryPut(key, child);
 		return result;
 	}
 
 	trySetKey(oldKey: string, newKey: string): Component {
-		var item = super.trySetKey(oldKey, newKey);
+		const item = super.trySetKey(oldKey, newKey);
 		if (item === undefined) {
 			return undefined;
 		}
@@ -63,7 +63,7 @@ export default class ComponentChildren extends Map<Component> {
 	}
 
 	tryRemove(key: string): Component {
-		var item = super.tryRemove(key);
+		const item = super.tryRemove(key);
 		if (item === undefined) {
 			return undefined;
 		}
@@ -72,13 +72,13 @@ export default class ComponentChildren extends Map<Component> {
 	}
 
 	trySplice(removedKeys: string[], updatedItems: Dictionary<Component>): IMap.SpliceResult<Component> {
-		var spliceResult = super.trySplice(removedKeys, updatedItems);
+		const spliceResult = super.trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		var removedItems = spliceResult.removedItems;
-		var addedItems = spliceResult.addedItems;
-		var children = DictionaryUtils.map(addedItems, (item) => {
+		const removedItems = spliceResult.removedItems;
+		const addedItems = spliceResult.addedItems;
+		const children = DictionaryUtils.map(addedItems, (item) => {
 			return new ComponentChild(this.component, item);
 		}, this);
 		this.target.trySplice(DictionaryUtils.getRemovedKeys(removedItems, addedItems), children);
@@ -86,7 +86,7 @@ export default class ComponentChildren extends Map<Component> {
 	}
 
 	clear(): Dictionary<Component> {
-		var items = super.clear();
+		const items = super.clear();
 		if (items === undefined) {
 			return undefined;
 		}
@@ -95,7 +95,7 @@ export default class ComponentChildren extends Map<Component> {
 	}
 
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
-		var result = super.tryReindex(keyMap);
+		const result = super.tryReindex(keyMap);
 		if (result === undefined) {
 			return undefined;
 		}

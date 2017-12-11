@@ -32,4 +32,4 @@ Class destructor. You must override it in a subclass and call this method explic
 	// Once object is not needed anymore, destroy it
 	object.destroy();
 
-Alternatively (and optimally), you should use [own](#own) method to aggregate this object inside another one.
+Alternatively (and optimally), you should use [own](IClass.md#own) method to aggregate this object in another one.
