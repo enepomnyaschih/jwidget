@@ -21,4 +21,4 @@
 
 ## Description
 
-See [jwidget/DestroyablePromise] for details.
+See [jwidget/DestroyablePromise](DestroyablePromise.md) for details.

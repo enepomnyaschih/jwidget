@@ -20,7 +20,7 @@
 
 ## Description
 
-Extension of [jwidget/DestroyableBindable](Watchable.md) interface with [set](#set) method to modify the property value. It is smart to store the property as **IProperty** internally, and expose it as [jwidget/Bindable](Watchable.md) or [jwidget/DestroyableBindable] externally to deny direct control over the property by clients.
+Extension of [jwidget/DestroyableBindable](DestroyableBindable.md) interface with [set](#set) method to modify the property value. It is smart to store the property as **IProperty** internally, and expose it as [jwidget/Bindable](Bindable.md) or [jwidget/DestroyableBindable](DestroyableBindable.md) externally to deny direct control over the property by clients.
 
 Can be used as a target property in [jwidget/Copier](Copier.md) and [jwidget/Mapper](Mapper.md) model bindings.
 

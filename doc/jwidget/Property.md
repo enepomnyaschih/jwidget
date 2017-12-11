@@ -50,7 +50,7 @@ Example of model class that exposes properties for two-way binding:
 		readonly age  : IProperty<number> = new Property(0);
 	}
 
-References: [jwidget/Class].
+References: [jwidget/Class](Class.md).
 
 And this is an example of view class that uses these bindings:
 
@@ -81,11 +81,11 @@ And this is an example of view class that uses these bindings:
 		}
 	}
 
-References: [jwidget/template], [jwidget/Component], [jwidget/Mapper], [jwidget/ui/val], [TWOWAY](index.md#Binding), [map](#map).
+References: [jwidget/template](template.md), [jwidget/Component](Component.md), [jwidget/Mapper](Mapper.md), [jwidget/ui/val](ui/val.md), [TWOWAY](index.md#Binding), [map](#map).
 
 **Example 3.** One-way binding.
 
-If you want to forbid property modification by the clients, use [jwidget/Bindable] getters:
+If you want to forbid property modification by the clients, use [jwidget/Bindable](Bindable.md) getters:
 
 	class Counter extends Class {
 		private _seconds = new Property(0);
@@ -100,7 +100,7 @@ If you want to forbid property modification by the clients, use [jwidget/Bindabl
 		}
 	}
 
-References: [jwidget/Class], [jwidget/Interval].
+References: [jwidget/Class](Class.md), [jwidget/Interval](Interval.md).
 
 Now the client can only use one-way binding:
 
@@ -114,7 +114,7 @@ Now the client can only use one-way binding:
 		}
 	}
 
-References: [jwidget/Component], [jwidget/ui/val].
+References: [jwidget/Component](Component.md), [jwidget/ui/val](ui/val.md).
 
 ## Constructor
 

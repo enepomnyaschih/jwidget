@@ -24,8 +24,8 @@
 	* [remove](#remove)
 	* [getElement](#getelement)
 	* [removeElement](#removeelement)
-	* [addReplaceable](#addreplaceable)
-	* [addArray](#addarray)
+	* [addBindable](#addbindable)
+	* [addList](#addlist)
 	* [addCollection](#addcollection)
 	* [using](#using)
 * **Protected methods**
@@ -377,7 +377,7 @@ Also, you need to provide TypeScript compiler with `require` method semantics. J
 
 	new Component()
 
-Yes, objects of this class can be constructed. They can be used as dummy components or simple containers. For example, here's a common pattern for [jwidget/Bindable]<[jwidget/ReadonlyList]<**Component**>> rendering:
+Yes, objects of this class can be constructed. They can be used as dummy components or simple containers. For example, here's a common pattern for [jwidget/Bindable](Bindable.md)<[jwidget/ReadonlyList](ReadonlyList.md)<**Component**>> rendering:
 
 	@template('<div><div jwid="labels"></div></div>')
 	class Container extends Component {
@@ -394,7 +394,7 @@ Yes, objects of this class can be constructed. They can be used as dummy compone
 		}
 	}
 
-Reference: [jwidget/template], [jwidget/Bindable.map], [jwidget/ReadonlyList], [destroy](index.md#destroy).
+Reference: [jwidget/template](template.md), [jwidget/Bindable.map](Bindable.md#map), [jwidget/ReadonlyList](ReadonlyList.md), [destroy](index.md#destroy).
 
 You should not rely on this possibility too much. The best approach is to inherit a new class from **Component** and render the children in its implementation.
 
@@ -492,7 +492,7 @@ Remove element by `jwid`. Element gets removed from DOM and destroyed. It is the
 
 Reference: [jwidget/Bindable](Bindable.md), [jwidget/Destroyable](Destroyable.md).
 
-Adds child component and synchronizes the component with the bindable. On every bindable change, removes the child and adds another one. Equivalent to returning a [jwidget/Bindable]<**Component**> instance in rendering method. It is convenient to create "component" bindable from data bindable using [jwidget/Bindable.map](IProperty.md#mapobject) method:
+Adds child component and synchronizes the component with the bindable. On every bindable change, removes the child and adds another one. Equivalent to returning a [jwidget/Bindable](Bindable.md)<**Component**> instance in rendering method. It is convenient to create "component" bindable from data bindable using [jwidget/Bindable.map](Bindable.md#map) method:
 
 	afterRender() {
 		super.afterRender();
@@ -509,9 +509,9 @@ Adds child component and synchronizes the component with the bindable. On every 
 * **source** - Child component list.
 * **el** - `jwid` of element to add child components into. Defaults to root element ([el](#el)) of component.
 
-Reference: [jwidget/ReadonlyList](IArray.md), [jwidget/Destroyable](Destroyable.md).
+Reference: [jwidget/ReadonlyList](ReadonlyList.md), [jwidget/Destroyable](Destroyable.md).
 
-Adds list of child components and synchronizes the component with it. On every list change, adds or removes corresponding children. Equivalent to returning a [jwidget/List]<**Component**> instance in rendering method. As opposed to [addCollection](#addcollection) method, retains component order. However, it works slower and accepts list only. It is convenient to create "source" list from data list using [jwidget/mapper/list.mapList](mapper/array.md) utility:
+Adds list of child components and synchronizes the component with it. On every list change, adds or removes corresponding children. Equivalent to returning a [jwidget/List](List.md)<**Component**> instance in rendering method. As opposed to [addCollection](#addcollection) method, retains component order. However, it works slower and accepts list only. It is convenient to create "source" list from data list using [jwidget/mapper/list.mapList](mapper/list.md#maplist) utility:
 
 	afterRender() {
 		super.afterRender();
@@ -519,7 +519,7 @@ Adds list of child components and synchronizes the component with it. On every l
 		this.addList(list, "users");
 	}
 
-**addList** method returns an object. If you destroy it, the children get removed from parent component and the synchronization gets stopped. Also, the list is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this list are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/list](mapper/array/IArrayMapper.md) or list destruction in [unrender](#unrender) method or via [own](IClass.md#own).
+**addList** method returns an object. If you destroy it, the children get removed from parent component and the synchronization gets stopped. Also, the list is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child components inside this list are not destroyed automatically. Usually it can be done by corresponding [jwidget/mapper/list](mapper/list.md) or list destruction in [unrender](#unrender) method or via [own](IClass.md#own).
 
 ### addCollection
 
@@ -530,7 +530,7 @@ Adds list of child components and synchronizes the component with it. On every l
 
 Reference: [jwidget/ICollection](ICollection.md), [jwidget/Destroyable](Destroyable.md).
 
-Adds collection of child components and synchronizes the component with it. On every collection change, adds or removes corresponding children. Equivalent to returning a [jwidget/List]<**Component**> instance in rendering method. As opposed to [addCollection](#addcollection) method, ignores component order. However, it works faster and accepts any kind of collection, not list only. It is convenient to create "source" collection from data collection using [jwidget/mapper.mapCollection](mapper/array.md) utility:
+Adds collection of child components and synchronizes the component with it. On every collection change, adds or removes corresponding children. Equivalent to returning a [jwidget/List](List.md)<**Component**> instance in rendering method. As opposed to [addCollection](#addcollection) method, ignores component order. However, it works faster and accepts any kind of collection, not list only. It is convenient to create "source" collection from data collection using [jwidget/mapper.mapCollection](mapper.md#mapcollection) utility:
 
 	afterRender() {
 		super.afterRender();

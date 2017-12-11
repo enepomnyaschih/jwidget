@@ -31,7 +31,7 @@ In the next example, val function returns **DestroyableBindable**<string>, so we
 		}
 	}
 
-References: [jwidget/Class], [jwidget/ui/val].
+References: [jwidget/Class](Class.md), [jwidget/ui/val](ui/val.md).
 
 In some cases, binding destruction is not obligatory. In the next example, the component binds a property to its own element, so garbage collector will take everything away on component destruction anyway. So, it doesn't make much sense to aggregate the binding explicitly.
 
@@ -45,7 +45,7 @@ In some cases, binding destruction is not obligatory. In the next example, the c
 		}
 	}
 
-References: [jwidget/Component], [jwidget/template], [jwidget/ui/val].
+References: [jwidget/Component](Component.md), [jwidget/template](template.md), [jwidget/ui/val](ui/val.md).
 
 ## Members
 
