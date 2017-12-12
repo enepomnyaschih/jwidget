@@ -6,7 +6,7 @@
 
 ## Consumption
 
-	import * as template from "jwidget/template";
+	import template from "jwidget/template";
 
 ## Description
 

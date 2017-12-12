@@ -35,7 +35,7 @@ import * as DomUtils from './DomUtils';
  * unlike other templates which should be applied manually.
  *
  * @param template Template HTML string.
- * @param id Template name to add or override. Defaults to `main`.
+ * @param id Template name to add or override. Defaults to "main".
  */
 export default function(template: string, id?: string): any;
 
@@ -45,7 +45,7 @@ export default function(template: string, id?: string): any;
 export default function(tpls: Dictionary<string>): any;
 export default function(tpl: any, id?: string): any {
 	return function(target: any) {
-		var tpls: Dictionary<string>;
+		let tpls: Dictionary<string>;
 		if (typeof tpl === 'string') {
 			tpls = {};
 			tpls[id || 'main'] = tpl;

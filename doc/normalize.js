@@ -108,6 +108,9 @@ const files = {
 		type: 'class',
 		super: ['Class']
 	},
+	template: {
+		type: 'function'
+	},
 	Copier: {
 		type: 'class',
 		typevars: ['T'],
@@ -432,7 +435,7 @@ function buildConsumption(fullName, lf) {
 
 function buildHierarchy(fullName, lf) {
 	const {file} = getFileInfo(fullName);
-	if (file.type === 'utils') {
+	if (file.type === 'utils' || file.type === 'function') {
 		return '';
 	}
 	const store = [];
