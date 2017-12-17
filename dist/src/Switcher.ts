@@ -24,45 +24,7 @@ import Listenable from './Listenable';
 import Bindable from './Bindable';
 
 /**
- * Watches source [[JW.Property|properties]] modification and calls
- * the specified functions.
- *
- * [[JW.Switcher.Config.init|init]] function is called on switcher
- * initialization and on property change. The new values of the properties are passed as arguments.
- *
- * [[JW.Switcher.Config.done|done]] function is called on property
- * change and on switcher destruction. The old values of the properties are passed as arguments.
- *
- *     let property = new JW.Property<number>(1);
- *     let switcher = new JW.Switcher([property], {
- *         init: (value: number) => {
- *             console.log("Init " + value);
- *         },
- *         done: (value: number) => {
- *             console.log("Done " + value);
- *         },
- *         scope: this
- *     });                 // output: Init 1
- *     property.set(2);    // output: Done 1, Init 2
- *     property.set(null); // output: Done 2
- *     property.set(3);    // output: Init 3
- *     switcher.destroy(); // output: Done 3
- *
- * By default, switcher doesn't call the callbacks if at least one of the source values is null. You can change it
- * via [[JW.Switcher.Config.acceptNull|acceptNull]] option.
- *
- * Realistic use case for switcher is represented in the next example:
- *
- *     this.selectedFile = this.own(new JW.Property<File>());
- *     this.own(new JW.Switcher([this.selectedFile], {
- *         init: function(file) {
- *             file.selected.set(true);
- *         },
- *         done: function(file) {
- *             file.selected.set(false);
- *         },
- *         scope: this
- *     }));
+ * Listens source property modification and calls the specified functions.
  */
 class Switcher extends Class {
 	private _init: Switcher.Callback;
@@ -100,7 +62,7 @@ class Switcher extends Class {
 	}
 
 	/**
-	 * Watches specified event and issues switcher update on the event triggering.
+	 * Listens specified event and issues callback calls on event triggering.
 	 * @param event Event.
 	 * @returns this
 	 */
@@ -109,7 +71,7 @@ class Switcher extends Class {
 	}
 
 	/**
-	 * Watches specified property and issues switcher update on the property change.
+	 * Watches specified property and issues callback calls on its change.
 	 * @param property Property.
 	 * @returns this
 	 */
@@ -118,7 +80,7 @@ class Switcher extends Class {
 	}
 
 	/**
-	 * Updates switcher forcibly.
+	 * Calls callbacks forcibly.
 	 */
 	update() {
 		this._doDone();
