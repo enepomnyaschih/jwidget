@@ -487,20 +487,20 @@ Remove element by `jwid`. Element gets removed from DOM and destroyed. It is the
 
 	addBindable(component: Bindable<Component>, id: string): Destroyable
 
-* **component** - Child component bindable.
+* **component** - Child component property.
 * **id** - `jwid` of element to replace.
 
 Reference: [jwidget/Bindable](Bindable.md), [jwidget/Destroyable](Destroyable.md).
 
-Adds child component and synchronizes the component with the bindable. On every bindable change, removes the child and adds another one. Equivalent to returning a [jwidget/Bindable](Bindable.md)<**Component**> instance in rendering method. It is convenient to create "component" bindable from data bindable using [jwidget/Bindable.map](Bindable.md#map) method:
+Adds child component and synchronizes the component with the property. On every property change, removes the child and adds another one. Equivalent to returning a [jwidget/Bindable](Bindable.md)<**Component**> instance in rendering method. It is convenient to create "component" property from data property using [jwidget/Bindable.map](Bindable.md#map) method:
 
 	afterRender() {
 		super.afterRender();
-		const bindable = this.own(this.user.avatar.map((avatar) => new AvatarView(avatar), {destroy}));
-		this.addBindable(bindable, "avatar");
+		const avatarView = this.own(this.user.avatar.map((avatar) => new AvatarView(avatar), {destroy}));
+		this.addBindable(avatarView, "avatar");
 	}
 
-**addBindable** method returns an object. If you destroy it, the child gets removed from parent component and the synchronization gets stopped. Also, the bindable is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child component inside this property is not destroyed automatically. Usually it can be done by corresponding [jwidget/Mapper](Mapper.md) or property destruction in [unrender](#unrender) method or via [own](IClass.md#own).
+**addBindable** method returns an object. If you destroy it, the child gets removed from parent component and the synchronization gets stopped. Also, the property is removed from parent component on parent component destruction right before [unrender](#unrender) method call. But notice that child component inside this property is not destroyed automatically. Usually it can be done by corresponding [jwidget/Mapper](Mapper.md) or property destruction in [unrender](#unrender) method or via [own](IClass.md#own).
 
 ### addList
 

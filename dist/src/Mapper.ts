@@ -30,122 +30,7 @@ import Property from './Property';
 import Reducer from './Reducer';
 
 /**
- * Watches source [[JW.Property|properties]] modification and recreates
- * a target property using specified functions. Unlike [[JW.Functor]],
- * lets you destroy a previously created value. Also, mapper resets the target
- * property value to null on destruction.
- *
- *     let count = new JW.Property<number>(1);
- *     let units = new JW.Property<string>("apples");
- *     let target = new JW.Property<string>();
- *
- *     // Next command prints "Init 1 apples" to console
- *     let mapper = new JW.Mapper<string>([count, units], {
- *         target: target,
- *         createValue: (value: number, units: string) => {
- *             let result = value + " " + units;
- *             console.log("Init " + result);
- *             return result;
- *         },
- *         destroyValue: (result: string, value: number, units: string) {
- *             console.log("Done " + result);
- *         },
- *         scope: this
- *     });
- *     assert.strictEqual("1 apples", target.get());
- *
- *     // Next command prints "Done 1 apples" and "Init 2 apples"
- *     count.set(2);
- *     assert.strictEqual("2 apples", target.get());
- *
- *     // Next command prints "Done 2 apples"
- *     mapper.destroy();
- *     assert.strictEqual(null, target.get());
- *
- * If **target** is omitted in constructor, it is created automatically. Notice
- * that mapper owns it in this case.
- *
- *     let source = new JW.Property<number>(1);
- *     let mapper = new JW.Mapper<string>([source], {
- *         createValue: (value: number): string {
- *             return value + " apples";
- *         },
- *         scope: this
- *     });
- *     let target = mapper.target;
- *     assert.strictEqual("1 apples", target.get());
- *     mapper.destroy();
- *
- * In simple cases, [[JW.Property.$mapValue|$mapValue]] and
- * [[JW.Property.$mapObject|$mapObject]] shorthand methods
- * can be used instead. They return the target property right away:
- *
- *     let source = new JW.Property<number>(1);
- *     let target = source.$mapValue((value) => { return value + " apples"; });
- *     assert.strictEqual("1 apples", target.get());
- *     target.destroy();
- *
- * On source property change, next flow will take a place:
- *
- * 1. New value is created
- * 1. Target property is set to new value
- * 1. Old value is destroyed
- *
- * In contrast, [[JW.Switcher]]'s flow is opposite:
- *
- * 1. [[JW.Switcher.Config.done|done]] method is called
- * 1. [[JW.Switcher.Config.init|init]] method is called
- *
- * Common use case for mapper is replaceable child component creation by data:
- *
- *     class MyComponent extends JW.UI.Component {
- *         constructor(private document: JW.Property<MyDocument>) {
- *             super();
- *         }
- *
- *         renderDocument(): any {
- *             return this.own(this.document.$mapObject((document) => {
- *                 return new MyDocumentView(document);
- *             }));
- *         }
- *     }
- *
- *     JW.UI.template(MyComponent, {
- *         main:
- *             '<div jwclass="my-component">' +
- *                 '<div jwid="document"></div>' +
- *             '</div>'
- *     });
- *
- * Also, mapper allows you to chain property calculations. Assume that you have several folders and
- * several files in each folder. One folder is selected, and each folder has a selected file inside. You
- * want to create a file view by a currently selected folder and a currently selected file there. Do this:
- *
- *     class Folder extends JW.Class {
- *         selectedFile = this.own(new JW.Property<File>());
- *     }
- *
- *     class App extends JW.Class {
- *         selectedFolder = this.own(new JW.Property<Folder>());
- *         fileView = this.own(new JW.Property<FileView>());
- *
- *         constructor() {
- *             super();
- *             this.own(this.selectedFolder.$mapObject((folder) => {
- *                 return new JW.Mapper<FileView>([folder.selectedFile], {
- *                     target: this.fileView,
- *                     createValue: (file: File) => {
- *                         return new FileView(folder, file);
- *                     },
- *                     destroyValue: JW.destroy,
- *                     scope: this
- *                 });
- *             }, this));
- *         }
- *     }
- *
- * By default, mapper doesn't call the callbacks if at least one of the source values is null. You can change it
- * via [[JW.Mapper.Config.acceptNull|acceptNull]] option.
+ * Listens source properties modification and recreates target value via mapping function.
  *
  * @param T Target property value type.
  */
@@ -160,6 +45,8 @@ class Mapper<T> extends Class {
 	private _viaNull: boolean;
 
 	/**
+	 * @param sources Source properties.
+	 * @param create Mapping function.
 	 * @param config Configuration.
 	 */
 	constructor(readonly sources: Bindable<any>[], create: Mapper.CreateCallback<T>, config: Mapper.FullConfig<T> = {}) {
@@ -184,6 +71,9 @@ class Mapper<T> extends Class {
 		return this._target;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected destroyObject() {
 		const oldValue = this.target.get();
 		if (oldValue === this._targetValue) {
@@ -203,8 +93,7 @@ class Mapper<T> extends Class {
 	}
 
 	/**
-	 * Watches specified event and issues target value recalculation on
-	 * the event triggering.
+	 * Listens specified event and issues target value recalculation on event triggering.
 	 * @param event Event.
 	 * @returns this
 	 */
@@ -213,8 +102,7 @@ class Mapper<T> extends Class {
 	}
 
 	/**
-	 * Watches specified property and issues target value recalculation on
-	 * the property change.
+	 * Watches specified property and issues target value recalculation on its change.
 	 * @param property Property.
 	 * @returns this
 	 */
@@ -249,7 +137,7 @@ class Mapper<T> extends Class {
 
 namespace Mapper {
 	/**
-	 * [[JW.Mapper]]'s [[JW.Mapper.Config.createValue|createValue]] callback.
+	 * Mapper's `create` callback signature.
 	 *
 	 * @param T Target property value type.
 	 */
@@ -258,7 +146,7 @@ namespace Mapper {
 	}
 
 	/**
-	 * [[JW.Mapper]]'s [[JW.Mapper.Config.destroyValue|destroyValue]] callback.
+	 * Mapper's `destroy` callback signature.
 	 *
 	 * @param T Target property value type.
 	 */
@@ -266,9 +154,12 @@ namespace Mapper {
 		(targetValue: T, ...sourceValues: any[]): any;
 	}
 
+	/**
+	 * Mapper's partial configuration.
+	 */
 	export interface Config<T> {
 		/**
-		 * Destroys target property value.
+		 * Destroys target property value if specified.
 		 */
 		readonly destroy?: DestroyCallback<T>;
 
@@ -296,7 +187,7 @@ namespace Mapper {
 	}
 
 	/**
-	 * [[JW.Mapper]] configuration.
+	 * Mapper's full configuration.
 	 *
 	 * @param T Target property value type.
 	 */
@@ -307,15 +198,20 @@ namespace Mapper {
 		readonly target?: IProperty<T>;
 	}
 
-	export class ByReducer<T> extends Class {
-		private _target: IProperty<T>;
+	/**
+	 * Mapper by reducer. Kind of mapper optimized for working with collections of similar properties.
+	 */
+	export class ByReducer<T, U> extends Class {
+		private _target: IProperty<U>;
 
 		/**
-		 * @param config Configuration.
+		 * @param sources Source bindables.
+		 * @param reducer Mapping reducer.
+		 * @param target Target property.
 		 */
-		constructor(readonly sources: Bindable<any>[], readonly reducer: Reducer<any, T>, target?: IProperty<T>) {
+		constructor(readonly sources: Bindable<T>[], readonly reducer: Reducer<T, U>, target?: IProperty<U>) {
 			super();
-			this._target = target || this.own(new Property<T>());
+			this._target = target || this.own(new Property<U>());
 			this._update();
 			this.sources.forEach(this._bind, this);
 		}
@@ -323,7 +219,7 @@ namespace Mapper {
 		/**
 		 * Target property.
 		 */
-		get target(): Bindable<T> {
+		get target(): Bindable<U> {
 			return this._target;
 		}
 
@@ -340,7 +236,21 @@ namespace Mapper {
 
 export default Mapper;
 
+/**
+ * Optimized way to create a mapper with new target value.
+ *
+ * @param sources Source properties.
+ * @param reducer Mapping reducer.
+ * @returns Target property.
+ */
 export function mapProperties<T>(sources: Bindable<any>[], reducer: Reducer<any, T>): DestroyableBindable<T>;
+
+/**
+ * @param sources Source properties.
+ * @param create Mapping function.
+ * @param config Configuration.
+ * @returns Target property.
+ */
 export function mapProperties<T>(sources: Bindable<any>[],
 		create: Mapper.CreateCallback<T>, config?: Mapper.Config<T>): DestroyableBindable<T>;
 export function mapProperties<T>(sources: Bindable<any>[],

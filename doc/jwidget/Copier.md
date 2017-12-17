@@ -38,7 +38,7 @@ Reference: [jwidget/Property](Property.md).
 
 Reference: [jwidget/Bindable](Bindable.md), [jwidget/IProperty](IProperty.md).
 
-Constructs **Copier** instance. Synchronizes `target` property to `source`. If `target` is omitted, creates it automatically. Copier [owns](IClass.md#own) it in this case.
+Constructs **Copier** instance. Synchronizes `target` property to `source`.
 
 ## Properties
 
@@ -48,7 +48,7 @@ Constructs **Copier** instance. Synchronizes `target` property to `source`. If `
 
 Reference: [jwidget/Bindable](Bindable.md).
 
-Source bindable.
+Source property.
 
 ### target
 
@@ -56,4 +56,4 @@ Source bindable.
 
 Reference: [jwidget/Bindable](Bindable.md).
 
-Target bindable.
+Target property.

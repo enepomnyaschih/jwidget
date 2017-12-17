@@ -109,7 +109,7 @@ const files = {
 		super: ['Class']
 	},
 	template: {
-		type: 'function'
+		type: 'object'
 	},
 	Copier: {
 		type: 'class',
@@ -119,7 +119,8 @@ const files = {
 	Mapper: {
 		type: 'class',
 		typevars: ['T'],
-		super: ['Class']
+		super: ['Class'],
+		extras: ['mapProperties']
 	},
 	Switcher: {
 		type: 'class',
@@ -254,6 +255,9 @@ const files = {
 	},
 	AbstractTemplate: {
 		type: 'abstract class'
+	},
+	dummyDestroyable: {
+		type: 'object'
 	},
 	IndexCount: {
 		type: 'class'
@@ -430,12 +434,15 @@ function buildConsumption(fullName, lf) {
 		fullName = 'jwidget';
 	}
 	return "## Consumption" + lf + lf +
-		'\timport ' + (file.type === 'utils' ? `* as ${name}` : name) + ' from "' + fullName + '";' + lf + lf;
+		'\timport ' + (file.type === 'utils' ? `* as ${name}` : name) + ' from "' + fullName + '";' + lf +
+		(file.extras || []).map((extra) => (
+			'\timport {' + extra + '} from "' + fullName + '";' + lf
+		)).join('') + lf;
 }
 
 function buildHierarchy(fullName, lf) {
 	const {file} = getFileInfo(fullName);
-	if (file.type === 'utils' || file.type === 'function') {
+	if (file.type === 'utils' || file.type === 'object') {
 		return '';
 	}
 	const store = [];
