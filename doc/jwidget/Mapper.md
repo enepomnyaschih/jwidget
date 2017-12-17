@@ -147,7 +147,7 @@ Reference: [jwidget/Class](Class.md), [jwidget/template](template.md), [jwidget/
 
 ## Constructor
 
-	new Mapper<T>(sources: Bindable<any>[], create: Mapper.CreateCallback<T>, config: Mapper.FullConfig<T> = {})
+	new Mapper<T>(sources: Bindable<any>[], create: Mapper.CreateCallback<T>, config?: Mapper.FullConfig<T>)
 
 * **sources** - Source properties.
 * **create** - Mapping function. Signature: `(...sourceValues: any[]) => T`
@@ -244,7 +244,7 @@ Reference: [jwidget/Bindable](Bindable.md), [jwidget/Property](Property.md), [jw
 
 Reference: [jwidget/Bindable](Bindable.md), [jwidget/Reducer](Reducer.md), [jwidget/IProperty](IProperty.md).
 
-Constructs **Mapper.ByReducer** instance. Computes [target](#target) property value as result of reducer and synchronizes it to all **sources**. If **target** is omitted, creates it automatically.
+Constructs **Mapper.ByReducer** instance. Computes [target](#target-1) property value as result of reducer and synchronizes it to all **sources**. If **target** is omitted, creates it automatically.
 
 ## Properties
 
