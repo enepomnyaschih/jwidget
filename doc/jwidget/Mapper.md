@@ -45,7 +45,7 @@ Listens source [jwidget/Bindable](Bindable.md) instances modification and recrea
     count.set(2);
     expect(target.get()).toBe("2 apples");
 
-    mapper.destroy(); // stops synchronization and reset target value to null
+    mapper.destroy(); // stops synchronization and resets target value to null
     expect(target.get()).toBe(null);
 
 Reference: [jwidget/Property](Property.md).
@@ -74,14 +74,12 @@ And even better, if you have just one source property, simply call its [map](Bin
 
 If target value is [jwidget/Destroyable](Destroyable.md) instance, **Mapper** can destroy it for you. Just pass `destroy` config option:
 
-	import {destroy} from "jwidget";
-
 	const source = new Property(1);
 	const target = source.map((value) => new View(value), {destroy});
 	source.set(2); // assigns target value to new View instance and destroys the previous one
 	target.destroy(); // stops synchronization and destroys the View
 
-Reference: [destroy](index.md#destroy).
+Reference: [jwidget.destroy](index.md#destroy).
 
 ### Flow
 
@@ -91,18 +89,14 @@ On source property change, next flow takes place:
 2. Reassign target property.
 3. Destroy the old value.
 
-You can override this behaviour by passing **viaNull** config option. It reverses mapper updating flow. Default flow is:
-
-1. Create a new value.
-2. Reassign target property.
-3. Destroy the old value.
-
-Setting this option to true changes the flow the next way:
+You can override this behaviour by passing **viaNull** config option. Setting it to true changes the flow the next way:
 
 1. Set target value to null.
 2. Destroy the old value.
 3. Create a new value.
 4. Assign target property.
+
+This can be useful if you want the old value to be destroyed before the new value is created.
 
 ### View binding
 
@@ -119,9 +113,11 @@ Common use case for mapper is bindable child component creation by data:
         }
     }
 
+Reference: [jwidget/template], [jwidget/Component], [jwidget/Bindable], [jwidget.destroy](index.md#destroy).
+
 ### Chaining
 
-**Mapper** allows you to chain property calculations. Assume that you have several folders and several files in each folder. One folder is selected, and each folder has a selected file inside. You
+Mapper allows you to chain property calculations. Assume that you have several folders and several files in each folder. One folder is selected, and each folder has a selected file inside. You
 want to create a file view by currently selected file in currently selected folder. You can do it the next way:
 
 	class File extends Class {
@@ -147,6 +143,8 @@ want to create a file view by currently selected file in currently selected fold
         }
     }
 
+Reference: [jwidget/Class], [jwidget/template], [jwidget/Component], [jwidget/Bindable], [jwidget/Property], [jwidget.destroy](index.md#destroy).
+
 ## Constructor
 
 	new Mapper<T>(sources: Bindable<any>[], create: Mapper.CreateCallback<T>, config: Mapper.FullConfig<T> = {})
@@ -154,10 +152,10 @@ want to create a file view by currently selected file in currently selected fold
 * **sources** - Source properties.
 * **create** - Mapping function. Signature: `(...sourceValues: any[]) => T`
 * **config** - Configuration:
-** **target**?: [jwidget/IProperty](IProperty.md)<T> - Target property.
-** **destroy**?: Mapper.DestroyCallback<T> - Destroys target property value if specified. Signature: `(targetValue: T, ...sourceValues: any[]) => any`
-** **scope**?: any - **create** and **destroy** call scope. Defaults to mapper itself.
-** **viaNull**?: boolean - Reverses [mapper updating flow](#flow).
+	* **target**?: [jwidget/IProperty](IProperty.md)<T> - Target property.
+	* **destroy**?: Mapper.DestroyCallback<T> - Destroys target property value if specified. Signature: `(targetValue: T, ...sourceValues: any[]) => any`
+	* **scope**?: any - **create** and **destroy** call scope. Defaults to mapper itself.
+	* **viaNull**?: boolean - Reverses [mapper updating flow](#flow).
 
 Reference: [jwidget/Bindable](Bindable.md).
 
@@ -290,8 +288,8 @@ Reference: [jwidget/Bindable](Bindable.md), [jwidget/Reducer](Reducer.md).
 * **sources** - Source properties.
 * **create** - Mapping function. Signature: `(...sourceValues: any[]) => T`
 * **config** - Configuration:
-** **destroy**?: Mapper.DestroyCallback<T> - Destroys target property value if specified. Signature: `(targetValue: T, ...sourceValues: any[]) => any`
-** **scope**?: any - **create** and **destroy** call scope. Defaults to mapper itself.
-** **viaNull**?: boolean - Reverses [mapper updating flow](#flow).
+	* **destroy**?: Mapper.DestroyCallback<T> - Destroys target property value if specified. Signature: `(targetValue: T, ...sourceValues: any[]) => any`
+	* **scope**?: any - **create** and **destroy** call scope. Defaults to mapper itself.
+	* **viaNull**?: boolean - Reverses [mapper updating flow](#flow).
 
 Reference: [jwidget/Bindable](Bindable.md).
