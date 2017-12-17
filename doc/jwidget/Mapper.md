@@ -113,7 +113,7 @@ Common use case for mapper is bindable child component creation by data:
         }
     }
 
-Reference: [jwidget/template], [jwidget/Component], [jwidget/Bindable], [jwidget.destroy](index.md#destroy).
+Reference: [jwidget/template](template.md), [jwidget/Component](Component.md), [jwidget/Bindable](Bindable.md), [jwidget.destroy](index.md#destroy).
 
 ### Chaining
 
@@ -143,7 +143,7 @@ want to create a file view by currently selected file in currently selected fold
         }
     }
 
-Reference: [jwidget/Class], [jwidget/template], [jwidget/Component], [jwidget/Bindable], [jwidget/Property], [jwidget.destroy](index.md#destroy).
+Reference: [jwidget/Class](Class.md), [jwidget/template](template.md), [jwidget/Component](Component.md), [jwidget/Bindable](Bindable.md), [jwidget/Property](Property.md), [jwidget.destroy](index.md#destroy).
 
 ## Constructor
 
