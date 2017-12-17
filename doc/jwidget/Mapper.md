@@ -153,7 +153,8 @@ Reference: [jwidget/Class](Class.md), [jwidget/template](template.md), [jwidget/
 * **create** - Mapping function. Signature: `(...sourceValues: any[]) => T`
 * **config** - Configuration:
 	* **target**?: [jwidget/IProperty](IProperty.md)<T> - Target property.
-	* **destroy**?: Mapper.DestroyCallback<T> - Destroys target property value if specified. Signature: `(targetValue: T, ...sourceValues: any[]) => any`
+	* **destroy**?: Mapper.DestroyCallback<T> - Destroys target property value if specified.
+	Signature: `(targetValue: T, ...sourceValues: any[]) => any`
 	* **scope**?: any - **create** and **destroy** call scope. Defaults to mapper itself.
 	* **viaNull**?: boolean - Reverses [mapper updating flow](#flow).
 
@@ -288,7 +289,8 @@ Reference: [jwidget/Bindable](Bindable.md), [jwidget/Reducer](Reducer.md).
 * **sources** - Source properties.
 * **create** - Mapping function. Signature: `(...sourceValues: any[]) => T`
 * **config** - Configuration:
-	* **destroy**?: Mapper.DestroyCallback<T> - Destroys target property value if specified. Signature: `(targetValue: T, ...sourceValues: any[]) => any`
+	* **destroy**?: Mapper.DestroyCallback<T> - Destroys target property value if specified.
+	Signature: `(targetValue: T, ...sourceValues: any[]) => any`
 	* **scope**?: any - **create** and **destroy** call scope. Defaults to mapper itself.
 	* **viaNull**?: boolean - Reverses [mapper updating flow](#flow).
 
