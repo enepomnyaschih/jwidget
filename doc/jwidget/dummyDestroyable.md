@@ -6,7 +6,7 @@
 
 ## Consumption
 
-	import * as dummyDestroyable from "jwidget/dummyDestroyable";
+	import dummyDestroyable from "jwidget/dummyDestroyable";
 
 ## Description
 

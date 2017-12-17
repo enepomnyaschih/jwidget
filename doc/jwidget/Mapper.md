@@ -1,14 +1,27 @@
 [Back to index](../README.md)
 
-# Copier
+# Mapper
 
+* ****
+	* [Flow](#flow)
+	* [View binding](#view binding)
+	* [Chaining](#chaining)
 * **Properties**
-	* [source](#source)
+	* [sources](#sources)
 	* [target](#target)
+* **Methods**
+	* [listen](#listen)
+	* [bind](#bind)
+	* [update](#update)
+* **Properties**
+	* [sources](#sources)
+	* [target](#target)
+	* [reducer](#reducer)
 
 ## Consumption
 
-	import Copier from "jwidget/Copier";
+	import Mapper from "jwidget/Mapper";
+	import {mapProperties} from "jwidget/Mapper";
 
 ## Hierarchy
 
@@ -16,11 +29,11 @@
 * interface [jwidget/Identifiable](Identifiable.md)
 	* interface [jwidget/IClass](IClass.md)
 		* class [jwidget/Class](Class.md)
-			* class **jwidget/Copier**`<T>`
+			* class **jwidget/Mapper**`<T>`
 
 ## Description
 
-Listens source [jwidget/Bindable] instances modification and recreates target value via mapping function.
+Listens source [jwidget/Bindable](Bindable.md) instances modification and recreates target value via mapping function.
 
     const count  = new Property(1);
     const unit   = new Property("apples");
@@ -35,7 +48,7 @@ Listens source [jwidget/Bindable] instances modification and recreates target va
     mapper.destroy(); // stops synchronization and reset target value to null
     expect(target.get()).toBe(null);
 
-Reference: [jwidget/Property].
+Reference: [jwidget/Property](Property.md).
 
 If `target` is omitted in constructor, it is created automatically.
 
@@ -59,7 +72,7 @@ And even better, if you have just one source property, simply call its [map](Bin
     expect(target.get()).toBe("1 apples");
     target.destroy(); // stops synchronization
 
-If target value is [jwidget/Destroyable] instance, **Mapper** can destroy it for you. Just pass `destroy` config option:
+If target value is [jwidget/Destroyable](Destroyable.md) instance, **Mapper** can destroy it for you. Just pass `destroy` config option:
 
 	import {destroy} from "jwidget";
 
@@ -141,12 +154,12 @@ want to create a file view by currently selected file in currently selected fold
 * **sources** - Source properties.
 * **create** - Mapping function. Signature: `(...sourceValues: any[]) => T`
 * **config** - Configuration:
-** **target**?: [jwidget/IProperty]<T> - Target property.
+** **target**?: [jwidget/IProperty](IProperty.md)<T> - Target property.
 ** **destroy**?: Mapper.DestroyCallback<T> - Destroys target property value if specified. Signature: `(targetValue: T, ...sourceValues: any[]) => any`
 ** **scope**?: any - **create** and **destroy** call scope. Defaults to mapper itself.
 ** **viaNull**?: boolean - Reverses [mapper updating flow](#flow).
 
-Reference: [jwidget/Bindable].
+Reference: [jwidget/Bindable](Bindable.md).
 
 Constructs **Mapper** instance. Computes [target](#target) property value as result of **create** callback and synchronizes it to all **sources**. If **target** is omitted in **config**, creates it automatically.
 
@@ -174,7 +187,7 @@ Target property.
 
 	listen(event: Listenable<any>): this
 
-Reference: [jwidget/Listenable].
+Reference: [jwidget/Listenable](Listenable.md).
 
 Listens specified event and issues target value recalculation on event triggering.
 
@@ -182,7 +195,7 @@ Listens specified event and issues target value recalculation on event triggerin
 
 	bind(property: Bindable<any>): this
 
-Reference: [jwidget/Bindable].
+Reference: [jwidget/Bindable](Bindable.md).
 
 Watches specified property and issues target value recalculation on its change.
 
@@ -219,7 +232,7 @@ Mapper by reducer. Kind of mapper optimized for working with collections of simi
 	sources[0].set(5);
 	expect(target.get()).toBe(9);
 
-Reference: [jwidget/Bindable], [jwidget/Property], [jwidget/Reducer.sum].
+Reference: [jwidget/Bindable](Bindable.md), [jwidget/Property](Property.md), [jwidget/Reducer.sum](Reducer.md#sum).
 
 ## Constructor
 
@@ -229,7 +242,7 @@ Reference: [jwidget/Bindable], [jwidget/Property], [jwidget/Reducer.sum].
 * **reducer** - Mapping reducer.
 * **target** - Target property.
 
-Reference: [jwidget/Bindable], [jwidget/Reducer], [jwidget/IProperty].
+Reference: [jwidget/Bindable](Bindable.md), [jwidget/Reducer](Reducer.md), [jwidget/IProperty](IProperty.md).
 
 Constructs **Mapper.ByReducer** instance. Computes [target](#target) property value as result of reducer and synchronizes it to all **sources**. If **target** is omitted, creates it automatically.
 
@@ -255,7 +268,7 @@ Target property.
 
 	reducer: Reducer<T, U>
 
-Reference: [jwidget/Reducer].
+Reference: [jwidget/Reducer](Reducer.md).
 
 Mapping reducer.
 
@@ -270,7 +283,7 @@ Optimized way to create a mapper with new target value. Returns target property.
 * **sources** - Source properties.
 * **reducer** - Mapping reducer.
 
-Reference: [jwidget/Bindable], [jwidget/Reducer].
+Reference: [jwidget/Bindable](Bindable.md), [jwidget/Reducer](Reducer.md).
 
 	mapProperties<T>(sources: Bindable<any>[], create: Mapper.CreateCallback<T>, config?: Mapper.Config<T>): DestroyableBindable<T>
 
@@ -281,4 +294,4 @@ Reference: [jwidget/Bindable], [jwidget/Reducer].
 ** **scope**?: any - **create** and **destroy** call scope. Defaults to mapper itself.
 ** **viaNull**?: boolean - Reverses [mapper updating flow](#flow).
 
-Reference: [jwidget/Bindable].
+Reference: [jwidget/Bindable](Bindable.md).
