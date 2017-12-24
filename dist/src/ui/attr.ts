@@ -40,7 +40,7 @@ class AttrUpdater extends Class {
  * Watches string property modification and updates the specified attribute of the DOM element.
  * Destroy the returned object to stop synchronization.
  * @param el DOM element.
- * @param attr DOM element attribute name.
+ * @param attr Attribute name.
  * @param property Attribute value to assign.
  */
 export default function attr(el: JQuery, attr: string, property: Bindable<any>): Destroyable {

@@ -1,7 +1,12 @@
 {
-  "name": "decgen",
+  "name": "docgen",
   "version": "0.0.1",
-  "description": "Simple TypeScript doc gen",
+  "description": "Documentation generator for TypeScript based on YAML source files.",
+  "homepage": "http://enepomnyaschih.github.io/jwidget",
+  "bugs": {
+    "url": "https://github.com/enepomnyaschih/jwidget/issues",
+    "email": "jwidgetproject@gmail.com"
+  },
   "license": "LGPL-3.0",
   "author": {
     "name": "Egor Nepomnyaschih",
@@ -13,10 +18,13 @@
     "url": "https://github.com/enepomnyaschih/jwidget.git"
   },
   "private": true,
-  "dependencies": {
-    "lodash": "^4.17.4"
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "@types/node": "^8.0.15"
+  "dependencies": {
+    "@types/js-yaml": "^3.10.1",
+    "@types/node": "^8.5.1",
+    "js-yaml": "^3.10.0"
   }
 }

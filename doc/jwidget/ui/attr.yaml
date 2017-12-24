@@ -1,0 +1,20 @@
+default:
+  type: function
+  signature: |
+    (el: JQuery, attr: string, property: %Bindable<any>): %Destroyable
+  params:
+    el: DOM element.
+    attr: Attribute name.
+    property: Attribute value to assign.
+  returns: Binding object. Destroy the returned object to stop synchronization.
+  description: |
+    <p>Watches string property modification and updates the specified attribute of the DOM element.</p>
+    <code>
+    // Bind "title" attribute to title property value
+    this.%own(attr(el, "title", title));
+    </code>
+    <example id="attr1" height="180"/>
+  references:
+    own:
+      file: jwidget
+      symbol: own
