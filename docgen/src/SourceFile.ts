@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import DocObject from "./objects/DocObject";
 import Project from "./Project";
+import {mkdir} from "./utils/File";
 
 export default class SourceFile {
 
@@ -12,6 +13,7 @@ export default class SourceFile {
 	}
 
 	write(path: string) {
+		mkdir(path);
 		fs.writeFileSync(path, this.render());
 	}
 
