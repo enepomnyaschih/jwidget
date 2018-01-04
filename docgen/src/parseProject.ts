@@ -35,8 +35,9 @@ function parseProjectDir(project: Project, relativePath?: string) {
 	if (fs.statSync(absolutePath).isFile()) {
 		if (/\.yaml$/.test(relativePath)) {
 			parseProjectFile(project, relativePath);
+		} else {
+			console.log(`Ignored ${relativePath} because this is not an yaml file.`);
 		}
-		console.log(`Ignored ${relativePath} because this is not an yaml file.`);
 		return;
 	}
 	const fileNames = fs.readdirSync(absolutePath);

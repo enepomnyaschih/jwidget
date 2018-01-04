@@ -6,7 +6,8 @@ default:
       description: Query context. In a subclass, you can specify any kind of context for your queries.
   description: TBD
   constructor:
-    signature: (config?: %Config)
+    signature: |
+      (config?: %Config)
     params:
       config: Configuration.
     description: Creates class instance.
@@ -14,7 +15,8 @@ default:
     getHeaders:
       type: method
       modifier: abstract
-      signature: (context: %C): %Dictionary<string>
+      signature: |
+        (context: %C): %Dictionary<string>
       params:
         context: Query context.
       description:
