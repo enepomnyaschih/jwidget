@@ -15,5 +15,3 @@ symbols:
       this.%own(attr(el, "title", title));
       </code>
       <example id="attr1" height="180"/>
-    references:
-      own:

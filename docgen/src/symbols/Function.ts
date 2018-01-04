@@ -37,7 +37,7 @@ ${renderText(this.context, this.description)}`;
 				buffer += `\n<dt>${key}</dt><dd>${this.params[key]}</dd>`;
 			}
 		}
-		buffer += `\n<dt>Returns</dt><dd>${this.returns}</dd>\n`;
+		buffer += `\n<dt>returns</dt><dd>${this.returns}</dd>\n`;
 		return buffer;
 	}
 }

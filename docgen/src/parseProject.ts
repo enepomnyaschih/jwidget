@@ -15,11 +15,11 @@ const parsers: {[key: string]: (file: SourceFile, key: string, json: any) => Doc
 
 function parseProjectFile(project: Project, relativePath: string) {
 	const fileId = relativePath.substr(0, relativePath.indexOf("."));
-	console.log(`Building ${fileId}...`);
+	console.log(`Parsing ${fileId}...`);
 	const json: FileJson = readYaml(path.resolve(project.dirAbsolutePath, relativePath));
 	const file = new SourceFile(project, fileId, json.references);
 	if (json.symbols) {
-		for (let key in json) {
+		for (let key in json.symbols) {
 			if (json.symbols.hasOwnProperty(key)) {
 				const symbolJson = json.symbols[key];
 				file.symbols[key] = parsers[symbolJson.type](file, key, symbolJson);

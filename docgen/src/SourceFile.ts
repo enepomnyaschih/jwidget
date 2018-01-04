@@ -36,6 +36,7 @@ export default class SourceFile {
 	}
 
 	write(path: string) {
+		console.log(`Writing ${this.id}...`);
 		mkdir(path);
 		fs.writeFileSync(path, this.render());
 	}
@@ -63,16 +64,16 @@ export default class SourceFile {
 		<h1>${this.id}</h1>
 		<h2>Consumption</h2>
 		<pre>${this.consumption}</pre>
-		${this.renderObjects()}
+		${this.renderSymbols()}
 	</body>
 </html>`;
 	}
 
-	private renderObjects() {
-		let buffer = '';
+	private renderSymbols() {
+		let buffer = "";
 		for (let key in this.symbols) {
 			if (this.symbols.hasOwnProperty(key)) {
-				if (key !== 'default') {
+				if (key !== "default") {
 					buffer += `\n<h1>${key}</h1>`;
 				}
 				buffer += this.symbols[key].render();

@@ -35,5 +35,5 @@ export function getReferenceUrl(reference: Reference, relativeToFile: string): s
 	return [
 		...from.slice(diff).map(() => ".."),
 		...to.slice(diff)
-	].join("/") + hash;
+	].join("/") + ".html" + hash;
 }

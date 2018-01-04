@@ -12,7 +12,7 @@ export default class StructSymbol extends AbstractSymbol {
 
 	readonly kind: string;
 	readonly typevars: TypeVar[];
-	readonly extendsThe: Extension[] = [];
+	private _extendsThe: Extension[] = [];
 	readonly extendedBy: StructSymbol[] = [];
 	readonly description: string;
 	readonly showInheritanceLevels: number;
@@ -22,7 +22,7 @@ export default class StructSymbol extends AbstractSymbol {
 		super(file, id);
 		this.kind = json.kind || "class";
 		this.typevars = json.typevars || [];
-		this.extendsThe = json.extends || [];
+		this._extendsThe = json.extends || [];
 		this.description = json.description;
 		this.showInheritanceLevels = json.showInheritanceLevels;
 		this.context = new StructContext(this, json.references);
@@ -31,14 +31,21 @@ export default class StructSymbol extends AbstractSymbol {
 	}
 
 	get inheritanceLevel(): number {
-		return this.extendsThe.reduce<number>((result, extension) => (
+		return this._extendsThe.reduce<number>((result, extension) => (
 			Math.max(result, this.project.getStructByExtension(extension).inheritanceLevel)
 		), 0);
 	}
 
 	link() {
-		this.extendsThe.forEach((extension) => {
-			this.project.getStructByExtension(extension).extendedBy.push(this);
+		this._extendsThe = this._extendsThe.filter((extension) => {
+			try {
+				this.project.getStructByExtension(extension).extendedBy.push(this);
+				return true;
+			} catch (error) {
+				console.warn(`Unable to extend [${this.file.id} -> ${this.id}] from ` +
+					`[${extension.file} -> ${extension.symbol || "default"}]: ${error.message}`);
+				return false;
+			}
 		});
 	}
 
@@ -54,7 +61,7 @@ ${this.renderHierarchyTail(this.inheritanceLevel + 1, cache)}
 	}
 
 	renderHierarchyHead(level: number, cache: StructSymbol[]): string {
-		return this.extendsThe.map((extension) => {
+		return this._extendsThe.map((extension) => {
 			const struct = this.project.getStructByExtension(extension);
 			if (cache.indexOf(struct) !== -1) {
 				return "";
@@ -89,7 +96,10 @@ ${struct.renderHierarchyTail(level + 1, cache, levelsLeft != null ? levelsLeft -
 	}
 
 	renderTypeVars() {
-		return this.typevars.length ? `<pre>&lt;${this.typevars.join(", ")}&gt;</pre>` : "";
+		if (!this.typevars.length) {
+			return "";
+		}
+		return `<span class="monospace">&lt;${this.typevars.map((typevar) => typevar.name).join(", ")}&gt;</span>`;
 	}
 }
 
