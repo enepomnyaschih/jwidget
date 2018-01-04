@@ -1,0 +1,5 @@
+output: docoutput
+references:
+  own:
+    file: jwidget/IClass
+    member: own

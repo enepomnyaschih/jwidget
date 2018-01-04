@@ -1,0 +1,10 @@
+default:
+  type: struct
+  kind: abstract class
+  typevars:
+    - name: T
+      description: Promise result type.
+  extends:
+    - file: jwidget/DestroyablePromise
+      typevars: [T]
+  description: See %DestroyablePromise for details.

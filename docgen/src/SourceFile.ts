@@ -1,15 +1,38 @@
 import * as fs from "fs";
-import DocObject from "./objects/DocObject";
+import ISymbol from "./symbols/ISymbol";
 import Project from "./Project";
 import {mkdir} from "./utils/File";
+import StructSymbol from "./symbols/Struct";
+import Context from "./Context";
+import ReferenceDictionary from "./models/ReferenceDictionary";
+import Reference from "./models/Reference";
 
 export default class SourceFile {
 
-	readonly objects: {[key: string]: DocObject} = {};
+	readonly context: Context;
+	readonly symbols: { [id: string]: ISymbol } = {};
+	readonly structs: { [id: string]: StructSymbol } = {};
 	readonly tokens: string[];
 
-	constructor(readonly project: Project, readonly id: string) {
+	constructor(readonly project: Project, readonly id: string, references: ReferenceDictionary) {
+		this.context = new SourceFileContext(this, references);
 		this.tokens = this.id.split('/');
+	}
+
+	get url() {
+		return `${this.id}.html`;
+	}
+
+	get token() {
+		return this.tokens[this.tokens.length - 1];
+	}
+
+	link() {
+		for (let id in this.structs) {
+			if (this.structs.hasOwnProperty(id)) {
+				this.structs[id].link();
+			}
+		}
 	}
 
 	write(path: string) {
@@ -17,8 +40,16 @@ export default class SourceFile {
 		fs.writeFileSync(path, this.render());
 	}
 
-	get url() {
-		return `${this.id}.html`;
+	private get index() {
+		return this.tokens.map(() => '..').join('/');
+	}
+
+	private get consumption() {
+		if (!this.symbols.default) {
+			return `import * as ${this.token} from "${this.id}";`;
+		}
+		const imports = Object.keys(this.symbols).map((key) => key === 'default' ? this.token : `{${key}}`).join(', ');
+		return `import ${imports} from "${this.id}";`;
 	}
 
 	private render() {
@@ -37,32 +68,42 @@ export default class SourceFile {
 </html>`;
 	}
 
-	private get token() {
-		return this.tokens[this.tokens.length - 1];
-	}
-
-	private get index() {
-		return this.tokens.map(() => '..').join('/');
-	}
-
-	private get consumption() {
-		if (!this.objects.default) {
-			return `import * as ${this.token} from "${this.id}";`;
-		}
-		const imports = Object.keys(this.objects).map((key) => key === 'default' ? this.token : `{${key}}`).join(', ');
-		return `import ${imports} from ${this.id};`;
-	}
-
 	private renderObjects() {
 		let buffer = '';
-		for (let key in this.objects) {
-			if (this.objects.hasOwnProperty(key)) {
+		for (let key in this.symbols) {
+			if (this.symbols.hasOwnProperty(key)) {
 				if (key !== 'default') {
 					buffer += `\n<h1>${key}</h1>`;
 				}
-				buffer += this.objects[key].render();
+				buffer += this.symbols[key].render();
 			}
 		}
 		return buffer;
+	}
+}
+
+class SourceFileContext extends Context {
+
+	constructor(readonly sourceFile: SourceFile, references: ReferenceDictionary) {
+		super(references);
+	}
+
+	get parent(): Context {
+		return this.sourceFile.project.context;
+	}
+
+	get selfReference(): Reference {
+		return {
+			file: this.sourceFile.id
+		};
+	}
+
+	protected get name(): string {
+		return this.sourceFile.id;
+	}
+
+	protected getDefaultReference(key: string): Reference {
+		const symbol = this.sourceFile.symbols[key];
+		return symbol ? symbol.context.selfReference : null;
 	}
 }

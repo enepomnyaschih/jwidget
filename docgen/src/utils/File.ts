@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as yaml from "js-yaml";
 
 export function mkdir(filePath: string) {
 	const dirname = path.dirname(filePath);
@@ -10,17 +11,24 @@ export function mkdir(filePath: string) {
 	fs.mkdirSync(dirname);
 }
 
-export function unlink(path: string) {
-	if (!fs.existsSync(path)) {
+export function unlink(dirPath: string) {
+	if (!fs.existsSync(dirPath)) {
 		return;
 	}
-	if (fs.statSync(path).isFile()) {
-		fs.unlinkSync(path);
+	if (fs.statSync(dirPath).isFile()) {
+		fs.unlinkSync(dirPath);
 		return;
 	}
-	const fileNames = fs.readdirSync(path);
+	const fileNames = fs.readdirSync(dirPath);
 	fileNames.forEach((fileName) => {
-		unlink(`${path}/${fileName}`);
+		unlink(`${dirPath}/${fileName}`);
 	});
-	fs.rmdirSync(path);
+	fs.rmdirSync(dirPath);
+}
+
+export function readYaml(filePath: string) {
+	if (!fs.statSync(filePath).isFile()) {
+		throw new Error(`${filePath} is not a file.`);
+	}
+	return yaml.safeLoad(fs.readFileSync(filePath, "utf8"));
 }

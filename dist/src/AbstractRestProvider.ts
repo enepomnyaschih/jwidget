@@ -37,9 +37,9 @@ abstract class AbstractRestProvider<C> {
 		this.settings = config.settings;
 	}
 
-	abstract getHeaders(config: C): Dictionary<string>;
+	abstract getHeaders(context: C): Dictionary<string>;
 
-	abstract getContentType(config: C): string;
+	abstract getContentType(context: C): string;
 
 	getUrl(action: string | string[], type: string = "GET") {
 		if (typeof action !== 'string') {
@@ -53,45 +53,45 @@ abstract class AbstractRestProvider<C> {
 			(this.urlBuilder ? this.urlBuilder(action) : this.url.replace("${action}", action));
 	}
 
-	get<T>(action: string | string[], data?: any, factory?: (response: any) => T, config?: C) {
-		return this.send("GET", action, data, config, factory);
+	get<T>(action: string | string[], data?: any, factory?: (response: any) => T, context?: C) {
+		return this.send("GET", action, data, context, factory);
 	}
 
-	post(action: string | string[], data?: any, config?: C) {
-		return this.send("POST", action, data, config);
+	post(action: string | string[], data?: any, context?: C) {
+		return this.send("POST", action, data, context);
 	}
 
-	put(action: string | string[], data?: any, config?: C) {
-		return this.send("PUT", action, data, config);
+	put(action: string | string[], data?: any, context?: C) {
+		return this.send("PUT", action, data, context);
 	}
 
-	patch(action: string | string[], data?: any, config?: C) {
-		return this.send("PATCH", action, data, config);
+	patch(action: string | string[], data?: any, context?: C) {
+		return this.send("PATCH", action, data, context);
 	}
 
-	del(action: string | string[], data?: any, config?: C) {
-		return this.send("DELETE", action, data, config);
+	del(action: string | string[], data?: any, context?: C) {
+		return this.send("DELETE", action, data, context);
 	}
 
-	upload(action: string | string[], data: File, config?: C) {
-		return this.send("POST", action, data, config, null, {
+	upload(action: string | string[], data: File, context?: C) {
+		return this.send("POST", action, data, context, null, {
 			processData: false,
 			contentType: false
 		});
 	}
 
-	private send<T>(type: string, action: string | string[], data: any, config: C,
+	private send<T>(type: string, action: string | string[], data: any, context: C,
 			factory?: (response: any) => T, settings?: JQueryAjaxSettings): DestroyablePromise<T> {
 		const url = this.getUrl(action, type);
 		if (url === null) {
 			return new HttpRequest<T>();
 		}
 		const contentType = (settings && settings.contentType != null) ?
-			settings.contentType : this.getContentType(config);
+			settings.contentType : this.getContentType(context);
 		settings = $.extend({}, this.settings, settings, {
 			url: url,
 			type: type,
-			headers: this.getHeaders(config),
+			headers: this.getHeaders(context),
 			contentType: contentType,
 			data: (contentType === "application/json" && data != null) ? JSON.stringify(data) : data
 		});

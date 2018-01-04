@@ -1,0 +1,23 @@
+default:
+  type: struct
+  kind: abstract class
+  typevars:
+    - name: C
+      description: Query context. In a subclass, you can specify any kind of context for your queries.
+  description: TBD
+  constructor:
+    signature: (config?: %Config)
+    params:
+      config: Configuration.
+    description: Creates class instance.
+  members:
+    getHeaders:
+      type: method
+      modifier: abstract
+      signature: (context: %C): %Dictionary<string>
+      params:
+        context: Query context.
+      description:
+  references:
+    Config:
+      symbol: AbstractRestProvider.Config
