@@ -585,11 +585,11 @@ symbols:
         %Identifiable objects.
     returns: '%splice function arguments. If no method call required, returns <tt>undefined</tt>.'
     description: |
-      Detects %splice function arguments to adjust %oldItems array contents to %newItems.
-      Determines item ranges neccessary to be removed and inserted.
-      Each item must have unique %getKey function result.
-      If items don't have unique key, probably %detectFilter method may help, because it doesn't require items
-      to be unique.
+      <p>Detects %splice function arguments to adjust %oldItems array contents to %newItems.</p>
+      <p>Determines item ranges neccessary to be removed and inserted.</p>
+      <p>Each item must have unique %getKey function result.</p>
+      <p>If items don't have unique key, probably %detectFilter method may help, because it doesn't require items
+      to be unique.</p>
 
   detectFilter:
     signature: |
@@ -599,10 +599,10 @@ symbols:
       newItems: 'Expected filtered array.'
     returns: '%removeParamsList argument of %splice function. If no method call required, returns <tt>undefined</tt>.'
     description: |
-      Detects %removeParamsList argument of %splice function to adjust %oldItems array contents to %newItems.
-      Determines item ranges neccessary to be removed.
-      Doesn't assume item insertion - try %detectSplice if that's the case.
-      At the other hand, %detectFilter doesn't require items to be unique.
+      <p>Detects %removeParamsList argument of %splice function to adjust %oldItems array contents to %newItems.</p>
+      <p>Determines item ranges neccessary to be removed.</p>
+      <p>Doesn't assume item insertion - try %detectSplice if that's the case.</p>
+      <p>At the other hand, %detectFilter doesn't require items to be unique.</p>
     references:
       removeParamsList: {}
 
@@ -617,9 +617,9 @@ symbols:
         %Identifiable objects.
     returns: '%reorder function argument. If no method call required, returns <tt>undefined</tt>.'
     description: |
-      Detects %reorder function to arguments to adjust %oldItems array contents to %newItems.
-      Determines indices to move the items to.
-      Each item must have unique %getKey function result.
+      <p>Detects %reorder function to arguments to adjust %oldItems array contents to %newItems.</p>
+      <p>Determines indices to move the items to.</p>
+      <p>Each item must have unique %getKey function result.</p>
 
   detectSort:
     signature: |
@@ -631,9 +631,9 @@ symbols:
       order: 'Sort order.'
     returns: '%reorder function argument. If no method call required, returns <tt>undefined</tt>.'
     description: |
-      Detects %reorder function to argument to sort array contents by the result of %callback call for each item.
-      %callback must return a comparable value, compatible with %cmp. Returns item itself by default.
-      Pass positive %order for ascending sorting, negative for descending sorting.
+      <p>Detects %reorder function to argument to sort array contents by the result of %callback call for each item.</p>
+      <p>%callback must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
+      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
 
   detectSortComparing:
     signature: |
@@ -645,9 +645,9 @@ symbols:
       order: 'Sort order.'
     returns: '%reorder function argument. If no method call required, returns <tt>undefined</tt>.'
     description: |
-      Detects %reorder function to argument to sort array contents by comparer.
-      %compare must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
-      Pass positive %order for ascending sorting, negative for descending sorting.
+      <p>Detects %reorder function to argument to sort array contents by comparer.</p>
+      <p>%compare must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.</p>
+      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
 
 references:
   empty:

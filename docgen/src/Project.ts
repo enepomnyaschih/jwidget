@@ -5,6 +5,7 @@ import Context from "./Context";
 import Reference from "./models/Reference";
 import Extension from "./models/Extension";
 import Dictionary from "./Dictionary";
+import DocError from "./DocError";
 
 export default class Project {
 
@@ -31,11 +32,11 @@ export default class Project {
 	getStruct(fileId: string, symbol: string = "default"): StructSymbol {
 		const file = this.files[fileId];
 		if (!file) {
-			throw new Error(`Invalid struct reference: File ${fileId} does not exist.`);
+			throw new DocError(`Invalid struct reference: File ${fileId} does not exist.`);
 		}
 		const struct = file.structs[symbol];
 		if (!struct) {
-			throw new Error(`Invalid struct reference: Struct ${symbol} does not exist in file ${fileId}.`);
+			throw new DocError(`Invalid struct reference: Struct ${symbol} does not exist in file ${fileId}.`);
 		}
 		return struct;
 	}
@@ -56,7 +57,7 @@ class ProjectContext extends Context {
 	}
 
 	get file(): SourceFile {
-		throw new Error("Absolute references are not supported. " +
+		throw new DocError("Absolute references are not supported. " +
 			"Please build all references relative to files, symbols or members.");
 	}
 
@@ -67,7 +68,7 @@ class ProjectContext extends Context {
 	protected getDefaultReference(key: string): Reference {
 		const file = this.project.filesByToken[key];
 		if (file === null) {
-			throw new Error(`${key} has multiple definitions.`);
+			throw new DocError(`${key} has multiple definitions.`);
 		}
 		return file ? {file: file.id} : null;
 	}

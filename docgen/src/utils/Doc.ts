@@ -2,6 +2,7 @@ import Context from "../Context";
 import Reference from "../models/Reference";
 import Dictionary from "../Dictionary";
 import * as DictionaryUtils from "../utils/Dictionary";
+import DocError from "../DocError";
 
 export function renderText(context: Context, text?: string) {
 	if (!text) {
@@ -18,8 +19,12 @@ export function renderReference(context: Context, key: string, relativeToFile?: 
 			`<a href="${url}" target="${reference.href ? "_blank" : "_parent"}">${reference.label || key}</a>` :
 			`<b>${reference.label || key}</b>`;
 	} catch (error) {
-		console.warn(error.message);
-		return `<span class="error">Invalid reference: ${key}</span>`;
+		if (error instanceof DocError) {
+			console.warn(error.message);
+			return `<span class="error">Invalid reference: ${key}</span>`;
+		} else {
+			throw error;
+		}
 	}
 }
 
@@ -35,7 +40,7 @@ export function getReferenceUrl(reference: Reference, relativeToFile: string): s
 		(reference.member ? (reference.static ? reference.member + "-static" : reference.member) : null)
 	].filter(Boolean).join("--");
 	const hash = suffix ? `#${suffix}` : '';
-	if (relativeToFile === reference.file) {
+	if (!reference.file || relativeToFile === reference.file) {
 		return hash;
 	}
 

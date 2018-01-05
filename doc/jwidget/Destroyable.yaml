@@ -1,0 +1,20 @@
+symbols:
+  default:
+    kind: interface
+    description: |
+      Object which has %destroy method. Can be aggregated in %IClass via %own method.
+    methods:
+      destroy:
+        signature: '(): void'
+        description: |
+          <p>Class destructor. You must override it in a subclass and call this method explicitly from outside, because
+          JavaScript doesn't support automatic class destructor calling.</p>
+          <pre>
+          const object = new MyClass();
+
+          // ...
+
+          // Once object is not needed anymore, destroy it
+          object.%destroy();
+          </pre>
+          <p>Alternatively (and optimally), you should use %own method to aggregate this object in another one.</p>

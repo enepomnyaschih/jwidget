@@ -4,9 +4,11 @@ import AbstractSymbol from "./AbstractSymbol";
 import {repeat} from "../utils/String";
 import Context from "../Context";
 import Reference from "../models/Reference";
-import {getReferenceUrl, renderDefinitions, renderParams, renderText} from "../utils/Doc";
+import {getReferenceUrl, renderDefinitions, renderText} from "../utils/Doc";
 import Dictionary from "../Dictionary";
 import * as DictionaryUtils from "../utils/Dictionary";
+import MethodMember, {MethodMemberJson} from "../members/Method";
+import DocError from "../DocError";
 
 export default class StructSymbol extends AbstractSymbol {
 
@@ -16,7 +18,7 @@ export default class StructSymbol extends AbstractSymbol {
 	readonly extendedBy: StructSymbol[] = [];
 	readonly description: string;
 	readonly showInheritanceLevels: number;
-	readonly methods: Dictionary<IMethod> = {};
+	readonly methods: Dictionary<MethodMember>;
 	readonly context: Context;
 
 	constructor(file: SourceFile, id: string, json: StructJson) {
@@ -26,7 +28,9 @@ export default class StructSymbol extends AbstractSymbol {
 		this._extendsThe = json.extends || [];
 		this.description = json.description;
 		this.showInheritanceLevels = json.showInheritanceLevels;
-		this.methods = json.methods || {};
+		this.methods = DictionaryUtils.map(json.methods || {}, (methodJson, id) => (
+			new MethodMember(this, id, methodJson)
+		));
 		this.context = new StructContext(this, json.references);
 
 		file.structs[id] = this;
@@ -44,9 +48,13 @@ export default class StructSymbol extends AbstractSymbol {
 				this.project.getStructByExtension(extension).extendedBy.push(this);
 				return true;
 			} catch (error) {
-				console.warn(`Unable to extend [${this.file.id} -> ${this.id}] from ` +
-					`[${extension.file} -> ${extension.symbol || "default"}]: ${error.message}`);
-				return false;
+				if (error instanceof DocError) {
+					console.warn(`Unable to extend [${this.file.id} -> ${this.id}] from ` +
+						`[${extension.file} -> ${extension.symbol || "default"}]: ${error.message}`);
+					return false;
+				} else {
+					throw error;
+				}
 			}
 		});
 	}
@@ -113,20 +121,12 @@ ${struct.renderHierarchyTail(level + 1, cache, levelsLeft != null ? levelsLeft -
 		if (DictionaryUtils.isEmpty(this.methods)) {
 			return "";
 		}
-		const dict = DictionaryUtils.map(this.methods, (method, name) => this.renderMethod(method, name));
+		const dict = DictionaryUtils.map(this.methods, (method) => method.render());
 		return `
 <h4>Methods</h4>
 <ul>
 ${DictionaryUtils.join(dict, "\n")}
 </ul>`
-	}
-
-	renderMethod(method: IMethod, name: string) {
-		return `
-<h5>${name}</h5>
-<pre>${method.modifier} ${renderText(this.context, method.signature)}</pre>
-${renderParams(this.context, method.params, method.returns)}
-${renderText(this.context, method.description)}`;
 	}
 }
 
@@ -137,22 +137,8 @@ export interface StructJson {
 	readonly extends?: Extension[];
 	readonly description?: string;
 	readonly showInheritanceLevels?: number;
-	readonly methods?: Dictionary<IMethod>;
+	readonly methods?: Dictionary<MethodMemberJson>;
 	readonly references?: Dictionary<Reference>;
-}
-
-export interface IMember {
-
-	readonly modifier?: string;
-	readonly description?: string;
-	readonly static?: boolean;
-}
-
-export interface IMethod extends IMember {
-
-	readonly signature?: string;
-	readonly params?: Dictionary<string>;
-	readonly returns?: string;
 }
 
 class StructContext extends Context {

@@ -1,6 +1,7 @@
 import Reference from "./models/Reference";
 import Dictionary from "./Dictionary";
 import SourceFile from "./SourceFile";
+import DocError from "./DocError";
 
 export default abstract class Context {
 
@@ -26,11 +27,15 @@ export default abstract class Context {
 		try {
 			const reference = this.getReference(key);
 			if (!reference) {
-				throw new Error(`${key} is not defined.`);
+				throw new DocError(`${key} is not defined.`);
 			}
 			return reference;
 		} catch (error) {
-			throw new Error(`Invalid reference: ${error.message} [${this.path}]`);
+			if (error instanceof DocError) {
+				throw new DocError(`Invalid reference: ${error.message} [${this.path}]`);
+			} else {
+				throw error;
+			}
 		}
 	}
 

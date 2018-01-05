@@ -15,10 +15,10 @@ export default class FunctionSymbol extends AbstractSymbol {
 
 	constructor(file: SourceFile, id: string, json: FunctionJson) {
 		super(file, id);
-		this.signature = json.signature.trim();
-		this.params = json.params;
+		this.signature = json.signature;
+		this.params = json.params || {};
 		this.returns = json.returns;
-		this.description = json.description ? json.description.trim() : null;
+		this.description = json.description;
 		this.context = new FunctionContext(this, json.references);
 	}
 
