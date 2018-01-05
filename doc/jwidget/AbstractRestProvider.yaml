@@ -3,8 +3,7 @@ symbols:
     type: struct
     kind: abstract class
     typevars:
-      - name: C
-        description: Query context. In a subclass, you can specify any kind of context for your queries.
+      C: Request context. In a subclass, you can specify any kind of context for your requests.
     description: TBD
     constructor:
       signature: |
@@ -12,15 +11,14 @@ symbols:
       params:
         config: Configuration.
       description: Creates class instance.
-    members:
+    methods:
       getHeaders:
-        type: method
         modifier: abstract
         signature: |
           (context: %C): %Dictionary<string>
         params:
-          context: Query context.
-        description:
+          context: Request context.
+        returns: Request headers.
 
 references:
   Config:

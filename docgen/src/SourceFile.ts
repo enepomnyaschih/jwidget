@@ -4,8 +4,8 @@ import Project from "./Project";
 import {mkdir} from "./utils/File";
 import StructSymbol from "./symbols/Struct";
 import Context from "./Context";
-import ReferenceDictionary from "./models/ReferenceDictionary";
 import Reference from "./models/Reference";
+import Dictionary from "./Dictionary";
 
 export default class SourceFile {
 
@@ -14,7 +14,7 @@ export default class SourceFile {
 	readonly structs: { [id: string]: StructSymbol } = {};
 	readonly tokens: string[];
 
-	constructor(readonly project: Project, readonly id: string, references: ReferenceDictionary) {
+	constructor(readonly project: Project, readonly id: string, references: Dictionary<Reference>) {
 		this.context = new SourceFileContext(this, references);
 		this.tokens = this.id.split('/');
 	}
@@ -85,7 +85,7 @@ export default class SourceFile {
 
 class SourceFileContext extends Context {
 
-	constructor(readonly sourceFile: SourceFile, references: ReferenceDictionary) {
+	constructor(readonly sourceFile: SourceFile, references: Dictionary<Reference>) {
 		super(references);
 	}
 

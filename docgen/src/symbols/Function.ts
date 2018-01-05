@@ -1,14 +1,14 @@
 import SourceFile from "../SourceFile";
 import AbstractSymbol from "./AbstractSymbol";
-import {renderText} from "../utils/Doc";
+import {renderParams, renderText} from "../utils/Doc";
 import Context from "../Context";
-import ReferenceDictionary from "../models/ReferenceDictionary";
 import Reference from "../models/Reference";
+import Dictionary from "../Dictionary";
 
 export default class FunctionSymbol extends AbstractSymbol {
 
 	readonly signature: string;
-	readonly params: { [key: string]: string };
+	readonly params: Dictionary<string>;
 	readonly returns: string;
 	readonly description: string;
 	readonly context: Context;
@@ -16,7 +16,7 @@ export default class FunctionSymbol extends AbstractSymbol {
 	constructor(file: SourceFile, id: string, json: FunctionJson) {
 		super(file, id);
 		this.signature = json.signature.trim();
-		this.params = json.params || {};
+		this.params = json.params;
 		this.returns = json.returns;
 		this.description = json.description.trim();
 		this.context = new FunctionContext(this, json.references);
@@ -26,34 +26,24 @@ export default class FunctionSymbol extends AbstractSymbol {
 		return `
 <h2>Signature</h2>
 <pre>${renderText(this.context, this.signature)}</pre>
-<dl>${this.renderParams()}</dl>
+${renderParams(this.context, this.params, this.returns)}
+<h2>Description</h2>
 ${renderText(this.context, this.description)}`;
-	}
-
-	private renderParams() {
-		let buffer = '';
-		for (let key in this.params) {
-			if (this.params.hasOwnProperty(key)) {
-				buffer += `\n<dt>${key}</dt><dd>${this.params[key]}</dd>`;
-			}
-		}
-		buffer += `\n<dt>returns</dt><dd>${this.returns}</dd>\n`;
-		return buffer;
 	}
 }
 
 export interface FunctionJson {
 
 	readonly signature: string;
-	readonly params?: { [key: string]: string };
+	readonly params?: Dictionary<string>;
 	readonly returns?: string;
 	readonly description?: string;
-	readonly references?: ReferenceDictionary;
+	readonly references?: Dictionary<Reference>;
 }
 
 class FunctionContext extends Context {
 
-	constructor(readonly symbol: FunctionSymbol, references: ReferenceDictionary) {
+	constructor(readonly symbol: FunctionSymbol, references: Dictionary<Reference>) {
 		super(references);
 	}
 

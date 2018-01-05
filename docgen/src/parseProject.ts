@@ -1,17 +1,11 @@
 import * as fs from "fs";
 import * as path from "path";
 import SourceFile from "./SourceFile";
-import DocObject from "./symbols/ISymbol";
-import FunctionObject from "./symbols/Function";
 import Project from "./Project";
-import StructObject from "./symbols/Struct";
 import {readYaml} from "./utils/File";
-import ReferenceDictionary from "./models/ReferenceDictionary";
-
-const parsers: {[key: string]: (file: SourceFile, key: string, json: any) => DocObject} = {
-	"function": (file: SourceFile, key: string, json: any) => new FunctionObject(file, key, json),
-	"struct": (file: SourceFile, key: string, json: any) => new StructObject(file, key, json)
-};
+import Reference from "./models/Reference";
+import Dictionary from "./Dictionary";
+import parseSymbol from "./parseSymbol";
 
 function parseProjectFile(project: Project, relativePath: string) {
 	const fileId = relativePath.substr(0, relativePath.indexOf("."));
@@ -21,8 +15,7 @@ function parseProjectFile(project: Project, relativePath: string) {
 	if (json.symbols) {
 		for (let key in json.symbols) {
 			if (json.symbols.hasOwnProperty(key)) {
-				const symbolJson = json.symbols[key];
-				file.symbols[key] = parsers[symbolJson.type](file, key, symbolJson);
+				file.symbols[key] = parseSymbol(file, key, json.symbols[key]);
 			}
 		}
 	}
@@ -60,11 +53,11 @@ export default function parseProject(projectFileAbsolutePath: string): Project {
 interface ProjectJson {
 
 	readonly output?: string;
-	readonly references?: ReferenceDictionary;
+	readonly references?: Dictionary<Reference>;
 }
 
 interface FileJson {
 
 	readonly symbols: any;
-	readonly references?: ReferenceDictionary;
+	readonly references?: Dictionary<Reference>;
 }

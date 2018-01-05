@@ -3,8 +3,8 @@ import SourceFile from "./SourceFile";
 import StructSymbol from "./symbols/Struct";
 import Context from "./Context";
 import Reference from "./models/Reference";
-import ReferenceDictionary from "./models/ReferenceDictionary";
 import Extension from "./models/Extension";
+import Dictionary from "./Dictionary";
 
 export default class Project {
 
@@ -12,7 +12,7 @@ export default class Project {
 	readonly files: { [id: string]: SourceFile } = {};
 	readonly filesByToken: { [token: string]: SourceFile } = {}; // null value indicates ambiguity
 
-	constructor(readonly fileAbsolutePath: string, readonly outputRelativePath: string, references: ReferenceDictionary) {
+	constructor(readonly fileAbsolutePath: string, readonly outputRelativePath: string, references: Dictionary<Reference>) {
 		this.context = new ProjectContext(this, references);
 	}
 
@@ -47,7 +47,7 @@ export default class Project {
 
 class ProjectContext extends Context {
 
-	constructor(readonly project: Project, references: ReferenceDictionary) {
+	constructor(readonly project: Project, references: Dictionary<Reference>) {
 		super(references);
 	}
 

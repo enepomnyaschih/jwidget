@@ -1,30 +1,32 @@
 import SourceFile from "../SourceFile";
-import TypeVar from "../models/TypeVar";
 import Extension from "../models/Extension";
 import AbstractSymbol from "./AbstractSymbol";
 import {repeat} from "../utils/String";
 import Context from "../Context";
-import ReferenceDictionary from "../models/ReferenceDictionary";
 import Reference from "../models/Reference";
-import {getReferenceUrl} from "../utils/Doc";
+import {getReferenceUrl, renderDefinitions, renderParams, renderText} from "../utils/Doc";
+import Dictionary from "../Dictionary";
+import * as DictionaryUtils from "../utils/Dictionary";
 
 export default class StructSymbol extends AbstractSymbol {
 
 	readonly kind: string;
-	readonly typevars: TypeVar[];
+	readonly typevars: Dictionary<string>;
 	private _extendsThe: Extension[] = [];
 	readonly extendedBy: StructSymbol[] = [];
 	readonly description: string;
 	readonly showInheritanceLevels: number;
+	readonly methods: Dictionary<IMethod> = {};
 	readonly context: Context;
 
 	constructor(file: SourceFile, id: string, json: StructJson) {
 		super(file, id);
 		this.kind = json.kind || "class";
-		this.typevars = json.typevars || [];
+		this.typevars = json.typevars || {};
 		this._extendsThe = json.extends || [];
 		this.description = json.description;
 		this.showInheritanceLevels = json.showInheritanceLevels;
+		this.methods = json.methods || {};
 		this.context = new StructContext(this, json.references);
 
 		file.structs[id] = this;
@@ -57,7 +59,11 @@ export default class StructSymbol extends AbstractSymbol {
 ${this.renderHierarchyHead(this.inheritanceLevel - 1, cache)}
 <li>${repeat("\t", this.inheritanceLevel, "")}${this.kind} <b>${this.objectName}</b>${this.renderTypeVars()}</li>
 ${this.renderHierarchyTail(this.inheritanceLevel + 1, cache)}
-</ul>`;
+</ul>
+<h2>Description</h2>
+${renderDefinitions(this.context, this.typevars)}
+${renderText(this.context, this.description)}
+${this.renderMethods()}`;
 	}
 
 	renderHierarchyHead(level: number, cache: StructSymbol[]): string {
@@ -96,26 +102,61 @@ ${struct.renderHierarchyTail(level + 1, cache, levelsLeft != null ? levelsLeft -
 	}
 
 	renderTypeVars() {
-		if (!this.typevars.length) {
+		if (DictionaryUtils.isEmpty(this.typevars)) {
 			return "";
 		}
-		return `<span class="monospace">&lt;${this.typevars.map((typevar) => typevar.name).join(", ")}&gt;</span>`;
+		return `<span class="monospace">&lt;${Object.keys(this.typevars).join(", ")}&gt;</span>`;
+	}
+
+	renderMethods() {
+		if (DictionaryUtils.isEmpty(this.methods)) {
+			return "";
+		}
+		const dict = DictionaryUtils.map(this.methods, (method, name) => this.renderMethod(method, name));
+		return `
+<h2>Methods</h2>
+<ul>
+${DictionaryUtils.join(dict, "\n")}
+</ul>`
+	}
+
+	renderMethod(method: IMethod, name: string) {
+		return `
+<h3>${name}</h3>
+<pre>${method.modifier} ${renderText(this.context, method.signature)}</pre>
+${renderParams(this.context, method.params, method.returns)}
+${renderText(this.context, method.description)}`;
 	}
 }
 
 export interface StructJson {
 
 	readonly kind?: string;
-	readonly typevars?: TypeVar[];
+	readonly typevars?: Dictionary<string>;
 	readonly extends?: Extension[];
 	readonly description?: string;
 	readonly showInheritanceLevels?: number;
-	readonly references?: ReferenceDictionary;
+	readonly methods?: Dictionary<IMethod>;
+	readonly references?: Dictionary<Reference>;
+}
+
+export interface IMember {
+
+	readonly modifier?: string;
+	readonly description?: string;
+	readonly static?: boolean;
+}
+
+export interface IMethod extends IMember {
+
+	readonly signature?: string;
+	readonly params?: Dictionary<string>;
+	readonly returns?: string;
 }
 
 class StructContext extends Context {
 
-	constructor(readonly symbol: StructSymbol, references: ReferenceDictionary) {
+	constructor(readonly symbol: StructSymbol, references: Dictionary<Reference>) {
 		super(references);
 	}
 
@@ -135,11 +176,17 @@ class StructContext extends Context {
 	}
 
 	protected getDefaultReference(key: string): Reference {
-		const typevar = this.symbol.typevars.find((typevar) => typevar.name === key);
-		if (typevar) {
+		if (this.symbol.typevars.hasOwnProperty(key)) {
 			return {
 				...this.selfReference,
-				member: typevar.name
+				member: key
+			};
+		}
+		const member = this.symbol.methods[key];
+		if (member) {
+			return {
+				...this.selfReference,
+				member: member.static ? (key + "-static") : key
 			};
 		}
 		return null;

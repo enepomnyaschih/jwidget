@@ -1,11 +1,11 @@
-import ReferenceDictionary from "./models/ReferenceDictionary";
 import Reference from "./models/Reference";
+import Dictionary from "./Dictionary";
 
 export default abstract class Context {
 
-	readonly references: ReferenceDictionary;
+	readonly references: Dictionary<Reference>;
 
-	constructor(references: ReferenceDictionary) {
+	constructor(references: Dictionary<Reference>) {
 		this.references = references || {};
 	}
 
