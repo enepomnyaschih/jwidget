@@ -13,8 +13,10 @@ export function renderText(context: Context, text?: string) {
 export function renderReference(context: Context, key: string, relativeToFile?: string): string {
 	try {
 		const reference = context.resolveReference(key);
-		const url = getReferenceUrl(reference, relativeToFile || context.selfReference.file);
-		return `<a href="${url}">${reference.label || key}</a>`;
+		const url = getReferenceUrl(reference, relativeToFile || context.file.id);
+		return url ?
+			`<a href="${url}" target="${reference.href ? "_blank" : "_parent"}">${reference.label || key}</a>` :
+			`<b>${reference.label || key}</b>`;
 	} catch (error) {
 		console.warn(error.message);
 		return `<span class="error">Invalid reference: ${key}</span>`;
@@ -22,6 +24,12 @@ export function renderReference(context: Context, key: string, relativeToFile?: 
 }
 
 export function getReferenceUrl(reference: Reference, relativeToFile: string): string {
+	if (reference.href) {
+		return reference.href;
+	}
+	if (!reference.file && !reference.symbol) {
+		return null;
+	}
 	const suffix = [
 		(reference.symbol ? reference.symbol.replace(".", "-") : null),
 		(reference.member ? (reference.static ? reference.member + "-static" : reference.member) : null)

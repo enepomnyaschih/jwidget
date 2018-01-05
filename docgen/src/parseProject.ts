@@ -1,24 +1,16 @@
 import * as fs from "fs";
 import * as path from "path";
-import SourceFile from "./SourceFile";
+import SourceFile, {SourceFileJson} from "./SourceFile";
 import Project from "./Project";
 import {readYaml} from "./utils/File";
 import Reference from "./models/Reference";
 import Dictionary from "./Dictionary";
-import parseSymbol from "./parseSymbol";
 
 function parseProjectFile(project: Project, relativePath: string) {
 	const fileId = relativePath.substr(0, relativePath.indexOf("."));
 	console.log(`Parsing ${fileId}...`);
-	const json: FileJson = readYaml(path.resolve(project.dirAbsolutePath, relativePath));
-	const file = new SourceFile(project, fileId, json.references);
-	if (json.symbols) {
-		for (let key in json.symbols) {
-			if (json.symbols.hasOwnProperty(key)) {
-				file.symbols[key] = parseSymbol(file, key, json.symbols[key]);
-			}
-		}
-	}
+	const json: SourceFileJson = readYaml(path.resolve(project.dirAbsolutePath, relativePath));
+	const file = new SourceFile(project, fileId, json);
 	project.files[fileId] = file;
 	project.filesByToken[file.token] = project.filesByToken.hasOwnProperty(file.token) ? null : file;
 }
@@ -53,11 +45,5 @@ export default function parseProject(projectFileAbsolutePath: string): Project {
 interface ProjectJson {
 
 	readonly output?: string;
-	readonly references?: Dictionary<Reference>;
-}
-
-interface FileJson {
-
-	readonly symbols: any;
 	readonly references?: Dictionary<Reference>;
 }

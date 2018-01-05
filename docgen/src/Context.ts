@@ -1,5 +1,6 @@
 import Reference from "./models/Reference";
 import Dictionary from "./Dictionary";
+import SourceFile from "./SourceFile";
 
 export default abstract class Context {
 
@@ -11,7 +12,7 @@ export default abstract class Context {
 
 	abstract readonly parent: Context;
 
-	abstract readonly selfReference: Reference;
+	abstract readonly file: SourceFile;
 
 	protected abstract readonly name: string;
 

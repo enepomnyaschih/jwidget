@@ -5,4 +5,5 @@ export default interface Reference {
 	readonly member?: string;
 	readonly static?: boolean;
 	readonly label?: string;
+	readonly href?: string;
 }

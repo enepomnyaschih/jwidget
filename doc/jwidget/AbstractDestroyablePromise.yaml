@@ -1,6 +1,5 @@
 symbols:
   default:
-    type: struct
     kind: abstract class
     typevars:
       T: Promise result type.

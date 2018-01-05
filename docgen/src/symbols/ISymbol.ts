@@ -1,8 +1,8 @@
-import Context from "../Context";
+import Reference from "../models/Reference";
 
 interface ISymbol {
 
-	readonly context: Context;
+	readonly selfReference: Reference;
 
 	render(): string;
 }

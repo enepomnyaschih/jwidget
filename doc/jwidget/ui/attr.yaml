@@ -1,6 +1,5 @@
 symbols:
   default:
-    type: function
     signature: |
       (el: JQuery, attr: string, property: %Bindable<any>): %Destroyable
     params:

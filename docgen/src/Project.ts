@@ -55,7 +55,7 @@ class ProjectContext extends Context {
 		return null;
 	}
 
-	get selfReference(): Reference {
+	get file(): SourceFile {
 		throw new Error("Absolute references are not supported. " +
 			"Please build all references relative to files, symbols or members.");
 	}

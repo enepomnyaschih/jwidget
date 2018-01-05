@@ -51,18 +51,15 @@ class FunctionContext extends Context {
 		return this.symbol.file.context;
 	}
 
-	get selfReference(): Reference {
-		return {
-			file: this.symbol.file.id,
-			symbol: this.symbol.id
-		};
+	get file(): SourceFile {
+		return this.symbol.file;
 	}
 
 	protected get name(): string {
 		return this.symbol.id;
 	}
 
-	protected getDefaultReference(): Reference {
-		return null;
+	protected getDefaultReference(key: string): Reference {
+		return (key === this.name || this.symbol.params.hasOwnProperty(key)) ? {} : null;
 	}
 }

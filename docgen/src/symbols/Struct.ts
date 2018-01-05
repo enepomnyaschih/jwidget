@@ -73,7 +73,7 @@ ${this.renderMethods()}`;
 				return "";
 			}
 			cache.push(struct);
-			const url = getReferenceUrl(struct.context.selfReference, this.file.id);
+			const url = getReferenceUrl(struct.selfReference, this.file.id);
 			return `
 ${struct.renderHierarchyHead(level - 1, cache)}
 <li>${repeat("\t", level, "")}${struct.kind} <a href="${url}">${struct.objectName}</a>${struct.renderTypeVars()}</li>`;
@@ -94,7 +94,7 @@ ${struct.renderHierarchyHead(level - 1, cache)}
 				return "";
 			}
 			cache.push(name);
-			const url = getReferenceUrl(struct.context.selfReference, this.file.id);
+			const url = getReferenceUrl(struct.selfReference, this.file.id);
 			return `
 <li>${repeat("\t", level, "")}${struct.kind} <a href="${url}">${struct.objectName}</a>${struct.renderTypeVars()}</li>
 ${struct.renderHierarchyTail(level + 1, cache, levelsLeft != null ? levelsLeft - 1 : null)}`;
@@ -164,11 +164,8 @@ class StructContext extends Context {
 		return this.symbol.file.context;
 	}
 
-	get selfReference(): Reference {
-		return {
-			file: this.symbol.file.id,
-			symbol: this.symbol.id
-		};
+	get file(): SourceFile {
+		return this.symbol.file;
 	}
 
 	protected get name(): string {
@@ -176,16 +173,19 @@ class StructContext extends Context {
 	}
 
 	protected getDefaultReference(key: string): Reference {
+		if (key === this.name) {
+			return {};
+		}
 		if (this.symbol.typevars.hasOwnProperty(key)) {
 			return {
-				...this.selfReference,
+				...this.symbol.selfReference,
 				member: key
 			};
 		}
 		const member = this.symbol.methods[key];
 		if (member) {
 			return {
-				...this.selfReference,
+				...this.symbol.selfReference,
 				member: member.static ? (key + "-static") : key
 			};
 		}

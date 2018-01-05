@@ -1,5 +1,24 @@
 output: docoutput
 references:
+  # External references
+  lodash:
+    label: Lodash
+    href: https://lodash.com
+  underscore:
+    label: Underscore.js
+    href: http://underscorejs.org
+
+  # Terms
+  truthy:
+    file: jwidget
+    symbol: isTruthy
+
+  # Core
+  cmp:
+    file: jwidget
+    symbol: cmp
+
+  # IClass
   own:
     file: jwidget/IClass
     member: own
