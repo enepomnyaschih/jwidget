@@ -18,16 +18,15 @@ export default class FunctionSymbol extends AbstractSymbol {
 		this.signature = json.signature.trim();
 		this.params = json.params;
 		this.returns = json.returns;
-		this.description = json.description.trim();
+		this.description = json.description ? json.description.trim() : null;
 		this.context = new FunctionContext(this, json.references);
 	}
 
 	render(): string {
 		return `
-<h2>Signature</h2>
+${this.renderId()}
 <pre>${renderText(this.context, this.signature)}</pre>
 ${renderParams(this.context, this.params, this.returns)}
-<h2>Description</h2>
 ${renderText(this.context, this.description)}`;
 	}
 }

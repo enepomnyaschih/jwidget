@@ -26,6 +26,10 @@ abstract class AbstractSymbol implements ISymbol {
 	}
 
 	abstract render(): string;
+
+	protected renderId() {
+		return `<h3>${this.id === "default" ? "Default export" : this.id}</h3>`;
+	}
 }
 
 export default AbstractSymbol;

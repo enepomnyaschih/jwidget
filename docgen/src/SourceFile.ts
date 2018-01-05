@@ -72,7 +72,7 @@ export default class SourceFile {
 		<a href="${this.index}">Back to index</a>
 		<h1>${this.id}</h1>
 		${renderText(this.context, this.description)}
-		<h2>Consumption</h2>
+		<h3>Consumption</h3>
 		<pre>${this.consumption}</pre>
 		${this.renderSymbols()}
 	</body>
@@ -83,9 +83,6 @@ export default class SourceFile {
 		let buffer = "";
 		for (let key in this.symbols) {
 			if (this.symbols.hasOwnProperty(key)) {
-				if (key !== "default") {
-					buffer += `\n<h1>${key}</h1>`;
-				}
 				buffer += this.symbols[key].render();
 			}
 		}

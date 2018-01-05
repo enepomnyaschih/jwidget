@@ -54,13 +54,14 @@ export default class StructSymbol extends AbstractSymbol {
 	render(): string {
 		const cache: StructSymbol[] = [];
 		return `
-<h2>Hierarchy</h2>
+${this.renderId()}
+<h4>Hierarchy</h4>
 <ul class="hierarchy">
 ${this.renderHierarchyHead(this.inheritanceLevel - 1, cache)}
 <li>${repeat("\t", this.inheritanceLevel, "")}${this.kind} <b>${this.objectName}</b>${this.renderTypeVars()}</li>
 ${this.renderHierarchyTail(this.inheritanceLevel + 1, cache)}
 </ul>
-<h2>Description</h2>
+<h4>Description</h4>
 ${renderDefinitions(this.context, this.typevars)}
 ${renderText(this.context, this.description)}
 ${this.renderMethods()}`;
@@ -114,7 +115,7 @@ ${struct.renderHierarchyTail(level + 1, cache, levelsLeft != null ? levelsLeft -
 		}
 		const dict = DictionaryUtils.map(this.methods, (method, name) => this.renderMethod(method, name));
 		return `
-<h2>Methods</h2>
+<h4>Methods</h4>
 <ul>
 ${DictionaryUtils.join(dict, "\n")}
 </ul>`
@@ -122,7 +123,7 @@ ${DictionaryUtils.join(dict, "\n")}
 
 	renderMethod(method: IMethod, name: string) {
 		return `
-<h3>${name}</h3>
+<h5>${name}</h5>
 <pre>${method.modifier} ${renderText(this.context, method.signature)}</pre>
 ${renderParams(this.context, method.params, method.returns)}
 ${renderText(this.context, method.description)}`;

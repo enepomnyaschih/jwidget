@@ -39,14 +39,15 @@ export function getReferenceUrl(reference: Reference, relativeToFile: string): s
 		return hash;
 	}
 
-	const from = relativeToFile.split("/").slice(0, -1);
+	const fromHead = relativeToFile.split("/").slice(0, -1);
 	const to = reference.file.split("/");
+	const toHead = to.slice(0, -1);
 	let diff = 0;
-	while (diff < from.length && diff < to.length && from[diff] === to[diff]) {
+	while (diff < fromHead.length && diff < toHead.length && fromHead[diff] === toHead[diff]) {
 		++diff;
 	}
 	return [
-		...from.slice(diff).map(() => ".."),
+		...fromHead.slice(diff).map(() => ".."),
 		...to.slice(diff)
 	].join("/") + ".html" + hash;
 }
