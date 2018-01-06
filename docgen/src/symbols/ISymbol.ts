@@ -1,10 +1,9 @@
 import Reference from "../models/Reference";
+import Renderable from "../Renderable";
 
-interface ISymbol {
+interface ISymbol extends Renderable {
 
 	readonly selfReference: Reference;
-
-	render(): string;
 }
 
 export default ISymbol;

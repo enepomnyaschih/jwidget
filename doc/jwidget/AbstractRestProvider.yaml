@@ -4,12 +4,14 @@ symbols:
     typevars:
       C: Request context. In a subclass, you can specify any kind of context for your requests.
     description: TBD
+
     constructor:
       signature: |
         (config?: %Config)
       params:
         config: Configuration.
       description: Creates class instance.
+
     methods:
       getHeaders:
         modifiers: abstract

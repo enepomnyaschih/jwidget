@@ -3,6 +3,7 @@ symbols:
     kind: interface
     description: |
       Object which has %destroy method. Can be aggregated in %IClass via %own method.
+
     methods:
       destroy:
         signature: '(): void'

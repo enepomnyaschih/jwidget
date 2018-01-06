@@ -4,7 +4,7 @@ import AbstractSymbol from "./AbstractSymbol";
 import {repeat} from "../utils/String";
 import Context from "../Context";
 import Reference from "../models/Reference";
-import {getReferenceUrl, renderDefinitions, renderText} from "../utils/Doc";
+import {getReferenceUrl, renderDefinitions, renderDictionary, renderText} from "../utils/Doc";
 import Dictionary from "../Dictionary";
 import * as DictionaryUtils from "../utils/Dictionary";
 import MethodMember, {MethodMemberJson} from "../members/Method";
@@ -23,6 +23,8 @@ export default class StructSymbol extends AbstractSymbol {
 	readonly _constructor: Constructor;
 	readonly properties: Dictionary<PropertyMember>;
 	readonly methods: Dictionary<MethodMember>;
+	readonly staticProperties: Dictionary<PropertyMember>;
+	readonly staticMethods: Dictionary<MethodMember>;
 	readonly context: Context;
 
 	constructor(file: SourceFile, id: string, json: StructJson) {
@@ -33,15 +35,21 @@ export default class StructSymbol extends AbstractSymbol {
 		this.description = json.description;
 		this.showInheritanceLevels = json.showInheritanceLevels;
 		this._constructor = json.hasOwnProperty("constructor") ? new Constructor(this, json.constructor) : null;
-		this.properties = DictionaryUtils.map(json.properties || {}, (propertyJson, id) => (
-			new PropertyMember(this, id, propertyJson)
-		));
-		this.methods = DictionaryUtils.map(json.methods || {}, (methodJson, id) => (
-			new MethodMember(this, id, methodJson)
-		));
+		this.properties = this.readProperties(json.properties);
+		this.methods = this.readMethods(json.methods);
+		this.staticProperties = this.readProperties(json.staticProperties);
+		this.staticMethods = this.readMethods(json.staticMethods);
 		this.context = new StructContext(this, json.references);
 
 		file.structs[id] = this;
+	}
+
+	private readProperties(json: Dictionary<PropertyMemberJson>) {
+		return DictionaryUtils.map(json || {}, (propertyJson, id) => new PropertyMember(this, id, propertyJson));
+	}
+
+	private readMethods(json: Dictionary<MethodMemberJson>) {
+		return DictionaryUtils.map(json || {}, (methodJson, id) => new MethodMember(this, id, methodJson));
 	}
 
 	get inheritanceLevel(): number {
@@ -81,8 +89,10 @@ ${this.renderHierarchyTail(this.inheritanceLevel + 1, cache)}
 ${renderDefinitions(this.context, this.typevars)}
 ${renderText(this.context, this.description)}
 ${this._constructor ? this._constructor.render() : ""}
-${this.renderProperties()}
-${this.renderMethods()}`;
+${renderDictionary(this.properties, "<h4>Properties</h4>")}
+${renderDictionary(this.methods, "<h4>Methods</h4>")}
+${renderDictionary(this.staticProperties, "<h4>Static properties</h4>")}
+${renderDictionary(this.staticMethods, "<h4>Static methods</h4>")}`
 	}
 
 	renderHierarchyHead(level: number, cache: StructSymbol[]): string {
@@ -126,30 +136,6 @@ ${struct.renderHierarchyTail(level + 1, cache, levelsLeft != null ? levelsLeft -
 		}
 		return `<span class="monospace">&lt;${Object.keys(this.typevars).join(", ")}&gt;</span>`;
 	}
-
-	renderProperties() {
-		if (DictionaryUtils.isEmpty(this.properties)) {
-			return "";
-		}
-		const dict = DictionaryUtils.map(this.properties, (property) => property.render());
-		return `
-<h4>Properties</h4>
-<ul>
-${DictionaryUtils.join(dict, "\n")}
-</ul>`
-	}
-
-	renderMethods() {
-		if (DictionaryUtils.isEmpty(this.methods)) {
-			return "";
-		}
-		const dict = DictionaryUtils.map(this.methods, (method) => method.render());
-		return `
-<h4>Methods</h4>
-<ul>
-${DictionaryUtils.join(dict, "\n")}
-</ul>`
-	}
 }
 
 export interface StructJson {
@@ -162,6 +148,8 @@ export interface StructJson {
 	readonly constructor?: ConstructorJson;
 	readonly properties?: Dictionary<PropertyMemberJson>;
 	readonly methods?: Dictionary<MethodMemberJson>;
+	readonly staticProperties?: Dictionary<PropertyMemberJson>;
+	readonly staticMethods?: Dictionary<MethodMemberJson>;
 	readonly references?: Dictionary<Reference>;
 }
 
@@ -187,17 +175,19 @@ class StructContext extends Context {
 		if (key === this.name) {
 			return {};
 		}
-		if (this.symbol.typevars.hasOwnProperty(key)) {
+		if (this.symbol.typevars.hasOwnProperty(key) ||
+			this.symbol.properties.hasOwnProperty(key) ||
+			this.symbol.methods.hasOwnProperty(key)) {
 			return {
 				...this.symbol.selfReference,
 				member: key
 			};
 		}
-		const member = this.symbol.methods[key];
-		if (member) {
+		if (this.symbol.staticProperties.hasOwnProperty(key) ||
+			this.symbol.staticMethods.hasOwnProperty(key)) {
 			return {
 				...this.symbol.selfReference,
-				member: member.static ? (key + "-static") : key
+				member: `${key}-static`
 			};
 		}
 		return null;

@@ -6,6 +6,7 @@ symbols:
       - file: jwidget/Identifiable
     description: |
       Interface of %Class - see it for details.
+
     methods:
       own:
         signature: |

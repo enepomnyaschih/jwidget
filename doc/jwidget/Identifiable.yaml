@@ -5,6 +5,7 @@ symbols:
     description: |
       An object which has unique %iid value assigned via core %newIid method.
       Makes this object suitable for efficient storage in %ISet.
+
     properties:
       iid:
         modifiers: [readonly]

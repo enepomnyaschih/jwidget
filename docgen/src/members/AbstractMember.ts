@@ -1,16 +1,15 @@
 import StructSymbol from "../symbols/Struct";
 import SourceFile from "../SourceFile";
+import Renderable from "../Renderable";
 
-export default abstract class AbstractMember {
+export default abstract class AbstractMember implements Renderable {
 
 	readonly modifiers: string;
 	readonly description: string;
-	readonly static: boolean;
 
 	constructor(readonly struct: StructSymbol, readonly id: string, json: AbstractMemberJson) {
 		this.modifiers = json.modifiers;
 		this.description = json.description;
-		this.static = json.static;
 	}
 
 	get file(): SourceFile {
@@ -24,5 +23,4 @@ export interface AbstractMemberJson {
 
 	readonly modifiers?: string;
 	readonly description?: string;
-	readonly static?: boolean;
 }

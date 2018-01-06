@@ -64,9 +64,8 @@ symbols:
       description: |
         Constructs an event.
 
-    methods:
+    staticMethods:
       make:
-        static: true
         signature: |
           <P>(owner: %IClass, dummy: boolean): %IEvent<P>
         params:

@@ -30,6 +30,7 @@ symbols:
       Destroying cover
       Destroying book
       </pre>
+
     constructor:
       signature: |
         ()
@@ -44,6 +45,7 @@ symbols:
                 %owning(new Request());
         }
         </pre>
+
     methods:
       destroy:
         signature: '(): void'
