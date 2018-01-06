@@ -21,7 +21,7 @@ export function unlink(dirPath: string) {
 	}
 	const fileNames = fs.readdirSync(dirPath);
 	fileNames.forEach((fileName) => {
-		unlink(`${dirPath}/${fileName}`);
+		unlink(path.resolve(dirPath, fileName));
 	});
 	fs.rmdirSync(dirPath);
 }
@@ -31,4 +31,19 @@ export function readYaml(filePath: string) {
 		throw new Error(`${filePath} is not a file.`);
 	}
 	return yaml.safeLoad(fs.readFileSync(filePath, "utf8"));
+}
+
+export function copy(src: string, dest: string) {
+	if (!fs.existsSync(src)) {
+		return;
+	}
+	if (fs.statSync(src).isFile()) {
+		fs.copyFileSync(src, dest);
+		return;
+	}
+	const fileNames = fs.readdirSync(src);
+	mkdir(dest);
+	fileNames.forEach((fileName) => {
+		copy(path.resolve(src, fileName), path.resolve(dest, fileName));
+	});
 }

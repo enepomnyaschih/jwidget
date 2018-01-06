@@ -7,14 +7,14 @@ import {readYaml} from "./utils/File";
 function parseProjectFile(project: Project, relativePath: string) {
 	const fileId = relativePath.substr(0, relativePath.indexOf("."));
 	console.log(`Parsing ${fileId}...`);
-	const json: SourceFileJson = readYaml(path.resolve(project.dirAbsolutePath, relativePath));
+	const json: SourceFileJson = readYaml(path.resolve(project.inputAbsolutePath, relativePath));
 	const file = new SourceFile(project, fileId, json);
 	project.files[fileId] = file;
 	project.filesByToken[file.token] = project.filesByToken.hasOwnProperty(file.token) ? null : file;
 }
 
 function parseProjectDir(project: Project, relativePath?: string) {
-	const absolutePath = relativePath ? path.resolve(project.dirAbsolutePath, relativePath) : project.dirAbsolutePath;
+	const absolutePath = relativePath ? path.resolve(project.inputAbsolutePath, relativePath) : project.inputAbsolutePath;
 	if (fs.statSync(absolutePath).isFile()) {
 		if (/\.yaml$/.test(relativePath)) {
 			parseProjectFile(project, relativePath);

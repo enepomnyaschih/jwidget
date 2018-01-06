@@ -4,7 +4,14 @@ import * as DictionaryUtils from "../utils/Dictionary";
 import Project from "../Project";
 import SourceFile from "../SourceFile";
 import {mkdir} from "../utils/File";
-import {getReferenceUrl, renderDefinitions, renderDictionary, renderParams, renderText} from "../utils/Doc";
+import {
+	getReferenceUrl,
+	getRelativeUrl,
+	renderDefinitions,
+	renderDictionary,
+	renderParams,
+	renderText
+} from "../utils/Doc";
 import SymbolVisitor from "../SymbolVisitor";
 import StructSymbol from "../symbols/Struct";
 import FunctionSymbol from "../symbols/Function";
@@ -19,7 +26,7 @@ import Constructor from "../Constructor";
 export default function defaultTemplate(project: Project) {
 	for (let fileId in project.files) {
 		writeFile(project.files[fileId],
-			path.resolve(path.dirname(project.fileAbsolutePath), project.outputRelativePath, `${fileId}.html`));
+			path.resolve(project.outputAbsolutePath, `${fileId}.html`));
 	}
 }
 
@@ -34,7 +41,7 @@ function renderFile(file: SourceFile) {
 <html>
 	<head>
 		<title>${file.id} - jWidget</title>
-		<style>.error {color: red;}</style>
+		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("styles.css", file.id)}">
 	</head>
 	<body>
 		<a href="${file.tokens.map(() => '..').join('/')}">Back to index</a>

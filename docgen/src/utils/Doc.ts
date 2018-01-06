@@ -61,9 +61,17 @@ export function getReferenceUrl(reference: Reference, relativeToFile: string): s
 	if (!reference.file || relativeToFile === reference.file) {
 		return hash;
 	}
+	return getRelativeUrl(reference.file + ".html" + hash, relativeToFile);
+}
 
+export function getRelativeUrl(absoluteUrl: string, relativeToFile: string): string {
 	const fromHead = relativeToFile.split("/").slice(0, -1);
-	const to = reference.file.split("/");
+	const toSearchIndex = absoluteUrl.indexOf("?");
+	const toHashIndex = absoluteUrl.indexOf("#");
+	const toPathnameLength = Math.min(
+		(toSearchIndex === -1) ? absoluteUrl.length : toSearchIndex,
+		(toHashIndex === -1) ? absoluteUrl.length : toHashIndex);
+	const to = absoluteUrl.substr(0, toPathnameLength).split("/");
 	const toHead = to.slice(0, -1);
 	let diff = 0;
 	while (diff < fromHead.length && diff < toHead.length && fromHead[diff] === toHead[diff]) {
@@ -72,7 +80,7 @@ export function getReferenceUrl(reference: Reference, relativeToFile: string): s
 	return [
 		...fromHead.slice(diff).map(() => ".."),
 		...to.slice(diff)
-	].join("/") + ".html" + hash;
+	].join("/") + absoluteUrl.substr(toPathnameLength);
 }
 
 export function renderParams(context: Context, params: Dictionary<string>, returns?: string): string {

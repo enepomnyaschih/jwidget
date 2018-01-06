@@ -11,18 +11,34 @@ export default class Project {
 
 	readonly files: Dictionary<SourceFile> = {};
 	readonly filesByToken: Dictionary<SourceFile> = {}; // null value indicates ambiguity
+	readonly inputRelativePath: string;
 	readonly outputRelativePath: string;
+	readonly staticRelativePath: string;
 	readonly context: Context;
 	readonly includes: Dictionary<string> = {};
 
 	constructor(readonly fileAbsolutePath: string, json: ProjectJson) {
+		this.inputRelativePath = json.input || "doc";
 		this.outputRelativePath = json.output || "docoutput";
+		this.staticRelativePath = json.static || "docstatic";
 		this.context = new ProjectContext(this, json.references);
 		this.includes = json.includes || {};
 	}
 
 	get dirAbsolutePath() {
-		return path.resolve(path.dirname(this.fileAbsolutePath), "doc");
+		return path.dirname(this.fileAbsolutePath);
+	}
+
+	get inputAbsolutePath() {
+		return path.resolve(this.dirAbsolutePath, this.inputRelativePath);
+	}
+
+	get outputAbsolutePath() {
+		return path.resolve(this.dirAbsolutePath, this.outputRelativePath);
+	}
+
+	get staticAbsolutePath() {
+		return path.resolve(this.dirAbsolutePath, this.staticRelativePath);
 	}
 
 	link() {
@@ -52,7 +68,9 @@ export default class Project {
 
 export interface ProjectJson {
 
+	readonly input?: string;
 	readonly output?: string;
+	readonly static?: string;
 	readonly references?: Dictionary<Reference>;
 	readonly includes?: Dictionary<string>;
 }
