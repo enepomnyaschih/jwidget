@@ -29,14 +29,11 @@ class DummyEvent implements IEvent<any> {
 
 	destroy(): void {}
 
-	listen(handler: (params: any) => void, scope?: any): Destroyable {
-		handler = handler;
-		scope = scope;
+	listen(_handler: (params: any) => void, _scope?: any): Destroyable {
 		return dummyDestroyable;
 	}
 
-	trigger(params?: any): void {
-		params = params;
+	trigger(_params?: any): void {
 	}
 }
 

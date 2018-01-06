@@ -38,7 +38,7 @@ export interface MethodMemberJson extends AbstractMemberJson {
 	readonly signature?: string;
 	readonly params?: Dictionary<string>;
 	readonly returns?: string;
-	readonly references?: Dictionary<Reference>
+	readonly references?: Dictionary<Reference>;
 }
 
 class MethodContext extends Context {

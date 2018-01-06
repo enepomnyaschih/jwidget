@@ -1,6 +1,5 @@
 symbols:
   default:
-    kind: class
     extends:
       - file: jwidget/IClass
     description: |

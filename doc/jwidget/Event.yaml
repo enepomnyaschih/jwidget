@@ -1,6 +1,5 @@
 symbols:
   default:
-    kind: class
     typevars:
       P: Event parameters.
     extends:
