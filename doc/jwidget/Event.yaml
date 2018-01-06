@@ -1,0 +1,79 @@
+symbols:
+  default:
+    kind: class
+    typevars:
+      P: Event parameters.
+    extends:
+      - file: jwidget/IEvent
+    description: |
+      <p>Real implementation of %IEvent interface that calls handler functions on %trigger method call (as opposed to
+      %dummyEvent which doesn't). Used to notify some objects (listeners) about certain events (for example, field
+      value changes). Remember to destroy the event attachments to prevent side effects. It is smart to expose event
+      objects in getters returning %Listenable to deny direct control over the event by the listeners.</p>
+      <p>Full example of class that triggers the events:</p>
+      <pre>
+      class Dispatcher extends %Class {
+          private _items: any[] = [];
+          private _addEvent = new %Event<DispatcherEventParams>();
+          private _removeEvent = new %Event<DispatcherEventParams>();
+
+          get addEvent(): %Listenable {
+              return this._addEvent;
+          }
+
+          get removeEvent(): %Listenable {
+              return this._removeEvent;
+          }
+
+          addItem(item: any, index: number) {
+              this._items.splice(index, 0, item);
+              this._addEvent.%trigger({item, index});
+          }
+
+          removeItem(index) {
+              const item = this._items.splice(index, 1)[0];
+              this._removeEvent.%trigger({item, index});
+          }
+      }
+
+      interface DispatcherEventParams {
+          item: any;
+          index: number;
+      }
+      </pre>
+      <p>Full example of event listener:</p>
+      <pre>
+      class Listener extends %Class {
+          constructor(dispatcher: Dispatcher) {
+              super();
+              this.own(dispatcher.addEvent.%listen(this._onAdd, this));
+              this.own(dispatcher.removeEvent.%listen(this._onRemove, this));
+          }
+
+          _onAdd(params: DispatcherEventParams) {
+              console.log(`${params.item} item is added at ${params.index}.`);
+          }
+
+          _onRemove(params: DispatcherEventParams) {
+              console.log(`${params.item} item is removed at ${params.index}.`);
+          }
+      }
+      </pre>
+
+    constructor:
+      signature: '(): void'
+      description: |
+        Constructs an event.
+
+    methods:
+      make:
+        static: true
+        signature: |
+          <P>(owner: %IClass, dummy: boolean): %IEvent<P>
+        params:
+          owner: 'Object to aggregate new event in.'
+          dummy: 'Determines if dummy event should be used instead.'
+        returns: 'Event object.'
+        description: |
+          If %dummy argument is false, returns a new instance of %Event aggregated in the %owner object.
+          Else returns %dummyEvent.

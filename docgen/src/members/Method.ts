@@ -26,7 +26,7 @@ export default class MethodMember extends AbstractMember {
 		return `
 <li>
 <h5>${this.id}</h5>
-<pre>${this.modifiers ? this.modifiers + " " : ""}${renderText(this.context, this.signature)}</pre>
+<pre>${this.modifiers ? this.modifiers + " " : ""}${this.static ? "static " : ""}${renderText(this.context, this.signature)}</pre>
 ${renderParams(this.context, this.params, this.returns)}
 ${renderText(this.context, this.description)}
 </li>`;

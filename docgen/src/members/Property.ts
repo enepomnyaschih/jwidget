@@ -22,7 +22,7 @@ export default class PropertyMember extends AbstractMember {
 		return `
 <li>
 <h5>${this.id}</h5>
-<pre>${this.modifiers ? this.modifiers + " " : ""}${this.id}: ${renderText(this.context, this.type)}</pre>
+<pre>${this.modifiers ? this.modifiers + " " : ""}${this.static ? "static " : ""}${this.id}: ${renderText(this.context, this.type)}</pre>
 ${renderText(this.context, this.description)}
 </li>`;
 	}
