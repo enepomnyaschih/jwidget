@@ -9,12 +9,16 @@ import DocError from "./DocError";
 
 export default class Project {
 
+	readonly files: Dictionary<SourceFile> = {};
+	readonly filesByToken: Dictionary<SourceFile> = {}; // null value indicates ambiguity
+	readonly outputRelativePath: string;
 	readonly context: Context;
-	readonly files: { [id: string]: SourceFile } = {};
-	readonly filesByToken: { [token: string]: SourceFile } = {}; // null value indicates ambiguity
+	readonly includes: Dictionary<string> = {};
 
-	constructor(readonly fileAbsolutePath: string, readonly outputRelativePath: string, references: Dictionary<Reference>) {
-		this.context = new ProjectContext(this, references);
+	constructor(readonly fileAbsolutePath: string, json: ProjectJson) {
+		this.outputRelativePath = json.output || "docoutput";
+		this.context = new ProjectContext(this, json.references);
+		this.includes = json.includes || {};
 	}
 
 	get dirAbsolutePath() {
@@ -44,6 +48,13 @@ export default class Project {
 	getStructByExtension(extension: Extension): StructSymbol {
 		return this.getStruct(extension.file, extension.symbol);
 	}
+}
+
+export interface ProjectJson {
+
+	readonly output?: string;
+	readonly references?: Dictionary<Reference>;
+	readonly includes?: Dictionary<string>;
 }
 
 class ProjectContext extends Context {

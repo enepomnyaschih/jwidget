@@ -1,10 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
 import SourceFile, {SourceFileJson} from "./SourceFile";
-import Project from "./Project";
+import Project, {ProjectJson} from "./Project";
 import {readYaml} from "./utils/File";
-import Reference from "./models/Reference";
-import Dictionary from "./Dictionary";
 
 function parseProjectFile(project: Project, relativePath: string) {
 	const fileId = relativePath.substr(0, relativePath.indexOf("."));
@@ -36,14 +34,8 @@ export default function parseProject(projectFileAbsolutePath: string): Project {
 		projectFileAbsolutePath = path.resolve(projectFileAbsolutePath, "doc.yaml");
 	}
 	const json: ProjectJson = readYaml(projectFileAbsolutePath);
-	const project = new Project(projectFileAbsolutePath, json.output || "docoutput", json.references);
+	const project = new Project(projectFileAbsolutePath, json);
 	parseProjectDir(project);
 	project.link();
 	return project;
-}
-
-interface ProjectJson {
-
-	readonly output?: string;
-	readonly references?: Dictionary<Reference>;
 }

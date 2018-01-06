@@ -3,12 +3,30 @@ import Reference from "../models/Reference";
 import Dictionary from "../Dictionary";
 import * as DictionaryUtils from "../utils/Dictionary";
 import DocError from "../DocError";
+import Project from "../Project";
 
 export function renderText(context: Context, text?: string) {
 	if (!text) {
 		return "";
 	}
-	return text.replace(/%(\w+)/g, (_, key) => renderReference(context, key));
+	return renderIncludes(context.file.project, text)
+		.replace(/%(\w+)/g, (_, key) => renderReference(context, key));
+}
+
+export function renderIncludes(project: Project, text?: string) {
+	if (!text) {
+		return "";
+	}
+	return text.replace(/%%(\w+)/g, (_, key) => renderInclude(project, key))
+}
+
+export function renderInclude(project: Project, key: string): string {
+	const include = project.includes[key];
+	if (!include) {
+		console.warn(`Invalid inclusion: ${key} is not defined.`);
+		return `<span class="error">Invalid inclusion: ${key}</span>`;
+	}
+	return renderIncludes(project, include);
 }
 
 export function renderReference(context: Context, key: string, relativeToFile?: string): string {

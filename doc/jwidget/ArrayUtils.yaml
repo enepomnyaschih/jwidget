@@ -63,6 +63,7 @@ symbols:
       <T>(arr: T[], value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number
     params:
       arr: 'Array to inspect.'
+      value: 'Value to insert/remove.'
       compare: 'Item comparer.'
       scope: '%compare call scope.'
       order: 'Order the array is sorted by.'

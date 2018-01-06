@@ -80,7 +80,7 @@ ${this.renderHierarchyTail(this.inheritanceLevel + 1, cache)}
 <h4>Description</h4>
 ${renderDefinitions(this.context, this.typevars)}
 ${renderText(this.context, this.description)}
-${this._constructor ? this._constructor.render() : null}
+${this._constructor ? this._constructor.render() : ""}
 ${this.renderProperties()}
 ${this.renderMethods()}`;
 	}

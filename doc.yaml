@@ -34,3 +34,24 @@ references:
   trigger:
     file: jwidget/IEvent
     member: trigger
+
+includes:
+  EventExample: |
+    <p>It is smart to store the event as %IEvent internally, and expose it as %Listenable externally to deny direct
+    control over the event by the clients.</p>
+    <pre>
+    class Example {
+        private _changeEvent = new %Event<number>();
+
+        get changeEvent(): %Listenable<number> {
+            return this._changeEvent;
+        }
+
+        // ...
+
+            // We can't trigger public changeEvent, but we can trigger private _changeEvent
+            this._changeEvent.%trigger(value);
+
+        // ...
+    }
+    </pre>

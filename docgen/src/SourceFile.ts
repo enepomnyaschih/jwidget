@@ -67,6 +67,7 @@ export default class SourceFile {
 <html>
 	<head>
 		<title>${this.id} - jWidget</title>
+		<style>.error {color: red;}</style>
 	</head>
 	<body>
 		<a href="${this.index}">Back to index</a>
