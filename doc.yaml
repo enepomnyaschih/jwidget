@@ -1,4 +1,5 @@
 output: docoutput
+template: default
 references:
   # External references
   lodash:

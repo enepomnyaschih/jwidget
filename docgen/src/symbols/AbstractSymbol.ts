@@ -1,6 +1,7 @@
 import ISymbol from "./ISymbol";
 import SourceFile from "../SourceFile";
 import Project from "../Project";
+import SymbolVisitor from "../SymbolVisitor";
 
 abstract class AbstractSymbol implements ISymbol {
 
@@ -25,11 +26,7 @@ abstract class AbstractSymbol implements ISymbol {
 		};
 	}
 
-	abstract render(): string;
-
-	protected renderId() {
-		return `<h3>${this.id === "default" ? "Default export" : this.id}</h3>`;
-	}
+	abstract visit<U>(visitor: SymbolVisitor<U>): U;
 }
 
 export default AbstractSymbol;

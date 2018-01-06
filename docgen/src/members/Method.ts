@@ -4,7 +4,6 @@ import StructSymbol from "../symbols/Struct";
 import Reference from "../models/Reference";
 import Context from "../Context";
 import SourceFile from "../SourceFile";
-import {renderParams, renderText} from "../utils/Doc";
 import {htmlEncode} from "../utils/String";
 
 export default class MethodMember extends AbstractMember {
@@ -20,16 +19,6 @@ export default class MethodMember extends AbstractMember {
 		this.params = json.params || {};
 		this.returns = json.returns;
 		this.context = new MethodContext(this, json.references);
-	}
-
-	render() {
-		return `
-<li>
-<h5>${this.id}</h5>
-<pre>${this.modifiers ? this.modifiers + " " : ""}${renderText(this.context, this.signature)}</pre>
-${renderParams(this.context, this.params, this.returns)}
-${renderText(this.context, this.description)}
-</li>`;
 	}
 }
 

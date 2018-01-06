@@ -1,8 +1,7 @@
 import StructSymbol from "../symbols/Struct";
 import SourceFile from "../SourceFile";
-import Renderable from "../Renderable";
 
-export default abstract class AbstractMember implements Renderable {
+export default abstract class AbstractMember {
 
 	readonly modifiers: string;
 	readonly description: string;
@@ -15,8 +14,6 @@ export default abstract class AbstractMember implements Renderable {
 	get file(): SourceFile {
 		return this.struct.file;
 	}
-
-	abstract render(): string;
 }
 
 export interface AbstractMemberJson {

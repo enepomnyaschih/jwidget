@@ -4,7 +4,6 @@ import Dictionary from "../Dictionary";
 import * as DictionaryUtils from "../utils/Dictionary";
 import DocError from "../DocError";
 import Project from "../Project";
-import Renderable from "../Renderable";
 
 export function renderText(context: Context, text?: string) {
 	if (!text) {
@@ -91,11 +90,12 @@ export function renderDefinitions(context: Context, params: Dictionary<string>):
 	return `<dl>\n${DictionaryUtils.join(dict, "\n")}\n</dl>`;
 }
 
-export function renderDictionary(dict: Dictionary<Renderable>, title: string) {
+export function renderDictionary<T>(dict: Dictionary<T>, title: string,
+									renderer: (obj: T, key: string) => string, scope?: any) {
 	if (DictionaryUtils.isEmpty(dict)) {
 		return "";
 	}
-	const strDict = DictionaryUtils.map(dict, (renderable) => renderable.render());
+	const strDict = DictionaryUtils.map(dict, renderer, scope);
 	return `
 ${title}
 <ul>

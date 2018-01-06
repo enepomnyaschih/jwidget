@@ -1,10 +1,10 @@
 import SourceFile from "../SourceFile";
 import AbstractSymbol from "./AbstractSymbol";
-import {renderParams, renderText} from "../utils/Doc";
 import Context from "../Context";
 import Reference from "../models/Reference";
 import Dictionary from "../Dictionary";
 import {htmlEncode} from "../utils/String";
+import SymbolVisitor from "../SymbolVisitor";
 
 export default class FunctionSymbol extends AbstractSymbol {
 
@@ -23,12 +23,8 @@ export default class FunctionSymbol extends AbstractSymbol {
 		this.context = new FunctionContext(this, json.references);
 	}
 
-	render(): string {
-		return `
-${this.renderId()}
-<pre>${renderText(this.context, this.signature)}</pre>
-${renderParams(this.context, this.params, this.returns)}
-${renderText(this.context, this.description)}`;
+	visit<U>(visitor: SymbolVisitor<U>): U {
+		return visitor.visitFunction(this);
 	}
 }
 

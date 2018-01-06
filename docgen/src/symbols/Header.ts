@@ -1,6 +1,6 @@
 import AbstractSymbol from "./AbstractSymbol";
 import SourceFile from "../SourceFile";
-import {htmlEncode} from "../utils/String";
+import SymbolVisitor from "../SymbolVisitor";
 
 export default class HeaderSymbol extends AbstractSymbol {
 
@@ -10,7 +10,7 @@ export default class HeaderSymbol extends AbstractSymbol {
 		file.groups[id] = [];
 	}
 
-	render(): string {
-		return `<h2>${htmlEncode(this.text)}</h2>`;
+	visit<U>(visitor: SymbolVisitor<U>): U {
+		return visitor.visitHeader(this);
 	}
 }

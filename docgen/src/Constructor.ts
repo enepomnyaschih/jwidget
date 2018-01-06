@@ -2,7 +2,6 @@ import StructSymbol from "./symbols/Struct";
 import Dictionary from "./Dictionary";
 import Context from "./Context";
 import {htmlEncode} from "./utils/String";
-import {renderDefinitions, renderText} from "./utils/Doc";
 import Reference from "./models/Reference";
 import SourceFile from "./SourceFile";
 
@@ -20,14 +19,6 @@ export default class Constructor {
 		this.params = json.params || {};
 		this.description = json.description;
 		this.context = new ConstructorContext(this, json.references);
-	}
-
-	render() {
-		return `
-<h4>Constructor</h4>
-<pre>new ${this.struct.objectName}${this.struct.renderTypeVars()}${renderText(this.context, this.signature)}</pre>
-${renderDefinitions(this.context, this.params)}
-${renderText(this.context, this.description)}`;
 	}
 }
 

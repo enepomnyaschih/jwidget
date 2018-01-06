@@ -1,14 +1,11 @@
-import * as fs from "fs";
 import * as DictionaryUtils from "./utils/Dictionary";
 import ISymbol from "./symbols/ISymbol";
 import Project from "./Project";
-import {mkdir} from "./utils/File";
 import StructSymbol from "./symbols/Struct";
 import Context from "./Context";
 import Reference from "./models/Reference";
 import Dictionary from "./Dictionary";
 import parseSymbol from "./parseSymbol";
-import {renderText} from "./utils/Doc";
 
 export default class SourceFile {
 
@@ -42,52 +39,6 @@ export default class SourceFile {
 				this.structs[id].link();
 			}
 		}
-	}
-
-	write(path: string) {
-		console.log(`Writing ${this.id}...`);
-		mkdir(path);
-		fs.writeFileSync(path, this.render());
-	}
-
-	private get index() {
-		return this.tokens.map(() => '..').join('/');
-	}
-
-	private get consumption() {
-		if (!this.symbols.default) {
-			return `import * as ${this.token} from "${this.id}";`;
-		}
-		const imports = Object.keys(this.symbols).map((key) => key === 'default' ? this.token : `{${key}}`).join(', ');
-		return `import ${imports} from "${this.id}";`;
-	}
-
-	private render() {
-		return `<!DOCTYPE html>
-<html>
-	<head>
-		<title>${this.id} - jWidget</title>
-		<style>.error {color: red;}</style>
-	</head>
-	<body>
-		<a href="${this.index}">Back to index</a>
-		<h1>${this.id}</h1>
-		${renderText(this.context, this.description)}
-		<h3>Consumption</h3>
-		<pre>${this.consumption}</pre>
-		${this.renderSymbols()}
-	</body>
-</html>`;
-	}
-
-	private renderSymbols() {
-		let buffer = "";
-		for (let key in this.symbols) {
-			if (this.symbols.hasOwnProperty(key)) {
-				buffer += this.symbols[key].render();
-			}
-		}
-		return buffer;
 	}
 }
 

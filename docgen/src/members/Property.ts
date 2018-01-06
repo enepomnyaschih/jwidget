@@ -4,7 +4,6 @@ import StructSymbol from "../symbols/Struct";
 import Reference from "../models/Reference";
 import Context from "../Context";
 import SourceFile from "../SourceFile";
-import {renderText} from "../utils/Doc";
 import {htmlEncode} from "../utils/String";
 
 export default class PropertyMember extends AbstractMember {
@@ -16,15 +15,6 @@ export default class PropertyMember extends AbstractMember {
 		super(struct, id, json);
 		this.type = htmlEncode(json.type);
 		this.context = new MethodContext(this, json.references);
-	}
-
-	render() {
-		return `
-<li>
-<h5>${this.id}</h5>
-<pre>${this.modifiers ? this.modifiers + " " : ""}${this.id}: ${renderText(this.context, this.type)}</pre>
-${renderText(this.context, this.description)}
-</li>`;
 	}
 }
 

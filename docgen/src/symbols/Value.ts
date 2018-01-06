@@ -1,10 +1,10 @@
 import SourceFile from "../SourceFile";
 import AbstractSymbol from "./AbstractSymbol";
-import {renderText} from "../utils/Doc";
 import Context from "../Context";
 import Reference from "../models/Reference";
 import Dictionary from "../Dictionary";
 import {htmlEncode} from "../utils/String";
+import SymbolVisitor from "../SymbolVisitor";
 
 export default class ValueSymbol extends AbstractSymbol {
 
@@ -19,11 +19,8 @@ export default class ValueSymbol extends AbstractSymbol {
 		this.context = new ValueContext(this, json.references);
 	}
 
-	render(): string {
-		return `
-${this.renderId()}
-<pre>${this.objectName}: ${renderText(this.context, this.type)}</pre>
-${renderText(this.context, this.description)}`;
+	visit<U>(visitor: SymbolVisitor<U>): U {
+		return visitor.visitValue(this);
 	}
 }
 
