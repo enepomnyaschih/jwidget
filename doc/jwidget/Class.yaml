@@ -1,0 +1,87 @@
+symbols:
+  default:
+    kind: class
+    extends:
+      - file: jwidget/IClass
+    description: |
+      <p>Introduces object aggregation support. If you call <tt>a.%own(b)</tt>, then <b>b</b> is destroyed
+      automatically on <b>a</b> destruction. You can aggregate any object implementing %Destroyable. Aggregated objects
+      are destroyed in reverse order.</p>
+      <pre>
+      class Book extends %Class {
+          cover = this.%own(new Cover());
+
+          %destroyObject() {
+              console.log("Destroying book");
+              super.%destroyObject();
+          }
+      }
+
+      class Cover implements %Destroyable {
+          %destroy() {
+              console.log("Destroying cover");
+          }
+      }
+
+      const book = new Book();
+      book.%destroy();
+      </pre>
+      <p>Output:</p>
+      <pre>
+      Destroying cover
+      Destroying book
+      </pre>
+    constructor:
+      signature: |
+        ()
+      description: |
+        <p>Constructs %Class instance. Usually contructor is called in subclass, but you can also create pure %Class
+        instances as dummy objects or aggregators for other objects. For example, by destroying the object returned
+        from the next method you cancel both animation and request.</p>
+        <pre>
+        startOperation() {
+            return new %Class().
+                %owning(new Animation()).
+                %owning(new Request());
+        }
+        </pre>
+    methods:
+      destroy:
+        signature: '(): void'
+        description: |
+          <p>Class destructor invocation method. Destroys all aggregated objects and calls %destroyObject method.
+          You must call this method explicitly from outside, because JavaScript doesn't support automatic class
+          destructor calling.</p>
+          <pre>
+          const object = new MyClass();
+
+          // ...
+
+          // Once object is not needed anymore, destroy it
+          object.%destroy();
+          </pre>
+          <p>Alternatively (and optimally), you should use %own method to aggregate this object inside another one.</p>
+          <p>Unlike the other %Destroyable subclasses, %Class subclasses are not recommended to override %destroy
+          method directly. Instead, please use %destroyObject if you want the aggregated objects to be already
+          destroyed.</p>
+          <p>You can override %destroy method in a subclass to do some preliminary work before aggregated object
+          destruction. For example, %Component overrides this method to remove child components before their
+          destruction, because child components are usually aggregated inside the component. However, in the majority
+          of cases, you should override %destroyObject method instead to customize destruction logic.</p>
+
+      destroyObject:
+        modifiers: [protected]
+        signature: '(): void'
+        description: |
+          <p>Class destructor implementation. Called in %destroy method <i>after aggregated object destruction</i>.
+          The logic of class instance destruction should be implemented here. If you override this method,
+          remember to call <tt>super.%destroyObject</tt> at the end of the method:</p>
+          <pre>
+          %destroyObject() {
+              // Release resources
+              ...
+
+              // Call superclass destructor
+              super.%destroyObject();
+          }
+          </pre>

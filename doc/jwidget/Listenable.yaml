@@ -1,0 +1,51 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      P: Event parameter.
+    showInheritanceLevel: 2
+    description: |
+      <p>Container for callback functions. Provides basic event listening functionality.</p>
+      <p>Has a sub-interface %IEvent, which exposes %trigger method to trigger the event. It is smart to store
+      the event as %IEvent internally, and expose it as %Listenable externally to deny direct control over the event
+      by the clients.</p>
+      <pre>
+      class Example {
+          private _changeEvent = new %Event<number>();
+
+          get changeEvent(): %Listenable<number> {
+              return this._changeEvent;
+          }
+
+          // ...
+
+              // We can't trigger public changeEvent, but we can trigger private _changeEvent
+              this._changeEvent.%trigger(value);
+
+          // ...
+      }
+      </pre>
+
+    properties:
+      dummy:
+        modifiers: [readonly]
+        type: boolean
+        description: |
+          <p>Checks if this event is %dummy. This knowledge may help you do certain code optimizations.</p>
+        references:
+          dummy:
+            file: jwidget/dummyEvent
+
+    methods:
+      listen:
+        signature: |
+          (handler: (params: %P) => void, scope?: any): %Destroyable
+        params:
+          handler: 'Event handler function.'
+          scope: '%handler call scope.'
+        returns: 'Event attachment.'
+        description: |
+          <p>Starts listening to the event.</p>
+          <p>Whenever the event is %triggered, %handler function is called. Handlers are called in the same order
+          as they were bound.</p>
+          <p>You can stop listening the event by %destroying the returned object.</p>

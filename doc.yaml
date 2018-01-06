@@ -12,6 +12,12 @@ references:
   truthy:
     file: jwidget
     symbol: isTruthy
+  triggered:
+    file: jwidget/IEvent
+    member: trigger
+  destroying:
+    file: jwidget/Destroyable
+    member: destroy
 
   # Core
   cmp:
@@ -25,3 +31,6 @@ references:
   own:
     file: jwidget/IClass
     member: own
+  trigger:
+    file: jwidget/IEvent
+    member: trigger

@@ -10,6 +10,7 @@ import * as DictionaryUtils from "../utils/Dictionary";
 import MethodMember, {MethodMemberJson} from "../members/Method";
 import DocError from "../DocError";
 import PropertyMember, {PropertyMemberJson} from "../members/Property";
+import {ConstructorJson, default as Constructor} from "../Constructor";
 
 export default class StructSymbol extends AbstractSymbol {
 
@@ -19,6 +20,7 @@ export default class StructSymbol extends AbstractSymbol {
 	readonly extendedBy: StructSymbol[] = [];
 	readonly description: string;
 	readonly showInheritanceLevels: number;
+	readonly _constructor: Constructor;
 	readonly properties: Dictionary<PropertyMember>;
 	readonly methods: Dictionary<MethodMember>;
 	readonly context: Context;
@@ -30,6 +32,7 @@ export default class StructSymbol extends AbstractSymbol {
 		this._extendsThe = json.extends || [];
 		this.description = json.description;
 		this.showInheritanceLevels = json.showInheritanceLevels;
+		this._constructor = json.hasOwnProperty("constructor") ? new Constructor(this, json.constructor) : null;
 		this.properties = DictionaryUtils.map(json.properties || {}, (propertyJson, id) => (
 			new PropertyMember(this, id, propertyJson)
 		));
@@ -77,6 +80,7 @@ ${this.renderHierarchyTail(this.inheritanceLevel + 1, cache)}
 <h4>Description</h4>
 ${renderDefinitions(this.context, this.typevars)}
 ${renderText(this.context, this.description)}
+${this._constructor ? this._constructor.render() : null}
 ${this.renderProperties()}
 ${this.renderMethods()}`;
 	}
@@ -155,6 +159,7 @@ export interface StructJson {
 	readonly extends?: Extension[];
 	readonly description?: string;
 	readonly showInheritanceLevels?: number;
+	readonly constructor?: ConstructorJson;
 	readonly properties?: Dictionary<PropertyMemberJson>;
 	readonly methods?: Dictionary<MethodMemberJson>;
 	readonly references?: Dictionary<Reference>;
