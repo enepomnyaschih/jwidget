@@ -40,7 +40,11 @@ export default abstract class Context {
 	}
 
 	private getReference(key: string): Reference {
-		return this.references[key] || this.getDefaultReference(key) ||
+		return this.references[key] || getBuiltInReference(key) || this.getDefaultReference(key) ||
 			(this.parent ? this.parent.getReference(key) : null);
 	}
+}
+
+function getBuiltInReference(key: string): Reference {
+	return (key === "this") ? {} : null;
 }

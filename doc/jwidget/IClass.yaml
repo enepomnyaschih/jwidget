@@ -1,0 +1,37 @@
+symbols:
+  default:
+    kind: interface
+    extends:
+      - file: jwidget/Destroyable
+      - file: jwidget/Identifiable
+    description: |
+      Interface of %Class - see it for details.
+    methods:
+      own:
+        signature: |
+          <T extends %Destroyable>(obj: T): T
+        params:
+          obj: 'Object to aggregate.'
+        returns: '%obj'
+        description: |
+          <p>Aggregates the object. It means that the specified object is automatically destroyed
+          on %this object destruction. The aggregated objects are destroyed in reverse order.
+          Returns %obj object, which makes it easy to use in field definition:</p>
+          <pre>
+          private selected = %this.%own(new %Property(false));
+          </pre>
+
+      owning:
+        signature: |
+          (obj: %Destroyable): %this
+        params:
+          obj: 'Object to aggregate.'
+        returns: '%this'
+        description: |
+          <p>Aggregates the object. It means that the specified object is automatically destroyed
+          on %this object destruction. The aggregated objects are destroyed in reverse order.
+          Returns %this object, which makes it easy to use in object instantiation:</p>
+          <pre>
+          const items = new %List();
+          return new Panel(items).%owning(items);
+          </pre>

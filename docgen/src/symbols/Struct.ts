@@ -43,7 +43,7 @@ export default class StructSymbol extends AbstractSymbol {
 
 	get inheritanceLevel(): number {
 		return this._extendsThe.reduce<number>((result, extension) => (
-			Math.max(result, this.project.getStructByExtension(extension).inheritanceLevel)
+			Math.max(result, this.project.getStructByExtension(extension).inheritanceLevel + 1)
 		), 0);
 	}
 
@@ -108,7 +108,7 @@ ${struct.renderHierarchyHead(level - 1, cache)}
 			if (cache.indexOf(struct) !== -1) {
 				return "";
 			}
-			cache.push(name);
+			cache.push(struct);
 			const url = getReferenceUrl(struct.selfReference, this.file.id);
 			return `
 <li>${repeat("\t", level, "")}${struct.kind} <a href="${url}">${struct.objectName}</a>${struct.renderTypeVars()}</li>
