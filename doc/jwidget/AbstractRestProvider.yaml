@@ -12,7 +12,7 @@ symbols:
       description: Creates class instance.
     methods:
       getHeaders:
-        modifier: abstract
+        modifiers: abstract
         signature: |
           (context: %C): %Dictionary<string>
         params:

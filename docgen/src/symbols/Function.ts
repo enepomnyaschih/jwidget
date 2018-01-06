@@ -4,6 +4,7 @@ import {renderParams, renderText} from "../utils/Doc";
 import Context from "../Context";
 import Reference from "../models/Reference";
 import Dictionary from "../Dictionary";
+import {htmlEncode} from "../utils/String";
 
 export default class FunctionSymbol extends AbstractSymbol {
 
@@ -15,7 +16,7 @@ export default class FunctionSymbol extends AbstractSymbol {
 
 	constructor(file: SourceFile, id: string, json: FunctionJson) {
 		super(file, id);
-		this.signature = json.signature;
+		this.signature = htmlEncode(json.signature);
 		this.params = json.params || {};
 		this.returns = json.returns;
 		this.description = json.description;

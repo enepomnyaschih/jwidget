@@ -9,6 +9,7 @@ import Dictionary from "../Dictionary";
 import * as DictionaryUtils from "../utils/Dictionary";
 import MethodMember, {MethodMemberJson} from "../members/Method";
 import DocError from "../DocError";
+import PropertyMember, {PropertyMemberJson} from "../members/Property";
 
 export default class StructSymbol extends AbstractSymbol {
 
@@ -18,6 +19,7 @@ export default class StructSymbol extends AbstractSymbol {
 	readonly extendedBy: StructSymbol[] = [];
 	readonly description: string;
 	readonly showInheritanceLevels: number;
+	readonly properties: Dictionary<PropertyMember>;
 	readonly methods: Dictionary<MethodMember>;
 	readonly context: Context;
 
@@ -28,6 +30,9 @@ export default class StructSymbol extends AbstractSymbol {
 		this._extendsThe = json.extends || [];
 		this.description = json.description;
 		this.showInheritanceLevels = json.showInheritanceLevels;
+		this.properties = DictionaryUtils.map(json.properties || {}, (propertyJson, id) => (
+			new PropertyMember(this, id, propertyJson)
+		));
 		this.methods = DictionaryUtils.map(json.methods || {}, (methodJson, id) => (
 			new MethodMember(this, id, methodJson)
 		));
@@ -72,6 +77,7 @@ ${this.renderHierarchyTail(this.inheritanceLevel + 1, cache)}
 <h4>Description</h4>
 ${renderDefinitions(this.context, this.typevars)}
 ${renderText(this.context, this.description)}
+${this.renderProperties()}
 ${this.renderMethods()}`;
 	}
 
@@ -117,6 +123,18 @@ ${struct.renderHierarchyTail(level + 1, cache, levelsLeft != null ? levelsLeft -
 		return `<span class="monospace">&lt;${Object.keys(this.typevars).join(", ")}&gt;</span>`;
 	}
 
+	renderProperties() {
+		if (DictionaryUtils.isEmpty(this.properties)) {
+			return "";
+		}
+		const dict = DictionaryUtils.map(this.properties, (property) => property.render());
+		return `
+<h4>Properties</h4>
+<ul>
+${DictionaryUtils.join(dict, "\n")}
+</ul>`
+	}
+
 	renderMethods() {
 		if (DictionaryUtils.isEmpty(this.methods)) {
 			return "";
@@ -137,6 +155,7 @@ export interface StructJson {
 	readonly extends?: Extension[];
 	readonly description?: string;
 	readonly showInheritanceLevels?: number;
+	readonly properties?: Dictionary<PropertyMemberJson>;
 	readonly methods?: Dictionary<MethodMemberJson>;
 	readonly references?: Dictionary<Reference>;
 }

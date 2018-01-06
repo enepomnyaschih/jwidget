@@ -1,0 +1,15 @@
+symbols:
+  default:
+    kind: interface
+    showInheritanceLevels: 2
+    description: |
+      An object which has unique %iid value assigned via core %newIid method.
+      Makes this object suitable for efficient storage in %ISet.
+    properties:
+      iid:
+        modifiers: [readonly]
+        type: number
+        description: |
+          <p>Instance ID.</p>
+          <p>Auto-incrementing object unique ID. Extend %Class to have such an identifier auto-assigned, or
+          simply call %newIid method to obtain one.</p>

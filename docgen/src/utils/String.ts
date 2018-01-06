@@ -7,3 +7,10 @@ export function repeat(value: string, count: number, separator?: string): any {
 	}
 	return (separator == null) ? arr : arr.join(separator);
 }
+
+export function htmlEncode(s: string) {
+	return s.replace(/&/g, '&amp;')
+		.replace(/"/g, '&quot;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;');
+}

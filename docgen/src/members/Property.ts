@@ -4,21 +4,17 @@ import StructSymbol from "../symbols/Struct";
 import Reference from "../models/Reference";
 import Context from "../Context";
 import SourceFile from "../SourceFile";
-import {renderParams, renderText} from "../utils/Doc";
+import {renderText} from "../utils/Doc";
 import {htmlEncode} from "../utils/String";
 
-export default class MethodMember extends AbstractMember {
+export default class PropertyMember extends AbstractMember {
 
-	readonly signature: string;
-	readonly params: Dictionary<string>;
-	readonly returns: string;
+	readonly type: string;
 	readonly context: Context;
 
-	constructor(struct: StructSymbol, id: string, json: MethodMemberJson) {
+	constructor(struct: StructSymbol, id: string, json: PropertyMemberJson) {
 		super(struct, id, json);
-		this.signature = htmlEncode(json.signature);
-		this.params = json.params || {};
-		this.returns = json.returns;
+		this.type = htmlEncode(json.type);
 		this.context = new MethodContext(this, json.references);
 	}
 
@@ -26,24 +22,21 @@ export default class MethodMember extends AbstractMember {
 		return `
 <li>
 <h5>${this.id}</h5>
-<pre>${this.modifiers ? this.modifiers + " " : ""}${renderText(this.context, this.signature)}</pre>
-${renderParams(this.context, this.params, this.returns)}
+<pre>${this.modifiers ? this.modifiers + " " : ""}${this.id}: ${renderText(this.context, this.type)}</pre>
 ${renderText(this.context, this.description)}
 </li>`;
 	}
 }
 
-export interface MethodMemberJson extends AbstractMemberJson {
+export interface PropertyMemberJson extends AbstractMemberJson {
 
-	readonly signature?: string;
-	readonly params?: Dictionary<string>;
-	readonly returns?: string;
+	readonly type?: string;
 	readonly references?: Dictionary<Reference>
 }
 
 class MethodContext extends Context {
 
-	constructor(readonly method: MethodMember, references: Dictionary<Reference>) {
+	constructor(readonly method: PropertyMember, references: Dictionary<Reference>) {
 		super(references);
 	}
 
@@ -60,6 +53,6 @@ class MethodContext extends Context {
 	}
 
 	protected getDefaultReference(key: string): Reference {
-		return (key === this.name || this.method.params.hasOwnProperty(key)) ? {} : null;
+		return (key === this.name) ? {} : null;
 	}
 }

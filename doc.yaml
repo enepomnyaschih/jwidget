@@ -17,6 +17,9 @@ references:
   cmp:
     file: jwidget
     symbol: cmp
+  newIid:
+    file: jwidget
+    symbol: newIid
 
   # IClass
   own:

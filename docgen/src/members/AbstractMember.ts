@@ -3,12 +3,12 @@ import SourceFile from "../SourceFile";
 
 export default abstract class AbstractMember {
 
-	readonly modifier: string;
+	readonly modifiers: string;
 	readonly description: string;
 	readonly static: boolean;
 
 	constructor(readonly struct: StructSymbol, readonly id: string, json: AbstractMemberJson) {
-		this.modifier = json.modifier;
+		this.modifiers = json.modifiers;
 		this.description = json.description;
 		this.static = json.static;
 	}
@@ -22,7 +22,7 @@ export default abstract class AbstractMember {
 
 export interface AbstractMemberJson {
 
-	readonly modifier?: string;
+	readonly modifiers?: string;
 	readonly description?: string;
 	readonly static?: boolean;
 }
