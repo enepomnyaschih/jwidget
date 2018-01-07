@@ -7,7 +7,7 @@ export default class HeaderSymbol extends AbstractSymbol {
 	constructor(file: SourceFile, id: string, readonly text: string) {
 		super(file, id);
 		file.currentGroupId = id;
-		file.groups[id] = [];
+		file.groupTitles[id] = text;
 	}
 
 	visit<U>(visitor: SymbolVisitor<U>): U {

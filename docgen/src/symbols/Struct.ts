@@ -41,6 +41,7 @@ export default class StructSymbol extends AbstractSymbol {
 		this.context = new StructContext(this, json.references);
 
 		file.structs[id] = this;
+		this.addToGroup();
 	}
 
 	get extending(): Extension[] {

@@ -1,7 +1,8 @@
 import StructSymbol from "../symbols/Struct";
 import SourceFile from "../SourceFile";
+import IMember from "./IMember";
 
-export default abstract class AbstractMember {
+export default abstract class AbstractMember implements IMember {
 
 	readonly modifiers: string;
 	readonly description: string;

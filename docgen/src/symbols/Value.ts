@@ -17,6 +17,7 @@ export default class ValueSymbol extends AbstractSymbol {
 		this.type = htmlEncode(json.type);
 		this.description = json.description;
 		this.context = new ValueContext(this, json.references);
+		this.addToGroup();
 	}
 
 	visit<U>(visitor: SymbolVisitor<U>): U {

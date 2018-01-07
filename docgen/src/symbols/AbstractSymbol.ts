@@ -6,9 +6,6 @@ import SymbolVisitor from "../SymbolVisitor";
 abstract class AbstractSymbol implements ISymbol {
 
 	constructor(readonly file: SourceFile, readonly id: string) {
-		if (file.currentGroupId) {
-			file.groups[file.currentGroupId].push(id);
-		}
 	}
 
 	get project(): Project {
@@ -27,6 +24,11 @@ abstract class AbstractSymbol implements ISymbol {
 	}
 
 	abstract visit<U>(visitor: SymbolVisitor<U>): U;
+
+	protected addToGroup() {
+		this.file.groups[this.file.currentGroupId] = this.file.groups[this.file.currentGroupId] || [];
+		this.file.groups[this.file.currentGroupId].push(this.id);
+	}
 }
 
 export default AbstractSymbol;

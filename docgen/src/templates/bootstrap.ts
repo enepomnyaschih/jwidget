@@ -22,6 +22,8 @@ import ISymbol from "../symbols/ISymbol";
 import MethodMember from "../members/Method";
 import PropertyMember from "../members/Property";
 import Constructor from "../Constructor";
+import Dictionary from "../Dictionary";
+import IMember from "../members/IMember";
 
 export default function bootstrapTemplate(project: Project) {
 	for (let fileId in project.files) {
@@ -37,14 +39,7 @@ function writeFile(file: SourceFile, path: string) {
 }
 
 function renderFile(file: SourceFile) {
-	const x = `
-<h1>${file.id}</h1>
-${renderText(file.context, file.description)}
-<h3>Consumption</h3>
-<pre>${renderConsumption(file)}</pre>
-${renderSymbols(file)}
-`;
-	return !x ? null : `<!DOCTYPE html>
+	return `<!DOCTYPE html>
 <html>
 	<head>
 		<title>${file.id} - jWidget</title>
@@ -83,38 +78,86 @@ ${renderSymbols(file)}
 		<div id="contents">
 			<nav id="sidebar" class="navbar navbar-light bg-light">
 				<nav class="nav nav-pills flex-column">
-					<a class="nav-link" href="#item-1">Item 1</a>
-					<nav class="nav nav-pills flex-column">
-						<a class="nav-link ml-3 my-1" href="#item-1-1">Item 1-1</a>
-						<a class="nav-link ml-3 my-1" href="#item-1-2">Item 1-2</a>
-					</nav>
-					<a class="nav-link" href="#item-2">Item2</a>
-					<a class="nav-link" href="#item-3">Item3</a>
-					<nav class="nav nav-pills flex-column">
-						<a class="nav-link ml-3 my-1" href="#item-3-1">Item 3-1</a>
-						<a class="nav-link ml-3 my-1" href="#item-3-2">Item 3-2</a>
-					</nav>
+					<a class="navbar-brand" href="#">${file.id}</a>
+					${renderIndex(file)}
+					<div class="py-3"></div>
 				</nav>
 			</nav>
 			<div id="main">
-				<h4 id="item-1">Item 1</h4>
-				<p>...</p>
-				<h5 id="item-1-1">Item 1-1</h5>
-				<p>...</p>
-				<h5 id="item-1-2">Item 2-2</h5>
-				<p>...</p>
-				<h4 id="item-2">Item 2</h4>
-				<p>...</p>
-				<h4 id="item-3">Item 3</h4>
-				<p>...</p>
-				<h5 id="item-3-1">Item 3-1</h5>
-				<p>...</p>
-				<h5 id="item-3-2">Item 3-2</h5>
-				<p>...</p>
+				<h1>${file.id}</h1>
+				${renderText(file.context, file.description)}
+				<h3>Consumption</h3>
+				<pre>${renderConsumption(file)}</pre>
+				${renderSymbols(file)}
 			</div>
 		</div>
 	</body>
 </html>`;
+}
+
+function renderIndex(file: SourceFile) {
+	return DictionaryUtils.join(DictionaryUtils.map(file.groups, (group, key) => (
+		key ? renderIndexGroup(file, group, key) : renderIndexSymbols(file, group)
+	)), "\n");
+}
+
+function renderIndexGroup(file: SourceFile, group: string[], key: string) {
+	return `
+<a class="nav-link px-0" href="#${key}">${file.groupTitles[key]}</a>
+<nav class="nav nav-pills flex-column ml-3">${renderIndexSymbols(file, group)}</nav>`
+}
+
+function renderIndexSymbols(file: SourceFile, group: string[]) {
+	return group.map((id) => renderIndexSymbol(file, id)).join("\n");
+}
+
+function renderIndexSymbol(file: SourceFile, id: string) {
+	const symbol = file.symbols[id];
+	const url = getReferenceUrl(symbol.selfReference, file.id);
+	return `
+<a class="nav-link p-0" href="${url}">${renderId(symbol)}</a>
+${symbol.visit(symbolIndexRenderVisitor)}`;
+}
+
+const symbolIndexRenderVisitor: SymbolVisitor<string> = {
+
+	visitHeader(_symbol: HeaderSymbol): string {
+		return "";
+	},
+
+	visitValue(_symbol: ValueSymbol): string {
+		return "";
+	},
+
+	visitFunction(_symbol: FunctionSymbol): string {
+		return "";
+	},
+
+	visitStruct(symbol: StructSymbol): string {
+		return `
+<nav class="nav nav-pills flex-column">
+<a class="nav-link py-0" href="#${symbol.id}--hierarchy">Hierarchy</a>
+<a class="nav-link py-0" href="#${symbol.id}--description">Description</a>
+${symbol._constructor ? `<a class="nav-link py-0" href="#${symbol.id}--constructor">Constructor</a>` : ""}
+${renderIndexDictionary(symbol, symbol.properties, "properties", "Properties")}
+${renderIndexDictionary(symbol, symbol.methods, "methods", "Methods")}
+${renderIndexDictionary(symbol, symbol.staticProperties, "static-properties", "Static properties")}
+${renderIndexDictionary(symbol, symbol.staticMethods, "static-methods", "Static methods")}
+</nav>`
+	}
+}
+
+function renderIndexDictionary(struct: StructSymbol, dict: Dictionary<IMember>, key: string, title: string): string {
+	if (DictionaryUtils.isEmpty(dict)) {
+		return "";
+	}
+	return `
+<a class="nav-link py-0" href="#${struct.id}---${key}">${title}</a>
+<nav class="nav nav-pills flex-column ml-3">
+${DictionaryUtils.join(DictionaryUtils.map(dict, (member) => (
+		`<a class="nav-link py-0" href="#${struct.id.replace(".", "-")}--${member.id}"><small>${member.id}</small></a>`
+	)), "\n")}
+</nav>`
 }
 
 function renderConsumption(file: SourceFile) {
@@ -143,14 +186,14 @@ const symbolRenderVisitor: SymbolVisitor<string> = {
 
 	visitValue(symbol: ValueSymbol): string {
 		return `
-${renderId(symbol)}
+<h3>${renderId(symbol)}</h3>
 <pre>${symbol.objectName}: ${renderText(symbol.context, symbol.type)}</pre>
 ${renderText(symbol.context, symbol.description)}`;
 	},
 
 	visitFunction(symbol: FunctionSymbol): string {
 		return `
-${renderId(symbol)}
+<h3>${renderId(symbol)}</h3>
 <pre>${renderText(symbol.context, symbol.signature)}</pre>
 ${renderParams(symbol.context, symbol.params, symbol.returns)}
 ${renderText(symbol.context, symbol.description)}`;
@@ -159,7 +202,7 @@ ${renderText(symbol.context, symbol.description)}`;
 	visitStruct(symbol: StructSymbol): string {
 		const cache: StructSymbol[] = [];
 		return `
-${renderId(symbol)}
+<h3>${renderId(symbol)}</h3>
 <h4>Hierarchy</h4>
 <ul class="hierarchy">
 ${renderHierarchyHead(symbol, symbol.inheritanceLevel - 1, cache)}
@@ -178,7 +221,7 @@ ${renderDictionary(symbol.staticMethods, "<h4>Static methods</h4>", (method) => 
 }
 
 function renderId(symbol: ISymbol) {
-	return `<h3>${symbol.id === "default" ? "Default export" : symbol.id}</h3>`;
+	return (symbol.id === "default") ? "Default export" : symbol.id;
 }
 
 function renderHierarchyHead(struct: StructSymbol, level: number, cache: StructSymbol[]): string {

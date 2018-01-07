@@ -11,12 +11,13 @@ export default class SourceFile {
 
 	readonly description: string;
 	readonly symbols: Dictionary<ISymbol>;
+	readonly groupTitles: Dictionary<string> = {};
 	readonly groups: Dictionary<string[]> = {};
 	readonly structs: Dictionary<StructSymbol> = {};
 	readonly tokens: string[];
 	readonly context: Context;
 
-	currentGroupId: string;
+	currentGroupId: string = "";
 
 	constructor(readonly project: Project, readonly id: string, json: SourceFileJson) {
 		this.description = json.description;

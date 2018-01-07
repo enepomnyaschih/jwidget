@@ -21,6 +21,7 @@ export default class FunctionSymbol extends AbstractSymbol {
 		this.returns = json.returns;
 		this.description = json.description;
 		this.context = new FunctionContext(this, json.references);
+		this.addToGroup();
 	}
 
 	visit<U>(visitor: SymbolVisitor<U>): U {
