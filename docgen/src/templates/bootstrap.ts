@@ -77,7 +77,7 @@ function renderFile(file: SourceFile) {
 		</nav>
 		<div id="contents">
 			<nav id="sidebar" class="navbar navbar-light bg-light">
-				<nav class="nav nav-pills flex-column">
+				<nav id="index" class="nav nav-pills flex-column">
 					<a class="navbar-brand" href="#">${file.id}</a>
 					${renderIndex(file)}
 					<div class="py-3"></div>
@@ -103,8 +103,8 @@ function renderIndex(file: SourceFile) {
 
 function renderIndexGroup(file: SourceFile, group: string[], key: string) {
 	return `
-<a class="nav-link px-0" href="#${key}">${file.groupTitles[key]}</a>
-<nav class="nav nav-pills flex-column ml-3">${renderIndexSymbols(file, group)}</nav>`
+<a class="nav-link" href="#${key}">${file.groupTitles[key]}</a>
+<nav class="nav nav-pills flex-column">${renderIndexSymbols(file, group)}</nav>`
 }
 
 function renderIndexSymbols(file: SourceFile, group: string[]) {
@@ -115,7 +115,7 @@ function renderIndexSymbol(file: SourceFile, id: string) {
 	const symbol = file.symbols[id];
 	const url = getReferenceUrl(symbol.selfReference, file.id);
 	return `
-<a class="nav-link p-0" href="${url}">${renderId(symbol)}</a>
+<a class="nav-link" href="${url}">${renderId(symbol)}</a>
 ${symbol.visit(symbolIndexRenderVisitor)}`;
 }
 
@@ -136,9 +136,9 @@ const symbolIndexRenderVisitor: SymbolVisitor<string> = {
 	visitStruct(symbol: StructSymbol): string {
 		return `
 <nav class="nav nav-pills flex-column">
-<a class="nav-link py-0" href="#${symbol.id}--hierarchy">Hierarchy</a>
-<a class="nav-link py-0" href="#${symbol.id}--description">Description</a>
-${symbol._constructor ? `<a class="nav-link py-0" href="#${symbol.id}--constructor">Constructor</a>` : ""}
+<a class="nav-link" href="#${symbol.id}--hierarchy">Hierarchy</a>
+<a class="nav-link" href="#${symbol.id}--description">Description</a>
+${symbol._constructor ? `<a class="nav-link" href="#${symbol.id}--constructor">Constructor</a>` : ""}
 ${renderIndexDictionary(symbol, symbol.properties, "properties", "Properties")}
 ${renderIndexDictionary(symbol, symbol.methods, "methods", "Methods")}
 ${renderIndexDictionary(symbol, symbol.staticProperties, "static-properties", "Static properties")}
@@ -151,13 +151,14 @@ function renderIndexDictionary(struct: StructSymbol, dict: Dictionary<IMember>, 
 	if (DictionaryUtils.isEmpty(dict)) {
 		return "";
 	}
+	const prefix = struct.id.replace(".", "-");
 	return `
-<a class="nav-link py-0" href="#${struct.id}---${key}">${title}</a>
-<nav class="nav nav-pills flex-column ml-3">
+<a class="nav-link" href="#${struct.id}---${key}">${title}</a>
+<nav class="nav nav-pills flex-column">
 ${DictionaryUtils.join(DictionaryUtils.map(dict, (member) => (
-		`<a class="nav-link py-0" href="#${struct.id.replace(".", "-")}--${member.id}"><small>${member.id}</small></a>`
+		`<a class="nav-link" href="#${prefix}--${member.id}${member.isStatic ? "-static" : ""}">${member.id}</a>`
 	)), "\n")}
-</nav>`
+</nav>`;
 }
 
 function renderConsumption(file: SourceFile) {

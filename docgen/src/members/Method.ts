@@ -13,8 +13,8 @@ export default class MethodMember extends AbstractMember {
 	readonly returns: string;
 	readonly context: Context;
 
-	constructor(struct: StructSymbol, id: string, json: MethodMemberJson) {
-		super(struct, id, json);
+	constructor(struct: StructSymbol, id: string, isStatic: boolean, json: MethodMemberJson) {
+		super(struct, id, isStatic, json);
 		this.signature = htmlEncode(json.signature);
 		this.params = json.params || {};
 		this.returns = json.returns;

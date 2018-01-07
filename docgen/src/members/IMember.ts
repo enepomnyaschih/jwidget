@@ -6,6 +6,7 @@ export default interface IMember {
 	readonly struct: StructSymbol;
 	readonly file: SourceFile;
 	readonly id: string;
+	readonly isStatic: boolean;
 	readonly modifiers: string;
 	readonly description: string;
 }

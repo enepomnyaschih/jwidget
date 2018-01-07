@@ -34,10 +34,10 @@ export default class StructSymbol extends AbstractSymbol {
 		this.description = json.description;
 		this.showInheritanceLevels = json.showInheritanceLevels;
 		this._constructor = json.hasOwnProperty("constructor") ? new Constructor(this, json.constructor) : null;
-		this.properties = this.readProperties(json.properties);
-		this.methods = this.readMethods(json.methods);
-		this.staticProperties = this.readProperties(json.staticProperties);
-		this.staticMethods = this.readMethods(json.staticMethods);
+		this.properties = this.readProperties(json.properties, false);
+		this.methods = this.readMethods(json.methods, false);
+		this.staticProperties = this.readProperties(json.staticProperties, true);
+		this.staticMethods = this.readMethods(json.staticMethods, true);
 		this.context = new StructContext(this, json.references);
 
 		file.structs[id] = this;
@@ -48,12 +48,12 @@ export default class StructSymbol extends AbstractSymbol {
 		return this._extending;
 	}
 
-	private readProperties(json: Dictionary<PropertyMemberJson>) {
-		return DictionaryUtils.map(json || {}, (propertyJson, id) => new PropertyMember(this, id, propertyJson));
+	private readProperties(json: Dictionary<PropertyMemberJson>, isStatic: boolean) {
+		return DictionaryUtils.map(json || {}, (propertyJson, id) => new PropertyMember(this, id, isStatic, propertyJson));
 	}
 
-	private readMethods(json: Dictionary<MethodMemberJson>) {
-		return DictionaryUtils.map(json || {}, (methodJson, id) => new MethodMember(this, id, methodJson));
+	private readMethods(json: Dictionary<MethodMemberJson>, isStatic: boolean) {
+		return DictionaryUtils.map(json || {}, (methodJson, id) => new MethodMember(this, id, isStatic, methodJson));
 	}
 
 	get inheritanceLevel(): number {

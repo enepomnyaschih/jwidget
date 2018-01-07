@@ -11,8 +11,8 @@ export default class PropertyMember extends AbstractMember {
 	readonly type: string;
 	readonly context: Context;
 
-	constructor(struct: StructSymbol, id: string, json: PropertyMemberJson) {
-		super(struct, id, json);
+	constructor(struct: StructSymbol, id: string, isStatic: boolean, json: PropertyMemberJson) {
+		super(struct, id, isStatic, json);
 		this.type = htmlEncode(json.type);
 		this.context = new MethodContext(this, json.references);
 	}

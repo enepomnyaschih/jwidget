@@ -24,6 +24,24 @@ html, body {
     display: none;
 }
 
+#index .nav {
+    margin-left: 1rem;
+}
+
+#index .nav-link {
+    font-weight: 600;
+    padding: .5rem 0;
+}
+
+#index .nav .nav-link {
+    font-weight: 400;
+    padding: 0;
+}
+
+#index .nav .nav .nav-link {
+    font-weight: 300;
+}
+
 @media (min-width: 992px) {
     #sidebar {
         display: block;
