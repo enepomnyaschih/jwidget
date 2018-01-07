@@ -42,7 +42,7 @@ function renderFile(file: SourceFile) {
 	return `<!DOCTYPE html>
 <html>
 	<head>
-		<title>${file.id} - jWidget</title>
+		<title>${file.id}${file.project.name ? " - " + file.project.name : ""}</title>
 		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("bootstrap.min.css", file.id)}">
 		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("styles.css", file.id)}">
 		<script type="text/javascript" src="${getRelativeUrl("jquery-3.2.1.min.js", file.id)}"></script>
@@ -50,7 +50,7 @@ function renderFile(file: SourceFile) {
 	</head>
 	<body>
 		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
-			<a class="navbar-brand" href="${getRelativeUrl("", file.id)}">jWidget 2</a>
+			${file.project.name ? `<a class="navbar-brand" href="${getRelativeUrl("", file.id)}">${file.project.name}</a>` : ""}
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -84,11 +84,13 @@ function renderFile(file: SourceFile) {
 				</nav>
 			</nav>
 			<div class="doc-main">
-				<h1>${file.id}</h1>
-				${renderText(file.context, file.description)}
-				<h3>Consumption</h3>
-				<pre>${renderConsumption(file)}</pre>
-				${renderSymbols(file)}
+				<div class="container-fluid">
+					<h1>${file.id}</h1>
+					${renderText(file.context, file.description)}
+					<h3>Consumption</h3>
+					<pre>${renderConsumption(file)}</pre>
+					${renderSymbols(file)}
+				</div>
 			</div>
 		</div>
 	</body>
@@ -302,5 +304,5 @@ ${renderText(method.context, method.description)}
 }
 
 function renderHeader(tag: string, id: string, title: string) {
-	return `<${tag}><span id="${id}"></span>${title}</${tag}>`;
+	return `<${tag}><span id="${id}"></span>${title}<a class="anchorjs-link" href="#${id}" aria-label="Anchor" style="padding-left: 0.375em;">#</a></${tag}>`;
 }

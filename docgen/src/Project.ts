@@ -11,6 +11,7 @@ export default class Project {
 
 	readonly files: Dictionary<SourceFile> = {};
 	readonly filesByToken: Dictionary<SourceFile> = {}; // null value indicates ambiguity
+	readonly name: string;
 	readonly inputRelativePath: string;
 	readonly outputRelativePath: string;
 	readonly staticRelativePath: string;
@@ -18,6 +19,7 @@ export default class Project {
 	readonly includes: Dictionary<string> = {};
 
 	constructor(readonly fileAbsolutePath: string, json: ProjectJson) {
+		this.name = json.name;
 		this.inputRelativePath = json.input || "doc";
 		this.outputRelativePath = json.output || "docoutput";
 		this.staticRelativePath = json.static || "docstatic";
@@ -68,6 +70,7 @@ export default class Project {
 
 export interface ProjectJson {
 
+	readonly name?: string;
 	readonly input?: string;
 	readonly output?: string;
 	readonly static?: string;
