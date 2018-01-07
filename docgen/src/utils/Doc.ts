@@ -35,7 +35,7 @@ export function renderReference(context: Context, key: string, relativeToFile?: 
 		const url = getReferenceUrl(reference, relativeToFile || context.file.id);
 		return url ?
 			`<a href="${url}" target="${reference.href ? "_blank" : "_parent"}">${reference.label || key}</a>` :
-			`<code>${reference.label || key}</code>`;
+			`<b>${reference.label || key}</b>`;
 	} catch (error) {
 		if (error instanceof DocError) {
 			console.warn(error.message);
@@ -54,7 +54,7 @@ export function getReferenceUrl(reference: Reference, relativeToFile: string): s
 		return null;
 	}
 	const suffix = [
-		(reference.symbol ? reference.symbol.replace(".", "-") : null),
+		(reference.symbol ? reference.symbol.replace(".", "-") : reference.member ? "default" : null),
 		(reference.member ? (reference.static ? reference.member + "-static" : reference.member) : null)
 	].filter(Boolean).join("--");
 	const hash = suffix ? `#${suffix}` : '';
@@ -94,6 +94,8 @@ export function renderDefinitions(context: Context, params: Dictionary<string>):
 	if (DictionaryUtils.isEmpty(params)) {
 		return "";
 	}
-	const dict = DictionaryUtils.map(params, (param, key) => `<dt>${key}</dt><dd>${renderText(context, param)}</dd>`);
-	return `<dl>\n${DictionaryUtils.join(dict, "\n")}\n</dl>`;
+	const dict = DictionaryUtils.map(params, (param, key) => (
+		`<dt class="col-lg-2 col-sm-3">${key}</dt><dd class="col-lg-10 col-sm-9">${renderText(context, param)}</dd>`
+	));
+	return `<dl class="row">\n${DictionaryUtils.join(dict, "\n")}\n</dl>`;
 }

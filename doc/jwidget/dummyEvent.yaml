@@ -6,7 +6,7 @@ symbols:
       <p>As opposed to %Event, doesn't really bind the event handlers, just pretends it does that. Can be used as a
       lightweight implementation of %IEvent interface if you certainly know that the event should never get triggered.
       Since the application usually involves many events, this can save quite a bit of memory and CPU.</p>
-      <p>Based on a boolean <code>dummy</code> argument, you can selectively create a new %Event instance or get %dummyEvent
+      <p>Based on a boolean <b>dummy</b> argument, you can selectively create a new %Event instance or get %dummyEvent
       via %Event.%make static method.</p>
 
 references:

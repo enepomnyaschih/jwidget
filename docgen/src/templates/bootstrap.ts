@@ -291,7 +291,7 @@ ${DictionaryUtils.join(strDict, "\n")}`;
 
 function renderProperty(property: PropertyMember) {
 	return `
-${renderHeader("h5", `${property.struct.hash}--${property.id}`, property.id)}
+${renderHeader("h5", `${property.struct.hash}--${property.id}${property.isStatic ? "-static" : ""}`, property.id)}
 <div class="doc-member">
 <p><code>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, property.type)}</code></p>
 ${renderText(property.context, property.description)}
@@ -300,7 +300,7 @@ ${renderText(property.context, property.description)}
 
 function renderMethod(method: MethodMember) {
 	return `
-${renderHeader("h5", `${method.struct.hash}--${method.id}`, method.id)}
+${renderHeader("h5", `${method.struct.hash}--${method.id}${method.isStatic ? "-static" : ""}`, method.id)}
 <div class="doc-member">
 <p><code>${method.modifiers ? method.modifiers + " " : ""}${renderText(method.context, method.signature)}</code></p>
 ${renderParams(method.context, method.params, method.returns)}

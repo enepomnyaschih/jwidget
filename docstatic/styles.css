@@ -26,6 +26,10 @@ samp {
     white-space: pre-wrap;
 }
 
+dt {
+    text-align: right;
+}
+
 .doc-error {
     background-color: #ffdddd;
     color: red;

@@ -74,7 +74,7 @@ symbols:
         description: |
           <p>Class destructor implementation. Called in %destroy method <i>after aggregated object destruction</i>.
           The logic of class instance destruction should be implemented here. If you override this method,
-          remember to call <code>super.%destroyObject</code> at the end of the method:</p>
+          remember to call <code>super.%destroyObject()</code> at the end of the method:</p>
           <pre>
           %destroyObject() {
               // Release resources
