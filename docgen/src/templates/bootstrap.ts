@@ -4,20 +4,13 @@ import * as DictionaryUtils from "../utils/Dictionary";
 import Project from "../Project";
 import SourceFile from "../SourceFile";
 import {mkdir} from "../utils/File";
-import {
-	getReferenceUrl,
-	getRelativeUrl,
-	renderDefinitions,
-	renderDictionary,
-	renderParams,
-	renderText
-} from "../utils/Doc";
+import {getReferenceUrl, getRelativeUrl, renderDefinitions, renderParams, renderText} from "../utils/Doc";
 import SymbolVisitor from "../SymbolVisitor";
 import StructSymbol from "../symbols/Struct";
 import FunctionSymbol from "../symbols/Function";
 import ValueSymbol from "../symbols/Value";
 import HeaderSymbol from "../symbols/Header";
-import {htmlEncode, repeat} from "../utils/String";
+import {htmlEncode} from "../utils/String";
 import ISymbol from "../symbols/ISymbol";
 import MethodMember from "../members/Method";
 import PropertyMember from "../members/Property";
@@ -189,26 +182,31 @@ const symbolRenderVisitor: SymbolVisitor<string> = {
 	visitValue(symbol: ValueSymbol): string {
 		return `
 ${renderHeader("h3", symbol.hash, renderId(symbol))}
-<pre>${symbol.objectName}: ${renderText(symbol.context, symbol.type)}</pre>
-${renderText(symbol.context, symbol.description)}`;
+<div class="doc-section">
+<p><code>${symbol.objectName}: ${renderText(symbol.context, symbol.type)}</code></p>
+${renderText(symbol.context, symbol.description)}
+</div>`;
 	},
 
 	visitFunction(symbol: FunctionSymbol): string {
 		return `
 ${renderHeader("h3", symbol.hash, renderId(symbol))}
-<pre>${renderText(symbol.context, symbol.signature)}</pre>
+<div class="doc-section">
+<p><code>${renderText(symbol.context, symbol.signature)}</code></p>
 ${renderParams(symbol.context, symbol.params, symbol.returns)}
-${renderText(symbol.context, symbol.description)}`;
+${renderText(symbol.context, symbol.description)}
+</div>`;
 	},
 
 	visitStruct(symbol: StructSymbol): string {
 		const cache: StructSymbol[] = [];
 		return `
 ${renderHeader("h3", symbol.hash, renderId(symbol))}
+<div class="doc-section">
 ${renderHeader("h4", `${symbol.hash}---hierarchy`, "Hierarchy")}
-<ul class="hierarchy">
+<ul class="doc-hierarchy">
 ${renderHierarchyHead(symbol, symbol.inheritanceLevel - 1, cache)}
-<li>${repeat("\t", symbol.inheritanceLevel, "")}${symbol.kind} <b>${symbol.objectName}</b>${renderTypeVars(symbol)}</li>
+<li>${renderTab(symbol.inheritanceLevel)}${symbol.kind} <b>${symbol.objectName}</b>${renderTypeVars(symbol)}</li>
 ${renderHierarchyTail(symbol, symbol.inheritanceLevel + 1, cache)}
 </ul>
 ${renderHeader("h4", `${symbol.hash}---description`, "Description")}
@@ -218,7 +216,8 @@ ${renderConstructor(symbol._constructor)}
 ${renderMembers(symbol, symbol.properties, "properties", "Properties", renderProperty)}
 ${renderMembers(symbol, symbol.methods, "methods", "Methods", renderMethod)}
 ${renderMembers(symbol, symbol.staticProperties, "staticProperties", "Static properties", renderProperty)}
-${renderMembers(symbol, symbol.staticMethods, "staticMethods", "Static methods", renderMethod)}`
+${renderMembers(symbol, symbol.staticMethods, "staticMethods", "Static methods", renderMethod)}
+</div>`
 	}
 }
 
@@ -236,7 +235,7 @@ function renderHierarchyHead(struct: StructSymbol, level: number, cache: StructS
 		const url = getReferenceUrl(extendedStruct.selfReference, struct.file.id);
 		return `
 ${renderHierarchyHead(extendedStruct, level - 1, cache)}
-<li>${repeat("\t", level, "")}${extendedStruct.kind} <a href="${url}">${extendedStruct.objectName}</a>${renderTypeVars(extendedStruct)}</li>`;
+<li>${renderTab(level)}${extendedStruct.kind} <a href="${url}">${extendedStruct.objectName}</a>${renderTypeVars(extendedStruct)}</li>`;
 	}).join("");
 }
 
@@ -256,7 +255,7 @@ function renderHierarchyTail(struct: StructSymbol, level: number, cache: StructS
 		cache.push(extendingStruct);
 		const url = getReferenceUrl(extendingStruct.selfReference, struct.file.id);
 		return `
-<li>${repeat("\t", level, "")}${extendingStruct.kind} <a href="${url}">${extendingStruct.objectName}</a>${renderTypeVars(extendingStruct)}</li>
+<li>${renderTab(level)}${extendingStruct.kind} <a href="${url}">${extendingStruct.objectName}</a>${renderTypeVars(extendingStruct)}</li>
 ${renderHierarchyTail(extendingStruct, level + 1, cache, levelsLeft != null ? levelsLeft - 1 : null)}`;
 	}).join("");
 }
@@ -274,35 +273,45 @@ function renderConstructor(constr: Constructor) {
 	}
 	return `
 ${renderHeader("h4", `${constr.struct.hash}---constructor`, "Constructor")}
-<pre>new ${constr.struct.objectName}${renderTypeVars(constr.struct)}${renderText(constr.context, constr.signature)}</pre>
+<p><code>new ${constr.struct.objectName}${renderTypeVars(constr.struct)}${renderText(constr.context, constr.signature)}</code></p>
 ${renderDefinitions(constr.context, constr.params)}
 ${renderText(constr.context, constr.description)}`;
 }
 
 function renderMembers<T extends IMember>(struct: StructSymbol, members: Dictionary<T>, key: string, title: string,
 										  renderer: (member: T) => string) {
-	return renderDictionary(members, renderHeader("h4", `${struct.hash}---${key}`, title), renderer);
+	if (DictionaryUtils.isEmpty(members)) {
+		return "";
+	}
+	const strDict = DictionaryUtils.map(members, renderer);
+	return `
+${renderHeader("h4", `${struct.hash}---${key}`, title)}
+${DictionaryUtils.join(strDict, "\n")}`;
 }
 
 function renderProperty(property: PropertyMember) {
 	return `
-<li>
 ${renderHeader("h5", `${property.struct.hash}--${property.id}`, property.id)}
-<pre>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, property.type)}</pre>
+<div class="doc-member">
+<p><code>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, property.type)}</code></p>
 ${renderText(property.context, property.description)}
-</li>`;
+</div>`;
 }
 
 function renderMethod(method: MethodMember) {
 	return `
-<li>
 ${renderHeader("h5", `${method.struct.hash}--${method.id}`, method.id)}
-<pre>${method.modifiers ? method.modifiers + " " : ""}${renderText(method.context, method.signature)}</pre>
+<div class="doc-member">
+<p><code>${method.modifiers ? method.modifiers + " " : ""}${renderText(method.context, method.signature)}</code></p>
 ${renderParams(method.context, method.params, method.returns)}
 ${renderText(method.context, method.description)}
-</li>`;
+</div>`;
 }
 
 function renderHeader(tag: string, id: string, title: string) {
 	return `<${tag}><span id="${id}"></span>${title}<a class="anchorjs-link" href="#${id}" aria-label="Anchor" style="padding-left: 0.375em;">#</a></${tag}>`;
+}
+
+function renderTab(level: number) {
+	return `<span style="margin-left: ${2 * level}em"></span>`;
 }

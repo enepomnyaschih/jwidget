@@ -3,8 +3,8 @@ symbols:
     extends:
       - file: jwidget/IClass
     description: |
-      <p>Introduces object aggregation support. If you call <tt>a.%own(b)</tt>, then <b>b</b> is destroyed
-      automatically on <b>a</b> destruction. You can aggregate any object implementing %Destroyable. Aggregated objects
+      <p>Introduces object aggregation support. If you call <code>a.%own(b)</code>, then <code>b</code> is destroyed
+      automatically on <code>a</code> destruction. You can aggregate any object implementing %Destroyable. Aggregated objects
       are destroyed in reverse order.</p>
       <pre>
       class Book extends %Class {
@@ -26,10 +26,8 @@ symbols:
       book.%destroy();
       </pre>
       <p>Output:</p>
-      <pre>
-      Destroying cover
-      Destroying book
-      </pre>
+      <samp>Destroying cover
+      Destroying book</samp>
 
     constructor:
       signature: |
@@ -76,7 +74,7 @@ symbols:
         description: |
           <p>Class destructor implementation. Called in %destroy method <i>after aggregated object destruction</i>.
           The logic of class instance destruction should be implemented here. If you override this method,
-          remember to call <tt>super.%destroyObject</tt> at the end of the method:</p>
+          remember to call <code>super.%destroyObject</code> at the end of the method:</p>
           <pre>
           %destroyObject() {
               // Release resources

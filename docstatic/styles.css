@@ -3,6 +3,7 @@ html, body {
 }
 
 h1, h2, h3, h4, h5, h6 {
+    padding-top: 10px;
     position: relative;
 }
 
@@ -11,12 +12,24 @@ span[id] {
     top: -60px;
 }
 
-h1 {
-    padding: 10px 0;
+h1, h3 {
+    padding-bottom: 10px;
+}
+
+pre, samp {
+    padding-left: 24px;
+}
+
+samp {
+    display: block;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
 }
 
 .doc-error {
+    background-color: #ffdddd;
     color: red;
+    padding: 0 3px;
 }
 
 .doc-header {
@@ -83,4 +96,18 @@ h1 {
 .anchorjs-link:hover {
     color: #007bff;
     text-decoration: none;
+}
+
+.doc-section {
+    border-left: 4px solid #e5e5e5;
+    padding-left: 20px;
+}
+
+.doc-hierarchy {
+    list-style: none;
+    padding-left: 0;
+}
+
+.doc-member {
+    padding-left: 24px;
 }

@@ -1,7 +1,7 @@
 description: |
   <p>jWidget utilities for native JavaScript arrays. Some utilities duplicate the functions of %underscore and %lodash,
   but still may come in handy if you want to keep dependency list short.</p>
-  <p>Functions don't check the arguments. If you pass <tt>null</tt> or not an array, or if you pass the index out of
+  <p>Functions don't check the arguments. If you pass <code>null</code> or not an array, or if you pass the index out of
   array bounds etc., it will have the unpredictable consequences. jWidget is designed for performance, and these
   utilities were implemented mostly for internal usage, so please do all neccessary assertions before using them.</p>
 
@@ -30,7 +30,7 @@ symbols:
     params:
       arr: 'Array to inspect.'
       item: 'Item to look for.'
-    returns: 'Item exists in array, i.e. if <tt>%arr.indexOf(%item)</tt> doesn''t return -1.'
+    returns: 'Item exists in array, i.e. if <code>%arr.indexOf(%item)</code> doesn''t return -1.'
 
   find:
     signature: |
@@ -359,7 +359,7 @@ symbols:
     returns: 'New reversed array.'
     description: |
       <p>Builds a new array containing items of original array in reversed order.</p>
-      <p>As opposed to <tt>%arr.reverse()</tt>, does not modify the original array.</p>
+      <p>As opposed to <code>%arr.reverse()</code>, does not modify the original array.</p>
 
   toSorted:
     signature: |
@@ -446,7 +446,7 @@ symbols:
     returns: 'Final accumulator value.'
     description: |
       Applies a function against an accumulator and each item in the array (from left to right) to reduce it to a
-      single value. Compared to standard <tt>%arr.reduce(%callback, %initial)</tt>, also supports %Reducer as an argument.
+      single value. Compared to standard <code>%arr.reduce(%callback, %initial)</code>, also supports %Reducer as an argument.
 
   equal:
     signature: |
@@ -465,14 +465,14 @@ symbols:
       scope: '%callback call scope.'
     returns: '%callback returns %truthy value for each array item.'
     description: |
-      As opposed to <tt>%arr.every(%callback, %scope)</tt>, iterates the items in backward order.
+      As opposed to <code>%arr.every(%callback, %scope)</code>, iterates the items in backward order.
 
   isIdentity:
     signature: |
       (arr: number[]): boolean
     params:
       arr: 'Array to inspect.'
-    returns: 'Every item in %arr is equal to its index: <tt>%arr[i] === i</tt>.'
+    returns: 'Every item in %arr is equal to its index: <code>%arr[i] === i</code>.'
 
   invert:
     signature: |
@@ -481,7 +481,7 @@ symbols:
       arr: 'Array to invert.'
     returns: 'New inverted array.'
     description: |
-      Builds a new array by the rule: <tt>result[%arr[i]] === i</tt> and returns it.
+      Builds a new array by the rule: <code>result[%arr[i]] === i</code> and returns it.
 
   merge:
     signature: |
@@ -501,7 +501,7 @@ symbols:
       arr: 'Array to modify.'
       items: 'Items to add.'
       index: 'Index of an item to insert the new ones before. By default, appends the items to the end of array.'
-    returns: '<tt>true</tt> if the array was modified, else <tt>undefined</tt>.'
+    returns: '<code>true</code> if the array was modified, else <code>undefined</code>.'
     description: |
       Adds a range of new items to the array. As opposed to %addAll, returns different result.
 
@@ -512,7 +512,7 @@ symbols:
       arr: 'Array to modify.'
       index: 'Index of an item to replace.'
       item: 'Item to replace it with.'
-    returns: '%Some over the replaced item if the array was modified, else <tt>undefined</tt>.'
+    returns: '%Some over the replaced item if the array was modified, else <code>undefined</code>.'
     description: |
       Replaces an item in the array. As opposed to %set, returns different result.
 
@@ -523,7 +523,7 @@ symbols:
       arr: 'Array to modify.'
       index: 'Index of the first item to remove.'
       count: 'Count of items to remove.'
-    returns: 'The removed items if the array was modified, else <tt>undefined</tt>.'
+    returns: 'The removed items if the array was modified, else <code>undefined</code>.'
     description: |
       Removes an item range from the array. As opposed to %removeAll, returns different result.
 
@@ -534,7 +534,7 @@ symbols:
       arr: 'Array to modify.'
       fromIndex: 'Index to an item to move.'
       toIndex: 'Index to move the item to.'
-    returns: 'The moved item if the array was modified, else <tt>undefined</tt>.'
+    returns: 'The moved item if the array was modified, else <code>undefined</code>.'
     description: |
       Moves an item in the array. As opposed to %move, returns different result.
 
@@ -543,7 +543,7 @@ symbols:
       <T>(arr: T[]): T[]
     params:
       arr: 'Array to modify.'
-    returns: 'Old array contents if the array was modified, else <tt>undefined</tt>.'
+    returns: 'Old array contents if the array was modified, else <code>undefined</code>.'
     description: |
       Clears the array. As opposed to %clear, returns different result.
 
@@ -556,7 +556,7 @@ symbols:
       arr: 'Array to modify.'
       removeParamsList: 'Array of segments to remove sorted by index ascending. Segments are removed in backward order.'
       addParamsList: 'Array of segments to insert sorted by index ascending. Segments are inserted in forward order.'
-    returns: 'Full information about the added/removed items if the array was modified, else <tt>undefined</tt>.'
+    returns: 'Full information about the added/removed items if the array was modified, else <code>undefined</code>.'
     description: |
       Removes and inserts item ranges (in this order). As opposed to %splice, returns different result.
 
@@ -566,7 +566,7 @@ symbols:
     params:
       arr: 'Array to modify.'
       indexArray: 'Indices to move the items to.'
-    returns: 'Old item order if the array was modified, else <tt>undefined</tt>.'
+    returns: 'Old item order if the array was modified, else <code>undefined</code>.'
     description: |
       <p>Reorders array items. As opposed to %reorder, returns different result.</p>
       <p>Item with index i is moved to index %indexArray[i].
@@ -584,7 +584,7 @@ symbols:
       getKey: |
         Identifies an item in this array for optimization. Default implementation identifies only primitive values and
         %Identifiable objects.
-    returns: '%splice function arguments. If no method call required, returns <tt>undefined</tt>.'
+    returns: '%splice function arguments. If no method call required, returns <code>undefined</code>.'
     description: |
       <p>Detects %splice function arguments to adjust %oldItems array contents to %newItems.</p>
       <p>Determines item ranges neccessary to be removed and inserted.</p>
@@ -598,7 +598,7 @@ symbols:
     params:
       oldItems: 'Original array to filter.'
       newItems: 'Expected filtered array.'
-    returns: '%removeParamsList argument of %splice function. If no method call required, returns <tt>undefined</tt>.'
+    returns: '%removeParamsList argument of %splice function. If no method call required, returns <code>undefined</code>.'
     description: |
       <p>Detects %removeParamsList argument of %splice function to adjust %oldItems array contents to %newItems.</p>
       <p>Determines item ranges neccessary to be removed.</p>
@@ -616,7 +616,7 @@ symbols:
       getKey: |
         Identifies an item in this array for optimization. Default implementation identifies only primitive values and
         %Identifiable objects.
-    returns: '%reorder function argument. If no method call required, returns <tt>undefined</tt>.'
+    returns: '%reorder function argument. If no method call required, returns <code>undefined</code>.'
     description: |
       <p>Detects %reorder function to arguments to adjust %oldItems array contents to %newItems.</p>
       <p>Determines indices to move the items to.</p>
@@ -630,7 +630,7 @@ symbols:
       callback: 'Item evaluation function.'
       scope: '%callback call scope.'
       order: 'Sort order.'
-    returns: '%reorder function argument. If no method call required, returns <tt>undefined</tt>.'
+    returns: '%reorder function argument. If no method call required, returns <code>undefined</code>.'
     description: |
       <p>Detects %reorder function to argument to sort array contents by the result of %callback call for each item.</p>
       <p>%callback must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
@@ -644,7 +644,7 @@ symbols:
       compare: 'Item comparer.'
       scope: '%compare call scope.'
       order: 'Sort order.'
-    returns: '%reorder function argument. If no method call required, returns <tt>undefined</tt>.'
+    returns: '%reorder function argument. If no method call required, returns <code>undefined</code>.'
     description: |
       <p>Detects %reorder function to argument to sort array contents by comparer.</p>
       <p>%compare must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.</p>

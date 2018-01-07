@@ -35,7 +35,7 @@ export function renderReference(context: Context, key: string, relativeToFile?: 
 		const url = getReferenceUrl(reference, relativeToFile || context.file.id);
 		return url ?
 			`<a href="${url}" target="${reference.href ? "_blank" : "_parent"}">${reference.label || key}</a>` :
-			`<b>${reference.label || key}</b>`;
+			`<code>${reference.label || key}</code>`;
 	} catch (error) {
 		if (error instanceof DocError) {
 			console.warn(error.message);
@@ -96,17 +96,4 @@ export function renderDefinitions(context: Context, params: Dictionary<string>):
 	}
 	const dict = DictionaryUtils.map(params, (param, key) => `<dt>${key}</dt><dd>${renderText(context, param)}</dd>`);
 	return `<dl>\n${DictionaryUtils.join(dict, "\n")}\n</dl>`;
-}
-
-export function renderDictionary<T>(dict: Dictionary<T>, title: string,
-									renderer: (obj: T, key: string) => string, scope?: any) {
-	if (DictionaryUtils.isEmpty(dict)) {
-		return "";
-	}
-	const strDict = DictionaryUtils.map(dict, renderer, scope);
-	return `
-${title}
-<ul>
-${DictionaryUtils.join(strDict, "\n")}
-</ul>`
 }

@@ -4,14 +4,7 @@ import * as DictionaryUtils from "../utils/Dictionary";
 import Project from "../Project";
 import SourceFile from "../SourceFile";
 import {mkdir} from "../utils/File";
-import {
-	getReferenceUrl,
-	getRelativeUrl,
-	renderDefinitions,
-	renderDictionary,
-	renderParams,
-	renderText
-} from "../utils/Doc";
+import {getReferenceUrl, getRelativeUrl, renderDefinitions, renderParams, renderText} from "../utils/Doc";
 import SymbolVisitor from "../SymbolVisitor";
 import StructSymbol from "../symbols/Struct";
 import FunctionSymbol from "../symbols/Function";
@@ -22,6 +15,7 @@ import ISymbol from "../symbols/ISymbol";
 import MethodMember from "../members/Method";
 import PropertyMember from "../members/Property";
 import Constructor from "../Constructor";
+import Dictionary from "../Dictionary";
 
 export default function defaultTemplate(project: Project) {
 	for (let fileId in project.files) {
@@ -188,4 +182,17 @@ function renderMethod(method: MethodMember) {
 ${renderParams(method.context, method.params, method.returns)}
 ${renderText(method.context, method.description)}
 </li>`;
+}
+
+export function renderDictionary<T>(dict: Dictionary<T>, title: string,
+									renderer: (obj: T, key: string) => string) {
+	if (DictionaryUtils.isEmpty(dict)) {
+		return "";
+	}
+	const strDict = DictionaryUtils.map(dict, renderer);
+	return `
+${title}
+<ul>
+${DictionaryUtils.join(strDict, "\n")}
+</ul>`
 }

@@ -27,7 +27,7 @@ symbols:
           <pre>
           this.myEvent.%trigger({sender: this});
           </pre>
-          <p>This way, we've called all handlers of <b>myEvent</b> with parameters <tt>{sender: this}</tt>.
+          <p>This way, we've called all handlers of <code>myEvent</code> with parameters <code>{sender: this}</code>.
 
       destroy:
         signature: |
