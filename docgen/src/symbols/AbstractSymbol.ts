@@ -8,6 +8,10 @@ abstract class AbstractSymbol implements ISymbol {
 	constructor(readonly file: SourceFile, readonly id: string) {
 	}
 
+	get hash(): string {
+		return this.id.replace(".", "-");
+	}
+
 	get project(): Project {
 		return this.file.project;
 	}

@@ -24,7 +24,7 @@ export function renderInclude(project: Project, key: string): string {
 	const include = project.includes[key];
 	if (!include) {
 		console.warn(`Invalid inclusion: ${key} is not defined.`);
-		return `<span class="error">Invalid inclusion: ${key}</span>`;
+		return `<span class="doc-error">Invalid inclusion: ${key}</span>`;
 	}
 	return renderIncludes(project, include);
 }
@@ -39,7 +39,7 @@ export function renderReference(context: Context, key: string, relativeToFile?: 
 	} catch (error) {
 		if (error instanceof DocError) {
 			console.warn(error.message);
-			return `<span class="error">Invalid reference: ${key}</span>`;
+			return `<span class="doc-error">Invalid reference: ${key}</span>`;
 		} else {
 			throw error;
 		}

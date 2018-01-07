@@ -2,48 +2,44 @@ html, body {
     height: 100%;
 }
 
-.error {
+.doc-error {
     color: red;
 }
 
-.stretch {
-    height: 100%;
-}
-
-#header {
+.doc-header {
     position: fixed;
     top: 0;
     width: 100%;
 }
 
-#contents {
+.doc-contents {
     margin-top: 56px;
 }
 
-#sidebar {
+.doc-sidebar {
     display: none;
 }
 
-#index .nav {
+.doc-index .nav {
     margin-left: 1rem;
 }
 
-#index .nav-link {
+.doc-index .nav-link {
     font-weight: 600;
     padding: .5rem 0;
 }
 
-#index .nav .nav-link {
+.doc-index .nav .nav-link {
     font-weight: 400;
     padding: 0;
 }
 
-#index .nav .nav .nav-link {
+.doc-index .nav .nav .nav-link {
     font-weight: 300;
 }
 
 @media (min-width: 992px) {
-    #sidebar {
+    .doc-sidebar {
         display: block;
         float: left;
         height: calc(100% - 56px);
@@ -52,7 +48,7 @@ html, body {
         width: 300px;
     }
 
-    #main {
+    .doc-main {
         margin-left: 300px;
     }
 }

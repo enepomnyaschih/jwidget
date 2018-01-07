@@ -49,7 +49,7 @@ function renderFile(file: SourceFile) {
 		<script type="text/javascript" src="${getRelativeUrl("bootstrap.bundle.min.js", file.id)}"></script>
 	</head>
 	<body>
-		<nav id="header" class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
 			<a class="navbar-brand" href="${getRelativeUrl("", file.id)}">jWidget 2</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -75,15 +75,15 @@ function renderFile(file: SourceFile) {
 				</form>
 			</div>
 		</nav>
-		<div id="contents">
-			<nav id="sidebar" class="navbar navbar-light bg-light">
-				<nav id="index" class="nav nav-pills flex-column">
+		<div class="doc-contents">
+			<nav class="doc-sidebar navbar navbar-light bg-light">
+				<nav class="doc-index nav nav-pills flex-column">
 					<a class="navbar-brand" href="#">${file.id}</a>
 					${renderIndex(file)}
 					<div class="py-3"></div>
 				</nav>
 			</nav>
-			<div id="main">
+			<div class="doc-main">
 				<h1>${file.id}</h1>
 				${renderText(file.context, file.description)}
 				<h3>Consumption</h3>
@@ -136,13 +136,13 @@ const symbolIndexRenderVisitor: SymbolVisitor<string> = {
 	visitStruct(symbol: StructSymbol): string {
 		return `
 <nav class="nav nav-pills flex-column">
-<a class="nav-link" href="#${symbol.id}--hierarchy">Hierarchy</a>
-<a class="nav-link" href="#${symbol.id}--description">Description</a>
-${symbol._constructor ? `<a class="nav-link" href="#${symbol.id}--constructor">Constructor</a>` : ""}
+<a class="nav-link" href="#${symbol.id}---hierarchy">Hierarchy</a>
+<a class="nav-link" href="#${symbol.id}---description">Description</a>
+${symbol._constructor ? `<a class="nav-link" href="#${symbol.id}---constructor">Constructor</a>` : ""}
 ${renderIndexDictionary(symbol, symbol.properties, "properties", "Properties")}
 ${renderIndexDictionary(symbol, symbol.methods, "methods", "Methods")}
-${renderIndexDictionary(symbol, symbol.staticProperties, "static-properties", "Static properties")}
-${renderIndexDictionary(symbol, symbol.staticMethods, "static-methods", "Static methods")}
+${renderIndexDictionary(symbol, symbol.staticProperties, "staticProperties", "Static properties")}
+${renderIndexDictionary(symbol, symbol.staticMethods, "staticMethods", "Static methods")}
 </nav>`
 	}
 }
@@ -151,12 +151,11 @@ function renderIndexDictionary(struct: StructSymbol, dict: Dictionary<IMember>, 
 	if (DictionaryUtils.isEmpty(dict)) {
 		return "";
 	}
-	const prefix = struct.id.replace(".", "-");
 	return `
 <a class="nav-link" href="#${struct.id}---${key}">${title}</a>
 <nav class="nav nav-pills flex-column">
 ${DictionaryUtils.join(DictionaryUtils.map(dict, (member) => (
-		`<a class="nav-link" href="#${prefix}--${member.id}${member.isStatic ? "-static" : ""}">${member.id}</a>`
+		`<a class="nav-link" href="#${struct.hash}--${member.id}${member.isStatic ? "-static" : ""}">${member.id}</a>`
 	)), "\n")}
 </nav>`;
 }
@@ -182,19 +181,19 @@ function renderSymbols(file: SourceFile) {
 const symbolRenderVisitor: SymbolVisitor<string> = {
 
 	visitHeader(symbol: HeaderSymbol): string {
-		return `<h2>${htmlEncode(symbol.text)}</h2>`;
+		return `<h2 id="${symbol.id}">${htmlEncode(symbol.text)}</h2>`;
 	},
 
 	visitValue(symbol: ValueSymbol): string {
 		return `
-<h3>${renderId(symbol)}</h3>
+<h3 id="${symbol.id}">${renderId(symbol)}</h3>
 <pre>${symbol.objectName}: ${renderText(symbol.context, symbol.type)}</pre>
 ${renderText(symbol.context, symbol.description)}`;
 	},
 
 	visitFunction(symbol: FunctionSymbol): string {
 		return `
-<h3>${renderId(symbol)}</h3>
+<h3 id="${symbol.id}">${renderId(symbol)}</h3>
 <pre>${renderText(symbol.context, symbol.signature)}</pre>
 ${renderParams(symbol.context, symbol.params, symbol.returns)}
 ${renderText(symbol.context, symbol.description)}`;
@@ -203,21 +202,21 @@ ${renderText(symbol.context, symbol.description)}`;
 	visitStruct(symbol: StructSymbol): string {
 		const cache: StructSymbol[] = [];
 		return `
-<h3>${renderId(symbol)}</h3>
-<h4>Hierarchy</h4>
+<h3 id="${symbol.id}">${renderId(symbol)}</h3>
+<h4 id="${symbol.id}---hierarchy">Hierarchy</h4>
 <ul class="hierarchy">
 ${renderHierarchyHead(symbol, symbol.inheritanceLevel - 1, cache)}
 <li>${repeat("\t", symbol.inheritanceLevel, "")}${symbol.kind} <b>${symbol.objectName}</b>${renderTypeVars(symbol)}</li>
 ${renderHierarchyTail(symbol, symbol.inheritanceLevel + 1, cache)}
 </ul>
-<h4>Description</h4>
+<h4 id="${symbol.id}---description">Description</h4>
 ${renderDefinitions(symbol.context, symbol.typevars)}
 ${renderText(symbol.context, symbol.description)}
 ${renderConstructor(symbol._constructor)}
-${renderDictionary(symbol.properties, "<h4>Properties</h4>", (property) => renderProperty(property))}
-${renderDictionary(symbol.methods, "<h4>Methods</h4>", (method) => renderMethod(method))}
-${renderDictionary(symbol.staticProperties, "<h4>Static properties</h4>", (property) => renderProperty(property))}
-${renderDictionary(symbol.staticMethods, "<h4>Static methods</h4>", (method) => renderMethod(method))}`
+${renderMembers(symbol, symbol.properties, "properties", "Properties", renderProperty)}
+${renderMembers(symbol, symbol.methods, "methods", "Methods", renderMethod)}
+${renderMembers(symbol, symbol.staticProperties, "staticProperties", "Static properties", renderProperty)}
+${renderMembers(symbol, symbol.staticMethods, "staticMethods", "Static methods", renderMethod)}`
 	}
 }
 
@@ -272,16 +271,21 @@ function renderConstructor(constr: Constructor) {
 		return "";
 	}
 	return `
-<h4>Constructor</h4>
+<h4 id="${constr.struct.id}---constructor">Constructor</h4>
 <pre>new ${constr.struct.objectName}${renderTypeVars(constr.struct)}${renderText(constr.context, constr.signature)}</pre>
 ${renderDefinitions(constr.context, constr.params)}
 ${renderText(constr.context, constr.description)}`;
 }
 
+function renderMembers<T extends IMember>(struct: StructSymbol, members: Dictionary<T>, key: string, title: string,
+										  renderer: (member: T) => string) {
+	return renderDictionary(members, `<h4 id="${struct.hash}---${key}">${title}</h4>`, renderer)
+}
+
 function renderProperty(property: PropertyMember) {
 	return `
 <li>
-<h5>${property.id}</h5>
+<h5 id="${property.struct.hash}--${property.id}">${property.id}</h5>
 <pre>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, property.type)}</pre>
 ${renderText(property.context, property.description)}
 </li>`;
@@ -290,7 +294,7 @@ ${renderText(property.context, property.description)}
 function renderMethod(method: MethodMember) {
 	return `
 <li>
-<h5>${method.id}</h5>
+<h5 id="${method.struct.hash}--${method.id}">${method.id}</h5>
 <pre>${method.modifiers ? method.modifiers + " " : ""}${renderText(method.context, method.signature)}</pre>
 ${renderParams(method.context, method.params, method.returns)}
 ${renderText(method.context, method.description)}
