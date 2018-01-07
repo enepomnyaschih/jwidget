@@ -181,19 +181,19 @@ function renderSymbols(file: SourceFile) {
 const symbolRenderVisitor: SymbolVisitor<string> = {
 
 	visitHeader(symbol: HeaderSymbol): string {
-		return `<h2 id="${symbol.id}">${htmlEncode(symbol.text)}</h2>`;
+		return renderHeader("h2", symbol.hash, htmlEncode(symbol.text));
 	},
 
 	visitValue(symbol: ValueSymbol): string {
 		return `
-<h3 id="${symbol.id}">${renderId(symbol)}</h3>
+${renderHeader("h3", symbol.hash, renderId(symbol))}
 <pre>${symbol.objectName}: ${renderText(symbol.context, symbol.type)}</pre>
 ${renderText(symbol.context, symbol.description)}`;
 	},
 
 	visitFunction(symbol: FunctionSymbol): string {
 		return `
-<h3 id="${symbol.id}">${renderId(symbol)}</h3>
+${renderHeader("h3", symbol.hash, renderId(symbol))}
 <pre>${renderText(symbol.context, symbol.signature)}</pre>
 ${renderParams(symbol.context, symbol.params, symbol.returns)}
 ${renderText(symbol.context, symbol.description)}`;
@@ -202,14 +202,14 @@ ${renderText(symbol.context, symbol.description)}`;
 	visitStruct(symbol: StructSymbol): string {
 		const cache: StructSymbol[] = [];
 		return `
-<h3 id="${symbol.id}">${renderId(symbol)}</h3>
-<h4 id="${symbol.id}---hierarchy">Hierarchy</h4>
+${renderHeader("h3", symbol.hash, renderId(symbol))}
+${renderHeader("h4", `${symbol.hash}---hierarchy`, "Hierarchy")}
 <ul class="hierarchy">
 ${renderHierarchyHead(symbol, symbol.inheritanceLevel - 1, cache)}
 <li>${repeat("\t", symbol.inheritanceLevel, "")}${symbol.kind} <b>${symbol.objectName}</b>${renderTypeVars(symbol)}</li>
 ${renderHierarchyTail(symbol, symbol.inheritanceLevel + 1, cache)}
 </ul>
-<h4 id="${symbol.id}---description">Description</h4>
+${renderHeader("h4", `${symbol.hash}---description`, "Description")}
 ${renderDefinitions(symbol.context, symbol.typevars)}
 ${renderText(symbol.context, symbol.description)}
 ${renderConstructor(symbol._constructor)}
@@ -271,7 +271,7 @@ function renderConstructor(constr: Constructor) {
 		return "";
 	}
 	return `
-<h4 id="${constr.struct.id}---constructor">Constructor</h4>
+${renderHeader("h4", `${constr.struct.hash}---constructor`, "Constructor")}
 <pre>new ${constr.struct.objectName}${renderTypeVars(constr.struct)}${renderText(constr.context, constr.signature)}</pre>
 ${renderDefinitions(constr.context, constr.params)}
 ${renderText(constr.context, constr.description)}`;
@@ -279,13 +279,13 @@ ${renderText(constr.context, constr.description)}`;
 
 function renderMembers<T extends IMember>(struct: StructSymbol, members: Dictionary<T>, key: string, title: string,
 										  renderer: (member: T) => string) {
-	return renderDictionary(members, `<h4 id="${struct.hash}---${key}">${title}</h4>`, renderer)
+	return renderDictionary(members, renderHeader("h4", `${struct.hash}---${key}`, title), renderer);
 }
 
 function renderProperty(property: PropertyMember) {
 	return `
 <li>
-<h5 id="${property.struct.hash}--${property.id}">${property.id}</h5>
+${renderHeader("h5", `${property.struct.hash}--${property.id}`, property.id)}
 <pre>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, property.type)}</pre>
 ${renderText(property.context, property.description)}
 </li>`;
@@ -294,9 +294,13 @@ ${renderText(property.context, property.description)}
 function renderMethod(method: MethodMember) {
 	return `
 <li>
-<h5 id="${method.struct.hash}--${method.id}">${method.id}</h5>
+${renderHeader("h5", `${method.struct.hash}--${method.id}`, method.id)}
 <pre>${method.modifiers ? method.modifiers + " " : ""}${renderText(method.context, method.signature)}</pre>
 ${renderParams(method.context, method.params, method.returns)}
 ${renderText(method.context, method.description)}
 </li>`;
+}
+
+function renderHeader(tag: string, id: string, title: string) {
+	return `<${tag}><span id="${id}"></span>${title}</${tag}>`;
 }

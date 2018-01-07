@@ -2,6 +2,15 @@ html, body {
     height: 100%;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    position: relative;
+}
+
+span[id] {
+    position: absolute;
+    top: -64px;
+}
+
 .doc-error {
     color: red;
 }
@@ -10,6 +19,7 @@ html, body {
     position: fixed;
     top: 0;
     width: 100%;
+    z-index: 1;
 }
 
 .doc-contents {
