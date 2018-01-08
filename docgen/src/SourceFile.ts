@@ -35,11 +35,11 @@ export default class SourceFile {
 	}
 
 	link() {
-		for (let id in this.structs) {
-			if (this.structs.hasOwnProperty(id)) {
-				this.structs[id].link();
-			}
-		}
+		DictionaryUtils.forEach(this.structs, (struct) => struct.link());
+	}
+
+	inheritMembers() {
+		DictionaryUtils.forEach(this.structs, (struct) => struct.inheritMembers());
 	}
 }
 

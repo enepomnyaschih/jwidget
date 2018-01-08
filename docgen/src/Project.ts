@@ -1,4 +1,5 @@
 import * as path from "path";
+import * as DictionaryUtils from "./utils/Dictionary";
 import SourceFile from "./SourceFile";
 import StructSymbol from "./symbols/Struct";
 import Context from "./Context";
@@ -44,11 +45,11 @@ export default class Project {
 	}
 
 	link() {
-		for (let id in this.files) {
-			if (this.files.hasOwnProperty(id)) {
-				this.files[id].link();
-			}
-		}
+		DictionaryUtils.forEach(this.files, (file) => file.link());
+	}
+
+	inheritMembers() {
+		DictionaryUtils.forEach(this.files, (file) => file.inheritMembers());
 	}
 
 	getStruct(fileId: string, symbol: string = "default"): StructSymbol {

@@ -10,7 +10,7 @@ export function renderText(context: Context, text?: string) {
 		return "";
 	}
 	return renderIncludes(context.file.project, text)
-		.replace(/%(\w+)/g, (_, key) => renderReference(context, key));
+		.replace(/%(\w+)/g, (_, key) => renderReferenceByKey(context, key));
 }
 
 export function renderIncludes(project: Project, text?: string) {
@@ -29,13 +29,20 @@ export function renderInclude(project: Project, key: string): string {
 	return renderIncludes(project, include);
 }
 
-export function renderReference(context: Context, key: string, relativeToFile?: string): string {
+export function renderReference(reference: Reference, relativeToFile: string): string {
+	const url = getReferenceUrl(reference, relativeToFile);
+	return url ?
+		`<a href="${url}" target="${reference.href ? "_blank" : "_parent"}">${reference.label}</a>` :
+		`<b>${reference.label}</b>`;
+}
+
+export function renderReferenceByKey(context: Context, key: string, relativeToFile?: string): string {
 	try {
 		const reference = context.resolveReference(key);
-		const url = getReferenceUrl(reference, relativeToFile || context.file.id);
-		return url ?
-			`<a href="${url}" target="${reference.href ? "_blank" : "_parent"}">${reference.label || key}</a>` :
-			`<b>${reference.label || key}</b>`;
+		return renderReference({
+			label: key,
+			...reference
+		}, relativeToFile || context.file.id);
 	} catch (error) {
 		if (error instanceof DocError) {
 			console.warn(error.message);
@@ -86,7 +93,7 @@ export function getRelativeUrl(absoluteUrl: string, relativeToFile: string): str
 export function renderParams(context: Context, params: Dictionary<string>, returns?: string): string {
 	return renderDefinitions(context, {
 		...params,
-		...(returns ? {returns} : null)
+		...(returns ? {'<span class="doc-returns">returns</span>': returns} : null)
 	});
 }
 

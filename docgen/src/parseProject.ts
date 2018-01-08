@@ -37,5 +37,6 @@ export default function parseProject(projectFileAbsolutePath: string): Project {
 	const project = new Project(projectFileAbsolutePath, json);
 	parseProjectDir(project);
 	project.link();
+	project.inheritMembers();
 	return project;
 }

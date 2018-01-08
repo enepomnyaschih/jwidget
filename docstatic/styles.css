@@ -130,6 +130,19 @@ dt {
     padding-left: 24px;
 }
 
+.doc-inherit-mark {
+    font-size: 80%;
+    font-weight: 400;
+}
+
+.doc-hide-inherited .doc-inherited {
+    display: none;
+}
+
+.doc-returns {
+    font-weight: 400;
+}
+
 .doc-index-popover {
     display: none;
 }

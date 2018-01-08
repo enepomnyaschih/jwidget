@@ -4,24 +4,32 @@ import StructSymbol from "../symbols/Struct";
 import Reference from "../models/Reference";
 import Context from "../Context";
 import SourceFile from "../SourceFile";
-import {htmlEncode} from "../utils/String";
 
 export default class PropertyMember extends AbstractMember {
 
 	readonly type: string;
 	readonly context: Context;
 
-	constructor(struct: StructSymbol, id: string, isStatic: boolean, json: PropertyMemberJson) {
-		super(struct, id, isStatic, json);
-		this.type = htmlEncode(json.type);
+	constructor(struct: StructSymbol, inheritedFrom: StructSymbol, id: string, isStatic: boolean,
+				json: PropertyMemberJson) {
+		super(struct, inheritedFrom, id, isStatic, json);
+		this.type = json.type;
 		this.context = new MethodContext(this, json.references);
+	}
+
+	inherit(toStruct: StructSymbol): PropertyMember {
+		return new PropertyMember(toStruct, this.inheritedFrom, this.id, this.isStatic, {
+			type: this.type,
+			modifiers: this.modifiers,
+			description: this.description,
+			references: this.references
+		});
 	}
 }
 
 export interface PropertyMemberJson extends AbstractMemberJson {
 
 	readonly type?: string;
-	readonly references?: Dictionary<Reference>
 }
 
 class MethodContext extends Context {

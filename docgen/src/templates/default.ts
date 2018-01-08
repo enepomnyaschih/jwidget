@@ -169,7 +169,7 @@ function renderProperty(property: PropertyMember) {
 	return `
 <li>
 <h5>${property.id}</h5>
-<pre>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, property.type)}</pre>
+<pre>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, htmlEncode(property.type))}</pre>
 ${renderText(property.context, property.description)}
 </li>`;
 }
@@ -178,7 +178,7 @@ function renderMethod(method: MethodMember) {
 	return `
 <li>
 <h5>${method.id}</h5>
-<pre>${method.modifiers ? method.modifiers + " " : ""}${renderText(method.context, method.signature)}</pre>
+<pre>${method.modifiers ? method.modifiers + " " : ""}${renderText(method.context, htmlEncode(method.signature))}</pre>
 ${renderParams(method.context, method.params, method.returns)}
 ${renderText(method.context, method.description)}
 </li>`;

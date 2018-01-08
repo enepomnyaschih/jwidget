@@ -37,6 +37,24 @@ export function map<T, U>(dict: Dictionary<T>, callback: (item: T, key: string) 
 	return result;
 }
 
+export function filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
+	var result: Dictionary<T> = {};
+	every(dict, function (item: T, key: string): boolean {
+		if (callback.call(scope, item, key)) {
+			result[key] = item;
+		}
+		return true;
+	});
+	return result;
+}
+
+export function forEach<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any) {
+	every(dict, function (item, key) {
+		callback.call(scope, item, key);
+		return true;
+	});
+}
+
 export function toArray<T>(dict: Dictionary<T>): T[] {
 	if (!dict) {
 		return null;
@@ -51,4 +69,10 @@ export function toArray<T>(dict: Dictionary<T>): T[] {
 
 export function join(dict: Dictionary<string>, separator?: string): string {
 	return toArray(dict).join(separator);
+}
+
+export function putAll<T>(dict: Dictionary<T>, items: Dictionary<T>) {
+	for (var key in items) {
+		dict[key] = items[key];
+	}
 }

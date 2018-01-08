@@ -4,7 +4,6 @@ import StructSymbol from "../symbols/Struct";
 import Reference from "../models/Reference";
 import Context from "../Context";
 import SourceFile from "../SourceFile";
-import {htmlEncode} from "../utils/String";
 
 export default class MethodMember extends AbstractMember {
 
@@ -13,12 +12,24 @@ export default class MethodMember extends AbstractMember {
 	readonly returns: string;
 	readonly context: Context;
 
-	constructor(struct: StructSymbol, id: string, isStatic: boolean, json: MethodMemberJson) {
-		super(struct, id, isStatic, json);
-		this.signature = htmlEncode(json.signature);
+	constructor(struct: StructSymbol, inheritedFrom: StructSymbol, id: string, isStatic: boolean,
+				json: MethodMemberJson) {
+		super(struct, inheritedFrom, id, isStatic, json);
+		this.signature = json.signature;
 		this.params = json.params || {};
 		this.returns = json.returns;
 		this.context = new MethodContext(this, json.references);
+	}
+
+	inherit(toStruct: StructSymbol): MethodMember {
+		return new MethodMember(toStruct, this.inheritedFrom, this.id, this.isStatic, {
+			signature: this.signature,
+			params: this.params,
+			returns: this.returns,
+			modifiers: this.modifiers,
+			description: this.description,
+			references: this.references
+		});
 	}
 }
 
@@ -27,7 +38,6 @@ export interface MethodMemberJson extends AbstractMemberJson {
 	readonly signature?: string;
 	readonly params?: Dictionary<string>;
 	readonly returns?: string;
-	readonly references?: Dictionary<Reference>;
 }
 
 class MethodContext extends Context {

@@ -10,12 +10,14 @@ import DocError from "../DocError";
 import PropertyMember, {PropertyMemberJson} from "../members/Property";
 import {ConstructorJson, default as Constructor} from "../Constructor";
 import SymbolVisitor from "../SymbolVisitor";
+import IMember from "../members/IMember";
 
 export default class StructSymbol extends AbstractSymbol {
 
 	readonly kind: string;
 	readonly typevars: Dictionary<string>;
 	private _extending: Extension[] = [];
+	private _membersExtended: boolean = false;
 	readonly extendedBy: StructSymbol[] = [];
 	readonly description: string;
 	readonly showInheritanceLevels: number;
@@ -49,11 +51,11 @@ export default class StructSymbol extends AbstractSymbol {
 	}
 
 	private readProperties(json: Dictionary<PropertyMemberJson>, isStatic: boolean) {
-		return DictionaryUtils.map(json || {}, (propertyJson, id) => new PropertyMember(this, id, isStatic, propertyJson));
+		return DictionaryUtils.map(json || {}, (propertyJson, id) => new PropertyMember(this, this, id, isStatic, propertyJson));
 	}
 
 	private readMethods(json: Dictionary<MethodMemberJson>, isStatic: boolean) {
-		return DictionaryUtils.map(json || {}, (methodJson, id) => new MethodMember(this, id, isStatic, methodJson));
+		return DictionaryUtils.map(json || {}, (methodJson, id) => new MethodMember(this, this, id, isStatic, methodJson));
 	}
 
 	get inheritanceLevel(): number {
@@ -79,8 +81,28 @@ export default class StructSymbol extends AbstractSymbol {
 		});
 	}
 
+	inheritMembers() {
+		if (this._membersExtended) {
+			return;
+		}
+		this._extending.forEach((extension) => {
+			const extendedStruct = this.project.getStructByExtension(extension);
+			extendedStruct.inheritMembers();
+			this.inheritMemberDictionary(this.properties, extendedStruct.properties);
+			this.inheritMemberDictionary(this.methods, extendedStruct.methods);
+			this.inheritMemberDictionary(this.staticProperties, extendedStruct.staticProperties);
+			this.inheritMemberDictionary(this.staticMethods, extendedStruct.staticMethods);
+		});
+	}
+
 	visit<U>(visitor: SymbolVisitor<U>): U {
 		return visitor.visitStruct(this);
+	}
+
+	private inheritMemberDictionary(members: Dictionary<IMember>, membersOfExtendedStruct: Dictionary<IMember>) {
+		const membersToInherit = DictionaryUtils.filter(membersOfExtendedStruct, (_, key) => !members.hasOwnProperty(key));
+		const inheritedMembers = DictionaryUtils.map(membersToInherit, (member) => member.inherit(this));
+		DictionaryUtils.putAll(members, inheritedMembers);
 	}
 }
 
@@ -121,19 +143,26 @@ class StructContext extends Context {
 		if (key === this.name) {
 			return {};
 		}
-		if (this.symbol.typevars.hasOwnProperty(key) ||
-			this.symbol.properties.hasOwnProperty(key) ||
+		if (this.symbol.typevars.hasOwnProperty(key)) {
+			return {
+				...this.symbol.selfReference,
+				label: key
+			};
+		}
+		if (this.symbol.properties.hasOwnProperty(key) ||
 			this.symbol.methods.hasOwnProperty(key)) {
 			return {
 				...this.symbol.selfReference,
-				member: key
+				member: key,
+				label: key
 			};
 		}
 		if (this.symbol.staticProperties.hasOwnProperty(key) ||
 			this.symbol.staticMethods.hasOwnProperty(key)) {
 			return {
 				...this.symbol.selfReference,
-				member: `${key}-static`
+				member: `${key}-static`,
+				label: key
 			};
 		}
 		return null;

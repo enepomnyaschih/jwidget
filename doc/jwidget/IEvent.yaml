@@ -11,9 +11,11 @@ symbols:
       <p>Extension of %Listenable interface with %trigger method.</p>
       %%EventExample
       <p>Has two implementations:</p>
-      <dl>
-        <dt>%Event</dt><dd>Real implementation that calls handler functions on %trigger call.</dd>
-        <dt>%dummyEvent</dt><dd>Dummy implementation that doesn't store handler functions and never calls them.</dd>
+      <dl class="row">
+        <dt class="col-lg-2 col-sm-3">%Event</dt>
+        <dd class="col-lg-10 col-sm-9">Real implementation that calls handler functions on %trigger call.</dd>
+        <dt class="col-lg-2 col-sm-3">%dummyEvent</dt>
+        <dd class="col-lg-10 col-sm-9">Dummy implementation that doesn't store handler functions and never calls them.</dd>
       </dl>
 
     methods:

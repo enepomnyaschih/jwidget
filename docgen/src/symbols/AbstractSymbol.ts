@@ -23,7 +23,8 @@ abstract class AbstractSymbol implements ISymbol {
 	get selfReference() {
 		return {
 			file: this.file.id,
-			symbol: this.id
+			symbol: this.id,
+			label: this.objectName
 		};
 	}
 

@@ -4,7 +4,14 @@ import * as DictionaryUtils from "../utils/Dictionary";
 import Project from "../Project";
 import SourceFile from "../SourceFile";
 import {mkdir} from "../utils/File";
-import {getReferenceUrl, getRelativeUrl, renderDefinitions, renderParams, renderText} from "../utils/Doc";
+import {
+	getReferenceUrl,
+	getRelativeUrl,
+	renderDefinitions,
+	renderParams,
+	renderReference,
+	renderText
+} from "../utils/Doc";
 import SymbolVisitor from "../SymbolVisitor";
 import StructSymbol from "../symbols/Struct";
 import FunctionSymbol from "../symbols/Function";
@@ -65,6 +72,10 @@ function renderFile(file: SourceFile) {
 					</li>
 				</ul>
 				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+						<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+						<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+					</div>
 					<input class="form-control mr-sm-2" disabled type="search" placeholder="Search" aria-label="Search">
 					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 				</form>
@@ -152,10 +163,12 @@ function renderIndexDictionary(struct: StructSymbol, dict: Dictionary<IMember>, 
 	return `
 <a class="nav-link" href="#${struct.id}---${key}">${title}</a>
 <nav class="nav nav-pills flex-column">
-${DictionaryUtils.join(DictionaryUtils.map(dict, (member) => (
-		`<a class="nav-link" href="#${struct.hash}--${member.id}${member.isStatic ? "-static" : ""}">${member.id}</a>`
-	)), "\n")}
+${DictionaryUtils.join(DictionaryUtils.map(dict, renderIndexMember), "\n")}
 </nav>`;
+}
+
+function renderIndexMember(member: IMember) {
+	return `<a class="nav-link${member.isInherited ? " font-italic" : ""}" href="#${member.hash}">${member.id}</a>`;
 }
 
 function renderConsumption(file: SourceFile) {
@@ -294,21 +307,27 @@ ${DictionaryUtils.join(strDict, "\n")}`;
 
 function renderProperty(property: PropertyMember) {
 	return `
-${renderHeader("h5", `${property.struct.hash}--${property.id}${property.isStatic ? "-static" : ""}`, property.id)}
-<div class="doc-member">
-<p><code>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, property.type)}</code></p>
+${renderMemberHeader(property)}
+<div class="doc-member${property.isInherited ? " doc-inherited" : ""}">
+<p><code>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, htmlEncode(property.type))}</code></p>
 ${renderText(property.context, property.description)}
 </div>`;
 }
 
 function renderMethod(method: MethodMember) {
 	return `
-${renderHeader("h5", `${method.struct.hash}--${method.id}${method.isStatic ? "-static" : ""}`, method.id)}
-<div class="doc-member">
-<p><code>${method.modifiers ? method.modifiers + " " : ""}${renderText(method.context, method.signature)}</code></p>
+${renderMemberHeader(method)}
+<div class="doc-member${method.isInherited ? " doc-inherited" : ""}">
+<p><code>${method.modifiers ? method.modifiers + " " : ""}${renderText(method.context, htmlEncode(method.signature))}</code></p>
 ${renderParams(method.context, method.params, method.returns)}
 ${renderText(method.context, method.description)}
 </div>`;
+}
+
+function renderMemberHeader(member: IMember) {
+	const text = !member.isInherited ? member.id :
+		`<i>${member.id}</i> <span class="doc-inherit-mark">(inherited from ${renderReference(member.inheritedFrom.selfReference, member.file.id)})</span>`;
+	return renderHeader("h5", member.hash, text);
 }
 
 function renderHeader(tag: string, id: string, title: string) {
