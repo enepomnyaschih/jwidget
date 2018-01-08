@@ -69,7 +69,9 @@ function renderSymbols(file: SourceFile) {
 const symbolRenderVisitor: SymbolVisitor<string> = {
 
 	visitHeader(symbol: HeaderSymbol): string {
-		return `<h2>${htmlEncode(symbol.text)}</h2>`;
+		return `
+<h2>${htmlEncode(symbol.header)}</h2>
+${renderText(symbol.context, symbol.description)}`;
 	},
 
 	visitValue(symbol: ValueSymbol): string {
@@ -169,7 +171,7 @@ function renderProperty(property: PropertyMember) {
 	return `
 <li>
 <h5>${property.id}</h5>
-<pre>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, htmlEncode(property.type))}</pre>
+<pre>${property.modifiers ? property.modifiers + " " : ""}${property.id}${property.optional ? "?" : ""}: ${renderText(property.context, htmlEncode(property.type))}</pre>
 ${renderText(property.context, property.description)}
 </li>`;
 }

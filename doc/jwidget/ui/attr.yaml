@@ -6,11 +6,9 @@ symbols:
       el: DOM element.
       attr: Attribute name.
       property: Attribute value to assign.
-    returns: Binding object. Destroy the returned object to stop synchronization.
+    returns: Binding object. You must %destroy it to stop synchronization.
     description: |
       <p>Watches string property modification and updates the specified attribute of the DOM element.</p>
-      <code>
+      <pre>
       // Bind "title" attribute to title property value
-      this.%own(attr(el, "title", title));
-      </code>
-      <example id="attr1" height="180"/>
+      this.%own(%attr(el, "title", title));</pre>

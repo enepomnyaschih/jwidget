@@ -8,18 +8,21 @@ import SourceFile from "../SourceFile";
 export default class PropertyMember extends AbstractMember {
 
 	readonly type: string;
+	readonly optional: boolean;
 	readonly context: Context;
 
 	constructor(struct: StructSymbol, inheritedFrom: StructSymbol, id: string, isStatic: boolean,
 				json: PropertyMemberJson) {
 		super(struct, inheritedFrom, id, isStatic, json);
 		this.type = json.type;
+		this.optional = json.optional;
 		this.context = new MethodContext(this, json.references);
 	}
 
 	inherit(toStruct: StructSymbol): PropertyMember {
 		return new PropertyMember(toStruct, this.inheritedFrom, this.id, this.isStatic, {
 			type: this.type,
+			optional: this.optional,
 			modifiers: this.modifiers,
 			description: this.description,
 			references: this.references
@@ -30,6 +33,7 @@ export default class PropertyMember extends AbstractMember {
 export interface PropertyMemberJson extends AbstractMemberJson {
 
 	readonly type?: string;
+	readonly optional?: boolean;
 }
 
 class MethodContext extends Context {

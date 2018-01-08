@@ -30,6 +30,10 @@ dt {
     text-align: right;
 }
 
+dd dt {
+    color: darkgray;
+}
+
 .popover {
     max-height: calc(100% - 60px);
     max-width: calc(100% - 20px);

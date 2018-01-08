@@ -1,0 +1,359 @@
+description: |
+  <p>Core jWidget utilities. Some utilities duplicate the functions of %underscore and %lodash, but still may come in
+  handy if you want to keep dependency list short.</p>
+
+symbols:
+  enumerations: 'Enumerations'
+
+  Binding:
+    type: 'enum'
+    description: |
+      <p>jWidget binding modes. All options have shorthands, i.e. <code>Binding.UPDATE</code> can be imported
+      separately as <code>{UPDATE}</code>.</p>
+      <dl class="row">
+        <dt class="col-lg-2 col-sm-3">UPDATE = 1</dt>
+        <dd class="col-lg-10 col-sm-9">
+          <p>Bind element attribute to property.</p>
+          <pre>
+          // Bind element value to property
+          this.%own(%val(el, property, %UPDATE));</pre>
+          <p>Always used as default binding. Hence, the next code is almost equivalent:</p>
+          <pre>
+          this.%own(%val(el, property));</pre>
+          <p>Please prefer the second approach, because the first one takes %IProperty as an argument whereas
+          %Bindable is enough for the second one.</p>
+        </dd>
+        <dt class="col-lg-2 col-sm-3">WATCH = 2</dt>
+        <dd class="col-lg-10 col-sm-9">
+          <p>Bind property to element attribute.</p>
+          <pre>
+          // Bind property to element value
+          this.%own(%val(el, property, %WATCH));</pre>
+          <p>Always supplied with a no-argument method, which creates the property automatically.</p>
+          <pre>
+          // Watch element value
+          const property = this.%own(%val(el));</pre>
+        </dd>
+        <dt class="col-lg-2 col-sm-3">TWOWAY = 3</dt>
+        <dd class="col-lg-10 col-sm-9">
+          <p>Bind element attribute and property to each other.</p>
+          <p>%UPDATE-binding is applied first, %WATCH is applied last.</p>
+          <pre>
+          // Assign element value to property and setup two-way binding
+          this.%own(%val(el, property, %TWOWAY));</pre>
+        </dd>
+      </dl>
+    references:
+      UPDATE: {}
+      WATCH: {}
+      TWOWAY: {}
+
+  CollectionFlags:
+    type: 'enum'
+    description: |
+      <p>jWidget collection flags. All options have shorthands, i.e. <code>CollectionFlags.SILENT</code> can be
+      imported separately as <code>{SILENT}</code>.</p>
+      <dl class="row">
+        <dt class="col-lg-2 col-sm-3">SILENT = 1</dt>
+        <dd class="col-lg-10 col-sm-9">
+          <p>Creates a silent collection, which means that it never %triggers modification events. Silent collections
+          work a little bit faster and consume less memory. Useful for collections that never get modified or
+          observed.</p>
+          <pre>
+          const silentList = new %List&lt;number&gt;([1, 2], %SILENT);
+          const mappedList = %mapList(silentList, (value) => 2 * value);
+          expect(mappedList.%items).toEqual([2, 4]);
+          silentList.%add(3);
+          expect(mappedList.%items).toEqual([2, 4]); // 6 is not added, because source list is silent</pre>
+        </dd>
+        <dt class="col-lg-2 col-sm-3">ADAPTER = 2</dt>
+        <dd class="col-lg-10 col-sm-9">
+          <p>Creates an adapter for an existing array or dictionary, which means that it uses the same object as a
+          container for the collection contents instead of creating a new container. Note that you should not modify
+          the original array or dictionary in this case, because it may break the collection consistency.</p>
+          <pre>
+          const originalArray = [1, 2];
+          const adapterList = new %List&lt;number&gt;(originalArray, %ADAPTER);
+          adapterList.add(3);
+          expect(originalArray).toEqual([1, 2, 3]); // 3 is added to original array, because the list is adapter</pre>
+        </dd>
+      </dl>
+      <p>Pass both flags via bitwise disjunction operator:</p>
+      <pre>
+      new %List&lt;number&gt;(originalArray, %SILENT | %ADAPTER);</pre>
+    references:
+      SILENT: {}
+      ADAPTER: {}
+      items:
+        file: jwidget/ReadOnlyList
+        member: items
+      add:
+        file: jwidget/IList
+        member: add
+
+  testers:
+    header: 'Value test functions'
+    description: |
+      <p>These functions are useful for collection filtering:</p>
+      <pre>
+      const realValues = values.filter(%isNotNil);</pre>
+      <p>Which is a shorter equivalent for:</p>
+      <pre>
+      const readValues = values.filter((value) => value != null);</pre>
+
+  isUndefined:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is undefined.
+
+  isDefined:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is not undefined.
+
+  isNull:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is null.
+
+  isNotNull:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is not null.
+
+  isNil:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is undefined or null.
+
+  isNotNil:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is not undefined and null.
+
+  isFalsy:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is falsy (i.e. <code>Boolean(value)</code> is false).
+
+  isTruthy:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is truthy (i.e. <code>Boolean(value)</code> is true).
+
+  isInt:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is integer.
+
+  isNumber:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is number.
+
+  isString:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is string.
+
+  isBoolean:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is boolean.
+
+  isFunction:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is function.
+
+  isArray:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is native JavaScript Array.
+
+  isRegExp:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is regular expression.
+
+  isDate:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to test.
+    returns: Value is date.
+
+  other: Other functions
+
+  def:
+    signature: |
+      <T>(value: T, defaultValue: T): T
+    params:
+      value: Value to test.
+      defaultValue: Default value to return.
+    returns: '%value if it is not undefined, else %defaultValue.'
+    description: |
+      As opposed to %defn, treats null as suitable value.
+
+  defn:
+    signature: |
+      <T>(value: T, defaultValue: T): T
+    params:
+      value: Value to test.
+      defaultValue: Default value to return.
+    returns: '%value if it is not undefined and null, else %defaultValue.'
+    description: |
+      As opposed to %def, throws null as unsuitable value.
+
+  apply:
+    signature: |
+      <T>(target: %Dictionary<T>, ...sources: %Dictionary<T>[]): %Dictionary<T>
+    params:
+      target: Target dictionary to copy the values to.
+      sources: Source dictionaries.
+    returns: '%target'
+    description: |
+      <p>Iterates through objects passed after first argument and copies all their fields into %target object.
+      Returns %target. Undefined source values are ignored. Null and undefined source dictionaries are ignored.</p>
+      <p>Function modifies %target object!</p>
+      <pre>
+      var x: %Dictionary&lt;number&gt; = { |  var y: %Dictionary&lt;number&gt; = {  // Result = {
+          a: 10,                    |                                 //     a: 10,
+          b: 20,                    |      b: 30,                     //     b: 30,
+          c: null,                  |      c: 40,                     //     c: 40,
+          d: undefined,             |      d: 50,                     //     d: 50,
+          e: null                   |                                 //     e: null,
+                                    |      f: 60,                     //     f: 60
+                                    |      g: undefined               //
+      };                            |  };                             // };
+
+      %apply&lt;number&gt;(x, y);</pre>
+
+  cmp:
+    signature: |
+      (x: any, y: any, config?: %CmpConfig): number
+    params:
+      x: First value to compare.
+      y: Second value to compare.
+      config: Optional configuration.
+    returns: One or {-1, 0, 1} as comparison result.
+    description: |
+      <p>Universal and sophisticated comparer for array sorting. Broadly speaking, it:</p>
+      <ul>
+        <li>Returns 1, if <code>%x > %y</code></li>
+        <li>Returns -1, if <code>%x < %y</code></li>
+        <li>Returns 0, if <code>%x == %y</code></li>
+      </ul>
+      <p>In reality, it supports the next features:</p>
+      <ul>
+        <li>Comparing of boolean, number, string values, subarrays</li>
+        <li>Determined linear order, even for mixed arrays</li>
+        <li>Case insensitive comparing for strings</li>
+        <li>Comparing of digit sequences in strings as numbers</li>
+      </ul>
+      <h5>Example</h5>
+      <p>Sort by color descending first, and by status ascending last. Both parameters are optional.</p>
+      <pre>
+      rows.sort((x, y) => {
+          return %cmp(x.color == null, y.color == null) ||
+                -%cmp(x.color, y.color) ||
+                 %cmp(x.status == null, y.status == null) ||
+                 %cmp(x.status, y.status);
+      });</pre>
+
+  CmpConfig:
+    simple: true
+    kind: interface
+    description: |
+      Optional configuration of %cmp function.
+    properties:
+      caseInsensitive:
+        type: boolean = false
+        description: Ignore case when comparing strings.
+      compareNumbersInStrings:
+        type: boolean = false
+        description: Compare digit sequences as numbers when comparing strings.
+
+  get:
+    signature: |
+      <T>(obj: any, path: any): T
+    params:
+      obj: Object to inspect.
+      path: Field name or path to it.
+    returns: Field value.
+    description: |
+      <p>Returns object field or subfield by %path. <b>Path</b> is a primitive value (object key), or an array of
+      subpaths. If %path is null, undefined or empty array, returns %obj. If item doesn't exist, returns undefined.</p>
+      <h5>Example</h5>
+      <pre>
+      const obj = {
+          abc: [
+              {
+                  qwe: "xyz"
+              }
+          ]
+      };
+
+      expect(%get(obj, ["abc", 0, "qwe"])).toBe("xyz");
+      expect(%get(obj, "abc")).toBe(obj.abc);</pre>
+
+  newIid:
+    signature: '(): number'
+    returns: New unique auto-incremented integer identified.
+    description: |
+      <p>Returns a new auto-incremented instance identifier for %Identifiable interface.
+      %Class constructor calls it automatically.</p>
+
+  iidStr:
+    signature: |
+      (obj: %Identifiable): string
+    params:
+      obj: Object to inspect.
+    returns: '%iid field of %obj converted to a string.'
+    description: |
+      <p>Can be used as efficient <b>getKey</b> implementation for collections consisting of %Identifiable objects
+      only. Since default <b>getKey</b> implementation analyzes input value nature very deeply, it has performance
+      penalty. Specifying %iidStr for collections of %Identifiable objects may improve performance significantly.</p>
+
+  destroy:
+    signature: |
+      (obj: any): any
+    params:
+      obj: Object to destroy.
+    returns: undefined.
+    description: |
+      <p>Calls %destroy method of %obj if available. Can be used in configuration of any mapper.</p>
+      <pre>
+      const views = %mapList(models, (model) => new View(model), {%destroy});</pre>
+      <p>Doesn't return anything - any return type is specified for easier usage in methods like
+      %ArrayUtils.%backEvery.</p>

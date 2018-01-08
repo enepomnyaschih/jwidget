@@ -7,6 +7,8 @@ import ValueSymbol from "./symbols/Value";
 
 export default function parseSymbol(file: SourceFile, id: string, json: any): ISymbol {
 	if (typeof json === "string") {
+		return new HeaderSymbol(file, id, {header: json});
+	} else if (json.header) {
 		return new HeaderSymbol(file, id, json);
 	} else if (json.signature) {
 		return new FunctionSymbol(file, id, json);

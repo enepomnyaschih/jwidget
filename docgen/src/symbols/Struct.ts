@@ -14,6 +14,7 @@ import IMember from "../members/IMember";
 
 export default class StructSymbol extends AbstractSymbol {
 
+	readonly simple: boolean;
 	readonly kind: string;
 	readonly typevars: Dictionary<string>;
 	private _extending: Extension[] = [];
@@ -30,6 +31,7 @@ export default class StructSymbol extends AbstractSymbol {
 
 	constructor(file: SourceFile, id: string, json: StructJson) {
 		super(file, id);
+		this.simple = json.simple || false;
 		this.kind = json.kind || "class";
 		this.typevars = json.typevars || {};
 		this._extending = json.extends || [];
@@ -62,6 +64,13 @@ export default class StructSymbol extends AbstractSymbol {
 		return this._extending.reduce<number>((result, extension) => (
 			Math.max(result, this.project.getStructByExtension(extension).inheritanceLevel + 1)
 		), 0);
+	}
+
+	get showHierarchy(): boolean {
+		if (this.simple) {
+			return false;
+		}
+		return this._extending.length !== 0 || (this.extendedBy.length !== 0 && this.showInheritanceLevels !== 0);
 	}
 
 	link() {
@@ -108,6 +117,7 @@ export default class StructSymbol extends AbstractSymbol {
 
 export interface StructJson {
 
+	readonly simple?: boolean;
 	readonly kind?: string;
 	readonly typevars?: Dictionary<string>;
 	readonly extends?: Extension[];

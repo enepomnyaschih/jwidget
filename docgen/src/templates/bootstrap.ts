@@ -145,8 +145,8 @@ const symbolIndexRenderVisitor: SymbolVisitor<string> = {
 	visitStruct(symbol: StructSymbol): string {
 		return `
 <nav class="nav nav-pills flex-column">
-<a class="nav-link" href="#${symbol.id}---hierarchy">Hierarchy</a>
-<a class="nav-link" href="#${symbol.id}---description">Description</a>
+${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.id}---hierarchy">Hierarchy</a>`}
+${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.id}---description">Description</a>`}
 ${symbol._constructor ? `<a class="nav-link" href="#${symbol.id}---constructor">Constructor</a>` : ""}
 ${renderIndexDictionary(symbol, symbol.properties, "properties", "Properties")}
 ${renderIndexDictionary(symbol, symbol.methods, "methods", "Methods")}
@@ -160,11 +160,10 @@ function renderIndexDictionary(struct: StructSymbol, dict: Dictionary<IMember>, 
 	if (DictionaryUtils.isEmpty(dict)) {
 		return "";
 	}
-	return `
+	const members = DictionaryUtils.join(DictionaryUtils.map(dict, renderIndexMember), "\n");
+	return struct.simple ? members : `
 <a class="nav-link" href="#${struct.id}---${key}">${title}</a>
-<nav class="nav nav-pills flex-column">
-${DictionaryUtils.join(DictionaryUtils.map(dict, renderIndexMember), "\n")}
-</nav>`;
+<nav class="nav nav-pills flex-column">${members}</nav>`;
 }
 
 function renderIndexMember(member: IMember) {
@@ -192,7 +191,9 @@ function renderSymbols(file: SourceFile) {
 const symbolRenderVisitor: SymbolVisitor<string> = {
 
 	visitHeader(symbol: HeaderSymbol): string {
-		return renderHeader("h2", symbol.hash, htmlEncode(symbol.text));
+		return `
+${renderHeader("h2", symbol.hash, htmlEncode(symbol.header))}
+${renderText(symbol.context, symbol.description)}`;
 	},
 
 	visitValue(symbol: ValueSymbol): string {
@@ -215,17 +216,11 @@ ${renderText(symbol.context, symbol.description)}
 	},
 
 	visitStruct(symbol: StructSymbol): string {
-		const cache: StructSymbol[] = [];
 		return `
 ${renderHeader("h3", symbol.hash, renderId(symbol))}
 <div class="doc-section">
-${renderHeader("h4", `${symbol.hash}---hierarchy`, "Hierarchy")}
-<ul class="doc-hierarchy">
-${renderHierarchyHead(symbol, symbol.inheritanceLevel - 1, cache)}
-<li>${renderTab(symbol.inheritanceLevel)}${symbol.kind} <b>${symbol.objectName}</b>${renderTypeVars(symbol)}</li>
-${renderHierarchyTail(symbol, symbol.inheritanceLevel + 1, cache)}
-</ul>
-${renderHeader("h4", `${symbol.hash}---description`, "Description")}
+${symbol.simple ? "" : renderHierarchy(symbol)}
+${symbol.simple ? "" : renderHeader("h4", `${symbol.hash}---description`, "Description")}
 ${renderDefinitions(symbol.context, symbol.typevars)}
 ${renderText(symbol.context, symbol.description)}
 ${renderConstructor(symbol._constructor)}
@@ -239,6 +234,20 @@ ${renderMembers(symbol, symbol.staticMethods, "staticMethods", "Static methods",
 
 function renderId(symbol: ISymbol) {
 	return (symbol.id === "default") ? "Default export" : symbol.id;
+}
+
+function renderHierarchy(struct: StructSymbol) {
+	if (struct.simple) {
+		return "";
+	}
+	const cache: StructSymbol[] = [];
+	return `
+${renderHeader("h4", `${struct.hash}---hierarchy`, "Hierarchy")}
+<ul class="doc-hierarchy">
+${renderHierarchyHead(struct, struct.inheritanceLevel - 1, cache)}
+<li>${renderTab(struct.inheritanceLevel)}${struct.kind} <b>${struct.objectName}</b>${renderTypeVars(struct)}</li>
+${renderHierarchyTail(struct, struct.inheritanceLevel + 1, cache)}
+</ul>`
 }
 
 function renderHierarchyHead(struct: StructSymbol, level: number, cache: StructSymbol[]): string {
@@ -301,7 +310,7 @@ function renderMembers<T extends IMember>(struct: StructSymbol, members: Diction
 	}
 	const strDict = DictionaryUtils.map(members, renderer);
 	return `
-${renderHeader("h4", `${struct.hash}---${key}`, title)}
+${struct.simple ? "" : `${renderHeader("h4", `${struct.hash}---${key}`, title)}`}
 ${DictionaryUtils.join(strDict, "\n")}`;
 }
 
@@ -309,7 +318,7 @@ function renderProperty(property: PropertyMember) {
 	return `
 ${renderMemberHeader(property)}
 <div class="doc-member${property.isInherited ? " doc-inherited" : ""}">
-<p><code>${property.modifiers ? property.modifiers + " " : ""}${property.id}: ${renderText(property.context, htmlEncode(property.type))}</code></p>
+<p><code>${property.modifiers ? property.modifiers + " " : ""}${property.id}${property.optional ? "?" : ""}: ${renderText(property.context, htmlEncode(property.type))}</code></p>
 ${renderText(property.context, property.description)}
 </div>`;
 }
@@ -331,7 +340,8 @@ function renderMemberHeader(member: IMember) {
 }
 
 function renderHeader(tag: string, id: string, title: string) {
-	return `<${tag}><span id="${id}"></span>${title}<a class="anchorjs-link" href="#${id}" aria-label="Anchor" style="padding-left: 0.375em;">#</a></${tag}>`;
+	const anchor = (id === "default") ? "" : `<span id="${id}"></span>`;
+	return `<${tag}>${anchor}${title}<a class="anchorjs-link" href="#${id}" aria-label="Anchor" style="padding-left: 0.375em;">#</a></${tag}>`;
 }
 
 function renderTab(level: number) {

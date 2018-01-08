@@ -9,24 +9,49 @@ references:
     label: Underscore.js
     href: http://underscorejs.org
 
+  # Pages
+  DocumentationRoot:
+    file: doc
+    label: Documentation root
+
   # Terms
   truthy:
     file: jwidget
     symbol: isTruthy
-  triggered:
-    file: jwidget/IEvent
-    member: trigger
   destroying:
     file: jwidget/Destroyable
     member: destroy
+  triggered:
+    file: jwidget/IEvent
+    member: trigger
+  triggers:
+    file: jwidget/IEvent
+    member: trigger
 
   # Core
+  CoreUtils:
+    file: jwidget
   cmp:
     file: jwidget
     symbol: cmp
   newIid:
     file: jwidget
     symbol: newIid
+
+  # ArrayUtils
+  backEvery:
+    file: jwidget/ArrayUtils
+    symbol: backEvery
+
+  # Destroyable
+  destroy:
+    file: jwidget/Destroyable
+    member: destroy
+
+  # Identifiable
+  iid:
+    file: jwidget/Identifiable
+    member: iid
 
   # IClass
   own:
@@ -39,11 +64,12 @@ references:
 includes:
   DocumentationIndex: |
     <div class="container-fluid">
+      <h5>%DocumentationRoot</h5>
       <div class="row">
         <div class="col-4">
           <h5>Utilities</h5>
           <ul class="list-unstyled">
-            <li>%jwidget</li>
+            <li>%CoreUtils</li>
             <li>%ArrayUtils</li>
             <li>%DictionaryUtils</li>
             <li>%DomUtils</li>
