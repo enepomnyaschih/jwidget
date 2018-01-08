@@ -26,6 +26,10 @@ samp {
     white-space: pre-wrap;
 }
 
+code {
+    white-space: pre-wrap;
+}
+
 dt {
     text-align: right;
 }

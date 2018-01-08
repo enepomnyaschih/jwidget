@@ -8,6 +8,24 @@ references:
   underscore:
     label: Underscore.js
     href: http://underscorejs.org
+  Promise:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+  PromiseAll:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+    label: Promise.all
+  PromiseRace:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race
+    label: Promise.race
+  PromiseThen:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
+    label: Promise.then
+  PromiseCatch:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
+    label: Promise.catch
+  jqXHR:
+    href: http://api.jquery.com/jquery.ajax/
+  Thenable:
+    href: https://www.npmjs.com/package/@types/es6-promise
 
   # Pages
   DocumentationRoot:
@@ -64,6 +82,11 @@ references:
   trigger:
     file: jwidget/IEvent
     member: trigger
+
+  # Class
+  destroyObject:
+    file: jwidget/Class
+    member: destroyObject
 
 includes:
   DocumentationIndex: |
