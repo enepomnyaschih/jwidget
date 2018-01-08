@@ -20,8 +20,8 @@ export default class StructSymbol extends AbstractSymbol {
 	private _extending: Extension[] = [];
 	private _membersExtended: boolean = false;
 	readonly extendedBy: StructSymbol[] = [];
-	readonly description: string;
 	readonly showInheritanceLevels: number;
+	readonly description: string;
 	readonly _constructor: Constructor;
 	readonly properties: Dictionary<PropertyMember>;
 	readonly methods: Dictionary<MethodMember>;
@@ -35,8 +35,8 @@ export default class StructSymbol extends AbstractSymbol {
 		this.kind = json.kind || "class";
 		this.typevars = json.typevars || {};
 		this._extending = json.extends || [];
-		this.description = json.description;
 		this.showInheritanceLevels = json.showInheritanceLevels;
+		this.description = json.description;
 		this._constructor = json.hasOwnProperty("constructor") ? new Constructor(this, json.constructor) : null;
 		this.properties = this.readProperties(json.properties, false);
 		this.methods = this.readMethods(json.methods, false);
@@ -101,6 +101,10 @@ export default class StructSymbol extends AbstractSymbol {
 			this.inheritMemberDictionary(this.methods, extendedStruct.methods);
 			this.inheritMemberDictionary(this.staticProperties, extendedStruct.staticProperties);
 			this.inheritMemberDictionary(this.staticMethods, extendedStruct.staticMethods);
+			const referencesToInherit = DictionaryUtils.filter(extendedStruct.context.references, (_, key) => (
+				!this.context.references.hasOwnProperty(key)
+			));
+			DictionaryUtils.putAll(this.context.references, referencesToInherit);
 		});
 	}
 
@@ -121,8 +125,8 @@ export interface StructJson {
 	readonly kind?: string;
 	readonly typevars?: Dictionary<string>;
 	readonly extends?: Extension[];
-	readonly description?: string;
 	readonly showInheritanceLevels?: number;
+	readonly description?: string;
 	readonly constructor?: ConstructorJson;
 	readonly properties?: Dictionary<PropertyMemberJson>;
 	readonly methods?: Dictionary<MethodMemberJson>;

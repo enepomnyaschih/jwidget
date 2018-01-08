@@ -1,0 +1,39 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      V: Value type.
+    extends:
+      - file: jwidget/Destroyable
+      - file: jwidget/Bindable
+        typevars: [V]
+    showInheritanceLevels: 1
+    description: |
+      <p>Extension of %Bindable interface with %destroy method. If some method returns %DestroyableBindable, probably
+      it establishes some kind of binding and wants you to take control over its life time. Usually that means that you
+      must aggregate it via %own method.</p>
+      <p>In the next example, %val function returns %DestroyableBindable&lt;string&gt;, so we are supposed to aggregate
+      it. Life time of ValueLogger can be shorter than <code>el</code> element life time, so ValueLogger must aggregate
+      the binding to cancel it on destruction.</p>
+      <h5>Example 1. Value logger</h5>
+      <pre>
+      class ValueLogger extends %Class {
+          constructor(el: JQuery) {
+              const value = this.%own(%val(el));
+              value.%map((value) => console.log(value));
+          }
+      }
+      </pre>
+      <p>In some cases, binding destruction is not obligatory. In the next example, the component binds a property to
+      its own element, so garbage collector will take everything away on component destruction anyway. So, it doesn't
+      make much sense to aggregate the binding explicitly.</p>
+      <h5>Example 2. Typical binding to own DOM element</h5>
+      <pre>
+      @%template('<div><input type="text" jwid="input"></div>')
+      class App extends %Component {
+          renderInput(el: JQuery) {
+              const value = %val(el);
+              value.%map((value) => console.log(value));
+          }
+      }
+      </pre>

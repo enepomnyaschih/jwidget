@@ -126,6 +126,20 @@ symbols:
             member: viaNull
             label: viaNull
 
+    references:
+      binding:
+        file: jwidget/Bindable
+        symbol: bindings
+      ChangeEventParams:
+        file: jwidget/Bindable
+        symbol: Bindable.ChangeEventParams
+      Triggered:
+        file: jwidget/IEvent
+        member: trigger
+      set:
+        file: jwidget/IProperty
+        member: set
+
   Bindable.ChangeEventParams:
     kind: interface
     simple: true
@@ -147,17 +161,7 @@ symbols:
         modifiers: readonly
         description: <p>New property value.</p>
 
-references:
-  set:
-    file: jwidget/IProperty
-    member: set
-  Triggered:
-    file: jwidget/IEvent
-    member: trigger
-  binding:
-    symbol: bindings
-  changeEvent:
-    symbol: default
-    member: changeEvent
-  ChangeEventParams:
-    symbol: Bindable.ChangeEventParams
+    references:
+      changeEvent:
+        symbol: default
+        member: changeEvent
