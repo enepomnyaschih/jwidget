@@ -4,12 +4,15 @@ import Dictionary from "../Dictionary";
 import * as DictionaryUtils from "../utils/Dictionary";
 import DocError from "../DocError";
 import Project from "../Project";
+import {htmlEncode} from "./String";
 
 export function renderText(context: Context, text?: string) {
 	if (!text) {
 		return "";
 	}
 	return renderIncludes(context.file.project, text)
+		.replace(/\s*?<\/pre>/g, "</pre>")
+		.replace(/<pre>([\s\S]*?)<\/pre>/g, (_, code) => `<pre>${htmlEncode(code)}</pre>`)
 		.replace(/%(\w+)/g, (_, key) => renderReferenceByKey(context, key));
 }
 

@@ -91,7 +91,7 @@ function renderFile(file: SourceFile) {
 			</nav>
 			<div class="doc-main">
 				<div class="container-fluid">
-					<h1>${file.id}</h1>
+					<h1><span id="default"></span>${file.id}</h1>
 					${renderText(file.context, file.description)}
 					<h3>Consumption</h3>
 					<pre>${renderConsumption(file)}</pre>

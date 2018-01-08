@@ -1,0 +1,163 @@
+symbols:
+  default:
+    kind: interface
+    showInheritanceLevels: 2
+    typevars:
+      V: Value type.
+    description: |
+      <p>Read-only container for a value. Provides basic data binding functionality.</p>
+      <p>Has a sub-interface %IProperty, which exposes %set method to modify the property. It is usually smart to
+      store the property as %IProperty internally, and expose it as %Bindable externally to deny direct control over
+      the property by the clients.</p>
+      <pre>
+      class Example {
+          private _size = new %Property<number>(0);
+
+          get size(): %Bindable<number> {
+              return this._size;
+          }
+
+          // ...
+
+              // We can't set public size, but we can set private _size
+              this._size.%set(value);
+
+          // ...
+      }
+      </pre>
+      <h5><span id="bindings"></span>Bindings</h5>
+      <p>%Bindable can be used as source property in the next model bindings:</p>
+      <ul>
+        <li>%Copier - Keeps one property equal to another.</li>
+        <li>%Mapper - Keeps one property as a result of the function from several other properties.</li>
+        <li>%Switcher - Observes the property.</li>
+      </ul>
+      <p>Also, it can be used as a source property in the next view bindings:</p>
+      <ul>
+        <li>%attr - Binds attribute to a property.</li>
+        <li>%class - Binds CSS class to a property.</li>
+        <li>%css - Binds CSS style to a property.</li>
+        <li>%html - Binds inner HTML to a property.</li>
+        <li>%prop - Binds jQuery property to a jWidget property and/or vice versa.</li>
+        <li>%radio - Binds radio selection to a property and/or vice versa.</li>
+        <li>%show - Binds visibility to a property.</li>
+        <li>%text - Binds inner text to a property.</li>
+        <li>%val - Binds input value to a property and/or vice versa.</li>
+      </ul>
+      <p>All bindings are independent - you can implement your own bindings if you want.</p>
+
+    properties:
+      changeEvent:
+        type: '%Listenable<%Bindable.%ChangeEventParams<%V>>'
+        modifiers: readonly
+        description: |
+          <p>Property value has just been changed. %Triggered in result of %set method call if the value has been
+          changed.</p>
+
+      silent:
+        type: boolean
+        modifiers: readonly
+        description: |
+          <p>Checks if this property never %triggers events. This knowledge may help you do certain code
+          optimizations.</p>
+
+    methods:
+      get:
+        signature: '(): %V'
+        returns: Current property value.
+        description: |
+          <p>Think twice before calling this method - probably it makes sense to use some kind of %binding instead?</p>
+
+      map:
+        signature: |
+          <U>(create: (value: %V) => U, config?: %Mapper.%Config<U>): %DestroyableBindable<U>
+        params:
+          create: Mapping function.
+          config: Configuration options.
+        returns: Mapped property.
+        description: |
+          <p>Builds a new property containing the result of the %create function called on this property value. To stop
+          synchronization, %destroy the resulting property. To map multiple properties at once, use %Mapper.</p>
+          <h5>Example 1. Double number</h5>
+          <pre>
+          const num = new %Property<number>(3);
+          const double = num.%map((value) => 2 * value);
+          expect(double.%get()).toBe(6);
+          num.%set(5);
+          expect(double.%get()).toBe(10);
+          </pre>
+          <p>Pass %configDestroy option to destroy the previously mapped values.</p>
+          <h5>Example 2. Typical bindable model mapping to UI component</h5>
+          <pre>
+          @%template('<div><div jwid="report"></div></div>')
+          class App extends %Component {
+              constructor(private report: %Bindable<Report>) {}
+
+              protected renderReport() {
+                  return this.%own(report.%map((report) => new ReportView(report), {%destroyFunction}));
+              }
+          }
+          </pre>
+          <p>Pass %configViaNull option to reverse mapper updating flow. Default flow is:</p>
+          <ol>
+            <li>Create a new value.</li>
+            <li>Reassign target property.</li>
+            <li>Destroy the old value.</li>
+          </ol>
+          <p>Setting this option to true changes the flow the next way:</p>
+          <ol>
+            <li>Set target value to null.</li>
+            <li>Destroy the old value.</li>
+            <li>Create a new value.</li>
+            <li>Assign target property.</li>
+          </ol>
+        references:
+          Config:
+            file: jwidget/Mapper
+            symbol: Mapper.Config
+          configDestroy:
+            file: jwidget/Mapper
+            symbol: Mapper.Config
+            member: destroy
+            label: destroy
+          configViaNull:
+            file: jwidget/Mapper
+            symbol: Mapper.Config
+            member: viaNull
+            label: viaNull
+
+  Bindable.ChangeEventParams:
+    kind: interface
+    simple: true
+    typevars:
+      V: Value type.
+    description: |
+      <p>Parameters of %changeEvent.</p>
+    properties:
+      sender:
+        type: '%Bindable<%V>'
+        modifiers: readonly
+        description: <p>Property that has value changed.</p>
+      oldValue:
+        type: '%V'
+        modifiers: readonly
+        description: <p>Old property value.</p>
+      value:
+        type: '%V'
+        modifiers: readonly
+        description: <p>New property value.</p>
+
+references:
+  set:
+    file: jwidget/IProperty
+    member: set
+  Triggered:
+    file: jwidget/IEvent
+    member: trigger
+  binding:
+    symbol: bindings
+  changeEvent:
+    symbol: default
+    member: changeEvent
+  ChangeEventParams:
+    symbol: Bindable.ChangeEventParams

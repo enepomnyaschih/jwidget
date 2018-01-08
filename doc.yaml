@@ -34,6 +34,10 @@ references:
   cmp:
     file: jwidget
     symbol: cmp
+  destroyFunction:
+    file: jwidget
+    symbol: destroy
+    label: destroy
   newIid:
     file: jwidget
     symbol: newIid
@@ -101,6 +105,7 @@ includes:
           <ul class="list-unstyled">
             <li>%Component</li>
             <li>%template</li>
+            <li>%on</li>
           </ul>
         </div>
         <div class="col-4">
@@ -116,7 +121,6 @@ includes:
             <li>%cls</li>
             <li>%css</li>
             <li>%html</li>
-            <li>%on</li>
             <li>%prop</li>
             <li>%radio</li>
             <li>%show</li>
