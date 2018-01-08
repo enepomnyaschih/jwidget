@@ -30,6 +30,20 @@ dt {
     text-align: right;
 }
 
+.popover {
+    max-height: calc(100% - 60px);
+    max-width: calc(100% - 20px);
+    overflow-y: auto;
+    width: 1200px;
+}
+
+@media (max-width: 991.99px) {
+    .popover,
+    .dropdown-toggle:after {
+        display: none;
+    }
+}
+
 .doc-error {
     background-color: #ffdddd;
     color: red;
@@ -114,4 +128,8 @@ dt {
 
 .doc-member {
     padding-left: 24px;
+}
+
+.doc-index-popover {
+    display: none;
 }

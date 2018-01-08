@@ -40,6 +40,7 @@ function renderFile(file: SourceFile) {
 		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("styles.css", file.id)}">
 		<script type="text/javascript" src="${getRelativeUrl("jquery-3.2.1.min.js", file.id)}"></script>
 		<script type="text/javascript" src="${getRelativeUrl("bootstrap.bundle.min.js", file.id)}"></script>
+		<script type="text/javascript" src="${getRelativeUrl("scripts.js", file.id)}"></script>
 	</head>
 	<body>
 		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
@@ -59,7 +60,8 @@ function renderFile(file: SourceFile) {
 						<a class="nav-link disabled" href="${getRelativeUrl("tutorial.html", file.id)}">Tutorial</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="${getRelativeUrl("doc.html", file.id)}">Documentation <span class="sr-only">(current)</span></a>
+						<a class="doc-index-link nav-link dropdown-toggle" href="${getRelativeUrl("doc.html", file.id)}"
+							tabindex="0">Documentation <span class="sr-only">(current)</span></a>
 					</li>
 				</ul>
 				<form class="form-inline my-2 my-lg-0">
@@ -86,6 +88,7 @@ function renderFile(file: SourceFile) {
 				</div>
 			</div>
 		</div>
+		<div class="doc-index-popover">${renderText(file.context, "%%DocumentationIndex")}</div>
 	</body>
 </html>`;
 }

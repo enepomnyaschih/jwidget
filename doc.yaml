@@ -37,6 +37,208 @@ references:
     member: trigger
 
 includes:
+  DocumentationIndex: |
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-4">
+          <h5>Utilities</h5>
+          <ul class="list-unstyled">
+            <li>%jwidget</li>
+            <li>%ArrayUtils</li>
+            <li>%DictionaryUtils</li>
+            <li>%DomUtils</li>
+            <li>%StringUtils</li>
+          </ul>
+          <h5>Core interfaces</h5>
+          <ul class="list-unstyled">
+            <li>%Destroyable</li>
+            <li>%Identifiable</li>
+            <li>%Listenable</li>
+            <li>%Bindable</li>
+            <li>%DestroyableBindable</li>
+            <li>%DestroyablePromise</li>
+          </ul>
+        </div>
+        <div class="col-4">
+          <h5>Auxiliary interfaces</h5>
+          <ul class="list-unstyled">
+            <li>%Dictionary</li>
+            <li>%Some</li>
+          </ul>
+          <h5>Core classes and their interfaces</h5>
+          <ul class="list-unstyled">
+            <li>%Class, %IClass</li>
+            <li>%Event, %IEvent</li>
+            <li>%Property, %IProperty</li>
+          </ul>
+          <h5>UI core</h5>
+          <ul class="list-unstyled">
+            <li>%Component</li>
+            <li>%template</li>
+          </ul>
+        </div>
+        <div class="col-4">
+          <h5>Model bindings for %Property</h5>
+          <ul class="list-unstyled">
+            <li>%Copier</li>
+            <li>%Mapper</li>
+            <li>%Switcher</li>
+          </ul>
+          <h5>View bindings for %Property</h5>
+          <ul class="list-unstyled" style="column-count: 2">
+            <li>%attr</li>
+            <li>%cls</li>
+            <li>%css</li>
+            <li>%html</li>
+            <li>%on</li>
+            <li>%prop</li>
+            <li>%radio</li>
+            <li>%show</li>
+            <li>%text</li>
+            <li>%val</li>
+          </ul>
+        </div>
+        <div class="col-8">
+          <h5>Collections</h5>
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <td>%ReadOnlyCollection</td>
+                <td>%ReadOnlyList</td>
+                <td>%ReadOnlyMap</td>
+                <td>%ReadOnlySet</td>
+              </tr>
+              <tr>
+                <td>%DestroyableReadOnlyCollection</td>
+                <td>%DestroyableReadOnlyList</td>
+                <td>%DestroyableReadOnlyMap</td>
+                <td>%DestroyableReadOnlySet</td>
+              </tr>
+              <tr>
+                <td>%ICollection</td>
+                <td>%IList</td>
+                <td>%IMap</td>
+                <td>%ISet</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>%List</td>
+                <td>%Map</td>
+                <td>%Set</td>
+              </tr>
+              <tr>
+                <td colspan="4"><h5>Collection synchronizers</h5></td>
+              </tr>
+              <tr>
+                <td>%mapCollection</td>
+                <td>%mapList</td>
+                <td>%mapMap</td>
+                <td>%mapSet</td>
+              </tr>
+              <tr>
+                <td>%filterCollection</td>
+                <td>%filterList</td>
+                <td>%filterMap</td>
+                <td>%filterSet</td>
+              </tr>
+              <tr>
+                <td>%countCollection</td>
+                <td>%countList</td>
+                <td>%countMap</td>
+                <td>%countSet</td>
+              </tr>
+              <tr>
+                <td>%indexCollection</td>
+                <td>%indexList</td>
+                <td>%indexMap</td>
+                <td>%indexSet</td>
+              </tr>
+              <tr>
+                <td>%collectionToSet</td>
+                <td>%listToSet</td>
+                <td>%mapToSet</td>
+                <td>%setToSet</td>
+              </tr>
+              <tr>
+                <td>%collectionToList</td>
+                <td>%listToList</td>
+                <td>%mapToList</td>
+                <td>%setToList</td>
+              </tr>
+              <tr>
+                <td>%sortCollectionComparing</td>
+                <td>%sortListComparing</td>
+                <td>%sortMapComparing</td>
+                <td>%sortSetComparing</td>
+              </tr>
+              <tr>
+                <td>%createObserver</td>
+                <td>%ListObserver</td>
+                <td>%MapObserver</td>
+                <td>%SetObserver</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>%ListInserter</td>
+                <td>%MapInserter</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>%mergeLists</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>%reverseList</td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-4">
+          <h5>Routing</h5>
+          <ul class="list-unstyled">
+            <li>%hash</li>
+            <li>%Router</li>
+          </ul>
+          <h5>AJAX and promises</h5>
+          <ul class="list-unstyled">
+            <li>%AbstractRestProvider</li>
+            <li>%HttpRequest</li>
+            <li>%AllPromise</li>
+            <li>%RacePromise</li>
+            <li>%Timeout</li>
+          </ul>
+          <h5>Other destroyable adapters</h5>
+          <ul class="list-unstyled">
+            <li>%Destructor</li>
+            <li>%Interval</li>
+          </ul>
+          <h5>Other tools</h5>
+          <ul class="list-unstyled">
+            <li>%DomInserter</li>
+            <li>%DomTemplate</li>
+            <li>%HtmlTemplate</li>
+            <li>%Reducer</li>
+          </ul>
+          <h5>References (low level stuff)</h5>
+          <ul class="list-unstyled">
+            <li>%AbstractDestroyablePromise</li>
+            <li>%AbstractTemplate</li>
+            <li>%dummyDestroyable</li>
+            <li>%dummyEvent</li>
+            <li>%IndexCount</li>
+            <li>%IndexItems</li>
+            <li>%ListSpliceResult</li>
+            <li>%TemplateOutput</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
   EventExample: |
     <p>It is smart to store the event as %IEvent internally, and expose it as %Listenable externally to deny direct
     control over the event by the clients.</p>
