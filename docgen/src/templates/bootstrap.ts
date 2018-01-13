@@ -224,9 +224,9 @@ ${symbol.simple ? "" : renderHeader("h4", `${symbol.hash}---description`, "Descr
 ${renderDefinitions(symbol.context, symbol.typevars)}
 ${renderText(symbol.context, symbol.description)}
 ${renderConstructor(symbol._constructor)}
-${renderMembers(symbol, symbol.properties, "properties", "Properties", renderProperty)}
+${renderMembers(symbol, symbol.properties, "properties", "Fields", renderProperty)}
 ${renderMembers(symbol, symbol.methods, "methods", "Methods", renderMethod)}
-${renderMembers(symbol, symbol.staticProperties, "staticProperties", "Static properties", renderProperty)}
+${renderMembers(symbol, symbol.staticProperties, "staticProperties", "Static fields", renderProperty)}
 ${renderMembers(symbol, symbol.staticMethods, "staticMethods", "Static methods", renderMethod)}
 </div>`
 	}

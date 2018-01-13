@@ -36,6 +36,9 @@ references:
   truthy:
     file: jwidget
     symbol: isTruthy
+  destroyed:
+    file: jwidget/Destroyable
+    member: destroy
   destroying:
     file: jwidget/Destroyable
     member: destroy
@@ -49,6 +52,9 @@ references:
   # Core
   CoreUtils:
     file: jwidget
+  TWOWAY:
+    file: jwidget
+    symbol: Binding
   cmp:
     file: jwidget
     symbol: cmp
@@ -87,6 +93,11 @@ references:
   destroyObject:
     file: jwidget/Class
     member: destroyObject
+
+  # Listenable
+  listen:
+    file: jwidget/Listenable
+    member: listen
 
 includes:
   DocumentationIndex: |
@@ -307,6 +318,26 @@ includes:
 
             // We can't trigger public changeEvent, but we can trigger private _changeEvent
             this._changeEvent.%trigger(value);
+
+        // ...
+    }
+    </pre>
+
+  PropertyExample: |
+    <p>It is sometimes smart to store the property as %IProperty internally, and expose it as %Bindable or
+    %DestroyableBindable externally to deny direct control over the property by the clients.</p>
+    <pre>
+    class Example {
+        private _size = new %Property<number>(0);
+
+        get size(): %Bindable<number> {
+            return this._size;
+        }
+
+        // ...
+
+            // We can't set public size, but we can set private _size
+            this._size.%set(value);
 
         // ...
     }

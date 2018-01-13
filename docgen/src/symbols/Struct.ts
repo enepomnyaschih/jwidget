@@ -94,6 +94,7 @@ export default class StructSymbol extends AbstractSymbol {
 		if (this._membersExtended) {
 			return;
 		}
+		this._membersExtended = true;
 		this._extending.forEach((extension) => {
 			const extendedStruct = this.project.getStructByExtension(extension);
 			extendedStruct.inheritMembers();

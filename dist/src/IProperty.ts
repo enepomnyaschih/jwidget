@@ -19,11 +19,12 @@
 */
 
 import DestroyableBindable from "./DestroyableBindable";
+import IClass from "./IClass";
 
 /**
  * Extension of `DestroyableBindable` interface with `set` method to modify the property value.
  */
-interface IProperty<V> extends DestroyableBindable<V> {
+interface IProperty<V> extends IClass, DestroyableBindable<V> {
 	/**
 	 * Changes property value and triggers `changeEvent` if the value has been changed.
 	 */

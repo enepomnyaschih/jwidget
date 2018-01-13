@@ -7,7 +7,7 @@ symbols:
       - file: jwidget/Destroyable
       - file: jwidget/Bindable
         typevars: [V]
-    showInheritanceLevels: 1
+    showInheritanceLevels: 2
     description: |
       <p>Extension of %Bindable interface with %destroy method. If some method returns %DestroyableBindable, probably
       it establishes some kind of binding and wants you to take control over its life time. Usually that means that you

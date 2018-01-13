@@ -1,0 +1,29 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      V: Value type.
+    extends:
+      - file: jwidget/IClass
+      - file: jwidget/DestroyableBindable
+    description: |
+      <p>Extension of %DestroyableBindable interface with %set method to modify the property value.</p>
+      %%PropertyExample
+      <p>Can be used as a target property in %Copier and %Mapper model bindings. Also, can be used as a target property
+      in %prop, %radio and %val view bindings.All bindings are independent - you can implement your own binding if you
+      want.</p>
+
+    methods:
+      set:
+        signature: '(value: %V)'
+        params:
+          value: New value to set.
+        description: |
+          <p>Changes property value and triggers %changeEvent if the value has been changed.</p>
+
+      ownValue:
+        signature: '(): this'
+        returns: 'this'
+        description: |
+          <p>Makes this property an owner of its value. It means that the value is %destroyed automatically on
+          reassignment or destruction of the property.</p>

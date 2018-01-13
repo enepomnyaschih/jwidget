@@ -1,0 +1,14 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      T: Value type.
+    description: |
+      <p>Value container. Interface which hash only one readonly field: %value.</p>
+
+    properties:
+      value:
+        modifiers: readonly
+        type: '%T'
+        description: |
+          <p>The contained value.</p>

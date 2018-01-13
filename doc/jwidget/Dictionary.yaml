@@ -1,0 +1,14 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      T: Value type.
+    description: |
+      <p>Interface for native JavaScript dictionary.</p>
+      <pre>
+      const mapping: %Dictionary<number> = {
+          "one": 1,
+          "two": 2,
+          "three": 3
+      };
+      </pre>

@@ -1,0 +1,116 @@
+symbols:
+  default:
+    kind: class
+    typevars:
+      V: Value type.
+    extends:
+      - file: jwidget/Class
+      - file: jwidget/IProperty
+    description: |
+      <p>Container for a value. Provides basic data binding functionality.</p>
+      <h5>Example 1. Property demonstration</h5>
+      <p>The next example demonstrates basic property functionality:</p>
+      <pre>
+      const prop = new %Property('foo');
+      console.log(prop.%get());  // output: foo
+
+      prop.%changeEvent.%listen(({value}) => console.log(value));
+      prop.%set('bar');          // output: bar
+      prop.%set('bar');          // no change - no output
+      prop.%set('10');           // output: 10
+      prop.%set(10);             // output: 10 (different type)
+
+      const doubl = prop.%map((value) => value * 2);
+      console.log(doubl.%get()); // output: 20
+      prop.%set(6);              // output: 6
+      console.log(doubl.%get()); // output: 12
+      </pre>
+      <h5>Example 2. Model & View two-way binding</h5>
+      <p>Example of model class that exposes properties for two-way binding:</p>
+      <pre>
+      class User extends %Class {
+          readonly name = new %Property('');
+          readonly age  = new %Property(0);
+      }
+      </pre>
+      <p>And following is an example of view class that uses these bindings:</p>
+      <pre>
+      @%template(
+          '<div>' +
+              '<input type="text" jwid="name">' +
+              '<input type="text" jwid="age">' +
+          '</div>'
+      )
+      class UserView extends %Component {
+          constructor(private user: User) {
+              super();
+          }
+
+          protected renderName(el: JQuery) {
+              // simple two-way binding
+              this.%own(%val(el, this.user.name, %TWOWAY));
+          }
+
+          protected renderAge(el: JQuery) {
+              // to display a number in text input, we must map it back and forth
+
+              // map age to string property
+              const ageString = this.%own(this.user.age.%map(String));
+
+              // bind it back
+              this.%own(new %Mapper([ageString], Number, {%target: this.user.age}));
+
+              // bind input element value to age string
+              this.%own(%val(el, ageString, %TWOWAY));
+          }
+      }
+      </pre>
+      <h5>Example 3. One-way binding</h5
+      <p>If you want to forbid property modification by the clients, use %Bindable getters:</p>
+      <pre>
+      class Counter extends %Class {
+          private _seconds = new %Property(0);
+
+          constructor() {
+              super();
+              this.%own(new %Interval(() => this._seconds.%set(this._seconds.%get() + 1), 1000));
+          }
+
+          get seconds(): %Bindable<number> {
+              return this._seconds;
+          }
+      }
+      </pre>
+      <p>Now the client can only use one-way binding:</p>
+      <pre>
+      class CounterView extends %Component {
+          constructor(private counter: Counter) {
+              super();
+          }
+
+          protected renderRoot(el: JQuery) {
+              this.%own(%text(el, this.counter.seconds));
+          }
+      }
+      </pre>
+
+    constructor:
+      signature: |
+        (value: %V, silent: boolean = false)
+      params:
+        value: Initial value.
+        silent: |
+          If true, uses %dummyEvent implementation for %changeEvent. Use it if you know for sure that the
+          property never gets modified or there are no listeners interested in its modification. Since every jWidget
+          application relies on many properties, this may help you improve application performance.
+      description: |
+        Constructs a property and sets initial value.
+
+    references:
+      set:
+        symbol: default
+        member: set
+      target:
+        file: jwidget/Mapper
+        symbol: Mapper.FullConfig
+        member: target

@@ -8,6 +8,22 @@ symbols:
       Interface of %Class - see it for details.
 
     methods:
+      destroy:
+        signature: '(): void'
+        description: |
+          <p>Class destructor invocation method. Destroys all aggregated objects and releases all bindings.
+          You must call this method explicitly from outside, because JavaScript doesn't support automatic class
+          destructor calling.</p>
+          <pre>
+          const object = new MyClass();
+
+          // ...
+
+          // Once object is not needed anymore, destroy it
+          object.%destroy();
+          </pre>
+          <p>Alternatively (and optimally), you should use %own method to aggregate this object inside another one.</p>
+
       own:
         signature: |
           <T extends %Destroyable>(obj: T): T
@@ -36,3 +52,8 @@ symbols:
           const items = new %List();
           return new Panel(items).%owning(items);
           </pre>
+
+    references:
+      own:
+        file: jwidget/IClass
+        member: own
