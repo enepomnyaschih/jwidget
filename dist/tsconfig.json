@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./dist",
+        "outDir": ".",
         "sourceMap": true,
         "module": "commonjs",
         "target": "es5",
@@ -15,7 +15,7 @@
         "declaration": true
     },
     "include": [
-        "dist/src/**/*"
+        "src/**/*"
     ],
     "exclude": []
 }
