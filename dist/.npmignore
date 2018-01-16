@@ -1,1 +1,8 @@
 /test
+/node_modules
+/.bowerrc
+/.npmignore
+/bower.json
+/karma.conf.js
+/tsconfig.json
+/webpack.config.js

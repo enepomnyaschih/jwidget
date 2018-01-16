@@ -277,9 +277,9 @@ namespace Router {
 	export class Redirector extends Component {
 		constructor(private path: string, private router: Router<any>, private replaceState?: boolean) {
 			super();
-			this.own(new Timeout(() => {
+			this.own(new Timeout().then(() => {
 				redirect(this.path, this.router, defn(this.replaceState, true));
-			}, this));
+			}));
 		}
 	}
 

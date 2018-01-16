@@ -23,7 +23,7 @@ import AbstractDestroyablePromise from "./AbstractDestroyablePromise";
 export default class Timeout extends AbstractDestroyablePromise<number> {
 	private timeout: number;
 
-	constructor(ms: number) {
+	constructor(ms?: number) {
 		let timeout;
 		super(new Promise((resolve) => {
 			timeout = setTimeout(resolve, ms);

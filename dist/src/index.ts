@@ -21,6 +21,7 @@
 import Dictionary from './Dictionary';
 import Identifiable from './Identifiable';
 import {cmpPrimitives} from './internal';
+
 export {identity} from './internal';
 
 /**
@@ -180,7 +181,20 @@ export function apply<T>(target: Dictionary<T>, ...sources: Dictionary<T>[]): Di
  *
  * See online documentation for details.
  */
-export function cmp(x: any, y: any, config?: CmpConfig): number {
+export function cmp(x: any, y: any): number {
+	return smartCmp(x, y);
+}
+
+/**
+ * Universal and sophisticated comparer for array sorting. Broadly speaking, it:
+ *
+ * - Returns 1, if x > y
+ * - Returns -1, if x < y
+ * - Returns 0, if x == y
+ *
+ * See online documentation for details.
+ */
+export function smartCmp(x: any, y: any, config?: CmpConfig): number {
 	const xRank = getTypeRank(x);
 	const yRank = getTypeRank(y);
 	if (xRank !== yRank) {
@@ -220,7 +234,7 @@ function cmpBooleans(x: boolean, y: boolean): number {
 function cmpArrays(x: any[], y: any[], config?: CmpConfig): number {
 	const n = Math.min(x.length, y.length);
 	for (let i = 0; i < n; ++i) {
-		let result = cmp(x[i], y[i], config);
+		let result = smartCmp(x[i], y[i], config);
 		if (result) {
 			return result;
 		}
