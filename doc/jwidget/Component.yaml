@@ -340,7 +340,7 @@ symbols:
       </ol></li>
       </ol>
 
-      <h5>Integration with WebPack</h5>
+      <h5><span id="webPackIntegration"></span>Integration with WebPack</h5>
       <p>There's an easy way to attach HTML templates via WebPack. The first example from this topic can be splitted
       into two files:</p>
       <h6>MyComponent.ts</h6>
