@@ -11,4 +11,6 @@ symbols:
       <p>Watches string property modification and updates the specified attribute of the DOM element.</p>
       <pre>
       // Bind "title" attribute to title property value
-      this.%own(%attr(el, "title", title));</pre>
+      this.%own(%attr(el, "title", title));
+      </pre>
+      %example:attr

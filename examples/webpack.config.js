@@ -1,6 +1,9 @@
 /* Configuration */
 
 var pages = {
+    "attr": {
+        source: "./attr/index.ts"
+    },
     "component": {
         source: "./component/index.ts"
     }
