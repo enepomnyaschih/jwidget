@@ -8,6 +8,11 @@ references:
   underscore:
     label: Underscore.js
     href: http://underscorejs.org
+  jquery:
+    label: jQuery
+    href: http://api.jquery.com
+  JQuery:
+    href: http://api.jquery.com
   Promise:
     href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
   PromiseAll:

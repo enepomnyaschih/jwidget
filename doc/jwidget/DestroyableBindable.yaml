@@ -19,6 +19,7 @@ symbols:
       <pre>
       class ValueLogger extends %Class {
           constructor(el: JQuery) {
+              super();
               const value = this.%own(%val(el));
               value.%map((value) => console.log(value));
           }

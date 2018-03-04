@@ -1,9 +1,9 @@
 import Context from "../Context";
-import Reference from "../models/Reference";
 import Dictionary from "../Dictionary";
-import * as DictionaryUtils from "../utils/Dictionary";
 import DocError from "../DocError";
+import Reference from "../models/Reference";
 import Project from "../Project";
+import * as DictionaryUtils from "../utils/Dictionary";
 import {htmlEncode} from "./String";
 
 export function renderText(context: Context, text?: string) {
@@ -13,6 +13,7 @@ export function renderText(context: Context, text?: string) {
 	return renderIncludes(context.file.project, text)
 		.replace(/\s*?<\/pre>/g, "</pre>")
 		.replace(/<pre>([\s\S]*?)<\/pre>/g, (_, code) => `<pre>${htmlEncode(code)}</pre>`)
+		.replace(/%example:([\w\-]+)/g, (_, name) => renderExample(name, context.file.id))
 		.replace(/%(\w+)/g, (_, key) => renderReferenceByKey(context, key));
 }
 
@@ -30,6 +31,11 @@ export function renderInclude(project: Project, key: string): string {
 		return `<span class="doc-error">Invalid inclusion: ${key}</span>`;
 	}
 	return renderIncludes(project, include);
+}
+
+export function renderExample(name: string, relativeToFile: string): string {
+	return '<iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" ' +
+		`src="${getRelativeUrl(`samples/${name}.html`, relativeToFile)}"></iframe>`;
 }
 
 export function renderReference(reference: Reference, relativeToFile: string): string {

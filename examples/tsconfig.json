@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./public",
+    "sourceMap": true,
+    "module": "commonjs",
+    "target": "es5",
+    "alwaysStrict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "experimentalDecorators": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": []
+}

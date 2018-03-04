@@ -12,4 +12,6 @@
 /docgen/dist/*
 /docoutput
 node_modules
+bower_components
 package-lock.json
+/examples/public
