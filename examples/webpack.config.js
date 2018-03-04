@@ -6,6 +6,9 @@ var pages = {
     },
     "component": {
         source: "./component/index.ts"
+    },
+    "on": {
+        source: "./on/index.ts"
     }
 };
 

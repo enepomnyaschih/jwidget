@@ -47,6 +47,9 @@ references:
   destroying:
     file: jwidget/Destroyable
     member: destroy
+  destruction:
+    file: jwidget/Destroyable
+    member: destroy
   triggered:
     file: jwidget/IEvent
     member: trigger

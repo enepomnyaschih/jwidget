@@ -4,7 +4,7 @@ import attr from "jwidget/ui/attr";
 import val from "jwidget/ui/val";
 import initExample from "../common/initExample";
 
-require('./index.css');
+require("./index.css");
 
 @template(
 	'<div jwclass="application">' +

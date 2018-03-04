@@ -1,0 +1,29 @@
+symbols:
+  default:
+    signature: |
+      on(el: %JQuery, events: string, handler: (eventObject: JQueryEventObject) => any): %Destroyable
+      on(el: %JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any): %Destroyable
+    params:
+      el: DOM element.
+      events: 'One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".'
+      selector: |
+        A selector string to filter the descendants of the selected elements that trigger the event. If the selector is
+        null or omitted, the event is always triggered when it reaches the selected element.
+      handler: |
+        A function to execute when the event is triggered. The value <tt>false</tt> is also allowed as a
+        shorthand for a function that simply does <tt>return false</tt>.
+    description: |
+      <p>Attaches handler to an event. jWidget extension for jQuery "on" method returning the destroyable event
+      attachment. The attachment %destruction results in event unbinding which allows you to use jQuery events in
+      conjunction with %own method.</p>
+      <pre>
+      // Bind a handler to "mousemove" event and aggregate the attachment
+      this.%own(%on($(window), "mousemove", event => {
+          $(".output").text(event.pageX + ":" + event.pageY);
+      }));
+      </pre>
+      %example:on
+    references:
+      jqon:
+        href: http://api.jquery.com/on/
+        label: jQuery on
