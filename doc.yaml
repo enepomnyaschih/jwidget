@@ -80,6 +80,10 @@ references:
   destroy:
     file: jwidget/Destroyable
     member: destroy
+  baseDestroy:
+    file: jwidget/Destroyable
+    member: destroy
+    label: destroy
 
   # Identifiable
   iid:

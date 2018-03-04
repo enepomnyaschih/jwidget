@@ -35,7 +35,7 @@ symbols:
       }
       </pre>
       %example:component
-      <p>Let's find out how HTML template works. Each component has a main template, which is passed into %template
+      <p>Let's find out how HTML template works. Each component has a <b>main </b>template, which is passed into %template
       annotation and defaults to <tt>&lt;div&gt;&lt;/div&gt;</tt>. You can add more templates. Subclass inherits
       superclass templates.</p>
       <p>Pay attention to special attributes %jwclass and %jwid in the template. %jwclass is a root
@@ -55,12 +55,12 @@ symbols:
       <p>Component can be created by simple construction of component object. After that, you can use one of the
       methods %render, %renderTo, %renderAs to render this component and optionally insert it into DOM.
       <pre>
-      $(function() {
-          new MyComponent("Hello, World!", "javascript:alert('Hello!')").renderTo("body");
+      $(() => {
+          new MyComponent("Hello, World!", "javascript:alert('Hello!')").%renderTo("body");
       });
       </pre>
 
-      <h5><span id="childComponents">Child components</h5>
+      <h5><span id="childComponents"></span>Child components</h5>
       <p>There are 5 ways to add a child component (<b>note</b>: examples are not complete - see %componentRemoval.</p>
       <ul>
       <li>
@@ -69,7 +69,7 @@ symbols:
       <pre>
       %afterRender() {
           super.%afterRender();
-          this.%children.%mapSet(new LabelView("Hello"), "label");
+          this.%children.%setOfMap(new LabelView("Hello"), "label");
       }
       </pre>
       </li>
@@ -122,10 +122,10 @@ symbols:
       </pre>
       </li>
       <li>
-      <p>Define method <b>render&lt;ChildId&gt;, where <b>&lt;ChildId&gt;</b> is jwid of an element in CamelCase with
-      capitalized first letter. Example: <b>renderArticle</b> (renders element with jwid = "article"). If the method
+      <p>Define method <b>render&lt;ChildId&gt;</b>, where <b>&lt;ChildId&gt;</b> is jwid of an element in CamelCase with
+      capitalized first letter. Example: <b>renderArticle</b> renders the element with jwid = "article". If the method
       returns an instance of %Component, %Bindable or %ReadOnlyCollection, then result will be treated as a child
-      component or a child component collection. Define method <b>renderRoot</b> to render the root element, but you
+      component or a child component list/collection. Define method <b>renderRoot</b> to render the root element, but you
       can return only %ReadOnlyCollection there, because it is impossible to replace the root element of the
       component.</p>
       <pre>
@@ -140,10 +140,10 @@ symbols:
       <p>Reference: %tutorial1</p>
 
       <h5>More about child component collections</h5>
-      <p>It is convenient to use %mapColletion method to convert data collections into UI component collections. Thanks
-      to it, view is updated on data update automatically.</p>
+      <p>It is convenient to use %mapList, %mapMap, %mapSet and %mapCollection functions to convert data collections
+      to UI component collections. Thanks to them, view is updated on data update automatically.</p>
       <p>That's the reason why we recommend to use jWidget collections in data model instead of native JavaScript Array
-      and Object: jWidget collections have observable implementations which can be synchronized to each other.</p>
+      and Object: jWidget collections can be synchronized to each other.</p>
       <p>Reference: %tutorial6</p>
 
       <h5><span id="moreAboutRender"></span>More about renderChildId methods</h5>
@@ -153,10 +153,10 @@ symbols:
       <pre>
       protected renderChildId(el: %JQuery): any
       </pre>
-      <dl>
-      <dt>el</dt><dd>Element with corresponding jwid.</dd>
+      <dl class="row">
+      <dt class="col-lg-2 col-sm-3">el</dt><dd class="col-lg-10 col-sm-9">Element with corresponding jwid.</dd>
       </dl>
-      <p>Depending on the returned result of this method, you have the next capabilities:</p>
+      <p>Depending on the returned value of this method, you have the next options:</p>
       <ul>
       <li>If the method returns an instance of %Component, then it gets added into %children map and becomes a child
       component. This option doesn't work for the root element.</li>
@@ -166,13 +166,14 @@ symbols:
       method %addList.</li>
       <li>If the method returns an instance of %ReadOnlyMap&lt;%Component&gt; or %ReadOnlySet&lt;%Component&gt;, then
       it gets added as a child collection via method %addCollection.</li>
-      <li>If the method returns <b>false</b>, then element gets removed from the HTML document. This option doesn't
+      <li>If the method returns <b>false</b>, then the element gets removed from the HTML document. This option doesn't
       work for the root element.</li>
-      <li>In any other case, framework doesn't perform any additional actions with the element.</li>
+      <li>In any other case, the framework doesn't perform any additional actions with the element. You can use
+      <b>el</b> argument to do arbitrary manipulations over it.</li>
       </ul>
       <p>The method should be protected, not private, to avoid "unused method" warning of TypeScript compiler.</p>
 
-      <h5><span id="componentRemoval">Component removal and destruction</span></h5>
+      <h5><span id="componentRemoval"></span>Component removal and destruction</span></h5>
       <p>You can destroy the component via %destroy method. However you can not destroy a component which is added into
       another component as a child (framework throws an exception in this case). You must remove the child component
       from its parent first. To remove the component from its parent, you must perform the operation opposite to the
@@ -192,7 +193,7 @@ symbols:
       // should be called after the rendering initiation
       initLabels() {
           // Map label data array to view array
-          this._labelViews = %mapList(this.labels, (label) => new LabelView(label), {%destroy});
+          this._labelViews = %mapList(this.labels, label => new LabelView(label), {%destroy});
 
           // Add labels into element with jwid="labels"
           this._labelArray = this.%addList(this._labelViews, "labels");
@@ -215,12 +216,12 @@ symbols:
       }
 
       renderLabels() {
-          return this.%own(%mapList(this.labels, (label) => new LabelView(label), {%destroy}));
+          return this.%own(%mapList(this.labels, label => new LabelView(label), {%destroy}));
       }
       </pre>
 
       <h5>Common practices in child component management</h5>
-      <h6>Create child component</h6>
+      <h6>Create a child component</h6>
       <p>This example describes how to create and destroy a child component with <tt>jwid="title-box"</tt>.</p>
       <pre>
       @%template(
@@ -234,7 +235,7 @@ symbols:
           }
       }
       </pre>
-      <h6>Create bindable child component</h6>
+      <h6>Create a bindable child component</h6>
       <p>This example describes how to create and destroy a bindable child component with <tt>jwid="document"</tt>.
       Assume that you have an observable property "document" and want to replace an old document view with a new one on
       document change.</p>
@@ -250,11 +251,11 @@ symbols:
           }
 
           protected renderDocument() {
-              return this.%own(this.document.%map((document) => new DocumentView(document)));
+              return this.%own(this.document.%mapProperty(document => new DocumentView(document), {%destroy}));
           }
       }
       </pre>
-      <h6>Create child collection</h6>
+      <h6>Create a child component collection</h6>
       <p>This example describes how to create and destroy child components by data collection, and insert them into
       element with <tt>jwid="labels"</tt>. If data collection is not silent, child component collection gets constantly
       synchronized with the data.</p>
@@ -270,7 +271,7 @@ symbols:
           }
 
           protected renderLabels() {
-              return this.own(%mapList(this.labels, (label) => new LabelView(label)));
+              return this.own(%mapList(this.labels, label => new LabelView(label), {%destroy));
           }
       }
       </pre>
@@ -288,7 +289,7 @@ symbols:
               super();
           }
 
-          protected renderTitleBox: function() {
+          protected renderTitleBox() {
               return this.titleBox;
           }
       }
@@ -300,35 +301,44 @@ symbols:
       <li>Like in all other classes, <b>constructor</b> is called first. Usually all fields are assigned to their
       initial values here, events are created etc. Only component model should be touched here, view is completely
       ignored. Notice that component is not rendered after construction yet, so it doesn't have fields %el and
-      %children assigned, and methods %addList, %addCollection, %addBindable won't work. The main reason for that is
-      that we want to give you ability to do something else between component construction and rendering, for example,
+      %children assigned, and methods %addList, %addCollection, %addBindable won't work. The main reason behind that is
+      our wish to give you a possibility to do something else between component construction and rendering, for example,
       change some field values and call some methods. Second reason: it is not recommended to call virtual methods in
       constructor in any object-oriented language. It may result in undesired side effects. You can render the
       component directly by calling %render, %renderTo, %renderAs, or by adding this component into another component
-      as a child. For example, component gets rendered immediately after adding into %children map. You can invoke
+      as a child. For example, component gets rendered immediately once it gets added to %children map. You can invoke
       component rendering multiple times, but it gets rendered only once.</li>
-      <li>Method %beforeRender is called during rendering, after HTML template reading and initialization of all links
-      to this template elements. It is convenient to perform some preliminary action here before child component
-      creation. You are already able to create child components here anyway. Call <tt>super.beforeRender()</tt> at the
-      first line of the method.</li>
-      <li>All %renderChildId methods are called for HTML template elements, i.e. child component creation
-      is performed. The methods are called in the same order as these jwid's are written in the template.</li>
-      <li>Method %afterRender is called at the end of rendering procedure. You should assign all elements' attributes
-      here, create child components, bind event handlers and fill the component with interactivity. Component rendering
-      is finished here. Call <tt>super.afterRender()</tt> at the first line of the method.</li>
+      <li>Component rendering flow:<ol>
+        <li>Method %createElement is called to create the HTML elements by the template.</li>
+        <li>The links to all elements are assigned.</li>
+        <li>Method %beforeRender is called. It is convenient to perform some preliminary actions here. You are already
+        able to create child components. Call <tt>super.beforeRender()</tt> at the first line of the method.</li>
+        <li>All %renderChildId methods are called for HTML template elements. The methods are called in the same order as
+        these jwid's are written in the template.</li>
+        <li>Method %afterRender is called at the end of rendering procedure. You should assign all elements' attributes
+        here, create child components, bind event handlers and fill the component with interactivity. Component rendering
+        is finished here. Call <tt>super.afterRender()</tt> at the first line of the method.</li>
+      </ol></li>
       <li>Method %afterAppend is called once the component first time appears in HTML DOM and UI component tree.
       Component layouting should be performed here (i.e. element size computation). Call <tt>super.afterAppend()</tt>
       at the first line of the method.</li>
-      <li>Method %releaseDom is called during component destruction. Everything that was performed in %afterAppend
-      method, i.e. on step 5, should be reverted here. Call <tt>super.releaseDom()</tt> at the last line of the
-      method.</li>
-      <li>Method %unrender is called during component destruction. Everything that was performed during component
-      rendering, i.e. on steps 2-4, should be reverted here. All child components are already removed by the framework
-      before this method call, but the components themselves are not destroyed. You must destroy them explicitly unless
-      you use %own method to aggregate them. Call <tt>super.unrender()</tt> at the last line of the method.</li>
-      <li>Method %afterDestroy is called during component destruction. Everything that was performed in component
-      constructor, i.e. on step 1, should be reverted here. Call <tt>super.afterDestroy()</tt> at the last line of the
-      method.</li>
+      <li>Component destruction flow:<ol>
+        <li>Method %releaseDom is called. Everything that was performed in %afterAppend
+        method, i.e. on step 3, should be reverted here. Call <tt>super.releaseDom()</tt> at the last line of the
+        method.</li>
+        <li>The element is removed from DOM. All child components are removed. All child collections, lists and
+        properties are unbound.</li>
+        <li>Method %unrender is called. Everything that was performed during component
+        rendering, i.e. on step 2, should be reverted here. You must destroy the child components explicitly here unless
+        you use %own method to aggregate them. Call <tt>super.unrender()</tt> at the last line of the method.</li>
+        <li>The element is destroyed, i.e. all event handlers and data assigned to the element is released.</li>
+        <li>Method %afterDestroy is called. Nearly everything that was performed in component
+        constructor, i.e. on step 1, should be reverted here. Call <tt>super.afterDestroy()</tt> at the last line of the
+        method.</li>
+        <li>All aggregated objects (including child components) are destroyed.</li>
+        <li>Method %destroyObject is called. Call <tt>super.destroyObject()</tt> at the last line of the method.</li>
+      </ol></li>
+      </ol>
 
       <h5>Integration with WebPack</h5>
       <p>There's an easy way to attach HTML templates via WebPack. The first example from this topic can be splitted
@@ -355,7 +365,8 @@ symbols:
           <a href="#" jwid="link">Click me!</a>
       </div>
       </pre>
-      <p>To make this work, you need to install <b>html-loader</b> NPM module:</li>
+      <p>To make this work, you need to install <a href="https://www.npmjs.com/package/html-loader"
+      target="_blank">html-loader</a> NPM module:</li>
       <pre>
       npm install --save-dev html-loader
       </pre>
@@ -387,7 +398,7 @@ symbols:
     constructor:
       signature: '()'
       description: |
-        <p>Yes, objects of this class can be constructed. They can be used as dummy components or simple containers.
+        <p>Plain objects of this class can be constructed. They can be used as dummy components or simple containers.
         For example, here's a common pattern for %Bindable&lt;%ReadonlyList&lt;%Component&gt;&gt; rendering:</p>
         <pre>
         @%template('<div><div jwid="labels"></div></div>')
@@ -397,7 +408,7 @@ symbols:
             }
 
             protected renderLabels: function() {
-                return this.%own(this.labels.%mapProperty((labels) => {
+                return this.%own(this.labels.%mapProperty(labels => {
                     const component = new Component().%render();
                     component.%addList(labels);
                     return component;
@@ -407,223 +418,227 @@ symbols:
         </pre>
         <p>You should not rely on this possibility too much. The best approach is to inherit a new class from
         %Component and render the children in its implementation.</p>
-      properties:
-        parent:
-          type: %Component
-          description: |
-            <p>Parent component. Field is available from component rendering beginning.</p>
-        el:
-          type: %JQuery
-          description: |
-            <p>Root element. Field is available from component rendering beginning.</p>
-        children:
-          type: %IMap<%Component>
-          description: |
-            <p>Mutable named child components. Use this map to add child components in place of elements with
-            corresponding jwid. Field is available from component rendering beginning.</p>
-        templates:
-          type: %Dictionary<%AbstractTemplate>
-          description: |
-            <p>Map from template ID to the template. Templates are defined by %template annotation.</p>
-      method:
-        render:
-          signature: '(): this'
-          returns: 'this'
-          description: |
-            <p>Renders the component. Call this method to initialize references to all elements of component and create
-            child components. This method is called automatically in the next cases:</p>
-            <ul>
-            <li>One of methods %renderTo, %renderAs is called.</li>
-            <li>The component is added into another component as a child.</li>
-            </ul>
-            <p>Feel free to call component rendering multiple times: it gets rendered only once.</p>
-        renderTo:
-          signature: '(el: string | HTMLElement | %JQuery): this'
-          params:
-            el: 'Element to render component into.'
-          returns: 'this'
-          description: |
-            <p>Renders the component into an element. Use it to render root component only: children must be rendered
-            using %children, %addList, %addCollection, %addBindable members.</p>
-        renderAs:
-          signature: '(el: string | HTMLElement | %JQuery): this'
-          params:
-            el: 'Element to render component in place of.'
-          returns: 'this'
-          description: |
-            <p>Renders the component in place of an element. Use it to render root component only: children must be
-            rendered using %children, %addList, %addCollection, %addBindable members.</p>
-        remove:
-          signature: '(): this'
-          returns: 'this'
-          description: |
-            <p>Removes the component from DOM. Can be used for root component only (which was added via %renderTo or
-            %renderAs method). All child components should be removed using %children map or binding deletion.
-            See %componentRemoval for details.</p>
-        getElement:
-          signature: '(id: string): %JQuery'
-          params:
-            id: 'jwid of the element.'
-          returns: Element.
-          description: |
-            <p>Returns element by its jwid.</p>
-        removeElement:
-          signature: '(id: string): this'
-          params:
-            id: 'jwid of the element.'
-          returns: 'this'
-          description: |
-            <p>Removes element by jwid. Element gets removed from DOM and destroyed. It is then impossible to get it by
-            %getElement method.</p>
-        addBindable:
-          signature: '(component: %Bindable<%Component>, id: string): %Destroyable'
-          params:
-            component: 'Child component property.'
-            id: 'jwid of element to replace.'
-          returns: 'Binding.'
-          description: |
-            <p>Adds child component and synchronizes the component with the property. On every property change, removes
-            the child and adds another one. Equivalent to returning a %Bindable&lt;%Component&gt; instance in rendering
-            method. It is convenient to create %component property from data property using %mapProperty method:</p>
-            <pre>
-            protected %afterRender() {
-                super.%afterRender();
-                const avatarView = this.%own(this.user.avatar.%map((avatar) => new AvatarView(avatar), {%destroy}));
-                this.%addBindable(avatarView, "avatar");
-            }
-            </pre>
-            <p>%addBindable method returns a binding. If you %destroy it, the child gets removed from parent component
-            and the synchronization gets stopped. Also, the property is removed from parent component on parent
-            component destruction right before %unrender method call. But notice that child component inside this
-            property does not get destroyed automatically. Usually it can be done by corresponding %Mapper or %Property
-            destruction in %unrender method or via %own.
-        addList:
-          signature: '(source: %ReadonlyList<%Component>, el?: string | HTMLElement | %JQuery): %Destroyable'
-          params:
-            source: 'Child component list.'
-            el: 'jwid of element to add child components into. Defaults to root element (%el) of component.'
-          returns: 'Binding.'
-          description: |
-            <p>Adds list of child components and synchronizes the component with it. On every list change, adds or
-            removes corresponding children. Equivalent to returning a %ReadonlyList&lt;%Component&gt; instance in rendering
-            method. As opposed to %addCollection method, retains component order. However, it works slower and accepts
-            list only. It is convenient to create "source" list from data list using %mapList utility:</p>
-            <pre>
-            protected %afterRender() {
-                super.%afterRender();
-                const list = this.%own(%mapList(this.users, (user) => new UserView(user), {%destroy}));
-                this.%addList(list, "users");
-            }
-            </pre>
-            <p>%addList method returns a binding. If you %destroy it, the children get removed from parent component
-            and the synchronization gets stopped. Also, the list is removed from parent component on parent component
-            destruction right before %unrender method call. But notice that child components inside this list are not
-            destroyed automatically. Usually it can be done by corresponding %ListMapper or list destruction in
-            %unrender method or via %own.</p>
-        addCollection:
-          signature: '(source: %ReadonlyCollection<%Component>, el?: string | HTMLElement | %JQuery): %Destroyable'
-          params:
-            source: 'Child component collection.'
-            el: 'jwid of element to add child components into. Defaults to root element (%el) of component.'
-          returns: 'Binding.'
-          description: |
-            <p>Adds collection of child components and synchronizes the component with it. On every collection change,
-            adds or removes corresponding children. Equivalent to returning a %ReadonlyCollection&lt;%Component%&gt;
-            instance in rendering method. As opposed to %addList method, ignores component order. However, it works
-            faster and accepts any kind of collection, not list only. It is convenient to create "source" collection
-            from data collection using %mapCollection utility:</p>
-            <pre>
-            protected %afterRender() {
-                super.%afterRender();
-                const collection = this.%own(%mapCollection(this.users, (user) => new UserView(user), {%destroy}));
-                this.%addCollection(collection, "users");
-            }
-            </pre>
-            <p>%addCollection method returns a binding. If you %destroy it, the children get removed from parent
-            component and the synchronization gets stopped. Also, the collection is removed from parent component on
-            parent component destruction right before %unrender method call. But notice that child components inside
-            this collection are not destroyed automatically. Usually it can be done by corresponding mapper or
-            collection destruction in %unrender method or via %own.</p>
-        using:
-          signature: '(value: string | %AbstractTemplate | HTMLElement | %JQuery): this'
-          params:
-            value: 'Template or element to use for component rendering.'
-          returns: 'this'
-          description: |
-            <p>Selects component rendering strategy. This method is needed only in very rare cases. By default,
-            component is rendered outside of DOM based on "main" HTML template specified by %template annotation.
-            You can change this by passing one of the next values into %using method of the component:</p>
-            <ul>
-            <li>%AbstractTemplate or string - use this template explicitly for rendering.</li>
-            <li>HTMLElement or %JQuery - build component on top of existing DOM element. Special attributes jwclass and
-            jwid get processed in the usual way.</li>
-            </ul>
-            <p><b>Note:</b> We strongly encourage you to use standard rendering strategy via %template, or at least
-            create %HtmlTemplate instances to store your HTML templates. They work 3 times faster compared to raw HTML
-            rendering thanks to preliminary compilation and node cloning method.</p>
-        beforeRender:
-          modifiers: protected
-          signature: 'beforeRender()'
-          description: |
-            <p>Component life stage method. Called during component rendering after HTML template parsing and
-            initialization of references to all elements of the template. Called before %renderChildId methods and
-            %afterRender method. It is convenient to perform some preliminary action here before child component
-            creation. But you are already able to create child components here. Call <tt>super.beforeRender()</tt> at
-            the first line of the method.</p>
-        afterRender:
-          modifiers: protected
-          signature: 'afterRender()'
-          description: |
-            <p>Component life stage method. Called after %beforeRender method and %renderChildId methods. You should
-            assign all elements' attributes here, create child components, bind to events and fill component with
-            interactivity. Call <tt>super.afterRender()</tt> at the first line of the method.</p>
-        afterAppend:
-          modifiers: protected
-          signature: 'afterAppend()'
-          description: |
-            <p>Component life stage method. Called after first-time component appearing in HTML DOM and UI components
-            tree. Component layouting should be performed here (element size computing). Component rendering is
-            finished here. Call <tt>super.afterAppend()</tt> at the first line of the method.</p>
-            <p><b>Caution:</b> the component is called in the next cases only:</p>
-            <ul>
-              <li>%renderTo or %renderAs method is called, and the parent element is present in the document body.</li>
-              <li>The component is added as a child component to a component that has %afterAppend method called
-              in the past.</li>
-              <li>This is a child component of a component that has %afterAppend called at the moment.</li>
-              <li>%render method is called, and %using method was called with a %jquery element passed.</li>
-            </ul>
-            <p>In other words, render child components as specified in %childComponents topic, and %afterAppend method
-            should work as expected.</p>
-        releaseDom:
-          modifiers: protected
-          signature: 'releaseDom()'
-          description: |
-            <p>Component life stage method. Called during component destruction before %unrender method call.
-            Everything that was performed in %afterAppend method should be reverted here. Call
-            <tt>super.releaseDom()</tt> at the last line of the method.</p>
-        unrender:
-          modifiers: protected
-          signature: 'unrender()'
-          description: |
-            <p>Component life stage method. Called during component destruction before %afterDestroy method call.
-            Everything that was performed during component rendering should be reverted here. All child components are
-            already removed by framework before this method call, but the components themselves are not destroyed. You
-            must destroy them explicitly as specified in %componentRemoval topic. Call <tt>super.unrender()</tt> at the
-            last line of the method.</p>
-        afterDestroy:
-          modifiers: protected
-          signature: 'afterDestroy()'
-          description: |
-            <p>Component life stage method. Called during component destruction after %unrender method call. Everything
-            that was performed during component construction should be reverted here. Call <tt>super.afterDestroy()</tt>
-            at the last line of the method.</p>
-        createElement:
-          modifiers: protected
-          signature: 'createElement(): %TemplateOutput'
-          returns: HTML template rendering output.
-          description: |
-            <p>Virtual method to render the component document fragment. By default, renders <b>main</b> HTML template
-            defined by %template annotation.</p>
+    properties:
+      parent:
+        modifiers: readonly
+        type: '%Component'
+        description: |
+          <p>Parent component. The field is available from component rendering beginning.</p>
+      el:
+        modifiers: readonly
+        type: '%JQuery'
+        description: |
+          <p>Root element. The field is available from component rendering beginning.</p>
+      children:
+        modifiers: readonly
+        type: '%IMap<%Component>'
+        description: |
+          <p>Child component mutable map. Use this map to add child components in place of elements with
+          corresponding jwid. The field is available from component rendering beginning.</p>
+      templates:
+        modifiers: readonly
+        type: '%Dictionary<%AbstractTemplate>'
+        description: |
+          <p>Map from template ID to the template. Templates are defined by %template annotation.</p>
+    methods:
+      render:
+        signature: '(): this'
+        returns: 'this'
+        description: |
+          <p>Renders the component. Call this method to initialize references to all elements of component and create
+          child components. This method is called automatically in the next cases:</p>
+          <ul>
+          <li>One of methods %renderTo, %renderAs is called.</li>
+          <li>The component is added into another component as a child.</li>
+          </ul>
+          <p>Feel free to call component rendering multiple times: it gets rendered only once.</p>
+      renderTo:
+        signature: '(el: string | HTMLElement | %JQuery): this'
+        params:
+          el: 'Element to render component into.'
+        returns: 'this'
+        description: |
+          <p>Renders the component into an element. Use it to render root component only: children must be rendered
+          using %children, %addList, %addCollection, %addBindable members.</p>
+      renderAs:
+        signature: '(el: string | HTMLElement | %JQuery): this'
+        params:
+          el: 'Element to render component in place of.'
+        returns: 'this'
+        description: |
+          <p>Renders the component in place of an element. Use it to render root component only: children must be
+          rendered using %children, %addList, %addCollection, %addBindable members.</p>
+      remove:
+        signature: '(): this'
+        returns: 'this'
+        description: |
+          <p>Removes the component from DOM. Can be used for root component only (which was added via %renderTo or
+          %renderAs method). All child components should be removed using %children map or binding deletion.
+          See %componentRemoval for details.</p>
+      getElement:
+        signature: '(id: string): %JQuery'
+        params:
+          id: 'jwid of the element.'
+        returns: Element.
+        description: |
+          <p>Returns element by its jwid.</p>
+      removeElement:
+        signature: '(id: string): this'
+        params:
+          id: 'jwid of the element.'
+        returns: 'this'
+        description: |
+          <p>Removes element by jwid. Element gets removed from DOM and destroyed. It is then impossible to get it by
+          %getElement method.</p>
+      addBindable:
+        signature: '(component: %Bindable<%Component>, id: string): %Destroyable'
+        params:
+          component: 'Child component property.'
+          id: 'jwid of element to replace.'
+        returns: 'Binding.'
+        description: |
+          <p>Adds child component and synchronizes the component with the property. On every property change, removes
+          the child and adds another one. Equivalent to returning a %Bindable&lt;%Component&gt; instance in rendering
+          method. It is convenient to create %component property from data property using %mapProperty method:</p>
+          <pre>
+          protected %afterRender() {
+              super.%afterRender();
+              const avatarView = this.%own(this.user.avatar.%mapProperty(avatar => new AvatarView(avatar), {%destroy}));
+              this.%addBindable(avatarView, "avatar");
+          }
+          </pre>
+          <p>%addBindable method returns a binding. If you %baseDestroy it, the child gets removed from parent component
+          and the synchronization gets stopped. Also, the property is removed from parent component on parent
+          component destruction right before %unrender method call. But notice that child component inside this
+          property does not get destroyed automatically. Usually it can be done by corresponding %Mapper or %Property
+          destruction in %unrender method or via %own.
+      addList:
+        signature: '(source: %ReadonlyList<%Component>, el?: string | HTMLElement | %JQuery): %Destroyable'
+        params:
+          source: 'Child component list.'
+          el: 'jwid of element to add child components into. Defaults to root element (%el) of component.'
+        returns: 'Binding.'
+        description: |
+          <p>Adds list of child components and synchronizes the component with it. On every list change, adds or
+          removes corresponding children. Equivalent to returning a %ReadonlyList&lt;%Component&gt; instance in rendering
+          method. As opposed to %addCollection method, retains component order. However, it works slower and accepts
+          list only. It is convenient to create "source" list from data list using %mapList utility:</p>
+          <pre>
+          protected %afterRender() {
+              super.%afterRender();
+              const list = this.%own(%mapList(this.users, user => new UserView(user), {%destroy}));
+              this.%addList(list, "users");
+          }
+          </pre>
+          <p>%addList method returns a binding. If you %baseDestroy it, the children get removed from parent component
+          and the synchronization gets stopped. Also, the list is removed from parent component on parent component
+          destruction right before %unrender method call. But notice that child components inside this list are not
+          destroyed automatically. Usually it can be done by corresponding %ListMapper or list destruction in
+          %unrender method or via %own.</p>
+      addCollection:
+        signature: '(source: %ReadonlyCollection<%Component>, el?: string | HTMLElement | %JQuery): %Destroyable'
+        params:
+          source: 'Child component collection.'
+          el: 'jwid of element to add child components into. Defaults to root element (%el) of component.'
+        returns: 'Binding.'
+        description: |
+          <p>Adds collection of child components and synchronizes the component with it. On every collection change,
+          adds or removes corresponding children. Equivalent to returning a %ReadonlyCollection&lt;%Component&gt;
+          instance in rendering method. As opposed to %addList method, ignores component order. However, it works
+          faster and accepts any kind of collection, not list only. It is convenient to create "source" collection
+          from data collection using %mapCollection utility:</p>
+          <pre>
+          protected %afterRender() {
+              super.%afterRender();
+              const collection = this.%own(%mapCollection(this.users, user => new UserView(user), {%destroy}));
+              this.%addCollection(collection, "users");
+          }
+          </pre>
+          <p>%addCollection method returns a binding. If you %baseDestroy it, the children get removed from parent
+          component and the synchronization gets stopped. Also, the collection is removed from parent component on
+          parent component destruction right before %unrender method call. But notice that child components inside
+          this collection are not destroyed automatically. Usually it can be done by corresponding mapper or
+          collection destruction in %unrender method or via %own.</p>
+      using:
+        signature: '(value: string | %AbstractTemplate | HTMLElement | %JQuery): this'
+        params:
+          value: 'Template or element to use for component rendering.'
+        returns: 'this'
+        description: |
+          <p>Selects component rendering strategy. This method is needed only in very rare cases. By default,
+          component is rendered outside of DOM based on "main" HTML template specified by %template annotation.
+          You can change this by passing one of the next values into %using method of the component:</p>
+          <ul>
+          <li>%AbstractTemplate or string - use this template explicitly for rendering.</li>
+          <li>HTMLElement or %JQuery - build component on top of existing DOM element. Special attributes jwclass and
+          jwid get processed in the usual way.</li>
+          </ul>
+          <p><b>Note:</b> We strongly encourage you to use standard rendering strategy via %template, or at least
+          create %HtmlTemplate instances to store your HTML templates. They work 3 times faster compared to raw HTML
+          rendering thanks to preliminary compilation and node cloning method.</p>
+      beforeRender:
+        modifiers: protected
+        signature: 'beforeRender()'
+        description: |
+          <p>Component life stage method. Called during component rendering after HTML template parsing and
+          initialization of references to all elements of the template. Called before %renderChildId methods and
+          %afterRender method. It is convenient to perform some preliminary action here before child component
+          creation. But you are already able to create child components here. Call <tt>super.beforeRender()</tt> at
+          the first line of the method.</p>
+      afterRender:
+        modifiers: protected
+        signature: 'afterRender()'
+        description: |
+          <p>Component life stage method. Called after %beforeRender method and %renderChildId methods. You should
+          assign all elements' attributes here, create child components, bind to events and fill component with
+          interactivity. Call <tt>super.afterRender()</tt> at the first line of the method.</p>
+      afterAppend:
+        modifiers: protected
+        signature: 'afterAppend()'
+        description: |
+          <p>Component life stage method. Called after first-time component appearing in HTML DOM and UI components
+          tree. Component layouting should be performed here (element size computing). Component rendering is
+          finished here. Call <tt>super.afterAppend()</tt> at the first line of the method.</p>
+          <p><b>Caution:</b> the component is called in the next cases only:</p>
+          <ul>
+            <li>%renderTo or %renderAs method is called, and the parent element is present in the document body.</li>
+            <li>The component is added as a child component to a component that has %afterAppend method called
+            in the past.</li>
+            <li>This is a child component of a component that has %afterAppend called at the moment.</li>
+            <li>%render method is called, and %using method was called with an HTMLElement or %jquery element passed.</li>
+          </ul>
+          <p>In other words, %afterAppend method works as expected as long as you render child components as specified
+          in %childComponents topic.</p>
+      releaseDom:
+        modifiers: protected
+        signature: 'releaseDom()'
+        description: |
+          <p>Component life stage method. Called during component destruction before %unrender method call.
+          Everything that was performed in %afterAppend method should be reverted here. Call
+          <tt>super.releaseDom()</tt> at the last line of the method.</p>
+      unrender:
+        modifiers: protected
+        signature: 'unrender()'
+        description: |
+          <p>Component life stage method. Called during component destruction before %afterDestroy method call.
+          Everything that was performed during component rendering should be reverted here. All child components are
+          already removed by framework before this method call, but the components themselves are not destroyed. You
+          must destroy them explicitly as specified in %componentRemoval topic. Call <tt>super.unrender()</tt> at the
+          last line of the method.</p>
+      afterDestroy:
+        modifiers: protected
+        signature: 'afterDestroy()'
+        description: |
+          <p>Component life stage method. Called during component destruction after %unrender method call. Everything
+          that was performed during component construction should be reverted here. Call <tt>super.afterDestroy()</tt>
+          at the last line of the method.</p>
+      createElement:
+        modifiers: protected
+        signature: 'createElement(): %TemplateOutput'
+        returns: HTML template rendering output.
+        description: |
+          <p>Virtual method to render the component document fragment. By default, renders <b>main</b> HTML template
+          defined by %template annotation.</p>
 
     references:
       jwclass: {}
@@ -634,14 +649,14 @@ symbols:
       moreAboutRender:
         href: '#moreAboutRender'
         label: More about renderChild methods
-      moreAboutRender:
+      childComponents:
         href: '#childComponents'
         label: Child components
       propertySet:
         file: jwidget/IProperty
         member: set
         label: set
-      mapSet:
+      setOfMap:
         file: jwidget/IMap
         member: set
         label: set
@@ -663,4 +678,4 @@ symbols:
         label: add
       renderChildId:
         href: '#moreAboutRender'
-        label: '<b>render&lt;ChildId&gt;</b>
+        label: 'render&lt;ChildId&gt;'

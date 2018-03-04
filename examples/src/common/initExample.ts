@@ -8,7 +8,7 @@ export default function initExample(name: string, links: string[]) {
 		} else {
 			el.append(', ');
 		}
-		el.append($('<a target="_blank"></a>').text(name).attr("href", `../src/${name}/${link}`));
+		el.append($('<a target="_blank"></a>').text(link).attr("href", `../src/${name}/${link}`));
 	});
 	$("body").prepend('<hr>').prepend(header).prepend(el);
 }

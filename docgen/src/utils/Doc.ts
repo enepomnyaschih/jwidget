@@ -34,14 +34,14 @@ export function renderInclude(project: Project, key: string): string {
 }
 
 export function renderExample(name: string, relativeToFile: string): string {
-	return '<iframe style="border: 1px solid green; padding: 10px;" width="800" height="180" ' +
-		`src="${getRelativeUrl(`samples/${name}.html`, relativeToFile)}"></iframe>`;
+	return '<iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" ' +
+		`src="${getRelativeUrl(`samples/public/${name}.html`, relativeToFile)}"></iframe>`;
 }
 
 export function renderReference(reference: Reference, relativeToFile: string): string {
 	const url = getReferenceUrl(reference, relativeToFile);
 	return url ?
-		`<a href="${url}" target="${reference.href ? "_blank" : "_parent"}">${reference.label}</a>` :
+		`<a href="${url}" target="${reference.href && reference.href.charAt(0) !== "#" ? "_blank" : "_parent"}">${reference.label}</a>` :
 		`<b>${reference.label}</b>`;
 }
 

@@ -1,8 +1,8 @@
 /* Configuration */
 
 var pages = {
-    "http-request": {
-        source: "./http-request/index.ts"
+    "component": {
+        source: "./component/index.ts"
     }
 };
 
@@ -68,7 +68,7 @@ module.exports = function (env) {
                 filename: id + ".html",
                 template: "!!html-webpack-plugin/lib/loader.js!./templates/index.html",
                 inject: "body",
-                prefix: "/",
+                prefix: "",
                 suffix: optimize ? ".min" : "",
                 dc: new Date().getTime(),
                 ga: optimize ? ga : ""
