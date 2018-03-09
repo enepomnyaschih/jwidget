@@ -8,8 +8,8 @@ require("./index.css");
 
 @template(
 	'<div jwclass="application">' +
-	'<div>"title" attribute: <input jwid="input" type="text" value="This is a tooltip!"></div>' +
-	'<div jwid="rect">Modify as you wish and hover mouse to see a tooltip</div>' +
+	'  <div>"title" attribute: <input jwid="input" type="text" value="This is a tooltip!"></div>' +
+	'  <div jwid="rect">Modify as you wish and hover mouse to see a tooltip</div>' +
 	'</div>'
 )
 class Application extends Component {

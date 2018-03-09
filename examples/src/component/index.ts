@@ -4,8 +4,8 @@ import initExample from "../common/initExample";
 
 @template(
 	'<div jwclass="my-component">' +
-	'<div jwid="hello-message"></div>' +
-	'<a href="#" jwid="link">Click me!</a>' +
+	'  <div jwid="hello-message"></div>' +
+	'  <a href="#" jwid="link">Click me!</a>' +
 	'</div>'
 )
 

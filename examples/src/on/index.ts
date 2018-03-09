@@ -7,15 +7,15 @@ require("./index.css");
 
 @template(
 	'<div jwclass="application">' +
-	'<div jwid="tip">' +
-	'This example demonstrates an easy way ' +
-	'to aggregate jQuery event handlers inside components. ' +
-	'Handler for "mousemove" event is aggregated inside component, ' +
-	'so component destruction triggers event unbinding. Try it!' +
-	'</div>' +
-	'<div jwid="buttons">' +
-	'<button type="button" jwid="destroy-button">Destroy component</button>' +
-	'</div>' +
+	'  <div jwid="tip">' +
+	'    This example demonstrates an easy way ' +
+	'    to aggregate jQuery event handlers inside components. ' +
+	'    Handler for "mousemove" event is aggregated inside component, ' +
+	'    so component destruction triggers event unbinding. Try it!' +
+	'  </div>' +
+	'  <div jwid="buttons">' +
+	'    <button type="button" jwid="destroy-button">Destroy component</button>' +
+	'  </div>' +
 	'</div>'
 )
 class Application extends Component {
