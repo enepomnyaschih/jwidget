@@ -116,6 +116,10 @@ references:
     file: jwidget/Bindable
     member: get
     label: get
+  mapOfBindable:
+    file: jwidget/Bindable
+    member: map
+    label: map
 
   # Property
   setOfProperty:

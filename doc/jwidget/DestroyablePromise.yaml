@@ -10,95 +10,105 @@ symbols:
       establishes some kind of cancellable asynchronous operation and wants you to take control over its life time.
       Destroying the %DestroyablePromise instance cancels the operation, so that neither %onFulfilled nor
       %onRejected callback gets called.</p>
-      <h5>Example 1. DestroyablePromise implementation for native setTimeout function</h5>
-      <pre>
-      class Timeout extends %AbstractDestroyablePromise<any> {
-          private timeout: number;
 
-          constructor(ms: number) {
-              let timeout;
-              super(new %Promise((resolve) => {
-                  // TypeScript disallows direct access to `this` before return from `super` call
-                  timeout = setTimeout(resolve, ms);
-              }));
-              this.timeout = timeout;
+    topics:
+      example1:
+        header: Example 1. DestroyablePromise implementation for native setTimeout function
+        text: |
+          <pre>
+          class Timeout extends %AbstractDestroyablePromise<any> {
+              private timeout: number;
+
+              constructor(ms: number) {
+                  let timeout;
+                  super(new %Promise((resolve) => {
+                      // TypeScript disallows direct access to `this` before return from `super` call
+                      timeout = setTimeout(resolve, ms);
+                  }));
+                  this.timeout = timeout;
+              }
+
+              protected %destroyObject() {
+                  clearTimeout(this.timeout);
+                  super.%destroyObject();
+              }
           }
+          </pre>
+          <p>%AbstractDestroyablePromise provides a built-in implementation for promise chaining via %then and %catch
+          methods.</p>
+          <p>Please note that %DestroyablePromise implementation can not extend native %Promise, because it is prohibited
+          by ECMAScript specification. So you can not chain native %Promise with %DestroyablePromise, because native
+          %Promise won't treat %DestroyablePromise as a %Promise to chain with. However, you can freely chain
+          %DestroyablePromise with both %DestroyablePromise and native %Promise.</p>
 
-          protected %destroyObject() {
-              clearTimeout(this.timeout);
-              super.%destroyObject();
-          }
-      }
-      </pre>
-      <p>%AbstractDestroyablePromise provides a built-in implementation for promise chaining via %then and %catch
-      methods.</p>
-      <p>Please note that %DestroyablePromise implementation can not extend native %Promise, because it is prohibited
-      by ECMAScript specification. So you can not chain native %Promise with %DestroyablePromise, because native
-      %Promise won't treat %DestroyablePromise as a %Promise to chain with. However, you can freely chain
-      %DestroyablePromise with both %DestroyablePromise and native %Promise.</p>
-      <h5>Example 2. DestroyablePromise chaining.</h5>
-      <pre>
-      const chain = new %HttpRequest($.get("/user")).%then((user) => {
-          // Chain %DestroyablePromise with another %DestroyablePromise
-          return new %HttpRequest($.get(`/user/${user.id}/profile`));
-      }).%then((profile) => {
-          // Chain %DestroyablePromise with native %Promise
-          return new %Promise((resolve) => setTimeout(resolve, 1000));
-      }).%then(() => {
-          // Further chaining with %DestroyablePromise is allowed
-          return new %HttpRequest($.get("/done"));
-      }).%catch((error) => {
-          console.error(error);
-      });
+      example2:
+        header: Example 2. DestroyablePromise chaining.
+        text: |
+          <pre>
+          const chain = new %HttpRequest($.get("/user")).%then((user) => {
+              // Chain %DestroyablePromise with another %DestroyablePromise
+              return new %HttpRequest($.get(`/user/${user.id}/profile`));
+          }).%then((profile) => {
+              // Chain %DestroyablePromise with native %Promise
+              return new %Promise((resolve) => setTimeout(resolve, 1000));
+          }).%then(() => {
+              // Further chaining with %DestroyablePromise is allowed
+              return new %HttpRequest($.get("/done"));
+          }).%catch((error) => {
+              console.error(error);
+          });
 
-      // ...later
-      chain.%destroy();
-      </pre>
-      <p>Please keep in mind that destroying the chain during the standard %Promise waiting won't result in operation
-      cancelling. In the example above, if you destroy the chain during any of three HTTP requests, it will cancel the
-      request and interrupt the chain. If you destroy the chain during setTimeout operation, the chain won't progress
-      further on, but the timeout promise will still get resolved in time. So, to make sure that the promise
-      destruction works properly, please wrap all your promises with %DestroyablePromise.</p>
-      <p>Destroying the chained promise will result in cancelling of all promises/operations <b>before</b> the end of
-      this chain, <b>not after</b>. So, in the third case below, <code>chain</code> object destruction won't do any
-      impact.</p>
-      <h5>Example 3. Chain destruction logic demonstration</h5>
-      <pre>
-      const chain = new %Timeout(1000).%then(function() {
-          return new %Timeout(1000);
-      });
+          // ...later
+          chain.%destroy();
+          </pre>
+          <p>Please keep in mind that destroying the chain during the standard %Promise waiting won't result in operation
+          cancelling. In the example above, if you destroy the chain during any of three HTTP requests, it will cancel the
+          request and interrupt the chain. If you destroy the chain during setTimeout operation, the chain won't progress
+          further on, but the timeout promise will still get resolved in time. So, to make sure that the promise
+          destruction works properly, please wrap all your promises with %DestroyablePromise.</p>
+          <p>Destroying the chained promise will result in cancelling of all promises/operations <b>before</b> the end of
+          this chain, <b>not after</b>. So, in the third case below, <code>chain</code> object destruction won't do any
+          impact.</p>
 
-      const nextChain = chain.%then(function() {
-          return new %Timeout(1000);
-      });
+      example3:
+        header: Example 3. Chain destruction logic demonstration
+        text: |
+          <pre>
+          const chain = new %Timeout(1000).%then(function() {
+              return new %Timeout(1000);
+          });
 
-      nextChain.%then(function() {
-          console.log("Fail!")
-      });
+          const nextChain = chain.%then(function() {
+              return new %Timeout(1000);
+          });
 
-      // Case 1: This test would cancel the chain properly
-      setTimeout(() => chain.%destroy(), 500);
+          nextChain.%then(function() {
+              console.log("Fail!")
+          });
 
-      // Case 2: This too
-      setTimeout(() => chain.%destroy(), 1500);
+          // Case 1: This test would cancel the chain properly
+          setTimeout(() => chain.%destroy(), 500);
 
-      // Case 3: This test would fail, because `chain` object would already be resolved
-      setTimeout(() => chain.%destroy(), 2500); // no impact
+          // Case 2: This too
+          setTimeout(() => chain.%destroy(), 1500);
 
-      // Case 4: The best way to fix the problem is to destroy the whole chain
-      setTimeout(() => nextChain.%destroy(), 2500);
-      </pre>
-      <p>jWidget provides a bunch of built-in %DestroyablePromise implementations for you to work with:</p>
-      <dl class="row">
-        <dt class="col-lg-2 col-sm-3">%Timeout</dt>
-        <dd class="col-lg-10 col-sm-9">Destroyable wrapper around setTimeout.</dd>
-        <dt class="col-lg-2 col-sm-3">%HttpRequest</dt>
-        <dd class="col-lg-10 col-sm-9">Destroyable wrapper around %jqXHR.</dd>
-        <dt class="col-lg-2 col-sm-3">%AllPromise</dt>
-        <dd class="col-lg-10 col-sm-9">Destroyable wrapper around %PromiseAll.</dd>
-        <dt class="col-lg-2 col-sm-3">RacePromise</dt>
-        <dd class="col-lg-10 col-sm-9">Destroyable wrapper around %PromiseRace.</dd>
-      </dl>
+          // Case 3: This test would fail, because `chain` object would already be resolved
+          setTimeout(() => chain.%destroy(), 2500); // no impact
+
+          // Case 4: The best way to fix the problem is to destroy the whole chain
+          setTimeout(() => nextChain.%destroy(), 2500);
+          </pre>
+          <p>jWidget provides a bunch of built-in %DestroyablePromise implementations for you to work with:</p>
+          <dl class="row">
+            <dt class="col-lg-2 col-sm-3">%Timeout</dt>
+            <dd class="col-lg-10 col-sm-9">Destroyable wrapper around setTimeout.</dd>
+            <dt class="col-lg-2 col-sm-3">%HttpRequest</dt>
+            <dd class="col-lg-10 col-sm-9">Destroyable wrapper around %jqXHR.</dd>
+            <dt class="col-lg-2 col-sm-3">%AllPromise</dt>
+            <dd class="col-lg-10 col-sm-9">Destroyable wrapper around %PromiseAll.</dd>
+            <dt class="col-lg-2 col-sm-3">RacePromise</dt>
+            <dd class="col-lg-10 col-sm-9">Destroyable wrapper around %PromiseRace.</dd>
+          </dl>
 
     properties:
       native:

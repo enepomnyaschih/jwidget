@@ -15,26 +15,33 @@ symbols:
       <p>In the next example, %val function returns %DestroyableBindable&lt;string&gt;, so we are supposed to aggregate
       it. Life time of ValueLogger can be shorter than <code>el</code> element life time, so ValueLogger must aggregate
       the binding to cancel it on destruction.</p>
-      <h5>Example 1. Value logger</h5>
-      <pre>
-      class ValueLogger extends %Class {
-          constructor(el: JQuery) {
-              super();
-              const value = this.%own(%val(el));
-              value.%map((value) => console.log(value));
+
+    topics:
+      example1:
+        header: Example 1. Value logger
+        text: |
+          <pre>
+          class ValueLogger extends %Class {
+              constructor(el: JQuery) {
+                  super();
+                  const value = this.%own(%val(el));
+                  value.%map((value) => console.log(value));
+              }
           }
-      }
-      </pre>
-      <p>In some cases, binding destruction is not obligatory. In the next example, the component binds a property to
-      its own element, so garbage collector will take everything away on component destruction anyway. So, it doesn't
-      make much sense to aggregate the binding explicitly.</p>
-      <h5>Example 2. Typical binding to own DOM element</h5>
-      <pre>
-      @%template('<div><input type="text" jwid="input"></div>')
-      class App extends %Component {
-          renderInput(el: JQuery) {
-              const value = %val(el);
-              value.%map((value) => console.log(value));
+          </pre>
+          <p>In some cases, binding destruction is not obligatory. In the next example, the component binds a property to
+          its own element, so garbage collector will take everything away on component destruction anyway. So, it doesn't
+          make much sense to aggregate the binding explicitly.</p>
+
+      example2:
+        header: Example 2. Typical binding to own DOM element
+        text: |
+          <pre>
+          @%template('<div><input type="text" jwid="input"></div>')
+          class App extends %Component {
+              renderInput(el: JQuery) {
+                  const value = %val(el);
+                  value.%map((value) => console.log(value));
+              }
           }
-      }
-      </pre>
+          </pre>

@@ -1,16 +1,16 @@
-import SourceFile from "../SourceFile";
-import Extension from "../models/Extension";
-import AbstractSymbol from "./AbstractSymbol";
-import Context from "../Context";
-import Reference from "../models/Reference";
-import Dictionary from "../Dictionary";
-import * as DictionaryUtils from "../utils/Dictionary";
-import MethodMember, {MethodMemberJson} from "../members/Method";
-import DocError from "../DocError";
-import PropertyMember, {PropertyMemberJson} from "../members/Property";
 import {ConstructorJson, default as Constructor} from "../Constructor";
-import SymbolVisitor from "../SymbolVisitor";
+import Context from "../Context";
+import Dictionary from "../Dictionary";
+import DocError from "../DocError";
 import IMember from "../members/IMember";
+import MethodMember, {MethodMemberJson} from "../members/Method";
+import PropertyMember, {PropertyMemberJson} from "../members/Property";
+import Extension from "../models/Extension";
+import Reference from "../models/Reference";
+import SourceFile from "../SourceFile";
+import SymbolVisitor from "../SymbolVisitor";
+import * as DictionaryUtils from "../utils/Dictionary";
+import AbstractSymbol from "./AbstractSymbol";
 
 export default class StructSymbol extends AbstractSymbol {
 
@@ -22,6 +22,7 @@ export default class StructSymbol extends AbstractSymbol {
 	readonly extendedBy: StructSymbol[] = [];
 	readonly showInheritanceLevels: number;
 	readonly description: string;
+	readonly topics: Dictionary<Topic>;
 	readonly _constructor: Constructor;
 	readonly properties: Dictionary<PropertyMember>;
 	readonly methods: Dictionary<MethodMember>;
@@ -37,6 +38,7 @@ export default class StructSymbol extends AbstractSymbol {
 		this._extending = json.extends || [];
 		this.showInheritanceLevels = json.showInheritanceLevels;
 		this.description = json.description;
+		this.topics = json.topics || {};
 		this._constructor = json.hasOwnProperty("constructor") ? new Constructor(this, json.constructor) : null;
 		this.properties = this.readProperties(json.properties, false);
 		this.methods = this.readMethods(json.methods, false);
@@ -128,12 +130,19 @@ export interface StructJson {
 	readonly extends?: Extension[];
 	readonly showInheritanceLevels?: number;
 	readonly description?: string;
+	readonly topics?: Dictionary<Topic>;
 	readonly constructor?: ConstructorJson;
 	readonly properties?: Dictionary<PropertyMemberJson>;
 	readonly methods?: Dictionary<MethodMemberJson>;
 	readonly staticProperties?: Dictionary<PropertyMemberJson>;
 	readonly staticMethods?: Dictionary<MethodMemberJson>;
 	readonly references?: Dictionary<Reference>;
+}
+
+export interface Topic {
+
+	readonly header?: string;
+	readonly text: string;
 }
 
 class StructContext extends Context {

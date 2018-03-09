@@ -1,9 +1,19 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as DictionaryUtils from "../utils/Dictionary";
+import Constructor from "../Constructor";
+import Dictionary from "../Dictionary";
+import IMember from "../members/IMember";
+import MethodMember from "../members/Method";
+import PropertyMember from "../members/Property";
 import Project from "../Project";
 import SourceFile from "../SourceFile";
-import {mkdir} from "../utils/File";
+import FunctionSymbol from "../symbols/Function";
+import HeaderSymbol from "../symbols/Header";
+import ISymbol from "../symbols/ISymbol";
+import StructSymbol from "../symbols/Struct";
+import ValueSymbol from "../symbols/Value";
+import SymbolVisitor from "../SymbolVisitor";
+import * as DictionaryUtils from "../utils/Dictionary";
 import {
 	getReferenceUrl,
 	getRelativeUrl,
@@ -12,18 +22,8 @@ import {
 	renderReference,
 	renderText
 } from "../utils/Doc";
-import SymbolVisitor from "../SymbolVisitor";
-import StructSymbol from "../symbols/Struct";
-import FunctionSymbol from "../symbols/Function";
-import ValueSymbol from "../symbols/Value";
-import HeaderSymbol from "../symbols/Header";
+import {mkdir} from "../utils/File";
 import {htmlEncode} from "../utils/String";
-import ISymbol from "../symbols/ISymbol";
-import MethodMember from "../members/Method";
-import PropertyMember from "../members/Property";
-import Constructor from "../Constructor";
-import Dictionary from "../Dictionary";
-import IMember from "../members/IMember";
 
 export default function bootstrapTemplate(project: Project) {
 	for (let fileId in project.files) {
@@ -147,6 +147,11 @@ const symbolIndexRenderVisitor: SymbolVisitor<string> = {
 <nav class="nav nav-pills flex-column">
 ${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.id}---hierarchy">Hierarchy</a>`}
 ${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.id}---description">Description</a>`}
+${symbol.simple ? "" : '<nav class="nav nav-pills flex-column">' +
+			DictionaryUtils.join(DictionaryUtils.map(symbol.topics, (topic, key) => (
+				`<a class="nav-link" href="#${key}">${topic.header}</a>`
+			)), "\n") +
+			'</nav>'}
 ${symbol._constructor ? `<a class="nav-link" href="#${symbol.id}---constructor">Constructor</a>` : ""}
 ${renderIndexDictionary(symbol, symbol.properties, "properties", "Properties")}
 ${renderIndexDictionary(symbol, symbol.methods, "methods", "Methods")}
@@ -223,6 +228,10 @@ ${symbol.simple ? "" : renderHierarchy(symbol)}
 ${symbol.simple ? "" : renderHeader("h4", `${symbol.hash}---description`, "Description")}
 ${renderDefinitions(symbol.context, symbol.typevars)}
 ${renderText(symbol.context, symbol.description)}
+${DictionaryUtils.join(DictionaryUtils.map(symbol.topics, (topic, key) => `
+	${renderHeader("h5", key, topic.header)}
+	${renderText(symbol.context, topic.text)}
+`), "\n")}
 ${renderConstructor(symbol._constructor)}
 ${renderMembers(symbol, symbol.properties, "properties", "Fields", renderProperty)}
 ${renderMembers(symbol, symbol.methods, "methods", "Methods", renderMethod)}
