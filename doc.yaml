@@ -111,6 +111,18 @@ references:
     file: jwidget/Listenable
     member: listen
 
+  # Bindable
+  getOfBindable:
+    file: jwidget/Bindable
+    member: get
+    label: get
+
+  # Property
+  setOfProperty:
+    file: jwidget/IProperty
+    member: set
+    label: set
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

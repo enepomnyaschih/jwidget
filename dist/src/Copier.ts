@@ -18,28 +18,28 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from './Bindable';
 import Class from './Class';
 import IProperty from './IProperty';
 import Property from './Property';
-import Bindable from './Bindable';
 
 /**
  * Listens source `Bindable` modification and copies its value to target property.
  *
  * @param T Property value type.
  */
-class Copier<T> extends Class {
+class Copier<V> extends Class {
 	private _targetCreated: boolean;
-	private _target: IProperty<T>;
+	private _target: IProperty<V>;
 
 	/**
-	 * @param source Source property.
+	 * @param source Source bindable.
 	 * @param target Target property.
 	 */
-	constructor(readonly source: Bindable<T>, target?: IProperty<T>) {
+	constructor(readonly source: Bindable<V>, target?: IProperty<V>) {
 		super();
 		this._targetCreated = target == null;
-		this._target = (target == null) ? new Property<T>(null, source.silent) : target;
+		this._target = (target == null) ? new Property<V>(null, source.silent) : target;
 		this._update();
 		this.own(this.source.changeEvent.listen(this._update, this));
 	}
@@ -47,7 +47,7 @@ class Copier<T> extends Class {
 	/**
 	 * Target property.
 	 */
-	get target(): Bindable<T> {
+	get target(): Bindable<V> {
 		return this._target;
 	}
 

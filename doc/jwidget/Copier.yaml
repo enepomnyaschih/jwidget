@@ -1,0 +1,35 @@
+symbols:
+  default:
+    kind: class
+    typevars:
+      V: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Listens source %Bindable modification and copies its value to target property.</p>
+      <pre>
+      const source = new %Property(1);
+      const target = new %Property<number>();
+      const copier = new %Copier(source, target);
+      expect(target.%getOfBindable()).toBe(1);
+      source.%setOfProperty(2);
+      expect(target.%getOfBindable()).toBe(2);
+      copier.%destroy(); // stop synchronization
+      </pre>
+    constructor:
+      signature: |
+        (source: %Bindable<%V>, target?: %IProperty<%V>)
+      params:
+        source: Source bindable.
+        target: Target property.
+      description: |
+        <p>Constructs %Copier instance. Synchronizes %target property to %source.</p>
+    properties:
+      source:
+        type: '%Bindable<%V>'
+        modifier: readonly
+        description: Source bindable.
+      target:
+        type: '%Bindable<%V>'
+        modifier: readonly
+        description: Target property.

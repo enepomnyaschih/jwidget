@@ -10,6 +10,7 @@ import initExample from "../common/initExample";
 )
 
 class MyComponent extends Component {
+
 	constructor(private message: string, private link: string) {
 		super();
 	}
