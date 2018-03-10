@@ -45,9 +45,6 @@ function renderFile(file: SourceFile) {
 		<title>${file.id}${file.project.name ? " - " + file.project.name : ""}</title>
 		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("bootstrap.min.css", file.id)}">
 		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("styles.css", file.id)}">
-		<script type="text/javascript" src="${getRelativeUrl("jquery-3.2.1.min.js", file.id)}"></script>
-		<script type="text/javascript" src="${getRelativeUrl("bootstrap.bundle.min.js", file.id)}"></script>
-		<script type="text/javascript" src="${getRelativeUrl("scripts.js", file.id)}"></script>
 	</head>
 	<body>
 		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
@@ -100,6 +97,9 @@ function renderFile(file: SourceFile) {
 			</div>
 		</div>
 		<div class="doc-index-popover">${renderText(file.context, "%%DocumentationIndex")}</div>
+		<script type="text/javascript" src="${getRelativeUrl("jquery-3.2.1.min.js", file.id)}"></script>
+		<script type="text/javascript" src="${getRelativeUrl("bootstrap.bundle.min.js", file.id)}"></script>
+		<script type="text/javascript" src="${getRelativeUrl("scripts.js", file.id)}"></script>
 	</body>
 </html>`;
 }
@@ -179,7 +179,8 @@ function renderConsumption(file: SourceFile) {
 	if (!file.symbols.default) {
 		return `import * as ${file.token} from "${file.id}";`;
 	}
-	const imports = Object.keys(file.symbols).map((key) => key === 'default' ? file.token : `{${key}}`).join(', ');
+	const imports = Object.keys(file.symbols).filter(key => key.indexOf('.') === -1)
+		.map(key => key === 'default' ? file.token : `{${key}}`).join(', ');
 	return `import ${imports} from "${file.id}";`;
 }
 

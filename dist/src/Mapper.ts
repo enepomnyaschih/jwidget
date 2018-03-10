@@ -155,7 +155,7 @@ namespace Mapper {
 	}
 
 	/**
-	 * Mapper's partial configuration.
+	 * Configuration of `mapProperties` function. Partial configuration of Mapper.
 	 */
 	export interface Config<T> {
 		/**
@@ -170,24 +170,13 @@ namespace Mapper {
 		readonly scope?: any;
 
 		/**
-		 * Reverses mapper updating flow. Default flow is:
-		 *
-		 * 1. Create a new value.
-		 * 2. Reassign target property.
-		 * 3. Destroy the old value.
-		 *
-		 * Setting this option to true changes the flow the next way:
-		 *
-		 * 1. Set target value to null.
-		 * 2. Destroy the old value.
-		 * 3. Create a new value.
-		 * 4. Assign target property.
+		 * Reverses mapper updating flow.
 		 */
 		readonly viaNull?: boolean;
 	}
 
 	/**
-	 * Mapper's full configuration.
+	 * Full configuration of Mapper.
 	 *
 	 * @param T Target property value type.
 	 */

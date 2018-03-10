@@ -1,0 +1,297 @@
+symbols:
+  default:
+    kind: class
+    typevars:
+      T: Target property value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Listens source %Bindable instances modification and recreates target value via mapping function.</p>
+      <pre>
+      const count  = new %Property(1);
+      const unit   = new %Property("apples");
+      const target = new %Property<string>();
+
+      const mapper = new %Mapper([count, units], (count: number, units: string) => count + " " + units, {target});
+      expect(target.%getOfBindable()).toBe("1 apples");
+
+      count.%setOfProperty(2);
+      expect(target.%getOfBindable()).toBe("2 apples");
+
+      mapper.%destroy(); // stops synchronization and resets target value to null
+      expect(target.%getOfBindable()).toBe(null);
+      </pre>
+      <p>If <b>target</b> is omitted in constructor, it is created automatically.</p>
+      <pre>
+      const source = new %Property(1);
+      const mapper = new %Mapper([source], (value: number) => value + " apples");
+      const target = mapper.%target;
+      expect(target.%getOfBindable()).toBe("1 apples");
+      mapper.%destroy(); // stops synchronization
+      </pre>
+      <p>In this case, it is optimal to use %mapProperties function instead. It returns target property right away:</p>
+      <pre>
+      const source = new %Property(1);
+      const target = %mapProperties([source], (value: number) => value + " apples");
+      expect(target.%getOfBindable()).toBe("1 apples");
+      target.%baseDestroy(); // stops synchronization
+      </pre>
+      <p>And even better, if you have just one source property, simply call its %mapOfBindable method:
+      <pre>
+      const source = new %Property(1);
+      const target = source.%mapOfBindable(value => value + " apples");
+      expect(target.%getOfBindable()).toBe("1 apples");
+      target.%baseDestroy(); // stops synchronization
+      </pre>
+      <p>If target value is %Destroyable instance, %Mapper can destroy it for you. Just pass %destroyOfConfig config
+      option:</p>
+      <pre>
+      const source = new %Property(1);
+      const target = source.%mapOfBindable(value => new View(value), {%destroyFunction});
+      source.%setOfProperty(2); // assigns target value to new View instance and destroys the previous one
+      target.%baseDestroy(); // stops synchronization and destroys the View
+      </pre>
+
+    topics:
+      flow:
+        header: Flow
+        text: |
+          <p>On source property change, next flow takes place:</p>
+          <ol>
+          <li>Create a new value.</li>
+          <li>Reassign target property.</li>
+          <li>Destroy the old value.</li>
+          </ol>
+          <p>You can override this behaviour by passing %viaNull config option. Setting it to true changes the flow the
+          next way:</p>
+          <ol>
+          <li>Set target value to null.</li>
+          <li>Destroy the old value.</li>
+          <li>Create a new value.</li>
+          <li>Assign target property.</li>
+          </ol>
+          <p>This can be useful if you want the old value to be destroyed before the new value is created.</p>
+
+      viewBinding:
+        header: View binding
+        text: |
+          <p>Common use case for mapper is bindable child component creation by data:</p>
+          <pre>
+          @%template('<div><div jwid="avatar"></div></div>')
+          class ProfileView extends %Component {
+              constructor(private avatar: %Bindable<Avatar>) {
+                  super();
+              }
+
+              protected renderAvatar() {
+                  return this.%own(this.avatar.%mapOfBindable(avatar => new AvatarView(avatar), {%destroyFunction}));
+              }
+          }
+          </pre>
+
+      chaining:
+        header: Chaining
+        text: |
+          <p>Mapper allows you to chain property calculations. Assume that you have several folders and several files
+          in each folder. One folder is selected, and each folder has a selected file inside. You want to create a file
+          view by currently selected file in currently selected folder. You can do it the next way:</p>
+          <pre>
+          class File extends %Class {
+              // ... whatever
+          }
+
+          class Folder extends %Class {
+              readonly selectedFile = new %Property<File>();
+          }
+
+          @%template('<div><div jwid="file"></div></div>')
+          class AppView extends %Component {
+              constructor(private selectedFolder: %Bindable<Folder>) {
+                  super();
+              }
+
+              protected renderFile() {
+                  const target = new %Property<FileView>();
+                  this.own(this.selectedFolder.%mapOfBindable(folder => (
+                      folder.selectedFile.%mapOfBindable(file => new FileView(file), {target, %destroyFunction});
+                  ), {%destroyFunction}));
+                  return target;
+              }
+          }
+          </pre>
+
+    constructor:
+      signature: '(sources: %Bindable<any>[], create: %Mapper.%CreateCallback<%T>, config?: %Mapper.%FullConfig<%T>)'
+      params:
+        sources: Source bindables.
+        create: 'Mapping function. Signature: <code>(...sourceValues: any[]) => %T</code>'
+        config: Configuration.
+      description: |
+        <p>Constructs %Mapper instance. Computes %target property value as result of %create callback and synchronizes
+        it to all %sources. If %targetOfConfig is omitted in %config, creates it automatically.</p>
+
+    properties:
+      sources:
+        type: '%Bindable<any>[]'
+        description: |
+          <p>Source bindables.</p>
+
+      target:
+        type: '%Bindable<%T>'
+        description: |
+          <p>Target property.</p>
+
+    methods:
+      listen:
+        signature: '(event: %Listenable<any>): this'
+        params:
+          event: Event to listen.
+        returns: this
+        description: |
+          <p>Listens specified event and issues target value recalculation on event triggering.</p>
+
+      bind:
+        signature: '(property: %Bindable<any>): this'
+        params:
+          property: Bindable to watch.
+        returns: this
+        description: |
+          <p>Watches specified property and issues target value recalculation on its change.</p>
+
+      update:
+        signature: '()'
+        description: |
+          <p>Updates target property forcibly.</p>
+
+    references:
+      destroyOfConfig:
+        symbol: Mapper.Config
+        member: destroy
+        label: destroy
+
+      targetOfConfig:
+        symbol: Mapper.FullConfig
+        member: target
+        label: target
+
+      viaNull:
+        symbol: Mapper.Config
+        member: viaNull
+        label: viaNull
+
+  Mapper.ByReducer:
+    kind: class
+    typevars:
+      T: Source bindable value type.
+      U: Target property value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Mapper by %Reducer. Kind of mapper optimized for working with collections of similar properties.</p>
+      <pre>
+      const sources: %Bindable<number>[] = [
+          new %Property(3),
+          new %Property(2),
+          new %Property(2)
+      ];
+      const target = new %Property<number>();
+
+      const mapper = new %Mapper.%ByReducer(sources, sum, target);
+      expect(target.%getOfBindable()).toBe(7);
+
+      sources[0].%setOfProperty(5);
+      expect(target.%getOfBindable()).toBe(9);
+      </pre>
+
+    constructor:
+      signature: '(sources: %Bindable<T>[], reducer: %Reducer<T, U>, target?: %IProperty<U>)'
+      params:
+        sources: Source bindables.
+        reducer: Mapping reducer.
+        target: Target property.
+      description: |
+        <p>Constructs %Mapper.%ByReducer instance. Computes %target property value as result of reducer and
+        synchronizes it to all %sources. If %target is omitted, creates it automatically.</p>
+
+    properties:
+      sources:
+        type: '%Bindable<%T>[]'
+        description: Source bindables.
+
+      target:
+        type: '%Bindable<%U>'
+        description: Target property.
+
+      reducer:
+        type: '%Reducer<%T, %U>'
+        description: Mapping reducer.
+
+  mapProperties:
+    signature: |
+      mapProperties<T>(sources: %Bindable<any>[], reducer: %Reducer<any, T>): %DestroyableBindable<T>
+      mapProperties<T>(sources: %Bindable<any>[], create: %Mapper.%CreateCallback<T>, config?: %Mapper.%Config<T>): %DestroyableBindable<T>
+    params:
+      sources: Source bindables.
+      reducer: Mapping reducer.
+      create: 'Mapping function. Signature: <code>(...sourceValues: any[]) => T</code>'
+      config: Configuration.
+    description: |
+      <p>Optimized way to create a mapper with new target value. Returns target property. Destroy it to stop
+      synchronization.</p>
+    references:
+      Config:
+        symbol: Mapper.Config
+
+  Mapper.Config:
+    kind: interface
+    typevars:
+      T: Target property value type.
+    description: |
+      <p>Configuration of %mapProperties function. Partial configuration of %Mapper.</p>
+    properties:
+      destroy:
+        type: '%Mapper.%DestroyCallback<%T>'
+        optional: true
+        description: |
+          <p>Destroys target property value if specified.</p>
+          <p>Signature: <code>(targetValue: %T, ...sourceValues: any[]) => any</code>
+
+      scope:
+        type: any
+        optional: true
+        description: <p>%create and %destroy call scope. Defaults to mapper itself.</p>
+        references:
+          create: {}
+
+      viaNull:
+        type: boolean
+        optional: true
+        description: <p>Reverses %flow.</p>
+        references:
+          flow:
+            symbol: flow
+            label: mapper updating flow
+
+  Mapper.FullConfig:
+    kind: interface
+    typevars:
+      T: Target property value type.
+    extends:
+      - file: jwidget/Mapper
+        symbol: Mapper.Config
+        typevars: [T]
+    description:
+      <p>Full configuration of %Mapper.</p>
+    properties:
+      target:
+        type: '%IProperty<%T>'
+        optional: true
+        description: <p>Target property. By default, created automatically.</p>
+
+references:
+  CreateCallback: {}
+  DestroyCallback: {}
+  ByReducer: {}
+
+  FullConfig:
+    symbol: Mapper.FullConfig
