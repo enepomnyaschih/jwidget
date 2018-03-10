@@ -1,0 +1,110 @@
+symbols:
+  default:
+    kind: class
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Listens source %Property modification and calls the specified functions.</p>
+      <p>%init function is called on switcher initialization and property change. New values of the properties are
+      passed as arguments.</p>
+      <p>%done function is called on property change and switcher destruction. Old values of the properties are passed
+      as arguments.</p>
+      <pre>
+      const property = new %Property(1);
+      const switcher = new %Switcher([property], {
+          %init: (value: number) => console.log("Init " + value),
+          %done: (value: number) => console.log("Done " + value)
+      });                 // output: Init 1
+      property.%setOfProperty(2);    // output: Done 1, Init 2
+      property.%setOfProperty(null); // output: Done 2
+      property.%setOfProperty(3);    // output: Init 3
+      switcher.%destroy(); // output: Done 3
+      </pre>
+      <p>By default, switcher doesn't call the callbacks if at least one of the source values is null. You can change
+      this behaviour using %acceptNull option.</p>
+      <p>The next example demonstrates how you can control "selected" field of your model synchronized to global
+      "selectedFile" property:</p>
+      <pre>
+      const selectedFile = new %Property<File>();
+      new %Switcher([selectedFile], {
+          %init: (file: File) => file.selected.%setOfProperty(true),
+          %done: (file: File) => file.selected.%setOfProperty(false)
+      });
+      </pre>
+
+    constructor:
+      signature: '(sources: %Bindable<any>[], config?: %Switcher.%Config)'
+      params:
+        sources: Source properties.
+        config: Configuration.
+      description: |
+        <p>Constructs %Switcher instance. Calls %init callback if all source values are not null initially. Starts
+        synchronization.</p>
+
+    properties:
+      sources:
+        type: '%Bindable<any>[]'
+        description: <p>Source properties.</p>
+
+    methods:
+      listen:
+        signature: '(event: %Listenable<any>): this'
+        params:
+          event: Event to listen.
+        returns: this
+        description: <p>Listens specified event and issues callback calls on event triggering.</p>
+
+      bind:
+        signature: '(property: %Bindable<any>): this'
+        params:
+          property: Bindable to watch.
+        returns: this
+        description: <p>Watches specified property and issues callback calls on its change.</p>
+
+      update:
+        signature: '()'
+        description: <p>Calls callbacks forcibly.</p>
+
+  Switcher.Config:
+    kind: interface
+    simple: true
+    description: |
+      <p>Configuration of %Switcher.</p>
+    properties:
+      init:
+        type: '%Switcher.%Callback'
+        description: |
+          <p>Value initialization callback.</p>
+          <p>Signature: <code>(...sourceValues: any[]): any</code></p>
+
+      done:
+        type: '%Switcher.%Callback'
+        description: |
+          <p>Value releasing callback.</p>
+          <p>Signature: <code>(...sourceValues: any[]): any</code></p>
+
+      scope:
+        type: any
+        description: <p>%init and %done call scope. Defaults to switcher itself.</p>
+
+      acceptNull:
+        type: boolean
+        description: <p>Set to true if you want the callbacks to be called even if one of source values is null.</p>
+
+references:
+  Config:
+    symbol: Switcher.Config
+
+  init:
+    symbol: Switcher.Config
+    member: init
+
+  done:
+    symbol: Switcher.Config
+    member: done
+
+  acceptNull:
+    symbol: Switcher.Config
+    member: acceptNull
+
+  Callback: {}

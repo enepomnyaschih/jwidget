@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from './Bindable';
 import Class from './Class';
 import {isNotNil} from './index';
 import Listenable from './Listenable';
-import Bindable from './Bindable';
 
 /**
  * Listens source property modification and calls the specified functions.
@@ -63,7 +63,7 @@ class Switcher extends Class {
 
 	/**
 	 * Listens specified event and issues callback calls on event triggering.
-	 * @param event Event.
+	 * @param event Event to listen.
 	 * @returns this
 	 */
 	listen(event: Listenable<any>): this {
@@ -72,7 +72,7 @@ class Switcher extends Class {
 
 	/**
 	 * Watches specified property and issues callback calls on its change.
-	 * @param property Property.
+	 * @param property Bindable to watch.
 	 * @returns this
 	 */
 	bind(property: Bindable<any>): this {
@@ -105,14 +105,14 @@ class Switcher extends Class {
 
 namespace Switcher {
 	/**
-	 * [[JW.Switcher]] callback.
+	 * Switcher callback.
 	 */
 	export interface Callback {
 		(...sourceValues: any[]): any;
 	}
 
 	/**
-	 * [[JW.Switcher]] configuration.
+	 * Configuration of Switcher.
 	 */
 	export interface Config {
 		/**
@@ -126,13 +126,12 @@ namespace Switcher {
 		readonly done?: Callback;
 
 		/**
-		 * [[init]] and [[done]] call scope.
-		 * Defaults to switcher itself.
+		 * `init` and `done` call scope. Defaults to switcher itself.
 		 */
 		readonly scope?: any;
 
 		/**
-		 * If false, functions won't be called if at least one of the source values is null.
+		 * Set to true if you want the callbacks to be called even if one of source values is null.
 		 */
 		readonly acceptNull?: boolean;
 	}

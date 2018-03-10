@@ -244,6 +244,7 @@ symbols:
 
   Mapper.Config:
     kind: interface
+    simple: true
     typevars:
       T: Target property value type.
     description: |
@@ -274,13 +275,14 @@ symbols:
 
   Mapper.FullConfig:
     kind: interface
+    simple: true
     typevars:
       T: Target property value type.
     extends:
       - file: jwidget/Mapper
         symbol: Mapper.Config
         typevars: [T]
-    description:
+    description: |
       <p>Full configuration of %Mapper.</p>
     properties:
       target:
