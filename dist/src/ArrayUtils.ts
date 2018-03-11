@@ -18,12 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {cmp, def} from './index';
-import {identity, initReduceState, VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
 import IList from './IList';
+import {cmp, def} from './index';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
+import {identity, initReduceState, VidMap, VidSet} from './internal';
 import ListSpliceResult from './ListSpliceResult';
 import Reducer from './Reducer';
 import Some from './Some';
@@ -185,7 +185,7 @@ export function maxIndex<T>(arr: T[], callback?: (item: T, index: number) => any
  * @param order Pass positive order to find the highest value, and negative to find the lowest one.
  * @returns Array item.
  */
-export function maxComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T {
+export function maxComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): T {
 	return arr[maxIndexComparing(arr, compare, scope, order)];
 }
 
@@ -199,7 +199,7 @@ export function maxComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i
  * @param order Pass positive order to find the highest value, and negative to find the lowest one.
  * @returns Item index.
  */
-export function maxIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number {
+export function maxIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): number {
 	if (arr.length === 0) {
 		return -1;
 	}
@@ -250,7 +250,7 @@ export function minIndex<T>(arr: T[], callback?: (item: T, index: number) => any
  * @param order Pass positive order to find the lowest value, and negative to find the highest one.
  * @returns Array item.
  */
-export function minComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T {
+export function minComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): T {
 	return maxComparing(arr, compare, scope, -order);
 }
 
@@ -264,7 +264,7 @@ export function minComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i
  * @param order Pass positive order to find the lowest value, and negative to find the highest one.
  * @returns Item index.
  */
-export function minIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number {
+export function minIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): number {
 	return maxIndexComparing(arr, compare, scope, -order);
 }
 
@@ -331,7 +331,7 @@ export function getSortingIndices<T>(arr: T[], callback?: (item: T, index: numbe
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
  * @returns Array of indices.
  */
-export function getSortingIndicesComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number[]{
+export function getSortingIndicesComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[] {
 	compare = compare || cmp;
 	scope = scope || arr;
 	order = order || 1;
@@ -375,7 +375,7 @@ export function toSorted<T>(arr: T[], callback?: (item: T, index: number) => any
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
  * @returns Sorted array.
  */
-export function toSortedComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T[]{
+export function toSortedComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T[] {
 	return getSortingIndicesComparing(arr, compare, scope, order).map(function (index): T {
 		return arr[index];
 	});
