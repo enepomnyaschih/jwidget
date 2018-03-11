@@ -351,17 +351,17 @@ interface IMap<T> extends ICollection<T>, DestroyableReadOnlyMap<T> {
 
 	maxKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
 
-	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T;
+	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
 
-	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string;
+	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
 
 	min(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
 
 	minKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
 
-	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T;
+	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
 
-	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string;
+	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
 
 	/**
 	 * Replaces item with specified key. If map doesn't contain such key, new item is added.

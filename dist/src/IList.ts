@@ -467,17 +467,17 @@ interface IList<T> extends ICollection<T>, DestroyableReadOnlyList<T> {
 
 	maxIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
 
-	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T;
+	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T;
 
-	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number;
+	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
 
 	min(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
 
 	minIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
 
-	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T;
+	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T;
 
-	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number;
+	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
 
 	/**
 	 * Inserts an item to array.

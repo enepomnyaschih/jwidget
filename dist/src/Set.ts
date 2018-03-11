@@ -18,23 +18,23 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import * as ArrayUtils from './ArrayUtils';
 import Bindable from './Bindable';
-import Listenable from './Listenable';
-import {destroy, SILENT, ADAPTER} from './index';
-import {vid, VidSet} from './internal';
 import Class from './Class';
 import Dictionary from './Dictionary';
 import Event from './Event';
-import IList from './IList';
 import IEvent from './IEvent';
+import IList from './IList';
 import IMap from './IMap';
+import {ADAPTER, destroy, SILENT} from './index';
+import {vid, VidSet} from './internal';
 import IProperty from './IProperty';
 import ISet from './ISet';
 import List from './List';
+import Listenable from './Listenable';
 import Map from './Map';
 import Property from './Property';
 import Reducer from './Reducer';
-import * as ArrayUtils from './ArrayUtils';
 
 /**
  * Set is unordered collection optimized for items adding, removal and search. Unlike
@@ -437,7 +437,7 @@ class Set<T> extends Class implements ISet<T> {
 		return ArrayUtils.max(this._items.values, callback, scope, order);
 	}
 
-	maxComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T {
+	maxComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T {
 		return ArrayUtils.maxComparing(this._items.values, compare, scope, order);
 	}
 
@@ -445,7 +445,7 @@ class Set<T> extends Class implements ISet<T> {
 		return ArrayUtils.min(this._items.values, callback, scope, order);
 	}
 
-	minComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T {
+	minComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T {
 		return ArrayUtils.minComparing(this._items.values, compare, scope, order);
 	}
 

@@ -18,26 +18,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import * as ArrayUtils from './ArrayUtils';
 import Bindable from './Bindable';
 import Class from './Class';
-import Listenable from './Listenable';
-import {apply, destroy, CollectionFlags, SILENT, ADAPTER} from './index';
-import {vid, VidSet} from './internal';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
+import * as DictionaryUtils from './DictionaryUtils';
 import Event from './Event';
-import IList from './IList';
 import IEvent from './IEvent';
+import IList from './IList';
 import IMap from './IMap';
+import {ADAPTER, apply, CollectionFlags, destroy, SILENT} from './index';
+import {vid, VidSet} from './internal';
 import IProperty from './IProperty';
 import ISet from './ISet';
 import List from './List';
+import Listenable from './Listenable';
 import Property from './Property';
 import Reducer from './Reducer';
-import Some from './Some';
 import Set from './Set';
-import * as ArrayUtils from './ArrayUtils';
-import * as DictionaryUtils from './DictionaryUtils';
+import Some from './Some';
 
 /**
  * Map is unordered collection. Each item has its own string key.
@@ -522,11 +522,11 @@ class Map<T> extends Class implements IMap<T> {
 		return DictionaryUtils.maxKey(this._items, callback, scope, order);
 	}
 
-	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T {
+	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T {
 		return DictionaryUtils.maxComparing(this._items, compare, scope, order);
 	}
 
-	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string {
+	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string {
 		return DictionaryUtils.maxKeyComparing(this._items, compare, scope, order);
 	}
 
@@ -538,11 +538,11 @@ class Map<T> extends Class implements IMap<T> {
 		return DictionaryUtils.minKey(this._items, callback, scope, order);
 	}
 
-	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T {
+	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T {
 		return DictionaryUtils.minComparing(this._items, compare, scope, order);
 	}
 
-	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string {
+	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string {
 		return DictionaryUtils.minKeyComparing(this._items, compare, scope, order);
 	}
 

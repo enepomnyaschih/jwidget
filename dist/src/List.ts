@@ -18,27 +18,27 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Listenable from './Listenable';
-import {destroy, CollectionFlags, SILENT, ADAPTER} from './index';
-import {vid, VidSet} from './internal';
+import * as ArrayUtils from './ArrayUtils';
+import Bindable from './Bindable';
 import Class from './Class';
 import Dictionary from './Dictionary';
 import Event from './Event';
-import IList from './IList';
 import IEvent from './IEvent';
+import IList from './IList';
 import IMap from './IMap';
-import IProperty from './IProperty';
+import {ADAPTER, CollectionFlags, destroy, SILENT} from './index';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
+import {vid, VidSet} from './internal';
+import IProperty from './IProperty';
 import ISet from './ISet';
+import Listenable from './Listenable';
 import ListSpliceResult from './ListSpliceResult';
 import Map from './Map';
 import Property from './Property';
 import Reducer from './Reducer';
 import Set from './Set';
 import Some from './Some';
-import Bindable from './Bindable';
-import * as ArrayUtils from './ArrayUtils';
 
 /**
  * Array is ordered collection. Each item of array has an index. Index of first item is 0,
@@ -548,11 +548,11 @@ export default class List<T> extends Class implements IList<T> {
 		return ArrayUtils.maxIndex(this._items, callback, scope, order);
 	}
 
-	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T {
+	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T {
 		return ArrayUtils.maxComparing(this._items, compare, scope, order);
 	}
 
-	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number {
+	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number {
 		return ArrayUtils.maxIndexComparing(this._items, compare, scope, order);
 	}
 
@@ -564,11 +564,11 @@ export default class List<T> extends Class implements IList<T> {
 		return ArrayUtils.minIndex(this._items, callback, scope, order);
 	}
 
-	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T {
+	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T {
 		return ArrayUtils.minComparing(this._items, compare, scope, order);
 	}
 
-	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number {
+	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number {
 		return ArrayUtils.minIndexComparing(this._items, compare, scope, order);
 	}
 

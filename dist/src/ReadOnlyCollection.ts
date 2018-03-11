@@ -424,11 +424,11 @@ interface ReadOnlyCollection<T> {
 
 	max(callback?: (item: T) => any, scope?: any, order?: number): T;
 
-	maxComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T;
+	maxComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T;
 
 	min(callback?: (item: T) => any, scope?: any, order?: number): T;
 
-	minComparing(compare?: (t1: T, t2: T) => any, scope?: any, order?: number): T;
+	minComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T;
 }
 
 export default ReadOnlyCollection;

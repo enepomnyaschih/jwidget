@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {apply, cmp} from './index';
-import {cmpPrimitives, identity, initReduceState, VidMap, VidSet} from './internal';
 import Dictionary from './Dictionary';
 import IMap from './IMap';
+import {apply, cmp} from './index';
+import {cmpPrimitives, identity, initReduceState, VidMap, VidSet} from './internal';
 import Reducer from './Reducer';
 import Some from './Some';
 
@@ -198,7 +198,7 @@ export function maxKey<T>(dict: Dictionary<T>, callback?: (item: T, key: string)
  * @param order Pass positive order to find the highest value, and negative to find the lowest one.
  * @returns Dictionary item.
  */
-export function maxComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): T {
+export function maxComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order: number = 1): T {
 	return dict[maxKeyComparing(dict, compare, scope, order)];
 }
 
@@ -212,7 +212,7 @@ export function maxComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1
  * @param order Pass positive order to find the highest value, and negative to find the lowest one.
  * @returns Item key.
  */
-export function maxKeyComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): string {
+export function maxKeyComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order: number = 1): string {
 	compare = compare || cmpPrimitives;
 	scope = scope || dict;
 	let result: string;
@@ -260,7 +260,7 @@ export function minKey<T>(dict: Dictionary<T>, callback?: (item: T, key: string)
  * @param order Pass positive order to find the lowest value, and negative to find the highest one.
  * @returns Dictionary item.
  */
-export function minComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): T {
+export function minComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order: number = 1): T {
 	return maxComparing(dict, compare, scope, -order);
 }
 
@@ -274,7 +274,7 @@ export function minComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1
  * @param order Pass positive order to find the lowest value, and negative to find the highest one.
  * @returns Item key.
  */
-export function minKeyComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order: number = 1): string {
+export function minKeyComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order: number = 1): string {
 	return maxKeyComparing(dict, compare, scope, -order);
 }
 
@@ -600,7 +600,7 @@ export function getSortingKeys<T>(dict: Dictionary<T>, callback?: (item: T, key:
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
  * @returns Array of keys.
  */
-export function getSortingKeysComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string[] {
+export function getSortingKeysComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string[] {
 	compare = compare || cmp;
 	order = order || 1;
 	var pairs: any[] = [];
@@ -643,7 +643,7 @@ export function toSorted<T>(dict: Dictionary<T>, callback?: (item: T, key: strin
  * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
  * @returns Sorted array.
  */
-export function toSortedComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T[] {
+export function toSortedComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T[] {
 	return getSortingKeysComparing(dict, compare, scope, order).map(function (key): T {
 		return dict[key];
 	});

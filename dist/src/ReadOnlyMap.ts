@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Listenable from './Listenable';
 import Dictionary from './Dictionary';
 import IList from './IList';
 import IMap from './IMap';
+import Listenable from './Listenable';
 import ReadOnlyCollection from './ReadOnlyCollection';
 import Reducer from './Reducer';
 
@@ -350,17 +350,17 @@ interface ReadOnlyMap<T> extends ReadOnlyCollection<T> {
 
 	maxKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
 
-	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T;
+	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
 
-	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string;
+	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
 
 	min(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
 
 	minKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
 
-	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T;
+	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
 
-	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string;
+	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
 }
 
 export default ReadOnlyMap;
