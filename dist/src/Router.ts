@@ -18,19 +18,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {defn, identity, isNotNil} from './index';
+import * as ArrayUtils from './ArrayUtils';
 import Bindable from './Bindable';
+import CancelToken from "./CancelToken";
 import Class from './Class';
 import Component from './Component';
 import Copier from './Copier';
+import defer from "./defer";
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
+import * as DictionaryUtils from './DictionaryUtils';
 import hash from './hash';
+import {defn, identity, isNotNil} from './index';
 import IProperty from './IProperty';
 import Property from './Property';
-import Timeout from './Timeout';
-import * as ArrayUtils from './ArrayUtils';
-import * as DictionaryUtils from './DictionaryUtils';
 
 /**
  * This router can handle complicated router hierarchies (something more than a single stack of routers) in exchange
@@ -176,7 +177,7 @@ namespace Router {
 		if (typeof separator === "function") {
 			return separator;
 		}
-		return function(path: string) {
+		return function (path: string) {
 			const result = separator.exec(path || "");
 			return result ? [result[1], defn(ArrayUtils.find(result.slice(2), isNotNil), null)] : null;
 		};
@@ -209,7 +210,7 @@ namespace Router {
 			return joiner;
 		}
 		var trimmer = new RegExp("^(?:" + joiner.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&') + ")*");
-		return function(route, arg) {
+		return function (route, arg) {
 			return !arg ? route : (arg.charAt(0) === "?") ? (route + arg) : (route + joiner + arg.replace(trimmer, ""));
 		};
 	}
@@ -245,7 +246,7 @@ namespace Router {
 			return handler;
 		}
 		const routes = handler.routes || {};
-		return function(this: any, route: string, arg: Bindable<string>): T {
+		return function (this: any, route: string, arg: Bindable<string>): T {
 			return routes[route] ? routes[route].call(this, arg) :
 				handler.notFound ? handler.notFound.call(this, route, arg) : null;
 		};
@@ -271,15 +272,15 @@ namespace Router {
 	export function bindRouting(component: any, path: Bindable<string>): Destroyable {
 		return !component ? null :
 			component.bindRouting ? component.bindRouting(path) :
-			component.path ? new Copier(path, component.path) : null;
+				component.path ? new Copier(path, component.path) : null;
 	}
 
 	export class Redirector extends Component {
 		constructor(private path: string, private router: Router<any>, private replaceState?: boolean) {
 			super();
-			this.own(new Timeout().then(() => {
+			defer(0, this.own(new CancelToken())).then(() => {
 				redirect(this.path, this.router, defn(this.replaceState, true));
-			}));
+			});
 		}
 	}
 
@@ -312,12 +313,12 @@ namespace Router {
 		readonly defaultRoute: string;
 		readonly router: Router<Destroyable>;
 
-		constructor(config: Node.Config)  {
+		constructor(config: Node.Config) {
 			super();
 			this.defaultRoute = config.defaultRoute;
 
 			const routeMap = ArrayUtils.index(config.routes, identity);
-			this._paths    = DictionaryUtils.map(routeMap, () => new Property<string>());
+			this._paths = DictionaryUtils.map(routeMap, () => new Property<string>());
 			this._expanded = DictionaryUtils.map(routeMap, () => new Property(config.expanded === true));
 
 			if (config.expanded && (typeof config.expanded !== "boolean")) {
@@ -376,11 +377,13 @@ namespace Router {
 
 	class NodeExpander extends Class {
 		constructor(private router: Router<any>, sourcePath: Bindable<string>,
-				targetPath: IProperty<string>, expanded: IProperty<boolean>) {
+					targetPath: IProperty<string>, expanded: IProperty<boolean>) {
 			super();
 			this.own(new Copier(sourcePath, targetPath));
 			expanded.set(true);
-			this.own(expanded.changeEvent.listen(() => {this.router.redirect("")}));
+			this.own(expanded.changeEvent.listen(() => {
+				this.router.redirect("")
+			}));
 		}
 	}
 }

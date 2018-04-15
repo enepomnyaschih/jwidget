@@ -58,7 +58,7 @@ export default class Event<P> implements IEvent<P> {
 	 * @param handler Event handler function.
 	 * @param scope `handler` call scope.
 	 */
-	listen(handler: (params: P) => void, scope?: any): Destroyable {
+	listen(handler: (params: P) => any, scope?: any): Destroyable {
 		if (this._attachments === null) {
 			this._attachments = {};
 		}

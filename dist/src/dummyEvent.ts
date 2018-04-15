@@ -29,7 +29,7 @@ class DummyEvent implements IEvent<any> {
 
 	destroy(): void {}
 
-	listen(_handler: (params: any) => void, _scope?: any): Destroyable {
+	listen(_handler: (params: any) => any, _scope?: any): Destroyable {
 		return dummyDestroyable;
 	}
 

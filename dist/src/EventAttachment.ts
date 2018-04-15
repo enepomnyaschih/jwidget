@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {newIid} from './index';
 import Destroyable from './Destroyable';
 import Event from './Event';
 import Identifiable from './Identifiable';
+import {newIid} from './index';
 
 /**
  * @hidden
@@ -29,7 +29,7 @@ import Identifiable from './Identifiable';
 export default class EventAttachment<P> implements Destroyable, Identifiable {
 	readonly iid = newIid();
 
-	constructor(private _event: Event<P>, readonly handler: (params: P) => void, readonly scope: any) {
+	constructor(private _event: Event<P>, readonly handler: (params: P) => any, readonly scope: any) {
 	}
 
 	destroy() {

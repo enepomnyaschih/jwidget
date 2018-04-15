@@ -18,12 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyablePromise from "./DestroyablePromise";
+import CancelToken from "./CancelToken";
 import Dictionary from "./Dictionary";
 import {isNil} from "./index";
-import HttpRequest from "./HttpRequest";
+import request from "./request";
 
 abstract class AbstractRestProvider<C> {
+
 	private mock: Dictionary<string>;
 	private url: string;
 	private urlBuilder: (action: string) => string;
@@ -53,49 +54,50 @@ abstract class AbstractRestProvider<C> {
 			(this.urlBuilder ? this.urlBuilder(action) : this.url.replace("${action}", action));
 	}
 
-	get<T>(action: string | string[], data?: any, factory?: (response: any) => T, context?: C) {
-		return this.send("GET", action, data, context, factory);
+	get<T>(action: string | string[], config?: AbstractRestProvider.DataConfig<C, T>) {
+		return this.send("GET", action, config);
 	}
 
-	post(action: string | string[], data?: any, context?: C) {
-		return this.send("POST", action, data, context);
+	post<T>(action: string | string[], config?: AbstractRestProvider.DataConfig<C, T>) {
+		return this.send("POST", action, config);
 	}
 
-	put(action: string | string[], data?: any, context?: C) {
-		return this.send("PUT", action, data, context);
+	put<T>(action: string | string[], config?: AbstractRestProvider.DataConfig<C, T>) {
+		return this.send("PUT", action, config);
 	}
 
-	patch(action: string | string[], data?: any, context?: C) {
-		return this.send("PATCH", action, data, context);
+	patch<T>(action: string | string[], config?: AbstractRestProvider.DataConfig<C, T>) {
+		return this.send("PATCH", action, config);
 	}
 
-	del(action: string | string[], data?: any, context?: C) {
-		return this.send("DELETE", action, data, context);
+	del<T>(action: string | string[], config?: AbstractRestProvider.DataConfig<C, T>) {
+		return this.send("DELETE", action, config);
 	}
 
-	upload(action: string | string[], data: File, context?: C) {
-		return this.send("POST", action, data, context, null, {
+	upload<T>(action: string | string[], config?: AbstractRestProvider.UploadConfig<C, T>) {
+		return this.send("POST", action, config, {
 			processData: false,
 			contentType: false
 		});
 	}
 
-	private send<T>(type: string, action: string | string[], data: any, context: C,
-			factory?: (response: any) => T, settings?: JQueryAjaxSettings): DestroyablePromise<T> {
+	private send<T>(type: string, action: string | string[], config: AbstractRestProvider.DataConfig<C, T> = {}, settings?: JQueryAjaxSettings): Promise<T> {
 		const url = this.getUrl(action, type);
 		if (url === null) {
-			return new HttpRequest<T>();
+			return request<T>();
 		}
-		const contentType = (settings && settings.contentType != null) ?
-			settings.contentType : this.getContentType(context);
+		const data = config.data,
+			contentType = (settings && settings.contentType != null) ?
+				settings.contentType : this.getContentType(config.context);
 		settings = $.extend({}, this.settings, settings, {
 			url: url,
 			type: type,
-			headers: this.getHeaders(context),
+			headers: this.getHeaders(config.context),
 			contentType: contentType,
-			data: (contentType === "application/json" && data != null) ? JSON.stringify(data) : data
+			data: (type !== "GET" && type !== "DELETE" && contentType === "application/json" && data != null) ?
+				JSON.stringify(data) : data
 		});
-		return new HttpRequest<T>($.ajax(settings), factory);
+		return request<T>($.ajax(settings), config.factory, config.cancelToken);
 	}
 }
 
@@ -107,5 +109,19 @@ namespace AbstractRestProvider {
 		urlBuilder?: (action: string) => string;
 		mock?: Dictionary<string>;
 		settings?: JQueryAjaxSettings;
+	}
+
+	export interface BaseConfig<C, T> {
+		readonly cancelToken?: CancelToken;
+		readonly context?: C;
+		readonly factory?: (response: any) => T;
+	}
+
+	export interface DataConfig<C, T> extends BaseConfig<C, T> {
+		readonly data?: any;
+	}
+
+	export interface UploadConfig<C, T> extends BaseConfig<C, T> {
+		readonly data?: File;
 	}
 }

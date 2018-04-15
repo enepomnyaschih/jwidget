@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractDestroyablePromise from "../AbstractDestroyablePromise";
+import AbstractDestroyablePromise from "../experimental/AbstractDestroyablePromise";
 
 class Timeout extends AbstractDestroyablePromise<number> {
 	private timeout: number;
