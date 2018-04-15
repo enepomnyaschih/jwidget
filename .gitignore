@@ -5,6 +5,7 @@
 !/dist/.bowerrc
 !/dist/.npmignore
 !/dist/bower.json
+!/dist/clean.sh
 !/dist/karma.conf.js
 !/dist/package.json
 !/dist/tsconfig.json

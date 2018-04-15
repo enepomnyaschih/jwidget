@@ -86,6 +86,11 @@ class Router<T extends Destroyable> extends Class {
 		if (this._updating) {
 			throw new Error("Router can not be destroyed during its update cycle.");
 		}
+		const target = this._target.get();
+		if (target != null) {
+			this._target.set(null);
+			target.destroy();
+		}
 		super.destroyObject();
 	}
 

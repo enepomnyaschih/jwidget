@@ -3,6 +3,7 @@
 /.bowerrc
 /.npmignore
 /bower.json
+/clean.sh
 /karma.conf.js
 /tsconfig.json
 /webpack.config.js
