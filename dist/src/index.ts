@@ -203,6 +203,8 @@ export function smartCmp(x: any, y: any, config?: CmpConfig): number {
 	switch (xRank) {
 		case "array": return cmpArrays(x, y, config);
 		case "boolean": return cmpBooleans(x, y);
+		case "identifiable":
+			return cmpIdentifiables(x, y);
 		case "string": return cmpStrings(x, y);
 		default: return cmpPrimitives(x, y);
 	}
@@ -224,11 +226,8 @@ export interface CmpConfig {
 }
 
 function getTypeRank(x: any): string {
-	return (x === undefined) ? "0" : (x === null) ? "1" : isArray(x) ? "array" : typeof x;
-}
-
-function cmpBooleans(x: boolean, y: boolean): number {
-	return x ? (y ? 0 : 1) : (y ? -1 : 0);
+	return (x === undefined) ? "0" : (x === null) ? "1" : isArray(x) ? "array" :
+		(typeof x.iid === "number") ? "identifiable" : typeof x;
 }
 
 function cmpArrays(x: any[], y: any[], config?: CmpConfig): number {
@@ -240,6 +239,14 @@ function cmpArrays(x: any[], y: any[], config?: CmpConfig): number {
 		}
 	}
 	return cmpPrimitives(x.length, y.length);
+}
+
+function cmpBooleans(x: boolean, y: boolean): number {
+	return x ? (y ? 0 : 1) : (y ? -1 : 0);
+}
+
+function cmpIdentifiables(x: Identifiable, y: Identifiable): number {
+	return cmpPrimitives(x.iid, y.iid);
 }
 
 function cmpStrings(x: string, y: string, config?: CmpConfig): number {
