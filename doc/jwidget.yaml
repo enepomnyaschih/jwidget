@@ -280,7 +280,7 @@ symbols:
       </ul>
       <p>In reality, it supports the next features:</p>
       <ul>
-        <li>Comparing of boolean, number, string values, subarrays</li>
+        <li>Comparing of boolean, number, string, %Identifiable (by %iid) values, subarrays</li>
         <li>Determined linear order, even for mixed arrays</li>
         <li>Case insensitive comparing for strings</li>
         <li>Comparing of digit sequences in strings as numbers</li>
