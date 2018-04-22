@@ -41,7 +41,7 @@ export default class CancelToken implements Destroyable {
 
 	destroy() {
 		this._event.trigger();
-		this._event.destroy();
+		this._event.purge();
 		this._event = null;
 	}
 }

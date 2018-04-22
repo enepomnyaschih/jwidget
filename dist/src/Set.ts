@@ -173,9 +173,9 @@ class Set<T> extends Class implements ISet<T> {
 		this._items = VidSet.fromArray<T>(items, this.getKey);
 		this._length = this.own(new Property(items.length, silent));
 
-		this._spliceEvent = Event.make<ISet.SpliceEventParams<T>>(this, silent);
-		this._clearEvent  = Event.make<ISet.ItemsEventParams<T>>(this, silent);
-		this._changeEvent = Event.make<ISet.EventParams<T>>(this, silent);
+		this._spliceEvent = Event.make<ISet.SpliceEventParams<T>>(silent);
+		this._clearEvent = Event.make<ISet.ItemsEventParams<T>>(silent);
+		this._changeEvent = Event.make<ISet.EventParams<T>>(silent);
 	}
 
 	protected destroyObject(): void {

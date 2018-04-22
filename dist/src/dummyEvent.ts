@@ -23,11 +23,13 @@ import dummyDestroyable from "./dummyDestroyable";
 import IEvent from "./IEvent";
 
 class DummyEvent implements IEvent<any> {
+
 	get dummy() {
 		return true;
 	}
 
-	destroy(): void {}
+	purge(): void {
+	}
 
 	listen(_handler: (params: any) => any, _scope?: any): Destroyable {
 		return dummyDestroyable;

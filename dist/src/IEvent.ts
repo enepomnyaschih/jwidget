@@ -18,13 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Destroyable from "./Destroyable";
 import Listenable from "./Listenable";
 
 /**
  * Extension of `Listenable` interface with `trigger` method.
  */
-interface IEvent<P> extends Listenable<P>, Destroyable {
+interface IEvent<P> extends Listenable<P> {
 	/**
 	 * Triggers event, i.e. calls all bound handlers.
 	 * @param params Event params.
@@ -32,10 +31,9 @@ interface IEvent<P> extends Listenable<P>, Destroyable {
 	trigger(params?: P): void;
 
 	/**
-	 * Class destructor invocation method. Unbinds all event handlers.
-	 * As opposed to the majority of classes, you can call event's `destroy` method multiple times.
+	 * Unbinds all event handlers.
 	 */
-	destroy(): void;
+	purge(): void;
 }
 
 export default IEvent;

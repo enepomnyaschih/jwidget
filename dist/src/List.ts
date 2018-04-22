@@ -225,12 +225,12 @@ export default class List<T> extends Class implements IList<T> {
 		this._items = adapter ? items : items ? items.concat() : [];
 		this._length = this.own(new Property(this._items.length, silent));
 
-		this._spliceEvent  = Event.make<IList.SpliceEventParams<T>>(this, silent);
-		this._replaceEvent = Event.make<IList.ReplaceEventParams<T>>(this, silent);
-		this._moveEvent    = Event.make<IList.MoveEventParams<T>>(this, silent);
-		this._reorderEvent = Event.make<IList.ReorderEventParams<T>>(this, silent);
-		this._clearEvent   = Event.make<IList.ItemsEventParams<T>>(this, silent);
-		this._changeEvent  = Event.make<IList.EventParams<T>>(this, silent);
+		this._spliceEvent = Event.make<IList.SpliceEventParams<T>>(silent);
+		this._replaceEvent = Event.make<IList.ReplaceEventParams<T>>(silent);
+		this._moveEvent = Event.make<IList.MoveEventParams<T>>(silent);
+		this._reorderEvent = Event.make<IList.ReorderEventParams<T>>(silent);
+		this._clearEvent = Event.make<IList.ItemsEventParams<T>>(silent);
+		this._changeEvent = Event.make<IList.EventParams<T>>(silent);
 	}
 
 	protected destroyObject(): void {

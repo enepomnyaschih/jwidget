@@ -201,10 +201,10 @@ class Map<T> extends Class implements IMap<T> {
 		this._items = this._adapter ? items : apply<T>({}, items);
 		this._length = this.own(new Property(DictionaryUtils.getLength(this._items), silent));
 
-		this._spliceEvent  = Event.make<IMap.SpliceEventParams<T>>(this, silent);
-		this._reindexEvent = Event.make<IMap.ReindexEventParams<T>>(this, silent);
-		this._clearEvent   = Event.make<IMap.ItemsEventParams<T>>(this, silent);
-		this._changeEvent  = Event.make<IMap.EventParams<T>>(this, silent);
+		this._spliceEvent = Event.make<IMap.SpliceEventParams<T>>(silent);
+		this._reindexEvent = Event.make<IMap.ReindexEventParams<T>>(silent);
+		this._clearEvent = Event.make<IMap.ItemsEventParams<T>>(silent);
+		this._changeEvent = Event.make<IMap.EventParams<T>>(silent);
 	}
 
 	protected destroyObject(): void {

@@ -22,7 +22,6 @@ import Destroyable from "./Destroyable";
 import Dictionary from "./Dictionary";
 import dummyEvent from "./dummyEvent";
 import EventAttachment from "./EventAttachment";
-import IClass from "./IClass";
 import IEvent from "./IEvent";
 
 /**
@@ -40,10 +39,9 @@ export default class Event<P> implements IEvent<P> {
 	}
 
 	/**
-	 * Class destructor invocation method. Unbinds all event handlers.
-	 * As opposed to the majority of classes, you can call event's `destroy` method multiple times.
+	 * Unbinds all event handlers.
 	 */
-	destroy() {
+	purge() {
 		this._attachments = null;
 	}
 
@@ -92,12 +90,10 @@ export default class Event<P> implements IEvent<P> {
 	}
 
 	/**
-	 * If `dummy` argument is false, returns a new instance of `Event` aggregated in the
-	 * `owner` object. Else returns `dummyEvent`.
-	 * @param owner An object to aggregate a new event in.
-	 * @param dummy Determines if dummy event should be used instead.
+	 * If `dummy` argument is false, returns a new instance of `Event`. Else returns `dummyEvent`.
+	 * @param dummy Determines if dummy event should be used.
 	 */
-	static make<P>(owner: IClass, dummy: boolean): IEvent<P> {
-		return dummy ? dummyEvent : owner.own(new Event<P>());
+	static make<P>(dummy: boolean): IEvent<P> {
+		return dummy ? dummyEvent : new Event<P>();
 	}
 }

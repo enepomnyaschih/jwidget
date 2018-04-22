@@ -5,7 +5,6 @@ symbols:
       P: Event parameters.
     showInheritanceLevels: 1
     extends:
-      - file: jwidget/Destroyable
       - file: jwidget/Listenable
     description: |
       <p>Extension of %Listenable interface with %trigger method.</p>
@@ -31,9 +30,8 @@ symbols:
           </pre>
           <p>This way, we've called all handlers of <code>myEvent</code> with parameters <code>{sender: this}</code>.
 
-      destroy:
+      purge:
         signature: |
           (): void
         description: |
-          <p>Class destructor invocation method. Unbinds all event handlers. As opposed to the majority of classes,
-          you can call event's %destroy method multiple times.</p>
+          <p>Unbinds all event handlers.</p>

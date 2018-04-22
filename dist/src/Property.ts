@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from "./Bindable";
 import Class from "./Class";
-import {destroy} from "./index";
-import Listenable from "./Listenable";
 import DestroyableBindable from "./DestroyableBindable";
 import Event from "./Event";
 import IEvent from "./IEvent";
+import {destroy} from "./index";
 import IProperty from "./IProperty";
+import Listenable from "./Listenable";
 import {default as Mapper, mapProperties} from "./Mapper";
-import Bindable from "./Bindable";
 
 /**
  * Container for a value. Provides basic data binding functionality.
@@ -43,7 +43,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 */
 	constructor(protected value: V = null, silent: boolean = false) {
 		super();
-		this._changeEvent = Event.make<Bindable.ChangeEventParams<V>>(this, silent);
+		this._changeEvent = Event.make<Bindable.ChangeEventParams<V>>(silent);
 	}
 
 	protected destroyObject() {

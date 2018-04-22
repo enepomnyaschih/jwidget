@@ -67,11 +67,9 @@ symbols:
     staticMethods:
       make:
         signature: |
-          <P>(owner: %IClass, dummy: boolean): %IEvent<P>
+          <P>(dummy: boolean): %IEvent<P>
         params:
-          owner: 'Object to aggregate new event in.'
           dummy: 'Determines if dummy event should be used instead.'
         returns: 'Event object.'
         description: |
-          If %dummy argument is false, returns a new instance of %Event aggregated in the %owner object.
-          Else returns %dummyEvent.
+          If %dummy argument is false, returns a new instance of %Event. Else returns %dummyEvent.
