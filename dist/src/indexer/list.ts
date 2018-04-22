@@ -66,7 +66,7 @@ export default class ListIndexer<T> extends AbstractIndexer<T> {
 export function indexList<T>(source: ReadOnlyList<T>, getKey: (item: T) => any,
 							 scope?: any): DestroyableReadOnlyMap<T> {
 	if (source.silent) {
-		return source.$index(getKey, scope);
+		return source.index(getKey, scope);
 	}
 	const target = new Map<T>(source.getKey);
 	return target.owning(new ListIndexer<T>(source, getKey, {target, scope}));

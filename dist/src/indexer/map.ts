@@ -60,7 +60,7 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 export function indexMap<T>(source: ReadOnlyMap<T>, getKey: (item: T) => any,
 							scope?: any): DestroyableReadOnlyMap<T> {
 	if (source.silent) {
-		return source.$index(getKey, scope);
+		return source.index(getKey, scope);
 	}
 	const target = new Map<T>(source.getKey);
 	return target.owning(new MapIndexer<T>(source, getKey, {target, scope}));

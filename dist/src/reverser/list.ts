@@ -203,7 +203,7 @@ namespace ListReverser {
 
 export function reverseList<T>(source: ReadOnlyList<T>): DestroyableReadOnlyList<T> {
 	if (source.silent) {
-		return source.$toReversed();
+		return source.toReversed();
 	}
 	const target = new List<T>(source.getKey);
 	return target.owning(new ListReverser<T>(source, {target}));

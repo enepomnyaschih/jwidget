@@ -59,7 +59,7 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this.target.tryRemoveAll(this.source.getKeys());
+		this.target.tryRemoveAll(this.source.getKeys().items);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}

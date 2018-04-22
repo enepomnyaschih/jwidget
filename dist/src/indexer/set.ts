@@ -59,7 +59,7 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
 export function indexSet<T>(source: ReadOnlySet<T>, getKey: (item: T) => any,
 							scope?: any): DestroyableReadOnlyMap<T> {
 	if (source.silent) {
-		return source.$index(getKey, scope);
+		return source.index(getKey, scope);
 	}
 	const target = new Map<T>(source.getKey);
 	return target.owning(new SetIndexer<T>(source, getKey, {target, scope}));

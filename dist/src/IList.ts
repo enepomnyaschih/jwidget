@@ -19,7 +19,6 @@
 */
 
 import DestroyableReadOnlyList from './DestroyableReadOnlyList';
-import Dictionary from './Dictionary';
 import ICollection from './ICollection';
 import IMap from './IMap';
 import Listenable from './Listenable';
@@ -253,69 +252,27 @@ interface IList<T> extends ICollection<T>, DestroyableReadOnlyList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): T[];
+	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<T>;
+	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): T[];
+	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<number>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<T>;
+	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number>;
 
 	/**
 	 * @inheritdoc
 	 */
-	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[];
-
-	/**
-	 * Returns keys of sorted items.
-	 *
-	 * Builds array of item keys, sorted by result of callback call for each item.
-	 *
-	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[cmp]]. Returns item itself by default.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted item keys array.
-	 */
-	$getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<number>;
-
-	/**
-	 * @inheritdoc
-	 */
-	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): number[];
-
-	/**
-	 * Returns keys of sorted items.
-	 *
-	 * Builds array of item keys, sorted by comparer.
-	 *
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[cmp]]
-	 * @param scope **comparer** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted item keys array.
-	 */
-	$getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number>;
-
-	/**
-	 * @inheritdoc
-	 */
-	index(callback: (item: T, index: number) => any, scope?: any): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$index(callback: (item: T, index: number) => any, scope?: any): IMap<T>;
+	index(callback: (item: T, index: number) => any, scope?: any): IMap<T>;
 
 	/**
 	 * @inheritdoc
@@ -408,15 +365,7 @@ interface IList<T> extends ICollection<T>, DestroyableReadOnlyList<T> {
 	 *
 	 * @returns Reversed array.
 	 */
-	toReversed(): T[];
-
-	/**
-	 * Builds a new array containing items of this array in reversed order.
-	 * Current array is not modified.
-	 *
-	 * @returns Reversed array.
-	 */
-	$toReversed(): IList<T>;
+	toReversed(): IList<T>;
 
 	/**
 	 * Checks for equality (===) to another array, item by item.
@@ -461,6 +410,7 @@ interface IList<T> extends ICollection<T>, DestroyableReadOnlyList<T> {
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
 
 	reduce<U>(reducer: Reducer<T, U>): U;
+
 	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
 
 	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;

@@ -58,7 +58,7 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 export function sortMapComparing<T>(source: ReadOnlyMap<T>,
 		config?: AbstractSorterComparing.Config<T>): DestroyableReadOnlyList<T> {
 	if (source.silent) {
-		return source.$toSortedComparing(config.compare, config.scope, config.order);
+		return source.toSortedComparing(config.compare, config.scope, config.order);
 	}
 	const target = new List<T>(source.getKey);
 	return target.owning(new MapSorterComparing<T>(source, {

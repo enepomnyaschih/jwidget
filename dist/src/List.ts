@@ -21,7 +21,6 @@
 import * as ArrayUtils from './ArrayUtils';
 import Bindable from './Bindable';
 import Class from './Class';
-import Dictionary from './Dictionary';
 import Event from './Event';
 import IEvent from './IEvent';
 import IList from './IList';
@@ -182,12 +181,12 @@ export default class List<T> extends Class implements IList<T> {
 	private _length: IProperty<number>;
 	private _items: T[];
 
-	private _spliceEvent  : IEvent<IList.SpliceEventParams<T>>;
-	private _replaceEvent : IEvent<IList.ReplaceEventParams<T>>;
-	private _moveEvent    : IEvent<IList.MoveEventParams<T>>;
-	private _reorderEvent : IEvent<IList.ReorderEventParams<T>>;
-	private _clearEvent   : IEvent<IList.ItemsEventParams<T>>;
-	private _changeEvent  : IEvent<IList.EventParams<T>>;
+	private _spliceEvent: IEvent<IList.SpliceEventParams<T>>;
+	private _replaceEvent: IEvent<IList.ReplaceEventParams<T>>;
+	private _moveEvent: IEvent<IList.MoveEventParams<T>>;
+	private _reorderEvent: IEvent<IList.ReorderEventParams<T>>;
+	private _clearEvent: IEvent<IList.ItemsEventParams<T>>;
+	private _changeEvent: IEvent<IList.EventParams<T>>;
 
 	/**
 	 * Identifies an item in this collection for optimization of some algorithms.
@@ -444,71 +443,36 @@ export default class List<T> extends Class implements IList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): T[] {
-		return ArrayUtils.toSorted(this._items, callback, scope || this, order);
+	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<T> {
+		return new List<T>(ArrayUtils.toSorted(this._items, callback, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSorted(callback, scope, order), this.getKey, SILENT | ADAPTER);
+	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<T> {
+		return new List<T>(ArrayUtils.toSortedComparing(this._items, compare, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): T[] {
-		return ArrayUtils.toSortedComparing(this._items, compare, scope || this, order);
+	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<number> {
+		return new List<number>(ArrayUtils.getSortingIndices(this._items, callback, scope || this, order), String, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSortedComparing(compare, scope, order), this.getKey, SILENT | ADAPTER);
+	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number> {
+		return new List<number>(ArrayUtils.getSortingIndicesComparing(this._items, compare, scope || this, order), String, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[] {
-		return ArrayUtils.getSortingIndices(this._items, callback, scope || this, order);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<number> {
-		return new List<number>(this.getSortingIndices(callback, scope, order), String, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): number[] {
-		return ArrayUtils.getSortingIndicesComparing(this._items, compare, scope || this, order);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number> {
-		return new List<number>(this.getSortingIndicesComparing(compare, scope, order), String, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	index(callback: (item: T, index: number) => any, scope?: any): Dictionary<T> {
-		return ArrayUtils.index(this._items, callback, scope);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$index(callback: (item: T, index: number) => any, scope?: any): IMap<T> {
-		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
+	index(callback: (item: T, index: number) => any, scope?: any): IMap<T> {
+		return new Map<T>(ArrayUtils.index(this._items, callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -683,8 +647,8 @@ export default class List<T> extends Class implements IList<T> {
 		if (oldProxy === undefined) {
 			return undefined;
 		}
-		this._replaceEvent.trigger({ sender: this, index: index, oldItem: oldProxy.value, newItem: item });
-		this._changeEvent.trigger({ sender: this });
+		this._replaceEvent.trigger({sender: this, index: index, oldItem: oldProxy.value, newItem: item});
+		this._changeEvent.trigger({sender: this});
 		if (this._ownsItems) {
 			(<any>oldProxy.value).destroy();
 		}
@@ -748,7 +712,7 @@ export default class List<T> extends Class implements IList<T> {
 	 * @param count Count of items to remove.
 	 * @returns The removed items.
 	 */
-	removeAll(index: number, count: number): T[]{
+	removeAll(index: number, count: number): T[] {
 		var result = this.tryRemoveAll(index, count);
 		return result || [];
 	}
@@ -760,7 +724,7 @@ export default class List<T> extends Class implements IList<T> {
 	 * @param count Count of items to remove.
 	 * @returns The removed items. If collection is not modified, returns undefined.
 	 */
-	tryRemoveAll(index: number, count: number): T[]{
+	tryRemoveAll(index: number, count: number): T[] {
 		var result = this.trySplice([new IndexCount(index, count)], []);
 		if (result !== undefined) {
 			return result.removedItemsList[0].items;
@@ -801,22 +765,22 @@ export default class List<T> extends Class implements IList<T> {
 		if (item === undefined) {
 			return undefined;
 		}
-		this._moveEvent.trigger({ sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item });
-		this._changeEvent.trigger({ sender: this });
+		this._moveEvent.trigger({sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item});
+		this._changeEvent.trigger({sender: this});
 		return item;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	clear(): T[]{
+	clear(): T[] {
 		var oldItems = ArrayUtils.tryClear(this._items);
 		if (oldItems === undefined) {
 			return undefined;
 		}
 		this._length.set(0);
-		this._clearEvent.trigger({ sender: this, items: oldItems });
-		this._changeEvent.trigger({ sender: this });
+		this._clearEvent.trigger({sender: this, items: oldItems});
+		this._changeEvent.trigger({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(oldItems, destroy);
 		}
@@ -848,8 +812,8 @@ export default class List<T> extends Class implements IList<T> {
 			return undefined;
 		}
 		this._length.set(this._items.length);
-		this._spliceEvent.trigger({ sender: this, spliceResult: result });
-		this._changeEvent.trigger({ sender: this });
+		this._spliceEvent.trigger({sender: this, spliceResult: result});
+		this._changeEvent.trigger({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(result.removedItems, destroy);
 		}
@@ -873,13 +837,13 @@ export default class List<T> extends Class implements IList<T> {
 	 * Must contain all indexes from 0 to (length - 1).
 	 * @returns Old array contents. If collection is not modified, returns undefined.
 	 */
-	tryReorder(indexArray: number[]): T[]{
+	tryReorder(indexArray: number[]): T[] {
 		var items = ArrayUtils.tryReorder(this._items, indexArray);
 		if (items === undefined) {
 			return undefined;
 		}
-		this._reorderEvent.trigger({ sender: this, indexArray: indexArray, items: items });
-		this._changeEvent.trigger({ sender: this });
+		this._reorderEvent.trigger({sender: this, indexArray: indexArray, items: items});
+		this._changeEvent.trigger({sender: this});
 		return items;
 	}
 
@@ -911,7 +875,7 @@ export default class List<T> extends Class implements IList<T> {
 	 * @returns **removeParamsList** argument of [[splice]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectFilter(newItems: T[]): IList.IndexCount[]{
+	detectFilter(newItems: T[]): IList.IndexCount[] {
 		return ArrayUtils.detectFilter(this._items, newItems);
 	}
 
@@ -944,7 +908,7 @@ export default class List<T> extends Class implements IList<T> {
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
+	detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[] {
 		return ArrayUtils.detectSort(this._items, callback, scope || this, order);
 	}
 
@@ -959,7 +923,7 @@ export default class List<T> extends Class implements IList<T> {
 	 * @returns **indexArray** argument of [[reorder]] method.
 	 * If no method call required, returns undefined.
 	 */
-	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[]{
+	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[] {
 		return ArrayUtils.detectSortComparing(this._items, compare, scope || this, order);
 	}
 
@@ -1069,18 +1033,8 @@ export default class List<T> extends Class implements IList<T> {
 	 *
 	 * @returns Reversed array.
 	 */
-	toReversed(): T[] {
-		return ArrayUtils.toReversed(this._items);
-	}
-
-	/**
-	 * Builds a new array containing items of this array in reversed order.
-	 * Current array is not modified.
-	 *
-	 * @returns Reversed array.
-	 */
-	$toReversed(): IList<T> {
-		return new List(this.toReversed(), this.getKey, SILENT | ADAPTER);
+	toReversed(): IList<T> {
+		return new List(ArrayUtils.toReversed(this._items), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**

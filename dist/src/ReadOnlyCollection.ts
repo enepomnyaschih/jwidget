@@ -19,7 +19,6 @@
 */
 
 import Bindable from './Bindable';
-import Dictionary from './Dictionary';
 import ICollection from './ICollection';
 import IList from './IList';
 import IMap from './IMap';
@@ -267,20 +266,7 @@ interface ReadOnlyCollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
 	 */
-	toSorted(callback?: (item: T) => any, scope?: any, order?: number): T[];
-
-	/**
-	 * Converts collection to sorted array.
-	 *
-	 * Builds array consisting of collection items sorted by result of callback call for each item.
-	 *
-	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[cmp]]. Returns item itself by default.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted array.
-	 */
-	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T>;
+	toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * Converts collection to sorted array.
@@ -294,21 +280,7 @@ interface ReadOnlyCollection<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Sorted array.
 	 */
-	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[];
-
-	/**
-	 * Converts collection to sorted array.
-	 *
-	 * Builds array consisting of collection items sorted by comparer.
-	 *
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[cmp]]
-	 * @param scope **comparer** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted array.
-	 */
-	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T>;
+	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * Indexes collection.
@@ -319,18 +291,7 @@ interface ReadOnlyCollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Collection index.
 	 */
-	index(callback: (item: T) => any, scope?: any): Dictionary<T>;
-
-	/**
-	 * Indexes collection.
-	 *
-	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
-	 *
-	 * @param callback Indexer function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Collection index.
-	 */
-	$index(callback: (item: T) => any, scope?: any): IMap<T>;
+	index(callback: (item: T) => any, scope?: any): IMap<T>;
 
 	/**
 	 * Converts collection to array.
@@ -420,6 +381,7 @@ interface ReadOnlyCollection<T> {
 	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => any): ICollection<U>;
 
 	reduce<U>(reducer: Reducer<T, U>): U;
+
 	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U;
 
 	max(callback?: (item: T) => any, scope?: any, order?: number): T;

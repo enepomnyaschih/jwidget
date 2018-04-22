@@ -295,19 +295,14 @@ namespace ListMerger {
 export function mergeLists<T>(source: ReadOnlyList<ReadOnlyList<T>>,
 							  getKey?: (item: T) => any): DestroyableReadOnlyList<T> {
 	if (source.silent && source.every((item) => item.silent)) {
-		return $mergeNoSync(source, getKey);
+		return mergeNoSync(source, getKey);
 	}
 	const target = new List<T>(getKey);
 	return target.owning(new ListMerger<T>(source, {target}));
 }
 
-export function mergeNoSync<T>(source: ReadOnlyList<ReadOnlyList<T>>): T[] {
-	return ArrayUtils.merge(source.items.map((item) => item.items));
-}
-
-export function $mergeNoSync<T>(source: ReadOnlyList<ReadOnlyList<T>>,
-								getKey?: (item: T) => any): DestroyableReadOnlyList<T> {
-	return new List(mergeNoSync(source), getKey, SILENT & ADAPTER);
+export function mergeNoSync<T>(source: ReadOnlyList<ReadOnlyList<T>>, getKey?: (item: T) => any): IList<T> {
+	return new List(ArrayUtils.merge(source.items.map((item) => item.items)), getKey, SILENT & ADAPTER);
 }
 
 class Bunch<T> extends Class {

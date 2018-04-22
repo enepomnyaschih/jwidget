@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import IList from "./IList";
 import ISet from './ISet';
 import Listenable from './Listenable';
 import ReadOnlyCollection from './ReadOnlyCollection';
@@ -153,12 +154,12 @@ interface ReadOnlySet<T> extends ReadOnlyCollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSorted(callback?: (item: T) => any, scope?: any, order?: number): T[];
+	toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[];
+	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc

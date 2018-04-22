@@ -61,7 +61,7 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 	 * @inheritdoc
 	 */
 	protected destroyObject() {
-		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys()), this.source.items);
+		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys().items), this.source.items);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -122,7 +122,7 @@ namespace MapMapper {
 }
 
 export function mapMap<T, U>(source: ReadOnlyMap<T>, create: (sourceValue: T) => U,
-		config: AbstractMapper.Config<T, U> = {}): DestroyableReadOnlyMap<U> {
+							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadOnlyMap<U> {
 	if (!source.silent) {
 		const target = new Map<U>(config.getKey);
 		return target.owning(new MapMapper<T, U>(source, create, {

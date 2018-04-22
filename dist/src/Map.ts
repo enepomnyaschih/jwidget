@@ -159,10 +159,10 @@ class Map<T> extends Class implements IMap<T> {
 	private _adapter: boolean;
 	private _items: Dictionary<T>;
 
-	private _spliceEvent  : IEvent<IMap.SpliceEventParams<T>>;
-	private _reindexEvent : IEvent<IMap.ReindexEventParams<T>>;
-	private _clearEvent   : IEvent<IMap.ItemsEventParams<T>>;
-	private _changeEvent  : IEvent<IMap.EventParams<T>>;
+	private _spliceEvent: IEvent<IMap.SpliceEventParams<T>>;
+	private _reindexEvent: IEvent<IMap.ReindexEventParams<T>>;
+	private _clearEvent: IEvent<IMap.ItemsEventParams<T>>;
+	private _changeEvent: IEvent<IMap.EventParams<T>>;
 
 	/**
 	 * Identifies an item in this collection for optimization of some algorithms.
@@ -337,15 +337,8 @@ class Map<T> extends Class implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	getKeys(): string[] {
-		return Object.keys(this._items);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$getKeys(): IList<string> {
-		return new List<string>(this.getKeys(), String, SILENT | ADAPTER);
+	getKeys(): IList<string> {
+		return new List<string>(Object.keys(this._items), String, SILENT | ADAPTER);
 	}
 
 	/**
@@ -418,57 +411,29 @@ class Map<T> extends Class implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): T[] {
-		return DictionaryUtils.toSorted(this._items, callback, scope || this, order);
+	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<T> {
+		return new List<T>(DictionaryUtils.toSorted(this._items, callback, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSorted(callback, scope, order), this.getKey, SILENT | ADAPTER);
+	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<T> {
+		return new List<T>(DictionaryUtils.toSortedComparing(this._items, compare, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T[] {
-		return DictionaryUtils.toSortedComparing(this._items, compare, scope || this, order);
+	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<string> {
+		return new List<string>(DictionaryUtils.getSortingKeys(this._items, callback, scope || this, order), String, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSortedComparing(compare, scope, order), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): string[] {
-		return DictionaryUtils.getSortingKeys(this._items, callback, scope || this, order);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<string> {
-		return new List<string>(this.getSortingKeys(callback, scope, order), String, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string[] {
-		return DictionaryUtils.getSortingKeysComparing(this._items, compare, scope || this, order);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<string> {
-		return new List<string>(this.getSortingKeysComparing(compare, scope, order), String, SILENT | ADAPTER);
+	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<string> {
+		return new List<string>(DictionaryUtils.getSortingKeysComparing(this._items, compare, scope || this, order), String, SILENT | ADAPTER);
 	}
 
 	/**
@@ -495,15 +460,8 @@ class Map<T> extends Class implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	index(callback: (item: T, key: string) => any, scope?: any): Dictionary<T> {
-		return DictionaryUtils.index(this._items, callback, scope || this);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$index(callback: (item: T, key: string) => any, scope?: any): IMap<T> {
-		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
+	index(callback: (item: T, key: string) => any, scope?: any): IMap<T> {
+		return new Map<T>(DictionaryUtils.index(this._items, callback, scope || this), this.getKey, SILENT | ADAPTER);
 	}
 
 	reduce<U>(reducer: Reducer<T, U>): U;
@@ -642,9 +600,9 @@ class Map<T> extends Class implements IMap<T> {
 			}
 			const addedItems: Dictionary<T> = {};
 			addedItems[key] = item;
-			const spliceResult = { removedItems: removedItems, addedItems: addedItems };
-			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
-			this._changeEvent.trigger({ sender: this });
+			const spliceResult = {removedItems: removedItems, addedItems: addedItems};
+			this._spliceEvent.trigger({sender: this, spliceResult: spliceResult});
+			this._changeEvent.trigger({sender: this});
 		}
 		if (removedItem !== undefined && this._ownsItems) {
 			(<Destroyable><any>removedItem).destroy();
@@ -684,7 +642,7 @@ class Map<T> extends Class implements IMap<T> {
 	 */
 	putAllVerbose(items: Dictionary<T>): IMap.SpliceResult<T> {
 		var spliceResult = this.tryPutAll(items);
-		return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
+		return (spliceResult !== undefined) ? spliceResult : {removedItems: {}, addedItems: {}};
 	}
 
 	/**
@@ -716,8 +674,8 @@ class Map<T> extends Class implements IMap<T> {
 			return undefined;
 		}
 		if (!this.silent) {
-			this._reindexEvent.trigger({ sender: this, keyMap: {[oldKey]: newKey} });
-			this._changeEvent.trigger({ sender: this });
+			this._reindexEvent.trigger({sender: this, keyMap: {[oldKey]: newKey}});
+			this._changeEvent.trigger({sender: this});
 		}
 		return item;
 	}
@@ -734,9 +692,9 @@ class Map<T> extends Class implements IMap<T> {
 		}
 		this._length.set(this._length.get() - 1);
 		if (!this.silent) {
-			const spliceResult: IMap.SpliceResult<T> = { addedItems: {}, removedItems: {[key]: item} };
-			this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
-			this._changeEvent.trigger({ sender: this });
+			const spliceResult: IMap.SpliceResult<T> = {addedItems: {}, removedItems: {[key]: item}};
+			this._spliceEvent.trigger({sender: this, spliceResult: spliceResult});
+			this._changeEvent.trigger({sender: this});
 		}
 		if (this._ownsItems) {
 			(<Destroyable><any>item).destroy();
@@ -828,8 +786,8 @@ class Map<T> extends Class implements IMap<T> {
 			items = this._items;
 			this._items = {};
 		}
-		this._clearEvent.trigger({ sender: this, items: items });
-		this._changeEvent.trigger({ sender: this });
+		this._clearEvent.trigger({sender: this, items: items});
+		this._changeEvent.trigger({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(DictionaryUtils.toArray(items), destroy);
 		}
@@ -844,7 +802,7 @@ class Map<T> extends Class implements IMap<T> {
 	 */
 	splice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
 		var spliceResult = this.trySplice(removedKeys, updatedItems);
-		return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
+		return (spliceResult !== undefined) ? spliceResult : {removedItems: {}, addedItems: {}};
 	}
 
 	/**
@@ -860,8 +818,8 @@ class Map<T> extends Class implements IMap<T> {
 			return undefined;
 		}
 		this._length.set(this._length.get() + DictionaryUtils.getLength(spliceResult.addedItems) - DictionaryUtils.getLength(spliceResult.removedItems));
-		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
-		this._changeEvent.trigger({ sender: this });
+		this._spliceEvent.trigger({sender: this, spliceResult: spliceResult});
+		this._changeEvent.trigger({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(DictionaryUtils.toArray(spliceResult.removedItems), destroy);
 		}
@@ -891,8 +849,8 @@ class Map<T> extends Class implements IMap<T> {
 		if (result === undefined) {
 			return undefined;
 		}
-		this._reindexEvent.trigger({ sender: this, keyMap: result });
-		this._changeEvent.trigger({ sender: this });
+		this._reindexEvent.trigger({sender: this, keyMap: result});
+		this._changeEvent.trigger({sender: this});
 		return result;
 	}
 

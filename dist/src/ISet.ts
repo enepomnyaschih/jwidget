@@ -20,6 +20,7 @@
 
 import DestroyableReadOnlySet from './DestroyableReadOnlySet';
 import ICollection from './ICollection';
+import IList from "./IList";
 import Listenable from './Listenable';
 
 /**
@@ -153,12 +154,12 @@ interface ISet<T> extends ICollection<T>, DestroyableReadOnlySet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSorted(callback?: (item: T) => any, scope?: any, order?: number): T[];
+	toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[];
+	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc

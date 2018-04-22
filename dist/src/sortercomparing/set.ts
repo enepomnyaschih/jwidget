@@ -55,7 +55,7 @@ export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
 export function sortSetComparing<T>(source: ReadOnlySet<T>,
 		config?: AbstractSorterComparing.Config<T>): DestroyableReadOnlyList<T> {
 	if (source.silent) {
-		return source.$toSortedComparing(config.compare, config.scope, config.order);
+		return source.toSortedComparing(config.compare, config.scope, config.order);
 	}
 	const target = new List<T>(source.getKey);
 	return target.owning(new SetSorterComparing<T>(source, {

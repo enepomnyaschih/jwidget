@@ -174,12 +174,7 @@ interface ReadOnlyMap<T> extends ReadOnlyCollection<T> {
 	/**
 	 * Returns array of all map keys.
 	 */
-	getKeys(): string[];
-
-	/**
-	 * Returns array of all map keys.
-	 */
-	$getKeys(): IList<string>;
+	getKeys(): IList<string>;
 
 	/**
 	 * Checks existance of item with specified key in collection.
@@ -227,69 +222,27 @@ interface ReadOnlyMap<T> extends ReadOnlyCollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): T[];
+	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<T>;
+	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T[];
+	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<string>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<T>;
+	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<string>;
 
 	/**
 	 * @inheritdoc
 	 */
-	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): string[];
-
-	/**
-	 * Returns keys of sorted items.
-	 *
-	 * Builds array of item keys, sorted by result of callback call for each item.
-	 *
-	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[cmp]]. Returns item itself by default.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted item keys array.
-	 */
-	$getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<string>;
-
-	/**
-	 * @inheritdoc
-	 */
-	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string[];
-
-	/**
-	 * Returns keys of sorted items.
-	 *
-	 * Builds array of item keys, sorted by comparer.
-	 *
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[cmp]]
-	 * @param scope **comparer** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Sorted item keys array.
-	 */
-	$getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<string>;
-
-	/**
-	 * @inheritdoc
-	 */
-	index(callback: (item: T, key: string) => any, scope?: any): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	$index(callback: (item: T, key: string) => any, scope?: any): IMap<T>;
+	index(callback: (item: T, key: string) => any, scope?: any): IMap<T>;
 
 	/**
 	 * @inheritdoc

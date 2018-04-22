@@ -134,9 +134,9 @@ class Set<T> extends Class implements ISet<T> {
 	private _length: IProperty<number>;
 	private _items: VidSet<T>
 
-	private _spliceEvent : IEvent<ISet.SpliceEventParams<T>>;
-	private _clearEvent  : IEvent<ISet.ItemsEventParams<T>>;
-	private _changeEvent : IEvent<ISet.EventParams<T>>;
+	private _spliceEvent: IEvent<ISet.SpliceEventParams<T>>;
+	private _clearEvent: IEvent<ISet.ItemsEventParams<T>>;
+	private _changeEvent: IEvent<ISet.EventParams<T>>;
 
 	/**
 	 * Identifies an item in this collection for optimization of some algorithms.
@@ -337,7 +337,7 @@ class Set<T> extends Class implements ISet<T> {
 	 * @returns Found item or undefined.
 	 */
 	find(callback: (item: T) => any, scope?: any): T {
-		let result: T;
+		let result: T = undefined;
 		this._items.every((item) => {
 			if (callback.call(scope || this, item)) {
 				result = item;
@@ -351,29 +351,15 @@ class Set<T> extends Class implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	toSorted(callback?: (item: T) => any, scope?: any, order?: number): T[] {
-		return ArrayUtils.toSorted(this._items.values, callback, scope || this, order);
+	toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T> {
+		return new List<T>(ArrayUtils.toSorted(this._items.values, callback, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSorted(callback, scope, order), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T[] {
-		return ArrayUtils.toSortedComparing(this._items.values, compare, scope || this, order);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T> {
-		return new List<T>(this.toSortedComparing(compare, scope, order), this.getKey, SILENT | ADAPTER);
+	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T> {
+		return new List<T>(ArrayUtils.toSortedComparing(this._items.values, compare, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -385,7 +371,7 @@ class Set<T> extends Class implements ISet<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Collection index.
 	 */
-	index(callback: (item: T) => any, scope?: any): Dictionary<T> {
+	index(callback: (item: T) => any, scope?: any): IMap<T> {
 		const result: Dictionary<T> = {};
 		this._items.every((item) => {
 			const key: string = callback.call(scope || this, item);
@@ -394,14 +380,7 @@ class Set<T> extends Class implements ISet<T> {
 			}
 			return true;
 		});
-		return result;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	$index(callback: (item: T) => any, scope?: any): IMap<T> {
-		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
+		return new Map<T>(result, this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
@@ -611,8 +590,8 @@ class Set<T> extends Class implements ISet<T> {
 		const items: T[] = this._items.values.concat();
 		this._items.clear();
 		this._length.set(0);
-		this._clearEvent.trigger({ sender: this, items: items });
-		this._changeEvent.trigger({ sender: this });
+		this._clearEvent.trigger({sender: this, items: items});
+		this._changeEvent.trigger({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(items, destroy);
 		}
@@ -627,7 +606,7 @@ class Set<T> extends Class implements ISet<T> {
 	 */
 	splice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
 		var spliceResult = this.trySplice(removedItems, addedItems);
-		return (spliceResult !== undefined) ? spliceResult : { addedItems: [], removedItems: [] };
+		return (spliceResult !== undefined) ? spliceResult : {addedItems: [], removedItems: []};
 	}
 
 	/**
@@ -642,8 +621,8 @@ class Set<T> extends Class implements ISet<T> {
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		this._spliceEvent.trigger({ sender: this, spliceResult: spliceResult });
-		this._changeEvent.trigger({ sender: this });
+		this._spliceEvent.trigger({sender: this, spliceResult: spliceResult});
+		this._changeEvent.trigger({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(spliceResult.removedItems, destroy);
 		}
@@ -660,7 +639,7 @@ class Set<T> extends Class implements ISet<T> {
 		if ((removedItems === undefined) && (addedItems === undefined)) {
 			return undefined;
 		}
-		const spliceResult = { removedItems: removedItems || [], addedItems: addedItems || [] };
+		const spliceResult = {removedItems: removedItems || [], addedItems: addedItems || []};
 		this._length.set(this._length.get() + spliceResult.addedItems.length - spliceResult.removedItems.length);
 		return spliceResult;
 	}
@@ -726,7 +705,7 @@ class Set<T> extends Class implements ISet<T> {
 			}
 		}
 		if ((removedItems.length !== 0) || (addedItems.length !== 0)) {
-			return { removedItems: removedItems, addedItems: addedItems };
+			return {removedItems: removedItems, addedItems: addedItems};
 		}
 		return undefined;
 	}

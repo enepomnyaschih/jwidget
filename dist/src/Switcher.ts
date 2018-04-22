@@ -62,13 +62,13 @@ class Switcher<T> extends Class {
 	private _doInit() {
 		this._value = this.source.get();
 		if (this._init && (this._acceptNil || this._value != null)) {
-			this._init.apply(this._scope, this._value);
+			this._init.call(this._scope, this._value);
 		}
 	}
 
 	private _doDone() {
 		if (this._done && (this._acceptNil || this._value != null)) {
-			this._done.apply(this._scope, this._value);
+			this._done.call(this._scope, this._value);
 		}
 		this._value = null;
 	}
