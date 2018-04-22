@@ -20,36 +20,29 @@
 
 import Bindable from './Bindable';
 import Class from './Class';
-import {isNotNil} from './index';
-import Listenable from './Listenable';
 
 /**
  * Listens source property modification and calls the specified functions.
  */
-class Switcher extends Class {
-	private _init: Switcher.Callback;
-	private _done: Switcher.Callback;
+class Switcher<T> extends Class {
+	private _init: Switcher.Callback<T>;
+	private _done: Switcher.Callback<T>;
 	private _scope: any;
-	private _acceptNull: boolean;
-	private _sourceValues: any[];
+	private _acceptNil: boolean;
+	private _value: T;
 
 	/**
-	 * @param sources Source properties.
+	 * @param source Source property.
 	 * @param config Configuration.
 	 */
-	constructor(
-		readonly sources: Bindable<any>[],
-		config?: Switcher.Config)
-	{
+	constructor(readonly source: Bindable<T>, config: Switcher.Config<T> = {}) {
 		super();
-		config = config || {};
 		this._init = config.init;
 		this._done = config.done;
 		this._scope = config.scope || this;
-		this._acceptNull = config.acceptNull || false;
-		this._sourceValues = null;
+		this._acceptNil = config.acceptNil || false;
 		this._doInit();
-		sources.forEach(this.bind, this);
+		this.own(source.changeEvent.listen(this._update, this));
 	}
 
 	protected destroyObject() {
@@ -57,49 +50,27 @@ class Switcher extends Class {
 		this._init = null;
 		this._done = null;
 		this._scope = null;
-		this._sourceValues = null;
+		this._value = null;
 		super.destroyObject();
 	}
 
-	/**
-	 * Listens specified event and issues callback calls on event triggering.
-	 * @param event Event to listen.
-	 * @returns this
-	 */
-	listen(event: Listenable<any>): this {
-		return this.owning(event.listen(this.update, this));
-	}
-
-	/**
-	 * Watches specified property and issues callback calls on its change.
-	 * @param property Bindable to watch.
-	 * @returns this
-	 */
-	bind(property: Bindable<any>): this {
-		return this.listen(property.changeEvent);
-	}
-
-	/**
-	 * Calls callbacks forcibly.
-	 */
-	update() {
+	private _update() {
 		this._doDone();
 		this._doInit();
 	}
 
 	private _doInit() {
-		const values = this.sources.map((source) => source.get());
-		this._sourceValues = (this._acceptNull || values.every(isNotNil)) ? values : null;
-		if (this._sourceValues && this._init) {
-			this._init.apply(this._scope, this._sourceValues);
+		this._value = this.source.get();
+		if (this._init && (this._acceptNil || this._value != null)) {
+			this._init.apply(this._scope, this._value);
 		}
 	}
 
 	private _doDone() {
-		if (this._sourceValues && this._done) {
-			this._done.apply(this._scope, this._sourceValues);
+		if (this._done && (this._acceptNil || this._value != null)) {
+			this._done.apply(this._scope, this._value);
 		}
-		this._sourceValues = null;
+		this._value = null;
 	}
 }
 
@@ -107,23 +78,23 @@ namespace Switcher {
 	/**
 	 * Switcher callback.
 	 */
-	export interface Callback {
-		(...sourceValues: any[]): any;
+	export interface Callback<T> {
+		(value: T): any;
 	}
 
 	/**
 	 * Configuration of Switcher.
 	 */
-	export interface Config {
+	export interface Config<T> {
 		/**
 		 * Value initialization callback.
 		 */
-		readonly init?: Callback;
+		readonly init?: Callback<T>;
 
 		/**
 		 * Value releasing callback.
 		 */
-		readonly done?: Callback;
+		readonly done?: Callback<T>;
 
 		/**
 		 * `init` and `done` call scope. Defaults to switcher itself.
@@ -133,7 +104,7 @@ namespace Switcher {
 		/**
 		 * Set to true if you want the callbacks to be called even if one of source values is null.
 		 */
-		readonly acceptNull?: boolean;
+		readonly acceptNil?: boolean;
 	}
 }
 
