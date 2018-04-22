@@ -19,9 +19,9 @@
 */
 
 import Destroyable from './Destroyable';
-import ReadOnlyMap from './ReadOnlyMap';
+import ReadonlyCollection from './ReadonlyCollection';
 
-interface DestroyableReadOnlyMap<T> extends Destroyable, ReadOnlyMap<T> {
+interface DestroyableReadonlyCollection<T> extends Destroyable, ReadonlyCollection<T> {
 }
 
-export default DestroyableReadOnlyMap;
+export default DestroyableReadonlyCollection;

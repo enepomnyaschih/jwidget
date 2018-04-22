@@ -18,30 +18,30 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
+import DestroyableReadonlySet from '../DestroyableReadonlySet';
 import List from '../List';
 import Map from '../Map';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 import Set from '../Set';
 import AbstractConverterToSet from './AbstractConverterToSet';
 import {default as ListConverterToSet, listToSet} from './list';
 import {default as MapConverterToSet, mapToSet} from './map';
 import {default as SetConverterToSet, setToSet} from './set';
 
-export function createConverterToSet<T>(source: ReadOnlyCollection<T>,
-		config?: AbstractConverterToSet.Config<T>): AbstractConverterToSet<T> {
+export function createConverterToSet<T>(source: ReadonlyCollection<T>,
+										config?: AbstractConverterToSet.Config<T>): AbstractConverterToSet<T> {
 	return (source instanceof List) ? new ListConverterToSet(source, config) :
 		(source instanceof Map) ? new MapConverterToSet(source, config) :
 		(source instanceof Set) ? new SetConverterToSet(source, config) : null;
 }
 
-export function collectionToSet<T>(source: ReadOnlyCollection<T>): DestroyableReadOnlySet<T> {
+export function collectionToSet<T>(source: ReadonlyCollection<T>): DestroyableReadonlySet<T> {
 	return (source instanceof List) ? listToSet(source) :
 		(source instanceof Map) ? mapToSet(source) :
 		(source instanceof Set) ? setToSet(source) : null;
 }
 
-export function collectionAsSet<T>(source: ReadOnlyCollection<T>): DestroyableReadOnlySet<T> {
+export function collectionAsSet<T>(source: ReadonlyCollection<T>): DestroyableReadonlySet<T> {
 	return (source instanceof List) ? listToSet(source) :
 		(source instanceof Map) ? mapToSet(source) :
 		(source instanceof Set) ? source : null;

@@ -18,11 +18,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
+import DestroyableReadonlyList from '../DestroyableReadonlyList';
 import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
 import List from '../List';
-import ReadOnlyMap from '../ReadOnlyMap';
+import ReadonlyMap from '../ReadonlyMap';
 import AbstractSorterComparing from './AbstractSorterComparing';
 
 /**
@@ -32,12 +32,12 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyMap<T>;
+	readonly source: ReadonlyMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyMap<T>, config?: AbstractSorterComparing.FullConfig<T>) {
+	constructor(source: ReadonlyMap<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -55,8 +55,8 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	}
 }
 
-export function sortMapComparing<T>(source: ReadOnlyMap<T>,
-		config?: AbstractSorterComparing.Config<T>): DestroyableReadOnlyList<T> {
+export function sortMapComparing<T>(source: ReadonlyMap<T>,
+									config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toSortedComparing(config.compare, config.scope, config.order);
 	}

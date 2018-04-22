@@ -22,7 +22,7 @@ import Class from '../Class';
 import Component from '../Component';
 import * as DomUtils from '../DomUtils';
 import {createObserver} from '../observer/collection';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
  * @hidden
@@ -30,7 +30,7 @@ import ReadOnlyCollection from '../ReadOnlyCollection';
 export default class ComponentCollectionInserter extends Class {
 	private len: number = 0;
 
-	constructor(source: ReadOnlyCollection<Component>, private el: HTMLElement) {
+	constructor(source: ReadonlyCollection<Component>, private el: HTMLElement) {
 		super();
 		this.own(createObserver(source, {
 			add: this._addItem,

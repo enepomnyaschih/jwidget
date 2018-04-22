@@ -18,9 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
+import DestroyableReadonlySet from '../DestroyableReadonlySet';
 import ISet from '../ISet';
-import ReadOnlySet from '../ReadOnlySet';
+import ReadonlySet from '../ReadonlySet';
 import Set from '../Set';
 import AbstractConverterToSet from './AbstractConverterToSet';
 
@@ -31,12 +31,12 @@ export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlySet<T>;
+	readonly source: ReadonlySet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlySet<T>, config: AbstractConverterToSet.Config<T>) {
+	constructor(source: ReadonlySet<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -52,7 +52,7 @@ export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 	}
 }
 
-export function setToSet<T>(source: ReadOnlySet<T>): DestroyableReadOnlySet<T> {
+export function setToSet<T>(source: ReadonlySet<T>): DestroyableReadonlySet<T> {
 	if (source.silent) {
 		return source.toSet();
 	}

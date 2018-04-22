@@ -22,7 +22,7 @@ import Bindable from '../Bindable';
 import Class from '../Class';
 import IProperty from '../IProperty';
 import Property from '../Property';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
  * Counter for collection items which match the specified filter.
@@ -110,7 +110,7 @@ abstract class AbstractCounter<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyCollection<T>, protected _test: (item: T) => any,
+	constructor(readonly source: ReadonlyCollection<T>, protected _test: (item: T) => any,
 				config: AbstractCounter.Config = {}) {
 		super();
 		this._scope = config.scope || this;

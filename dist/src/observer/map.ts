@@ -20,7 +20,7 @@
 
 import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
-import ReadOnlyMap from '../ReadOnlyMap';
+import ReadonlyMap from '../ReadonlyMap';
 import AbstractObserver from './AbstractObserver';
 
 /**
@@ -30,12 +30,12 @@ export default class MapObserver<T> extends AbstractObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyMap<T>;
+	readonly source: ReadonlyMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyMap<T>, config: AbstractObserver.Config<T>) {
+	constructor(source: ReadonlyMap<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));

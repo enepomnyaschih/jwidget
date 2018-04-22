@@ -19,9 +19,9 @@
 */
 
 import Destroyable from './Destroyable';
-import ReadOnlySet from './ReadOnlySet';
+import ReadonlyList from './ReadonlyList';
 
-interface DestroyableReadOnlySet<T> extends Destroyable, ReadOnlySet<T> {
+interface DestroyableReadonlyList<T> extends Destroyable, ReadonlyList<T> {
 }
 
-export default DestroyableReadOnlySet;
+export default DestroyableReadonlyList;

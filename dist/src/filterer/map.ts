@@ -18,11 +18,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
+import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
 import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
 import Map from '../Map';
-import ReadOnlyMap from '../ReadOnlyMap';
+import ReadonlyMap from '../ReadonlyMap';
 import AbstractFilterer from './AbstractFilterer';
 
 /**
@@ -34,7 +34,7 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyMap<T>;
+	readonly source: ReadonlyMap<T>;
 
 	/**
 	 * @inheritdoc
@@ -44,7 +44,7 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyMap<T>, test: (item: T) => any,
+	constructor(source: ReadonlyMap<T>, test: (item: T) => any,
 				config: MapFilterer.Config<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
@@ -96,7 +96,7 @@ namespace MapFilterer {
 	}
 }
 
-export function filterMap<T>(source: ReadOnlyMap<T>, test: (item: T) => any, scope?: any): DestroyableReadOnlyMap<T> {
+export function filterMap<T>(source: ReadonlyMap<T>, test: (item: T) => any, scope?: any): DestroyableReadonlyMap<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

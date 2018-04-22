@@ -18,26 +18,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyCollection from '../DestroyableReadOnlyCollection';
+import DestroyableReadonlyCollection from '../DestroyableReadonlyCollection';
 import List from '../List';
 import Map from '../Map';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 import Set from '../Set';
 import AbstractMapper from './AbstractMapper';
 import {default as ListMapper, mapList} from './list';
 import {default as MapMapper, mapMap} from './map';
 import {default as SetMapper, mapSet} from './set';
 
-export function createMapper<T, U>(source: ReadOnlyCollection<T>, create: (sourceValue: T) => U,
-		config?: AbstractMapper.Config<T, U>): AbstractMapper<T, U> {
+export function createMapper<T, U>(source: ReadonlyCollection<T>, create: (sourceValue: T) => U,
+								   config?: AbstractMapper.Config<T, U>): AbstractMapper<T, U> {
 	return (source instanceof List) ? new ListMapper(source, create, config) :
 		(source instanceof Map) ? new MapMapper(source, create, config) :
-		(source instanceof Set) ? new SetMapper(source, create, config) : null;
+			(source instanceof Set) ? new SetMapper(source, create, config) : null;
 }
 
-export function mapCollection<T, U>(source: ReadOnlyCollection<T>, create: (item: T) => U,
-		config?: AbstractMapper.Config<T, U>): DestroyableReadOnlyCollection<U> {
+export function mapCollection<T, U>(source: ReadonlyCollection<T>, create: (item: T) => U,
+									config?: AbstractMapper.Config<T, U>): DestroyableReadonlyCollection<U> {
 	return (source instanceof List) ? mapList(source, create, config) :
 		(source instanceof Map) ? mapMap(source, create, config) :
-		(source instanceof Set) ? mapSet(source, create, config) : null;
+			(source instanceof Set) ? mapSet(source, create, config) : null;
 }

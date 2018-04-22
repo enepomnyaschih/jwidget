@@ -22,7 +22,7 @@ import Class from '../Class';
 import Dictionary from '../Dictionary';
 import IMap from '../IMap';
 import Map from '../Map';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
  * Collection indexer.
@@ -120,7 +120,7 @@ abstract class AbstractIndexer<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyCollection<T>, protected _getKey: (item: T) => any,
+	constructor(readonly source: ReadonlyCollection<T>, protected _getKey: (item: T) => any,
 				config: AbstractIndexer.Config<T> = {}) {
 		super();
 		this._scope = config.scope || this;

@@ -21,7 +21,7 @@
 import Class from './Class';
 import * as DomUtils from './DomUtils';
 import ListInserter from './inserter/list';
-import ReadOnlyList from './ReadOnlyList';
+import ReadonlyList from './ReadonlyList';
 
 /**
  * Abstract view synchronizer. See [[Inserter]] for details.
@@ -31,7 +31,7 @@ export default class AbstractInserter<T> extends Class {
 	 * @param source Source array.
 	 * @param el Parent element.
 	 */
-	constructor(source: ReadOnlyList<T>, readonly el: HTMLElement) {
+	constructor(source: ReadonlyList<T>, readonly el: HTMLElement) {
 		super();
 		this.own(new ListInserter(source, {
 			add: this._addItem,

@@ -19,14 +19,14 @@
 */
 
 import * as ArrayUtils from '../ArrayUtils';
-import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
+import DestroyableReadonlyList from '../DestroyableReadonlyList';
 import Dictionary from '../Dictionary';
 import IList from '../IList';
 import {def} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
-import ReadOnlyList from '../ReadOnlyList';
+import ReadonlyList from '../ReadonlyList';
 import AbstractFilterer from './AbstractFilterer';
 
 /**
@@ -43,7 +43,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyList<T>;
+	readonly source: ReadonlyList<T>;
 
 	/**
 	 * @inheritdoc
@@ -53,7 +53,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyList<T>, test: (item: T) => any,
+	constructor(source: ReadonlyList<T>, test: (item: T) => any,
 				config: ListFilterer.FullConfig<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
@@ -341,8 +341,8 @@ namespace ListFilterer {
 	}
 }
 
-export function filterList<T>(source: ReadOnlyList<T>, test: (item: T) => any,
-							  scope?: any): DestroyableReadOnlyList<T> {
+export function filterList<T>(source: ReadonlyList<T>, test: (item: T) => any,
+							  scope?: any): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

@@ -25,7 +25,7 @@ import {cmp} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
  * Converter to array (sorter by comparer).
@@ -155,7 +155,7 @@ abstract class AbstractSorterComparing<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyCollection<T>, config: AbstractSorterComparing.FullConfig<T> = {}) {
+	constructor(readonly source: ReadonlyCollection<T>, config: AbstractSorterComparing.FullConfig<T> = {}) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;

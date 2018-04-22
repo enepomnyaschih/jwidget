@@ -18,12 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
+import DestroyableReadonlyList from '../DestroyableReadonlyList';
 import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
 import {VidSet} from '../internal';
 import List from '../List';
-import ReadOnlyMap from '../ReadOnlyMap';
+import ReadonlyMap from '../ReadonlyMap';
 import AbstractConverterToList from './AbstractConverterToList';
 
 /**
@@ -33,12 +33,12 @@ export default class MapConverterToList<T> extends AbstractConverterToList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyMap<T>;
+	readonly source: ReadonlyMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyMap<T>, config: AbstractConverterToList.Config<T>) {
+	constructor(source: ReadonlyMap<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -57,7 +57,7 @@ export default class MapConverterToList<T> extends AbstractConverterToList<T> {
 	}
 }
 
-export function mapToList<T>(source: ReadOnlyMap<T>): DestroyableReadOnlyList<T> {
+export function mapToList<T>(source: ReadonlyMap<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toList();
 	}

@@ -19,7 +19,7 @@
 */
 
 import IList from '../IList';
-import ReadOnlyList from '../ReadOnlyList';
+import ReadonlyList from '../ReadonlyList';
 import AbstractObserver from './AbstractObserver';
 
 /**
@@ -29,12 +29,12 @@ export default class ListObserver<T> extends AbstractObserver<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyList<T>;
+	readonly source: ReadonlyList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyList<T>, config: AbstractObserver.Config<T>) {
+	constructor(source: ReadonlyList<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));

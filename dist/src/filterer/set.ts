@@ -18,9 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
+import DestroyableReadonlySet from '../DestroyableReadonlySet';
 import ISet from '../ISet';
-import ReadOnlySet from '../ReadOnlySet';
+import ReadonlySet from '../ReadonlySet';
 import Set from '../Set';
 import AbstractFilterer from './AbstractFilterer';
 
@@ -33,7 +33,7 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlySet<T>;
+	readonly source: ReadonlySet<T>;
 
 	/**
 	 * @inheritdoc
@@ -43,7 +43,7 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlySet<T>, test: (item: T) => any,
+	constructor(source: ReadonlySet<T>, test: (item: T) => any,
 				config: SetFilterer.Config<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
@@ -90,8 +90,8 @@ namespace SetFilterer {
 	}
 }
 
-export function filterSet<T>(source: ReadOnlySet<T>, test: (item: T) => any,
-							 scope?: any): DestroyableReadOnlySet<T> {
+export function filterSet<T>(source: ReadonlySet<T>, test: (item: T) => any,
+							 scope?: any): DestroyableReadonlySet<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

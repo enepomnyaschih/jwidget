@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
+import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
 import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
@@ -35,7 +35,7 @@ export function createIndexer<T>(source: ICollection<T>, getKey: (item: T) => an
 		(source instanceof Set) ? new SetIndexer(source, getKey, config) : null;
 }
 
-export function indexCollection<T>(source: ICollection<T>, getKey: (item: T) => any, scope?: any): DestroyableReadOnlyMap<T> {
+export function indexCollection<T>(source: ICollection<T>, getKey: (item: T) => any, scope?: any): DestroyableReadonlyMap<T> {
 	return (source instanceof List) ? indexList(source, getKey, scope) :
 		(source instanceof Map) ? indexMap(source, getKey, scope) :
 		(source instanceof Set) ? indexSet(source, getKey, scope) : null;

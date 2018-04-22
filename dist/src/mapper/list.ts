@@ -18,13 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
+import DestroyableReadonlyList from '../DestroyableReadonlyList';
 import Destructor from '../Destructor';
 import IList from '../IList';
 import {destroy} from '../index';
 import IndexItems from '../IndexItems';
 import List from '../List';
-import ReadOnlyList from '../ReadOnlyList';
+import ReadonlyList from '../ReadonlyList';
 import AbstractMapper from './AbstractMapper';
 
 /**
@@ -36,7 +36,7 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyList<T>;
+	readonly source: ReadonlyList<T>;
 
 	/**
 	 * @inheritdoc
@@ -46,7 +46,7 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyList<T>, create: (sourceValue: T) => U, config: ListMapper.FullConfig<T, U> = {}) {
+	constructor(source: ReadonlyList<T>, create: (sourceValue: T) => U, config: ListMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(config.getKey, this.source.silent) : config.target;
@@ -136,8 +136,8 @@ namespace ListMapper {
 	}
 }
 
-export function mapList<T, U>(source: ReadOnlyList<T>, create: (sourceValue: T) => U,
-		config: AbstractMapper.Config<T, U> = {}): DestroyableReadOnlyList<U> {
+export function mapList<T, U>(source: ReadonlyList<T>, create: (sourceValue: T) => U,
+							  config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyList<U> {
 	if (!source.silent) {
 		const target = new List<U>(config.getKey);
 		return target.owning(new ListMapper<T, U>(source, create, {

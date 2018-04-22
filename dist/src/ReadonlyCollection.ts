@@ -160,7 +160,7 @@ import Reducer from './Reducer';
  * * Object as map, see [[DictionaryUtils]] functions.
  * * Object as set, see [[SetUtils]] functions.
  */
-interface ReadOnlyCollection<T> {
+interface ReadonlyCollection<T> {
 	/**
 	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
 	 */
@@ -393,4 +393,4 @@ interface ReadOnlyCollection<T> {
 	minComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T;
 }
 
-export default ReadOnlyCollection;
+export default ReadonlyCollection;

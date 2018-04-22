@@ -18,26 +18,26 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyCollection from '../DestroyableReadOnlyCollection';
+import DestroyableReadonlyCollection from '../DestroyableReadonlyCollection';
 import List from '../List';
 import Map from '../Map';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 import Set from '../Set';
 import AbstractFilterer from './AbstractFilterer';
 import {default as ListFilterer, filterList} from './list';
 import {default as MapFilterer, filterMap} from './map';
 import {default as SetFilterer, filterSet} from './set';
 
-export function createFilterer<T>(source: ReadOnlyCollection<T>, test: (item: T) => any,
+export function createFilterer<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
 								  scope?: any): AbstractFilterer<T> {
 	return (source instanceof List) ? new ListFilterer(source, test, {scope}) :
 		(source instanceof Map) ? new MapFilterer(source, test, {scope}) :
-		(source instanceof Set) ? new SetFilterer(source, test, {scope}) : null;
+			(source instanceof Set) ? new SetFilterer(source, test, {scope}) : null;
 }
 
-export function filterCollection<T>(source: ReadOnlyCollection<T>, test: (item: T) => any,
-									scope?: any): DestroyableReadOnlyCollection<T> {
+export function filterCollection<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
+									scope?: any): DestroyableReadonlyCollection<T> {
 	return (source instanceof List) ? filterList(source, test, scope) :
 		(source instanceof Map) ? filterMap(source, test, scope) :
-		(source instanceof Set) ? filterSet(source, test, scope) : null;
+			(source instanceof Set) ? filterSet(source, test, scope) : null;
 }

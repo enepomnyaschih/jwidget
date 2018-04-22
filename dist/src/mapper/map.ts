@@ -18,14 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
+import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
 import Destructor from '../Destructor';
 import Dictionary from '../Dictionary';
 import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
 import {destroy} from '../index';
 import Map from '../Map';
-import ReadOnlyMap from '../ReadOnlyMap';
+import ReadonlyMap from '../ReadonlyMap';
 import AbstractMapper from './AbstractMapper';
 
 /**
@@ -37,7 +37,7 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyMap<T>;
+	readonly source: ReadonlyMap<T>;
 
 	/**
 	 * @inheritdoc
@@ -47,7 +47,7 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyMap<T>, create: (data: T) => U, config: MapMapper.FullConfig<T, U> = {}) {
+	constructor(source: ReadonlyMap<T>, create: (data: T) => U, config: MapMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<U>(config.getKey, this.source.silent) : config.target;
@@ -121,8 +121,8 @@ namespace MapMapper {
 	}
 }
 
-export function mapMap<T, U>(source: ReadOnlyMap<T>, create: (sourceValue: T) => U,
-							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadOnlyMap<U> {
+export function mapMap<T, U>(source: ReadonlyMap<T>, create: (sourceValue: T) => U,
+							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyMap<U> {
 	if (!source.silent) {
 		const target = new Map<U>(config.getKey);
 		return target.owning(new MapMapper<T, U>(source, create, {

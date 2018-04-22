@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
+import DestroyableReadonlySet from '../DestroyableReadonlySet';
 import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
-import ReadOnlyMap from '../ReadOnlyMap';
+import ReadonlyMap from '../ReadonlyMap';
 import Set from '../Set';
 import AbstractConverterToSet from './AbstractConverterToSet';
 
@@ -32,12 +32,12 @@ export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyMap<T>;
+	readonly source: ReadonlyMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyMap<T>, config: AbstractConverterToSet.Config<T>) {
+	constructor(source: ReadonlyMap<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -56,7 +56,7 @@ export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 	}
 }
 
-export function mapToSet<T>(source: ReadOnlyMap<T>): DestroyableReadOnlySet<T> {
+export function mapToSet<T>(source: ReadonlyMap<T>): DestroyableReadonlySet<T> {
 	if (source.silent) {
 		return source.toSet();
 	}

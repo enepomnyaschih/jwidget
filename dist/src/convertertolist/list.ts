@@ -18,13 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
+import DestroyableReadonlyList from '../DestroyableReadonlyList';
 import IList from '../IList';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import {VidSet} from '../internal';
 import List from '../List';
-import ReadOnlyList from '../ReadOnlyList';
+import ReadonlyList from '../ReadonlyList';
 import AbstractConverterToList from './AbstractConverterToList';
 
 /**
@@ -34,12 +34,12 @@ export default class ListConverterToList<T> extends AbstractConverterToList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyList<T>;
+	readonly source: ReadonlyList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyList<T>, config: AbstractConverterToList.Config<T>) {
+	constructor(source: ReadonlyList<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
@@ -65,7 +65,7 @@ export default class ListConverterToList<T> extends AbstractConverterToList<T> {
 	}
 }
 
-export function listToList<T>(source: ReadOnlyList<T>): DestroyableReadOnlyList<T> {
+export function listToList<T>(source: ReadonlyList<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toList();
 	}

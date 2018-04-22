@@ -21,7 +21,7 @@
 import IList from "./IList";
 import ISet from './ISet';
 import Listenable from './Listenable';
-import ReadOnlyCollection from './ReadOnlyCollection';
+import ReadonlyCollection from './ReadonlyCollection';
 
 /**
  * Set is unordered collection optimized for items adding, removal and search. Unlike
@@ -94,7 +94,7 @@ import ReadOnlyCollection from './ReadOnlyCollection';
  * All the same algorithms are also available for native JavaScript Object as set,
  * see [[SetUtils]] functions.
  */
-interface ReadOnlySet<T> extends ReadOnlyCollection<T> {
+interface ReadonlySet<T> extends ReadonlyCollection<T> {
 	/**
 	 * All set items. Please note that this is a getter - the internal representation of `Set` is different.
 	 */
@@ -200,4 +200,4 @@ interface ReadOnlySet<T> extends ReadOnlyCollection<T> {
 	equal(array: T[]): boolean;
 }
 
-export default ReadOnlySet;
+export default ReadonlySet;

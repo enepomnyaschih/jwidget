@@ -21,7 +21,7 @@
 import IList from './IList';
 import IMap from './IMap';
 import Listenable from './Listenable';
-import ReadOnlyCollection from './ReadOnlyCollection';
+import ReadonlyCollection from './ReadonlyCollection';
 import Reducer from './Reducer';
 
 /**
@@ -126,7 +126,7 @@ import Reducer from './Reducer';
  *
  * @param T Array item type.
  */
-interface ReadOnlyList<T> extends ReadOnlyCollection<T> {
+interface ReadonlyList<T> extends ReadonlyCollection<T> {
 	/**
 	 * Returns the last collection item. If collection is empty, returns undefined.
 	 */
@@ -429,4 +429,4 @@ interface ReadOnlyList<T> extends ReadOnlyCollection<T> {
 	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
 }
 
-export default ReadOnlyList;
+export default ReadonlyList;

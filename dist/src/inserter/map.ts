@@ -22,7 +22,7 @@ import Class from '../Class';
 import Dictionary from '../Dictionary';
 import {isEmpty} from '../DictionaryUtils';
 import IMap from '../IMap';
-import ReadOnlyMap from '../ReadOnlyMap';
+import ReadonlyMap from '../ReadonlyMap';
 
 /**
  * View synchronizer with map. Listens all map events and reduces them to 2 granular functions:
@@ -83,7 +83,7 @@ class MapInserter<T> extends Class {
 	 * @param source Source map.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyMap<T>, config: MapInserter.Config<T> = {}) {
+	constructor(readonly source: ReadonlyMap<T>, config: MapInserter.Config<T> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;

@@ -36,8 +36,8 @@ import {apply, destroy} from './index';
 import List from './List';
 import Map from './Map';
 import Property from './Property';
-import ReadOnlyCollection from './ReadOnlyCollection';
-import ReadOnlyList from './ReadOnlyList';
+import ReadonlyCollection from './ReadonlyCollection';
+import ReadonlyList from './ReadonlyList';
 import Set from './Set';
 import * as StringUtils from './StringUtils';
 import TemplateOutput from './TemplateOutput';
@@ -379,7 +379,7 @@ export default class Component extends Class {
 	 * @param source Child component list.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addList(source: ReadOnlyList<Component>, el?: string | HTMLElement | JQuery): Destroyable {
+	addList(source: ReadonlyList<Component>, el?: string | HTMLElement | JQuery): Destroyable {
 		return new ComponentList(this, source, this._getContainerElement(el));
 	}
 
@@ -390,7 +390,7 @@ export default class Component extends Class {
 	 * @param source Child component collection.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addCollection(source: ReadOnlyCollection<Component>, el?: string | HTMLElement | JQuery): Destroyable {
+	addCollection(source: ReadonlyCollection<Component>, el?: string | HTMLElement | JQuery): Destroyable {
 		return new ComponentCollection(this, source, this._getContainerElement(el));
 	}
 

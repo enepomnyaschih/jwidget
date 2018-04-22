@@ -18,29 +18,29 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
+import DestroyableReadonlyList from '../DestroyableReadonlyList';
 import List from '../List';
 import Map from '../Map';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 import Set from '../Set';
 import AbstractConverterToList from './AbstractConverterToList';
 import {default as ListConverterToList, listToList} from './list';
 import {default as MapConverterToList, mapToList} from './map';
 import {default as SetConverterToList, setToList} from './set';
 
-export function createConverterToList<T>(source: ReadOnlyCollection<T>, config: AbstractConverterToList.Config<T>): AbstractConverterToList<T> {
+export function createConverterToList<T>(source: ReadonlyCollection<T>, config: AbstractConverterToList.Config<T>): AbstractConverterToList<T> {
 	return (source instanceof List) ? new ListConverterToList(source, config) :
 		(source instanceof Map) ? new MapConverterToList(source, config) :
 		(source instanceof Set) ? new SetConverterToList(source, config) : null;
 }
 
-export function collectionToList<T>(source: ReadOnlyCollection<T>): DestroyableReadOnlyList<T> {
+export function collectionToList<T>(source: ReadonlyCollection<T>): DestroyableReadonlyList<T> {
 	return (source instanceof List) ? listToList(source) :
 		(source instanceof Map) ? mapToList(source) :
 		(source instanceof Set) ? setToList(source) : null;
 }
 
-export function collectionAsList<T>(source: ReadOnlyCollection<T>): DestroyableReadOnlyList<T> {
+export function collectionAsList<T>(source: ReadonlyCollection<T>): DestroyableReadonlyList<T> {
 	return (source instanceof List) ? source :
 		(source instanceof Map) ? mapToList(source) :
 		(source instanceof Set) ? setToList(source) : null;

@@ -20,7 +20,7 @@
 
 import Class from '../Class';
 import IList from '../IList';
-import ReadOnlyList from '../ReadOnlyList';
+import ReadonlyList from '../ReadonlyList';
 
 /**
  * View synchronizer with array. Listens all array events and reduces them to 2 granular functions:
@@ -78,7 +78,7 @@ class ListInserter<T> extends Class {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyList<T>, config: ListInserter.Config<T> = {}) {
+	constructor(readonly source: ReadonlyList<T>, config: ListInserter.Config<T> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;

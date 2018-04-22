@@ -18,7 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyMap from './DestroyableReadOnlyMap';
+import DestroyableReadonlyMap from './DestroyableReadonlyMap';
 import Dictionary from './Dictionary';
 import ICollection from './ICollection';
 import IList from './IList';
@@ -109,7 +109,7 @@ import Some from './Some';
  * All the same algorithms are also available for native JavaScript Object as map,
  * see [[DictionaryUtils]] functions.
  */
-interface IMap<T> extends ICollection<T>, DestroyableReadOnlyMap<T> {
+interface IMap<T> extends ICollection<T>, DestroyableReadonlyMap<T> {
 	/**
 	 * Returns item map - internal collection representation.
 	 *

@@ -19,7 +19,7 @@
 */
 
 import Class from '../Class';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
  * Collection item converter.
@@ -126,7 +126,7 @@ abstract class AbstractMapper<T, U> extends Class {
 	/**
 	 * Target collection.
 	 */
-	readonly target: ReadOnlyCollection<U>;
+	readonly target: ReadonlyCollection<U>;
 
 	/**
 	 * Creates synchronizer.
@@ -135,8 +135,8 @@ abstract class AbstractMapper<T, U> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyCollection<T>, protected _create: (data: T) => U,
-			config: AbstractMapper.Config<T, U> = {}) {
+	constructor(readonly source: ReadonlyCollection<T>, protected _create: (data: T) => U,
+				config: AbstractMapper.Config<T, U> = {}) {
 		super();
 		this._destroy = config.destroy;
 		this._scope = config.scope || this;

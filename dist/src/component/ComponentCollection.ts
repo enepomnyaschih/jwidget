@@ -22,14 +22,14 @@ import Class from '../Class';
 import Component from '../Component';
 import * as DomUtils from '../DomUtils';
 import {createMapper} from '../mapper/collection';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 import ComponentCollectionInserter from './ComponentCollectionInserter';
 
 /**
  * @hidden
  */
 export default class ComponentCollection extends Class {
-	constructor(private parent: Component, private source: ReadOnlyCollection<Component>, el: JQuery) {
+	constructor(private parent: Component, private source: ReadonlyCollection<Component>, el: JQuery) {
 		super();
 		parent._collections[this.iid] = this;
 

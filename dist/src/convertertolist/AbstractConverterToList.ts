@@ -23,7 +23,7 @@ import IList from '../IList';
 import IndexItems from '../IndexItems';
 import {VidSet} from '../internal';
 import List from '../List';
-import ReadOnlyCollection from '../ReadOnlyCollection';
+import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
  * Converter to array (orderer). Converts source collection to array.
@@ -101,7 +101,7 @@ abstract class AbstractConverterToList<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyCollection<T>, config: AbstractConverterToList.Config<T> = {}) {
+	constructor(readonly source: ReadonlyCollection<T>, config: AbstractConverterToList.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;

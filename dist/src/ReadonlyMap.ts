@@ -22,7 +22,7 @@ import Dictionary from './Dictionary';
 import IList from './IList';
 import IMap from './IMap';
 import Listenable from './Listenable';
-import ReadOnlyCollection from './ReadOnlyCollection';
+import ReadonlyCollection from './ReadonlyCollection';
 import Reducer from './Reducer';
 
 /**
@@ -108,7 +108,7 @@ import Reducer from './Reducer';
  * All the same algorithms are also available for native JavaScript Object as map,
  * see [[DictionaryUtils]] functions.
  */
-interface ReadOnlyMap<T> extends ReadOnlyCollection<T> {
+interface ReadonlyMap<T> extends ReadonlyCollection<T> {
 	/**
 	 * Returns item map - internal collection representation.
 	 *
@@ -316,4 +316,4 @@ interface ReadOnlyMap<T> extends ReadOnlyCollection<T> {
 	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
 }
 
-export default ReadOnlyMap;
+export default ReadonlyMap;

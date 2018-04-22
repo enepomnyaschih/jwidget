@@ -22,7 +22,7 @@ import * as ArrayUtils from '../ArrayUtils';
 import DestroyableBindable from '../DestroyableBindable';
 import IList from '../IList';
 import Property from '../Property';
-import ReadOnlyList from '../ReadOnlyList';
+import ReadonlyList from '../ReadonlyList';
 import AbstractCounter from './AbstractCounter';
 
 /**
@@ -32,12 +32,12 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyList<T>;
+	readonly source: ReadonlyList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyList<T>, test: (item: T) => any,
+	constructor(source: ReadonlyList<T>, test: (item: T) => any,
 				config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
@@ -72,7 +72,7 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 	}
 }
 
-export function countList<T>(source: ReadOnlyList<T>, test: (item: T) => any,
+export function countList<T>(source: ReadonlyList<T>, test: (item: T) => any,
 							 scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);

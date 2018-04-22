@@ -19,12 +19,12 @@
 */
 
 import Class from '../Class';
-import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
+import DestroyableReadonlyList from '../DestroyableReadonlyList';
 import IList from '../IList';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
-import ReadOnlyList from '../ReadOnlyList';
+import ReadonlyList from '../ReadonlyList';
 
 /**
  * Array reverser. Builds array containing all items of source array in reversed order.
@@ -101,7 +101,7 @@ class ListReverser<T> extends Class {
 	 * @param source Source array.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyList<T>, config: ListReverser.Config<T> = {}) {
+	constructor(readonly source: ReadonlyList<T>, config: ListReverser.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
@@ -201,7 +201,7 @@ namespace ListReverser {
 	}
 }
 
-export function reverseList<T>(source: ReadOnlyList<T>): DestroyableReadOnlyList<T> {
+export function reverseList<T>(source: ReadonlyList<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toReversed();
 	}

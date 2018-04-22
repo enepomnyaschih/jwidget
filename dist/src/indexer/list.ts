@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
+import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
 import IList from '../IList';
 import Map from '../Map';
-import ReadOnlyList from '../ReadOnlyList';
+import ReadonlyList from '../ReadonlyList';
 import AbstractIndexer from './AbstractIndexer';
 
 /**
@@ -31,12 +31,12 @@ export default class ListIndexer<T> extends AbstractIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlyList<T>;
+	readonly source: ReadonlyList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyList<T>, getKey: (item: T) => any,
+	constructor(source: ReadonlyList<T>, getKey: (item: T) => any,
 				config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
@@ -63,8 +63,8 @@ export default class ListIndexer<T> extends AbstractIndexer<T> {
 	}
 }
 
-export function indexList<T>(source: ReadOnlyList<T>, getKey: (item: T) => any,
-							 scope?: any): DestroyableReadOnlyMap<T> {
+export function indexList<T>(source: ReadonlyList<T>, getKey: (item: T) => any,
+							 scope?: any): DestroyableReadonlyMap<T> {
 	if (source.silent) {
 		return source.index(getKey, scope);
 	}

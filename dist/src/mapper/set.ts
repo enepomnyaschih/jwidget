@@ -18,12 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
+import DestroyableReadonlySet from '../DestroyableReadonlySet';
 import Destructor from '../Destructor';
 import {destroy} from '../index';
 import {VidMap} from '../internal';
 import ISet from '../ISet';
-import ReadOnlySet from '../ReadOnlySet';
+import ReadonlySet from '../ReadonlySet';
 import Set from '../Set';
 import AbstractMapper from './AbstractMapper';
 
@@ -41,7 +41,7 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	readonly source: ReadOnlySet<T>;
+	readonly source: ReadonlySet<T>;
 
 	/**
 	 * @inheritdoc
@@ -51,7 +51,7 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlySet<T>, create: (data: T) => U, config: SetMapper.FullConfig<T, U> = {}) {
+	constructor(source: ReadonlySet<T>, create: (data: T) => U, config: SetMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
 		this._items = new VidMap<T, U>(source.getKey);
 		this._targetCreated = config.target == null;
@@ -129,8 +129,8 @@ namespace SetMapper {
 	}
 }
 
-export function mapSet<T, U>(source: ReadOnlySet<T>, create: (sourceValue: T) => U,
-		config: AbstractMapper.Config<T, U> = {}): DestroyableReadOnlySet<U> {
+export function mapSet<T, U>(source: ReadonlySet<T>, create: (sourceValue: T) => U,
+							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlySet<U> {
 	if (!source.silent) {
 		const target = new Set<U>(config.getKey);
 		return target.owning(new SetMapper<T, U>(source, create, {
