@@ -1,4 +1,4 @@
-﻿/*!
+﻿/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -19,9 +19,9 @@
 */
 
 import Dictionary from './Dictionary';
-import TemplateOutput from './TemplateOutput';
 import * as DomUtils from './DomUtils';
 import * as StringUtils from './StringUtils';
+import TemplateOutput from './TemplateOutput';
 
 /**
  * Abstract HTML template.

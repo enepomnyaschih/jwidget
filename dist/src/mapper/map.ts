@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {destroy} from '../index';
-import AbstractMapper from './AbstractMapper';
 import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
 import Destructor from '../Destructor';
 import Dictionary from '../Dictionary';
+import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
+import {destroy} from '../index';
 import Map from '../Map';
 import ReadOnlyMap from '../ReadOnlyMap';
-import * as DictionaryUtils from '../DictionaryUtils';
+import AbstractMapper from './AbstractMapper';
 
 /**
  * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Map]].

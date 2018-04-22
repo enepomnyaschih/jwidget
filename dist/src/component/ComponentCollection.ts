@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,12 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {createMapper} from '../mapper/collection';
 import Class from '../Class';
 import Component from '../Component';
-import ComponentCollectionInserter from './ComponentCollectionInserter';
-import ReadOnlyCollection from '../ReadOnlyCollection';
 import * as DomUtils from '../DomUtils';
+import {createMapper} from '../mapper/collection';
+import ReadOnlyCollection from '../ReadOnlyCollection';
+import ComponentCollectionInserter from './ComponentCollectionInserter';
 
 /**
  * @hidden

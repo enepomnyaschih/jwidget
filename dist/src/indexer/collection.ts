@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ListIndexer, indexList} from './list';
-import {default as MapIndexer, indexMap} from './map';
-import {default as SetIndexer, indexSet} from './set';
-import AbstractIndexer from './AbstractIndexer';
 import DestroyableReadOnlyMap from '../DestroyableReadOnlyMap';
 import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
+import AbstractIndexer from './AbstractIndexer';
+import {default as ListIndexer, indexList} from './list';
+import {default as MapIndexer, indexMap} from './map';
+import {default as SetIndexer, indexSet} from './set';
 
 export function createIndexer<T>(source: ICollection<T>, getKey: (item: T) => string,
 		config?: AbstractIndexer.Config<T>): AbstractIndexer<T> {

@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ListConverterToSet, listToSet} from './list';
-import {default as MapConverterToSet, mapToSet} from './map';
-import {default as SetConverterToSet, setToSet} from './set';
-import AbstractConverterToSet from './AbstractConverterToSet';
 import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
 import List from '../List';
 import Map from '../Map';
 import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
+import AbstractConverterToSet from './AbstractConverterToSet';
+import {default as ListConverterToSet, listToSet} from './list';
+import {default as MapConverterToSet, mapToSet} from './map';
+import {default as SetConverterToSet, setToSet} from './set';
 
 export function createConverterToSet<T>(source: ReadOnlyCollection<T>,
 		config?: AbstractConverterToSet.Config<T>): AbstractConverterToSet<T> {

@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,9 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {isEmpty} from '../DictionaryUtils';
 import Class from '../Class';
 import Dictionary from '../Dictionary';
+import {isEmpty} from '../DictionaryUtils';
 import IMap from '../IMap';
 import ReadOnlyMap from '../ReadOnlyMap';
 

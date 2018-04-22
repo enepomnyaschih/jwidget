@@ -1,4 +1,4 @@
-﻿/*!
+﻿/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,9 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {newIid} from './index';
 import Destroyable from './Destroyable';
 import IClass from './IClass';
+import {newIid} from './index';
 
 /**
  * Introduces object aggregation support.

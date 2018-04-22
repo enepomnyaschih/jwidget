@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,14 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {destroy} from '../index';
-import {VidMap} from '../internal';
-import AbstractMapper from './AbstractMapper';
 import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
 import Destructor from '../Destructor';
+import {destroy} from '../index';
+import {VidMap} from '../internal';
 import ISet from '../ISet';
 import ReadOnlySet from '../ReadOnlySet';
 import Set from '../Set';
+import AbstractMapper from './AbstractMapper';
 
 /**
  * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Set]].

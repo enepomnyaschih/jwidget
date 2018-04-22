@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,11 +18,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractFilterer from './AbstractFilterer';
 import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
 import ISet from '../ISet';
 import ReadOnlySet from '../ReadOnlySet';
 import Set from '../Set';
+import AbstractFilterer from './AbstractFilterer';
 
 /**
  * [[JW.Abstract.Filterer|Filterer]] implementation for [[JW.Set]].

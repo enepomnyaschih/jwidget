@@ -1,4 +1,4 @@
-﻿/*!
+﻿/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ListInserter from './inserter/list';
 import Class from './Class';
-import ReadOnlyList from './ReadOnlyList';
 import * as DomUtils from './DomUtils';
+import ListInserter from './inserter/list';
+import ReadOnlyList from './ReadOnlyList';
 
 /**
  * Abstract view synchronizer. See [[Inserter]] for details.

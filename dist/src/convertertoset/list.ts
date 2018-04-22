@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,11 +18,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractConverterToSet from './AbstractConverterToSet';
 import DestroyableReadOnlySet from '../DestroyableReadOnlySet';
 import IList from '../IList';
 import ReadOnlyList from '../ReadOnlyList';
 import Set from '../Set';
+import AbstractConverterToSet from './AbstractConverterToSet';
 
 /**
  * [[JW.Abstract.Lister|Lister]] implementation for [[JW.Array]].

@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,14 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {destroy} from '../index';
-import AbstractMapper from './AbstractMapper';
 import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import Destructor from '../Destructor';
 import IList from '../IList';
+import {destroy} from '../index';
 import IndexItems from '../IndexItems';
 import List from '../List';
 import ReadOnlyList from '../ReadOnlyList';
+import AbstractMapper from './AbstractMapper';
 
 /**
  * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Array]].

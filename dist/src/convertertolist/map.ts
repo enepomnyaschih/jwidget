@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,13 +18,13 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {VidSet} from '../internal';
-import AbstractConverterToList from './AbstractConverterToList';
 import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
+import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
+import {VidSet} from '../internal';
 import List from '../List';
 import ReadOnlyMap from '../ReadOnlyMap';
-import * as DictionaryUtils from '../DictionaryUtils';
+import AbstractConverterToList from './AbstractConverterToList';
 
 /**
  * [[JW.Abstract.Orderer|Orderer]] implementation for [[JW.Map]].

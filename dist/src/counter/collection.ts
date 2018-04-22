@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ListCounter, countList} from './list';
-import {default as MapCounter, countMap} from './map';
-import {default as SetCounter, countSet} from './set';
-import AbstractCounter from './AbstractCounter';
 import DestroyableBindable from '../DestroyableBindable';
 import List from '../List';
 import Map from '../Map';
 import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
+import AbstractCounter from './AbstractCounter';
+import {countList, default as ListCounter} from './list';
+import {countMap, default as MapCounter} from './map';
+import {countSet, default as SetCounter} from './set';
 
 export function createCounter<T>(source: ReadOnlyCollection<T>, test: (item: T) => boolean,
 		config?: AbstractCounter.Config): AbstractCounter<T> {

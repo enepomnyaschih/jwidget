@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -20,9 +20,9 @@
 
 /// <reference types="jquery" />
 
+import Bindable from '../Bindable';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
-import Bindable from '../Bindable';
 
 class TextUpdater extends Class {
 	constructor(private el: JQuery, private property: Bindable<any>) {

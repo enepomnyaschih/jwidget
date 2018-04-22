@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,14 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {cmp} from '../index';
+import * as ArrayUtils from '../ArrayUtils';
 import Class from '../Class';
 import IList from '../IList';
+import {cmp} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
 import ReadOnlyCollection from '../ReadOnlyCollection';
-import * as ArrayUtils from '../ArrayUtils';
 
 /**
  * Converter to array (sorter by comparer).

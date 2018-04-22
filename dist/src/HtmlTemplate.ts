@@ -1,4 +1,4 @@
-﻿/*!
+﻿/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -20,8 +20,8 @@
 
 import AbstractTemplate from './AbstractTemplate';
 import Dictionary from './Dictionary';
-import TemplateOutput from './TemplateOutput';
 import * as DomUtils from './DomUtils';
+import TemplateOutput from './TemplateOutput';
 
 /**
  * HTML template. This class compiles the input template only once, and uses element cloning further on to

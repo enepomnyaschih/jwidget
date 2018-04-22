@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,14 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ListObserver from './list';
-import MapObserver from './map';
-import SetObserver from './set';
-import AbstractObserver from './AbstractObserver';
 import List from '../List';
 import Map from '../Map';
 import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
+import AbstractObserver from './AbstractObserver';
+import ListObserver from './list';
+import MapObserver from './map';
+import SetObserver from './set';
 
 export function createObserver<T>(source: ReadOnlyCollection<T>,
 		config: AbstractObserver.Config<T>): AbstractObserver<T> {

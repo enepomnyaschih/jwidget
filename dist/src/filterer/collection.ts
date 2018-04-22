@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ListFilterer, filterList} from './list';
-import {default as MapFilterer, filterMap} from './map';
-import {default as SetFilterer, filterSet} from './set';
-import AbstractFilterer from './AbstractFilterer';
 import DestroyableReadOnlyCollection from '../DestroyableReadOnlyCollection';
 import List from '../List';
 import Map from '../Map';
 import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
+import AbstractFilterer from './AbstractFilterer';
+import {default as ListFilterer, filterList} from './list';
+import {default as MapFilterer, filterMap} from './map';
+import {default as SetFilterer, filterSet} from './set';
 
 export function createFilterer<T>(source: ReadOnlyCollection<T>, test: (item: T) => boolean,
 		scope?: any): AbstractFilterer<T> {

@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,16 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {destroy, iidStr, SILENT, ADAPTER} from '../index';
-import {mapList} from '../mapper/list';
+import * as ArrayUtils from '../ArrayUtils';
 import Class from '../Class';
 import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import IList from '../IList';
+import {ADAPTER, destroy, iidStr, SILENT} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
+import {mapList} from '../mapper/list';
 import ReadOnlyList from '../ReadOnlyList';
-import * as ArrayUtils from '../ArrayUtils';
 
 /**
  * Arrays merger. Builds array consisting of all source collections items in the same order.

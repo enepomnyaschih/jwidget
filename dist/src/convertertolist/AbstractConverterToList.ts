@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,10 +18,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {VidSet} from '../internal';
 import Class from '../Class';
 import IList from '../IList';
 import IndexItems from '../IndexItems';
+import {VidSet} from '../internal';
 import List from '../List';
 import ReadOnlyCollection from '../ReadOnlyCollection';
 

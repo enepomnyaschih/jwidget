@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,9 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import Bindable from '../Bindable';
 import Class from '../Class';
 import Component from '../Component';
-import Bindable from '../Bindable';
 import Switcher from '../Switcher';
 
 /**
@@ -31,8 +31,8 @@ export default class ComponentBindable extends Class {
 		super();
 		parent._bindables[this.iid] = this;
 
-		this.own(new Switcher([component], {
-			init: (child: Component) => {
+		this.own(new Switcher<Component>(component, {
+			init: child => {
 				this.parent.children.put(this.id, child);
 			},
 			done: () => {

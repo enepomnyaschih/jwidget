@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,16 +18,16 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {def} from '../index';
-import AbstractFilterer from './AbstractFilterer';
+import * as ArrayUtils from '../ArrayUtils';
 import DestroyableReadOnlyList from '../DestroyableReadOnlyList';
 import Dictionary from '../Dictionary';
 import IList from '../IList';
+import {def} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
 import ReadOnlyList from '../ReadOnlyList';
-import * as ArrayUtils from '../ArrayUtils';
+import AbstractFilterer from './AbstractFilterer';
 
 /**
  * [[JW.Abstract.Filterer|Filterer]] implementation for [[JW.Array]].

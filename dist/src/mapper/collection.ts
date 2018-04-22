@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {default as ListMapper, mapList} from './list';
-import {default as MapMapper, mapMap} from './map';
-import {default as SetMapper, mapSet} from './set';
-import AbstractMapper from './AbstractMapper';
 import DestroyableReadOnlyCollection from '../DestroyableReadOnlyCollection';
 import List from '../List';
 import Map from '../Map';
 import ReadOnlyCollection from '../ReadOnlyCollection';
 import Set from '../Set';
+import AbstractMapper from './AbstractMapper';
+import {default as ListMapper, mapList} from './list';
+import {default as MapMapper, mapMap} from './map';
+import {default as SetMapper, mapSet} from './set';
 
 export function createMapper<T, U>(source: ReadOnlyCollection<T>, create: (sourceValue: T) => U,
 		config?: AbstractMapper.Config<T, U>): AbstractMapper<T, U> {

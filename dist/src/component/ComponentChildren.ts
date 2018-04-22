@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,15 +18,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {iidStr} from '../index';
 import Component from '../Component';
-import ComponentChild from './ComponentChild';
-import ComponentChildInserter from './ComponentChildInserter';
 import Dictionary from '../Dictionary';
+import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
+import {iidStr} from '../index';
 import Map from '../Map';
 import Some from '../Some';
-import * as DictionaryUtils from '../DictionaryUtils';
+import ComponentChild from './ComponentChild';
+import ComponentChildInserter from './ComponentChildInserter';
 
 /**
  * @hidden

@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,8 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Destroyable from "./Destroyable";
 import Bindable from "./Bindable";
+import Destroyable from "./Destroyable";
 
 /**
  * Extension of `Bindable` interface with `destroy` method.

@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -20,13 +20,13 @@
 
 /// <reference types="jquery" />
 
-import {Binding, UPDATE, WATCH} from '../index';
+import Bindable from '../Bindable';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
 import DestroyableBindable from '../DestroyableBindable';
+import {Binding, UPDATE, WATCH} from '../index';
 import IProperty from '../IProperty';
 import Property from '../Property';
-import Bindable from '../Bindable';
 
 class RadioBinding extends Class {
 	constructor(el: JQuery, name: string, property: Bindable<any>);

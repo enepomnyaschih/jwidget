@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,12 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCounter from './AbstractCounter';
 import DestroyableBindable from '../DestroyableBindable';
+import * as DictionaryUtils from '../DictionaryUtils';
 import IMap from '../IMap';
 import Property from '../Property';
 import ReadOnlyMap from '../ReadOnlyMap';
-import * as DictionaryUtils from '../DictionaryUtils';
+import AbstractCounter from './AbstractCounter';
 
 /**
  * [[JW.Abstract.Counter|Counter]] implementation for [[JW.Map]].

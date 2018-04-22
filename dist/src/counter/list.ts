@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,12 +18,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractCounter from './AbstractCounter';
+import * as ArrayUtils from '../ArrayUtils';
 import DestroyableBindable from '../DestroyableBindable';
 import IList from '../IList';
 import Property from '../Property';
 import ReadOnlyList from '../ReadOnlyList';
-import * as ArrayUtils from '../ArrayUtils';
+import AbstractCounter from './AbstractCounter';
 
 /**
  * [[JW.Abstract.Counter|Counter]] implementation for [[JW.Array]].

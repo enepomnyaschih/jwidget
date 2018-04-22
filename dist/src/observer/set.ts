@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,9 +18,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import AbstractObserver from './AbstractObserver';
 import ISet from '../ISet';
 import ReadOnlySet from '../ReadOnlySet';
+import AbstractObserver from './AbstractObserver';
 
 /**
  * [[JW.Abstract.Observer|Observer]] implementation for [[JW.Set]].

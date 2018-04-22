@@ -1,4 +1,4 @@
-/*!
+/*
 	jWidget 2
 	Copyright (C) 2017  Egor Nepomnyaschih
 	enepomnyaschih@gmail.com
@@ -18,8 +18,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import IList from "./IList";
 import * as ArrayUtils from "./ArrayUtils";
+import IList from "./IList";
 
 /**
  * [[JW.List.splice|splice]] method result.
