@@ -18,8 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/// <reference types="jquery" />
-
 import Bindable from '../Bindable';
 import Class from '../Class';
 import Destroyable from '../Destroyable';
@@ -28,9 +26,9 @@ import Switcher from '../Switcher';
 class ClassNameUpdater extends Class {
 	constructor(private el: JQuery, property: Bindable<string>) {
 		super();
-		this.own(new Switcher([property], {
-			init: (value: any) => this.el.addClass(value),
-			done: (value: any) => this.el.removeClass(value)
+		this.own(new Switcher(property, {
+			init: value => this.el.addClass(value),
+			done: value => this.el.removeClass(value)
 		}));
 	}
 }
