@@ -28,4 +28,5 @@ class DummyDestroyable implements Destroyable {
  * Dummy implementation of `Destroyable` interface.
  * Exposes `destroy` method which does nothing.
  */
-export default <Destroyable>(new DummyDestroyable());
+const dummyDestroyable = <Destroyable>(new DummyDestroyable()); // An extra variable helps IntelliSense to find this import
+export default dummyDestroyable;

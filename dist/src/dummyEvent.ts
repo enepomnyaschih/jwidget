@@ -43,4 +43,5 @@ class DummyEvent implements IEvent<any> {
  * Dummy implementation of `Listenable<any>` interface.
  * As opposed to `Event`, doesn't really bind the event handlers, just pretends it does that.
  */
-export default <IEvent<any>>(new DummyEvent());
+const dummyEvent = <IEvent<any>>(new DummyEvent()); // An extra variable helps IntelliSense to find this import
+export default dummyEvent;

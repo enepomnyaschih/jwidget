@@ -90,4 +90,5 @@ export class Hash extends Property<string> {
 	}
 }
 
-export default new Hash();
+const hash = new Hash(); // An extra variable helps IntelliSense to find this import
+export default hash;
