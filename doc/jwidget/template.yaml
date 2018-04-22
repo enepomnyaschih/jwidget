@@ -1,33 +1,27 @@
 symbols:
   default:
     signature: |
-      (template: string, id?: string): any
-      (tpls: Dictionary<string>): any
+      (template: string): any
     params:
       template: Template HTML string.
-      id: Template name to add or override. Defaults to "main".
-      tpls: Templates to add or override.
     returns: Class transformation function (annotation).
     description: |
-      <p>Defines HTML templates for a %Component subclass.</p>
+      <p>Defines HTML template for a %Component subclass. Template is used to render the component.</p>
       <pre>
       @%template('<div>Hello, World!</div>')
       class MyComponent extends %Component {
       }
       </pre>
-      <p>You can define multiple templates for any subclass of %Component. Each template has a name. You can get
-      component template via %templates dictionary.</p>
-      <p>Templates are inherited along with component classes.</p>
-      <p>Each component class has at least one template, its name is <b>main</b>. This is the main template which is
-      used to render the component. By default, <b>main</b> equals to <tt>&lt;div&gt;&lt;/div&gt;</tt>. The <b>main</b>
-      template is enough to render the majority of components. This template is applied automatically, unlike the other
-      templates which should be applied manually.</p>
+      <p>You can get component template via %templateField field.</p>
+      <p>Template is inherited down the component class hierarchy.</p>
+      <p>Template of base Component is <tt>&lt;div&gt;&lt;/div&gt;</tt>.</p>
       <p>With WebPack, you can easily extract the templates to separate HTML files. See %webPackIntegration for
       details.</p>
     references:
-      templates:
+      templateField:
         file: jwidget/Component
-        member: templates
+        member: template
+        label: template
       webPackIntegration:
         file: jwidget/Component
         symbol: webPackIntegration

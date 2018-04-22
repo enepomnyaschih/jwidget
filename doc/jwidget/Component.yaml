@@ -19,7 +19,7 @@ symbols:
         header: jWidget UI component example
         text: |
           <pre>
-          @%template(
+          @%templateAnnotation(
               '<div jwclass="my-component">' +
                   '<div jwid="hello-message"></div>' +
                   '<a href="#" jwid="link">Click me!</a>' +
@@ -38,7 +38,7 @@ symbols:
           }
           </pre>
           %example:component
-          <p>Let's find out how HTML template works. Each component has a <b>main </b>template, which is passed into %template
+          <p>Let's find out how HTML template works. Each component has a <b>main </b>template, which is passed into %templateAnnotation
           annotation and defaults to <tt>&lt;div&gt;&lt;/div&gt;</tt>. You can add more templates. Subclass inherits
           superclass templates.</p>
           <p>Pay attention to special attributes %jwclass and %jwid in the template. %jwclass is a root
@@ -239,7 +239,7 @@ symbols:
           <h6>Create a child component</h6>
           <p>This example describes how to create and destroy a child component with <tt>jwid="title-box"</tt>.</p>
           <pre>
-          @%template(
+          @%templateAnnotation(
               '<div jwclass="my-component">' +
                   '<div jwid="title-box"></div>' +
               '</div>'
@@ -255,7 +255,7 @@ symbols:
           Assume that you have an observable property "document" and want to replace an old document view with a new one on
           document change.</p>
           <pre>
-          @%template(
+          @%templateAnnotation(
               '<div jwclass="my-component">' +
                   '<div jwid="document"></div>' +
               '</div>'
@@ -275,7 +275,7 @@ symbols:
           element with <tt>jwid="labels"</tt>. If data collection is not silent, child component collection gets constantly
           synchronized with the data.</p>
           <pre>
-          @%template(
+          @%templateAnnotation(
               '<div jwclass="my-component">' +
                   '<div jwid="labels"></div>' +
               '</div>'
@@ -294,7 +294,7 @@ symbols:
           <p>This example describes how to insert child components which have lifetime controlled by someone else, and
           therefore shouldn't be destroyed by parent component.</p>
           <pre>
-          @%template(
+          @%templateAnnotation(
               '<div jwclass="my-component">' +
                   '<div jwid="title-box"></div>' +
               '</div>'
@@ -364,7 +364,7 @@ symbols:
           into two files:</p>
           <h6>MyComponent.ts</h6>
           <pre>
-          @%template(require<string>("./MyComponent.jw.html"))
+          @%templateAnnotation(require<string>("./MyComponent.jw.html"))
           class MyComponent extends %Component {
               constructor(private message: string, private link: string) {
                   super();
@@ -421,7 +421,7 @@ symbols:
         <p>Plain objects of this class can be constructed. They can be used as dummy components or simple containers.
         For example, here's a common pattern for %Bindable&lt;%ReadonlyList&lt;%Component&gt;&gt; rendering:</p>
         <pre>
-        @%template('<div><div jwid="labels"></div></div>')
+        @%templateAnnotation('<div><div jwid="labels"></div></div>')
         class Container extends %Component {
             constructor(private labels: %Bindable<%ReadonlyList<%Component>>) {
                 super();
@@ -455,11 +455,11 @@ symbols:
         description: |
           <p>Child component mutable map. Use this map to add child components in place of elements with
           corresponding jwid. The field is available from component rendering beginning.</p>
-      templates:
+      template:
         modifiers: readonly
-        type: '%Dictionary<%AbstractTemplate>'
+        type: '%AbstractTemplate'
         description: |
-          <p>Map from template ID to the template. Templates are defined by %template annotation.</p>
+          <p>Component template. Template is defined by %templateAnnotation annotation.</p>
     methods:
       render:
         signature: '(): this'
@@ -586,7 +586,7 @@ symbols:
         returns: 'this'
         description: |
           <p>Selects component rendering strategy. This method is needed only in very rare cases. By default,
-          component is rendered outside of DOM based on "main" HTML template specified by %template annotation.
+          component is rendered outside of DOM based on %template property.
           You can change this by passing one of the next values into %using method of the component:</p>
           <ul>
           <li>%AbstractTemplate or string - use this template explicitly for rendering.</li>
@@ -657,8 +657,7 @@ symbols:
         signature: 'createElement(): %TemplateOutput'
         returns: HTML template rendering output.
         description: |
-          <p>Virtual method to render the component document fragment. By default, renders <b>main</b> HTML template
-          defined by %template annotation.</p>
+          <p>Virtual method to render the component document fragment. By default, renders by %template.</p>
 
     references:
       jwclass: {}
@@ -699,3 +698,6 @@ symbols:
       renderChildId:
         href: '#moreAboutRender'
         label: 'render&lt;ChildId&gt;'
+      templateAnnotation:
+        file: jwidget/template
+        label: template

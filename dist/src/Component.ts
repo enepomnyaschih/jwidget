@@ -18,31 +18,29 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/// <reference types="jquery" />
-
-import {apply, destroy} from './index';
-import List from './List';
 import AbstractTemplate from './AbstractTemplate';
+import Bindable from './Bindable';
 import Class from './Class';
 import ComponentBindable from './component/ComponentBindable';
 import ComponentChildren from './component/ComponentChildren';
 import ComponentCollection from './component/ComponentCollection';
 import ComponentList from './component/ComponentList';
+import Destroyable from "./Destroyable";
 import Dictionary from './Dictionary';
+import * as DictionaryUtils from './DictionaryUtils';
 import DomTemplate from './DomTemplate';
-import ReadOnlyList from './ReadOnlyList';
-import ReadOnlyCollection from './ReadOnlyCollection';
+import * as DomUtils from './DomUtils';
 import HtmlTemplate from './HtmlTemplate';
+import IMap from "./IMap";
+import {apply, destroy} from './index';
+import List from './List';
 import Map from './Map';
 import Property from './Property';
+import ReadOnlyCollection from './ReadOnlyCollection';
+import ReadOnlyList from './ReadOnlyList';
 import Set from './Set';
-import TemplateOutput from './TemplateOutput';
-import Bindable from './Bindable';
-import * as DomUtils from './DomUtils';
-import * as DictionaryUtils from './DictionaryUtils';
 import * as StringUtils from './StringUtils';
-import IMap from "./IMap";
-import Destroyable from "./Destroyable";
+import TemplateOutput from './TemplateOutput';
 
 /**
  * Base class of UI component.
@@ -60,7 +58,7 @@ export default class Component extends Class {
 	private _children: ComponentChildren = null;
 
 	private _wasAfterAppend: boolean = false;
-	private _template: AbstractTemplate = null;
+	private _template: AbstractTemplate;
 
 	private __elements: Dictionary<JQuery> = null;
 	private __bindables: Dictionary<ComponentBindable> = null;
@@ -68,20 +66,13 @@ export default class Component extends Class {
 	private __collections: Dictionary<ComponentCollection> = null;
 
 	/**
-	 * Map from template ID to the template. Templates are defined by `template` annotation.
-	 */
-	readonly templates: Dictionary<AbstractTemplate>;
-
-	/**
-	 * Yes, objects of this class can be constructed.
-	 * They can be used as dummy components or simple containers.
+	 * Plain objects of this class can be constructed. They can be used as dummy components or simple containers.
 	 */
 	constructor() {
 		super();
-		if (!Component.prototype.templates) {
-			DomUtils.template(Component, {main: '<div></div>'});
+		if (!Component.prototype._template) {
+			Component.prototype._template = new HtmlTemplate('<div></div>');
 		}
-		this._template = this.templates['main'];
 	}
 
 	/**
@@ -104,6 +95,13 @@ export default class Component extends Class {
 	 */
 	get children(): IMap<Component> {
 		return this._children;
+	}
+
+	/**
+	 * Component template.
+	 */
+	get template(): AbstractTemplate {
+		return this._template;
 	}
 
 	/**
@@ -222,7 +220,7 @@ export default class Component extends Class {
 
 	/**
 	 * Virtual method to render the component document fragment.
-	 * By default, renders `main` HTML template.
+	 * By default, renders by template.
 	 */
 	protected createElement(): TemplateOutput {
 		return this._template.createElement();

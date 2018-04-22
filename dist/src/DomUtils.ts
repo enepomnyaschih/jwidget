@@ -18,12 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {apply} from './index';
-import Class from './Class';
-import Component from './Component';
 import Dictionary from './Dictionary';
-import HtmlTemplate from './HtmlTemplate';
-import * as DictionaryUtils from './DictionaryUtils';
 
 /**
  * Some code is taken from jQuery. We are not happy with standard jQuery.parseHtml, because it is slow.
@@ -41,33 +36,6 @@ const wrapMap: Dictionary<any[]> = {
 const rtagName = /^<([\w:]+)/;
 
 let _fragment: DocumentFragment = null;
-
-/**
- * Defines HTML templates for specified `Component` subclass.
- * See `template` for details.
- *
- * @param cls `Component` subclass.
- * @param tpls Templates to add or override.
- */
-export function template(cls: any, tpls: Dictionary<string>) {
-	if (cls !== Component && !Component.prototype.templates) {
-		template(Component, {main: '<div></div>'});
-	}
-	const templates = DictionaryUtils.map(tpls, function(html) {
-		return new HtmlTemplate(html);
-	});
-	if (cls.prototype.Templates && cls.prototype.Templates.componentCls == cls) {
-		apply(cls.prototype.Templates.prototype, templates);
-	} else {
-		const __ = function() { }
-		__.prototype = (cls.prototype.Templates || Class).prototype;
-		cls.prototype.Templates = function() { };
-		cls.prototype.Templates.prototype = new (<typeof Object>__)();
-		cls.prototype.Templates.componentCls = cls;
-		apply(cls.prototype.Templates.prototype, templates);
-		cls.prototype.templates = new cls.prototype.Templates();
-	}
-}
 
 /**
  * Checks if value is a jQuery element.
@@ -236,7 +204,7 @@ export function _afterAppend(child: { _afterAppend: () => void }) {
 	child._afterAppend();
 }
 
-(function(wrapMap) {
+(function (wrapMap) {
 	wrapMap['optgroup'] = wrapMap['option'];
 	wrapMap['tbody'] = wrapMap['tfoot'] = wrapMap['colgroup'] = wrapMap['caption'] = wrapMap['thead'];
 	wrapMap['th'] = wrapMap['td'];

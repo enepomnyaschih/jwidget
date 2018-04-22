@@ -18,40 +18,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Dictionary from './Dictionary';
-import * as DomUtils from './DomUtils';
+import HtmlTemplate from "./HtmlTemplate";
 
 /**
- * Defines HTML templates for a `Component` subclass.
- *
- * You can define multiple templates for any subclass of `Component`. Each template has a name.
- * You can get component template via `Component.templates` dictionary.
- *
- * Templates are inherited along with component classes.
- *
- * Each component class has at least one template, its name is `main`. This is the main template which is
- * used to render the component. By default, `main` equals to `<div></div>`.
- * Usually, `main` template is enough for the majority of components. This template is applied automatically,
- * unlike other templates which should be applied manually.
- *
- * @param template Template HTML string.
- * @param id Template name to add or override. Defaults to "main".
+ * Defines HTML template for a `Component` subclass.
+ * @param html Template HTML string.
  */
-export default function(template: string, id?: string): any;
-
-/**
- * @param tpls Templates to add or override.
- */
-export default function(tpls: Dictionary<string>): any;
-export default function(tpl: any, id?: string): any {
-	return function(target: any) {
-		let tpls: Dictionary<string>;
-		if (typeof tpl === 'string') {
-			tpls = {};
-			tpls[id || 'main'] = tpl;
-		} else {
-			tpls = tpl;
-		}
-		DomUtils.template(target, tpls);
+export default function (html: string): any {
+	return function (target: any) {
+		target.prototype._template = new HtmlTemplate(html);
 	};
 }
