@@ -71,7 +71,7 @@ export function contains<T>(arr: T[], item: T): boolean {
  * @param scope `callback` call scope. Defaults to array itself.
  * @returns The found item or undefined.
  */
-export function find<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): T {
+export function find<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): T {
 	return arr[findIndex(arr, callback, scope)];
 }
 
@@ -87,7 +87,7 @@ export function find<T>(arr: T[], callback: (item: T, index: number) => boolean,
  * @param scope `callback` call scope. Defaults to array itself.
  * @returns Index of the found item or undefined.
  */
-export function findIndex<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number {
+export function findIndex<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): number {
 	scope = scope || arr;
 	let result: number;
 	arr.every(function (item, index) {
@@ -271,14 +271,14 @@ export function minIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: numb
 /**
  * Counts the items matching criteria.
  *
- * Returns the number of items for which callback returns truthy value.
+ * Returns count of items which `callback` returns truthy value for.
  *
  * @param arr Array.
  * @param callback Criteria callback.
  * @param scope `callback` call scope. Defaults to array itself.
  * @returns Number of items.
  */
-export function count<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number {
+export function count<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): number {
 	scope = scope || arr;
 	let result = 0;
 	arr.every(function (item, index) {
@@ -405,7 +405,7 @@ export function toReversed<T>(arr: T[]): T[] {
  * @param scope `callback` call scope. Defaults to array itself.
  * @returns Array index.
  */
-export function index<T>(arr: T[], callback: (item: T, index: number) => string, scope?: any): Dictionary<T> {
+export function index<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): Dictionary<T> {
 	scope = scope || arr;
 	const result: Dictionary<T> = {};
 	arr.every(function (item, index) {
@@ -533,7 +533,7 @@ export function removeItem<T>(arr: T[], item: T): number {
  * @param getKey Function which returns unique key of an item in this array.
  * By default, identifies primitive values and `Identifiable` objects.
  */
-export function removeItems<T>(arr: T[], items: T[], getKey?: (item: T) => string) {
+export function removeItems<T>(arr: T[], items: T[], getKey?: (item: T) => any) {
 	const itemSet = VidSet.fromArray<T>(items, getKey);
 	const newItems = arr.filter(function (item: T): boolean {
 		return !itemSet.contains(item);
@@ -659,7 +659,7 @@ export function equal<T>(x: T[], y: T[]): boolean {
  * @param scope `callback` call scope. Defaults to array itself.
  * @returns True if every item matches the criteria.
  */
-export function backEvery<T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): boolean {
+export function backEvery<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): boolean {
 	scope = scope || arr;
 	for (var i = arr.length - 1; i >= 0; --i) {
 		if (!callback.call(scope, arr[i], i)) {
@@ -901,7 +901,7 @@ export function tryReorder<T>(arr: T[], indexArray: number[]): T[]{
  * @returns `splice` method arguments. If no method call required, returns undefined.
  */
 export function detectSplice<T>(oldItems: T[], newItems: T[],
-		getKey?: (item: T) => string): IList.SpliceParams<T> {
+								getKey?: (item: T) => any): IList.SpliceParams<T> {
 	var removeParamsList: IList.IndexCount[] = [];
 	var addParamsList: IList.IndexItems<T>[] = [];
 	var oldIndexMap = new VidMap<T, number>(getKey);
@@ -998,7 +998,7 @@ export function detectFilter<T>(oldItems: T[], newItems: T[]): IList.IndexCount[
  * @returns `indexArray` argument of `reorder` method.
  * If no method call required, returns undefined.
  */
-export function detectReorder<T>(oldItems: T[], newItems: T[], getKey?: (item: T) => string): number[] {
+export function detectReorder<T>(oldItems: T[], newItems: T[], getKey?: (item: T) => any): number[] {
 	var indexArray: number[] = [];
 	var newIndexMap = new VidMap<T, number>(getKey);
 	for (var i = 0, l = newItems.length; i < l; ++i) {

@@ -28,15 +28,15 @@ import {default as ListFilterer, filterList} from './list';
 import {default as MapFilterer, filterMap} from './map';
 import {default as SetFilterer, filterSet} from './set';
 
-export function createFilterer<T>(source: ReadOnlyCollection<T>, test: (item: T) => boolean,
-		scope?: any): AbstractFilterer<T> {
+export function createFilterer<T>(source: ReadOnlyCollection<T>, test: (item: T) => any,
+								  scope?: any): AbstractFilterer<T> {
 	return (source instanceof List) ? new ListFilterer(source, test, {scope}) :
 		(source instanceof Map) ? new MapFilterer(source, test, {scope}) :
 		(source instanceof Set) ? new SetFilterer(source, test, {scope}) : null;
 }
 
-export function filterCollection<T>(source: ReadOnlyCollection<T>, test: (item: T) => boolean,
-		scope?: any): DestroyableReadOnlyCollection<T> {
+export function filterCollection<T>(source: ReadOnlyCollection<T>, test: (item: T) => any,
+									scope?: any): DestroyableReadOnlyCollection<T> {
 	return (source instanceof List) ? filterList(source, test, scope) :
 		(source instanceof Map) ? filterMap(source, test, scope) :
 		(source instanceof Set) ? filterSet(source, test, scope) : null;

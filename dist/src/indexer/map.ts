@@ -37,8 +37,8 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyMap<T>, getKey: (item: T) => string,
-			config?: AbstractIndexer.Config<T>) {
+	constructor(source: ReadOnlyMap<T>, getKey: (item: T) => any,
+				config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -57,8 +57,8 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 	}
 }
 
-export function indexMap<T>(source: ReadOnlyMap<T>, getKey: (item: T) => string,
-		scope?: any): DestroyableReadOnlyMap<T> {
+export function indexMap<T>(source: ReadOnlyMap<T>, getKey: (item: T) => any,
+							scope?: any): DestroyableReadOnlyMap<T> {
 	if (source.silent) {
 		return source.$index(getKey, scope);
 	}

@@ -110,8 +110,8 @@ abstract class AbstractCounter<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyCollection<T>, protected _test: (item: T) => boolean,
-			config: AbstractCounter.Config = {}) {
+	constructor(readonly source: ReadOnlyCollection<T>, protected _test: (item: T) => any,
+				config: AbstractCounter.Config = {}) {
 		super();
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
@@ -190,7 +190,7 @@ namespace AbstractCounter {
 		/**
 		 * Filtering criteria.
 		 */
-		readonly test?: (item: T) => boolean;
+		readonly test?: (item: T) => any;
 
 		/**
 		 * [[filterItem]] call scope.

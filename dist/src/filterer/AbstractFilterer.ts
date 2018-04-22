@@ -122,8 +122,8 @@ abstract class AbstractFilterer<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyCollection<T>, protected _test: (item: T) => boolean,
-			config: AbstractFilterer.Config = {}) {
+	constructor(readonly source: ReadOnlyCollection<T>, protected _test: (item: T) => any,
+				config: AbstractFilterer.Config = {}) {
 		super();
 		this._scope = config.scope || this;
 	}

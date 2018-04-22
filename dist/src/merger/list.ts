@@ -142,7 +142,7 @@ class ListMerger<T> extends Class {
 		super.destroyObject();
 	}
 
-	private _createTarget(source: ReadOnlyList<ReadOnlyList<T>>, getKey: (item: T) => string): IList<T> {
+	private _createTarget(source: ReadOnlyList<ReadOnlyList<T>>, getKey: (item: T) => any): IList<T> {
 		return new List<T>(getKey, source.silent && source.every((item) => item.silent));
 	}
 
@@ -288,12 +288,12 @@ namespace ListMerger {
 		/**
 		 * Identifies an item in the auto-created target collection for optimization of some algorithms.
 		 */
-		readonly getKey?: (item: T) => string;
+		readonly getKey?: (item: T) => any;
 	}
 }
 
 export function mergeLists<T>(source: ReadOnlyList<ReadOnlyList<T>>,
-		getKey?: (item: T) => string): DestroyableReadOnlyList<T> {
+							  getKey?: (item: T) => any): DestroyableReadOnlyList<T> {
 	if (source.silent && source.every((item) => item.silent)) {
 		return $mergeNoSync(source, getKey);
 	}
@@ -306,7 +306,7 @@ export function mergeNoSync<T>(source: ReadOnlyList<ReadOnlyList<T>>): T[] {
 }
 
 export function $mergeNoSync<T>(source: ReadOnlyList<ReadOnlyList<T>>,
-		getKey?: (item: T) => string): DestroyableReadOnlyList<T> {
+								getKey?: (item: T) => any): DestroyableReadOnlyList<T> {
 	return new List(mergeNoSync(source), getKey, SILENT & ADAPTER);
 }
 

@@ -192,7 +192,7 @@ export default class List<T> extends Class implements IList<T> {
 	/**
 	 * Identifies an item in this collection for optimization of some algorithms.
 	 */
-	readonly getKey: (item: T) => string;
+	readonly getKey: (item: T) => any;
 
 	/**
 	 * @param items Initial array contents.
@@ -200,9 +200,9 @@ export default class List<T> extends Class implements IList<T> {
 	 * a new array.
 	 */
 	constructor(silent?: boolean);
-	constructor(getKey: (item: T) => string, silent?: boolean);
+	constructor(getKey: (item: T) => any, silent?: boolean);
 	constructor(items: T[], flags?: CollectionFlags);
-	constructor(items: T[], getKey: (item: T) => string, flags?: CollectionFlags);
+	constructor(items: T[], getKey: (item: T) => any, flags?: CollectionFlags);
 	constructor(a?: any, b?: any, c?: CollectionFlags) {
 		super();
 		if (typeof a === "boolean") {
@@ -398,14 +398,14 @@ export default class List<T> extends Class implements IList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	every(callback: (item: T, index: number) => boolean, scope?: any): boolean {
+	every(callback: (item: T, index: number) => any, scope?: any): boolean {
 		return this._items.every(callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	some(callback: (item: T, index: number) => boolean, scope?: any): boolean {
+	some(callback: (item: T, index: number) => any, scope?: any): boolean {
 		return this._items.some(callback, scope || this);
 	}
 
@@ -430,14 +430,14 @@ export default class List<T> extends Class implements IList<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	findIndex(callback: (item: T, index: number) => boolean, scope?: any): number {
+	findIndex(callback: (item: T, index: number) => any, scope?: any): number {
 		return ArrayUtils.findIndex(this._items, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	find(callback: (item: T, index: number) => boolean, scope: any = null): T {
+	find(callback: (item: T, index: number) => any, scope: any = null): T {
 		return ArrayUtils.find(this._items, callback, scope);
 	}
 
@@ -500,35 +500,35 @@ export default class List<T> extends Class implements IList<T> {
 	/**
 	 * @inheritdoc
 	 */
-	index(callback: (item: T, index: number) => string, scope?: any): Dictionary<T> {
+	index(callback: (item: T, index: number) => any, scope?: any): Dictionary<T> {
 		return ArrayUtils.index(this._items, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$index(callback: (item: T, index: number) => string, scope?: any): IMap<T> {
+	$index(callback: (item: T, index: number) => any, scope?: any): IMap<T> {
 		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T> {
+	filter(callback: (item: T, index: number) => any, scope?: any): IList<T> {
 		return new List<T>(this._items.filter(callback, scope || this), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	count(callback: (item: T, index: number) => boolean, scope?: any): number {
+	count(callback: (item: T, index: number) => any, scope?: any): number {
 		return ArrayUtils.count(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => string): IList<U> {
+	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => any): IList<U> {
 		return new List<U>(this._items.map(callback, scope || this), getKey, SILENT | ADAPTER);
 	}
 
@@ -1112,7 +1112,7 @@ export default class List<T> extends Class implements IList<T> {
 	 * @param callback Criteria callback.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
-	backEvery(callback: (item: T, index: number) => boolean, scope?: any): boolean {
+	backEvery(callback: (item: T, index: number) => any, scope?: any): boolean {
 		return ArrayUtils.backEvery(this._items, callback, scope);
 	}
 

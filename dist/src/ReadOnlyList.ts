@@ -219,12 +219,12 @@ interface ReadOnlyList<T> extends ReadOnlyCollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	every(callback: (item: T, index: number) => boolean, scope?: any): boolean;
+	every(callback: (item: T, index: number) => any, scope?: any): boolean;
 
 	/**
 	 * @inheritdoc
 	 */
-	some(callback: (item: T, index: number) => boolean, scope?: any): boolean;
+	some(callback: (item: T, index: number) => any, scope?: any): boolean;
 
 	/**
 	 * @inheritdoc
@@ -242,12 +242,12 @@ interface ReadOnlyList<T> extends ReadOnlyCollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	findIndex(callback: (item: T, index: number) => boolean, scope?: any): number;
+	findIndex(callback: (item: T, index: number) => any, scope?: any): number;
 
 	/**
 	 * @inheritdoc
 	 */
-	find(callback: (item: T, index: number) => boolean, scope: any): T;
+	find(callback: (item: T, index: number) => any, scope: any): T;
 
 	/**
 	 * @inheritdoc
@@ -309,27 +309,27 @@ interface ReadOnlyList<T> extends ReadOnlyCollection<T> {
 	/**
 	 * @inheritdoc
 	 */
-	index(callback: (item: T, index: number) => string, scope?: any): Dictionary<T>;
+	index(callback: (item: T, index: number) => any, scope?: any): Dictionary<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$index(callback: (item: T, index: number) => string, scope?: any): IMap<T>;
+	$index(callback: (item: T, index: number) => any, scope?: any): IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T, index: number) => boolean, scope?: any): IList<T>;
+	filter(callback: (item: T, index: number) => any, scope?: any): IList<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	count(callback: (item: T, index: number) => boolean, scope?: any): number;
+	count(callback: (item: T, index: number) => any, scope?: any): number;
 
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => string): IList<U>;
+	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => any): IList<U>;
 
 	/**
 	 * Detects [[splice]] method arguments to adjust array contents to **newItems**.
@@ -442,7 +442,7 @@ interface ReadOnlyList<T> extends ReadOnlyCollection<T> {
 	 * @param callback Criteria callback.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
-	backEvery(callback: (item: T, index: number) => boolean, scope?: any): boolean;
+	backEvery(callback: (item: T, index: number) => any, scope?: any): boolean;
 
 	/**
 	 * Determines index of first item which is more (or less if **order** < 0) than specified value by **compare** function,

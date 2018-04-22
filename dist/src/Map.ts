@@ -167,7 +167,7 @@ class Map<T> extends Class implements IMap<T> {
 	/**
 	 * Identifies an item in this collection for optimization of some algorithms.
 	 */
-	readonly getKey: (item: T) => string;
+	readonly getKey: (item: T) => any;
 
 	/**
 	 * @param json Initial map contents.
@@ -175,9 +175,9 @@ class Map<T> extends Class implements IMap<T> {
 	 * a new map.
 	 */
 	constructor(silent?: boolean);
-	constructor(getKey: (item: T) => string, silent?: boolean);
+	constructor(getKey: (item: T) => any, silent?: boolean);
 	constructor(items: Dictionary<T>, flags?: CollectionFlags);
-	constructor(items: Dictionary<T>, getKey: (item: T) => string, flags?: CollectionFlags);
+	constructor(items: Dictionary<T>, getKey: (item: T) => any, flags?: CollectionFlags);
 	constructor(a?: any, b?: any, c?: CollectionFlags) {
 		super();
 		if (typeof a === "boolean") {
@@ -372,14 +372,14 @@ class Map<T> extends Class implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	every(callback: (item: T, key: string) => boolean, scope?: any): boolean {
+	every(callback: (item: T, key: string) => any, scope?: any): boolean {
 		return DictionaryUtils.every(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	some(callback: (item: T, key: string) => boolean, scope?: any): boolean {
+	some(callback: (item: T, key: string) => any, scope?: any): boolean {
 		return DictionaryUtils.some(this._items, callback, scope || this);
 	}
 
@@ -404,14 +404,14 @@ class Map<T> extends Class implements IMap<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	findKey(callback: (item: T, key: string) => boolean, scope?: any): string {
+	findKey(callback: (item: T, key: string) => any, scope?: any): string {
 		return DictionaryUtils.findKey(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	find(callback: (item: T, key: string) => boolean, scope?: any): T {
+	find(callback: (item: T, key: string) => any, scope?: any): T {
 		return DictionaryUtils.find(this._items, callback, scope || this);
 	}
 
@@ -474,35 +474,35 @@ class Map<T> extends Class implements IMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T> {
+	filter(callback: (item: T, key: string) => any, scope?: any): IMap<T> {
 		return new Map<T>(DictionaryUtils.filter(this._items, callback, scope || this), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	count(callback: (item: T, key: string) => boolean, scope?: any): number {
+	count(callback: (item: T, key: string) => any, scope?: any): number {
 		return DictionaryUtils.count(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => string): IMap<U> {
+	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => any): IMap<U> {
 		return new Map<U>(DictionaryUtils.map(this._items, callback, scope || this), getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	index(callback: (item: T, key: string) => string, scope?: any): Dictionary<T> {
+	index(callback: (item: T, key: string) => any, scope?: any): Dictionary<T> {
 		return DictionaryUtils.index(this._items, callback, scope || this);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	$index(callback: (item: T, key: string) => string, scope?: any): IMap<T> {
+	$index(callback: (item: T, key: string) => any, scope?: any): IMap<T> {
 		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 

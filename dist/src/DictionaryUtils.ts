@@ -115,7 +115,7 @@ export function keyOf<T>(dict: Dictionary<T>, item: T): string {
  * @param scope `callback` call scope. Defaults to dictionary itself.
  * @returns Found item or undefined.
  */
-export function find<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): T {
+export function find<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): T {
 	var result: T;
 	every(dict, function (item, key) {
 		if (callback.call(scope, item, key)) {
@@ -139,7 +139,7 @@ export function find<T>(dict: Dictionary<T>, callback: (item: T, key: string) =>
  * @param scope `callback` call scope. Defaults to dictionary itself.
  * @returns Found item key or undefined.
  */
-export function findKey<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): string {
+export function findKey<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): string {
 	var result: string;
 	every(dict, function (item, key) {
 		if (callback.call(scope, item, key)) {
@@ -374,7 +374,7 @@ export function removeItem<T>(dict: Dictionary<T>, item: T): string {
  * @param getKey Function which returns unique key of an item in this dictionary.
  * By default, identifies primitive values and `Identifiable` objects.
  */
-export function removeItems<T>(dict: Dictionary<T>, items: T[], getKey?: (item: T) => string) {
+export function removeItems<T>(dict: Dictionary<T>, items: T[], getKey?: (item: T) => any) {
 	const itemSet = VidSet.fromArray<T>(items, getKey);
 	const newItems = filter(dict, function (item) {
 		return !itemSet.contains(item);
@@ -458,7 +458,7 @@ export function clone<T>(dict: Dictionary<T>): Dictionary<T> {
  * @param callback Criteria callback.
  * @param scope `callback` call scope. Defaults to dictionary itself.
  */
-export function every<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
+export function every<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): boolean {
 	scope = scope || dict;
 	for (var key in dict) {
 		if (!callback.call(scope, dict[key], key)) {
@@ -479,7 +479,7 @@ export function every<T>(dict: Dictionary<T>, callback: (item: T, key: string) =
  * @param callback Criteria callback.
  * @param scope `callback` call scope. Defaults to dictionary itself.
  */
-export function some<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean {
+export function some<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): boolean {
 	return !every(dict, function (item, key) {
 		return !callback.call(scope, item, key);
 	});
@@ -509,7 +509,7 @@ export function forEach<T>(dict: Dictionary<T>, callback: (item: T, key: string)
  * @param scope `callback` call scope. Defaults to dictionary itself.
  * @returns Filtered dictionary.
  */
-export function filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T> {
+export function filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): Dictionary<T> {
 	var result: Dictionary<T> = {};
 	every(dict, function (item: T, key: string): boolean {
 		if (callback.call(scope, item, key)) {
@@ -530,7 +530,7 @@ export function filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) 
  * @param scope `callback` call scope. Defaults to dictionary itself.
  * @returns Number of items.
  */
-export function count<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): number {
+export function count<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): number {
 	var result = 0;
 	every(dict, function (item: T, key: string): boolean {
 		if (callback.call(scope, item, key)) {
@@ -676,7 +676,7 @@ export function toArray<T>(dict: Dictionary<T>): T[] {
  * @param scope `callback` call scope. Defaults to array itself.
  * @returns Dictionary index.
  */
-export function index<T>(dict: Dictionary<T>, callback: (item: T, key: string) => string, scope?: any): Dictionary<T> {
+export function index<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): Dictionary<T> {
 	var result: Dictionary<T> = {};
 	every(dict, function (item, oldKey) {
 		var key = callback.call(scope, item, oldKey);
@@ -961,7 +961,7 @@ export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>
  * By default, identifies primitive values and `Identifiable` objects.
  * @returns `keyMap` argument of `reindex` method. If no method call required, returns undefined.
  */
-export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => string): Dictionary<string> {
+export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => any): Dictionary<string> {
 	const newItemKeys = new VidMap<T, string>(getKey)
 	for (var key in newItems) {
 		newItemKeys.put(newItems[key], key);

@@ -141,7 +141,7 @@ class Set<T> extends Class implements ISet<T> {
 	/**
 	 * Identifies an item in this collection for optimization of some algorithms.
 	 */
-	readonly getKey: (item: T) => string;
+	readonly getKey: (item: T) => any;
 
 	/**
 	 * This constructor should be used to create a new set and copy the items into it.
@@ -149,9 +149,9 @@ class Set<T> extends Class implements ISet<T> {
 	 * @param items Initial set contents.
 	 */
 	constructor(silent?: boolean);
-	constructor(getKey: (item: T) => string, silent?: boolean);
+	constructor(getKey: (item: T) => any, silent?: boolean);
 	constructor(items: T[], silent?: boolean);
-	constructor(items: T[], getKey: (item: T) => string, silent?: boolean);
+	constructor(items: T[], getKey: (item: T) => any, silent?: boolean);
 	constructor(a?: any, b?: any, c?: boolean) {
 		super();
 		if (typeof a === "boolean") {
@@ -292,7 +292,7 @@ class Set<T> extends Class implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	every(callback: (item: T) => boolean, scope?: any): boolean {
+	every(callback: (item: T) => any, scope?: any): boolean {
 		return this._items.every(callback, scope);
 	}
 
@@ -306,7 +306,7 @@ class Set<T> extends Class implements ISet<T> {
 	 * @param callback Criteria callback.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
-	some(callback: (item: T) => boolean, scope?: any): boolean {
+	some(callback: (item: T) => any, scope?: any): boolean {
 		return !this._items.every((item) => {
 			return !callback.call(scope || this, item);
 		});
@@ -336,7 +336,7 @@ class Set<T> extends Class implements ISet<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item or undefined.
 	 */
-	find(callback: (item: T) => boolean, scope?: any): T {
+	find(callback: (item: T) => any, scope?: any): T {
 		let result: T;
 		this._items.every((item) => {
 			if (callback.call(scope || this, item)) {
@@ -385,7 +385,7 @@ class Set<T> extends Class implements ISet<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Collection index.
 	 */
-	index(callback: (item: T) => string, scope?: any): Dictionary<T> {
+	index(callback: (item: T) => any, scope?: any): Dictionary<T> {
 		const result: Dictionary<T> = {};
 		this._items.every((item) => {
 			const key: string = callback.call(scope || this, item);
@@ -400,28 +400,28 @@ class Set<T> extends Class implements ISet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	$index(callback: (item: T) => string, scope?: any): IMap<T> {
+	$index(callback: (item: T) => any, scope?: any): IMap<T> {
 		return new Map<T>(this.index(callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T) => boolean, scope?: any): ISet<T> {
+	filter(callback: (item: T) => any, scope?: any): ISet<T> {
 		return new Set<T>(this._items.values.filter(callback, scope), this.getKey, true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	count(callback: (item: T) => boolean, scope?: any): number {
+	count(callback: (item: T) => any, scope?: any): number {
 		return ArrayUtils.count(this._items.values, callback, scope);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ISet<U> {
+	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => any): ISet<U> {
 		return new Set<U>(this._items.values.map(callback, scope), getKey, true);
 	}
 

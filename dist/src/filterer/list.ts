@@ -53,8 +53,8 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyList<T>, test: (item: T) => boolean,
-			config: ListFilterer.FullConfig<T> = {}) {
+	constructor(source: ReadOnlyList<T>, test: (item: T) => any,
+				config: ListFilterer.FullConfig<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(this.source.getKey, this.source.silent) : config.target;
@@ -71,7 +71,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	 * @param config Options to modify.
 	 */
 	reconfigure(config: ListFilterer.Reconfig<T>) {
-		this._test = def(config.filterer, this._test);
+		this._test = def(config.test, this._test);
 		this._scope = def(config.scope, this._scope);
 		this.refilter();
 	}
@@ -332,7 +332,7 @@ namespace ListFilterer {
 		/**
 		 * Filtering criteria.
 		 */
-		readonly filterer?: (item: T) => boolean;
+		readonly test?: (item: T) => any;
 
 		/**
 		 * [[filterItem]] call scope.
@@ -341,8 +341,8 @@ namespace ListFilterer {
 	}
 }
 
-export function filterList<T>(source: ReadOnlyList<T>, test: (item: T) => boolean,
-		scope?: any): DestroyableReadOnlyList<T> {
+export function filterList<T>(source: ReadOnlyList<T>, test: (item: T) => any,
+							  scope?: any): DestroyableReadOnlyList<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

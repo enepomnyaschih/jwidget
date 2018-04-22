@@ -113,7 +113,7 @@ Returns key of item in dictionary.
 
 ### find
 
-	find<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): T
+	find<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): T
 
 Finds item matching criteria.
 
@@ -123,7 +123,7 @@ Algorithms iterates items consequently, and stops after first item matching the 
 
 ### findKey
 
-	findKey<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): string
+	findKey<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): string
 
 Finds item matching criteria.
 
@@ -269,7 +269,7 @@ Returns item key in the dictionary or undefined.
 
 ### removeItems
 
-	removeItems<T>(dict: Dictionary<T>, items: T[], getKey?: (item: T) => string)
+	removeItems<T>(dict: Dictionary<T>, items: T[], getKey?: (item: T) => any)
 
 Removes all occurrences of items in dictionary.
 
@@ -321,7 +321,7 @@ Returns a shallow copy of the dictionary.
 
 ### every
 
-	every<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean
+	every<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): boolean
 
 Matches all items against criteria.
 
@@ -331,7 +331,7 @@ Algorithms iterates items consequently, and stops after the first item not match
 
 ### some
 
-	some<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): boolean
+	some<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): boolean
 
 Matches each item against criteria.
 
@@ -347,7 +347,7 @@ Iterates dictionary items. Calls specified function for all items.
 
 ### filter
 
-	filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): Dictionary<T>
+	filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): Dictionary<T>
 
 Filters dictionary by criteria.
 
@@ -355,7 +355,7 @@ Builds new dictionary, consisting of items for which callback returns [truthy](i
 
 ### count
 
-	count<T>(dict: Dictionary<T>, callback: (item: T, key: string) => boolean, scope?: any): number
+	count<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): number
 
 Counts the items matching criteria.
 
@@ -423,7 +423,7 @@ Builds new array consisting of dictionary items in arbitrary order.
 
 ### index
 
-	index<T>(dict: Dictionary<T>, callback: (item: T, key: string) => string, scope?: any): Dictionary<T>
+	index<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): Dictionary<T>
 
 Indexes dictionary items.
 
@@ -509,7 +509,7 @@ Returns [splice](#splice) method arguments. If no method call required, returns 
 
 ### detectReindex
 
-	detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => string): Dictionary<string>
+	detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => any): Dictionary<string>
 
 Detects [reindex](#reindex) method arguments to adjust dictionary contents to `newItems`.
 Determines which keys should be assigned to all items.

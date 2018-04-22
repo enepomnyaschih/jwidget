@@ -170,7 +170,7 @@ interface ReadOnlyCollection<T> {
 	/**
 	 * Identifies an item in this collection for optimization of some algorithms.
 	 */
-	readonly getKey: (item: T) => string;
+	readonly getKey: (item: T) => any;
 
 	/**
 	 * Collection length property.
@@ -221,7 +221,7 @@ interface ReadOnlyCollection<T> {
 	 * @param callback Criteria callback.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
-	every(callback: (item: T) => boolean, scope?: any): boolean;
+	every(callback: (item: T) => any, scope?: any): boolean;
 
 	/**
 	 * Matches each item against criteria.
@@ -233,7 +233,7 @@ interface ReadOnlyCollection<T> {
 	 * @param callback Criteria callback.
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 */
-	some(callback: (item: T) => boolean, scope?: any): boolean;
+	some(callback: (item: T) => any, scope?: any): boolean;
 
 	/**
 	 * Iterates collection items. Calls specified function for all items.
@@ -254,7 +254,7 @@ interface ReadOnlyCollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item or undefined.
 	 */
-	find(callback: (item: T) => boolean, scope?: any): T;
+	find(callback: (item: T) => any, scope?: any): T;
 
 	/**
 	 * Converts collection to sorted array.
@@ -319,7 +319,7 @@ interface ReadOnlyCollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Collection index.
 	 */
-	index(callback: (item: T) => string, scope?: any): Dictionary<T>;
+	index(callback: (item: T) => any, scope?: any): Dictionary<T>;
 
 	/**
 	 * Indexes collection.
@@ -330,7 +330,7 @@ interface ReadOnlyCollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Collection index.
 	 */
-	$index(callback: (item: T) => string, scope?: any): IMap<T>;
+	$index(callback: (item: T) => any, scope?: any): IMap<T>;
 
 	/**
 	 * Converts collection to array.
@@ -395,7 +395,7 @@ interface ReadOnlyCollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Filtered collection.
 	 */
-	filter(callback: (item: T) => boolean, scope?: any): ICollection<T>;
+	filter(callback: (item: T) => any, scope?: any): ICollection<T>;
 
 	/**
 	 * Counts the items matching criteria.
@@ -406,7 +406,7 @@ interface ReadOnlyCollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Number of items.
 	 */
-	count(callback: (item: T) => boolean, scope?: any): number;
+	count(callback: (item: T) => any, scope?: any): number;
 
 	/**
 	 * Maps collection items.
@@ -417,7 +417,7 @@ interface ReadOnlyCollection<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Mapped collection.
 	 */
-	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ICollection<U>;
+	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => any): ICollection<U>;
 
 	reduce<U>(reducer: Reducer<T, U>): U;
 	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U;

@@ -37,8 +37,8 @@ export default class MapCounter<T> extends AbstractCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyMap<T>, test: (item: T) => boolean,
-			config?: AbstractCounter.Config) {
+	constructor(source: ReadOnlyMap<T>, test: (item: T) => any,
+				config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -56,8 +56,8 @@ export default class MapCounter<T> extends AbstractCounter<T> {
 	}
 }
 
-export function countMap<T>(source: ReadOnlyMap<T>, test: (item: T) => boolean,
-		scope?: any): DestroyableBindable<number> {
+export function countMap<T>(source: ReadOnlyMap<T>, test: (item: T) => any,
+							scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

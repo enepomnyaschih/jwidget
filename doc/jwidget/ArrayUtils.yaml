@@ -34,7 +34,7 @@ symbols:
 
   find:
     signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): T
+      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): T
     params:
       arr: 'Array to inspect.'
       callback: 'Search predicate.'
@@ -47,7 +47,7 @@ symbols:
 
   findIndex:
     signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number
+      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): number
     params:
       arr: 'Array to inspect.'
       callback: 'Search predicate.'
@@ -259,7 +259,7 @@ symbols:
 
   removeItems:
     signature: |
-      <T>(arr: T[], items: T[], getKey?: (item: T) => string)
+      <T>(arr: T[], items: T[], getKey?: (item: T) => any)
     params:
       arr: 'Array to modify.'
       items: 'Items to remove.'
@@ -344,7 +344,7 @@ symbols:
 
   count:
     signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): number
+      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): number
     params:
       arr: 'Array to inspect.'
       callback: 'Item predicate function.'
@@ -424,7 +424,7 @@ symbols:
 
   index:
     signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => string, scope?: any): %Dictionary<T>
+      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): %Dictionary<T>
     params:
       arr: 'Array to index.'
       callback: 'Item indexer function.'
@@ -458,7 +458,7 @@ symbols:
 
   backEvery:
     signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => boolean, scope?: any): boolean
+      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): boolean
     params:
       arr: 'Array to inspect.'
       callback: 'Item predicate function.'
@@ -577,7 +577,7 @@ symbols:
   detectSplice:
     signature: |
       <T>(oldItems: T[], newItems: T[],
-        getKey?: (item: T) => string): %IList.%SpliceParams<T>
+        getKey?: (item: T) => any): %IList.%SpliceParams<T>
     params:
       oldItems: 'Original array to splice.'
       newItems: 'Expected spliced array.'
@@ -609,7 +609,7 @@ symbols:
 
   detectReorder:
     signature: |
-      <T>(oldItems: T[], newItems: T[], getKey?: (item: T) => string): number[]
+      <T>(oldItems: T[], newItems: T[], getKey?: (item: T) => any): number[]
     params:
       oldItems: 'Original array to reorder.'
       newItems: 'Expected reordered array.'

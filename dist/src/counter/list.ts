@@ -37,8 +37,8 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyList<T>, test: (item: T) => boolean,
-			config?: AbstractCounter.Config) {
+	constructor(source: ReadOnlyList<T>, test: (item: T) => any,
+				config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
@@ -72,8 +72,8 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 	}
 }
 
-export function countList<T>(source: ReadOnlyList<T>, test: (item: T) => boolean,
-		scope?: any): DestroyableBindable<number> {
+export function countList<T>(source: ReadOnlyList<T>, test: (item: T) => any,
+							 scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

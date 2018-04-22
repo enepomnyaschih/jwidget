@@ -120,8 +120,8 @@ abstract class AbstractIndexer<T> extends Class {
 	 * @param source Source collection.
 	 * @param config Configuration.
 	 */
-	constructor(readonly source: ReadOnlyCollection<T>, protected _getKey: (item: T) => string,
-			config: AbstractIndexer.Config<T> = {}) {
+	constructor(readonly source: ReadOnlyCollection<T>, protected _getKey: (item: T) => any,
+				config: AbstractIndexer.Config<T> = {}) {
 		super();
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;

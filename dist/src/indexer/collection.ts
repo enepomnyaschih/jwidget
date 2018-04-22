@@ -28,14 +28,14 @@ import {default as ListIndexer, indexList} from './list';
 import {default as MapIndexer, indexMap} from './map';
 import {default as SetIndexer, indexSet} from './set';
 
-export function createIndexer<T>(source: ICollection<T>, getKey: (item: T) => string,
-		config?: AbstractIndexer.Config<T>): AbstractIndexer<T> {
+export function createIndexer<T>(source: ICollection<T>, getKey: (item: T) => any,
+								 config?: AbstractIndexer.Config<T>): AbstractIndexer<T> {
 	return (source instanceof List) ? new ListIndexer(source, getKey, config) :
 		(source instanceof Map) ? new MapIndexer(source, getKey, config) :
 		(source instanceof Set) ? new SetIndexer(source, getKey, config) : null;
 }
 
-export function indexCollection<T>(source: ICollection<T>, getKey: (item: T) => string, scope?: any): DestroyableReadOnlyMap<T> {
+export function indexCollection<T>(source: ICollection<T>, getKey: (item: T) => any, scope?: any): DestroyableReadOnlyMap<T> {
 	return (source instanceof List) ? indexList(source, getKey, scope) :
 		(source instanceof Map) ? indexMap(source, getKey, scope) :
 		(source instanceof Set) ? indexSet(source, getKey, scope) : null;

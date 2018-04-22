@@ -44,8 +44,8 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlyMap<T>, test: (item: T) => boolean,
-			config: MapFilterer.Config<T> = {}) {
+	constructor(source: ReadOnlyMap<T>, test: (item: T) => any,
+				config: MapFilterer.Config<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<T>(source.getKey, this.source.silent) : config.target;
@@ -96,7 +96,7 @@ namespace MapFilterer {
 	}
 }
 
-export function filterMap<T>(source: ReadOnlyMap<T>, test: (item: T) => boolean, scope?: any): DestroyableReadOnlyMap<T> {
+export function filterMap<T>(source: ReadOnlyMap<T>, test: (item: T) => any, scope?: any): DestroyableReadOnlyMap<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

@@ -148,7 +148,7 @@ interface ISet<T> extends ICollection<T>, DestroyableReadOnlySet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	every(callback: (item: T) => boolean, scope?: any): boolean;
+	every(callback: (item: T) => any, scope?: any): boolean;
 
 	/**
 	 * @inheritdoc
@@ -163,17 +163,17 @@ interface ISet<T> extends ICollection<T>, DestroyableReadOnlySet<T> {
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T) => boolean, scope?: any): ISet<T>;
+	filter(callback: (item: T) => any, scope?: any): ISet<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	count(callback: (item: T) => boolean, scope?: any): number;
+	count(callback: (item: T) => any, scope?: any): number;
 
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => string): ISet<U>;
+	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => any): ISet<U>;
 
 	/**
 	 * @inheritdoc

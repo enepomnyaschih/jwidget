@@ -195,12 +195,12 @@ interface IMap<T> extends ICollection<T>, DestroyableReadOnlyMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	every(callback: (item: T, key: string) => boolean, scope?: any): boolean;
+	every(callback: (item: T, key: string) => any, scope?: any): boolean;
 
 	/**
 	 * @inheritdoc
 	 */
-	some(callback: (item: T, key: string) => boolean, scope?: any): boolean;
+	some(callback: (item: T, key: string) => any, scope?: any): boolean;
 
 	/**
 	 * @inheritdoc
@@ -218,12 +218,12 @@ interface IMap<T> extends ICollection<T>, DestroyableReadOnlyMap<T> {
 	 * @param scope **callback** call scope. Defaults to collection itself.
 	 * @returns Found item key or undefined.
 	 */
-	findKey(callback: (item: T, key: string) => boolean, scope?: any): string;
+	findKey(callback: (item: T, key: string) => any, scope?: any): string;
 
 	/**
 	 * @inheritdoc
 	 */
-	find(callback: (item: T, key: string) => boolean, scope: any): T;
+	find(callback: (item: T, key: string) => any, scope: any): T;
 
 	/**
 	 * @inheritdoc
@@ -285,27 +285,27 @@ interface IMap<T> extends ICollection<T>, DestroyableReadOnlyMap<T> {
 	/**
 	 * @inheritdoc
 	 */
-	index(callback: (item: T, key: string) => string, scope?: any): Dictionary<T>;
+	index(callback: (item: T, key: string) => any, scope?: any): Dictionary<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	$index(callback: (item: T, key: string) => string, scope?: any): IMap<T>;
+	$index(callback: (item: T, key: string) => any, scope?: any): IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	filter(callback: (item: T, key: string) => boolean, scope?: any): IMap<T>;
+	filter(callback: (item: T, key: string) => any, scope?: any): IMap<T>;
 
 	/**
 	 * @inheritdoc
 	 */
-	count(callback: (item: T, key: string) => boolean, scope?: any): number;
+	count(callback: (item: T, key: string) => any, scope?: any): number;
 
 	/**
 	 * @inheritdoc
 	 */
-	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => string): IMap<U>;
+	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => any): IMap<U>;
 
 	/**
 	 * @inheritdoc

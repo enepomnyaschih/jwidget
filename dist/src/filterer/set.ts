@@ -43,8 +43,8 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlySet<T>, test: (item: T) => boolean,
-			config: SetFilterer.Config<T> = {}) {
+	constructor(source: ReadOnlySet<T>, test: (item: T) => any,
+				config: SetFilterer.Config<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(source.getKey, this.source.silent) : config.target;
@@ -90,8 +90,8 @@ namespace SetFilterer {
 	}
 }
 
-export function filterSet<T>(source: ReadOnlySet<T>, test: (item: T) => boolean,
-		scope?: any): DestroyableReadOnlySet<T> {
+export function filterSet<T>(source: ReadOnlySet<T>, test: (item: T) => any,
+							 scope?: any): DestroyableReadOnlySet<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

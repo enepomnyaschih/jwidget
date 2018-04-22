@@ -37,8 +37,8 @@ export default class SetCounter<T> extends AbstractCounter<T> {
 	/**
 	 * @inheritdoc
 	 */
-	constructor(source: ReadOnlySet<T>, test: (item: T) => boolean,
-			config?: AbstractCounter.Config) {
+	constructor(source: ReadOnlySet<T>, test: (item: T) => any,
+				config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.clearEvent.listen(this._onClear, this));
@@ -56,8 +56,8 @@ export default class SetCounter<T> extends AbstractCounter<T> {
 	}
 }
 
-export function countSet<T>(source: ReadOnlySet<T>, test: (item: T) => boolean,
-		scope?: any): DestroyableBindable<number> {
+export function countSet<T>(source: ReadOnlySet<T>, test: (item: T) => any,
+							scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

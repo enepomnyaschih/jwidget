@@ -99,7 +99,8 @@ export class VidMap<K, V> {
 	private _array: Pair<K, V>[] = [];
 	private _cache: V[];
 
-	constructor(private _getKey: (key: K) => string = vid) {}
+	constructor(private _getKey: (key: K) => any = vid) {
+	}
 
 	get values(): V[] {
 		if (this._cache !== undefined) {
@@ -172,7 +173,7 @@ export class VidMap<K, V> {
 		this._cache = undefined;
 	}
 
-	every(test: (value: V, key: K) => boolean, scope?: any): boolean {
+	every(test: (value: V, key: K) => any, scope?: any): boolean {
 		scope = scope || this;
 		if (!this._array.every((pair) => test.call(scope, pair.v, pair.k))) {
 			return false;
@@ -209,7 +210,8 @@ export class VidSet<T> {
 	private _array: T[] = [];
 	private _cache: T[];
 
-	constructor(private _getKey: (item: T) => string = vid) {}
+	constructor(private _getKey: (item: T) => any = vid) {
+	}
 
 	get values(): T[] {
 		if (this._cache !== undefined) {
@@ -277,7 +279,7 @@ export class VidSet<T> {
 		this._cache = undefined;
 	}
 
-	every(test: (item: T) => boolean, scope?: any): boolean {
+	every(test: (item: T) => any, scope?: any): boolean {
 		if (!this._array.every(test, scope)) {
 			return false;
 		}
@@ -301,13 +303,13 @@ export class VidSet<T> {
 		return undefined;
 	}
 
-	static fromArray<T>(items: T[], getKey?: (item: T) => string) {
+	static fromArray<T>(items: T[], getKey?: (item: T) => any) {
 		const set = new VidSet<T>(getKey);
 		items.forEach(set.add, set);
 		return set;
 	}
 
-	static fromDictionary<T>(items: Dictionary<T>, getKey?: (item: T) => string) {
+	static fromDictionary<T>(items: Dictionary<T>, getKey?: (item: T) => any) {
 		const set = new VidSet<T>(getKey);
 		for (let key in items) {
 			set.add(items[key]);
