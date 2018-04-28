@@ -6,7 +6,7 @@
     "@types/es6-promise": "0.0.32",
     "@types/jquery": "2.0.39",
     "@types/lodash": "^4.14.54",
-    "jwidget": "2.0.5"
+    "jwidget": "2.0.x"
   },
   "devDependencies": {
     "bower": "1.8.x",

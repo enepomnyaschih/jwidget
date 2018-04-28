@@ -1,0 +1,25 @@
+symbols:
+  default:
+    signature: |
+      (el: JQuery, cls: string, property: %Bindable<any>): %Destroyable
+      (el: JQuery, cls: %Bindable<string>): %Destroyable
+    params:
+      el: DOM element.
+      cls: Class name.
+      property: Property indicating if the class should be activated.
+    returns: Binding object. You must %destroy it to stop the synchronization.
+    description: |
+      <p>Watches boolean or string property modification and updates class attribute in the DOM element.</p>
+      <p>One signature allows you to turn on/off the specified class.</p>
+      <pre>
+      // Bind "checked" CSS class to checked property value
+      this.%own(%cls(el, "checked", checked));
+      </pre>
+      %example:cls1
+      <p>Another signature allows you to variate the CSS class name in an element.</p>
+      <pre>
+      // Bind Bind CSS class name to color property value
+      this.%own(%cls(el, color));
+      </pre>
+      %example:cls2
+      <p>Both signatures make no impact to the other (unrelated) CSS classes that are already present in the element.</p>

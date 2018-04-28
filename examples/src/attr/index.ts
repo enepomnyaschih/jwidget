@@ -24,6 +24,6 @@ class Application extends Component {
 }
 
 $(() => {
-	initExample("component", ["index.ts"]);
+	initExample("component", ["index.ts", "index.css"]);
 	new Application().renderTo("body");
 });

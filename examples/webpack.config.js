@@ -4,6 +4,12 @@ var pages = {
     "attr": {
         source: "./attr/index.ts"
     },
+    "cls1": {
+        source: "./cls1/index.ts"
+    },
+    "cls2": {
+        source: "./cls2/index.ts"
+    },
     "component": {
         source: "./component/index.ts"
     },
