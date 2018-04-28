@@ -18,32 +18,24 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import CancelToken, {AsyncOperation} from "./CancelToken";
-
-class RequestOperation<T> extends AsyncOperation<T> {
-
-	private aborted = false;
-
-	constructor(private xhr: JQueryXHR, private factory: (response: any) => T, cancelToken: CancelToken) {
-		super(cancelToken);
-	}
-
-	protected run(resolve: (value?: (Thenable<T> | T)) => void, reject: (error?: any) => void): void {
-		this.xhr.then((response) => {
-			resolve(this.factory ? this.factory(response) : response);
-		}, (request) => {
-			if (!this.aborted) {
-				reject(request);
-			}
-		});
-	}
-
-	protected cancel(): void {
-		this.aborted = true;
-		this.xhr.abort();
-	}
-}
+import CancelToken, {runAsync} from "./CancelToken";
 
 export default function request<T>(xhr?: JQueryXHR, factory?: (response: any) => T, cancelToken?: CancelToken) {
-	return new RequestOperation<T>(xhr, factory, cancelToken).getPromise();
+	let aborted = false;
+	return runAsync<T>(
+		(resolve: (value?: (Thenable<T> | T)) => void, reject: (error?: any) => void) => {
+			xhr.then((response) => {
+				resolve(factory ? factory(response) : response);
+			}, (request) => {
+				if (!aborted) {
+					reject(request);
+				}
+			});
+		},
+		() => {
+			aborted = true;
+			xhr.abort();
+		},
+		cancelToken
+	);
 }

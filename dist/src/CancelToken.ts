@@ -46,31 +46,24 @@ export default class CancelToken implements Destroyable {
 	}
 }
 
-export abstract class AsyncOperation<T> {
+export function runAsync<T>(run: (resolve: (value?: T | Thenable<T>) => void, reject: (error?: any) => void) => void,
+							cancel: () => void,
+							cancelToken?: CancelToken): Promise<T> {
 
-	constructor(private cancelToken?: CancelToken) {
+	if (!cancelToken) {
+		return new Promise(run);
 	}
-
-	protected abstract run(resolve: (value?: T | Thenable<T>) => void, reject: (error?: any) => void): void;
-
-	protected abstract cancel(): void;
-
-	getPromise(): Promise<T> {
-		if (!this.cancelToken) {
-			return new Promise((resolve, reject) => this.run(resolve, reject));
-		}
-		if (this.cancelToken.cancelled) {
-			return new Promise<T>(() => null);
-		}
-		const attachment = this.cancelToken.addHandler(this.cancel, this);
-		return new Promise<T>((resolve, reject) => {
-			this.run((value?: T | Thenable<T>) => {
-				attachment.destroy();
-				resolve(value);
-			}, (error?: any) => {
-				attachment.destroy();
-				reject(error);
-			})
-		});
+	if (cancelToken.cancelled) {
+		return new Promise<T>(() => null);
 	}
+	const attachment = cancelToken.addHandler(cancel);
+	return new Promise<T>((resolve, reject) => {
+		run((value?: T | Thenable<T>) => {
+			attachment.destroy();
+			resolve(value);
+		}, (error?: any) => {
+			attachment.destroy();
+			reject(error);
+		})
+	});
 }

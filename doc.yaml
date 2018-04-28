@@ -148,7 +148,6 @@ includes:
             <li>%Listenable</li>
             <li>%Bindable</li>
             <li>%DestroyableBindable</li>
-            <li>%DestroyablePromise</li>
           </ul>
         </div>
         <div class="col-4">
@@ -295,16 +294,16 @@ includes:
           <ul class="list-unstyled">
             <li>%hash</li>
             <li>%Router</li>
+            <li>%UIRouter</li>
           </ul>
-          <h5>AJAX and promises</h5>
+          <h5>AJAX and asyncronous operations</h5>
           <ul class="list-unstyled">
+            <li>%CancelToken</li>
+            <li>%defer</li>
             <li>%AbstractRestProvider</li>
-            <li>%HttpRequest</li>
-            <li>%AllPromise</li>
-            <li>%RacePromise</li>
-            <li>%Timeout</li>
+            <li>%request</li>
           </ul>
-          <h5>Other destroyable adapters</h5>
+          <h5>Destroyable adapters</h5>
           <ul class="list-unstyled">
             <li>%Destructor</li>
             <li>%Interval</li>
@@ -318,7 +317,6 @@ includes:
           </ul>
           <h5>References (low level stuff)</h5>
           <ul class="list-unstyled">
-            <li>%AbstractDestroyablePromise</li>
             <li>%AbstractTemplate</li>
             <li>%dummyDestroyable</li>
             <li>%dummyEvent</li>
