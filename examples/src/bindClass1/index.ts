@@ -1,7 +1,7 @@
+import bindClass from "jwidget/bindClass";
+import bindProp from "jwidget/bindProp";
 import Component from "jwidget/Component";
 import template from "jwidget/template";
-import cls from "jwidget/ui/cls";
-import prop from "jwidget/ui/prop";
 import initExample from "../common/initExample";
 
 require("./index.css");
@@ -16,14 +16,14 @@ class Application extends Component {
 
 	protected renderRect(el: JQuery) {
 		// Watch checkbox state
-		const checked = this.own(prop(this.getElement("checkbox"), "checked"));
+		const checked = bindProp(this.getElement("checkbox"), "checked");
 
 		// Bind "checked" CSS class to checked property value
-		this.own(cls(el, "checked", checked));
+		bindClass(el, "checked", checked);
 	}
 }
 
 $(() => {
-	initExample("cls1", ["index.ts", "index.css"]);
+	initExample("bindClass1", ["index.ts", "index.css"]);
 	new Application().renderTo("body");
 });

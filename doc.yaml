@@ -107,9 +107,10 @@ references:
     member: destroyObject
 
   # Listenable
-  listen:
+  listenMethod:
     file: jwidget/Listenable
     member: listen
+    label: listen
 
   # Bindable
   getOfBindable:
@@ -166,7 +167,7 @@ includes:
           <ul class="list-unstyled">
             <li>%Component</li>
             <li>%template</li>
-            <li>%on</li>
+            <li>%listen</li>
           </ul>
         </div>
         <div class="col-4">
@@ -178,15 +179,15 @@ includes:
           </ul>
           <h5>View bindings for %Property</h5>
           <ul class="list-unstyled" style="column-count: 2">
-            <li>%attr</li>
-            <li>%cls</li>
-            <li>%css</li>
-            <li>%html</li>
-            <li>%prop</li>
-            <li>%radio</li>
-            <li>%show</li>
-            <li>%text</li>
-            <li>%val</li>
+            <li>%bindAttr</li>
+            <li>%bindClass</li>
+            <li>%bindCss</li>
+            <li>%bindDisplay</li>
+            <li>%bindHtml</li>
+            <li>%bindProp</li>
+            <li>%bindRadio</li>
+            <li>%bindText</li>
+            <li>%bindVal</li>
           </ul>
         </div>
         <div class="col-8">

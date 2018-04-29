@@ -1,7 +1,7 @@
+import bindClass from "jwidget/bindClass";
+import bindRadio from "jwidget/bindRadio";
 import Component from "jwidget/Component";
 import template from "jwidget/template";
-import cls from "jwidget/ui/cls";
-import radio from "jwidget/ui/radio";
 import initExample from "../common/initExample";
 
 require("./index.css");
@@ -20,14 +20,14 @@ class Application extends Component {
 
 	protected renderRect(el: JQuery) {
 		// Watch radio button selection
-		const color = this.own(radio(this.getElement("colors"), "color"));
+		const color = bindRadio(this.getElement("colors"), "color");
 
 		// Bind CSS class name to color property value
-		this.own(cls(el, color));
+		bindClass(el, color);
 	}
 }
 
 $(() => {
-	initExample("cls2", ["index.ts", "index.css"]);
+	initExample("bindClass2", ["index.ts", "index.css"]);
 	new Application().renderTo("body");
 });

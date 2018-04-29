@@ -18,7 +18,7 @@ symbols:
           const prop = new %Property('foo');
           console.log(prop.%get());  // output: foo
 
-          prop.%changeEvent.%listen(({value}) => console.log(value));
+          prop.%changeEvent.%listenMethod(({value}) => console.log(value));
           prop.%set('bar');          // output: bar
           prop.%set('bar');          // no change - no output
           prop.%set('10');           // output: 10
@@ -55,7 +55,7 @@ symbols:
 
               protected renderName(el: JQuery) {
                   // simple two-way binding
-                  this.%own(%val(el, this.user.name, %TWOWAY));
+                  this.%own(%bindVal(el, this.user.name, %TWOWAY));
               }
 
               protected renderAge(el: JQuery) {
@@ -65,10 +65,10 @@ symbols:
                   const ageString = this.%own(this.user.age.%map(String));
 
                   // bind it back
-                  this.%own(new %Mapper([ageString], Number, {%target: this.user.age}));
+                  new %Mapper([ageString], Number, {%target: this.user.age});
 
                   // bind input element value to age string
-                  this.%own(%val(el, ageString, %TWOWAY));
+                  %bindVal(el, ageString, %TWOWAY);
               }
           }
           </pre>
@@ -99,7 +99,7 @@ symbols:
               }
 
               protected renderRoot(el: JQuery) {
-                  this.%own(%text(el, this.counter.seconds));
+                  this.%own(%bindText(el, this.counter.seconds));
               }
           }
           </pre>

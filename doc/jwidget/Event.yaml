@@ -45,8 +45,8 @@ symbols:
       class Listener extends %Class {
           constructor(dispatcher: Dispatcher) {
               super();
-              this.own(dispatcher.addEvent.%listen(this._onAdd, this));
-              this.own(dispatcher.removeEvent.%listen(this._onRemove, this));
+              this.own(dispatcher.addEvent.%listenMethod(this._onAdd, this));
+              this.own(dispatcher.removeEvent.%listenMethod(this._onRemove, this));
           }
 
           _onAdd(params: DispatcherEventParams) {

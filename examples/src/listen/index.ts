@@ -1,6 +1,6 @@
 import Component from "jwidget/Component";
+import listen from "jwidget/listen";
 import template from "jwidget/template";
-import on from "jwidget/ui/on";
 import initExample from "../common/initExample";
 
 require("./index.css");
@@ -24,7 +24,7 @@ class Application extends Component {
 		super.beforeRender();
 
 		// Bind a handler to "mousemove" event and aggregate the attachment
-		this.own(on($(window), "mousemove", event => {
+		this.own(listen($(window), "mousemove", event => {
 			$(".output").text(event.pageX + ":" + event.pageY);
 		}));
 	}
@@ -36,7 +36,7 @@ class Application extends Component {
 }
 
 $(() => {
-	initExample("on", ["index.ts"]);
+	initExample("listen", ["index.ts", "index.css"]);
 
 	// Keep output outside of application, to demonstate that
 	// event handler is unbound on application destruction.

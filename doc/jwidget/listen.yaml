@@ -13,16 +13,16 @@ symbols:
         A function to execute when the event is triggered. The value <tt>false</tt> is also allowed as a
         shorthand for a function that simply does <tt>return false</tt>.
     description: |
-      <p>Attaches handler to an event. jWidget extension for jQuery "on" method returning the destroyable event
+      <p>Attaches handler to a DOM event. jWidget extension for jQuery "on" method returning a destroyable event
       attachment. The attachment %destruction results in event unbinding which allows you to use jQuery events in
       conjunction with %own method.</p>
       <pre>
       // Bind a handler to "mousemove" event and aggregate the attachment
-      this.%own(%on($(window), "mousemove", event => {
+      this.%own(%listen($(window), "mousemove", event => {
           $(".output").text(event.pageX + ":" + event.pageY);
       }));
       </pre>
-      %example:on
+      %example:listen
     references:
       jqon:
         href: http://api.jquery.com/on/

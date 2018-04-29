@@ -21,15 +21,15 @@ symbols:
           </ul>
           <p>Also, it can be used as a source property in the next view bindings:</p>
           <ul>
-            <li>%attr - Binds attribute to a property.</li>
-            <li>%class - Binds CSS class to a property.</li>
-            <li>%css - Binds CSS style to a property.</li>
-            <li>%html - Binds inner HTML to a property.</li>
-            <li>%prop - Binds jQuery property to a jWidget property and/or vice versa.</li>
-            <li>%radio - Binds radio selection to a property and/or vice versa.</li>
-            <li>%show - Binds visibility to a property.</li>
-            <li>%text - Binds inner text to a property.</li>
-            <li>%val - Binds input value to a property and/or vice versa.</li>
+            <li>%bindAttr - Binds attribute to a property.</li>
+            <li>%bindClass - Binds CSS class to a property.</li>
+            <li>%bindCss - Binds CSS style to a property.</li>
+            <li>%bindDisplay - Binds visibility to a property.</li>
+            <li>%bindHtml - Binds inner HTML to a property.</li>
+            <li>%bindProp - Binds jQuery property to a jWidget property and/or vice versa.</li>
+            <li>%bindRadio - Binds radio selection to a property and/or vice versa.</li>
+            <li>%bindText - Binds inner text to a property.</li>
+            <li>%bindVal - Binds input value to a property and/or vice versa.</li>
           </ul>
           <p>All bindings are independent - you can implement your own bindings if you want.</p>
 

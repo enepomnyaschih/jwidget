@@ -1,20 +1,23 @@
 /* Configuration */
 
 var pages = {
-    "attr": {
-        source: "./attr/index.ts"
+    "bindAttr": {
+        source: "./bindAttr/index.ts"
     },
-    "cls1": {
-        source: "./cls1/index.ts"
+    "bindClass1": {
+        source: "./bindClass1/index.ts"
     },
-    "cls2": {
-        source: "./cls2/index.ts"
+    "bindClass2": {
+        source: "./bindClass2/index.ts"
     },
     "component": {
         source: "./component/index.ts"
     },
-    "on": {
-        source: "./on/index.ts"
+    "bindCss": {
+        source: "./bindCss/index.ts"
+    },
+    "listen": {
+        source: "./listen/index.ts"
     }
 };
 

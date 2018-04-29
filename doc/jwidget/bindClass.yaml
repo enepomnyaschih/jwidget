@@ -13,13 +13,13 @@ symbols:
       <p>One signature allows you to turn on/off the specified class.</p>
       <pre>
       // Bind "checked" CSS class to checked property value
-      this.%own(%cls(el, "checked", checked));
+      this.%own(%bindClass(el, "checked", checked));
       </pre>
-      %example:cls1
+      %example:bindClass1
       <p>Another signature allows you to variate the CSS class name in an element.</p>
       <pre>
       // Bind Bind CSS class name to color property value
-      this.%own(%cls(el, color));
+      this.%own(%bindClass(el, color));
       </pre>
-      %example:cls2
+      %example:bindClass2
       <p>Both signatures make no impact to the other (unrelated) CSS classes that are already present in the element.</p>
