@@ -1,0 +1,41 @@
+symbols:
+  default:
+    type: '%IHash'
+    description: |
+      <p>Instance of %IHash singleton. Provides a transparent %Property-compatible interface over <b>location.hash</b>
+      manipulations. Has a built-in protection against infinite redirections.</p>
+
+  IHash:
+    kind: interface
+    extends:
+      - file: jwidget/IProperty
+        typevars: [string]
+    description: |
+      <p>Interface of %hash object. Extension of %IProperty&lt;string&gt; interface with %updating status indicator and
+      <b>replaceState</b> optional parameter of %set method.</p>
+      <p>The built-in implementation of this interface also listens to "hashchange" DOM event to properly update own
+      state. It makes this properly transparently mirror current browser <b>location.hash</b> value.</p>
+    properties:
+      updating:
+        modifiers: readonly
+        type: boolean
+        description: |
+          <p>Indicates if hash assignment is in progress at the moment. While %updating is true, <b>location.hash</b>
+          gets modified and %changeEvent gets triggered. Checking this flag in corresponding event handlers may prevent
+          infinite loops and unexpected callback conflicts.</p>
+
+    methods:
+      set:
+        signature: |
+          (value: string = "", replaceState?: boolean)
+        params:
+          value: New hash value to assign.
+          replaceState: |
+            Replace the current browser historical state rather than pushing a new state to the stack.
+            Pass this flag on any automated redirection to let browser properly handle "Back" button click.
+        description: |
+          <p>Assigns <b>location.hash</b> to a new value and triggers %changeEvent. Rises %updating flag to prevent
+          infinite loops and callback conflicts during this time.</p>
+          <p>Default implementation of this method provides an extra layer of infinite redirection protection. If more
+          than 25 redirections occur during 1 second, the property blocks further assignments and writes an error into
+          browser console listing all redirections that were supposed to happen.</p>

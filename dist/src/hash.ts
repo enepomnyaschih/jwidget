@@ -18,13 +18,33 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import IProperty from "./IProperty";
 import Property from "./Property";
 
 /**
- * Current page hash (without leading "#"). As of jWidget 1.4.1, two-way bound to location.hash.
- * This is a singleton available as [[hash]].
+ * Interface of `hash` object. Extension of IProperty<string> interface with `updating` status indicator and
+ * `replaceState` optional parameter of `set` method.
  */
-export class Hash extends Property<string> {
+export interface IHash extends IProperty<string> {
+
+	/**
+	 * Indicates if hash assignment is in progress at the moment. While `updating` is true, `location.hash`
+	 * gets modified and `changeEvent` gets triggered. Checking this flag in corresponding event handlers may prevent
+	 * infinite loops and unexpected callback conflicts.
+	 */
+	readonly updating: boolean;
+
+	/**
+	 * Assigns `location.hash` to a new value and triggers `changeEvent`. Rises `updating` flag to prevent
+	 * infinite loops and callback conflicts during this time.
+	 * @param value New hash value to assign.
+	 * @param replaceState Replace the current browser historical state rather than pushing a new state to the stack.
+	 */
+	set(value: string, replaceState?: boolean): void;
+}
+
+class Hash extends Property<string> implements IHash {
+
 	private readonly redirectionDetectionInterval = 1000;
 	private readonly redirectionDetectionLimit = 25;
 
@@ -36,6 +56,9 @@ export class Hash extends Property<string> {
 
 	constructor() {
 		super(location.hash.substr(1));
+		if (hash != null) {
+			throw new Error("Hash is a singleton. Unable to create more instances.")
+		}
 		$(window).on("hashchange", () => {
 			this.set(location.hash.substr(1));
 		});
@@ -45,13 +68,6 @@ export class Hash extends Property<string> {
 		return this._updating;
 	}
 
-	/**
-	 * Changes current page hash to the specified value.
-	 *
-	 * @param value New page hash value.
-	 * @param replaceState If true, browser history forgets the current state, so that
-	 * "Back" button returns you two steps back instead of one. Useful for automatic page redirections.
-	 */
 	set(value: string = "", replaceState?: boolean) {
 		if (this.redirectionLocked) {
 			return;
@@ -90,5 +106,9 @@ export class Hash extends Property<string> {
 	}
 }
 
-const hash = new Hash(); // An extra variable helps IntelliSense to find this import
+/**
+ * Instance of IHash singleton. Provides a transparent Property-compatible interface over `location.hash`
+ * manipulations. Has a built-in protection against infinite redirections.
+ */
+const hash: IHash = new Hash(); // An extra variable helps IntelliSense to find this import
 export default hash;
