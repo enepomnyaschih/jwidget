@@ -22,12 +22,6 @@ import Bindable from './Bindable';
 import Class from './Class';
 import Destroyable from './Destroyable';
 
-/**
- * Result of [[JQuery.jwhtml|jwhtml]] method call. Destroy it to stop synchronization.
- *
- * Was used as a standalone class before jWidget 1.4.
- * As of jWidget 1.4, [[JQuery.jwhtml|jwhtml]] is an easier alternative.
- */
 class HtmlUpdater extends Class {
 	/**
 	 * @param el DOM element.
@@ -46,14 +40,9 @@ class HtmlUpdater extends Class {
 
 /**
  * Watches string property modification and updates inner HTML of the DOM element.
- * Returns [[JW.UI.HtmlUpdater]] instance. Destroy it to stop synchronization.
- *
- *     // Bind inner HTML to html property value
- *     this.own(el.jwhtml(html));
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwhtml.html"></iframe>
- *
+ * @param el DOM element.
  * @param property HTML value.
+ * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindHtml(el: JQuery, property: Bindable<any>): Destroyable {
 	return new HtmlUpdater(el, property);

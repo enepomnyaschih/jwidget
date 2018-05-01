@@ -35,15 +35,10 @@ class TextUpdater extends Class {
 }
 
 /**
- * Watches string modification and updates inner text of the DOM element.
- * Returns [[JW.UI.TextUpdater]] instance. Destroy it to stop synchronization.
- *
- *     // Bind inner text to property value
- *     this.own(el.jwtext(text));
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="220" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwtext.html"></iframe>
- *
+ * Watches string property modification and updates inner text of the DOM element.
+ * @param el DOM element.
  * @param property Text value.
+ * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindText(el: JQuery, property: Bindable<any>): Destroyable {
 	return new TextUpdater(el, property);

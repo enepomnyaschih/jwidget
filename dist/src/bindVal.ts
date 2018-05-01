@@ -100,42 +100,29 @@ namespace ValueListener {
 }
 
 /**
- * DOM element value management method.
- *
- * Returns a string property containing current element value and starts watching for value modification.
- * Destroy the result property to stop synchronization.
- *
- *     // Watch input element value
- *     var value = this.own(el.jwval());
- *
- * @param simple If true, listens "change" event only. Defaults to false which enables
- * reaction to any real-time field modification.
+ * Returns a string property containing current DOM element value and starts watching for its modification.
+ * @param el DOM element.
+ * @param simple Disable live watch by timer.
+ * @returns Bound property. You must destroy it to stop the synchronization.
  */
 export default function bindVal(el: JQuery, simple?: boolean): DestroyableBindable<string>;
 
 /**
- * DOM element value management method.
- *
- * Binds DOM text input value to string property and/or vice versa.
- * Returns [[JW.UI.ValueBinding]] instance. Destroy it to stop synchronization.
- *
- *     // Bind element value to property
- *     this.own(el.jwval(value));
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="285" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval.html"></iframe>
- *
- * Two way binding:
- *
- *     this.own(el.jwval(this.value, JW.TWOWAY));
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="180" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwval-two.html"></iframe>
- *
- * @param property Element value.
- * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
- * @param simple If true, watch-binding listens "change" event only. Defaults to false which enables
- * reaction to any real-time field modification.
+ * Watches string property modification and updates the DOM element value.
+ * @param el DOM element.
+ * @param value Element value to assign.
+ * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindVal(el: JQuery, value: Bindable<any>): Destroyable;
+
+/**
+ * Watches string property modification and updates the DOM element value and/or vice versa.
+ * @param el DOM element.
+ * @param value Element value to read and/or write.
+ * @param binding Binding direction.
+ * @param simple Disable live watch by timer.
+ * @returns Binding object. You must destroy it to stop the synchronization.
+ */
 export default function bindVal(el: JQuery, value: IProperty<string>, binding: Binding, simple?: boolean): Destroyable;
 export default function bindVal(el: JQuery, value: any, binding?: any, simple?: any): Destroyable {
 	if (value != null && (typeof value !== "boolean")) {

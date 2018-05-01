@@ -99,48 +99,30 @@ namespace RadioListener {
 }
 
 /**
- * Radio group value management method.
- *
- * Returns a string property containing current radio group selection and starts watching for selection modification.
- * Destroy the result property to stop synchronization.
- *
- * Notice that the object binds an event listener to a container element and uses bubbling mechanism to detect the
- * selection modification. That's why you must avoid bubbling interruption in child elements of the container.
- * All radios must have the same "name" attribute value. If neighter radio is selected, property is set to null.
- *
- *     // Watch radio button selection
- *     var color = this.own(el.jwradio("color"));
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="255" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwclass-string.html"></iframe>
- *
- * @param name Radios "name" attribute.
+ * Returns a string property containing current radio group selection and starts watching for its modification.
+ * @param el DOM element.
+ * @param name Value of "name" attribute in radio button elements.
+ * @returns Bound property. You must destroy it to stop the synchronization.
  */
 export default function bindRadio(el: JQuery, name: string): DestroyableBindable<string>;
 
 /**
- * Radio group value management method.
- *
- * Binds radio group selection to string property and/or vice versa.
- * Returns [[JW.UI.RadioBinding]] instance. Destroy it to stop synchronization.
- *
- * All radios must have the same "name" attribute value.
- *
- *     // Bind radio button selection to property value
- *     this.own(el.jwradio("letter", value));
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="170" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio.html"></iframe>
- *
- * Two way binding:
- *
- *     this.own(el.jwradio("first", this.value, JW.TWOWAY));
- *
- * <iframe style="border: 1px solid green; padding: 10px;" width="730" height="300" src="http://enepomnyaschih.github.io/mt/1.4/jwui-property-jwradio-two.html"></iframe>
- *
- * @param name Radios "name" attribute.
- * @param property Radio value.
- * @param binding Binding mode. Defaults to [[JW.Binding.UPDATE]].
+ * Watches string property modification and updates the radio group selection.
+ * @param el DOM element.
+ * @param name Value of "name" attribute in radio button elements.
+ * @param property Radio button value to select.
+ * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindRadio(el: JQuery, name: string, property: Bindable<any>): Destroyable;
+
+/**
+ * Watches string property modification and updates the radio group selection.
+ * @param el DOM element.
+ * @param name Value of "name" attribute in radio button elements.
+ * @param property Radio button value to read and/or write.
+ * @param binding Binding direction.
+ * @returns Binding object. You must destroy it to stop the synchronization.
+ */
 export default function bindRadio(el: JQuery, name: string, property: IProperty<string>, binding?: Binding): Destroyable;
 export default function bindRadio(el: JQuery, name: string, property?: any, binding?: Binding): Destroyable {
 	if (property != null) {
