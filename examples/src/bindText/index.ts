@@ -1,4 +1,4 @@
-import bindHtml from "jwidget/bindHtml";
+import bindText from "jwidget/bindText";
 import bindVal from "jwidget/bindVal";
 import Component from "jwidget/Component";
 import template from "jwidget/template";
@@ -6,7 +6,7 @@ import initExample from "../common/initExample";
 
 @template(
 	'<div jwclass="application">' +
-	'  <div>HTML:</div>' +
+	'  <div>Text:</div>' +
 	'  <textarea jwid="input" rows="5" cols="80"></textarea>' +
 	'  <div>Output:</div>' +
 	'  <div jwid="output"></div>' +
@@ -19,14 +19,14 @@ class Application extends Component {
 		input.html('<b>Hello!</b>');
 
 		// Watch input value
-		const html = bindVal(input);
+		const text = bindVal(input);
 
 		// Bind inner HTML to html property value
-		bindHtml(el, html);
+		bindText(el, text);
 	}
 }
 
 $(() => {
-	initExample("bindHtml", ["index.ts"]);
+	initExample("bindText", ["index.ts"]);
 	new Application().renderTo("body");
 });

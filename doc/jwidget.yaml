@@ -16,10 +16,10 @@ symbols:
           <p>Bind element attribute to property.</p>
           <pre>
           // Bind element value to property
-          this.%own(%bindVal(el, property, %UPDATE));</pre>
+          %bindVal(el, property, %UPDATE);</pre>
           <p>Always used as default binding. Hence, the next code is almost equivalent:</p>
           <pre>
-          this.%own(%bindVal(el, property));</pre>
+          %bindVal(el, property);</pre>
           <p>Please prefer the second approach, because the first one takes %IProperty as an argument whereas
           %Bindable is enough for the second one.</p>
         </dd>
@@ -28,11 +28,11 @@ symbols:
           <p>Bind property to element attribute.</p>
           <pre>
           // Bind property to element value
-          this.%own(%bindVal(el, property, %WATCH));</pre>
+          %bindVal(el, property, %WATCH);</pre>
           <p>Always supplied with a no-argument method, which creates the property automatically.</p>
           <pre>
           // Watch element value
-          const property = this.%own(%bindVal(el));</pre>
+          const property = %bindVal(el);</pre>
         </dd>
         <dt class="col-lg-2 col-sm-3">TWOWAY = 3</dt>
         <dd class="col-lg-10 col-sm-9">
@@ -40,7 +40,7 @@ symbols:
           <p>%UPDATE-binding is applied first, %WATCH is applied last.</p>
           <pre>
           // Assign element value to property and setup two-way binding
-          this.%own(%bindVal(el, property, %TWOWAY));</pre>
+          %bindVal(el, property, %TWOWAY);</pre>
         </dd>
       </dl>
     references:

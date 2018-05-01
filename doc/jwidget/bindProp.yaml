@@ -1,0 +1,41 @@
+symbols:
+  default:
+    signature: |
+      (el: JQuery, prop: string): %DestroyableBindable<boolean>
+      (el: JQuery, prop: string, property: %Bindable<any>): %Destroyable
+      (el: JQuery, prop: string, property: %IProperty<boolean>, binding: %Binding): %Destroyable
+    params:
+      el: DOM element.
+      prop: Name of DOM element property.
+      property: Property value to read and/or write.
+      binding: Binding direction.
+    returns: Binding object or bound property. You must %destroy it to stop the synchronization.
+    description: |
+      <p>Watches boolean property modification and updates the specified property of the DOM element and/or vice
+      versa.</p>
+      <p>One signature returns a boolean property containing current checkbox state and starts watching for its
+      modification. Only "checked" prop is supported in this case.</p>
+      <pre>
+      // Watch checkbox state
+      const property = %bindProp(el, "checked");
+      </pre>
+      <p>Second signature watches boolean property modification and updates the specified property of the DOM
+      element.</p>
+      <pre>
+      // Bind element state to property
+      %bindProp(el, "disabled", property);
+      </pre>
+      %example:bindProp1
+      <p>Third signature allows you to setup a reverse or two-way binding.</p>
+      <pre>
+      %bindProp(el, "disabled", property, %TWOWAY);
+      </pre>
+      %example:bindProp2
+      <p>The function returns a binding object. If you need to stop the synchronization, %destroy it. This is not neccessary
+      if you work with a private property and DOM element as in the example above. However, if you work with an
+      external model or DOM element (e.g. they get passed to the constructor of the component), you must take care of
+      the binding destruction, because life time of these objects can be longer than the life time of your
+      component. The easiest way to do it is to %own the binding:</p>
+      <pre>
+      this.%own(%bindProp(el, "disabled", property));
+      </pre>

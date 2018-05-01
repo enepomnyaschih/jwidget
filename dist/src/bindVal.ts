@@ -28,7 +28,7 @@ import IProperty from './IProperty';
 import Property from './Property';
 
 class ValueBinding extends Class {
-	constructor(el: JQuery, property: Bindable<any>, simple?: boolean);
+	constructor(el: JQuery, property: Bindable<any>);
 	constructor(el: JQuery, property: IProperty<string>, binding: Binding, simple?: boolean);
 	constructor(el: JQuery, property: any, binding: any = UPDATE, simple?: boolean) {
 		super();
@@ -135,7 +135,7 @@ export default function bindVal(el: JQuery, simple?: boolean): DestroyableBindab
  * @param simple If true, watch-binding listens "change" event only. Defaults to false which enables
  * reaction to any real-time field modification.
  */
-export default function bindVal(el: JQuery, value: Bindable<any>, simple?: boolean): Destroyable;
+export default function bindVal(el: JQuery, value: Bindable<any>): Destroyable;
 export default function bindVal(el: JQuery, value: IProperty<string>, binding: Binding, simple?: boolean): Destroyable;
 export default function bindVal(el: JQuery, value: any, binding?: any, simple?: any): Destroyable {
 	if (value != null && (typeof value !== "boolean")) {

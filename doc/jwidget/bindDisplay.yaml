@@ -1,24 +1,25 @@
 symbols:
   default:
     signature: |
-      (el: JQuery, attr: string, property: %Bindable<any>): %Destroyable
+      (el: JQuery, property: %Bindable<any>): %Destroyable
     params:
       el: DOM element.
-      attr: Attribute name.
-      property: Attribute value to assign.
+      property: Element visibility.
     returns: Binding object. You must %destroy it to stop the synchronization.
     description: |
-      <p>Watches string property modification and updates the specified attribute of the DOM element.</p>
+      <p>Watches boolean property modification and updates visibility of the DOM element. When %property has %falsy
+      value, sets "display" inline style to "none". When %property is %truthy, removes "display" inline style. Make
+      sure that the element is visible by default according to your CSS rules.</p>
       <pre>
-      // Bind "title" attribute to title property value
-      %bindAttr(el, "title", title);
+      // Bind element visibility to property value
+      %bindDisplay(el, checked);
       </pre>
-      %example:bindAttr
+      %example:bindDisplay
       <p>The function returns a binding object. If you need to stop the synchronization, %destroy it. This is not neccessary
       if you work with a private property and DOM element as in the example above. However, if you work with an
       external model or DOM element (e.g. they get passed to the constructor of the component), you must take care of
       the binding destruction, because life time of these objects can be longer than the life time of your
       component. The easiest way to do it is to %own the binding:</p>
       <pre>
-      this.%own(%bindAttr(el, "title", title));
+      this.%own(%bindDisplay(el, checked));
       </pre>

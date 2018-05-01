@@ -38,6 +38,9 @@ references:
     label: Documentation root
 
   # Terms
+  falsy:
+    file: jwidget
+    symbol: isFalsy
   truthy:
     file: jwidget
     symbol: isTruthy
@@ -60,6 +63,9 @@ references:
   # Core
   CoreUtils:
     file: jwidget
+  Binding:
+    file: jwidget
+    symbol: Binding
   TWOWAY:
     file: jwidget
     symbol: Binding
