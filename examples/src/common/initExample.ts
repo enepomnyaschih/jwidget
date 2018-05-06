@@ -1,6 +1,5 @@
 export default function initExample(name: string, links: string[]) {
-	const header = $('<div><b>Example</b></div>');
-	const el = $('<div style="float: right"><b>Source:</b> </div>');
+	const el = $('<div style="float: right; width: 600px"><b>Source:</b> </div>');
 	let first = true;
 	links.forEach((link) => {
 		if (first) {
@@ -10,5 +9,5 @@ export default function initExample(name: string, links: string[]) {
 		}
 		el.append($('<a target="_blank"></a>').text(link).attr("href", `../src/${name}/${link}`));
 	});
-	$("body").prepend('<hr>').prepend(header).prepend(el);
+	$("body").prepend('<hr>').prepend('<div style="clear: both"></div>').prepend('<div><b>Example</b></div>').prepend(el);
 }

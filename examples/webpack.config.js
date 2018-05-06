@@ -45,6 +45,9 @@ var pages = {
 	},
 	"listen": {
 		source: "./listen/index.ts"
+	},
+	"router": {
+		source: "./router/index.ts"
 	}
 };
 

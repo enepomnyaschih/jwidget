@@ -109,7 +109,7 @@ symbols:
                   %nameOfConfig: "inbox",
                   %parentOfConfig: this.parentRouter,
                   %pathOfConfig: this.path,
-                  %handlerOfConfig: route => {
+                  %handlerOfConfig: id => {
                       if (!id) {
                           return new EmailList(this.emails);
                       }
@@ -120,7 +120,7 @@ symbols:
               this.router.%update();
           }
 
-          protected renderEmail() {
+          protected renderContent() {
               return this.router.%target;
           }
           </pre>
@@ -215,8 +215,8 @@ symbols:
           <pre>
           const activeElement = this.router.%route.%mapOfBindable(route => el.filter('[data-route="' + route + '"]'));
           new %Switcher(activeElement, {
-              %initOfSwitcher: el => el.addClass("active"),
-              %doneOfSwitcher: el => el.removeClass("active")
+              %initOfSwitcher: el => el.css("font-weight", "bold"),
+              %doneOfSwitcher: el => el.css("font-weight", "")
           });
           </pre>
 

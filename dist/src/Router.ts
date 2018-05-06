@@ -392,7 +392,7 @@ namespace Router {
 	 * @param router Compute full path relative to this router.
 	 * @returns Full path relative to the `router`.
 	 */
-	export function getFullPath(path: string, router: Router<any>) {
+	export function getFullPath(path: string, router?: Router<any>) {
 		return router ? router.getFullPath(path) : path;
 	}
 
@@ -402,7 +402,7 @@ namespace Router {
 	 * @param router Redirect relative to this router.
 	 * @param replaceState Replace the current browser historical state rather than pushing a new state to the stack.
 	 */
-	export function redirect(path: string, router: Router<any>, replaceState?: boolean) {
+	export function redirect(path: string, router?: Router<any>, replaceState?: boolean) {
 		try {
 			path = getFullPath(path, router);
 			if (hash.updating) {
@@ -426,7 +426,7 @@ namespace Router {
 		 * @param replaceState Replace the current browser historical state rather than pushing a new state to the
 		 * stack. Defaults to true.
 		 */
-		constructor(private path: string, private router: Router<any>, private replaceState?: boolean) {
+		constructor(private path: string, private router?: Router<any>, private replaceState?: boolean) {
 			super();
 			defer(0, this.own(new CancelToken())).then(() => {
 				redirect(this.path, this.router, defn(this.replaceState, true));
