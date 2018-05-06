@@ -1,0 +1,7 @@
+symbols:
+  default:
+    extends:
+      - file: jwidget/Router
+    hideInheritedMembers: true
+    description:
+      <p>Shorthand for %Router&lt;%Component&gt;.</p>
