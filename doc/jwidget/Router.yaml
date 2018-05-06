@@ -20,7 +20,8 @@ symbols:
           <li><b>Path</b> is some final part of URL (hash) relevant to a certain router. Path never contains "#"
           symbol.</li>
           <li><b>Root path</b> is URL (hash) without "#" symbol.</li>
-          <li><b>Route</b> is the first token of the path which is relevant to the next single step of the routing.</li>
+          <li><b>Route</b> or <b>route name</b> is the first token of the path which is relevant to the next single
+          step of the routing.</li>
           <li><b>Argument</b> is the remaining path after route extraction.</li>
           </ul>
           <p>For example, hash value <tt>#inbox/3?filter=10</tt> provides us with <tt>inbox/3?filter=10</tt> global
@@ -625,7 +626,7 @@ symbols:
       details.</p>
     constructor:
       signature: |
-        (path: string, router: %Router<any>, replaceState?: boolean)
+        (path: string, router: %Router<any>, replaceState: boolean = true)
       params:
         path: Path relative to %router.
         router: Redirect relative to this router.
