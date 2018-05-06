@@ -1,7 +1,7 @@
-import ISymbol from "./ISymbol";
-import SourceFile from "../SourceFile";
 import Project from "../Project";
+import SourceFile from "../SourceFile";
 import SymbolVisitor from "../SymbolVisitor";
+import ISymbol from "./ISymbol";
 
 abstract class AbstractSymbol implements ISymbol {
 
@@ -9,7 +9,7 @@ abstract class AbstractSymbol implements ISymbol {
 	}
 
 	get hash(): string {
-		return this.id.replace(".", "-");
+		return this.id.replace(/\./g, "-");
 	}
 
 	get project(): Project {

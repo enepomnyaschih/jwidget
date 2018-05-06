@@ -16,11 +16,12 @@ export default class StructSymbol extends AbstractSymbol {
 
 	readonly simple: boolean;
 	readonly kind: string;
-	readonly typevars: Dictionary<string>;
+	readonly typevars: Dictionary<TypeVar>;
 	private _extending: Extension[] = [];
 	private _membersExtended: boolean = false;
 	readonly extendedBy: StructSymbol[] = [];
 	readonly showInheritanceLevels: number;
+	readonly hideInheritedMembers: boolean;
 	readonly description: string;
 	readonly topics: Dictionary<Topic>;
 	readonly _constructor: Constructor;
@@ -34,9 +35,12 @@ export default class StructSymbol extends AbstractSymbol {
 		super(file, id);
 		this.simple = json.simple || false;
 		this.kind = json.kind || "class";
-		this.typevars = json.typevars || {};
+		this.typevars = DictionaryUtils.map(json.typevars || {}, value => (
+			typeof value === "string" ? {description: value, extends: []} : value
+		));
 		this._extending = json.extends || [];
 		this.showInheritanceLevels = json.showInheritanceLevels;
+		this.hideInheritedMembers = json.hideInheritedMembers;
 		this.description = json.description;
 		this.topics = json.topics || {};
 		this._constructor = json.hasOwnProperty("constructor") ? new Constructor(this, json.constructor) : null;
@@ -93,7 +97,7 @@ export default class StructSymbol extends AbstractSymbol {
 	}
 
 	inheritMembers() {
-		if (this._membersExtended) {
+		if (this._membersExtended || this.hideInheritedMembers) {
 			return;
 		}
 		this._membersExtended = true;
@@ -126,9 +130,10 @@ export interface StructJson {
 
 	readonly simple?: boolean;
 	readonly kind?: string;
-	readonly typevars?: Dictionary<string>;
+	readonly typevars?: Dictionary<string | TypeVar>;
 	readonly extends?: Extension[];
 	readonly showInheritanceLevels?: number;
+	readonly hideInheritedMembers?: boolean;
 	readonly description?: string;
 	readonly topics?: Dictionary<Topic>;
 	readonly constructor?: ConstructorJson;
@@ -137,6 +142,12 @@ export interface StructJson {
 	readonly staticProperties?: Dictionary<PropertyMemberJson>;
 	readonly staticMethods?: Dictionary<MethodMemberJson>;
 	readonly references?: Dictionary<Reference>;
+}
+
+export interface TypeVar {
+
+	readonly description: string;
+	readonly extends?: Extension[];
 }
 
 export interface Topic {

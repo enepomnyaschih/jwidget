@@ -10,7 +10,7 @@ import SourceFile from "../SourceFile";
 import FunctionSymbol from "../symbols/Function";
 import HeaderSymbol from "../symbols/Header";
 import ISymbol from "../symbols/ISymbol";
-import StructSymbol from "../symbols/Struct";
+import StructSymbol, {TypeVar} from "../symbols/Struct";
 import ValueSymbol from "../symbols/Value";
 import SymbolVisitor from "../SymbolVisitor";
 import * as DictionaryUtils from "../utils/Dictionary";
@@ -20,6 +20,7 @@ import {
 	renderDefinitions,
 	renderParams,
 	renderReference,
+	renderStructReference,
 	renderText
 } from "../utils/Doc";
 import {mkdir} from "../utils/File";
@@ -145,14 +146,14 @@ const symbolIndexRenderVisitor: SymbolVisitor<string> = {
 	visitStruct(symbol: StructSymbol): string {
 		return `
 <nav class="nav nav-pills flex-column">
-${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.id}---hierarchy">Hierarchy</a>`}
-${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.id}---description">Description</a>`}
+${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.hash}---hierarchy">Hierarchy</a>`}
+${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.hash}---description">Description</a>`}
 ${symbol.simple ? "" : '<nav class="nav nav-pills flex-column">' +
 			DictionaryUtils.join(DictionaryUtils.map(symbol.topics, (topic, key) => (
 				`<a class="nav-link" href="#${key}">${topic.header}</a>`
 			)), "\n") +
 			'</nav>'}
-${symbol._constructor ? `<a class="nav-link" href="#${symbol.id}---constructor">Constructor</a>` : ""}
+${symbol._constructor ? `<a class="nav-link" href="#${symbol.hash}---constructor">Constructor</a>` : ""}
 ${renderIndexDictionary(symbol, symbol.properties, "properties", "Properties")}
 ${renderIndexDictionary(symbol, symbol.methods, "methods", "Methods")}
 ${renderIndexDictionary(symbol, symbol.staticProperties, "staticProperties", "Static properties")}
@@ -167,7 +168,7 @@ function renderIndexDictionary(struct: StructSymbol, dict: Dictionary<IMember>, 
 	}
 	const members = DictionaryUtils.join(DictionaryUtils.map(dict, renderIndexMember), "\n");
 	return struct.simple ? members : `
-<a class="nav-link" href="#${struct.id}---${key}">${title}</a>
+<a class="nav-link" href="#${struct.hash}---${key}">${title}</a>
 <nav class="nav nav-pills flex-column">${members}</nav>`;
 }
 
@@ -227,7 +228,7 @@ ${renderHeader("h3", symbol.hash, renderId(symbol))}
 <div class="doc-section">
 ${symbol.simple ? "" : renderHierarchy(symbol)}
 ${symbol.simple ? "" : renderHeader("h4", `${symbol.hash}---description`, "Description")}
-${renderDefinitions(symbol.context, symbol.typevars)}
+${renderTypeVarDefinitions(symbol)}
 ${renderText(symbol.context, symbol.description)}
 ${DictionaryUtils.join(DictionaryUtils.map(symbol.topics, (topic, key) => `
 	${renderHeader("h5", key, topic.header)}
@@ -255,7 +256,7 @@ function renderHierarchy(struct: StructSymbol) {
 ${renderHeader("h4", `${struct.hash}---hierarchy`, "Hierarchy")}
 <ul class="doc-hierarchy">
 ${renderHierarchyHead(struct, struct.inheritanceLevel - 1, cache)}
-<li>${renderTab(struct.inheritanceLevel)}${struct.kind} <b>${struct.objectName}</b>${renderTypeVars(struct)}</li>
+<li>${renderTab(struct.inheritanceLevel)}${struct.kind} <b>${struct.objectName}</b>${renderTypeVarsWithExtensions(struct)}</li>
 ${renderHierarchyTail(struct, struct.inheritanceLevel + 1, cache)}
 </ul>`
 }
@@ -267,10 +268,9 @@ function renderHierarchyHead(struct: StructSymbol, level: number, cache: StructS
 			return "";
 		}
 		cache.push(extendedStruct);
-		const url = getReferenceUrl(extendedStruct.selfReference, struct.file.id);
 		return `
 ${renderHierarchyHead(extendedStruct, level - 1, cache)}
-<li>${renderTab(level)}${extendedStruct.kind} <a href="${url}">${extendedStruct.objectName}</a>${renderTypeVars(extendedStruct)}</li>`;
+<li>${renderTab(level)}${extendedStruct.kind} ${renderStructReference(extendedStruct, struct.file.id)}${renderTypeVars(extendedStruct)}</li>`;
 	}).join("");
 }
 
@@ -288,9 +288,8 @@ function renderHierarchyTail(struct: StructSymbol, level: number, cache: StructS
 			return "";
 		}
 		cache.push(extendingStruct);
-		const url = getReferenceUrl(extendingStruct.selfReference, struct.file.id);
 		return `
-<li>${renderTab(level)}${extendingStruct.kind} <a href="${url}">${extendingStruct.objectName}</a>${renderTypeVars(extendingStruct)}</li>
+<li>${renderTab(level)}${extendingStruct.kind} ${renderStructReference(extendingStruct, struct.file.id)}${renderTypeVars(extendingStruct)}</li>
 ${renderHierarchyTail(extendingStruct, level + 1, cache, levelsLeft != null ? levelsLeft - 1 : null)}`;
 	}).join("");
 }
@@ -300,6 +299,30 @@ function renderTypeVars(struct: StructSymbol) {
 		return "";
 	}
 	return `<span class="monospace">&lt;${Object.keys(struct.typevars).join(", ")}&gt;</span>`;
+}
+
+function renderTypeVarsWithExtensions(struct: StructSymbol) {
+	if (DictionaryUtils.isEmpty(struct.typevars)) {
+		return "";
+	}
+	return `<span class="monospace">&lt;${DictionaryUtils.join(DictionaryUtils.map(struct.typevars, (typevar, key) => (
+		key + (typevar.extends.length ? ` ${renderTypeVarExtensions(struct, typevar)}` : "")
+	)), ", ")}&gt;</span>`;
+}
+
+function renderTypeVarDefinitions(struct: StructSymbol): string {
+	return renderDefinitions(struct.context, DictionaryUtils.map(struct.typevars, typevar => (
+		(typevar.extends.length ? `(${renderTypeVarExtensions(struct, typevar)}) ` : "") + typevar.description
+	)));
+}
+
+function renderTypeVarExtensions(struct: StructSymbol, typevar: TypeVar) {
+	return `extends ${typevar.extends.map(extension => (
+		renderStructReference(struct.project.getStructByExtension({
+			file: extension.file,
+			symbol: extension.symbol
+		}), struct.file.id)
+	)).join(" & ")}`;
 }
 
 function renderConstructor(constr: Constructor) {

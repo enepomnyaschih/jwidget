@@ -53,6 +53,9 @@ references:
   destruction:
     file: jwidget/Destroyable
     member: destroy
+  destroys:
+    file: jwidget/Destroyable
+    member: destroy
   triggered:
     file: jwidget/IEvent
     member: trigger
@@ -128,11 +131,40 @@ references:
     member: map
     label: map
 
+  # IProperty
+  ownValue:
+    file: jwidget/IProperty
+    member: ownValue
+
   # Property
   setOfProperty:
     file: jwidget/IProperty
     member: set
     label: set
+
+  # Switcher
+  initOfSwitcher:
+    file: jwidget/Switcher
+    symbol: Switcher.Config
+    member: init
+    label: init
+
+  doneOfSwitcher:
+    file: jwidget/Switcher
+    symbol: Switcher.Config
+    member: done
+    label: done
+
+  # Component
+  beforeRender:
+    file: jwidget/Component
+    member: beforeRender
+
+  # List
+  findOfList:
+    file: jwidget/ReadonlyList
+    member: find
+    label: find
 
 includes:
   DocumentationIndex: |

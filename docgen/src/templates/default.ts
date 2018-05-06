@@ -1,21 +1,21 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as DictionaryUtils from "../utils/Dictionary";
-import Project from "../Project";
-import SourceFile from "../SourceFile";
-import {mkdir} from "../utils/File";
-import {getReferenceUrl, getRelativeUrl, renderDefinitions, renderParams, renderText} from "../utils/Doc";
-import SymbolVisitor from "../SymbolVisitor";
-import StructSymbol from "../symbols/Struct";
-import FunctionSymbol from "../symbols/Function";
-import ValueSymbol from "../symbols/Value";
-import HeaderSymbol from "../symbols/Header";
-import {htmlEncode, repeat} from "../utils/String";
-import ISymbol from "../symbols/ISymbol";
-import MethodMember from "../members/Method";
-import PropertyMember from "../members/Property";
 import Constructor from "../Constructor";
 import Dictionary from "../Dictionary";
+import MethodMember from "../members/Method";
+import PropertyMember from "../members/Property";
+import Project from "../Project";
+import SourceFile from "../SourceFile";
+import FunctionSymbol from "../symbols/Function";
+import HeaderSymbol from "../symbols/Header";
+import ISymbol from "../symbols/ISymbol";
+import StructSymbol from "../symbols/Struct";
+import ValueSymbol from "../symbols/Value";
+import SymbolVisitor from "../SymbolVisitor";
+import * as DictionaryUtils from "../utils/Dictionary";
+import {getReferenceUrl, getRelativeUrl, renderDefinitions, renderParams, renderText} from "../utils/Doc";
+import {mkdir} from "../utils/File";
+import {htmlEncode, repeat} from "../utils/String";
 
 export default function defaultTemplate(project: Project) {
 	for (let fileId in project.files) {
@@ -99,9 +99,9 @@ ${renderHierarchyHead(symbol, symbol.inheritanceLevel - 1, cache)}
 <li>${repeat("\t", symbol.inheritanceLevel, "")}${symbol.kind} <b>${symbol.objectName}</b>${renderTypeVars(symbol)}</li>
 ${renderHierarchyTail(symbol, symbol.inheritanceLevel + 1, cache)}
 </ul>
-<h4>Description</h4>
-${renderDefinitions(symbol.context, symbol.typevars)}
-${renderText(symbol.context, symbol.description)}
+<h4>Description</h4>` +
+			//${renderDefinitions(symbol.context, symbol.typevars)}
+			`${renderText(symbol.context, symbol.description)}
 ${renderConstructor(symbol._constructor)}
 ${renderDictionary(symbol.properties, "<h4>Properties</h4>", (property) => renderProperty(property))}
 ${renderDictionary(symbol.methods, "<h4>Methods</h4>", (method) => renderMethod(method))}

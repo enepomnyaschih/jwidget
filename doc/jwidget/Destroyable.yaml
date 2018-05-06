@@ -1,6 +1,7 @@
 symbols:
   default:
     kind: interface
+    showInheritanceLevels: 1
     description: |
       Object which has %destroy method. Can be aggregated in %IClass via %own method.
 

@@ -3,6 +3,7 @@ import Dictionary from "../Dictionary";
 import DocError from "../DocError";
 import Reference from "../models/Reference";
 import Project from "../Project";
+import StructSymbol from "../symbols/Struct";
 import * as DictionaryUtils from "../utils/Dictionary";
 import {htmlEncode} from "./String";
 
@@ -114,4 +115,9 @@ export function renderDefinitions(context: Context, params: Dictionary<string>):
 		`<dt class="col-lg-2 col-sm-3">${key}</dt><dd class="col-lg-10 col-sm-9">${renderText(context, param)}</dd>`
 	));
 	return `<dl class="row">\n${DictionaryUtils.join(dict, "\n")}\n</dl>`;
+}
+
+export function renderStructReference(struct: StructSymbol, relativeToFile: string) {
+	const url = getReferenceUrl(struct.selfReference, relativeToFile);
+	return `<a href="${url}">${struct.objectName}</a>`;
 }

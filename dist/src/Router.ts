@@ -135,8 +135,8 @@ class Router<T extends Destroyable> extends Class {
 export default Router;
 
 namespace Router {
-	export const defaultSeparator = /^\/*([^?\/]+)(?:\/(.*)|(\?.*))?$/;
-	export const defaultJoiner = "/";
+	export const DEFAULT_SEPARATOR = /^\/*([^?\/]+)(?:\/(.*)|(\?.*))?$/;
+	export const DEFAULT_JOINER = "/";
 
 	export interface Separator {
 		(path: string): string[];
@@ -155,8 +155,8 @@ namespace Router {
 	}
 
 	export interface HandlerConfig<T> {
-		routes?: Dictionary<Route<T>>;
-		notFound?: Handler<T>;
+		readonly routes?: Dictionary<Route<T>>;
+		readonly notFound?: Handler<T>;
 	}
 
 	export interface Config<T> {
@@ -178,7 +178,7 @@ namespace Router {
 	 * @param regexp Regular expression.
 	 * @returns Separator function.
 	 */
-	export function makeSeparator(separator: Separator | RegExp = defaultSeparator): Separator {
+	export function makeSeparator(separator: Separator | RegExp = DEFAULT_SEPARATOR): Separator {
 		if (typeof separator === "function") {
 			return separator;
 		}
@@ -210,7 +210,7 @@ namespace Router {
 	 * @param joiner Joiner symbol/string.
 	 * @returns Joiner function.
 	 */
-	export function makeJoiner(joiner: Joiner | string = defaultJoiner): Joiner {
+	export function makeJoiner(joiner: Joiner | string = DEFAULT_JOINER): Joiner {
 		if (typeof joiner === "function") {
 			return joiner;
 		}
@@ -272,12 +272,6 @@ namespace Router {
 			throw new Error("Can not perform URL redirection to " + path + ": " + e.message);
 		}
 		hash.set(path, replaceState);
-	}
-
-	export function bindRouting(component: any, path: Bindable<string>): Destroyable {
-		return !component ? null :
-			component.bindRouting ? component.bindRouting(path) :
-				component.path ? new Copier(path, component.path) : null;
 	}
 
 	export class Redirector extends Component {
@@ -364,7 +358,7 @@ namespace Router {
 			return this._paths;
 		}
 
-		get expanded(): Dictionary<Bindable<boolean>> {
+		get expanded(): Dictionary<IProperty<boolean>> {
 			return this._expanded;
 		}
 	}

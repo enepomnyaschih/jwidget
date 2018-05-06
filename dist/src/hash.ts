@@ -108,7 +108,8 @@ class Hash extends Property<string> implements IHash {
 
 /**
  * Instance of IHash singleton. Provides a transparent Property-compatible interface over `location.hash`
- * manipulations. Has a built-in protection against infinite redirections.
+ * manipulations. Value of this property is always equal to `location.hash` without leading "#" symbol.
+ * Has a built-in protection against infinite redirections.
  */
 const hash: IHash = new Hash(); // An extra variable helps IntelliSense to find this import
 export default hash;

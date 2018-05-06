@@ -1,0 +1,948 @@
+symbols:
+  default:
+    typevars:
+      T:
+        extends:
+          - file: jwidget/Destroyable
+        description: Target object type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>URL router. Converts incoming part of URL (hash) to a target object and passes tail string to it
+      for further routing. Target object may have any type, but usually this is %Component. For simplicity,
+      %Router&lt;%Component&gt; has a shorthand - %UIRouter.</p>
+
+    topics:
+      terminology:
+        header: Terminology
+        text: |
+          <ul>
+          <li><b>Path</b> is some final part of URL (hash) relevant to a certain router. Path never contains "#"
+          symbol.</li>
+          <li><b>Root path</b> is URL (hash) without "#" symbol.</li>
+          <li><b>Route</b> is the first token of the path which is relevant to the next single step of the routing.</li>
+          <li><b>Argument</b> is the remaining path after route extraction.</li>
+          </ul>
+          <p>For example, hash value <tt>#inbox/3?filter=10</tt> provides us with <tt>inbox/3?filter=10</tt> global
+          path, and it may get processed in 2 steps with the following values:</p>
+          <table class="table table-striped">
+            <thead class="thead-dark">
+              <tr>
+                <th>Path</th>
+                <th>Route</th>
+                <th>Argument</th>
+              </tr>
+            </thead>
+            <tbody style="font-family: monospace">
+              <tr>
+                <td>inbox/3?filter=10</td>
+                <td>inbox</td>
+                <td>3?filter=10</td>
+              </tr>
+              <tr>
+                <td>3?filter=10</td>
+                <td>3</td>
+                <td>?filter=10</td>
+              </tr>
+            </tbody>
+          </table>
+
+      howItWorks:
+        header: How it works
+        text: |
+          <p>Router takes an incoming string %Property (for example, %hash), parses it and provides an outcoming
+          %Property&lt;%T&gt;. Outcoming property may contain any object you want. You specify this object in a
+          callback function. This can be either general-purpose %Handler function or a part of %HandlerConfig&lt;%T&gt;
+          object.</p>
+          %example:router
+          <p>In this example, %hash is passed to Application's router object, and it builds a target property
+          containing a child component to render by the following rules:</p>
+          <ul>
+          <li><tt>inbox/*</tt> path is mapped to Inbox component</li>
+          <li><tt>compose/*</tt> path is mapped to Compose component</li>
+          <li><tt>settings/*</tt> path is mapped to Settings component</li>
+          <li>blank path is automatically redirected to <tt>inbox</tt></li>
+          <li>any other path is mapped to NotFound component</li>
+          </ul>
+          <p>The following code demonstrates the common pattern of root router initialization:</p>
+          <pre>
+          protected %beforeRender() {
+              super.%beforeRender();
+              this.router = this.%own(new %UIRouter({
+                  %pathOfConfig: %hash,
+                  %handlerOfConfig: {
+                      %routesOfConfig: {
+                          "inbox"   : arg => new Inbox(arg, this.router),
+                          "compose" : () => new Compose(),
+                          "settings": () => new Settings(),
+                          ""        : () => new %Router.%Redirector("inbox", this.router)
+                      },
+                      %notFoundOfConfig: route => new NotFound(route)
+                  }
+              }));
+              this.router.%update();
+          }
+
+          protected renderPage() {
+              return this.router.%target;
+          }
+          </pre>
+          <p>Notice that %update method is called separately after router construction. It is implemented so to make
+          sure that <tt>this.router</tt> field is assigned before routing. Sometimes it is a crucial factor (e.g. in the
+          example above, <tt>this.router</tt> is used in "inbox" route handler).</p>
+
+      routeHierarchy:
+        header: Route hierarchy
+        text: |
+          <p>In the example above, Inbox provides further routing for all <tt>inbox/*</tt> paths based on its own rules.
+          Applacation router passes path tail string to Inbox constructor to make this happen. Inbox rules:</p>
+          <ul>
+          <li><tt>inbox</tt> path is mapped to EmailList component</li>
+          <li><tt>inbox/:id</tt> path is mapped to Email component if an email with such ID exists</li>
+          <li><tt>inbox/:id</tt> path is mapped to EmailNotFound component if there's no email with such ID</li>
+          </ul>
+          <pre>
+          protected %beforeRender() {
+              super.%beforeRender();
+              this.router = this.%own(new %UIRouter({
+                  %nameOfConfig: "inbox",
+                  %parentOfConfig: this.parentRouter,
+                  %pathOfConfig: this.path,
+                  %handlerOfConfig: route => {
+                      if (!id) {
+                          return new EmailList(this.emails);
+                      }
+                      const email = this.emails.%findOfList(email => email.id === id);
+                      return email != null ? new Email(email, this.router) : new EmailNotFound(id);
+                  }
+              }));
+              this.router.%update();
+          }
+
+          protected renderEmail() {
+              return this.router.%target;
+          }
+          </pre>
+          <p>We can recognize the next differences between the root router and its child:</p>
+          <ul>
+          <li>%path value is different: the root router is based on full %hash, and the child router is based on its
+          remainder after "inbox/" substring.</li>
+          <li>Child router requires proper %name to be specified. Router name is a chunk of the path that caused this
+          route to get initialized. In our case, this is obviously "inbox". It is not certainly a constant: if we want
+          "inbox/:id" route to have subroutes, then a specific email ID would be a name of the email router.</li>
+          <li>Child router requires proper %parent to be specified. Pass parent router here. Every router should have
+          a reference to its parent. It provides %getFullPath and %redirect with a clue about all parts of the path. If
+          your router provides you with wrong paths, check %name and %parent of all routers in your hierarchy - they
+          are likely assigned to wrong values.</li>
+          </ul>
+
+      routingFlow:
+        header: Routing flow
+        text: |
+          <p>Routing is performed in three steps:</p>
+          <ol>
+          <li><p>Incoming path string is parsed using %separatorOfConfig callback into two tokens: <b>route</b> and
+          <b>argument</b>. The <b>route</b> should be used to process this single routing step, and the <b>argument</b>
+          should be passed to the target for further routing. Make sure that %separatorOfConfig never returns two routes which
+          have the same target. For example, if both "" and "inbox" lead to Inbox component, make sure that %separator
+          function returns the same route for them, for example, "index".</p>
+          <pre>
+          this.router = this.%own(new %UIRouter({
+              %pathOfConfig: %hash,
+              %separatorOfConfig: path => path ? %Router.%makeSeparator()(path) : ["inbox", null], // mirror "" to "inbox"
+              %handlerOfConfig: {
+                  %routesOfConfig: {
+                      "inbox"   : arg => new Inbox(arg, this.router),
+                      "compose" : () => new Compose(),
+                      "settings": () => new Settings()
+                  },
+                  %notFoundOfConfig: route => new NotFound(route)
+              }
+          }));
+          </pre>
+          <p>Otherwise, expect your target component to be recreated when user switches back and forth between "" and
+          "inbox". If %separator function returns null or undefined, it is automatically mapped to <tt>["", null]</tt>.
+          Separator can be specified as a string. In this case, it is passed to %makeSeparator function - see it for
+          more details.</p></li>
+          <li>If the route returned by separator is changed, the next steps are following:<ul>
+              <li>Null is assigned to %target property and the previous target gets %destroyed</li>
+              <li>%arg and %route get assigned to new values</li>
+              <li>%handlerOfConfig function is called to build a new target</li>
+              <li>Result is assigned to %target property</li></ul></li>
+          <li>Else only %arg gets reassigned to pass the control flow to the child routers.</li>
+          </ol>
+          <p>Please notice that %Router controls the life time of your target objects. For this reason, any target must
+          implement %Destroyable interface. You should also control the life time of your router (i.e. %own it
+          in the component).</p>
+
+      redirection:
+        header: Redirection
+        text: |
+          <p>2nd and 3rd steps above result in creation of many new objects that may cause unexpected redirections.
+          This would make things fall apart. That's why jWidget router recommends to do such redirections
+          asyncronously. If your component happen to do the redirection immediately and syncronously, the router will
+          discard to handle it and throw an error.</p>
+          <p>However, outside routing cycle, you are free to do the redirections syncronously at any moment. The easiest way to
+          do this is to use %redirect instance method or corresponding static method. The instance method performs
+          redirection inside this router. The static method takes a router as an optional argument. If you dismiss it,
+          it will result in global redirection.</p>
+          <pre>
+          this.router.%redirect("inbox"); // redirection in this router
+          %Router.%staticRedirect("inbox"); // global redirection
+          </pre>
+          <p>To do the asyncronous redirection in a router %handlerOfConfig function, render %Router.%Redirector as a target
+          component.</p>
+          <pre>
+          this.router = this.%own(new %UIRouter({
+              %pathOfConfig: %hash,
+              %handlerOfConfig: {
+                  %routesOfConfig: {
+                      "inbox": arg => new Inbox(arg)
+                  },
+                  %notFoundOfConfig: () => new %Router.%Redirector("inbox", this.router)
+              }
+          }));
+          </pre>
+          <p>This router will forcibly redirect any route to "inbox".</p>
+          <p>If you define custom %separatorOfConfig function, you must also define an opposite %joinerOfConfig function for
+          redirections to work properly.</p>
+
+      menuStatus:
+        header: Menu status management
+        text: |
+          <p>In order to highlight the active item of your menu, you can use %route property.</p>
+          <pre>
+          const activeElement = this.router.%route.%mapOfBindable(route => el.filter('[data-route="' + route + '"]'));
+          new %Switcher(activeElement, {
+              %initOfSwitcher: el => el.addClass("active"),
+              %doneOfSwitcher: el => el.removeClass("active")
+          });
+          </pre>
+
+    constructor:
+      signature: |
+        (config?: %Router.%Config<%T>)
+      params:
+        config: Router configuration.
+      description: |
+        <p>Creates router instance. Please notice that the router doesn't process current route immediately on
+        initialization. To process the route, call %update method.</p>
+
+    properties:
+      name:
+        modifiers: readonly
+        type: string
+        description: |
+          <p>Router name. Must be equal to the route name in the %parent router. Required for proper %getFullPath and
+          %redirect method processing. Root router does not have a name.</p>
+
+      parent:
+        modifiers: readonly
+        type: '%Router<any>'
+        description: |
+          <p>Parent router. Required for proper %getFullPath and %redirect method processing. Root router does not have
+          a parent.</p>
+
+      path:
+        modifiers: readonly
+        type: '%Bindable<string>'
+        description: |
+          <p>Path that the router is bound to. Path is a final part of URL (hash) relevant to this
+          router. Any path change results in %update method call.</p>
+
+      separator:
+        modifiers: readonly
+        type: '%Router.%Separator'
+        description: |
+          <p>Path separator function used by the router. See %separatorOfConfig for details.</p>
+
+      joiner:
+        modifiers: readonly
+        type: '%Router.%Joiner'
+        description: |
+          <p>Path joiner function used by the router. See %joinerOfConfig for details.</p>
+
+      handler:
+        modifiers: readonly
+        type: '%Router.%Handler<%T>'
+        description: |
+          <p>Route handler function used by the router. See %handlerOfConfig for details.</p>
+
+      scope:
+        modifiers: readonly
+        type: any
+        description: |
+          <p>%separatorOfConfig, %joinerOfConfig and %handlerOfConfig call scope.</p>
+
+      target:
+        modifiers: readonly
+        type: '%Bindable<%T>'
+        description: |
+          <p>Router target. Main purpose of the router is to convert %path to %target. In particular, %UIRouter
+          creates %Component instances based on current %path value so you could render them.</p>
+
+      route:
+        modifiers: readonly
+        type: '%Bindable<string>'
+        description: |
+          <p>Current route. First chunk of the path detected by %separatorOfConfig function. You can watch this property
+          to activate and deactivate items in your menu. See %menuStatus.</p>
+
+      arg:
+        modifiers: readonly
+        type: '%Bindable<string>'
+        description: |
+          <p>Remainder of current route after %separatorOfConfig function call. This property is passed to %handlerOfConfig
+          function and can be passed over to child components for further routing.</p>
+
+    methods:
+      update:
+        signature: |
+          ()
+        description: |
+          <p>Issues route processing. See %routingFlow for details.</p>
+
+      join:
+        signature: |
+          (route: string, arg: string): string
+        params:
+          route: Route name.
+          arg: Remainder of the path.
+        returns: Full path.
+        description: |
+          <p>Returns the result of %joinerOfConfig function call for this router.</p>
+
+      getFullPath:
+        signature: |
+          (path: string): string
+        params:
+          path: Path relative to this router.
+        returns: Full path relative to the root router.
+        description: |
+          <p>Returns full path as the result of %joinerOfConfig function call in %parentOfConfig router with %nameOfConfig passed as
+          <b>route</b> and %path passed as <b>arg</b>.</p>
+          <p>Returns %path if this is the root router.</p>
+
+      redirect:
+        signature: |
+          (path: string, replaceState: boolean = false)
+        params:
+          path: Path relative to this router.
+          replaceState: Replace the current browser historical state rather than pushing a new state to the stack.
+        description: |
+          <p>Immediately performs the redirection, i.e. sets %hash to %getFullPath(%path).</p>
+
+    staticProperties:
+      DEFAULT_SEPARATOR:
+        type: RegExp
+        description: |
+          <p>Default value of %separatorOfConfig: <tt>/^\/*([^?\/]+)(?:\/(.*)|(\?.*))?$/</tt></p>
+          <p>Briefly, it follows the next logic:</p>
+          <ul>
+          <li>Trims leading /</li>
+          <li>Looks for the first / or ?</li>
+          <li>Uses first part as route</li>
+          <li>Uses second part as argument. Questionmark ? is included to the argument, slash / is not</li>
+          </ul>
+          <p>Examples:</p>
+          <table class="table table-striped">
+            <thead class="thead-dark">
+              <tr><th>Incoming path</th><th>Resulting route</th><th>Resulting argument</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>"" or null</td><td>""</td><td>null</td></tr>
+              <tr><td>"inbox"</td><td>"inbox"</td><td>null</td></tr>
+              <tr><td>"inbox/"</td><td>"inbox"</td><td>""</td></tr>
+              <tr><td>"inbox/1"</td><td>"inbox"</td><td>"1"</td></tr>
+              <tr><td>"inbox/1/edit"</td><td>"inbox"</td><td>"1/edit"</td></tr>
+              <tr><td>"/inbox"</td><td>"inbox"</td><td>null</td></tr>
+              <tr><td>"/inbox/"</td><td>"inbox"</td><td>""</td></tr>
+              <tr><td>"///inbox///"</td><td>"inbox"</td><td>"//"</td></tr>
+              <tr><td>"inbox?id=1"</td><td>"inbox"</td><td>"?id=1"</td></tr>
+            </tbody>
+          </table>
+
+      DEFAULT_JOINER:
+        type: string
+        description: |
+          <p>Default value of %joinerOfConfig: <tt>"/"</tt></p>
+          <p>Simply joins route and argument with <tt>"/"</tt></p>
+
+    staticMethods:
+      makeSeparator:
+        signature: |
+          (separator: %Router.%Separator | RegExp = %Router.%DEFAULT_SEPARATOR): %Router.%Separator
+        params:
+          separator: Function or regular expression.
+        returns: Separator function.
+        description: |
+          <p>If %separator is a function, returns it immediately. Else converts the specified regular expression to
+          a function by the following rule: The first token ($1) of path is used as a route, and the next non-null token
+          ($2 or further) is used as an argument. If path is null, it is assumed to be "".</p>
+
+      makeJoiner:
+        signature: |
+          (joiner: %Router.%Joiner | string = %Router.%DEFAULT_JOINER): %Router.%Joiner
+        params:
+          joiner: Function or separation character.
+        returns: Joiner function.
+        description: |
+          <p>If %joiner is a function, returns it immediately. Else converts the specified string to a function by the
+          following rule: joins incoming route/argument pair via the specified string. Leading joiner symbols in argument
+          are trimmed. If argument starts with "?", joiner symbol is not added. If argument is null or blank, returns
+          route. Examples:</p>
+          <table class="table table-striped">
+            <thead class="thead-dark">
+              <tr><th>Incoming route</th><th>Incoming argument</th><th>Separator</th><th>Resulting path</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>""</td><td>""</td><td>"/"</td><td>""</td></tr>
+              <tr><td>"inbox"</td><td>""</td><td>"/"</td><td>"inbox"</td></tr>
+              <tr><td>"inbox"</td><td>"1"</td><td>"/"</td><td>"inbox/1"</td></tr>
+              <tr><td>"inbox"</td><td>"1/reply"</td><td>"/"</td><td>"inbox/1/reply"</td></tr>
+              <tr><td>"inbox"</td><td>"/1/reply"</td><td>"/"</td><td>"inbox/1/reply"</td></tr>
+              <tr><td>"inbox"</td><td>"/1/reply/"</td><td>"/"</td><td>"inbox/1/reply/"</td></tr>
+              <tr><td>"inbox"</td><td>"///1/reply///"</td><td>"/"</td><td>"inbox/1/reply///"</td></tr>
+              <tr><td>"inbox"</td><td>"?id=1"</td><td>"/"</td><td>"inbox?id=1"</td></tr>
+            </tbody>
+          </table>
+
+      makeHandler:
+        signature: |
+          <T>(handler: %Router.%Handler<T> | %Router.%HandlerConfig<T> = {}): %Router.%Handler<T>
+        params:
+          handler: Handler configuration object.
+        returns: Handler function.
+        description: |
+          <p>If %handler is a function, returns it immediately. Else converts the specified object to a function. See
+          %HandlerConfig for details.</p>
+          <p>Example:</p>
+          <pre>
+          this.router = this.%own(new %UIRouter({
+              %pathOfConfig: %hash,
+              %handlerOfConfig: { // this object is auto-converted to a function via %makeHandler
+                  %routesOfConfig: {
+                      "inbox" : arg => new Inbox(arg),
+                      ""      : () => new %Router.%Redirector("inbox", this.router)
+                  },
+                  %notFoundOfConfig: () => new NotFound()
+              }
+          }));
+
+      getFullPath:
+        signature: |
+          (path: string, router: Router<any>): string
+        params:
+          path: Path relative to %router.
+          router: Compute full path relative to this router.
+        returns: Full path relative to the %router.
+        description: |
+          <p>Returns full path as the result of %joinerOfConfig function call in %parentOfConfig of %router with %nameOfConfig passed as
+          <b>route</b> and %path passed as <b>arg</b>.</p>
+          <p>Returns %path if this is the root router.</p>
+
+      redirect:
+        signature: |
+          (path: string, router: Router<any>, replaceState?: boolean)
+        params:
+          path: Path relative to %router.
+          router: Redirect relative to this router.
+          replaceState: Replace the current browser historical state rather than pushing a new state to the stack.
+        description: |
+          <p>Immediately performs the redirection, i.e. sets %hash to %staticGetFullPath(%path, %router).</p>
+
+  Router.Separator:
+    kind: interface
+    simple: true
+    description: |
+      <p><code>(path: string): string[]</code></p>
+      <p>Signature of %separatorOfConfig function. The function splits path to route and argument. Therefore, it must
+      return two string values. If function returns null, it is assumed to be <tt>["", null]</tt>.</p>
+
+  Router.Joiner:
+    kind: interface
+    simple: true
+    description: |
+      <p><code>(route: string, arg: string): string</code></p>
+      <p>Signature of %joinerOfConfig function. The function joins route and argument to a path.</p>
+
+  Router.Handler:
+    kind: interface
+    simple: true
+    typevars:
+      T: Target object type.
+    description: |
+      <p><code>(route: string, arg: %Bindable<string>): %T</code></p>
+      <p>Signature of %handlerOfConfig general-purpose function. The function maps the specified route to a target object
+      (usually, %Component) and passes argument to it for further routing.</p>
+
+  Router.Route:
+    kind: interface
+    simple: true
+    typevars:
+      T: Target object type.
+    description: |
+      <p><code>(arg: %Bindable<string>): %T</code></p>
+      <p>Signature of a single route in %handlerOfConfig object. The function maps a single route to a target
+      object (usually, %Component) and passes argument to it for further routing.</p>
+
+  Router.HandlerConfig:
+    kind: interface
+    simple: true
+    typevars:
+      T: Target object type.
+    description: |
+      <p>%Router %handlerOfConfig configuration object.</p>
+
+    properties:
+      routes:
+        modifiers: readonly
+        optional: true
+        type: '%Dictionary<%Router.%Route<%T>>'
+        description: |
+          <p>Map of specific route handlers. If current route is present in this dictionary, the router calls its
+          corresponding handler and passes argument to it. Route and argument themselves are computed with %separatorOfConfig
+          callback.</p>
+
+      notFound:
+        modifiers: readonly
+        optional: true
+        type: '%Router.%Handler<%T>'
+        description: |
+          <p>If none of the %routes matches current route, the router calls this handler callback and passes both
+          route and argument to it. By default, returns null for any input.</p>
+
+  Router.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Target object type.
+    description: |
+      <p>%Router configuration object.</p>
+
+    properties:
+      name:
+        modifiers: readonly
+        optional: true
+        type: string
+        description: |
+          <p>Router name. Router name is a chunk of the path that caused this route to get initialized. Root router
+          doesn't have a name. See %routeHierarchy for details.</p>
+
+      parent:
+        modifiers: readonly
+        optional: true
+        type: string
+        description: |
+          <p>Parent router. It provides %getFullPath and %redirect with a clue about all parts of the path. If
+          your router provides you with wrong paths, check %name and %parent of all routers in your hierarchy - they
+          are likely assigned to wrong values. Root router doesn't have a parent. See %routeHierarchy for details.</p>
+
+      path:
+        modifiers: readonly
+        optional: true
+        type: '%Bindable<string>'
+        description: |
+          <p>Path to bind the router to. Root router should usually get bound to %hash property. Child routers should
+          receive %path from their parents.</p>
+
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IProperty<%T>'
+        description: |
+          <p>Target property. Router puts the result of %handlerOfConfig function call to target property. If %target is
+          omitted, the router creates it automatically. %Router automatically controls the life time of your targets,
+          so, if you pass your precreated %target property to a %Router, make sure that it is not aggregating its value,
+          i.e. %ownValue method is <b>not called</b>.</p>
+
+      separator:
+        modifiers: readonly
+        optional: true
+        type: '%Router.%Separator | RegExp'
+        description: |
+          <p>Path separator function. Parses incoming path to two tokens: route and argument. Route gets used to
+          process a single routing step and create a target, argument gets passed to the target for further routing.</p>
+          <p>Separator can be specified as a function or a regular expression. The function has the next signature:</p>
+          <p><code>(path: string): string[]</code></p>
+          <p>It must return two string values. If it returns null, it is assumed to be <tt>["", null]</tt>.</p>
+          <p>Make sure that separator never returns two routes which have the same target. For example, if both "" and
+          "inbox" lead to Inbox component, make sure that separator function returns the same route for them, for
+          example, "inbox". Otherwise, expect your target component to be recreated when user switches back and forth
+          between "" and "inbox".</p>
+          <p>If you define custom separator function, you must also define an opposite %joinerOfConfig function for
+          redirections to work properly.</p>
+          <p>If the separator is specified as a regular expression, it gets converted to a function with
+          %Router.%makeSeparator function - see it for more details.</p>
+          <p>Defaults to %Router.%DEFAULT_SEPARATOR. See it for more details.</p>
+
+      joiner:
+        modifiers: readonly
+        optional: true
+        type: '%Router.%Joiner | string'
+        description: |
+          <p>Path joiner. Opposite to %separator. Used in %getFullPath and %redirect methods to properly build the
+          path. Joins incoming route and argument to a full path.</p>
+          <p>Joiner can be specified as a function or a string. The function has the next signature:</p>
+          <p><code>(route: string, arg: string): string</code></p>
+          <p>If the joiner is specified as a string, it gets converted to a function with %Router.%makeJoiner function -
+          see it for more details.</p>
+          <p>Defaults to %Router.%DEFAULT_JOINER = "/".</p>
+
+      handler:
+        modifiers: readonly
+        optional: true
+        type: '%Router.%Handler<%T> | %Router.%HandlerConfig<%T>'
+        description: |
+          <p>Route handler. Maps the route string to a target object and passes argument to it for further routing.</p>
+          <pre>
+          handler: (route, arg) => {
+              const doc = this.docs[route];
+              return doc ? doc.createView(arg) : new Page404();
+          }
+          </pre>
+          <p>Handler function must create a new object instead of returning an existing object, because %Router
+          controls life time of the target objects and %destroys them on route leave.</p>
+          <p>Handler may return null or undefined if nothing needs to be assigned as a target - router will recognize
+          this case and won't try to destroy anything.</p>
+          <p>Handler can be specified as an object matching %Router.%HandlerConfig interface. In this case, it gets
+          converted to a function with %Router.%makeHandler function. See %Router.%HandlerConfig for more details.</p>
+          <p>Default handler function maps all routes to null.</p>
+
+      scope:
+        modifiers: readonly
+        optional: true
+        type: '%Router.%Handler<%T> | %Router.%HandlerConfig<%T>'
+        description: |
+          <p>%separator, %joiner and %handler call scope.</p>
+
+  Router.Redirector:
+    extends:
+      - file: jwidget/Component
+    hideInheritedMembers: true
+    description: |
+      <p>Recommended way to perform an asyncronous redirection in %Router %handlerOfConfig function. See %redirection for
+      details.</p>
+    constructor:
+      signature: |
+        (path: string, router: %Router<any>, replaceState?: boolean)
+      params:
+        path: Path relative to %router.
+        router: Redirect relative to this router.
+        replaceState: Replace the current browser historical state rather than pushing a new state to the stack.
+      description: |
+        <p>Creates a new redirector.</p>
+
+  Router.Node:
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Creates a router that manages mapping of two sets of properties:</p>
+      <ul>
+      <li>%paths which exposes string path properties for child routers if neccessary;</li>
+      <li>%expanded which exposes boolean "expanded" properties for child UI panels.</li>
+      </ul>
+      <p>This allows you to render your content as a fixed list of panels representing the concurrent routes.</p>
+      <pre>
+      @%template(
+          '<div jwclass="user-settings">' +
+          '  <div jwid="simple"></div>' +
+          '  <div jwid="advanced"></div>' +
+          '</div>'
+      )
+      export default class UserSettings extends %Component {
+
+          private node: %Router.%Node;
+
+          %beforeRender() {
+              super.%beforeRender();
+              this.node = this.%own(new %Router.%Node({
+                  %pathOfNode: %hash,
+                  %routesOfNode: ["simple", "advanced"],
+                  %expandedOfNode: true
+              }));
+          }
+
+          renderSimple() {
+              return this.%own(new FieldSet({
+                  label: "Simple settings",
+                  content: new SimpleUserSettings(this.node.%router, this.node.%paths["simple"]),
+                  expanded: this.node.%expanded["simple"]
+              })).ownContent();
+          }
+
+          renderAdvanced() {
+              return this.%own(new FieldSet({
+                  label: "Advanced settings",
+                  content: new AdvancedUserSettings(this.node.%router, this.node.%paths["advanced"]),
+                  expanded: this.node.%expanded["advanced"]
+              })).ownContent();
+          }
+      }
+      </pre>
+
+    constructor:
+      signature: |
+        (config: %Router.%Node.%Config)
+      params:
+        config: Node configuration.
+      description: |
+        <p>Creates router node, assigns its properties to initial values and starts synchronization.</p>
+
+    properties:
+      router:
+        modifiers: readonly
+        type: '%Router<any>'
+        description: |
+          <p>Router that manages this node. Node creates this router automatically. You should pass this router to
+          child components as their parent router for further routing.</p>
+
+      paths:
+        modifiers: readonly
+        type: '%Dictionary<%Bindable<string>>'
+        description: |
+          <p>Provides paths to bind child routers to, by name. Only one route is active at a time, but their paths
+          always exist regardless of their activity.</p>
+
+      expanded:
+        modifiers: readonly
+        type: '%Dictionary<%IProperty<boolean>>'
+        description: |
+          <p>Provides "expanded" flags to bind child panels to, by name. Support two-way binding:</p>
+          <ol>
+          <li>Once the global path starts referring this node and this name in the node, "expanded" gets assigned to
+          true automatically. But not the opposite: once it stops, "expanded" stays unchanged.</li>
+          <li>Once "expanded" property becomes true, global path gets redirected to this name in this node. But not the
+          opposite: false value assignment doesn't lead to any visible changes in global path.</li>
+          </ol>
+
+      defaultRoute:
+        modifiers: readonly
+        type: string
+        description: |
+          <p>Default route this node was initialized with.</p>
+
+    references:
+      nameOfNode:
+        symbol: Router.Node.Config
+        member: name
+        label: name
+
+      parentOfNode:
+        symbol: Router.Node.Config
+        member: parent
+        label: parent
+
+      pathOfNode:
+        symbol: Router.Node.Config
+        member: path
+        label: path
+
+      routesOfNode:
+        symbol: Router.Node.Config
+        member: routes
+        label: routes
+
+      expandedOfNode:
+        symbol: Router.Node.Config
+        member: expanded
+        label: expanded
+
+      defaultRouteOfNode:
+        symbol: Router.Node.Config
+        member: defaultRoute
+        label: defaultRoute
+
+  Router.Node.Config:
+    kind: interface
+    simple: true
+    description: |
+      <p>%Router.%Node configuration.</p>
+
+    properties:
+      name:
+        modifiers: readonly
+        optional: true
+        type: string
+        description: |
+          <p>Router name. See %nameOfConfig in Router configuration for details.</p>
+
+      parent:
+        modifiers: readonly
+        optional: true
+        type: string
+        description: |
+          <p>Parent router. See %parentOfConfig in Router configuration for details.</p>
+
+      path:
+        modifiers: readonly
+        optional: true
+        type: '%Bindable<string>'
+        description: |
+          <p>Path to bind the router to. See %pathOfConfig in Router configuration for details.</p>
+
+      routes:
+        modifiers: readonly
+        type: string[]
+        description: |
+          <p>Fixed list of routes to manage by this node. For every name in this list, corresponding properties will be
+          created in %paths and %expanded dictionaries of the node.</p>
+
+        references:
+          paths:
+            symbol: Router.Node
+            member: paths
+
+          expanded:
+            symbol: Router.Node
+            member: expanded
+
+      expanded:
+        modifiers: readonly
+        optional: true
+        type: boolean | string[]
+        description: |
+          <p>Initial "expanded" status of routes or initial routes to expand. Defaults to false (all routes are
+          collapsed).</p>
+
+      defaultRoute:
+        modifiers: readonly
+        optional: true
+        type: string
+        description: |
+          <p>Default route. If the initial path is blank (""), the router performs a redirection to this route, i.e.
+          expands one of the panels. Doesn't work after initialization.</p>
+
+references:
+  terminology:
+    href: "#terminology"
+    label: Terminology
+
+  howItWorks:
+    href: "#howItWorks"
+    label: How it works
+
+  routeHierarchy:
+    href: "#routeHierarchy"
+    label: Route hierarchy
+
+  routingFlow:
+    href: "#routingFlow"
+    label: Routing flow
+
+  redirection:
+    href: "#redirection"
+    label: Redirection
+
+  menuStatus:
+    href: "#menuStatus"
+    label: Menu status management
+
+  Separator:
+    symbol: Router.Separator
+
+  Joiner:
+    symbol: Router.Joiner
+
+  Handler:
+    symbol: Router.Handler
+
+  Route:
+    symbol: Router.Route
+
+  HandlerConfig:
+    symbol: Router.HandlerConfig
+
+  Config:
+    symbol: Router.Config
+
+  Redirector:
+    symbol: Router.Redirector
+
+  Node:
+    symbol: Router.Node
+
+  nameOfConfig:
+    symbol: Router.Config
+    member: name
+    label: name
+
+  parentOfConfig:
+    symbol: Router.Config
+    member: parent
+    label: parent
+
+  pathOfConfig:
+    symbol: Router.Config
+    member: path
+    label: path
+
+  separatorOfConfig:
+    symbol: Router.Config
+    member: separator
+    label: separator
+
+  joinerOfConfig:
+    symbol: Router.Config
+    member: joiner
+    label: joiner
+
+  handlerOfConfig:
+    symbol: Router.Config
+    member: handler
+    label: handler
+
+  routesOfConfig:
+    symbol: Router.HandlerConfig
+    member: routes
+    label: routes
+
+  notFoundOfConfig:
+    symbol: Router.HandlerConfig
+    member: notFound
+    label: notFound
+
+  getFullPath:
+    symbol: default
+    member: getFullPath
+
+  redirect:
+    symbol: default
+    member: redirect
+
+  staticGetFullPath:
+    symbol: default
+    member: getFullPath
+    static: true
+    label: getFullPath
+
+  staticRedirect:
+    symbol: default
+    member: redirect
+    static: true
+    label: redirect
+
+  makeSeparator:
+    symbol: default
+    member: makeSeparator
+    static: true
+
+  makeJoiner:
+    symbol: default
+    member: makeJoiner
+    static: true
+
+  makeHandler:
+    symbol: default
+    member: makeHandler
+    static: true
+
+  DEFAULT_SEPARATOR:
+    symbol: default
+    member: DEFAULT_SEPARATOR
+    static: true
+
+  DEFAULT_JOINER:
+    symbol: default
+    member: DEFAULT_JOINER
+    static: true
