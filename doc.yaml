@@ -33,6 +33,8 @@ references:
     href: https://www.npmjs.com/package/@types/es6-promise
   setTimeout:
     href: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
+  clearTimeout:
+    href: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearTimeout
 
   # Pages
   DocumentationRoot:

@@ -84,7 +84,7 @@ abstract class AbstractRestProvider<C> {
 	private send<T>(type: string, action: string | string[], config: AbstractRestProvider.DataConfig<C, T> = {}, settings?: JQueryAjaxSettings): Promise<T> {
 		const url = this.getUrl(action, type);
 		if (url === null) {
-			return request<T>();
+			return request();
 		}
 		const data = config.data,
 			contentType = (settings && settings.contentType != null) ?
@@ -97,7 +97,8 @@ abstract class AbstractRestProvider<C> {
 			data: (type !== "GET" && type !== "DELETE" && contentType === "application/json" && data != null) ?
 				JSON.stringify(data) : data
 		});
-		return request<T>($.ajax(settings), config.factory, config.cancelToken);
+		let promise = request($.ajax(settings), config.cancelToken);
+		return config.factory ? promise.then(config.factory) : promise;
 	}
 }
 

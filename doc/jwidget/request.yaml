@@ -1,0 +1,41 @@
+symbols:
+  default:
+    signature: '<T>(xhr?: %JQueryXHR, cancelToken?: %CancelToken): %Promise<T>'
+    params:
+      xhr: jQuery XML HTTP request wrapper object.
+      cancelToken: Cancellation token to bind the operation to.
+    returns: Promise object representing the request.
+    description: |
+      <p>%Promise wrapper over %jQueryAjax with %CancelToken support. Resolves the promise with request result on its
+      successful completion. Rejects the promise with XMLHttpRequest on request failure. If the operation gets
+      cancelled via the token, the promise never gets resolved or rejected.</p>
+      <p>The next example demonstrates how to use this function in %Component:</p>
+      <pre>
+      class AjaxGreeter extends %Component {
+
+          private cancelToken = this.%own(new %CancelToken());
+
+          constructor(private count: %IProperty<number>) {
+              super();
+          }
+
+          protected async renderRoot(el: JQuery) {
+              el.text("Loading...");
+              const data = await %request($.get("data.json"), this.cancelToken);
+              el.text(data.message);
+              this.count.%setOfProperty(this.count.%getOfBindable() + 1);
+          }
+      }
+      </pre>
+      %example:request
+      <p>As you can see, %request is perfectly compatible with async/await syntax. Please also notice that the cancellation
+      token is aggregated in the component. It means that should the component get %destroyed during the request, the
+      <b>count</b> won't be incremented.</p>
+      <p>See also: %AbstractRestProvider</p>
+
+    references:
+      JQueryXHR:
+        href: https://api.jquery.com/jquery.ajax/#jqXHR
+      jQueryAjax:
+        href: https://api.jquery.com/jQuery.ajax/
+        label: jQuery AJAX API functions

@@ -49,6 +49,9 @@ var pages = {
 	"listen": {
 		source: "./listen/index.ts"
 	},
+	"request": {
+		source: "./request/index.ts"
+	},
 	"router": {
 		source: "./router/index.ts"
 	}

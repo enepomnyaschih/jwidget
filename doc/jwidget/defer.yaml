@@ -31,3 +31,4 @@ symbols:
       <p>As you can see, %defer is perfectly compatible with async/await syntax. Please also notice that the cancellation
       token is aggregated in the component. It means that should the component get %destroyed during the timeout, the
       <b>count</b> won't be incremented.</p>
+      <p>See also: %Interval</p>

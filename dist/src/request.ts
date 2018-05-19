@@ -20,13 +20,19 @@
 
 import CancelToken, {runAsync} from "./CancelToken";
 
-export default function request<T>(xhr?: JQueryXHR, factory?: (response: any) => T, cancelToken?: CancelToken) {
+/**
+ * Promise wrapper over jQuery AJAX API functions with CancelToken support. Resolves the promise with request result on its
+ * successful completion. Rejects the promise with XMLHttpRequest on request failure. If the operation gets
+ * cancelled via the token, the promise never gets resolved or rejected.
+ * @param xhr jQuery XML HTTP request wrapper object.
+ * @param cancelToken Cancellation token to bind the operation to.
+ * @returns Promise object representing the request.
+ */
+export default function request(xhr?: JQueryXHR, cancelToken?: CancelToken) {
 	let aborted = false;
-	return runAsync<T>(
-		(resolve: (value?: (Thenable<T> | T)) => void, reject: (error?: any) => void) => {
-			xhr.then((response) => {
-				resolve(factory ? factory(response) : response);
-			}, (request) => {
+	return runAsync<any>(
+		(resolve: (value?: (Thenable<any> | any)) => void, reject: (error?: any) => void) => {
+			xhr.then(resolve, request => {
 				if (!aborted) {
 					reject(request);
 				}

@@ -67,7 +67,7 @@ symbols:
 
   runAsync:
     signature: |
-      <T>(run: (resolve: (value?: T | Thenable<T>) => void, reject: (error?: any) => void) => void, cancel: () => void, cancelToken?: %CancelToken): Promise<T>
+      <T>(run: (resolve: (value?: T | Thenable<T>) => void, reject: (error?: any) => void) => void, cancel: () => void, cancelToken?: %CancelToken): %Promise<T>
     params:
       run: Asyncronous operation initiation callback.
       cancel: Asyncronous operation cancelation callback.
@@ -87,17 +87,17 @@ symbols:
       side effects such as error popup displaying. There is no signal on promise cancelation. Since your code is the
       only origin that can trigger token cancelation, you can always implement such a signal for yourself if
       necessary.</p>
-      <p>The following code demonstrates how to convert <b>setTimeout</b> function to a cancelable promise using this
+      <p>The following code demonstrates how to convert %setTimeout function to a cancelable promise using this
       utility.</p>
       <pre>
       export default function (ms?: number, cancelToken?: %CancelToken) {
           let timeout: number;
           return %runAsync<void>(
               (resolve: (value?: (Thenable<void> | void)) => void) => {
-                  timeout = setTimeout(resolve, ms);
+                  timeout = %setTimeout(resolve, ms);
               },
               () => {
-                  clearTimeout(timeout);
+                  %clearTimeout(timeout);
               },
               cancelToken
           );
