@@ -1,0 +1,33 @@
+symbols:
+  default:
+    signature: '(ms: number = 0, cancelToken?: %CancelToken): %Promise<void>'
+    params:
+      ms: Timeout duration in milliseconds.
+      cancelToken: Cancellation token to bind the operation to.
+    returns: Promise object representing the timeout.
+    description: |
+      <p>%Promise wrapper over %setTimeout function with %CancelToken support. Resolves the promise after specified
+      period of time. Never rejects the promise. If the operation gets cancelled via the token, the promise never gets
+      resolved or rejected.</p>
+      <p>The next example demonstrates how to use this function in %Component:</p>
+      <pre>
+      class DelayedGreeter extends %Component {
+
+          private cancelToken = this.%own(new %CancelToken());
+
+          constructor(private count: %IProperty<number>) {
+              super();
+          }
+
+          protected async renderRoot(el: JQuery) {
+              el.text("Wait...");
+              await %defer(1000, this.cancelToken);
+              el.text("Hello!");
+              this.count.%setOfProperty(this.count.%getOfBindable() + 1);
+          }
+      }
+      </pre>
+      %example:defer
+      <p>As you can see, %defer is perfectly compatible with async/await syntax. Please also notice that the cancellation
+      token is aggregated in the component. It means that should the component get %destroyed during the timeout, the
+      <b>count</b> won't be incremented.</p>

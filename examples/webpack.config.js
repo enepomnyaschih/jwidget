@@ -43,6 +43,9 @@ var pages = {
 	"component": {
 		source: "./component/index.ts"
 	},
+	"defer": {
+		source: "./defer/index.ts"
+	},
 	"listen": {
 		source: "./listen/index.ts"
 	},

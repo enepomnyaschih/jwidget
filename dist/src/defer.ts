@@ -20,6 +20,14 @@
 
 import CancelToken, {runAsync} from "./CancelToken";
 
+/**
+ * Promise wrapper over setTimeout function with CancelToken support. Resolves the promise after specified
+ * period of time. Never rejects the promise. If the operation gets cancelled via the token, the promise never gets
+ * resolved or rejected.
+ * @param ms Timeout duration in milliseconds.
+ * @param cancelToken Cancellation token to bind the operation to.
+ * @returns Promise object representing the timeout.
+ */
 export default function (ms?: number, cancelToken?: CancelToken) {
 	let timeout: number;
 	return runAsync<void>(

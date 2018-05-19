@@ -22,7 +22,7 @@ import Component from "./Component";
 import Router from "./Router";
 
 /**
- * Router that creates Components.
+ * Shorthand for Router<Component>.
  */
 export default class UIRouter extends Router<Component> {
 }
