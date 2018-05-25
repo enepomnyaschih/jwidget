@@ -1,6 +1,6 @@
 symbols:
   default:
-    signature: '<T>(xhr?: %JQueryXHR, cancelToken?: %CancelToken): %Promise<T>'
+    signature: '<T>(xhr: %JQueryXHR, cancelToken?: %CancelToken): %Promise<T>'
     params:
       xhr: jQuery XML HTTP request wrapper object.
       cancelToken: Cancellation token to bind the operation to.
@@ -31,7 +31,6 @@ symbols:
       <p>As you can see, %request is perfectly compatible with async/await syntax. Please also notice that the cancellation
       token is aggregated in the component. It means that should the component get %destroyed during the request, the
       <b>count</b> won't be incremented.</p>
-      <p>See also: %AbstractRestProvider</p>
 
     references:
       JQueryXHR:
@@ -39,3 +38,230 @@ symbols:
       jQueryAjax:
         href: https://api.jquery.com/jQuery.ajax/
         label: jQuery AJAX API functions
+
+  api:
+    header: How to implement API communication high-level interface in jWidget
+    text: |
+      <p>This topic demonstrates the best practices of API communication service implementation in jWidget.</p>
+      <p>jWidget doesn't provide high-level implementations of Rest, JSON RPC, SOAP and other protocols, because
+      every Web application may have its own deviations from these standards. We want to stay flexible. At the other
+      hand, low-level utilities of jWidget allow you to implement your own high-level interfaces very easily.
+      The following code demonstrates an example of such high-level interface implementation:</p>
+      <h6>api.ts</h6>
+      <pre>
+      export interface AjaxConfig {
+          readonly data?: any;
+          readonly cancelToken?: %CancelToken;
+          readonly settings?: JQueryAjaxSettings;
+      }
+
+      function ajax(type: string, url: string, config: AjaxConfig = {}): %Promise<any> {
+          if (url === null) {
+              return %Promise.reject(null);
+          }
+          const {data, settings, cancelToken} = config;
+          return %request($.ajax({
+              ...settings,
+              type,
+              url,
+              data,
+              contentType: "application/json",
+              dataType: "json"
+          }), cancelToken);
+      }
+
+      function push(type: string, url: string, config: AjaxConfig = {}) {
+          return ajax(type, url, {
+              ...config,
+              data: config.data != null ? JSON.stringify(config.data) : null
+          });
+      }
+
+      export function get(url: string, config?: AjaxConfig) {
+          return ajax("GET", url, config);
+      }
+
+      export function post(url: string, config: AjaxConfig = {}) {
+          return push("POST", url, config);
+      }
+
+      export function put(url: string, config: AjaxConfig = {}) {
+          return push("PUT", url, config);
+      }
+      </pre>
+      <p>With just 44 lines of code, we've got a bunch of high-level functions that implement communication to a
+      typical REST API. Since you are an author of this code, you can easily transform the communication
+      protocol as you wish: for example, copy session ID from local storage to request headers. It's up to you.
+      All these functions return %Promise<any> where any is response JSON.</p>
+
+  endpoints:
+    header: How to define API endpoints in jWidget
+    text: |
+      <p>One of the best jWidget advantages is true strong typing. In particular, it allows you to define your API
+      endpoints as strongly typed functions as follows:</p>
+      <h6>endpoints.ts</h6>
+      <pre>
+      export interface ProjectEndpointParams {
+          readonly projectId: number;
+      }
+
+      const apiEndpoint = %append(%absoluteRoot, "api");
+
+      export const projectsEndpoint = %append(apiEndpoint, "projects");
+      export const projectEndpoint = %append(projectsEndpoint, (params: ProjectEndpointParams) => String(params.projectId));
+
+      export interface SkillEndpointParams extends ProjectEndpointParams {
+          readonly skillId: number;
+      }
+
+      export const skillsEndpoint = %append(projectEndpoint, "skills");
+      export const skillEndpoint = %append(skillsEndpoint, (params: SkillEndpointParams) => String(params.skillId));
+
+      export interface UserEndpointParams {
+          readonly userId: number;
+      }
+
+      export const usersEndpoint = %append(apiEndpoint, "users");
+      export const userEndpoint = %append(usersEndpoint, (params: UserEndpointParams) => String(params.userId));
+      </pre>
+      <p>With this code, you define the next set of functions:</p>
+      <table class="table table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>Signature</th>
+            <th>Returns</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>apiEndpoint({})</code></td>
+            <td><tt>/api</tt></td>
+          </tr>
+          <tr>
+            <td><code>projectsEndpoint({})</code></td>
+            <td><tt>/api/projects</tt></td>
+          </tr>
+          <tr>
+            <td><code>projectEndpoint({projectId: number})</code></td>
+            <td><tt>/api/projects/:projectId</tt></td>
+          </tr>
+          <tr>
+            <td><code>skillsEndpoint({projectId: number})</code></td>
+            <td><tt>/api/projects/:projectId/skills</tt></td>
+          </tr>
+          <tr>
+            <td><code>skillEndpoint({projectId: number, skillId: number})</code></td>
+            <td><tt>/api/projects/:projectId/skills/:skillId</tt></td>
+          </tr>
+          <tr>
+            <td><code>usersEndpoint({})</code></td>
+            <td><tt>/api/users</tt></td>
+          </tr>
+          <tr>
+            <td><code>userEndpoint({userId: number})</code></td>
+            <td><tt>/api/users/:userId</tt></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Of course, the functions replace <tt>:value</tt> entries with real values that you pass as parameters. The
+      TypeScript compiler properly checks the validity of your parameters. An attempt to call a function with
+      missing or invalid parameters will be prevented at compilation phase. An attempt to pass null or undefined as
+      a parameter will be rejected in runtime.</p>
+      <p>Now you can use these functions to build URL parameter for high-level API communication functions above.</p>
+    references:
+      append:
+        file: jwidget/Endpoint
+        symbol: append
+      absoluteRoot:
+        file: jwidget/Endpoint
+        symbol: absoluteRoot
+
+  models:
+    header: How to define business models in jWidget
+    text: |
+      <p>It is smart to define every business model as a class. It allows you to define all derivative values as
+      getters and all manipulations as methods. It also makes sense to define a static "createByJson" method to
+      build your model from raw JSON object returned by the API.</p>
+      <h6>models/Project.ts</h6>
+      <pre>
+      class Project extends %Class {
+
+          readonly id: number;
+          readonly name: %IProperty<string>;
+          readonly skills: %IList<Skill>;
+
+          constructor(config: Project.Config) {
+              super();
+              this.id = config.id;
+              this.name = new %Property(config.name);
+              this.skills = new %List(config.skills);
+          }
+
+          get title() {
+              return this.name.%getOfBindable();
+          }
+
+          static createByJson(json: any) {
+              return new Project({
+                  id: json.id,
+                  name: json.name,
+                  skills: (<any[]>json.skills || []).map(Skill.createByJson)
+              });
+          }
+      }
+
+      namespace Project {
+          export interface Config {
+              readonly id: number;
+              readonly name: string;
+              readonly skills: Skill[];
+          }
+      }
+
+      export default Project;
+      </pre>
+      <p>Project.Config object is very similar to the JSON, but it is still different: skills are defined as true
+      models, not raw JSON objects. It allows you to pass a predefined skill object to the Project constructor. It
+      may play a crucial role in business logic you your application later. That's why we define a separate static
+      method createByJson to encapsulate all JSON parsing burden in it.</p>
+      <p>Files <b>models/Skill.ts</b> and <b>models/User.ts</b> are implemented similarly.</p>
+
+  services:
+    header: How to implement final API communication services in jWidget
+    text: |
+      <p>All work above was just preparation to the final step: API services implementation. Let's group our REST
+      services by endpoint and define every group in a separate file:</p>
+      <h6>services/Project.ts</h6>
+      <pre>
+      import %CancelToken from "jwidget/%CancelToken";
+      import {projectEndpoint, projectsEndpoint} from "../../endpoints";
+      import {get, post, put} from "../api";
+      import Project from "../models/Project";
+
+      export async function getProjects(cancelToken?: %CancelToken) {
+          const response: any[] = await get(projectsEndpoint(null), {cancelToken});
+          return response.map(Project.createByJson);
+      }
+
+      export async function getProject(projectId: number, cancelToken?: %CancelToken) {
+          const response = await get(projectEndpoint({projectId}), {cancelToken});
+          return Project.createByJson(response);
+      }
+
+      export async function createProject(data: any, cancelToken?: %CancelToken) {
+          const response = await post(projectsEndpoint(null), {data, cancelToken});
+          return Project.createByJson(response);
+      }
+
+      export function updateProject(projectId: number, data: any, cancelToken?: %CancelToken) {
+          return put(projectEndpoint({projectId}), {data, cancelToken});
+      }
+      </pre>
+      <p>All these functions return %Promise, and TypeScript properly infers the type of the promise result in each
+      case:</p>
+      <ul>
+      <li>getProjects: %Promise&lt;Project[]&gt;</li>
+      <li>getProject: %Promise&lt;Project&gt;</li>
+      <li>createProject: %Promise&lt;Project&gt;</li>
+      <li>updateProject: %Promise&lt;any&gt; (essentially the result doesn't matter here)</li>
+      </ul>

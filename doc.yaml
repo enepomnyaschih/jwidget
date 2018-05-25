@@ -338,12 +338,12 @@ includes:
             <li>%hash</li>
             <li>%Router</li>
             <li>%UIRouter</li>
+            <li>%Endpoint</li>
           </ul>
           <h5>AJAX and asyncronous operations</h5>
           <ul class="list-unstyled">
             <li>%CancelToken</li>
             <li>%defer</li>
-            <li>%AbstractRestProvider</li>
             <li>%request</li>
           </ul>
           <h5>Destroyable adapters</h5>
