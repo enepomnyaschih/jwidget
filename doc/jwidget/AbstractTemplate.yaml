@@ -1,0 +1,12 @@
+symbols:
+  default:
+    kind: abstract class
+    description: |
+      <p>Abstract HTML template. See implementations for details.</p>
+    methods:
+      createElement:
+        signature: |
+          (): %TemplateOutput
+        returns: Template rendering output.
+        description: |
+          <p>Renders the template.</p>

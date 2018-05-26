@@ -30,9 +30,7 @@ export default class DomTemplate extends AbstractTemplate {
 	private output: TemplateOutput = null;
 	private groups: Dictionary<HTMLElement[]>
 
-	constructor(el: HTMLElement);
-	constructor(el: JQuery);
-	constructor(el: any) {
+	constructor(el: HTMLElement | JQuery) {
 		super();
 		this.el = jQuery(el)[0];
 	}

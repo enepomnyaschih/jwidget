@@ -1,0 +1,40 @@
+symbols:
+  default:
+    extends:
+      - file: jwidget/AbstractTemplate
+    description: |
+      <p>Template that processes jwclass and jwid attributes in an existing DOM element. This kind of template is
+      applied to a %Component when an HTML element is passed to %using method.</p>
+      <pre>
+      new MyComponent().%using($("#sample")).%render();
+
+      class MyComponent extends %Component {
+          protected renderMessage(el: %JQuery) {
+              el.text("Hello!");
+          }
+      }
+      </pre>
+      <h6>Input DOM structure<h6>
+      <pre>
+      <div id="sample" jwclass="my-component">
+          <div jwid="message"></div>
+      </div>
+      </pre>
+      <h6>Output DOM structure</h6>
+      <pre>
+      <div id="sample" class="my-component">
+          <div class="my-component-message">Hello!</div>
+      </div>
+      </pre>
+    constructor:
+      signature: |
+        (el: HTMLElement | %JQuery)
+      params:
+        el: Element to process.
+    references:
+      using:
+        file: jwidget/Component
+        member: using
+      render:
+        file: jwidget/Component
+        member: render
