@@ -20,15 +20,26 @@
 
 import Destroyable from './Destroyable';
 
+/**
+ * Destroyable wrapper over setInterval function. Instead of calling clearInterval, you must destroy the
+ * Interval instance. Usually, it can be done by aggregating the instance in another object.
+ */
 export default class Interval implements Destroyable {
 	private interval: number;
 
 	/**
-	 * @param callback Timeout callback function.
-	 * @param scope Call scope of callback.
-	 * @param ms Timeout delay in milliseconds.
+	 * Creates an Interval instance.
+	 * @param callback Callback to call every time the specified period of time has passed.
+	 * @param ms Period of time in milliseconds.
 	 */
 	constructor(callback: () => any, ms?: number);
+
+	/**
+	 * Creates an Interval instance.
+	 * @param callback Callback to call every time the specified period of time has passed.
+	 * @param scope `callback` call scope.
+	 * @param ms Period of time in milliseconds.
+	 */
 	constructor(callback: () => any, scope: any, ms?: number);
 	constructor(callback: () => any, scope?: any, ms?: number) {
 		if ((scope != null) && (typeof scope === "object")) {

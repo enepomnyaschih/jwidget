@@ -1,0 +1,19 @@
+symbols:
+  default:
+    extends:
+      - file: jwidget/Destroyable
+    description: |
+      <p>%Destroyable wrapper over %setInterval function. Instead of calling %clearInterval, you must %destroy the
+      %Interval instance. Usually, it can be done by %aggregating the instance in another object.</p>
+    constructor:
+      signature: |
+        (callback: () => any, ms?: number)
+        new Interval(callback: () => any, scope: any, ms?: number)
+      params:
+        callback: Callback to call every time the specified period of time has passed.
+        scope: '%callback call scope.'
+        ms: Period of time in milliseconds.
+    references:
+      aggregating:
+        file: jwidget/IClass
+        member: own
