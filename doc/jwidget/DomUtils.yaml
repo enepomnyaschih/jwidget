@@ -1,0 +1,106 @@
+description: |
+  <p>jWidget utilities for HTML DOM in addition to %jquery. Usually you don't need them if you use %Component to
+  manipulate DOM. These are low-level alternatives to the existing %jquery methods which work much faster, because they
+  don't perform any safety checks.</p>
+
+symbols:
+  functions: Functions
+
+  isElement:
+    signature: |
+      (value: any): boolean
+    params:
+      value: Value to check.
+    returns: Value is a %jquery element (i.e. instanceof jQuery.fn.init).
+
+  isTextInput:
+    signature: |
+      (el: %JQuery): boolean
+      (el: Element): boolean
+    params:
+      el: Element to check.
+    returns: Element is a text input.
+    description: |
+      <p>Checks if the element is a text input, i.e. one of:</p>
+      <pre>
+      <input type="text">
+      <input type="password">
+      <input type="email">
+      <input type="number">
+      <input type="search">
+      <input type="tel">
+      <input type="url">
+      <textarea></textarea>
+      </pre>
+
+  inDom:
+    signature: |
+      (el: HTMLElement): boolean
+    params:
+      el: Element to check.
+    returns: Current HTML document body contains the specified element.
+
+  inEl:
+    signature: |
+      (descendantEl: HTMLElement, ancestorEl: HTMLElement): boolean
+    params:
+      descendantEl: Descendant HTML element to check.
+      ancestorEl: Ancestor HTML element to check.
+    returns: Element is a descendant of another element.
+
+  hasClass:
+    signature: |
+      (el: HTMLElement, cls: string): boolean
+    params:
+      el: HTML element.
+      cls: Single CSS class name.
+    returns: The element contains this CSS class name.
+
+  addClass:
+    signature: |
+      (el: HTMLElement, cls: string)
+    params:
+      el: HTML element.
+      cls: Single CSS class name.
+    description: |
+      <p>Adds the specified CSS class name to element unless it already contains it.</p>
+
+  parseHtml:
+    signature: |
+      (html: string): HTMLElement
+    params:
+      html: HTML code to parse.
+    returns: New HTML element.
+    description: |
+      <p>Parses HTML and builds a new DOM element. Doesn't perform any validation, but works much faster than %jquery
+      alternatives. Use it only if you are author of this HTML code.</p>
+
+  insert:
+    signature: |
+      (parent: Node, child: Node, index?: number)
+    params:
+      parent: Element to insert into.
+      child: Element to insert.
+      index: Position to insert at. Defaults to the last position in %parent.
+    description: |
+      <p>Inserts element as a child at specified position.</p>
+
+  remove:
+    signature: |
+      (el: Node)
+    params:
+      el: Element to remove.
+    description: |
+      <p>Removes element from DOM.</p>
+
+  replace:
+    signature: |
+      (removeEl: HTMLElement, insertEl: HTMLElement, attrs?: boolean)
+    params:
+      removeEl: Element to replace.
+      insertEl: Element to replace %removeEl with.
+      attrs: Preserve main attributes. Defaults to true.
+    description: |
+      <p>Replaces one HTML element with another.<p>
+      <p>If %attrs is true, copies id and all CSS class names from %removeEl to %insertEl. This is how root element of
+      %Component is enhanced when inserted to another %Component as a child.</p>

@@ -87,7 +87,7 @@ export function inDom(el: HTMLElement): boolean {
 }
 
 /**
- * Checks recursively if one HTML element is a descendant of another element.
+ * Checks deeply if one HTML element is a descendant of another element.
  *
  * @param descendantEl Descendant HTML element to check.
  * @param ancestorEl Ancestor HTML element to check.
@@ -140,12 +140,12 @@ export function parseHtml(html: string): HTMLElement {
 	} else {
 		_fragment = document.createDocumentFragment();
 	}
-	var el: HTMLElement = document.createElement("div");
+	let el: HTMLElement = document.createElement("div");
 	_fragment.appendChild(el);
-	var tagName = rtagName.exec(html)[1];
-	var wrap = wrapMap[tagName] || wrapMap['_default'];
+	const tagName = rtagName.exec(html)[1];
+	const wrap = wrapMap[tagName] || wrapMap['_default'];
 	el.innerHTML = wrap[1] + html + wrap[2];
-	for (var i = 0; i < wrap[0]; ++i) {
+	for (let i = 0; i < wrap[0]; ++i) {
 		el = <HTMLElement>(el.firstChild);
 	}
 	return <HTMLElement>(el.firstChild);
@@ -185,11 +185,11 @@ export function remove(el: Node) {
  * @param attrs If true, retains element `id` and `class`
  */
 export function replace(removeEl: HTMLElement, insertEl: HTMLElement, attrs?: boolean) {
-	var parentEl = removeEl.parentNode;
+	const parentEl = removeEl.parentNode;
 	if (!parentEl) {
 		return;
 	}
-	var id = attrs ? removeEl.getAttribute("id") : null,
+	const id = attrs ? removeEl.getAttribute("id") : null,
 		cls = attrs ? removeEl.getAttribute("class") : null;
 	parentEl.replaceChild(insertEl, removeEl);
 	if (id) {
