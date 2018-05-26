@@ -5,6 +5,8 @@ import Reference from "../models/Reference";
 import Dictionary from "../Dictionary";
 import {htmlEncode} from "../utils/String";
 import SymbolVisitor from "../SymbolVisitor";
+import Topic, {TopicJson} from "../Topic";
+import * as DictionaryUtils from "../utils/Dictionary";
 
 export default class FunctionSymbol extends AbstractSymbol {
 
@@ -12,6 +14,7 @@ export default class FunctionSymbol extends AbstractSymbol {
 	readonly params: Dictionary<string>;
 	readonly returns: string;
 	readonly description: string;
+	readonly topics: Dictionary<Topic>;
 	readonly context: Context;
 
 	constructor(file: SourceFile, id: string, json: FunctionJson) {
@@ -20,6 +23,7 @@ export default class FunctionSymbol extends AbstractSymbol {
 		this.params = json.params || {};
 		this.returns = json.returns;
 		this.description = json.description;
+		this.topics = DictionaryUtils.map(json.topics || {}, (json, id) => new Topic(id, this, json));
 		this.context = new FunctionContext(this, json.references);
 		this.addToGroup();
 	}
@@ -35,6 +39,7 @@ export interface FunctionJson {
 	readonly params?: Dictionary<string>;
 	readonly returns?: string;
 	readonly description?: string;
+	readonly topics?: Dictionary<TopicJson>;
 	readonly references?: Dictionary<Reference>;
 }
 

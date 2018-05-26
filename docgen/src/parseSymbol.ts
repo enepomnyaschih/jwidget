@@ -1,8 +1,8 @@
 import SourceFile from "./SourceFile";
-import ISymbol from "./symbols/ISymbol";
 import FunctionSymbol from "./symbols/Function";
-import StructSymbol from "./symbols/Struct";
 import HeaderSymbol from "./symbols/Header";
+import ISymbol from "./symbols/ISymbol";
+import StructSymbol from "./symbols/Struct";
 import ValueSymbol from "./symbols/Value";
 
 export default function parseSymbol(file: SourceFile, id: string, json: any): ISymbol {

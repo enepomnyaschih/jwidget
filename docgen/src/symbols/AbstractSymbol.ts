@@ -2,6 +2,7 @@ import Project from "../Project";
 import SourceFile from "../SourceFile";
 import SymbolVisitor from "../SymbolVisitor";
 import ISymbol from "./ISymbol";
+import Context from "../Context";
 
 abstract class AbstractSymbol implements ISymbol {
 
@@ -27,6 +28,8 @@ abstract class AbstractSymbol implements ISymbol {
 			label: this.objectName
 		};
 	}
+
+	abstract get context(): Context;
 
 	abstract visit<U>(visitor: SymbolVisitor<U>): U;
 

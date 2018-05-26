@@ -11,6 +11,7 @@ import SourceFile from "../SourceFile";
 import SymbolVisitor from "../SymbolVisitor";
 import * as DictionaryUtils from "../utils/Dictionary";
 import AbstractSymbol from "./AbstractSymbol";
+import Topic, {TopicJson} from "../Topic";
 
 export default class StructSymbol extends AbstractSymbol {
 
@@ -42,7 +43,7 @@ export default class StructSymbol extends AbstractSymbol {
 		this.showInheritanceLevels = json.showInheritanceLevels;
 		this.hideInheritedMembers = json.hideInheritedMembers;
 		this.description = json.description;
-		this.topics = json.topics || {};
+		this.topics = DictionaryUtils.map(json.topics || {}, (json, id) => new Topic(id, this, json));
 		this._constructor = json.hasOwnProperty("constructor") ? new Constructor(this, json.constructor) : null;
 		this.properties = this.readProperties(json.properties, false);
 		this.methods = this.readMethods(json.methods, false);
@@ -135,7 +136,7 @@ export interface StructJson {
 	readonly showInheritanceLevels?: number;
 	readonly hideInheritedMembers?: boolean;
 	readonly description?: string;
-	readonly topics?: Dictionary<Topic>;
+	readonly topics?: Dictionary<TopicJson>;
 	readonly constructor?: ConstructorJson;
 	readonly properties?: Dictionary<PropertyMemberJson>;
 	readonly methods?: Dictionary<MethodMemberJson>;
@@ -148,12 +149,6 @@ export interface TypeVar {
 
 	readonly description: string;
 	readonly extends?: Extension[];
-}
-
-export interface Topic {
-
-	readonly header?: string;
-	readonly text: string;
 }
 
 class StructContext extends Context {

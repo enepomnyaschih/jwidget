@@ -25,6 +25,7 @@ import {
 } from "../utils/Doc";
 import {mkdir} from "../utils/File";
 import {htmlEncode} from "../utils/String";
+import Topic from "../Topic";
 
 export default function bootstrapTemplate(project: Project) {
 	for (let fileId in project.files) {
@@ -139,8 +140,8 @@ const symbolIndexRenderVisitor: SymbolVisitor<string> = {
 		return "";
 	},
 
-	visitFunction(_symbol: FunctionSymbol): string {
-		return "";
+	visitFunction(symbol: FunctionSymbol): string {
+		return renderTopicIndex(symbol.topics);
 	},
 
 	visitStruct(symbol: StructSymbol): string {
@@ -148,11 +149,7 @@ const symbolIndexRenderVisitor: SymbolVisitor<string> = {
 <nav class="nav nav-pills flex-column">
 ${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.hash}---hierarchy">Hierarchy</a>`}
 ${symbol.simple ? "" : `<a class="nav-link" href="#${symbol.hash}---description">Description</a>`}
-${symbol.simple ? "" : '<nav class="nav nav-pills flex-column">' +
-			DictionaryUtils.join(DictionaryUtils.map(symbol.topics, (topic, key) => (
-				`<a class="nav-link" href="#${key}">${topic.header}</a>`
-			)), "\n") +
-			'</nav>'}
+${symbol.simple ? "" : renderTopicIndex(symbol.topics)}
 ${symbol._constructor ? `<a class="nav-link" href="#${symbol.hash}---constructor">Constructor</a>` : ""}
 ${renderIndexDictionary(symbol, symbol.properties, "properties", "Properties")}
 ${renderIndexDictionary(symbol, symbol.methods, "methods", "Methods")}
@@ -176,11 +173,20 @@ function renderIndexMember(member: IMember) {
 	return `<a class="nav-link${member.isInherited ? " font-italic" : ""}" href="#${member.hash}">${member.id}</a>`;
 }
 
+function renderTopicIndex(topics: Dictionary<Topic>) {
+	return DictionaryUtils.isEmpty(topics) ? "" : '<nav class="nav nav-pills flex-column">' +
+		DictionaryUtils.join(DictionaryUtils.map(topics, (topic, key) => (
+			`<a class="nav-link" href="#${key}">${topic.header}</a>`
+		)), "\n") +
+		'</nav>';
+}
+
 function renderConsumption(file: SourceFile) {
 	if (!file.symbols.default) {
 		return `import * as ${file.token} from "${file.id}";`;
 	}
-	const imports = Object.keys(file.symbols).filter(key => key.indexOf('.') === -1)
+	const imports = Object.keys(file.symbols)
+		.filter(key => key.indexOf('.') === -1)
 		.map(key => key === 'default' ? file.token : `{${key}}`).join(', ');
 	return `import ${imports} from "${file.id}";`;
 }
@@ -219,6 +225,7 @@ ${renderHeader("h3", symbol.hash, renderId(symbol))}
 <p><code>${renderText(symbol.context, symbol.signature)}</code></p>
 ${renderParams(symbol.context, symbol.params, symbol.returns)}
 ${renderText(symbol.context, symbol.description)}
+${renderTopics(symbol.topics)}
 </div>`;
 	},
 
@@ -230,10 +237,7 @@ ${symbol.simple ? "" : renderHierarchy(symbol)}
 ${symbol.simple ? "" : renderHeader("h4", `${symbol.hash}---description`, "Description")}
 ${renderTypeVarDefinitions(symbol)}
 ${renderText(symbol.context, symbol.description)}
-${DictionaryUtils.join(DictionaryUtils.map(symbol.topics, (topic, key) => `
-	${renderHeader("h5", key, topic.header)}
-	${renderText(symbol.context, topic.text)}
-`), "\n")}
+${renderTopics(symbol.topics)}
 ${renderConstructor(symbol._constructor)}
 ${renderMembers(symbol, symbol.properties, "properties", "Fields", renderProperty)}
 ${renderMembers(symbol, symbol.methods, "methods", "Methods", renderMethod)}
@@ -241,7 +245,7 @@ ${renderMembers(symbol, symbol.staticProperties, "staticProperties", "Static fie
 ${renderMembers(symbol, symbol.staticMethods, "staticMethods", "Static methods", renderMethod)}
 </div>`
 	}
-}
+};
 
 function renderId(symbol: ISymbol) {
 	return (symbol.id === "default") ? "Default export" : symbol.id;
@@ -325,6 +329,13 @@ function renderTypeVarExtensions(struct: StructSymbol, typevar: TypeVar) {
 	)).join(" & ")}`;
 }
 
+function renderTopics(topics: Dictionary<Topic>): string {
+	return DictionaryUtils.join(DictionaryUtils.map(topics, (topic, key) => `
+		${renderHeader("h5", key, topic.header)}
+		${renderText(topic.context, topic.text)}
+	`), "\n");
+}
+
 function renderConstructor(constr: Constructor) {
 	if (!constr) {
 		return "";
@@ -337,7 +348,7 @@ ${renderText(constr.context, constr.description)}`;
 }
 
 function renderMembers<T extends IMember>(struct: StructSymbol, members: Dictionary<T>, key: string, title: string,
-										  renderer: (member: T) => string) {
+                                          renderer: (member: T) => string) {
 	if (DictionaryUtils.isEmpty(members)) {
 		return "";
 	}
