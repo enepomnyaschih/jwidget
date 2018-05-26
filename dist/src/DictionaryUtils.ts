@@ -36,13 +36,13 @@ export function getFirst<T>(dict: Dictionary<T>): T {
 }
 
 /**
- * Returns some key in item.
+ * Returns key of some item in dictionary.
  *
  * @param dict Dictionary.
- * @returns Some item. If dictionary is empty, returns undefined.
+ * @returns Key of some item. If dictionary is empty, returns undefined.
  */
 export function getFirstKey<T>(dict: Dictionary<T>): string {
-	for (var key in dict) {
+	for (let key in dict) {
 		return key;
 	}
 	return undefined;
@@ -52,12 +52,11 @@ export function getFirstKey<T>(dict: Dictionary<T>): string {
  * Returns count of items in dictionary.
  *
  * @param dict Dictionary.
- * @returns Count of items.
+ * @returns Count of items in dictionary.
  */
 export function getLength<T>(dict: Dictionary<T>): number {
-	var length = 0;
-	for (var key in dict) {
-		key = key;
+	let length = 0;
+	for (let _key in dict) {
 		++length;
 	}
 	return length;
@@ -70,8 +69,7 @@ export function getLength<T>(dict: Dictionary<T>): number {
  * @returns Dictionary has no keys/items.
  */
 export function isEmpty<T>(dict: Dictionary<T>) {
-	for (let key in dict) {
-		key = key; // suppress unused variable error
+	for (let _key in dict) {
 		return false;
 	}
 	return true;
@@ -116,7 +114,7 @@ export function keyOf<T>(dict: Dictionary<T>, item: T): string {
  * @returns Found item or undefined.
  */
 export function find<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): T {
-	var result: T;
+	let result: T = undefined;
 	every(dict, function (item, key) {
 		if (callback.call(scope, item, key)) {
 			result = item;
@@ -140,7 +138,7 @@ export function find<T>(dict: Dictionary<T>, callback: (item: T, key: string) =>
  * @returns Found item key or undefined.
  */
 export function findKey<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): string {
-	var result: string;
+	let result: string = undefined;
 	every(dict, function (item, key) {
 		if (callback.call(scope, item, key)) {
 			result = key;
@@ -158,7 +156,7 @@ export function findKey<T>(dict: Dictionary<T>, callback: (item: T, key: string)
  * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
  * @param scope `callback` call scope. Defaults to dictionary itself.
  * @param order Pass positive order to find the highest value, and negative to find the lowest one.
- * @returns Dictionary item.
+ * @returns Maximum dictionary item.
  */
 export function max<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order: number = 1): T {
 	return dict[maxKey(dict, callback, scope, order)];
@@ -215,9 +213,9 @@ export function maxComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1
 export function maxKeyComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order: number = 1): string {
 	compare = compare || cmpPrimitives;
 	scope = scope || dict;
-	let result: string;
+	let result: string = undefined;
 	for (let key in dict) {
-		if (order * compare.call(scope, dict[result], dict[key], result, key) < 0) {
+		if (result === undefined || order * compare.call(scope, dict[result], dict[key], result, key) < 0) {
 			result = key;
 		}
 	}
@@ -287,7 +285,7 @@ export function minKeyComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T,
  * @returns The replaced item.
  */
 export function put<T>(dict: Dictionary<T>, key: string, item: T): T {
-	var result = tryPut(dict, key, item);
+	const result = tryPut(dict, key, item);
 	return (result !== undefined) ? result.value : dict[key];
 }
 
@@ -298,7 +296,7 @@ export function put<T>(dict: Dictionary<T>, key: string, item: T): T {
  * @param items Items with corresponding keys.
  */
 export function putAll<T>(dict: Dictionary<T>, items: Dictionary<T>) {
-	for (var key in items) {
+	for (let key in items) {
 		dict[key] = items[key];
 	}
 }
@@ -311,7 +309,7 @@ export function putAll<T>(dict: Dictionary<T>, items: Dictionary<T>) {
  * @returns Result of internal `splice` method call. Nevers returns null or undefined.
  */
 export function putAllVerbose<T>(dict: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
-	var spliceResult = tryPutAll(dict, items);
+	const spliceResult = tryPutAll(dict, items);
 	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 }
 
@@ -333,9 +331,8 @@ export function remove<T>(dict: Dictionary<T>, key: string): T {
  * @param keys Keys of items to remove.
  */
 export function removeAll<T>(dict: Dictionary<T>, keys: string[]) {
-	for (var i = 0, l = keys.length; i < l; ++i) {
-		var key = keys[i];
-		delete dict[key];
+	for (let i = 0, l = keys.length; i < l; ++i) {
+		delete dict[keys[i]];
 	}
 }
 
@@ -347,7 +344,7 @@ export function removeAll<T>(dict: Dictionary<T>, keys: string[]) {
  * @returns The removed items. Never returns null or undefined.
  */
 export function removeAllVerbose<T>(dict: Dictionary<T>, keys: string[]): Dictionary<T> {
-	var items = tryRemoveAll(dict, keys);
+	const items = tryRemoveAll(dict, keys);
 	return (items !== undefined) ? items : {};
 }
 
@@ -359,7 +356,7 @@ export function removeAllVerbose<T>(dict: Dictionary<T>, keys: string[]): Dictio
  * @returns Item key in the dictionary.
  */
 export function removeItem<T>(dict: Dictionary<T>, item: T): string {
-	var key = keyOf(dict, item);
+	const key = keyOf(dict, item);
 	if (key !== undefined) {
 		tryRemove(dict, key);
 	}
@@ -392,7 +389,7 @@ export function removeItems<T>(dict: Dictionary<T>, items: T[], getKey?: (item: 
  * @returns The moved item.
  */
 export function setKey<T>(dict: Dictionary<T>, oldKey: string, newKey: string): T {
-	var item = trySetKey(dict, oldKey, newKey);
+	const item = trySetKey(dict, oldKey, newKey);
 	return (item !== undefined) ? item : dict[newKey];
 }
 
@@ -403,7 +400,7 @@ export function setKey<T>(dict: Dictionary<T>, oldKey: string, newKey: string): 
  * @returns Old dictionary contents. Never returns null or undefined.
  */
 export function clear<T>(dict: Dictionary<T>): Dictionary<T> {
-	var result = tryClear(dict);
+	const result = tryClear(dict);
 	return (result !== undefined) ? result : {};
 }
 
@@ -416,7 +413,7 @@ export function clear<T>(dict: Dictionary<T>): Dictionary<T> {
  * @returns Splice result. Never returns null or undefined.
  */
 export function splice<T>(dict: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
-	var spliceResult = trySplice(dict, removedKeys, updatedItems);
+	const spliceResult = trySplice(dict, removedKeys, updatedItems);
 	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 }
 
@@ -429,7 +426,7 @@ export function splice<T>(dict: Dictionary<T>, removedKeys: string[], updatedIte
  * @returns Map of changed keys. Never returns null or undefined.
  */
 export function reindex<T>(dict: Dictionary<T>, keyMap: Dictionary<string>): Dictionary<string> {
-	var result = tryReindex(dict, keyMap);
+	const result = tryReindex(dict, keyMap);
 	return (result !== undefined) ? result : {};
 }
 
@@ -460,7 +457,7 @@ export function clone<T>(dict: Dictionary<T>): Dictionary<T> {
  */
 export function every<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): boolean {
 	scope = scope || dict;
-	for (var key in dict) {
+	for (let key in dict) {
 		if (!callback.call(scope, dict[key], key)) {
 			return false;
 		}
@@ -510,7 +507,7 @@ export function forEach<T>(dict: Dictionary<T>, callback: (item: T, key: string)
  * @returns Filtered dictionary.
  */
 export function filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): Dictionary<T> {
-	var result: Dictionary<T> = {};
+	const result: Dictionary<T> = {};
 	every(dict, function (item: T, key: string): boolean {
 		if (callback.call(scope, item, key)) {
 			result[key] = item;
@@ -531,7 +528,7 @@ export function filter<T>(dict: Dictionary<T>, callback: (item: T, key: string) 
  * @returns Number of items.
  */
 export function count<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): number {
-	var result = 0;
+	let result = 0;
 	every(dict, function (item: T, key: string): boolean {
 		if (callback.call(scope, item, key)) {
 			++result;
@@ -552,7 +549,7 @@ export function count<T>(dict: Dictionary<T>, callback: (item: T, key: string) =
  * @returns Mapped dictionary.
  */
 export function map<T, U>(dict: Dictionary<T>, callback: (item: T, key: string) => U, scope?: any): Dictionary<U> {
-	var result: Dictionary<U> = {};
+	const result: Dictionary<U> = {};
 	every(dict, function (item: T, key: string): boolean {
 		result[key] = callback.call(scope, item, key);
 		return true;
@@ -575,7 +572,7 @@ export function map<T, U>(dict: Dictionary<T>, callback: (item: T, key: string) 
 export function getSortingKeys<T>(dict: Dictionary<T>, callback?: (item: T, key: string) => any, scope?: any, order?: number): string[] {
 	callback = callback || function (x) { return x; };
 	order = order || 1;
-	var pairs: any[] = [];
+	const pairs: any[] = [];
 	every(dict, function (item, key) {
 		pairs.push([key, callback.call(scope, item, key)]);
 		return true;
@@ -603,7 +600,7 @@ export function getSortingKeys<T>(dict: Dictionary<T>, callback?: (item: T, key:
 export function getSortingKeysComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string[] {
 	compare = compare || cmp;
 	order = order || 1;
-	var pairs: any[] = [];
+	const pairs: any[] = [];
 	every(dict, function (item, key) {
 		pairs.push([key, item]);
 		return true;
@@ -658,7 +655,7 @@ export function toSortedComparing<T>(dict: Dictionary<T>, compare?: (t1: T, t2: 
  * @returns Dictionary items.
  */
 export function toArray<T>(dict: Dictionary<T>): T[] {
-	var result: T[] = [];
+	const result: T[] = [];
 	every(dict, function (item) {
 		result.push(item);
 		return true;
@@ -677,9 +674,9 @@ export function toArray<T>(dict: Dictionary<T>): T[] {
  * @returns Dictionary index.
  */
 export function index<T>(dict: Dictionary<T>, callback: (item: T, key: string) => any, scope?: any): Dictionary<T> {
-	var result: Dictionary<T> = {};
+	const result: Dictionary<T> = {};
 	every(dict, function (item, oldKey) {
-		var key = callback.call(scope, item, oldKey);
+		const key = callback.call(scope, item, oldKey);
 		if (key != null) {
 			result[key] = item;
 		}
@@ -731,8 +728,8 @@ export function equal<T>(x: Dictionary<T>, y: Dictionary<T>): boolean {
 	if (x === y) {
 		return true;
 	}
-	var length = getLength(y);
-	for (var key in x) {
+	let length = getLength(y);
+	for (let key in x) {
 		if ((--length < 0) || (x[key] !== y[key])) {
 			return false;
 		}
@@ -765,15 +762,15 @@ export function tryPut<T>(dict: Dictionary<T>, key: string, item: T): Some<T> {
  * @returns Result of internal `splice` method call. If dictionary is not modified, returns undefined.
  */
 export function tryPutAll<T>(dict: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
-	var removedItems: Dictionary<T> = {};
-	var addedItems: Dictionary<T> = {};
-	for (var key in items) {
-		var item = items[key];
-		var oldItem = tryPut(dict, key, item);
+	const removedItems: Dictionary<T> = {};
+	const addedItems: Dictionary<T> = {};
+	for (let key in items) {
+		const item = items[key];
+		const oldItem = tryPut(dict, key, item);
 		if (oldItem === undefined) {
 			continue;
 		}
-		var removedItem = oldItem.value;
+		const removedItem = oldItem.value;
 		if (removedItem !== undefined) {
 			removedItems[key] = removedItem;
 		}
@@ -793,7 +790,7 @@ export function tryPutAll<T>(dict: Dictionary<T>, items: Dictionary<T>): IMap.Sp
  * @returns Old dictionary item. If dictionary is not modified, returns undefined.
  */
 export function tryRemove<T>(dict: Dictionary<T>, key: string): T {
-	var item = dict[key];
+	const item = dict[key];
 	if (item !== undefined) {
 		delete dict[key];
 	}
@@ -808,10 +805,10 @@ export function tryRemove<T>(dict: Dictionary<T>, key: string): T {
  * @returns The removed items. If dictionary is not modified, returns undefined.
  */
 export function tryRemoveAll<T>(dict: Dictionary<T>, keys: string[]): Dictionary<T> {
-	var items: Dictionary<T> = {};
-	for (var i = 0, l = keys.length; i < l; ++i) {
-		var key = keys[i];
-		var item = tryRemove(dict, key);
+	const items: Dictionary<T> = {};
+	for (let i = 0, l = keys.length; i < l; ++i) {
+		const key = keys[i];
+		const item = tryRemove(dict, key);
 		if (item !== undefined) {
 			items[key] = item;
 		}
@@ -834,7 +831,7 @@ export function trySetKey<T>(dict: Dictionary<T>, oldKey: string, newKey: string
 	if (oldKey === newKey) {
 		return undefined;
 	}
-	var item = dict[oldKey];
+	const item = dict[oldKey];
 	delete dict[oldKey];
 	dict[newKey] = item;
 	return item;
@@ -850,8 +847,8 @@ export function tryClear<T>(dict: Dictionary<T>): Dictionary<T> {
 	if (isEmpty(dict)) {
 		return undefined;
 	}
-	var items: Dictionary<T> = apply({}, dict);
-	for (var key in items) {
+	const items: Dictionary<T> = apply({}, dict);
+	for (let key in items) {
 		delete dict[key];
 	}
 	return items;
@@ -869,8 +866,8 @@ export function trySplice<T>(dict: Dictionary<T>, removedKeys: string[], updated
 	removedKeys = removedKeys.filter(function (key) {
 		return !updatedItems.hasOwnProperty(key);
 	});
-	var removedItems = tryRemoveAll(dict, removedKeys);
-	var spliceResult = tryPutAll(dict, updatedItems);
+	const removedItems = tryRemoveAll(dict, removedKeys);
+	const spliceResult = tryPutAll(dict, updatedItems);
 	if (spliceResult !== undefined) {
 		apply(spliceResult.removedItems, removedItems);
 		return spliceResult;
@@ -890,20 +887,20 @@ export function trySplice<T>(dict: Dictionary<T>, removedKeys: string[], updated
  * @returns Map of changed keys. If dictionary is not modified, returns undefined.
  */
 export function tryReindex<T>(dict: Dictionary<T>, keyMap: Dictionary<string>): Dictionary<string> {
-	var sanitizedKeyMap: Dictionary<string> = {};
-	for (var oldKey in keyMap) {
-		var newKey = keyMap[oldKey];
+	const sanitizedKeyMap: Dictionary<string> = {};
+	for (let oldKey in keyMap) {
+		const newKey = keyMap[oldKey];
 		if ((newKey === undefined) || (newKey === oldKey) || (dict[oldKey] === undefined)) {
 			continue;
 		}
 		sanitizedKeyMap[oldKey] = newKey;
 	}
 
-	var backKeyMap = getInverted(sanitizedKeyMap);
-	var removedKeys: string[] = [];
-	var updatedItems: Dictionary<T> = {};
-	for (var oldKey in sanitizedKeyMap) {
-		var newKey = sanitizedKeyMap[oldKey];
+	const backKeyMap = getInverted(sanitizedKeyMap);
+	const removedKeys: string[] = [];
+	const updatedItems: Dictionary<T> = {};
+	for (let oldKey in sanitizedKeyMap) {
+		const newKey = sanitizedKeyMap[oldKey];
 		// JW.assertUndefined(updatedItems[newKey]);
 		sanitizedKeyMap[oldKey] = newKey;
 		updatedItems[newKey] = dict[oldKey];
@@ -915,7 +912,7 @@ export function tryReindex<T>(dict: Dictionary<T>, keyMap: Dictionary<string>): 
 	if (isEmpty(sanitizedKeyMap)) {
 		return undefined;
 	}
-	for (var i = 0, l = removedKeys.length; i < l; ++i) {
+	for (let i = 0, l = removedKeys.length; i < l; ++i) {
 		delete dict[removedKeys[i]];
 	}
 	apply(dict, updatedItems);
@@ -931,15 +928,15 @@ export function tryReindex<T>(dict: Dictionary<T>, keyMap: Dictionary<string>): 
  * @returns `splice` method arguments. If no method call required, returns undefined.
  */
 export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>): IMap.SpliceParams<T> {
-	var removedKeys: string[] = [];
-	var updatedItems: Dictionary<T> = {};
-	for (var key in oldItems) {
+	const removedKeys: string[] = [];
+	const updatedItems: Dictionary<T> = {};
+	for (let key in oldItems) {
 		if (!newItems.hasOwnProperty(key)) {
 			removedKeys.push(key);
 		}
 	}
-	for (var key in newItems) {
-		var item = newItems[key];
+	for (let key in newItems) {
+		const item = newItems[key];
 		if (item !== oldItems[key]) {
 			updatedItems[key] = item;
 		}
@@ -963,12 +960,12 @@ export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>
  */
 export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>, getKey?: (item: T) => any): Dictionary<string> {
 	const newItemKeys = new VidMap<T, string>(getKey)
-	for (var key in newItems) {
+	for (let key in newItems) {
 		newItemKeys.put(newItems[key], key);
 	}
-	var keyMap: Dictionary<string> = {};
-	for (var oldKey in oldItems) {
-		var newKey = newItemKeys.get(oldItems[oldKey]);
+	const keyMap: Dictionary<string> = {};
+	for (let oldKey in oldItems) {
+		const newKey = newItemKeys.get(oldItems[oldKey]);
 		if (oldKey !== newKey) {
 			keyMap[oldKey] = newKey;
 		}
@@ -988,8 +985,8 @@ export function detectReindex<T>(oldItems: Dictionary<T>, newItems: Dictionary<T
  * @returns Effectively removed keys.
  */
 export function getRemovedKeys<T>(removedItems: Dictionary<T>, addedItems: Dictionary<T>): string[] {
-	var removedKeys: string[] = [];
-	for (var key in removedItems) {
+	const removedKeys: string[] = [];
+	for (let key in removedItems) {
 		if (!addedItems.hasOwnProperty(key)) {
 			removedKeys.push(key);
 		}
