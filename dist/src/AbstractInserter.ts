@@ -23,13 +23,10 @@ import * as DomUtils from './DomUtils';
 import ListInserter from './inserter/list';
 import ReadonlyList from './ReadonlyList';
 
-/**
- * Abstract view synchronizer. See [[Inserter]] for details.
- */
-export default class AbstractInserter<T> extends Class {
+export default abstract class AbstractInserter<T> extends Class {
 	/**
-	 * @param source Source array.
-	 * @param el Parent element.
+	 * @param source Child element list.
+	 * @param el Parent element to insert children into.
 	 */
 	constructor(source: ReadonlyList<T>, readonly el: HTMLElement) {
 		super();
@@ -40,15 +37,12 @@ export default class AbstractInserter<T> extends Class {
 		}));
 	}
 
-	protected _getElement(item: T): HTMLElement {
-		item = item;
-		throw new SyntaxError("Method not implemented");
-	}
+	protected abstract _getElement(item: T): HTMLElement;
 
 	protected _addItem(item: T, index: number) {
-		var parent = this.el;
-		var anchor = parent.childNodes[index];
-		var child = this._getElement(item);
+		const parent = this.el;
+		const anchor = parent.childNodes[index];
+		const child = this._getElement(item);
 		if (anchor != null) {
 			parent.insertBefore(child, anchor);
 		} else {
@@ -56,8 +50,7 @@ export default class AbstractInserter<T> extends Class {
 		}
 	}
 
-	protected _removeItem(item: T, index: number) {
-		index = index;
+	protected _removeItem(item: T, _index: number) {
 		DomUtils.remove(this._getElement(item));
 	}
 }

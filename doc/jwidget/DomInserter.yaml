@@ -1,0 +1,28 @@
+symbols:
+  default:
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>View synchronizer. Synchronizes DOM element children with the source %List. Usually used in conjunction with
+      %mapList.</p>
+      <pre>
+      const data = new %List(["apple", "banana", "cherry"]);
+      const elements = %mapList(data, value => {
+          return $('<option />').text(value)[0];
+      });
+      const inserter = new %DomInserter(elements, document.getElementById("myselect"));
+      </pre>
+      <p>You must %destroy the %DomInserter instance to stop the synchronization.</p>
+      <p>Prefer using %Component capabilities for DOM management and avoid %DomInserter usage if possible.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlyList<HTMLElement>, el: HTMLElement)
+      params:
+        source: Child element list.
+        el: Parent element to insert children into.
+
+    properties:
+      el:
+        type: HTMLElement
+        description: |
+          <p>Parent element to insert children into.</p>
