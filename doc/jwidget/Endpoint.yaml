@@ -60,12 +60,12 @@ symbols:
       <p>For more examples, see %examples.</p>
 
   relativeRoot:
-    type: 'Endpoint<{}>'
+    type: '%Endpoint<{}>'
     description: |
       <p>Endpoint referring to "" (empty) URL. Use %append function to create new endpoints from this one.</p>
 
   absoluteRoot:
-    type: 'Endpoint<{}>'
+    type: '%Endpoint<{}>'
     description: |
       <p>Endpoint referring to "/" URL. Use %append function to create new endpoints from this one.</p>
 
