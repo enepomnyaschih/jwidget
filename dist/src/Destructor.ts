@@ -20,7 +20,15 @@
 
 import Destroyable from './Destroyable';
 
+/**
+ * Destroyable object that calls the specified callback on destruction.
+ */
 export default class Destructor implements Destroyable {
+	/**
+	 * Creates a destructor instance.
+	 * @param callback Callback to call on destruction.
+	 * @param scope `callback` call scope.
+	 */
 	constructor(private callback: () => any, private scope?: any) {}
 
 	destroy() {

@@ -1,0 +1,20 @@
+symbols:
+  default:
+    extends:
+      - file: jwidget/Destroyable
+    description: |
+      <p>%Destroyable object that calls the specified callback on %destruction. Can be used as a simple object
+      destruction handler:</p>
+      <pre>
+      function logDestruction(obj: %IClass) {
+          obj.%own(new %Destructor(() => {
+              console.log("The object is being destroyed.");
+          }));
+      }
+      </pre>
+    constructor:
+      signature: |
+        (callback: () => any, scope?: any)
+      params:
+        callback: Callback to call on destruction.
+        scope: '%callback call scope.'
