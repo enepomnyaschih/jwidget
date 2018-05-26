@@ -41,7 +41,7 @@ symbols:
       suffix: URI components to append to the endpoint or a function returning the components by parameters.
     returns: Endpoint representing the base endpoint with the suffix appended.
     description: |
-      <p>Defines a new endpoint by appending suffix to an existing endpoint. If the suffix is defined as a function,
+      <p>Defines a new endpoint by appending a suffix to an existing endpoint. If the suffix is defined as a function,
       the new endpoint may take additional parameters (because U should extend P). Use the following pattern to let
       TypeScript properly infer the parameters you use:</p>
       <pre>
