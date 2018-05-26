@@ -1,0 +1,111 @@
+description: |
+  <p>Various utilities for string manipulation.</p>
+
+symbols:
+  functions: Functions
+
+  htmlEncode:
+    signature: |
+      (str: string): string
+    params:
+      str: HTML string.
+    returns: Encoded text string.
+    description: |
+      <p>Escapes special HTML symbols. Converts symbols <tt>&amp;</tt>, <tt>&gt;</tt>, <tt>&lt;</tt>, <tt>&quot;</tt>
+      to <tt>&amp;amp</tt>, <tt>&amp;gt;</tt>, <tt>&amp;lt;</tt>, <tt>&amp;quot;</tt> correspondingly.</p>
+      <pre>
+      %htmlEncode('<div/>'); // '&lt;div/&gt;'
+      </pre>
+
+  htmlDecode:
+    signature: |
+      (str: string): string
+    params:
+      str: Text string.
+    returns: Decoded HTML string.
+    description: |
+      <p>Unescapes special HTML symbols. Converts sequences <tt>&amp;amp</tt>, <tt>&amp;gt;</tt>, <tt>&amp;lt;</tt>,
+      <tt>&amp;quot;</tt> to <tt>&amp;</tt>, <tt>&gt;</tt>, <tt>&lt;</tt>, <tt>&quot;</tt> correspondingly.</p>
+      <pre>
+      %htmlDecode('&lt;div/&gt;'); // '<div/>'
+      </pre>
+
+  ellipsis:
+    signature: |
+      (str: string, length: number, ellipsis?: string): string
+    params:
+      str: Text string.
+      length: Maximum length to allow.
+      ellipsis: Ellipsis sequence to shorten the string with. Defaults to "..."
+    returns: Short string.
+    description: |
+      <p>Shortens the string to specified length. If string is short enough, it stays the same. Otherwise it gets cut
+      and %ellipsis substring is appended so that the resulting string length equals to %length.</p>
+      <pre>
+      %ellipsis('This is a long string!', 10); // 'This is...'
+      </pre>
+
+  pad:
+    signature: |
+      (str: string, length: number, ch: string): string
+    params:
+      str: Input string.
+      length: Minimum length of the resulting string.
+      ch: Symbol to prepend.
+    returns: Long string.
+    description: |
+      <p>Prepends string with specified symbol at the beginning to adjust it to specified length. If string is long
+      enough, it stays the same.</p>
+      <pre>
+      %pad('15', 4, '0'); // 0015
+      </pre>
+
+  capitalize:
+    signature: |
+      (str: string): string
+    params:
+      str: Text string.
+    returns: Capitalized string.
+    description: |
+      <p>Returns the same string with the first symbol converted to uppercase.</p>
+      <pre>
+      %capitalize('bob'); // 'Bob'
+      </pre>
+
+  camel:
+    signature: |
+      (str: string): string
+    params:
+      str: Hyphen-delimited string.
+    returns: String is camelCase.
+    description: |
+      <p>Converts hyphen-style to camelStyle.</p>
+      <pre>
+      %camel('i-love-js')  // 'iLoveJs'
+      </pre>
+
+  hyphen:
+    signature: |
+      (str: string): string
+    params:
+      str: String in camelCase.
+    returns: Hyphen-delimited string.
+    description: |
+      <p>Converts camelStyle to hyphen-style.</p>
+      <pre>
+      %hyphen('iLoveJs')  // 'i-love-js'
+      </pre>
+
+  parseClass:
+    signature: |
+      (str: string): string[]
+      (str: any[]): string[]
+    params:
+      str: String or array of such things.
+    returns: Array of separate CSS class names.
+    description: |
+      <p>Parses CSS class string and returns array of CSS class names. Supports strings, untrimmed strings,
+      space-separated strings, arrays and subarrays.</p>
+      <pre>
+      %parseClass(['  a    b ', 'c', [], [['d', 'e']]]); // ['a', 'b', 'c', 'd', 'e']
+      </pre>
