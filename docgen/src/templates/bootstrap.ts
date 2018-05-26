@@ -185,10 +185,8 @@ function renderConsumption(file: SourceFile) {
 	if (!file.symbols.default) {
 		return `import * as ${file.token} from "${file.id}";`;
 	}
-	const imports = Object.keys(file.symbols)
-		.filter(key => key.indexOf('.') === -1)
-		.map(key => key === 'default' ? file.token : `{${key}}`).join(', ');
-	return `import ${imports} from "${file.id}";`;
+	const imports = Object.keys(file.symbols).filter(key => key !== 'default' && key.indexOf('.') === -1);
+	return `import ${file.token}${imports.length ? ', {' + imports.join(', ') + '}' : ''} from "${file.id}";`;
 }
 
 function renderSymbols(file: SourceFile) {

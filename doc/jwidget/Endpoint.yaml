@@ -1,0 +1,76 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      P: Endpoint parameters type.
+    simple: true
+    description: |
+      <p><code>(params: P): string</code></p>
+      <p>Signature of an endpoint resolution function. The function returns a specific URL by parameters. The endpoints
+      can define routes to use with %Router or backend API methods to access with %request.</p>
+      <p>This module provides %append function to build new endpoints by extending the existing endpoints.</p>
+      <pre>
+      interface ProjectEndpointParams {
+          readonly projectId: number;
+      }
+
+      const apiEndpoint = %append(%absoluteRoot, "api");
+      const projectsEndpoint = %append(apiEndpoint, "projects");
+      const projectEndpoint = %append(projectsEndpoint, (params: ProjectEndpointParams) => String(params.projectId));
+
+      const url = projectEndpoint({projectId: 10}); // returns "/api/projects/10"
+      </pre>
+      <p>For more examples, see %examples.</p>
+
+  Suffix:
+    kind: interface
+    typevars:
+      P: Endpoint parameters type.
+    simple: true
+    description: |
+      <p><code>(params: P): string | string[]</code></p>
+      <p>Signature of an endpoint suffix resolution function. The functions returns a URL component or an array of URL
+      components by parameters. The components get auto-encoded being passed to %append function.</p>
+
+  append:
+    signature: |
+      <P>(base: %Endpoint<P>, suffix: string | string[]): %Endpoint<P>
+      <P, U extends P>(base: %Endpoint<P>, suffix: %Suffix<U>): %Endpoint<U>
+    params:
+      base: Base endpoint to extend.
+      suffix: URI components to append to the endpoint or a function returning the components by parameters.
+    returns: Endpoint representing the base endpoint with the suffix appended.
+    description: |
+      <p>Defines a new endpoint by appending suffix to an existing endpoint. If the suffix is defined as a function,
+      the new endpoint may take additional parameters (because U should extend P). Use the following pattern to let
+      TypeScript properly infer the parameters you use:</p>
+      <pre>
+      interface ProjectEndpointParams {
+          readonly projectId: number;
+      }
+
+      // infers Endpoint<{}>
+      const apiEndpoint = %append(%absoluteRoot, ["api", "projects"]);
+
+      // infers Endpoint<ProjectEndpointParams>
+      const projectEndpoint = %append(projectsEndpoint, (params: ProjectEndpointParams) => String(params.projectId));
+      </pre>
+      <p>Here, apiEndpoint and projectsEndpoint require no parameters, and projectEndpoint requires one
+      parameter (projectId).</p>
+      <p>For more examples, see %examples.</p>
+
+  relativeRoot:
+    type: 'Endpoint<{}>'
+    description: |
+      <p>Endpoint referring to "" (empty) URL. Use %append function to create new endpoints from this one.</p>
+
+  absoluteRoot:
+    type: 'Endpoint<{}>'
+    description: |
+      <p>Endpoint referring to "/" URL. Use %append function to create new endpoints from this one.</p>
+
+references:
+  examples:
+    file: jwidget/request
+    symbol: endpoints
+    label: How to define API endpoints in jWidget
