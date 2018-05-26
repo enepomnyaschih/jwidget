@@ -28,8 +28,12 @@ import TemplateOutput from './TemplateOutput';
 export default class DomTemplate extends AbstractTemplate {
 	private el: HTMLElement;
 	private output: TemplateOutput = null;
-	private groups: Dictionary<HTMLElement[]>
+	private groups: Dictionary<HTMLElement[]>;
 
+	/**
+	 * Creates a template instance.
+	 * @param el Element to process.
+	 */
 	constructor(el: HTMLElement | JQuery) {
 		super();
 		this.el = jQuery(el)[0];
