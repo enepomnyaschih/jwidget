@@ -1,0 +1,6 @@
+symbols:
+  default:
+    type: '%Destroyable'
+    description: |
+      <p>Dummy implementation of %Destroyable interface.</p>
+      <p>Exposes %destroy method which does nothing.</p>
