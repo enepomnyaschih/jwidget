@@ -373,3 +373,11 @@ symbols:
         returns: Minimum collection item.
         description: |
           <p>Returns the lowest (or highest if %order < 0) collection item in terms of the specified comparer function.</p>
+
+    references:
+      EventParams:
+        file: jwidget/ICollection
+        symbol: ICollection.EventParams
+      clear:
+        file: jwidget/ICollection
+        member: clear
