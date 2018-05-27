@@ -1,0 +1,14 @@
+symbols:
+  default:
+    typevars:
+      T: Item type.
+    extends:
+      - file: jwidget/IList
+        symbol: IList.SpliceResult
+        typevars: [T]
+    description: |
+      <p>%IList.%splice method result.</p>
+    references:
+      splice:
+        symbol: default
+        member: splice

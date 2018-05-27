@@ -1,4 +1,49 @@
 symbols:
+  IList.SpliceResult:
+    kind: interface
+    simple: true
+    typevars:
+      T: Item type.
+    description: |
+      <p>%IList.%splice method result.</p>
+    properties:
+      oldItems:
+        modifiers: readonly
+        type: '%T[]'
+        description: Old list contents.
+      removedItemsList:
+        modifiers: readonly
+        type: '%IList.%IndexItems<%T>[]'
+        description: Removed item segments.
+      addedItemsList:
+        modifiers: readonly
+        type: '%IList.%IndexItems<%T>[]'
+        description: Added item segments.
+      removedItems:
+        modifiers: readonly
+        type: '%T[]'
+        description: Plain array of all removed items.
+      addedItems:
+        modifiers: readonly
+        type: '%T[]'
+        description: Plain array of all added items.
+      removeParamsList:
+        modifiers: readonly
+        type: '%IList.%IndexCount[]'
+        description: Removed item segments converted to index and count pairs.
+      empty:
+        modifiers: readonly
+        type: boolean
+        description: The splice call didn't change the list.
+    references:
+      splice:
+        symbol: default
+        member: splice
+      IndexCount:
+        symbol: IList.IndexCount
+      IndexItems:
+        symbol: IList.IndexItems
+
   IList.IndexCount:
     kind: interface
     simple: true
@@ -56,6 +101,8 @@ symbols:
       splice:
         symbol: default
         member: splice
+      ListSpliceResult:
+        symbol: IList.ListSpliceResult
       IndexCount:
         symbol: IList.IndexCount
       IndexItems:

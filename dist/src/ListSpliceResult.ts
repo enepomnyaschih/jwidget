@@ -22,9 +22,7 @@ import * as ArrayUtils from "./ArrayUtils";
 import IList from "./IList";
 
 /**
- * [[JW.List.splice|splice]] method result.
- *
- * @param T Item type.
+ * IList.splice method result.
  */
 export default class ListSpliceResult<T> implements IList.SpliceResult<T> {
 	private _removedItems: T[];
@@ -42,7 +40,7 @@ export default class ListSpliceResult<T> implements IList.SpliceResult<T> {
 	}
 
 	/**
-	 * Returns plain array of removed items.
+	 * Plain array of all removed items.
 	 */
 	get removedItems(): T[]{
 		if (!this._removedItems) {
@@ -54,7 +52,7 @@ export default class ListSpliceResult<T> implements IList.SpliceResult<T> {
 	}
 
 	/**
-	 * Returns plain array of added items.
+	 * Plain array of all added items.
 	 */
 	get addedItems(): T[]{
 		if (!this._addedItems) {
@@ -66,7 +64,7 @@ export default class ListSpliceResult<T> implements IList.SpliceResult<T> {
 	}
 
 	/**
-	 * Converts removed item segments to "index-count" pairs.
+	 * Removed item segments converted to index and count pairs.
 	 */
 	get removeParamsList(): IList.IndexCount[]{
 		if (!this._removeParamsList) {
@@ -76,8 +74,7 @@ export default class ListSpliceResult<T> implements IList.SpliceResult<T> {
 	}
 
 	/**
-	 * Checks if [[JW.List.splice|splice]] method call didn't change the array.
-	 * @returns Array hasn't been changed.
+	 * The splice call didn't change the list.
 	 */
 	get empty(): boolean {
 		return (this.removedItemsList.length === 0) && (this.addedItemsList.length === 0);

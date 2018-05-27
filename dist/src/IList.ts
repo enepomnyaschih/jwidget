@@ -758,13 +758,11 @@ namespace IList {
 	}
 
 	/**
-	 * [[JW.List.splice|splice]] method result.
-	 *
-	 * @param T Item type.
+	 * IList.splice method result.
 	 */
 	export interface SpliceResult<T> {
 		/**
-		 * Old array contents.
+		 * Old list contents.
 		 */
 		readonly oldItems: T[];
 
@@ -774,28 +772,27 @@ namespace IList {
 		readonly removedItemsList: IndexItems<T>[];
 
 		/**
-		 * @param addedItemsList Added item segments.
+		 * Added item segments.
 		 */
 		readonly addedItemsList: IndexItems<T>[];
 
 		/**
-		 * Returns plain array of removed items.
+		 * Plain array of all removed items.
 		 */
 		readonly removedItems: T[];
 
 		/**
-		 * Returns plain array of added items.
+		 * Plain array of all added items.
 		 */
 		readonly addedItems: T[];
 
 		/**
-		 * Converts removed item segments to "index-count" pairs.
+		 * Removed item segments converted to index and count pairs.
 		 */
 		readonly removeParamsList: IndexCount[];
 
 		/**
-		 * Checks if [[JW.List.splice|splice]] method call didn't change the array.
-		 * @returns Array hasn't been changed.
+		 * The splice call didn't change the list.
 		 */
 		readonly empty: boolean;
 	}
