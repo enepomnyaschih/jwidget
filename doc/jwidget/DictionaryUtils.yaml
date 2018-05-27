@@ -104,7 +104,7 @@ symbols:
       <T>(dict: %Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T
     params:
       dict: Dictionary.
-      compare: Return a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
+      compare: Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
       scope: '%compare call scope. Defaults to %dict.'
       order: Pass negative order to find the lowest value.
     returns: Maximum dictionary item.
@@ -116,7 +116,7 @@ symbols:
       <T>(dict: %Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string
     params:
       dict: Dictionary.
-      compare: Return a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
+      compare: Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
       scope: '%compare call scope. Defaults to %dict.'
       order: Pass negative order to find the lowest value.
     returns: Key of the maximum dictionary item.
@@ -152,7 +152,7 @@ symbols:
       <T>(dict: %Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): T
     params:
       dict: Dictionary.
-      compare: Return a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
+      compare: Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
       scope: '%compare call scope. Defaults to %dict.'
       order: Pass negative order to find the highest value.
     returns: Minimum dictionary item.
@@ -164,7 +164,7 @@ symbols:
       <T>(dict: %Dictionary<T>, compare?: (t1: T, t2: T, k1: string, k2: string) => any, scope?: any, order?: number): string
     params:
       dict: Dictionary.
-      compare: Return a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
+      compare: Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
       scope: '%compare call scope. Defaults to %dict.'
       order: Pass negative order to find the highest value.
     returns: Key of the minimum dictionary item.

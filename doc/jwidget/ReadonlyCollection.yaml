@@ -1,0 +1,375 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      T: Item type.
+    description: |
+      <p>Abstract collection.</p>
+      <p>There are 3 collection types in jWidget: %List, %Map, %Set. Every collection has 3 subsequent abstractions and
+      one implementation.</p>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td>%ReadonlyCollection</td>
+            <td>%ReadonlyList</td>
+            <td>%ReadonlyMap</td>
+            <td>%ReadonlySet</td>
+          </tr>
+          <tr>
+            <td>%DestroyableReadonlyCollection</td>
+            <td>%DestroyableReadonlyList</td>
+            <td>%DestroyableReadonlyMap</td>
+            <td>%DestroyableReadonlySet</td>
+          </tr>
+          <tr>
+            <td>%ICollection</td>
+            <td>%IList</td>
+            <td>%IMap</td>
+            <td>%ISet</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>%List</td>
+            <td>%Map</td>
+            <td>%Set</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Every collection has its advantages and disadvantages. You can convert collections to each other using their
+      methods. In comparison to native JavaScript arrays and objects, jWidget collections are observable, i.e. they
+      trigger the events about their modification.</p>
+      <p>The next synchronizers exist to connect the collections to each other:</p>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td>%mapCollection</td>
+            <td>%mapList</td>
+            <td>%mapMap</td>
+            <td>%mapSet</td>
+          </tr>
+          <tr>
+            <td>%filterCollection</td>
+            <td>%filterList</td>
+            <td>%filterMap</td>
+            <td>%filterSet</td>
+          </tr>
+          <tr>
+            <td>%countCollection</td>
+            <td>%countList</td>
+            <td>%countMap</td>
+            <td>%countSet</td>
+          </tr>
+          <tr>
+            <td>%indexCollection</td>
+            <td>%indexList</td>
+            <td>%indexMap</td>
+            <td>%indexSet</td>
+          </tr>
+          <tr>
+            <td>%collectionToSet</td>
+            <td>%listToSet</td>
+            <td>%mapToSet</td>
+            <td>%setToSet</td>
+          </tr>
+          <tr>
+            <td>%collectionToList</td>
+            <td>%listToList</td>
+            <td>%mapToList</td>
+            <td>%setToList</td>
+          </tr>
+          <tr>
+            <td>%sortCollectionComparing</td>
+            <td>%sortListComparing</td>
+            <td>%sortMapComparing</td>
+            <td>%sortSetComparing</td>
+          </tr>
+          <tr>
+            <td>%createObserver</td>
+            <td>%ListObserver</td>
+            <td>%MapObserver</td>
+            <td>%SetObserver</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>%ListInserter</td>
+            <td>%MapInserter</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>%mergeLists</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>%reverseList</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+    properties:
+      silent:
+        modifiers: readonly
+        type: boolean
+        description: Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+
+      getKey:
+        modifiers: readonly
+        type: '(item: %T) => any'
+        description: Identifies an item in this collection for optimization of some algorithms.
+
+      length:
+        modifiers: readonly
+        type: '%Bindable<number>'
+        description: Collection length property.
+
+      empty:
+        modifiers: readonly
+        type: boolean
+        description: Checks collection for emptiness.
+
+      first:
+        modifiers: readonly
+        type: '%T'
+        description: Returns the first item in collection. If collection is empty, returns undefined.
+
+      clearEvent:
+        modifiers: readonly
+        type: '%Listenable<%ICollection.%EventParams<%T>>'
+        description: Collection is cleared. Triggered in result of calling %clear method.
+
+      changeEvent:
+        modifiers: readonly
+        type: '%Listenable<%ICollection.%EventParams<%T>>'
+        description: Collection is changed. Triggered right after any another event.
+
+    methods:
+      clone:
+        signature: |
+          (): %ICollection<%T>
+        returns: Shallow copy of this collection.
+
+      contains:
+        signature: |
+          (item: %T): boolean
+        params:
+          item: Item to check.
+        returns: Item exists in this collection.
+
+      every:
+        signature: |
+          (callback: (item: %T) => any, scope?: any): boolean
+        params:
+          callback: Criteria callback.
+          scope: '%callback call scope. Defaults to the collection.'
+        returns: All items match the criteria.
+        description: |
+          <p>Matches all items against criteria. Returns true if %callback returns %truthy value for all collection
+          items. Algorithms iterates through the items sequentially, and stops it after the first item not matching
+          the criteria.<p>
+
+      some:
+        signature: |
+          (callback: (item: %T) => any, scope?: any): boolean
+        params:
+          callback: Criteria callback.
+          scope: '%callback call scope. Defaults to the collection.'
+        returns: Some item matches the criteria.
+        description: |
+          <p>Matches each item against criteria. Returns true if %callback returns %truthy value for at least one item
+          in the collection. Algorithms iterates through the items sequentially, and stops it after the first item matching
+          the criteria.<p>
+
+      forEach:
+        signature: |
+          (callback: (item: %T) => any, scope?: any)
+        params:
+          callback: Callback function.
+          scope: '%callback call scope. Defaults to the collection.'
+        description: |
+          <p>Iterates through the collection items. Calls the specified function for all items.<p>
+
+      find:
+        signature: |
+          (callback: (item: %T) => any, scope?: any): %T
+        params:
+          callback: Criteria callback.
+          scope: '%callback call scope. Defaults to the collection.'
+        returns: First item matching the criteria.
+        description: |
+          <p>Finds an item matching the criteria. Returns the first item %callback returns %truthy value for.
+          Algorithms iterates through the items sequentially, and stops it after the first item matching the criteria.</p>
+
+      toSorted:
+        signature: |
+          (callback?: (item: %T) => any, scope?: any, order?: number): %IList<%T>
+        params:
+          callback: Indexer function. Must return a comparable value, compatible with %cmp. Returns the item itself by default.
+          scope: '%callback call scope. Defaults to the collection.'
+          order: Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
+        returns: Sorted array.
+        description: |
+          <p>Converts the collection to a sorted array. Builds an array consisting of the collection items sorted by
+          the result of %callback call for each item.</p>
+
+      toSortedComparing:
+        signature: |
+          (compare?: (t1: %T, t2: %T) => number, scope?: any, order?: number): %IList<%T>
+        params:
+          compare: Comparer function. Should return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
+          scope: '%compare call scope. Defaults to the collection.'
+          order: Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
+        returns: Sorted array.
+        description: |
+          <p>Converts the collection to a sorted array. Builds an array consisting of the collection items sorted by
+          the comparer.</p>
+
+      index:
+        signature: |
+          (callback: (item: %T) => any, scope?: any): %IMap<%T>
+        params:
+          callback: Indexer function.
+          scope: '%callback call scope. Defaults to the collection.'
+        returns: Collection index.
+        description: |
+          <p>Indexes collection. Builds a new map by rule: key is the result of %callback function call, value is the
+          corresponding item.</p>
+
+      toArray:
+        signature: |
+          (): %T[]
+        returns: Array of items.
+        description: |
+          <p>Converts collection to an array. Builds a new array consisting of collection items.</p>
+
+      toList:
+        signature: |
+          (): %IList<%T>
+        returns: List of items.
+        description: |
+          <p>Converts collection to a list. Builds a new list consisting of collection items.</p>
+
+      toSet:
+        signature: |
+          (): %ISet<%T>
+        returns: Set of items.
+        description: |
+          <p>Converts collection to a set. Builds a new set consisting of collection items.</p>
+
+      asArray:
+        signature: |
+          (): %T[]
+        returns: Array of items.
+        description: |
+          <p>Represents collection as array. If this collection is list, returns the internal array of items immediately.
+          Else, executes toArray method. Use with caution.</p>
+
+      asList:
+        signature: |
+          (): %IList<%T>[]
+        returns: List of items.
+        description: |
+          <p>Represents collection as list. If this collection is list, returns it immediately.
+          Else, executes toList method. Use with caution.</p>
+
+      asSet:
+        signature: |
+          (): %ISet<%T>[]
+        returns: Set of items.
+        description: |
+          <p>Represents collection as set. If this collection is set, returns it immediately.
+          Else, executes toSet method. Use with caution.</p>
+
+      filter:
+        signature: |
+          (callback: (item: %T) => any, scope?: any): %ICollection<%T>
+        params:
+          callback: Criteria callback.
+          scope: '%callback call scope. Defaults to the collection.'
+        returns: Filtered collection.
+        description: |
+          <p>Filters the collection by criteria. Builds a new collection of the same type, consisting of items %callback
+          return %truthy value for.</p>
+
+      count:
+        signature: |
+          (callback: (item: %T) => any, scope?: any): number
+        params:
+          callback: Criteria callback.
+          scope: '%callback call scope. Defaults to the collection.'
+        returns: Number of matching items.
+        description: |
+          <p>Counts the items matching criteria. Returns the number of items the callback returns truthy value for.</p>
+
+      map:
+        signature: |
+          <U>(callback: (item: %T) => U, scope?: any, getKey?: (item: U) => any): %ICollection<U>
+        params:
+          callback: Mapping function.
+          scope: '%callback call scope. Defaults to the collection.'
+          getKey: |
+            Function which returns unique key of an item in the resulting collection.
+            By default, efficiently identifies primitive values and %Identifiable objects.
+        returns: Mapped collection.
+        description: |
+          <p>Maps collection items. Builds a new collection of the same type, containing results of %callback call for
+          each collection item.</p>
+
+      reduce:
+        signature: |
+          <U>(reducer: %Reducer<%T, U>): U
+          <U>(callback: (accumulator: U, item: %T) => U, initial: U): U
+        params:
+          reducer: Standard %Reducer.
+          callback: Function to execute on each item in the collection.
+          initial: Value to use as the first argument to the first call of the callback.
+        returns: Final accumulator value.
+        description: |
+          <p>Applies a function against an accumulator and each item in the collection to reduce it to a single value.</p>
+
+      max:
+        signature: |
+          (callback?: (item: %T) => any, scope?: any, order?: number): %T
+        params:
+          callback: Returns a comparable value, compatible with %cmp. Returns the item itself by default.
+          scope: '%callback call scope. Defaults to the collection.'
+          order: Pass negative order to find the lowest value.
+        returns: Maximum collection item.
+        description: |
+          <p>Returns the collection item the %callback returns the highest (or lowest if %order < 0) value for.</p>
+
+      maxComparing:
+        signature: |
+          (compare?: (t1: %T, t2: %T) => any, scope?: any, order?: number): %T
+        params:
+          compare: Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
+          scope: '%compare call scope. Defaults to the collection.'
+          order: Pass negative order to find the lowest value.
+        returns: Maximum collection item.
+        description: |
+          <p>Returns the highest (or lowest if %order < 0) collection item in terms of the specified comparer function.</p>
+
+      min:
+        signature: |
+          (callback?: (item: %T) => any, scope?: any, order?: number): %T
+        params:
+          callback: Returns a comparable value, compatible with %cmp. Returns the item itself by default.
+          scope: '%callback call scope. Defaults to the collection.'
+          order: Pass negative order to find the highest value.
+        returns: Minimum collection item.
+        description: |
+          <p>Returns the collection item the %callback returns the lowest (or highest if %order < 0) value for.</p>
+
+      minComparing:
+        signature: |
+          (compare?: (t1: %T, t2: %T) => any, scope?: any, order?: number): %T
+        params:
+          compare: Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
+          scope: '%compare call scope. Defaults to the collection.'
+          order: Pass negative order to find the highest value.
+        returns: Minimum collection item.
+        description: |
+          <p>Returns the lowest (or highest if %order < 0) collection item in terms of the specified comparer function.</p>

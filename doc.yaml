@@ -241,16 +241,16 @@ includes:
           <table class="table table-sm">
             <tbody>
               <tr>
-                <td>%ReadOnlyCollection</td>
-                <td>%ReadOnlyList</td>
-                <td>%ReadOnlyMap</td>
-                <td>%ReadOnlySet</td>
+                <td>%ReadonlyCollection</td>
+                <td>%ReadonlyList</td>
+                <td>%ReadonlyMap</td>
+                <td>%ReadonlySet</td>
               </tr>
               <tr>
-                <td>%DestroyableReadOnlyCollection</td>
-                <td>%DestroyableReadOnlyList</td>
-                <td>%DestroyableReadOnlyMap</td>
-                <td>%DestroyableReadOnlySet</td>
+                <td>%DestroyableReadonlyCollection</td>
+                <td>%DestroyableReadonlyList</td>
+                <td>%DestroyableReadonlyMap</td>
+                <td>%DestroyableReadonlySet</td>
               </tr>
               <tr>
                 <td>%ICollection</td>
