@@ -1,0 +1,19 @@
+symbols:
+  default:
+    kind: interface
+    simple: true
+    description: |
+      <p>Result of %AbstractTemplate.%createElement method call. HTML template rendering output.</p>
+    properties:
+      root:
+        modifiers: readonly
+        type: HTMLElement
+        description: The rendered element. In a component, it is claimed as component root element.
+      groups:
+        modifiers: readonly
+        type: '%Dictionary<HTMLElement[]>'
+        description: Map from jwid to the respective elements.
+    references:
+      createElement:
+        file: jwidget/AbstractTemplate
+        member: createElement

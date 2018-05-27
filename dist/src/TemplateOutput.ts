@@ -21,8 +21,7 @@
 import Dictionary from './Dictionary';
 
 /**
- * Result of [[JW.UI.AbstractTemplate.createElement|createElement]] method call.
- * HTML template rendering output. Must expose two public properties: [[root]] and [[groups]].
+ * Result of AbstractTemplate.createElement method call. HTML template rendering output.
  */
 interface TemplateOutput {
 	/**
