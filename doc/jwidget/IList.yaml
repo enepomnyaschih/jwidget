@@ -1,0 +1,62 @@
+symbols:
+  IList.IndexCount:
+    kind: interface
+    simple: true
+    description: |
+      <p>Index and count pair. Used in %IList.%splice method arguments to specify item segments to remove.</p>
+    properties:
+      index:
+        modifiers: readonly
+        type: number
+        description: Index.
+      count:
+        modifiers: readonly
+        type: number
+        description: Count.
+    methods:
+      clone:
+        signature: |
+          (): %IList.%IndexCount
+        returns: Clone.
+    references:
+      splice:
+        symbol: default
+        member: splice
+      IndexCount:
+        symbol: IList.IndexCount
+
+  IList.IndexItems:
+    kind: interface
+    simple: true
+    typevars:
+      T: Item type.
+    description: |
+      <p>Index and items pair. Used in %IList.%splice method arguments to specify item segments to insert, and in
+      %ListSpliceResult class to specify removed and added item segments.</p>
+    properties:
+      index:
+        modifiers: readonly
+        type: number
+        description: Index.
+      items:
+        modifiers: readonly
+        type: '%T[]'
+        description: Items.
+    methods:
+      toIndexCount:
+        signature: |
+          (): %IList.%IndexCount
+        returns: Index and count pair.
+        description: Converts to index and count pair.
+      clone:
+        signature: |
+          (): %IList.%IndexItems<%T>
+        returns: Clone.
+    references:
+      splice:
+        symbol: default
+        member: splice
+      IndexCount:
+        symbol: IList.IndexCount
+      IndexItems:
+        symbol: IList.IndexItems

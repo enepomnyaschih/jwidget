@@ -801,11 +801,17 @@ namespace IList {
 	}
 
 	/**
-	 * "Index-count" pair. Used in [[JW.List.splice|splice]] method arguments
-	 * to specify item segments to remove.
+	 * Index and count pair. Used in IList.splice method arguments to specify item segments to remove.
 	 */
 	export interface IndexCount {
+		/**
+		 * Index.
+		 */
 		readonly index: number;
+
+		/**
+		 * Count.
+		 */
 		readonly count: number;
 
 		/**
@@ -815,18 +821,22 @@ namespace IList {
 	}
 
 	/**
-	 * "Index-items" pair. Used in [[JW.List.splice|splice]] method arguments
-	 * to specify item segments to insert, and in [[JW.List.SpliceResult|SpliceResult]]
-	 * class to specify removed and added item segments.
-	 *
-	 * @param T Item type.
+	 * Index and items pair. Used in IList.splice method arguments to specify item segments to insert, and in
+	 * ListSpliceResult class to specify removed and added item segments.
 	 */
 	export interface IndexItems<T> {
+		/**
+		 * Index.
+		 */
 		readonly index: number;
+
+		/**
+		 * Items.
+		 */
 		readonly items: T[];
 
 		/**
-		 * Converts to "index-count" pair.
+		 * Converts to index and count pair.
 		 */
 		toIndexCount(): IndexCount;
 

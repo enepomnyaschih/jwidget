@@ -927,15 +927,15 @@ export function detectSplice<T>(oldItems: T[], newItems: T[],
 
 	function testRemove(oldIndex: number) {
 		if (oldIndex > nextOldIndex) {
-			var count = oldIndex - nextOldIndex;
+			const count = oldIndex - nextOldIndex;
 			removeParamsList.push(new IndexCount(nextOldIndex, count));
 			offset -= count;
 		}
 	}
 
-	for (var newIndex = 0, l = newItems.length; newIndex < l; ++newIndex) {
-		var item = newItems[newIndex];
-		var oldIndex = oldIndexMap.get(item);
+	for (let newIndex = 0, l = newItems.length; newIndex < l; ++newIndex) {
+		const item = newItems[newIndex];
+		const oldIndex = oldIndexMap.get(item);
 		if ((oldIndex === undefined) || (oldIndex < nextOldIndex)) {
 			buffer(item);
 		} else {
@@ -964,13 +964,13 @@ export function detectSplice<T>(oldItems: T[], newItems: T[],
  * If no method call required, returns undefined.
  */
 export function detectFilter<T>(oldItems: T[], newItems: T[]): IList.IndexCount[] {
-	var removeParamsList: IList.IndexCount[] = [];
-	var oldIndex = 0;
-	var oldLength = oldItems.length;
-	var newLength = newItems.length;
-	for (var newIndex = 0; newIndex <= newLength; ++newIndex) {
-		var newItem = newItems[newIndex];
-		var count = 0;
+	const removeParamsList: IList.IndexCount[] = [];
+	let oldIndex = 0;
+	const oldLength = oldItems.length;
+	const newLength = newItems.length;
+	for (let newIndex = 0; newIndex <= newLength; ++newIndex) {
+		const newItem = newItems[newIndex];
+		let count = 0;
 		while ((oldIndex + count < oldLength) && (oldItems[oldIndex + count] !== newItem)) {
 			++count;
 		}

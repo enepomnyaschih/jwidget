@@ -21,10 +21,13 @@
 import IList from './IList';
 
 /**
- * "Index-count" pair. Used in [[JW.List.splice|splice]] method arguments
- * to specify item segments to remove.
+ * Index and count pair. Used in IList.splice method arguments to specify item segments to remove.
  */
 export default class IndexCount implements IList.IndexCount {
+	/**
+	 * @param index Index.
+	 * @param count Count.
+	 */
 	constructor(readonly index: number, public count: number) {
 	}
 

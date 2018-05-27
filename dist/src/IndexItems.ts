@@ -22,18 +22,19 @@ import IList from './IList';
 import IndexCount from './IndexCount';
 
 /**
- * "Index-items" pair. Used in [[JW.List.splice|splice]] method arguments
- * to specify item segments to insert, and in [[JW.List.SpliceResult|SpliceResult]]
- * class to specify removed and added item segments.
- *
- * @param T Item type.
+ * Index and items pair. Used in IList.splice method arguments to specify item segments to insert, and in
+ * ListSpliceResult class to specify removed and added item segments.
  */
 export default class IndexItems<T> implements IList.IndexItems<T> {
+	/**
+	 * @param index Index.
+	 * @param items Items.
+	 */
 	constructor(readonly index: number, readonly items: T[]) {
 	}
 
 	/**
-	 * Converts to "index-count" pair.
+	 * Converts to index and count pair.
 	 */
 	toIndexCount(): IList.IndexCount {
 		return new IndexCount(this.index, this.items.length);

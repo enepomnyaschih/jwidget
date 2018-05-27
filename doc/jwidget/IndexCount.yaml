@@ -1,0 +1,18 @@
+symbols:
+  default:
+    extends:
+      - file: jwidget/IList
+        symbol: IList.IndexCount
+    description: |
+      <p>Index and count pair. Used in %IList.%splice method arguments to specify item segments to remove.</p>
+    constructor:
+      signature: |
+        (index: number, count: number)
+      params:
+        index: Index.
+        count: Count.
+
+references:
+  splice:
+    file: jwidget/IList
+    method: splice

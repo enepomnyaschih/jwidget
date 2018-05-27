@@ -1,0 +1,22 @@
+symbols:
+  default:
+    typevars:
+      T: Item type.
+    extends:
+      - file: jwidget/IList
+        symbol: IList.IndexItems
+        typevars: [T]
+    description: |
+      <p>Index and items pair. Used in %IList.%splice method arguments to specify item segments to insert, and in
+      %ListSpliceResult class to specify removed and added item segments.</p>
+    constructor:
+      signature: |
+        (index: number, items: %T[])
+      params:
+        index: Index.
+        items: Items.
+
+references:
+  splice:
+    file: jwidget/IList
+    method: splice
