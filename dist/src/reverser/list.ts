@@ -105,7 +105,7 @@ class ListReverser<T> extends Class {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
-		this.target.tryAddAll(this._reverse(source.items));
+		this.target.addAll(this._reverse(source.items));
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
 		this.own(source.moveEvent.listen(this._onMove, this));

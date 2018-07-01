@@ -260,9 +260,9 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 		var index = this._countFiltered(0, params.index);
 		this._filtered[params.index] = newFiltered ? 1 : 0;
 		if (!newFiltered) {
-			this.target.tryRemove(index);
+			this.target.remove(index);
 		} else if (!oldFiltered) {
-			this.target.tryAdd(params.newItem, index);
+			this.target.add(params.newItem, index);
 		} else {
 			this.target.trySet(index, params.newItem);
 		}

@@ -592,19 +592,7 @@ export default class List<T> extends Class implements IList<T> {
 	 * By default, appends the item to the end of collection.
 	 */
 	add(item: T, index?: number) {
-		this.tryAdd(item, index);
-	}
-
-	/**
-	 * Inserts an item to array.
-	 *
-	 * @param item Item to insert.
-	 * @param index Index of an item before which to insert new one.
-	 * By default, appends the item to the end of collection.
-	 * @returns Always returns true.
-	 */
-	tryAdd(item: T, index?: number): boolean {
-		return this.tryAddAll([item], index);
+		this.addAll([item], index);
 	}
 
 	/**
@@ -615,25 +603,10 @@ export default class List<T> extends Class implements IList<T> {
 	 * By default, appends the items to the end of collection.
 	 */
 	addAll(items: T[], index?: number) {
-		this.tryAddAll(items, index);
-	}
-
-	/**
-	 * Inserts item range to array.
-	 *
-	 * @param items Items to insert.
-	 * @param index Index of an item before which to insert new ones.
-	 * By default, appends the items to the end of collection.
-	 * @returns Always returns true.
-	 */
-	tryAddAll(items: T[], index?: number): boolean {
 		if (index === undefined) {
 			index = this._items.length;
 		}
-		if (this.trySplice([], [new IndexItems<T>(index, items)])) {
-			return true;
-		}
-		return undefined;
+		this.trySplice([], [new IndexItems<T>(index, items)]);
 	}
 
 	/**
@@ -669,20 +642,6 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Removes item at specified position.
-	 * If array doesn't contain such index, it will demolish the application.
-	 *
-	 * @returns The removed item. If collection is not modified, returns undefined.
-	 */
-	tryRemove(index: number): T {
-		var result = this.tryRemoveAll(index, 1);
-		if (result !== undefined) {
-			return result[0];
-		}
-		return undefined;
-	}
-
-	/**
 	 * Removes item with specified key. If collection doesn't contain such key:
 	 *
 	 * * Array will be broken.
@@ -691,16 +650,20 @@ export default class List<T> extends Class implements IList<T> {
 	 * @returns The removed item.
 	 */
 	remove(index: number): T {
-		return this.tryRemove(index);
+		const result = this.tryRemoveAll(index, 1);
+		if (result !== undefined) {
+			return result[0];
+		}
+		return undefined;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	removeItem(item: T): number {
-		var key = this.indexOf(item);
+		const key = this.indexOf(item);
 		if (key !== -1) {
-			this.tryRemove(key);
+			this.remove(key);
 		}
 		return key;
 	}
@@ -1077,7 +1040,7 @@ export default class List<T> extends Class implements IList<T> {
 	 */
 	pop(): T {
 		if (this._items.length !== 0) {
-			return this.tryRemove(this._items.length - 1);
+			return this.remove(this._items.length - 1);
 		}
 		return undefined;
 	}

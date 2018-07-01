@@ -50,7 +50,7 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 		super(source, create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(config.getKey, this.source.silent) : config.target;
-		this.target.tryAddAll(this._createItems(this.source.items));
+		this.target.addAll(this._createItems(this.source.items));
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
 		this.own(source.moveEvent.listen(this._onMove, this));

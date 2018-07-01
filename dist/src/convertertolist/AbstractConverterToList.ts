@@ -105,7 +105,7 @@ abstract class AbstractConverterToList<T> extends Class {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
-		this.target.tryAddAll(source.asArray());
+		this.target.addAll(source.asArray());
 	}
 
 	/**

@@ -121,7 +121,7 @@ class ListMerger<T> extends Class {
 			destroy,
 			getKey: iidStr
 		});
-		this.target.tryAddAll(this._getAllItems());
+		this.target.addAll(this._getAllItems());
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
 		this.own(source.moveEvent.listen(this._onMove, this));
