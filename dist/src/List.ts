@@ -40,141 +40,9 @@ import Set from './Set';
 import Some from './Some';
 
 /**
- * Array is ordered collection. Each item of array has an index. Index of first item is 0,
+ * Ordered collection of items. Each item of the list has an index. Index of first item is 0,
  * index of each next one is higher by 1.
- *
- * # Array methods
- *
- * **Difference compared to [[IndexedCollection]] is in bold.**
- *
- * Content retrieving:
- *
- * * [[length]] - Collection length property.
- * * [[isEmpty]] - Checks collection for emptiness.
- * * [[get]] - Returns collection item by index.
- * * [[getFirst]] - Returns first item in collection.
- * * **[[getLast]] - Returns last item in collection.**
- * * [[getFirstKey]] - Returns index of first item in collection.
- * * **[[getLastKey]] - Returns index of last item in collection.**
- * * [[getKeys]], [[$getKeys]] - Returns array of all item indexes.
- * * [[containsItem]] - Does collection contain the item?
- * * [[containsKey]] - Does collection contain the index?
- * * [[keyOf]] - Returns item index. If item is not found, returns undefined.
- * * **[[indexOf]] - Returns item index. If item is not found, return -1.**
- * * **[[getItems]] - Returns internal representation of array.**
- * * **[[binarySearch]] - Finds the index by binary search.**
- *
- * Iteration algorithms:
- *
- * * [[every]] - Checks all items by criteria.
- * Returns true if all items match the criteria.
- * * [[some]] - Checks each item by criteria.
- * Returns true if some item matches the criteria.
- * * [[each]] - Iterates items.
- * * [[search]] - Finds item by criteria.
- * Returns first item matching the criteria.
- * * [[find]] - Finds item by criteria.
- * Returns index of first item matching the criteria.
- * * [[filter]], [[filter]],
- * [[$filter]] - Filters collection by criteria.
- * Builds new collection of the same type, consisting of items matching the criteria.
- * * [[count]], [[$count]],
- * [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[map]],
- * [[$mapValues]], [[$mapObjects]] - Maps collection items.
- * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * * [[toSorted]], [[$toSorted]],
- * [[toSortedComparing]], [[$toSortedComparing]],
- * [[$$toSortedComparing]] -
- * Builds array consisting of collection items sorted by indexer or comparer.
- * * [[getSortingKeys]], [[$getSortingKeys]],
- * [[getSortingKeysComparing]],
- * [[$getSortingKeysComparing]] -
- * Returns indexes of collection items sorted by indexer or comparer.
- * * [[index]], [[$index]],
- * [[$$index]] - Indexes collection.
- * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * * [[toArray]], [[$toArray]],
- * [[$$toArray]] - Builds new array consisting of collection items.
- * * [[toDictionary]], [[toMap]] - Builds new map consisting of collection items.
- * * [[toSet]], [[toSet]],
- * [[$toSet]] - Builds new set consisting of collection items.
- * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asDictionary]], [[asMap]] - Represents collection as map.
- * * [[asSet]], [[asSet]] - Represents collection as set.
- * * **[[backEvery]] - Checks all items by criteria in backward order.**
- * * **[[merge]], [[$merge]],
- * [[$$merge]] - *suitable if array consists of List instances only.*
- * Builds array consisting of items of subarrays in the same order.**
- * * **[[toReversed]], [[$toReversed]],
- * [[$$toReversed]] -
- * Builds array consisting of collection items in reverse order.**
- *
- * Collection modification:
- *
- * * **[[add]], [[tryAdd]] - Inserts an item.**
- * * **[[addAll]], [[tryAddAll]] - Inserts item range.**
- * * [[set]], [[trySet]] - Replaces an item by index.
- * * [[remove]], [[tryRemove]] - Removes an item by index.
- * * **[[removeAll]], [[$removeAll]],
- * [[tryRemoveAll]] - Removes item range.**
- * * [[removeItem]] - Removes first occurency of an item in collection.
- * * [[removeItems]] - Removes all occurencies of items in collection.
- * * **[[pop]] - Removes last item.**
- * * **[[move]], [[tryMove]] - Moves item.**
- * * [[clear]], [[$clear]],
- * [[tryClear]] - Clears collection.
- * * **[[splice]], [[trySplice]] - Removes/inserts item ranges.**
- * * **[[reorder]], [[tryReorder]] - Reorders items.**
- * * **[[sort]], [[sortComparing]] - Sorts array.**
- * * **[[reverse]] - Reverses item order in array.**
- * * **[[performSplice]] - Adjusts contents using [[splice]]. method.**
- * * **[[performFilter]] - Filters contents using [[splice]]. method.**
- * * **[[performReorder]] - Adjusts contents using [[reorder]]. method.**
- *
- * Synchronizers creation:
- *
- * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
- * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$filter]] method.
- * * [[createCounter]] - Creates matching item counter.
- * Extended version of [[$$count]] method.
- * * [[createLister]] - Creates converter to set.
- * Extended version of [[$toSet]] method.
- * * [[createIndexer]] - Creates converter to map (indexer).
- * Extended version of [[$$index]] method.
- * * [[createOrderer]] - Creates converter to array (orderer).
- * Extended version of [[$$toArray]] method.
- * * [[createSorterComparing]] - Creates converter to array (sorter by comparer).
- * Extended version of [[$$toSortedComparing]] method.
- * * [[createObserver]] - Creates observer.
- * * **[[createInserter]] - Creates view synchronizer with array.**
- * * **[[createMerger]] - Creates arrays merger.
- * Extended version of [[$$merge]] method.**
- * * **[[createReverser]] - Creates array reverser.
- * Extended version of [[$$toReversed]] method.**
- *
- * Similar collection creation (for algorithms and synchronizers implementation):
- *
- * * [[createEmpty]] - Creates empty collection of the same type.
- * * [[createEmptyArray]] - Creates empty array of the same observability level.
- * * [[createEmptyMap]] - Creates empty map of the same observability level.
- * * [[createEmptySet]] - Creates empty set of the same observability level.
- *
- * Other methods:
- *
- * * **[[detectSplice]] - Detects [[splice]] method arguments to adjust contents.**
- * * **[[detectFilter]] - Detects removeParamsList argument of [[splice]] method to filter contents.**
- * * **[[detectReorder]] - Detects [[reorder]] method arguments to adjust contents.**
- * * **[[detectSort]] - Detects [[reorder]] method arguments to sort by indexer.**
- * * **[[detectSortComparing]] - Detects [[reorder]] method arguments to sort by comparer.**
- * * **[[equal]] - Checks for equality to another array.**
- *
- * All the same algorithms are also available for native JavaScript Array,
- * see [[JW.Array]] static methods.
- *
- * @param T Array item type.
+ * @param T Item type.
  */
 export default class List<T> extends Class implements IList<T> {
 	private _ownsItems: Boolean = false;
@@ -189,18 +57,32 @@ export default class List<T> extends Class implements IList<T> {
 	private _changeEvent: IEvent<IList.EventParams<T>>;
 
 	/**
-	 * Identifies an item in this collection for optimization of some algorithms.
+	 * @inheritDoc
 	 */
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * @param items Initial array contents.
-	 * @param adapter Set to true to wrap the **items** rather than copying them into
-	 * a new array.
+	 * @param silent Create a silent collection which means that it never triggers modification events.
 	 */
 	constructor(silent?: boolean);
+
+	/**
+	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
+	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 */
 	constructor(getKey: (item: T) => any, silent?: boolean);
+
+	/**
+	 * @param items Initial list contents.
+	 * @param flags Collection configuration flags.
+	 */
 	constructor(items: T[], flags?: CollectionFlags);
+
+	/**
+	 * @param items Initial list contents.
+	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
+	 * @param flags Collection configuration flags.
+	 */
 	constructor(items: T[], getKey: (item: T) => any, flags?: CollectionFlags);
 	constructor(a?: any, b?: any, c?: CollectionFlags) {
 		super();
@@ -238,42 +120,42 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+	 * @inheritDoc
 	 */
 	get silent() {
 		return this.changeEvent.dummy;
 	}
 
 	/**
-	 * Collection length property.
+	 * @inheritDoc
 	 */
 	get length(): Bindable<number> {
 		return this._length;
 	}
 
 	/**
-	 * Checks collection for emptiness.
+	 * @inheritDoc
 	 */
 	get empty() {
 		return this.length.get() === 0;
 	}
 
 	/**
-	 * Returns first item in collection. If collection is empty, returns undefined.
+	 * @inheritDoc
 	 */
 	get first(): T {
 		return this._items[0];
 	}
 
 	/**
-	 * Returns the last collection item. If collection is empty, returns undefined.
+	 * @inheritDoc
 	 */
 	get last(): T {
 		return this._items[this._items.length - 1];
 	}
 
 	/**
-	 * Returns index of last collection item. If collection is empty, returns undefined.
+	 * @inheritDoc
 	 */
 	get lastIndex(): number {
 		var l = this._items.length;
@@ -281,92 +163,56 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Returns item array - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
+	 * @inheritDoc
 	 */
 	get items(): T[] {
 		return this._items;
 	}
 
 	/**
-	 * Items are removed from array and items are added to array. Triggered in result
-	 * of calling:
-	 *
-	 * * [[add]]
-	 * * [[tryAdd]]
-	 * * [[addAll]]
-	 * * [[tryAddAll]]
-	 * * [[remove]]
-	 * * [[tryRemove]]
-	 * * [[removeItem]]
-	 * * [[pop]]
-	 * * [[removeAll]]
-	 * * [[tryRemoveAll]]
-	 * * [[removeItems]]
-	 * * [[splice]]
-	 * * [[trySplice]]
-	 * * [[performSplice]]
+	 * @inheritDoc
 	 */
 	get spliceEvent(): Listenable<IList.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
 	/**
-	 * Item is replaced in array. Triggered in result of calling:
-	 *
-	 * * [[set]]
-	 * * [[trySet]]
+	 * @inheritDoc
 	 */
 	get replaceEvent(): Listenable<IList.ReplaceEventParams<T>> {
 		return this._replaceEvent;
 	}
 
 	/**
-	 * Item is moved in array. Triggered in result of calling:
-	 *
-	 * * [[move]]
-	 * * [[tryMove]]
+	 * @inheritDoc
 	 */
 	get moveEvent(): Listenable<IList.MoveEventParams<T>> {
 		return this._moveEvent;
 	}
 
 	/**
-	 * Array is cleared. Triggered in result of calling:
-	 * * [[clear]]
-	 * * [[$clear]]
-	 * * [[tryClear]]
+	 * @inheritDoc
 	 */
 	get clearEvent(): Listenable<IList.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
 	/**
-	 * Items are reordered in array. Triggered in result of calling:
-	 *
-	 * * [[reorder]]
-	 * * [[tryReorder]]
-	 * * [[performReorder]]
-	 * * [[sort]]
-	 * * [[sortComparing]]
+	 * @inheritDoc
 	 */
 	get reorderEvent(): Listenable<IList.ReorderEventParams<T>> {
 		return this._reorderEvent;
 	}
 
 	/**
-	 * Array is changed. Triggered right after any another event.
+	 * @inheritDoc
 	 */
 	get changeEvent(): Listenable<IList.EventParams<T>> {
 		return this._changeEvent;
 	}
 
 	/**
-	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
-	 * this collection. The item is destroyed when it leaves the
-	 * collection, and all items are destroyed on the collection destruction.
-	 * @returns this
+	 * @inheritDoc
 	 */
 	ownItems(): this {
 		this._ownsItems = true;
@@ -374,129 +220,124 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Returns a full copy of this object.
+	 * @inheritDoc
 	 */
 	clone(): IList<T> {
 		return new List<T>(this.items, this.getKey, this.silent ? SILENT : 0);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	get(index: number): T {
 		return this._items[index];
 	}
 
 	/**
-	 * Checks item for existance in collection.
+	 * @inheritDoc
 	 */
 	contains(item: T): boolean {
 		return ArrayUtils.contains(this._items, item);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	every(callback: (item: T, index: number) => any, scope?: any): boolean {
 		return this._items.every(callback, scope || this);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	some(callback: (item: T, index: number) => any, scope?: any): boolean {
 		return this._items.some(callback, scope || this);
 	}
 
 	/**
-	 * Iterates collection items. Calls specified function for all items.
-	 *
-	 * @param callback Callback function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @inheritDoc
 	 */
 	forEach(callback: (item: T, index: number) => any, scope?: any): void {
 		this._items.forEach(callback, scope || this);
 	}
 
 	/**
-	 * Finds item matching criteria.
-	 *
-	 * Returns key of first item for which callback returns !== false.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Found item key or undefined.
+	 * @inheritDoc
 	 */
 	findIndex(callback: (item: T, index: number) => any, scope?: any): number {
 		return ArrayUtils.findIndex(this._items, callback, scope);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	find(callback: (item: T, index: number) => any, scope: any = null): T {
 		return ArrayUtils.find(this._items, callback, scope);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<T> {
 		return new List<T>(ArrayUtils.toSorted(this._items, callback, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<T> {
 		return new List<T>(ArrayUtils.toSortedComparing(this._items, compare, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<number> {
 		return new List<number>(ArrayUtils.getSortingIndices(this._items, callback, scope || this, order), String, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number> {
 		return new List<number>(ArrayUtils.getSortingIndicesComparing(this._items, compare, scope || this, order), String, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	index(callback: (item: T, index: number) => any, scope?: any): IMap<T> {
 		return new Map<T>(ArrayUtils.index(this._items, callback, scope), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	filter(callback: (item: T, index: number) => any, scope?: any): IList<T> {
 		return new List<T>(this._items.filter(callback, scope || this), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	count(callback: (item: T, index: number) => any, scope?: any): number {
 		return ArrayUtils.count(this._items, callback, scope || this);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => any): IList<U> {
 		return new List<U>(this._items.map(callback, scope || this), getKey, SILENT | ADAPTER);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	reduce<U>(reducer: Reducer<T, U>): U;
+	/**
+	 * @inheritDoc
+	 */
 	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
 	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, item: T, index: number) => U), initial?: U): U {
 		return (typeof reducer === "function") ?
@@ -504,103 +345,113 @@ export default class List<T> extends Class implements IList<T> {
 			ArrayUtils.reduce<T, U>(this.items, reducer);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T {
 		return ArrayUtils.max(this._items, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	maxIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number {
 		return ArrayUtils.maxIndex(this._items, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T {
 		return ArrayUtils.maxComparing(this._items, compare, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number {
 		return ArrayUtils.maxIndexComparing(this._items, compare, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	min(callback?: (item: T, index: number) => any, scope?: any, order?: number): T {
 		return ArrayUtils.min(this._items, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	minIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number {
 		return ArrayUtils.minIndex(this._items, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T {
 		return ArrayUtils.minComparing(this._items, compare, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number {
 		return ArrayUtils.minIndexComparing(this._items, compare, scope, order);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toArray(): T[] {
 		return this._items.concat();
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toList(): IList<T> {
 		return new List<T>(this.toArray(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSet(): ISet<T> {
 		return new Set<T>(this.toArray(), this.getKey, true);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	asArray(): T[] {
 		return this._items;
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	asList(): IList<T> {
 		return this;
 	}
 
 	/**
-	 * Represents collection as set.
-	 *
-	 * If this collection is set, returns it immediately.
-	 * Else, executes [[toSet]] method.
-	 * This method works usually faster than [[toSet]],
-	 * but please make sure that the returned set
-	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 * @inheritDoc
 	 */
 	asSet(): ISet<T> {
 		return this.toSet();
 	}
 
 	/**
-	 * Inserts an item to array.
-	 *
-	 * @param item Item to insert.
-	 * @param index Index of an item before which to insert new one.
-	 * By default, appends the item to the end of collection.
+	 * @inheritDoc
 	 */
 	add(item: T, index?: number) {
 		this.addAll([item], index);
 	}
 
 	/**
-	 * Inserts item range to array.
-	 *
-	 * @param items Items to insert.
-	 * @param index Index of an item before which to insert new ones.
-	 * By default, appends the items to the end of collection.
+	 * @inheritDoc
 	 */
 	addAll(items: T[], index?: number) {
 		if (index === undefined) {
@@ -610,10 +461,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Replaces item at specified position.
-	 * If array doesn't contain such index, it will demolish the application.
-	 *
-	 * @returns The replaced item. If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	trySet(index: number, item: T): Some<T> {
 		const oldProxy = ArrayUtils.trySet(this._items, index, item);
@@ -629,12 +477,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Replaces item with specified key. If collection doesn't contain such key:
-	 *
-	 * * Array will be broken.
-	 * * Map will add a new item.
-	 *
-	 * @returns The replaced item.
+	 * @inheritDoc
 	 */
 	set(index: number, item: T): T {
 		const result = this.trySet(index, item);
@@ -642,12 +485,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Removes item with specified key. If collection doesn't contain such key:
-	 *
-	 * * Array will be broken.
-	 * * Map will add a new item.
-	 *
-	 * @returns The removed item.
+	 * @inheritDoc
 	 */
 	remove(index: number): T {
 		const result = this.tryRemoveAll(index, 1);
@@ -658,7 +496,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	removeItem(item: T): number {
 		const key = this.indexOf(item);
@@ -669,11 +507,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Removes item range from array.
-	 *
-	 * @param index Index of first item to remove.
-	 * @param count Count of items to remove.
-	 * @returns The removed items.
+	 * @inheritDoc
 	 */
 	removeAll(index: number, count: number): T[] {
 		var result = this.tryRemoveAll(index, count);
@@ -681,11 +515,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Removes item range from array.
-	 *
-	 * @param index Index of first item to remove.
-	 * @param count Count of items to remove.
-	 * @returns The removed items. If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryRemoveAll(index: number, count: number): T[] {
 		var result = this.trySplice([new IndexCount(index, count)], []);
@@ -696,7 +526,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	removeItems(items: T[]) {
 		const itemSet = VidSet.fromArray<T>(items, this.getKey);
@@ -705,11 +535,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Moves an item inside array.
-	 *
-	 * @param fromIndex Item index to move.
-	 * @param toIndex Index to move to.
-	 * @returns The moved item.
+	 * @inheritDoc
 	 */
 	move(fromIndex: number, toIndex: number): T {
 		this.tryMove(fromIndex, toIndex);
@@ -717,11 +543,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Moves an item inside array.
-	 *
-	 * @param fromIndex Item index to move.
-	 * @param toIndex Index to move to.
-	 * @returns The moved item. If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryMove(fromIndex: number, toIndex: number): T {
 		var item = ArrayUtils.tryMove(this._items, fromIndex, toIndex);
@@ -734,7 +556,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	clear(): T[] {
 		var oldItems = ArrayUtils.tryClear(this._items);
@@ -751,11 +573,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
-	 *
-	 * @param removeParamsList Array of segments to remove sorted by index asc. Segments are removed in backward order.
-	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
-	 * @returns Splice result. Never returns null or undefined.
+	 * @inheritDoc
 	 */
 	splice(removeParamsList: IList.IndexCount[], addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T> {
 		var result = this.trySplice(removeParamsList, addParamsList);
@@ -763,11 +581,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
-	 *
-	 * @param removeParamsList Array of segments to remove sorted by index asc. Segments are removed in backward order.
-	 * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
-	 * @returns Splice result. If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	trySplice(removeParamsList: IList.IndexCount[], addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T> {
 		var result = ArrayUtils.trySplice(this._items, removeParamsList, addParamsList);
@@ -784,21 +598,14 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Reorders array items.
-	 *
-	 * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
-	 * Must contain all indexes from 0 to (length - 1).
+	 * @inheritDoc
 	 */
 	reorder(indexArray: number[]) {
 		this.tryReorder(indexArray);
 	}
 
 	/**
-	 * Reorders array items.
-	 *
-	 * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
-	 * Must contain all indexes from 0 to (length - 1).
-	 * @returns Old array contents. If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryReorder(indexArray: number[]): T[] {
 		var items = ArrayUtils.tryReorder(this._items, indexArray);
@@ -811,97 +618,42 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Detects [[splice]] method arguments to adjust array contents to **newItems**.
-	 * Determines which item ranges should be removed and which ones should be inserted.
-	 * All items must have unique **getKey** function result.
-	 * If items don't have unique key, probably [[detectFilter]] method may help,
-	 * because it doesn't require item uniquiness.
-	 *
-	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then you are in a good shape.
-	 * @param scope **getKey** call scope. Defaults to collection itself.
-	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
+	 * @inheritDoc
 	 */
 	detectSplice(newItems: T[]): IList.SpliceParams<T> {
 		return ArrayUtils.detectSplice(this._items, newItems, this.getKey);
 	}
 
 	/**
-	 * Detects **removeParamsList** arguments of [[splice]] to adjust array contents to **newItems**.
-	 * Determines which item ranges should be removed.
-	 * Doesn't assume items insertion - try [[detectSplice]] if that's the case.
-	 * In advantage to [[detectSplice]], doesn't require item uniquiness.
-	 *
-	 * @param newItems New array contents.
-	 * @returns **removeParamsList** argument of [[splice]] method.
-	 * If no method call required, returns undefined.
+	 * @inheritDoc
 	 */
 	detectFilter(newItems: T[]): IList.IndexCount[] {
 		return ArrayUtils.detectFilter(this._items, newItems);
 	}
 
 	/**
-	 * Detects [[reorder]] method arguments to adjust array contents to **newItems**.
-	 * Determines where to move all items.
-	 * If **newItems** contents differ from collection contents,
-	 * you should pray to Gods that application still works well.
-	 *
-	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then it's all right.
-	 * @param scope **getKey** call scope. Defaults to collection itself.
-	 * @returns **indexArray** argument of [[reorder]] method.
-	 * If no method call required, returns undefined.
+	 * @inheritDoc
 	 */
 	detectReorder(newItems: T[]): number[] {
 		return ArrayUtils.detectReorder(this._items, newItems, this.getKey);
 	}
 
 	/**
-	 * Detects [[reorder]] method arguments to sort array contents by result of
-	 * **callback** call for each item.
-	 *
-	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[JW.cmp]]. Returns item itself by default.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns **indexArray** argument of [[reorder]] method.
-	 * If no method call required, returns undefined.
+	 * @inheritDoc
 	 */
 	detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[] {
 		return ArrayUtils.detectSort(this._items, callback, scope || this, order);
 	}
 
 	/**
-	 * Detects [[reorder]] method arguments to sort array contents by comparer.
-	 *
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
-	 * @param scope **comparer** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns **indexArray** argument of [[reorder]] method.
-	 * If no method call required, returns undefined.
+	 * @inheritDoc
 	 */
 	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[] {
 		return ArrayUtils.detectSortComparing(this._items, compare, scope || this, order);
 	}
 
 	/**
-	 * Adjusts array contents to **newItems** using [[detectSplice]] and
-	 * [[splice]] methods.
-	 * All items must have unique **getKey** function result.
-	 * If items don't have unique key, probably [[detectFilter]] method may help,
-	 * because it doesn't require item uniquiness.
-	 *
-	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then you are in a good shape.
-	 * @param scope **getKey** call scope. Defaults to collection itself.
+	 * @inheritDoc
 	 */
 	performSplice(newItems: T[]) {
 		var params = this.detectSplice(newItems);
@@ -911,13 +663,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Adjusts array contents to **newItems** using [[detectFilter]] and
-	 * [[splice]] methods.
-	 * Only removes items.
-	 * Doesn't assume items insertion - try [[detectSplice]] if that's the case.
-	 * In advantage to [[detectSplice]], doesn't require item uniquiness.
-	 *
-	 * @param newItems New array contents.
+	 * @inheritDoc
 	 */
 	performFilter(newItems: T[]) {
 		var params = this.detectFilter(newItems);
@@ -927,14 +673,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Adjusts array contents to **newItems** using [[detectReorder]] and
-	 * [[reorder]] methods.
-	 *
-	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then it's all right.
-	 * @param scope **getKey** call scope. Defaults to collection itself.
+	 * @inheritDoc
 	 */
 	performReorder(newItems: T[]) {
 		var indexArray = this.detectReorder(newItems);
@@ -944,12 +683,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Sorts array by result of **callback** function call for each item.
-	 *
-	 * @param callback Indexer function. Must return a comparable value, compatible with
-	 * [[JW.cmp]]. Returns item itself by default.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+	 * @inheritDoc
 	 */
 	sort(callback?: (item: T, index: number) => any, scope?: any, order?: number) {
 		var indexArray = this.detectSort(callback, scope, order);
@@ -959,13 +693,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Sorts array by comparer.
-	 *
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
-	 * @param scope **comparer** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
+	 * @inheritDoc
 	 */
 	sortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number) {
 		var indexArray = this.detectSortComparing(compare, scope, order);
@@ -975,7 +703,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Reverses item order in array. Modifies the array itself.
+	 * @inheritDoc
 	 */
 	reverse() {
 		if (this.silent) {
@@ -991,52 +719,35 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Builds a new array containing items of this array in reversed order.
-	 * Current array is not modified.
-	 *
-	 * @returns Reversed array.
+	 * @inheritDoc
 	 */
 	toReversed(): IList<T> {
 		return new List(ArrayUtils.toReversed(this._items), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * Checks for equality (===) to another array, item by item.
-	 *
-	 * @param arr Another array.
-	 * @returns Arrays are equal.
+	 * @inheritDoc
 	 */
 	equal(arr: T[]): boolean {
 		return ArrayUtils.equal(this._items, arr);
 	}
 
 	/**
-	 * Returns item index in this collection.
-	 *
-	 * @returns Item index. If item doesn't exist, returns -1.
+	 * @inheritDoc
 	 */
 	indexOf(item: T): number {
 		return this._items.indexOf(item);
 	}
 
 	/**
-	 * Checks all items against criteria in backward order.
-	 *
-	 * Returns true if criteria returns !== false for all collection items.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item not matching the criteria.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @inheritDoc
 	 */
 	backEvery(callback: (item: T, index: number) => any, scope?: any): boolean {
 		return ArrayUtils.backEvery(this._items, callback, scope);
 	}
 
 	/**
-	 * Removes last array item. Does nothing if array is empty.
-	 *
-	 * @returns The removed item or undefined.
+	 * @inheritDoc
 	 */
 	pop(): T {
 		if (this._items.length !== 0) {
@@ -1046,17 +757,7 @@ export default class List<T> extends Class implements IList<T> {
 	}
 
 	/**
-	 * Determines index of first item which is more (or less if **order** < 0) than specified value by **compare** function,
-	 * using binary search. Array must be sorted by **compare** function.
-	 * Can be used for item insertion easily.
-	 * If you want to use this method for item removal, you must look at previous item and compare it to **value** first.
-	 *
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[JW.cmp]]
-	 * @param scope **comparer** call scope. Defaults to collection itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Item index.
+	 * @inheritDoc
 	 */
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
 		return ArrayUtils.binarySearch(this._items, value, compare, scope, order);
