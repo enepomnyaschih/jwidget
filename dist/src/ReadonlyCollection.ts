@@ -221,8 +221,8 @@ interface ReadonlyCollection<T> {
 	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U;
 
 	/**
-	 * Returns the collection item the %callback returns the highest (or lowest if %order < 0) value for.
-	 * @param callback Returns a comparable value, compatible with %cmp. Returns the item itself by default.
+	 * Returns the collection item the callback returns the highest (or lowest if order < 0) value for.
+	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
 	 * @param scope Callback call scope. Defaults to the collection
 	 * @param order Pass negative order to find the lowest value.
 	 * @returns Maximum collection item.
@@ -239,8 +239,8 @@ interface ReadonlyCollection<T> {
 	maxComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T;
 
 	/**
-	 * Returns the collection item the %callback returns the lowest (or highest if %order < 0) value for.
-	 * @param callback Returns a comparable value, compatible with %cmp. Returns the item itself by default.
+	 * Returns the collection item the callback returns the lowest (or highest if order < 0) value for.
+	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
 	 * @param scope Callback call scope. Defaults to the collection
 	 * @param order Pass negative order to find the highest value.
 	 * @returns Minimum collection item.
