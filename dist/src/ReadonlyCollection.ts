@@ -51,7 +51,7 @@ interface ReadonlyCollection<T> {
 	readonly empty: boolean;
 
 	/**
-	 * Returns the first item in collection. If collection is empty, returns undefined.
+	 * Returns the first (or some) item in collection. If collection is empty, returns undefined.
 	 */
 	readonly first: T;
 

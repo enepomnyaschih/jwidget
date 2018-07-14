@@ -25,7 +25,9 @@ import ReadonlyCollection from './ReadonlyCollection';
 import Reducer from './Reducer';
 
 /**
- * Ordered list.
+ * Ordered collection of items. Each item of the list has an index. Index of first item is 0,
+ * index of each next one is higher by 1.
+ * @param T Item type.
  */
 interface ReadonlyList<T> extends ReadonlyCollection<T> {
 	/**
@@ -82,6 +84,7 @@ interface ReadonlyList<T> extends ReadonlyCollection<T> {
 
 	/**
 	 * Returns an item by index. If an item with such index doesn't exist, returns undefined.
+	 * @param index Item index.
 	 */
 	get(index: number): T;
 
@@ -124,14 +127,11 @@ interface ReadonlyList<T> extends ReadonlyCollection<T> {
 
 	/**
 	 * Finds item matching criteria.
-	 *
-	 * Returns key of first item for which callback returns !== false.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
-	 *
+	 * Returns index of the first item the callback returns %truthy value for.
+	 * Algorithm iterates items sequentially, and stops it after the first item matching the criteria.
 	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Found item key or undefined.
+	 * @param scope `callback` call scope. Defaults to collection itself.
+	 * @returns Found item index or undefined.
 	 */
 	findIndex(callback: (item: T, index: number) => any, scope?: any): number;
 
@@ -221,9 +221,9 @@ interface ReadonlyList<T> extends ReadonlyCollection<T> {
 	/**
 	 * Returns index of the list item the callback returns the highest (or lowest if order < 0) value for.
 	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the collection
+	 * @param scope Callback call scope. Defaults to the collection.
 	 * @param order Pass negative order to find the lowest value.
-	 * @returns Index of item with highest (or lowest) value in list.
+	 * @returns Index of item with the highest (or lowest) value in the list.
 	 */
 	maxIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
 
@@ -237,7 +237,7 @@ interface ReadonlyList<T> extends ReadonlyCollection<T> {
 	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
 	 * @param scope Callback call scope. Defaults to the collection.
 	 * @param order Pass negative order to find the lowest value.
-	 * @returns Index of highest (or lowest) list item.
+	 * @returns Index of the highest (or lowest) list item.
 	 */
 	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
 
@@ -249,9 +249,9 @@ interface ReadonlyList<T> extends ReadonlyCollection<T> {
 	/**
 	 * Returns index of the list item the callback returns the lowest (or highest if order < 0) value for.
 	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the collection
+	 * @param scope Callback call scope. Defaults to the collection.
 	 * @param order Pass negative order to find the highest value.
-	 * @returns Index of item with lowest (or highest) value in list.
+	 * @returns Index of item with the lowest (or highest) value in the list.
 	 */
 	minIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
 
@@ -261,11 +261,11 @@ interface ReadonlyList<T> extends ReadonlyCollection<T> {
 	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T;
 
 	/**
-	 * Returns index of the lowest (or highest if order < 0) collection item in terms of the specified comparer function.
+	 * Returns index of the lowest (or highest if order < 0) list item in terms of the specified comparer function.
 	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
 	 * @param scope Callback call scope. Defaults to the collection.
 	 * @param order Pass negative order to find the highest value.
-	 * @returns Index of lowest (or highest) list item.
+	 * @returns Index of the lowest (or highest) list item.
 	 */
 	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
 

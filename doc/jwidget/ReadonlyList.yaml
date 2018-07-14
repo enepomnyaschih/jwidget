@@ -6,7 +6,8 @@ symbols:
     extends:
       - file: jwidget/ReadonlyCollection
     description: |
-      <p>Ordered list.</p>
+      <p>Ordered collection of items. Each item of the list has an index. Index of first item is 0,
+      index of each next one is higher by 1.</p>
     properties:
       last:
         modifiers: readonly
@@ -44,45 +45,45 @@ symbols:
         description: Items are reordered in the list.
       changeEvent:
         modifiers: readonly
-        type: 'Listenable<IList.EventParams<T>>'
+        type: '%Listenable<%IList.%EventParams<T>>'
         description: The list is changed. Triggered right after any another event.
 
     methods:
       clone:
         signature: |
           (): %IList<%T>
-        returns: Shallow copy of this list.
+        returns: Returns a shallow copy of this collection.
 
       get:
         signature: |
-          (index: number): T
+          (index: number): %T
         params:
           index: Index in the list.
         returns: Item at the index. If an item with such index doesn't exist, returns undefined.
 
       every:
         signature: |
-          (callback: (item: T, index: number) => any, scope?: any): boolean
+          (callback: (item: %T, index: number) => any, scope?: any): boolean
         params:
           callback: Criteria callback.
           scope: '%callback call scope. Defaults to the collection.'
         returns: All items match the criteria.
         description: |
           <p>Matches all items against criteria. Returns true if %callback returns %truthy value for all collection
-          items. Algorithms iterates through the items sequentially, and stops it after the first item not matching
+          items. Algorithms iterates through the items consequently, and stops it after the first item not matching
           the criteria.<p>
 
       backEvery:
         signature: |
-          (callback: (item: T, index: number) => any, scope?: any): boolean
+          (callback: (item: %T, index: number) => any, scope?: any): boolean
         params:
           callback: Criteria callback.
           scope: '%callback call scope. Defaults to collection itself.'
         returns: Every item matches the criteria.
         description: |
           <p>Checks all items against the criteria in backward order.
-          Returns true if the callback returns !== false for all collection items.
-          Algorithm iterates items consequently, and stops it after the first item not matching the criteria.</p>
+          Returns true if %callback returns %truthy value for all collection items.
+          Algorithm iterates through the items consequently, and stops it after the first item not matching the criteria.</p>
 
       some:
         signature: |
@@ -240,7 +241,7 @@ symbols:
 
       map:
         signature: |
-          <U>(callback: (item: %T, index: number) => U, scope?: any, getKey?: (item: U) => any): %ICollection<U>
+          <U>(callback: (item: %T, index: number) => U, scope?: any, getKey?: (item: U) => any): %IList<U>
         params:
           callback: Mapping function.
           scope: '%callback call scope. Defaults to the collection.'
@@ -448,6 +449,11 @@ references:
     file: jwidget/IList
     symbol: IList.SpliceParams
     label: SpliceParams
+
+  EventParams:
+    file: jwidget/IList
+    symbol: IList.EventParams
+    label: EventParams
 
   SpliceEventParams:
     file: jwidget/IList
