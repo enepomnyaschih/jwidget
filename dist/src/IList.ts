@@ -32,29 +32,9 @@ import Some from './Some';
 interface IList<T> extends ICollection<T>, DestroyableReadonlyList<T> {
 
 	/**
-	 * Items are removed from the list and items are added to the list.
-	 */
-	readonly spliceEvent: Listenable<IList.SpliceEventParams<T>>;
-
-	/**
-	 * An item is replaced in the list.
-	 */
-	readonly replaceEvent: Listenable<IList.ReplaceEventParams<T>>;
-
-	/**
-	 * An item is moved in the list.
-	 */
-	readonly moveEvent: Listenable<IList.MoveEventParams<T>>;
-
-	/**
 	 * The list is cleared.
 	 */
 	readonly clearEvent: Listenable<IList.ItemsEventParams<T>>;
-
-	/**
-	 * Items are reordered in the list.
-	 */
-	readonly reorderEvent: Listenable<IList.ReorderEventParams<T>>;
 
 	/**
 	 * The list is changed. Triggered right after any another event.
@@ -87,97 +67,97 @@ interface IList<T> extends ICollection<T>, DestroyableReadonlyList<T> {
 	findIndex(callback: (item: T, index: number) => any, scope?: any): number;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	find(callback: (item: T, index: number) => any, scope: any): T;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IList<number>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IList<number>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	index(callback: (item: T, index: number) => any, scope?: any): IMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	filter(callback: (item: T, index: number) => any, scope?: any): IList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	count(callback: (item: T, index: number) => any, scope?: any): number;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => any): IList<U>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	reduce<U>(reducer: Reducer<T, U>): U;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	maxIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	min(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	minIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
 
@@ -227,7 +207,7 @@ interface IList<T> extends ICollection<T>, DestroyableReadonlyList<T> {
 	move(fromIndex: number, toIndex: number): T;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	clear(): T[];
 

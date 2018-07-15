@@ -27,436 +27,279 @@ import Reducer from './Reducer';
 import Some from './Some';
 
 /**
- * Map is unordered collection. Each item has its own string key.
- *
- * # Map methods
- *
- * **Difference compared to [[IIndexedCollection]] is in bold.**
- *
- * Content retrieving:
- *
- * * [[length]] - Collection length property.
- * * [[isEmpty]] - Checks collection for emptiness.
- * * [[get]] - Returns collection item by key.
- * * [[getFirst]] - Returns first item in collection.
- * * [[getFirstKey]] - Returns key of first item in collection.
- * * [[getKeys]], #$getKeys - Returns array of all item keys.
- * * [[containsItem]] - Does collection contain the item?
- * * [[containsKey]] - Does collection contain the key?
- * * [[keyOf]] - Returns item key. If item is not found, returns undefined.
- * * **[[getJson]] - Returns internal representation of the map.**
- *
- * Iteration algorithms:
- *
- * * [[every]] - Checks all items by criteria.
- * Returns true if all items match the criteria.
- * * [[some]] - Checks each item by criteria.
- * Returns true if some items matches the criteria.
- * * [[each]], [[forEach]] - Iterates items.
- * * [[search]] - Finds item by criteria.
- * Returns first item matching the criteria.
- * * [[find]] - Finds item by criteria.
- * Returns index of first item matching the criteria.
- * * [[filter]], [[filter]] - Filters collection by criteria.
- * Builds new collection of the same type, consisting of items matching the criteria.
- * * [[count]], [[$count]] - Counts the items matching criteria.
- * * [[map]], [[map]] - Maps collection items.
- * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * * [[toSorted]], [[$toSorted]], [[toSortedComparing]], [[$toSortedComparing]] -
- * Builds array consisting of collection items sorted by indexer or comparer.
- * * [[getSortingKeys]], [[$getSortingKeys]],
- * [[getSortingKeysComparing]], [[$getSortingKeysComparing]] -
- * Returns indexes of collection items sorted by indexer or comparer.
- * * [[index]], [[$index]] - Indexes collection.
- * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * * [[toArray]], [[$toArray]] - Builds new array consisting of collection items.
- * * [[toDictionary]], [[toMap]] - Builds new map consisting of collection items.
- * * [[toSet]], [[toSet]] - Builds new set consisting of collection items.
- * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asDictionary]], [[asMap]] - Represents collection as map.
- * * [[asSet]], [[asSet]] - Represents collection as set.
- *
- * Collection modification:
- *
- * * [[set]], [[trySet]] - Adds or replaces an item by key.
- * * **[[setAll]], [[setAllVerbose]],
- * [[trySetAll]] - Adds or replaces a bunch of items.**
- * * [[remove]], [[tryRemove]] - Removes an item by key.
- * * **[[removeAll]], [[removeAllVerbose]],
- * [[$removeAllVerbose]], [[tryRemoveAll]] - Removes a bunch of items.**
- * * [[removeItem]] - Removes first occurency of an item in collection.
- * * [[removeItems]] - Removes all occurencies of items in collection.
- * * **[[setKey]], [[trySetKey]] - Changes item key.**
- * * [[clear]], [[$clear]], [[tryClear]] - Clears collection.
- * * **[[splice]], [[trySplice]] - Removes and adds bunches of items.**
- * * **[[reindex]], [[tryReindex]] - Changes item keys.**
- * * **[[performSplice]] - Adjusts contents using [[splice]] method.**
- * * **[[performReindex]] - Adjusts contents using [[reindex]] method.**
- *
- * Similar collection creation (for algorithms and synchronizers implementation):
- *
- * * [[createEmpty]] - Creates empty collection of the same type.
- * * [[createEmptyArray]] - Creates empty array of the same observability level.
- * * [[createEmptyMap]] - Creates empty map of the same observability level.
- * * [[createEmptySet]] - Creates empty set of the same observability level.
- *
- * Other methods:
- *
- * * **[[detectSplice]] - Detects [[splice]] method arguments to adjust contents.**
- * * **[[detectReindex]] - Detects [[reindex]] method arguments to adjust contents.**
- * * **[[equal]] - Checks for equality to another map.**
- *
- * All the same algorithms are also available for native JavaScript Object as map,
- * see [[DictionaryUtils]] functions.
+ * Extension of DestroyableReadonlyMap with modification methods.
+ * @param T Map item type.
  */
 interface IMap<T> extends ICollection<T>, DestroyableReadonlyMap<T> {
-	/**
-	 * Returns item map - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
-	 */
-	readonly items: Dictionary<T>;
 
 	/**
-	 * Returns key of first collection item. If collection is empty, returns undefined.
-	 */
-	readonly firstKey: string;
-
-	/**
-	 * Items are removed from map, items are added to map and items are updated in map.
-	 * Triggered in result of calling:
-	 *
-	 * * [[set]]
-	 * * [[trySet]]
-	 * * [[setAll]]
-	 * * [[trySetAll]]
-	 * * [[remove]]
-	 * * [[tryRemove]]
-	 * * [[removeItem]]
-	 * * [[removeAll]]
-	 * * [[tryRemoveAll]]
-	 * * [[removeItems]]
-	 * * [[splice]]
-	 * * [[trySplice]]
-	 * * [[performSplice]]
-	 */
-	readonly spliceEvent: Listenable<IMap.SpliceEventParams<T>>;
-
-	/**
-	 * Keys of items are changed in map. Triggered in result of calling:
-	 *
-	 * * [[setKey]]
-	 * * [[trySetKey]]
-	 * * [[reindex]]
-	 * * [[tryReindex]]
-	 * * [[performReindex]]
-	 */
-	readonly reindexEvent: Listenable<IMap.ReindexEventParams<T>>;
-
-	/**
-	 * Map is cleared. Triggered in result of calling:
-	 *
-	 * * [[clear]]
-	 * * [[$clear]]
-	 * * [[tryClear]]
+	 * The map is cleared.
 	 */
 	readonly clearEvent: Listenable<IMap.ItemsEventParams<T>>;
 
 	/**
-	 * Map is changed. Triggered right after any another event.
+	 * The map is changed. Triggered right after any another event.
 	 */
 	readonly changeEvent: Listenable<IMap.EventParams<T>>;
 
 	/**
-	 * Returns item by key. If item with such key doesn't exist, returns undefined.
+	 * Returns a full copy of this collection.
 	 */
-	get(key: string): T;
+	clone(): IMap<T>;
 
 	/**
-	 * Returns array of all map keys.
-	 */
-	getKeys(): IList<string>;
-
-	/**
-	 * Checks existance of item with specified key in collection.
-	 */
-	containsKey(key: string): boolean;
-
-	/**
-	 * Returns key of item in collection. If such item doesn't exist, returns undefined.
-	 */
-	keyOf(item: T): string;
-
-	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	every(callback: (item: T, key: string) => any, scope?: any): boolean;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	some(callback: (item: T, key: string) => any, scope?: any): boolean;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	forEach(callback: (item: T, key: string) => any, scope?: any): void;
 
 	/**
-	 * Finds item matching criteria.
-	 *
-	 * Returns key of first item for which callback returns !== false.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Found item key or undefined.
+	 * @inheritDoc
 	 */
 	findKey(callback: (item: T, key: string) => any, scope?: any): string;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	find(callback: (item: T, key: string) => any, scope: any): T;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<string>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<string>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	index(callback: (item: T, key: string) => any, scope?: any): IMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	filter(callback: (item: T, key: string) => any, scope?: any): IMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	count(callback: (item: T, key: string) => any, scope?: any): number;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => any): IMap<U>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
-	toDictionary(): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	asDictionary(): Dictionary<T>;
-
-	/**
-	 * Detects [[splice]] method arguments to adjust map contents to **newItems**.
-	 * Determines which item bunches should be removed and which ones should be inserted/replaced, and their keys.
-	 * @param newItems New map contents.
-	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
-	 */
-	detectSplice(newItems: Dictionary<T>): IMap.SpliceParams<T>;
-
-	/**
-	 * Detects [[reindex]] method arguments to adjust map contents to **newItems**.
-	 * Determines which keys should be assigned to all items.
-	 * If **newItems** contents differ from current map contents, the map will be broken.
-	 * @param newItems New map contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to [[getKey]].
-	 * If collection consists of instances of [[IClass]], then you are in a good shape.
-	 * @param scope **getKey** call scope. Defaults to collection itself.
-	 * @returns **keyMap** argument of [[reindex]] method.
-	 * If no method call required, returns undefined.
-	 */
-	detectReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): Dictionary<string>;
-
-	/**
-	 * Checks for equality (===) to another map, item by item.
-	 */
-	equal(map: Dictionary<T>): boolean;
-
 	reduce<U>(reducer: Reducer<T, U>): U;
+
+	/**
+	 * @inheritDoc
+	 */
 	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
 
+	/**
+	 * @inheritDoc
+	 */
 	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
 
+	/**
+	 * @inheritDoc
+	 */
 	maxKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
 
+	/**
+	 * @inheritDoc
+	 */
 	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
 
+	/**
+	 * @inheritDoc
+	 */
 	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
 
+	/**
+	 * @inheritDoc
+	 */
 	min(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
 
+	/**
+	 * @inheritDoc
+	 */
 	minKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
 
+	/**
+	 * @inheritDoc
+	 */
 	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
 
+	/**
+	 * @inheritDoc
+	 */
 	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
 
 	/**
-	 * Replaces item with specified key. If map doesn't contain such key, new item is added.
-	 * @returns The replaced item. If collection is not modified, returns undefined.
-	 */
-	tryPut(key: string, item: T): Some<T>;
-
-	/**
-	 * Replaces item with specified key. If collection doesn't contain such key:
-	 *
-	 * * Array will be broken.
-	 * * Map will add a new item.
-	 *
+	 * Puts or replaces an item with the specified key.
+	 * @param key Item key.
+	 * @param item Item to put.
 	 * @returns The replaced item.
 	 */
 	put(key: string, item: T): T;
 
 	/**
-	 * Adds or replaces a bunch of items.
+	 * Puts or replaces a bunch of items.
+	 * @param items Items to put.
 	 */
 	putAll(items: Dictionary<T>): void;
 
 	/**
-	 * Low-performance alternative to [[setAll]] with verbose result set.
-	 * @returns Result of internal [[splice]] method call.
+	 * Low-performance alternative to putAll with verbose result set.
+	 * @param items Items to put.
+	 * @returns Result of internal splice method call.
 	 */
 	putAllVerbose(items: Dictionary<T>): IMap.SpliceResult<T>;
 
 	/**
-	 * Adds or replaces a bunch of items.
-	 * @returns Result of internal [[splice]] method call.
-	 * If collection is not modified, returns undefined.
-	 */
-	tryPutAll(items: Dictionary<T>): IMap.SpliceResult<T>;
-
-	/**
-	 * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it causes an error.
+	 * Changes item key in the map. If collection doesn't contain oldKey or contains newKey, it may lead to unexpected
+	 * consequences.
+	 * @param oldKey Old key of the item.
+	 * @param newKey New key of the item.
 	 * @returns The moved item.
 	 */
 	setKey(oldKey: string, newKey: string): T;
 
 	/**
-	 * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it causes an error.
-	 * @returns The moved item.
-	 * If collection is not modified, returns undefined.
-	 */
-	trySetKey(oldKey: string, newKey: string): T;
-
-	/**
-	 * Removes item with specified key if it exists in map.
-	 * @returns Old collection item.
-	 * If collection is not modified, returns undefined.
-	 */
-	tryRemove(key: string): T;
-
-	/**
-	 * Removes item with specified key. If collection doesn't contain such key:
-	 *
-	 * * Array will be broken.
-	 * * Map will add a new item.
-	 *
+	 * Removes item with specified key.
+	 * @param key Item key.
 	 * @returns The removed item.
 	 */
-	remove(index: string): T;
+	remove(key: string): T;
 
 	/**
-	 * Removes a bunch of items from map.
+	 * Removes a bunch of items from the map.
+	 * @param keys Item keys.
 	 */
 	removeAll(keys: string[]): void;
 
 	/**
-	 * Low-performance alternative to [[removeAll]] with verbose result set.
+	 * Low-performance alternative to removeAll with verbose result set.
+	 * @param keys Item keys.
 	 * @returns The removed items.
 	 */
 	removeAllVerbose(keys: string[]): Dictionary<T>;
 
 	/**
-	 * Removes a bunch of items from map.
-	 * @returns The removed items.
-	 * If collection is not modified, returns undefined.
-	 */
-	tryRemoveAll(keys: string[]): Dictionary<T>;
-
-	/**
-	 * @inheritdoc
-	 */
-	removeItems(items: T[]): void;
-
-	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	clear(): Dictionary<T>;
 
 	/**
-	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
+	 * Removes and adds bunches of items in the map. Universal optimized granular operation of removal/insertion.
 	 * @param removedKeys Keys of items to remove.
-	 * @param updatedItems Items to add/replace.
+	 * @param updatedItems Items to put/replace.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
 	splice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T>;
 
 	/**
-	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
-	 * @param removedKeys Keys of items to remove.
-	 * @param updatedItems Items to add/replace.
-	 * @returns Splice result.
-	 * If collection is not modified, returns undefined.
-	 */
-	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T>;
-
-	/**
-	 * Changes item keys in map.
-	 * @param keyMap Key map. Item with key x will gain key keyMap[x].
-	 * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
-	 * @returns Map of changed keys. Never returns null or undefined.
+	 * Changes item keys in the map.
+	 * @param keyMap Key dictionary. Item with key x will gain key keyMap[x].
+	 * It is necessary to pass only changed keys, but unchanged keys or nonexistent keys are acceptable as well.
+	 * @returns Dictionary of changed keys. Never returns null or undefined.
 	 */
 	reindex(keyMap: Dictionary<string>): Dictionary<string>;
 
 	/**
-	 * Changes item keys in map.
-	 * @param keyMap Key map. Item with key x will gain key keyMap[x].
-	 * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
-	 * @returns Map of changed keys.
-	 * If collection is not modified, returns undefined.
+	 * Puts or replaces an item with the specified key.
+	 * @param key Item key.
+	 * @param item Item to put.
+	 * @returns The replaced item. If collection is not modified, returns undefined.
+	 */
+	tryPut(key: string, item: T): Some<T>;
+
+	/**
+	 * Puts or replaces a bunch of items.
+	 * @param items Items to put.
+	 * @returns Result of internal splice method call. If collection is not modified, returns undefined.
+	 */
+	tryPutAll(items: Dictionary<T>): IMap.SpliceResult<T>;
+
+	/**
+	 * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it may lead to unexpected
+	 * consequences.
+	 * @param oldKey Old key of the item.
+	 * @param newKey New key of the item.
+	 * @returns The moved item. If collection is not modified, returns undefined.
+	 */
+	trySetKey(oldKey: string, newKey: string): T;
+
+	/**
+	 * Removes item with specified key.
+	 * @param key Item key.
+	 * @returns The removed item. If collection is not modified, returns undefined.
+	 */
+	tryRemove(key: string): T;
+
+	/**
+	 * Removes a bunch of items from the map.
+	 * @param keys Item keys.
+	 * @returns The removed items. If collection is not modified, returns undefined.
+	 */
+	tryRemoveAll(keys: string[]): Dictionary<T>;
+
+	/**
+	 * Removes and adds bunches of items in the map. Universal optimized granular operation of removal/insertion.
+	 * @param removedKeys Keys of items to remove.
+	 * @param updatedItems Items to put/replace.
+	 * @returns Splice result. If collection is not modified, returns undefined.
+	 */
+	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T>;
+
+	/**
+	 * Changes item keys in the map.
+	 * @param keyMap Key dictionary. Item with key x will gain key keyMap[x].
+	 * It is necessary to pass only changed keys, but unchanged keys or nonexistent keys are acceptable as well.
+	 * @returns Dictionary of changed keys. If collection is not modified, returns undefined.
 	 */
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string>;
 
 	/**
-	 * Adjusts map contents to **newItems** using [[detectSplice]] and
-	 * [[splice]] methods.
+	 * Adjusts map contents to `newItems` using `detectSplice` and `splice` methods.
 	 * @param newItems New map contents.
 	 */
 	performSplice(newItems: Dictionary<T>): void;
 
 	/**
-	 * Adjusts map contents to **newItems** using [[detectReindex]] and
-	 * [[reindex]] methods.
+	 * Adjusts map contents to `newItems` using `detectReindex` and `reindex` methods.
+	 * All items must have unique `getKey` function result.
 	 * @param newItems New map contents.
 	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to [[getKey]].
-	 * If collection consists of instances of [[IClass]], then you are in a good shape.
-	 * @param scope **getKey** call scope. Defaults to collection itself.
+	 * Defaults to `getKey` property of the collection.
+	 * @param scope `getKey` call scope. Defaults to collection itself.
 	 */
 	performReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): void;
 }
@@ -466,6 +309,7 @@ export default IMap;
 namespace IMap {
 	/**
 	 * `IMap` event parameters.
+	 * @param T Item type.
 	 */
 	export interface EventParams<T> extends ICollection.EventParams<T> {
 		/**
@@ -476,6 +320,7 @@ namespace IMap {
 
 	/**
 	 * Parameters of `spliceEvent`.
+	 * @param T Item type.
 	 */
 	export interface SpliceEventParams<T> extends EventParams<T> {
 		/**
@@ -486,6 +331,7 @@ namespace IMap {
 
 	/**
 	 * Parameters of `reindexEvent`.
+	 * @param T Item type.
 	 */
 	export interface ReindexEventParams<T> extends EventParams<T> {
 		/**
@@ -496,6 +342,7 @@ namespace IMap {
 
 	/**
 	 * Parameters of `clearEvent`.
+	 * @param T Item type.
 	 */
 	export interface ItemsEventParams<T> extends EventParams<T> {
 		/**
@@ -505,9 +352,7 @@ namespace IMap {
 	}
 
 	/**
-	 * [[JW.Map.splice]] method arguments.
-	 * Returned by [[JW.Map.detectSplice]] method.
-	 *
+	 * IMap.splice method arguments. Result of `detectSplice` method.
 	 * @param T Item type.
 	 */
 	export interface SpliceParams<T> {
@@ -517,18 +362,24 @@ namespace IMap {
 		readonly removedKeys: string[];
 
 		/**
-		 * Items to add/replace.
+		 * Items to put/replace.
 		 */
 		readonly updatedItems: Dictionary<T>;
 	}
 
 	/**
-	 * [[JW.Map.splice]] method result.
-	 *
+	 * IMap.splice method result.
 	 * @param T Item type.
 	 */
 	export interface SpliceResult<T> {
+		/**
+		 * Removed items.
+		 */
 		readonly removedItems: Dictionary<T>;
+
+		/**
+		 * Added items.
+		 */
 		readonly addedItems: Dictionary<T>;
 	}
 }

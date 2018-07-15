@@ -1,0 +1,21 @@
+symbols:
+  default:
+    typevars:
+      T: Item type.
+    extends:
+      - file: jwidget/IMap
+        typevars: [T]
+      - file: jwidget/Class
+    description: |
+      <p>Unordered key-value collection. Each item has its own string key.</p>
+    constructor:
+      signature: |
+        (silent?: boolean)
+        new Map<T>(getKey: (item: %T) => any, silent?: boolean)
+        new Map<T>(items: %Dictionary<%T>, flags?: %CollectionFlags)
+        new Map<T>(items: %Dictionary<%T>, getKey: (item: %T) => any, flags?: %CollectionFlags)
+      params:
+        silent: Create a silent collection which means that it never triggers modification events.
+        getKey: Function that identifies an item in this collection for optimization of some algorithms.
+        items: Initial map contents.
+        flags: Collection configuration flags.

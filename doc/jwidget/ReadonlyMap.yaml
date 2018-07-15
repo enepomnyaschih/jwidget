@@ -362,41 +362,46 @@ symbols:
           Determines new keys to be assigned to all items.
           If %newItems contents differ from the map contents, it may lead to unknown consequences.</p>
 
-references:
-  getKeyProperty:
-    symbol: default
-    member: getKey
-    label: getKey
+    references:
+      getKeyProperty:
+        symbol: default
+        member: getKey
+        label: getKey
 
-  splice:
-    file: jwidget/IMap
-    member: splice
+      splice:
+        file: jwidget/IMap
+        member: splice
 
-  reindex:
-    file: jwidget/IMap
-    member: reindex
+      reindex:
+        file: jwidget/IMap
+        member: reindex
 
-  SpliceParams:
-    file: jwidget/IMap
-    symbol: IMap.SpliceParams
-    label: SpliceParams
+      SpliceResult:
+        file: jwidget/IMap
+        symbol: IMap.SpliceResult
+        label: SpliceResult
 
-  EventParams:
-    file: jwidget/IMap
-    symbol: IMap.EventParams
-    label: EventParams
+      SpliceParams:
+        file: jwidget/IMap
+        symbol: IMap.SpliceParams
+        label: SpliceParams
 
-  SpliceEventParams:
-    file: jwidget/IMap
-    symbol: IMap.SpliceEventParams
-    label: SpliceEventParams
+      EventParams:
+        file: jwidget/IMap
+        symbol: IMap.EventParams
+        label: EventParams
 
-  ReindexEventParams:
-    file: jwidget/IMap
-    symbol: IMap.ReindexEventParams
-    label: ReindexEventParams
+      SpliceEventParams:
+        file: jwidget/IMap
+        symbol: IMap.SpliceEventParams
+        label: SpliceEventParams
 
-  ItemsEventParams:
-    file: jwidget/IMap
-    symbol: IMap.ItemsEventParams
-    label: ItemsEventParams
+      ReindexEventParams:
+        file: jwidget/IMap
+        symbol: IMap.ReindexEventParams
+        label: ReindexEventParams
+
+      ItemsEventParams:
+        file: jwidget/IMap
+        symbol: IMap.ItemsEventParams
+        label: ItemsEventParams

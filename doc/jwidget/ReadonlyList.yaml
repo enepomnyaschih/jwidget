@@ -431,51 +431,56 @@ symbols:
         description: |
           <p>Detects %reorder method arguments to sort list contents by comparer.</p>
 
-references:
-  getKeyProperty:
-    symbol: default
-    member: getKey
-    label: getKey
+    references:
+      getKeyProperty:
+        symbol: default
+        member: getKey
+        label: getKey
 
-  splice:
-    file: jwidget/IList
-    member: splice
+      splice:
+        file: jwidget/IList
+        member: splice
 
-  reorder:
-    file: jwidget/IList
-    member: reorder
+      reorder:
+        file: jwidget/IList
+        member: reorder
 
-  SpliceParams:
-    file: jwidget/IList
-    symbol: IList.SpliceParams
-    label: SpliceParams
+      SpliceParams:
+        file: jwidget/IList
+        symbol: IList.SpliceParams
+        label: SpliceParams
 
-  EventParams:
-    file: jwidget/IList
-    symbol: IList.EventParams
-    label: EventParams
+      SpliceResult:
+        file: jwidget/IList
+        symbol: IList.SpliceResult
+        label: SpliceResult
 
-  SpliceEventParams:
-    file: jwidget/IList
-    symbol: IList.SpliceEventParams
-    label: SpliceEventParams
+      EventParams:
+        file: jwidget/IList
+        symbol: IList.EventParams
+        label: EventParams
 
-  ReorderEventParams:
-    file: jwidget/IList
-    symbol: IList.ReorderEventParams
-    label: ReorderEventParams
+      SpliceEventParams:
+        file: jwidget/IList
+        symbol: IList.SpliceEventParams
+        label: SpliceEventParams
 
-  MoveEventParams:
-    file: jwidget/IList
-    symbol: IList.MoveEventParams
-    label: MoveEventParams
+      ReorderEventParams:
+        file: jwidget/IList
+        symbol: IList.ReorderEventParams
+        label: ReorderEventParams
 
-  ItemsEventParams:
-    file: jwidget/IList
-    symbol: IList.ItemsEventParams
-    label: ItemsEventParams
+      MoveEventParams:
+        file: jwidget/IList
+        symbol: IList.MoveEventParams
+        label: MoveEventParams
 
-  ReplaceEventParams:
-    file: jwidget/IList
-    symbol: IList.ReplaceEventParams
-    label: ReplaceEventParams
+      ItemsEventParams:
+        file: jwidget/IList
+        symbol: IList.ItemsEventParams
+        label: ItemsEventParams
+
+      ReplaceEventParams:
+        file: jwidget/IList
+        symbol: IList.ReplaceEventParams
+        label: ReplaceEventParams

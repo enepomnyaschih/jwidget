@@ -40,118 +40,8 @@ import Set from './Set';
 import Some from './Some';
 
 /**
- * Map is unordered collection. Each item has its own string key.
- *
- * # Map methods
- *
- * **Difference compared to [[JW.IndexedCollection]] is in bold.**
- *
- * Content retrieving:
- *
- * * [[length]] - Collection length property.
- * * [[isEmpty]] - Checks collection for emptiness.
- * * [[get]] - Returns collection item by key.
- * * [[getFirst]] - Returns first item in collection.
- * * [[getFirstKey]] - Returns key of first item in collection.
- * * [[getKeys]], #$getKeys - Returns array of all item keys.
- * * [[containsItem]] - Does collection contain the item?
- * * [[containsKey]] - Does collection contain the key?
- * * [[keyOf]] - Returns item key. If item is not found, returns undefined.
- * * **[[getJson]] - Returns internal representation of map.**
- *
- * Iteration algorithms:
- *
- * * [[every]] - Checks all items by criteria.
- * Returns true if all items match the criteria.
- * * [[some]] - Checks each item by criteria.
- * Returns true if some items matches the criteria.
- * * [[each]] - Iterates items.
- * * [[search]] - Finds item by criteria.
- * Returns first item matching the criteria.
- * * [[find]] - Finds item by criteria.
- * Returns index of first item matching the criteria.
- * * [[filter]], [[filter]],
- * [[$filter]] - Filters collection by criteria.
- * Builds new collection of the same type, consisting of items matching the criteria.
- * * [[count]], [[$count]],
- * [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[map]],
- * [[$mapValues]], [[$mapObjects]] - Maps collection items.
- * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * * [[toSorted]], [[$toSorted]],
- * [[toSortedComparing]], [[$toSortedComparing]],
- * [[$$toSortedComparing]] -
- * Builds array consisting of collection items sorted by indexer or comparer.
- * * [[getSortingKeys]], [[$getSortingKeys]],
- * [[getSortingKeysComparing]],
- * [[$getSortingKeysComparing]] -
- * Returns indexes of collection items sorted by indexer or comparer.
- * * [[index]], [[$index]],
- * [[$$index]] - Indexes collection.
- * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * * [[toArray]], [[$toArray]],
- * [[$$toArray]] - Builds new array consisting of collection items.
- * * [[toDictionary]], [[toMap]] - Builds new map consisting of collection items.
- * * [[toSet]], [[toSet]],
- * [[$toSet]] - Builds new set consisting of collection items.
- * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asDictionary]], [[asMap]] - Represents collection as map.
- * * [[asSet]], [[asSet]] - Represents collection as set.
- *
- * Collection modification:
- *
- * * [[set]], [[trySet]] - Adds or replaces an item by key.
- * * **[[setAll]], [[setAllVerbose]],
- * [[trySetAll]] - Adds or replaces a bunch of items.**
- * * [[remove]], [[tryRemove]] - Removes an item by key.
- * * **[[removeAll]], [[removeAllVerbose]],
- * [[$removeAllVerbose]], [[tryRemoveAll]] - Removes a bunch of items.**
- * * [[removeItem]] - Removes first occurency of an item in collection.
- * * [[removeItems]] - Removes all occurencies of items in collection.
- * * **[[setKey]], [[trySetKey]] - Changes item key.**
- * * [[clear]], [[$clear]],
- * [[tryClear]] - Clears collection.
- * * **[[splice]], [[trySplice]] - Removes and adds bunches of items.**
- * * **[[reindex]], [[tryReindex]] - Changes item keys.**
- * * **[[performSplice]] - Adjusts contents using [[splice]] method.**
- * * **[[performReindex]] - Adjusts contents using [[reindex]] method.**
- *
- * Synchronizers creation:
- *
- * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
- * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$filter]] method.
- * * [[createCounter]] - Creates matching item counter.
- * Extended version of [[$$count]] method.
- * * [[createLister]] - Creates converter to set.
- * Extended version of [[$toSet]] method.
- * * [[createIndexer]] - Creates converter to map (indexer).
- * Extended version of [[$$index]] method.
- * * [[createOrderer]] - Creates converter to array (orderer).
- * Extended version of [[$$toArray]] method.
- * * [[createSorterComparing]] - Creates converter to array (sorter by comparer).
- * Extended version of [[$$toSortedComparing]] method.
- * * [[createObserver]] - Creates observer.
- * * **[[createInserter]] - Creates view synchronizer with map.**
- *
- * Similar collection creation (for algorithms and synchronizers implementation):
- *
- * * [[createEmpty]] - Creates empty collection of the same type.
- * * [[createEmptyArray]] - Creates empty array of the same observability level.
- * * [[createEmptyMap]] - Creates empty map of the same observability level.
- * * [[createEmptySet]] - Creates empty set of the same observability level.
- *
- * Other methods:
- *
- * * **[[detectSplice]] - Detects [[splice]] method arguments to adjust contents.**
- * * **[[detectReindex]] - Detects [[reindex]] method arguments to adjust contents.**
- * * **[[equal]] - Checks for equality to another map.**
- *
- * All the same algorithms are also available for native JavaScript Object as map,
- * see [[JW.Map]] static methods.
- *
- * @param T Map item type.
+ * Unordered key-value collection. Each item has its own string key.
+ * @param T Item type.
  */
 class Map<T> extends Class implements IMap<T> {
 	private _ownsItems: Boolean = false;
@@ -165,18 +55,32 @@ class Map<T> extends Class implements IMap<T> {
 	private _changeEvent: IEvent<IMap.EventParams<T>>;
 
 	/**
-	 * Identifies an item in this collection for optimization of some algorithms.
+	 * @inheritDoc
 	 */
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * @param json Initial map contents.
-	 * @param adapter Set to true to wrap the **items** rather than copying them into
-	 * a new map.
+	 * @param silent Create a silent collection which means that it never triggers modification events.
 	 */
 	constructor(silent?: boolean);
+
+	/**
+	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
+	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 */
 	constructor(getKey: (item: T) => any, silent?: boolean);
+
+	/**
+	 * @param items Initial map contents.
+	 * @param flags Collection configuration flags.
+	 */
 	constructor(items: Dictionary<T>, flags?: CollectionFlags);
+
+	/**
+	 * @param items Initial map contents.
+	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
+	 * @param flags Collection configuration flags.
+	 */
 	constructor(items: Dictionary<T>, getKey: (item: T) => any, flags?: CollectionFlags);
 	constructor(a?: any, b?: any, c?: CollectionFlags) {
 		super();
@@ -213,107 +117,77 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+	 * @inheritDoc
 	 */
 	get silent() {
 		return this.changeEvent.dummy;
 	}
 
 	/**
-	 * Collection length property.
+	 * @inheritDoc
 	 */
 	get length(): Bindable<number> {
 		return this._length;
 	}
 
 	/**
-	 * Checks collection for emptiness.
+	 * @inheritDoc
 	 */
 	get empty() {
 		return this.length.get() === 0;
 	}
 
 	/**
-	 * Returns first item in collection. If collection is empty, returns undefined.
+	 * @inheritDoc
 	 */
 	get first(): T {
 		return DictionaryUtils.getFirst(this._items);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	get firstKey(): string {
 		return DictionaryUtils.getFirstKey(this._items);
 	}
 
 	/**
-	 * Returns item map - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
+	 * @inheritDoc
 	 */
 	get items(): Dictionary<T> {
 		return this._items;
 	}
 
 	/**
-	 * Items are removed from map, items are added to map and items are updated in map.
-	 * Triggered in result of calling:
-	 *
-	 * * [[set]]
-	 * * [[trySet]]
-	 * * [[setAll]]
-	 * * [[trySetAll]]
-	 * * [[remove]]
-	 * * [[tryRemove]]
-	 * * [[removeItem]]
-	 * * [[removeAll]]
-	 * * [[tryRemoveAll]]
-	 * * [[removeItems]]
-	 * * [[splice]]
-	 * * [[trySplice]]
-	 * * [[performSplice]]
+	 * @inheritDoc
 	 */
 	get spliceEvent(): Listenable<IMap.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
 	/**
-	 * Keys of items are changed in map. Triggered in result of calling:
-	 *
-	 * * [[setKey]]
-	 * * [[trySetKey]]
-	 * * [[reindex]]
-	 * * [[tryReindex]]
-	 * * [[performReindex]]
+	 * @inheritDoc
 	 */
 	get reindexEvent(): Listenable<IMap.ReindexEventParams<T>> {
 		return this._reindexEvent;
 	}
 
 	/**
-	 * Map is cleared. Triggered in result of calling:
-	 *
-	 * * [[clear]]
-	 * * [[$clear]]
-	 * * [[tryClear]]
+	 * @inheritDoc
 	 */
 	get clearEvent(): Listenable<IMap.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
 	/**
-	 * Map is changed. Triggered right after any another event.
+	 * @inheritDoc
 	 */
 	get changeEvent(): Listenable<IMap.EventParams<T>> {
 		return this._changeEvent;
 	}
 
 	/**
-	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
-	 * this collection. The item is destroyed when it leaves the
-	 * collection, and all items are destroyed on the collection destruction.
-	 * @returns this
+	 * @inheritDoc
 	 */
 	ownItems(): this {
 		this._ownsItems = true;
@@ -321,268 +195,271 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Returns a full copy of this object.
+	 * @inheritDoc
 	 */
 	clone(): IMap<T> {
 		return new Map<T>(this.items, this.getKey, this.silent ? SILENT : 0);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	get(key: string): T {
 		return this._items[key];
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	getKeys(): IList<string> {
 		return new List<string>(Object.keys(this._items), String, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	contains(item: T): boolean {
 		return DictionaryUtils.contains(this._items, item);
 	}
 
 	/**
-	 * Checks existance of item with specified key in collection.
+	 * @inheritDoc
 	 */
 	containsKey(key: string): boolean {
 		return this.get(key) !== undefined;
 	}
 
 	/**
-	 * Returns key of item in collection. If such item doesn't exist, returns undefined.
+	 * @inheritDoc
 	 */
 	keyOf(item: T): string {
 		return DictionaryUtils.keyOf(this._items, item);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	every(callback: (item: T, key: string) => any, scope?: any): boolean {
 		return DictionaryUtils.every(this._items, callback, scope || this);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	some(callback: (item: T, key: string) => any, scope?: any): boolean {
 		return DictionaryUtils.some(this._items, callback, scope || this);
 	}
 
 	/**
-	 * Iterates collection items. Calls specified function for all items.
-	 *
-	 * @param callback Callback function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @inheritDoc
 	 */
 	forEach(callback: (item: T, key: string) => any, scope?: any): void {
 		DictionaryUtils.forEach(this._items, callback, scope || this);
 	}
 
 	/**
-	 * Finds item matching criteria.
-	 *
-	 * Returns key of first item for which callback returns !== false.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Found item key or undefined.
+	 * @inheritDoc
 	 */
 	findKey(callback: (item: T, key: string) => any, scope?: any): string {
 		return DictionaryUtils.findKey(this._items, callback, scope || this);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	find(callback: (item: T, key: string) => any, scope?: any): T {
 		return DictionaryUtils.find(this._items, callback, scope || this);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<T> {
 		return new List<T>(DictionaryUtils.toSorted(this._items, callback, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<T> {
 		return new List<T>(DictionaryUtils.toSortedComparing(this._items, compare, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IList<string> {
 		return new List<string>(DictionaryUtils.getSortingKeys(this._items, callback, scope || this, order), String, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IList<string> {
 		return new List<string>(DictionaryUtils.getSortingKeysComparing(this._items, compare, scope || this, order), String, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	filter(callback: (item: T, key: string) => any, scope?: any): IMap<T> {
 		return new Map<T>(DictionaryUtils.filter(this._items, callback, scope || this), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	count(callback: (item: T, key: string) => any, scope?: any): number {
 		return DictionaryUtils.count(this._items, callback, scope || this);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => any): IMap<U> {
 		return new Map<U>(DictionaryUtils.map(this._items, callback, scope || this), getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	index(callback: (item: T, key: string) => any, scope?: any): IMap<T> {
 		return new Map<T>(DictionaryUtils.index(this._items, callback, scope || this), this.getKey, SILENT | ADAPTER);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	reduce<U>(reducer: Reducer<T, U>): U;
+
+	/**
+	 * @inheritDoc
+	 */
 	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
+
+	/**
+	 * @inheritDoc
+	 */
 	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, item: T, key: string) => U), initial?: U): U {
 		return (typeof reducer === "function") ?
 			DictionaryUtils.reduce<T, U>(this.items, reducer, initial) :
 			DictionaryUtils.reduce<T, U>(this.items, reducer);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T {
 		return DictionaryUtils.max(this._items, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	maxKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string {
 		return DictionaryUtils.maxKey(this._items, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T {
 		return DictionaryUtils.maxComparing(this._items, compare, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string {
 		return DictionaryUtils.maxKeyComparing(this._items, compare, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	min(callback?: (item: T, key: string) => any, scope?: any, order?: number): T {
 		return DictionaryUtils.min(this._items, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	minKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string {
 		return DictionaryUtils.minKey(this._items, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T {
 		return DictionaryUtils.minComparing(this._items, compare, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string {
 		return DictionaryUtils.minKeyComparing(this._items, compare, scope, order);
 	}
 
 	/**
-	 * Converts collection to array.
-	 *
-	 * Builds new array consisting of collection items.
+	 * @inheritDoc
 	 */
 	toArray(): T[] {
 		return DictionaryUtils.toArray(this._items);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toList(): IList<T> {
 		return new List<T>(this.toArray(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSet(): ISet<T> {
 		return new Set<T>(this.toArray(), this.getKey, true);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toDictionary(): Dictionary<T> {
 		return apply<T>({}, this._items);
 	}
 
 	/**
-	 * Represents collection as array.
-	 *
-	 * If this collection is array, returns it immediately.
-	 * Else, executes [[toArray]] method.
-	 * This method works usually faster than [[toArray]],
-	 * but please make sure that the returned array
-	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 * @inheritDoc
 	 */
 	asArray(): T[] {
 		return this.toArray();
 	}
 
 	/**
-	 * Represents collection as array.
-	 *
-	 * If this collection is array, returns it immediately.
-	 * Else, executes [[toArray]] method.
-	 * This method works usually faster than [[toArray]],
-	 * but please make sure that the returned array
-	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 * @inheritDoc
 	 */
 	asList(): IList<T> {
 		return this.toList();
 	}
 
 	/**
-	 * Represents collection as set.
-	 *
-	 * If this collection is set, returns it immediately.
-	 * Else, executes [[toSet]] method.
-	 * This method works usually faster than [[toSet]],
-	 * but please make sure that the returned set
-	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 * @inheritDoc
 	 */
 	asSet(): ISet<T> {
 		return this.toSet();
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	asDictionary(): Dictionary<T> {
 		return this._items;
 	}
 
 	/**
-	 * Replaces item with specified key. If map doesn't contain such key, new item is added.
-	 * @returns The replaced item. If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryPut(key: string, item: T): Some<T> {
 		const result = DictionaryUtils.tryPut(this._items, key, item);
@@ -611,12 +488,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Replaces item with specified key. If collection doesn't contain such key:
-	 *
-	 * * Array will be broken.
-	 * * Map will add a new item.
-	 *
-	 * @returns The replaced item.
+	 * @inheritDoc
 	 */
 	put(key: string, item: T): T {
 		const result = this.tryPut(key, item);
@@ -624,7 +496,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Adds or replaces a bunch of items.
+	 * @inheritDoc
 	 */
 	putAll(items: Dictionary<T>) {
 		if (!this.silent) {
@@ -637,8 +509,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Low-performance alternative to [[setAll]] with verbose result set.
-	 * @returns Result of internal [[splice]] method call.
+	 * @inheritDoc
 	 */
 	putAllVerbose(items: Dictionary<T>): IMap.SpliceResult<T> {
 		var spliceResult = this.tryPutAll(items);
@@ -646,17 +517,14 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Adds or replaces a bunch of items.
-	 * @returns Result of internal [[splice]] method call.
-	 * If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryPutAll(items: Dictionary<T>): IMap.SpliceResult<T> {
 		return this.trySplice([], items);
 	}
 
 	/**
-	 * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it causes an error.
-	 * @returns The moved item.
+	 * @inheritDoc
 	 */
 	setKey(oldKey: string, newKey: string): T {
 		this.trySetKey(oldKey, newKey);
@@ -664,9 +532,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it causes an error.
-	 * @returns The moved item.
-	 * If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	trySetKey(oldKey: string, newKey: string): T {
 		const item = DictionaryUtils.trySetKey(this._items, oldKey, newKey);
@@ -681,9 +547,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Removes item with specified key if it exists in map.
-	 * @returns Old collection item.
-	 * If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryRemove(key: string): T {
 		const item = DictionaryUtils.tryRemove(this._items, key);
@@ -703,19 +567,14 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Removes item with specified key. If collection doesn't contain such key:
-	 *
-	 * * Array will be broken.
-	 * * Map will add a new item.
-	 *
-	 * @returns The removed item.
+	 * @inheritDoc
 	 */
 	remove(key: string): T {
 		return this.tryRemove(key);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	removeItem(item: T): string {
 		var key = this.keyOf(item);
@@ -726,7 +585,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Removes a bunch of items from map.
+	 * @inheritDoc
 	 */
 	removeAll(keys: string[]) {
 		if (!this.silent) {
@@ -739,8 +598,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Low-performance alternative to [[removeAll]] with verbose result set.
-	 * @returns The removed items.
+	 * @inheritDoc
 	 */
 	removeAllVerbose(keys: string[]): Dictionary<T> {
 		const items = this.tryRemoveAll(keys);
@@ -748,9 +606,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Removes a bunch of items from map.
-	 * @returns The removed items.
-	 * If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryRemoveAll(keys: string[]): Dictionary<T> {
 		const spliceResult = this.trySplice(keys, {});
@@ -761,7 +617,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	removeItems(items: T[]) {
 		const itemSet = VidSet.fromArray<T>(items, this.getKey);
@@ -772,7 +628,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	clear(): Dictionary<T> {
 		if (this._length.get() === 0) {
@@ -795,10 +651,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
-	 * @param removedKeys Keys of items to remove.
-	 * @param updatedItems Items to add/replace.
-	 * @returns Splice result. Never returns null or undefined.
+	 * @inheritDoc
 	 */
 	splice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
 		var spliceResult = this.trySplice(removedKeys, updatedItems);
@@ -806,11 +659,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Removes and adds bunches of items in map. Universal optimized granular operation of removal/insertion.
-	 * @param removedKeys Keys of items to remove.
-	 * @param updatedItems Items to add/replace.
-	 * @returns Splice result.
-	 * If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
 		const spliceResult = DictionaryUtils.trySplice(this._items, removedKeys, updatedItems);
@@ -827,10 +676,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Changes item keys in map.
-	 * @param keyMap Key map. Item with key x will gain key keyMap[x].
-	 * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
-	 * @returns Map of changed keys. Never returns null or undefined.
+	 * @inheritDoc
 	 */
 	reindex(keyMap: Dictionary<string>): Dictionary<string> {
 		var result = this.tryReindex(keyMap);
@@ -838,11 +684,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Changes item keys in map.
-	 * @param keyMap Key map. Item with key x will gain key keyMap[x].
-	 * It is neccessary to pass only changed keys, but unchanged keys or unexisting keys are acceptable as well.
-	 * @returns Map of changed keys.
-	 * If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
 		const result = DictionaryUtils.tryReindex(this._items, keyMap);
@@ -855,35 +697,21 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Detects [[splice]] method arguments to adjust map contents to **newItems**.
-	 * Determines which item bunches should be removed and which ones should be inserted/replaced, and their keys.
-	 * @param newItems New map contents.
-	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
+	 * @inheritDoc
 	 */
 	detectSplice(newItems: Dictionary<T>): IMap.SpliceParams<T> {
 		return DictionaryUtils.detectSplice(this._items, newItems);
 	}
 
 	/**
-	 * Detects [[reindex]] method arguments to adjust map contents to **newItems**.
-	 * Determines which keys should be assigned to all items.
-	 * If **newItems** contents differ from current map contents, the map will be broken.
-	 * @param newItems New map contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then you are in a good shape.
-	 * @param scope **getKey** call scope. Defaults to collection itself.
-	 * @returns **keyMap** argument of [[reindex]] method.
-	 * If no method call required, returns undefined.
+	 * @inheritDoc
 	 */
 	detectReindex(newItems: Dictionary<T>): Dictionary<string> {
 		return DictionaryUtils.detectReindex(this._items, newItems, this.getKey);
 	}
 
 	/**
-	 * Adjusts map contents to **newItems** using [[detectSplice]] and
-	 * [[splice]] methods.
-	 * @param newItems New map contents.
+	 * @inheritDoc
 	 */
 	performSplice(newItems: Dictionary<T>) {
 		var params = this.detectSplice(newItems);
@@ -893,13 +721,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Adjusts map contents to **newItems** using [[detectReindex]] and
-	 * [[reindex]] methods.
-	 * @param newItems New map contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to [[getKey]].
-	 * If collection consists of instances of JW.Class, then you are in a good shape.
-	 * @param scope **getKey** call scope. Defaults to collection itself.
+	 * @inheritDoc
 	 */
 	performReindex(newItems: Dictionary<T>) {
 		var keyMap = this.detectReindex(newItems);
@@ -909,7 +731,7 @@ class Map<T> extends Class implements IMap<T> {
 	}
 
 	/**
-	 * Checks for equality (===) to another map, item by item.
+	 * @inheritDoc
 	 */
 	equal(map: Dictionary<T>): boolean {
 		return DictionaryUtils.equal(this._items, map);

@@ -11,6 +11,40 @@ symbols:
     description: |
       <p>Extension of %DestroyableReadonlyList with modification methods.</p>
 
+    properties:
+      # clearEvent and changeEvent take signature from ICollection by default, and this is wrong.
+      # If we override only them, the order of properties in documentation gets weird.
+      # So we override all of them.
+      spliceEvent:
+        modifiers: readonly
+        type: '%Listenable<%IList.%SpliceEventParams<%T>>'
+        description: Items are removed from the list and items are added to the list.
+
+      replaceEvent:
+        modifiers: readonly
+        type: '%Listenable<%IList.%ReplaceEventParams<%T>>'
+        description: An item is replaced in the list.
+
+      moveEvent:
+        modifiers: readonly
+        type: '%Listenable<%IList.%MoveEventParams<%T>>'
+        description: An item is moved in the list.
+
+      clearEvent:
+        modifiers: readonly
+        type: '%Listenable<%IList.%ItemsEventParams<%T>>'
+        description: The list is cleared.
+
+      reorderEvent:
+        modifiers: readonly
+        type: '%Listenable<%IList.%ReorderEventParams<%T>>'
+        description: Items are reordered in the list.
+
+      changeEvent:
+        modifiers: readonly
+        type: '%Listenable<%IList.%EventParams<T>>'
+        description: The list is changed. Triggered right after any another event.
+
     methods:
       clone:
         signature: |
@@ -77,7 +111,7 @@ symbols:
       clear:
         signature: |
           (): %T[]
-        returns: Old collection contents (depending on collection type).
+        returns: Old collection contents.
         description: |
           <p>Clears the collection and triggers %clearEvent.</p>
 
@@ -225,11 +259,21 @@ symbols:
         description: |
           <p>Removes last item from the list. Does nothing if the list is empty.</p>
 
+    references:
+      EventParams:
+        file: jwidget/IList
+        symbol: IMap.EventParams
+        label: EventParams
+
   IList.EventParams:
     kind: interface
     simple: true
     typevars:
       T: Item type.
+    extends:
+      - file: jwidget/ICollection
+        symbol: ICollection.EventParams
+        typevars: [T]
     description: |
       <p>%IList event parameters.</p>
     properties:
@@ -447,42 +491,33 @@ symbols:
         returns: Clone.
 
 references:
-  getKeyProperty:
-    symbol: default
-    member: getKey
-    label: getKey
   splice:
     symbol: default
     member: splice
+
   detectSplice:
     symbol: default
     member: detectSplice
+
   spliceEvent:
     symbol: default
     member: spliceEvent
+
   moveEvent:
     symbol: default
     member: moveEvent
+
   replaceEvent:
     symbol: default
     member: replaceEvent
+
   reorderEvent:
     symbol: default
     member: reorderEvent
+
   clearEvent:
     symbol: default
     member: clearEvent
-  SpliceEventParams:
-    symbol: IList.SpliceEventParams
-  ReplaceEventParams:
-    symbol: IList.ReplaceEventParams
-  MoveEventParams:
-    symbol: IList.MoveEventParams
-  ReorderEventParams:
-    symbol: IList.ReorderEventParams
+
   SpliceResult:
     symbol: IList.SpliceResult
-  IndexCount:
-    symbol: IList.IndexCount
-  IndexItems:
-    symbol: IList.IndexItems
