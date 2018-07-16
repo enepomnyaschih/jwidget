@@ -37,120 +37,46 @@ import Property from './Property';
 import Reducer from './Reducer';
 
 /**
- * Set is unordered collection optimized for items adding, removal and search. Unlike
- * array and map, set can contain only [[JW.Class]] instances. Internal set representation is
- * map from [[iid]] to items themselves.
- *
- * # Set methods
- *
- * **Difference compared to [[JW.Abstract]] is in bold.**
- *
- * Content retrieving:
- *
- * * [[length]] - Collection length property.
- * * [[isEmpty]] - Checks collection for emptiness.
- * * [[getFirst]] - Returns first item in collection.
- * * [[containsItem]] - Does collection contain the item?
- * - **[[getJson]] - Returns internal representation of set.**
- *
- * Iteration algorithms:
- *
- * * [[every]] - Checks all items by criteria.
- * Returns true if all items match the criteria.
- * * [[some]] - Checks each item by criteria.
- * Returns true if some item matches the criteria.
- * * [[each]] - Iterates items through.
- * * [[search]] - Finds item by criteria.
- * Returns first item matching the criteria.
- * * [[filter]], [[filter]], [[$filter]] - Filters collection by criteria.
- * Builds new collection of the same type, consisting of items matching the criteria.
- * * [[count]], [[$count]], [[$$count]] - Counts the items matching criteria.
- * * [[map]], [[map]], [[$mapValues]], [[$mapObjects]] - Maps collection items.
- * Builds new collection of the same type, consisting of results of mapping function call for each collection item.
- * * [[toSorted]], [[$toSorted]],
- * [[toSortedComparing]], [[$toSortedComparing]],
- * [[$$toSortedComparing]] -
- * Builds array consisting of collection items sorted by indexer or comparer.
- * * [[index]], [[$index]], [[$$index]] - Indexes collection.
- * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * * [[toArray]], [[$toArray]], [[$$toArray]] -
- * Builds new array consisting of collection items.
- * * [[toSet]], [[toSet]], [[$toSet]] -
- * Builds new set consisting of collection items.
- * * [[asArray]], [[$asArray]] - Represents collection as array.
- * * [[asSet]], [[asSet]] - Represents collection as set.
- *
- * Collection modification:
- *
- * - **[[add]], [[tryAdd]] - Adds item to set.**
- * - **[[addAll]], [[$addAll]],
- * [[tryAddAll]] - Adds multiple items to set.**
- * - **[[remove]], [[tryRemove]] - Removes item from set.**
- * - **[[removeAll]], [[$removeAll]],
- * [[tryRemoveAll]] - Removes multiple items from set.**
- * * [[removeItem]] - Removes first occurency of an item in collection.
- * * [[removeItems]] - Removes all occurencies of items in collection.
- * * [[clear]], [[$clear]], [[tryClear]] - Clears collection.
- * - **[[splice]], [[trySplice]] - Removes and adds multiple items.**
- * - **[[performSplice]] - Adjusts contents using [[splice]] method.**
- *
- * Synchronizers creation:
- *
- * * [[createMapper]] - Creates item mapper.
- * Extended version of [[$mapValues]] and [[$mapObjects]] methods.
- * * [[createFilterer]] - Creates filterer.
- * Extended version of [[$filter]] method.
- * * [[createCounter]] - Creates matching item counter.
- * Extended version of [[$$count]] method.
- * * [[createLister]] - Creates converter to set.
- * Extended version of [[$toSet]] method.
- * * [[createIndexer]] - Creates converter to map (indexer).
- * Extended version of [[$$index]] method.
- * * [[createOrderer]] - Creates converter to array (orderer).
- * Extended version of [[$$toArray]] method.
- * * [[createSorterComparing]] - Creates converter to array (sorter by comparer).
- * Extended version of [[$$toSortedComparing]] method.
- * * [[createObserver]] - Creates observer.
- *
- * Similar collection creation (for algorithms and synchronizers implementation):
- *
- * * [[createEmpty]] - Creates empty collection of the same type.
- * * [[createEmptyArray]] - Creates empty array of the same observability type.
- * * [[createEmptyMap]] - Creates empty map of the same observability type.
- * * [[createEmptySet]] - Creates empty set of the same observability type.
- *
- * Other methods:
- *
- * - **[[detectSplice]] - Detects [[splice]] method arguments to adjust contents.**
- * - **[[equal]] - Checks for equality to array.**
- *
- * All the same algorithms are also available for native JavaScript Object as set,
- * see [[JW.Set]] static methods.
- *
- * @param T Collection item type.
+ * Unordered collection optimized for items adding, removal and search.
+ * @param T Item type.
  */
 class Set<T> extends Class implements ISet<T> {
+
 	private _ownsItems: Boolean = false;
 	private _length: IProperty<number>;
-	private _items: VidSet<T>
+	private _items: VidSet<T>;
 
 	private _spliceEvent: IEvent<ISet.SpliceEventParams<T>>;
 	private _clearEvent: IEvent<ISet.ItemsEventParams<T>>;
 	private _changeEvent: IEvent<ISet.EventParams<T>>;
 
 	/**
-	 * Identifies an item in this collection for optimization of some algorithms.
+	 * @inheritDoc
 	 */
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * This constructor should be used to create a new set and copy the items into it.
-	 *
-	 * @param items Initial set contents.
+	 * @param silent Create a silent collection which means that it never triggers modification events.
 	 */
 	constructor(silent?: boolean);
+
+	/**
+	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
+	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 */
 	constructor(getKey: (item: T) => any, silent?: boolean);
+
+	/**
+	 * @param items Initial map contents.
+	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 */
 	constructor(items: T[], silent?: boolean);
+
+	/**
+	 * @param items Initial map contents.
+	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
+	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 */
 	constructor(items: T[], getKey: (item: T) => any, silent?: boolean);
 	constructor(a?: any, b?: any, c?: boolean) {
 		super();
@@ -184,37 +110,35 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+	 * @inheritDoc
 	 */
 	get silent() {
 		return this.changeEvent.dummy;
 	}
 
 	/**
-	 * Collection length property.
+	 * @inheritDoc
 	 */
 	get length(): Bindable<number> {
 		return this._length;
 	}
 
 	/**
-	 * Checks collection for emptiness.
+	 * @inheritDoc
 	 */
 	get empty() {
 		return this.length.get() === 0;
 	}
 
 	/**
-	 * Returns item map - internal collection representation.
-	 *
-	 * **Caution: doesn't make a copy - please don't modify.**
+	 * @inheritDoc
 	 */
 	get items(): T[] {
 		return this._items.values;
 	}
 
 	/**
-	 * Returns first item in collection. If collection is empty, returns undefined.
+	 * @inheritDoc
 	 */
 	get first(): T {
 		let result: T;
@@ -226,49 +150,28 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Items are removed from set, items are added to set.
-	 * Triggered in result of calling:
-	 *
-	 * * [[add]]
-	 * * [[tryAdd]]
-	 * * [[addAll]]
-	 * * [[$addAll]]
-	 * * [[tryAddAll]]
-	 * * [[remove]]
-	 * * [[tryRemove]]
-	 * * [[removeItem]]
-	 * * [[removeAll]]
-	 * * [[$removeAll]]
-	 * * [[tryRemoveAll]]
-	 * * [[removeItems]]
-	 * * [[splice]]
-	 * * [[trySplice]]
-	 * * [[performSplice]]
+	 * @inheritDoc
 	 */
 	get spliceEvent(): Listenable<ISet.SpliceEventParams<T>> {
 		return this._spliceEvent;
 	}
 
 	/**
-	 * Set is cleared. Triggered in result of calling:
-	 *
-	 * * [[clear]]
-	 * * [[$clear]]
-	 * * [[tryClear]]
+	 * @inheritDoc
 	 */
 	get clearEvent(): Listenable<ISet.ItemsEventParams<T>> {
 		return this._clearEvent;
 	}
 
 	/**
-	 * Set is changed. Triggered right after any another event.
+	 * @inheritDoc
 	 */
 	get changeEvent(): Listenable<ISet.EventParams<T>> {
 		return this._changeEvent;
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	ownItems(): this {
 		this._ownsItems = true;
@@ -276,35 +179,28 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Returns a full copy of this object.
+	 * @inheritDoc
 	 */
 	clone(): ISet<T> {
 		return new Set<T>(this.items, this.getKey, this.silent);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	contains(item: T): boolean {
 		return this._items.contains(item);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	every(callback: (item: T) => any, scope?: any): boolean {
 		return this._items.every(callback, scope);
 	}
 
 	/**
-	 * Matches each item against criteria.
-	 *
-	 * Returns true if callback returns !== false for some collection item.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @inheritDoc
 	 */
 	some(callback: (item: T) => any, scope?: any): boolean {
 		return !this._items.every((item) => {
@@ -313,10 +209,7 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Iterates collection items. Calls specified function for all items.
-	 *
-	 * @param callback Callback function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
+	 * @inheritDoc
 	 */
 	forEach(callback: (item: T) => any, scope?: any) {
 		this._items.every((item) => {
@@ -326,15 +219,7 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Finds item matching criteria.
-	 *
-	 * Returns first item for which callback returns !== false.
-	 *
-	 * Algorithms iterates items sequentially, and stops after first item matching the criteria.
-	 *
-	 * @param callback Criteria callback.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Found item or undefined.
+	 * @inheritDoc
 	 */
 	find(callback: (item: T) => any, scope?: any): T {
 		let result: T = undefined;
@@ -349,27 +234,21 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSorted(callback?: (item: T) => any, scope?: any, order?: number): IList<T> {
 		return new List<T>(ArrayUtils.toSorted(this._items.values, callback, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSortedComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): IList<T> {
 		return new List<T>(ArrayUtils.toSortedComparing(this._items.values, compare, scope || this, order), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * Indexes collection.
-	 *
-	 * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
-	 *
-	 * @param callback Indexer function.
-	 * @param scope **callback** call scope. Defaults to collection itself.
-	 * @returns Collection index.
+	 * @inheritDoc
 	 */
 	index(callback: (item: T) => any, scope?: any): IMap<T> {
 		const result: Dictionary<T> = {};
@@ -384,27 +263,34 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	filter(callback: (item: T) => any, scope?: any): ISet<T> {
 		return new Set<T>(this._items.values.filter(callback, scope), this.getKey, true);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	count(callback: (item: T) => any, scope?: any): number {
 		return ArrayUtils.count(this._items.values, callback, scope);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => any): ISet<U> {
 		return new Set<U>(this._items.values.map(callback, scope), getKey, true);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	reduce<U>(reducer: Reducer<T, U>): U;
+
+	/**
+	 * @inheritDoc
+	 */
 	reduce<U>(callback: (accumulator: U, item: T) => U, initial: U): U;
 	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, item: T) => U), initial?: U): U {
 		return (typeof reducer === "function") ?
@@ -412,99 +298,85 @@ class Set<T> extends Class implements ISet<T> {
 			ArrayUtils.reduce<T, U>(this._items.values, reducer);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	max(callback?: (item: T) => any, scope?: any, order?: number): T {
 		return ArrayUtils.max(this._items.values, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	maxComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T {
 		return ArrayUtils.maxComparing(this._items.values, compare, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	min(callback?: (item: T) => any, scope?: any, order?: number): T {
 		return ArrayUtils.min(this._items.values, callback, scope, order);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	minComparing(compare?: (t1: T, t2: T) => number, scope?: any, order?: number): T {
 		return ArrayUtils.minComparing(this._items.values, compare, scope, order);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toArray(): T[] {
 		return this._items.values.concat();
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toList(): IList<T> {
 		return new List<T>(this.toArray(), this.getKey, SILENT | ADAPTER);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	toSet(): ISet<T> {
 		return new Set<T>(this._items.values, this.getKey, true);
 	}
 
 	/**
-	 * Represents collection as array.
-	 *
-	 * If this collection is array, returns it immediately.
-	 * Else, executes [[toArray]] method.
-	 * This method works usually faster than [[toArray]],
-	 * but please make sure that the returned array
-	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 * @inheritDoc
 	 */
 	asArray(): T[] {
 		return this.toArray();
 	}
 
 	/**
-	 * Represents collection as array.
-	 *
-	 * If this collection is array, returns it immediately.
-	 * Else, executes [[toArray]] method.
-	 * This method works usually faster than [[toArray]],
-	 * but please make sure that the returned array
-	 * won't be modified externally, because it can cause strange unexpected bugs.
+	 * @inheritDoc
 	 */
 	asList(): IList<T> {
 		return this.toList();
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	asSet(): ISet<T> {
 		return this;
 	}
 
 	/**
-	 * Adds an item to set if one is absent.
-	 * @returns Item is added successfully. False if item is already present.
+	 * @inheritDoc
 	 */
 	add(item: T): boolean {
-		return this.tryAdd(item) !== undefined;
+		return this.trySplice([], [item]) !== undefined;
 	}
 
 	/**
-	 * Adds an item to set if one is absent.
-	 * @returns Item is added successfully. If collection is not modified, returns undefined.
-	 * In other words, this method may return true or undefined.
-	 */
-	tryAdd(item: T): boolean {
-		if (this.trySplice([], [item]) !== undefined) {
-			return true;
-		}
-		return undefined;
-	}
-
-	/**
-	 * Adds multiple items to set, ones that are absent.
-	 * @returns The added items.
+	 * @inheritDoc
 	 */
 	addAll(items: T[]): T[] {
 		var result = this.tryAddAll(items);
@@ -512,9 +384,7 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Adds multiple items to set, ones that are absent.
-	 * @returns The added items.
-	 * If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryAddAll(items: T[]): T[] {
 		var spliceResult = this.trySplice([], items);
@@ -525,35 +395,21 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Removes an item from set if one is present.
-	 * @returns Item is removed successfully. Returns false if item is already absent.
+	 * @inheritDoc
 	 */
 	remove(item: T): boolean {
-		return this.tryRemove(item) !== undefined;
+		return this.trySplice([item], []) !== undefined;
 	}
 
 	/**
-	 * Removes an item from set if one is present.
-	 * @returns Item is removed successfully. If collection is not modified, returns undefined.
-	 * In other words, this method may return true or undefined.
-	 */
-	tryRemove(item: T): boolean {
-		if (this.trySplice([item], []) !== undefined) {
-			return true;
-		}
-		return undefined;
-	}
-
-	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	removeItem(item: T) {
-		this.tryRemove(item);
+		this.remove(item);
 	}
 
 	/**
-	 * Removes multiple items from set, ones that are present.
-	 * @returns The removed items.
+	 * @inheritDoc
 	 */
 	removeAll(items: T[]): T[] {
 		var result = this.tryRemoveAll(items);
@@ -561,9 +417,7 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Removes multiple items from set, ones that are present.
-	 * @returns The removed items.
-	 * If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	tryRemoveAll(items: T[]): T[] {
 		var spliceResult = this.trySplice(items, []);
@@ -574,14 +428,14 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	removeItems(items: T[]) {
 		this.tryRemoveAll(items);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	clear(): T[] {
 		if (this._length.get() === 0) {
@@ -599,10 +453,7 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Removes and adds multiple items in set. Universal optimized granular operation of removal/insertion.
-	 * @param removedItems Items to remove.
-	 * @param addedItems Items to add.
-	 * @returns Splice result. Never returns null or undefined.
+	 * @inheritDoc
 	 */
 	splice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
 		var spliceResult = this.trySplice(removedItems, addedItems);
@@ -610,11 +461,7 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Removes and adds multiple items in set. Universal optimized granular operation of removal/insertion.
-	 * @param removedItems Items to remove.
-	 * @param addedItems Items to add.
-	 * @returns Splice result.
-	 * If collection is not modified, returns undefined.
+	 * @inheritDoc
 	 */
 	trySplice(removedItems: T[], addedItems: T[]): ISet.SpliceResult<T> {
 		const spliceResult = this._trySplice(removedItems, addedItems);
@@ -681,10 +528,7 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Detects [[splice]] method arguments to adjust set contents to **newItems**.
-	 * Determines which items should be removed and which ones should be added.
-	 * @param newItems New set contents.
-	 * @returns [[splice]] method arguments. If no method call required, returns undefined.
+	 * @inheritDoc
 	 */
 	detectSplice(newItemArray: T[]): ISet.SpliceParams<T> {
 		const removedItems: T[] = [];
@@ -711,9 +555,7 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Adjusts set contents to **newItems** using [[detectSplice]] and
-	 * [[splice]] methods.
-	 * @param newItems New set contents.
+	 * @inheritDoc
 	 */
 	performSplice(newItems: T[]) {
 		var spliceParams = this.detectSplice(newItems);
@@ -723,7 +565,7 @@ class Set<T> extends Class implements ISet<T> {
 	}
 
 	/**
-	 * Checks for equality (===) to array, item by item.
+	 * @inheritDoc
 	 */
 	equal(array: T[]): boolean {
 		if (this.length.get() !== array.length) {
