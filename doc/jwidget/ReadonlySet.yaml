@@ -1,0 +1,122 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      T: Item type.
+    extends:
+      - file: jwidget/ReadonlyCollection
+        typevars: [T]
+    description: |
+      <p>Unordered collection optimized for items adding, removal and search. By default, Set can optimally handle
+      %Identifiable instances and primitive values. All the other types will use backdoor solution which relies on full
+      loop. The loop reduces efficiency for the majority of operations, and it will be indicated by a warning message in
+      browser console. To fix this issue, you can specify a custom %getKeyProperty function to identify your objects more
+      efficiently.</p>
+
+    properties:
+      items:
+        modifiers: readonly
+        type: '%T[]'
+        description: |
+          <p>Array of all set items. This getter makes a copy of the collection (in fact, internal representation of
+          %Set is not an array).</p>
+
+      spliceEvent:
+        modifiers: readonly
+        type: '%Listenable<%ISet.%SpliceEventParams<%T>>'
+        description: Items are removed from the set and/or items are added to the set.
+
+      clearEvent:
+        modifiers: readonly
+        type: '%Listenable<%ISet.%ItemsEventParams<%T>>'
+        description: The set is cleared.
+
+      changeEvent:
+        modifiers: readonly
+        type: '%Listenable<%ISet.%EventParams<%T>>'
+        description: The set is changed. Triggered right after any another event.
+
+    methods:
+      clone:
+        signature: |
+          (): %ISet<%T>
+        returns: Returns a shallow copy of this collection.
+
+      filter:
+        signature: |
+          (callback: (item: %T) => any, scope?: any): %ISet<%T>
+        params:
+          callback: Criteria callback.
+          scope: '%callback call scope. Defaults to the collection.'
+        returns: Filtered collection.
+        description: |
+          <p>Filters the collection by criteria. Builds a new collection of the same type, consisting of items %callback
+          returns %truthy value for.</p>
+
+      map:
+        signature: |
+          <U>(callback: (item: %T) => U, scope?: any, getKey?: (item: U) => any): %ISet<U>
+        params:
+          callback: Mapping function.
+          scope: '%callback call scope. Defaults to the collection.'
+          getKey: |
+            Function which returns unique key of an item in the resulting collection.
+            Defaults to %getKeyProperty property of the collection.
+        returns: Mapped collection.
+        description: |
+          <p>Maps collection items. Builds a new collection of the same type, containing results of %callback call for
+          each collection item.</p>
+
+      detectSplice:
+        signature: |
+          (newItems: %T[]): %ISet.%SpliceParams<%T>
+        params:
+          newItems: New set contents.
+        returns: '%splice method arguments. If no method call required, returns undefined.'
+        description: |
+          <p>Detects %splice method arguments to adjust the set contents to %newItems.
+          Determines item bunches to be removed and added.</p>
+
+      equal:
+        signature: |
+          (array: %T[]): boolean
+        params:
+          array: Array.
+        returns: This set is equal to the array.
+        description: |
+          <p>Checks this set for equality (===) to an array, item by item.</p>
+
+    references:
+      getKeyProperty:
+        symbol: default
+        member: getKey
+        label: getKey
+
+      splice:
+        file: jwidget/ISet
+        member: splice
+
+      SpliceResult:
+        file: jwidget/ISet
+        symbol: ISet.SpliceResult
+        label: SpliceResult
+
+      SpliceParams:
+        file: jwidget/ISet
+        symbol: ISet.SpliceParams
+        label: SpliceParams
+
+      EventParams:
+        file: jwidget/ISet
+        symbol: ISet.EventParams
+        label: EventParams
+
+      SpliceEventParams:
+        file: jwidget/ISet
+        symbol: ISet.SpliceEventParams
+        label: SpliceEventParams
+
+      ItemsEventParams:
+        file: jwidget/ISet
+        symbol: ISet.ItemsEventParams
+        label: ItemsEventParams

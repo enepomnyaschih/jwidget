@@ -23,16 +23,12 @@ import Listenable from './Listenable';
 import ReadonlyCollection from './ReadonlyCollection';
 
 /**
- * Unordered collection optimized for items adding, removal and search. By default, Set can optimally handle
- * %Identifiable instances and primitive values. All the other types will use backdoor solution which relies on full
- * loop. The loop reduces efficiency for the majority of operations, and it will be indicated by a warning message in
- * browser console. To fix this issue, you can specify a custom %getKeyProperty function to identify your objects more
- * efficiently.
+ * Unordered collection optimized for items adding, removal and search.
  * @param T Item type.
  */
 interface ReadonlySet<T> extends ReadonlyCollection<T> {
 	/**
-	 * Array of all set items. This getter makes a copy of the collection (in fact, internal representation of %Set is
+	 * Array of all set items. This getter makes a copy of the collection (in fact, internal representation of Set is
 	 * not an array).
 	 */
 	readonly items: T[];
@@ -55,6 +51,11 @@ interface ReadonlySet<T> extends ReadonlyCollection<T> {
 	/**
 	 * @inheritDoc
 	 */
+	clone(): ISet<T>;
+
+	/**
+	 * @inheritDoc
+	 */
 	filter(callback: (item: T) => any, scope?: any): ISet<T>;
 
 	/**
@@ -64,8 +65,8 @@ interface ReadonlySet<T> extends ReadonlyCollection<T> {
 
 	/**
 	 * Detects `splice` method arguments to adjust the set contents to `newItems`.
-	 * Determines item bunches to be removed and inserted/replaced, along with their keys.
-	 * @param newItems New map contents.
+	 * Determines item bunches to be removed and added.
+	 * @param newItems New set contents.
 	 * @returns `splice` method arguments. If no method call required, returns undefined.
 	 */
 	detectSplice(newItems: T[]): ISet.SpliceParams<T>;

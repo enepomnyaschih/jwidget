@@ -190,7 +190,7 @@ symbols:
 
       filter:
         signature: |
-          (callback: (item: %T, key: string) => any, scope?: any): %ICollection<%T>
+          (callback: (item: %T, key: string) => any, scope?: any): %IMap<%T>
         params:
           callback: Criteria callback.
           scope: '%callback call scope. Defaults to the collection.'

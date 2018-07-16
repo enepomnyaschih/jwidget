@@ -39,7 +39,7 @@ interface ISet<T> extends ICollection<T>, DestroyableReadonlySet<T> {
 	readonly changeEvent: Listenable<ISet.EventParams<T>>;
 
 	/**
-	 * Returns a full copy of this collection.
+	 * @inheritDoc
 	 */
 	clone(): ISet<T>;
 
