@@ -22,93 +22,8 @@ import Class from '../Class';
 import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
- * Collection item converter.
- * Builds new collection of the same type, consisting of results of callback function
- * call for each collection item.
- * If original collection is observable, starts continuous synchronization.
- *
- *     var source = new JW.ObservableArray<number>([1, 2]);
- *     var mapper = source.createMapper<number>({
- *         createItem: function(x) { return 2 * x }
- *     });
- *     var target = source.target;
- *
- *     assert.strictEqual(target.get(0), 2);
- *     assert.strictEqual(target.get(1), 4);
- *
- *     // Target collection is automatically synchronized with original observable collection
- *     source.add(3);
- *     assert.strictEqual(target.get(2), 6);
- *
- *     mapper.destroy();
- *
- * Can be used for data convertion into view.
- *
- *     var mapper = dataCollection.createMapper<View>({
- *         createItem: (data) => { return new View(this, data); },
- *         destroyItem: JW.destroy,
- *         scope: this
- *     });
- *     var viewCollection = mapper.target;
- *
- * Use [[JW.Abstract.createMapper|createMapper]] method to create the synchronizer.
- * The method selects a synchronizer implementation which fits better (simple or observable).
- *
- * You can pass target collection in config option:
- *
- *     var viewCollection = new JW.Array<View>();
- *     var mapper = dataCollection.createMapper<View>({
- *         target: viewCollection,
- *         createItem: (data) => { return new View(this, data); },
- *         destroyItem: JW.destroy,
- *         scope: this
- *     });
- *
- * In simple cases, [[JW.Abstract.$mapValues|$mapValues]]
- * and [[JW.Abstract.$mapObjects|$mapObjects]] shorthands can be used instead.
- * They return the target collection right away:
- *
- *     var viewCollection = dataCollection.$mapObjects<View>((data) => {
- *         return new View(this, data);
- *     }, this);
- *
- *     // Once not needed anymore, destroy
- *     viewCollection.destroy();
- *
- * Synchronizer rules:
- *
- * - Target collection is stored in [[target]] property.
- * - All items of source collection are converted and added to [[target]]
- * immediately on synchronizer initialization.
- * - All items are removed from [[target]] and destroyed on synchronizer destruction.
- * - You can pass target map in
- * [[Mapper.Config.target|target]] config option.
- * In this case, you are responsible for its destruction (though items will be removed and destroyed
- * automatically on synchronizer destruction anyway).
- * - If [[Mapper.Config.target|target]]
- * is not passed, it will be created automatically. Synchronizer will select
- * appropriate [[target]] implementation (simple or observable). In this
- * case, [[target]] will be destroyed automatically on synchronizer destruction.
- * - The items are not recreated in target collection on source items reordering/reindexing,
- * but they are reordered/reindexed according to source collection modification.
- *
- * **Additional rules for different collection types**
- *
- * [[JW.List]]:
- *
- * - Target collection must be empty before initialization.
- * - You can't modify target collection manually and/or create other synchronizers with the same target collection.
- *
- * [[JW.Map]]:
- *
- * - A target collection can be synchronized with multiple source collections, if keys of all items are different.
- * - You can add items to target collection manually, if their keys differ from other collection keys.
- *
- * [[JW.Set]]:
- *
- * - A target collection can be synchronized with multiple source collections, if all items are different.
- * - You can add items to target collection manually, if they differ from other collection items.
- *
+ * Abstract collection item mapper. Builds new collection of the same type, consisting of results of callback function
+ * call for each collection item, and starts continuous synchronization.
  * @param T Source collection item type.
  * @param U Target collection item type.
  */
@@ -129,11 +44,7 @@ abstract class AbstractMapper<T, U> extends Class {
 	readonly target: ReadonlyCollection<U>;
 
 	/**
-	 * Creates synchronizer.
-	 * [[JW.Abstract.createMapper|createMapper]] method is preferred instead.
-	 *
-	 * @param source Source collection.
-	 * @param config Configuration.
+	 * @hidden
 	 */
 	constructor(readonly source: ReadonlyCollection<T>, protected _create: (data: T) => U,
 				config: AbstractMapper.Config<T, U> = {}) {
@@ -143,7 +54,7 @@ abstract class AbstractMapper<T, U> extends Class {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this._create = null;
@@ -161,8 +72,7 @@ namespace AbstractMapper {
 	}
 
 	/**
-	 * [[JW.Abstract.Mapper]] configuration.
-	 *
+	 * AbstractMapper configuration.
 	 * @param T Source collection item type.
 	 * @param U Target collection item type.
 	 */
@@ -173,8 +83,7 @@ namespace AbstractMapper {
 		readonly destroy?: DestroyCallback<T, U>;
 
 		/**
-		 * [[createItem]] and [[destroyItem]] call scope.
-		 * Defaults to synchronizer itself.
+		 * Call scope of mapper's `create` and `destroy` callbacks. Defaults to synchronizer itself.
 		 */
 		readonly scope?: any;
 

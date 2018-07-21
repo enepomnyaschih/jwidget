@@ -28,23 +28,27 @@ import ReadonlyList from '../ReadonlyList';
 import AbstractMapper from './AbstractMapper';
 
 /**
- * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Array]].
+ * AbstractMapper implementation for List.
+ * @param T Source collection item type.
+ * @param U Target collection item type.
  */
 class ListMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	readonly target: IList<U>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param create Mapping callback.
+	 * @param config Mapper configuration.
 	 */
 	constructor(source: ReadonlyList<T>, create: (sourceValue: T) => U, config: ListMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
@@ -59,7 +63,7 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this._destroyItems(this.target.clear() || [], this.source.items);
@@ -126,18 +130,27 @@ export default ListMapper;
 
 namespace ListMapper {
 	/**
-	 * @inheritdoc
+	 * ListMapper configuration.
+	 * @param T Source collection item type.
+	 * @param U Target collection item type.
 	 */
 	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
-		 * @inheritdoc
+		 * Target collection.
 		 */
 		readonly target?: IList<U>;
 	}
 }
 
+/**
+ * Maps list. See %AbstractMapper for details.
+ * @param source Source collection.
+ * @param create Mapping callback.
+ * @param config Mapper configuration.
+ * @returns Target collection.
+ */
 export function mapList<T, U>(source: ReadonlyList<T>, create: (sourceValue: T) => U,
-							  config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyList<U> {
+                              config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyList<U> {
 	if (!source.silent) {
 		const target = new List<U>(config.getKey);
 		return target.owning(new ListMapper<T, U>(source, create, {

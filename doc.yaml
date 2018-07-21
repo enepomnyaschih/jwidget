@@ -177,6 +177,40 @@ references:
     member: find
     label: find
 
+  # Synchronizers
+  mappers:
+    file: jwidget/mapper/AbstractMapper
+    label: Mappers
+
+  ListMapper:
+    file: jwidget/mapper/list
+
+  MapMapper:
+    file: jwidget/mapper/map
+
+  SetMapper:
+    file: jwidget/mapper/set
+
+  createMapper:
+    file: jwidget/mapper/collection
+    symbol: createMapper
+
+  mapCollection:
+    file: jwidget/mapper/collection
+    symbol: mapCollection
+
+  mapList:
+    file: jwidget/mapper/list
+    symbol: mapList
+
+  mapMap:
+    file: jwidget/mapper/map
+    symbol: mapMap
+
+  mapSet:
+    file: jwidget/mapper/set
+    symbol: mapSet
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">
@@ -267,77 +301,22 @@ includes:
                 <td>%Map</td>
                 <td>%Set</td>
               </tr>
-              <tr>
-                <td colspan="4"><h5>Collection synchronizers</h5></td>
-              </tr>
-              <tr>
-                <td>%mapCollection</td>
-                <td>%mapList</td>
-                <td>%mapMap</td>
-                <td>%mapSet</td>
-              </tr>
-              <tr>
-                <td>%filterCollection</td>
-                <td>%filterList</td>
-                <td>%filterMap</td>
-                <td>%filterSet</td>
-              </tr>
-              <tr>
-                <td>%countCollection</td>
-                <td>%countList</td>
-                <td>%countMap</td>
-                <td>%countSet</td>
-              </tr>
-              <tr>
-                <td>%indexCollection</td>
-                <td>%indexList</td>
-                <td>%indexMap</td>
-                <td>%indexSet</td>
-              </tr>
-              <tr>
-                <td>%collectionToSet</td>
-                <td>%listToSet</td>
-                <td>%mapToSet</td>
-                <td>%setToSet</td>
-              </tr>
-              <tr>
-                <td>%collectionToList</td>
-                <td>%listToList</td>
-                <td>%mapToList</td>
-                <td>%setToList</td>
-              </tr>
-              <tr>
-                <td>%sortCollectionComparing</td>
-                <td>%sortListComparing</td>
-                <td>%sortMapComparing</td>
-                <td>%sortSetComparing</td>
-              </tr>
-              <tr>
-                <td>%createObserver</td>
-                <td>%ListObserver</td>
-                <td>%MapObserver</td>
-                <td>%SetObserver</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>%ListInserter</td>
-                <td>%MapInserter</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>%mergeLists</td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>%reverseList</td>
-                <td></td>
-                <td></td>
-              </tr>
             </tbody>
           </table>
+          <h5>Collection bindings</h5>
+          <ul class="list-unstyled" style="column-count: 2">
+            <li>%mappers</li>
+            <li>%filterers</li>
+            <li>%counters</li>
+            <li>%indexers</li>
+            <li>%convertersToSet</li>
+            <li>%convertersToList</li>
+            <li>%sortersComparing</li>
+            <li>%observers</li>
+            <li>%inserters</li>
+            <li>%mergers</li>
+            <li>%reversers</li>
+          </ul>
         </div>
         <div class="col-4">
           <h5>Routing</h5>
