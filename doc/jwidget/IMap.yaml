@@ -4,43 +4,14 @@ symbols:
     typevars:
       T: Item type.
     extends:
-      - file: jwidget/ICollection
-        typevars: [T]
       - file: jwidget/DestroyableReadonlyMap
+        typevars: [T]
+      - file: jwidget/ICollection
         typevars: [T]
     description: |
       <p>Extension of %DestroyableReadonlyMap with modification methods.</p>
 
-    properties:
-      # clearEvent and changeEvent take signature from ICollection by default, and this is wrong.
-      # If we override only them, the order of properties in documentation gets weird.
-      # So we override all of them.
-      spliceEvent:
-        modifiers: readonly
-        type: '%Listenable<%IMap.%SpliceEventParams<%T>>'
-        description: Items are removed from the map and items are updated in the map.
-
-      reindexEvent:
-        modifiers: readonly
-        type: '%Listenable<%IMap.%ReindexEventParams<%T>>'
-        description: Keys of items are changed in the map.
-
-      clearEvent:
-        modifiers: readonly
-        type: '%Listenable<%IMap.%ItemsEventParams<%T>>'
-        description: The map is cleared.
-
-      changeEvent:
-        modifiers: readonly
-        type: '%Listenable<%IMap.%EventParams<%T>>'
-        description: The map is changed. Triggered right after any another event.
-
     methods:
-      clone:
-        signature: |
-          (): %IMap<%T>
-        returns: Full copy of this collection.
-
       put:
         signature: |
           (key: string, item: %T): %T

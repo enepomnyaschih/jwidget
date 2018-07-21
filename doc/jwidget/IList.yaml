@@ -4,53 +4,14 @@ symbols:
     typevars:
       T: Item type.
     extends:
-      - file: jwidget/ICollection
-        typevars: [T]
       - file: jwidget/DestroyableReadonlyList
+        typevars: [T]
+      - file: jwidget/ICollection
         typevars: [T]
     description: |
       <p>Extension of %DestroyableReadonlyList with modification methods.</p>
 
-    properties:
-      # clearEvent and changeEvent take signature from ICollection by default, and this is wrong.
-      # If we override only them, the order of properties in documentation gets weird.
-      # So we override all of them.
-      spliceEvent:
-        modifiers: readonly
-        type: '%Listenable<%IList.%SpliceEventParams<%T>>'
-        description: Items are removed from the list and items are added to the list.
-
-      replaceEvent:
-        modifiers: readonly
-        type: '%Listenable<%IList.%ReplaceEventParams<%T>>'
-        description: An item is replaced in the list.
-
-      moveEvent:
-        modifiers: readonly
-        type: '%Listenable<%IList.%MoveEventParams<%T>>'
-        description: An item is moved in the list.
-
-      clearEvent:
-        modifiers: readonly
-        type: '%Listenable<%IList.%ItemsEventParams<%T>>'
-        description: The list is cleared.
-
-      reorderEvent:
-        modifiers: readonly
-        type: '%Listenable<%IList.%ReorderEventParams<%T>>'
-        description: Items are reordered in the list.
-
-      changeEvent:
-        modifiers: readonly
-        type: '%Listenable<%IList.%EventParams<T>>'
-        description: The list is changed. Triggered right after any another event.
-
     methods:
-      clone:
-        signature: |
-          (): %IList<%T>
-        returns: Full copy of this collection.
-
       add:
         signature: |
           (item: %T, index?: number)

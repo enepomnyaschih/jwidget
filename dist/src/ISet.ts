@@ -23,7 +23,7 @@ import ICollection from './ICollection';
 import Listenable from './Listenable';
 
 /**
- * Extension of DestroyableReadonlyMap with modification methods.
+ * Extension of DestroyableReadonlySet with modification methods.
  * @param T Map item type.
  */
 interface ISet<T> extends ICollection<T>, DestroyableReadonlySet<T> {
@@ -55,18 +55,21 @@ interface ISet<T> extends ICollection<T>, DestroyableReadonlySet<T> {
 
 	/**
 	 * Adds an item to the set if one is absent.
+	 * @param item Item to add.
 	 * @returns Item is added successfully. False if item is already present.
 	 */
 	add(item: T): boolean;
 
 	/**
 	 * Adds multiple items to the set, ones that are absent.
+	 * @param items Items to add.
 	 * @returns The added items. Never returns null or undefined.
 	 */
 	addAll(items: T[]): T[];
 
 	/**
 	 * Removes an item from the set if one is present.
+	 * @param item Item to remove.
 	 * @returns Item is removed successfully. Returns false if item is already absent.
 	 */
 	remove(item: T): boolean;
@@ -78,6 +81,7 @@ interface ISet<T> extends ICollection<T>, DestroyableReadonlySet<T> {
 
 	/**
 	 * Removes multiple items from the set, ones that are present.
+	 * @param items Items to remove.
 	 * @returns The removed items. Never returns null or undefined.
 	 */
 	removeAll(items: T[]): T[];
@@ -102,12 +106,14 @@ interface ISet<T> extends ICollection<T>, DestroyableReadonlySet<T> {
 
 	/**
 	 * Adds multiple items to the set, ones that are absent.
+	 * @param items Items to add.
 	 * @returns The added items. If collection is not modified, returns undefined.
 	 */
 	tryAddAll(items: T[]): T[];
 
 	/**
 	 * Removes multiple items from the set, ones that are present.
+	 * @param items Items to remove.
 	 * @returns The removed items. If collection is not modified, returns undefined.
 	 */
 	tryRemoveAll(items: T[]): T[];
