@@ -25,7 +25,7 @@ symbols:
       config: Mapper configuration.
     returns: Collection mapper.
     description: |
-      <p>Creates a mapper matching the source collection type. See %mappers for details.</p>
+      <p>Maps a collection and starts synchronization. See %mappers for details.</p>
       <p>If you know exact type of the source collection, please use %mapList, %mapMap and %mapSet
       functions instead, because they are more efficient.</p>
 

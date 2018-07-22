@@ -1,0 +1,28 @@
+expandImports: true
+
+symbols:
+  createFilterer:
+    signature: |
+      <T>(source: %ReadonlyCollection<T>, test: (item: T) => any, scope?: any): %AbstractFilterer<T>
+    params:
+      source: Source collection.
+      test: Filtering criteria.
+      scope: Filterer configuration.
+    returns: Collection filterer.
+    description: |
+      <p>Creates a filterer matching the source collection type. See %filterers for details.</p>
+      <p>If you know exact type of the source collection, please use %ListFilterer, %MapFilterer and %SetFilterer
+      constructors instead, because they are more efficient.</p>
+
+  filterCollection:
+    signature: |
+      <T>(source: %ReadonlyCollection<T>, test: (item: T) => any, scope?: any): %DestroyableReadonlyCollection<T>
+    params:
+      source: Source collection.
+      test: Filtering criteria.
+      scope: Call scope of %test function.
+    returns: Collection filterer.
+    description: |
+      <p>Filters a collection and starts synchronization. See %filterers for details.</p>
+      <p>If you know exact type of the source collection, please use %filterList, %filterMap and %filterSet
+      functions instead, because they are more efficient.</p>

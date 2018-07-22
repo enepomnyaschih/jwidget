@@ -30,28 +30,27 @@ import ReadonlyList from '../ReadonlyList';
 import AbstractFilterer from './AbstractFilterer';
 
 /**
- * [[JW.Abstract.Filterer|Filterer]] implementation for [[JW.Array]].
+ * AbstractFilterer implementation for List.
+ * @param T Collection item type.
  */
 class ListFilterer<T> extends AbstractFilterer<T> {
 	private _targetCreated: boolean;
+	private _filtered: number[] = [];
 
 	/**
-	 * @hidden
-	 */
-	protected _filtered: number[] = [];
-
-	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	readonly target: IList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param test Filtering criteria.
+	 * @param config Filterer configuration.
 	 */
 	constructor(source: ReadonlyList<T>, test: (item: T) => any,
 				config: ListFilterer.FullConfig<T> = {}) {
@@ -79,7 +78,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * Refilters target collection item at specified position in source collection.
 	 * Call this method when collection item properties change the way that it must be refiltered.
-	 * @param index Index of source collection item to refilter.
+	 * @param sourceIndex Index of source collection item to refilter.
 	 */
 	refilterAt(sourceIndex: number) {
 		var item = this.source.get(sourceIndex);
@@ -187,7 +186,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this.target.clear();
@@ -197,9 +196,6 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 		super.destroyObject();
 	}
 
-	/**
-	 * @hidden
-	 */
 	private _countFiltered(index: number, count: number): number {
 		var result = 0;
 		for (var i = 0; i < count; ++i) {
@@ -208,9 +204,6 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 		return result;
 	}
 
-	/**
-	 * @hidden
-	 */
 	private _splice(removedItemsList: IList.IndexItems<T>[], addedItemsList: IList.IndexItems<T>[]) {
 		var sourceIndex = 0;
 		var targetIndex = 0;
@@ -313,36 +306,43 @@ export default ListFilterer;
 
 namespace ListFilterer {
 	/**
-	 * @inheritdoc
+	 * ListFilterer configuration.
+	 * @param T Collection item type.
 	 */
 	export interface FullConfig<T> extends AbstractFilterer.Config {
 		/**
-		 * @inheritdoc
+		 * Target collection.
 		 */
 		readonly target?: IList<T>;
 	}
 
 	/**
-	 * [[Filterer]]'s [[Filterer.reconfigure|reconfigure]] method options.
+	 * ListFilterer.reconfigure method configuration.
 	 * All options are optional. If skipped, an option stays the same.
-	 *
 	 * @param T Collection item type.
 	 */
 	export interface Reconfig<T> {
 		/**
-		 * Filtering criteria.
+		 * New filtering criteria.
 		 */
 		readonly test?: (item: T) => any;
 
 		/**
-		 * [[filterItem]] call scope.
+		 * New `test` call scope.
 		 */
 		readonly scope?: any;
 	}
 }
 
+/**
+ * Filters a list and starts synchronization.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param scope Call scope of `test` function.
+ * @returns Target collection.
+ */
 export function filterList<T>(source: ReadonlyList<T>, test: (item: T) => any,
-							  scope?: any): DestroyableReadonlyList<T> {
+                              scope?: any): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

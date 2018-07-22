@@ -25,23 +25,26 @@ import Set from '../Set';
 import AbstractFilterer from './AbstractFilterer';
 
 /**
- * [[JW.Abstract.Filterer|Filterer]] implementation for [[JW.Set]].
+ * AbstractFilterer implementation for Set.
+ * @param T Collection item type.
  */
 class SetFilterer<T> extends AbstractFilterer<T> {
 	private _targetCreated: boolean;
 
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	readonly target: ISet<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param test Filtering criteria.
+	 * @param config Filterer configuration.
 	 */
 	constructor(source: ReadonlySet<T>, test: (item: T) => any,
 				config: SetFilterer.Config<T> = {}) {
@@ -54,7 +57,7 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this.target.tryRemoveAll(this.source.toArray());
@@ -80,18 +83,26 @@ export default SetFilterer;
 
 namespace SetFilterer {
 	/**
-	 * @inheritdoc
+	 * SetFilterer configuration.
+	 * @param T Collection item type.
 	 */
 	export interface Config<T> extends AbstractFilterer.Config {
 		/**
-		 * @inheritdoc
+		 * Target collection.
 		 */
 		readonly target?: ISet<T>;
 	}
 }
 
+/**
+ * Filters a set and starts synchronization.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param scope Call scope of `test` function.
+ * @returns Target collection.
+ */
 export function filterSet<T>(source: ReadonlySet<T>, test: (item: T) => any,
-							 scope?: any): DestroyableReadonlySet<T> {
+                             scope?: any): DestroyableReadonlySet<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}

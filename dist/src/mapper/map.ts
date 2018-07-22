@@ -128,7 +128,7 @@ namespace MapMapper {
 }
 
 /**
- * Maps a map. See AbstractMapper for details.
+ * Maps a map and starts synchronization.
  * @param source Source collection.
  * @param create Mapping callback.
  * @param config Mapper configuration.

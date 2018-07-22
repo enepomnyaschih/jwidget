@@ -26,23 +26,26 @@ import ReadonlyMap from '../ReadonlyMap';
 import AbstractFilterer from './AbstractFilterer';
 
 /**
- * [[JW.Abstract.Filterer|Filterer]] implementation for [[JW.Map]].
+ * AbstractFilterer implementation for Map.
+ * @param T Collection item type.
  */
 class MapFilterer<T> extends AbstractFilterer<T> {
 	private _targetCreated: boolean;
 
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	readonly target: IMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param test Filtering criteria.
+	 * @param config Filterer configuration.
 	 */
 	constructor(source: ReadonlyMap<T>, test: (item: T) => any,
 				config: MapFilterer.Config<T> = {}) {
@@ -56,7 +59,7 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this.target.tryRemoveAll(this.source.getKeys().items);
@@ -86,16 +89,24 @@ export default MapFilterer;
 
 namespace MapFilterer {
 	/**
-	 * @inheritdoc
+	 * MapFilterer configuration.
+	 * @param T Collection item type.
 	 */
 	export interface Config<T> extends AbstractFilterer.Config {
 		/**
-		 * @inheritdoc
+		 * Target collection.
 		 */
 		readonly target?: IMap<T>;
 	}
 }
 
+/**
+ * Filters a map and starts synchronization.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param scope Call scope of `test` function.
+ * @returns Target collection.
+ */
 export function filterMap<T>(source: ReadonlyMap<T>, test: (item: T) => any, scope?: any): DestroyableReadonlyMap<T> {
 	if (source.silent) {
 		return source.filter(test, scope);

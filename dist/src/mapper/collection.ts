@@ -43,7 +43,7 @@ export function createMapper<T, U>(source: ReadonlyCollection<T>, create: (sourc
 }
 
 /**
- * Creates a mapper matching the source collection type and returns its target collection.
+ * Maps a collection and starts synchronization.
  * @param source Source collection.
  * @param create Mapping callback.
  * @param config Mapper configuration.

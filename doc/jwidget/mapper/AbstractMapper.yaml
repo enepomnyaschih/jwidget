@@ -81,12 +81,10 @@ description: |
 
   <h3>Synchronizer rules</h3>
 
-  </pre>
-  <p>Synchronizer rules:</p>
   <ul>
     <li>All items of source collection get mapped and added to %target immediately on synchronizer initialization.</li>
-    <li>All items get removed from %target and destroyed via %destroyOfConfig callback on synchronizer destruction.</li>
-    <li>You can pass target map in <b>target</b> config option. In this case, you are responsible for its
+    <li>Mapped items get removed from %target and destroyed via %destroyOfConfig callback on synchronizer destruction.</li>
+    <li>You can pass target collection in <b>target</b> config option. In this case, you are responsible for its
     destruction (though items get removed and destroyed automatically on synchronizer destruction anyway).</li>
     <li>If <b>target</b> is not passed, it gets created automatically. In this
     case, %target gets destroyed automatically on synchronizer destruction.</li>
@@ -96,17 +94,17 @@ description: |
 
   <h3>Additional rules for different collection types</h3>
 
-  <p>%List:</p>
+  <p>%List - the synchronizer requires exclusive access to the target collection, i.e.:</p>
   <ul>
     <li>Target collection must be empty before initialization.</li>
     <li>You can't modify target collection manually and/or create other synchronizers with the same target collection.</li>
   </ul>
-  <p>%Map:</p>
+  <p>%Map - the synchronizer doesn't expect key conflicts, i.e.:</p>
   <ul>
     <li>Target collection can be synchronized with multiple source collections, as long as keys of all items are different.</li>
     <li>You can add items to target collection manually, as long as their keys differ from other collection keys.</li>
   </ul>
-  <p>%Set:</p>
+  <p>%Set - the synchronizer doesn't expect item conflicts, i.e.:</p>
   <ul>
     <li>Target collection can be synchronized with multiple source collections, as long as all items are different.</li>
     <li>You can add items to target collection manually, as long as they differ from other collection items.</li>
@@ -157,7 +155,7 @@ symbols:
         optional: true
         type: any
         description: |
-          <p>Call scope of mapper's <b>create</b> and %destroy callbacks. Defaults to synchronizer itself.</p>
+          <p>Call scope of mapper's <b>create</b> and %destroy callbacks. Defaults to the synchronizer itself.</p>
 
     references:
       DestroyCallback: {}

@@ -26,6 +26,11 @@ symbols:
         type: '%IMap<%U>'
         description: Target collection.
 
+    references:
+      AbstractMapper:
+        file: jwidget/mapper/AbstractMapper
+        symbol: default
+
   MapMapper.FullConfig:
     kind: interface
     simple: true
@@ -54,7 +59,7 @@ symbols:
       create: Mapping callback.
       config: Mapper configuration.
     returns: Target collection.
-    description: 'Maps a map. See %AbstractMapper for details.'
+    description: 'Maps a map and starts synchronization. See %mappers for details.'
 
 references:
   Config:

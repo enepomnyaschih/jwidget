@@ -136,7 +136,7 @@ namespace SetMapper {
 }
 
 /**
- * Maps a set. See AbstractMapper for details.
+ * Maps a set and starts synchronization.
  * @param source Source collection.
  * @param create Mapping callback.
  * @param config Mapper configuration.

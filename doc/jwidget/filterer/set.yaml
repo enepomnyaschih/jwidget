@@ -1,0 +1,62 @@
+symbols:
+  default:
+    defaultName: SetFilterer
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/filterer/AbstractFilterer
+    description: |
+      <p>%AbstractFilterer implementation for %Set. See %filterers for details.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlySet<%T>, test: (item: %T) => any, config?: %SetFilterer.%Config<%T>)
+      params:
+        source: Source collection.
+        test: Filtering criteria.
+        config: Filterer configuration.
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlySet<%T>'
+        description: Source collection.
+
+      target:
+        modifiers: readonly
+        type: '%ISet<%T>'
+        description: Target collection.
+
+    references:
+      AbstractFilterer:
+        file: jwidget/filterer/AbstractFilterer
+        symbol: default
+
+  SetFilterer.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/filterer/AbstractFilterer
+        symbol: AbstractFilterer.Config
+    description: |
+      <p>%SetFilterer configuration.</p>
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%ISet<%T>'
+        description: Target collection.
+
+  filterSet:
+    signature: |
+      <T>(source: %ReadonlySet<T>, test: (item: T) => any, scope?: any): %DestroyableReadonlySet<T>
+    params:
+      source: Source collection.
+      test: Filtering criteria.
+      scope: Call scope of %test function.
+    returns: Target collection.
+    description: 'Filters a set and starts synchronization. See %filterers for details.'
+
+references:
+  Config:
+    symbol: SetFilterer.Config

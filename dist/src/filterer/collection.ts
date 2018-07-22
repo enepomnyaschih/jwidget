@@ -28,15 +28,29 @@ import {default as ListFilterer, filterList} from './list';
 import {default as MapFilterer, filterMap} from './map';
 import {default as SetFilterer, filterSet} from './set';
 
+/**
+ * Creates a filterer matching the source collection type.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param scope Filterer configuration.
+ * @returns Collection filterer.
+ */
 export function createFilterer<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
-								  scope?: any): AbstractFilterer<T> {
+                                  scope?: any): AbstractFilterer<T> {
 	return (source instanceof List) ? new ListFilterer(source, test, {scope}) :
 		(source instanceof Map) ? new MapFilterer(source, test, {scope}) :
 			(source instanceof Set) ? new SetFilterer(source, test, {scope}) : null;
 }
 
+/**
+ * Filters a collection and starts synchronization.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param scope Call scope of `test` function.
+ * @returns Target collection.
+ */
 export function filterCollection<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
-									scope?: any): DestroyableReadonlyCollection<T> {
+                                    scope?: any): DestroyableReadonlyCollection<T> {
 	return (source instanceof List) ? filterList(source, test, scope) :
 		(source instanceof Map) ? filterMap(source, test, scope) :
 			(source instanceof Set) ? filterSet(source, test, scope) : null;

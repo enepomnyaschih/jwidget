@@ -177,7 +177,7 @@ references:
     member: find
     label: find
 
-  # Synchronizers
+  # Mappers
   mappers:
     file: jwidget/mapper/AbstractMapper
     label: Mappers
@@ -210,6 +210,40 @@ references:
   mapSet:
     file: jwidget/mapper/set
     symbol: mapSet
+
+  # Filterers
+  filterers:
+    file: jwidget/filterer/AbstractFilterer
+    label: Filterers
+
+  ListFilterer:
+    file: jwidget/filterer/list
+
+  MapFilterer:
+    file: jwidget/filterer/map
+
+  SetFilterer:
+    file: jwidget/filterer/set
+
+  createFilterer:
+    file: jwidget/filterer/collection
+    symbol: createFilterer
+
+  filterCollection:
+    file: jwidget/filterer/collection
+    symbol: filterCollection
+
+  filterList:
+    file: jwidget/filterer/list
+    symbol: filterList
+
+  filterMap:
+    file: jwidget/filterer/map
+    symbol: filterMap
+
+  filterSet:
+    file: jwidget/filterer/set
+    symbol: filterSet
 
 includes:
   DocumentationIndex: |

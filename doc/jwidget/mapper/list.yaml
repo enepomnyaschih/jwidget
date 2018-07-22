@@ -26,6 +26,11 @@ symbols:
         type: '%IList<%U>'
         description: Target collection.
 
+    references:
+      AbstractMapper:
+        file: jwidget/mapper/AbstractMapper
+        symbol: default
+
   ListMapper.FullConfig:
     kind: interface
     simple: true
@@ -54,7 +59,7 @@ symbols:
       create: Mapping callback.
       config: Mapper configuration.
     returns: Target collection.
-    description: 'Maps a list. See %AbstractMapper for details.'
+    description: 'Maps a list and starts synchronization. See %mappers for details.'
 
 references:
   Config:

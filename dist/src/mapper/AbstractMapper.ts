@@ -83,7 +83,7 @@ namespace AbstractMapper {
 		readonly destroy?: DestroyCallback<T, U>;
 
 		/**
-		 * Call scope of mapper's `create` and `destroy` callbacks. Defaults to synchronizer itself.
+		 * Call scope of mapper's `create` and `destroy` callbacks. Defaults to the synchronizer itself.
 		 */
 		readonly scope?: any;
 
