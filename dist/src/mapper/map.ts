@@ -29,23 +29,27 @@ import ReadonlyMap from '../ReadonlyMap';
 import AbstractMapper from './AbstractMapper';
 
 /**
- * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Map]].
+ * AbstractMapper implementation for Map.
+ * @param T Source collection item type.
+ * @param U Target collection item type.
  */
 class MapMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	readonly target: IMap<U>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param create Mapping callback.
+	 * @param config Mapper configuration.
 	 */
 	constructor(source: ReadonlyMap<T>, create: (data: T) => U, config: MapMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
@@ -58,7 +62,7 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys().items), this.source.items);
@@ -111,18 +115,27 @@ export default MapMapper;
 
 namespace MapMapper {
 	/**
-	 * @inheritdoc
+	 * MapMapper configuration.
+	 * @param T Source collection item type.
+	 * @param U Target collection item type.
 	 */
 	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
-		 * @inheritdoc
+		 * Target collection.
 		 */
 		readonly target?: IMap<U>;
 	}
 }
 
+/**
+ * Maps a map. See AbstractMapper for details.
+ * @param source Source collection.
+ * @param create Mapping callback.
+ * @param config Mapper configuration.
+ * @returns Target collection.
+ */
 export function mapMap<T, U>(source: ReadonlyMap<T>, create: (sourceValue: T) => U,
-							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyMap<U> {
+                             config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyMap<U> {
 	if (!source.silent) {
 		const target = new Map<U>(config.getKey);
 		return target.owning(new MapMapper<T, U>(source, create, {

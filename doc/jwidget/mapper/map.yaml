@@ -1,16 +1,16 @@
 symbols:
   default:
-    defaultName: ListMapper
+    defaultName: MapMapper
     typevars:
       T: Source collection item type.
       U: Target collection item type.
     extends:
       - file: jwidget/mapper/AbstractMapper
     description: |
-      <p>%AbstractMapper implementation for %List. See %mappers for details.</p>
+      <p>%AbstractMapper implementation for %Map. See %mappers for details.</p>
     constructor:
       signature: |
-        (source: %ReadonlyList<%T>, create: (sourceValue: %T) => %U, config?: %ListMapper.%FullConfig<%T, %U>)
+        (source: %ReadonlyMap<%T>, create: (sourceValue: %T) => %U, config?: %MapMapper.%FullConfig<%T, %U>)
       params:
         source: Source collection.
         create: Mapping callback.
@@ -18,15 +18,15 @@ symbols:
     properties:
       source:
         modifiers: readonly
-        type: '%ReadonlyList<%T>'
+        type: '%ReadonlyMap<%T>'
         description: Source collection.
 
       target:
         modifiers: readonly
-        type: '%IList<%U>'
+        type: '%IMap<%U>'
         description: Target collection.
 
-  ListMapper.FullConfig:
+  MapMapper.FullConfig:
     kind: interface
     simple: true
     typevars:
@@ -37,24 +37,24 @@ symbols:
         symbol: AbstractMapper.Config
         typevars: [T, U]
     description: |
-      <p>%ListMapper configuration.</p>
+      <p>%MapMapper configuration.</p>
     properties:
       target:
         modifiers: readonly
         optional: true
-        type: '%IList<%U>'
+        type: '%IMap<%U>'
         description: Target collection.
 
-  mapList:
+  mapMap:
     signature: |
-      <T, U>(source: %ReadonlyList<T>, create: (sourceValue: T) => U,
-             config?: %AbstractMapper.%Config<T, U>): %DestroyableReadonlyList<U>
+      <T, U>(source: %ReadonlyMap<T>, create: (sourceValue: T) => U,
+             config?: %AbstractMapper.%Config<T, U>): %DestroyableReadonlyMap<U>
     params:
       source: Source collection.
       create: Mapping callback.
       config: Mapper configuration.
     returns: Target collection.
-    description: 'Maps a list. See %AbstractMapper for details.'
+    description: 'Maps a map. See %AbstractMapper for details.'
 
 references:
   Config:
@@ -62,4 +62,4 @@ references:
     symbol: AbstractMapper.Config
 
   FullConfig:
-    symbol: ListMapper.FullConfig
+    symbol: MapMapper.FullConfig

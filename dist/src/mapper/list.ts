@@ -143,7 +143,7 @@ namespace ListMapper {
 }
 
 /**
- * Maps list. See %AbstractMapper for details.
+ * Maps a list. See AbstractMapper for details.
  * @param source Source collection.
  * @param create Mapping callback.
  * @param config Mapper configuration.

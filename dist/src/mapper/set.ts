@@ -28,7 +28,9 @@ import Set from '../Set';
 import AbstractMapper from './AbstractMapper';
 
 /**
- * [[JW.Abstract.Mapper|Mapper]] implementation for [[JW.Set]].
+ * AbstractMapper implementation for Set.
+ * @param T Source collection item type.
+ * @param U Target collection item type.
  */
 class SetMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
@@ -39,17 +41,19 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	protected _items: VidMap<T, U>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	readonly target: ISet<U>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param create Mapping callback.
+	 * @param config Mapper configuration.
 	 */
 	constructor(source: ReadonlySet<T>, create: (data: T) => U, config: SetMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
@@ -62,7 +66,7 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		var datas = this.source.toArray();
@@ -119,18 +123,27 @@ export default SetMapper;
 
 namespace SetMapper {
 	/**
-	 * @inheritdoc
+	 * SetMapper configuration.
+	 * @param T Source collection item type.
+	 * @param U Target collection item type.
 	 */
 	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
-		 * @inheritdoc
+		 * Target collection.
 		 */
 		readonly target?: ISet<U>;
 	}
 }
 
+/**
+ * Maps a set. See AbstractMapper for details.
+ * @param source Source collection.
+ * @param create Mapping callback.
+ * @param config Mapper configuration.
+ * @returns Target collection.
+ */
 export function mapSet<T, U>(source: ReadonlySet<T>, create: (sourceValue: T) => U,
-							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlySet<U> {
+                             config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlySet<U> {
 	if (!source.silent) {
 		const target = new Set<U>(config.getKey);
 		return target.owning(new SetMapper<T, U>(source, create, {

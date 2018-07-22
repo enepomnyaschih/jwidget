@@ -71,8 +71,8 @@ export function getReferenceUrl(reference: Reference, relativeToFile: string): s
 		return null;
 	}
 	const suffix = [
-		(reference.symbol ? reference.symbol.replace(".", "-") : reference.member ? "default" : null),
-		(reference.member ? (reference.static ? reference.member + "-static" : reference.member) : null)
+		reference.symbol ? reference.symbol.replace(".", "-") : reference.member ? "default" : null,
+		reference.member ? (reference.static ? reference.member + "-static" : reference.member) : null
 	].filter(Boolean).join("--");
 	const hash = suffix ? `#${suffix}` : '';
 	if (!reference.file || relativeToFile === reference.file) {

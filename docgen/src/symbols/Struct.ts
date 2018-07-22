@@ -15,6 +15,7 @@ import Topic, {TopicJson} from "../Topic";
 
 export default class StructSymbol extends AbstractSymbol {
 
+	private _defaultName: string;
 	readonly simple: boolean;
 	readonly kind: string;
 	readonly typevars: Dictionary<TypeVar>;
@@ -34,6 +35,7 @@ export default class StructSymbol extends AbstractSymbol {
 
 	constructor(file: SourceFile, id: string, json: StructJson) {
 		super(file, id);
+		this._defaultName = json.defaultName;
 		this.simple = json.simple || false;
 		this.kind = json.kind || "class";
 		this.typevars = DictionaryUtils.map(json.typevars || {}, value => (
@@ -55,6 +57,10 @@ export default class StructSymbol extends AbstractSymbol {
 		this.addToGroup();
 	}
 
+	get defaultName() {
+		return this._defaultName || super.defaultName;
+	}
+
 	get extending(): Extension[] {
 		return this._extending;
 	}
@@ -71,13 +77,6 @@ export default class StructSymbol extends AbstractSymbol {
 		return this._extending.reduce<number>((result, extension) => (
 			Math.max(result, this.project.getStructByExtension(extension).inheritanceLevel + 1)
 		), 0);
-	}
-
-	get showHierarchy(): boolean {
-		if (this.simple) {
-			return false;
-		}
-		return this._extending.length !== 0 || (this.extendedBy.length !== 0 && this.showInheritanceLevels !== 0);
 	}
 
 	link() {
@@ -129,6 +128,7 @@ export default class StructSymbol extends AbstractSymbol {
 
 export interface StructJson {
 
+	readonly defaultName?: string;
 	readonly simple?: boolean;
 	readonly kind?: string;
 	readonly typevars?: Dictionary<string | TypeVar>;

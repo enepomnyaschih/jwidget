@@ -18,7 +18,11 @@ abstract class AbstractSymbol implements ISymbol {
 	}
 
 	get objectName() {
-		return this.id === "default" ? this.file.token : this.id;
+		return this.id === "default" ? this.defaultName : this.id;
+	}
+
+	get defaultName() {
+		return this.file.token;
 	}
 
 	get selfReference() {

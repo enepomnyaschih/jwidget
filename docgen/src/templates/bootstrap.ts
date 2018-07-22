@@ -90,7 +90,7 @@ function renderFile(file: SourceFile) {
 			</nav>
 			<div class="doc-main">
 				<div class="container-fluid">
-					<h1><span id="default"></span>${file.id}</h1>
+					<h1>${file.description ? "" : '<span id="default"></span>'}${file.id}</h1>
 					${renderText(file.context, file.description)}
 					<h3>Consumption</h3>
 					<pre>${renderConsumption(file)}</pre>
@@ -186,7 +186,7 @@ function renderConsumption(file: SourceFile) {
 		return `import * as ${file.token} from "${file.id}";`;
 	}
 	const imports = Object.keys(file.symbols).filter(key => key !== 'default' && key.indexOf('.') === -1);
-	return `import ${file.token}${imports.length ? ', {' + imports.join(', ') + '}' : ''} from "${file.id}";`;
+	return `import ${file.symbols.default.objectName}${imports.length ? ', {' + imports.join(', ') + '}' : ''} from "${file.id}";`;
 }
 
 function renderSymbols(file: SourceFile) {
@@ -382,8 +382,7 @@ function renderMemberHeader(member: IMember) {
 }
 
 function renderHeader(tag: string, id: string, title: string) {
-	const anchor = (id === "default") ? "" : `<span id="${id}"></span>`;
-	return `<${tag}>${anchor}${title}<a class="anchorjs-link" href="#${id}" aria-label="Anchor" style="padding-left: 0.375em;">#</a></${tag}>`;
+	return `<${tag}><span id="${id}"></span>${title}<a class="anchorjs-link" href="#${id}" aria-label="Anchor" style="padding-left: 0.375em;">#</a></${tag}>`;
 }
 
 function renderTab(level: number) {
