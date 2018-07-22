@@ -1,0 +1,35 @@
+expandImports: true
+
+symbols:
+  createMapper:
+    signature: |
+      <T, U>(source: %ReadonlyCollection<T>, create: (sourceValue: T) => U,
+             config?: %AbstractMapper.%Config<T, U>): %AbstractMapper<T, U>
+    params:
+      source: Source collection.
+      create: Mapping callback.
+      config: Mapper configuration.
+    returns: Collection mapper.
+    description: |
+      <p>Creates a mapper matching the source collection type. See %mappers for details.</p>
+      <p>If you know exact type of the source collection, please use %ListMapper, %MapMapper and %SetMapper
+      constructors instead, because they are more efficient.</p>
+
+  mapCollection:
+    signature: |
+      <T, U>(source: %ReadonlyCollection<T>, create: (sourceValue: T) => U,
+             config?: %AbstractMapper.%Config<T, U>): %AbstractMapper<T, U>
+    params:
+      source: Source collection.
+      create: Mapping callback.
+      config: Mapper configuration.
+    returns: Collection mapper.
+    description: |
+      <p>Creates a mapper matching the source collection type. See %mappers for details.</p>
+      <p>If you know exact type of the source collection, please use %mapList, %mapMap and %mapSet
+      functions instead, because they are more efficient.</p>
+
+references:
+  Config:
+    file: jwidget/mapper/AbstractMapper
+    symbol: AbstractMapper.Config

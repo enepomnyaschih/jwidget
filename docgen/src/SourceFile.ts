@@ -9,6 +9,7 @@ import parseSymbol from "./parseSymbol";
 
 export default class SourceFile {
 
+	readonly expandImports: boolean;
 	readonly description: string;
 	readonly symbols: Dictionary<ISymbol>;
 	readonly groupTitles: Dictionary<string> = {};
@@ -20,6 +21,7 @@ export default class SourceFile {
 	currentGroupId: string = "";
 
 	constructor(readonly project: Project, readonly id: string, json: SourceFileJson) {
+		this.expandImports = json.expandImports || false;
 		this.description = json.description;
 		this.tokens = this.id.split('/');
 		this.context = new SourceFileContext(this, json.references);
@@ -45,6 +47,7 @@ export default class SourceFile {
 
 export interface SourceFileJson {
 
+	readonly expandImports?: boolean;
 	readonly description?: string;
 	readonly symbols?: any;
 	readonly references?: Dictionary<Reference>;

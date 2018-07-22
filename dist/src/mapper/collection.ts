@@ -28,15 +28,29 @@ import {default as ListMapper, mapList} from './list';
 import {default as MapMapper, mapMap} from './map';
 import {default as SetMapper, mapSet} from './set';
 
+/**
+ * Creates a mapper matching the source collection type.
+ * @param source Source collection.
+ * @param create Mapping callback.
+ * @param config Mapper configuration.
+ * @returns Collection mapper.
+ */
 export function createMapper<T, U>(source: ReadonlyCollection<T>, create: (sourceValue: T) => U,
-								   config?: AbstractMapper.Config<T, U>): AbstractMapper<T, U> {
+                                   config?: AbstractMapper.Config<T, U>): AbstractMapper<T, U> {
 	return (source instanceof List) ? new ListMapper(source, create, config) :
 		(source instanceof Map) ? new MapMapper(source, create, config) :
 			(source instanceof Set) ? new SetMapper(source, create, config) : null;
 }
 
+/**
+ * Creates a mapper matching the source collection type and returns its target collection.
+ * @param source Source collection.
+ * @param create Mapping callback.
+ * @param config Mapper configuration.
+ * @returns Target collection.
+ */
 export function mapCollection<T, U>(source: ReadonlyCollection<T>, create: (item: T) => U,
-									config?: AbstractMapper.Config<T, U>): DestroyableReadonlyCollection<U> {
+                                    config?: AbstractMapper.Config<T, U>): DestroyableReadonlyCollection<U> {
 	return (source instanceof List) ? mapList(source, create, config) :
 		(source instanceof Map) ? mapMap(source, create, config) :
 			(source instanceof Set) ? mapSet(source, create, config) : null;

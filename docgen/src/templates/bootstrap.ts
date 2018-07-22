@@ -182,11 +182,14 @@ function renderTopicIndex(topics: Dictionary<Topic>) {
 }
 
 function renderConsumption(file: SourceFile) {
-	if (!file.symbols.default) {
+	if (!file.symbols.default && !file.expandImports) {
 		return `import * as ${file.token} from "${file.id}";`;
 	}
 	const imports = Object.keys(file.symbols).filter(key => key !== 'default' && key.indexOf('.') === -1);
-	return `import ${file.symbols.default.objectName}${imports.length ? ', {' + imports.join(', ') + '}' : ''} from "${file.id}";`;
+	return `import ${[
+		file.symbols.default ? file.symbols.default.objectName : '',
+		imports.length ? '{' + imports.join(', ') + '}' : ''
+	].filter(Boolean).join(', ')} from "${file.id}";`;
 }
 
 function renderSymbols(file: SourceFile) {
