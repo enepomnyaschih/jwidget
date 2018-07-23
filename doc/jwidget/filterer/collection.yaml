@@ -21,7 +21,7 @@ symbols:
       source: Source collection.
       test: Filtering criteria.
       scope: Call scope of %test function.
-    returns: Collection filterer.
+    returns: Filtered collection.
     description: |
       <p>Filters a collection and starts synchronization. See %filterers for details.</p>
       <p>If you know exact type of the source collection, please use %filterList, %filterMap and %filterSet

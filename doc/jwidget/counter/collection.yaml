@@ -1,0 +1,33 @@
+expandImports: true
+
+symbols:
+  createCounter:
+    signature: |
+      <T>(source: %ReadonlyCollection<T>, test: (item: T) => any, config?: %AbstractCounter.%Config): %AbstractCounter<T>
+    params:
+      source: Source collection.
+      test: Filtering criteria.
+      config: Counter configuration.
+    returns: Collection counter.
+    description: |
+      <p>Creates a counter matching the source collection type. See %counters for details.</p>
+      <p>If you know exact type of the source collection, please use %ListCounter, %MapCounter and %SetCounter
+      constructors instead, because they are more efficient.</p>
+
+  countCollection:
+    signature: |
+      <T>(source: %ReadonlyCollection<T>, test: (item: T) => any, scope?: any): %DestroyableBindable<number>
+    params:
+      source: Source collection.
+      test: Filtering criteria.
+      scope: Call scope of %test function.
+    returns: Count of matching items.
+    description: |
+      <p>Counts matching items in a collection and starts synchronization. See %counters for details.</p>
+      <p>If you know exact type of the source collection, please use %countList, %countMap and %countSet
+      functions instead, because they are more efficient.</p>
+
+references:
+  Config:
+    file: jwidget/counter/AbstractCounter
+    symbol: AbstractCounter.Config

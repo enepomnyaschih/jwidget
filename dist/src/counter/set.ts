@@ -26,16 +26,18 @@ import ReadonlySet from '../ReadonlySet';
 import AbstractCounter from './AbstractCounter';
 
 /**
- * [[JW.Abstract.Counter|Counter]] implementation for [[JW.Set]].
+ * AbstractCounter implementation for Set.
  */
 export default class SetCounter<T> extends AbstractCounter<T> {
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param test Filtering criteria.
+	 * @param config Counter configuration.
 	 */
 	constructor(source: ReadonlySet<T>, test: (item: T) => any,
 				config?: AbstractCounter.Config) {
@@ -56,8 +58,15 @@ export default class SetCounter<T> extends AbstractCounter<T> {
 	}
 }
 
+/**
+ * Counts matching items in a list and starts synchronization.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param scope Call scope of `test` function.
+ * @returns Target property.
+ */
 export function countSet<T>(source: ReadonlySet<T>, test: (item: T) => any,
-							scope?: any): DestroyableBindable<number> {
+                            scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

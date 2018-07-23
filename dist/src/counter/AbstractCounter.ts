@@ -25,69 +25,8 @@ import Property from '../Property';
 import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
- * Counter for collection items which match the specified filter.
- * Builds new JW.Property&lt;number&gt;, containing the number of items for which callback
- * function returns !== false.
- * If original collection is observable, starts continuous synchronization.
- *
- *     var source = new JW.ObservableArray<number>([1, 2, 3]);
- *     var counter = source.createCounter({
- *         filterItem: function(x) { return x % 2 === 1; }
- *     });
- *     var target = counter.target;
- *     assert.strictEqual(target.get(), 2); // two odd numbers: 1, 3
- *
- *     source.addAll([4, 7, 1, 6]);
- *     assert.strictEqual(target.get(), 4); // four odd numbers: 1, 3, 7, 1
- *
- *     counter.destroy();
- *
- * Use [[JW.Abstract.createCounter|createCounter]] method to create the synchronizer.
- * The method selects a synchronizer implementation which fits better (simple or observable).
- *
- * You can pass target property in config option:
- *
- *     var source = new JW.ObservableSet();
- *     var target = new JW.Property<number>(0);
- *     var counter = source.createCounter({
- *         target: target,
- *         filterItem: this._filterItem,
- *         scope: this
- *     });
- *
- * In simple cases, [[JW.Abstract.$$count|$$count]] shorthand can be used instead.
- * It returns the target property right away:
- *
- *     var source = new JW.ObservableArray<number>([1, 2, 3]);
- *     var target = source.$$count(function(x) { return x % 2 === 1; });
- *     assert.strictEqual(target.get(), 2); // two odd numbers: 1, 3
- *
- *     source.addAll([4, 7, 1, 6]);
- *     assert.strictEqual(target.get(), 4); // four odd numbers: 1, 3, 7, 1
- *
- *     target.destroy();
- *
- * You may use [[JW.Abstract.Filterer|Filterer]] instead
- * of counter, but counter works much faster because it doesn't create a filtered collection.
- *
- *     var source = new JW.ObservableArray();
- *
- *     // via filterer
- *     var filterer = source.createFilterer({
- *         filterItem: this._filterItem,
- *         scope: this
- *     });
- *     var count = filterer.target.length; // JW.Property<number>
- *
- *     // via counter, works faster
- *     var counter = source.createCounter({
- *         filterItem: this._filterItem,
- *         scope: this
- *     });
- *     var count = counter.target; // JW.Property<number>
- *
- * Counter works correctly for observable collections only.
- *
+ * Abstract collection item counter. Builds a new Property containing number of collection items the callback
+ * returns truthy value for, and starts continuous synchronization.
  * @param T Collection item type.
  */
 abstract class AbstractCounter<T> extends Class {
@@ -104,11 +43,9 @@ abstract class AbstractCounter<T> extends Class {
 	protected _target: IProperty<number>;
 
 	/**
-	 * Creates synchronizer.
-	 * [[JW.Abstract.createCounter|createCounter]] method is preferred instead.
-	 *
 	 * @param source Source collection.
-	 * @param config Configuration.
+	 * @param _test Filtering criteria.
+	 * @param config Counter configuration.
 	 */
 	constructor(readonly source: ReadonlyCollection<T>, protected _test: (item: T) => any,
 				config: AbstractCounter.Config = {}) {
@@ -127,7 +64,7 @@ abstract class AbstractCounter<T> extends Class {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this._target.set(0);
@@ -163,14 +100,12 @@ export default AbstractCounter;
 
 namespace AbstractCounter {
 	/**
-	 * [[Counter]] configuration.
-	 *
+	 * AbstractCounter configuration.
 	 * @param T Collection item type.
 	 */
 	export interface Config {
 		/**
-		 * [[filterItem]] call scope.
-		 * Defaults to synchronizer itself.
+		 * Call scope of counter's `test` callback. Defaults to the synchronizer itself.
 		 */
 		readonly scope?: any;
 
@@ -181,9 +116,7 @@ namespace AbstractCounter {
 	}
 
 	/**
-	 * [[Counter]]'s [[Counter.reconfigure|reconfigure]] method options.
-	 * All options are optional. If skipped, an option stays the same.
-	 *
+	 * AbstractCounter.reconfigure method configuration.
 	 * @param T Collection item type.
 	 */
 	export interface Reconfig<T> {
@@ -193,7 +126,7 @@ namespace AbstractCounter {
 		readonly test?: (item: T) => any;
 
 		/**
-		 * [[filterItem]] call scope.
+		 * Call scope of counter's `test` callback.
 		 */
 		readonly scope?: any;
 	}

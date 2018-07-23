@@ -23,7 +23,7 @@ symbols:
       source: Source collection.
       create: Mapping callback.
       config: Mapper configuration.
-    returns: Collection mapper.
+    returns: Mapped collection.
     description: |
       <p>Maps a collection and starts synchronization. See %mappers for details.</p>
       <p>If you know exact type of the source collection, please use %mapList, %mapMap and %mapSet

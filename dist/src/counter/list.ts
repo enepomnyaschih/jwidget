@@ -26,19 +26,20 @@ import ReadonlyList from '../ReadonlyList';
 import AbstractCounter from './AbstractCounter';
 
 /**
- * [[JW.Abstract.Counter|Counter]] implementation for [[JW.Array]].
+ * AbstractCounter implementation for List.
  */
 export default class ListCounter<T> extends AbstractCounter<T> {
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param test Filtering criteria.
+	 * @param config Counter configuration.
 	 */
-	constructor(source: ReadonlyList<T>, test: (item: T) => any,
-				config?: AbstractCounter.Config) {
+	constructor(source: ReadonlyList<T>, test: (item: T) => any, config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
@@ -72,8 +73,15 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 	}
 }
 
+/**
+ * Counts matching items in a list and starts synchronization.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param scope Call scope of `test` function.
+ * @returns Target property.
+ */
 export function countList<T>(source: ReadonlyList<T>, test: (item: T) => any,
-							 scope?: any): DestroyableBindable<number> {
+                             scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

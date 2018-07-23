@@ -28,16 +28,30 @@ import {countList, default as ListCounter} from './list';
 import {countMap, default as MapCounter} from './map';
 import {countSet, default as SetCounter} from './set';
 
+/**
+ * Creates a counter matching the source collection type.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param config Counter configuration.
+ * @returns Collection counter.
+ */
 export function createCounter<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
-								 config?: AbstractCounter.Config): AbstractCounter<T> {
+                                 config?: AbstractCounter.Config): AbstractCounter<T> {
 	return (source instanceof List) ? new ListCounter(source, test, config) :
 		(source instanceof Map) ? new MapCounter(source, test, config) :
-		(source instanceof Set) ? new SetCounter(source, test, config) : null;
+			(source instanceof Set) ? new SetCounter(source, test, config) : null;
 }
 
+/**
+ * Counts matching items in a collection and starts synchronization.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param scope Call scope of %test function.
+ * @returns Count of matching items.
+ */
 export function countCollection<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
-								   scope?: any): DestroyableBindable<number> {
+                                   scope?: any): DestroyableBindable<number> {
 	return (source instanceof List) ? countList(source, test, scope) :
 		(source instanceof Map) ? countMap(source, test, scope) :
-		(source instanceof Set) ? countSet(source, test, scope) : null;
+			(source instanceof Set) ? countSet(source, test, scope) : null;
 }

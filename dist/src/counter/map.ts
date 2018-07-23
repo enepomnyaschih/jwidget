@@ -26,16 +26,18 @@ import ReadonlyMap from '../ReadonlyMap';
 import AbstractCounter from './AbstractCounter';
 
 /**
- * [[JW.Abstract.Counter|Counter]] implementation for [[JW.Map]].
+ * AbstractCounter implementation for Map.
  */
 export default class MapCounter<T> extends AbstractCounter<T> {
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param test Filtering criteria.
+	 * @param config Counter configuration.
 	 */
 	constructor(source: ReadonlyMap<T>, test: (item: T) => any,
 				config?: AbstractCounter.Config) {
@@ -56,8 +58,15 @@ export default class MapCounter<T> extends AbstractCounter<T> {
 	}
 }
 
+/**
+ * Counts matching items in a list and starts synchronization.
+ * @param source Source collection.
+ * @param test Filtering criteria.
+ * @param scope Call scope of `test` function.
+ * @returns Target property.
+ */
 export function countMap<T>(source: ReadonlyMap<T>, test: (item: T) => any,
-							scope?: any): DestroyableBindable<number> {
+                            scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

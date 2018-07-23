@@ -245,6 +245,40 @@ references:
     file: jwidget/filterer/set
     symbol: filterSet
 
+  # Counters
+  counters:
+    file: jwidget/counter/AbstractCounter
+    label: Counters
+
+  ListCounter:
+    file: jwidget/counter/list
+
+  MapCounter:
+    file: jwidget/counter/map
+
+  SetCounter:
+    file: jwidget/counter/set
+
+  createCounter:
+    file: jwidget/counter/collection
+    symbol: createCounter
+
+  countCollection:
+    file: jwidget/counter/collection
+    symbol: countCollection
+
+  countList:
+    file: jwidget/counter/list
+    symbol: countList
+
+  countMap:
+    file: jwidget/counter/map
+    symbol: countMap
+
+  countSet:
+    file: jwidget/counter/set
+    symbol: countSet
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

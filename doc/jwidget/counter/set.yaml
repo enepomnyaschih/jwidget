@@ -1,0 +1,31 @@
+symbols:
+  default:
+    defaultName: SetCounter
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/counter/AbstractCounter
+    description: |
+      <p>%AbstractCounter implementation for %Set. See %counters for details.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlySet<%T>, test: (item: %T) => any, config?: %AbstractCounter.%Config)
+      params:
+        source: Source collection.
+        test: Filtering criteria.
+        config: Counter configuration.
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlySet<%T>'
+        description: Source collection.
+
+  countSet:
+    signature: |
+      <T>(source: %ReadonlySet<T>, test: (item: T) => any, scope?: any): %DestroyableBindable<number>
+    params:
+      source: Source collection.
+      test: Filtering criteria.
+      scope: Call scope of %test function.
+    returns: Target property.
+    description: 'Counts matching items in a set and starts synchronization. See %counters for details.'
