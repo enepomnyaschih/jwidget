@@ -279,6 +279,40 @@ references:
     file: jwidget/counter/set
     symbol: countSet
 
+  # Indexers
+  indexers:
+    file: jwidget/indexer/AbstractIndexer
+    label: Indexers
+
+  ListIndexer:
+    file: jwidget/indexer/list
+
+  MapIndexer:
+    file: jwidget/indexer/map
+
+  SetIndexer:
+    file: jwidget/indexer/set
+
+  createIndexer:
+    file: jwidget/indexer/collection
+    symbol: createIndexer
+
+  indexCollection:
+    file: jwidget/indexer/collection
+    symbol: indexCollection
+
+  indexList:
+    file: jwidget/indexer/list
+    symbol: indexList
+
+  indexMap:
+    file: jwidget/indexer/map
+    symbol: indexMap
+
+  indexSet:
+    file: jwidget/indexer/set
+    symbol: indexSet
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

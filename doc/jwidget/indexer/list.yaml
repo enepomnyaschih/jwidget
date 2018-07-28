@@ -1,0 +1,37 @@
+symbols:
+  default:
+    defaultName: ListIndexer
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/indexer/AbstractIndexer
+    description: |
+      <p>%AbstractIndexer implementation for %List. See %indexers for details.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlyList<%T>, getKey: (item: %T) => any, config?: %AbstractIndexer.%Config<%T>)
+      params:
+        source: Source collection.
+        getKey: Indexer function.
+        config: Indexer configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyList<%T>'
+        description: Source collection.
+
+  indexList:
+    signature: |
+      <T>(source: %ReadonlyList<T>, getKey: (item: T) => any, scope?: any): %DestroyableReadonlyMap<T>
+    params:
+      source: Source collection.
+      getKey: Indexer function.
+      scope: Call scope of %getKey callback.
+    returns: Collection index map.
+    description: 'Indexes list and starts synchronization. See %indexers for details.'
+
+references:
+  Config:
+    file: jwidget/indexer/AbstractIndexer
+    symbol: AbstractIndexer.Config

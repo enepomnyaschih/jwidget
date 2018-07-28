@@ -25,19 +25,20 @@ import ReadonlyList from '../ReadonlyList';
 import AbstractIndexer from './AbstractIndexer';
 
 /**
- * [[JW.Abstract.Indexer|Indexer]] implementation for [[JW.Array]].
+ * AbstractIndexer implementation for List.
  */
 export default class ListIndexer<T> extends AbstractIndexer<T> {
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param getKey Indexer function.
+	 * @param config Indexer configuration.
 	 */
-	constructor(source: ReadonlyList<T>, getKey: (item: T) => any,
-				config?: AbstractIndexer.Config<T>) {
+	constructor(source: ReadonlyList<T>, getKey: (item: T) => any, config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
@@ -46,25 +47,32 @@ export default class ListIndexer<T> extends AbstractIndexer<T> {
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(
+		this._target.trySplice(
 			this._keys(spliceResult.removedItems),
 			this._index(spliceResult.addedItems));
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		this.target.trySplice(
+		this._target.trySplice(
 			this._keys([params.oldItem]),
 			this._index([params.newItem]));
 	}
 
 	private _onClear(params: IList.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(
+		this._target.tryRemoveAll(
 			this._keys(params.items));
 	}
 }
 
+/**
+ * Indexes list and starts synchronization.
+ * @param source Source collection.
+ * @param getKey Indexer function.
+ * @param scope Call scope of `getKey` callback.
+ * @returns Collection index map.
+ */
 export function indexList<T>(source: ReadonlyList<T>, getKey: (item: T) => any,
-							 scope?: any): DestroyableReadonlyMap<T> {
+                             scope?: any): DestroyableReadonlyMap<T> {
 	if (source.silent) {
 		return source.index(getKey, scope);
 	}

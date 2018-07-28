@@ -23,81 +23,11 @@ import Dictionary from '../Dictionary';
 import IMap from '../IMap';
 import Map from '../Map';
 import ReadonlyCollection from '../ReadonlyCollection';
+import ReadonlyMap from "../ReadonlyMap";
 
 /**
- * Collection indexer.
- * Builds new map by rule: key is the result of indexer function call, value is the corresponding item.
- * If original collection is observable, starts continuous synchronization.
- * Can be used for fast item search by key (for example, by ID).
- *
- *     interface Item {
- *         id: number;
- *         label: string;
- *     }
- *
- *     var array = new JW.ObservableArray<Item>([{id: 9, label: "The item"}]);
- *     var indexer = array.createIndexer({
- *         getKey: function(item) { return String(item.id); },
- *         scope: this
- *     });
- *     var map = indexer.target;
- *
- *     // Get an item with ID = 9
- *     assert.strictEqual(map.get(9).label, "The item");
- *     assert.strictEqual(map.get(5), undefined);
- *
- *     // Target map is automatically synchronized with original observable array
- *     array.add({id: 5, label: "New item"});
- *     assert.strictEqual(map.get(5).label, "New item");
- *
- *     indexer.destroy();
- *
- * **Notice:** All items of source collection must have different (unique) string keys.
- *
- * Use [[JW.Abstract.createFilterer|createFilterer]] method to create the synchronizer.
- * The method selects a synchronizer implementation which fits better (simple or observable).
- *
- * You can pass target map in config option:
- *
- *     var map = new JW.Map();
- *     var indexer = collection.createIndexer({
- *         target: map,
- *         getKey: function(item) { return String(item.id); },
- *         scope: this
- *     });
- *
- * In simple cases, [[JW.Abstract.$$index|$$index]] shorthand can be used instead.
- * It returns the target map right away:
- *
- *     var array = new JW.ObservableArray<Item>([{id: 9, label: "The item"}]);
- *     var map = array.$$index(function(item) { return String(item.id); });
- *
- *     // Get an item with ID = 9
- *     assert.strictEqual(map.get(9).label, "The item");
- *     assert.strictEqual(map.get(5), undefined);
- *
- *     // Target map is automatically synchronized with original observable array
- *     array.add({id: 5, label: "New item"});
- *     assert.strictEqual(map.get(5).label, "New item");
- *
- *     map.destroy();
- *
- * Synchronizer rules:
- *
- * - Target map is stored in [[target]] property.
- * - All items of source collection are added to [[target]] immediately
- * on synchronizer initialization.
- * - All items are removed from [[target]] on synchronizer destruction.
- * - You can pass target map in
- * [[Indexer.Config.target|target]] config option.
- * In this case, you are responsible for its destruction (though items will be removed
- * automatically on synchronizer destruction anyway).
- * - If [[Indexer.Config.target|target]]
- * is not passed, it will be created automatically. Synchronizer will select
- * appropriate [[target]] implementation (simple or observable). In this
- * case, [[target]] will be destroyed automatically on synchronizer destruction.
- * - You can index multiple collections into one map, if keys of all items are different.
- *
+ * Abstract collection indexer. Builds a new map by rule: key is the result of the function call, value is the
+ * corresponding item. Can be used for item search optimization.
  * @param T Collection item type.
  */
 abstract class AbstractIndexer<T> extends Class {
@@ -109,33 +39,36 @@ abstract class AbstractIndexer<T> extends Class {
 	protected _scope: any;
 
 	/**
-	 * Target map.
+	 * @hidden
 	 */
-	readonly target: IMap<T>;
+	protected _target: IMap<T>;
 
 	/**
-	 * Creates synchronizer.
-	 * [[JW.Abstract.createIndexer|createIndexer]] method is preferred instead.
-	 *
-	 * @param source Source collection.
-	 * @param config Configuration.
+	 * @hidden
 	 */
 	constructor(readonly source: ReadonlyCollection<T>, protected _getKey: (item: T) => any,
 				config: AbstractIndexer.Config<T> = {}) {
 		super();
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Map<T>(source.getKey, source.silent) : config.target;
-		this.target.tryPutAll(this._index(source.asArray()));
+		this._target = this._targetCreated ? new Map<T>(source.getKey, source.silent) : config.target;
+		this._target.tryPutAll(this._index(source.asArray()));
 	}
 
 	/**
-	 * @inheritdoc
+	 * Target map.
+	 */
+	get target(): ReadonlyMap<T> {
+		return this._target;
+	}
+
+	/**
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this.target.tryRemoveAll(this._keys(this.source.asArray()));
+		this._target.tryRemoveAll(this._keys(this.source.asArray()));
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this._getKey = null;
 		this._scope = null;
@@ -170,14 +103,12 @@ export default AbstractIndexer;
 
 namespace AbstractIndexer {
 	/**
-	 * [[JW.Abstract.Indexer]] configuration.
-	 *
+	 * AbstractIndexer configuration.
 	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
 		/**
-		 * [[getKey]] call scope.
-		 * Defaults to synchronizer itself.
+		 * Call scope of indexer's `getKey` callback. Defaults to the synchronizer itself.
 		 */
 		readonly scope?: any;
 

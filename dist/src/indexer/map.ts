@@ -26,16 +26,18 @@ import ReadonlyMap from '../ReadonlyMap';
 import AbstractIndexer from './AbstractIndexer';
 
 /**
- * [[JW.Abstract.Indexer|Indexer]] implementation for [[JW.Map]].
+ * AbstractIndexer implementation for Map.
  */
 export default class MapIndexer<T> extends AbstractIndexer<T> {
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param getKey Indexer function.
+	 * @param config Indexer configuration.
 	 */
 	constructor(source: ReadonlyMap<T>, getKey: (item: T) => any,
 				config?: AbstractIndexer.Config<T>) {
@@ -46,19 +48,26 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 
 	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(
+		this._target.trySplice(
 			this._keys(DictionaryUtils.toArray(spliceResult.removedItems)),
 			this._index(DictionaryUtils.toArray(spliceResult.addedItems)));
 	}
 
 	private _onClear(params: IMap.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(
+		this._target.tryRemoveAll(
 			this._keys(DictionaryUtils.toArray(params.items)));
 	}
 }
 
+/**
+ * Indexes map and starts synchronization.
+ * @param source Source collection.
+ * @param getKey Indexer function.
+ * @param scope Call scope of `getKey` callback.
+ * @returns Collection index map.
+ */
 export function indexMap<T>(source: ReadonlyMap<T>, getKey: (item: T) => any,
-							scope?: any): DestroyableReadonlyMap<T> {
+                            scope?: any): DestroyableReadonlyMap<T> {
 	if (source.silent) {
 		return source.index(getKey, scope);
 	}

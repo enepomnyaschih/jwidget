@@ -25,16 +25,18 @@ import ReadonlySet from '../ReadonlySet';
 import AbstractIndexer from './AbstractIndexer';
 
 /**
- * [[JW.Abstract.Indexer|Indexer]] implementation for [[JW.Set]].
+ * AbstractIndexer implementation for Set.
  */
 export default class SetIndexer<T> extends AbstractIndexer<T> {
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param getKey Indexer function.
+	 * @param config Indexer configuration.
 	 */
 	constructor(source: ReadonlySet<T>, getKey: (item: T) => any,
 				config?: AbstractIndexer.Config<T>) {
@@ -45,19 +47,26 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
 
 	private _onSplice(params: ISet.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(
+		this._target.trySplice(
 			this._keys(spliceResult.removedItems),
 			this._index(spliceResult.addedItems));
 	}
 
 	private _onClear(params: ISet.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(
+		this._target.tryRemoveAll(
 			this._keys(params.items));
 	}
 }
 
+/**
+ * Indexes set and starts synchronization.
+ * @param source Source collection.
+ * @param getKey Indexer function.
+ * @param scope Call scope of `getKey` callback.
+ * @returns Collection index map.
+ */
 export function indexSet<T>(source: ReadonlySet<T>, getKey: (item: T) => any,
-							scope?: any): DestroyableReadonlyMap<T> {
+                            scope?: any): DestroyableReadonlyMap<T> {
 	if (source.silent) {
 		return source.index(getKey, scope);
 	}

@@ -19,7 +19,6 @@
 */
 
 import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
-import ICollection from '../ICollection';
 import List from '../List';
 import Map from '../Map';
 import Set from '../Set';
@@ -27,16 +26,32 @@ import AbstractIndexer from './AbstractIndexer';
 import {default as ListIndexer, indexList} from './list';
 import {default as MapIndexer, indexMap} from './map';
 import {default as SetIndexer, indexSet} from './set';
+import ReadonlyCollection from "../ReadonlyCollection";
 
-export function createIndexer<T>(source: ICollection<T>, getKey: (item: T) => any,
-								 config?: AbstractIndexer.Config<T>): AbstractIndexer<T> {
+/**
+ * Creates an indexer matching the source collection type.
+ * @param source Source collection.
+ * @param getKey Indexer function.
+ * @param config Indexer configuration.
+ * @returns Collection indexer.
+ */
+export function createIndexer<T>(source: ReadonlyCollection<T>, getKey: (item: T) => any,
+                                 config?: AbstractIndexer.Config<T>): AbstractIndexer<T> {
 	return (source instanceof List) ? new ListIndexer(source, getKey, config) :
 		(source instanceof Map) ? new MapIndexer(source, getKey, config) :
-		(source instanceof Set) ? new SetIndexer(source, getKey, config) : null;
+			(source instanceof Set) ? new SetIndexer(source, getKey, config) : null;
 }
 
-export function indexCollection<T>(source: ICollection<T>, getKey: (item: T) => any, scope?: any): DestroyableReadonlyMap<T> {
+/**
+ * Indexes a collection and starts synchronization.
+ * @param source Source collection.
+ * @param getKey Indexer function.
+ * @param scope Call scope of `getKey` callback.
+ * @returns Collection index map.
+ */
+export function indexCollection<T>(source: ReadonlyCollection<T>, getKey: (item: T) => any,
+                                   scope?: any): DestroyableReadonlyMap<T> {
 	return (source instanceof List) ? indexList(source, getKey, scope) :
 		(source instanceof Map) ? indexMap(source, getKey, scope) :
-		(source instanceof Set) ? indexSet(source, getKey, scope) : null;
+			(source instanceof Set) ? indexSet(source, getKey, scope) : null;
 }

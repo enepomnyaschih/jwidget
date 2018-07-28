@@ -1,0 +1,159 @@
+description: |
+  <p><b>Indexer</b> is one of collection synchronizers. <b>Indexer</b> builds a new map by rule: key is the result of
+  the function call, value is the corresponding item. Can be used for item search optimization.</p>
+  <pre>
+  interface Item {
+      id: number;
+      label: string;
+  }
+
+  const source = new %List<Item>([
+      {id: 3, label: "Three"},
+      {id: 6, label: "Six"},
+      {id: 7, label: "Seven"}
+  ]);
+  const indexer = new %ListIndexer(source, x => x.id);
+  const target = indexer.%target;
+
+  expect(target.%get(3).label).toBe("Three");
+
+  // Target collection is automatically synchronized with the original collection
+  source.%add({id: 2, label: "Two"});
+  expect(target.%get(2).label).toBe("Two");
+
+  // Destroy the indexer to stop synchronization
+  indexer.%destroy();
+  </pre>
+
+  <h3>Indexer modules</h3>
+
+  <p><b>Indexer</b> has one common abstract class with one implementation per collection type. Every implementation is
+  supplied with a shorthand function that returns target collection directly. There is also a module that merges all
+  implementations together and allows you to map a collection of any (i.e. unknown) type.</p>
+  <p>Module dependencies and exports are represented at the following diagram:</p>
+  <table class="table table-sm text-center">
+    <tbody>
+      <tr>
+        <td colspan="3">
+          <h5>jwidget/indexer/AbstractIndexer</h5>
+          <p>%AbstractIndexer</p>
+          <p class="text-secondary">All other modules depend on it</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h5>jwidget/indexer/list</h5>
+          <p>%ListIndexer, %indexList</p>
+        </td>
+        <td>
+          <h5>jwidget/indexer/map</h5>
+          <p>%MapIndexer, %indexMap</p>
+        </td>
+        <td>
+          <h5>jwidget/indexer/set</h5>
+          <p>%SetIndexer, %indexSet</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <h5>jwidget/indexer/collection</h5>
+          <p>%createIndexer, %indexCollection</p>
+          <p class="text-danger">Depends on all other modules</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Knowledge of this diagram may help you to optimize WebPack bundling. Avoid using modules you don't need to.</p>
+
+  <h3>Features and examples</h3>
+
+  <p>You can pass target map in config option:</p>
+  <pre>
+  const source = new %List<Item>([
+      {id: 3, label: "Three"},
+      {id: 6, label: "Six"},
+      {id: 7, label: "Seven"}
+  ]);
+  const target = new Map<Item>();
+  const indexer = new %ListIndexer(source, x => x.id, {%targetOfConfig});
+  </pre>
+  <p>If you want to index the items into a new map, use shorthand functions %indexList, %indexMap, %indexSet and
+  %indexCollection instead:</p>
+  <pre>
+  const source = new %List<Item>([
+      {id: 3, label: "Three"},
+      {id: 6, label: "Six"},
+      {id: 7, label: "Seven"}
+  ]);
+  const target = %mapList(source, x => x.id);
+
+  // Destroy the target collection to stop synchronization
+  target.%destroy();
+  </pre>
+
+  <h3>Synchronizer rules</h3>
+
+  <ul>
+    <li>All items of source collection get indexed and added to %target immediately on synchronizer initialization.</li>
+    <li>Indexed items get removed from %target on synchronizer destruction.</li>
+    <li>You can pass target map in <b>target</b> config option. In this case, you are responsible for its
+    destruction (though items get removed automatically on synchronizer destruction anyway).</li>
+    <li>If <b>target</b> is not passed, it gets created automatically. In this
+    case, %target gets destroyed automatically on synchronizer destruction.</li>
+    <li>All items must have different keys.</li>
+  </ul>
+
+symbols:
+  default:
+    kind: abstract class
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Abstract collection indexer. Builds a new map by rule: key is the result of the function call, value is the
+      corresponding item. Can be used for item search optimization.</p>
+
+    properties:
+      target:
+        modifiers: readonly
+        type: '%ReadonlyMap<%T>'
+        description: Target collection.
+
+  AbstractIndexer.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Collection item type.
+    properties:
+      scope:
+        modifiers: readonly
+        optional: true
+        type: any
+        description: |
+          <p>Call scope of indexer's <b>getKey</b> callback. Defaults to the synchronizer itself.</p>
+
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IMap<%T>'
+        description: |
+          <p>Target map. By default, created automatically.</p>
+
+references:
+  target:
+    symbol: default
+    member: target
+
+  get:
+    file: jwidget/ReadonlyMap
+    member: get
+
+  add:
+    file: jwidget/IList
+    member: add
+
+  targetOfConfig:
+    symbol: AbstractIndexer.Config
+    member: target
+    label: target
