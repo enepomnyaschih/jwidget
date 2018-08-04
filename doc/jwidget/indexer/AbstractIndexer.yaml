@@ -74,7 +74,7 @@ description: |
       {id: 6, label: "Six"},
       {id: 7, label: "Seven"}
   ]);
-  const target = new Map<Item>();
+  const target = new %Map<Item>();
   const indexer = new %ListIndexer(source, x => x.id, {%targetOfConfig});
   </pre>
   <p>If you want to index the items into a new map, use shorthand functions %indexList, %indexMap, %indexSet and

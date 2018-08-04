@@ -313,6 +313,40 @@ references:
     file: jwidget/indexer/set
     symbol: indexSet
 
+  # ConvertersToSet
+  convertersToSet:
+    file: jwidget/convertertoset/AbstractConverterToSet
+    label: Converters to set
+
+  ListConverterToSet:
+    file: jwidget/convertertoset/list
+
+  MapConverterToSet:
+    file: jwidget/convertertoset/map
+
+  SetConverterToSet:
+    file: jwidget/convertertoset/set
+
+  createConverterToSet:
+    file: jwidget/convertertoset/collection
+    symbol: createConverterToSet
+
+  collectionToSet:
+    file: jwidget/convertertoset/collection
+    symbol: collectionToSet
+
+  listToSet:
+    file: jwidget/convertertoset/list
+    symbol: listToSet
+
+  mapToSet:
+    file: jwidget/convertertoset/map
+    symbol: mapToSet
+
+  setToSet:
+    file: jwidget/convertertoset/set
+    symbol: setToSet
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

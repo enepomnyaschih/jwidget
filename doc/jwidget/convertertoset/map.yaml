@@ -1,0 +1,34 @@
+symbols:
+  default:
+    defaultName: MapConverterToSet
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/convertertoset/AbstractConverterToSet
+    description: |
+      <p>%AbstractConverterToSet implementation for %Map. See %convertersToSet for details.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlyMap<%T>, config: %AbstractConverterToSet.%Config<%T>)
+      params:
+        source: Source collection.
+        config: Converter configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyMap<%T>'
+        description: Source collection.
+
+  mapToSet:
+    signature: |
+      <T>(source: %ReadonlyMap<T>): %DestroyableReadonlySet<T>
+    params:
+      source: Source collection.
+    returns: Target set.
+    description: 'Converts map to set and starts synchronization. See %convertersToSet for details.'
+
+references:
+  Config:
+    file: jwidget/convertertoset/AbstractConverterToSet
+    symbol: AbstractConverterToSet.Config

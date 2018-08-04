@@ -25,16 +25,17 @@ import Set from '../Set';
 import AbstractConverterToSet from './AbstractConverterToSet';
 
 /**
- * [[JW.Abstract.Lister|Lister]] implementation for [[JW.Set]].
+ * AbstractConverterToSet implementation for Set.
  */
 export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param config Converter configuration.
 	 */
 	constructor(source: ReadonlySet<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
@@ -44,14 +45,19 @@ export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 
 	private _onSplice(params: ISet.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
+		this._target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
 	private _onClear(params: ISet.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(params.items);
+		this._target.tryRemoveAll(params.items);
 	}
 }
 
+/**
+ * Creates a copy of a set and starts synchronization.
+ * @param source Source collection.
+ * @returns Target set.
+ */
 export function setToSet<T>(source: ReadonlySet<T>): DestroyableReadonlySet<T> {
 	if (source.silent) {
 		return source.toSet();

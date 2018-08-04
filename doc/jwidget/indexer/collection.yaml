@@ -29,5 +29,5 @@ symbols:
 
 references:
   Config:
-    file: jwidget/mapper/AbstractIndexer
+    file: jwidget/indexer/AbstractIndexer
     symbol: AbstractIndexer.Config

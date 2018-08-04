@@ -25,16 +25,17 @@ import Set from '../Set';
 import AbstractConverterToSet from './AbstractConverterToSet';
 
 /**
- * [[JW.Abstract.Lister|Lister]] implementation for [[JW.Array]].
+ * AbstractConverterToSet implementation for List.
  */
 export default class ListConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param config Converter configuration.
 	 */
 	constructor(source: ReadonlyList<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
@@ -45,18 +46,23 @@ export default class ListConverterToSet<T> extends AbstractConverterToSet<T> {
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
+		this._target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		this.target.trySplice([params.oldItem], [params.newItem]);
+		this._target.trySplice([params.oldItem], [params.newItem]);
 	}
 
 	private _onClear(params: IList.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(params.items);
+		this._target.tryRemoveAll(params.items);
 	}
 }
 
+/**
+ * Converts list to set and starts synchronization.
+ * @param source Source collection.
+ * @returns Target set.
+ */
 export function listToSet<T>(source: ReadonlyList<T>): DestroyableReadonlySet<T> {
 	if (source.silent) {
 		return source.toSet();

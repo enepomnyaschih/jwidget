@@ -26,16 +26,17 @@ import Set from '../Set';
 import AbstractConverterToSet from './AbstractConverterToSet';
 
 /**
- * [[JW.Abstract.Lister|Lister]] implementation for [[JW.Map]].
+ * AbstractConverterToSet implementation for Map.
  */
 export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
-	 * @inheritdoc
+	 * Source collection.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source collection.
+	 * @param config Converter configuration.
 	 */
 	constructor(source: ReadonlyMap<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
@@ -45,17 +46,22 @@ export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 
 	private _onSplice(params: IMap.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		this.target.trySplice(
+		this._target.trySplice(
 			DictionaryUtils.toArray(spliceResult.removedItems),
 			DictionaryUtils.toArray(spliceResult.addedItems));
 	}
 
 	private _onClear(params: IMap.ItemsEventParams<T>) {
-		this.target.tryRemoveAll(
+		this._target.tryRemoveAll(
 			DictionaryUtils.toArray(params.items));
 	}
 }
 
+/**
+ * Converts map to set and starts synchronization.
+ * @param source Source collection.
+ * @returns Target set.
+ */
 export function mapToSet<T>(source: ReadonlyMap<T>): DestroyableReadonlySet<T> {
 	if (source.silent) {
 		return source.toSet();

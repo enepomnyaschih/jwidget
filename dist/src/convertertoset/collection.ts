@@ -28,21 +28,26 @@ import {default as ListConverterToSet, listToSet} from './list';
 import {default as MapConverterToSet, mapToSet} from './map';
 import {default as SetConverterToSet, setToSet} from './set';
 
+/**
+ * Creates a converter to set matching the source collection type.
+ * @param source Source collection.
+ * @param config Converter configuration.
+ * @returns Collection converter to set.
+ */
 export function createConverterToSet<T>(source: ReadonlyCollection<T>,
-										config?: AbstractConverterToSet.Config<T>): AbstractConverterToSet<T> {
+                                        config?: AbstractConverterToSet.Config<T>): AbstractConverterToSet<T> {
 	return (source instanceof List) ? new ListConverterToSet(source, config) :
 		(source instanceof Map) ? new MapConverterToSet(source, config) :
-		(source instanceof Set) ? new SetConverterToSet(source, config) : null;
+			(source instanceof Set) ? new SetConverterToSet(source, config) : null;
 }
 
+/**
+ * Converts a collection to set and starts synchronization.
+ * @param source Source collection.
+ * @returns Target set.
+ */
 export function collectionToSet<T>(source: ReadonlyCollection<T>): DestroyableReadonlySet<T> {
 	return (source instanceof List) ? listToSet(source) :
 		(source instanceof Map) ? mapToSet(source) :
-		(source instanceof Set) ? setToSet(source) : null;
-}
-
-export function collectionAsSet<T>(source: ReadonlyCollection<T>): DestroyableReadonlySet<T> {
-	return (source instanceof List) ? listToSet(source) :
-		(source instanceof Map) ? mapToSet(source) :
-		(source instanceof Set) ? source : null;
+			(source instanceof Set) ? setToSet(source) : null;
 }

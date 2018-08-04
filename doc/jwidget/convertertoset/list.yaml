@@ -1,0 +1,34 @@
+symbols:
+  default:
+    defaultName: ListConverterToSet
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/convertertoset/AbstractConverterToSet
+    description: |
+      <p>%AbstractConverterToSet implementation for %List. See %convertersToSet for details.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlyList<%T>, config: %AbstractConverterToSet.%Config<%T>)
+      params:
+        source: Source collection.
+        config: Converter configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyList<%T>'
+        description: Source collection.
+
+  listToSet:
+    signature: |
+      <T>(source: %ReadonlyList<T>): %DestroyableReadonlySet<T>
+    params:
+      source: Source collection.
+    returns: Target set.
+    description: 'Converts list to set and starts synchronization. See %convertersToSet for details.'
+
+references:
+  Config:
+    file: jwidget/convertertoset/AbstractConverterToSet
+    symbol: AbstractConverterToSet.Config
