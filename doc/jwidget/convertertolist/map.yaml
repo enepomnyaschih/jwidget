@@ -9,7 +9,7 @@ symbols:
       <p>%AbstractConverterToList implementation for %Map. See %convertersToList for details.</p>
     constructor:
       signature: |
-        (source: %ReadonlyMap<%T>, config: %AbstractConverterToList.%Config<%T>)
+        (source: %ReadonlyMap<%T>, config?: %AbstractConverterToList.%Config<%T>)
       params:
         source: Source map.
         config: Converter configuration.

@@ -24,16 +24,17 @@ import ReadonlyMap from '../ReadonlyMap';
 import AbstractObserver from './AbstractObserver';
 
 /**
- * [[JW.Abstract.Observer|Observer]] implementation for [[JW.Map]].
+ * AbstractObserver implementation for Map.
  */
 export default class MapObserver<T> extends AbstractObserver<T> {
 	/**
-	 * @inheritdoc
+	 * Source map.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source map.
+	 * @param config Observer configuration.
 	 */
 	constructor(source: ReadonlyMap<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);

@@ -10,7 +10,7 @@ symbols:
       combine contents of several collections in a single %List. See %convertersToList for details.</p>
     constructor:
       signature: |
-        (source: %ReadonlyList<%T>, config: %AbstractConverterToList.%Config<%T>)
+        (source: %ReadonlyList<%T>, config?: %AbstractConverterToList.%Config<%T>)
       params:
         source: Source list.
         config: Converter configuration.

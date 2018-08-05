@@ -415,6 +415,24 @@ references:
     file: jwidget/sortercomparing/set
     symbol: sortSetComparing
 
+  # Observers
+  observers:
+    file: jwidget/observer/AbstractObserver
+    label: Observers
+
+  ListObserver:
+    file: jwidget/observer/list
+
+  MapObserver:
+    file: jwidget/observer/map
+
+  SetObserver:
+    file: jwidget/observer/set
+
+  createObserver:
+    file: jwidget/observer/collection
+    symbol: createObserver
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

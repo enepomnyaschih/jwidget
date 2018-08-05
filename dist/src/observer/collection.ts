@@ -27,9 +27,15 @@ import ListObserver from './list';
 import MapObserver from './map';
 import SetObserver from './set';
 
+/**
+ * Creates an observer matching the source collection type.
+ * @param source Source collection.
+ * @param config Observer configuration.
+ * @returns Collection observer.
+ */
 export function createObserver<T>(source: ReadonlyCollection<T>,
-								  config: AbstractObserver.Config<T>): AbstractObserver<T> {
+                                  config: AbstractObserver.Config<T>): AbstractObserver<T> {
 	return (source instanceof List) ? new ListObserver(source, config) :
 		(source instanceof Map) ? new MapObserver(source, config) :
-		(source instanceof Set) ? new SetObserver(source, config) : null;
+			(source instanceof Set) ? new SetObserver(source, config) : null;
 }

@@ -23,16 +23,17 @@ import ReadonlySet from '../ReadonlySet';
 import AbstractObserver from './AbstractObserver';
 
 /**
- * [[JW.Abstract.Observer|Observer]] implementation for [[JW.Set]].
+ * AbstractObserver implementation for Set.
  */
 export default class SetObserver<T> extends AbstractObserver<T> {
 	/**
-	 * @inheritdoc
+	 * Source set.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source set.
+	 * @param config Observer configuration.
 	 */
 	constructor(source: ReadonlySet<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);

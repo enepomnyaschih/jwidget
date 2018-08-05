@@ -9,7 +9,7 @@ symbols:
       <p>%AbstractConverterToList implementation for %Set. See %convertersToList for details.</p>
     constructor:
       signature: |
-        (source: %ReadonlySet<%T>, config: %AbstractConverterToList.%Config<%T>)
+        (source: %ReadonlySet<%T>, config?: %AbstractConverterToList.%Config<%T>)
       params:
         source: Source set.
         config: Converter configuration.

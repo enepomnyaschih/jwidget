@@ -1,0 +1,26 @@
+symbols:
+  default:
+    defaultName: ListObserver
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/observer/AbstractObserver
+    description: |
+      <p>%AbstractObserver implementation for %List. See %observers for details.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlyList<%T>, config: %AbstractObserver.%Config<%T>)
+      params:
+        source: Source list.
+        config: Observer configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyList<%T>'
+        description: Source list.
+
+references:
+  Config:
+    file: jwidget/observer/AbstractObserver
+    symbol: AbstractObserver.Config

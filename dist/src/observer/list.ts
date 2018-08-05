@@ -23,16 +23,17 @@ import ReadonlyList from '../ReadonlyList';
 import AbstractObserver from './AbstractObserver';
 
 /**
- * [[JW.Abstract.Observer|Observer]] implementation for [[JW.Array]].
+ * AbstractObserver implementation for List.
  */
 export default class ListObserver<T> extends AbstractObserver<T> {
 	/**
-	 * @inheritdoc
+	 * Source list.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source list.
+	 * @param config Observer configuration.
 	 */
 	constructor(source: ReadonlyList<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);

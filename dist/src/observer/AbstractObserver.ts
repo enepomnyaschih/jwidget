@@ -23,41 +23,7 @@ import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
  * Collection observer. Listens all collection events and reduces them to 2 granular functions:
- * item is added and item is removed. In optimization purposes, you can define a third function: collection is cleared
- * (in case if there is more effective clearing algorithm than iterative items deletion).
- * Also, you can define a function which is called on each collection modification.
- * For example, this synchronizer can be used to notify the items if they are added to collection.
- *
- *     var observer = collection.createObserver({
- *         addItem: function(item) { item.setInCollection(true); },
- *         removeItem: function(item) { item.setInCollection(false); },
- *         scope: this
- *     });
- *
- * Use [[JW.Abstract.createObserver|createObserver]] method to create the synchronizer.
- * The method selects a synchronizer implementation which fits better (simple or observable).
- *
- * Just another observer use case: if you have an abstract collection on input (and you don't know whether it is
- * simple or observable), and you want to listen collection change event if it is observable,
- * then you can do it meeting OOD principles:
- *
- *     var observer = collection.createObserver({
- *         change: function() { console.log("Collection is changed"); }
- *     });
- *
- * Synchronizer rules:
- *
- * - Function [[Observer.Config.addItem|addItem]]
- * is called for all items of source collection on synchronizer initialization.
- * - Function [[Observer.Config.clearItems|clearItems]]
- * is called for collection, or function
- * [[Observer.Config.removeItem|removeItem]] is called for
- * all items of source collection on synchronizer destruction.
- * - Functions [[Observer.Config.addItem|addItem]],
- * [[Observer.Config.removeItem|removeItem]] and
- * [[Observer.Config.clearItems|clearItems]] are
- * not called on source collection reordering/reindexing.
- *
+ * item is added and item is removed.
  * @param T Collection item type.
  */
 abstract class AbstractObserver<T> extends Class {
@@ -82,11 +48,7 @@ abstract class AbstractObserver<T> extends Class {
 	protected _scope: any;
 
 	/**
-	 * Creates synchronizer.
-	 * [[JW.Abstract.createObserver|createObserver]] method is preferred instead.
-	 *
-	 * @param source Source collection.
-	 * @param config Configuration.
+	 * @hidden
 	 */
 	constructor(readonly source: ReadonlyCollection<T>, config: AbstractObserver.Config<T>) {
 		super();
@@ -98,7 +60,7 @@ abstract class AbstractObserver<T> extends Class {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this._doClearItems(this.source.asArray());
@@ -152,30 +114,27 @@ export default AbstractObserver;
 
 namespace AbstractObserver {
 	/**
-	 * [[JW.Abstract.Observer]] configuration.
-	 *
+	 * AbstractObserver configuration.
 	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
 		/**
-		 * Item is added to collection.
+		 * Callback to call when an item is added to the collection.
 		 */
 		readonly add?: (item: T) => void;
 
 		/**
-		 * Item is removed from collection.
+		 * Callback to call when an item is removed from the collection.
 		 */
 		readonly remove?: (item: T) => void;
 
 		/**
-		 * Collection is cleared. By default, calls [[removeItem]] for all collection items.
+		 * Callback to call when the collection is cleared. By default, calls `remove` for all collection items.
 		 */
 		readonly clear?: (items: T[]) => void;
 
 		/**
-		 * [[addItem]], [[removeItem]],
-		 * [[clearItems]] and [[change]] call scope.
-		 * Defaults to synchronizer itself.
+		 * Call scope of `add`, `remove` and `clear` callbacks. Defaults to the synchronizer itself.
 		 */
 		readonly scope?: any;
 	}
