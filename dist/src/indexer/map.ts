@@ -30,12 +30,12 @@ import AbstractIndexer from './AbstractIndexer';
  */
 export default class MapIndexer<T> extends AbstractIndexer<T> {
 	/**
-	 * Source collection.
+	 * Source map.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source map.
 	 * @param getKey Indexer function.
 	 * @param config Indexer configuration.
 	 */
@@ -61,7 +61,7 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 
 /**
  * Indexes map and starts synchronization.
- * @param source Source collection.
+ * @param source Source map.
  * @param getKey Indexer function.
  * @param scope Call scope of `getKey` callback.
  * @returns Collection index map.

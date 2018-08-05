@@ -36,17 +36,17 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
-	 * Source collection.
+	 * Source list.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @inheritDoc
+	 * Target list.
 	 */
 	readonly target: IList<U>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source list.
 	 * @param create Mapping callback.
 	 * @param config Mapper configuration.
 	 */
@@ -136,7 +136,7 @@ namespace ListMapper {
 	 */
 	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
-		 * Target collection.
+		 * Target list.
 		 */
 		readonly target?: IList<U>;
 	}
@@ -144,10 +144,10 @@ namespace ListMapper {
 
 /**
  * Maps a list and starts synchronization.
- * @param source Source collection.
+ * @param source Source list.
  * @param create Mapping callback.
  * @param config Mapper configuration.
- * @returns Target collection.
+ * @returns Target list.
  */
 export function mapList<T, U>(source: ReadonlyList<T>, create: (sourceValue: T) => U,
                               config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyList<U> {

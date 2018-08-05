@@ -30,12 +30,12 @@ import AbstractCounter from './AbstractCounter';
  */
 export default class MapCounter<T> extends AbstractCounter<T> {
 	/**
-	 * Source collection.
+	 * Source map.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source map.
 	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
@@ -59,8 +59,8 @@ export default class MapCounter<T> extends AbstractCounter<T> {
 }
 
 /**
- * Counts matching items in a list and starts synchronization.
- * @param source Source collection.
+ * Counts matching items in a map and starts synchronization.
+ * @param source Source map.
  * @param test Filtering criteria.
  * @param scope Call scope of `test` function.
  * @returns Target property.

@@ -11,19 +11,19 @@ symbols:
       signature: |
         (source: %ReadonlyList<%T>, test: (item: %T) => any, config?: %ListFilterer.%FullConfig<%T>)
       params:
-        source: Source collection.
+        source: Source list.
         test: Filtering criteria.
         config: Filterer configuration.
     properties:
       source:
         modifiers: readonly
         type: '%ReadonlyList<%T>'
-        description: Source collection.
+        description: Source list.
 
       target:
         modifiers: readonly
-        type: '%IList<%T>'
-        description: Target collection.
+        type: '%ReadonlyList<%T>'
+        description: Target list.
 
     methods:
       reconfigure:
@@ -79,7 +79,7 @@ symbols:
         modifiers: readonly
         optional: true
         type: '%IList<%T>'
-        description: Target collection.
+        description: Target list.
 
   ListFilterer.Reconfig:
     kind: interface
@@ -105,10 +105,10 @@ symbols:
     signature: |
       <T>(source: %ReadonlyList<T>, test: (item: T) => any, scope?: any): %DestroyableReadonlyList<T>
     params:
-      source: Source collection.
+      source: Source list.
       test: Filtering criteria.
       scope: Call scope of %test function.
-    returns: Target collection.
+    returns: Target list.
     description: 'Filters a list and starts synchronization. See %filterers for details.'
 
 references:

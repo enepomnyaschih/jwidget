@@ -27,16 +27,17 @@ import ReadonlyMap from '../ReadonlyMap';
 import AbstractConverterToList from './AbstractConverterToList';
 
 /**
- * [[JW.Abstract.Orderer|Orderer]] implementation for [[JW.Map]].
+ * AbstractConverterToList implementation for Map.
  */
 export default class MapConverterToList<T> extends AbstractConverterToList<T> {
 	/**
-	 * @inheritdoc
+	 * Source map.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source map.
+	 * @param config Converter configuration.
 	 */
 	constructor(source: ReadonlyMap<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
@@ -52,11 +53,16 @@ export default class MapConverterToList<T> extends AbstractConverterToList<T> {
 	}
 
 	private _onClear(params: IMap.ItemsEventParams<T>) {
-		this.target.removeItems(
+		this._target.removeItems(
 			DictionaryUtils.toArray(params.items));
 	}
 }
 
+/**
+ * Converts a map to a list and start synchronization.
+ * @param source Source map.
+ * @returns Target list.
+ */
 export function mapToList<T>(source: ReadonlyMap<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toList();

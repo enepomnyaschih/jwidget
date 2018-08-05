@@ -1,0 +1,35 @@
+symbols:
+  default:
+    defaultName: ListConverterToList
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/convertertolist/AbstractConverterToList
+    description: |
+      <p>%AbstractConverterToList implementation for %List. Can be used to maintain a copy of an existing %List and also to
+      combine contents of several collections in a single %List. See %convertersToList for details.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlyList<%T>, config: %AbstractConverterToList.%Config<%T>)
+      params:
+        source: Source list.
+        config: Converter configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyList<%T>'
+        description: Source list.
+
+  listToList:
+    signature: |
+      <T>(source: %ReadonlyList<T>): %DestroyableReadonlyList<T>
+    params:
+      source: Source list.
+    returns: Target list.
+    description: 'Creates a copy of a list and starts synchronization. See %convertersToList for details.'
+
+references:
+  Config:
+    file: jwidget/convertertolist/AbstractConverterToList
+    symbol: AbstractConverterToList.Config

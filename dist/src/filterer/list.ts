@@ -38,7 +38,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	private _filtered: number[] = [];
 
 	/**
-	 * Source collection.
+	 * Source list.
 	 */
 	readonly source: ReadonlyList<T>;
 
@@ -48,7 +48,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 	readonly target: IList<T>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source list.
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
@@ -311,7 +311,7 @@ namespace ListFilterer {
 	 */
 	export interface FullConfig<T> extends AbstractFilterer.Config {
 		/**
-		 * Target collection.
+		 * Target list.
 		 */
 		readonly target?: IList<T>;
 	}
@@ -336,10 +336,10 @@ namespace ListFilterer {
 
 /**
  * Filters a list and starts synchronization.
- * @param source Source collection.
+ * @param source Source list.
  * @param test Filtering criteria.
  * @param scope Call scope of `test` function.
- * @returns Target collection.
+ * @returns Target list.
  */
 export function filterList<T>(source: ReadonlyList<T>, test: (item: T) => any,
                               scope?: any): DestroyableReadonlyList<T> {

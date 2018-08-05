@@ -347,6 +347,40 @@ references:
     file: jwidget/convertertoset/set
     symbol: setToSet
 
+  # ConvertersToList
+  convertersToList:
+    file: jwidget/convertertolist/AbstractConverterToList
+    label: Converters to list
+
+  ListConverterToList:
+    file: jwidget/convertertolist/list
+
+  MapConverterToList:
+    file: jwidget/convertertolist/map
+
+  SetConverterToList:
+    file: jwidget/convertertolist/set
+
+  createConverterToList:
+    file: jwidget/convertertolist/collection
+    symbol: createConverterToList
+
+  collectionToList:
+    file: jwidget/convertertolist/collection
+    symbol: collectionToList
+
+  listToList:
+    file: jwidget/convertertolist/list
+    symbol: listToList
+
+  mapToList:
+    file: jwidget/convertertolist/map
+    symbol: mapToList
+
+  setToList:
+    file: jwidget/convertertolist/set
+    symbol: setToList
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

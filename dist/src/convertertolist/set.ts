@@ -26,16 +26,17 @@ import ReadonlySet from '../ReadonlySet';
 import AbstractConverterToList from './AbstractConverterToList';
 
 /**
- * [[JW.Abstract.Orderer|Orderer]] implementation for [[JW.Set]].
+ * AbstractConverterToList implementation for Set.
  */
 export default class SetConverterToList<T> extends AbstractConverterToList<T> {
 	/**
-	 * @inheritdoc
+	 * Source set.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source set.
+	 * @param config Converter configuration.
 	 */
 	constructor(source: ReadonlySet<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
@@ -51,10 +52,15 @@ export default class SetConverterToList<T> extends AbstractConverterToList<T> {
 	}
 
 	private _onClear(params: ISet.ItemsEventParams<T>) {
-		this.target.removeItems(params.items);
+		this._target.removeItems(params.items);
 	}
 }
 
+/**
+ * Converts a set to a list and starts synchronization.
+ * @param source Source set.
+ * @returns Target list.
+ */
 export function setToList<T>(source: ReadonlySet<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toList();

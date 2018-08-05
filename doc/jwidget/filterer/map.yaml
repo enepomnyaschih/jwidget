@@ -12,19 +12,19 @@ symbols:
       signature: |
         (source: %ReadonlyMap<%T>, test: (item: %T) => any, config?: %MapFilterer.%Config<%T>)
       params:
-        source: Source collection.
+        source: Source map.
         test: Filtering criteria.
         config: Filterer configuration.
     properties:
       source:
         modifiers: readonly
         type: '%ReadonlyMap<%T>'
-        description: Source collection.
+        description: Source map.
 
       target:
         modifiers: readonly
-        type: '%IMap<%T>'
-        description: Target collection.
+        type: '%ReadonlyMap<%T>'
+        description: Target map.
 
     references:
       AbstractFilterer:
@@ -46,16 +46,16 @@ symbols:
         modifiers: readonly
         optional: true
         type: '%IMap<%T>'
-        description: Target collection.
+        description: Target map.
 
   filterMap:
     signature: |
       <T>(source: %ReadonlyMap<T>, test: (item: T) => any, scope?: any): %DestroyableReadonlyMap<T>
     params:
-      source: Source collection.
+      source: Source map.
       test: Filtering criteria.
       scope: Call scope of %test function.
-    returns: Target collection.
+    returns: Target map.
     description: 'Filters a map and starts synchronization. See %filterers for details.'
 
 references:

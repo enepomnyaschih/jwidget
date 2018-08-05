@@ -30,12 +30,12 @@ import AbstractCounter from './AbstractCounter';
  */
 export default class ListCounter<T> extends AbstractCounter<T> {
 	/**
-	 * Source collection.
+	 * Source list.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source list.
 	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
@@ -75,7 +75,7 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 
 /**
  * Counts matching items in a list and starts synchronization.
- * @param source Source collection.
+ * @param source Source list.
  * @param test Filtering criteria.
  * @param scope Call scope of `test` function.
  * @returns Target property.

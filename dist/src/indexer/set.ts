@@ -29,12 +29,12 @@ import AbstractIndexer from './AbstractIndexer';
  */
 export default class SetIndexer<T> extends AbstractIndexer<T> {
 	/**
-	 * Source collection.
+	 * Source set.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source set.
 	 * @param getKey Indexer function.
 	 * @param config Indexer configuration.
 	 */
@@ -60,7 +60,7 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
 
 /**
  * Indexes set and starts synchronization.
- * @param source Source collection.
+ * @param source Source set.
  * @param getKey Indexer function.
  * @param scope Call scope of `getKey` callback.
  * @returns Collection index map.

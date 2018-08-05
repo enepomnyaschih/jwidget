@@ -30,12 +30,12 @@ import AbstractConverterToSet from './AbstractConverterToSet';
  */
 export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
-	 * Source collection.
+	 * Source map.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source map.
 	 * @param config Converter configuration.
 	 */
 	constructor(source: ReadonlyMap<T>, config: AbstractConverterToSet.Config<T>) {
@@ -59,7 +59,7 @@ export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 
 /**
  * Converts map to set and starts synchronization.
- * @param source Source collection.
+ * @param source Source map.
  * @returns Target set.
  */
 export function mapToSet<T>(source: ReadonlyMap<T>): DestroyableReadonlySet<T> {

@@ -32,7 +32,7 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	private _targetCreated: boolean;
 
 	/**
-	 * Source collection.
+	 * Source set.
 	 */
 	readonly source: ReadonlySet<T>;
 
@@ -42,7 +42,7 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	readonly target: ISet<T>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source set.
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
@@ -88,7 +88,7 @@ namespace SetFilterer {
 	 */
 	export interface Config<T> extends AbstractFilterer.Config {
 		/**
-		 * Target collection.
+		 * Target set.
 		 */
 		readonly target?: ISet<T>;
 	}
@@ -96,10 +96,10 @@ namespace SetFilterer {
 
 /**
  * Filters a set and starts synchronization.
- * @param source Source collection.
+ * @param source Source set.
  * @param test Filtering criteria.
  * @param scope Call scope of `test` function.
- * @returns Target collection.
+ * @returns Target set.
  */
 export function filterSet<T>(source: ReadonlySet<T>, test: (item: T) => any,
                              scope?: any): DestroyableReadonlySet<T> {

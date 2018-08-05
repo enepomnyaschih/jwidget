@@ -33,7 +33,7 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	private _targetCreated: boolean;
 
 	/**
-	 * Source collection.
+	 * Source map.
 	 */
 	readonly source: ReadonlyMap<T>;
 
@@ -43,7 +43,7 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	readonly target: IMap<T>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source map.
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
@@ -102,10 +102,10 @@ namespace MapFilterer {
 
 /**
  * Filters a map and starts synchronization.
- * @param source Source collection.
+ * @param source Source map.
  * @param test Filtering criteria.
  * @param scope Call scope of `test` function.
- * @returns Target collection.
+ * @returns Target map.
  */
 export function filterMap<T>(source: ReadonlyMap<T>, test: (item: T) => any, scope?: any): DestroyableReadonlyMap<T> {
 	if (source.silent) {

@@ -11,20 +11,20 @@ symbols:
       signature: |
         (source: %ReadonlyMap<%T>, config: %AbstractConverterToSet.%Config<%T>)
       params:
-        source: Source collection.
+        source: Source map.
         config: Converter configuration.
 
     properties:
       source:
         modifiers: readonly
         type: '%ReadonlyMap<%T>'
-        description: Source collection.
+        description: Source map.
 
   mapToSet:
     signature: |
       <T>(source: %ReadonlyMap<T>): %DestroyableReadonlySet<T>
     params:
-      source: Source collection.
+      source: Source map.
     returns: Target set.
     description: 'Converts map to set and starts synchronization. See %convertersToSet for details.'
 

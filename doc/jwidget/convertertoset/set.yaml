@@ -12,20 +12,20 @@ symbols:
       signature: |
         (source: %ReadonlySet<%T>, config: %AbstractConverterToSet.%Config<%T>)
       params:
-        source: Source collection.
+        source: Source set.
         config: Converter configuration.
 
     properties:
       source:
         modifiers: readonly
         type: '%ReadonlySet<%T>'
-        description: Source collection.
+        description: Source set.
 
   setToSet:
     signature: |
       <T>(source: %ReadonlySet<T>): %DestroyableReadonlySet<T>
     params:
-      source: Source collection.
+      source: Source set.
     returns: Target set.
     description: 'Creates a copy of a set and starts synchronization. See %convertersToSet for details.'
 

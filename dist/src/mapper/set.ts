@@ -41,17 +41,17 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	protected _items: VidMap<T, U>;
 
 	/**
-	 * @inheritDoc
+	 * Source set.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @inheritDoc
+	 * Target set.
 	 */
 	readonly target: ISet<U>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source set.
 	 * @param create Mapping callback.
 	 * @param config Mapper configuration.
 	 */
@@ -129,7 +129,7 @@ namespace SetMapper {
 	 */
 	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
-		 * Target collection.
+		 * Target set.
 		 */
 		readonly target?: ISet<U>;
 	}
@@ -137,10 +137,10 @@ namespace SetMapper {
 
 /**
  * Maps a set and starts synchronization.
- * @param source Source collection.
+ * @param source Source set.
  * @param create Mapping callback.
  * @param config Mapper configuration.
- * @returns Target collection.
+ * @returns Target set.
  */
 export function mapSet<T, U>(source: ReadonlySet<T>, create: (sourceValue: T) => U,
                              config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlySet<U> {

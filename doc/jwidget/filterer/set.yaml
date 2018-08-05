@@ -11,19 +11,19 @@ symbols:
       signature: |
         (source: %ReadonlySet<%T>, test: (item: %T) => any, config?: %SetFilterer.%Config<%T>)
       params:
-        source: Source collection.
+        source: Source set.
         test: Filtering criteria.
         config: Filterer configuration.
     properties:
       source:
         modifiers: readonly
         type: '%ReadonlySet<%T>'
-        description: Source collection.
+        description: Source set.
 
       target:
         modifiers: readonly
-        type: '%ISet<%T>'
-        description: Target collection.
+        type: '%ReadonlySet<%T>'
+        description: Target set.
 
     references:
       AbstractFilterer:
@@ -45,7 +45,7 @@ symbols:
         modifiers: readonly
         optional: true
         type: '%ISet<%T>'
-        description: Target collection.
+        description: Target set.
 
   filterSet:
     signature: |
@@ -54,7 +54,7 @@ symbols:
       source: Source collection.
       test: Filtering criteria.
       scope: Call scope of %test function.
-    returns: Target collection.
+    returns: Target set.
     description: 'Filters a set and starts synchronization. See %filterers for details.'
 
 references:

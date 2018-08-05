@@ -12,19 +12,19 @@ symbols:
       signature: |
         (source: %ReadonlyList<%T>, create: (sourceValue: %T) => %U, config?: %ListMapper.%FullConfig<%T, %U>)
       params:
-        source: Source collection.
+        source: Source list.
         create: Mapping callback.
         config: Mapper configuration.
     properties:
       source:
         modifiers: readonly
         type: '%ReadonlyList<%T>'
-        description: Source collection.
+        description: Source list.
 
       target:
         modifiers: readonly
-        type: '%IList<%U>'
-        description: Target collection.
+        type: '%ReadonlyList<%U>'
+        description: Target list.
 
     references:
       AbstractMapper:
@@ -48,17 +48,17 @@ symbols:
         modifiers: readonly
         optional: true
         type: '%IList<%U>'
-        description: Target collection.
+        description: Target list.
 
   mapList:
     signature: |
       <T, U>(source: %ReadonlyList<T>, create: (sourceValue: T) => U,
              config?: %AbstractMapper.%Config<T, U>): %DestroyableReadonlyList<U>
     params:
-      source: Source collection.
+      source: Source list.
       create: Mapping callback.
       config: Mapper configuration.
-    returns: Target collection.
+    returns: Target list.
     description: 'Maps a list and starts synchronization. See %mappers for details.'
 
 references:

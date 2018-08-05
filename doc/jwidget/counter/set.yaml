@@ -11,20 +11,20 @@ symbols:
       signature: |
         (source: %ReadonlySet<%T>, test: (item: %T) => any, config?: %AbstractCounter.%Config)
       params:
-        source: Source collection.
+        source: Source set.
         test: Filtering criteria.
         config: Counter configuration.
     properties:
       source:
         modifiers: readonly
         type: '%ReadonlySet<%T>'
-        description: Source collection.
+        description: Source set.
 
   countSet:
     signature: |
       <T>(source: %ReadonlySet<T>, test: (item: T) => any, scope?: any): %DestroyableBindable<number>
     params:
-      source: Source collection.
+      source: Source set.
       test: Filtering criteria.
       scope: Call scope of %test function.
     returns: Target property.

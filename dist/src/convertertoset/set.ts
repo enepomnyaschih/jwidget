@@ -29,12 +29,12 @@ import AbstractConverterToSet from './AbstractConverterToSet';
  */
 export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
-	 * Source collection.
+	 * Source set.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @param source Source collection.
+	 * @param source Source set.
 	 * @param config Converter configuration.
 	 */
 	constructor(source: ReadonlySet<T>, config: AbstractConverterToSet.Config<T>) {
@@ -55,7 +55,7 @@ export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 
 /**
  * Creates a copy of a set and starts synchronization.
- * @param source Source collection.
+ * @param source Source set.
  * @returns Target set.
  */
 export function setToSet<T>(source: ReadonlySet<T>): DestroyableReadonlySet<T> {

@@ -29,7 +29,7 @@ description: |
 
   <p><b>Indexer</b> has one common abstract class with one implementation per collection type. Every implementation is
   supplied with a shorthand function that returns target collection directly. There is also a module that merges all
-  implementations together and allows you to map a collection of any (i.e. unknown) type.</p>
+  implementations together and allows you to index a collection of any (i.e. unknown) type.</p>
   <p>Module dependencies and exports are represented at the following diagram:</p>
   <table class="table table-sm text-center">
     <tbody>
@@ -118,7 +118,7 @@ symbols:
       target:
         modifiers: readonly
         type: '%ReadonlyMap<%T>'
-        description: Target collection.
+        description: Target map.
 
   AbstractIndexer.Config:
     kind: interface

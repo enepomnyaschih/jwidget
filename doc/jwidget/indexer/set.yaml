@@ -11,7 +11,7 @@ symbols:
       signature: |
         (source: %ReadonlySet<%T>, getKey: (item: %T) => any, config?: %AbstractIndexer.%Config<%T>)
       params:
-        source: Source collection.
+        source: Source set.
         getKey: Indexer function.
         config: Indexer configuration.
 
@@ -19,13 +19,13 @@ symbols:
       source:
         modifiers: readonly
         type: '%ReadonlySet<%T>'
-        description: Source collection.
+        description: Source set.
 
   indexSet:
     signature: |
       <T>(source: %ReadonlySet<T>, getKey: (item: T) => any, scope?: any): %DestroyableReadonlyMap<T>
     params:
-      source: Source collection.
+      source: Source set.
       getKey: Indexer function.
       scope: Call scope of %getKey callback.
     returns: Collection index map.

@@ -28,16 +28,17 @@ import ReadonlyList from '../ReadonlyList';
 import AbstractConverterToList from './AbstractConverterToList';
 
 /**
- * [[JW.Abstract.Orderer|Orderer]] implementation for [[JW.Array]].
+ * AbstractConverterToList implementation for List.
  */
 export default class ListConverterToList<T> extends AbstractConverterToList<T> {
 	/**
-	 * @inheritdoc
+	 * Source list.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source list.
+	 * @param config Converter configuration.
 	 */
 	constructor(source: ReadonlyList<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
@@ -55,16 +56,21 @@ export default class ListConverterToList<T> extends AbstractConverterToList<T> {
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
 		const index = this.target.indexOf(params.oldItem);
-		this.target.trySplice(
+		this._target.trySplice(
 			[new IndexCount(index, 1)],
 			[new IndexItems(this.target.length.get() - 1, [params.newItem])]);
 	}
 
 	private _onClear(params: IList.ItemsEventParams<T>) {
-		this.target.removeItems(params.items);
+		this._target.removeItems(params.items);
 	}
 }
 
+/**
+ * Creates a copy of a list and starts synchronization.
+ * @param source Source list.
+ * @returns Target list.
+ */
 export function listToList<T>(source: ReadonlyList<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toList();
