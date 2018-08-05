@@ -26,16 +26,17 @@ import ReadonlyMap from '../ReadonlyMap';
 import AbstractSorterComparing from './AbstractSorterComparing';
 
 /**
- * [[JW.Abstract.SorterComparing|SorterComparing]] implementation for [[JW.Map]].
+ * AbstractSorterComparing implementation for Map.
  */
 export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
-	 * @inheritdoc
+	 * Source map.
 	 */
 	readonly source: ReadonlyMap<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source map.
+	 * @param config Sorter configuration.
 	 */
 	constructor(source: ReadonlyMap<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
@@ -55,8 +56,14 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	}
 }
 
+/**
+ * Sorts a map and starts synchronization.
+ * @param source Source map.
+ * @param config Sorter configuration.
+ * @returns Sorted list.
+ */
 export function sortMapComparing<T>(source: ReadonlyMap<T>,
-									config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
+                                    config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toSortedComparing(config.compare, config.scope, config.order);
 	}

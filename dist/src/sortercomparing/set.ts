@@ -25,16 +25,17 @@ import ReadonlySet from '../ReadonlySet';
 import AbstractSorterComparing from './AbstractSorterComparing';
 
 /**
- * [[JW.Abstract.SorterComparing|SorterComparing]] implementation for [[JW.Set]].
+ * AbstractSorterComparing implementation for Set.
  */
 export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
-	 * @inheritdoc
+	 * Source set.
 	 */
 	readonly source: ReadonlySet<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source set.
+	 * @param config Sorter configuration.
 	 */
 	constructor(source: ReadonlySet<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
@@ -52,8 +53,14 @@ export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
 	}
 }
 
+/**
+ * Sorts a set and starts synchronization.
+ * @param source Source set.
+ * @param config Sorter configuration.
+ * @returns Sorted list.
+ */
 export function sortSetComparing<T>(source: ReadonlySet<T>,
-									config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
+                                    config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toSortedComparing(config.compare, config.scope, config.order);
 	}

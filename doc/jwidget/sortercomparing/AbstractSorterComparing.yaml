@@ -1,0 +1,176 @@
+description: |
+  <p><b>Sorter (comparing)</b> is one of collection synchronizers. <b>Sorter (comparing)</b> builds a new %List
+  containing the items of source collection sorter by comparer.</p>
+  <pre>
+  const source = new %Set(["qw", "er", "ty"]);
+  const sorter = new %SetSorterComparing(source, {%compareOfConfig: (x, y) => %cmp(x[1], y[1])});
+  const target = sorter.%target;
+
+  expect(target.%items).toEqual(["er", "qw", "ty"]); // r < w < y
+
+  // Target collection is automatically synchronized with the original collection
+  source.%add("ui");
+  expect(target.%items).toEqual(["ui", "er", "qw", "ty"]); // i < r < w < y
+
+  // Destroy the sorter to stop synchronization
+  sorter.%destroy();
+  </pre>
+
+  <h3>Sorter (comparing) - modules</h3>
+
+  <p><b>Sorter (comparing)</b> has one common abstract class with one implementation per collection type. Every implementation is
+  supplied with a shorthand function that returns target list directly. There is also a module that merges all
+  implementations together and allows you to sort a collection of any (i.e. unknown) type.</p>
+  <p>Module dependencies and exports are represented at the following diagram:</p>
+  <table class="table table-sm text-center">
+    <tbody>
+      <tr>
+        <td colspan="3">
+          <h5>jwidget/sortercomparing/AbstractSorterComparing</h5>
+          <p>%AbstractSorterComparing</p>
+          <p class="text-secondary">All other modules depend on it</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h5>jwidget/sortercomparing/list</h5>
+          <p>%ListSorterComparing, %sortListComparing</p>
+        </td>
+        <td>
+          <h5>jwidget/sortercomparing/map</h5>
+          <p>%MapSorterComparing, %sortMapComparing</p>
+        </td>
+        <td>
+          <h5>jwidget/sortercomparing/set</h5>
+          <p>%SetSorterComparing, %sortSetComparing</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <h5>jwidget/sortercomparing/collection</h5>
+          <p>%createSorterComparing, %sortCollectionComparing</p>
+          <p class="text-danger">Depends on all other modules</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Knowledge of this diagram may help you to optimize WebPack bundling. Avoid using modules you don't need to.</p>
+
+  <h3>Features and examples</h3>
+
+  <p>You can pass target list in config option:</p>
+  <pre>
+  const source = new %Set(["qw", "er", "ty"]);
+  const target = new %List<string>();
+  const converter = new %SetSorterComparing(source, {%compareOfConfig: (x, y) => %cmp(x[1], y[1]), %targetOfConfig});
+  </pre>
+  <p>If you want to create a new list, use shorthand functions %sortListComparing, %sortMapComparing, %sortSetComparing and
+  %sortCollectionComparing instead:</p>
+  <pre>
+  const source = new %Set(["qw", "er", "ty"]);
+  const target = %sortSetComparing(source, {%compareOfConfig: (x, y) => %cmp(x[1], y[1])});
+
+  // Destroy the target collection to stop synchronization
+  target.%destroy();
+  </pre>
+
+  <h3>Synchronizer rules</h3>
+
+  <ul>
+    <li>All items of source collection get added to %target immediately on synchronizer initialization.</li>
+    <li>Sorted items get removed from %target on synchronizer destruction.</li>
+    <li>You can pass target set in <b>target</b> config option. In this case, you are responsible for its
+    destruction (though items get removed automatically on synchronizer destruction anyway).</li>
+    <li>If <b>target</b> is not passed, it gets created automatically. In this
+    case, %target gets destroyed automatically on synchronizer destruction.</li>
+    <li>All items must be different.</li>
+    <li>You can edit target collection manually as long as you avoid item conflicts and keep the collection sorted.</li>
+  </ul>
+
+symbols:
+  default:
+    kind: abstract class
+    typevars:
+      T: Collection item type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Abstract collection sorter (comparing).</p>
+
+    properties:
+      target:
+        modifiers: readonly
+        type: '%ReadonlyList<%T>'
+        description: Target list.
+
+    methods:
+      resort:
+        signature: |
+          ()
+        description: |
+          <p>Resorts target list forcibly. Call this method on sorting factors modification.</p>
+
+  AbstractSorterComparing.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Collection item type.
+    properties:
+      compare:
+        modifiers: readonly
+        optional: true
+        type: '(x: %T, y: %T) => number'
+        description: |
+          <p>Item comparing callback. Defaults to %cmp.</p>
+
+      scope:
+        modifiers: readonly
+        optional: true
+        type: any
+        description: |
+          <p>Call scope of %compare callback. Defaults to synchronizer itself.</p>
+
+      order:
+        modifiers: readonly
+        optional: true
+        type: number
+        description: |
+          <p>Sorting order. Positive number for ascending sorting, negative for descending sorting. Defaults to 1.</p>
+
+  AbstractSorterComparing.FullConfig:
+    kind: interface
+    simple: true
+    typevars:
+      T: Collection item type.
+    extends:
+      - symbol: AbstractSorterComparing.Config
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IList<%T>'
+        description: |
+          <p>Target list. By default, created automatically.</p>
+
+references:
+  target:
+    symbol: default
+    member: target
+
+  items:
+    file: jwidget/ReadonlyList
+    member: items
+
+  add:
+    file: jwidget/ISet
+    member: add
+
+  compareOfConfig:
+    symbol: AbstractSorterComparing.Config
+    member: compare
+    label: compare
+
+  targetOfConfig:
+    symbol: AbstractSorterComparing.FullConfig
+    member: target
+    label: target

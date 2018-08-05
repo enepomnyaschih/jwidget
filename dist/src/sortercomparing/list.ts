@@ -25,16 +25,17 @@ import ReadonlyList from '../ReadonlyList';
 import AbstractSorterComparing from './AbstractSorterComparing';
 
 /**
- * [[JW.Abstract.SorterComparing|SorterComparing]] implementation for [[JW.Array]].
+ * AbstractSorterComparing implementation for List.
  */
 export default class ListSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
-	 * @inheritdoc
+	 * Source list.
 	 */
 	readonly source: ReadonlyList<T>;
 
 	/**
-	 * @inheritdoc
+	 * @param source Source list.
+	 * @param config Sorter configuration.
 	 */
 	constructor(source: ReadonlyList<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
@@ -57,8 +58,14 @@ export default class ListSorterComparing<T> extends AbstractSorterComparing<T> {
 	}
 }
 
+/**
+ * Sorts a list and starts synchronization.
+ * @param source Source list.
+ * @param config Sorter configuration.
+ * @returns Sorted list.
+ */
 export function sortListComparing<T>(source: ReadonlyList<T>,
-									 config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
+                                     config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toSortedComparing(config.compare, config.scope, config.order);
 	}

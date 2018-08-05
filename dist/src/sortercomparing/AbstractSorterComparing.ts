@@ -26,103 +26,10 @@ import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import List from '../List';
 import ReadonlyCollection from '../ReadonlyCollection';
+import ReadonlyList from "../ReadonlyList";
 
 /**
- * Converter to array (sorter by comparer).
- * Converts source collection to array. Adds new items into such locations that target array is always kept in sorted
- * state. If original collection is observable, starts continuous synchronization.
- * Sorting is performed by comparing function defined by user.
- *
- *     interface Item {
- *         id: number;
- *         title: string;
- *     }
- *
- *     var source = new JW.ObservableArray<Item>([
- *         {title: "apple", id: 3},
- *         {title: "Carrot", id: 1},
- *         {title: "Apple", id: 2}
- *     ]);
- *
- *     // Sort by title case-insensitively, and then by id
- *     var sorter = source.createSorterComparing({
- *         compare: function(x, y) {
- *             return JW.cmp(x.title, y.title, true) || JW.cmp(x.id, y.id);
- *         },
- *         scope: this
- *     });
- *     var target = sorter.target;
- *
- *     assert.strictEqual(target.get(0).id, 2); // Apple
- *     assert.strictEqual(target.get(1).id, 3); // apple
- *     assert.strictEqual(target.get(2).id, 1); // Carrot
- *
- *     // Target array is automatically synchronized with original observable collection
- *     source.add({title: "Banana", id: 4});
- *     assert.strictEqual(target.get(0).id, 2); // Apple
- *     assert.strictEqual(target.get(1).id, 3); // apple
- *     assert.strictEqual(target.get(2).id, 4); // Banana
- *     assert.strictEqual(target.get(3).id, 1); // Carrot
- *
- *     sorter.destroy();
- *
- * Use [[JW.Abstract.createSorterComparing|createSorterComparing]] method to create the synchronizer.
- * The method selects a synchronizer implementation which fits better (simple or observable).
- *
- * You can pass target array in config option:
- *
- *     var array = new JW.Array();
- *     var sorter = collection.createSorterComparing({
- *         target: array,
- *         compare: function(x, y) {
- *             return JW.cmp(x.title, y.title, true) || JW.cmp(x.id, y.id);
- *         },
- *         scope: this
- *     });
- *
- * In simple cases, [[JW.Abstract.$$toSortedComparing|$$toSortedComparing]] shorthand can be used instead.
- * It returns the target array right away:
- *
- *     var source = new JW.ObservableArray<Item>([
- *         {title: "apple", id: 3},
- *         {title: "Carrot", id: 1},
- *         {title: "Apple", id: 2}
- *     ]);
- *
- *     // Sort by title case-insensitively, and then by id
- *     var target = source.$$toSortedComparing(function(x, y) {
- *         return JW.cmp(x.title, y.title, true) || JW.cmp(x.id, y.id);
- *     });
- *
- *     assert(target.get(0).id === 2); // Apple
- *     assert(target.get(1).id === 3); // apple
- *     assert(target.get(2).id === 1); // Carrot
- *
- *     // Target array is automatically synchronized with original observable collection
- *     source.add({title: "Banana", id: 4});
- *     assert(target.get(0).id === 2); // Apple
- *     assert(target.get(1).id === 3); // apple
- *     assert(target.get(2).id === 4); // Banana
- *     assert(target.get(3).id === 1); // Carrot
- *
- *     target.destroy();
- *
- * Synchronizer rules:
- *
- * - Target array is stored in [[target]] property.
- * - All items of source collection are added to [[target]]
- * immediately on synchronizer initialization.
- * - All items are removed from [[target]] on synchronizer destruction.
- * - You can pass target array in
- * [[SorterComparing.Config.target|target]] config option.
- * In this case, you are responsible for its destruction (though items will be removed
- * automatically on synchronizer destruction anyway).
- * - If [[SorterComparing.Config.target|target]]
- * is not passed, it will be created automatically. Synchronizer will select
- * appropriate [[target]] implementation (simple or observable). In this
- * case, [[target]] will be destroyed automatically on synchronizer destruction.
- * - You can sort multiple collections into one array.
- *
+ * Sorter (comparing). Builds a new List containing the items of source collection sorter by comparer.
  * @param T Collection item type.
  */
 abstract class AbstractSorterComparing<T> extends Class {
@@ -144,16 +51,12 @@ abstract class AbstractSorterComparing<T> extends Class {
 	protected _order: number;
 
 	/**
-	 * Target array.
+	 * @hidden
 	 */
-	readonly target: IList<T>;
+	protected _target: IList<T>;
 
 	/**
-	 * Creates synchronizer.
-	 * [[JW.Abstract.createSorterComparing|createSorterComparing]] method is preferred instead.
-	 *
-	 * @param source Source collection.
-	 * @param config Configuration.
+	 * @hidden
 	 */
 	constructor(readonly source: ReadonlyCollection<T>, config: AbstractSorterComparing.FullConfig<T> = {}) {
 		super();
@@ -161,17 +64,21 @@ abstract class AbstractSorterComparing<T> extends Class {
 		this._order = config.order || 1;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
+		this._target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
 		this._splice([], source.asArray());
 	}
 
+	get target(): ReadonlyList<T> {
+		return this._target;
+	}
+
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this._splice(this.source.asArray(), []);
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this._compare = null;
 		this._scope = null;
@@ -179,10 +86,10 @@ abstract class AbstractSorterComparing<T> extends Class {
 	}
 
 	/**
-	 * Resorts target array forcibly. Call this method on sorting factors modification.
+	 * Resorts target list forcibly. Call this method on sorting factors modification.
 	 */
 	resort() {
-		this.target.sortComparing(this._compare, this._scope, this._order);
+		this._target.sortComparing(this._compare, this._scope, this._order);
 	}
 
 	/**
@@ -246,7 +153,7 @@ abstract class AbstractSorterComparing<T> extends Class {
 		if (iAdds < addedItems.length) {
 			addParamsList.push(new IndexItems<T>(iTarget + addShift, addedItems.slice(iAdds)));
 		}
-		this.target.trySplice(removeParamsList, addParamsList);
+		this._target.trySplice(removeParamsList, addParamsList);
 	}
 }
 
@@ -254,8 +161,7 @@ export default AbstractSorterComparing;
 
 namespace AbstractSorterComparing {
 	/**
-	 * [[JW.Abstract.SorterComparing]] configuration.
-	 *
+	 * AbstractSorterComparing configuration.
 	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
@@ -265,23 +171,23 @@ namespace AbstractSorterComparing {
 		readonly compare?: (x: T, y: T) => number;
 
 		/**
-		 * [[compare]] call scope.
-		 * Defaults to synchronizer itself.
+		 * Call scope of `compare` callback. Defaults to synchronizer itself.
 		 */
 		readonly scope?: any;
 
 		/**
-		 * Sorting order. Positive number for ascending sorting, negative for descending sorting.
-		 * Defaults to 1.
+		 * Sorting order. Positive number for ascending sorting, negative for descending sorting. Defaults to 1.
 		 */
 		readonly order?: number;
 	}
 
+	/**
+	 * AbstractSorterComparing full configuration.
+	 */
 	export interface FullConfig<T> extends Config<T> {
 		/**
-		 * Target array. By default, created automatically.
+		 * Target list. By default, created automatically.
 		 */
 		readonly target?: IList<T>;
-
 	}
 }

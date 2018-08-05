@@ -28,16 +28,28 @@ import {default as ListSorterComparing, sortListComparing} from './list';
 import {default as MapSorterComparing, sortMapComparing} from './map';
 import {default as SetSorterComparing, sortSetComparing} from './set';
 
+/**
+ * Creates a sorter (comparing) matching the source collection type.
+ * @param source Source collection.
+ * @param config Sorter configuration.
+ * @returns Collection sorter (comparing).
+ */
 export function createSorterComparing<T>(source: ReadonlyCollection<T>,
-										 config?: AbstractSorterComparing.FullConfig<T>): AbstractSorterComparing<T> {
+                                         config?: AbstractSorterComparing.FullConfig<T>): AbstractSorterComparing<T> {
 	return (source instanceof List) ? new ListSorterComparing(source, config) :
 		(source instanceof Map) ? new MapSorterComparing(source, config) :
-		(source instanceof Set) ? new SetSorterComparing(source, config) : null;
+			(source instanceof Set) ? new SetSorterComparing(source, config) : null;
 }
 
+/**
+ * Sorts a collection (comparing) and starts synchronization.
+ * @param source Source collection.
+ * @param config Sorter configuration.
+ * @returns Sorted list.
+ */
 export function sortCollectionComparing<T>(source: ReadonlyCollection<T>,
-										   config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
+                                           config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
 	return (source instanceof List) ? sortListComparing(source, config) :
 		(source instanceof Map) ? sortMapComparing(source, config) :
-		(source instanceof Set) ? sortSetComparing(source, config) : null;
+			(source instanceof Set) ? sortSetComparing(source, config) : null;
 }

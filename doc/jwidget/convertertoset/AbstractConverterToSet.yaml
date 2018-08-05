@@ -78,7 +78,7 @@ description: |
 
   <ul>
     <li>All items of source collection get added to %target immediately on synchronizer initialization.</li>
-    <li>Indexed items get removed from %target on synchronizer destruction.</li>
+    <li>The items get removed from %target on synchronizer destruction.</li>
     <li>You can pass target set in <b>target</b> config option. In this case, you are responsible for its
     destruction (though items get removed automatically on synchronizer destruction anyway).</li>
     <li>If <b>target</b> is not passed, it gets created automatically. In this

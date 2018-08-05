@@ -17,7 +17,7 @@ description: |
   // Destroy the converter to stop synchronization
   converter.%destroy();
   </pre>
-  <p>If you want to build a list with a special item order, use %sorterscomparing instead.</p>
+  <p>If you want to build a list with a special item order, use %sortersComparing instead.</p>
 
   <h3>Converter to list - modules</h3>
 
@@ -81,7 +81,7 @@ description: |
 
   <ul>
     <li>All items of source collection get added to %target immediately on synchronizer initialization.</li>
-    <li>Indexed items get removed from %target on synchronizer destruction.</li>
+    <li>The items get removed from %target on synchronizer destruction.</li>
     <li>You can pass target set in <b>target</b> config option. In this case, you are responsible for its
     destruction (though items get removed automatically on synchronizer destruction anyway).</li>
     <li>If <b>target</b> is not passed, it gets created automatically. In this
@@ -104,7 +104,7 @@ symbols:
       target:
         modifiers: readonly
         type: '%ReadonlyList<%T>'
-        description: Target collection.
+        description: Target list.
 
   AbstractConverterToList.Config:
     kind: interface
