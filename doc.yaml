@@ -433,6 +433,17 @@ references:
     file: jwidget/observer/collection
     symbol: createObserver
 
+  # Inserters
+  inserters:
+    file: jwidget/inserter/list
+    label: Inserters
+
+  ListInserter:
+    file: jwidget/inserter/list
+
+  MapInserter:
+    file: jwidget/inserter/map
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

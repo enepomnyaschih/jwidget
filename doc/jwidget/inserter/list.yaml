@@ -1,0 +1,145 @@
+description: |
+  <p><b>Inserter</b> is one of collection synchronizers. <b>Inserters</b> are the same as %observers, but they
+  also consider item order.</p>
+  <p>This synchronizer can be used to smoothly integrate with a third party API:</p>
+  <pre>
+  // External library API
+  declare class Chart {
+      constructor(el: HTMLElement);
+      addPlot(plot: Plot, at: number): void;
+      removePlot(at: number): void;
+      clearPlots(): void;
+  }
+
+  // Our wrapper around it
+  class DatasetChart extends %Component {
+      private chart: Chart;
+      private inserter: %ListInserter;
+
+      constructor(private plots: %List<Plot>) {
+          super();
+      }
+
+      protected %afterAppend() {
+          super.%afterAppend();
+          this.chart = new Chart(this.el[0]);
+          this.inserter = new %ListInserter(this.plots, {
+              %addOfConfig    : (plot, at) => this.chart.addPlot(plot, at),
+              %removeOfConfig : (plot, at) => this.chart.removePlot(at),
+              %clearOfConfig  : () => this.chart.clearPlots()
+          });
+      }
+
+      protected %releaseDom() {
+          // Destroy the inserter to stop synchronization
+          this.inserter.%destroy();
+          this.chart.terminate();
+          super.%releaseDom();
+      }
+  }
+  </pre>
+  <p>It is easier than handling all %List events.</p>
+
+  <h3>Inserter - modules</h3>
+
+  <p><b>Inserter</b> has two independent implementations:</p>
+  <ul>
+    <li>jwidget/inserter/list - %ListInserter</li>
+    <li>jwidget/inserter/map - %MapInserter</li>
+  </ul>
+  <p>%Set doesn't have an inserter, because it would have no difference to %SetObserver.</p>
+
+  <h3>Synchronizer rules</h3>
+
+  <ul>
+    <li>Function %addOfConfig is called for all items of source collection on synchronizer initialization.</li>
+    <li>Function %clearOfConfig (if present) or %removeOfConfig is called for all items of source collection on
+    synchronizer destruction.</li>
+    <li>Functions %addOfConfig, %removeOfConfig and %clearOfConfig are called on any collection modification.</li>
+  </ul>
+
+symbols:
+  default:
+    defaultName: ListInserter
+    typevars:
+      T: List item type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Inserter implementation for %List. See %inserters for details.</p>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyList<%T>, config?: %ListInserter.%Config<%T>)
+      params:
+        source: Source list.
+        config: Inserter configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyList<%T>'
+        description: |
+          <p>Source list.</p>
+
+  ListInserter.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: List item type.
+
+    properties:
+      add:
+        modifiers: readonly
+        optional: true
+        type: '(item: %T, index: number) => void'
+        description: |
+          <p>Callback to call when an item is added to the list or moved within the list.</p>
+
+      remove:
+        modifiers: readonly
+        optional: true
+        type: '(item: %T, index: number) => void'
+        description: |
+          <p>Callback to call when an item is removed from the list or moved within the list.</p>
+
+      clear:
+        modifiers: readonly
+        optional: true
+        type: '(items: %T[]) => void'
+        description: |
+          <p>Callback to call when the list is cleared. By default, calls %remove for all list items.</p>
+
+      scope:
+        modifiers: readonly
+        optional: true
+        type: any
+        description: |
+          <p>Call scope of %add, %remove and %clear callbacks. Defaults to the synchronizer itself.</p>
+
+references:
+  Config:
+    symbol: ListInserter.Config
+
+  addOfConfig:
+    symbol: ListInserter.Config
+    member: add
+    label: add
+
+  removeOfConfig:
+    symbol: ListInserter.Config
+    member: remove
+    label: remove
+
+  clearOfConfig:
+    symbol: ListInserter.Config
+    member: clear
+    label: clear
+
+  afterAppend:
+    file: jwidget/Component
+    member: afterAppend
+
+  releaseDom:
+    file: jwidget/Component
+    member: releaseDom

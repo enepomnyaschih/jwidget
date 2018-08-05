@@ -23,32 +23,8 @@ import IList from '../IList';
 import ReadonlyList from '../ReadonlyList';
 
 /**
- * View synchronizer with array. Listens all array events and reduces them to 2 granular functions:
- * item is added into specific position and item is removed from specific position. In optimization purposes,
- * you can define a third function: array is cleared
- * (in case if there is more effective clearing algorithm than iterative items deletion).
- * Unlike [[JW.Abstract.Observer|Observer]], tracks items order.
- *
- * Use [[JW.List.createinserter|createinserter]] method to create the synchronizer.
- * The method selects a synchronizer implementation which fits better (simple or observable).
- *
- *     var inserter = array.createInserter({
- *         addItem: function(item, index) { this.store.insert(item, index); },
- *         removeItem: function(item, index) { this.store.remove(index); },
- *         scope: this
- *     });
- *
- * Synchronizer rules:
- *
- * - Function [[Inserter.Config.addItem|addItem]]
- * is called for all items of source array on synchronizer initialization.
- * - Function [[Inserter.Config.clearItems|clearItems]]
- * is called for array, or function
- * [[Inserter.Config.removeItem|removeItem]] is called for
- * all items of source array on synchronizer destruction.
- * - On source array reordering, items order is synchorinized by callback functions calls.
- *
- * @param T Array item type.
+ * Inserter implementation for List.
+ * @param T List item type.
  */
 class ListInserter<T> extends Class {
 	/**
@@ -72,11 +48,8 @@ class ListInserter<T> extends Class {
 	protected _scope: any;
 
 	/**
-	 * Creates synchronizer.
-	 * [[JW.List.createInserter|createInserter]] method is preferred instead.
-	 *
-	 * @param source Source array.
-	 * @param config Configuration.
+	 * @param source Source list.
+	 * @param config Inserter configuration.
 	 */
 	constructor(readonly source: ReadonlyList<T>, config: ListInserter.Config<T> = {}) {
 		super();
@@ -93,7 +66,7 @@ class ListInserter<T> extends Class {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected destroyObject() {
 		this._doClearItems(this.source.items);
@@ -190,30 +163,27 @@ export default ListInserter;
 
 namespace ListInserter {
 	/**
-	 * [[JW.List.Inserter]] configuration.
-	 *
-	 * @param T Collection item type.
+	 * ListInserter configuration.
+	 * @param T List item type.
 	 */
 	export interface Config<T> {
 		/**
-		 * Function to call on item adding to specific position in array.
+		 * Callback to call when an item is added to the list or moved within the list.
 		 */
 		readonly add?: (item: T, index: number) => void;
 
 		/**
-		 * Function to call on item removing from specific position in array.
+		 * Callback to call when an item is removed from the list or moved within the list.
 		 */
 		readonly remove?: (item: T, index: number) => void;
 
 		/**
-		 * Function to call on array cleanup.
-		 * By default, calls [[removeItem]] for all array items.
+		 * Callback to call when the list is cleared. By default, calls `remove` for all list items.
 		 */
 		readonly clear?: (items: T[]) => void;
 
 		/**
-		 * [[addItem]], [[removeItem]] and [[clearItems]] call scope.
-		 * Defaults to synchronizer itself.
+		 * Call scope of `add`, `remove` and `clear` callbacks. Defaults to the synchronizer itself.
 		 */
 		readonly scope?: any;
 	}

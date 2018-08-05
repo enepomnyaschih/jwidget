@@ -25,33 +25,7 @@ import IMap from '../IMap';
 import ReadonlyMap from '../ReadonlyMap';
 
 /**
- * View synchronizer with map. Listens all map events and reduces them to 2 granular functions:
- * item is added with specific key and item is removed with specific key. In optimization purposes,
- * you can define a third function: map is cleared
- * (in case if there is more effective clearing algorithm than iterative items deletion).
- * Unlike JW.Abstract.Observer, tracks items keys.
- * Can be used mainly for DOM-element synchronization with map of child elements.
- *
- * Use [[JW.Map.createInserter|createInserter]] method to create the synchronizer.
- *
- *     var inserter = map.createInserter({
- *         addItem: function(el, key) { this.el.find("[elkey=" + key + "]").append(el); },
- *         removeItem: function(el, key) { el.detach(); },
- *         scope: this
- *     });
- *
- * The method will select which synchronizer implementation fits better (simple or observable).
- *
- * Synchronizer rules:
- *
- * - Function [[Inserter.Config.addItem|addItem]]
- * is called for all items of source map on synchronizer initialization.
- * - Function [[Inserter.Config.clearItems|clearItems]]
- * is called for map, or function
- * [[Inserter.Config.removeItem|removeItem]] is called for
- * all items of source map on synchronizer destruction.
- * - On source map reindexing, items keys are synchorinized by callback functions calls.
- *
+ * Inserter implementation for Map.
  * @param T Map item type.
  */
 class MapInserter<T> extends Class {
@@ -75,13 +49,9 @@ class MapInserter<T> extends Class {
 	 */
 	protected _scope: any;
 
-
 	/**
-	 * Creates synchronizer.
-	 * [[JW.Map.createInserter|createInserter]] method is preferred instead.
-	 *
 	 * @param source Source map.
-	 * @param config Configuration.
+	 * @param config Inserter configuration.
 	 */
 	constructor(readonly source: ReadonlyMap<T>, config: MapInserter.Config<T> = {}) {
 		super();
@@ -96,9 +66,9 @@ class MapInserter<T> extends Class {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
-	destroyObject() {
+	protected destroyObject() {
 		this._doClearItems(this.source.items);
 		this._add = null;
 		this._remove = null;
@@ -165,31 +135,27 @@ export default MapInserter;
 
 namespace MapInserter {
 	/**
-	 * [[JW.Map.Inserter]] configuration.
-	 *
-	 * @param T Collection item type.
+	 * MapInserter configuration.
+	 * @param T Map item type.
 	 */
 	export interface Config<T> {
 		/**
-		 * Function to call on item adding to specific position in map.
+		 * Callback to call when an item is added to the map or moved within the map.
 		 */
 		readonly add?: (item: T, key: string) => void;
 
 		/**
-		 * Function to call on item removing from specific position in map.
+		 * Callback to call when an item is removed from the map or moved within the map.
 		 */
 		readonly remove?: (item: T, key: string) => void;
 
 		/**
-		 * Function to call on map cleanup.
-		 * By default, calls [[removeItem]] for all map items.
+		 * Callback to call when the map is cleared. By default, calls `remove` for all map items.
 		 */
 		readonly clear?: (items: Dictionary<T>) => void;
 
 		/**
-		 * [[addItem]], [[removeItem]] and
-		 * [[clearItems]] call scope.
-		 * Defaults to synchronizer itself.
+		 * Call scope of `add`, `remove` and `clear` callbacks. Defaults to the synchronizer itself.
 		 */
 		readonly scope?: any;
 	}
