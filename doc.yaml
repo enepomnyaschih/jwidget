@@ -460,6 +460,18 @@ references:
     file: jwidget/merger/list
     symbol: mergeNoSync
 
+  # Reversers
+  reversers:
+    file: jwidget/reverser/list
+    label: Reversers
+
+  ListReverser:
+    file: jwidget/reverser/list
+
+  reverseList:
+    file: jwidget/reverser/list
+    symbol: reverseList
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

@@ -27,85 +27,22 @@ import List from '../List';
 import ReadonlyList from '../ReadonlyList';
 
 /**
- * Array reverser. Builds array containing all items of source array in reversed order.
- * If original collection is observable, starts continuous synchronization.
- *
- *     var source = new JW.ObservableArray([1, 2, 3]);
- *     var reverser = source.createReverser();
- *     var target = reverser.target;
- *     assert(target.equal([3, 2, 1]));
- *
- *     source.add(4);
- *     assert(target.equal([4, 3, 2, 1]));
- *
- *     source.remove(2);
- *     assert(target.equal([4, 2, 1]));
- *
- *     reverser.destroy();
- *
- * Use [[JW.List.createReverser|createReverser]] method to create the synchronizer.
- * The method will select which synchronizer implementation fits better (simple or observable).
- *
- * You can pass target array in config option:
- *
- *     var source = new JW.Array();
- *     var target = new JW.Array();
- *     var reverser = source.createReverser({
- *         target: target
- *     });
- *
- * In simple cases, [[JW.List.$$toReversed|$$toReversed]] shorthand can be used instead. It returns the target array right away:
- *
- *     var source = new JW.ObservableArray([1, 2, 3]);
- *     var target = source.$$toReversed();
- *     assert(target.equal([3, 2, 1]));
- *
- *     source.add(4);
- *     assert(target.equal([4, 3, 2, 1]));
- *
- *     source.remove(2);
- *     assert(target.equal([4, 2, 1]));
- *
- *     target.destroy();
- *
- * Synchronizer rules:
- *
- * - Target array is stored in [[target]] property.
- * - Target array must be empty before initialization.
- * - You can't modify target array manually and/or create other synchronizers with the same target array.
- * - All items of source array are added to [[target]]
- * immediately on synchronizer initialization.
- * - All items are removed from [[target]] on synchronizer destruction.
- * - You can pass target array in [[Reverser.Config.target|target]] config option.
- * In this case, you are responsible for its destruction (though items will be removed
- * automatically on synchronizer destruction anyway).
- * - If [[Reverser.Config.target|target]]
- * is not passed, it will be created automatically. Synchronizer will select
- * appropriate [[target]] implementation (simple or observable). In this
- * case, [[target]] will be destroyed automatically on synchronizer destruction.
- *
- * @param T Array item type.
+ * List reverser.
+ * @param T List item type.
  */
 class ListReverser<T> extends Class {
 	private _targetCreated: boolean;
+	private _target: IList<T>;
 
 	/**
-	 * Target array.
-	 */
-	readonly target: IList<T>;
-
-	/**
-	 * Creates synchronizer.
-	 * [[JW.List.createReverser|createReverser]] method is preferred instead.
-	 *
-	 * @param source Source array.
-	 * @param config Configuration.
+	 * @param source Source list.
+	 * @param config Reverser configuration.
 	 */
 	constructor(readonly source: ReadonlyList<T>, config: ListReverser.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
-		this.target.addAll(this._reverse(source.items));
+		this._target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
+		this._target.addAll(this._reverse(source.items));
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
 		this.own(source.moveEvent.listen(this._onMove, this));
@@ -114,14 +51,21 @@ class ListReverser<T> extends Class {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
-	destroyObject() {
-		this.target.clear();
+	protected destroyObject() {
+		this._target.clear();
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		super.destroyObject();
+	}
+
+	/**
+	 * Target list.
+	 */
+	get target(): ReadonlyList<T> {
+		return this._target;
 	}
 
 	private _reverse(items: T[]) {
@@ -132,7 +76,7 @@ class ListReverser<T> extends Class {
 
 	private _onSplice(params: IList.SpliceEventParams<T>) {
 		var spliceResult = params.spliceResult;
-		var oldLength = this.target.length.get();
+		var oldLength = this._target.length.get();
 		var newLength = oldLength;
 
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -157,21 +101,21 @@ class ListReverser<T> extends Class {
 			return new IndexItems<T>(index, this._reverse(items));
 		});
 
-		this.target.trySplice(removeParamsList, addParamsList);
+		this._target.trySplice(removeParamsList, addParamsList);
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<T>) {
-		this.target.trySet(this.target.length.get() - params.index - 1, params.newItem);
+		this._target.trySet(this._target.length.get() - params.index - 1, params.newItem);
 	}
 
 	private _onMove(params: IList.MoveEventParams<T>) {
-		this.target.tryMove(
-			this.target.length.get() - params.fromIndex - 1,
-			this.target.length.get() - params.toIndex - 1);
+		this._target.tryMove(
+			this._target.length.get() - params.fromIndex - 1,
+			this._target.length.get() - params.toIndex - 1);
 	}
 
 	private _onClear() {
-		this.target.clear();
+		this._target.clear();
 	}
 
 	private _onReorder(params: IList.ReorderEventParams<T>) {
@@ -181,7 +125,7 @@ class ListReverser<T> extends Class {
 		for (var i = 0; i < length; ++i) {
 			indexes[length - i - 1] = length - indexArray[i] - 1;
 		}
-		this.target.tryReorder(indexes);
+		this._target.tryReorder(indexes);
 	}
 }
 
@@ -189,18 +133,22 @@ export default ListReverser;
 
 namespace ListReverser {
 	/**
-	 * [[JW.List.Reverser]] configuration.
-	 *
-	 * @param T Collection item type.
+	 * ListReverser configuration.
+	 * @param T List item type.
 	 */
 	export interface Config<T> {
 		/**
-		 * Target array. By default, created automatically.
+		 * Target list. By default, created automatically.
 		 */
 		readonly target?: IList<T>;
 	}
 }
 
+/**
+ * Reverses lists and starts synchronization.
+ * @param source Source list.
+ * @returns Reversed list.
+ */
 export function reverseList<T>(source: ReadonlyList<T>): DestroyableReadonlyList<T> {
 	if (source.silent) {
 		return source.toReversed();
