@@ -1,0 +1,172 @@
+description: |
+  <p><b>Merger</b> is one of collection synchronizers. <b>Merger</b> builds a list consisting of all items of source
+  lists in the same order.</p>
+  <pre>
+  const source = new %List([
+      new %List([1, 2, 3]),
+      new %List<number>(),
+      new %List([4])
+  ]);
+  const merger = new %ListMerger(source);
+  const target = merger.%target;
+  expect(target.%items).toEqual([1, 2, 3, 4]);
+
+  source.%add(new %List([5, 6]));
+  expect(target.%items).toEqual([1, 2, 3, 4, 5, 6]);
+
+  source.%get(1).%addAll([7, 8, 9]);
+  expect(target.%items).toEqual([1, 2, 3, 7, 8, 9, 4, 5, 6]);
+
+  // Destroy the merger to stop synchronization
+  merger.%destroy();
+  </pre>
+
+  <h3>Features and examples</h3>
+
+  <p>You can pass target list in a config option:</p>
+  <pre>
+  const source = new %List([
+      new %List([1, 2, 3]),
+      new %List<number>(),
+      new %List([4])
+  ]);
+  const target = new %List<number>();
+  const merger = new %ListMerger(source, {%targetOfConfig});
+  </pre>
+
+  <p>If you want to create a new list, use shorthand function %mergeLists instead:</p>
+  <pre>
+  const source = new %List([
+      new %List([1, 2, 3]),
+      new %List<number>(),
+      new %List([4])
+  ]);
+  const target = %mergeLists(source);
+
+  // Destroy the target collection to stop synchronization
+  target.%destroy();
+  </pre>
+
+  <p>If you don't care about synchronization, use %mergeNoSync function:</p>
+  <pre>
+  const source = new %List([
+      new %List([1, 2, 3]),
+      new %List<number>(),
+      new %List([4])
+  ]);
+  const target = %mergeNoSync(source);
+  </pre>
+
+  <h3>Synchronizer rules</h3>
+
+  <ul>
+    <li>Target list must be empty before initialization.</li>
+    <li>The synchronizer requires exclusive access to the target list. You can't modify it manually or create other
+    synchronizers with the same target list.</li>
+    <li>All items of source list are added to %target immediately on synchronizer initialization.</li>
+    <li>All items are removed from %target on synchronizer destruction.</li>
+    <li>You can pass target list in %targetOfConfig config option. In this case, you are responsible for its destruction
+    (though items will be removed automatically on synchronizer destruction anyway).</li>
+    <li>If %targetOfConfig is not passed, it gets created automatically. In this
+    case, it will be destroyed automatically on synchronizer destruction.</li>
+  </ul>
+
+symbols:
+  default:
+    defaultName: ListMerger
+    typevars:
+      T: List item type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>List merger. See %mergers for details.</p>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyList<%ReadonlyList<%T>>, config?: %ListMerger.%Config<%T>)
+      params:
+        source: Source list.
+        config: Merger configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyList<%T>'
+        description: |
+          <p>Source list.</p>
+
+      target:
+        modifiers: readonly
+        type: '%ReadonlyList<%T>'
+        description: |
+          <p>Target list.</p>
+
+  ListMerger.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: List item type.
+
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IList<%T>'
+        description: |
+          <p>Target list. By default, created automatically.</p>
+
+      getKey:
+        modifiers: readonly
+        optional: true
+        type: '(item: %T) => any'
+        description: |
+          <p>Function which identifies an item in the auto-created target list for optimization of some algorithms.</p>
+
+  mergeLists:
+    signature: |
+      <T>(source: %ReadonlyList<%ReadonlyList<T>>, getKey?: (item: T) => any): %DestroyableReadonlyList<T>
+    params:
+      source: Source list.
+      getKey: Function which identifies an item in the target list for optimization of some algorithms.
+    returns: Merged list.
+    description: |
+      <p>Merges lists and starts synchronization. See %mergers for details.</p>
+
+  mergeNoSync:
+    signature: |
+      <T>(source: %ReadonlyList<%ReadonlyList<T>>, getKey?: (item: T) => any): %IList<T>
+    params:
+      source: Source list.
+      getKey: Function which identifies an item in the target list for optimization of some algorithms.
+    returns: Merged list.
+    description: |
+      <p>Merges lists without synchronization. See %mergers for details.</p>
+
+references:
+  Config:
+    symbol: ListMerger.Config
+
+  items:
+    file: jwidget/ReadonlyList
+    member: items
+
+  get:
+    file: jwidget/ReadonlyList
+    member: get
+
+  add:
+    file: jwidget/IList
+    member: add
+
+  addAll:
+    file: jwidget/IList
+    member: addAll
+
+  target:
+    symbol: default
+    member: target
+
+  targetOfConfig:
+    symbol: ListMerger.Config
+    member: target
+    label: target

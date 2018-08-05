@@ -444,6 +444,22 @@ references:
   MapInserter:
     file: jwidget/inserter/map
 
+  # Mergers
+  mergers:
+    file: jwidget/merger/list
+    label: Mergers
+
+  ListMerger:
+    file: jwidget/merger/list
+
+  mergeLists:
+    file: jwidget/merger/list
+    symbol: mergeLists
+
+  mergeNoSync:
+    file: jwidget/merger/list
+    symbol: mergeNoSync
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

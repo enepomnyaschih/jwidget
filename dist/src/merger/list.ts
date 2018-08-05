@@ -30,98 +30,27 @@ import {mapList} from '../mapper/list';
 import ReadonlyList from '../ReadonlyList';
 
 /**
- * Arrays merger. Builds array consisting of all source collections items in the same order.
- * If any of the original collections is observable, starts continuous synchronization.
- *
- *     var source = new JW.ObservableArray([
- *         new JW.Array([1, 2, 3]),
- *         new JW.ObservableArray(),
- *         new JW.Array([4])
- *     ]);
- *     var merger = source.createMerger();
- *     var target = merger.target;
- *     assert(target.equal([1, 2, 3, 4]));
- *
- *     source.add(new JW.Array([5, 6]));
- *     assert(target.equal([1, 2, 3, 4, 5, 6]));
- *
- *     source.get(1).addAll([7, 8, 9]);
- *     assert(target.equal([1, 2, 3, 7, 8, 9, 4, 5, 6]));
- *
- *     merger.destroy();
- *
- * Use [[JW.List.createMerger|createMerger]] method to create the synchronizer.
- * The method will select which synchronizer implementation fits better (simple or observable).
- *
- * You can pass target array in config option:
- *
- *     var source = new JW.Array();
- *     var target = new JW.Array();
- *     var merger = source.createMerger({
- *         target: target
- *     });
- *
- * In simple cases, [[JW.List.$$merge|$$merge]] shorthand can be used instead. It returns the target array right away:
- *
- *     var source = new JW.ObservableArray([
- *         new JW.Array([1, 2, 3]),
- *         new JW.ObservableArray(),
- *         new JW.Array([4])
- *     ]);
- *     var target = source.$$merge();
- *     assert(target.equal([1, 2, 3, 4]));
- *
- *     source.add(new JW.Array([5, 6]));
- *     assert(target.equal([1, 2, 3, 4, 5, 6]));
- *
- *     source.get(1).addAll([7, 8, 9]);
- *     assert(target.equal([1, 2, 3, 7, 8, 9, 4, 5, 6]));
- *
- *     target.destroy();
- *
- * Synchronizer rules:
- *
- * - Target array is stored in [[target]] property.
- * - Target array must be empty before initialization.
- * - You can't modify target array manually and/or create other synchronizers with the same target array.
- * - All items of source arrays are added to [[target]]
- * immediately on synchronizer initialization.
- * - All items are removed from [[target]] on synchronizer destruction.
- * - You can pass target array in [[Merger.Config.target|target]] config option.
- * In this case, you are responsible for its destruction (though items will be removed
- * automatically on synchronizer destruction anyway).
- * - If [[Merger.Config.target|target]]
- * is not passed, it will be created automatically. Synchronizer will select
- * appropriate [[target]] implementation (simple or observable). In this
- * case, [[target]] will be destroyed automatically on synchronizer destruction.
- *
- * @param T Array item type.
+ * List merger.
+ * @param T List item type.
  */
 class ListMerger<T> extends Class {
 	private _targetCreated: boolean;
 	private _bunches: DestroyableReadonlyList<Bunch<T>>;
+	private _target: IList<T>;
 
 	/**
-	 * Target array.
-	 */
-	readonly target: IList<T>;
-
-	/**
-	 * Creates synchronizer.
-	 * [[JW.List.createMerger|createMerger]] method is preferred instead.
-	 *
-	 * @param source Source array.
-	 * @param config Configuration.
+	 * @param source Source list.
+	 * @param config Merger configuration.
 	 */
 	constructor(readonly source: ReadonlyList<ReadonlyList<T>>, config: ListMerger.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? this._createTarget(source, config.getKey) : config.target;
-		this._bunches = mapList<ReadonlyList<T>, Bunch<T>>(source, (bunch) => new Bunch<T>(this.source, this.target, bunch), {
+		this._target = this._targetCreated ? this._createTarget(source, config.getKey) : config.target;
+		this._bunches = mapList<ReadonlyList<T>, Bunch<T>>(source, (bunch) => new Bunch<T>(this.source, this._target, bunch), {
 			destroy,
 			getKey: iidStr
 		});
-		this.target.addAll(this._getAllItems());
+		this._target.addAll(this._getAllItems());
 		this.own(source.spliceEvent.listen(this._onSplice, this));
 		this.own(source.replaceEvent.listen(this._onReplace, this));
 		this.own(source.moveEvent.listen(this._onMove, this));
@@ -130,16 +59,20 @@ class ListMerger<T> extends Class {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
-	destroyObject() {
-		this.target.clear();
+	protected destroyObject() {
+		this._target.clear();
 		this._bunches.destroy();
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this._bunches = null;
 		super.destroyObject();
+	}
+
+	get target(): ReadonlyList<T> {
+		return this._target;
 	}
 
 	private _createTarget(source: ReadonlyList<ReadonlyList<T>>, getKey: (item: T) => any): IList<T> {
@@ -204,19 +137,19 @@ class ListMerger<T> extends Class {
 		var addParamsList = spliceResult.addedItemsList.map((indexItems) => {
 			return new IndexItems<T>(indexes[indexItems.index], this._merge(indexItems.items));
 		}, this);
-		this.target.trySplice(removeParamsList, addParamsList);
+		this._target.trySplice(removeParamsList, addParamsList);
 	}
 
 	private _onReplace(params: IList.ReplaceEventParams<ReadonlyList<T>>) {
 		var index = this._count(this.source.items, 0, params.index);
-		this.target.trySplice(
+		this._target.trySplice(
 			[new IndexCount(index, params.oldItem.length.get())],
 			[new IndexItems<T>(index, params.newItem.items)]);
 	}
 
 	private _onMove(params: IList.MoveEventParams<ReadonlyList<T>>) {
 		var count = params.item.length.get();
-		var indexes = new Array<number>(this.target.length.get());
+		var indexes = new Array<number>(this._target.length.get());
 		var currentIndex = 0;
 
 		function shiftBunch(bunchLength: number, shift: number) {
@@ -248,17 +181,17 @@ class ListMerger<T> extends Class {
 			shiftBunch(this.source.get(i).length.get(), 0);
 		}
 
-		this.target.tryReorder(indexes);
+		this._target.tryReorder(indexes);
 	}
 
 	private _onClear() {
-		this.target.clear();
+		this._target.clear();
 	}
 
 	private _onReorder(params: IList.ReorderEventParams<ReadonlyList<T>>) {
 		var oldIndexes = this._getIndexes(params.items);
 		var newIndexes = this._getIndexes(this.source.items);
-		var indexes = new Array<number>(this.target.length.get());
+		var indexes = new Array<number>(this._target.length.get());
 		for (var i = 0, l = params.items.length; i < l; ++i) {
 			var bunch = params.items[i];
 			var oldIndex = oldIndexes[i];
@@ -267,7 +200,7 @@ class ListMerger<T> extends Class {
 				indexes[oldIndex + j] = newIndex + j;
 			}
 		}
-		this.target.tryReorder(indexes);
+		this._target.tryReorder(indexes);
 	}
 }
 
@@ -275,25 +208,30 @@ export default ListMerger;
 
 namespace ListMerger {
 	/**
-	 * [[JW.List.Merger]] configuration.
-	 *
-	 * @param T Collection item type.
+	 * ListMerger configuration.
+	 * @param T List item type.
 	 */
 	export interface Config<T> {
 		/**
-		 * Target array. By default, created automatically.
+		 * Target list. By default, created automatically.
 		 */
 		readonly target?: IList<T>;
 
 		/**
-		 * Identifies an item in the auto-created target collection for optimization of some algorithms.
+		 * Function which identifies an item in the auto-created target list for optimization of some algorithms.
 		 */
 		readonly getKey?: (item: T) => any;
 	}
 }
 
+/**
+ * Merges lists and starts synchronization.
+ * @param source Source list.
+ * @param getKey Function which identifies an item in the target list for optimization of some algorithms.
+ * @returns Merged list.
+ */
 export function mergeLists<T>(source: ReadonlyList<ReadonlyList<T>>,
-							  getKey?: (item: T) => any): DestroyableReadonlyList<T> {
+                              getKey?: (item: T) => any): DestroyableReadonlyList<T> {
 	if (source.silent && source.every((item) => item.silent)) {
 		return mergeNoSync(source, getKey);
 	}
@@ -301,6 +239,12 @@ export function mergeLists<T>(source: ReadonlyList<ReadonlyList<T>>,
 	return target.owning(new ListMerger<T>(source, {target}));
 }
 
+/**
+ * Merges lists without synchronization.
+ * @param source Source list.
+ * @param getKey Function which identifies an item in the target list for optimization of some algorithms.
+ * @returns Merged list.
+ */
 export function mergeNoSync<T>(source: ReadonlyList<ReadonlyList<T>>, getKey?: (item: T) => any): IList<T> {
 	return new List(ArrayUtils.merge(source.items.map((item) => item.items)), getKey, SILENT & ADAPTER);
 }
