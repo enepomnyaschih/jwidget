@@ -40,3 +40,7 @@ symbols:
           <p>Default implementation of this method provides an extra layer of infinite redirection protection. If more
           than 25 redirections occur during 1 second, the property blocks further assignments and writes an error into
           browser console listing all redirections that were supposed to happen.</p>
+
+    references:
+      V:
+        file: jwidget/IProperty

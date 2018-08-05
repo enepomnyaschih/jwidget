@@ -98,7 +98,7 @@ symbols:
           </li>
           <li>
           <p>Add an ordered list of child components into some element using %addList method. Pass an instance of
-          %ReadOnlyList&lt;%Component&gt; as an argument and the framework will provide the synchronization with this list
+          %ReadonlyList&lt;%Component&gt; as an argument and the framework will provide the synchronization with this list
           during application running.</p>
           <pre>
           %afterRender() {
@@ -131,9 +131,9 @@ symbols:
           <li>
           <p>Define method <b>render&lt;ChildId&gt;</b>, where <b>&lt;ChildId&gt;</b> is jwid of an element in CamelCase with
           capitalized first letter. Example: <b>renderArticle</b> renders the element with jwid = "article". If the method
-          returns an instance of %Component, %Bindable or %ReadOnlyCollection, then result will be treated as a child
+          returns an instance of %Component, %Bindable or %ReadonlyCollection, then result will be treated as a child
           component or a child component list/collection. Define method <b>renderRoot</b> to render the root element, but you
-          can return only %ReadOnlyCollection there, because it is impossible to replace the root element of the
+          can return only %ReadonlyCollection there, because it is impossible to replace the root element of the
           component.</p>
           <pre>
           protected renderLabel() {
@@ -173,9 +173,9 @@ symbols:
           component. This option doesn't work for the root element.</li>
           <li>If the method returns an instance of %Bindable&lt;Component&gt;, then it gets added as a bindable child
           component via %addBindable method. This option doesn't work for the root element.</li>
-          <li>If the method returns an instance of %ReadOnlyList&lt;%Component&gt;, then it gets added as a child list via
+          <li>If the method returns an instance of %ReadonlyList&lt;%Component&gt;, then it gets added as a child list via
           method %addList.</li>
-          <li>If the method returns an instance of %ReadOnlyMap&lt;%Component&gt; or %ReadOnlySet&lt;%Component&gt;, then
+          <li>If the method returns an instance of %ReadonlyMap&lt;%Component&gt; or %ReadonlySet&lt;%Component&gt;, then
           it gets added as a child collection via method %addCollection.</li>
           <li>If the method returns <b>false</b>, then the element gets removed from the HTML document. This option doesn't
           work for the root element.</li>
@@ -300,7 +300,7 @@ symbols:
               '</div>'
           )
           class MyComponent extends %Component {
-              constructor(private titleBox: %Component | %Bindable<Component> | %ReadOnlyCollection<%Component>) {
+              constructor(private titleBox: %Component | %Bindable<Component> | %ReadonlyCollection<%Component>) {
                   super();
               }
 

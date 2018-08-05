@@ -143,7 +143,8 @@ symbols:
     typevars:
       T: Collection item type.
     extends:
-      - symbol: AbstractSorterComparing.Config
+      - file: jwidget/sortercomparing/AbstractSorterComparing
+        symbol: AbstractSorterComparing.Config
     properties:
       target:
         modifiers: readonly

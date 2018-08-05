@@ -598,3 +598,7 @@ references:
   SpliceResult:
     file: jwidget/IMap
     symbol: IMap.SpliceResult
+
+  SpliceParams:
+    file: jwidget/IMap
+    symbol: SpliceParams
