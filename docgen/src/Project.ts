@@ -89,9 +89,8 @@ class ProjectContext extends Context {
 		return null;
 	}
 
-	get file(): SourceFile {
-		throw new DocError("Absolute references are not supported. " +
-			"Please build all references relative to files, symbols or members.");
+	get fileId(): string {
+		return "index";
 	}
 
 	protected get name() {

@@ -4,6 +4,7 @@ import SymbolVisitor from "../SymbolVisitor";
 import Dictionary from "../Dictionary";
 import Reference from "../models/Reference";
 import Context from "../Context";
+import Project from "../Project";
 
 export default class HeaderSymbol extends AbstractSymbol {
 
@@ -43,8 +44,12 @@ class HeaderContext extends Context {
 		return this.symbol.file.context;
 	}
 
-	get file(): SourceFile {
-		return this.symbol.file;
+	get project(): Project {
+		return this.symbol.project;
+	}
+
+	get fileId(): string {
+		return this.symbol.file.id;
 	}
 
 	protected get name(): string {

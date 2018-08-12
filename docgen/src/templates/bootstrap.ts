@@ -26,47 +26,97 @@ import {
 import {mkdir} from "../utils/File";
 import {htmlEncode} from "../utils/String";
 import Topic from "../Topic";
+import Context from "../Context";
 
 export default function bootstrapTemplate(project: Project) {
 	for (let fileId in project.files) {
-		writeFile(project.files[fileId],
-			path.resolve(project.outputAbsolutePath, `${fileId}.html`));
+		const file = project.files[fileId];
+		writeFile(project, fileId, renderDocFile(file));
+	}
+	if (project.includes['MainPage']) {
+		writeFile(project, 'index', renderFile({
+			id: 'index',
+			project,
+			title: project.name,
+			context: project.context,
+			contents: `<div class="doc-contents">${renderText(project.context, "%%MainPage")}</div>`
+		}));
 	}
 }
 
-function writeFile(file: SourceFile, path: string) {
-	console.log(`Writing ${file.id}...`);
-	mkdir(path);
-	fs.writeFileSync(path, renderFile(file));
+function writeFile(project: Project, fileId: string, html: string) {
+	console.log(`Writing ${fileId}...`);
+	const filePath = path.resolve(project.outputAbsolutePath, `${fileId}.html`);
+	mkdir(filePath);
+	fs.writeFileSync(filePath, html);
 }
 
-function renderFile(file: SourceFile) {
+function renderDocFile(file: SourceFile) {
+	return renderFile({
+		id: file.id,
+		project: file.project,
+		title: `${file.id}${file.project.name ? " - " + file.project.name : ""}`,
+		context: file.context,
+		contents: `
+			<div class="doc-contents">
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">${file.id}</a>
+						${renderIndex(file)}
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1>${file.description ? "" : '<span id="default"></span>'}${file.id}</h1>
+						${renderText(file.context, file.description)}
+						<h3>Consumption</h3>
+						<pre>${renderConsumption(file)}</pre>
+						${renderSymbols(file)}
+					</div>
+				</div>
+			</div>
+		`
+	});
+}
+
+interface FileRenderingConfig {
+
+	readonly id: string;
+	readonly project: Project;
+	readonly title: string;
+	readonly context: Context;
+	readonly contents: string;
+}
+
+function renderFile(config: FileRenderingConfig) {
+	const homeUrl = getRelativeUrl("", config.id);
 	return `<!DOCTYPE html>
 <html>
 	<head>
-		<title>${file.id}${file.project.name ? " - " + file.project.name : ""}</title>
-		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("bootstrap.min.css", file.id)}">
-		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("styles.css", file.id)}">
+		<title>${config.title}</title>
+		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("bootstrap.min.css", config.id)}">
+		<link rel="stylesheet" type="text/css" href="${getRelativeUrl("styles.css", config.id)}">
 	</head>
 	<body>
 		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
-			${file.project.name ? `<a class="navbar-brand" href="${getRelativeUrl("", file.id)}">${file.project.name}</a>` : ""}
+			${config.project.name ? `<a class="navbar-brand" href="${homeUrl}">${config.project.name}</a>` : ""}
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item">
-						<a class="nav-link" href="${getRelativeUrl("", file.id)}">Home</a>
+						<a class="nav-link" href="${homeUrl}">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link disabled" href="${getRelativeUrl("getstarted.html", file.id)}">Get started</a>
+						<a class="nav-link disabled" href="${getRelativeUrl("getstarted.html", config.id)}">Get started</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link disabled" href="${getRelativeUrl("tutorial.html", file.id)}">Tutorial</a>
+						<a class="nav-link disabled" href="${getRelativeUrl("tutorial.html", config.id)}">Tutorial</a>
 					</li>
 					<li class="nav-item">
-						<a class="doc-index-link nav-link dropdown-toggle" href="${getRelativeUrl("doc.html", file.id)}"
+						<a class="doc-index-link nav-link dropdown-toggle" href="${getRelativeUrl("doc.html", config.id)}"
 							tabindex="0">Documentation <span class="sr-only">(current)</span></a>
 					</li>
 				</ul>
@@ -80,28 +130,11 @@ function renderFile(file: SourceFile) {
 				</form>
 			</div>
 		</nav>
-		<div class="doc-contents">
-			<nav class="doc-sidebar navbar navbar-light bg-light">
-				<nav class="doc-index nav nav-pills flex-column">
-					<a class="navbar-brand" href="#">${file.id}</a>
-					${renderIndex(file)}
-					<div class="py-3"></div>
-				</nav>
-			</nav>
-			<div class="doc-main">
-				<div class="container-fluid">
-					<h1>${file.description ? "" : '<span id="default"></span>'}${file.id}</h1>
-					${renderText(file.context, file.description)}
-					<h3>Consumption</h3>
-					<pre>${renderConsumption(file)}</pre>
-					${renderSymbols(file)}
-				</div>
-			</div>
-		</div>
-		<div class="doc-index-popover">${renderText(file.context, "%%DocumentationIndex")}</div>
-		<script type="text/javascript" src="${getRelativeUrl("jquery-3.2.1.min.js", file.id)}"></script>
-		<script type="text/javascript" src="${getRelativeUrl("bootstrap.bundle.min.js", file.id)}"></script>
-		<script type="text/javascript" src="${getRelativeUrl("scripts.js", file.id)}"></script>
+		${config.contents}
+		<div class="doc-index-popover">${renderText(config.context, "%%DocumentationIndex")}</div>
+		<script type="text/javascript" src="${getRelativeUrl("jquery-3.2.1.min.js", config.id)}"></script>
+		<script type="text/javascript" src="${getRelativeUrl("bootstrap.bundle.min.js", config.id)}"></script>
+		<script type="text/javascript" src="${getRelativeUrl("scripts.js", config.id)}"></script>
 	</body>
 </html>`;
 }

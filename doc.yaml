@@ -631,6 +631,9 @@ includes:
       </div>
     </div>
 
+  MainPage: |
+    <p>Hello!</p>
+
   EventExample: |
     <p>It is smart to store the event as %IEvent internally, and expose it as %Listenable externally to deny direct
     control over the event by the clients.</p>

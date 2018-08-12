@@ -3,7 +3,7 @@ import AbstractMember, {AbstractMemberJson} from "./AbstractMember";
 import StructSymbol from "../symbols/Struct";
 import Reference from "../models/Reference";
 import Context from "../Context";
-import SourceFile from "../SourceFile";
+import Project from "../Project";
 
 export default class MethodMember extends AbstractMember {
 
@@ -13,7 +13,7 @@ export default class MethodMember extends AbstractMember {
 	readonly context: Context;
 
 	constructor(struct: StructSymbol, inheritedFrom: StructSymbol, id: string, isStatic: boolean,
-				json: MethodMemberJson) {
+	            json: MethodMemberJson) {
 		super(struct, inheritedFrom, id, isStatic, json);
 		this.signature = json.signature;
 		this.params = json.params || {};
@@ -50,8 +50,12 @@ class MethodContext extends Context {
 		return this.method.struct.context;
 	}
 
-	get file(): SourceFile {
-		return this.method.file;
+	get project(): Project {
+		return this.method.struct.project;
+	}
+
+	get fileId(): string {
+		return this.method.file.id;
 	}
 
 	protected get name(): string {

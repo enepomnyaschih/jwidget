@@ -11,10 +11,10 @@ export function renderText(context: Context, text?: string) {
 	if (!text) {
 		return "";
 	}
-	return renderIncludes(context.file.project, text)
+	return renderIncludes(context.project, text)
 		.replace(/\s*?<\/pre>/g, "</pre>")
 		.replace(/<pre>([\s\S]*?)<\/pre>/g, (_, code) => `<pre>${htmlEncode(code)}</pre>`)
-		.replace(/%example:([\w\-]+)/g, (_, name) => renderExample(name, context.file.id))
+		.replace(/%example:([\w\-]+)/g, (_, name) => renderExample(name, context.fileId))
 		.replace(/%(\w+)/g, (_, key) => renderReferenceByKey(context, key));
 }
 
@@ -52,7 +52,7 @@ export function renderReferenceByKey(context: Context, key: string, relativeToFi
 		return renderReference({
 			label: key,
 			...reference
-		}, relativeToFile || context.file.id);
+		}, relativeToFile || context.fileId);
 	} catch (error) {
 		if (error instanceof DocError) {
 			console.warn(error.message);
@@ -88,16 +88,16 @@ export function getRelativeUrl(absoluteUrl: string, relativeToFile: string): str
 	const toPathnameLength = Math.min(
 		(toSearchIndex === -1) ? absoluteUrl.length : toSearchIndex,
 		(toHashIndex === -1) ? absoluteUrl.length : toHashIndex);
-	const to = absoluteUrl.substr(0, toPathnameLength).split("/");
+	const to = absoluteUrl.substr(0, toPathnameLength).split("/").filter(Boolean);
 	const toHead = to.slice(0, -1);
 	let diff = 0;
 	while (diff < fromHead.length && diff < toHead.length && fromHead[diff] === toHead[diff]) {
 		++diff;
 	}
-	return [
+	return ([
 		...fromHead.slice(diff).map(() => ".."),
 		...to.slice(diff)
-	].join("/") + absoluteUrl.substr(toPathnameLength);
+	].join("/") + absoluteUrl.substr(toPathnameLength)) || ".";
 }
 
 export function renderParams(context: Context, params: Dictionary<string>, returns?: string): string {

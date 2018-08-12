@@ -63,8 +63,12 @@ class SourceFileContext extends Context {
 		return this.sourceFile.project.context;
 	}
 
-	get file(): SourceFile {
-		return this.sourceFile;
+	get project(): Project {
+		return this.sourceFile.project;
+	}
+
+	get fileId(): string {
+		return this.sourceFile.id;
 	}
 
 	protected get name(): string {

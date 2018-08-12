@@ -5,6 +5,7 @@ import Reference from "../models/Reference";
 import Dictionary from "../Dictionary";
 import {htmlEncode} from "../utils/String";
 import SymbolVisitor from "../SymbolVisitor";
+import Project from "../Project";
 
 export default class ValueSymbol extends AbstractSymbol {
 
@@ -42,8 +43,12 @@ class ValueContext extends Context {
 		return this.symbol.file.context;
 	}
 
-	get file(): SourceFile {
-		return this.symbol.file;
+	get project(): Project {
+		return this.symbol.project;
+	}
+
+	get fileId(): string {
+		return this.symbol.file.id;
 	}
 
 	protected get name(): string {

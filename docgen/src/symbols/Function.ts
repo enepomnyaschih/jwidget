@@ -7,6 +7,7 @@ import {htmlEncode} from "../utils/String";
 import SymbolVisitor from "../SymbolVisitor";
 import Topic, {TopicJson} from "../Topic";
 import * as DictionaryUtils from "../utils/Dictionary";
+import Project from "../Project";
 
 export default class FunctionSymbol extends AbstractSymbol {
 
@@ -53,8 +54,12 @@ class FunctionContext extends Context {
 		return this.symbol.file.context;
 	}
 
-	get file(): SourceFile {
-		return this.symbol.file;
+	get project(): Project {
+		return this.symbol.project;
+	}
+
+	get fileId(): string {
+		return this.symbol.file.id;
 	}
 
 	protected get name(): string {

@@ -3,7 +3,7 @@ import Dictionary from "./Dictionary";
 import Context from "./Context";
 import {htmlEncode} from "./utils/String";
 import Reference from "./models/Reference";
-import SourceFile from "./SourceFile";
+import Project from "./Project";
 
 export default class Constructor {
 
@@ -40,8 +40,12 @@ class ConstructorContext extends Context {
 		return this.constr.struct.context;
 	}
 
-	get file(): SourceFile {
-		return this.constr.struct.file;
+	get project(): Project {
+		return this.constr.struct.project;
+	}
+
+	get fileId(): string {
+		return this.constr.struct.file.id;
 	}
 
 	protected get name(): string {

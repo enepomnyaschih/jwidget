@@ -12,6 +12,7 @@ import SymbolVisitor from "../SymbolVisitor";
 import * as DictionaryUtils from "../utils/Dictionary";
 import AbstractSymbol from "./AbstractSymbol";
 import Topic, {TopicJson} from "../Topic";
+import Project from "../Project";
 
 export default class StructSymbol extends AbstractSymbol {
 
@@ -161,8 +162,12 @@ class StructContext extends Context {
 		return this.symbol.file.context;
 	}
 
-	get file(): SourceFile {
-		return this.symbol.file;
+	get project(): Project {
+		return this.symbol.project;
+	}
+
+	get fileId(): string {
+		return this.symbol.file.id;
 	}
 
 	protected get name(): string {

@@ -2,7 +2,7 @@ import Context from "./Context";
 import Dictionary from "./Dictionary";
 import Reference from "./models/Reference";
 import ISymbol from "./symbols/ISymbol";
-import SourceFile from "./SourceFile";
+import Project from "./Project";
 
 export default class Topic {
 
@@ -34,8 +34,12 @@ class TopicContext extends Context {
 		return this.topic.symbol.context;
 	}
 
-	get file(): SourceFile {
-		return this.topic.symbol.file;
+	get project(): Project {
+		return this.topic.symbol.project;
+	}
+
+	get fileId(): string {
+		return this.topic.symbol.file.id;
 	}
 
 	protected get name(): string {

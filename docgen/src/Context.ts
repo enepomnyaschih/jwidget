@@ -1,7 +1,7 @@
 import Reference from "./models/Reference";
 import Dictionary from "./Dictionary";
-import SourceFile from "./SourceFile";
 import DocError from "./DocError";
+import Project from "./Project";
 
 export default abstract class Context {
 
@@ -13,7 +13,9 @@ export default abstract class Context {
 
 	abstract readonly parent: Context;
 
-	abstract readonly file: SourceFile;
+	abstract readonly project: Project;
+
+	abstract readonly fileId: string;
 
 	protected abstract readonly name: string;
 
