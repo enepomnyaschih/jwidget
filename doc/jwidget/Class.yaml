@@ -1,5 +1,6 @@
 symbols:
   default:
+    showInheritanceLevels: 0
     extends:
       - file: jwidget/IClass
     description: |

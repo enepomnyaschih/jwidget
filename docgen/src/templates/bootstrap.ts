@@ -39,6 +39,7 @@ export default function bootstrapTemplate(project: Project) {
 			project,
 			title: project.name,
 			context: project.context,
+			isDoc: false,
 			contents: `<div class="doc-contents">${renderText(project.context, "%%MainPage")}</div>`
 		}));
 	}
@@ -57,6 +58,7 @@ function renderDocFile(file: SourceFile) {
 		project: file.project,
 		title: `${file.id}${file.project.name ? " - " + file.project.name : ""}`,
 		context: file.context,
+		isDoc: true,
 		contents: `
 			<div class="doc-contents">
 				<nav class="doc-sidebar navbar navbar-light bg-light">
@@ -86,6 +88,7 @@ interface FileRenderingConfig {
 	readonly project: Project;
 	readonly title: string;
 	readonly context: Context;
+	readonly isDoc: boolean;
 	readonly contents: string;
 }
 
@@ -121,10 +124,7 @@ function renderFile(config: FileRenderingConfig) {
 					</li>
 				</ul>
 				<form class="form-inline my-2 my-lg-0">
-					<div class="form-check text-light mr-2">
-						<input class="form-check-input" type="checkbox" id="navbarShowInherited">
-						<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
-					</div>
+					${config.isDoc ? docToolbar : ''}
 					<input class="form-control mr-sm-2" disabled type="search" placeholder="Search" aria-label="Search">
 					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 				</form>
@@ -138,6 +138,12 @@ function renderFile(config: FileRenderingConfig) {
 	</body>
 </html>`;
 }
+
+const docToolbar =
+	`<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>`;
 
 function renderIndex(file: SourceFile) {
 	return DictionaryUtils.join(DictionaryUtils.map(file.groups, (group, key) => (

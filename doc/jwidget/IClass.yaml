@@ -1,6 +1,7 @@
 symbols:
   default:
     kind: interface
+    showInheritanceLevels: 1
     extends:
       - file: jwidget/Destroyable
       - file: jwidget/Identifiable

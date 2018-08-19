@@ -46,6 +46,9 @@ var pages = {
 	"defer": {
 		source: "./defer/index.ts"
 	},
+    "greeter": {
+        source: "./greeter/index.ts"
+    },
 	"listen": {
 		source: "./listen/index.ts"
 	},
