@@ -7,8 +7,10 @@ import Reference from "./models/Reference";
 import Dictionary from "./Dictionary";
 import parseSymbol from "./parseSymbol";
 
+// TODO: Probably it makes sense to extract base class for tutorials (for now, empty symbol list indicates tutorial).
 export default class SourceFile {
 
+	readonly title: string;
 	readonly expandImports: boolean;
 	readonly description: string;
 	readonly symbols: Dictionary<ISymbol>;
@@ -21,6 +23,7 @@ export default class SourceFile {
 	currentGroupId: string = "";
 
 	constructor(readonly project: Project, readonly id: string, json: SourceFileJson) {
+		this.title = json.title || `${id}${project.name ? ` - ${project.name}` : ""}`;
 		this.expandImports = json.expandImports || false;
 		this.description = json.description;
 		this.tokens = this.id.split('/');
@@ -36,6 +39,10 @@ export default class SourceFile {
 		return this.tokens[this.tokens.length - 1];
 	}
 
+	get isModule() {
+		return !DictionaryUtils.isEmpty(this.symbols);
+	}
+
 	link() {
 		DictionaryUtils.forEach(this.structs, (struct) => struct.link());
 	}
@@ -47,6 +54,7 @@ export default class SourceFile {
 
 export interface SourceFileJson {
 
+	readonly title?: string;
 	readonly expandImports?: boolean;
 	readonly description?: string;
 	readonly symbols?: any;
