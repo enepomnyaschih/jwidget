@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {Thenable} from "es6-promise";
 import CancelToken, {runAsync} from "./CancelToken";
 
 /**

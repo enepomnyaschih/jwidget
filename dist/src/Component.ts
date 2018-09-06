@@ -310,7 +310,7 @@ export default class Component extends Class {
 	 */
 	renderTo(el: string | HTMLElement | JQuery): this {
 		this.render();
-		jQuery(el)[0].appendChild(this._el[0]);
+		jQuery(<any>el)[0].appendChild(this._el[0]);
 		this._afterAppend();
 		return this;
 	}
@@ -323,7 +323,7 @@ export default class Component extends Class {
 	 */
 	renderAs(el: string | HTMLElement | JQuery): this {
 		this.render();
-		DomUtils.replace(jQuery(el)[0], this._el[0], true);
+		DomUtils.replace(jQuery(<any>el)[0], this._el[0], true);
 		this._afterAppend();
 		return this;
 	}

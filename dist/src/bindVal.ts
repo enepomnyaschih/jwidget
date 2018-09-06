@@ -88,7 +88,7 @@ class ValueListener extends Class {
 	}
 
 	_update() {
-		this._target.set(this.el.val());
+		this._target.set(<any>this.el.val());
 	}
 }
 

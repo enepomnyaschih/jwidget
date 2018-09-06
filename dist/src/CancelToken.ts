@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {Promise, Thenable} from "es6-promise";
 import Destroyable from "./Destroyable";
 import dummyDestroyable from "./dummyDestroyable";
 import Event from "./Event";

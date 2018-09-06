@@ -36,7 +36,7 @@ export default class DomTemplate extends AbstractTemplate {
 	 */
 	constructor(el: HTMLElement | JQuery) {
 		super();
-		this.el = jQuery(el)[0];
+		this.el = <any>jQuery(el)[0];
 	}
 
 	get requiresAfterAppend(): boolean {

@@ -1,6 +1,6 @@
 {
   "name": "jwidget",
-  "version": "2.0.21",
+  "version": "2.0.23",
   "description": "Object-oriented FrontEnd MV framework",
   "homepage": "http://enepomnyaschih.github.io/jwidget",
   "bugs": {
@@ -17,23 +17,23 @@
     "type": "git",
     "url": "https://github.com/enepomnyaschih/jwidget.git"
   },
-  "dependencies": {
-    "@types/es6-promise": "0.0.32",
-    "@types/jasmine": "^2.5.42",
-    "@types/jquery": "2.0.39"
+  "peerDependencies": {
+    "@types/jquery": "^3.3.6",
+    "es6-promise": "^4.2.4",
+    "jquery": "^3.3.1",
+    "typescript": "^3.0.3",
+    "webpack": "^4.16.0"
   },
   "devDependencies": {
-    "clean-webpack-plugin": "0.1.14",
-    "html-webpack-plugin": "2.26.0",
-    "jasmine-core": "^2.9.1",
-    "karma": "^1.4.1",
-    "karma-chrome-launcher": "^2.0.0",
-    "karma-jasmine": "^1.1.0",
-    "source-map-loader": "0.1.5",
-    "ts-loader": "1.3.3",
-    "typescript": "2.6.x"
+    "@types/jquery": "3.3.x",
+    "es6-promise": "4.2.x",
+    "jquery": "3.3.x",
+    "typescript": "3.0.x",
+    "webpack": "4.16.x"
   },
   "scripts": {
-    "setup": "npm install -g bower typescript webpack karma-cli doc & npm link typescript webpack & bower install & npm install"
+    "build": "node_modules/.bin/tsc",
+    "clean": "",
+    "publish": "./clea"
   }
 }

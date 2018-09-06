@@ -122,13 +122,12 @@ module.exports = function (env) {
 				filename: id + ".html",
 				template: "!!html-webpack-plugin/lib/loader.js!./templates/index.html",
 				inject: "body",
-				prefix: "",
 				suffix: optimize ? ".min" : "",
 				dc: new Date().getTime(),
 				ga: optimize ? ga : ""
 			});
 		})).concat([
-			new HtmlWebpackPrefixPlugin()
+			//new HtmlWebpackPrefixPlugin()
 		]).concat(optimize ? [
 			new webpack.optimize.UglifyJsPlugin({
 				minimize: true

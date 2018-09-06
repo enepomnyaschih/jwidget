@@ -41,7 +41,7 @@ let _fragment: DocumentFragment = null;
  * Checks if value is a jQuery element.
  */
 export function isElement(value: any): boolean {
-	return value instanceof jQuery.fn.init;
+	return value instanceof (<any>jQuery.fn).init;
 }
 
 const lifeInputTags = ["text", "password", "email", "number", "search", "tel", "url"];
