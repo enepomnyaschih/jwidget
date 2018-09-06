@@ -32,8 +32,6 @@
     "webpack": "4.16.x"
   },
   "scripts": {
-    "build": "node_modules/.bin/tsc",
-    "clean": "",
-    "publish": "./clea"
+    "build": "node_modules/.bin/tsc"
   }
 }
