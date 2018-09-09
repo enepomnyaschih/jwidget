@@ -1,5 +1,13 @@
 name: jWidget 2
 
+statics:
+- src: docstatic
+  dest: .
+- src: examples/public
+  dest: samples/public
+- src: examples/src
+  dest: samples/src
+
 references:
   # External references
   lodash:

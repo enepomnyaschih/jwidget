@@ -1,12 +1,12 @@
 import * as path from "path";
-import * as DictionaryUtils from "./utils/Dictionary";
-import SourceFile from "./SourceFile";
-import StructSymbol from "./symbols/Struct";
 import Context from "./Context";
-import Reference from "./models/Reference";
-import Extension from "./models/Extension";
 import Dictionary from "./Dictionary";
 import DocError from "./DocError";
+import Extension from "./models/Extension";
+import Reference from "./models/Reference";
+import SourceFile from "./SourceFile";
+import StructSymbol from "./symbols/Struct";
+import * as DictionaryUtils from "./utils/Dictionary";
 
 export default class Project {
 
@@ -15,7 +15,7 @@ export default class Project {
 	readonly name: string;
 	readonly inputRelativePath: string;
 	readonly outputRelativePath: string;
-	readonly staticRelativePath: string;
+	readonly statics: StaticDefinition[];
 	readonly context: Context;
 	readonly includes: Dictionary<string> = {};
 
@@ -23,7 +23,7 @@ export default class Project {
 		this.name = json.name;
 		this.inputRelativePath = json.input || "doc";
 		this.outputRelativePath = json.output || "docoutput";
-		this.staticRelativePath = json.static || "docstatic";
+		this.statics = json.statics || [];
 		this.context = new ProjectContext(this, json.references);
 		this.includes = json.includes || {};
 	}
@@ -33,15 +33,15 @@ export default class Project {
 	}
 
 	get inputAbsolutePath() {
-		return path.resolve(this.dirAbsolutePath, this.inputRelativePath);
+		return this.getAbsolutePath(this.inputRelativePath);
 	}
 
 	get outputAbsolutePath() {
-		return path.resolve(this.dirAbsolutePath, this.outputRelativePath);
+		return this.getAbsolutePath(this.outputRelativePath);
 	}
 
-	get staticAbsolutePath() {
-		return path.resolve(this.dirAbsolutePath, this.staticRelativePath);
+	getAbsolutePath(relativePath: string) {
+		return path.resolve(this.dirAbsolutePath, relativePath);
 	}
 
 	link() {
@@ -74,9 +74,15 @@ export interface ProjectJson {
 	readonly name?: string;
 	readonly input?: string;
 	readonly output?: string;
-	readonly static?: string;
+	readonly statics?: StaticDefinition[];
 	readonly references?: Dictionary<Reference>;
 	readonly includes?: Dictionary<string>;
+}
+
+export interface StaticDefinition {
+
+	readonly src: string;
+	readonly dest: string;
 }
 
 class ProjectContext extends Context {

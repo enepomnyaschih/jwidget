@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import * as path from "path";
 import * as yaml from "js-yaml";
+import * as path from "path";
 
 export function mkdir(filePath: string) {
 	const dirname = path.dirname(filePath);
@@ -42,7 +42,9 @@ export function copy(src: string, dest: string) {
 		return;
 	}
 	const fileNames = fs.readdirSync(src);
-	mkdir(dest);
+	if (!fs.existsSync(dest)) {
+		fs.mkdirSync(dest);
+	}
 	fileNames.forEach((fileName) => {
 		copy(path.resolve(src, fileName), path.resolve(dest, fileName));
 	});
