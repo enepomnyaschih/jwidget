@@ -489,6 +489,31 @@ references:
     file: jwidget/reverser/list
     symbol: reverseList
 
+  # Tutorials
+  tutorial1:
+    file: tutorials/tutorial1
+    label: Tutorial. Part 1. Model and view
+
+  tutorial2:
+    file: tutorials/tutorial2
+    label: Tutorial. Part 2. Child component collections
+
+  tutorial3:
+    file: tutorials/tutorial3
+    label: Tutorial. Part 3. Named child components
+
+  tutorial4:
+    file: tutorials/tutorial4
+    label: Tutorial. Part 4. Events
+
+  tutorial5:
+    file: tutorials/tutorial5
+    label: Tutorial. Part 5. Properties
+
+  tutorial6:
+    file: tutorials/tutorial6
+    label: Tutorial. Part 6. Collection synchronizers
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">

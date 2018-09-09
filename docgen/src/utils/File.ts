@@ -42,9 +42,7 @@ export function copy(src: string, dest: string) {
 		return;
 	}
 	const fileNames = fs.readdirSync(src);
-	if (!fs.existsSync(dest)) {
-		fs.mkdirSync(dest);
-	}
+	mkdir(path.resolve(dest, "dummy"));
 	fileNames.forEach((fileName) => {
 		copy(path.resolve(src, fileName), path.resolve(dest, fileName));
 	});

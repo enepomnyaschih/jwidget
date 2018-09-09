@@ -2,6 +2,8 @@ title: Part 1. Model and view - jWidget 2 tutorials
 
 description: |
   <div class="container">
+    <h2>Tutorial. Part 1. Model and view</h2>
+
     %example:tutorial1
 
     <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-1">https://github.com/enepomnyaschih/mt/tree/mt-2.1-1</a> (Git branch).</p>
@@ -429,5 +431,5 @@ description: |
     flexible: you can override any element rendering in an inherited component class. Let's stick to this way in future
     samples.</p>
 
-    <a href="tutorial2.html">
+    %tutorial2
   </div>
