@@ -13,6 +13,7 @@ import ISymbol from "../symbols/ISymbol";
 import StructSymbol, {TypeVar} from "../symbols/Struct";
 import ValueSymbol from "../symbols/Value";
 import SymbolVisitor from "../SymbolVisitor";
+import Topic from "../Topic";
 import * as DictionaryUtils from "../utils/Dictionary";
 import {
 	getReferenceUrl,
@@ -25,7 +26,6 @@ import {
 } from "../utils/Doc";
 import {mkdir} from "../utils/File";
 import {htmlEncode} from "../utils/String";
-import Topic from "../Topic";
 
 export default function bootstrapTemplate(project: Project) {
 	for (let fileId in project.files) {
@@ -62,10 +62,8 @@ function renderFile(file: SourceFile) {
 						<a class="nav-link" href="${homeUrl}">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link disabled" href="${getRelativeUrl("getstarted.html", file.id)}">Get started</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link disabled" href="${getRelativeUrl("tutorial.html", file.id)}">Tutorial</a>
+						<a class="nav-link dropdown-toggle" href="${getRelativeUrl("tutorials/tutorial1.html", file.id)}"
+							tabindex="0">Tutorial <span class="sr-only">(current)</span></a>
 					</li>
 					<li class="nav-item">
 						<a class="doc-index-link nav-link dropdown-toggle" href="${getRelativeUrl("doc.html", file.id)}"
@@ -96,9 +94,11 @@ function renderFile(file: SourceFile) {
 						<pre>${renderConsumption(file)}</pre>
 						${renderSymbols(file)}
 					</div>
+					${docFooter}
 				</div>
-			` : renderText(file.context, file.description)}
+			` : `${renderText(file.context, file.description)}${docFooter}`}
 		</div>
+		<div class="doc-index-popover">${renderText(file.context, "%%DocumentationIndex")}</div>
 		<div class="doc-index-popover">${renderText(file.context, "%%DocumentationIndex")}</div>
 		<script type="text/javascript" src="${getRelativeUrl("jquery-3.2.1.min.js", file.id)}"></script>
 		<script type="text/javascript" src="${getRelativeUrl("bootstrap.bundle.min.js", file.id)}"></script>
@@ -112,6 +112,9 @@ const docToolbar =
 		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
 		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
 	</div>`;
+
+const docFooter =
+	'<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>';
 
 function renderIndex(file: SourceFile) {
 	return DictionaryUtils.join(DictionaryUtils.map(file.groups, (group, key) => (

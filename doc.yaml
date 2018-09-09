@@ -179,6 +179,14 @@ references:
     file: jwidget/Component
     member: beforeRender
 
+  afterRender:
+    file: jwidget/Component
+    member: afterRender
+
+  getElement:
+    file: jwidget/Component
+    member: getElement
+
   renderTo:
     file: jwidget/Component
     member: renderTo
@@ -490,6 +498,10 @@ references:
     symbol: reverseList
 
   # Tutorials
+  tutorial:
+    file: tutorials/tutorial
+    label: Tutorial
+
   tutorial1:
     file: tutorials/tutorial1
     label: Tutorial. Part 1. Model and view

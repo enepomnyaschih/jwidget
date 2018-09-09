@@ -38,6 +38,12 @@ dd dt {
     color: darkgray;
 }
 
+footer {
+    font-size: 11px;
+    padding: 10px 0;
+    text-align: center;
+}
+
 .popover {
     max-height: calc(100% - 60px);
     max-width: calc(100% - 20px);
