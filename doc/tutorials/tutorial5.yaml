@@ -1,0 +1,109 @@
+title: Part 5. Properties - jWidget 2 tutorials
+
+description: |
+  <div class="container">
+  <h2>Tutorial. Part 5. Properties</h2>
+
+  %example:tutorial5
+
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-5">https://github.com/enepomnyaschih/mt/tree/mt-2.1-5</a> (Git branch).</p>
+
+  <p>Now it's the time to learn a new layer of jWidget: %Property and its interfaces %Bindable and %IProperty.
+  <b>Property</b> is a value that can notify the clients about its modification. So, %Property is a class with two
+  methods: %get, %set - and an event %changeEvent. Whenever you change the value of the property with %set method call,
+  %changeEvent is triggered. The event is not triggered if the value is not changed in result of %set method call.</p>
+
+  <p>So, in our Mini-Twitter example, we can simplify Like/Unlike and Retweet/Unretweet behaviour implementation by
+  introducing two boolean properties.</p>
+
+  <p>First, let's change the model. We need to replace simple boolean fields with properties.</p>
+
+  <h5>src/model/Tweet.ts</h5>
+
+  <pre>
+  import %IProperty from "jwidget/IProperty";
+  import %Property from "jwidget/Property";
+
+  export default class Tweet {
+
+      // ...
+
+      readonly like: %IProperty<boolean>;
+      readonly retweet: %IProperty<boolean>;
+
+      constructor(config: TweetConfig) {
+          this.fullName = config.fullName;
+          this.shortName = config.shortName;
+          this.avatarUrl48 = config.avatarUrl48;
+          this.contentHtml = config.contentHtml;
+          this.time = config.time;
+          this.like = new %Property(config.like);
+          this.retweet = new %Property(config.retweet);
+      }
+  </pre>
+
+  <p>We can now remove the corresponding events and setters - it is quite a chunk of code. Let's modify the view now.
+  Instead of listening property change event manually, we can utilize property bindings.</p>
+
+  <p>First, we're going to build string properties with "Like/Unlike" and "Retweet/Unretweet" values from
+  original boolean properties. To do so, we can use %mapOfBindable method. Since life time of the model can be longer
+  than life time of the view (because the model can live without a view, and not vice versa), it is important to
+  aggregate this binding in the view with %own method.</p>
+
+  <p>Second, we're going to bind DOM elements to all these properties with %bindText function. It doesn't make much
+  sense to aggregate this binding, because the source property belongs to the view itself, and the binding is so simple
+  that it doesn't create any objects in the output.</p>
+
+  <p>Third, we should also bind "active" CSS class presence to the values of corresponding properties with %bindClass
+  function. Since this is a binding to model, we must aggregate it with %own method.</p>
+
+  <h5>src/view/TweetView.ts</h5>
+
+  <pre>
+      protected renderLike(el: JQuery) {
+          const text = this.%own(this.tweet.like.%mapOfBindable(like => like ? "Unlike" : "Like"));
+          %bindText(el, text);
+          this.%own(%bindClass(el, "active", this.tweet.like));
+          el.on("click", event => {
+              event.preventDefault();
+              this.tweet.like.%set(!this.tweet.like.%get());
+          });
+      }
+
+      protected renderRetweet(el: JQuery) {
+          const text = this.%own(this.tweet.retweet.%mapOfBindable(retweet => retweet ? "Unretweet" : "Retweet"));
+          %bindText(el, text);
+          this.%own(%bindClass(el, "active", this.tweet.retweet));
+          el.on("click", event => {
+              event.preventDefault();
+              this.tweet.retweet.%set(!this.tweet.retweet.%get());
+          });
+      }
+  </pre>
+
+  <p>And we can delete methods _updateLike and _updateRetweet - we don't use them anymore.</p>
+
+  <p>Run the application.</p>
+
+  <p>The syntax of properties and bindings is clean and straightforward. They let you make code shorter and more
+  readable. Take a look at %Bindable documentation for full list of %bindings.</p>
+
+  %tutorial6
+  </div>
+
+references:
+  get:
+    file: jwidget/Bindable
+    member: get
+
+  set:
+    file: jwidget/IProperty
+    member: set
+
+  changeEvent:
+    file: jwidget/Bindable
+    member: changeEvent
+
+  bindings:
+    file: jwidget/Bindable
+    symbol: bindings
