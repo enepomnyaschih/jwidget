@@ -1,0 +1,229 @@
+title: Part 2. Child component collections - jWidget 2 tutorials
+
+description: |
+  <div class="container">
+  <h2>Tutorial. Part 2. Child component collections</h2>
+
+  %example:tutorial2
+
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-2">https://github.com/enepomnyaschih/mt/tree/mt-2.1-2</a> (Git branch).</p>
+
+  <p>In this part, we meet %List class. We will try its algorithm %mapList and learn how to display child UI component
+  lists. Our goal is to render a list of tweets developed in the previous part.</p>
+
+  <p>Like in the first sample, let's start with the model. We must put several tweets into a list. Let's define class
+  TweetFeed for this. It should contain a list of tweets.</p>
+
+  <h5>src/model/TweetFeed.ts</h5>
+
+  <pre>
+  import %IList from "jwidget/IList";
+  import %List from "jwidget/List";
+  import %ReadonlyList from "jwidget/ReadonlyList";
+  import Tweet from "./Tweet";
+
+  export default class TweetFeed {
+
+      private _tweets: %IList<Tweet>;
+
+      constructor(tweets: Tweet[] = []) {
+          this._tweets = new %List(tweets);
+      }
+
+      get tweets(): %ReadonlyList<Tweet> {
+          return this._tweets;
+      }
+
+      static createByJson(json: any) {
+          return new TweetFeed((<any[]>json || []).map(Tweet.createByJson));
+      }
+  }
+  </pre>
+
+  <p>We have defined tweet list as %IList, instantiated it as %List and shared it as %ReadonlyList. Actually, %IList
+  is an extension of %ReadonlyList interface with modification methods such as %add, and %List is a class
+  implementing %IList interface. By implementing TweetFeed this way, we provide clients of this class with readonly
+  access to the list of tweets, but keep the possibility to modify it internally.</p>
+
+  <p>Let's continue with the view. Define class TweetFeedView.</p>
+
+  <h5>src/view/TweetFeedView.jw.html</h5>
+
+  <pre>
+  <div jwclass="mt-tweet-feed">
+      <div jwid="header">Tweets</div>
+      <div jwid="tweets"></div>
+      <div jwid="footer">...</div>
+  </div>
+  </pre>
+
+  <h5>src/view/TweetFeedView.ts</h5>
+
+  <pre>
+  import {%destroy} from "jwidget";
+  import %Component from "jwidget/Component";
+  import {%mapList} from "jwidget/mapper/list";
+  import %template from "jwidget/template";
+  import TweetFeed from "../model/TweetFeed";
+  import TweetView from "./TweetView";
+
+  @%template(require<string>("./TweetFeedView.jw.html"))
+  export default class TweetFeedView extends %Component {
+
+      constructor(private tweetFeed: TweetFeed) {
+          super();
+      }
+
+      protected renderTweets() {
+          return this.%own(%mapList(this.tweetFeed.tweets, tweet => new TweetView(tweet), {%destroy}));
+      }
+  }
+  </pre>
+
+  <p>Let's review renderTweets method in details. Similarly to TweetView component, we've defined method
+  <tt>render&lt;ChildId&gt;</tt> for element with jwid="tweets". But now this method not just fills the element with
+  data, but renders a list of child components into it.</p>
+
+  <p>This list is created from model via collection item conversion function %mapList. It returns a list of tweet views.
+  It works better here than usual %map method for the following two reasons.</p>
+
+  <p>First, it subscribes itself to all source list modification events and synchronizes target list to source list any
+  time the modification happens. This is an example of jWidget 2 data binding mechanism. Please notice that %mapList
+  can be used to map not just model to view, but also model to another model and view to another view. This is an
+  advantage of jWidget 2 over the other frontend frameworks. This is very flexible and transparent solution.</p>
+
+  <p>Second, it controls life time of the mapped items. Pay attention to %own method call. This is <b>object aggregation
+  method</b> of jWidget. If object A owns object B, then destruction of object A automatically triggers destruction of
+  object B. In our case, destruction of TweetFeedView automatically triggers destruction of tweet view list. The list
+  destruction unbinds it from the model, which allows the browser to release the memory and prevent unintended source
+  list modification handling. Also, we pass %destroy argument to %mapList method - it instructs the synchronizer to
+  destroy tweet views when they are not needed anymore, i.e. once the corresponding tweets get removed from the model
+  or once the entire target collection gets destroyed. It is a good practice to destroy child UI components when you
+  don't need them anymore, because any UI component may initialize its own bindings you can be unaware of. See
+  %commonPractices for more instructions about how this can be achieved.</p>
+
+  <p>Finally, let's define styles.</p>
+
+  <h5>src/view/TweetFeedView.styl</h5>
+
+  <pre>
+  .mt-tweet-feed
+      background #fff
+      border 1px solid rgba(0,0,0,0.45)
+      border-radius 6px
+      box-sizing border-box
+      width 522px
+
+      &-header
+          color #333
+          font-family Arial, sans-serif
+          font-size 18px
+          font-weight bold
+          padding 10px
+          text-shadow 0 1px 0 #fff
+
+      &-footer
+          border-top 1px solid #e8e8e8
+          padding 8px
+          text-align center
+  </pre>
+
+  <p>Add the file to index.styl:</p>
+
+  <pre>
+  // All Stylus files should be imported here in the preferred order
+
+  @import "view/TweetFeedView"
+  @import "view/TweetView"
+  </pre>
+
+  <p>And prepare new test data.</p>
+
+  <h5>src/index.ts</h5>
+
+  <pre>
+  import "es6-promise/auto";
+  import "script-loader!jquery";
+  import "./index.styl";
+
+  import TweetFeed from "./model/TweetFeed";
+  import TweetFeedView from "./view/TweetFeedView";
+
+  $(function () {
+      const tweetFeed = TweetFeed.createByJson([
+          {
+              "fullName": "Road Runner",
+              "shortName": "roadrunner",
+              "avatarUrl48": "backend/avatar-48.png",
+              "contentHtml": "jWidget documentation is here <a href=\"https://enepomnyaschih.github.com/jwidget\" target=\"_blank\">enepomnyaschih.github.com/jwidget</a>",
+              "timeAgo": 215000,
+              "like": false,
+              "retweet": true
+          },
+          {
+              "fullName": "Road Runner",
+              "shortName": "roadrunner",
+              "avatarUrl48": "backend/avatar-48.png",
+              "contentHtml": "Tweet feed is growing",
+              "timeAgo": 515000,
+              "like": false,
+              "retweet": false
+          }
+      ]);
+      new TweetFeedView(tweetFeed).%renderTo("body");
+  });
+  </pre>
+
+  <p>Running the application in the browser displays the expected result.</p>
+
+  <p>Let's review one more way of child component rendering, without <tt>render&lt;ChildId&gt;</tt> method definition.
+  Let's remove renderTweets method and override %afterRender method instead:</p>
+
+  <pre>
+  import {%destroy} from "jwidget";
+  import %Component from "jwidget/Component";
+  import {%mapList} from "jwidget/mapper/list";
+  import %template from "jwidget/template";
+  import TweetFeed from "../model/TweetFeed";
+  import TweetView from "./TweetView";
+
+  @%template(require<string>("./TweetFeedView.jw.html"))
+  export default class TweetFeedView extends %Component {
+
+      constructor(private tweetFeed: TweetFeed) {
+          super();
+      }
+
+      protected %afterRender() {
+          super.%afterRender();
+          const tweetViews = this.%own(%mapList(this.tweetFeed.tweets, tweet => new TweetView(tweet), {%destroy}));
+          this.%addList(tweetViews, "tweets");
+      }
+  }
+  </pre>
+
+  <p>This code is equivalent to the original one, but child component list is added dynamically with %addList method.
+  This method takes element "jwid" as second argument, which should be used as a container for child components passed
+  in the first argument. If we won't pass second argument, the array will be rendered into root element. Use the way
+  you like more. I'll stick to the first way, utilizing <tt>render&lt;ChildId&gt;</tt> method.</p>
+
+  %tutorial3
+  </div>
+
+references:
+  add:
+    file: jwidget/IList
+    member: add
+
+  map:
+    file: jwidget/IList
+    member: map
+
+  commonPractices:
+    file: jwidget/Component
+    symbol: commonPractices
+    label: Common practices in child component management
+
+  addList:
+    file: jwidget/Component
+    member: addList

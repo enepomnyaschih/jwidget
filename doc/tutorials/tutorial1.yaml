@@ -273,6 +273,7 @@ description: |
   .mt-tweet
       background #fff
       border-top 1px solid #e8e8e8
+      box-sizing border-box
       font-family Arial,sans-serif
       font-size 14px
       overflow hidden

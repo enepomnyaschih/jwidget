@@ -1,11 +1,11 @@
-import * as DictionaryUtils from "./utils/Dictionary";
-import ISymbol from "./symbols/ISymbol";
-import Project from "./Project";
-import StructSymbol from "./symbols/Struct";
 import Context from "./Context";
-import Reference from "./models/Reference";
 import Dictionary from "./Dictionary";
+import Reference from "./models/Reference";
 import parseSymbol from "./parseSymbol";
+import Project from "./Project";
+import ISymbol from "./symbols/ISymbol";
+import StructSymbol from "./symbols/Struct";
+import * as DictionaryUtils from "./utils/Dictionary";
 
 // TODO: Probably it makes sense to extract base class for tutorials (for now, empty symbol list indicates tutorial).
 export default class SourceFile {
@@ -84,7 +84,7 @@ class SourceFileContext extends Context {
 	}
 
 	protected getDefaultReference(key: string): Reference {
-		if (key === this.sourceFile.token) {
+		if (key === this.sourceFile.token && this.sourceFile.isModule) {
 			return {};
 		}
 		const symbol = this.sourceFile.symbols[key];
