@@ -64,7 +64,7 @@ description: |
     gives you confidence in your ability to implement as complicated and big MV application as you would like to. You
     are free to use all well-known OOD patterns and follow OOD
     <a href="http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)" target="_blank">SOLID principles</a>. Read the
-    %tutorial for more examples.</p>
+    %TutorialIndex for more examples.</p>
     <p>The difference between jWidget and other Model-View frameworks is the approach of working with properties and
     collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding
     is performed explicitly using %Property and its bindings. Instead of special tags-repeaters in HTML templates, you work with

@@ -63,11 +63,11 @@ function renderFile(file: SourceFile) {
 					</li>
 					<li class="nav-item">
 						<a class="nav-link dropdown-toggle" href="${getRelativeUrl("tutorials/tutorial1.html", file.id)}"
-							tabindex="0">Tutorial <span class="sr-only">(current)</span></a>
+							data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
 					</li>
 					<li class="nav-item">
-						<a class="doc-index-link nav-link dropdown-toggle" href="${getRelativeUrl("doc.html", file.id)}"
-							tabindex="0">Documentation <span class="sr-only">(current)</span></a>
+						<a class="nav-link dropdown-toggle" href="${getRelativeUrl("doc.html", file.id)}"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
 					</li>
 				</ul>
 				<form class="form-inline my-2 my-lg-0">
@@ -98,8 +98,8 @@ function renderFile(file: SourceFile) {
 				</div>
 			` : `${renderText(file.context, file.description)}${docFooter}`}
 		</div>
-		<div class="doc-index-popover">${renderText(file.context, "%%DocumentationIndex")}</div>
-		<div class="doc-index-popover">${renderText(file.context, "%%DocumentationIndex")}</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none">${renderText(file.context, "%%TutorialIndex")}</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none">${renderText(file.context, "%%DocumentationIndex")}</div>
 		<script type="text/javascript" src="${getRelativeUrl("jquery-3.2.1.min.js", file.id)}"></script>
 		<script type="text/javascript" src="${getRelativeUrl("bootstrap.bundle.min.js", file.id)}"></script>
 		<script type="text/javascript" src="${getRelativeUrl("scripts.js", file.id)}"></script>

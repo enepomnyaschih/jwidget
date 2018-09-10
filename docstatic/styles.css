@@ -44,15 +44,30 @@ footer {
     text-align: center;
 }
 
-.popover {
+.doc-dropdown {
+    background: white;
+    border: 1px solid lightgray;
+    border-radius: 5px;
     max-height: calc(100% - 60px);
-    max-width: calc(100% - 20px);
     overflow-y: auto;
+    position: fixed;
+    top: 50px;
+    z-index: 1;
+}
+
+#tutorial-dropdown {
+    left: 150px;
+    width: 500px;
+}
+
+#index-dropdown {
+    left: 10px;
+    max-width: calc(100% - 20px);
     width: 1200px;
 }
 
 @media (max-width: 991.99px) {
-    .popover,
+    .doc-dropdown,
     .dropdown-toggle:after {
         display: none;
     }

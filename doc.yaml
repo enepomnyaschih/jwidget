@@ -498,9 +498,9 @@ references:
     symbol: reverseList
 
   # Tutorials
-  tutorial:
-    file: tutorials/tutorial
-    label: Tutorial
+  TutorialIndex:
+    file: tutorial
+    label: jWidget 2 tutorials
 
   tutorial1:
     file: tutorials/tutorial1
@@ -683,6 +683,19 @@ includes:
           </ul>
         </div>
       </div>
+    </div>
+
+  TutorialIndex: |
+    <div class="container-fluid">
+      <h5>%TutorialIndex</h5>
+      <ul>
+        <li>%tutorial1</li>
+        <li>%tutorial2</li>
+        <li>%tutorial3</li>
+        <li>%tutorial4</li>
+        <li>%tutorial5</li>
+        <li>%tutorial6</li>
+      </ul>
     </div>
 
   EventExample: |
