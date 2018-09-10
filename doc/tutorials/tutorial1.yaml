@@ -139,7 +139,7 @@ description: |
 
     <p>This is usual HTML except one thing: special attributes "jwclass" and "jwid".
     "jwclass" is a root CSS-class of the component, and the prefix for all elements which have "jwid" defined.
-    CSS-class of each element with "jwid" will be <tt>&lt;jwclass&gt;-&lt;jwid&gt;</tt>. So,
+    CSS-class of each element with "jwid" will be <b>&lt;jwclass&gt;-&lt;jwid&gt;</b>. So,
     the template above will expand to the next HTML:</p>
 
   <pre>
@@ -161,7 +161,7 @@ description: |
   </div>
   </pre>
 
-    <p>Presence of a common prefix <tt>mt-tweet-</tt> in all elements simplifies component slicing via various
+    <p>Presence of a common prefix <b>mt-tweet-</b> in all elements simplifies component slicing via various
     CSS-preprocessors like <a href="http://sass-lang.com" target="_blank">Sass</a>,
     <a href="http://lesscss.org" target="_blank">LESS</a> and
     <a href="http://stylus-lang.com/" target="_blank">Stylus</a>.</p>
@@ -359,8 +359,8 @@ description: |
     <img src="tweet-view.png">
 
     <p>Let's review one more thing. We can write JS code of the component in a different way. Instead of accessing the
-    elements via %getElement method, let's just define methods <tt>render&lt;ChildId&gt;</tt>, where
-    <tt>&lt;ChildId&gt;</tt> is "jwid" of an element written in CapitalizedCamelCase:</p>
+    elements via %getElement method, let's just define methods <b>render&lt;ChildId&gt;</b>, where
+    <b>&lt;ChildId&gt;</b> is "jwid" of an element written in CapitalizedCamelCase:</p>
 
     <h5>src/view/TweetView.ts</h5>
 

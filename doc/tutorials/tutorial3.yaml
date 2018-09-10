@@ -1,0 +1,490 @@
+title: Part 3. Named child components - jWidget 2 tutorials
+
+description: |
+  <div class="container">
+  <h2>Tutorial. Part 3. Named child components</h2>
+
+  %example:tutorial3
+
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-3">https://github.com/enepomnyaschih/mt/tree/mt-2.1-3</a> (Git branch).</p>
+
+  <p>In this part we learn how to render child components that don't belong to lists. Examples of such components are
+  user profile panel and tweet feed - they are child components of application.</p>
+
+  <img src="application.png">
+
+  <p>First, let's implement Application class - root view of the application.</p>
+
+  <h5>src/view/Application.jw.html</h5>
+
+  <pre>
+  <div jwclass="mt-application">
+      <div jwid="wrap">
+          <div jwid="profile-box"></div>
+          <div jwid="tweets"></div>
+      </div>
+  </div>
+  </pre>
+
+  <h5>src/view/Application.ts</h5>
+
+  <pre>
+  import %Component from "jwidget/Component";
+  import %template from "jwidget/template";
+  import ApplicationData from "../model/ApplicationData";
+  import TweetFeed from "./TweetFeed";
+
+  @%template(require<string>("./Application.jw.html"))
+  export default class Application extends %Component {
+
+      constructor(private data: ApplicationData) {
+          super();
+      }
+
+      protected renderTweets() {
+          return this.%own(new TweetFeed(this.data.tweets));
+      }
+
+      protected %afterRender() {
+          super.%afterRender();
+          $("html").addClass("mt-html");
+          $("body").addClass("mt-body");
+      }
+  }
+  </pre>
+
+  <p>Once again, we see method <b>render&lt;ChildId&gt;</b> (renderTweets), and once again it does something new. This
+  time, it creates and returns an instance of TweetFeed class. It means that the instance of TweetFeed will be
+  rendered at the place of element with jwid="tweets". This element will be completely replaced with the component,
+  and all its CSS classes (here: "mt-application-tweets") will be copied into root element of the component.</p>
+
+  <p>Let's review some details of this feature.</p>
+
+  <p><b>First</b>, it is important to understand that after instantiation of TweetFeed class object the component
+  is not rendered yet. It means that it doesn't have HTML elements and capability to add child components.
+  Component will be rendered automatically somewhere inside the framework, later. But if you really need to perform
+  some additional actions with the rendered component (for example, add a CSS-class),
+  you can render it explicitly using %render method.</p>
+
+  <pre>
+      protected renderTweets() {
+          const view = this.%own(new TweetFeed(this.data.tweets));
+          view.%render();
+          view.el.addClass("my-extra-class");
+          return view;
+      }
+  </pre>
+
+  <p><b>Second</b>, like in the previous parts, we should have a way to add a child component without
+  <b>render&lt;ChildId&gt;</b> method definition. You can do it using %children map.</p>
+
+  <pre>
+      protected %afterRender() {
+          super.%afterRender();
+          this.%children.%put("tweets", this.%own(new TweetFeed(this.data.tweets)));
+      }
+  </pre>
+
+  <p>Select the way you like more, but, again, I will stick to <b>render&lt;ChildId&gt;</b> method.</p>
+
+  <p>Add styles.</p>
+
+  <h5>src/view/Application.styl</h5>
+
+  <pre>
+  .blocklink
+      color inherit
+      display block
+      font inherit
+      font-size 100%
+      text-decoration inherit
+
+  .mt-html
+  .mt-body
+      background #c0deed
+
+  .mt-application
+      font-family Arial, sans-serif
+
+      &-wrap
+          background rgba(255,255,255,0.5)
+          box-sizing border-box
+          margin 0 auto
+          overflow hidden
+          padding 15px
+          width 868px
+
+      &-profile-box
+          float left
+          width 302px
+
+      &-tweets
+          float left
+          margin-left 13px
+  </pre>
+
+  <p>Update index.styl and index.ts to apply the changes.</p>
+
+  <h5>src/index.styl</h5>
+
+  <pre>
+  // All Stylus files should be imported here in the preferred order
+
+  @import "view/Application"
+  @import "view/TweetFeed"
+  @import "view/TweetView"
+  </pre>
+
+  <h5>src/index.ts</h5>
+
+  <pre>
+  import "es6-promise/auto";
+  import "script-loader!jquery";
+  import "./index.styl";
+
+  import ApplicationData from "./model/ApplicationData";
+  import Application from "./view/Application";
+
+  $(function () {
+      const data = ApplicationData.createByJson([
+          {
+              "fullName": "Road Runner",
+              "shortName": "roadrunner",
+              "avatarUrl48": "backend/avatar-48.png",
+              "contentHtml": "jWidget documentation is here <a href=\"https://enepomnyaschih.github.com/jwidget\" target=\"_blank\">enepomnyaschih.github.com/jwidget</a>",
+              "timeAgo": 215000,
+              "like": false,
+              "retweet": true
+          },
+          {
+              "fullName": "Road Runner",
+              "shortName": "roadrunner",
+              "avatarUrl48": "backend/avatar-48.png",
+              "contentHtml": "Tweet feed is growing",
+              "timeAgo": 515000,
+              "like": false,
+              "retweet": false
+          }
+      ]);
+      new Application(data).%renderTo("body");
+  });
+  </pre>
+
+  <p>We'll see the next result.</p>
+
+  <img src="result-3.png">
+
+  <p>Profile panel is remaining to implement.</p>
+
+  <p>Let's start with model once again. We need to collect data about current user profile. Let's create Profile
+  model.</p>
+
+  <h5>src/model/Profile.ts</h5>
+
+  <pre>
+  export default interface Profile {
+
+      readonly fullName: string;
+      readonly shortName: string;
+      readonly avatarUrl32: string;
+      readonly avatarUrl48: string;
+      readonly tweets: number;
+      readonly following: number;
+      readonly followers: number;
+  }
+  </pre>
+
+  <p>Now, let's add Profile to ApplicationData.</p>
+
+  <h5>src/model/ApplicationData.ts</h5>
+
+  <pre>
+  import %IList from "jwidget/IList";
+  import %List from "jwidget/List";
+  import %ReadonlyList from "jwidget/ReadonlyList";
+  import Profile from "./Profile";
+  import Tweet from "./Tweet";
+
+  export default class ApplicationData {
+
+      private _tweets: %IList<Tweet>;
+
+      constructor(readonly profile: Profile, tweets: Tweet[] = []) {
+          this._tweets = new %List(tweets);
+      }
+
+      get tweets(): %ReadonlyList<Tweet> {
+          return this._tweets;
+      }
+
+      static createByJson(json: any) {
+          return new ApplicationData(json.profile,
+              (<any[]>json.tweets || []).map(Tweet.createByJson));
+      }
+  }
+  </pre>
+
+  <p>Let's switch to view. Implement ProfileBox.</p>
+
+  <h5>src/view/ProfileBox.jw.html</h5>
+
+  <pre>
+  <div jwclass="mt-profile-box">
+      <a jwid="top" class="blocklink" href="#">
+          <div jwid="avatar"></div>
+          <div jwid="full-name"></div>
+          <div jwid="show-profile">Show my profile</div>
+      </a>
+      <div jwid="middle">
+          <a jwid="count tweets" class="blocklink" href="#">
+              <div jwid="count-value tweets-value"></div>
+              <div jwid="count-label">TWEETS</div>
+          </a>
+          <a jwid="count count-border following" class="blocklink" href="#">
+              <div jwid="count-value following-value"></div>
+              <div jwid="count-label">FOLLOWING</div>
+          </a>
+          <a jwid="count count-border followers" class="blocklink" href="#">
+              <div jwid="count-value followers-value"></div>
+              <div jwid="count-label">FOLLOWERS</div>
+          </a>
+      </div>
+      <div jwid="bottom">
+          <form jwid="compose-form">
+              <div jwid="compose-fields">
+                  <textarea jwid="compose-input" placeholder="Compose tweet..."></textarea>
+              </div>
+              <div jwid="compose-buttons">
+                  <input jwid="compose-submit" type="submit" value="Tweet">
+              </div>
+          </form>
+      </div>
+  </div>
+  </pre>
+
+  <h5>src/view/ProfileBox.ts</h5>
+
+  <pre>
+  import %Component from "jwidget/Component";
+  import %template from "jwidget/template";
+  import Profile from "../model/Profile";
+
+  @%template(require<string>("./ProfileBox.jw.html"))
+  export default class ProfileBox extends %Component {
+
+      constructor(private profile: Profile) {
+          super();
+      }
+
+      protected renderTop(el: JQuery) {
+          el.attr("href", "https://twitter.com/" + this.profile.shortName);
+      }
+
+      protected renderAvatar(el: JQuery) {
+          el.css("background-image", "url(" + this.profile.avatarUrl32 + ")");
+      }
+
+      protected renderFullName(el: JQuery) {
+          el.text(this.profile.fullName);
+      }
+
+      protected renderTweets(el: JQuery) {
+          el.attr("href", "https://twitter.com/" + this.profile.shortName);
+      }
+
+      protected renderTweetsValue(el: JQuery) {
+          el.text(this.profile.tweets);
+      }
+
+      protected renderFollowingValue(el: JQuery) {
+          el.text(this.profile.following);
+      }
+
+      protected renderFollowersValue(el: JQuery) {
+          el.text(this.profile.followers);
+      }
+  }
+  </pre>
+
+  <h5>src/view/ProfileBox.styl</h5>
+
+  <pre>
+  .mt-profile-box
+      background #f9f9f9
+      border 1px solid rgba(0,0,0,0.45)
+      border-radius 6px
+      box-sizing border-box
+
+      &-full-name
+      &-count-value
+      &-compose-submit
+          color #333
+          font-family Arial, sans-serif
+          font-size 14px
+          font-weight bold
+          text-shadow 0 1px 0 #fff
+
+      &-show-profile,
+      &-count-label
+          color #999
+          font-family Arial, sans-serif
+          font-size 11px
+          text-shadow 0 1px 0 #fff
+
+      &-top
+          border-bottom 1px solid #e8e8e8
+          overflow hidden
+          padding 12px
+          padding-bottom 2px
+
+      &-avatar
+          background transparent none no-repeat 0 0
+          border-radius 3px
+          float left
+          margin 0 10px 10px 0
+          width 32px
+          height 32px
+
+      &-full-name
+          padding-top 2px
+
+      &-top:hover &-full-name
+          color #0084b4
+          text-decoration underline
+
+      &-middle
+          overflow hidden
+
+      &-count
+          float left
+          padding 7px 12px
+
+          &:hover &-value
+              color #0084b4
+
+          &:hover &-label
+              color #0084b4
+
+          &-border
+              border-left 1px solid #e8e8e8
+
+      &-bottom
+          background #f5f5f5
+          border-radius 0 0 6px 6px
+          border-top 1px solid #e8e8e8
+          padding 10px 12px
+
+      &-compose
+          &-input
+              border 1px solid #ccc
+              border-radius 3px
+              box-sizing border-box
+              padding 8px
+              width 274px
+
+          &-buttons
+              text-align right
+
+          &-submit
+              background #19aadf
+              border 1px solid #057ed0
+              border-radius 4px
+              color #fff
+              cursor pointer
+              padding 6px 10px
+              text-shadow 0 -1px 0 rgba(0,0,0,0.45)
+
+              &:hover
+                  background #09a0d7
+  </pre>
+
+  <p>Add profile box rendering method to Application.</p>
+
+  <pre>
+      protected renderProfileBox() {
+          return this.own(new ProfileBox(this.data.profile));
+      }
+  </pre>
+
+  <p>Register ProfileBox styles.</p>
+
+  <h5>src/index.styl</h5>
+
+  <pre>
+  // All Stylus files should be imported here in the preferred order
+
+  @import "view/Application"
+  @import "view/ProfileBox"
+  @import "view/TweetFeed"
+  @import "view/TweetView"
+  </pre>
+
+  <p>And enhance the data JSON with profile data.</p>
+
+  <h5>src/index.ts</h5>
+
+  <pre>
+  import "es6-promise/auto";
+  import "script-loader!jquery";
+  import "./index.styl";
+
+  import ApplicationData from "./model/ApplicationData";
+  import Application from "./view/Application";
+
+  $(function () {
+      const data = ApplicationData.createByJson({
+          "profile": {
+              "fullName": "Road Runner",
+              "shortName": "roadrunner",
+              "avatarUrl32": "backend/avatar-32.png",
+              "avatarUrl48": "backend/avatar-48.png",
+              "tweets": 380,
+              "following": 21,
+              "followers": 27
+          },
+          "tweets": [
+              {
+                  "fullName": "Road Runner",
+                  "shortName": "roadrunner",
+                  "avatarUrl48": "backend/avatar-48.png",
+                  "contentHtml": "jWidget documentation is here <a href=\"https://enepomnyaschih.github.com/jwidget\" target=\"_blank\">enepomnyaschih.github.com/jwidget</a>",
+                  "timeAgo": 215000,
+                  "like": false,
+                  "retweet": true
+              }, {
+                  "fullName": "Road Runner",
+                  "shortName": "roadrunner",
+                  "avatarUrl48": "backend/avatar-48.png",
+                  "contentHtml": "Tweet feed is growing",
+                  "timeAgo": 515000,
+                  "like": false,
+                  "retweet": false
+              }
+          ]
+      });
+      new Application(data).%renderTo("body");
+  });
+  </pre>
+
+  <p>Here is the result, which represents original requirements.</p>
+
+  <img src="application.png">
+
+  <p>We've learned how to render components and add them into each other. Now it's the time to add a bit of dynamics into
+  our application. We'll describe this in next part.</p>
+
+  %tutorial4
+  </div>
+
+references:
+  render:
+    file: jwidget/Component
+    member: render
+
+  children:
+    file: jwidget/Component
+    member: children
+
+  put:
+    file: jwidget/IMap
+    member: put
