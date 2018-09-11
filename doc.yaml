@@ -526,6 +526,10 @@ references:
     file: tutorials/tutorial6
     label: Tutorial. Part 6. Collection bindings
 
+  philosophy:
+    file: tutorials/philosophy
+    label: jWidget philosophy
+
 includes:
   DocumentationIndex: |
     <div class="container-fluid">
@@ -695,6 +699,10 @@ includes:
         <li>%tutorial4</li>
         <li>%tutorial5</li>
         <li>%tutorial6</li>
+      </ul>
+      <hr>
+      <ul>
+        <li>%philosophy</li>
       </ul>
     </div>
 

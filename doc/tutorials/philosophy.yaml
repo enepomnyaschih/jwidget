@@ -1,0 +1,84 @@
+title: jWidget philosophy
+
+description: |
+  <div class="container">
+  <h2>jWidget philosophy</h2>
+
+  <h3>Model and view</h3>
+
+  <ol>
+  <li>All main application classes and interfaces are classified to model and view.</li>
+  <li>Model stores the data. All data is stored in model.</li>
+  <li>Model may initialize internal data bindings. To control their life time, the model should inherit %Class and %own
+  the bindings.</li>
+  <li>View classes (components) render data to the screen. All components should be inherited from %Component.</li>
+  <li>View has direct references to corresponding models. On user action, component calls corresponding
+  method of model in order to modify it.</li>
+  <li>Model doesn't have direct references to any views, but it triggers events about its modification.</li>
+  <li>View listens model events to make neccessary updates.</li>
+  <li>View should initialize and aggregate data bindings provided by the framework.</li>
+  </ol>
+
+  <h3>Object life time control</h3>
+
+  <ol>
+  <li>You should destroy the following objects:<ul>
+    <li>Bindings that have shorter life time than their source properties/collections.</li>
+    <li>Any objects that may initialize such bindings or other such objects (recursively).</li>
+  </ul></li>
+  <li>An object that issued a binding/object creation is responsible for its destruction.</li>
+  <li>It is optimal to destroy the objects using aggregation mechanism implemented by method %own, or
+  using the internal features of the classes:<ul>
+    <li>Method %IProperty.%ownValue</li>
+    <li>Method %ICollection.%ownItems</li>
+    <li>Config options %Mapper.%destroyOfMapperConfig, %AbstractMapper.%destroyOfCollectionMapperConfig etc.</li>
+  </ul></li>
+  <li>Sometimes it is acceptable to destroy the objects explicitly using method %destroyOfDestroyable.</li>
+  </ol>
+
+  <h3>Data binding</h3>
+
+  <ol>
+  <li>Objects and DOM-elements should never be recreated without a strong reason. Instead, they must be updated using
+  data binding.</li>
+  <li>Data binding of single values is performed with %Property class and its bindings.</li>
+  </ol>
+
+  <h3>Data binding in collections</h3>
+
+  <ol>
+  <li>Data and components are structured based on three collection types: %List, %Map and %Set. Read common theory of
+  algorithms and data structures to learn pros and cons of each collection type.</li>
+  <li>Each collection triggers events about its modification.</li>
+  <li>You don't need to listen all collection events manually. Instead, you should use standard collection bindings.
+  The bindings provide a simple way to connect collections to each other.</li>
+  <li>Collections are closed inside binding methods. In other words, any modification of one collection triggers
+  at most one modification of another collection, which is connected to the first one using standard binding.</li>
+  <li>Almost any user action can be handled by a single manual collection modification in model. All other collections
+  (including component collections in the view) must be synchronized automatically via bindings.</li>
+  <li>For proper and fast application running, it is enough to configure all bindings only once, similarly to
+  indexes and foreign keys configuration in data bases.</li>
+  </ol>
+  </div>
+
+references:
+  ownItems:
+    file: jwidget/ICollection
+    member: ownItems
+
+  destroyOfMapperConfig:
+    file: jwidget/Mapper
+    symbol: Mapper.Config
+    member: destroy
+    label: destroy
+
+  destroyOfCollectionMapperConfig:
+    file: jwidget/mapper/AbstractMapper
+    symbol: AbstractMapper.Config
+    member: destroy
+    label: destroy
+
+  destroyOfDestroyable:
+    file: jwidget/Destroyable
+    member: destroy
+    label: destroy
