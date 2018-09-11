@@ -2,9 +2,7 @@
 /.idea/workspace.xml
 /dist/*
 !/dist/src
-!/dist/.bowerrc
 !/dist/.npmignore
-!/dist/bower.json
 !/dist/clean.sh
 !/dist/karma.conf.js
 !/dist/package.json
@@ -13,6 +11,5 @@
 /docgen/dist/*
 /docoutput
 node_modules
-bower_components
 package-lock.json
 /examples/public
