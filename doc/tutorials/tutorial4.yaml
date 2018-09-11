@@ -65,8 +65,8 @@ description: |
       }
   </pre>
 
-  <p>At the next step, we should replace readonly fields with getters and setters in the model. To implement them,
-  we need to define likeChangeEvent and retweetChangeEvent.</p>
+  <p>At the next step, we should replace Tweet interface with a class. Readonly fields "like" and "retweet" should be
+  replaced with getters and setters. To implement them, we need to define likeChangeEvent and retweetChangeEvent.</p>
 
   <h5>src/model/Tweet.ts</h5>
 
@@ -76,14 +76,26 @@ description: |
 
   export default class Tweet {
 
-      // ...
+      readonly fullName: string;
+      readonly shortName: string;
+      readonly avatarUrl48: string;
+      readonly contentHtml: string;
+      readonly time: number;
 
       private _like: boolean;
       private _retweet: boolean;
       private _likeChangeEvent = new %Event<boolean>();
       private _retweetChangeEvent = new %Event<boolean>();
 
-      // ...
+      constructor(config: TweetConfig) {
+          this.fullName = config.fullName;
+          this.shortName = config.shortName;
+          this.avatarUrl48 = config.avatarUrl48;
+          this.contentHtml = config.contentHtml;
+          this.time = config.time;
+          this._like = config.like;
+          this._retweet = config.retweet;
+      }
 
       get like() {
           return this._like;
@@ -115,7 +127,24 @@ description: |
           return this._retweetChangeEvent;
       }
 
-      // ...
+      static createByJson(json: any) {
+          return new Tweet({
+              ...json,
+              time: new Date().getTime() - json["timeAgo"]
+          });
+      }
+  }
+
+  export interface TweetConfig {
+
+      readonly fullName: string;
+      readonly shortName: string;
+      readonly avatarUrl48: string;
+      readonly contentHtml: string;
+      readonly time: number;
+      readonly like: boolean;
+      readonly retweet: boolean;
+  }
   </pre>
 
   <p>Event is triggered with %trigger method, which takes an argument to pass to event listeners. In this case it is
@@ -124,7 +153,19 @@ description: |
   "stopPropagation", as well as there is no pretection against dead loops. If you want to introduce something like this,
   implement it by yourself using %IEvent interface. jWidget is modest in this regard, but fast.</p>
 
-  <p>Next, we must bind handlers to these events and update the view in them. In contrast to React or Backbone, you
+  <p>Since we have replaced "createTweetByJson" function with "createByJson" static method, let's immediately change
+  its usage.</p>
+
+  <h5>src/model/ApplicationData.ts</h5>
+
+  <pre>
+      static createByJson(json: any) {
+          return new ApplicationData(json.profile,
+              (<any[]>json.tweets || []).map(Tweet.createByJson));
+      }
+  </pre>
+
+  <p>Next, we must bind handlers to the events and update the view in them. In contrast to React or Backbone, you
   don't need to update the entire view in jWidget - you just update what you need. To prevent code duplication, let's
   extract element updating code of TweetView into separate methods "updateLike" and "updateRetweet".</p>
 
@@ -172,7 +213,7 @@ description: |
   <p>Refresh the page, open browser console and run next command:</p>
 
   <pre>
-  data.tweets.%get(0).like = true;
+  data.tweets[0].like = true;
   </pre>
 
   <p>Your application will obediently reflect the change.</p>
@@ -188,10 +229,6 @@ description: |
   </div>
 
 references:
-  get:
-    file: jwidget/ReadonlyList
-    member: get
-
   parameters:
     href: https://api.jquery.com/category/events/event-object/
 

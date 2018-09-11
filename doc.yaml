@@ -524,7 +524,7 @@ references:
 
   tutorial6:
     file: tutorials/tutorial6
-    label: Tutorial. Part 6. Collection synchronizers
+    label: Tutorial. Part 6. Collection bindings
 
 includes:
   DocumentationIndex: |

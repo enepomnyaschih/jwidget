@@ -63,7 +63,7 @@ footer {
 #index-dropdown {
     left: 10px;
     max-width: calc(100% - 20px);
-    width: 1200px;
+    width: 1300px;
 }
 
 @media (max-width: 991.99px) {

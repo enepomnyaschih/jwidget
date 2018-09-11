@@ -8,44 +8,10 @@ description: |
 
   <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-2">https://github.com/enepomnyaschih/mt/tree/mt-2.1-2</a> (Git branch).</p>
 
-  <p>In this part we meet %List class. We will try its algorithm %mapList and learn how to display child UI component
-  lists. Our goal is to render a list of tweets developed in the previous part.</p>
+  <p>In this part we meet %List class. We will learn how to use it to display child UI component lists. Our goal is to
+  render a list of tweets developed in the previous part.</p>
 
-  <p>Like in the first sample, let's start with the model. We must put several tweets into a list. Let's define class
-  ApplicationData for this. It should contain a list of tweets.</p>
-
-  <h5>src/model/ApplicationData.ts</h5>
-
-  <pre>
-  import %IList from "jwidget/IList";
-  import %List from "jwidget/List";
-  import %ReadonlyList from "jwidget/ReadonlyList";
-  import Tweet from "./Tweet";
-
-  export default class ApplicationData {
-
-      private _tweets: %IList<Tweet>;
-
-      constructor(tweets: Tweet[] = []) {
-          this._tweets = new %List(tweets);
-      }
-
-      get tweets(): %ReadonlyList<Tweet> {
-          return this._tweets;
-      }
-
-      static createByJson(json: any) {
-          return new ApplicationData((<any[]>json || []).map(Tweet.createByJson));
-      }
-  }
-  </pre>
-
-  <p>We have defined tweet list as %IList, instantiated it as %List and shared it as %ReadonlyList. Actually, %IList
-  is an extension of %ReadonlyList interface with modification methods such as %add, and %List is a class
-  implementing %IList interface. By implementing ApplicationData this way, we provide clients of this class with readonly
-  access to the list of tweets, but keep the possibility to modify it internally.</p>
-
-  <p>Let's continue with the view. Define class TweetFeed.</p>
+  <p>Let's dive directly to the view. Define class TweetFeed.</p>
 
   <h5>src/view/TweetFeed.jw.html</h5>
 
@@ -60,10 +26,8 @@ description: |
   <h5>src/view/TweetFeed.ts</h5>
 
   <pre>
-  import {%destroy} from "jwidget";
   import %Component from "jwidget/Component";
-  import {%mapList} from "jwidget/mapper/list";
-  import %ReadonlyList from "jwidget/ReadonlyList";
+  import %List from "jwidget/List";
   import %template from "jwidget/template";
   import Tweet from "../model/Tweet";
   import TweetView from "./TweetView";
@@ -71,39 +35,40 @@ description: |
   @%template(require<string>("./TweetFeed.jw.html"))
   export default class TweetFeed extends %Component {
 
-      constructor(private tweets: %ReadonlyList<Tweet>) {
+      constructor(private tweets: Tweet[]) {
           super();
       }
 
       protected renderTweets() {
-          return this.%own(%mapList(this.tweets, tweet => new TweetView(tweet), {%destroy}));
+          const tweetViews = this.tweets.map(tweet => new TweetView(tweet));
+          return this.%own(new %List(tweetViews)).%ownItems();
       }
   }
   </pre>
 
   <p>Let's review renderTweets method in details. Similarly to TweetView component, we've defined method
   <b>render&lt;ChildId&gt;</b> for element with jwid="tweets". But now this method not just fills the element with
-  data, but renders a list of child components into it.</p>
+  data, but renders a list of child components into it. This list is created from an array of tweet models with the
+  following steps:</p>
 
-  <p>This list is created from model via collection item conversion function %mapList. It returns a list of tweet views.
-  It works better here than usual %map method for the following two reasons.</p>
+  <ol>
+  <li>Models get mapped to views via ES5 <b>map</b> method of array.</li>
+  <li>View array gets converted to jWidget %List.</li>
+  <li>The %List gets aggregated in TweetFeed via %own method, and its items get aggregated in it with %ownItems method.</li>
+  </ol>
 
-  <p><b>First</b>, it subscribes itself to all source list modification events and synchronizes target list to source list any
-  time the modification happens. This is an example of jWidget 2 data binding mechanism. Please notice that %mapList
-  can be used to map not just model to view, but also model to another model and view to another view. This is an
-  advantage of jWidget 2 over the other frontend frameworks. This is very flexible and transparent solution.</p>
+  <p>jWidget components recognize jWidget lists of components, not arrays. If you return such a list as a result of
+  <b>render&lt;ChildId&gt;</b> method, then this list gets rendered into the corresponding element as a list of child
+  components.</p>
 
-  <p><b>Second</b>, it controls life time of the mapped items. Pay attention to %own method call. This is <b>object aggregation
-  method</b> of jWidget. If object A owns object B, then destruction of object A automatically triggers destruction of
-  object B. In our case, destruction of TweetFeed automatically triggers destruction of tweet view list. The list
-  destruction unbinds it from the model, which allows the browser to release the memory and prevent unintended source
-  list modification handling. Also, we pass %destroy argument to %mapList method - it instructs the synchronizer to
-  destroy tweet views when they are not needed anymore, i.e. once the corresponding tweets get removed from the model
-  or once the entire target collection gets destroyed. It is a good practice to destroy child UI components when you
+  <p>Aggregation methods %own and %ownItems control the life time of child components. If object A owns object B, then
+  destruction of object A automatically triggers destruction of object B. In our case, destruction of TweetFeed
+  automatically triggers destruction of tweet view list. Thanks to %ownItems call, destruction of the list triggers
+  destruction all its elements, i.e. tweet views. It is a good practice to destroy child UI components when you
   don't need them anymore, because any UI component may initialize its own bindings you can be unaware of. See
   %commonPractices for more instructions about how this can be achieved.</p>
 
-  <p>Finally, let's define styles.</p>
+  <p>Let's define styles.</p>
 
   <h5>src/view/TweetFeed.styl</h5>
 
@@ -147,11 +112,11 @@ description: |
   import "script-loader!jquery";
   import "./index.styl";
 
-  import ApplicationData from "./model/ApplicationData";
+  import {createTweetByJson} from "./model/Tweet";
   import TweetFeed from "./view/TweetFeed";
 
   $(function () {
-      const data = ApplicationData.createByJson([
+      const tweets = [
           {
               "fullName": "Road Runner",
               "shortName": "roadrunner",
@@ -170,8 +135,8 @@ description: |
               "like": false,
               "retweet": false
           }
-      ]);
-      new TweetFeed(data.tweets).%renderTo("body");
+      ].map(createTweetByJson);
+      new TweetFeed(tweets).%renderTo("body");
   });
   </pre>
 
@@ -181,10 +146,8 @@ description: |
   Let's remove renderTweets method and override %afterRender method instead:</p>
 
   <pre>
-  import {%destroy} from "jwidget";
   import %Component from "jwidget/Component";
-  import {%mapList} from "jwidget/mapper/list";
-  import %ReadonlyList from "jwidget/ReadonlyList";
+  import %List from "jwidget/List";
   import %template from "jwidget/template";
   import Tweet from "../model/Tweet";
   import TweetView from "./TweetView";
@@ -192,14 +155,15 @@ description: |
   @%template(require<string>("./TweetFeed.jw.html"))
   export default class TweetFeed extends %Component {
 
-      constructor(private tweets: %ReadonlyList<Tweet>) {
+      constructor(private tweets: Tweet[]) {
           super();
       }
 
       protected %afterRender() {
           super.%afterRender();
-          const tweetViews = this.%own(%mapList(this.tweets, tweet => new TweetView(tweet), {%destroy}));
-          this.%addList(tweetViews, "tweets");
+          const tweetViews = this.tweets.map(tweet => new TweetView(tweet));
+          const tweetViewList = this.%own(new %List(tweetViews)).%ownItems();
+          this.%addList(tweetViewList, "tweets");
       }
   }
   </pre>
@@ -229,3 +193,7 @@ references:
   addList:
     file: jwidget/Component
     member: addList
+
+  ownItems:
+    file: jwidget/ICollection
+    member: ownItems
