@@ -1,6 +1,1 @@
-node_modules
-bower_components
-/public/*.html
-/public/*.js
-/public/*.json
-/public/*.map
+/public

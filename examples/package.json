@@ -1,33 +1,34 @@
 {
   "name": "jwidget-examples",
   "private": true,
-  "version": "0.0.0",
-  "dependencies": {
-    "@types/es6-promise": "0.0.32",
-    "@types/jquery": "2.0.39",
-    "@types/lodash": "^4.14.54",
-    "jwidget": "2.0.x"
+  "version": "2.1.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node_modules/.bin/webpack --watch --config webpack/webpack.dev.js",
+    "build-dev": "node_modules/.bin/webpack --config webpack/webpack.dev.js",
+    "build": "node_modules/.bin/webpack --config webpack/webpack.prod.js"
   },
   "devDependencies": {
-    "bower": "1.8.x",
-    "clean-webpack-plugin": "0.1.14",
-    "css-loader": "0.26.1",
-    "file-loader": "0.9.0",
-    "html-loader": "0.4.4",
-    "html-webpack-plugin": "2.26.0",
-    "html-webpack-prefix-plugin": "0.0.5",
-    "source-map-loader": "0.1.5",
-    "style-loader": "0.13.1",
-    "stylus": "0.54.5",
-    "stylus-loader": "2.4.0",
-    "ts-loader": "3.3.1",
-    "typescript": "2.6.2",
-    "url-loader": "^1.1.1",
-    "webpack": "2.x",
-    "webpack-strip-block": "0.1.0"
-  },
-  "scripts": {
-    "debug": "webpack",
-    "release": "webpack --env.optimize"
+    "@types/jquery": "3.3.x",
+    "clean-webpack-plugin": "0.1.x",
+    "copy-webpack-plugin": "4.5.x",
+    "css-loader": "1.0.x",
+    "es6-promise": "4.2.x",
+    "file-loader": "1.1.x",
+    "html-webpack-plugin": "^4.0.0-alpha",
+    "jquery": "3.3.x",
+    "jwidget": "2.0.x",
+    "mini-css-extract-plugin": "0.4.x",
+    "optimize-css-assets-webpack-plugin": "5.0.x",
+    "script-loader": "0.7.x",
+    "source-map-loader": "0.2.x",
+    "stylus": "0.54.x",
+    "stylus-loader": "3.0.x",
+    "ts-loader": "4.5.x",
+    "typescript": "3.0.x",
+    "url-loader": "1.0.x",
+    "webpack": "4.16.x",
+    "webpack-cli": "3.1.x",
+    "webpack-merge": "4.1.x"
   }
 }
