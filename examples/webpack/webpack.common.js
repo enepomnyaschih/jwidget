@@ -1,6 +1,5 @@
 const path = require("path"),
 	CleanWebpackPlugin = require("clean-webpack-plugin"),
-	CopyWebpackPlugin = require("copy-webpack-plugin"),
 	HtmlWebpackPlugin = require("html-webpack-plugin"),
 	MiniCssExtractPlugin = require("mini-css-extract-plugin"),
 	pages = require("./pages");
@@ -19,8 +18,7 @@ module.exports = {
 	entry: entry,
 	output: {
 		filename: "bundle-[name]-[contenthash].js",
-		path: path.resolve(__dirname, "../" + publicFolder),
-		publicPath: "/"
+		path: path.resolve(__dirname, "../" + publicFolder)
 	},
 	resolve: {
 		extensions: [".ts", ".js"]
@@ -69,7 +67,6 @@ module.exports = {
 		new CleanWebpackPlugin([publicFolder], {
 			root: path.resolve(__dirname, "..")
 		}),
-		new CopyWebpackPlugin(["../static"]),
 		new MiniCssExtractPlugin({
 			chunkFilename: "[id]-[contenthash].css"
 		})

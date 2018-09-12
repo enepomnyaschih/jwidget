@@ -1,5 +1,5 @@
 import Component from "jwidget/Component";
-import listen from "jwidget/listen";
+//import listen from "jwidget/listen";
 import template from "jwidget/template";
 import initExample from "../common/initExample";
 
@@ -24,9 +24,9 @@ class Application extends Component {
 		super.beforeRender();
 
 		// Bind a handler to "mousemove" event and aggregate the attachment
-		this.own(listen($(window), "mousemove", event => {
-			$(".output").text(event.pageX + ":" + event.pageY);
-		}));
+		// this.own(listen($(window), "mousemove", event => {
+		// 	$(".output").text(event.pageX + ":" + event.pageY);
+		// }));
 	}
 
 	protected renderDestroyButton(el: JQuery) {

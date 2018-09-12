@@ -9,7 +9,7 @@ rm -r docoutput
 
 pushd examples || exit 1
 npm install || exit 1
-npm run build-prod || exit 1
+npm run build || exit 1
 popd || exit 1
 
 pushd docgen || exit 1
@@ -25,7 +25,7 @@ mv git/docoutput doc/$1 || exit 1
 pushd mt | exit 1
 git checkout mt-$1-1 || exit 1
 npm install || exit 1
-npm run build-prod || exit 1
+npm run build || exit 1
 mv public ../doc/$1/samples/tutorial1 || exit 1
 popd
 

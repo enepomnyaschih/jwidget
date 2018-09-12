@@ -1,4 +1,5 @@
 // hack to make this a module
+// @ts-ignore
 export default null;
 
 // hack to use CommonJS syntax in TypeScript files (e.g. to load CSS)

@@ -33,17 +33,17 @@ export function readYaml(filePath: string) {
 	return yaml.safeLoad(fs.readFileSync(filePath, "utf8"));
 }
 
-export function copy(src: string, dest: string) {
+export function copy(src: string, dest: string, rename?: (dest: string) => string) {
 	if (!fs.existsSync(src)) {
 		return;
 	}
 	if (fs.statSync(src).isFile()) {
-		fs.copyFileSync(src, dest);
+		fs.copyFileSync(src, rename ? rename(dest) : dest);
 		return;
 	}
 	const fileNames = fs.readdirSync(src);
 	mkdir(path.resolve(dest, "dummy"));
 	fileNames.forEach((fileName) => {
-		copy(path.resolve(src, fileName), path.resolve(dest, fileName));
+		copy(path.resolve(src, fileName), path.resolve(dest, fileName), rename);
 	});
 }

@@ -83,6 +83,7 @@ export interface StaticDefinition {
 
 	readonly src: string;
 	readonly dest: string;
+	readonly rename?: boolean;
 }
 
 class ProjectContext extends Context {

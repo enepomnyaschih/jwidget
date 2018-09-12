@@ -14,6 +14,7 @@
     "copy-webpack-plugin": "4.5.x",
     "css-loader": "1.0.x",
     "es6-promise": "4.2.x",
+    "es6-templates": "0.2.x",
     "file-loader": "1.1.x",
     "html-webpack-plugin": "^4.0.0-alpha",
     "jquery": "3.3.x",
