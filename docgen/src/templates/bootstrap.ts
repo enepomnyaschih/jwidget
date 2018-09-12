@@ -72,8 +72,6 @@ function renderFile(file: SourceFile) {
 				</ul>
 				<form class="form-inline my-2 my-lg-0">
 					${file.isModule ? docToolbar : ''}
-					<input class="form-control mr-sm-2" disabled type="search" placeholder="Search" aria-label="Search">
-					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 				</form>
 			</div>
 		</nav>
@@ -115,6 +113,10 @@ const docToolbar =
 
 const docFooter =
 	'<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>';
+
+// Search field - for future implementation
+// <input class="form-control mr-sm-2" disabled type="search" placeholder="Search" aria-label="Search">
+// <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 
 function renderIndex(file: SourceFile) {
 	return DictionaryUtils.join(DictionaryUtils.map(file.groups, (group, key) => (
