@@ -70,7 +70,7 @@ interface IMap<T> extends ICollection<T>, DestroyableReadonlyMap<T> {
 	/**
 	 * @inheritDoc
 	 */
-	find(callback: (item: T, key: string) => any, scope: any): T;
+	find(callback: (item: T, key: string) => any, scope?: any): T;
 
 	/**
 	 * @inheritDoc

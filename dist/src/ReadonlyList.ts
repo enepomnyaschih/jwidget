@@ -123,7 +123,7 @@ interface ReadonlyList<T> extends ReadonlyCollection<T> {
 	/**
 	 * @inheritDoc
 	 */
-	find(callback: (item: T, index: number) => any, scope: any): T;
+	find(callback: (item: T, index: number) => any, scope?: any): T;
 
 	/**
 	 * Finds item matching criteria.

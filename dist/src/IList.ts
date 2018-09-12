@@ -69,7 +69,7 @@ interface IList<T> extends ICollection<T>, DestroyableReadonlyList<T> {
 	/**
 	 * @inheritDoc
 	 */
-	find(callback: (item: T, index: number) => any, scope: any): T;
+	find(callback: (item: T, index: number) => any, scope?: any): T;
 
 	/**
 	 * @inheritDoc

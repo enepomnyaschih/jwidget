@@ -108,7 +108,7 @@ interface ReadonlyMap<T> extends ReadonlyCollection<T> {
 	/**
 	 * @inheritDoc
 	 */
-	find(callback: (item: T, key: string) => any, scope: any): T;
+	find(callback: (item: T, key: string) => any, scope?: any): T;
 
 	/**
 	 * Finds item matching criteria.
