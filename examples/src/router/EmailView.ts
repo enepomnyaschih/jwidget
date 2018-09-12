@@ -3,13 +3,7 @@ import Router from "jwidget/Router";
 import template from "jwidget/template";
 import Email from "./Email";
 
-@template(
-	'<div jwclass="email">' +
-	'  <h3 jwid="summary"></h3>' +
-	'  <div jwid="content"></div>' +
-	'  <div><a jwid="back" href="#">Back</a></div>' +
-	'</div>'
-)
+@template(require<string>("./EmailView.jw.html"))
 export default class EmailView extends Component {
 
 	constructor(private email: Email, private parentRouter: Router<any>) {

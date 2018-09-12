@@ -10,23 +10,7 @@ import Inbox from "./Inbox";
 import NotFound from "./NotFound";
 import Settings from "./Settings";
 
-@template(
-	'<div jwclass="application">' +
-	'  <div jwid="header">' +
-	'    <form jwid="url-form">' +
-	'      <b>Current URL hash:</b> #' +
-	'      <input type="text" jwid="url"> ' +
-	'      <input type="submit" value="Change now!">' +
-	'    </form>' +
-	'    <div><b>Pages:</b> ' +
-	'      <a jwid="route" data-route="inbox">Inbox</a> | ' +
-	'      <a jwid="route" data-route="compose">Compose</a> | ' +
-	'      <a jwid="route" data-route="settings">Settings</a>' +
-	'    </div>' +
-	'  </div>' +
-	'  <div jwid="page"></div>' +
-	'</div>'
-)
+@template(require<string>("./Application.jw.html"))
 export default class Application extends Component {
 
 	private router: UIRouter;

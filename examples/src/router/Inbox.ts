@@ -10,12 +10,7 @@ import EmailList from "./EmailList";
 import EmailNotFound from "./EmailNotFound";
 import EmailView from "./EmailView";
 
-@template(
-	'<div jwclass="inbox">' +
-	'  <h2>Inbox</h2>' +
-	'  <div jwid="content"></div>' +
-	'</div>'
-)
+@template(require<string>("./Inbox.jw.html"))
 export default class Inbox extends Component {
 
 	private router: UIRouter;

@@ -26,6 +26,9 @@ description: |
     update cycles. Each object simply listens events and handles them in very straightforward way. Look at the next
     example:</p>
     <pre>
+    import "es6-promise/auto";
+    import "script-loader!jquery";
+
     import {%TWOWAY} from "jwidget";
     import %bindText from "jwidget/bindText";
     import %bindVal from "jwidget/bindVal";

@@ -21,7 +21,7 @@
 import Destroyable from './Destroyable';
 
 class JQEventAttachment implements Destroyable {
-	constructor(private el: JQuery, private events: string, private arg1: any, private arg2?: any) {
+	constructor(private el: JQuery<any>, private events: string, private arg1: any, private arg2?: any) {
 		el.on(events, arg1, arg2);
 	}
 
@@ -33,17 +33,19 @@ class JQEventAttachment implements Destroyable {
 /**
  * Attaches handler to an event. jWidget extension for jQuery "on" method returning the destroyable event attachment.
  *
+ * @param el DOM element.
  * @param events One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".
  * @param handler A function to execute when the event is triggered. The value `false` is also allowed as a shorthand for a function that simply does `return false`.
  */
-export default function listen(el: JQuery, events: string, handler: (eventObject: JQueryEventObject) => any): Destroyable;
+export default function listen(el: JQuery<any>, events: string, handler: (eventObject: JQuery.Event) => any): Destroyable;
 
 /**
+ * @param el DOM element.
  * @param events One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".
  * @param selector A selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.
  * @param handler A function to execute when the event is triggered. The value `false` is also allowed as a shorthand for a function that simply does `return false`.
  */
-export default function listen(el: JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any): Destroyable;
-export default function listen(el: JQuery, events: string, arg1: any, arg2?: any): Destroyable {
+export default function listen(el: JQuery<any>, events: string, selector: string, handler: (eventObject: JQuery.Event) => any): Destroyable;
+export default function listen(el: JQuery<any>, events: string, arg1: any, arg2?: any): Destroyable {
 	return new JQEventAttachment(el, events, arg1, arg2);
 }

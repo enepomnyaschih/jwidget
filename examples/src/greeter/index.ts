@@ -1,9 +1,12 @@
+import "es6-promise/auto";
+
 import {TWOWAY} from "jwidget";
 import bindText from "jwidget/bindText";
 import bindVal from "jwidget/bindVal";
 import Component from "jwidget/Component";
 import Property from "jwidget/Property";
 import template from "jwidget/template";
+import "script-loader!jquery";
 
 @template(`<div class="greeter">
              <p>Your name: <input jwid="name-field" type="text"></p>
