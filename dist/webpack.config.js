@@ -27,10 +27,7 @@ module.exports = {
 		new CleanWebpackPlugin(["."], {
 			exclude: [
 				"src",
-				"test/bower_components",
-				".bowerrc",
 				".npmignore",
-				"bower.json",
 				"karma.conf.js",
 				"package.json",
 				"tsconfig.js",
