@@ -271,7 +271,7 @@ export default class List<T> extends Class implements IList<T> {
 	/**
 	 * @inheritDoc
 	 */
-	find(callback: (item: T, index: number) => any, scope?: any = null): T {
+	find(callback: (item: T, index: number) => any, scope?: any): T {
 		return ArrayUtils.find(this._items, callback, scope);
 	}
 
