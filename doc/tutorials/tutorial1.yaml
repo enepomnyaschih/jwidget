@@ -172,8 +172,11 @@ description: |
   });
   </pre>
 
-  <p>The first two imports are mandatory for jWidget, because the framework depends on native ES6 promises and jQuery.
-  Native ES6 promises are not yet supported by all browsers, so we need to register a polyfill for it.</p>
+  <p>The first two imports are mandatory for jWidget, because the framework depends on
+  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">native ES6 promises</a>
+  and <a href="http://jquery.com/" target="_blank">jQuery</a>.
+  Native ES6 promises are not yet supported by all browsers, so we need to register a
+  <a href="https://www.npmjs.com/package/es6-promise" target="_blank">polyfill</a> for it.</p>
 
   <p>Make sure that WebPack (running under "npm start") doesn't display any errors and refresh the browser page. You'll
   see something like this:</p>
