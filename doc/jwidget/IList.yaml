@@ -186,7 +186,7 @@ symbols:
 
       sort:
         signature: |
-          (callback?: (item: %T, index: number) => any, scope?: any, order?: number)
+          (callback?: (item: %T, index: number) => any, scope?: any, order: number = 1)
         params:
           callback: |
             Indexer function. Must return a comparable value, compatible with %cmp. Returns item itself by default.
@@ -197,7 +197,7 @@ symbols:
 
       sortComparing:
         signature: |
-          (compare?: (t1: %T, t2: %T, i1: number, i2: number) => number, scope?: any, order?: number)
+          (compare?: (t1: %T, t2: %T, i1: number, i2: number) => number, scope?: any, order: number = 1)
         params:
           compare: |
             Comparer function. Should return positive value if t1 > t2;

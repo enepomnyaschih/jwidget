@@ -60,7 +60,7 @@ symbols:
 
   binarySearch:
     signature: |
-      <T>(arr: T[], value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number
+      <T>(arr: T[], value: T, compare?: (t1: T, t2: T) => number, scope?: any, order: number = 1 = 1): number
     params:
       arr: 'Array to inspect.'
       value: 'Value to insert/remove.'
@@ -79,7 +79,7 @@ symbols:
 
   max:
     signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T
+      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1 = 1): T
     params:
       arr: 'Array to inspect.'
       callback: 'Item evaluation function.'
@@ -93,7 +93,7 @@ symbols:
 
   maxIndex:
     signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number
+      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1 = 1): number
     params:
       arr: 'Array to inspect.'
       callback: 'Item evaluation function.'
@@ -107,7 +107,7 @@ symbols:
 
   maxComparing:
     signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T
+      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1 = 1): T
     params:
       arr: 'Array to inspect.'
       compare: 'Item comparer.'
@@ -122,7 +122,7 @@ symbols:
 
   maxIndexComparing:
     signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number
+      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1 = 1): number
     params:
       arr: 'Array to inspect.'
       compare: 'Item comparer.'
@@ -137,7 +137,7 @@ symbols:
 
   min:
     signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T
+      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1 = 1): T
     params:
       arr: Array to inspect.
       callback: 'Item evaluation function.'
@@ -151,7 +151,7 @@ symbols:
 
   minIndex:
     signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number
+      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1 = 1): number
     params:
       arr: 'Array to inspect.'
       callback: 'Item evaluation function.'
@@ -165,7 +165,7 @@ symbols:
 
   minComparing:
     signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T
+      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1 = 1): T
     params:
       arr: 'Array to inspect.'
       compare: 'Item comparer.'
@@ -180,7 +180,7 @@ symbols:
 
   minIndexComparing:
     signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number
+      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1 = 1): number
     params:
       arr: 'Array to inspect.'
       compare: 'Item comparer.'
@@ -315,7 +315,7 @@ symbols:
 
   sort:
     signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number)
+      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1)
     params:
       arr: 'Array to modify.'
       callback: 'Item evaluation function.'
@@ -328,7 +328,7 @@ symbols:
 
   sortComparing:
     signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number)
+      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1)
     params:
       arr: 'Array to modify.'
       compare: 'Item comparer.'
@@ -363,7 +363,7 @@ symbols:
 
   toSorted:
     signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): T[]
+      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T[]
     params:
       arr: 'Array to sort.'
       callback: 'Item evaluation function.'
@@ -379,7 +379,7 @@ symbols:
 
   toSortedComparing:
     signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): T[]
+      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T[]
     params:
       arr: 'Array to sort.'
       compare: 'Item comparer.'
@@ -395,7 +395,7 @@ symbols:
 
   getSortingIndices:
     signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]
+      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number[]
     params:
       arr: 'Array to inspect.'
       callback: 'Item evaluation function.'
@@ -409,7 +409,7 @@ symbols:
 
   getSortingIndicesComparing:
     signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order?: number): number[]
+      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number[]
     params:
       arr: 'Array to inspect.'
       compare: 'Item comparer.'
@@ -624,7 +624,7 @@ symbols:
 
   detectSort:
     signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]
+      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number[]
     params:
       arr: 'Array to sort.'
       callback: 'Item evaluation function.'
@@ -638,7 +638,7 @@ symbols:
 
   detectSortComparing:
     signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[]
+      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): number[]
     params:
       arr: 'Array to sort.'
       compare: 'Item comparer.'

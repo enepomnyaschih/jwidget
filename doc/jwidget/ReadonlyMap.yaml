@@ -133,7 +133,7 @@ symbols:
 
       toSorted:
         signature: |
-          (callback?: (item: %T, key: string) => any, scope?: any, order?: number): %IList<%T>
+          (callback?: (item: %T, key: string) => any, scope?: any, order: number = 1): %IList<%T>
         params:
           callback: Indexer function. Must return a comparable value, compatible with %cmp. Returns the item itself by default.
           scope: '%callback call scope. Defaults to the collection.'
@@ -145,7 +145,7 @@ symbols:
 
       toSortedComparing:
         signature: |
-          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => number, scope?: any, order?: number): %IList<%T>
+          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => number, scope?: any, order: number = 1): %IList<%T>
         params:
           compare: Comparer function. Should return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
           scope: '%compare call scope. Defaults to the collection.'
@@ -157,7 +157,7 @@ symbols:
 
       getSortingKeys:
         signature: |
-          (callback?: (item: %T, key: string) => any, scope?: any, order?: number): %IList<string>
+          (callback?: (item: %T, key: string) => any, scope?: any, order: number = 1): %IList<string>
         params:
           callback: Indexer function. Must return a comparable value, compatible with %cmp. Returns the item itself by default.
           scope: '%callback call scope. Defaults to the collection.'
@@ -168,7 +168,7 @@ symbols:
 
       getSortingKeysComparing:
         signature: |
-          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => number, scope?: any, order?: number): %IList<string>
+          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => number, scope?: any, order: number = 1): %IList<string>
         params:
           compare: Comparer function. Should return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
           scope: '%compare call scope. Defaults to the collection.'
@@ -237,7 +237,7 @@ symbols:
 
       max:
         signature: |
-          (callback?: (item: %T, key: string) => any, scope?: any, order?: number): %T
+          (callback?: (item: %T, key: string) => any, scope?: any, order: number = 1): %T
         params:
           callback: 'Returns a comparable value, compatible with %cmp. Returns the item itself by default.'
           scope: '%callback call scope. Defaults to the collection.'
@@ -248,7 +248,7 @@ symbols:
 
       maxKey:
         signature: |
-          (callback?: (item: %T, key: string) => any, scope?: any, order?: number): number
+          (callback?: (item: %T, key: string) => any, scope?: any, order: number = 1): number
         params:
           callback: 'Returns a comparable value, compatible with %cmp. Returns the item itself by default.'
           scope: '%callback call scope. Defaults to the collection.'
@@ -259,7 +259,7 @@ symbols:
 
       maxComparing:
         signature: |
-          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => any, scope?: any, order?: number): %T
+          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => any, scope?: any, order: number = 1): %T
         params:
           compare: 'Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.'
           scope: '%compare call scope. Defaults to the collection.'
@@ -270,7 +270,7 @@ symbols:
 
       maxKeyComparing:
         signature: |
-          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => any, scope?: any, order?: number): number
+          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => any, scope?: any, order: number = 1): number
         params:
           compare: 'Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.'
           scope: '%compare call scope. Defaults to the collection.'
@@ -281,7 +281,7 @@ symbols:
 
       min:
         signature: |
-          (callback?: (item: %T, key: string) => any, scope?: any, order?: number): %T
+          (callback?: (item: %T, key: string) => any, scope?: any, order: number = 1): %T
         params:
           callback: 'Returns a comparable value, compatible with %cmp. Returns the item itself by default.'
           scope: '%callback call scope. Defaults to the collection.'
@@ -292,7 +292,7 @@ symbols:
 
       minKey:
         signature: |
-          (callback?: (item: %T, key: string) => any, scope?: any, order?: number): number
+          (callback?: (item: %T, key: string) => any, scope?: any, order: number = 1): number
         params:
           callback: 'Returns a comparable value, compatible with %cmp. Returns the item itself by default.'
           scope: '%callback call scope. Defaults to the collection.'
@@ -303,7 +303,7 @@ symbols:
 
       minComparing:
         signature: |
-          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => any, scope?: any, order?: number): %T
+          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => any, scope?: any, order: number = 1): %T
         params:
           compare: 'Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.'
           scope: '%compare call scope. Defaults to the collection.'
@@ -314,7 +314,7 @@ symbols:
 
       minKeyComparing:
         signature: |
-          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => any, scope?: any, order?: number): number
+          (compare?: (t1: %T, t2: %T, k1: string, k2: string) => any, scope?: any, order: number = 1): number
         params:
           compare: 'Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.'
           scope: '%compare call scope. Defaults to the collection.'
