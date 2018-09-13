@@ -18,7 +18,7 @@
     "file-loader": "1.1.x",
     "html-webpack-plugin": "^4.0.0-alpha",
     "jquery": "3.3.x",
-    "jwidget": "2.0.x",
+    "jwidget": "2.1.x",
     "mini-css-extract-plugin": "0.4.x",
     "optimize-css-assets-webpack-plugin": "5.0.x",
     "script-loader": "0.7.x",
