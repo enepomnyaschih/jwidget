@@ -94,7 +94,7 @@ class Router<T extends Destroyable> extends Class {
 		if ((this.name == null) !== (this.parent == null)) {
 			throw new Error("Router configuration error: you have specified router name or parent, but haven't specified another. These two options must come together.");
 		}
-		this.path = config.path || this.own(new Property<string>());
+		this.path = config.path || new Property<string>(); // we don't own it because its value is being used in destroyObject method - after ownage pool releasing
 		this.separator = Router.makeSeparator(config.separator);
 		this.joiner = Router.makeJoiner(config.joiner);
 		this.handler = Router.makeHandler(config.handler);
@@ -136,7 +136,6 @@ class Router<T extends Destroyable> extends Class {
 		}
 		const target = this._target.get();
 		if (target != null) {
-			this._target.set(null);
 			target.destroy();
 		}
 		super.destroyObject();
