@@ -65,7 +65,8 @@ export function isTextInput(el: any): boolean {
 	const $el: JQuery = jQuery(el);
 	const tagName = $el[0].tagName.toLowerCase();
 	if (tagName === "input") {
-		return lifeInputTags.indexOf($el.attr("type").toLowerCase()) !== -1;
+		const type = $el.attr("type");
+		return !type || lifeInputTags.indexOf(type.toLowerCase()) !== -1;
 	}
 	return tagName === "textarea";
 }
