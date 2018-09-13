@@ -76,5 +76,5 @@ description: |
     practices are used to bind model objects to each other and to bind view components to each other.</p>
     <p>Project license is <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html" target="_blank">LGPLv3</a>.</p>
     <p>Find source code and bug tracker at <a href="https://github.com/enepomnyaschih/jwidget" target="_blank">GitHub</a>.</p>
-    <p>Legacy jWidget 1 documentation <a href="http://enepomnyaschih.github.io/jwidget#!/guide/home">is still available here</a>.</p>
+    <p>Legacy jWidget 1 documentation <a href="http://enepomnyaschih.github.io/jwidget/1.4/#!/guide/home">is still available here</a>.</p>
   </div>
