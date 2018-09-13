@@ -53,7 +53,10 @@ class ValueUpdater extends Class {
 	}
 
 	private _update() {
-		this.el.val(this.property.get());
+		const value = this.property.get();
+		if (this.el.val() !== value) {
+			this.el.val(value).trigger("change");
+		}
 	}
 }
 
