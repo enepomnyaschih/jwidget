@@ -1,0 +1,8 @@
+<div jwclass="application">
+	<div jwid="colors">
+		<div><label><input type="radio" name="color" value="red">Add "red" class</label></div>
+		<div><label><input type="radio" name="color" value="green">Add "green" class</label></div>
+		<div><label><input type="radio" name="color" value="blue">Add "blue" class</label></div>
+	</div>
+	<div jwid="rect"></div>
+</div>

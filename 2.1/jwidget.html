@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jwidget - jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href=".">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href=".">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="tutorials/tutorial1.html"
+							data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">jwidget</a>
+						
+<a class="nav-link" href="#enumerations">Enumerations</a>
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#Binding">Binding</a>
+
+
+<a class="nav-link" href="#CollectionFlags">CollectionFlags</a>
+</nav>
+
+<a class="nav-link" href="#testers">Value test functions</a>
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#isUndefined">isUndefined</a>
+
+
+<a class="nav-link" href="#isDefined">isDefined</a>
+
+
+<a class="nav-link" href="#isNull">isNull</a>
+
+
+<a class="nav-link" href="#isNotNull">isNotNull</a>
+
+
+<a class="nav-link" href="#isNil">isNil</a>
+
+
+<a class="nav-link" href="#isNotNil">isNotNil</a>
+
+
+<a class="nav-link" href="#isFalsy">isFalsy</a>
+
+
+<a class="nav-link" href="#isTruthy">isTruthy</a>
+
+
+<a class="nav-link" href="#isInt">isInt</a>
+
+
+<a class="nav-link" href="#isNumber">isNumber</a>
+
+
+<a class="nav-link" href="#isString">isString</a>
+
+
+<a class="nav-link" href="#isBoolean">isBoolean</a>
+
+
+<a class="nav-link" href="#isFunction">isFunction</a>
+
+
+<a class="nav-link" href="#isArray">isArray</a>
+
+
+<a class="nav-link" href="#isRegExp">isRegExp</a>
+
+
+<a class="nav-link" href="#isDate">isDate</a>
+</nav>
+
+<a class="nav-link" href="#other">Other functions</a>
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#def">def</a>
+
+
+<a class="nav-link" href="#defn">defn</a>
+
+
+<a class="nav-link" href="#apply">apply</a>
+
+
+<a class="nav-link" href="#cmp">cmp</a>
+
+
+<a class="nav-link" href="#CmpConfig">CmpConfig</a>
+
+<nav class="nav nav-pills flex-column">
+
+
+
+
+<a class="nav-link" href="#CmpConfig--caseInsensitive">caseInsensitive</a>
+<a class="nav-link" href="#CmpConfig--compareNumbersInStrings">compareNumbersInStrings</a>
+
+
+
+</nav>
+
+<a class="nav-link" href="#get">get</a>
+
+
+<a class="nav-link" href="#newIid">newIid</a>
+
+
+<a class="nav-link" href="#iidStr">iidStr</a>
+
+
+<a class="nav-link" href="#destroy">destroy</a>
+</nav>
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1>jwidget</h1>
+						<p>Core jWidget utilities. Some utilities duplicate the functions of <a href="http://underscorejs.org" target="_blank">Underscore.js</a> and <a href="https://lodash.com" target="_blank">Lodash</a>, but still may come in
+handy if you want to keep dependency list short.</p>
+
+						<h3>Consumption</h3>
+						<pre>import * as jwidget from "jwidget";</pre>
+						
+<h2><span id="enumerations"></span>Enumerations<a class="anchorjs-link" href="#enumerations" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h2>
+
+<h3><span id="Binding"></span>Binding<a class="anchorjs-link" href="#Binding" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>Binding: enum</code></p>
+<p>jWidget binding modes. All options have shorthands, i.e. <code>Binding.UPDATE</code> can be imported
+separately as <code>{UPDATE}</code>.</p>
+<dl class="row">
+  <dt class="col-lg-2 col-sm-3">UPDATE = 1</dt>
+  <dd class="col-lg-10 col-sm-9">
+    <p>Bind element attribute to property.</p>
+    <pre>
+    // Bind element value to property
+    <a href="jwidget/bindVal.html" target="_parent">bindVal</a>(el, property, <b>UPDATE</b>);</pre>
+    <p>Always used as default binding. Hence, the next code is almost equivalent:</p>
+    <pre>
+    <a href="jwidget/bindVal.html" target="_parent">bindVal</a>(el, property);</pre>
+    <p>Please prefer the second approach, because the first one takes <a href="jwidget/IProperty.html" target="_parent">IProperty</a> as an argument whereas
+    <a href="jwidget/Bindable.html" target="_parent">Bindable</a> is enough for the second one.</p>
+  </dd>
+  <dt class="col-lg-2 col-sm-3">WATCH = 2</dt>
+  <dd class="col-lg-10 col-sm-9">
+    <p>Bind property to element attribute.</p>
+    <pre>
+    // Bind property to element value
+    <a href="jwidget/bindVal.html" target="_parent">bindVal</a>(el, property, <b>WATCH</b>);</pre>
+    <p>Always supplied with a no-argument method, which creates the property automatically.</p>
+    <pre>
+    // Watch element value
+    const property = <a href="jwidget/bindVal.html" target="_parent">bindVal</a>(el);</pre>
+  </dd>
+  <dt class="col-lg-2 col-sm-3">TWOWAY = 3</dt>
+  <dd class="col-lg-10 col-sm-9">
+    <p>Bind element attribute and property to each other.</p>
+    <p><b>UPDATE</b>-binding is applied first, <b>WATCH</b> is applied last.</p>
+    <pre>
+    // Assign element value to property and setup two-way binding
+    <a href="jwidget/bindVal.html" target="_parent">bindVal</a>(el, property, <b>TWOWAY</b>);</pre>
+  </dd>
+</dl>
+
+</div>
+<h3><span id="CollectionFlags"></span>CollectionFlags<a class="anchorjs-link" href="#CollectionFlags" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>CollectionFlags: enum</code></p>
+<p>jWidget collection flags. All options have shorthands, i.e. <code>CollectionFlags.SILENT</code> can be
+imported separately as <code>{SILENT}</code>.</p>
+<dl class="row">
+  <dt class="col-lg-2 col-sm-3">SILENT = 1</dt>
+  <dd class="col-lg-10 col-sm-9">
+    <p>Creates a silent collection, which means that it never <a href="jwidget/IEvent.html#default--trigger" target="_parent">triggers</a> modification events. Silent collections
+    work a little bit faster and consume less memory. Useful for collections that never get modified or
+    observed.</p>
+    <pre>
+    const silentList = new <a href="jwidget/List.html" target="_parent">List</a>&lt;number&gt;([1, 2], <b>SILENT</b>);
+    const mappedList = <a href="jwidget/mapper/list.html#mapList" target="_parent">mapList</a>(silentList, (value) =&gt; 2 * value);
+    expect(mappedList.<a href="jwidget/ReadOnlyList.html#default--items" target="_parent">items</a>).toEqual([2, 4]);
+    silentList.<a href="jwidget/IList.html#default--add" target="_parent">add</a>(3);
+    expect(mappedList.<a href="jwidget/ReadOnlyList.html#default--items" target="_parent">items</a>).toEqual([2, 4]); // 6 is not added, because source list is silent</pre>
+  </dd>
+  <dt class="col-lg-2 col-sm-3">ADAPTER = 2</dt>
+  <dd class="col-lg-10 col-sm-9">
+    <p>Creates an adapter for an existing array or dictionary, which means that it uses the same object as a
+    container for the collection contents instead of creating a new container. Note that you should not modify
+    the original array or dictionary in this case, because it may break the collection consistency.</p>
+    <pre>
+    const originalArray = [1, 2];
+    const adapterList = new <a href="jwidget/List.html" target="_parent">List</a>&lt;number&gt;(originalArray, <b>ADAPTER</b>);
+    adapterList.add(3);
+    expect(originalArray).toEqual([1, 2, 3]); // 3 is added to original array, because the list is adapter</pre>
+  </dd>
+</dl>
+<p>Pass both flags via bitwise disjunction operator:</p>
+<pre>
+new <a href="jwidget/List.html" target="_parent">List</a>&lt;number&gt;(originalArray, <b>SILENT</b> | <b>ADAPTER</b>);</pre>
+
+</div>
+<h2><span id="testers"></span>Value test functions<a class="anchorjs-link" href="#testers" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h2>
+<p>These functions are useful for collection filtering:</p>
+<pre>
+const realValues = values.filter(<a href="#isNotNil" target="_parent">isNotNil</a>);</pre>
+<p>Which is a shorter equivalent for:</p>
+<pre>
+const readValues = values.filter((value) =&gt; value != null);</pre>
+
+<h3><span id="isUndefined"></span>isUndefined<a class="anchorjs-link" href="#isUndefined" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is undefined.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isDefined"></span>isDefined<a class="anchorjs-link" href="#isDefined" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is not undefined.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isNull"></span>isNull<a class="anchorjs-link" href="#isNull" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is null.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isNotNull"></span>isNotNull<a class="anchorjs-link" href="#isNotNull" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is not null.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isNil"></span>isNil<a class="anchorjs-link" href="#isNil" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is undefined or null.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isNotNil"></span>isNotNil<a class="anchorjs-link" href="#isNotNil" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is not undefined and null.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isFalsy"></span>isFalsy<a class="anchorjs-link" href="#isFalsy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is falsy (i.e. <code>Boolean(value)</code> is false).</dd>
+</dl>
+
+
+</div>
+<h3><span id="isTruthy"></span>isTruthy<a class="anchorjs-link" href="#isTruthy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is truthy (i.e. <code>Boolean(value)</code> is true).</dd>
+</dl>
+
+
+</div>
+<h3><span id="isInt"></span>isInt<a class="anchorjs-link" href="#isInt" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is integer.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isNumber"></span>isNumber<a class="anchorjs-link" href="#isNumber" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is number.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isString"></span>isString<a class="anchorjs-link" href="#isString" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is string.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isBoolean"></span>isBoolean<a class="anchorjs-link" href="#isBoolean" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is boolean.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isFunction"></span>isFunction<a class="anchorjs-link" href="#isFunction" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is function.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isArray"></span>isArray<a class="anchorjs-link" href="#isArray" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is native JavaScript Array.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isRegExp"></span>isRegExp<a class="anchorjs-link" href="#isRegExp" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is regular expression.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isDate"></span>isDate<a class="anchorjs-link" href="#isDate" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(value: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Value is date.</dd>
+</dl>
+
+
+</div>
+<h2><span id="other"></span>Other functions<a class="anchorjs-link" href="#other" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h2>
+
+<h3><span id="def"></span>def<a class="anchorjs-link" href="#def" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(value: T, defaultValue: T): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3">defaultValue</dt><dd class="col-lg-10 col-sm-9">Default value to return.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>value</b> if it is not undefined, else <b>defaultValue</b>.</dd>
+</dl>
+As opposed to <a href="#defn" target="_parent">defn</a>, treats null as suitable value.
+
+
+</div>
+<h3><span id="defn"></span>defn<a class="anchorjs-link" href="#defn" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(value: T, defaultValue: T): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to test.</dd>
+<dt class="col-lg-2 col-sm-3">defaultValue</dt><dd class="col-lg-10 col-sm-9">Default value to return.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>value</b> if it is not undefined and null, else <b>defaultValue</b>.</dd>
+</dl>
+As opposed to <a href="#def" target="_parent">def</a>, throws null as unsuitable value.
+
+
+</div>
+<h3><span id="apply"></span>apply<a class="anchorjs-link" href="#apply" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(target: <a href="jwidget/Dictionary.html" target="_parent">Dictionary</a>&lt;T&gt;, ...sources: <a href="jwidget/Dictionary.html" target="_parent">Dictionary</a>&lt;T&gt;[]): <a href="jwidget/Dictionary.html" target="_parent">Dictionary</a>&lt;T&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">target</dt><dd class="col-lg-10 col-sm-9">Target dictionary to copy the values to.</dd>
+<dt class="col-lg-2 col-sm-3">sources</dt><dd class="col-lg-10 col-sm-9">Source dictionaries.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>target</b></dd>
+</dl>
+<p>Iterates through objects passed after first argument and copies all their fields into <b>target</b> object.
+Returns <b>target</b>. Undefined source values are ignored. Null and undefined source dictionaries are ignored.</p>
+<p>Function modifies <b>target</b> object!</p>
+<pre>
+var x: <a href="jwidget/Dictionary.html" target="_parent">Dictionary</a>&lt;number&gt; = { |  var y: <a href="jwidget/Dictionary.html" target="_parent">Dictionary</a>&lt;number&gt; = {  // Result = {
+    a: 10,                    |                                 //     a: 10,
+    b: 20,                    |      b: 30,                     //     b: 30,
+    c: null,                  |      c: 40,                     //     c: 40,
+    d: undefined,             |      d: 50,                     //     d: 50,
+    e: null                   |                                 //     e: null,
+                              |      f: 60,                     //     f: 60
+                              |      g: undefined               //
+};                            |  };                             // };
+
+<b>apply</b>&lt;number&gt;(x, y);</pre>
+
+
+</div>
+<h3><span id="cmp"></span>cmp<a class="anchorjs-link" href="#cmp" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(x: any, y: any, config?: <a href="#CmpConfig" target="_parent">CmpConfig</a>): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">x</dt><dd class="col-lg-10 col-sm-9">First value to compare.</dd>
+<dt class="col-lg-2 col-sm-3">y</dt><dd class="col-lg-10 col-sm-9">Second value to compare.</dd>
+<dt class="col-lg-2 col-sm-3">config</dt><dd class="col-lg-10 col-sm-9">Optional configuration.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">One or {-1, 0, 1} as comparison result.</dd>
+</dl>
+<p>Universal and sophisticated comparer for array sorting. Broadly speaking, it:</p>
+<ul>
+  <li>Returns 1, if <code><b>x</b> > <b>y</b></code></li>
+  <li>Returns -1, if <code><b>x</b> < <b>y</b></code></li>
+  <li>Returns 0, if <code><b>x</b> == <b>y</b></code></li>
+</ul>
+<p>In reality, it supports the next features:</p>
+<ul>
+  <li>Comparing of boolean, number, string, <a href="jwidget/Identifiable.html" target="_parent">Identifiable</a> (by <a href="jwidget/Identifiable.html#default--iid" target="_parent">iid</a>) values, subarrays</li>
+  <li>Determined linear order, even for mixed arrays</li>
+  <li>Case insensitive comparing for strings</li>
+  <li>Comparing of digit sequences in strings as numbers</li>
+</ul>
+<h5>Example</h5>
+<p>Sort by color descending first, and by status ascending last. Both parameters are optional.</p>
+<pre>
+rows.sort((x, y) =&gt; {
+    return <b>cmp</b>(x.color == null, y.color == null) ||
+          -<b>cmp</b>(x.color, y.color) ||
+           <b>cmp</b>(x.status == null, y.status == null) ||
+           <b>cmp</b>(x.status, y.status);
+});</pre>
+
+
+</div>
+<h3><span id="CmpConfig"></span>CmpConfig<a class="anchorjs-link" href="#CmpConfig" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+
+
+Optional configuration of <a href="#cmp" target="_parent">cmp</a> function.
+
+
+
+
+
+
+<h5><span id="CmpConfig--caseInsensitive"></span>caseInsensitive<a class="anchorjs-link" href="#CmpConfig--caseInsensitive" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly caseInsensitive: boolean = false</code></p>
+Ignore case when comparing strings.
+</div>
+
+<h5><span id="CmpConfig--compareNumbersInStrings"></span>compareNumbersInStrings<a class="anchorjs-link" href="#CmpConfig--compareNumbersInStrings" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly compareNumbersInStrings: boolean = false</code></p>
+Compare digit sequences as numbers when comparing strings.
+</div>
+
+
+
+</div>
+<h3><span id="get"></span>get<a class="anchorjs-link" href="#get" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(obj: any, path: any): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">path</dt><dd class="col-lg-10 col-sm-9">Field name or path to it.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Field value.</dd>
+</dl>
+<p>Returns object field or subfield by <b>path</b>. <b>Path</b> is a primitive value (object key), or an array of
+subpaths. If <b>path</b> is null, undefined or empty array, returns <b>obj</b>. If item doesn't exist, returns undefined.</p>
+<h5>Example</h5>
+<pre>
+const obj = {
+    abc: [
+        {
+            qwe: &quot;xyz&quot;
+        }
+    ]
+};
+
+expect(<b>get</b>(obj, [&quot;abc&quot;, 0, &quot;qwe&quot;])).toBe(&quot;xyz&quot;);
+expect(<b>get</b>(obj, &quot;abc&quot;)).toBe(obj.abc);</pre>
+
+
+</div>
+<h3><span id="newIid"></span>newIid<a class="anchorjs-link" href="#newIid" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(): number</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">New unique auto-incremented integer identified.</dd>
+</dl>
+<p>Returns a new auto-incremented instance identifier for <a href="jwidget/Identifiable.html" target="_parent">Identifiable</a> interface.
+<a href="jwidget/Class.html" target="_parent">Class</a> constructor calls it automatically.</p>
+
+
+</div>
+<h3><span id="iidStr"></span>iidStr<a class="anchorjs-link" href="#iidStr" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(obj: <a href="jwidget/Identifiable.html" target="_parent">Identifiable</a>): string
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to inspect.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><a href="jwidget/Identifiable.html#default--iid" target="_parent">iid</a> field of <b>obj</b> converted to a string.</dd>
+</dl>
+<p>Can be used as efficient <b>getKey</b> implementation for collections consisting of <a href="jwidget/Identifiable.html" target="_parent">Identifiable</a> objects
+only. Since default <b>getKey</b> implementation analyzes input value nature very deeply, it has performance
+penalty. Specifying <b>iidStr</b> for collections of <a href="jwidget/Identifiable.html" target="_parent">Identifiable</a> objects may improve performance significantly.</p>
+
+
+</div>
+<h3><span id="destroy"></span>destroy<a class="anchorjs-link" href="#destroy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(obj: any): any
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to destroy.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">undefined.</dd>
+</dl>
+<p>Calls <b>destroy</b> method of <b>obj</b> if available. Can be used in configuration of any mapper.</p>
+<pre>
+const views = <a href="jwidget/mapper/list.html#mapList" target="_parent">mapList</a>(models, (model) =&gt; new View(model), {<b>destroy</b>});</pre>
+<p>Doesn't return anything - any return type is specified for easier usage in methods like
+<a href="jwidget/ArrayUtils.html" target="_parent">ArrayUtils</a>.<a href="jwidget/ArrayUtils.html#backEvery" target="_parent">backEvery</a>.</p>
+
+
+</div>
+					</div>
+					<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+				</div>
+			
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Events</a></li>
+    <li><a href="tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><b>CoreUtils</b></li>
+        <li><a href="jwidget/ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="jwidget/DictionaryUtils.html" target="_parent">DictionaryUtils</a></li>
+        <li><a href="jwidget/DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="jwidget/StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="jwidget/Identifiable.html" target="_parent">Identifiable</a></li>
+        <li><a href="jwidget/Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="jwidget/Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="jwidget/DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Dictionary.html" target="_parent">Dictionary</a></li>
+        <li><a href="jwidget/Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Class.html" target="_parent">Class</a>, <a href="jwidget/IClass.html" target="_parent">IClass</a></li>
+        <li><a href="jwidget/Event.html" target="_parent">Event</a>, <a href="jwidget/IEvent.html" target="_parent">IEvent</a></li>
+        <li><a href="jwidget/Property.html" target="_parent">Property</a>, <a href="jwidget/IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Component.html" target="_parent">Component</a></li>
+        <li><a href="jwidget/template.html" target="_parent">template</a></li>
+        <li><a href="jwidget/listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Copier.html" target="_parent">Copier</a></li>
+        <li><a href="jwidget/Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="jwidget/Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="jwidget/bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="jwidget/bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="jwidget/bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="jwidget/bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="jwidget/bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="jwidget/bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="jwidget/bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="jwidget/bindText.html" target="_parent">bindText</a></li>
+        <li><a href="jwidget/bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="jwidget/ReadonlyCollection.html" target="_parent">ReadonlyCollection</a></td>
+            <td><a href="jwidget/ReadonlyList.html" target="_parent">ReadonlyList</a></td>
+            <td><a href="jwidget/ReadonlyMap.html" target="_parent">ReadonlyMap</a></td>
+            <td><a href="jwidget/ReadonlySet.html" target="_parent">ReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="jwidget/DestroyableReadonlyCollection.html" target="_parent">DestroyableReadonlyCollection</a></td>
+            <td><a href="jwidget/DestroyableReadonlyList.html" target="_parent">DestroyableReadonlyList</a></td>
+            <td><a href="jwidget/DestroyableReadonlyMap.html" target="_parent">DestroyableReadonlyMap</a></td>
+            <td><a href="jwidget/DestroyableReadonlySet.html" target="_parent">DestroyableReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="jwidget/ICollection.html" target="_parent">ICollection</a></td>
+            <td><a href="jwidget/IList.html" target="_parent">IList</a></td>
+            <td><a href="jwidget/IMap.html" target="_parent">IMap</a></td>
+            <td><a href="jwidget/ISet.html" target="_parent">ISet</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><a href="jwidget/List.html" target="_parent">List</a></td>
+            <td><a href="jwidget/Map.html" target="_parent">Map</a></td>
+            <td><a href="jwidget/Set.html" target="_parent">Set</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="jwidget/mapper/AbstractMapper.html" target="_parent">Mappers</a></li>
+        <li><a href="jwidget/filterer/AbstractFilterer.html" target="_parent">Filterers</a></li>
+        <li><a href="jwidget/counter/AbstractCounter.html" target="_parent">Counters</a></li>
+        <li><a href="jwidget/indexer/AbstractIndexer.html" target="_parent">Indexers</a></li>
+        <li><a href="jwidget/convertertoset/AbstractConverterToSet.html" target="_parent">Converters to set</a></li>
+        <li><a href="jwidget/convertertolist/AbstractConverterToList.html" target="_parent">Converters to list</a></li>
+        <li><a href="jwidget/sortercomparing/AbstractSorterComparing.html" target="_parent">Sorters (comparing)</a></li>
+        <li><a href="jwidget/observer/AbstractObserver.html" target="_parent">Observers</a></li>
+        <li><a href="jwidget/inserter/list.html" target="_parent">Inserters</a></li>
+        <li><a href="jwidget/merger/list.html" target="_parent">Mergers</a></li>
+        <li><a href="jwidget/reverser/list.html" target="_parent">Reversers</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/hash.html" target="_parent">hash</a></li>
+        <li><a href="jwidget/Router.html" target="_parent">Router</a></li>
+        <li><a href="jwidget/UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="jwidget/Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="jwidget/Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="jwidget/defer.html" target="_parent">defer</a></li>
+        <li><a href="jwidget/request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="jwidget/DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="jwidget/HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+        <li><a href="jwidget/Reducer.html" target="_parent">Reducer</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="jwidget/dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="jwidget/dummyEvent.html" target="_parent">dummyEvent</a></li>
+        <li><a href="jwidget/IndexCount.html" target="_parent">IndexCount</a></li>
+        <li><a href="jwidget/IndexItems.html" target="_parent">IndexItems</a></li>
+        <li><a href="jwidget/ListSpliceResult.html" target="_parent">ListSpliceResult</a></li>
+        <li><a href="jwidget/TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="scripts.js"></script>
+	</body>
+</html>

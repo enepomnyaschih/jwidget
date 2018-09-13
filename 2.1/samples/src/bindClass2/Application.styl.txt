@@ -1,0 +1,15 @@
+.application-rect
+    background silver
+    display inline-block
+    margin-top 10px
+    width 100px
+    height 100px
+
+    &.red
+        background red
+
+    &.green
+        background green
+
+    &.blue
+        background blue

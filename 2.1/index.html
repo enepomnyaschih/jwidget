@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href=".">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href=".">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="tutorials/tutorial1.html"
+							data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			<div class="container">
+  <div class="jumbotron">
+    <h1 class="display-4">jWidget 2</h1>
+    <p class="lead">Object-oriented TypeScript Model-View framework.</p>
+    <hr class="my-4">
+    <p>Being straight competitor to the other frontend frameworks, jWidget is good for developers who respect
+    the principles of object-oriented programming and appreciate good application performance.</p>
+  </div>
+  <p>jWidget 2 is available as <a href="https://www.npmjs.com/package/jwidget">npm package</a>.</p>
+  <pre>
+  npm install --save jwidget</pre>
+  <p>jWidget features:</p>
+  <ul>
+    <li>Base class <a href="jwidget/Class.html" target="_parent">Class</a> for object aggregation.</li>
+    <li><a href="jwidget/Event.html" target="_parent">Event</a> class for event listening and triggering.</li>
+    <li><a href="jwidget/Property.html" target="_parent">Property</a> class for value binding.</li>
+    <li><a href="jwidget/ReadonlyCollection.html" target="_parent">Collections</a>, algorithms, synchronizers.</li>
+    <li><a href="jwidget/Component.html" target="_parent">Component</a> for UI component creation and inheritance with HTML templates and DOM bindings.</li>
+    <li>and many other...</li>
+  </ul>
+  <p>jWidget is a pure object-oriented solution which doesn't rely on mystic custom HTML templates and unclear
+  update cycles. Each object simply listens events and handles them in very straightforward way. Look at the next
+  example:</p>
+  <pre>
+  import &quot;es6-promise/auto&quot;;
+  import &quot;script-loader!jquery&quot;;
+
+  import {<a href="jwidget.html#Binding" target="_parent">TWOWAY</a>} from &quot;jwidget&quot;;
+  import <a href="jwidget/bindText.html" target="_parent">bindText</a> from &quot;jwidget/bindText&quot;;
+  import <a href="jwidget/bindVal.html" target="_parent">bindVal</a> from &quot;jwidget/bindVal&quot;;
+  import <a href="jwidget/Component.html" target="_parent">Component</a> from &quot;jwidget/Component&quot;;
+  import <a href="jwidget/Property.html" target="_parent">Property</a> from &quot;jwidget/Property&quot;;
+  import <a href="jwidget/template.html" target="_parent">template</a> from &quot;jwidget/template&quot;;
+
+  @<a href="jwidget/template.html" target="_parent">template</a>(`&lt;div class=&quot;greeter&quot;&gt;
+               &lt;p&gt;Your name: &lt;input jwid=&quot;name-field&quot; type=&quot;text&quot;&gt;&lt;/p&gt;
+               &lt;div jwid=&quot;greeting&quot;&gt;&lt;/div&gt;
+             &lt;/div&gt;`)
+  class Greeter extends <a href="jwidget/Component.html" target="_parent">Component</a> {
+
+      private name = new <a href="jwidget/Property.html" target="_parent">Property</a>(&quot;guest&quot;);
+
+      protected renderNameField(el: JQuery) {
+          // Bind element value to property
+          <a href="jwidget/bindVal.html" target="_parent">bindVal</a>(el, this.name, <a href="jwidget.html#Binding" target="_parent">TWOWAY</a>);
+      }
+
+      protected renderGreeting(el: JQuery) {
+          // Build greeting message
+          const text = this.name.<a href="jwidget/Bindable.html#default--map" target="_parent">map</a>(name =&gt; `Hello, ${name}!`);
+
+          // Bind element text to message
+          <a href="jwidget/bindText.html" target="_parent">bindText</a>(el, text);
+      }
+  }
+
+  $(() =&gt; {
+      new Greeter().<a href="jwidget/Component.html#default--renderTo" target="_parent">renderTo</a>(&quot;body&quot;);
+  });</pre>
+  <iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="samples/public/greeter.html"></iframe>
+  <p>Sure, in Angular and React this code would be much shorter, but in jWidget you see clearly how it works. This
+  gives you confidence in your ability to implement as complicated and big MV application as you would like to. You
+  are free to use all well-known OOD patterns and follow OOD
+  <a href="http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)" target="_blank">SOLID principles</a>. Read the
+  <a href="tutorial.html" target="_parent">jWidget 2 tutorials</a> for more examples.</p>
+  <p>The difference between jWidget and other Model-View frameworks is the approach of working with properties and
+  collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding
+  is performed explicitly using <a href="jwidget/Property.html" target="_parent">Property</a> and its bindings. Instead of special tags-repeaters in HTML templates, you work with
+  collections explicitly using <a href="jwidget/ReadonlyCollection.html" target="_parent">Collections</a> and their synchronizers.</p>
+  <p>This approach is more effective: data binding is not constrained by connection between model and view. All the same
+  practices are used to bind model objects to each other and to bind view components to each other.</p>
+  <p>Project license is <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html" target="_blank">LGPLv3</a>.</p>
+  <p>Find source code and bug tracker at <a href="https://github.com/enepomnyaschih/jwidget" target="_blank">GitHub</a>.</p>
+  <p>Legacy jWidget 1 documentation <a href="http://enepomnyaschih.github.io/jwidget#!/guide/home">is still available here</a>.</p>
+</div>
+<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Events</a></li>
+    <li><a href="tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="jwidget/ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="jwidget/DictionaryUtils.html" target="_parent">DictionaryUtils</a></li>
+        <li><a href="jwidget/DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="jwidget/StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="jwidget/Identifiable.html" target="_parent">Identifiable</a></li>
+        <li><a href="jwidget/Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="jwidget/Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="jwidget/DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Dictionary.html" target="_parent">Dictionary</a></li>
+        <li><a href="jwidget/Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Class.html" target="_parent">Class</a>, <a href="jwidget/IClass.html" target="_parent">IClass</a></li>
+        <li><a href="jwidget/Event.html" target="_parent">Event</a>, <a href="jwidget/IEvent.html" target="_parent">IEvent</a></li>
+        <li><a href="jwidget/Property.html" target="_parent">Property</a>, <a href="jwidget/IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Component.html" target="_parent">Component</a></li>
+        <li><a href="jwidget/template.html" target="_parent">template</a></li>
+        <li><a href="jwidget/listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Copier.html" target="_parent">Copier</a></li>
+        <li><a href="jwidget/Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="jwidget/Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="jwidget/bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="jwidget/bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="jwidget/bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="jwidget/bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="jwidget/bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="jwidget/bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="jwidget/bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="jwidget/bindText.html" target="_parent">bindText</a></li>
+        <li><a href="jwidget/bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="jwidget/ReadonlyCollection.html" target="_parent">ReadonlyCollection</a></td>
+            <td><a href="jwidget/ReadonlyList.html" target="_parent">ReadonlyList</a></td>
+            <td><a href="jwidget/ReadonlyMap.html" target="_parent">ReadonlyMap</a></td>
+            <td><a href="jwidget/ReadonlySet.html" target="_parent">ReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="jwidget/DestroyableReadonlyCollection.html" target="_parent">DestroyableReadonlyCollection</a></td>
+            <td><a href="jwidget/DestroyableReadonlyList.html" target="_parent">DestroyableReadonlyList</a></td>
+            <td><a href="jwidget/DestroyableReadonlyMap.html" target="_parent">DestroyableReadonlyMap</a></td>
+            <td><a href="jwidget/DestroyableReadonlySet.html" target="_parent">DestroyableReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="jwidget/ICollection.html" target="_parent">ICollection</a></td>
+            <td><a href="jwidget/IList.html" target="_parent">IList</a></td>
+            <td><a href="jwidget/IMap.html" target="_parent">IMap</a></td>
+            <td><a href="jwidget/ISet.html" target="_parent">ISet</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><a href="jwidget/List.html" target="_parent">List</a></td>
+            <td><a href="jwidget/Map.html" target="_parent">Map</a></td>
+            <td><a href="jwidget/Set.html" target="_parent">Set</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="jwidget/mapper/AbstractMapper.html" target="_parent">Mappers</a></li>
+        <li><a href="jwidget/filterer/AbstractFilterer.html" target="_parent">Filterers</a></li>
+        <li><a href="jwidget/counter/AbstractCounter.html" target="_parent">Counters</a></li>
+        <li><a href="jwidget/indexer/AbstractIndexer.html" target="_parent">Indexers</a></li>
+        <li><a href="jwidget/convertertoset/AbstractConverterToSet.html" target="_parent">Converters to set</a></li>
+        <li><a href="jwidget/convertertolist/AbstractConverterToList.html" target="_parent">Converters to list</a></li>
+        <li><a href="jwidget/sortercomparing/AbstractSorterComparing.html" target="_parent">Sorters (comparing)</a></li>
+        <li><a href="jwidget/observer/AbstractObserver.html" target="_parent">Observers</a></li>
+        <li><a href="jwidget/inserter/list.html" target="_parent">Inserters</a></li>
+        <li><a href="jwidget/merger/list.html" target="_parent">Mergers</a></li>
+        <li><a href="jwidget/reverser/list.html" target="_parent">Reversers</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/hash.html" target="_parent">hash</a></li>
+        <li><a href="jwidget/Router.html" target="_parent">Router</a></li>
+        <li><a href="jwidget/UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="jwidget/Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="jwidget/Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="jwidget/defer.html" target="_parent">defer</a></li>
+        <li><a href="jwidget/request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="jwidget/DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="jwidget/HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+        <li><a href="jwidget/Reducer.html" target="_parent">Reducer</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="jwidget/AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="jwidget/dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="jwidget/dummyEvent.html" target="_parent">dummyEvent</a></li>
+        <li><a href="jwidget/IndexCount.html" target="_parent">IndexCount</a></li>
+        <li><a href="jwidget/IndexItems.html" target="_parent">IndexItems</a></li>
+        <li><a href="jwidget/ListSpliceResult.html" target="_parent">ListSpliceResult</a></li>
+        <li><a href="jwidget/TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="scripts.js"></script>
+	</body>
+</html>

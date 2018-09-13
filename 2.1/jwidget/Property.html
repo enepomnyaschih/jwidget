@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jwidget/Property - jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../tutorials/tutorial1.html"
+							data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">jwidget/Property</a>
+						
+<a class="nav-link" href="#default">Default export</a>
+
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#default---hierarchy">Hierarchy</a>
+<a class="nav-link" href="#default---description">Description</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#example1">Example 1. Property demonstration</a>
+<a class="nav-link" href="#example2">Example 2. Model & View two-way binding</a>
+<a class="nav-link" href="#example3">Example 3. One-way binding</a></nav>
+<a class="nav-link" href="#default---constructor">Constructor</a>
+
+<a class="nav-link" href="#default---properties">Properties</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link font-italic" href="#default--iid">iid</a>
+<a class="nav-link font-italic" href="#default--changeEvent">changeEvent</a>
+<a class="nav-link font-italic" href="#default--silent">silent</a></nav>
+
+<a class="nav-link" href="#default---methods">Methods</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link font-italic" href="#default--destroy">destroy</a>
+<a class="nav-link font-italic" href="#default--destroyObject">destroyObject</a>
+<a class="nav-link font-italic" href="#default--own">own</a>
+<a class="nav-link font-italic" href="#default--owning">owning</a>
+<a class="nav-link font-italic" href="#default--set">set</a>
+<a class="nav-link font-italic" href="#default--ownValue">ownValue</a>
+<a class="nav-link font-italic" href="#default--get">get</a>
+<a class="nav-link font-italic" href="#default--map">map</a></nav>
+
+
+</nav>
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1><span id="default"></span>jwidget/Property</h1>
+						
+						<h3>Consumption</h3>
+						<pre>import Property from "jwidget/Property";</pre>
+						
+<h3><span id="default"></span>Default export<a class="anchorjs-link" href="#default" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+<h4><span id="default---hierarchy"></span>Hierarchy<a class="anchorjs-link" href="#default---hierarchy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<ul class="doc-hierarchy">
+
+
+
+
+<li><span style="margin-left: 0em"></span>interface <a href="Destroyable.html#default">Destroyable</a></li>
+
+<li><span style="margin-left: 0em"></span>interface <a href="Identifiable.html#default">Identifiable</a></li>
+<li><span style="margin-left: 2em"></span>interface <a href="IClass.html#default">IClass</a></li>
+<li><span style="margin-left: 4em"></span>class <a href="Class.html#default">Class</a></li>
+
+
+
+<li><span style="margin-left: 0em"></span>interface <a href="Bindable.html#default">Bindable</a><span class="monospace">&lt;V&gt;</span></li>
+<li><span style="margin-left: 2em"></span>interface <a href="DestroyableBindable.html#default">DestroyableBindable</a><span class="monospace">&lt;V&gt;</span></li>
+<li><span style="margin-left: 4em"></span>interface <a href="IProperty.html#default">IProperty</a><span class="monospace">&lt;V&gt;</span></li>
+<li><span style="margin-left: 6em"></span>class <b>Property</b><span class="monospace">&lt;V&gt;</span></li>
+
+</ul>
+<h4><span id="default---description"></span>Description<a class="anchorjs-link" href="#default---description" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">V</dt><dd class="col-lg-10 col-sm-9">Value type.</dd>
+</dl>
+<p>Container for a value. Provides basic data binding functionality.</p>
+
+
+		<h5><span id="example1"></span>Example 1. Property demonstration<a class="anchorjs-link" href="#example1" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>The next example demonstrates basic property functionality:</p>
+<pre>
+const prop = new <b>Property</b>('foo');
+console.log(prop.<a href="#default--get" target="_parent">get</a>());  // output: foo
+
+prop.<a href="#default--changeEvent" target="_parent">changeEvent</a>.<a href="Listenable.html#default--listen" target="_parent">listen</a>(({value}) =&gt; console.log(value));
+prop.<a href="#default--set" target="_parent">set</a>('bar');          // output: bar
+prop.<a href="#default--set" target="_parent">set</a>('bar');          // no change - no output
+prop.<a href="#default--set" target="_parent">set</a>('10');           // output: 10
+prop.<a href="#default--set" target="_parent">set</a>(10);             // output: 10 (different type)
+
+const doubl = prop.<a href="#default--map" target="_parent">map</a>((value) =&gt; value * 2);
+console.log(doubl.<a href="#default--get" target="_parent">get</a>()); // output: 20
+prop.<a href="#default--set" target="_parent">set</a>(6);              // output: 6
+console.log(doubl.<a href="#default--get" target="_parent">get</a>()); // output: 12</pre>
+
+	
+
+		<h5><span id="example2"></span>Example 2. Model & View two-way binding<a class="anchorjs-link" href="#example2" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>Example of model class that exposes properties for two-way binding:</p>
+<pre>
+class User extends <a href="Class.html" target="_parent">Class</a> {
+    readonly name = new <b>Property</b>('');
+    readonly age  = new <b>Property</b>(0);
+}</pre>
+<p>And following is an example of view class that uses these bindings:</p>
+<pre>
+@<a href="template.html" target="_parent">template</a>(
+    '&lt;div&gt;' +
+        '&lt;input type=&quot;text&quot; jwid=&quot;name&quot;&gt;' +
+        '&lt;input type=&quot;text&quot; jwid=&quot;age&quot;&gt;' +
+    '&lt;/div&gt;'
+)
+class UserView extends <a href="Component.html" target="_parent">Component</a> {
+    constructor(private user: User) {
+        super();
+    }
+
+    protected renderName(el: JQuery) {
+        // simple two-way binding
+        this.<a href="IClass.html#default--own" target="_parent">own</a>(<a href="bindVal.html" target="_parent">bindVal</a>(el, this.user.name, <a href="../jwidget.html#Binding" target="_parent">TWOWAY</a>));
+    }
+
+    protected renderAge(el: JQuery) {
+        // to display a number in text input, we must map it back and forth
+
+        // map age to string property
+        const ageString = this.<a href="IClass.html#default--own" target="_parent">own</a>(this.user.age.<a href="#default--map" target="_parent">map</a>(String));
+
+        // bind it back
+        new <a href="Mapper.html" target="_parent">Mapper</a>([ageString], Number, {<a href="Mapper.html#Mapper-FullConfig--target" target="_parent">target</a>: this.user.age});
+
+        // bind input element value to age string
+        <a href="bindVal.html" target="_parent">bindVal</a>(el, ageString, <a href="../jwidget.html#Binding" target="_parent">TWOWAY</a>);
+    }
+}</pre>
+
+	
+
+		<h5><span id="example3"></span>Example 3. One-way binding<a class="anchorjs-link" href="#example3" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>If you want to forbid property modification by the clients, use <a href="Bindable.html" target="_parent">Bindable</a> getters:</p>
+<pre>
+class Counter extends <a href="Class.html" target="_parent">Class</a> {
+    private _seconds = new <b>Property</b>(0);
+
+    constructor() {
+        super();
+        this.<a href="IClass.html#default--own" target="_parent">own</a>(new <a href="Interval.html" target="_parent">Interval</a>(() =&gt; this._seconds.<a href="#default--set" target="_parent">set</a>(this._seconds.<a href="#default--get" target="_parent">get</a>() + 1), 1000));
+    }
+
+    get seconds(): <a href="Bindable.html" target="_parent">Bindable</a>&lt;number&gt; {
+        return this._seconds;
+    }
+}</pre>
+<p>Now the client can only use one-way binding:</p>
+<pre>
+class CounterView extends <a href="Component.html" target="_parent">Component</a> {
+    constructor(private counter: Counter) {
+        super();
+    }
+
+    protected renderRoot(el: JQuery) {
+        this.<a href="IClass.html#default--own" target="_parent">own</a>(<a href="bindText.html" target="_parent">bindText</a>(el, this.counter.seconds));
+    }
+}</pre>
+
+	
+
+<h4><span id="default---constructor"></span>Constructor<a class="anchorjs-link" href="#default---constructor" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<p><code>new Property<span class="monospace">&lt;V&gt;</span>(value: <a href="#default" target="_parent">V</a>, silent: boolean = false)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Initial value.</dd>
+<dt class="col-lg-2 col-sm-3">silent</dt><dd class="col-lg-10 col-sm-9">If true, uses <a href="dummyEvent.html" target="_parent">dummyEvent</a> implementation for <a href="#default--changeEvent" target="_parent">changeEvent</a>. Use it if you know for sure that the
+property never gets modified or there are no listeners interested in its modification. Since every jWidget
+application relies on many properties, this may help you improve application performance.
+</dd>
+</dl>
+Constructs a property and sets initial value.
+
+
+<h4><span id="default---properties"></span>Fields<a class="anchorjs-link" href="#default---properties" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--iid"></span><i>iid</i> <span class="doc-inherit-mark">(inherited from <a href="Identifiable.html#default" target="_parent">Identifiable</a>)</span><a class="anchorjs-link" href="#default--iid" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly iid: number</code></p>
+<p>Instance ID.</p>
+<p>Auto-incrementing object unique ID. Extend <a href="Class.html" target="_parent">Class</a> to have such an identifier auto-assigned, or
+simply call <a href="../jwidget.html#newIid" target="_parent">newIid</a> method to obtain one.</p>
+
+</div>
+
+<h5><span id="default--changeEvent"></span><i>changeEvent</i> <span class="doc-inherit-mark">(inherited from <a href="Bindable.html#default" target="_parent">Bindable</a>)</span><a class="anchorjs-link" href="#default--changeEvent" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly changeEvent: <a href="Listenable.html" target="_parent">Listenable</a>&lt;<a href="Bindable.html" target="_parent">Bindable</a>.<a href="Bindable.html#Bindable-ChangeEventParams" target="_parent">ChangeEventParams</a>&lt;<a href="#default" target="_parent">V</a>&gt;&gt;</code></p>
+<p>Property value has just been changed. <a href="IEvent.html#default--trigger" target="_parent">Triggered</a> in result of <a href="#default--set" target="_parent">set</a> method call if the value has been
+changed.</p>
+
+</div>
+
+<h5><span id="default--silent"></span><i>silent</i> <span class="doc-inherit-mark">(inherited from <a href="Bindable.html#default" target="_parent">Bindable</a>)</span><a class="anchorjs-link" href="#default--silent" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly silent: boolean</code></p>
+<p>Checks if this property never <a href="IEvent.html#default--trigger" target="_parent">triggers</a> events. This knowledge may help you do certain code
+optimizations.</p>
+
+</div>
+
+<h4><span id="default---methods"></span>Methods<a class="anchorjs-link" href="#default---methods" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--destroy"></span><i>destroy</i> <span class="doc-inherit-mark">(inherited from <a href="Class.html#default" target="_parent">Class</a>)</span><a class="anchorjs-link" href="#default--destroy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(): void</code></p>
+
+<p>Class destructor invocation method. Destroys all aggregated objects and calls <a href="#default--destroyObject" target="_parent">destroyObject</a> method.
+You must call this method explicitly from outside, because JavaScript doesn't support automatic class
+destructor calling.</p>
+<pre>
+const object = new MyClass();
+
+// ...
+
+// Once object is not needed anymore, destroy it
+object.<b>destroy</b>();</pre>
+<p>Alternatively (and optimally), you should use <a href="IClass.html#default--own" target="_parent">own</a> method to aggregate this object inside another one.</p>
+<p>Unlike the other <a href="Destroyable.html" target="_parent">Destroyable</a> subclasses, <a href="Class.html" target="_parent">Class</a> subclasses are not recommended to override <b>destroy</b>
+method directly. Instead, please use <a href="#default--destroyObject" target="_parent">destroyObject</a> if you want the aggregated objects to be already
+destroyed.</p>
+<p>You can override <b>destroy</b> method in a subclass to do some preliminary work before aggregated object
+destruction. For example, <a href="Component.html" target="_parent">Component</a> overrides this method to remove child components before their
+destruction, because child components are usually aggregated inside the component. However, in the majority
+of cases, you should override <a href="#default--destroyObject" target="_parent">destroyObject</a> method instead to customize destruction logic.</p>
+
+</div>
+
+<h5><span id="default--destroyObject"></span><i>destroyObject</i> <span class="doc-inherit-mark">(inherited from <a href="Class.html#default" target="_parent">Class</a>)</span><a class="anchorjs-link" href="#default--destroyObject" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>protected (): void</code></p>
+
+<p>Class destructor implementation. Called in <a href="#default--destroy" target="_parent">destroy</a> method <i>after aggregated object destruction</i>.
+The logic of class instance destruction should be implemented here. If you override this method,
+remember to call <code>super.<b>destroyObject</b>()</code> at the end of the method:</p>
+<pre>
+<b>destroyObject</b>() {
+    // Release resources
+    ...
+
+    // Call superclass destructor
+    super.<b>destroyObject</b>();
+}</pre>
+
+</div>
+
+<h5><span id="default--own"></span><i>own</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#default--own" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>&lt;T extends <a href="Destroyable.html" target="_parent">Destroyable</a>&gt;(obj: T): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>obj</b></dd>
+</dl>
+<p>Aggregates the object. It means that the specified object is automatically destroyed
+on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
+Returns <b>obj</b> object, which makes it easy to use in field definition:</p>
+<pre>
+private selected = this.<b>own</b>(new <b>Property</b>(false));</pre>
+
+</div>
+
+<h5><span id="default--owning"></span><i>owning</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#default--owning" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(obj: <a href="Destroyable.html" target="_parent">Destroyable</a>): this
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Aggregates the object. It means that the specified object is automatically destroyed
+on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
+Returns <code>this</code> object, which makes it easy to use in object instantiation:</p>
+<pre>
+const items = new <a href="List.html" target="_parent">List</a>();
+return new Panel(items).<b>owning</b>(items);</pre>
+
+</div>
+
+<h5><span id="default--set"></span><i>set</i> <span class="doc-inherit-mark">(inherited from <a href="IProperty.html#default" target="_parent">IProperty</a>)</span><a class="anchorjs-link" href="#default--set" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(value: <a href="#default" target="_parent">V</a>)</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">New value to set.</dd>
+</dl>
+<p>Changes property value and triggers <a href="#default--changeEvent" target="_parent">changeEvent</a> if the value has been changed.</p>
+
+</div>
+
+<h5><span id="default--ownValue"></span><i>ownValue</i> <span class="doc-inherit-mark">(inherited from <a href="IProperty.html#default" target="_parent">IProperty</a>)</span><a class="anchorjs-link" href="#default--ownValue" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(): this</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Makes this property an owner of its value. It means that the value is <a href="Destroyable.html#default--destroy" target="_parent">destroyed</a> automatically on
+reassignment or destruction of the property.</p>
+
+</div>
+
+<h5><span id="default--get"></span><i>get</i> <span class="doc-inherit-mark">(inherited from <a href="Bindable.html#default" target="_parent">Bindable</a>)</span><a class="anchorjs-link" href="#default--get" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(): <a href="#default" target="_parent">V</a></code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Current property value.</dd>
+</dl>
+<p>Think twice before calling this method - probably it makes sense to use some kind of <a href="Bindable.html#bindings" target="_parent">binding</a> instead?</p>
+
+</div>
+
+<h5><span id="default--map"></span><i>map</i> <span class="doc-inherit-mark">(inherited from <a href="Bindable.html#default" target="_parent">Bindable</a>)</span><a class="anchorjs-link" href="#default--map" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>&lt;U&gt;(create: (value: <a href="#default" target="_parent">V</a>) =&gt; U, config?: <a href="Mapper.html" target="_parent">Mapper</a>.<a href="Mapper.html#Mapper-Config" target="_parent">Config</a>&lt;U&gt;): <a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a>&lt;U&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">create</dt><dd class="col-lg-10 col-sm-9">Mapping function.</dd>
+<dt class="col-lg-2 col-sm-3">config</dt><dd class="col-lg-10 col-sm-9">Configuration options.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Mapped property.</dd>
+</dl>
+<p>Builds a new property containing the result of the <b>create</b> function called on this property value. To stop
+synchronization, <a href="#default--destroy" target="_parent">destroy</a> the resulting property. To map multiple properties at once, use <a href="Mapper.html" target="_parent">Mapper</a>.</p>
+<h5>Example 1. Double number</h5>
+<pre>
+const num = new <b>Property</b>&lt;number&gt;(3);
+const double = num.<b>map</b>(value =&gt; 2 * value);
+expect(double.<a href="#default--get" target="_parent">get</a>()).toBe(6);
+num.<a href="#default--set" target="_parent">set</a>(5);
+expect(double.<a href="#default--get" target="_parent">get</a>()).toBe(10);</pre>
+<p>Pass <a href="Mapper.html#Mapper-Config--destroy" target="_parent">destroy</a> option to destroy the previously mapped values.</p>
+<h5>Example 2. Typical bindable model mapping to UI component</h5>
+<pre>
+@<a href="template.html" target="_parent">template</a>('&lt;div&gt;&lt;div jwid=&quot;report&quot;&gt;&lt;/div&gt;&lt;/div&gt;')
+class App extends <a href="Component.html" target="_parent">Component</a> {
+    constructor(private report: <a href="Bindable.html" target="_parent">Bindable</a>&lt;Report&gt;) {}
+
+    protected renderReport() {
+        return this.<a href="IClass.html#default--own" target="_parent">own</a>(report.<b>map</b>(report =&gt; new ReportView(report), {<a href="../jwidget.html#destroy" target="_parent">destroy</a>}));
+    }
+}</pre>
+<p>Pass <a href="Mapper.html#Mapper-Config--viaNull" target="_parent">viaNull</a> option to reverse mapper updating flow. Default flow is:</p>
+<ol>
+  <li>Create a new value.</li>
+  <li>Reassign target property.</li>
+  <li>Destroy the old value.</li>
+</ol>
+<p>Setting this option to true changes the flow the next way:</p>
+<ol>
+  <li>Set target value to null.</li>
+  <li>Destroy the old value.</li>
+  <li>Create a new value.</li>
+  <li>Assign target property.</li>
+</ol>
+
+</div>
+
+
+</div>
+					</div>
+					<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+				</div>
+			
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="../tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="../tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="../tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="../tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Events</a></li>
+    <li><a href="../tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="../tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="../tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="DictionaryUtils.html" target="_parent">DictionaryUtils</a></li>
+        <li><a href="DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="Identifiable.html" target="_parent">Identifiable</a></li>
+        <li><a href="Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Dictionary.html" target="_parent">Dictionary</a></li>
+        <li><a href="Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Class.html" target="_parent">Class</a>, <a href="IClass.html" target="_parent">IClass</a></li>
+        <li><a href="Event.html" target="_parent">Event</a>, <a href="IEvent.html" target="_parent">IEvent</a></li>
+        <li><b>Property</b>, <a href="IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="Component.html" target="_parent">Component</a></li>
+        <li><a href="template.html" target="_parent">template</a></li>
+        <li><a href="listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <b>Property</b></h5>
+      <ul class="list-unstyled">
+        <li><a href="Copier.html" target="_parent">Copier</a></li>
+        <li><a href="Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <b>Property</b></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="bindText.html" target="_parent">bindText</a></li>
+        <li><a href="bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="ReadonlyCollection.html" target="_parent">ReadonlyCollection</a></td>
+            <td><a href="ReadonlyList.html" target="_parent">ReadonlyList</a></td>
+            <td><a href="ReadonlyMap.html" target="_parent">ReadonlyMap</a></td>
+            <td><a href="ReadonlySet.html" target="_parent">ReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="DestroyableReadonlyCollection.html" target="_parent">DestroyableReadonlyCollection</a></td>
+            <td><a href="DestroyableReadonlyList.html" target="_parent">DestroyableReadonlyList</a></td>
+            <td><a href="DestroyableReadonlyMap.html" target="_parent">DestroyableReadonlyMap</a></td>
+            <td><a href="DestroyableReadonlySet.html" target="_parent">DestroyableReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="ICollection.html" target="_parent">ICollection</a></td>
+            <td><a href="IList.html" target="_parent">IList</a></td>
+            <td><a href="IMap.html" target="_parent">IMap</a></td>
+            <td><a href="ISet.html" target="_parent">ISet</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><a href="List.html" target="_parent">List</a></td>
+            <td><a href="Map.html" target="_parent">Map</a></td>
+            <td><a href="Set.html" target="_parent">Set</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="mapper/AbstractMapper.html" target="_parent">Mappers</a></li>
+        <li><a href="filterer/AbstractFilterer.html" target="_parent">Filterers</a></li>
+        <li><a href="counter/AbstractCounter.html" target="_parent">Counters</a></li>
+        <li><a href="indexer/AbstractIndexer.html" target="_parent">Indexers</a></li>
+        <li><a href="convertertoset/AbstractConverterToSet.html" target="_parent">Converters to set</a></li>
+        <li><a href="convertertolist/AbstractConverterToList.html" target="_parent">Converters to list</a></li>
+        <li><a href="sortercomparing/AbstractSorterComparing.html" target="_parent">Sorters (comparing)</a></li>
+        <li><a href="observer/AbstractObserver.html" target="_parent">Observers</a></li>
+        <li><a href="inserter/list.html" target="_parent">Inserters</a></li>
+        <li><a href="merger/list.html" target="_parent">Mergers</a></li>
+        <li><a href="reverser/list.html" target="_parent">Reversers</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="hash.html" target="_parent">hash</a></li>
+        <li><a href="Router.html" target="_parent">Router</a></li>
+        <li><a href="UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="defer.html" target="_parent">defer</a></li>
+        <li><a href="request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+        <li><a href="Reducer.html" target="_parent">Reducer</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="dummyEvent.html" target="_parent">dummyEvent</a></li>
+        <li><a href="IndexCount.html" target="_parent">IndexCount</a></li>
+        <li><a href="IndexItems.html" target="_parent">IndexItems</a></li>
+        <li><a href="ListSpliceResult.html" target="_parent">ListSpliceResult</a></li>
+        <li><a href="TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

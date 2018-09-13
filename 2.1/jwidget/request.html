@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jwidget/request - jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../tutorials/tutorial1.html"
+							data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">jwidget/request</a>
+						
+<a class="nav-link" href="#default">Default export</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#api">How to implement API communication high-level interface in jWidget</a>
+<a class="nav-link" href="#endpoints">How to define API endpoints in jWidget</a>
+<a class="nav-link" href="#models">How to define business models in jWidget</a>
+<a class="nav-link" href="#services">How to implement final API communication services in jWidget</a></nav>
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1><span id="default"></span>jwidget/request</h1>
+						
+						<h3>Consumption</h3>
+						<pre>import request from "jwidget/request";</pre>
+						
+<h3><span id="default"></span>Default export<a class="anchorjs-link" href="#default" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(xhr: <a href="https://api.jquery.com/jquery.ajax/#jqXHR" target="_blank">JQueryXHR</a>, cancelToken?: <a href="CancelToken.html" target="_parent">CancelToken</a>): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;T&gt;</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">xhr</dt><dd class="col-lg-10 col-sm-9">jQuery XML HTTP request wrapper object.</dd>
+<dt class="col-lg-2 col-sm-3">cancelToken</dt><dd class="col-lg-10 col-sm-9">Cancellation token to bind the operation to.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Promise object representing the request.</dd>
+</dl>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a> wrapper over <a href="https://api.jquery.com/jQuery.ajax/" target="_blank">jQuery AJAX API functions</a> with <a href="CancelToken.html" target="_parent">CancelToken</a> support. Resolves the promise with request result on its
+successful completion. Rejects the promise with XMLHttpRequest on request failure. If the operation gets
+cancelled via the token, the promise never gets resolved or rejected.</p>
+<p>The next example demonstrates how to use this function in <a href="Component.html" target="_parent">Component</a>:</p>
+<pre>
+class AjaxGreeter extends <a href="Component.html" target="_parent">Component</a> {
+
+    private cancelToken = this.<a href="IClass.html#default--own" target="_parent">own</a>(new <a href="CancelToken.html" target="_parent">CancelToken</a>());
+
+    constructor(private count: <a href="IProperty.html" target="_parent">IProperty</a>&lt;number&gt;) {
+        super();
+    }
+
+    protected async renderRoot(el: JQuery) {
+        el.text(&quot;Loading...&quot;);
+        const data = await <b>request</b>($.get(&quot;data.json&quot;), this.cancelToken);
+        el.text(data.message);
+        this.count.<a href="IProperty.html#default--set" target="_parent">set</a>(this.count.<a href="Bindable.html#default--get" target="_parent">get</a>() + 1);
+    }
+}</pre>
+<iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="../samples/public/request.html"></iframe>
+<p>As you can see, <b>request</b> is perfectly compatible with async/await syntax. Please also notice that the cancellation
+token is aggregated in the component. It means that should the component get <a href="Destroyable.html#default--destroy" target="_parent">destroyed</a> during the request, the
+<b>count</b> won't be incremented.</p>
+
+
+		<h5><span id="api"></span>How to implement API communication high-level interface in jWidget<a class="anchorjs-link" href="#api" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>This topic demonstrates the best practices of API communication service implementation in jWidget.</p>
+<p>jWidget doesn't provide high-level implementations of Rest, JSON RPC, SOAP and other protocols, because
+every Web application may have its own deviations from these standards. We want to stay flexible. At the other
+hand, low-level utilities of jWidget allow you to implement your own high-level interfaces very easily.
+The following code demonstrates an example of such high-level interface implementation:</p>
+<h6>api.ts</h6>
+<pre>
+export interface AjaxConfig {
+    readonly data?: any;
+    readonly cancelToken?: <a href="CancelToken.html" target="_parent">CancelToken</a>;
+    readonly settings?: JQueryAjaxSettings;
+}
+
+function ajax(type: string, url: string, config: AjaxConfig = {}): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;any&gt; {
+    if (url === null) {
+        return <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>.reject(null);
+    }
+    const {data, settings, cancelToken} = config;
+    return <b>request</b>($.ajax({
+        ...settings,
+        type,
+        url,
+        data,
+        contentType: &quot;application/json&quot;,
+        dataType: &quot;json&quot;
+    }), cancelToken);
+}
+
+function push(type: string, url: string, config: AjaxConfig = {}) {
+    return ajax(type, url, {
+        ...config,
+        data: config.data != null ? JSON.stringify(config.data) : null
+    });
+}
+
+export function get(url: string, config?: AjaxConfig) {
+    return ajax(&quot;GET&quot;, url, config);
+}
+
+export function post(url: string, config: AjaxConfig = {}) {
+    return push(&quot;POST&quot;, url, config);
+}
+
+export function put(url: string, config: AjaxConfig = {}) {
+    return push(&quot;PUT&quot;, url, config);
+}</pre>
+<p>With just 44 lines of code, we've got a bunch of high-level functions that implement communication to a
+typical REST API. Since you are an author of this code, you can easily transform the communication
+protocol as you wish: for example, copy session ID from local storage to request headers. It's up to you.
+All these functions return <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a><any> where any is response JSON.</p>
+
+	
+
+		<h5><span id="endpoints"></span>How to define API endpoints in jWidget<a class="anchorjs-link" href="#endpoints" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>One of the best jWidget advantages is true strong typing. In particular, it allows you to define your API
+endpoints as strongly typed functions as follows:</p>
+<h6>endpoints.ts</h6>
+<pre>
+export interface ProjectEndpointParams {
+    readonly projectId: number;
+}
+
+const apiEndpoint = <a href="Endpoint.html#append" target="_parent">append</a>(<a href="Endpoint.html#absoluteRoot" target="_parent">absoluteRoot</a>, &quot;api&quot;);
+
+export const projectsEndpoint = <a href="Endpoint.html#append" target="_parent">append</a>(apiEndpoint, &quot;projects&quot;);
+export const projectEndpoint = <a href="Endpoint.html#append" target="_parent">append</a>(projectsEndpoint, (params: ProjectEndpointParams) =&gt; String(params.projectId));
+
+export interface SkillEndpointParams extends ProjectEndpointParams {
+    readonly skillId: number;
+}
+
+export const skillsEndpoint = <a href="Endpoint.html#append" target="_parent">append</a>(projectEndpoint, &quot;skills&quot;);
+export const skillEndpoint = <a href="Endpoint.html#append" target="_parent">append</a>(skillsEndpoint, (params: SkillEndpointParams) =&gt; String(params.skillId));
+
+export interface UserEndpointParams {
+    readonly userId: number;
+}
+
+export const usersEndpoint = <a href="Endpoint.html#append" target="_parent">append</a>(apiEndpoint, &quot;users&quot;);
+export const userEndpoint = <a href="Endpoint.html#append" target="_parent">append</a>(usersEndpoint, (params: UserEndpointParams) =&gt; String(params.userId));</pre>
+<p>With this code, you define the next set of functions:</p>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Signature</th>
+      <th>Returns</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>apiEndpoint({})</code></td>
+      <td><tt>/api</tt></td>
+    </tr>
+    <tr>
+      <td><code>projectsEndpoint({})</code></td>
+      <td><tt>/api/projects</tt></td>
+    </tr>
+    <tr>
+      <td><code>projectEndpoint({projectId: number})</code></td>
+      <td><tt>/api/projects/:projectId</tt></td>
+    </tr>
+    <tr>
+      <td><code>skillsEndpoint({projectId: number})</code></td>
+      <td><tt>/api/projects/:projectId/skills</tt></td>
+    </tr>
+    <tr>
+      <td><code>skillEndpoint({projectId: number, skillId: number})</code></td>
+      <td><tt>/api/projects/:projectId/skills/:skillId</tt></td>
+    </tr>
+    <tr>
+      <td><code>usersEndpoint({})</code></td>
+      <td><tt>/api/users</tt></td>
+    </tr>
+    <tr>
+      <td><code>userEndpoint({userId: number})</code></td>
+      <td><tt>/api/users/:userId</tt></td>
+    </tr>
+  </tbody>
+</table>
+<p>Of course, the functions replace <tt>:value</tt> entries with real values that you pass as parameters. The
+TypeScript compiler properly checks the validity of your parameters. An attempt to call a function with
+missing or invalid parameters will be prevented at compilation phase. An attempt to pass null or undefined as
+a parameter will be rejected in runtime.</p>
+<p>Now you can use these functions to build URL parameter for high-level API communication functions above.</p>
+
+	
+
+		<h5><span id="models"></span>How to define business models in jWidget<a class="anchorjs-link" href="#models" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>It is smart to define every business model as a class. It allows you to define all derivative values as
+getters and all manipulations as methods. It also makes sense to define a static "createByJson" method to
+build your model from raw JSON object returned by the API.</p>
+<h6>models/Project.ts</h6>
+<pre>
+class Project extends <a href="Class.html" target="_parent">Class</a> {
+
+    readonly id: number;
+    readonly name: <a href="IProperty.html" target="_parent">IProperty</a>&lt;string&gt;;
+    readonly skills: <a href="IList.html" target="_parent">IList</a>&lt;Skill&gt;;
+
+    constructor(config: Project.Config) {
+        super();
+        this.id = config.id;
+        this.name = new <a href="Property.html" target="_parent">Property</a>(config.name);
+        this.skills = new <a href="List.html" target="_parent">List</a>(config.skills);
+    }
+
+    get title() {
+        return this.name.<a href="Bindable.html#default--get" target="_parent">get</a>();
+    }
+
+    static createByJson(json: any) {
+        return new Project({
+            id: json.id,
+            name: json.name,
+            skills: (&lt;any[]&gt;json.skills || []).map(Skill.createByJson)
+        });
+    }
+}
+
+namespace Project {
+    export interface Config {
+        readonly id: number;
+        readonly name: string;
+        readonly skills: Skill[];
+    }
+}
+
+export default Project;</pre>
+<p>Project.Config object is very similar to the JSON, but it is still different: skills are defined as true
+models, not raw JSON objects. It allows you to pass a predefined skill object to the Project constructor. It
+may play a crucial role in business logic you your application later. That's why we define a separate static
+method createByJson to encapsulate all JSON parsing burden in it.</p>
+<p>Files <b>models/Skill.ts</b> and <b>models/User.ts</b> are implemented similarly.</p>
+
+	
+
+		<h5><span id="services"></span>How to implement final API communication services in jWidget<a class="anchorjs-link" href="#services" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>All work above was just preparation to the final step: API services implementation. Let's group our REST
+services by endpoint and define every group in a separate file:</p>
+<h6>services/Project.ts</h6>
+<pre>
+import <a href="CancelToken.html" target="_parent">CancelToken</a> from &quot;jwidget/<a href="CancelToken.html" target="_parent">CancelToken</a>&quot;;
+import {projectEndpoint, projectsEndpoint} from &quot;../../endpoints&quot;;
+import {get, post, put} from &quot;../api&quot;;
+import Project from &quot;../models/Project&quot;;
+
+export async function getProjects(cancelToken?: <a href="CancelToken.html" target="_parent">CancelToken</a>) {
+    const response: any[] = await get(projectsEndpoint(null), {cancelToken});
+    return response.map(Project.createByJson);
+}
+
+export async function getProject(projectId: number, cancelToken?: <a href="CancelToken.html" target="_parent">CancelToken</a>) {
+    const response = await get(projectEndpoint({projectId}), {cancelToken});
+    return Project.createByJson(response);
+}
+
+export async function createProject(data: any, cancelToken?: <a href="CancelToken.html" target="_parent">CancelToken</a>) {
+    const response = await post(projectsEndpoint(null), {data, cancelToken});
+    return Project.createByJson(response);
+}
+
+export function updateProject(projectId: number, data: any, cancelToken?: <a href="CancelToken.html" target="_parent">CancelToken</a>) {
+    return put(projectEndpoint({projectId}), {data, cancelToken});
+}</pre>
+<p>All these functions return <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>, and TypeScript properly infers the type of the promise result in each
+case:</p>
+<ul>
+<li>getProjects: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;Project[]&gt;</li>
+<li>getProject: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;Project&gt;</li>
+<li>createProject: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;Project&gt;</li>
+<li>updateProject: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;any&gt; (essentially the result doesn't matter here)</li>
+</ul>
+
+	
+</div>
+					</div>
+					<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+				</div>
+			
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="../tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="../tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="../tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="../tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Events</a></li>
+    <li><a href="../tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="../tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="../tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="DictionaryUtils.html" target="_parent">DictionaryUtils</a></li>
+        <li><a href="DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="Identifiable.html" target="_parent">Identifiable</a></li>
+        <li><a href="Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Dictionary.html" target="_parent">Dictionary</a></li>
+        <li><a href="Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Class.html" target="_parent">Class</a>, <a href="IClass.html" target="_parent">IClass</a></li>
+        <li><a href="Event.html" target="_parent">Event</a>, <a href="IEvent.html" target="_parent">IEvent</a></li>
+        <li><a href="Property.html" target="_parent">Property</a>, <a href="IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="Component.html" target="_parent">Component</a></li>
+        <li><a href="template.html" target="_parent">template</a></li>
+        <li><a href="listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="Copier.html" target="_parent">Copier</a></li>
+        <li><a href="Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="bindText.html" target="_parent">bindText</a></li>
+        <li><a href="bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="ReadonlyCollection.html" target="_parent">ReadonlyCollection</a></td>
+            <td><a href="ReadonlyList.html" target="_parent">ReadonlyList</a></td>
+            <td><a href="ReadonlyMap.html" target="_parent">ReadonlyMap</a></td>
+            <td><a href="ReadonlySet.html" target="_parent">ReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="DestroyableReadonlyCollection.html" target="_parent">DestroyableReadonlyCollection</a></td>
+            <td><a href="DestroyableReadonlyList.html" target="_parent">DestroyableReadonlyList</a></td>
+            <td><a href="DestroyableReadonlyMap.html" target="_parent">DestroyableReadonlyMap</a></td>
+            <td><a href="DestroyableReadonlySet.html" target="_parent">DestroyableReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="ICollection.html" target="_parent">ICollection</a></td>
+            <td><a href="IList.html" target="_parent">IList</a></td>
+            <td><a href="IMap.html" target="_parent">IMap</a></td>
+            <td><a href="ISet.html" target="_parent">ISet</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><a href="List.html" target="_parent">List</a></td>
+            <td><a href="Map.html" target="_parent">Map</a></td>
+            <td><a href="Set.html" target="_parent">Set</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="mapper/AbstractMapper.html" target="_parent">Mappers</a></li>
+        <li><a href="filterer/AbstractFilterer.html" target="_parent">Filterers</a></li>
+        <li><a href="counter/AbstractCounter.html" target="_parent">Counters</a></li>
+        <li><a href="indexer/AbstractIndexer.html" target="_parent">Indexers</a></li>
+        <li><a href="convertertoset/AbstractConverterToSet.html" target="_parent">Converters to set</a></li>
+        <li><a href="convertertolist/AbstractConverterToList.html" target="_parent">Converters to list</a></li>
+        <li><a href="sortercomparing/AbstractSorterComparing.html" target="_parent">Sorters (comparing)</a></li>
+        <li><a href="observer/AbstractObserver.html" target="_parent">Observers</a></li>
+        <li><a href="inserter/list.html" target="_parent">Inserters</a></li>
+        <li><a href="merger/list.html" target="_parent">Mergers</a></li>
+        <li><a href="reverser/list.html" target="_parent">Reversers</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="hash.html" target="_parent">hash</a></li>
+        <li><a href="Router.html" target="_parent">Router</a></li>
+        <li><a href="UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="defer.html" target="_parent">defer</a></li>
+        <li><b>request</b></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+        <li><a href="Reducer.html" target="_parent">Reducer</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="dummyEvent.html" target="_parent">dummyEvent</a></li>
+        <li><a href="IndexCount.html" target="_parent">IndexCount</a></li>
+        <li><a href="IndexItems.html" target="_parent">IndexItems</a></li>
+        <li><a href="ListSpliceResult.html" target="_parent">ListSpliceResult</a></li>
+        <li><a href="TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

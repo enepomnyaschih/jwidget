@@ -1,0 +1,177 @@
+html, body {
+    height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    padding-top: 10px;
+    position: relative;
+}
+
+span[id] {
+    position: absolute;
+    top: -60px;
+}
+
+h1, h3 {
+    padding-bottom: 10px;
+}
+
+pre, samp {
+    padding-left: 24px;
+}
+
+samp {
+    display: block;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+}
+
+code {
+    white-space: pre-wrap;
+}
+
+dt {
+    text-align: right;
+}
+
+dd dt {
+    color: darkgray;
+}
+
+footer {
+    font-size: 11px;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.doc-dropdown {
+    background: white;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    max-height: calc(100% - 60px);
+    overflow-y: auto;
+    position: fixed;
+    top: 50px;
+    z-index: 1;
+}
+
+#tutorial-dropdown {
+    left: 150px;
+    width: 500px;
+}
+
+#index-dropdown {
+    left: 10px;
+    max-width: calc(100% - 20px);
+    width: 1300px;
+}
+
+@media (max-width: 991.99px) {
+    .doc-dropdown,
+    .dropdown-toggle:after {
+        display: none;
+    }
+}
+
+.doc-error {
+    background-color: #ffdddd;
+    color: red;
+    padding: 0 3px;
+}
+
+.doc-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.doc-contents {
+    margin-top: 56px;
+}
+
+.doc-sidebar {
+    display: none;
+}
+
+.doc-index .nav {
+    margin-left: 1rem;
+}
+
+.doc-index .nav-link {
+    font-weight: 600;
+    padding: .5rem 0;
+}
+
+.doc-index .nav .nav-link {
+    font-weight: 400;
+    padding: 0;
+}
+
+.doc-index .nav .nav .nav-link {
+    font-weight: 300;
+}
+
+@media (min-width: 992px) {
+    .doc-sidebar {
+        display: block;
+        float: left;
+        height: calc(100% - 56px);
+        overflow-y: auto;
+        position: fixed;
+        width: 300px;
+    }
+
+    .doc-main {
+        margin-left: 300px;
+    }
+}
+
+.anchorjs-link {
+    font-weight: 400;
+    color: rgba(0, 123, 255, .5);
+    transition: color .16s linear;
+    opacity: 0;
+    text-decoration: none;
+}
+
+:hover > .anchorjs-link,
+.anchorjs-link:focus {
+    opacity: 1;
+}
+
+.anchorjs-link:hover {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.doc-section {
+    border-left: 4px solid #e5e5e5;
+    padding-left: 20px;
+}
+
+.doc-hierarchy {
+    list-style: none;
+    padding-left: 0;
+}
+
+.doc-member {
+    padding-left: 24px;
+}
+
+.doc-inherit-mark {
+    font-size: 80%;
+    font-weight: 400;
+}
+
+.doc-hide-inherited .doc-inherited {
+    display: none;
+}
+
+.doc-returns {
+    font-weight: 400;
+}
+
+.doc-index-popover {
+    display: none;
+}

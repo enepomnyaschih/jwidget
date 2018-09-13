@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Part 4. Events - jWidget 2 tutorials</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="tutorial1.html"
+							data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			<div class="container">
+<h2>Tutorial. Part 4. Events</h2>
+
+<iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="../samples/public/tutorial4.html"></iframe>
+
+<p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-4">https://github.com/enepomnyaschih/mt/tree/mt-2.1-4</a> (Git branch).</p>
+
+<p>In this part we learn how to handle user events in scope of jWidget framework. First, we must activate buttons
+Like/Unlike and Retweet/Unretweet.</p>
+
+<img src="buttons.png">
+
+<p>Here's a common scenario of Like button click handling in model-view architecture.</p>
+
+<ol>
+<li>The view intercepts "click" event with jQuery.</li>
+<li>The view accesses the model with <tt>tweet.like = !tweet.like</tt> setter.</li>
+<li>The model checks if "_like" field has been changed. If not, it exits from the setter with no impact.</li>
+<li>If "_like" field has been changed, model saves it and triggers "likeChangeEvent".</li>
+<li>View intercepts "likeChangeEvent" and updates itself.</li>
+</ol>
+
+<p>Notice that the view can update itself directly by its own before step 2. But it is unneccessary in model-view
+architecture, because the view listens "likeChangeEvent" anyway. Who knows what may trigger model
+modification? Any other views or services may access the model directly, but they hardly can access the corresponding
+views. That's why the view should get updated indirectly. It should listen to model modifications and handle them
+appropriately. This way, it can keep itself updated.</p>
+
+<p>In some other model-view frameworks (actually, MVC frameworks) controller is responsible for event listening and
+handling. jWidget doesn't provide any features for controller implementation. Controller part is identified by
+the author of the framework as redundant and complicating things with no benefit. jWidget goes without controller.</p>
+
+<p>Event management API is optimized for performance in jWidget and implemented by OOD principles. That's the reason
+why event management API is very different in jWidget and jQuery. jWidget event is implemented by class <a href="../jwidget/Event.html" target="_parent">Event</a> and
+defined by its interfaces <a href="../jwidget/Listenable.html" target="_parent">Listenable</a> and <a href="../jwidget/IEvent.html" target="_parent">IEvent</a>. One event instance represents one kind of action. In contrast,
+jQuery element is an object that manages events in jQuery and it represents all kinds of events that may happen to
+this element, and the event kind is identified by its name. jQuery implementation begets redundancy, because all
+events have a common set of <a href="https://api.jquery.com/category/events/event-object/" target="_blank">parameters</a> regardless of event kind difference. For example, it makes no sense to read
+mouse coordinates from key press event, but jQuery type definitions provide you with them anyway. In jWidget, you can
+specify different parameter types for different kinds of events, and that is easier to manage.</p>
+
+<p>So, let's start listening Like and Retweet button clicks. Let's follow the steps described above. First, bind
+handlers to click events using jQuery in TweetView class:</p>
+
+<h5>src/view/TweetView.ts</h5>
+
+<pre>
+    protected renderLike(el: JQuery) {
+        el.toggleClass(&quot;active&quot;, this.tweet.like).text(this.tweet.like ? &quot;Unlike&quot; : &quot;Like&quot;);
+        el.on(&quot;click&quot;, event =&gt; {
+            event.preventDefault();
+            this.tweet.like = !this.tweet.like;
+        });
+    }
+
+    protected renderRetweet(el: JQuery) {
+        el.toggleClass(&quot;active&quot;, this.tweet.retweet).text(this.tweet.retweet ? &quot;Unretweet&quot; : &quot;Retweet&quot;);
+        el.on(&quot;click&quot;, event =&gt; {
+            event.preventDefault();
+            this.tweet.retweet = !this.tweet.retweet;
+        });
+    }</pre>
+
+<p>At the next step, we should replace Tweet interface with a class. Readonly fields "like" and "retweet" should be
+replaced with getters and setters. To implement them, we need to define likeChangeEvent and retweetChangeEvent.</p>
+
+<h5>src/model/Tweet.ts</h5>
+
+<pre>
+import <a href="../jwidget/Event.html" target="_parent">Event</a> from &quot;jwidget/Event&quot;;
+import <a href="../jwidget/Listenable.html" target="_parent">Listenable</a> from &quot;jwidget/Listenable&quot;;
+
+export default class Tweet {
+
+    readonly fullName: string;
+    readonly shortName: string;
+    readonly avatarUrl48: string;
+    readonly contentHtml: string;
+    readonly time: number;
+
+    private _like: boolean;
+    private _retweet: boolean;
+    private _likeChangeEvent = new <a href="../jwidget/Event.html" target="_parent">Event</a>&lt;boolean&gt;();
+    private _retweetChangeEvent = new <a href="../jwidget/Event.html" target="_parent">Event</a>&lt;boolean&gt;();
+
+    constructor(config: TweetConfig) {
+        this.fullName = config.fullName;
+        this.shortName = config.shortName;
+        this.avatarUrl48 = config.avatarUrl48;
+        this.contentHtml = config.contentHtml;
+        this.time = config.time;
+        this._like = config.like;
+        this._retweet = config.retweet;
+    }
+
+    get like() {
+        return this._like;
+    }
+
+    set like(value) {
+        if (this._like !== value) {
+            this._like = value;
+            this._likeChangeEvent.<a href="../jwidget/IEvent.html#default--trigger" target="_parent">trigger</a>(value);
+        }
+    }
+
+    get likeChangeEvent(): <a href="../jwidget/Listenable.html" target="_parent">Listenable</a>&lt;boolean&gt; {
+        return this._likeChangeEvent;
+    }
+
+    get retweet() {
+        return this._retweet;
+    }
+
+    set retweet(value) {
+        if (this._retweet !== value) {
+            this._retweet = value;
+            this._retweetChangeEvent.<a href="../jwidget/IEvent.html#default--trigger" target="_parent">trigger</a>(value);
+        }
+    }
+
+    get retweetChangeEvent(): <a href="../jwidget/Listenable.html" target="_parent">Listenable</a>&lt;boolean&gt; {
+        return this._retweetChangeEvent;
+    }
+
+    static createByJson(json: any) {
+        return new Tweet({
+            ...json,
+            time: new Date().getTime() - json[&quot;timeAgo&quot;]
+        });
+    }
+}
+
+export interface TweetConfig {
+
+    readonly fullName: string;
+    readonly shortName: string;
+    readonly avatarUrl48: string;
+    readonly contentHtml: string;
+    readonly time: number;
+    readonly like: boolean;
+    readonly retweet: boolean;
+}</pre>
+
+<p>Event is triggered with <a href="../jwidget/IEvent.html#default--trigger" target="_parent">trigger</a> method, which takes an argument to pass to event listeners. In this case it is
+boolean - new value of the property. jWidget event is very simple: all listeners get iterated and called one by one
+immediately right in <a href="../jwidget/IEvent.html#default--trigger" target="_parent">trigger</a> method. There are no special features like bubbling, "preventDefault" or
+"stopPropagation", as well as there is no pretection against dead loops. If you want to introduce something like this,
+implement it by yourself using <a href="../jwidget/IEvent.html" target="_parent">IEvent</a> interface. jWidget is modest in this regard, but fast.</p>
+
+<p>Since we have replaced "createTweetByJson" function with "createByJson" static method, let's immediately change
+its usage.</p>
+
+<h5>src/model/ApplicationData.ts</h5>
+
+<pre>
+    static createByJson(json: any) {
+        return new ApplicationData(json.profile,
+            (&lt;any[]&gt;json.tweets || []).map(Tweet.createByJson));
+    }</pre>
+
+<p>Next, we must bind handlers to the events and update the view in them. In contrast to React or Backbone, you
+don't need to update the entire view in jWidget - you just update what you need. To prevent code duplication, let's
+extract element updating code of TweetView into separate methods "updateLike" and "updateRetweet".</p>
+
+<h5>src/view/TweetView.ts</h5>
+
+<pre>
+    protected renderLike(el: JQuery) {
+        this._updateLike();
+        this.tweet.likeChangeEvent.<a href="../jwidget/Listenable.html#default--listen" target="_parent">listen</a>(() =&gt; this._updateLike());
+        el.on(&quot;click&quot;, event =&gt; {
+            event.preventDefault();
+            this.tweet.like = !this.tweet.like;
+        });
+    }
+
+    protected renderRetweet(el: JQuery) {
+        this._updateRetweet();
+        this.tweet.retweetChangeEvent.<a href="../jwidget/Listenable.html#default--listen" target="_parent">listen</a>(() =&gt; this._updateRetweet());
+        el.on(&quot;click&quot;, event =&gt; {
+            event.preventDefault();
+            this.tweet.retweet = !this.tweet.retweet;
+        });
+    }
+
+    private _updateLike() {
+        this.getElement(&quot;like&quot;).toggleClass(
+            &quot;active&quot;, this.tweet.like).text(this.tweet.like ? &quot;Unlike&quot; : &quot;Like&quot;);
+    }
+
+    private _updateRetweet() {
+        this.getElement(&quot;retweet&quot;).toggleClass(
+            &quot;active&quot;, this.tweet.retweet).text(this.tweet.retweet ? &quot;Unretweet&quot; : &quot;Retweet&quot;);
+    }</pre>
+
+<p>It must work! Try to run it in browser and click Like/Unlike and Retweet/Unretweet buttons. Moreover, you can feel
+the transparency of this approach even more. Just for fun, define a global leverage to access the model.</p>
+
+<h5>src/index.ts</h5>
+
+<pre>
+    (&lt;any&gt;window).data = data;</pre>
+
+<p>Refresh the page, open browser console and run next command:</p>
+
+<pre>
+data.tweets[0].like = true;</pre>
+
+<p>Your application will obediently reflect the change.</p>
+
+<p>You may find this code too bulky. We wrote a ton of code just to implement a couple of very simple event handlers.
+Your judgement is absolutely justified. Our excuse to this is that we want to let you understand the meat and bones of
+model-view architecture. That's just how it works. And that's what will make your life easier if
+you decide to add more views to the models you already have. However, you indeed don't need so much code to maintain
+proper architecture - jWidget provides a bunch of useful utilities that may reduce this code drastically, and we will
+demonstrate them in the next tutorial.</p>
+
+<a href="tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a>
+</div>
+<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><b>Tutorial. Part 4. Events</b></li>
+    <li><a href="tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="../jwidget/ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="../jwidget/DictionaryUtils.html" target="_parent">DictionaryUtils</a></li>
+        <li><a href="../jwidget/DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="../jwidget/StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="../jwidget/Identifiable.html" target="_parent">Identifiable</a></li>
+        <li><a href="../jwidget/Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="../jwidget/Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="../jwidget/DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Dictionary.html" target="_parent">Dictionary</a></li>
+        <li><a href="../jwidget/Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Class.html" target="_parent">Class</a>, <a href="../jwidget/IClass.html" target="_parent">IClass</a></li>
+        <li><a href="../jwidget/Event.html" target="_parent">Event</a>, <a href="../jwidget/IEvent.html" target="_parent">IEvent</a></li>
+        <li><a href="../jwidget/Property.html" target="_parent">Property</a>, <a href="../jwidget/IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Component.html" target="_parent">Component</a></li>
+        <li><a href="../jwidget/template.html" target="_parent">template</a></li>
+        <li><a href="../jwidget/Listenable.html#default--listen" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="../jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Copier.html" target="_parent">Copier</a></li>
+        <li><a href="../jwidget/Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="../jwidget/Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="../jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="../jwidget/bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="../jwidget/bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="../jwidget/bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="../jwidget/bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="../jwidget/bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="../jwidget/bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="../jwidget/bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="../jwidget/bindText.html" target="_parent">bindText</a></li>
+        <li><a href="../jwidget/bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="../jwidget/ReadonlyCollection.html" target="_parent">ReadonlyCollection</a></td>
+            <td><a href="../jwidget/ReadonlyList.html" target="_parent">ReadonlyList</a></td>
+            <td><a href="../jwidget/ReadonlyMap.html" target="_parent">ReadonlyMap</a></td>
+            <td><a href="../jwidget/ReadonlySet.html" target="_parent">ReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="../jwidget/DestroyableReadonlyCollection.html" target="_parent">DestroyableReadonlyCollection</a></td>
+            <td><a href="../jwidget/DestroyableReadonlyList.html" target="_parent">DestroyableReadonlyList</a></td>
+            <td><a href="../jwidget/DestroyableReadonlyMap.html" target="_parent">DestroyableReadonlyMap</a></td>
+            <td><a href="../jwidget/DestroyableReadonlySet.html" target="_parent">DestroyableReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="../jwidget/ICollection.html" target="_parent">ICollection</a></td>
+            <td><a href="../jwidget/IList.html" target="_parent">IList</a></td>
+            <td><a href="../jwidget/IMap.html" target="_parent">IMap</a></td>
+            <td><a href="../jwidget/ISet.html" target="_parent">ISet</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><a href="../jwidget/List.html" target="_parent">List</a></td>
+            <td><a href="../jwidget/Map.html" target="_parent">Map</a></td>
+            <td><a href="../jwidget/Set.html" target="_parent">Set</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="../jwidget/mapper/AbstractMapper.html" target="_parent">Mappers</a></li>
+        <li><a href="../jwidget/filterer/AbstractFilterer.html" target="_parent">Filterers</a></li>
+        <li><a href="../jwidget/counter/AbstractCounter.html" target="_parent">Counters</a></li>
+        <li><a href="../jwidget/indexer/AbstractIndexer.html" target="_parent">Indexers</a></li>
+        <li><a href="../jwidget/convertertoset/AbstractConverterToSet.html" target="_parent">Converters to set</a></li>
+        <li><a href="../jwidget/convertertolist/AbstractConverterToList.html" target="_parent">Converters to list</a></li>
+        <li><a href="../jwidget/sortercomparing/AbstractSorterComparing.html" target="_parent">Sorters (comparing)</a></li>
+        <li><a href="../jwidget/observer/AbstractObserver.html" target="_parent">Observers</a></li>
+        <li><a href="../jwidget/inserter/list.html" target="_parent">Inserters</a></li>
+        <li><a href="../jwidget/merger/list.html" target="_parent">Mergers</a></li>
+        <li><a href="../jwidget/reverser/list.html" target="_parent">Reversers</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/hash.html" target="_parent">hash</a></li>
+        <li><a href="../jwidget/Router.html" target="_parent">Router</a></li>
+        <li><a href="../jwidget/UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="../jwidget/Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="../jwidget/Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="../jwidget/defer.html" target="_parent">defer</a></li>
+        <li><a href="../jwidget/request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="../jwidget/DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="../jwidget/HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+        <li><a href="../jwidget/Reducer.html" target="_parent">Reducer</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="../jwidget/dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="../jwidget/dummyEvent.html" target="_parent">dummyEvent</a></li>
+        <li><a href="../jwidget/IndexCount.html" target="_parent">IndexCount</a></li>
+        <li><a href="../jwidget/IndexItems.html" target="_parent">IndexItems</a></li>
+        <li><a href="../jwidget/ListSpliceResult.html" target="_parent">ListSpliceResult</a></li>
+        <li><a href="../jwidget/TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

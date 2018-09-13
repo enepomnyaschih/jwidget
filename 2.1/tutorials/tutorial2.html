@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Part 2. Child component collections - jWidget 2 tutorials</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="tutorial1.html"
+							data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			<div class="container">
+<h2>Tutorial. Part 2. Child component collections</h2>
+
+<iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="../samples/public/tutorial2.html"></iframe>
+
+<p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-2">https://github.com/enepomnyaschih/mt/tree/mt-2.1-2</a> (Git branch).</p>
+
+<p>In this part we meet <a href="../jwidget/List.html" target="_parent">List</a> class. We will learn how to use it to display child UI component lists. Our goal is to
+render a list of tweets developed in the previous part.</p>
+
+<p>Let's dive directly to the view. Define class TweetFeed.</p>
+
+<h5>src/view/TweetFeed.jw.html</h5>
+
+<pre>
+&lt;div jwclass=&quot;mt-tweet-feed&quot;&gt;
+    &lt;div jwid=&quot;header&quot;&gt;Tweets&lt;/div&gt;
+    &lt;div jwid=&quot;tweets&quot;&gt;&lt;/div&gt;
+    &lt;div jwid=&quot;footer&quot;&gt;...&lt;/div&gt;
+&lt;/div&gt;</pre>
+
+<h5>src/view/TweetFeed.ts</h5>
+
+<pre>
+import <a href="../jwidget/Component.html" target="_parent">Component</a> from &quot;jwidget/Component&quot;;
+import <a href="../jwidget/List.html" target="_parent">List</a> from &quot;jwidget/List&quot;;
+import <a href="../jwidget/template.html" target="_parent">template</a> from &quot;jwidget/template&quot;;
+import Tweet from &quot;../model/Tweet&quot;;
+import TweetView from &quot;./TweetView&quot;;
+
+@<a href="../jwidget/template.html" target="_parent">template</a>(require&lt;string&gt;(&quot;./TweetFeed.jw.html&quot;))
+export default class TweetFeed extends <a href="../jwidget/Component.html" target="_parent">Component</a> {
+
+    constructor(private tweets: Tweet[]) {
+        super();
+    }
+
+    protected renderTweets() {
+        const tweetViews = this.tweets.map(tweet =&gt; new TweetView(tweet));
+        return this.<a href="../jwidget/IClass.html#default--own" target="_parent">own</a>(new <a href="../jwidget/List.html" target="_parent">List</a>(tweetViews)).<a href="../jwidget/ICollection.html#default--ownItems" target="_parent">ownItems</a>();
+    }
+}</pre>
+
+<p>Let's review renderTweets method in details. Similarly to TweetView component, we've defined method
+<b>render&lt;ChildId&gt;</b> for element with jwid="tweets". But now this method not just fills the element with
+data, but renders a list of child components into it. This list is created from an array of tweet models with the
+following steps:</p>
+
+<ol>
+<li>Models get mapped to views via ES5 <b>map</b> method of array.</li>
+<li>View array gets converted to jWidget <a href="../jwidget/List.html" target="_parent">List</a>.</li>
+<li>The <a href="../jwidget/List.html" target="_parent">List</a> gets aggregated in TweetFeed via <a href="../jwidget/IClass.html#default--own" target="_parent">own</a> method, and its items get aggregated in it with <a href="../jwidget/ICollection.html#default--ownItems" target="_parent">ownItems</a> method.</li>
+</ol>
+
+<p>jWidget components recognize jWidget lists of components, not arrays. If you return such a list as a result of
+<b>render&lt;ChildId&gt;</b> method, then this list gets rendered into the corresponding element as a list of child
+components.</p>
+
+<p>Aggregation methods <a href="../jwidget/IClass.html#default--own" target="_parent">own</a> and <a href="../jwidget/ICollection.html#default--ownItems" target="_parent">ownItems</a> control the life time of child components. If object A owns object B, then
+destruction of object A automatically triggers destruction of object B. In our case, destruction of TweetFeed
+automatically triggers destruction of tweet view list. Thanks to <a href="../jwidget/ICollection.html#default--ownItems" target="_parent">ownItems</a> call, destruction of the list triggers
+destruction all its elements, i.e. tweet views. It is a good practice to destroy child UI components when you
+don't need them anymore, because any UI component may initialize its own bindings you can be unaware of. See
+<a href="../jwidget/Component.html#commonPractices" target="_parent">Common practices in child component management</a> for more instructions about how this can be achieved.</p>
+
+<p>Let's define styles.</p>
+
+<h5>src/view/TweetFeed.styl</h5>
+
+<pre>
+.mt-tweet-feed
+    background #fff
+    border 1px solid rgba(0,0,0,0.45)
+    border-radius 6px
+    box-sizing border-box
+    width 522px
+
+    &amp;-header
+        color #333
+        font-family Arial, sans-serif
+        font-size 18px
+        font-weight bold
+        padding 10px
+        text-shadow 0 1px 0 #fff
+
+    &amp;-footer
+        border-top 1px solid #e8e8e8
+        padding 8px
+        text-align center</pre>
+
+<p>Add the file to index.styl:</p>
+
+<pre>
+// All Stylus files should be imported here in the preferred order
+
+@import &quot;view/TweetFeed&quot;
+@import &quot;view/TweetView&quot;</pre>
+
+<p>And prepare new test data.</p>
+
+<h5>src/index.ts</h5>
+
+<pre>
+import &quot;es6-promise/auto&quot;;
+import &quot;script-loader!jquery&quot;;
+import &quot;./index.styl&quot;;
+
+import {createTweetByJson} from &quot;./model/Tweet&quot;;
+import TweetFeed from &quot;./view/TweetFeed&quot;;
+
+$(function () {
+    const tweets = [
+        {
+            &quot;fullName&quot;: &quot;Road Runner&quot;,
+            &quot;shortName&quot;: &quot;roadrunner&quot;,
+            &quot;avatarUrl48&quot;: &quot;backend/avatar-48.png&quot;,
+            &quot;contentHtml&quot;: &quot;jWidget documentation is here &lt;a href=\&quot;https://enepomnyaschih.github.com/jwidget\&quot; target=\&quot;_blank\&quot;&gt;enepomnyaschih.github.com/jwidget&lt;/a&gt;&quot;,
+            &quot;timeAgo&quot;: 215000,
+            &quot;like&quot;: false,
+            &quot;retweet&quot;: true
+        },
+        {
+            &quot;fullName&quot;: &quot;Road Runner&quot;,
+            &quot;shortName&quot;: &quot;roadrunner&quot;,
+            &quot;avatarUrl48&quot;: &quot;backend/avatar-48.png&quot;,
+            &quot;contentHtml&quot;: &quot;Tweet feed is growing&quot;,
+            &quot;timeAgo&quot;: 515000,
+            &quot;like&quot;: false,
+            &quot;retweet&quot;: false
+        }
+    ].map(createTweetByJson);
+    new TweetFeed(tweets).<a href="../jwidget/Component.html#default--renderTo" target="_parent">renderTo</a>(&quot;body&quot;);
+});</pre>
+
+<p>Running the application in the browser displays the expected result.</p>
+
+<p>Let's review one more way of child component rendering, without <b>render&lt;ChildId&gt;</b> method definition.
+Let's remove renderTweets method and override <a href="../jwidget/Component.html#default--afterRender" target="_parent">afterRender</a> method instead:</p>
+
+<pre>
+import <a href="../jwidget/Component.html" target="_parent">Component</a> from &quot;jwidget/Component&quot;;
+import <a href="../jwidget/List.html" target="_parent">List</a> from &quot;jwidget/List&quot;;
+import <a href="../jwidget/template.html" target="_parent">template</a> from &quot;jwidget/template&quot;;
+import Tweet from &quot;../model/Tweet&quot;;
+import TweetView from &quot;./TweetView&quot;;
+
+@<a href="../jwidget/template.html" target="_parent">template</a>(require&lt;string&gt;(&quot;./TweetFeed.jw.html&quot;))
+export default class TweetFeed extends <a href="../jwidget/Component.html" target="_parent">Component</a> {
+
+    constructor(private tweets: Tweet[]) {
+        super();
+    }
+
+    protected <a href="../jwidget/Component.html#default--afterRender" target="_parent">afterRender</a>() {
+        super.<a href="../jwidget/Component.html#default--afterRender" target="_parent">afterRender</a>();
+        const tweetViews = this.tweets.map(tweet =&gt; new TweetView(tweet));
+        const tweetViewList = this.<a href="../jwidget/IClass.html#default--own" target="_parent">own</a>(new <a href="../jwidget/List.html" target="_parent">List</a>(tweetViews)).<a href="../jwidget/ICollection.html#default--ownItems" target="_parent">ownItems</a>();
+        this.<a href="../jwidget/Component.html#default--addList" target="_parent">addList</a>(tweetViewList, &quot;tweets&quot;);
+    }
+}</pre>
+
+<p>This code is equivalent to the original one, but child component list is added dynamically with <a href="../jwidget/Component.html#default--addList" target="_parent">addList</a> method.
+This method takes element "jwid" as second argument, which should be used as a container for child components passed
+in the first argument. If we won't pass second argument, the array will be rendered into root element. Use the way
+you like more. I'll stick to the first way, utilizing <b>render&lt;ChildId&gt;</b> method.</p>
+
+<a href="tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a>
+</div>
+<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><b>Tutorial. Part 2. Child component collections</b></li>
+    <li><a href="tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="tutorial4.html" target="_parent">Tutorial. Part 4. Events</a></li>
+    <li><a href="tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="../jwidget/ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="../jwidget/DictionaryUtils.html" target="_parent">DictionaryUtils</a></li>
+        <li><a href="../jwidget/DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="../jwidget/StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="../jwidget/Identifiable.html" target="_parent">Identifiable</a></li>
+        <li><a href="../jwidget/Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="../jwidget/Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="../jwidget/DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Dictionary.html" target="_parent">Dictionary</a></li>
+        <li><a href="../jwidget/Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Class.html" target="_parent">Class</a>, <a href="../jwidget/IClass.html" target="_parent">IClass</a></li>
+        <li><a href="../jwidget/Event.html" target="_parent">Event</a>, <a href="../jwidget/IEvent.html" target="_parent">IEvent</a></li>
+        <li><a href="../jwidget/Property.html" target="_parent">Property</a>, <a href="../jwidget/IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Component.html" target="_parent">Component</a></li>
+        <li><a href="../jwidget/template.html" target="_parent">template</a></li>
+        <li><a href="../jwidget/listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="../jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Copier.html" target="_parent">Copier</a></li>
+        <li><a href="../jwidget/Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="../jwidget/Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="../jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="../jwidget/bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="../jwidget/bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="../jwidget/bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="../jwidget/bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="../jwidget/bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="../jwidget/bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="../jwidget/bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="../jwidget/bindText.html" target="_parent">bindText</a></li>
+        <li><a href="../jwidget/bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="../jwidget/ReadonlyCollection.html" target="_parent">ReadonlyCollection</a></td>
+            <td><a href="../jwidget/ReadonlyList.html" target="_parent">ReadonlyList</a></td>
+            <td><a href="../jwidget/ReadonlyMap.html" target="_parent">ReadonlyMap</a></td>
+            <td><a href="../jwidget/ReadonlySet.html" target="_parent">ReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="../jwidget/DestroyableReadonlyCollection.html" target="_parent">DestroyableReadonlyCollection</a></td>
+            <td><a href="../jwidget/DestroyableReadonlyList.html" target="_parent">DestroyableReadonlyList</a></td>
+            <td><a href="../jwidget/DestroyableReadonlyMap.html" target="_parent">DestroyableReadonlyMap</a></td>
+            <td><a href="../jwidget/DestroyableReadonlySet.html" target="_parent">DestroyableReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="../jwidget/ICollection.html" target="_parent">ICollection</a></td>
+            <td><a href="../jwidget/IList.html" target="_parent">IList</a></td>
+            <td><a href="../jwidget/IMap.html" target="_parent">IMap</a></td>
+            <td><a href="../jwidget/ISet.html" target="_parent">ISet</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><a href="../jwidget/List.html" target="_parent">List</a></td>
+            <td><a href="../jwidget/Map.html" target="_parent">Map</a></td>
+            <td><a href="../jwidget/Set.html" target="_parent">Set</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="../jwidget/mapper/AbstractMapper.html" target="_parent">Mappers</a></li>
+        <li><a href="../jwidget/filterer/AbstractFilterer.html" target="_parent">Filterers</a></li>
+        <li><a href="../jwidget/counter/AbstractCounter.html" target="_parent">Counters</a></li>
+        <li><a href="../jwidget/indexer/AbstractIndexer.html" target="_parent">Indexers</a></li>
+        <li><a href="../jwidget/convertertoset/AbstractConverterToSet.html" target="_parent">Converters to set</a></li>
+        <li><a href="../jwidget/convertertolist/AbstractConverterToList.html" target="_parent">Converters to list</a></li>
+        <li><a href="../jwidget/sortercomparing/AbstractSorterComparing.html" target="_parent">Sorters (comparing)</a></li>
+        <li><a href="../jwidget/observer/AbstractObserver.html" target="_parent">Observers</a></li>
+        <li><a href="../jwidget/inserter/list.html" target="_parent">Inserters</a></li>
+        <li><a href="../jwidget/merger/list.html" target="_parent">Mergers</a></li>
+        <li><a href="../jwidget/reverser/list.html" target="_parent">Reversers</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/hash.html" target="_parent">hash</a></li>
+        <li><a href="../jwidget/Router.html" target="_parent">Router</a></li>
+        <li><a href="../jwidget/UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="../jwidget/Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="../jwidget/Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="../jwidget/defer.html" target="_parent">defer</a></li>
+        <li><a href="../jwidget/request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="../jwidget/DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="../jwidget/HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+        <li><a href="../jwidget/Reducer.html" target="_parent">Reducer</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="../jwidget/dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="../jwidget/dummyEvent.html" target="_parent">dummyEvent</a></li>
+        <li><a href="../jwidget/IndexCount.html" target="_parent">IndexCount</a></li>
+        <li><a href="../jwidget/IndexItems.html" target="_parent">IndexItems</a></li>
+        <li><a href="../jwidget/ListSpliceResult.html" target="_parent">ListSpliceResult</a></li>
+        <li><a href="../jwidget/TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

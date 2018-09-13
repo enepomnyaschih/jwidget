@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jwidget/Router - jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../tutorials/tutorial1.html"
+							data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">jwidget/Router</a>
+						
+<a class="nav-link" href="#default">Default export</a>
+
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#default---hierarchy">Hierarchy</a>
+<a class="nav-link" href="#default---description">Description</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#terminology">Terminology</a>
+<a class="nav-link" href="#howItWorks">How it works</a>
+<a class="nav-link" href="#routeHierarchy">Route hierarchy</a>
+<a class="nav-link" href="#routingFlow">Routing flow</a>
+<a class="nav-link" href="#redirection">Redirection</a>
+<a class="nav-link" href="#menuStatus">Menu status management</a></nav>
+<a class="nav-link" href="#default---constructor">Constructor</a>
+
+<a class="nav-link" href="#default---properties">Properties</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#default--name">name</a>
+<a class="nav-link" href="#default--parent">parent</a>
+<a class="nav-link" href="#default--path">path</a>
+<a class="nav-link" href="#default--separator">separator</a>
+<a class="nav-link" href="#default--joiner">joiner</a>
+<a class="nav-link" href="#default--handler">handler</a>
+<a class="nav-link" href="#default--scope">scope</a>
+<a class="nav-link" href="#default--target">target</a>
+<a class="nav-link" href="#default--route">route</a>
+<a class="nav-link" href="#default--arg">arg</a>
+<a class="nav-link font-italic" href="#default--iid">iid</a></nav>
+
+<a class="nav-link" href="#default---methods">Methods</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#default--update">update</a>
+<a class="nav-link" href="#default--join">join</a>
+<a class="nav-link" href="#default--getFullPath">getFullPath</a>
+<a class="nav-link" href="#default--redirect">redirect</a>
+<a class="nav-link font-italic" href="#default--destroy">destroy</a>
+<a class="nav-link font-italic" href="#default--destroyObject">destroyObject</a>
+<a class="nav-link font-italic" href="#default--own">own</a>
+<a class="nav-link font-italic" href="#default--owning">owning</a></nav>
+
+<a class="nav-link" href="#default---staticProperties">Static properties</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#default--DEFAULT_SEPARATOR-static">DEFAULT_SEPARATOR</a>
+<a class="nav-link" href="#default--DEFAULT_JOINER-static">DEFAULT_JOINER</a></nav>
+
+<a class="nav-link" href="#default---staticMethods">Static methods</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#default--makeSeparator-static">makeSeparator</a>
+<a class="nav-link" href="#default--makeJoiner-static">makeJoiner</a>
+<a class="nav-link" href="#default--makeHandler-static">makeHandler</a>
+<a class="nav-link" href="#default--getFullPath-static">getFullPath</a>
+<a class="nav-link" href="#default--redirect-static">redirect</a></nav>
+</nav>
+
+<a class="nav-link" href="#Router-Separator">Router.Separator</a>
+
+<nav class="nav nav-pills flex-column">
+
+
+
+
+
+
+
+
+</nav>
+
+<a class="nav-link" href="#Router-Joiner">Router.Joiner</a>
+
+<nav class="nav nav-pills flex-column">
+
+
+
+
+
+
+
+
+</nav>
+
+<a class="nav-link" href="#Router-Handler">Router.Handler</a>
+
+<nav class="nav nav-pills flex-column">
+
+
+
+
+
+
+
+
+</nav>
+
+<a class="nav-link" href="#Router-Route">Router.Route</a>
+
+<nav class="nav nav-pills flex-column">
+
+
+
+
+
+
+
+
+</nav>
+
+<a class="nav-link" href="#Router-HandlerConfig">Router.HandlerConfig</a>
+
+<nav class="nav nav-pills flex-column">
+
+
+
+
+<a class="nav-link" href="#Router-HandlerConfig--routes">routes</a>
+<a class="nav-link" href="#Router-HandlerConfig--notFound">notFound</a>
+
+
+
+</nav>
+
+<a class="nav-link" href="#Router-Config">Router.Config</a>
+
+<nav class="nav nav-pills flex-column">
+
+
+
+
+<a class="nav-link" href="#Router-Config--name">name</a>
+<a class="nav-link" href="#Router-Config--parent">parent</a>
+<a class="nav-link" href="#Router-Config--path">path</a>
+<a class="nav-link" href="#Router-Config--target">target</a>
+<a class="nav-link" href="#Router-Config--separator">separator</a>
+<a class="nav-link" href="#Router-Config--joiner">joiner</a>
+<a class="nav-link" href="#Router-Config--handler">handler</a>
+<a class="nav-link" href="#Router-Config--scope">scope</a>
+
+
+
+</nav>
+
+<a class="nav-link" href="#Router-Redirector">Router.Redirector</a>
+
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#Router-Redirector---hierarchy">Hierarchy</a>
+<a class="nav-link" href="#Router-Redirector---description">Description</a>
+
+<a class="nav-link" href="#Router-Redirector---constructor">Constructor</a>
+
+
+
+
+</nav>
+
+<a class="nav-link" href="#Router-Node">Router.Node</a>
+
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#Router-Node---hierarchy">Hierarchy</a>
+<a class="nav-link" href="#Router-Node---description">Description</a>
+
+<a class="nav-link" href="#Router-Node---constructor">Constructor</a>
+
+<a class="nav-link" href="#Router-Node---properties">Properties</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#Router-Node--router">router</a>
+<a class="nav-link" href="#Router-Node--paths">paths</a>
+<a class="nav-link" href="#Router-Node--expanded">expanded</a>
+<a class="nav-link" href="#Router-Node--defaultRoute">defaultRoute</a>
+<a class="nav-link font-italic" href="#Router-Node--iid">iid</a></nav>
+
+<a class="nav-link" href="#Router-Node---methods">Methods</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link font-italic" href="#Router-Node--destroy">destroy</a>
+<a class="nav-link font-italic" href="#Router-Node--destroyObject">destroyObject</a>
+<a class="nav-link font-italic" href="#Router-Node--own">own</a>
+<a class="nav-link font-italic" href="#Router-Node--owning">owning</a></nav>
+
+
+</nav>
+
+<a class="nav-link" href="#Router-Node.Config">Router.Node.Config</a>
+
+<nav class="nav nav-pills flex-column">
+
+
+
+
+<a class="nav-link" href="#Router-Node-Config--name">name</a>
+<a class="nav-link" href="#Router-Node-Config--parent">parent</a>
+<a class="nav-link" href="#Router-Node-Config--path">path</a>
+<a class="nav-link" href="#Router-Node-Config--routes">routes</a>
+<a class="nav-link" href="#Router-Node-Config--expanded">expanded</a>
+<a class="nav-link" href="#Router-Node-Config--defaultRoute">defaultRoute</a>
+
+
+
+</nav>
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1><span id="default"></span>jwidget/Router</h1>
+						
+						<h3>Consumption</h3>
+						<pre>import Router from "jwidget/Router";</pre>
+						
+<h3><span id="default"></span>Default export<a class="anchorjs-link" href="#default" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+<h4><span id="default---hierarchy"></span>Hierarchy<a class="anchorjs-link" href="#default---hierarchy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<ul class="doc-hierarchy">
+
+
+
+
+<li><span style="margin-left: 0em"></span>interface <a href="Destroyable.html#default">Destroyable</a></li>
+
+<li><span style="margin-left: 0em"></span>interface <a href="Identifiable.html#default">Identifiable</a></li>
+<li><span style="margin-left: 2em"></span>interface <a href="IClass.html#default">IClass</a></li>
+<li><span style="margin-left: 4em"></span>class <a href="Class.html#default">Class</a></li>
+<li><span style="margin-left: 6em"></span>class <b>Router</b><span class="monospace">&lt;T extends <a href="Destroyable.html#default">Destroyable</a>&gt;</span></li>
+
+<li><span style="margin-left: 8em"></span>class <a href="UIRouter.html#default">UIRouter</a></li>
+
+</ul>
+<h4><span id="default---description"></span>Description<a class="anchorjs-link" href="#default---description" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">T</dt><dd class="col-lg-10 col-sm-9">(extends <a href="Destroyable.html#default">Destroyable</a>) Target object type.</dd>
+</dl>
+<p>URL router. Converts incoming part of URL (hash) to a target object and passes tail string to it
+for further routing. Target object may have any type, but usually this is <a href="Component.html" target="_parent">Component</a>. For simplicity,
+<b>Router</b>&lt;<a href="Component.html" target="_parent">Component</a>&gt; has a shorthand - <a href="UIRouter.html" target="_parent">UIRouter</a>.</p>
+
+
+		<h5><span id="terminology"></span>Terminology<a class="anchorjs-link" href="#terminology" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<ul>
+<li><b>Path</b> is some final part of URL (hash) relevant to a certain router. Path never contains "#"
+symbol.</li>
+<li><b>Root path</b> is URL (hash) without "#" symbol.</li>
+<li><b>Route</b> or <b>route name</b> is the first token of the path which is relevant to the next single
+step of the routing.</li>
+<li><b>Argument</b> is the remaining path after route extraction.</li>
+</ul>
+<p>For example, hash value <tt>#inbox/3?filter=10</tt> provides us with <tt>inbox/3?filter=10</tt> global
+path, and it may get processed in 2 steps with the following values:</p>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Path</th>
+      <th>Route</th>
+      <th>Argument</th>
+    </tr>
+  </thead>
+  <tbody style="font-family: monospace">
+    <tr>
+      <td>inbox/3?filter=10</td>
+      <td>inbox</td>
+      <td>3?filter=10</td>
+    </tr>
+    <tr>
+      <td>3?filter=10</td>
+      <td>3</td>
+      <td>?filter=10</td>
+    </tr>
+  </tbody>
+</table>
+
+	
+
+		<h5><span id="howItWorks"></span>How it works<a class="anchorjs-link" href="#howItWorks" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>Router takes an incoming string <a href="Property.html" target="_parent">Property</a> (for example, <a href="hash.html" target="_parent">hash</a>), parses it and provides an outcoming
+<a href="Property.html" target="_parent">Property</a>&lt;<a href="#default" target="_parent">T</a>&gt;. Outcoming property may contain any object you want. You specify this object in a
+callback function. This can be either general-purpose <a href="#Router-Handler" target="_parent">Handler</a> function or a part of <a href="#Router-HandlerConfig" target="_parent">HandlerConfig</a>&lt;<a href="#default" target="_parent">T</a>&gt;
+object.</p>
+<iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="../samples/public/router.html"></iframe>
+<p>In this example, <a href="hash.html" target="_parent">hash</a> is passed to Application's router object, and it builds a target property
+containing a child component to render by the following rules:</p>
+<ul>
+<li><tt>inbox/*</tt> path is mapped to Inbox component</li>
+<li><tt>compose/*</tt> path is mapped to Compose component</li>
+<li><tt>settings/*</tt> path is mapped to Settings component</li>
+<li>blank path is automatically redirected to <tt>inbox</tt></li>
+<li>any other path is mapped to NotFound component</li>
+</ul>
+<p>The following code demonstrates the common pattern of root router initialization:</p>
+<pre>
+protected <a href="Component.html#default--beforeRender" target="_parent">beforeRender</a>() {
+    super.<a href="Component.html#default--beforeRender" target="_parent">beforeRender</a>();
+    this.router = this.<a href="IClass.html#default--own" target="_parent">own</a>(new <a href="UIRouter.html" target="_parent">UIRouter</a>({
+        <a href="#Router-Config--path" target="_parent">path</a>: <a href="hash.html" target="_parent">hash</a>,
+        <a href="#Router-Config--handler" target="_parent">handler</a>: {
+            <a href="#Router-HandlerConfig--routes" target="_parent">routes</a>: {
+                &quot;inbox&quot;   : arg =&gt; new Inbox(arg, this.router),
+                &quot;compose&quot; : () =&gt; new Compose(),
+                &quot;settings&quot;: () =&gt; new Settings(),
+                &quot;&quot;        : () =&gt; new <b>Router</b>.<a href="#Router-Redirector" target="_parent">Redirector</a>(&quot;inbox&quot;, this.router)
+            },
+            <a href="#Router-HandlerConfig--notFound" target="_parent">notFound</a>: route =&gt; new NotFound(route)
+        }
+    }));
+    this.router.<a href="#default--update" target="_parent">update</a>();
+}
+
+protected renderPage() {
+    return this.router.<a href="#default--target" target="_parent">target</a>;
+}</pre>
+<p>Notice that <a href="#default--update" target="_parent">update</a> method is called separately after router construction. It is implemented so to make
+sure that <tt>this.router</tt> field is assigned before routing. Sometimes it is a crucial factor (e.g. in the
+example above, <tt>this.router</tt> is used in "inbox" route handler).</p>
+
+	
+
+		<h5><span id="routeHierarchy"></span>Route hierarchy<a class="anchorjs-link" href="#routeHierarchy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>In the example above, Inbox provides further routing for all <tt>inbox/*</tt> paths based on its own rules.
+Applacation router passes path tail string to Inbox constructor to make this happen. Inbox rules:</p>
+<ul>
+<li><tt>inbox</tt> path is mapped to EmailList component</li>
+<li><tt>inbox/:id</tt> path is mapped to Email component if an email with such ID exists</li>
+<li><tt>inbox/:id</tt> path is mapped to EmailNotFound component if there's no email with such ID</li>
+</ul>
+<pre>
+protected <a href="Component.html#default--beforeRender" target="_parent">beforeRender</a>() {
+    super.<a href="Component.html#default--beforeRender" target="_parent">beforeRender</a>();
+    this.router = this.<a href="IClass.html#default--own" target="_parent">own</a>(new <a href="UIRouter.html" target="_parent">UIRouter</a>({
+        <a href="#Router-Config--name" target="_parent">name</a>: &quot;inbox&quot;,
+        <a href="#Router-Config--parent" target="_parent">parent</a>: this.parentRouter,
+        <a href="#Router-Config--path" target="_parent">path</a>: this.path,
+        <a href="#Router-Config--handler" target="_parent">handler</a>: id =&gt; {
+            if (!id) {
+                return new EmailList(this.emails);
+            }
+            const email = this.emails.<a href="ReadonlyList.html#default--find" target="_parent">find</a>(email =&gt; email.id === id);
+            return email != null ? new Email(email, this.router) : new EmailNotFound(id);
+        }
+    }));
+    this.router.<a href="#default--update" target="_parent">update</a>();
+}
+
+protected renderContent() {
+    return this.router.<a href="#default--target" target="_parent">target</a>;
+}</pre>
+<p>We can recognize the next differences between the root router and its child:</p>
+<ul>
+<li><a href="#default--path" target="_parent">path</a> value is different: the root router is based on full <a href="hash.html" target="_parent">hash</a>, and the child router is based on its
+remainder after "inbox/" substring.</li>
+<li>Child router requires proper <a href="#default--name" target="_parent">name</a> to be specified. Router name is a chunk of the path that caused this
+route to get initialized. In our case, this is obviously "inbox". It is not certainly a constant: if we want
+"inbox/:id" route to have subroutes, then a specific email ID would be a name of the email router.</li>
+<li>Child router requires proper <a href="#default--parent" target="_parent">parent</a> to be specified. Pass parent router here. Every router should have
+a reference to its parent. It provides <a href="#default--getFullPath" target="_parent">getFullPath</a> and <a href="#default--redirect" target="_parent">redirect</a> with a clue about all parts of the path. If
+your router provides you with wrong paths, check <a href="#default--name" target="_parent">name</a> and <a href="#default--parent" target="_parent">parent</a> of all routers in your hierarchy - they
+are likely assigned to wrong values.</li>
+</ul>
+
+	
+
+		<h5><span id="routingFlow"></span>Routing flow<a class="anchorjs-link" href="#routingFlow" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>Routing is performed in three steps:</p>
+<ol>
+<li><p>Incoming path string is parsed using <a href="#Router-Config--separator" target="_parent">separator</a> callback into two tokens: <b>route</b> and
+<b>argument</b>. The <b>route</b> should be used to process this single routing step, and the <b>argument</b>
+should be passed to the target for further routing. Make sure that <a href="#Router-Config--separator" target="_parent">separator</a> never returns two routes which
+have the same target. For example, if both "" and "inbox" lead to Inbox component, make sure that <a href="#default--separator" target="_parent">separator</a>
+function returns the same route for them, for example, "index".</p>
+<pre>
+this.router = this.<a href="IClass.html#default--own" target="_parent">own</a>(new <a href="UIRouter.html" target="_parent">UIRouter</a>({
+    <a href="#Router-Config--path" target="_parent">path</a>: <a href="hash.html" target="_parent">hash</a>,
+    <a href="#Router-Config--separator" target="_parent">separator</a>: path =&gt; path ? <b>Router</b>.<a href="#default--makeSeparator-static" target="_parent">makeSeparator</a>()(path) : [&quot;inbox&quot;, null], // mirror &quot;&quot; to &quot;inbox&quot;
+    <a href="#Router-Config--handler" target="_parent">handler</a>: {
+        <a href="#Router-HandlerConfig--routes" target="_parent">routes</a>: {
+            &quot;inbox&quot;   : arg =&gt; new Inbox(arg, this.router),
+            &quot;compose&quot; : () =&gt; new Compose(),
+            &quot;settings&quot;: () =&gt; new Settings()
+        },
+        <a href="#Router-HandlerConfig--notFound" target="_parent">notFound</a>: route =&gt; new NotFound(route)
+    }
+}));</pre>
+<p>Otherwise, expect your target component to be recreated when user switches back and forth between "" and
+"inbox". If <a href="#default--separator" target="_parent">separator</a> function returns null or undefined, it is automatically mapped to <tt>["", null]</tt>.
+Separator can be specified as a string. In this case, it is passed to <a href="#default--makeSeparator-static" target="_parent">makeSeparator</a> function - see it for
+more details.</p></li>
+<li>If the route returned by separator is changed, the next steps are following:<ul>
+    <li>Null is assigned to <a href="#default--target" target="_parent">target</a> property and the previous target gets <a href="Destroyable.html#default--destroy" target="_parent">destroyed</a></li>
+    <li><a href="#default--arg" target="_parent">arg</a> and <a href="#default--route" target="_parent">route</a> get assigned to new values</li>
+    <li><a href="#Router-Config--handler" target="_parent">handler</a> function is called to build a new target</li>
+    <li>Result is assigned to <a href="#default--target" target="_parent">target</a> property</li></ul></li>
+<li>Else only <a href="#default--arg" target="_parent">arg</a> gets reassigned to pass the control flow to the child routers.</li>
+</ol>
+<p>Please notice that <b>Router</b> controls the life time of your target objects. For this reason, any target must
+implement <a href="Destroyable.html" target="_parent">Destroyable</a> interface. You should also control the life time of your router (i.e. <a href="IClass.html#default--own" target="_parent">own</a> it
+in the component).</p>
+
+	
+
+		<h5><span id="redirection"></span>Redirection<a class="anchorjs-link" href="#redirection" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>2nd and 3rd steps above result in creation of many new objects that may cause unexpected redirections.
+This would make things fall apart. That's why jWidget router recommends to do such redirections
+asyncronously. If your component happen to do the redirection immediately and syncronously, the router will
+discard to handle it and throw an error.</p>
+<p>However, outside routing cycle, you are free to do the redirections syncronously at any moment. The easiest way to
+do this is to use <a href="#default--redirect" target="_parent">redirect</a> instance method or corresponding static method. The instance method performs
+redirection inside this router. The static method takes a router as an optional argument. If you dismiss it,
+it will result in global redirection.</p>
+<pre>
+this.router.<a href="#default--redirect" target="_parent">redirect</a>(&quot;inbox&quot;); // redirection in this router
+<b>Router</b>.<a href="#default--redirect-static" target="_parent">redirect</a>(&quot;inbox&quot;); // global redirection</pre>
+<p>To do the asyncronous redirection in a router <a href="#Router-Config--handler" target="_parent">handler</a> function, render <b>Router</b>.<a href="#Router-Redirector" target="_parent">Redirector</a> as a target
+component.</p>
+<pre>
+this.router = this.<a href="IClass.html#default--own" target="_parent">own</a>(new <a href="UIRouter.html" target="_parent">UIRouter</a>({
+    <a href="#Router-Config--path" target="_parent">path</a>: <a href="hash.html" target="_parent">hash</a>,
+    <a href="#Router-Config--handler" target="_parent">handler</a>: {
+        <a href="#Router-HandlerConfig--routes" target="_parent">routes</a>: {
+            &quot;inbox&quot;: arg =&gt; new Inbox(arg)
+        },
+        <a href="#Router-HandlerConfig--notFound" target="_parent">notFound</a>: () =&gt; new <b>Router</b>.<a href="#Router-Redirector" target="_parent">Redirector</a>(&quot;inbox&quot;, this.router)
+    }
+}));</pre>
+<p>This router will forcibly redirect any route to "inbox".</p>
+<p>If you define custom <a href="#Router-Config--separator" target="_parent">separator</a> function, you must also define an opposite <a href="#Router-Config--joiner" target="_parent">joiner</a> function for
+redirections to work properly.</p>
+
+	
+
+		<h5><span id="menuStatus"></span>Menu status management<a class="anchorjs-link" href="#menuStatus" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>In order to highlight the active item of your menu, you can use <a href="#default--route" target="_parent">route</a> property.</p>
+<pre>
+const activeElement = this.router.<a href="#default--route" target="_parent">route</a>.<a href="Bindable.html#default--map" target="_parent">map</a>(route =&gt; el.filter('[data-route=&quot;' + route + '&quot;]'));
+new <a href="Switcher.html" target="_parent">Switcher</a>(activeElement, {
+    <a href="Switcher.html#Switcher-Config--init" target="_parent">init</a>: el =&gt; el.css(&quot;font-weight&quot;, &quot;bold&quot;),
+    <a href="Switcher.html#Switcher-Config--done" target="_parent">done</a>: el =&gt; el.css(&quot;font-weight&quot;, &quot;&quot;)
+});</pre>
+
+	
+
+<h4><span id="default---constructor"></span>Constructor<a class="anchorjs-link" href="#default---constructor" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<p><code>new Router<span class="monospace">&lt;T&gt;</span>(config?: <b>Router</b>.<a href="#Router-Config" target="_parent">Config</a>&lt;<a href="#default" target="_parent">T</a>&gt;)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">config</dt><dd class="col-lg-10 col-sm-9">Router configuration.</dd>
+</dl>
+<p>Creates router instance. Please notice that the router doesn't process current route immediately on
+initialization. To process the route, call <a href="#default--update" target="_parent">update</a> method.</p>
+
+
+<h4><span id="default---properties"></span>Fields<a class="anchorjs-link" href="#default---properties" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--name"></span>name<a class="anchorjs-link" href="#default--name" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly name: string</code></p>
+<p>Router name. Must be equal to the route name in the <a href="#default--parent" target="_parent">parent</a> router. Required for proper <a href="#default--getFullPath" target="_parent">getFullPath</a> and
+<a href="#default--redirect" target="_parent">redirect</a> method processing. Root router does not have a name.</p>
+
+</div>
+
+<h5><span id="default--parent"></span>parent<a class="anchorjs-link" href="#default--parent" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly parent: <b>Router</b>&lt;any&gt;</code></p>
+<p>Parent router. Required for proper <a href="#default--getFullPath" target="_parent">getFullPath</a> and <a href="#default--redirect" target="_parent">redirect</a> method processing. Root router does not have
+a parent.</p>
+
+</div>
+
+<h5><span id="default--path"></span>path<a class="anchorjs-link" href="#default--path" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly path: <a href="Bindable.html" target="_parent">Bindable</a>&lt;string&gt;</code></p>
+<p>Path that the router is bound to. Path is a final part of URL (hash) relevant to this
+router. Any path change results in <a href="#default--update" target="_parent">update</a> method call.</p>
+
+</div>
+
+<h5><span id="default--separator"></span>separator<a class="anchorjs-link" href="#default--separator" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly separator: <b>Router</b>.<a href="#Router-Separator" target="_parent">Separator</a></code></p>
+<p>Path separator function used by the router. See <a href="#Router-Config--separator" target="_parent">separator</a> for details.</p>
+
+</div>
+
+<h5><span id="default--joiner"></span>joiner<a class="anchorjs-link" href="#default--joiner" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly joiner: <b>Router</b>.<a href="#Router-Joiner" target="_parent">Joiner</a></code></p>
+<p>Path joiner function used by the router. See <a href="#Router-Config--joiner" target="_parent">joiner</a> for details.</p>
+
+</div>
+
+<h5><span id="default--handler"></span>handler<a class="anchorjs-link" href="#default--handler" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly handler: <b>Router</b>.<a href="#Router-Handler" target="_parent">Handler</a>&lt;<a href="#default" target="_parent">T</a>&gt;</code></p>
+<p>Route handler function used by the router. See <a href="#Router-Config--handler" target="_parent">handler</a> for details.</p>
+
+</div>
+
+<h5><span id="default--scope"></span>scope<a class="anchorjs-link" href="#default--scope" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly scope: any</code></p>
+<p><a href="#Router-Config--separator" target="_parent">separator</a>, <a href="#Router-Config--joiner" target="_parent">joiner</a> and <a href="#Router-Config--handler" target="_parent">handler</a> call scope.</p>
+
+</div>
+
+<h5><span id="default--target"></span>target<a class="anchorjs-link" href="#default--target" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly target: <a href="Bindable.html" target="_parent">Bindable</a>&lt;<a href="#default" target="_parent">T</a>&gt;</code></p>
+<p>Router target. Main purpose of the router is to convert <a href="#default--path" target="_parent">path</a> to <b>target</b>. In particular, <a href="UIRouter.html" target="_parent">UIRouter</a>
+creates <a href="Component.html" target="_parent">Component</a> instances based on current <a href="#default--path" target="_parent">path</a> value so you could render them.</p>
+
+</div>
+
+<h5><span id="default--route"></span>route<a class="anchorjs-link" href="#default--route" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly route: <a href="Bindable.html" target="_parent">Bindable</a>&lt;string&gt;</code></p>
+<p>Current route. First chunk of the path detected by <a href="#Router-Config--separator" target="_parent">separator</a> function. You can watch this property
+to activate and deactivate items in your menu. See <a href="#menuStatus" target="_parent">Menu status management</a>.</p>
+
+</div>
+
+<h5><span id="default--arg"></span>arg<a class="anchorjs-link" href="#default--arg" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly arg: <a href="Bindable.html" target="_parent">Bindable</a>&lt;string&gt;</code></p>
+<p>Remainder of current route after <a href="#Router-Config--separator" target="_parent">separator</a> function call. This property is passed to <a href="#Router-Config--handler" target="_parent">handler</a>
+function and can be passed over to child components for further routing.</p>
+
+</div>
+
+<h5><span id="default--iid"></span><i>iid</i> <span class="doc-inherit-mark">(inherited from <a href="Identifiable.html#default" target="_parent">Identifiable</a>)</span><a class="anchorjs-link" href="#default--iid" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly iid: number</code></p>
+<p>Instance ID.</p>
+<p>Auto-incrementing object unique ID. Extend <a href="Class.html" target="_parent">Class</a> to have such an identifier auto-assigned, or
+simply call <a href="../jwidget.html#newIid" target="_parent">newIid</a> method to obtain one.</p>
+
+</div>
+
+<h4><span id="default---methods"></span>Methods<a class="anchorjs-link" href="#default---methods" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--update"></span>update<a class="anchorjs-link" href="#default--update" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>()
+</code></p>
+
+<p>Issues route processing. See <a href="#routingFlow" target="_parent">Routing flow</a> for details.</p>
+
+</div>
+
+<h5><span id="default--join"></span>join<a class="anchorjs-link" href="#default--join" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(route: string, arg: string): string
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">route</dt><dd class="col-lg-10 col-sm-9">Route name.</dd>
+<dt class="col-lg-2 col-sm-3">arg</dt><dd class="col-lg-10 col-sm-9">Remainder of the path.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Full path.</dd>
+</dl>
+<p>Returns the result of <a href="#Router-Config--joiner" target="_parent">joiner</a> function call for this router.</p>
+
+</div>
+
+<h5><span id="default--getFullPath"></span>getFullPath<a class="anchorjs-link" href="#default--getFullPath" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(path: string): string
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">path</dt><dd class="col-lg-10 col-sm-9">Path relative to this router.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Full path relative to the root router.</dd>
+</dl>
+<p>Returns full path as the result of <a href="#Router-Config--joiner" target="_parent">joiner</a> function call in <a href="#Router-Config--parent" target="_parent">parent</a> router with <a href="#Router-Config--name" target="_parent">name</a> passed as
+<b>route</b> and <b>path</b> passed as <b>arg</b>.</p>
+<p>Returns <b>path</b> if this is the root router.</p>
+
+</div>
+
+<h5><span id="default--redirect"></span>redirect<a class="anchorjs-link" href="#default--redirect" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(path: string, replaceState: boolean = false)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">path</dt><dd class="col-lg-10 col-sm-9">Path relative to this router.</dd>
+<dt class="col-lg-2 col-sm-3">replaceState</dt><dd class="col-lg-10 col-sm-9">Replace the current browser historical state rather than pushing a new state to the stack.</dd>
+</dl>
+<p>Immediately performs the redirection, i.e. sets <a href="hash.html" target="_parent">hash</a> to <a href="#default--getFullPath" target="_parent">getFullPath</a>(<b>path</b>).</p>
+
+</div>
+
+<h5><span id="default--destroy"></span><i>destroy</i> <span class="doc-inherit-mark">(inherited from <a href="Class.html#default" target="_parent">Class</a>)</span><a class="anchorjs-link" href="#default--destroy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(): void</code></p>
+
+<p>Class destructor invocation method. Destroys all aggregated objects and calls <a href="#default--destroyObject" target="_parent">destroyObject</a> method.
+You must call this method explicitly from outside, because JavaScript doesn't support automatic class
+destructor calling.</p>
+<pre>
+const object = new MyClass();
+
+// ...
+
+// Once object is not needed anymore, destroy it
+object.<b>destroy</b>();</pre>
+<p>Alternatively (and optimally), you should use <a href="IClass.html#default--own" target="_parent">own</a> method to aggregate this object inside another one.</p>
+<p>Unlike the other <a href="Destroyable.html" target="_parent">Destroyable</a> subclasses, <a href="Class.html" target="_parent">Class</a> subclasses are not recommended to override <b>destroy</b>
+method directly. Instead, please use <a href="#default--destroyObject" target="_parent">destroyObject</a> if you want the aggregated objects to be already
+destroyed.</p>
+<p>You can override <b>destroy</b> method in a subclass to do some preliminary work before aggregated object
+destruction. For example, <a href="Component.html" target="_parent">Component</a> overrides this method to remove child components before their
+destruction, because child components are usually aggregated inside the component. However, in the majority
+of cases, you should override <a href="#default--destroyObject" target="_parent">destroyObject</a> method instead to customize destruction logic.</p>
+
+</div>
+
+<h5><span id="default--destroyObject"></span><i>destroyObject</i> <span class="doc-inherit-mark">(inherited from <a href="Class.html#default" target="_parent">Class</a>)</span><a class="anchorjs-link" href="#default--destroyObject" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>protected (): void</code></p>
+
+<p>Class destructor implementation. Called in <a href="#default--destroy" target="_parent">destroy</a> method <i>after aggregated object destruction</i>.
+The logic of class instance destruction should be implemented here. If you override this method,
+remember to call <code>super.<b>destroyObject</b>()</code> at the end of the method:</p>
+<pre>
+<b>destroyObject</b>() {
+    // Release resources
+    ...
+
+    // Call superclass destructor
+    super.<b>destroyObject</b>();
+}</pre>
+
+</div>
+
+<h5><span id="default--own"></span><i>own</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#default--own" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>&lt;T extends <a href="Destroyable.html" target="_parent">Destroyable</a>&gt;(obj: T): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>obj</b></dd>
+</dl>
+<p>Aggregates the object. It means that the specified object is automatically destroyed
+on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
+Returns <b>obj</b> object, which makes it easy to use in field definition:</p>
+<pre>
+private selected = this.<b>own</b>(new <a href="Property.html" target="_parent">Property</a>(false));</pre>
+
+</div>
+
+<h5><span id="default--owning"></span><i>owning</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#default--owning" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(obj: <a href="Destroyable.html" target="_parent">Destroyable</a>): this
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Aggregates the object. It means that the specified object is automatically destroyed
+on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
+Returns <code>this</code> object, which makes it easy to use in object instantiation:</p>
+<pre>
+const items = new <a href="List.html" target="_parent">List</a>();
+return new Panel(items).<b>owning</b>(items);</pre>
+
+</div>
+
+<h4><span id="default---staticProperties"></span>Static fields<a class="anchorjs-link" href="#default---staticProperties" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--DEFAULT_SEPARATOR-static"></span>DEFAULT_SEPARATOR<a class="anchorjs-link" href="#default--DEFAULT_SEPARATOR-static" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>DEFAULT_SEPARATOR: RegExp</code></p>
+<p>Default value of <a href="#Router-Config--separator" target="_parent">separator</a>: <tt>/^\/*([^?\/]+)(?:\/(.*)|(\?.*))?$/</tt></p>
+<p>Briefly, it follows the next logic:</p>
+<ul>
+<li>Trims leading /</li>
+<li>Looks for the first / or ?</li>
+<li>Uses first part as route</li>
+<li>Uses second part as argument. Questionmark ? is included to the argument, slash / is not</li>
+</ul>
+<p>Examples:</p>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr><th>Incoming path</th><th>Resulting route</th><th>Resulting argument</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>"" or null</td><td>""</td><td>null</td></tr>
+    <tr><td>"inbox"</td><td>"inbox"</td><td>null</td></tr>
+    <tr><td>"inbox/"</td><td>"inbox"</td><td>""</td></tr>
+    <tr><td>"inbox/1"</td><td>"inbox"</td><td>"1"</td></tr>
+    <tr><td>"inbox/1/edit"</td><td>"inbox"</td><td>"1/edit"</td></tr>
+    <tr><td>"/inbox"</td><td>"inbox"</td><td>null</td></tr>
+    <tr><td>"/inbox/"</td><td>"inbox"</td><td>""</td></tr>
+    <tr><td>"///inbox///"</td><td>"inbox"</td><td>"//"</td></tr>
+    <tr><td>"inbox?id=1"</td><td>"inbox"</td><td>"?id=1"</td></tr>
+  </tbody>
+</table>
+
+</div>
+
+<h5><span id="default--DEFAULT_JOINER-static"></span>DEFAULT_JOINER<a class="anchorjs-link" href="#default--DEFAULT_JOINER-static" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>DEFAULT_JOINER: string</code></p>
+<p>Default value of <a href="#Router-Config--joiner" target="_parent">joiner</a>: <tt>"/"</tt></p>
+<p>Simply joins route and argument with <tt>"/"</tt></p>
+
+</div>
+
+<h4><span id="default---staticMethods"></span>Static methods<a class="anchorjs-link" href="#default---staticMethods" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--makeSeparator-static"></span>makeSeparator<a class="anchorjs-link" href="#default--makeSeparator-static" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(separator: <b>Router</b>.<a href="#Router-Separator" target="_parent">Separator</a> | RegExp = <b>Router</b>.<a href="#default--DEFAULT_SEPARATOR-static" target="_parent">DEFAULT_SEPARATOR</a>): <b>Router</b>.<a href="#Router-Separator" target="_parent">Separator</a>
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">separator</dt><dd class="col-lg-10 col-sm-9">Function or regular expression.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Separator function.</dd>
+</dl>
+<p>If <b>separator</b> is a function, returns it immediately. Else converts the specified regular expression to
+a function by the following rule: The first token ($1) of path is used as a route, and the next non-null token
+($2 or further) is used as an argument. If path is null, it is assumed to be "".</p>
+
+</div>
+
+<h5><span id="default--makeJoiner-static"></span>makeJoiner<a class="anchorjs-link" href="#default--makeJoiner-static" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(joiner: <b>Router</b>.<a href="#Router-Joiner" target="_parent">Joiner</a> | string = <b>Router</b>.<a href="#default--DEFAULT_JOINER-static" target="_parent">DEFAULT_JOINER</a>): <b>Router</b>.<a href="#Router-Joiner" target="_parent">Joiner</a>
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">joiner</dt><dd class="col-lg-10 col-sm-9">Function or separation character.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Joiner function.</dd>
+</dl>
+<p>If <b>joiner</b> is a function, returns it immediately. Else converts the specified string to a function by the
+following rule: joins incoming route/argument pair via the specified string. Leading joiner symbols in argument
+are trimmed. If argument starts with "?", joiner symbol is not added. If argument is null or blank, returns
+route. Examples:</p>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr><th>Incoming route</th><th>Incoming argument</th><th>Separator</th><th>Resulting path</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>""</td><td>""</td><td>"/"</td><td>""</td></tr>
+    <tr><td>"inbox"</td><td>""</td><td>"/"</td><td>"inbox"</td></tr>
+    <tr><td>"inbox"</td><td>"1"</td><td>"/"</td><td>"inbox/1"</td></tr>
+    <tr><td>"inbox"</td><td>"1/reply"</td><td>"/"</td><td>"inbox/1/reply"</td></tr>
+    <tr><td>"inbox"</td><td>"/1/reply"</td><td>"/"</td><td>"inbox/1/reply"</td></tr>
+    <tr><td>"inbox"</td><td>"/1/reply/"</td><td>"/"</td><td>"inbox/1/reply/"</td></tr>
+    <tr><td>"inbox"</td><td>"///1/reply///"</td><td>"/"</td><td>"inbox/1/reply///"</td></tr>
+    <tr><td>"inbox"</td><td>"?id=1"</td><td>"/"</td><td>"inbox?id=1"</td></tr>
+  </tbody>
+</table>
+
+</div>
+
+<h5><span id="default--makeHandler-static"></span>makeHandler<a class="anchorjs-link" href="#default--makeHandler-static" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>&lt;T&gt;(handler: <b>Router</b>.<a href="#Router-Handler" target="_parent">Handler</a>&lt;T&gt; | <b>Router</b>.<a href="#Router-HandlerConfig" target="_parent">HandlerConfig</a>&lt;T&gt; = {}): <b>Router</b>.<a href="#Router-Handler" target="_parent">Handler</a>&lt;T&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">handler</dt><dd class="col-lg-10 col-sm-9">Handler configuration object.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Handler function.</dd>
+</dl>
+<p>If <b>handler</b> is a function, returns it immediately. Else converts the specified object to a function. See
+<a href="#Router-HandlerConfig" target="_parent">HandlerConfig</a> for details.</p>
+<p>Example:</p>
+<pre>
+this.router = this.<a href="IClass.html#default--own" target="_parent">own</a>(new <a href="UIRouter.html" target="_parent">UIRouter</a>({
+    <a href="#Router-Config--path" target="_parent">path</a>: <a href="hash.html" target="_parent">hash</a>,
+    <a href="#Router-Config--handler" target="_parent">handler</a>: { // this object is auto-converted to a function via <b>makeHandler</b>
+        <a href="#Router-HandlerConfig--routes" target="_parent">routes</a>: {
+            "inbox" : arg => new Inbox(arg),
+            ""      : () => new <b>Router</b>.<a href="#Router-Redirector" target="_parent">Redirector</a>("inbox", this.router)
+        },
+        <a href="#Router-HandlerConfig--notFound" target="_parent">notFound</a>: () => new NotFound()
+    }
+}));
+
+</div>
+
+<h5><span id="default--getFullPath-static"></span>getFullPath<a class="anchorjs-link" href="#default--getFullPath-static" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(path: string, router: Router&lt;any&gt;): string
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">path</dt><dd class="col-lg-10 col-sm-9">Path relative to <b>router</b>.</dd>
+<dt class="col-lg-2 col-sm-3">router</dt><dd class="col-lg-10 col-sm-9">Compute full path relative to this router.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Full path relative to the <b>router</b>.</dd>
+</dl>
+<p>Returns full path as the result of <a href="#Router-Config--joiner" target="_parent">joiner</a> function call in <a href="#Router-Config--parent" target="_parent">parent</a> of <b>router</b> with <a href="#Router-Config--name" target="_parent">name</a> passed as
+<b>route</b> and <b>path</b> passed as <b>arg</b>.</p>
+<p>Returns <b>path</b> if this is the root router.</p>
+
+</div>
+
+<h5><span id="default--redirect-static"></span>redirect<a class="anchorjs-link" href="#default--redirect-static" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(path: string, router: Router&lt;any&gt;, replaceState?: boolean)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">path</dt><dd class="col-lg-10 col-sm-9">Path relative to <b>router</b>.</dd>
+<dt class="col-lg-2 col-sm-3">router</dt><dd class="col-lg-10 col-sm-9">Redirect relative to this router.</dd>
+<dt class="col-lg-2 col-sm-3">replaceState</dt><dd class="col-lg-10 col-sm-9">Replace the current browser historical state rather than pushing a new state to the stack.</dd>
+</dl>
+<p>Immediately performs the redirection, i.e. sets <a href="hash.html" target="_parent">hash</a> to <a href="#default--getFullPath-static" target="_parent">getFullPath</a>(<b>path</b>, <b>router</b>).</p>
+
+</div>
+</div>
+<h3><span id="Router-Separator"></span>Router.Separator<a class="anchorjs-link" href="#Router-Separator" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+
+
+<p><code>(path: string): string[]</code></p>
+<p>Signature of <a href="#Router-Config--separator" target="_parent">separator</a> function. The function splits path to route and argument. Therefore, it must
+return two string values. If function returns null, it is assumed to be <tt>["", null]</tt>.</p>
+
+
+
+
+
+
+
+</div>
+<h3><span id="Router-Joiner"></span>Router.Joiner<a class="anchorjs-link" href="#Router-Joiner" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+
+
+<p><code>(route: string, arg: string): string</code></p>
+<p>Signature of <a href="#Router-Config--joiner" target="_parent">joiner</a> function. The function joins route and argument to a path.</p>
+
+
+
+
+
+
+
+</div>
+<h3><span id="Router-Handler"></span>Router.Handler<a class="anchorjs-link" href="#Router-Handler" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">T</dt><dd class="col-lg-10 col-sm-9">Target object type.</dd>
+</dl>
+<p><code>(route: string, arg: <a href="Bindable.html" target="_parent">Bindable</a><string>): <a href="#Router-Handler" target="_parent">T</a></code></p>
+<p>Signature of <a href="#Router-Config--handler" target="_parent">handler</a> general-purpose function. The function maps the specified route to a target object
+(usually, <a href="Component.html" target="_parent">Component</a>) and passes argument to it for further routing.</p>
+
+
+
+
+
+
+
+</div>
+<h3><span id="Router-Route"></span>Router.Route<a class="anchorjs-link" href="#Router-Route" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">T</dt><dd class="col-lg-10 col-sm-9">Target object type.</dd>
+</dl>
+<p><code>(arg: <a href="Bindable.html" target="_parent">Bindable</a><string>): <a href="#Router-Route" target="_parent">T</a></code></p>
+<p>Signature of a single route in <a href="#Router-Config--handler" target="_parent">handler</a> object. The function maps a single route to a target
+object (usually, <a href="Component.html" target="_parent">Component</a>) and passes argument to it for further routing.</p>
+
+
+
+
+
+
+
+</div>
+<h3><span id="Router-HandlerConfig"></span>Router.HandlerConfig<a class="anchorjs-link" href="#Router-HandlerConfig" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">T</dt><dd class="col-lg-10 col-sm-9">Target object type.</dd>
+</dl>
+<p><b>Router</b> <a href="#Router-Config--handler" target="_parent">handler</a> configuration object.</p>
+
+
+
+
+
+
+<h5><span id="Router-HandlerConfig--routes"></span>routes<a class="anchorjs-link" href="#Router-HandlerConfig--routes" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly routes?: <a href="Dictionary.html" target="_parent">Dictionary</a>&lt;<b>Router</b>.<a href="#Router-Route" target="_parent">Route</a>&lt;<a href="#Router-HandlerConfig" target="_parent">T</a>&gt;&gt;</code></p>
+<p>Map of specific route handlers. If current route is present in this dictionary, the router calls its
+corresponding handler and passes argument to it. Route and argument themselves are computed with <a href="#Router-Config--separator" target="_parent">separator</a>
+callback.</p>
+
+</div>
+
+<h5><span id="Router-HandlerConfig--notFound"></span>notFound<a class="anchorjs-link" href="#Router-HandlerConfig--notFound" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly notFound?: <b>Router</b>.<a href="#Router-Handler" target="_parent">Handler</a>&lt;<a href="#Router-HandlerConfig" target="_parent">T</a>&gt;</code></p>
+<p>If none of the <a href="#Router-HandlerConfig--routes" target="_parent">routes</a> matches current route, the router calls this handler callback and passes both
+route and argument to it. By default, returns null for any input.</p>
+
+</div>
+
+
+
+</div>
+<h3><span id="Router-Config"></span>Router.Config<a class="anchorjs-link" href="#Router-Config" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">T</dt><dd class="col-lg-10 col-sm-9">Target object type.</dd>
+</dl>
+<p><b>Router</b> configuration object.</p>
+
+
+
+
+
+
+<h5><span id="Router-Config--name"></span>name<a class="anchorjs-link" href="#Router-Config--name" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly name?: string</code></p>
+<p>Router name. Router name is a chunk of the path that caused this route to get initialized. Root router
+doesn't have a name. See <a href="#routeHierarchy" target="_parent">Route hierarchy</a> for details.</p>
+
+</div>
+
+<h5><span id="Router-Config--parent"></span>parent<a class="anchorjs-link" href="#Router-Config--parent" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly parent?: string</code></p>
+<p>Parent router. It provides <a href="#default--getFullPath" target="_parent">getFullPath</a> and <a href="#default--redirect" target="_parent">redirect</a> with a clue about all parts of the path. If
+your router provides you with wrong paths, check <a href="#Router-Config--name" target="_parent">name</a> and <b>parent</b> of all routers in your hierarchy - they
+are likely assigned to wrong values. Root router doesn't have a parent. See <a href="#routeHierarchy" target="_parent">Route hierarchy</a> for details.</p>
+
+</div>
+
+<h5><span id="Router-Config--path"></span>path<a class="anchorjs-link" href="#Router-Config--path" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly path?: <a href="Bindable.html" target="_parent">Bindable</a>&lt;string&gt;</code></p>
+<p>Path to bind the router to. Root router should usually get bound to <a href="hash.html" target="_parent">hash</a> property. Child routers should
+receive <b>path</b> from their parents.</p>
+
+</div>
+
+<h5><span id="Router-Config--target"></span>target<a class="anchorjs-link" href="#Router-Config--target" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly target?: <a href="IProperty.html" target="_parent">IProperty</a>&lt;<a href="#Router-Config" target="_parent">T</a>&gt;</code></p>
+<p>Target property. Router puts the result of <a href="#Router-Config--handler" target="_parent">handler</a> function call to target property. If <b>target</b> is
+omitted, the router creates it automatically. <b>Router</b> automatically controls the life time of your targets,
+so, if you pass your precreated <b>target</b> property to a <b>Router</b>, make sure that it is not aggregating its value,
+i.e. <a href="IProperty.html#default--ownValue" target="_parent">ownValue</a> method is <b>not called</b>.</p>
+
+</div>
+
+<h5><span id="Router-Config--separator"></span>separator<a class="anchorjs-link" href="#Router-Config--separator" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly separator?: <b>Router</b>.<a href="#Router-Separator" target="_parent">Separator</a> | RegExp</code></p>
+<p>Path separator function. Parses incoming path to two tokens: route and argument. Route gets used to
+process a single routing step and create a target, argument gets passed to the target for further routing.</p>
+<p>Separator can be specified as a function or a regular expression. The function has the next signature:</p>
+<p><code>(path: string): string[]</code></p>
+<p>It must return two string values. If it returns null, it is assumed to be <tt>["", null]</tt>.</p>
+<p>Make sure that separator never returns two routes which have the same target. For example, if both "" and
+"inbox" lead to Inbox component, make sure that separator function returns the same route for them, for
+example, "inbox". Otherwise, expect your target component to be recreated when user switches back and forth
+between "" and "inbox".</p>
+<p>If you define custom separator function, you must also define an opposite <a href="#Router-Config--joiner" target="_parent">joiner</a> function for
+redirections to work properly.</p>
+<p>If the separator is specified as a regular expression, it gets converted to a function with
+<b>Router</b>.<a href="#default--makeSeparator-static" target="_parent">makeSeparator</a> function - see it for more details.</p>
+<p>Defaults to <b>Router</b>.<a href="#default--DEFAULT_SEPARATOR-static" target="_parent">DEFAULT_SEPARATOR</a>. See it for more details.</p>
+
+</div>
+
+<h5><span id="Router-Config--joiner"></span>joiner<a class="anchorjs-link" href="#Router-Config--joiner" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly joiner?: <b>Router</b>.<a href="#Router-Joiner" target="_parent">Joiner</a> | string</code></p>
+<p>Path joiner. Opposite to <a href="#Router-Config--separator" target="_parent">separator</a>. Used in <a href="#default--getFullPath" target="_parent">getFullPath</a> and <a href="#default--redirect" target="_parent">redirect</a> methods to properly build the
+path. Joins incoming route and argument to a full path.</p>
+<p>Joiner can be specified as a function or a string. The function has the next signature:</p>
+<p><code>(route: string, arg: string): string</code></p>
+<p>If the joiner is specified as a string, it gets converted to a function with <b>Router</b>.<a href="#default--makeJoiner-static" target="_parent">makeJoiner</a> function -
+see it for more details.</p>
+<p>Defaults to <b>Router</b>.<a href="#default--DEFAULT_JOINER-static" target="_parent">DEFAULT_JOINER</a> = "/".</p>
+
+</div>
+
+<h5><span id="Router-Config--handler"></span>handler<a class="anchorjs-link" href="#Router-Config--handler" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly handler?: <b>Router</b>.<a href="#Router-Handler" target="_parent">Handler</a>&lt;<a href="#Router-Config" target="_parent">T</a>&gt; | <b>Router</b>.<a href="#Router-HandlerConfig" target="_parent">HandlerConfig</a>&lt;<a href="#Router-Config" target="_parent">T</a>&gt;</code></p>
+<p>Route handler. Maps the route string to a target object and passes argument to it for further routing.</p>
+<pre>
+handler: (route, arg) =&gt; {
+    const doc = this.docs[route];
+    return doc ? doc.createView(arg) : new Page404();
+}</pre>
+<p>Handler function must create a new object instead of returning an existing object, because <b>Router</b>
+controls life time of the target objects and <a href="Destroyable.html#default--destroy" target="_parent">destroys</a> them on route leave.</p>
+<p>Handler may return null or undefined if nothing needs to be assigned as a target - router will recognize
+this case and won't try to destroy anything.</p>
+<p>Handler can be specified as an object matching <b>Router</b>.<a href="#Router-HandlerConfig" target="_parent">HandlerConfig</a> interface. In this case, it gets
+converted to a function with <b>Router</b>.<a href="#default--makeHandler-static" target="_parent">makeHandler</a> function. See <b>Router</b>.<a href="#Router-HandlerConfig" target="_parent">HandlerConfig</a> for more details.</p>
+<p>Default handler function maps all routes to null.</p>
+
+</div>
+
+<h5><span id="Router-Config--scope"></span>scope<a class="anchorjs-link" href="#Router-Config--scope" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly scope?: <b>Router</b>.<a href="#Router-Handler" target="_parent">Handler</a>&lt;<a href="#Router-Config" target="_parent">T</a>&gt; | <b>Router</b>.<a href="#Router-HandlerConfig" target="_parent">HandlerConfig</a>&lt;<a href="#Router-Config" target="_parent">T</a>&gt;</code></p>
+<p><a href="#Router-Config--separator" target="_parent">separator</a>, <a href="#Router-Config--joiner" target="_parent">joiner</a> and <a href="#Router-Config--handler" target="_parent">handler</a> call scope.</p>
+
+</div>
+
+
+
+</div>
+<h3><span id="Router-Redirector"></span>Router.Redirector<a class="anchorjs-link" href="#Router-Redirector" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+<h4><span id="Router-Redirector---hierarchy"></span>Hierarchy<a class="anchorjs-link" href="#Router-Redirector---hierarchy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<ul class="doc-hierarchy">
+
+
+
+
+
+<li><span style="margin-left: 0em"></span>interface <a href="Destroyable.html#default">Destroyable</a></li>
+
+<li><span style="margin-left: 0em"></span>interface <a href="Identifiable.html#default">Identifiable</a></li>
+<li><span style="margin-left: 2em"></span>interface <a href="IClass.html#default">IClass</a></li>
+<li><span style="margin-left: 4em"></span>class <a href="Class.html#default">Class</a></li>
+<li><span style="margin-left: 6em"></span>class <a href="Component.html#default">Component</a></li>
+<li><span style="margin-left: 8em"></span>class <b>Router.Redirector</b></li>
+
+</ul>
+<h4><span id="Router-Redirector---description"></span>Description<a class="anchorjs-link" href="#Router-Redirector---description" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<p>Recommended way to perform an asyncronous redirection in <b>Router</b> <a href="#Router-Config--handler" target="_parent">handler</a> function. See <a href="#redirection" target="_parent">Redirection</a> for
+details.</p>
+
+
+
+<h4><span id="Router-Redirector---constructor"></span>Constructor<a class="anchorjs-link" href="#Router-Redirector---constructor" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<p><code>new Router.Redirector(path: string, router: <b>Router</b>&lt;any&gt;, replaceState: boolean = true)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">path</dt><dd class="col-lg-10 col-sm-9">Path relative to <b>router</b>.</dd>
+<dt class="col-lg-2 col-sm-3">router</dt><dd class="col-lg-10 col-sm-9">Redirect relative to this router.</dd>
+<dt class="col-lg-2 col-sm-3">replaceState</dt><dd class="col-lg-10 col-sm-9">Replace the current browser historical state rather than pushing a new state to the stack.</dd>
+</dl>
+<p>Creates a new redirector.</p>
+
+
+
+
+
+</div>
+<h3><span id="Router-Node"></span>Router.Node<a class="anchorjs-link" href="#Router-Node" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+<h4><span id="Router-Node---hierarchy"></span>Hierarchy<a class="anchorjs-link" href="#Router-Node---hierarchy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<ul class="doc-hierarchy">
+
+
+
+
+<li><span style="margin-left: 0em"></span>interface <a href="Destroyable.html#default">Destroyable</a></li>
+
+<li><span style="margin-left: 0em"></span>interface <a href="Identifiable.html#default">Identifiable</a></li>
+<li><span style="margin-left: 2em"></span>interface <a href="IClass.html#default">IClass</a></li>
+<li><span style="margin-left: 4em"></span>class <a href="Class.html#default">Class</a></li>
+<li><span style="margin-left: 6em"></span>class <b>Router.Node</b></li>
+
+</ul>
+<h4><span id="Router-Node---description"></span>Description<a class="anchorjs-link" href="#Router-Node---description" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<p>Creates a router that manages mapping of two sets of properties:</p>
+<ul>
+<li><a href="#Router-Node--paths" target="_parent">paths</a> which exposes string path properties for child routers if neccessary;</li>
+<li><a href="#Router-Node--expanded" target="_parent">expanded</a> which exposes boolean "expanded" properties for child UI panels.</li>
+</ul>
+<p>This allows you to render your content as a fixed list of panels representing the concurrent routes.</p>
+<pre>
+@<a href="template.html" target="_parent">template</a>(
+    '&lt;div jwclass=&quot;user-settings&quot;&gt;' +
+    '  &lt;div jwid=&quot;simple&quot;&gt;&lt;/div&gt;' +
+    '  &lt;div jwid=&quot;advanced&quot;&gt;&lt;/div&gt;' +
+    '&lt;/div&gt;'
+)
+export default class UserSettings extends <a href="Component.html" target="_parent">Component</a> {
+
+    private node: <b>Router</b>.<a href="#Router-Node" target="_parent">Node</a>;
+
+    <a href="Component.html#default--beforeRender" target="_parent">beforeRender</a>() {
+        super.<a href="Component.html#default--beforeRender" target="_parent">beforeRender</a>();
+        this.node = this.<a href="IClass.html#default--own" target="_parent">own</a>(new <b>Router</b>.<a href="#Router-Node" target="_parent">Node</a>({
+            <a href="#Router-Node.Config--path" target="_parent">path</a>: <a href="hash.html" target="_parent">hash</a>,
+            <a href="#Router-Node.Config--routes" target="_parent">routes</a>: [&quot;simple&quot;, &quot;advanced&quot;],
+            <a href="#Router-Node.Config--expanded" target="_parent">expanded</a>: true
+        }));
+    }
+
+    renderSimple() {
+        return this.<a href="IClass.html#default--own" target="_parent">own</a>(new FieldSet({
+            label: &quot;Simple settings&quot;,
+            content: new SimpleUserSettings(this.node.<a href="#Router-Node--router" target="_parent">router</a>, this.node.<a href="#Router-Node--paths" target="_parent">paths</a>[&quot;simple&quot;]),
+            expanded: this.node.<a href="#Router-Node--expanded" target="_parent">expanded</a>[&quot;simple&quot;]
+        })).ownContent();
+    }
+
+    renderAdvanced() {
+        return this.<a href="IClass.html#default--own" target="_parent">own</a>(new FieldSet({
+            label: &quot;Advanced settings&quot;,
+            content: new AdvancedUserSettings(this.node.<a href="#Router-Node--router" target="_parent">router</a>, this.node.<a href="#Router-Node--paths" target="_parent">paths</a>[&quot;advanced&quot;]),
+            expanded: this.node.<a href="#Router-Node--expanded" target="_parent">expanded</a>[&quot;advanced&quot;]
+        })).ownContent();
+    }
+}</pre>
+
+
+
+<h4><span id="Router-Node---constructor"></span>Constructor<a class="anchorjs-link" href="#Router-Node---constructor" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<p><code>new Router.Node(config: <b>Router</b>.<a href="#Router-Node" target="_parent">Node</a>.<a href="#Router-Config" target="_parent">Config</a>)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">config</dt><dd class="col-lg-10 col-sm-9">Node configuration.</dd>
+</dl>
+<p>Creates router node, assigns its properties to initial values and starts synchronization.</p>
+
+
+<h4><span id="Router-Node---properties"></span>Fields<a class="anchorjs-link" href="#Router-Node---properties" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="Router-Node--router"></span>router<a class="anchorjs-link" href="#Router-Node--router" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly router: <b>Router</b>&lt;any&gt;</code></p>
+<p>Router that manages this node. Node creates this router automatically. You should pass this router to
+child components as their parent router for further routing.</p>
+
+</div>
+
+<h5><span id="Router-Node--paths"></span>paths<a class="anchorjs-link" href="#Router-Node--paths" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly paths: <a href="Dictionary.html" target="_parent">Dictionary</a>&lt;<a href="Bindable.html" target="_parent">Bindable</a>&lt;string&gt;&gt;</code></p>
+<p>Provides paths to bind child routers to, by name. Only one route is active at a time, but their paths
+always exist regardless of their activity.</p>
+
+</div>
+
+<h5><span id="Router-Node--expanded"></span>expanded<a class="anchorjs-link" href="#Router-Node--expanded" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly expanded: <a href="Dictionary.html" target="_parent">Dictionary</a>&lt;<a href="IProperty.html" target="_parent">IProperty</a>&lt;boolean&gt;&gt;</code></p>
+<p>Provides "expanded" flags to bind child panels to, by name. Support two-way binding:</p>
+<ol>
+<li>Once the global path starts referring this node and this name in the node, "expanded" gets assigned to
+true automatically. But not the opposite: once it stops, "expanded" stays unchanged.</li>
+<li>Once "expanded" property becomes true, global path gets redirected to this name in this node. But not the
+opposite: false value assignment doesn't lead to any visible changes in global path.</li>
+</ol>
+
+</div>
+
+<h5><span id="Router-Node--defaultRoute"></span>defaultRoute<a class="anchorjs-link" href="#Router-Node--defaultRoute" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly defaultRoute: string</code></p>
+<p>Default route this node was initialized with.</p>
+
+</div>
+
+<h5><span id="Router-Node--iid"></span><i>iid</i> <span class="doc-inherit-mark">(inherited from <a href="Identifiable.html#default" target="_parent">Identifiable</a>)</span><a class="anchorjs-link" href="#Router-Node--iid" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly iid: number</code></p>
+<p>Instance ID.</p>
+<p>Auto-incrementing object unique ID. Extend <a href="Class.html" target="_parent">Class</a> to have such an identifier auto-assigned, or
+simply call <a href="../jwidget.html#newIid" target="_parent">newIid</a> method to obtain one.</p>
+
+</div>
+
+<h4><span id="Router-Node---methods"></span>Methods<a class="anchorjs-link" href="#Router-Node---methods" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="Router-Node--destroy"></span><i>destroy</i> <span class="doc-inherit-mark">(inherited from <a href="Class.html#default" target="_parent">Class</a>)</span><a class="anchorjs-link" href="#Router-Node--destroy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(): void</code></p>
+
+<p>Class destructor invocation method. Destroys all aggregated objects and calls <a href="#Router-Node--destroyObject" target="_parent">destroyObject</a> method.
+You must call this method explicitly from outside, because JavaScript doesn't support automatic class
+destructor calling.</p>
+<pre>
+const object = new MyClass();
+
+// ...
+
+// Once object is not needed anymore, destroy it
+object.<b>destroy</b>();</pre>
+<p>Alternatively (and optimally), you should use <a href="IClass.html#default--own" target="_parent">own</a> method to aggregate this object inside another one.</p>
+<p>Unlike the other <a href="Destroyable.html" target="_parent">Destroyable</a> subclasses, <a href="Class.html" target="_parent">Class</a> subclasses are not recommended to override <b>destroy</b>
+method directly. Instead, please use <a href="#Router-Node--destroyObject" target="_parent">destroyObject</a> if you want the aggregated objects to be already
+destroyed.</p>
+<p>You can override <b>destroy</b> method in a subclass to do some preliminary work before aggregated object
+destruction. For example, <a href="Component.html" target="_parent">Component</a> overrides this method to remove child components before their
+destruction, because child components are usually aggregated inside the component. However, in the majority
+of cases, you should override <a href="#Router-Node--destroyObject" target="_parent">destroyObject</a> method instead to customize destruction logic.</p>
+
+</div>
+
+<h5><span id="Router-Node--destroyObject"></span><i>destroyObject</i> <span class="doc-inherit-mark">(inherited from <a href="Class.html#default" target="_parent">Class</a>)</span><a class="anchorjs-link" href="#Router-Node--destroyObject" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>protected (): void</code></p>
+
+<p>Class destructor implementation. Called in <a href="#Router-Node--destroy" target="_parent">destroy</a> method <i>after aggregated object destruction</i>.
+The logic of class instance destruction should be implemented here. If you override this method,
+remember to call <code>super.<b>destroyObject</b>()</code> at the end of the method:</p>
+<pre>
+<b>destroyObject</b>() {
+    // Release resources
+    ...
+
+    // Call superclass destructor
+    super.<b>destroyObject</b>();
+}</pre>
+
+</div>
+
+<h5><span id="Router-Node--own"></span><i>own</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#Router-Node--own" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>&lt;T extends <a href="Destroyable.html" target="_parent">Destroyable</a>&gt;(obj: T): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>obj</b></dd>
+</dl>
+<p>Aggregates the object. It means that the specified object is automatically destroyed
+on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
+Returns <b>obj</b> object, which makes it easy to use in field definition:</p>
+<pre>
+private selected = this.<b>own</b>(new <a href="Property.html" target="_parent">Property</a>(false));</pre>
+
+</div>
+
+<h5><span id="Router-Node--owning"></span><i>owning</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#Router-Node--owning" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(obj: <a href="Destroyable.html" target="_parent">Destroyable</a>): this
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Aggregates the object. It means that the specified object is automatically destroyed
+on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
+Returns <code>this</code> object, which makes it easy to use in object instantiation:</p>
+<pre>
+const items = new <a href="List.html" target="_parent">List</a>();
+return new Panel(items).<b>owning</b>(items);</pre>
+
+</div>
+
+
+</div>
+<h3><span id="Router-Node-Config"></span>Router.Node.Config<a class="anchorjs-link" href="#Router-Node-Config" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+
+
+<p><b>Router</b>.<a href="#Router-Node" target="_parent">Node</a> configuration.</p>
+
+
+
+
+
+
+<h5><span id="Router-Node-Config--name"></span>name<a class="anchorjs-link" href="#Router-Node-Config--name" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly name?: string</code></p>
+<p>Router name. See <a href="#Router-Config--name" target="_parent">name</a> in Router configuration for details.</p>
+
+</div>
+
+<h5><span id="Router-Node-Config--parent"></span>parent<a class="anchorjs-link" href="#Router-Node-Config--parent" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly parent?: string</code></p>
+<p>Parent router. See <a href="#Router-Config--parent" target="_parent">parent</a> in Router configuration for details.</p>
+
+</div>
+
+<h5><span id="Router-Node-Config--path"></span>path<a class="anchorjs-link" href="#Router-Node-Config--path" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly path?: <a href="Bindable.html" target="_parent">Bindable</a>&lt;string&gt;</code></p>
+<p>Path to bind the router to. See <a href="#Router-Config--path" target="_parent">path</a> in Router configuration for details.</p>
+
+</div>
+
+<h5><span id="Router-Node-Config--routes"></span>routes<a class="anchorjs-link" href="#Router-Node-Config--routes" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly routes: string[]</code></p>
+<p>Fixed list of routes to manage by this node. For every name in this list, corresponding properties will be
+created in <a href="#Router-Node--paths" target="_parent">paths</a> and <a href="#Router-Node--expanded" target="_parent">expanded</a> dictionaries of the node.</p>
+
+</div>
+
+<h5><span id="Router-Node-Config--expanded"></span>expanded<a class="anchorjs-link" href="#Router-Node-Config--expanded" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly expanded?: boolean | string[]</code></p>
+<p>Initial "expanded" status of routes or initial routes to expand. Defaults to false (all routes are
+collapsed).</p>
+
+</div>
+
+<h5><span id="Router-Node-Config--defaultRoute"></span>defaultRoute<a class="anchorjs-link" href="#Router-Node-Config--defaultRoute" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly defaultRoute?: string</code></p>
+<p>Default route. If the initial path is blank (""), the router performs a redirection to this route, i.e.
+expands one of the panels. Doesn't work after initialization.</p>
+
+</div>
+
+
+
+</div>
+					</div>
+					<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+				</div>
+			
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="../tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="../tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="../tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="../tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Events</a></li>
+    <li><a href="../tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="../tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="../tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="DictionaryUtils.html" target="_parent">DictionaryUtils</a></li>
+        <li><a href="DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="Identifiable.html" target="_parent">Identifiable</a></li>
+        <li><a href="Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Dictionary.html" target="_parent">Dictionary</a></li>
+        <li><a href="Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Class.html" target="_parent">Class</a>, <a href="IClass.html" target="_parent">IClass</a></li>
+        <li><a href="Event.html" target="_parent">Event</a>, <a href="IEvent.html" target="_parent">IEvent</a></li>
+        <li><a href="Property.html" target="_parent">Property</a>, <a href="IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="Component.html" target="_parent">Component</a></li>
+        <li><a href="template.html" target="_parent">template</a></li>
+        <li><a href="listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="Copier.html" target="_parent">Copier</a></li>
+        <li><a href="Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="bindText.html" target="_parent">bindText</a></li>
+        <li><a href="bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="ReadonlyCollection.html" target="_parent">ReadonlyCollection</a></td>
+            <td><a href="ReadonlyList.html" target="_parent">ReadonlyList</a></td>
+            <td><a href="ReadonlyMap.html" target="_parent">ReadonlyMap</a></td>
+            <td><a href="ReadonlySet.html" target="_parent">ReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="DestroyableReadonlyCollection.html" target="_parent">DestroyableReadonlyCollection</a></td>
+            <td><a href="DestroyableReadonlyList.html" target="_parent">DestroyableReadonlyList</a></td>
+            <td><a href="DestroyableReadonlyMap.html" target="_parent">DestroyableReadonlyMap</a></td>
+            <td><a href="DestroyableReadonlySet.html" target="_parent">DestroyableReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="ICollection.html" target="_parent">ICollection</a></td>
+            <td><a href="IList.html" target="_parent">IList</a></td>
+            <td><a href="IMap.html" target="_parent">IMap</a></td>
+            <td><a href="ISet.html" target="_parent">ISet</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><a href="List.html" target="_parent">List</a></td>
+            <td><a href="Map.html" target="_parent">Map</a></td>
+            <td><a href="Set.html" target="_parent">Set</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="mapper/AbstractMapper.html" target="_parent">Mappers</a></li>
+        <li><a href="filterer/AbstractFilterer.html" target="_parent">Filterers</a></li>
+        <li><a href="counter/AbstractCounter.html" target="_parent">Counters</a></li>
+        <li><a href="indexer/AbstractIndexer.html" target="_parent">Indexers</a></li>
+        <li><a href="convertertoset/AbstractConverterToSet.html" target="_parent">Converters to set</a></li>
+        <li><a href="convertertolist/AbstractConverterToList.html" target="_parent">Converters to list</a></li>
+        <li><a href="sortercomparing/AbstractSorterComparing.html" target="_parent">Sorters (comparing)</a></li>
+        <li><a href="observer/AbstractObserver.html" target="_parent">Observers</a></li>
+        <li><a href="inserter/list.html" target="_parent">Inserters</a></li>
+        <li><a href="merger/list.html" target="_parent">Mergers</a></li>
+        <li><a href="reverser/list.html" target="_parent">Reversers</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="hash.html" target="_parent">hash</a></li>
+        <li><b>Router</b></li>
+        <li><a href="UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="defer.html" target="_parent">defer</a></li>
+        <li><a href="request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+        <li><a href="Reducer.html" target="_parent">Reducer</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="dummyEvent.html" target="_parent">dummyEvent</a></li>
+        <li><a href="IndexCount.html" target="_parent">IndexCount</a></li>
+        <li><a href="IndexItems.html" target="_parent">IndexItems</a></li>
+        <li><a href="ListSpliceResult.html" target="_parent">ListSpliceResult</a></li>
+        <li><a href="TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

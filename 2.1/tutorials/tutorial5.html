@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Part 5. Properties - jWidget 2 tutorials</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="tutorial1.html"
+							data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			<div class="container">
+<h2>Tutorial. Part 5. Properties</h2>
+
+<iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="../samples/public/tutorial5.html"></iframe>
+
+<p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-5">https://github.com/enepomnyaschih/mt/tree/mt-2.1-5</a> (Git branch).</p>
+
+<p>Now it's the time to learn a new layer of jWidget: <a href="../jwidget/Property.html" target="_parent">Property</a> and its interfaces <a href="../jwidget/Bindable.html" target="_parent">Bindable</a> and <a href="../jwidget/IProperty.html" target="_parent">IProperty</a>.
+<b>Property</b> is a value that can notify the clients about its modification. So, <a href="../jwidget/Property.html" target="_parent">Property</a> is a class with two
+methods: <a href="../jwidget/Bindable.html#default--get" target="_parent">get</a>, <a href="../jwidget/IProperty.html#default--set" target="_parent">set</a> - and an event <a href="../jwidget/Bindable.html#default--changeEvent" target="_parent">changeEvent</a>. Whenever you change the value of the property with <a href="../jwidget/IProperty.html#default--set" target="_parent">set</a> method call,
+<a href="../jwidget/Bindable.html#default--changeEvent" target="_parent">changeEvent</a> is triggered. The event is not triggered if the value is not changed in result of <a href="../jwidget/IProperty.html#default--set" target="_parent">set</a> method call.</p>
+
+<p>So, in our Mini-Twitter example, we can simplify Like/Unlike and Retweet/Unretweet behaviour implementation by
+introducing two boolean properties.</p>
+
+<p>First, let's change the model. We need to replace simple boolean fields with properties.</p>
+
+<h5>src/model/Tweet.ts</h5>
+
+<pre>
+import <a href="../jwidget/IProperty.html" target="_parent">IProperty</a> from &quot;jwidget/IProperty&quot;;
+import <a href="../jwidget/Property.html" target="_parent">Property</a> from &quot;jwidget/Property&quot;;
+
+export default class Tweet {
+
+    // ...
+
+    readonly like: <a href="../jwidget/IProperty.html" target="_parent">IProperty</a>&lt;boolean&gt;;
+    readonly retweet: <a href="../jwidget/IProperty.html" target="_parent">IProperty</a>&lt;boolean&gt;;
+
+    constructor(config: TweetConfig) {
+        this.fullName = config.fullName;
+        this.shortName = config.shortName;
+        this.avatarUrl48 = config.avatarUrl48;
+        this.contentHtml = config.contentHtml;
+        this.time = config.time;
+        this.like = new <a href="../jwidget/Property.html" target="_parent">Property</a>(config.like);
+        this.retweet = new <a href="../jwidget/Property.html" target="_parent">Property</a>(config.retweet);
+    }</pre>
+
+<p>We can now remove the corresponding events and setters - it is quite a chunk of code. Let's modify the view now.
+Instead of listening property change event manually, we can utilize property bindings.</p>
+
+<p>First, we're going to build string properties with "Like/Unlike" and "Retweet/Unretweet" values from
+original boolean properties. To do so, we can use <a href="../jwidget/Bindable.html#default--map" target="_parent">map</a> method. Since life time of the model can be longer
+than life time of the view (because the model can live without a view, and not vice versa), it is important to
+aggregate this binding in the view with <a href="../jwidget/IClass.html#default--own" target="_parent">own</a> method.</p>
+
+<p>Second, we're going to bind DOM elements to all these properties with <a href="../jwidget/bindText.html" target="_parent">bindText</a> function. It doesn't make much
+sense to aggregate this binding, because the source property belongs to the view itself, and the binding is so simple
+that it doesn't create any objects in the output.</p>
+
+<p>Third, we should also bind "active" CSS class presence to the values of corresponding properties with <a href="../jwidget/bindClass.html" target="_parent">bindClass</a>
+function. Since this is a binding to model, we must aggregate it with <a href="../jwidget/IClass.html#default--own" target="_parent">own</a> method.</p>
+
+<h5>src/view/TweetView.ts</h5>
+
+<pre>
+    protected renderLike(el: JQuery) {
+        const text = this.<a href="../jwidget/IClass.html#default--own" target="_parent">own</a>(this.tweet.like.<a href="../jwidget/Bindable.html#default--map" target="_parent">map</a>(like =&gt; like ? &quot;Unlike&quot; : &quot;Like&quot;));
+        <a href="../jwidget/bindText.html" target="_parent">bindText</a>(el, text);
+        this.<a href="../jwidget/IClass.html#default--own" target="_parent">own</a>(<a href="../jwidget/bindClass.html" target="_parent">bindClass</a>(el, &quot;active&quot;, this.tweet.like));
+        el.on(&quot;click&quot;, event =&gt; {
+            event.preventDefault();
+            this.tweet.like.<a href="../jwidget/IProperty.html#default--set" target="_parent">set</a>(!this.tweet.like.<a href="../jwidget/Bindable.html#default--get" target="_parent">get</a>());
+        });
+    }
+
+    protected renderRetweet(el: JQuery) {
+        const text = this.<a href="../jwidget/IClass.html#default--own" target="_parent">own</a>(this.tweet.retweet.<a href="../jwidget/Bindable.html#default--map" target="_parent">map</a>(retweet =&gt; retweet ? &quot;Unretweet&quot; : &quot;Retweet&quot;));
+        <a href="../jwidget/bindText.html" target="_parent">bindText</a>(el, text);
+        this.<a href="../jwidget/IClass.html#default--own" target="_parent">own</a>(<a href="../jwidget/bindClass.html" target="_parent">bindClass</a>(el, &quot;active&quot;, this.tweet.retweet));
+        el.on(&quot;click&quot;, event =&gt; {
+            event.preventDefault();
+            this.tweet.retweet.<a href="../jwidget/IProperty.html#default--set" target="_parent">set</a>(!this.tweet.retweet.<a href="../jwidget/Bindable.html#default--get" target="_parent">get</a>());
+        });
+    }</pre>
+
+<p>And we can delete methods _updateLike and _updateRetweet - we don't use them anymore.</p>
+
+<p>Run the application.</p>
+
+<p>The syntax of properties and bindings is clean and straightforward. They let you make code shorter and more
+readable. Take a look at <a href="../jwidget/Bindable.html" target="_parent">Bindable</a> documentation for full list of <a href="../jwidget/Bindable.html#bindings" target="_parent">bindings</a>.</p>
+
+<a href="tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a>
+</div>
+<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="tutorial4.html" target="_parent">Tutorial. Part 4. Events</a></li>
+    <li><b>Tutorial. Part 5. Properties</b></li>
+    <li><a href="tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="../jwidget/ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="../jwidget/DictionaryUtils.html" target="_parent">DictionaryUtils</a></li>
+        <li><a href="../jwidget/DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="../jwidget/StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="../jwidget/Identifiable.html" target="_parent">Identifiable</a></li>
+        <li><a href="../jwidget/Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="../jwidget/Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="../jwidget/DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Dictionary.html" target="_parent">Dictionary</a></li>
+        <li><a href="../jwidget/Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Class.html" target="_parent">Class</a>, <a href="../jwidget/IClass.html" target="_parent">IClass</a></li>
+        <li><a href="../jwidget/Event.html" target="_parent">Event</a>, <a href="../jwidget/IEvent.html" target="_parent">IEvent</a></li>
+        <li><a href="../jwidget/Property.html" target="_parent">Property</a>, <a href="../jwidget/IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Component.html" target="_parent">Component</a></li>
+        <li><a href="../jwidget/template.html" target="_parent">template</a></li>
+        <li><a href="../jwidget/listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="../jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Copier.html" target="_parent">Copier</a></li>
+        <li><a href="../jwidget/Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="../jwidget/Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="../jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="../jwidget/bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="../jwidget/bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="../jwidget/bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="../jwidget/bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="../jwidget/bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="../jwidget/bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="../jwidget/bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="../jwidget/bindText.html" target="_parent">bindText</a></li>
+        <li><a href="../jwidget/bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="../jwidget/ReadonlyCollection.html" target="_parent">ReadonlyCollection</a></td>
+            <td><a href="../jwidget/ReadonlyList.html" target="_parent">ReadonlyList</a></td>
+            <td><a href="../jwidget/ReadonlyMap.html" target="_parent">ReadonlyMap</a></td>
+            <td><a href="../jwidget/ReadonlySet.html" target="_parent">ReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="../jwidget/DestroyableReadonlyCollection.html" target="_parent">DestroyableReadonlyCollection</a></td>
+            <td><a href="../jwidget/DestroyableReadonlyList.html" target="_parent">DestroyableReadonlyList</a></td>
+            <td><a href="../jwidget/DestroyableReadonlyMap.html" target="_parent">DestroyableReadonlyMap</a></td>
+            <td><a href="../jwidget/DestroyableReadonlySet.html" target="_parent">DestroyableReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="../jwidget/ICollection.html" target="_parent">ICollection</a></td>
+            <td><a href="../jwidget/IList.html" target="_parent">IList</a></td>
+            <td><a href="../jwidget/IMap.html" target="_parent">IMap</a></td>
+            <td><a href="../jwidget/ISet.html" target="_parent">ISet</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><a href="../jwidget/List.html" target="_parent">List</a></td>
+            <td><a href="../jwidget/Map.html" target="_parent">Map</a></td>
+            <td><a href="../jwidget/Set.html" target="_parent">Set</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="../jwidget/mapper/AbstractMapper.html" target="_parent">Mappers</a></li>
+        <li><a href="../jwidget/filterer/AbstractFilterer.html" target="_parent">Filterers</a></li>
+        <li><a href="../jwidget/counter/AbstractCounter.html" target="_parent">Counters</a></li>
+        <li><a href="../jwidget/indexer/AbstractIndexer.html" target="_parent">Indexers</a></li>
+        <li><a href="../jwidget/convertertoset/AbstractConverterToSet.html" target="_parent">Converters to set</a></li>
+        <li><a href="../jwidget/convertertolist/AbstractConverterToList.html" target="_parent">Converters to list</a></li>
+        <li><a href="../jwidget/sortercomparing/AbstractSorterComparing.html" target="_parent">Sorters (comparing)</a></li>
+        <li><a href="../jwidget/observer/AbstractObserver.html" target="_parent">Observers</a></li>
+        <li><a href="../jwidget/inserter/list.html" target="_parent">Inserters</a></li>
+        <li><a href="../jwidget/merger/list.html" target="_parent">Mergers</a></li>
+        <li><a href="../jwidget/reverser/list.html" target="_parent">Reversers</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/hash.html" target="_parent">hash</a></li>
+        <li><a href="../jwidget/Router.html" target="_parent">Router</a></li>
+        <li><a href="../jwidget/UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="../jwidget/Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="../jwidget/Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="../jwidget/defer.html" target="_parent">defer</a></li>
+        <li><a href="../jwidget/request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="../jwidget/DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="../jwidget/HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+        <li><a href="../jwidget/Reducer.html" target="_parent">Reducer</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="../jwidget/dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="../jwidget/dummyEvent.html" target="_parent">dummyEvent</a></li>
+        <li><a href="../jwidget/IndexCount.html" target="_parent">IndexCount</a></li>
+        <li><a href="../jwidget/IndexItems.html" target="_parent">IndexItems</a></li>
+        <li><a href="../jwidget/ListSpliceResult.html" target="_parent">ListSpliceResult</a></li>
+        <li><a href="../jwidget/TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

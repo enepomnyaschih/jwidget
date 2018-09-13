@@ -1,0 +1,4 @@
+<div jwclass="application">
+	<div><label><input jwid="checkbox" type="checkbox">Disable textarea</label></div>
+	<textarea jwid="textarea">This is a textarea</textarea>
+</div>
