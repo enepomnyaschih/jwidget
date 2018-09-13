@@ -2,13 +2,9 @@
 <html>
 <head>
 <script type="text/javascript">
-var version = "1.4";
-if (location.href.indexOf("index.html") !== -1) {
-	location.href = location.href.replace("index.html", version + "/index.html");
-} else {
-	location.href = location.protocol + "//" + location.host + location.pathname.replace(/\/?$/, "/") + version +
-			"/index.html" + location.search + location.hash;
-}
+var version = "2.1";
+location.href = location.protocol + "//" + location.hostname + location.pathname.replace(/\/?$/, "/") + version +
+		"/" + location.search + location.hash;
 </script>
 </head>
 <body>
