@@ -4,7 +4,7 @@ description: |
   <div class="container">
   <h2>Tutorial. Part 6. Collection bindings</h2>
 
-  %example:tutorial6
+  <iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="../samples/tutorial6"></iframe>
 
   <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-6">https://github.com/enepomnyaschih/mt/tree/mt-2.1-6</a> (Git branch).</p>
 

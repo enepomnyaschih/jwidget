@@ -4,7 +4,7 @@ description: |
   <div class="container">
   <h2>Tutorial. Part 5. Properties</h2>
 
-  %example:tutorial5
+  <iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="../samples/tutorial5"></iframe>
 
   <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-5">https://github.com/enepomnyaschih/mt/tree/mt-2.1-5</a> (Git branch).</p>
 
