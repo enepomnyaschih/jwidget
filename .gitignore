@@ -13,3 +13,4 @@
 node_modules
 package-lock.json
 /examples/public
+/test/dist

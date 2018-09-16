@@ -1,0 +1,27 @@
+{
+  "name": "jwidget-tests",
+  "private": true,
+  "version": "2.1.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "node_modules/.bin/tsc --watch",
+    "karma": "node_modules/.bin/karma start",
+    "build": "node_modules/.bin/tsc",
+    "run": "node_modules/.bin/karma start --single-run"
+  },
+  "devDependencies": {
+    "@types/jasmine": "2.8.x",
+    "@types/jquery": "3.3.x",
+    "browserify": "16.2.x",
+    "es6-promise": "4.2.x",
+    "jasmine-core": "3.2.x",
+    "jquery": "3.3.x",
+    "jwidget": "2.1.x",
+    "karma": "3.0.x",
+    "karma-browserify": "5.3.x",
+    "karma-jasmine": "1.1.x",
+    "karma-phantomjs-launcher": "1.0.x",
+    "typescript": "3.0.x",
+    "watchify": "3.11.x"
+  }
+}
