@@ -203,9 +203,8 @@ export function smartCmp(x: any, y: any, config?: CmpConfig): number {
 	switch (xRank) {
 		case "array": return cmpArrays(x, y, config);
 		case "boolean": return cmpBooleans(x, y);
-		case "identifiable":
-			return cmpIdentifiables(x, y);
-		case "string": return cmpStrings(x, y);
+		case "identifiable": return cmpIdentifiables(x, y);
+		case "string": return cmpStrings(x, y, config);
 		default: return cmpPrimitives(x, y);
 	}
 }

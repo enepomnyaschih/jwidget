@@ -29,7 +29,7 @@ import CancelToken, {runAsync} from "./CancelToken";
  * @param cancelToken Cancellation token to bind the operation to.
  * @returns Promise object representing the request.
  */
-export default function request(xhr: JQueryXHR, cancelToken?: CancelToken) {
+export default function request(xhr: JQueryXHR, cancelToken?: CancelToken): Promise<any> {
 	let aborted = false;
 	return runAsync<any>(
 		(resolve: (value?: (Thenable<any> | any)) => void, reject: (error?: any) => void) => {

@@ -265,14 +265,38 @@ symbols:
 
   cmp:
     signature: |
+      (x: any, y: any): number
+    params:
+      x: First value to compare.
+      y: Second value to compare.
+    returns: One of {-1, 0, 1} as comparison result.
+    description: |
+      <p>Universal and sophisticated comparer for array/list sorting. The same as %smartCmp, but without third argument.
+      It comes in handy when a function takes a callback accepting 3 or more arguments - in this case, arguments of
+      %smartCmp won't match the callback definition:</p>
+      <pre>
+      const x = new %Class(),
+            y = new %Class(),
+            z = new %Class(),
+            list = new %List([x, y, z]);
+      list.%sortComparing(%cmp); // ok
+      list.%sortComparing(%smartCmp); // compilation error: callback arguments don't match
+      </pre>
+    references:
+      sortComparing:
+        file: jwidget/IList
+        member: sortComparing
+
+  smartCmp:
+    signature: |
       (x: any, y: any, config?: %CmpConfig): number
     params:
       x: First value to compare.
       y: Second value to compare.
       config: Optional configuration.
-    returns: One or {-1, 0, 1} as comparison result.
+    returns: One of {-1, 0, 1} as comparison result.
     description: |
-      <p>Universal and sophisticated comparer for array sorting. Broadly speaking, it:</p>
+      <p>Universal and sophisticated comparer for array/list sorting. Broadly speaking, it:</p>
       <ul>
         <li>Returns 1, if <code>%x > %y</code></li>
         <li>Returns -1, if <code>%x < %y</code></li>
@@ -280,19 +304,21 @@ symbols:
       </ul>
       <p>In reality, it supports the next features:</p>
       <ul>
-        <li>Comparing of boolean, number, string, %Identifiable (by %iid) values, subarrays</li>
+        <li>Comparing of boolean, number, string, %Identifiable (by %iid) values, subarrays, null, undefined</li>
         <li>Determined linear order, even for mixed arrays</li>
         <li>Case insensitive comparing for strings</li>
         <li>Comparing of digit sequences in strings as numbers</li>
       </ul>
+      <p>Values of different types are compared as follows: undefined &lt; null &lt; array &lt; boolean &lt;
+        %Identifiable &lt; number &lt; string.</p>
       <h5>Example</h5>
       <p>Sort by color descending first, and by status ascending last. Both parameters are optional.</p>
       <pre>
       rows.sort((x, y) => {
-          return %cmp(x.color == null, y.color == null) ||
-                -%cmp(x.color, y.color) ||
-                 %cmp(x.status == null, y.status == null) ||
-                 %cmp(x.status, y.status);
+          return %smartCmp(x.color == null, y.color == null) ||
+                -%smartCmp(x.color, y.color) ||
+                 %smartCmp(x.status == null, y.status == null) ||
+                 %smartCmp(x.status, y.status);
       });
       </pre>
 
@@ -305,11 +331,23 @@ symbols:
       caseInsensitive:
         type: boolean = false
         modifiers: readonly
-        description: Ignore case when comparing strings.
+        description: |
+          <p>Ignore case when comparing strings.</p>
+          <h5>Example</h5>
+          <pre>
+          expect(smartCmp("aB", "Ab")).toBe(1);
+          expect(smartCmp("aB", "Ab", {%caseInsensitive: true})).toBe(0);
+          </pre>
       compareNumbersInStrings:
         type: boolean = false
         modifiers: readonly
-        description: Compare digit sequences as numbers when comparing strings.
+        description: |
+          <p>Compare digit sequences as numbers when comparing strings.</p>
+          <h5>Example</h5>
+          <pre>
+          expect(%smartCmp("ab2", "ab10")).toBe(1);
+          expect(%smartCmp("ab2", "ab10", {%compareNumbersInStrings: true})).toBe(-1);
+          </pre>
 
   get:
     signature: |
