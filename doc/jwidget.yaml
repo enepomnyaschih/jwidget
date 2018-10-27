@@ -351,7 +351,7 @@ symbols:
 
   get:
     signature: |
-      <T>(obj: any, path: any): T
+      <T>(obj: any, path?: any): T
     params:
       obj: Object to inspect.
       path: Field name or path to it.

@@ -1,8 +1,8 @@
 symbols:
   default:
     signature: |
-      on(el: %JQuery, events: string, handler: (eventObject: JQueryEventObject) => any): %Destroyable
-      on(el: %JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any): %Destroyable
+      listen(el: %JQuery, events: string, handler: (eventObject: JQueryEventObject) => any): %Destroyable
+      listen(el: %JQuery, events: string, selector: string, handler: (eventObject: JQueryEventObject) => any): %Destroyable
     params:
       el: DOM element.
       events: 'One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".'

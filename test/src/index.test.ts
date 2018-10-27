@@ -2,6 +2,7 @@ import {
 	apply,
 	def,
 	defn,
+	get,
 	isArray,
 	isBoolean,
 	isDate,
@@ -570,6 +571,40 @@ describe("smartCmp", () => {
 	it("should support combined string comparison", () => {
 		expect(smartCmp("", "", {caseInsensitive: true, compareNumbersInStrings: true})).toBe(0);
 		expect(smartCmp("aB02", "Ab2", {caseInsensitive: true, compareNumbersInStrings: true})).toBe(0);
-		expect(smartCmp("ab2cd4ef6gh", "AB2CD4EF22GH", {caseInsensitive: true, compareNumbersInStrings: true})).toBe(-1);
+		expect(smartCmp("ab2cd4ef6gh", "AB2CD4EF22GH", {
+			caseInsensitive: true,
+			compareNumbersInStrings: true
+		})).toBe(-1);
+	});
+});
+
+describe("get", () => {
+	it("should work", () => {
+		const api: any = {
+			_base: "/app",
+			details: "/details",
+			calculationlines: {
+				_base: "/calclines",
+				add: "/create",
+				modify: "/modify",
+				delet_: "/delete",
+				"0": "/zero"
+			},
+			extractor: {
+				_base: "/extractor",
+				launch: "/launch",
+				status: "/status"
+			}
+		};
+
+		expect(get(api.details)).toBe("/details");
+		expect(get(api, "details")).toBe("/details");
+		expect(get(api, ["extractor", "status"])).toBe("/status");
+
+		expect(get(api.lala)).toBe(undefined);
+		expect(get(api, ["extractor", "launch", "now"])).toBe(undefined);
+		expect(get(api, ["extractor", "run", "now"])).toBe(undefined);
+
+		expect(get(api, ["calculationlines", 0])).toBe("/zero");
 	});
 });

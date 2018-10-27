@@ -297,7 +297,7 @@ function cmpStrings(x: string, y: string, config?: CmpConfig): number {
  * If `path` is null, undefined or empty array, returns `obj`.
  * If item doesn't exist, returns undefined.
  */
-export function get<T>(obj: any, path: any): T {
+export function get<T>(obj: any, path?: any): T {
 	if (path == null) {
 		return obj;
 	}
