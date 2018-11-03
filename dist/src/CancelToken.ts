@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Promise, Thenable} from "es6-promise";
 import Destroyable from "./Destroyable";
 import dummyDestroyable from "./dummyDestroyable";
 import Event from "./Event";
@@ -75,9 +74,9 @@ export default class CancelToken implements Destroyable {
  * @param cancelToken Optional cancelation token.
  * @returns Promise representing the operation with cancelation token support.
  */
-export function runAsync<T>(run: (resolve: (value?: T | Thenable<T>) => void, reject: (error?: any) => void) => void,
-							cancel: () => void,
-							cancelToken?: CancelToken): Promise<T> {
+export function runAsync<T>(run: (resolve: (value?: T | Promise<T>) => void, reject: (error?: any) => void) => void,
+                            cancel: () => void,
+                            cancelToken?: CancelToken): Promise<T> {
 
 	if (!cancelToken) {
 		return new Promise(run);
@@ -87,7 +86,7 @@ export function runAsync<T>(run: (resolve: (value?: T | Thenable<T>) => void, re
 	}
 	const attachment = cancelToken.addHandler(cancel);
 	return new Promise<T>((resolve, reject) => {
-		run((value?: T | Thenable<T>) => {
+		run((value?: T | Promise<T>) => {
 			attachment.destroy();
 			resolve(value);
 		}, (error?: any) => {

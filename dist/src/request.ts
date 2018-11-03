@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Thenable} from "es6-promise";
 import CancelToken, {runAsync} from "./CancelToken";
 
 /**
@@ -32,7 +31,7 @@ import CancelToken, {runAsync} from "./CancelToken";
 export default function request(xhr: JQueryXHR, cancelToken?: CancelToken): Promise<any> {
 	let aborted = false;
 	return runAsync<any>(
-		(resolve: (value?: (Thenable<any> | any)) => void, reject: (error?: any) => void) => {
+		(resolve: (value?: (Promise<any> | any)) => void, reject: (error?: any) => void) => {
 			xhr.then(resolve, request => {
 				if (!aborted) {
 					reject(request);

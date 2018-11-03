@@ -18,7 +18,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Promise, Thenable} from "es6-promise";
 import CancelToken, {runAsync} from "./CancelToken";
 
 /**
@@ -32,7 +31,7 @@ import CancelToken, {runAsync} from "./CancelToken";
 export default function (ms?: number, cancelToken?: CancelToken): Promise<void> {
 	let timeout: number;
 	return runAsync<void>(
-		(resolve: (value?: (Thenable<void> | void)) => void) => {
+		(resolve: (value?: (Promise<void> | void)) => void) => {
 			timeout = setTimeout(resolve, ms);
 		},
 		() => {
