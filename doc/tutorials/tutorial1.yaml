@@ -4,7 +4,7 @@ description: |
   <div class="container">
   <h2>Tutorial. Part 1. Model and view</h2>
 
-  <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="300" src="../samples/tutorial1"></iframe>
+  <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="300" src="../samples/tutorial1/"></iframe>
 
   <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-1">https://github.com/enepomnyaschih/mt/tree/mt-2.1-1</a> (Git branch).</p>
 
