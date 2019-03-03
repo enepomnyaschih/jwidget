@@ -27,7 +27,7 @@ function join(base: string, suffix: string[]): string {
             " contains blank parts - it may cause improper URL to be generated. Returned null URL.");
         return null;
     }
-    return [...(base ? [base] : []), ...suffix.map(encodeURIComponent)].join("/");
+    return [...(base === "/" ? [""] : base ? [base] : []), ...suffix.map(encodeURIComponent)].join("/");
 }
 
 function compute<P>(suffix: string | string[] | Suffix<P>, params: P): string[] {
