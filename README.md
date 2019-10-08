@@ -6,6 +6,12 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
+### 1.4.7 (October 9, 2019)
+
+Bug fixes:
+
+- Fixed value watcher for password fields
+
 ### 1.4.6 (August 31, 2016)
 
 Bug fixes:

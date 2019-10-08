@@ -1,5 +1,5 @@
 ﻿/*!
-	jWidget UI 1.4.6
+	jWidget UI 1.4.7
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -118,7 +118,7 @@ JW.UI = {
 		var tagName = el[0].tagName.toLowerCase();
 		if (tagName === "input") {
 			var type = el.attr("type");
-			return (type === "text") || (type !== "password");
+			return (type === "text") || (type === "password");
 		}
 		return tagName === "textarea";
 	},
