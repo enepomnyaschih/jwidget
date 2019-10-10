@@ -16,7 +16,7 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">/*!
-	jWidget UI 1.4.6
+	jWidget UI 1.4.7
 
 	http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
@@ -135,7 +135,7 @@ JW.UI = {
 		var tagName = el[0].tagName.toLowerCase();
 		if (tagName === &quot;input&quot;) {
 			var type = el.attr(&quot;type&quot;);
-			return (type === &quot;text&quot;) || (type !== &quot;password&quot;);
+			return (type === &quot;text&quot;) || (type === &quot;password&quot;);
 		}
 		return tagName === &quot;textarea&quot;;
 	},
