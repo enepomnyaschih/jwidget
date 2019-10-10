@@ -16,7 +16,7 @@ del /Q jwidget-files\plugins\*-tests.*
 
 :Compress an archive for downloading
 del /Q guides\endownload\jwidget.zip
-7za a guides\endownload\jwidget.zip jwidget-files
+7z a guides\endownload\jwidget.zip jwidget-files
 
 :Copy distributive files for absolute URL attachment
 xcopy /I /Y /E /Q jwidget-files\* guides\endownload
