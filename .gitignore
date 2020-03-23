@@ -11,6 +11,5 @@
 /docgen/dist/*
 /docoutput
 node_modules
-package-lock.json
 /examples/public
 /test/dist
