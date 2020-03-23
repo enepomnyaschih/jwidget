@@ -1,0 +1,20 @@
+{
+  "name": "jwidget",
+  "version": "2.2.0",
+  "description": "Object-oriented FrontEnd MV framework",
+  "homepage": "http://enepomnyaschih.github.io/jwidget",
+  "bugs": {
+    "url": "https://github.com/enepomnyaschih/jwidget/issues",
+    "email": "jwidgetproject@gmail.com"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Egor Nepomnyaschih",
+    "email": "enepomnyaschih@gmail.com",
+    "url": "https://github.com/enepomnyaschih"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enepomnyaschih/jwidget.git"
+  }
+}
