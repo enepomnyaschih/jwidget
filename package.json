@@ -6,7 +6,7 @@
     "@types/jquery": "~3.3.33",
     "@types/mocha": "~7.0.2",
     "chai": "~4.2.0",
-    "jwidget": "file:dist",
+    "jwidget": "file:main/dist",
     "mocha": "~7.1.1",
     "parcel-bundler": "~1.12.4",
     "source-map-support": "~0.5.16",

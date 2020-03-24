@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "sourceMap": true,
+    "outDir": "dist",
+    "inlineSourceMap": true,
+    "inlineSources": true,
     "module": "commonjs",
-    "target": "es2015",
+    "target": "es6",
     "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
+    "noImplicitThis": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "experimentalDecorators": true
+    "noUnusedParameters": true
   },
   "include": [
     "src/**/*"
