@@ -12,7 +12,7 @@ export default class Application extends Component {
 
 	protected renderButton(el: JQuery) {
 		el.on("click", () => {
-			el.text("Destroy current greeter and show a new one")
+			el.text("Destroy current greeter and show a new one");
 			this.greeter.set(new DelayedGreeter(this.count));
 		});
 	}

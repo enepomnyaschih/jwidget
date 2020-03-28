@@ -6,6 +6,8 @@
       <excludeFolder url="file://$MODULE_DIR$/docgen/dist" />
       <excludeFolder url="file://$MODULE_DIR$/main/dist" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
+      <excludeFolder url="file://$MODULE_DIR$/test/.cache" />
+      <excludeFolder url="file://$MODULE_DIR$/test/dist" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
     <orderEntry type="inheritedJdk" />

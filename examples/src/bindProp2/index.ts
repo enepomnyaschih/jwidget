@@ -1,6 +1,4 @@
-import "es6-promise/auto";
-import "script-loader!jquery";
-
+import $ from "jquery";
 import initExample from "../common/initExample";
 import Application from "./Application";
 

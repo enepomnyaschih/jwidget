@@ -1,3 +1,4 @@
+import $ from "jquery";
 import bindVal from "jwidget/bindVal";
 import Component from "jwidget/Component";
 import hash from "jwidget/hash";

@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 export default function initExample(name: string, links: string[]) {
 	const el = $('<div style="float: right; width: 600px"><b>Source:</b> </div>');
 	let first = true;

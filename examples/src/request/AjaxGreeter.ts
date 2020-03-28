@@ -1,3 +1,4 @@
+import $ from "jquery";
 import CancelToken from "jwidget/CancelToken";
 import Component from "jwidget/Component";
 import IProperty from "jwidget/IProperty";
