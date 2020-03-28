@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import jQuery from 'jquery';
 import AbstractTemplate from './AbstractTemplate';
 import Dictionary from './Dictionary';
 import TemplateOutput from './TemplateOutput';

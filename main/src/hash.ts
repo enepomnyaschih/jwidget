@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import jQuery from "jquery";
 import IProperty from "./IProperty";
 import Property from "./Property";
 
@@ -59,7 +60,7 @@ class Hash extends Property<string> implements IHash {
 		if (hash != null) {
 			throw new Error("Hash is a singleton. Unable to create more instances.")
 		}
-		$(window).on("hashchange", () => {
+		jQuery(window).on("hashchange", () => {
 			this.set(location.hash.substr(1));
 		});
 	}

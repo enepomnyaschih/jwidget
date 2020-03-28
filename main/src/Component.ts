@@ -18,6 +18,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import jQuery from 'jquery';
 import AbstractTemplate from './AbstractTemplate';
 import Bindable from './Bindable';
 import Class from './Class';
