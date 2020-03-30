@@ -14,7 +14,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*"
