@@ -2,7 +2,6 @@
   "private": true,
   "name": "jwidget-common",
   "devDependencies": {
-    "@babel/core": "~7.9.0",
     "@babel/plugin-transform-runtime": "~7.9.0",
     "@types/chai": "~4.2.7",
     "@types/jquery": "~3.3.33",

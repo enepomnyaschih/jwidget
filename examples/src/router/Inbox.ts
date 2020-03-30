@@ -5,6 +5,7 @@ import List from "jwidget/List";
 import Router from "jwidget/Router";
 import template from "jwidget/template";
 import UIRouter from "jwidget/UIRouter";
+import {EMAILS} from "./data";
 import EmailList from "./EmailList";
 import EmailNotFound from "./EmailNotFound";
 import EmailView from "./EmailView";
@@ -13,7 +14,7 @@ import EmailView from "./EmailView";
 export default class Inbox extends Component {
 
 	private router: UIRouter;
-	private emails = new List([], email => email.id, SILENT);
+	private emails = new List(EMAILS, email => email.id, SILENT);
 
 	constructor(private path: Bindable<string>, private parentRouter: Router<any>) {
 		super();

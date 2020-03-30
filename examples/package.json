@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "jwidget-examples",
+  "devDependencies": {
+    "@babel/core": "~7.9.0",
+    "parcel-plugin-static-files-copy": "~2.3.1"
+  }
+}

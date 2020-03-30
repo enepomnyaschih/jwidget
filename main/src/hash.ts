@@ -60,6 +60,7 @@ class Hash extends Property<string> implements IHash {
 		if (hash != null) {
 			throw new Error("Hash is a singleton. Unable to create more instances.")
 		}
+		hash = this;
 		jQuery(window).on("hashchange", () => {
 			this.set(location.hash.substr(1));
 		});
@@ -112,5 +113,6 @@ class Hash extends Property<string> implements IHash {
  * manipulations. Value of this property is always equal to `location.hash` without leading "#" symbol.
  * Has a built-in protection against infinite redirections.
  */
-const hash: IHash = new Hash(); // An extra variable helps IntelliSense to find this import
+let hash: IHash = null; // An extra variable helps IntelliSense to find this import
+new Hash();
 export default hash;
