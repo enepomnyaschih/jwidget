@@ -1,22 +1,29 @@
 /*!
-	jWidget Lib 1.4.7
+jWidget Lib 1.4.8
 
-	http://enepomnyaschih.github.io/jwidget/#!/guide/home
+http://enepomnyaschih.github.io/jwidget/#!/guide/home
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+MIT License
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 if (typeof JW !== "undefined") {
@@ -889,22 +896,27 @@ JW.Binding = {
 };
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.ClassUtil = {
@@ -1204,22 +1216,27 @@ JW.extend(JW.Class, Object, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -1358,22 +1375,27 @@ JW.extend(JW.Event, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -1404,22 +1426,27 @@ JW.extend(JW.EventAttachment, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -1443,22 +1470,27 @@ JW.extend(JW.EventParams, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -1482,22 +1514,27 @@ JW.extend(JW.ItemEventParams, JW.EventParams, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -1521,22 +1558,27 @@ JW.extend(JW.ValueEventParams, JW.EventParams, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -1562,22 +1604,27 @@ JW.extend(JW.ValueChangeEventParams, JW.ValueEventParams, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -1603,22 +1650,27 @@ JW.extend(JW.ItemValueEventParams, JW.ValueEventParams, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -2511,22 +2563,27 @@ JW.extend(JW.AbstractCollection, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -2670,22 +2727,27 @@ JW.extend(JW.AbstractCollection.Counter, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -2822,22 +2884,27 @@ JW.extend(JW.AbstractCollection.Filterer, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -2951,22 +3018,27 @@ JW.extend(JW.AbstractCollection.Lister, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -3109,22 +3181,27 @@ JW.extend(JW.AbstractCollection.Indexer, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -3276,22 +3353,27 @@ JW.extend(JW.AbstractCollection.Mapper, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -3432,22 +3514,27 @@ JW.extend(JW.AbstractCollection.Observer, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -3565,22 +3652,27 @@ JW.extend(JW.AbstractCollection.Orderer, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -3803,22 +3895,27 @@ JW.extend(JW.AbstractCollection.SorterComparing, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.AbstractCollection._createStatic$Array = function(namespace, algorithm) {
@@ -3944,22 +4041,27 @@ JW.AbstractCollection.createStaticMethods = function(namespace) {
 };
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -4596,22 +4698,27 @@ JW.extend(JW.IndexedCollection, JW.AbstractCollection, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.IndexedCollection.createStaticMethods = function(namespace) {
@@ -4772,22 +4879,27 @@ JW.IndexedCollection.createStaticMethods = function(namespace) {
 };
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -6239,22 +6351,27 @@ JW.extend(JW.AbstractArray.SpliceResult, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -6282,22 +6399,27 @@ JW.extend(JW.AbstractArray.Counter, JW.AbstractCollection.Counter, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -6501,22 +6623,27 @@ JW.extend(JW.AbstractArray.Filterer, JW.AbstractCollection.Filterer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -6544,22 +6671,27 @@ JW.extend(JW.AbstractArray.Indexer, JW.AbstractCollection.Indexer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -6678,22 +6810,27 @@ JW.extend(JW.AbstractArray.Inserter, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -6721,22 +6858,27 @@ JW.extend(JW.AbstractArray.Lister, JW.AbstractCollection.Lister, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -6794,22 +6936,27 @@ JW.extend(JW.AbstractArray.Mapper, JW.AbstractCollection.Mapper, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -6956,22 +7103,27 @@ JW.extend(JW.AbstractArray.Merger, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.AbstractArray.Merger.Bunch = function(merger, bunch) {
@@ -6981,22 +7133,27 @@ JW.AbstractArray.Merger.Bunch = function(merger, bunch) {
 JW.extend(JW.AbstractArray.Merger.Bunch, JW.Class);
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -7024,22 +7181,27 @@ JW.extend(JW.AbstractArray.Observer, JW.AbstractCollection.Observer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -7067,22 +7229,27 @@ JW.extend(JW.AbstractArray.Orderer, JW.AbstractCollection.Orderer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -7192,22 +7359,27 @@ JW.extend(JW.AbstractArray.Reverser, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -7235,22 +7407,27 @@ JW.extend(JW.AbstractArray.SorterComparing, JW.AbstractCollection.SorterComparin
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.AbstractArray.Splitter = function(source, config) {
@@ -7324,22 +7501,27 @@ JW.extend(JW.AbstractArray.Splitter/*<T extends Any, R extends JW.AbstractArray<
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8357,22 +8539,27 @@ JW.extend(JW.AbstractMap.SpliceResult, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8400,22 +8587,27 @@ JW.extend(JW.AbstractMap.Counter, JW.AbstractCollection.Counter, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8456,22 +8648,27 @@ JW.extend(JW.AbstractMap.Filterer, JW.AbstractCollection.Filterer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8499,22 +8696,27 @@ JW.extend(JW.AbstractMap.Indexer, JW.AbstractCollection.Indexer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8634,22 +8836,27 @@ JW.extend(JW.AbstractMap.Inserter, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8677,22 +8884,27 @@ JW.extend(JW.AbstractMap.Lister, JW.AbstractCollection.Lister, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8750,22 +8962,27 @@ JW.extend(JW.AbstractMap.Mapper, JW.AbstractCollection.Mapper, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8793,22 +9010,27 @@ JW.extend(JW.AbstractMap.Observer, JW.AbstractCollection.Observer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8836,22 +9058,27 @@ JW.extend(JW.AbstractMap.Orderer, JW.AbstractCollection.Orderer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -8879,22 +9106,27 @@ JW.extend(JW.AbstractMap.SorterComparing, JW.AbstractCollection.SorterComparing,
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -9467,22 +9699,27 @@ JW.extend(JW.AbstractSet.SpliceResult, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -9510,22 +9747,27 @@ JW.extend(JW.AbstractSet.Counter, JW.AbstractCollection.Counter, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -9566,22 +9808,27 @@ JW.extend(JW.AbstractSet.Filterer, JW.AbstractCollection.Filterer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -9609,22 +9856,27 @@ JW.extend(JW.AbstractSet.Indexer, JW.AbstractCollection.Indexer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -9652,22 +9904,27 @@ JW.extend(JW.AbstractSet.Lister, JW.AbstractCollection.Lister, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -9744,22 +10001,27 @@ JW.extend(JW.AbstractSet.Mapper, JW.AbstractCollection.Mapper, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -9787,22 +10049,27 @@ JW.extend(JW.AbstractSet.Observer, JW.AbstractCollection.Observer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -9830,22 +10097,27 @@ JW.extend(JW.AbstractSet.Orderer, JW.AbstractCollection.Orderer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -9873,22 +10145,27 @@ JW.extend(JW.AbstractSet.SorterComparing, JW.AbstractCollection.SorterComparing,
 });
 ;
 /*
-	JW array extension.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -11008,22 +11285,27 @@ JW.extend(JW.Array, JW.AbstractArray, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.IndexedCollection.createStaticMethods(JW.Array);
@@ -11596,22 +11878,27 @@ JW.apply(JW.Array, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -12508,22 +12795,27 @@ JW.extend(JW.Map, JW.AbstractMap, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.IndexedCollection.createStaticMethods(JW.Map);
@@ -12901,22 +13193,27 @@ JW.apply(JW.Map, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -13547,22 +13844,27 @@ JW.extend(JW.Set, JW.AbstractSet, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.AbstractCollection.createStaticMethods(JW.Set);
@@ -13875,22 +14177,27 @@ JW.ObservableCollection = {
 };
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -14383,22 +14690,27 @@ JW.extend(JW.ObservableArray.ReorderEventParams, JW.ObservableArray.ItemsEventPa
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -14451,22 +14763,27 @@ JW.extend(JW.ObservableArray.Counter, JW.AbstractArray.Counter, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -14557,22 +14874,27 @@ JW.extend(JW.ObservableArray.Filterer, JW.AbstractArray.Filterer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -14617,22 +14939,27 @@ JW.extend(JW.ObservableArray.Indexer, JW.AbstractArray.Indexer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -14713,22 +15040,27 @@ JW.extend(JW.ObservableArray.Inserter, JW.AbstractArray.Inserter, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -14768,22 +15100,27 @@ JW.extend(JW.ObservableArray.Lister, JW.AbstractArray.Lister, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -14847,22 +15184,27 @@ JW.extend(JW.ObservableArray.Mapper, JW.AbstractArray.Mapper, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -14993,22 +15335,27 @@ JW.extend(JW.ObservableArray.Merger, JW.AbstractArray.Merger, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.ObservableArray.Merger.Bunch = function(merger, bunch) {
@@ -15090,22 +15437,27 @@ JW.extend(JW.ObservableArray.Merger.Bunch, JW.AbstractArray.Merger.Bunch, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -15164,22 +15516,27 @@ JW.extend(JW.ObservableArray.Observer, JW.AbstractArray.Observer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -15224,22 +15581,27 @@ JW.extend(JW.ObservableArray.Orderer, JW.AbstractArray.Orderer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -15322,22 +15684,27 @@ JW.extend(JW.ObservableArray.Reverser, JW.AbstractArray.Reverser, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -15377,43 +15744,53 @@ JW.extend(JW.ObservableArray.SorterComparing, JW.AbstractArray.SorterComparing, 
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.ObservableArray.Splitter = JW.AbstractArray.Splitter.extend();
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -15805,22 +16182,27 @@ JW.extend(JW.ObservableMap.ItemsEventParams, JW.ObservableMap.EventParams, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -15857,22 +16239,27 @@ JW.extend(JW.ObservableMap.Counter, JW.AbstractMap.Counter, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -15914,22 +16301,27 @@ JW.extend(JW.ObservableMap.Filterer, JW.AbstractMap.Filterer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -15967,22 +16359,27 @@ JW.extend(JW.ObservableMap.Indexer, JW.AbstractMap.Indexer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16033,22 +16430,27 @@ JW.extend(JW.ObservableMap.Inserter, JW.AbstractMap.Inserter, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16086,22 +16488,27 @@ JW.extend(JW.ObservableMap.Lister, JW.AbstractMap.Lister, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16149,22 +16556,27 @@ JW.extend(JW.ObservableMap.Mapper, JW.AbstractMap.Mapper, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16203,22 +16615,27 @@ JW.extend(JW.ObservableMap.Observer, JW.AbstractMap.Observer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16256,22 +16673,27 @@ JW.extend(JW.ObservableMap.Orderer, JW.AbstractMap.Orderer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16308,22 +16730,27 @@ JW.extend(JW.ObservableMap.SorterComparing, JW.AbstractMap.SorterComparing, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16602,22 +17029,27 @@ JW.extend(JW.ObservableSet.ItemsEventParams, JW.ObservableSet.EventParams, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16654,22 +17086,27 @@ JW.extend(JW.ObservableSet.Counter, JW.AbstractSet.Counter, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16706,22 +17143,27 @@ JW.extend(JW.ObservableSet.Filterer, JW.AbstractSet.Filterer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16759,22 +17201,27 @@ JW.extend(JW.ObservableSet.Indexer, JW.AbstractSet.Indexer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16809,22 +17256,27 @@ JW.extend(JW.ObservableSet.Lister, JW.AbstractSet.Lister, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16864,22 +17316,27 @@ JW.extend(JW.ObservableSet.Mapper, JW.AbstractSet.Mapper, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16918,22 +17375,27 @@ JW.extend(JW.ObservableSet.Observer, JW.AbstractSet.Observer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -16970,22 +17432,27 @@ JW.extend(JW.ObservableSet.Orderer, JW.AbstractSet.Orderer, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -17020,22 +17487,27 @@ JW.extend(JW.ObservableSet.SorterComparing, JW.AbstractSet.SorterComparing, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -17107,22 +17579,27 @@ JW.extend(JW.Copier, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -17237,22 +17714,27 @@ JW.extend(JW.Functor, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -17505,22 +17987,27 @@ JW.extend(JW.Mapper, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -17739,22 +18226,27 @@ JW.extend(JW.Property, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -17903,22 +18395,27 @@ JW.extend(JW.Switcher, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -17994,22 +18491,27 @@ JW.extend(JW.Updater, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -18123,22 +18625,27 @@ JW.makeRegistry = function(cls, idField) {
 JW.makeFactory = JW.makeRegistry;
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -18175,22 +18682,27 @@ JW.extend(JW.Interval, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -18264,22 +18776,27 @@ JW.extend(JW.Proxy, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.setInterval = function(callback, ms) {
@@ -18311,22 +18828,27 @@ JW.setInterval = function(callback, ms) {
 };
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -18518,22 +19040,27 @@ JW.String = {
 };
 ;
 /*
-	jWidget Lib source file.
-	
-	Copyright (C) 2015 Egor Nepomnyaschih
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+MIT License
+
+Copyright (c) 2020 Egor Nepomnyaschih
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 /**
@@ -18570,22 +19097,27 @@ JW.extend(JW.Timeout, JW.Class, {
 });
 ;
 /*
-	jWidget Lib source file.
+MIT License
 
-	Copyright (C) 2015 Egor Nepomnyaschih
+Copyright (c) 2020 Egor Nepomnyaschih
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-	You should have received a copy of the GNU Lesser General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
 
 JW.Timer = function(delay, repeat, sensitive) {
