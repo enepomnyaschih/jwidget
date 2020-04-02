@@ -6,6 +6,10 @@ http://enepomnyaschih.github.io/jwidget/#!/api
 
 ## Changelog
 
+### 1.4.8 (April 1, 2020)
+
+- Relicensed under MIT.
+
 ### 1.4.7 (October 9, 2019)
 
 Bug fixes:
