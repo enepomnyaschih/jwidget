@@ -15,7 +15,7 @@
     "browserify": "16.2.x",
     "es6-promise": "4.2.x",
     "jasmine-core": "3.2.x",
-    "jquery": "3.3.x",
+    "jquery": "3.5.x",
     "jwidget": "2.1.x",
     "karma": "3.0.x",
     "karma-browserify": "5.3.x",
