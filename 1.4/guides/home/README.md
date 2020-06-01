@@ -67,9 +67,9 @@ collections explicitly using {@link JW.AbstractCollection collection classes} an
 This approach is more effective: data binding is not constrained by connection between model and view. All the same
 practices are used to bind model objects to each other and to bind view components to each other.
 
-Project license is LGPL.
+Project license is MIT.
 
-Current version: 1.4.7
+Current version: 1.4.8
 
 <font size="5">[Download jWidget](guides/endownload/jwidget.zip)</font>
 
