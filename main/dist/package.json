@@ -1,11 +1,10 @@
 {
   "name": "jwidget",
-  "version": "2.2.0",
-  "description": "Object-oriented FrontEnd MV framework",
+  "version": "2.2.0-rc.1",
+  "description": "Object-oriented TypeScript Model-View framework.",
   "homepage": "http://enepomnyaschih.github.io/jwidget",
   "bugs": {
-    "url": "https://github.com/enepomnyaschih/jwidget/issues",
-    "email": "jwidgetproject@gmail.com"
+    "url": "https://github.com/enepomnyaschih/jwidget/issues"
   },
   "license": "MIT",
   "author": {

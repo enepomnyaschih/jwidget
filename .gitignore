@@ -1,6 +1,2 @@
-$CACHE_FILE$
-*.iml
-.cache
-.idea
-node_modules
-/docgen/dist/*
+.idea/
+node_modules/
