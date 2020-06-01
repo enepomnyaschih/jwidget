@@ -1,0 +1,5 @@
+<div>
+	<button type="button" jwid="button">Show greeter</button>
+	<div>Hellos displayed: <span jwid="count"></span></div>
+	<div jwid="greeter"></div>
+</div>

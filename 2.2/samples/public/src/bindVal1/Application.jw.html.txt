@@ -1,0 +1,6 @@
+<div jwclass="application">
+	<div>Value:</div>
+	<textarea jwid="input" rows="5" cols="80">Hello!</textarea>
+	<div>Output:</div>
+	<textarea jwid="output" rows="5" cols="80" disabled></textarea>
+</div>

@@ -1,0 +1,4 @@
+<div jwclass="application">
+	<div><label><input jwid="checkbox" type="checkbox">Show rectangle</label></div>
+	<div jwid="rect"></div>
+</div>

@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jwidget/ArrayUtils - jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					
+						<li class="nav-item">
+							<a class="nav-link dropdown-toggle" href="../tutorials/tutorial1.html"
+								data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+						</li>
+					
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">jwidget/ArrayUtils</a>
+						
+<a class="nav-link" href="#getters">Getter functions</a>
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#getLast">getLast</a>
+
+
+<a class="nav-link" href="#isEmpty">isEmpty</a>
+</nav>
+
+<a class="nav-link" href="#searchers">Item search functions</a>
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#contains">contains</a>
+
+
+<a class="nav-link" href="#find">find</a>
+
+
+<a class="nav-link" href="#findIndex">findIndex</a>
+
+
+<a class="nav-link" href="#binarySearch">binarySearch</a>
+
+
+<a class="nav-link" href="#max">max</a>
+
+
+<a class="nav-link" href="#maxIndex">maxIndex</a>
+
+
+<a class="nav-link" href="#maxComparing">maxComparing</a>
+
+
+<a class="nav-link" href="#maxIndexComparing">maxIndexComparing</a>
+
+
+<a class="nav-link" href="#min">min</a>
+
+
+<a class="nav-link" href="#minIndex">minIndex</a>
+
+
+<a class="nav-link" href="#minComparing">minComparing</a>
+
+
+<a class="nav-link" href="#minIndexComparing">minIndexComparing</a>
+</nav>
+
+<a class="nav-link" href="#modifiers">Array modification functions</a>
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#add">add</a>
+
+
+<a class="nav-link" href="#addAll">addAll</a>
+
+
+<a class="nav-link" href="#set">set</a>
+
+
+<a class="nav-link" href="#remove">remove</a>
+
+
+<a class="nav-link" href="#removeAll">removeAll</a>
+
+
+<a class="nav-link" href="#removeItem">removeItem</a>
+
+
+<a class="nav-link" href="#removeItems">removeItems</a>
+
+
+<a class="nav-link" href="#move">move</a>
+
+
+<a class="nav-link" href="#clear">clear</a>
+
+
+<a class="nav-link" href="#splice">splice</a>
+
+
+<a class="nav-link" href="#reorder">reorder</a>
+
+
+<a class="nav-link" href="#sort">sort</a>
+
+
+<a class="nav-link" href="#sortComparing">sortComparing</a>
+</nav>
+
+<a class="nav-link" href="#other">Other functions</a>
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#count">count</a>
+
+
+<a class="nav-link" href="#toReversed">toReversed</a>
+
+
+<a class="nav-link" href="#toSorted">toSorted</a>
+
+
+<a class="nav-link" href="#toSortedComparing">toSortedComparing</a>
+
+
+<a class="nav-link" href="#getSortingIndices">getSortingIndices</a>
+
+
+<a class="nav-link" href="#getSortingIndicesComparing">getSortingIndicesComparing</a>
+
+
+<a class="nav-link" href="#index">index</a>
+
+
+<a class="nav-link" href="#reduce">reduce</a>
+
+
+<a class="nav-link" href="#equal">equal</a>
+
+
+<a class="nav-link" href="#backEvery">backEvery</a>
+
+
+<a class="nav-link" href="#isIdentity">isIdentity</a>
+
+
+<a class="nav-link" href="#invert">invert</a>
+
+
+<a class="nav-link" href="#merge">merge</a>
+</nav>
+
+<a class="nav-link" href="#internalModifiers">Low-level array modification functions (primarily for internal usage)</a>
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#tryAddAll">tryAddAll</a>
+
+
+<a class="nav-link" href="#trySet">trySet</a>
+
+
+<a class="nav-link" href="#tryRemoveAll">tryRemoveAll</a>
+
+
+<a class="nav-link" href="#tryMove">tryMove</a>
+
+
+<a class="nav-link" href="#tryClear">tryClear</a>
+
+
+<a class="nav-link" href="#trySplice">trySplice</a>
+
+
+<a class="nav-link" href="#tryReorder">tryReorder</a>
+</nav>
+
+<a class="nav-link" href="#internalAnalyzers">Low-level array analysing functions (primarily for internal usage)</a>
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#detectSplice">detectSplice</a>
+
+
+<a class="nav-link" href="#detectFilter">detectFilter</a>
+
+
+<a class="nav-link" href="#detectReorder">detectReorder</a>
+
+
+<a class="nav-link" href="#detectSort">detectSort</a>
+
+
+<a class="nav-link" href="#detectSortComparing">detectSortComparing</a>
+</nav>
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1>jwidget/ArrayUtils</h1>
+						<p>jWidget utilities for native JavaScript arrays. Some utilities duplicate the functions of <a href="http://underscorejs.org" target="_blank">Underscore.js</a> and <a href="https://lodash.com" target="_blank">Lodash</a>,
+but still may come in handy if you want to keep dependency list short.</p>
+<p>Functions don't check the arguments. If you pass <code>null</code> or not an array, or if you pass the index out of
+array bounds etc., it will have the unpredictable consequences. jWidget is designed for performance, and these
+utilities were implemented mostly for internal usage, so please do all neccessary assertions before using them.</p>
+
+						<h3>Consumption</h3>
+						<pre class="doc-consumption">import * as ArrayUtils from "jwidget/ArrayUtils";</pre>
+						
+<h2><span id="getters"></span>Getter functions<a class="anchorjs-link" href="#getters" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h2>
+
+<h3><span id="getLast"></span>getLast<a class="anchorjs-link" href="#getLast" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[]): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Last item in array. If array is <a href="#isEmpty" target="_parent">empty</a>, returns undefined.</dd>
+</dl>
+
+
+</div>
+<h3><span id="isEmpty"></span>isEmpty<a class="anchorjs-link" href="#isEmpty" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[]): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Array has zero length.</dd>
+</dl>
+
+
+</div>
+<h2><span id="searchers"></span>Item search functions<a class="anchorjs-link" href="#searchers" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h2>
+
+<h3><span id="contains"></span>contains<a class="anchorjs-link" href="#contains" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], item: T): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">item</dt><dd class="col-lg-10 col-sm-9">Item to look for.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Item exists in array, i.e. if <code><b>arr</b>.indexOf(<b>item</b>)</code> doesn't return -1.</dd>
+</dl>
+
+
+</div>
+<h3><span id="find"></span>find<a class="anchorjs-link" href="#find" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback: (item: T, index: number) =&gt; any, scope?: any): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Search predicate.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Array item.</dd>
+</dl>
+<p>Finds an item matching criteria.</p>
+<p>Returns the first item for which <b>callback</b> returns <a href="../jwidget.html#isTruthy" target="_parent">truthy</a> value.</p>
+<p>Algorithms iterates items consequently, and stops after the first item matching the criteria.</p>
+
+
+</div>
+<h3><span id="findIndex"></span>findIndex<a class="anchorjs-link" href="#findIndex" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback: (item: T, index: number) =&gt; any, scope?: any): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Search predicate.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Item index in array.</dd>
+</dl>
+<p>Finds an item matching criteria.</p>
+<p>Returns index of the first item for which <b>callback</b> returns <a href="../jwidget.html#isTruthy" target="_parent">truthy</a> value.</p>
+<p>Algorithms iterates items consequently, and stops after the first item matching the criteria.</p>
+
+
+</div>
+<h3><span id="binarySearch"></span>binarySearch<a class="anchorjs-link" href="#binarySearch" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], value: T, compare?: (t1: T, t2: T) =&gt; number, scope?: any, order: number = 1 = 1): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value to insert/remove.</dd>
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Item comparer.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>compare</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Order the array is sorted by.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Index the new item can be inserted in array.</dd>
+</dl>
+<p>Determines index of the first item which is more (or less if <b>order</b> < 0) than the specified value by
+  <b>compare</b> function, using binary search. Array must be sorted by <b>compare</b> function. Can be used for
+  item insertion easily. If you want to use this function for item removal, you must look at previous item and
+  compare it to <b>value</b> first.</p>
+<p>Comparer function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to
+  <a href="../jwidget.html#cmp" target="_parent">cmp</a>.</p>
+<p><b>order</b> should reflect sorting order. Positive number if array is sorted ascending, negative if descending.</p>
+
+
+</div>
+<h3><span id="max"></span>max<a class="anchorjs-link" href="#max" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback?: (item: T, index: number) =&gt; any, scope?: any, order: number = 1 = 1): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item evaluation function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Inversion argument.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Array item with highest (or lowest) value.</dd>
+</dl>
+<p>Returns the array item which <b>callback</b> returns the highest (or lowest) value for.</p>
+<p><b>callback</b> must return a comparable value, compatible with <a href="../jwidget.html#cmp" target="_parent">cmp</a>. Returns item itself by default.</p>
+<p>Pass positive <b>order</b> to find the highest value, and negative to find the lowest one.</p>
+
+
+</div>
+<h3><span id="maxIndex"></span>maxIndex<a class="anchorjs-link" href="#maxIndex" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback?: (item: T, index: number) =&gt; any, scope?: any, order: number = 1 = 1): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item evaluation function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Inversion argument.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Index of item with highest (or lowest) value in array.</dd>
+</dl>
+<p>Returns index of the array item which <b>callback</b> returns the highest (or lowest) value for.</p>
+<p><b>callback</b> must return a comparable value, compatible with <a href="../jwidget.html#cmp" target="_parent">cmp</a>. Returns item itself by default.</p>
+<p>Pass positive <b>order</b> to find the highest value, and negative to find the lowest one.</p>
+
+
+</div>
+<h3><span id="maxComparing"></span>maxComparing<a class="anchorjs-link" href="#maxComparing" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) =&gt; any, scope?: any, order: number = 1 = 1): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Item comparer.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>compare</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Inversion argument.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Highest (or lowest) array item.</dd>
+</dl>
+<p>Returns the highest (or lowest) array item in terms of <b>compare</b> function.</p>
+<p><b>compare</b> function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
+Defaults to <a href="../jwidget.html#cmp" target="_parent">cmp</a>.</p>
+<p>Pass positive <b>order</b> to find the highest value, and negative to find the lowest one.</p>
+
+
+</div>
+<h3><span id="maxIndexComparing"></span>maxIndexComparing<a class="anchorjs-link" href="#maxIndexComparing" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) =&gt; any, scope?: any, order: number = 1 = 1): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Item comparer.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>compare</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Inversion argument.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Index of highest (or lowest) array item.</dd>
+</dl>
+<p>Returns index of the highest (or lowest) array item in terms of <b>compare</b> function.</P
+<p><b>compare</b> function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
+Defaults to <a href="../jwidget.html#cmp" target="_parent">cmp</a>.</p>
+<p>Pass positive <b>order</b> to find the highest value, and negative to find the lowest one.</p>
+
+
+</div>
+<h3><span id="min"></span>min<a class="anchorjs-link" href="#min" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback?: (item: T, index: number) =&gt; any, scope?: any, order: number = 1 = 1): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item evaluation function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Inversion argument.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Array item with lowest (or highest) value.</dd>
+</dl>
+<p>Returns the array item which <b>callback</b> returns the lowest (or highest) value for.</p>
+<p><b>callback</b> must return a comparable value, compatible with <a href="../jwidget.html#cmp" target="_parent">cmp</a>. Returns item itself by default.</p>
+<p>Pass positive <b>order</b> to find the lowest value, and negative to find the highest one.</p>
+
+
+</div>
+<h3><span id="minIndex"></span>minIndex<a class="anchorjs-link" href="#minIndex" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback?: (item: T, index: number) =&gt; any, scope?: any, order: number = 1 = 1): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item evaluation function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Inversion argument.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Index of item with lowest (or highest) value in array.</dd>
+</dl>
+<p>Returns index of the array item which <b>callback</b> returns the lowest (or highest) value for.</p>
+<p><b>callback</b> must return a comparable value, compatible with <a href="../jwidget.html#cmp" target="_parent">cmp</a>. Returns item itself by default.</p>
+<p>Pass positive <b>order</b> to find the lowest value, and negative to find the highest one.</p>
+
+
+</div>
+<h3><span id="minComparing"></span>minComparing<a class="anchorjs-link" href="#minComparing" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) =&gt; any, scope?: any, order: number = 1 = 1): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Item comparer.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>compare</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Inversion argument.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Lowest (or highest) array item.</dd>
+</dl>
+<p>Returns the lowest (or highest) array item in terms of <b>compare</b> function.</p>
+<p><b>compare</b> function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
+Defaults to <a href="../jwidget.html#cmp" target="_parent">cmp</a>.</p>
+<p>Pass positive <b>order</b> to find the lowest value, and negative to find the highest one.</p>
+
+
+</div>
+<h3><span id="minIndexComparing"></span>minIndexComparing<a class="anchorjs-link" href="#minIndexComparing" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) =&gt; any, scope?: any, order: number = 1 = 1): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Item comparer.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>compare</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Inversion argument.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Index of lowest (or highest) array item.</dd>
+</dl>
+<p>Returns index of the lowest (or highest) array item in terms of <b>compare</b> function.</p>
+<p><b>compare</b> function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
+Defaults to <a href="../jwidget.html#cmp" target="_parent">cmp</a>.</p>
+<p>Pass positive <b>order</b> to find the lowest value, and negative to find the highest one.</p>
+
+
+</div>
+<h2><span id="modifiers"></span>Array modification functions<a class="anchorjs-link" href="#modifiers" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h2>
+
+<h3><span id="add"></span>add<a class="anchorjs-link" href="#add" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], item: T, index?: number)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">item</dt><dd class="col-lg-10 col-sm-9">Item to add.</dd>
+<dt class="col-lg-2 col-sm-3">index</dt><dd class="col-lg-10 col-sm-9">Index of an item to insert the new one before. By default, appends the item to the end of array.</dd>
+</dl>
+Adds a new item to the array.
+
+
+</div>
+<h3><span id="addAll"></span>addAll<a class="anchorjs-link" href="#addAll" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], items: T[], index?: number)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">items</dt><dd class="col-lg-10 col-sm-9">Items to add.</dd>
+<dt class="col-lg-2 col-sm-3">index</dt><dd class="col-lg-10 col-sm-9">Index of an item to insert the new ones before. By default, appends the items to the end of array.</dd>
+</dl>
+Adds a range of new items to the array.
+
+
+</div>
+<h3><span id="set"></span>set<a class="anchorjs-link" href="#set" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], index: number, item: T): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">index</dt><dd class="col-lg-10 col-sm-9">Index of an item to replace.</dd>
+<dt class="col-lg-2 col-sm-3">item</dt><dd class="col-lg-10 col-sm-9">Item to replace it with.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">The replaced item.</dd>
+</dl>
+Replaces an item in the array.
+
+
+</div>
+<h3><span id="remove"></span>remove<a class="anchorjs-link" href="#remove" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], index: number): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">index</dt><dd class="col-lg-10 col-sm-9">Index of an item to remove.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">The removed item.</dd>
+</dl>
+Removes an item from the array.
+
+
+</div>
+<h3><span id="removeAll"></span>removeAll<a class="anchorjs-link" href="#removeAll" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], index: number, count: number): T[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">index</dt><dd class="col-lg-10 col-sm-9">Index of the first item to remove.</dd>
+<dt class="col-lg-2 col-sm-3">count</dt><dd class="col-lg-10 col-sm-9">Count of items to remove.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">The removed items.</dd>
+</dl>
+Removes an item range from the array.
+
+
+</div>
+<h3><span id="removeItem"></span>removeItem<a class="anchorjs-link" href="#removeItem" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], item: T): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">item</dt><dd class="col-lg-10 col-sm-9">Item to remove.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Index of the removed item. If the item doesn't exist in the array, returns -1.</dd>
+</dl>
+Removes the first occurrence of an item in array.
+
+
+</div>
+<h3><span id="removeItems"></span>removeItems<a class="anchorjs-link" href="#removeItems" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], items: T[], getKey?: (item: T) =&gt; any)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">items</dt><dd class="col-lg-10 col-sm-9">Items to remove.</dd>
+<dt class="col-lg-2 col-sm-3">getKey</dt><dd class="col-lg-10 col-sm-9">Identifies an item in this array for optimization. Default implementation identifies only primitive values and
+<a href="Identifiable.html" target="_parent">Identifiable</a> objects.
+</dd>
+</dl>
+Removes all occurrences of items in array.
+
+
+</div>
+<h3><span id="move"></span>move<a class="anchorjs-link" href="#move" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], fromIndex: number, toIndex: number): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">fromIndex</dt><dd class="col-lg-10 col-sm-9">Index to an item to move.</dd>
+<dt class="col-lg-2 col-sm-3">toIndex</dt><dd class="col-lg-10 col-sm-9">Index to move the item to.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">The moved item.</dd>
+</dl>
+Moves an item in the array.
+
+
+</div>
+<h3><span id="clear"></span>clear<a class="anchorjs-link" href="#clear" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[]): T[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Old array contents. Never returns null or undefined.</dd>
+</dl>
+Clears the array.
+
+
+</div>
+<h3><span id="splice"></span>splice<a class="anchorjs-link" href="#splice" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[],
+  removeParamsList: <a href="IList.html" target="_parent">IList</a>.<a href="../IList.html#IList-IndexCount" target="_parent">IndexCount</a>[],
+  addParamsList: <a href="IList.html" target="_parent">IList</a>.<a href="../IList.html#IList-IndexItems" target="_parent">IndexItems</a>&lt;T&gt;[]): <a href="IList.html" target="_parent">IList</a>.<a href="../IList.html#IList-SpliceResult" target="_parent">SpliceResult</a>&lt;T&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">removeParamsList</dt><dd class="col-lg-10 col-sm-9">Array of segments to remove sorted by index ascending. Segments are removed in backward order.</dd>
+<dt class="col-lg-2 col-sm-3">addParamsList</dt><dd class="col-lg-10 col-sm-9">Array of segments to insert sorted by index ascending. Segments are inserted in forward order.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Full information about the added/removed items. Never returns null or undefined.</dd>
+</dl>
+Removes and inserts item ranges (in this order).
+
+
+</div>
+<h3><span id="reorder"></span>reorder<a class="anchorjs-link" href="#reorder" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], indexArray: number[])
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">indexArray</dt><dd class="col-lg-10 col-sm-9">Indices to move the items to.</dd>
+</dl>
+<p>Reorders array items.</p>
+<p>Item with index i is moved to index <b>indexArray</b>[i].
+<b>indexArray</b> must contain all indices from 0 to (<b>arr</b>.length - 1).</p>
+
+
+</div>
+<h3><span id="sort"></span>sort<a class="anchorjs-link" href="#sort" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback?: (item: T, index: number) =&gt; any, scope?: any, order: number = 1)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item evaluation function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sort order.</dd>
+</dl>
+<p>Sorts array by the result of <b>callback</b> function call for each item.</p>
+<p><b>callback</b> must return a comparable value, compatible with <a href="../jwidget.html#cmp" target="_parent">cmp</a>. Returns item itself by default.</p>
+<p>Pass positive <b>order</b> for ascending sorting, negative for descending sorting.</p>
+
+
+</div>
+<h3><span id="sortComparing"></span>sortComparing<a class="anchorjs-link" href="#sortComparing" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) =&gt; number, scope?: any, order: number = 1)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Item comparer.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>compare</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sort order.</dd>
+</dl>
+<p>Sorts array by comparer.<p>
+<p><b>compare</b> must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
+Defaults to <a href="../jwidget.html#cmp" target="_parent">cmp</a>.</p>
+<p>Pass positive <b>order</b> for ascending sorting, negative for descending sorting.</p>
+
+
+</div>
+<h2><span id="other"></span>Other functions<a class="anchorjs-link" href="#other" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h2>
+
+<h3><span id="count"></span>count<a class="anchorjs-link" href="#count" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback: (item: T, index: number) =&gt; any, scope?: any): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item predicate function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Count of items which <b>callback</b> returns <a href="../jwidget.html#isTruthy" target="_parent">truthy</a> value for.</dd>
+</dl>
+
+
+</div>
+<h3><span id="toReversed"></span>toReversed<a class="anchorjs-link" href="#toReversed" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[]): T[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to reverse.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">New reversed array.</dd>
+</dl>
+<p>Builds a new array containing items of original array in reversed order.</p>
+<p>As opposed to <code><b>arr</b>.reverse()</code>, does not modify the original array.</p>
+
+
+</div>
+<h3><span id="toSorted"></span>toSorted<a class="anchorjs-link" href="#toSorted" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback?: (item: T, index: number) =&gt; any, scope?: any, order: number = 1): T[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to sort.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item evaluation function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sort order.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">New sorted array.</dd>
+</dl>
+<p>Builds and returns a new array consisting of original array items sorted by the result of <b>callback</b> call for
+each item.</p>
+<p><b>callback</b> function must return a comparable value, compatible with <a href="../jwidget.html#cmp" target="_parent">cmp</a>. Returns item itself by default.</p>
+<p>Pass positive <b>order</b> for ascending sorting, negative for descending sorting.</p>
+<p>As opposed to <a href="#sort" target="_parent">sort</a>, does not modify the original array.</p>
+
+
+</div>
+<h3><span id="toSortedComparing"></span>toSortedComparing<a class="anchorjs-link" href="#toSortedComparing" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) =&gt; any, scope?: any, order: number = 1): T[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to sort.</dd>
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Item comparer.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>compare</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sort order.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">New sorted array.</dd>
+</dl>
+<p>Builds and returns a new array consisting of original array items sorted by <b>compare</b> function.</p>
+<p><b>compare</b> function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
+Defaults to <a href="../jwidget.html#cmp" target="_parent">cmp</a>.</p>
+<p>Pass positive <b>order</b> for ascending sorting, negative for descending sorting.</p>
+<p>As opposed to <a href="#sortComparing" target="_parent">sortComparing</a>, does not modify the original array.</p>
+
+
+</div>
+<h3><span id="getSortingIndices"></span>getSortingIndices<a class="anchorjs-link" href="#getSortingIndices" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback?: (item: T, index: number) =&gt; any, scope?: any, order: number = 1): number[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item evaluation function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sort order.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Indices of items to build the sorted array.</dd>
+</dl>
+<p>Builds array of item indices sorted by the result of <b>callback</b> call for each item.</p>
+<p><b>callback</b> function must return a comparable value, compatible with <a href="../jwidget.html#cmp" target="_parent">cmp</a>. Returns item itself by default.</p>
+<p>Pass positive <b>order</b> for ascending sorting, negative for descending sorting.</p>
+
+
+</div>
+<h3><span id="getSortingIndicesComparing"></span>getSortingIndicesComparing<a class="anchorjs-link" href="#getSortingIndicesComparing" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) =&gt; any, scope?: any, order: number = 1): number[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Item comparer.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>compare</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sort order.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Indices of items to build the sorted array.</dd>
+</dl>
+<p>Builds array of item indices sorted by <b>compare</b> function.</p>
+<p><b>compare</b> function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
+Defaults to <a href="../jwidget.html#cmp" target="_parent">cmp</a>.</p>
+<p>Pass positive <b>order</b> for ascending sorting, negative for descending sorting.</p>
+
+
+</div>
+<h3><span id="index"></span>index<a class="anchorjs-link" href="#index" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback: (item: T, index: number) =&gt; any, scope?: any): <a href="Dictionary.html" target="_parent">Dictionary</a>&lt;T&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to index.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item indexer function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Array index.</dd>
+</dl>
+Builds and returns a new <a href="Dictionary.html" target="_parent">Dictionary</a> by rule: key is the result of <b>callback</b> function call on an item,
+value is the item itself.
+
+
+</div>
+<h3><span id="reduce"></span>reduce<a class="anchorjs-link" href="#reduce" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T, U&gt;(arr: T[], reducer: <a href="Reducer.html" target="_parent">Reducer</a>&lt;T, U&gt;): U
+&lt;T, U&gt;(arr: T[], callback: (accumulator: U, item: T, index: number) =&gt; U, initial: U): U
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to reduce.</dd>
+<dt class="col-lg-2 col-sm-3">reducer</dt><dd class="col-lg-10 col-sm-9"><a href="Reducer.html" target="_parent">Reducer</a> instance to apply.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Reducer callback.</dd>
+<dt class="col-lg-2 col-sm-3">initial</dt><dd class="col-lg-10 col-sm-9">Initial accumulator value.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Final accumulator value.</dd>
+</dl>
+Applies a function against an accumulator and each item in the array (from left to right) to reduce it to a
+single value. Compared to standard <code><b>arr</b>.reduce(<b>callback</b>, <b>initial</b>)</code>, also supports <a href="Reducer.html" target="_parent">Reducer</a> as an argument.
+
+
+</div>
+<h3><span id="equal"></span>equal<a class="anchorjs-link" href="#equal" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(x: T[], y: T[]): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">x</dt><dd class="col-lg-10 col-sm-9">First array.</dd>
+<dt class="col-lg-2 col-sm-3">y</dt><dd class="col-lg-10 col-sm-9">Second array.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Arrays are equal shallowly, item by item (===).</dd>
+</dl>
+
+
+</div>
+<h3><span id="backEvery"></span>backEvery<a class="anchorjs-link" href="#backEvery" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback: (item: T, index: number) =&gt; any, scope?: any): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item predicate function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>callback</b> returns <a href="../jwidget.html#isTruthy" target="_parent">truthy</a> value for each array item.</dd>
+</dl>
+As opposed to <code><b>arr</b>.every(<b>callback</b>, <b>scope</b>)</code>, iterates the items in backward order.
+
+
+</div>
+<h3><span id="isIdentity"></span>isIdentity<a class="anchorjs-link" href="#isIdentity" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(arr: number[]): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to inspect.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Every item in <b>arr</b> is equal to its index: <code><b>arr</b>[i] === i</code>.</dd>
+</dl>
+
+
+</div>
+<h3><span id="invert"></span>invert<a class="anchorjs-link" href="#invert" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>(arr: number[]): number[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to invert.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">New inverted array.</dd>
+</dl>
+Builds a new array by the rule: <code>result[<b>arr</b>[i]] === i</code> and returns it.
+
+
+</div>
+<h3><span id="merge"></span>merge<a class="anchorjs-link" href="#merge" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arrays: T[][]): T[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arrays</dt><dd class="col-lg-10 col-sm-9">Arrays to merge.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">New merged array.</dd>
+</dl>
+Builds a new array consisting of subarray items in the same order and returns it.
+
+
+</div>
+<h2><span id="internalModifiers"></span>Low-level array modification functions (primarily for internal usage)<a class="anchorjs-link" href="#internalModifiers" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h2>
+
+<h3><span id="tryAddAll"></span>tryAddAll<a class="anchorjs-link" href="#tryAddAll" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], items: T[], index?: number): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">items</dt><dd class="col-lg-10 col-sm-9">Items to add.</dd>
+<dt class="col-lg-2 col-sm-3">index</dt><dd class="col-lg-10 col-sm-9">Index of an item to insert the new ones before. By default, appends the items to the end of array.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><code>true</code> if the array was modified, else <code>undefined</code>.</dd>
+</dl>
+Adds a range of new items to the array. As opposed to <a href="#addAll" target="_parent">addAll</a>, returns different result.
+
+
+</div>
+<h3><span id="trySet"></span>trySet<a class="anchorjs-link" href="#trySet" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], index: number, item: T): <a href="Some.html" target="_parent">Some</a>&lt;T&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">index</dt><dd class="col-lg-10 col-sm-9">Index of an item to replace.</dd>
+<dt class="col-lg-2 col-sm-3">item</dt><dd class="col-lg-10 col-sm-9">Item to replace it with.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><a href="Some.html" target="_parent">Some</a> over the replaced item if the array was modified, else <code>undefined</code>.</dd>
+</dl>
+Replaces an item in the array. As opposed to <a href="#set" target="_parent">set</a>, returns different result.
+
+
+</div>
+<h3><span id="tryRemoveAll"></span>tryRemoveAll<a class="anchorjs-link" href="#tryRemoveAll" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], index: number, count: number): T[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">index</dt><dd class="col-lg-10 col-sm-9">Index of the first item to remove.</dd>
+<dt class="col-lg-2 col-sm-3">count</dt><dd class="col-lg-10 col-sm-9">Count of items to remove.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">The removed items if the array was modified, else <code>undefined</code>.</dd>
+</dl>
+Removes an item range from the array. As opposed to <a href="#removeAll" target="_parent">removeAll</a>, returns different result.
+
+
+</div>
+<h3><span id="tryMove"></span>tryMove<a class="anchorjs-link" href="#tryMove" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], fromIndex: number, toIndex: number): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">fromIndex</dt><dd class="col-lg-10 col-sm-9">Index to an item to move.</dd>
+<dt class="col-lg-2 col-sm-3">toIndex</dt><dd class="col-lg-10 col-sm-9">Index to move the item to.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">The moved item if the array was modified, else <code>undefined</code>.</dd>
+</dl>
+Moves an item in the array. As opposed to <a href="#move" target="_parent">move</a>, returns different result.
+
+
+</div>
+<h3><span id="tryClear"></span>tryClear<a class="anchorjs-link" href="#tryClear" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[]): T[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Old array contents if the array was modified, else <code>undefined</code>.</dd>
+</dl>
+Clears the array. As opposed to <a href="#clear" target="_parent">clear</a>, returns different result.
+
+
+</div>
+<h3><span id="trySplice"></span>trySplice<a class="anchorjs-link" href="#trySplice" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[],
+  removeParamsList: <a href="IList.html" target="_parent">IList</a>.<a href="../IList.html#IList-IndexCount" target="_parent">IndexCount</a>[],
+  addParamsList: <a href="IList.html" target="_parent">IList</a>.<a href="../IList.html#IList-IndexItems" target="_parent">IndexItems</a>&lt;T&gt;[]): IList.<a href="../IList.html#IList-SpliceResult" target="_parent">SpliceResult</a>&lt;T&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">removeParamsList</dt><dd class="col-lg-10 col-sm-9">Array of segments to remove sorted by index ascending. Segments are removed in backward order.</dd>
+<dt class="col-lg-2 col-sm-3">addParamsList</dt><dd class="col-lg-10 col-sm-9">Array of segments to insert sorted by index ascending. Segments are inserted in forward order.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Full information about the added/removed items if the array was modified, else <code>undefined</code>.</dd>
+</dl>
+Removes and inserts item ranges (in this order). As opposed to <a href="#splice" target="_parent">splice</a>, returns different result.
+
+
+</div>
+<h3><span id="tryReorder"></span>tryReorder<a class="anchorjs-link" href="#tryReorder" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], indexArray: number[]): T[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to modify.</dd>
+<dt class="col-lg-2 col-sm-3">indexArray</dt><dd class="col-lg-10 col-sm-9">Indices to move the items to.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Old item order if the array was modified, else <code>undefined</code>.</dd>
+</dl>
+<p>Reorders array items. As opposed to <a href="#reorder" target="_parent">reorder</a>, returns different result.</p>
+<p>Item with index i is moved to index <b>indexArray</b>[i].
+<b>indexArray</b> must contain all indices from 0 to (<b>arr</b>.length - 1).</p>
+
+
+</div>
+<h2><span id="internalAnalyzers"></span>Low-level array analysing functions (primarily for internal usage)<a class="anchorjs-link" href="#internalAnalyzers" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h2>
+
+<h3><span id="detectSplice"></span>detectSplice<a class="anchorjs-link" href="#detectSplice" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(oldItems: T[], newItems: T[],
+  getKey?: (item: T) =&gt; any): <a href="IList.html" target="_parent">IList</a>.<a href="../IList.html#IList-SpliceParams" target="_parent">SpliceParams</a>&lt;T&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">oldItems</dt><dd class="col-lg-10 col-sm-9">Original array to splice.</dd>
+<dt class="col-lg-2 col-sm-3">newItems</dt><dd class="col-lg-10 col-sm-9">Expected spliced array.</dd>
+<dt class="col-lg-2 col-sm-3">getKey</dt><dd class="col-lg-10 col-sm-9">Identifies an item in this array for optimization. Default implementation identifies only primitive values and
+<a href="Identifiable.html" target="_parent">Identifiable</a> objects.
+</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><a href="#splice" target="_parent">splice</a> function arguments. If no method call required, returns <code>undefined</code>.</dd>
+</dl>
+<p>Detects <a href="#splice" target="_parent">splice</a> function arguments to adjust <b>oldItems</b> array contents to <b>newItems</b>.</p>
+<p>Determines item ranges neccessary to be removed and inserted.</p>
+<p>Each item must have unique <b>getKey</b> function result.</p>
+<p>If items don't have unique key, probably <a href="#detectFilter" target="_parent">detectFilter</a> method may help, because it doesn't require items
+to be unique.</p>
+
+
+</div>
+<h3><span id="detectFilter"></span>detectFilter<a class="anchorjs-link" href="#detectFilter" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(oldItems: T[], newItems: T[]): <a href="IList.html" target="_parent">IList</a>.<a href="../IList.html#IList-IndexCount" target="_parent">IndexCount</a>[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">oldItems</dt><dd class="col-lg-10 col-sm-9">Original array to filter.</dd>
+<dt class="col-lg-2 col-sm-3">newItems</dt><dd class="col-lg-10 col-sm-9">Expected filtered array.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>removeParamsList</b> argument of <a href="#splice" target="_parent">splice</a> function. If no method call required, returns <code>undefined</code>.</dd>
+</dl>
+<p>Detects <b>removeParamsList</b> argument of <a href="#splice" target="_parent">splice</a> function to adjust <b>oldItems</b> array contents to <b>newItems</b>.</p>
+<p>Determines item ranges neccessary to be removed.</p>
+<p>Doesn't assume item insertion - try <a href="#detectSplice" target="_parent">detectSplice</a> if that's the case.</p>
+<p>At the other hand, <b>detectFilter</b> doesn't require items to be unique.</p>
+
+
+</div>
+<h3><span id="detectReorder"></span>detectReorder<a class="anchorjs-link" href="#detectReorder" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(oldItems: T[], newItems: T[], getKey?: (item: T) =&gt; any): number[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">oldItems</dt><dd class="col-lg-10 col-sm-9">Original array to reorder.</dd>
+<dt class="col-lg-2 col-sm-3">newItems</dt><dd class="col-lg-10 col-sm-9">Expected reordered array.</dd>
+<dt class="col-lg-2 col-sm-3">getKey</dt><dd class="col-lg-10 col-sm-9">Identifies an item in this array for optimization. Default implementation identifies only primitive values and
+<a href="Identifiable.html" target="_parent">Identifiable</a> objects.
+</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><a href="#reorder" target="_parent">reorder</a> function argument. If no method call required, returns <code>undefined</code>.</dd>
+</dl>
+<p>Detects <a href="#reorder" target="_parent">reorder</a> function to arguments to adjust <b>oldItems</b> array contents to <b>newItems</b>.</p>
+<p>Determines indices to move the items to.</p>
+<p>Each item must have unique <b>getKey</b> function result.</p>
+
+
+</div>
+<h3><span id="detectSort"></span>detectSort<a class="anchorjs-link" href="#detectSort" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], callback?: (item: T, index: number) =&gt; any, scope?: any, order: number = 1): number[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to sort.</dd>
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Item evaluation function.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>callback</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sort order.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><a href="#reorder" target="_parent">reorder</a> function argument. If no method call required, returns <code>undefined</code>.</dd>
+</dl>
+<p>Detects <a href="#reorder" target="_parent">reorder</a> function to argument to sort array contents by the result of <b>callback</b> call for each item.</p>
+<p><b>callback</b> must return a comparable value, compatible with <a href="../jwidget.html#cmp" target="_parent">cmp</a>. Returns item itself by default.</p>
+<p>Pass positive <b>order</b> for ascending sorting, negative for descending sorting.</p>
+
+
+</div>
+<h3><span id="detectSortComparing"></span>detectSortComparing<a class="anchorjs-link" href="#detectSortComparing" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+<p><code>&lt;T&gt;(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) =&gt; number, scope?: any, order: number = 1): number[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">arr</dt><dd class="col-lg-10 col-sm-9">Array to sort.</dd>
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Item comparer.</dd>
+<dt class="col-lg-2 col-sm-3">scope</dt><dd class="col-lg-10 col-sm-9"><b>compare</b> call scope.</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sort order.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><a href="#reorder" target="_parent">reorder</a> function argument. If no method call required, returns <code>undefined</code>.</dd>
+</dl>
+<p>Detects <a href="#reorder" target="_parent">reorder</a> function to argument to sort array contents by comparer.</p>
+<p><b>compare</b> must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to <a href="../jwidget.html#cmp" target="_parent">cmp</a>.</p>
+<p>Pass positive <b>order</b> for ascending sorting, negative for descending sorting.</p>
+
+
+</div>
+					</div>
+					<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+				</div>
+			
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="../tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="../tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="../tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="../tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Events</a></li>
+    <li><a href="../tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="../tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="../tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><b>ArrayUtils</b></li>
+        <li><a href="DictionaryUtils.html" target="_parent">DictionaryUtils</a></li>
+        <li><a href="DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="Identifiable.html" target="_parent">Identifiable</a></li>
+        <li><a href="Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Dictionary.html" target="_parent">Dictionary</a></li>
+        <li><a href="Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Class.html" target="_parent">Class</a>, <a href="IClass.html" target="_parent">IClass</a></li>
+        <li><a href="Event.html" target="_parent">Event</a>, <a href="IEvent.html" target="_parent">IEvent</a></li>
+        <li><a href="Property.html" target="_parent">Property</a>, <a href="IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="Component.html" target="_parent">Component</a></li>
+        <li><a href="template.html" target="_parent">template</a></li>
+        <li><a href="listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="Copier.html" target="_parent">Copier</a></li>
+        <li><a href="Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="bindText.html" target="_parent">bindText</a></li>
+        <li><a href="bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="ReadonlyCollection.html" target="_parent">ReadonlyCollection</a></td>
+            <td><a href="ReadonlyList.html" target="_parent">ReadonlyList</a></td>
+            <td><a href="ReadonlyMap.html" target="_parent">ReadonlyMap</a></td>
+            <td><a href="ReadonlySet.html" target="_parent">ReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="DestroyableReadonlyCollection.html" target="_parent">DestroyableReadonlyCollection</a></td>
+            <td><a href="DestroyableReadonlyList.html" target="_parent">DestroyableReadonlyList</a></td>
+            <td><a href="DestroyableReadonlyMap.html" target="_parent">DestroyableReadonlyMap</a></td>
+            <td><a href="DestroyableReadonlySet.html" target="_parent">DestroyableReadonlySet</a></td>
+          </tr>
+          <tr>
+            <td><a href="ICollection.html" target="_parent">ICollection</a></td>
+            <td><a href="IList.html" target="_parent">IList</a></td>
+            <td><a href="IMap.html" target="_parent">IMap</a></td>
+            <td><a href="ISet.html" target="_parent">ISet</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><a href="List.html" target="_parent">List</a></td>
+            <td><a href="Map.html" target="_parent">Map</a></td>
+            <td><a href="Set.html" target="_parent">Set</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="mapper/AbstractMapper.html" target="_parent">Mappers</a></li>
+        <li><a href="filterer/AbstractFilterer.html" target="_parent">Filterers</a></li>
+        <li><a href="counter/AbstractCounter.html" target="_parent">Counters</a></li>
+        <li><a href="indexer/AbstractIndexer.html" target="_parent">Indexers</a></li>
+        <li><a href="convertertoset/AbstractConverterToSet.html" target="_parent">Converters to set</a></li>
+        <li><a href="convertertolist/AbstractConverterToList.html" target="_parent">Converters to list</a></li>
+        <li><a href="sortercomparing/AbstractSorterComparing.html" target="_parent">Sorters (comparing)</a></li>
+        <li><a href="observer/AbstractObserver.html" target="_parent">Observers</a></li>
+        <li><a href="inserter/list.html" target="_parent">Inserters</a></li>
+        <li><a href="merger/list.html" target="_parent">Mergers</a></li>
+        <li><a href="reverser/list.html" target="_parent">Reversers</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="hash.html" target="_parent">hash</a></li>
+        <li><a href="Router.html" target="_parent">Router</a></li>
+        <li><a href="UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="defer.html" target="_parent">defer</a></li>
+        <li><a href="request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+        <li><a href="Reducer.html" target="_parent">Reducer</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="dummyEvent.html" target="_parent">dummyEvent</a></li>
+        <li><a href="../IList.html#IList-IndexCount" target="_parent">IndexCount</a></li>
+        <li><a href="../IList.html#IList-IndexItems" target="_parent">IndexItems</a></li>
+        <li><a href="ListSpliceResult.html" target="_parent">ListSpliceResult</a></li>
+        <li><a href="TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

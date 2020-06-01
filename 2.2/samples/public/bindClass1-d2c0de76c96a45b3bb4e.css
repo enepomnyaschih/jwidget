@@ -1,0 +1,13 @@
+.application-rect {
+  border: 1px solid #f00;
+  display: inline-block;
+  margin-top: 10px;
+  width: 100px;
+  height: 100px;
+}
+.application-rect.checked {
+  background: #f00;
+}
+
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9iaW5kQ2xhc3MxL0FwcGxpY2F0aW9uLnN0eWwiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJmaWxlIjoiYmluZENsYXNzMS1kMmMwZGU3NmM5NmE0NWIzYmI0ZS5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuYXBwbGljYXRpb24tcmVjdCB7XG4gIGJvcmRlcjogMXB4IHNvbGlkICNmMDA7XG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgbWFyZ2luLXRvcDogMTBweDtcbiAgd2lkdGg6IDEwMHB4O1xuICBoZWlnaHQ6IDEwMHB4O1xufVxuLmFwcGxpY2F0aW9uLXJlY3QuY2hlY2tlZCB7XG4gIGJhY2tncm91bmQ6ICNmMDA7XG59XG4iXSwic291cmNlUm9vdCI6IiJ9*/
