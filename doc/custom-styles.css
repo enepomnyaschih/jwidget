@@ -1,0 +1,5 @@
+#index-dropdown {
+    left: 10px;
+    max-width: calc(100% - 20px);
+    width: 1300px;
+}

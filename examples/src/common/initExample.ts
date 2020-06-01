@@ -11,7 +11,7 @@ export default function initExample(name: string, links: string[]) {
 		} else {
 			el.append(', ');
 		}
-		el.append($('<a target="_blank"></a>').text(link).attr("href", `../src/${name}/${link}.txt`));
+		el.append($('<a target="_blank"></a>').text(link).attr("href", `src/${name}/${link}.txt`));
 	});
 	$("body").prepend('<div><b>Example</b></div><div><a href="javascript:location.reload()">Refresh</a></div><hr style="clear: both">').prepend(el);
 }

@@ -24,7 +24,7 @@ symbols:
           step of the routing.</li>
           <li><b>Argument</b> is the remaining path after route extraction.</li>
           </ul>
-          <p>For example, hash value <tt>#inbox/3?filter=10</tt> provides us with <tt>inbox/3?filter=10</tt> global
+          <p>For example, hash value <tt>#inbox/3?filter=10</tt> provides us with <tt>inbox/3?filter=10</tt> root
           path, and it may get processed in 2 steps with the following values:</p>
           <table class="table table-striped">
             <thead class="thead-dark">
@@ -711,10 +711,10 @@ symbols:
         description: |
           <p>Provides "expanded" flags to bind child panels to, by name. Support two-way binding:</p>
           <ol>
-          <li>Once the global path starts referring this node and this name in the node, "expanded" gets assigned to
+          <li>Once the root path starts referring this node and this name in the node, "expanded" gets assigned to
           true automatically. But not the opposite: once it stops, "expanded" stays unchanged.</li>
-          <li>Once "expanded" property becomes true, global path gets redirected to this name in this node. But not the
-          opposite: false value assignment doesn't lead to any visible changes in global path.</li>
+          <li>Once "expanded" property becomes true, root path gets redirected to this name in this node. But not the
+          opposite: false value assignment doesn't lead to any visible changes in root path.</li>
           </ol>
 
       defaultRoute:
