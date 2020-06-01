@@ -6,7 +6,7 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="300" src="../samples/tutorial2/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-2">https://github.com/enepomnyaschih/mt/tree/mt-2.1-2</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-2">https://github.com/enepomnyaschih/mt/tree/mt-2.2-2</a> (Git branch).</p>
 
   <p>In this part we meet %List class. We will learn how to use it to display child UI component lists. Our goal is to
   render a list of tweets developed in the previous part.</p>
@@ -64,7 +64,7 @@ description: |
   <p>Aggregation methods %own and %ownItems control the life time of child components. If object A owns object B, then
   destruction of object A automatically triggers destruction of object B. In our case, destruction of TweetFeed
   automatically triggers destruction of tweet view list. Thanks to %ownItems call, destruction of the list triggers
-  destruction all its elements, i.e. tweet views. It is a good practice to destroy child UI components when you
+  destruction of all its elements, i.e. tweet views. It is a good practice to destroy child UI components when you
   don't need them anymore, because any UI component may initialize its own bindings you can be unaware of. See
   %commonPractices for more instructions about how this can be achieved.</p>
 
@@ -108,10 +108,11 @@ description: |
   <h5>src/index.ts</h5>
 
   <pre>
-  import "es6-promise/auto";
-  import "script-loader!jquery";
+  import "core-js/stable";
+  import "regenerator-runtime/runtime";
   import "./index.styl";
 
+  import $ from "jquery";
   import {createTweetByJson} from "./model/Tweet";
   import TweetFeed from "./view/TweetFeed";
 

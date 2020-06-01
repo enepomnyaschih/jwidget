@@ -6,7 +6,7 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="330" src="../samples/tutorial4/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-4">https://github.com/enepomnyaschih/mt/tree/mt-2.1-4</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-4">https://github.com/enepomnyaschih/mt/tree/mt-2.2-4</a> (Git branch).</p>
 
   <p>In this part we learn how to handle user events in scope of jWidget framework. First, we must activate buttons
   Like/Unlike and Retweet/Unretweet.</p>
@@ -18,12 +18,11 @@ description: |
   <ol>
   <li>The view intercepts "click" event with jQuery.</li>
   <li>The view accesses the model with <tt>tweet.like = !tweet.like</tt> setter.</li>
-  <li>The model checks if "_like" field has been changed. If not, it exits from the setter with no impact.</li>
-  <li>If "_like" field has been changed, model saves it and triggers "likeChangeEvent".</li>
-  <li>View intercepts "likeChangeEvent" and updates itself.</li>
+  <li>The model triggers "likeChangeEvent".</li>
+  <li>The view intercepts "likeChangeEvent" and updates itself.</li>
   </ol>
 
-  <p>Notice that the view can update itself directly by its own before step 2. But it is unneccessary in model-view
+  <p>Notice that the view can update itself directly on its own before step 2. But it is unneccessary in model-view
   architecture, because the view listens "likeChangeEvent" anyway. Who knows what may trigger model
   modification? Any other views or services may access the model directly, but they hardly can access the corresponding
   views. That's why the view should get updated indirectly. It should listen to model modifications and handle them
@@ -31,11 +30,11 @@ description: |
 
   <p>In some other model-view frameworks (actually, MVC frameworks) controller is responsible for event listening and
   handling. jWidget doesn't provide any features for controller implementation. Controller part is identified by
-  the author of the framework as redundant and complicating things with no benefit. jWidget goes without controller.</p>
+  the author of the framework as unnecessary and complicating things with no benefit. jWidget goes without controller.</p>
 
-  <p>Event management API is optimized for performance in jWidget and implemented by OOD principles. That's the reason
-  why event management API is very different in jWidget and jQuery. jWidget event is implemented by class %Event and
-  defined by its interfaces %Listenable and %IEvent. One event instance represents one kind of action. In contrast,
+  <p>Event management API is optimized for performance in jWidget and implemented according to OOD principles. That's the reason
+  why event management API is very different in jWidget and jQuery. jWidget event is implemented with %Event class and
+  defined with its interfaces %Listenable and %IEvent. One event instance represents one kind of action. In contrast,
   jQuery element is an object that manages events in jQuery and it represents all kinds of events that may happen to
   this element, and the event kind is identified by its name. jQuery implementation begets redundancy, because all
   events have a common set of %parameters regardless of event kind difference. For example, it makes no sense to read
@@ -66,7 +65,9 @@ description: |
   </pre>
 
   <p>At the next step, we should replace Tweet interface with a class. Readonly fields "like" and "retweet" should be
-  replaced with getters and setters. To implement them, we need to define likeChangeEvent and retweetChangeEvent.</p>
+  replaced with getters and setters. To implement them, we need to define likeChangeEvent and retweetChangeEvent. Below
+  you can see a lot of boilerplate code to make it work, but don't worry about it - we'll deal with this problem
+  later.</p>
 
   <h5>src/model/Tweet.ts</h5>
 
@@ -148,12 +149,13 @@ description: |
   </pre>
 
   <p>Event is triggered with %trigger method, which takes an argument to pass to event listeners. In this case it is
-  boolean - new value of the property. jWidget event is very simple: all listeners get iterated and called one by one
+  boolean - the new value of the property. jWidget event is very simple: all listeners get iterated and called one by one
   immediately right in %trigger method. There are no special features like bubbling, "preventDefault" or
-  "stopPropagation", as well as there is no pretection against dead loops. If you want to introduce something like this,
-  implement it by yourself using %IEvent interface. jWidget is modest in this regard, but fast.</p>
+  "stopPropagation", as well as there is no pretection against dead loops or circular dependencies. If you want to
+  introduce something like this, implement it on your own using %IEvent interface. jWidget is modest in this regard,
+  but fast.</p>
 
-  <p>Since we have replaced "createTweetByJson" function with "createByJson" static method, let's immediately change
+  <p>Since we replaced "createTweetByJson" function with "createByJson" static method, let's immediately change
   its usage.</p>
 
   <h5>src/model/ApplicationData.ts</h5>
@@ -201,8 +203,8 @@ description: |
       }
   </pre>
 
-  <p>It must work! Try to run it in browser and click Like/Unlike and Retweet/Unretweet buttons. Moreover, you can feel
-  the transparency of this approach even more. Just for fun, define a global leverage to access the model.</p>
+  <p>It must work! Try to run it in a browser and click Like/Unlike and Retweet/Unretweet buttons. Moreover, you can feel
+  the transparency of this approach even more. Just for fun, define a global hook to access the model.</p>
 
   <h5>src/index.ts</h5>
 
@@ -210,7 +212,7 @@ description: |
       (<any>window).data = data;
   </pre>
 
-  <p>Refresh the page, open browser console and run next command:</p>
+  <p>Refresh the page, open the browser console and run the next command:</p>
 
   <pre>
   data.tweets[0].like = true;
@@ -218,11 +220,11 @@ description: |
 
   <p>Your application will obediently reflect the change.</p>
 
-  <p>You may find this code too bulky. We wrote a ton of code just to implement a couple of very simple event handlers.
-  Your judgement is absolutely justified. Our excuse to this is that we want to let you understand the meat and bones of
-  model-view architecture. That's just how it works. And that's what will make your life easier if
+  <p>You may find this code too bulky. We have written a ton of code just to implement a couple of very simple event
+  handlers. Your judgement is absolutely justified. The reason behind that is our desire to help you understanding the
+  spirit of the model-view architecture. That's just how it works on low level. And that's what will make your life easier if
   you decide to add more views to the models you already have. However, you indeed don't need so much code to maintain
-  proper architecture - jWidget provides a bunch of useful utilities that may reduce this code drastically, and we will
+  proper architecture - jWidget provides a bunch of useful utilities that will reduce this code drastically, and we will
   demonstrate them in the next tutorial.</p>
 
   %tutorial5

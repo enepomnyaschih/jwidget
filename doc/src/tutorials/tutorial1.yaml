@@ -6,7 +6,7 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="300" src="../samples/tutorial1/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-1">https://github.com/enepomnyaschih/mt/tree/mt-2.1-1</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-1">https://github.com/enepomnyaschih/mt/tree/mt-2.2-1</a> (Git branch).</p>
 
   <p>This tutorial shows you a way to develop your own Twitter in several steps using jWidget 2 and TypeScript.</p>
 
@@ -17,7 +17,7 @@ description: |
   <p>In the first sample we take a look at model and view. We will develop a simple UI component which takes data
   from a model to render itself.</p>
 
-  <p>First, download <a href="https://github.com/enepomnyaschih/jwidget-template">jWidget 2 project template</a>. The
+  <p>First, download <a href="https://github.com/enepomnyaschih/jwidget-template/tree/2.2">jWidget 2 project template</a>. The
   template gives you a good starting point. Now you don't need to bother about the environment configuration
   process. Just extract the template to some folder at your disk and run:</p>
 
@@ -151,10 +151,11 @@ description: |
   <h5>src/index.ts</h5>
 
   <pre>
-  import "es6-promise/auto";
-  import "script-loader!jquery";
+  import "core-js/stable";
+  import "regenerator-runtime/runtime";
   import "./index.styl";
 
+  import $ from "jquery";
   import {createTweetByJson} from "./model/Tweet";
   import TweetView from "./view/TweetView";
 
@@ -172,11 +173,10 @@ description: |
   });
   </pre>
 
-  <p>The first two imports are mandatory for jWidget, because the framework depends on
-  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">native ES6 promises</a>
-  and <a href="http://jquery.com/" target="_blank">jQuery</a>.
-  Native ES6 promises are not yet supported by all browsers, so we need to register a
-  <a href="https://www.npmjs.com/package/es6-promise" target="_blank">polyfill</a> for it.</p>
+  <p>The first two imports are mandatory for jWidget, because the framework depends on some edge EcmaScript features,
+  and these polyfills make sure that these features are available in all popular browsers. The third import attaches
+  all stylesheets in a preferred order as listed in index.styl file. The stylesheets are written in
+  <a href="http://stylus-lang.com/" target="_blank">Stylus</a> syntax.</p>
 
   <p>Make sure that WebPack (running under "npm start") doesn't display any errors and refresh the browser page. You'll
   see something like this:</p>
@@ -246,7 +246,8 @@ description: |
 
   <img src="result-2.png">
 
-  <p>Works well, but looks poorly. Let's demonstrate the magic of slicing. I prefer Stylus for this purpose, and its
+  <p>Works well, but looks poorly. Let's demonstrate the magic of slicing. I prefer
+  <a href="http://stylus-lang.com/" target="_blank">Stylus</a> for this purpose, and its
   interpreter is already configured in jWidget project template.</p>
 
   <h5>src/view/TweetView.styl</h5>
@@ -415,6 +416,29 @@ description: |
   element is rendered with its own method. You can use one way or another. I prefer second way because it is more
   flexible: you can override any element rendering in an inherited component class. Let's stick to this way in future
   samples.</p>
+
+  <h3>Cleanup</h3>
+
+  <p>Since we used a <a href="https://github.com/enepomnyaschih/jwidget-template/tree/2.2">template</a> to initialize
+  the project, it makes sense to do some cleanup now. Delete the following unused files:</p>
+
+  <ul>
+  <li>src/Application.jw.html</li>
+  <li>src/Application.styl</li>
+  <li>src/Application.ts</li>
+  </ul>
+
+  <p>Also, following the <a href="https://github.com/enepomnyaschih/jwidget-template/blob/2.2/README.md">README</a>
+  instructions:</p>
+
+  <ul>
+  <li>Adjust README.md file with your project description.</li>
+  <li>Replace LICENSE file with your desired license, or delete it if you don't want to distribute your
+  application's code.</li>
+  <li>Change the package name and version in package.json file.</li>
+  </ul>
+
+  <p>Once it is done, feel free to do your first commit to a source code repository.</p>
 
   %tutorial2
   </div>

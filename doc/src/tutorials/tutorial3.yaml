@@ -6,10 +6,10 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="330" src="../samples/tutorial3/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-3">https://github.com/enepomnyaschih/mt/tree/mt-2.1-3</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-3">https://github.com/enepomnyaschih/mt/tree/mt-2.2-3</a> (Git branch).</p>
 
   <p>In this part we learn how to render child components that don't belong to lists. Examples of such components are
-  user profile panel and tweet feed - they are child components of application.</p>
+  the user profile panel and the tweet feed - they are child components of the application.</p>
 
   <img src="application.png">
 
@@ -47,6 +47,7 @@ description: |
   <h5>src/view/Application.ts</h5>
 
   <pre>
+  import $ from "jquery";
   import %Component from "jwidget/Component";
   import %template from "jwidget/template";
   import ApplicationData from "../model/ApplicationData";
@@ -156,10 +157,11 @@ description: |
   <h5>src/index.ts</h5>
 
   <pre>
-  import "es6-promise/auto";
-  import "script-loader!jquery";
+  import "core-js/stable";
+  import "regenerator-runtime/runtime";
   import "./index.styl";
 
+  import $ from "jquery";
   import ApplicationData from "./model/ApplicationData";
   import Application from "./view/Application";
 
@@ -432,10 +434,11 @@ description: |
   <h5>src/index.ts</h5>
 
   <pre>
-  import "es6-promise/auto";
-  import "script-loader!jquery";
+  import "core-js/stable";
+  import "regenerator-runtime/runtime";
   import "./index.styl";
 
+  import $ from "jquery";
   import ApplicationData from "./model/ApplicationData";
   import Application from "./view/Application";
 
@@ -479,7 +482,7 @@ description: |
   <img src="application.png">
 
   <p>We've learned how to render components and add them into each other. Now it's the time to add a bit of dynamics into
-  our application. We'll describe this in next part.</p>
+  our application. We'll describe this in the next part.</p>
 
   %tutorial4
   </div>

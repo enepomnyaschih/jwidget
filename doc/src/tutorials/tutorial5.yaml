@@ -6,12 +6,13 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="330" src="../samples/tutorial5/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-5">https://github.com/enepomnyaschih/mt/tree/mt-2.1-5</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-5">https://github.com/enepomnyaschih/mt/tree/mt-2.2-5</a> (Git branch).</p>
 
   <p>Now it's the time to learn a new layer of jWidget: %Property and its interfaces %Bindable and %IProperty.
   <b>Property</b> is a value that can notify the clients about its modification. So, %Property is a class with two
   methods: %get, %set - and an event %changeEvent. Whenever you change the value of the property with %set method call,
-  %changeEvent is triggered. The event is not triggered if the value is not changed in result of %set method call.</p>
+  %changeEvent is triggered. The event is not triggered if the value is not changed in the result of the %set method
+  call.</p>
 
   <p>So, in our Mini-Twitter example, we can simplify Like/Unlike and Retweet/Unretweet behaviour implementation by
   introducing two boolean properties.</p>
@@ -42,8 +43,10 @@ description: |
       }
   </pre>
 
-  <p>We can now remove the corresponding events and setters - it is quite a chunk of code. Let's modify the view now.
-  Instead of listening property change event manually, we can utilize property bindings.</p>
+  <p>Please remove the corresponding events, getters and setters - it is quite a big chunk of code.</p>
+
+  <p>Let's modify the view now. Instead of listening property change event manually, we can utilize property
+  bindings.</p>
 
   <p>First, we're going to build string properties with "Like/Unlike" and "Retweet/Unretweet" values from
   original boolean properties. To do so, we can use %mapOfBindable method. Since life time of the model can be longer
@@ -52,9 +55,10 @@ description: |
 
   <p>Second, we're going to bind DOM elements to all these properties with %bindText function. It doesn't make much
   sense to aggregate this binding, because the source property belongs to the view itself, and the binding is so simple
-  that it doesn't create any objects in the output.</p>
+  that it doesn't create any objects in the output (see %philosophy for better understanding when you need to call
+  %own method and when not).</p>
 
-  <p>Third, we should also bind "active" CSS class presence to the values of corresponding properties with %bindClass
+  <p>Third, we should also bind "active" CSS class presence to the values of the corresponding properties with %bindClass
   function. Since this is a binding to model, we must aggregate it with %own method.</p>
 
   <h5>src/view/TweetView.ts</h5>
@@ -81,7 +85,7 @@ description: |
       }
   </pre>
 
-  <p>And we can delete methods _updateLike and _updateRetweet - we don't use them anymore.</p>
+  <p>And you may delete methods _updateLike and _updateRetweet - we don't use them anymore.</p>
 
   <p>Run the application.</p>
 

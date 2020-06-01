@@ -6,15 +6,15 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="330" src="../samples/tutorial6/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.1-6">https://github.com/enepomnyaschih/mt/tree/mt-2.1-6</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-6">https://github.com/enepomnyaschih/mt/tree/mt-2.2-6</a> (Git branch).</p>
 
   <p>Now we switch to the most wonderful and important part of jWidget which makes it special - it is collection
   bindings. In this tutorial, we add a feature of a new tweet posting and an existing tweet removal.</p>
 
-  <p>Let's start with a bit of refactoring. Remember how we bind Like/Unlike buttons in view to the properties in model?
-  We will use a similar approach to bind tweet feed to application data model. The model will trigger all kinds of
+  <p>Let's start with a bit of refactoring. Remember how we bind Like/Unlike buttons in view to properties in the model?
+  We will use a similar approach to bind the tweet feed to the application data model. The model will trigger all kinds of
   tweet collection modification events and the view will handle them appropriately. The easiest way to make it possible
-  is to replace tweet array with %List in ApplicationData class.</p>
+  is to replace tweet array with a %List in ApplicationData class.</p>
 
   <h5>src/model/ApplicationData.ts</h5>
 
@@ -38,9 +38,9 @@ description: |
   }
   </pre>
 
-  <p>%List has all kinds of events to notify the view about its modification. We could subscribe to these events and
-  handle them manually by updating the corresponding tweet view list. However, it would be too time consuming and
-  difficult. Instead, we are going to apply %mapList synchronizer to synchronize the view list to the model list.</p>
+  <p>%List has all kinds of events necessary to notify the view about its modification. We could subscribe to these events and
+  handle them manually by updating the corresponding tweet view list. However, it would be too much time consuming and
+  difficult. Instead, we are going to apply %mapList synchronizer to synchronize the view list with the model list.</p>
 
   <h5>src/view/TweetFeed.ts</h5>
 
@@ -66,22 +66,23 @@ description: |
   }
   </pre>
 
-  <p>Now the view list is created from model via list item conversion function %mapList. It returns a list of tweet
+  <p>Now the view list is created from the model via list item convertion function %mapList. It returns a list of tweet
   views. It works better here than usual %map method for the following two reasons.</p>
 
-  <p><b>First</b>, it subscribes itself to all source list modification events and synchronizes target list to source list any
-  time the modification happens. This is an example of jWidget 2 data binding mechanism. Please notice that %mapList
-  can be used to map not just model to view, but also model to another model and view to another view. This is an
-  advantage of jWidget 2 over the other frontend frameworks. This is very flexible and transparent solution.</p>
+  <p><b>First</b>, it subscribes itself to all source list modification events and synchronizes the target list with
+  the source list each time the modification happens. This is an example of jWidget 2 data binding mechanism.
+  Please notice that %mapList can be used to map not just a model to a view, but also a model to another model and
+  a view to another view. This is an advantage of jWidget 2 over the other frontend frameworks. This is a very flexible
+  and transparent solution.</p>
 
-  <p><b>Second</b>, it controls life time of the mapped items. Pay attention to %own method call. The list
-  destruction unbinds it from the model, which allows the browser to release the memory and prevent unintended source
-  list modification handling. Also, we pass %destroy argument to %mapList method - it instructs the synchronizer to
+  <p><b>Second</b>, it controls life time of the mapped items. Pay attention to the %own method call. The list
+  destruction unbinds it from the model, which allows the browser to release the memory and prevent an unintended handling
+  of the list modification. Also, we pass %destroyFunction argument to %mapList method - it instructs the synchronizer to
   destroy tweet views when they are not needed anymore, i.e. once the corresponding tweets get removed from the model
   or once the entire target collection gets destroyed.</p>
 
   <p>The refactoring is done, and you can run the application in your browser to make sure that it works as before.
-  Now, let's utilize %List to handle tweet creation. Bind ProfileBox to jQuery "submit" event.</p>
+  Now, let's utilize the %List to handle tweet creation. Bind ProfileBox to jQuery "submit" event.</p>
 
   <h5>src/view/ProfileBox.ts</h5>
 
@@ -98,7 +99,7 @@ description: |
           el.on("submit", event => {
               event.preventDefault();
 
-              const text: string = <any>this.%getElement("compose-input").val();
+              const text = <string>this.%getElement("compose-input").val();
               if (!text) {
                   return;
               }
@@ -126,15 +127,15 @@ description: |
       }
   </pre>
 
-  <p>That's it! Run the application in browser. After text input and "Tweet" button click, you'll see a new tweet in
-  tweet feed:</p>
+  <p>That's it! Run the application in a browser. After a text input and a "Tweet" button click, you'll see a new tweet
+  in the tweet feed:</p>
 
   <img src="result-4.png">
 
   <img src="result-5.png">
 
-  <p>Our next goal is to activate Remove button in tweets to remove them from the feed. Let's bind a handler to button click.
-  We need to pass ApplicationData all the way to TweetView.</p>
+  <p>Our next goal is to activate Remove button in tweets to remove them from the feed. Let's bind a handler to the button click.
+  We need to pass the ApplicationData all the way to the TweetView.</p>
 
   <h5>src/view/Application.ts</h5>
 
@@ -175,14 +176,18 @@ description: |
 
   <img src="result-6.png">
 
-  <p>In this tutorial we've reviewed a typical scenario of list item converter (%mapList) usage,
-  but you shouldn't stop on this. You should try other collection bindings, because there are reasonable
+  <p>In this tutorial we've reviewed a typical scenario of a list item converter (%mapList) usage,
+  but you shouldn't stop at this. You should try other collection bindings, because there are reasonable
   use cases for all of them. Find them in %DocumentationRoot, <b>Collection bindings</b> section.</p>
 
   <p>Notice that binding usage is not constrained by view only. For example, you may create an indexer in your model
-  just to speed-up access to the items by key. Sorter can sort a %Set of tweets by their publication date, and you won't
-  need to think of the position to insert a new tweet at. There is a lot of scenarios, and I recommend you to try them
+  just to speed-up access to its items by key. Sorter can sort a %Set of tweets by their publication date, and you won't
+  need to think about a position to insert a new tweet at. There is a lot of scenarios, and I recommend you trying them
   in practice.</p>
+
+  <p>This part concludes the jWidget tutorial series. Thank you for your attention, and we hope that you'll find jWidget
+  framework very useful for your everyday frontend development work! Feel free to share your feedback and report issues
+  in <a href="https://github.com/enepomnyaschih/jwidget/issues">GitHub</a>.</p>
 
   </div>
 
