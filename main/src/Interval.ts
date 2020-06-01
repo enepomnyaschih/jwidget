@@ -47,7 +47,7 @@ export default class Interval implements Destroyable {
 		} else if (typeof scope === "number") {
 			ms = scope;
 		}
-		this.interval = setInterval(callback, ms);
+		this.interval = window.setInterval(callback, ms);
 	}
 
 	destroy() {

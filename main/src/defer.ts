@@ -32,7 +32,7 @@ export default function (ms?: number, cancelToken?: CancelToken): Promise<void> 
 	let timeout: number;
 	return runAsync<void>(
 		(resolve: (value?: (Promise<void> | void)) => void) => {
-			timeout = setTimeout(resolve, ms);
+			timeout = window.setTimeout(resolve, ms);
 		},
 		() => {
 			clearTimeout(timeout);

@@ -1,4 +1,6 @@
 import $ from "jquery";
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 export default function initExample(name: string, links: string[]) {
 	const el = $('<div style="float: right; width: 600px"><b>Source:</b> </div>');

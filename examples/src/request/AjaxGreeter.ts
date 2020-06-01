@@ -14,7 +14,7 @@ export default class AjaxGreeter extends Component {
 
 	protected async renderRoot(el: JQuery) {
 		el.text("Loading...");
-		const data = await request($.get("data.json"), this.cancelToken);
+		const data = await request($.get("request/data.json"), this.cancelToken);
 		el.text(data.message);
 		this.count.set(this.count.get() + 1);
 	}
