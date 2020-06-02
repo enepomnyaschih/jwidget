@@ -26,9 +26,7 @@ description: |
     update cycles. Each object simply listens events and handles them in very straightforward way. Look at the next
     example:</p>
     <pre>
-    import "es6-promise/auto";
-    import "script-loader!jquery";
-
+    import $ from "jquery";
     import {%TWOWAY} from "jwidget";
     import %bindText from "jwidget/bindText";
     import %bindVal from "jwidget/bindVal";
@@ -79,5 +77,7 @@ description: |
     all versions prior to 1.4.8 are distributed under terms of
     <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html" target="_blank">LGPLv3 license</a>.</p>
     <p>Find source code and bug tracker at <a href="https://github.com/enepomnyaschih/jwidget" target="_blank">GitHub</a>.</p>
+    <p><a href="https://github.com/enepomnyaschih/jwidget-template" target="_blank">Preconfigured jWidget project template</a>
+    is available for an easy start.</p>
     <p>Legacy jWidget 1 documentation <a href="http://enepomnyaschih.github.io/jwidget/1.4/#!/guide/home">is still available here</a>.</p>
   </div>
