@@ -140,7 +140,7 @@ export function put(url: string, config: AjaxConfig = {}) {
 <p>With just 44 lines of code, we've got a bunch of high-level functions that implement communication to a
 typical REST API. Since you are an author of this code, you can easily transform the communication
 protocol as you wish: for example, copy session ID from local storage to request headers. It's up to you.
-All these functions return <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a><any> where any is response JSON.</p>
+All these functions return <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;any&gt; where any is response JSON.</p>
 
 	
 
@@ -261,7 +261,7 @@ namespace Project {
 export default Project;</pre>
 <p>Project.Config object is very similar to the JSON, but it is still different: skills are defined as true
 models, not raw JSON objects. It allows you to pass a predefined skill object to the Project constructor. It
-may play a crucial role in business logic you your application later. That's why we define a separate static
+may play a crucial role in business logic of your application later. That's why we define a separate static
 method createByJson to encapsulate all JSON parsing burden in it.</p>
 <p>Files <b>models/Skill.ts</b> and <b>models/User.ts</b> are implemented similarly.</p>
 
