@@ -1,3 +1,7 @@
+# 2.2.1
+
+* Added Babel to the build pipeline to repair IE 11 support.
+
 # 2.2
 
 * :boom: **Breaking change.** Changed jQuery consumption mechanics to ES6 import as opposed to old-fashined import via

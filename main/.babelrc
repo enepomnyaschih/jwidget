@@ -1,0 +1,24 @@
+{
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "browsers": [
+            "last 2 versions",
+            "IE >= 11"
+          ]
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ]
+  ],
+  "sourceMaps": "inline"
+}
