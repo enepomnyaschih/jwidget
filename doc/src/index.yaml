@@ -11,7 +11,7 @@ description: |
     </div>
     <p>jWidget 2 is available as <a href="https://www.npmjs.com/package/jwidget">npm package</a>.</p>
     <pre>
-    npm install --save jwidget
+    npm i jwidget jquery
     </pre>
     <p>jWidget features:</p>
     <ul>
