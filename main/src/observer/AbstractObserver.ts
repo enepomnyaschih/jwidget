@@ -26,7 +26,7 @@ import Class from '../Class';
 import ReadonlyCollection from '../ReadonlyCollection';
 
 /**
- * Collection observer. Listens all collection events and reduces them to 2 granular functions:
+ * Collection observer. Listens to all collection messages and reduces them to 2 granular functions:
  * item is added and item is removed.
  * @param T Collection item type.
  */

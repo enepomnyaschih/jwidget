@@ -45,7 +45,7 @@ class Copier<V> extends Class {
 		this._targetCreated = target == null;
 		this._target = (target == null) ? new Property<V>(null, source.silent) : target;
 		this._update();
-		this.own(this.source.changeEvent.listen(this._update, this));
+		this.own(this.source.onChange.listen(this._update, this));
 	}
 
 	/**

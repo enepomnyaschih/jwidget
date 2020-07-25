@@ -43,21 +43,21 @@ export default class ListSorterComparing<T> extends AbstractSorterComparing<T> {
 	 */
 	constructor(source: ReadonlyList<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.replaceEvent.listen(this._onReplace, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReplace.listen(this._onReplace, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IList.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
-	private _onReplace(params: IList.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceMessage<T>) {
 		this._splice([params.oldItem], [params.newItem]);
 	}
 
-	private _onClear(params: IList.ItemsEventParams<T>) {
+	private _onClear(params: IList.MessageWithItems<T>) {
 		this._splice(params.items, []);
 	}
 }

@@ -44,18 +44,18 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	 */
 	constructor(source: ReadonlyMap<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IMap.SpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			DictionaryUtils.toArray(spliceResult.removedItems),
 			DictionaryUtils.toArray(spliceResult.addedItems));
 	}
 
-	private _onClear(params: IMap.ItemsEventParams<T>) {
+	private _onClear(params: IMap.MessageWithItems<T>) {
 		this._splice(DictionaryUtils.toArray(params.items), []);
 	}
 }

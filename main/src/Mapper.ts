@@ -97,21 +97,21 @@ class Mapper<T> extends Class {
 	}
 
 	/**
-	 * Listens specified event and issues target value recalculation on event triggering.
-	 * @param event Event.
+	 * Listens to the specified dispatcher and issues target value recalculation on any message.
+	 * @param dispatcher Dispatcher.
 	 * @returns this
 	 */
-	listen(event: Listenable<any>): this {
-		return this.owning(event.listen(this.update, this));
+	listen(dispatcher: Listenable<unknown>): this {
+		return this.owning(dispatcher.listen(this.update, this));
 	}
 
 	/**
-	 * Watches specified property and issues target value recalculation on its change.
+	 * Watches over the specified property and issues target value recalculation on its change.
 	 * @param property Property.
 	 * @returns this
 	 */
-	bind(property: Bindable<any>): this {
-		return this.listen(property.changeEvent);
+	bind(property: Bindable<unknown>): this {
+		return this.listen(property.onChange);
 	}
 
 	/**
@@ -222,7 +222,7 @@ namespace Mapper {
 		}
 
 		private _bind(property: Bindable<any>): this {
-			return this.owning(property.changeEvent.listen(this._update, this));
+			return this.owning(property.onChange.listen(this._update, this));
 		}
 	}
 }

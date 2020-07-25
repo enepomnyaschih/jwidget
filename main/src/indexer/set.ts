@@ -45,18 +45,18 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
 	constructor(source: ReadonlySet<T>, getKey: (item: T) => any,
 				config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this._target.trySplice(
 			this._keys(spliceResult.removedItems),
 			this._index(spliceResult.addedItems));
 	}
 
-	private _onClear(params: ISet.ItemsEventParams<T>) {
+	private _onClear(params: ISet.MessageWithItems<T>) {
 		this._target.tryRemoveAll(
 			this._keys(params.items));
 	}

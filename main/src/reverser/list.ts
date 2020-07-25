@@ -47,11 +47,11 @@ class ListReverser<T> extends Class {
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
 		this._target.addAll(this._reverse(source.items));
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.replaceEvent.listen(this._onReplace, this));
-		this.own(source.moveEvent.listen(this._onMove, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
-		this.own(source.reorderEvent.listen(this._onReorder, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReplace.listen(this._onReplace, this));
+		this.own(source.onMove.listen(this._onMove, this));
+		this.own(source.onClear.listen(this._onClear, this));
+		this.own(source.onReorder.listen(this._onReorder, this));
 	}
 
 	/**
@@ -78,7 +78,7 @@ class ListReverser<T> extends Class {
 		return items;
 	}
 
-	private _onSplice(params: IList.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		var oldLength = this._target.length.get();
 		var newLength = oldLength;
@@ -108,11 +108,11 @@ class ListReverser<T> extends Class {
 		this._target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IList.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceMessage<T>) {
 		this._target.trySet(this._target.length.get() - params.index - 1, params.newItem);
 	}
 
-	private _onMove(params: IList.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveMessage<T>) {
 		this._target.tryMove(
 			this._target.length.get() - params.fromIndex - 1,
 			this._target.length.get() - params.toIndex - 1);
@@ -122,7 +122,7 @@ class ListReverser<T> extends Class {
 		this._target.clear();
 	}
 
-	private _onReorder(params: IList.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderMessage<T>) {
 		var indexArray = params.indexArray;
 		var length = indexArray.length;
 		var indexes = new Array<number>(indexArray.length);

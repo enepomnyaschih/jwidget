@@ -46,7 +46,7 @@ class Switcher<T> extends Class {
 		this._scope = config.scope || this;
 		this._acceptNil = config.acceptNil || false;
 		this._doInit();
-		this.own(source.changeEvent.listen(this._update, this));
+		this.own(source.onChange.listen(this._update, this));
 	}
 
 	protected destroyObject() {

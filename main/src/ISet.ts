@@ -35,12 +35,12 @@ interface ISet<T> extends ICollection<T>, DestroyableReadonlySet<T> {
 	/**
 	 * The set is cleared.
 	 */
-	readonly clearEvent: Listenable<ISet.ItemsEventParams<T>>;
+	readonly onClear: Listenable<ISet.MessageWithItems<T>>;
 
 	/**
-	 * The set is changed. Triggered right after any another event.
+	 * The set is changed. Dispatched right after any another message.
 	 */
-	readonly changeEvent: Listenable<ISet.EventParams<T>>;
+	readonly onChange: Listenable<ISet.Message<T>>;
 
 	/**
 	 * @inheritDoc
@@ -141,21 +141,21 @@ export default ISet;
 
 namespace ISet {
 	/**
-	 * `ISet` event parameters.
+	 * Message of ISet.
 	 * @param T Item type.
 	 */
-	export interface EventParams<T> extends ICollection.EventParams<T> {
+	export interface Message<T> extends ICollection.Message<T> {
 		/**
-		 * Event sender.
+		 * Message sender.
 		 */
 		readonly sender: ISet<T>;
 	}
 
 	/**
-	 * Parameters of `spliceEvent`.
+	 * Set splice message.
 	 * @param T Item type.
 	 */
-	export interface SpliceEventParams<T> extends EventParams<T> {
+	export interface SpliceMessage<T> extends Message<T> {
 		/**
 		 * Result of `splice` method.
 		 */
@@ -163,10 +163,10 @@ namespace ISet {
 	}
 
 	/**
-	 * Parameters of `clearEvent`.
+	 * Set message with items.
 	 * @param T Item type.
 	 */
-	export interface ItemsEventParams<T> extends EventParams<T> {
+	export interface MessageWithItems<T> extends Message<T> {
 		/**
 		 * Old set contents.
 		 */

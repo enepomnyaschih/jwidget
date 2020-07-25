@@ -43,16 +43,16 @@ export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
 	 */
 	constructor(source: ReadonlySet<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
-	private _onClear(params: ISet.ItemsEventParams<T>) {
+	private _onClear(params: ISet.MessageWithItems<T>) {
 		this._splice(params.items, []);
 	}
 }

@@ -38,12 +38,12 @@ interface IList<T> extends ICollection<T>, DestroyableReadonlyList<T> {
 	/**
 	 * The list is cleared.
 	 */
-	readonly clearEvent: Listenable<IList.ItemsEventParams<T>>;
+	readonly onClear: Listenable<IList.MessageWithItems<T>>;
 
 	/**
-	 * The list is changed. Triggered right after any another event.
+	 * The list is changed. Dispatched right after any another message.
 	 */
-	readonly changeEvent: Listenable<IList.EventParams<T>>;
+	readonly onChange: Listenable<IList.Message<T>>;
 
 	/**
 	 * Returns a full copy of this collection.
@@ -333,21 +333,21 @@ export default IList;
 
 namespace IList {
 	/**
-	 * `IList` event parameters.
+	 * Message of IList.
 	 * @param T Item type.
 	 */
-	export interface EventParams<T> extends ICollection.EventParams<T> {
+	export interface Message<T> extends ICollection.Message<T> {
 		/**
-		 * Event sender.
+		 * Message sender.
 		 */
 		readonly sender: IList<T>;
 	}
 
 	/**
-	 * Parameters of `spliceEvent`.
+	 * List splice message.
 	 * @param T Item type.
 	 */
-	export interface SpliceEventParams<T> extends EventParams<T> {
+	export interface SpliceMessage<T> extends Message<T> {
 		/**
 		 * Result of `splice` method.
 		 */
@@ -355,10 +355,10 @@ namespace IList {
 	}
 
 	/**
-	 * Parameters of `moveEvent`.
+	 * List item movement message.
 	 * @param T Item type.
 	 */
-	export interface MoveEventParams<T> extends EventParams<T> {
+	export interface MoveMessage<T> extends Message<T> {
 		/**
 		 * Where item is moved from.
 		 */
@@ -376,10 +376,10 @@ namespace IList {
 	}
 
 	/**
-	 * Parameters of `replaceEvent`.
+	 * List item replacement message.
 	 * @param T Item type.
 	 */
-	export interface ReplaceEventParams<T> extends EventParams<T> {
+	export interface ReplaceMessage<T> extends Message<T> {
 		/**
 		 * Index of the replaced item.
 		 */
@@ -397,10 +397,10 @@ namespace IList {
 	}
 
 	/**
-	 * Parameters of `clearEvent`.
+	 * List message with items.
 	 * @param T Item type.
 	 */
-	export interface ItemsEventParams<T> extends EventParams<T> {
+	export interface MessageWithItems<T> extends Message<T> {
 		/**
 		 * Old list contents.
 		 */
@@ -408,10 +408,10 @@ namespace IList {
 	}
 
 	/**
-	 * Parameters of `reorderEvent`.
+	 * List item reordering message.
 	 * @param T Item type.
 	 */
-	export interface ReorderEventParams<T> extends ItemsEventParams<T> {
+	export interface ReorderMessage<T> extends MessageWithItems<T> {
 		/**
 		 * Indexes of items in reordered list.
 		 */

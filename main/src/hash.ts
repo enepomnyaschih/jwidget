@@ -34,13 +34,13 @@ export interface IHash extends IProperty<string> {
 
 	/**
 	 * Indicates if hash assignment is in progress at the moment. While `updating` is true, `location.hash`
-	 * gets modified and `changeEvent` gets triggered. Checking this flag in corresponding event handlers may prevent
+	 * gets modified and a change message gets dispatched. Checking this flag in corresponding event handlers may prevent
 	 * infinite loops and unexpected callback conflicts.
 	 */
 	readonly updating: boolean;
 
 	/**
-	 * Assigns `location.hash` to a new value and triggers `changeEvent`. Rises `updating` flag to prevent
+	 * Assigns `location.hash` to a new value and dispatches a change message. Raises `updating` flag to prevent
 	 * infinite loops and callback conflicts during this time.
 	 * @param value New hash value to assign.
 	 * @param replaceState Replace the current browser historical state rather than pushing a new state to the stack.
@@ -107,7 +107,7 @@ class Hash extends Property<string> implements IHash {
 		} else {
 			location.hash = "#" + value;
 		}
-		this._changeEvent.dispatch({sender: this, value, oldValue});
+		this._onChange.dispatch({sender: this, value, oldValue});
 		this._updating = false;
 	}
 }

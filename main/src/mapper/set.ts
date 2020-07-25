@@ -65,8 +65,8 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<U>(config.getKey, this.source.silent) : config.target;
 		this.target.tryAddAll(this._createItems(source.toArray()));
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	/**
@@ -108,7 +108,7 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onSplice(params: ISet.SpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		var removedDatas = spliceResult.removedItems;
 		var addedDatas = spliceResult.addedItems;
@@ -116,7 +116,7 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 		this._destroyItems(removedDatas);
 	}
 
-	private _onClear(params: ISet.ItemsEventParams<T>) {
+	private _onClear(params: ISet.MessageWithItems<T>) {
 		var datas = params.items;
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);

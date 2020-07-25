@@ -46,11 +46,11 @@ export default class SetCounter<T> extends AbstractCounter<T> {
 	constructor(source: ReadonlySet<T>, test: (item: T) => any,
 				config?: AbstractCounter.Config) {
 		super(source, test, config);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this._target.set(this._target.get() -
 			ArrayUtils.count(spliceResult.removedItems, this._test, this._scope) +

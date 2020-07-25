@@ -60,9 +60,9 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<U>(config.getKey, this.source.silent) : config.target;
 		this.target.tryPutAll(this._createItems(source.items));
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.reindexEvent.listen(this._onReindex, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReindex.listen(this._onReindex, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	/**
@@ -93,7 +93,7 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onSplice(params: IMap.SpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceMessage<T>) {
 		var sourceResult = params.spliceResult;
 		var removedDatas = sourceResult.removedItems;
 		var addedDatas = sourceResult.addedItems;
@@ -105,11 +105,11 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onReindex(params: IMap.ReindexEventParams<T>) {
+	private _onReindex(params: IMap.ReindexMessage<T>) {
 		this.target.tryReindex(params.keyMap);
 	}
 
-	private _onClear(params: IMap.ItemsEventParams<T>) {
+	private _onClear(params: IMap.MessageWithItems<T>) {
 		var datas = params.items;
 		this._destroyItems(this.target.tryRemoveAll(Object.keys(datas)), datas);
 	}

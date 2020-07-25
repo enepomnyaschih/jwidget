@@ -62,11 +62,11 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<T>(this.source.getKey, this.source.silent) : config.target;
 		this._splice([], [new IndexItems(0, this.source.items)]);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.replaceEvent.listen(this._onReplace, this));
-		this.own(source.moveEvent.listen(this._onMove, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
-		this.own(source.reorderEvent.listen(this._onReorder, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReplace.listen(this._onReplace, this));
+		this.own(source.onMove.listen(this._onMove, this));
+		this.own(source.onClear.listen(this._onClear, this));
+		this.own(source.onReorder.listen(this._onReorder, this));
 	}
 
 	/**
@@ -243,12 +243,12 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onSplice(params: IList.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(spliceResult.removedItemsList, spliceResult.addedItemsList);
 	}
 
-	private _onReplace(params: IList.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceMessage<T>) {
 		var oldFiltered = this._filtered[params.index] !== 0;
 		var newFiltered = this._test.call(this._scope, params.newItem);
 		if (!oldFiltered && !newFiltered) {
@@ -265,7 +265,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 		}
 	}
 
-	private _onMove(params: IList.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveMessage<T>) {
 		if (this._filtered[params.fromIndex] !== 0) {
 			var fromIndex: number, toIndex: number;
 			if (params.fromIndex < params.toIndex) {
@@ -284,7 +284,7 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 		this.target.clear();
 	}
 
-	private _onReorder(params: IList.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderMessage<T>) {
 		var targetIndex = 0;
 		var targetIndexWhichMovesToI: Dictionary<number> = {};
 		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {

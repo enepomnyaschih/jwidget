@@ -57,9 +57,9 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Map<T>(source.getKey, this.source.silent) : config.target;
 		this.target.tryPutAll(DictionaryUtils.filter(source.items, this._test, this._scope));
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.reindexEvent.listen(this._onReindex, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReindex.listen(this._onReindex, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	/**
@@ -73,18 +73,18 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 		super.destroyObject();
 	}
 
-	private _onSplice(params: IMap.SpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			Object.keys(spliceResult.removedItems),
 			DictionaryUtils.filter(spliceResult.addedItems, this._test, this._scope));
 	}
 
-	private _onReindex(params: IMap.ReindexEventParams<T>) {
+	private _onReindex(params: IMap.ReindexMessage<T>) {
 		this.target.tryReindex(params.keyMap);
 	}
 
-	private _onClear(params: IMap.ItemsEventParams<T>) {
+	private _onClear(params: IMap.MessageWithItems<T>) {
 		this.target.tryRemoveAll(Object.keys(params.items));
 	}
 }

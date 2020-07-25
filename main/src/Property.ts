@@ -38,16 +38,16 @@ import {default as Mapper, mapProperties} from "./Mapper";
 export default class Property<V> extends Class implements IProperty<V> {
 	private _ownsValue = false;
 
-	protected _changeEvent: IDispatcher<Bindable.ChangeEventParams<V>>;
+	protected _onChange: IDispatcher<Bindable.ChangeMessage<V>>;
 
 	/**
 	 * Constructs a property and sets initial value.
 	 * @param value Initial value.
-	 * @param silent If true, uses `dummyEvent` implementation for `changeEvent.
+	 * @param silent If true, uses `dummyDispatcher` implementation for `onChange`.
 	 */
 	constructor(protected value: V = null, silent: boolean = false) {
 		super();
-		this._changeEvent = Dispatcher.make<Bindable.ChangeEventParams<V>>(silent);
+		this._onChange = Dispatcher.make<Bindable.ChangeMessage<V>>(silent);
 	}
 
 	protected destroyObject() {
@@ -58,17 +58,17 @@ export default class Property<V> extends Class implements IProperty<V> {
 	}
 
 	/**
-	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
+	 * Checks if this property never dispatches any messages. This knowledge may help you do certain code optimizations.
 	 */
 	get silent() {
-		return this._changeEvent.dummy;
+		return this._onChange.dummy;
 	}
 
 	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
-	get changeEvent(): Listenable<Bindable.ChangeEventParams<V>> {
-		return this._changeEvent;
+	get onChange(): Listenable<Bindable.ChangeMessage<V>> {
+		return this._onChange;
 	}
 
 	/**
@@ -80,7 +80,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	}
 
 	/**
-	 * Changes property value and triggers `changeEvent` if the value has been changed.
+	 * Changes the property value and dispatches a change message if the value has truly been changed.
 	 * @param value New value to set.
 	 */
 	set(value: V) {
@@ -92,7 +92,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 			return;
 		}
 		this.value = value;
-		this._changeEvent.dispatch({ sender: this, value: value, oldValue: oldValue });
+		this._onChange.dispatch({ sender: this, value: value, oldValue: oldValue });
 		if (this._ownsValue) {
 			destroy(oldValue);
 		}

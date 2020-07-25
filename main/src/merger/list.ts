@@ -55,11 +55,11 @@ class ListMerger<T> extends Class {
 			getKey: iidStr
 		});
 		this._target.addAll(this._getAllItems());
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.replaceEvent.listen(this._onReplace, this));
-		this.own(source.moveEvent.listen(this._onMove, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
-		this.own(source.reorderEvent.listen(this._onReorder, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReplace.listen(this._onReplace, this));
+		this.own(source.onMove.listen(this._onMove, this));
+		this.own(source.onClear.listen(this._onClear, this));
+		this.own(source.onReorder.listen(this._onReorder, this));
 	}
 
 	/**
@@ -124,7 +124,7 @@ class ListMerger<T> extends Class {
 		return indexes;
 	}
 
-	private _onSplice(params: IList.SpliceEventParams<ReadonlyList<T>>) {
+	private _onSplice(params: IList.SpliceMessage<ReadonlyList<T>>) {
 		var spliceResult = params.spliceResult;
 		var indexes = this._getIndexes(spliceResult.oldItems);
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -144,14 +144,14 @@ class ListMerger<T> extends Class {
 		this._target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IList.ReplaceEventParams<ReadonlyList<T>>) {
+	private _onReplace(params: IList.ReplaceMessage<ReadonlyList<T>>) {
 		var index = this._count(this.source.items, 0, params.index);
 		this._target.trySplice(
 			[new IndexCount(index, params.oldItem.length.get())],
 			[new IndexItems<T>(index, params.newItem.items)]);
 	}
 
-	private _onMove(params: IList.MoveEventParams<ReadonlyList<T>>) {
+	private _onMove(params: IList.MoveMessage<ReadonlyList<T>>) {
 		var count = params.item.length.get();
 		var indexes = new Array<number>(this._target.length.get());
 		var currentIndex = 0;
@@ -192,7 +192,7 @@ class ListMerger<T> extends Class {
 		this._target.clear();
 	}
 
-	private _onReorder(params: IList.ReorderEventParams<ReadonlyList<T>>) {
+	private _onReorder(params: IList.ReorderMessage<ReadonlyList<T>>) {
 		var oldIndexes = this._getIndexes(params.items);
 		var newIndexes = this._getIndexes(this.source.items);
 		var indexes = new Array<number>(this._target.length.get());
@@ -263,11 +263,11 @@ class Bunch<T> extends Class {
 		this.source = source;
 		this.target = target;
 		this.bunch = bunch;
-		this.own(bunch.spliceEvent.listen(this._onSplice, this));
-		this.own(bunch.replaceEvent.listen(this._onReplace, this));
-		this.own(bunch.moveEvent.listen(this._onMove, this));
-		this.own(bunch.clearEvent.listen(this._onClear, this));
-		this.own(bunch.reorderEvent.listen(this._onReorder, this));
+		this.own(bunch.onSplice.listen(this._onSplice, this));
+		this.own(bunch.onReplace.listen(this._onReplace, this));
+		this.own(bunch.onMove.listen(this._onMove, this));
+		this.own(bunch.onClear.listen(this._onClear, this));
+		this.own(bunch.onReorder.listen(this._onReorder, this));
 	}
 
 	private _getIndex(): number {
@@ -284,7 +284,7 @@ class Bunch<T> extends Class {
 		return 0;
 	}
 
-	private _onSplice(params: IList.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		var index = this._getIndex();
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
@@ -296,20 +296,20 @@ class Bunch<T> extends Class {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IList.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceMessage<T>) {
 		this.target.trySet(this._getIndex() + params.index, params.newItem);
 	}
 
-	private _onMove(params: IList.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveMessage<T>) {
 		var index = this._getIndex();
 		this.target.tryMove(index + params.fromIndex, index + params.toIndex);
 	}
 
-	private _onClear(params: IList.ItemsEventParams<T>) {
+	private _onClear(params: IList.MessageWithItems<T>) {
 		this.target.tryRemoveAll(this._getIndex(), params.items.length);
 	}
 
-	private _onReorder(params: IList.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderMessage<T>) {
 		var index = this._getIndex();
 		var bunchIndexArray = params.indexArray;
 		var bunchLength = bunchIndexArray.length;

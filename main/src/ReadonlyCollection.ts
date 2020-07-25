@@ -35,7 +35,7 @@ import Reducer from './Reducer';
  */
 interface ReadonlyCollection<T> {
 	/**
-	 * Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+	 * Checks if this collection never dispatches any message. This knowledge may help you do certain code optimizations.
 	 */
 	readonly silent: boolean;
 
@@ -62,12 +62,12 @@ interface ReadonlyCollection<T> {
 	/**
 	 * Collection is cleared.
 	 */
-	readonly clearEvent: Listenable<ICollection.EventParams<T>>;
+	readonly onClear: Listenable<ICollection.Message<T>>;
 
 	/**
-	 * Collection is changed. Triggered right after any another event.
+	 * Collection is changed. Dispatched right after any another message.
 	 */
-	readonly changeEvent: Listenable<ICollection.EventParams<T>>;
+	readonly onChange: Listenable<ICollection.Message<T>>;
 
 	/**
 	 * Returns a shallow copy of this collection.

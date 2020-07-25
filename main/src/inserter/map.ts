@@ -64,9 +64,9 @@ class MapInserter<T> extends Class {
 		this._scope = config.scope || this;
 		this._clear = config.clear;
 		this._addItems(this.source.items);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.reindexEvent.listen(this._onReindex, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReindex.listen(this._onReindex, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	/**
@@ -110,13 +110,13 @@ class MapInserter<T> extends Class {
 		}
 	}
 
-	private _onSplice(params: IMap.SpliceEventParams<T>) {
+	private _onSplice(params: IMap.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this._removeItems(spliceResult.removedItems);
 		this._addItems(spliceResult.addedItems);
 	}
 
-	private _onReindex(params: IMap.ReindexEventParams<T>) {
+	private _onReindex(params: IMap.ReindexMessage<T>) {
 		var keyMap = params.keyMap;
 		for (var oldKey in keyMap) {
 			var newKey = keyMap[oldKey];
@@ -130,7 +130,7 @@ class MapInserter<T> extends Class {
 		}
 	}
 
-	private _onClear(params: IMap.ItemsEventParams<T>) {
+	private _onClear(params: IMap.MessageWithItems<T>) {
 		this._doClearItems(params.items);
 	}
 }

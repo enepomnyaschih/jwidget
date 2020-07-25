@@ -53,12 +53,12 @@ export default class List<T> extends Class implements IList<T> {
 	private _length: IProperty<number>;
 	private _items: T[];
 
-	private _spliceEvent: IDispatcher<IList.SpliceEventParams<T>>;
-	private _replaceEvent: IDispatcher<IList.ReplaceEventParams<T>>;
-	private _moveEvent: IDispatcher<IList.MoveEventParams<T>>;
-	private _reorderEvent: IDispatcher<IList.ReorderEventParams<T>>;
-	private _clearEvent: IDispatcher<IList.ItemsEventParams<T>>;
-	private _changeEvent: IDispatcher<IList.EventParams<T>>;
+	private _onSplice: IDispatcher<IList.SpliceMessage<T>>;
+	private _onReplace: IDispatcher<IList.ReplaceMessage<T>>;
+	private _onMove: IDispatcher<IList.MoveMessage<T>>;
+	private _onReorder: IDispatcher<IList.ReorderMessage<T>>;
+	private _onClear: IDispatcher<IList.MessageWithItems<T>>;
+	private _onChange: IDispatcher<IList.Message<T>>;
 
 	/**
 	 * @inheritDoc
@@ -66,13 +66,13 @@ export default class List<T> extends Class implements IList<T> {
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 * @param silent Create a silent collection which means that it never dispatches any messages.
 	 */
 	constructor(silent?: boolean);
 
 	/**
 	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
-	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 * @param silent Create a silent collection which means that it never dispatches any messages.
 	 */
 	constructor(getKey: (item: T) => any, silent?: boolean);
 
@@ -110,12 +110,12 @@ export default class List<T> extends Class implements IList<T> {
 		this._items = adapter ? items : items ? items.concat() : [];
 		this._length = this.own(new Property(this._items.length, silent));
 
-		this._spliceEvent = Dispatcher.make<IList.SpliceEventParams<T>>(silent);
-		this._replaceEvent = Dispatcher.make<IList.ReplaceEventParams<T>>(silent);
-		this._moveEvent = Dispatcher.make<IList.MoveEventParams<T>>(silent);
-		this._reorderEvent = Dispatcher.make<IList.ReorderEventParams<T>>(silent);
-		this._clearEvent = Dispatcher.make<IList.ItemsEventParams<T>>(silent);
-		this._changeEvent = Dispatcher.make<IList.EventParams<T>>(silent);
+		this._onSplice = Dispatcher.make<IList.SpliceMessage<T>>(silent);
+		this._onReplace = Dispatcher.make<IList.ReplaceMessage<T>>(silent);
+		this._onMove = Dispatcher.make<IList.MoveMessage<T>>(silent);
+		this._onReorder = Dispatcher.make<IList.ReorderMessage<T>>(silent);
+		this._onClear = Dispatcher.make<IList.MessageWithItems<T>>(silent);
+		this._onChange = Dispatcher.make<IList.Message<T>>(silent);
 	}
 
 	protected destroyObject(): void {
@@ -127,7 +127,7 @@ export default class List<T> extends Class implements IList<T> {
 	 * @inheritDoc
 	 */
 	get silent() {
-		return this.changeEvent.dummy;
+		return this.onChange.dummy;
 	}
 
 	/**
@@ -176,43 +176,43 @@ export default class List<T> extends Class implements IList<T> {
 	/**
 	 * @inheritDoc
 	 */
-	get spliceEvent(): Listenable<IList.SpliceEventParams<T>> {
-		return this._spliceEvent;
+	get onSplice(): Listenable<IList.SpliceMessage<T>> {
+		return this._onSplice;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get replaceEvent(): Listenable<IList.ReplaceEventParams<T>> {
-		return this._replaceEvent;
+	get onReplace(): Listenable<IList.ReplaceMessage<T>> {
+		return this._onReplace;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get moveEvent(): Listenable<IList.MoveEventParams<T>> {
-		return this._moveEvent;
+	get onMove(): Listenable<IList.MoveMessage<T>> {
+		return this._onMove;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get clearEvent(): Listenable<IList.ItemsEventParams<T>> {
-		return this._clearEvent;
+	get onClear(): Listenable<IList.MessageWithItems<T>> {
+		return this._onClear;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get reorderEvent(): Listenable<IList.ReorderEventParams<T>> {
-		return this._reorderEvent;
+	get onReorder(): Listenable<IList.ReorderMessage<T>> {
+		return this._onReorder;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get changeEvent(): Listenable<IList.EventParams<T>> {
-		return this._changeEvent;
+	get onChange(): Listenable<IList.Message<T>> {
+		return this._onChange;
 	}
 
 	/**
@@ -472,8 +472,8 @@ export default class List<T> extends Class implements IList<T> {
 		if (oldProxy === undefined) {
 			return undefined;
 		}
-		this._replaceEvent.dispatch({sender: this, index: index, oldItem: oldProxy.value, newItem: item});
-		this._changeEvent.dispatch({sender: this});
+		this._onReplace.dispatch({sender: this, index: index, oldItem: oldProxy.value, newItem: item});
+		this._onChange.dispatch({sender: this});
 		if (this._ownsItems) {
 			(<any>oldProxy.value).destroy();
 		}
@@ -554,8 +554,8 @@ export default class List<T> extends Class implements IList<T> {
 		if (item === undefined) {
 			return undefined;
 		}
-		this._moveEvent.dispatch({sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item});
-		this._changeEvent.dispatch({sender: this});
+		this._onMove.dispatch({sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item});
+		this._onChange.dispatch({sender: this});
 		return item;
 	}
 
@@ -568,8 +568,8 @@ export default class List<T> extends Class implements IList<T> {
 			return undefined;
 		}
 		this._length.set(0);
-		this._clearEvent.dispatch({sender: this, items: oldItems});
-		this._changeEvent.dispatch({sender: this});
+		this._onClear.dispatch({sender: this, items: oldItems});
+		this._onChange.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(oldItems, destroy);
 		}
@@ -593,8 +593,8 @@ export default class List<T> extends Class implements IList<T> {
 			return undefined;
 		}
 		this._length.set(this._items.length);
-		this._spliceEvent.dispatch({sender: this, spliceResult: result});
-		this._changeEvent.dispatch({sender: this});
+		this._onSplice.dispatch({sender: this, spliceResult: result});
+		this._onChange.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(result.removedItems, destroy);
 		}
@@ -616,8 +616,8 @@ export default class List<T> extends Class implements IList<T> {
 		if (items === undefined) {
 			return undefined;
 		}
-		this._reorderEvent.dispatch({sender: this, indexArray: indexArray, items: items});
-		this._changeEvent.dispatch({sender: this});
+		this._onReorder.dispatch({sender: this, indexArray: indexArray, items: items});
+		this._onChange.dispatch({sender: this});
 		return items;
 	}
 

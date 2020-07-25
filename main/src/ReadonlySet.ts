@@ -40,17 +40,17 @@ interface ReadonlySet<T> extends ReadonlyCollection<T> {
 	/**
 	 * Items are removed from the set and/or items are added to the set.
 	 */
-	readonly spliceEvent: Listenable<ISet.SpliceEventParams<T>>;
+	readonly onSplice: Listenable<ISet.SpliceMessage<T>>;
 
 	/**
 	 * The set is cleared.
 	 */
-	readonly clearEvent: Listenable<ISet.ItemsEventParams<T>>;
+	readonly onClear: Listenable<ISet.MessageWithItems<T>>;
 
 	/**
-	 * The set is changed. Triggered right after any another event.
+	 * The set is changed. Dispatched right after any another message.
 	 */
-	readonly changeEvent: Listenable<ISet.EventParams<T>>;
+	readonly onChange: Listenable<ISet.Message<T>>;
 
 	/**
 	 * @inheritDoc

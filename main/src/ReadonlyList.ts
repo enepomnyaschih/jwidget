@@ -54,32 +54,32 @@ interface ReadonlyList<T> extends ReadonlyCollection<T> {
 	/**
 	 * Items are removed from the list and items are added to the list.
 	 */
-	readonly spliceEvent: Listenable<IList.SpliceEventParams<T>>;
+	readonly onSplice: Listenable<IList.SpliceMessage<T>>;
 
 	/**
 	 * An item is replaced in the list.
 	 */
-	readonly replaceEvent: Listenable<IList.ReplaceEventParams<T>>;
+	readonly onReplace: Listenable<IList.ReplaceMessage<T>>;
 
 	/**
 	 * An item is moved in the list.
 	 */
-	readonly moveEvent: Listenable<IList.MoveEventParams<T>>;
+	readonly onMove: Listenable<IList.MoveMessage<T>>;
 
 	/**
 	 * The list is cleared.
 	 */
-	readonly clearEvent: Listenable<IList.ItemsEventParams<T>>;
+	readonly onClear: Listenable<IList.MessageWithItems<T>>;
 
 	/**
 	 * Items are reordered in the list.
 	 */
-	readonly reorderEvent: Listenable<IList.ReorderEventParams<T>>;
+	readonly onReorder: Listenable<IList.ReorderMessage<T>>;
 
 	/**
-	 * The list is changed. Triggered right after any another event.
+	 * The list is changed. Dispatched right after any another message.
 	 */
-	readonly changeEvent: Listenable<IList.EventParams<T>>;
+	readonly onChange: Listenable<IList.Message<T>>;
 
 	/**
 	 * Returns a shallow copy of this collection.

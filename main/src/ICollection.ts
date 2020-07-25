@@ -50,7 +50,7 @@ interface ICollection<T> extends IClass, DestroyableReadonlyCollection<T> {
 	removeItems(items: T[]): void;
 
 	/**
-	 * Clears the collection and triggers clearEvent.
+	 * Clears the collection and dispatches a cleanup message.
 	 * @returns Old collection contents.
 	 */
 	clear(): any;
@@ -60,11 +60,11 @@ export default ICollection;
 
 namespace ICollection {
 	/**
-	 * ICollection event parameters.
+	 * Message of ICollection.
 	 */
-	export interface EventParams<T> {
+	export interface Message<T> {
 		/**
-		 * A collection that triggered the event.
+		 * A collection that dispatched the message.
 		 */
 		readonly sender: ICollection<T>;
 	}

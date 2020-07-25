@@ -381,7 +381,7 @@ export const ADAPTER = 2;
  */
 export enum CollectionFlags {
 	/**
-	 * If on, uses `dummyEvent` implementation for all collection events.
+	 * If on, uses `dummyDispatcher` implementation for all collection messages.
 	 * Toggle it on only if you know that this collection never gets modified or
 	 * there are no listeners intersted in its modification.
 	 */

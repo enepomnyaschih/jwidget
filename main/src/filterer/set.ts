@@ -56,8 +56,8 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new Set<T>(source.getKey, this.source.silent) : config.target;
 		this.target.tryAddAll(source.toList().items.filter(this._test, this._scope));
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	/**
@@ -71,14 +71,14 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 		super.destroyObject();
 	}
 
-	private _onSplice(params: ISet.SpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this.target.trySplice(
 			spliceResult.removedItems,
 			spliceResult.addedItems.filter(this._test, this._scope));
 	}
 
-	private _onClear(params: ISet.ItemsEventParams<T>) {
+	private _onClear(params: ISet.MessageWithItems<T>) {
 		this.target.tryRemoveAll(params.items);
 	}
 }

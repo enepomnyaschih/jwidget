@@ -59,11 +59,11 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new List<U>(config.getKey, this.source.silent) : config.target;
 		this.target.addAll(this._createItems(this.source.items));
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.replaceEvent.listen(this._onReplace, this));
-		this.own(source.moveEvent.listen(this._onMove, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
-		this.own(source.reorderEvent.listen(this._onReorder, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReplace.listen(this._onReplace, this));
+		this.own(source.onMove.listen(this._onMove, this));
+		this.own(source.onClear.listen(this._onClear, this));
+		this.own(source.onReorder.listen(this._onReorder, this));
 	}
 
 	/**
@@ -94,7 +94,7 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onSplice(params: IList.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceMessage<T>) {
 		var sourceResult = params.spliceResult;
 		var sourceAddedItemsList = sourceResult.addedItemsList;
 		var targetAddParamsList: IList.IndexItems<U>[] = [];
@@ -111,21 +111,21 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onReplace(params: IList.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceMessage<T>) {
 		var newItem = this._create.call(this._scope, params.newItem);
 		var oldItem = this.target.trySet(params.index, newItem).value;
 		this._destroy.call(this._scope, oldItem, params.oldItem);
 	}
 
-	private _onMove(params: IList.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveMessage<T>) {
 		this.target.tryMove(params.fromIndex, params.toIndex);
 	}
 
-	private _onClear(params: IList.ItemsEventParams<T>) {
+	private _onClear(params: IList.MessageWithItems<T>) {
 		this._destroyItems(this.target.clear(), params.items);
 	}
 
-	private _onReorder(params: IList.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderMessage<T>) {
 		this.target.tryReorder(params.indexArray);
 	}
 }

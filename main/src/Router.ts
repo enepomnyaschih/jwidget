@@ -104,7 +104,7 @@ class Router<T extends Destroyable> extends Class {
 		this.handler = Router.makeHandler(config.handler);
 		this.scope = config.scope || this;
 		this._target = config.target || this.own(new Property<T>());
-		this.own(this.path.changeEvent.listen(() => this.update(), this));
+		this.own(this.path.onChange.listen(() => this.update(), this));
 	}
 
 	/**
@@ -481,7 +481,7 @@ namespace Router {
 			}
 
 			DictionaryUtils.forEach(this._expanded, (expanded, route) => {
-				this.own(expanded.changeEvent.listen((params) => {
+				this.own(expanded.onChange.listen((params) => {
 					if (params.value && !this._updating) {
 						this.router.redirect(route);
 					}
@@ -570,7 +570,7 @@ namespace Router {
 			super();
 			this.own(new Copier(sourcePath, targetPath));
 			expanded.set(true);
-			this.own(expanded.changeEvent.listen(() => {
+			this.own(expanded.onChange.listen(() => {
 				this.router.redirect("")
 			}));
 		}

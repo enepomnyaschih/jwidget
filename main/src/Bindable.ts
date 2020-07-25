@@ -39,7 +39,7 @@ interface Bindable<V> {
 	/**
 	 * Property value is changed. Triggered in result of `set` method call if the value has been changed.
 	 */
-	readonly changeEvent: Listenable<Bindable.ChangeEventParams<V>>;
+	readonly onChange: Listenable<Bindable.ChangeMessage<V>>;
 
 	/**
 	 * Returns property value.
@@ -61,9 +61,9 @@ export default Bindable;
 
 namespace Bindable {
 	/**
-	 * `Bindable.changeEvent` params.
+	 * `Bindable.onChange` params.
 	 */
-	export interface ChangeEventParams<V> {
+	export interface ChangeMessage<V> {
 		/**
 		 * Sender property.
 		 */

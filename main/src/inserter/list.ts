@@ -62,11 +62,11 @@ class ListInserter<T> extends Class {
 		this._clear = config.clear;
 		this._scope = config.scope || this;
 		this._addItems(this.source.items, 0);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.replaceEvent.listen(this._onReplace, this));
-		this.own(source.moveEvent.listen(this._onMove, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
-		this.own(source.reorderEvent.listen(this._onReorder, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReplace.listen(this._onReplace, this));
+		this.own(source.onMove.listen(this._onMove, this));
+		this.own(source.onClear.listen(this._onClear, this));
+		this.own(source.onReorder.listen(this._onReorder, this));
 	}
 
 	/**
@@ -110,7 +110,7 @@ class ListInserter<T> extends Class {
 		}
 	}
 
-	private _onSplice(params: IList.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.removedItems;
@@ -135,7 +135,7 @@ class ListInserter<T> extends Class {
 		}
 	}
 
-	private _onReplace(params: IList.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceMessage<T>) {
 		if (this._remove) {
 			this._remove.call(this._scope, params.oldItem, params.index);
 		}
@@ -144,7 +144,7 @@ class ListInserter<T> extends Class {
 		}
 	}
 
-	private _onMove(params: IList.MoveEventParams<T>) {
+	private _onMove(params: IList.MoveMessage<T>) {
 		if (this._remove) {
 			this._remove.call(this._scope, params.item, params.fromIndex);
 		}
@@ -153,11 +153,11 @@ class ListInserter<T> extends Class {
 		}
 	}
 
-	private _onClear(params: IList.ItemsEventParams<T>) {
+	private _onClear(params: IList.MessageWithItems<T>) {
 		this._doClearItems(params.items);
 	}
 
-	private _onReorder(params: IList.ReorderEventParams<T>) {
+	private _onReorder(params: IList.ReorderMessage<T>) {
 		this._doClearItems(params.items);
 		this._addItems(this.source.items, 0);
 	}

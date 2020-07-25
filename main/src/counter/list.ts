@@ -45,12 +45,12 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 	 */
 	constructor(source: ReadonlyList<T>, test: (item: T) => any, config?: AbstractCounter.Config) {
 		super(source, test, config);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.replaceEvent.listen(this._onReplace, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReplace.listen(this._onReplace, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IList.SpliceEventParams<T>) {
+	private _onSplice(params: IList.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		var value = this._target.get();
 		spliceResult.removedItemsList.forEach((indexItems) => {
@@ -62,7 +62,7 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 		this._target.set(value);
 	}
 
-	private _onReplace(params: IList.ReplaceEventParams<T>) {
+	private _onReplace(params: IList.ReplaceMessage<T>) {
 		var oldFiltered = this._test.call(this._scope, params.oldItem);
 		var newFiltered = this._test.call(this._scope, params.newItem);
 		if (oldFiltered && !newFiltered) {

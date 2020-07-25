@@ -30,7 +30,7 @@ class AttrUpdater extends Class {
 	constructor(private el: JQuery, private attr: string, private property: Bindable<any>) {
 		super();
 		this._update();
-		this.own(property.changeEvent.listen(this._update, this));
+		this.own(property.onChange.listen(this._update, this));
 	}
 
 	private _update() {

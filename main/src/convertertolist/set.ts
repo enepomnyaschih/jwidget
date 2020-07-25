@@ -44,18 +44,18 @@ export default class SetConverterToList<T> extends AbstractConverterToList<T> {
 	 */
 	constructor(source: ReadonlySet<T>, config: AbstractConverterToList.Config<T>) {
 		super(source, config);
-		this.own(source.spliceEvent.listen(this._onSplice, this));
-		this.own(source.clearEvent.listen(this._onClear, this));
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceEventParams<T>) {
+	private _onSplice(params: ISet.SpliceMessage<T>) {
 		var spliceResult = params.spliceResult;
 		this._splice(
 			VidSet.fromArray<T>(spliceResult.removedItems, this.source.getKey),
 			VidSet.fromArray<T>(spliceResult.addedItems, this.source.getKey));
 	}
 
-	private _onClear(params: ISet.ItemsEventParams<T>) {
+	private _onClear(params: ISet.MessageWithItems<T>) {
 		this._target.removeItems(params.items);
 	}
 }

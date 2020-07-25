@@ -49,22 +49,22 @@ interface ReadonlyMap<T> extends ReadonlyCollection<T> {
 	/**
 	 * Items are removed from the map and items are updated in the map.
 	 */
-	readonly spliceEvent: Listenable<IMap.SpliceEventParams<T>>;
+	readonly onSplice: Listenable<IMap.SpliceMessage<T>>;
 
 	/**
 	 * Keys of items are changed in the map.
 	 */
-	readonly reindexEvent: Listenable<IMap.ReindexEventParams<T>>;
+	readonly onReindex: Listenable<IMap.ReindexMessage<T>>;
 
 	/**
 	 * The map is cleared.
 	 */
-	readonly clearEvent: Listenable<IMap.ItemsEventParams<T>>;
+	readonly onClear: Listenable<IMap.MessageWithItems<T>>;
 
 	/**
-	 * The map is changed. Triggered right after any another event.
+	 * The map is changed. Dispatched right after any another message.
 	 */
-	readonly changeEvent: Listenable<IMap.EventParams<T>>;
+	readonly onChange: Listenable<IMap.Message<T>>;
 
 	/**
 	 * Returns a shallow copy of this collection.

@@ -51,7 +51,7 @@ class RadioUpdater extends Class {
 		super();
 		this._selector = "input[type=radio][name='" + name + "']";
 		this._update();
-		this.own(property.changeEvent.listen(this._update, this));
+		this.own(property.onChange.listen(this._update, this));
 	}
 
 	private _update() {

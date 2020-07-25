@@ -30,7 +30,7 @@ import IClass from "./IClass";
  */
 interface IProperty<V> extends IClass, DestroyableBindable<V> {
 	/**
-	 * Changes property value and triggers `changeEvent` if the value has been changed.
+	 * Changes the property value and dispatches a change message if the value has truly been changed.
 	 */
 	set(value: V): void;
 

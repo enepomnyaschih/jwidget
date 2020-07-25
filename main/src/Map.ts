@@ -53,10 +53,10 @@ class Map<T> extends Class implements IMap<T> {
 	private _adapter: boolean;
 	private _items: Dictionary<T>;
 
-	private _spliceEvent: IDispatcher<IMap.SpliceEventParams<T>>;
-	private _reindexEvent: IDispatcher<IMap.ReindexEventParams<T>>;
-	private _clearEvent: IDispatcher<IMap.ItemsEventParams<T>>;
-	private _changeEvent: IDispatcher<IMap.EventParams<T>>;
+	private _onSplice: IDispatcher<IMap.SpliceMessage<T>>;
+	private _onReindex: IDispatcher<IMap.ReindexMessage<T>>;
+	private _onClear: IDispatcher<IMap.MessageWithItems<T>>;
+	private _onChange: IDispatcher<IMap.Message<T>>;
 
 	/**
 	 * @inheritDoc
@@ -64,13 +64,13 @@ class Map<T> extends Class implements IMap<T> {
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 * @param silent Create a silent collection which means that it never dispatches any messages.
 	 */
 	constructor(silent?: boolean);
 
 	/**
 	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
-	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 * @param silent Create a silent collection which means that it never dispatches any messages.
 	 */
 	constructor(getKey: (item: T) => any, silent?: boolean);
 
@@ -109,10 +109,10 @@ class Map<T> extends Class implements IMap<T> {
 		this._items = this._adapter ? items : apply<T>({}, items);
 		this._length = this.own(new Property(DictionaryUtils.getLength(this._items), silent));
 
-		this._spliceEvent = Dispatcher.make<IMap.SpliceEventParams<T>>(silent);
-		this._reindexEvent = Dispatcher.make<IMap.ReindexEventParams<T>>(silent);
-		this._clearEvent = Dispatcher.make<IMap.ItemsEventParams<T>>(silent);
-		this._changeEvent = Dispatcher.make<IMap.EventParams<T>>(silent);
+		this._onSplice = Dispatcher.make<IMap.SpliceMessage<T>>(silent);
+		this._onReindex = Dispatcher.make<IMap.ReindexMessage<T>>(silent);
+		this._onClear = Dispatcher.make<IMap.MessageWithItems<T>>(silent);
+		this._onChange = Dispatcher.make<IMap.Message<T>>(silent);
 	}
 
 	protected destroyObject(): void {
@@ -124,7 +124,7 @@ class Map<T> extends Class implements IMap<T> {
 	 * @inheritDoc
 	 */
 	get silent() {
-		return this.changeEvent.dummy;
+		return this.onChange.dummy;
 	}
 
 	/**
@@ -165,29 +165,29 @@ class Map<T> extends Class implements IMap<T> {
 	/**
 	 * @inheritDoc
 	 */
-	get spliceEvent(): Listenable<IMap.SpliceEventParams<T>> {
-		return this._spliceEvent;
+	get onSplice(): Listenable<IMap.SpliceMessage<T>> {
+		return this._onSplice;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get reindexEvent(): Listenable<IMap.ReindexEventParams<T>> {
-		return this._reindexEvent;
+	get onReindex(): Listenable<IMap.ReindexMessage<T>> {
+		return this._onReindex;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get clearEvent(): Listenable<IMap.ItemsEventParams<T>> {
-		return this._clearEvent;
+	get onClear(): Listenable<IMap.MessageWithItems<T>> {
+		return this._onClear;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get changeEvent(): Listenable<IMap.EventParams<T>> {
-		return this._changeEvent;
+	get onChange(): Listenable<IMap.Message<T>> {
+		return this._onChange;
 	}
 
 	/**
@@ -482,8 +482,8 @@ class Map<T> extends Class implements IMap<T> {
 			const addedItems: Dictionary<T> = {};
 			addedItems[key] = item;
 			const spliceResult = {removedItems: removedItems, addedItems: addedItems};
-			this._spliceEvent.dispatch({sender: this, spliceResult: spliceResult});
-			this._changeEvent.dispatch({sender: this});
+			this._onSplice.dispatch({sender: this, spliceResult: spliceResult});
+			this._onChange.dispatch({sender: this});
 		}
 		if (removedItem !== undefined && this._ownsItems) {
 			(<Destroyable><any>removedItem).destroy();
@@ -544,8 +544,8 @@ class Map<T> extends Class implements IMap<T> {
 			return undefined;
 		}
 		if (!this.silent) {
-			this._reindexEvent.dispatch({sender: this, keyMap: {[oldKey]: newKey}});
-			this._changeEvent.dispatch({sender: this});
+			this._onReindex.dispatch({sender: this, keyMap: {[oldKey]: newKey}});
+			this._onChange.dispatch({sender: this});
 		}
 		return item;
 	}
@@ -561,8 +561,8 @@ class Map<T> extends Class implements IMap<T> {
 		this._length.set(this._length.get() - 1);
 		if (!this.silent) {
 			const spliceResult: IMap.SpliceResult<T> = {addedItems: {}, removedItems: {[key]: item}};
-			this._spliceEvent.dispatch({sender: this, spliceResult: spliceResult});
-			this._changeEvent.dispatch({sender: this});
+			this._onSplice.dispatch({sender: this, spliceResult: spliceResult});
+			this._onChange.dispatch({sender: this});
 		}
 		if (this._ownsItems) {
 			(<Destroyable><any>item).destroy();
@@ -646,8 +646,8 @@ class Map<T> extends Class implements IMap<T> {
 			items = this._items;
 			this._items = {};
 		}
-		this._clearEvent.dispatch({sender: this, items: items});
-		this._changeEvent.dispatch({sender: this});
+		this._onClear.dispatch({sender: this, items: items});
+		this._onChange.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(DictionaryUtils.toArray(items), destroy);
 		}
@@ -671,8 +671,8 @@ class Map<T> extends Class implements IMap<T> {
 			return undefined;
 		}
 		this._length.set(this._length.get() + DictionaryUtils.getLength(spliceResult.addedItems) - DictionaryUtils.getLength(spliceResult.removedItems));
-		this._spliceEvent.dispatch({sender: this, spliceResult: spliceResult});
-		this._changeEvent.dispatch({sender: this});
+		this._onSplice.dispatch({sender: this, spliceResult: spliceResult});
+		this._onChange.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(DictionaryUtils.toArray(spliceResult.removedItems), destroy);
 		}
@@ -695,8 +695,8 @@ class Map<T> extends Class implements IMap<T> {
 		if (result === undefined) {
 			return undefined;
 		}
-		this._reindexEvent.dispatch({sender: this, keyMap: result});
-		this._changeEvent.dispatch({sender: this});
+		this._onReindex.dispatch({sender: this, keyMap: result});
+		this._onChange.dispatch({sender: this});
 		return result;
 	}
 

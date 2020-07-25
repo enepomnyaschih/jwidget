@@ -50,9 +50,9 @@ class Set<T> extends Class implements ISet<T> {
 	private _length: IProperty<number>;
 	private _items: VidSet<T>;
 
-	private _spliceEvent: IDispatcher<ISet.SpliceEventParams<T>>;
-	private _clearEvent: IDispatcher<ISet.ItemsEventParams<T>>;
-	private _changeEvent: IDispatcher<ISet.EventParams<T>>;
+	private _onSplice: IDispatcher<ISet.SpliceMessage<T>>;
+	private _onClear: IDispatcher<ISet.MessageWithItems<T>>;
+	private _onChange: IDispatcher<ISet.Message<T>>;
 
 	/**
 	 * @inheritDoc
@@ -60,26 +60,26 @@ class Set<T> extends Class implements ISet<T> {
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 * @param silent Create a silent collection which means that it never dispatches any messages.
 	 */
 	constructor(silent?: boolean);
 
 	/**
 	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
-	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 * @param silent Create a silent collection which means that it never dispatches any messages.
 	 */
 	constructor(getKey: (item: T) => any, silent?: boolean);
 
 	/**
 	 * @param items Initial map contents.
-	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 * @param silent Create a silent collection which means that it never dispatches any messages.
 	 */
 	constructor(items: T[], silent?: boolean);
 
 	/**
 	 * @param items Initial map contents.
 	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
-	 * @param silent Create a silent collection which means that it never triggers modification events.
+	 * @param silent Create a silent collection which means that it never dispatches any messages.
 	 */
 	constructor(items: T[], getKey: (item: T) => any, silent?: boolean);
 	constructor(a?: any, b?: any, c?: boolean) {
@@ -103,9 +103,9 @@ class Set<T> extends Class implements ISet<T> {
 		this._items = VidSet.fromArray<T>(items, this.getKey);
 		this._length = this.own(new Property(items.length, silent));
 
-		this._spliceEvent = Dispatcher.make<ISet.SpliceEventParams<T>>(silent);
-		this._clearEvent = Dispatcher.make<ISet.ItemsEventParams<T>>(silent);
-		this._changeEvent = Dispatcher.make<ISet.EventParams<T>>(silent);
+		this._onSplice = Dispatcher.make<ISet.SpliceMessage<T>>(silent);
+		this._onClear = Dispatcher.make<ISet.MessageWithItems<T>>(silent);
+		this._onChange = Dispatcher.make<ISet.Message<T>>(silent);
 	}
 
 	protected destroyObject(): void {
@@ -117,7 +117,7 @@ class Set<T> extends Class implements ISet<T> {
 	 * @inheritDoc
 	 */
 	get silent() {
-		return this.changeEvent.dummy;
+		return this.onChange.dummy;
 	}
 
 	/**
@@ -156,22 +156,22 @@ class Set<T> extends Class implements ISet<T> {
 	/**
 	 * @inheritDoc
 	 */
-	get spliceEvent(): Listenable<ISet.SpliceEventParams<T>> {
-		return this._spliceEvent;
+	get onSplice(): Listenable<ISet.SpliceMessage<T>> {
+		return this._onSplice;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get clearEvent(): Listenable<ISet.ItemsEventParams<T>> {
-		return this._clearEvent;
+	get onClear(): Listenable<ISet.MessageWithItems<T>> {
+		return this._onClear;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	get changeEvent(): Listenable<ISet.EventParams<T>> {
-		return this._changeEvent;
+	get onChange(): Listenable<ISet.Message<T>> {
+		return this._onChange;
 	}
 
 	/**
@@ -448,8 +448,8 @@ class Set<T> extends Class implements ISet<T> {
 		const items: T[] = this._items.values.concat();
 		this._items.clear();
 		this._length.set(0);
-		this._clearEvent.dispatch({sender: this, items: items});
-		this._changeEvent.dispatch({sender: this});
+		this._onClear.dispatch({sender: this, items: items});
+		this._onChange.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(items, destroy);
 		}
@@ -472,8 +472,8 @@ class Set<T> extends Class implements ISet<T> {
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		this._spliceEvent.dispatch({sender: this, spliceResult: spliceResult});
-		this._changeEvent.dispatch({sender: this});
+		this._onSplice.dispatch({sender: this, spliceResult: spliceResult});
+		this._onChange.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(spliceResult.removedItems, destroy);
 		}

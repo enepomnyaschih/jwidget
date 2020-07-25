@@ -39,12 +39,12 @@ interface IMap<T> extends ICollection<T>, DestroyableReadonlyMap<T> {
 	/**
 	 * The map is cleared.
 	 */
-	readonly clearEvent: Listenable<IMap.ItemsEventParams<T>>;
+	readonly onClear: Listenable<IMap.MessageWithItems<T>>;
 
 	/**
-	 * The map is changed. Triggered right after any another event.
+	 * The map is changed. Dispatched right after any another message.
 	 */
-	readonly changeEvent: Listenable<IMap.EventParams<T>>;
+	readonly onChange: Listenable<IMap.Message<T>>;
 
 	/**
 	 * Returns a full copy of this collection.
@@ -312,21 +312,21 @@ export default IMap;
 
 namespace IMap {
 	/**
-	 * `IMap` event parameters.
+	 * Message of IMap.
 	 * @param T Item type.
 	 */
-	export interface EventParams<T> extends ICollection.EventParams<T> {
+	export interface Message<T> extends ICollection.Message<T> {
 		/**
-		 * Event sender.
+		 * Message sender.
 		 */
 		readonly sender: IMap<T>;
 	}
 
 	/**
-	 * Parameters of `spliceEvent`.
+	 * Map splice message.
 	 * @param T Item type.
 	 */
-	export interface SpliceEventParams<T> extends EventParams<T> {
+	export interface SpliceMessage<T> extends Message<T> {
 		/**
 		 * Result of `splice` method.
 		 */
@@ -334,10 +334,10 @@ namespace IMap {
 	}
 
 	/**
-	 * Parameters of `reindexEvent`.
+	 * Map item reindexing message.
 	 * @param T Item type.
 	 */
-	export interface ReindexEventParams<T> extends EventParams<T> {
+	export interface ReindexMessage<T> extends Message<T> {
 		/**
 		 * Map of changed keys.
 		 */
@@ -345,10 +345,10 @@ namespace IMap {
 	}
 
 	/**
-	 * Parameters of `clearEvent`.
+	 * Map message with items.
 	 * @param T Item type.
 	 */
-	export interface ItemsEventParams<T> extends EventParams<T> {
+	export interface MessageWithItems<T> extends Message<T> {
 		/**
 		 * Old map contents.
 		 */
