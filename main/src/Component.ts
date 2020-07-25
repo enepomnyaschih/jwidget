@@ -182,7 +182,7 @@ export default class Component extends Class {
 	/**
 	 * Component life stage method. Called after `beforeRender` method and `render<ChildId>` methods.
 	 * You should assign all elements' attributes here, create child components,
-	 * bind to events and fill component with interactivity.
+	 * bind event handlers and fill component with interactivity.
 	 * Call `super.afterRender()` at the first line of the method.
 	 */
 	protected afterRender() {

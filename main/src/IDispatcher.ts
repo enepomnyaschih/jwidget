@@ -22,30 +22,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Destroyable from "./Destroyable";
-import dummyDestroyable from "./dummyDestroyable";
-import IEvent from "./IEvent";
-
-class DummyEvent implements IEvent<any> {
-
-	get dummy() {
-		return true;
-	}
-
-	purge(): void {
-	}
-
-	listen(_handler: (params: any) => any, _scope?: any): Destroyable {
-		return dummyDestroyable;
-	}
-
-	trigger(_params?: any): void {
-	}
-}
+import Listenable from "./Listenable";
 
 /**
- * Dummy implementation of `Listenable<any>` interface.
- * As opposed to `Event`, doesn't really bind the event handlers, just pretends it does that.
+ * Extension of `Listenable` interface with `dispatch` method.
  */
-const dummyEvent = <IEvent<any>>(new DummyEvent()); // An extra variable helps IntelliSense to find this import
-export default dummyEvent;
+interface IDispatcher<M> extends Listenable<M> {
+	/**
+	 * Dispatches a message, i.e. calls handler functions of all listeners.
+	 *
+	 * @param message Message to dispatch.
+	 */
+	dispatch(message?: M): void;
+
+	/**
+	 * Unregisters all listeners.
+	 */
+	purge(): void;
+}
+
+export default IDispatcher;

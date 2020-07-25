@@ -32,7 +32,7 @@ import Mapper from "./Mapper";
  */
 interface Bindable<V> {
 	/**
-	 * Checks if this property never triggers events. This knowledge may help you do certain code optimizations.
+	 * Checks if this property never dispatches messages. This knowledge may help you do certain code optimizations.
 	 */
 	readonly silent: boolean;
 

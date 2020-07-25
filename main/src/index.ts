@@ -120,13 +120,6 @@ export function isFunction(value: any) {
 }
 
 /**
- * Checks if value is a native JavaScript Array.
- */
-export function isArray(value: any) {
-	return Object.prototype.toString.apply(value) === '[object Array]';
-}
-
-/**
  * Checks if value is a regular expression.
  */
 export function isRegExp(value: any) {
@@ -145,13 +138,6 @@ export function isDate(value: any) {
  */
 export function def<T>(value: T, defaultValue: T): T {
 	return (value !== undefined) ? value : defaultValue;
-}
-
-/**
- * Defines default value. Returns `value`, if it is not undefined and null, else returns `default`.
- */
-export function defn<T>(value: T, defaultValue: T): T {
-	return (value != null) ? value : defaultValue;
 }
 
 /**
@@ -205,11 +191,16 @@ export function smartCmp(x: any, y: any, config?: CmpConfig): number {
 		return cmpPrimitives(xRank, yRank);
 	}
 	switch (xRank) {
-		case "array": return cmpArrays(x, y, config);
-		case "boolean": return cmpBooleans(x, y);
-		case "identifiable": return cmpIdentifiables(x, y);
-		case "string": return cmpStrings(x, y, config);
-		default: return cmpPrimitives(x, y);
+		case "array":
+			return cmpArrays(x, y, config);
+		case "boolean":
+			return cmpBooleans(x, y);
+		case "identifiable":
+			return cmpIdentifiables(x, y);
+		case "string":
+			return cmpStrings(x, y, config);
+		default:
+			return cmpPrimitives(x, y);
 	}
 }
 
@@ -229,7 +220,7 @@ export interface CmpConfig {
 }
 
 function getTypeRank(x: any): string {
-	return (x === undefined) ? "0" : (x === null) ? "1" : isArray(x) ? "array" :
+	return (x === undefined) ? "0" : (x === null) ? "1" : Array.isArray(x) ? "array" :
 		(typeof x.iid === "number") ? "identifiable" : typeof x;
 }
 
@@ -305,7 +296,7 @@ export function get<T>(obj: any, path?: any): T {
 	if (path == null) {
 		return obj;
 	}
-	if (!isArray(path)) {
+	if (!Array.isArray(path)) {
 		return (obj && typeof obj === "object") ? obj[path] : undefined;
 	}
 	for (let i = 0, l = path.length; i < l; ++i) {

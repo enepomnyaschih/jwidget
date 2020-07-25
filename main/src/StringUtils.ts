@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import {defn, isArray} from './index';
-
 /**
  * Escapes special HTML symbols.
  * Converts symbols &amp;, &gt;, &lt;, &quot; to `&amp;` `&gt;` `&lt;` `&quot;` correspondingly.
@@ -67,7 +65,7 @@ export function ellipsis(str: string, length: number, ellipsis?: string): string
 	if (str.length <= length) {
 		return str;
 	}
-	ellipsis = defn(ellipsis, "...");
+	ellipsis = ellipsis ?? "...";
 	return str.substr(0, length - ellipsis.length) + ellipsis;
 }
 
@@ -128,7 +126,7 @@ export function hyphen(str: string): string {
 export function parseClass(str: string): string[];
 export function parseClass(str: any[]): string[];
 export function parseClass(str: any): string[] {
-	if (isArray(str)) {
+	if (Array.isArray(str)) {
 		var result: string[] = [];
 		for (var i = 0; i < str.length; ++i) {
 			result.push.apply(result, parseClass(str[i]));

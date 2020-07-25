@@ -28,8 +28,8 @@ import Class from './Class';
 import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import * as DictionaryUtils from './DictionaryUtils';
-import Event from './Event';
-import IEvent from './IEvent';
+import Dispatcher from './Dispatcher';
+import IDispatcher from './IDispatcher';
 import IList from './IList';
 import IMap from './IMap';
 import {ADAPTER, apply, CollectionFlags, destroy, SILENT} from './index';
@@ -53,10 +53,10 @@ class Map<T> extends Class implements IMap<T> {
 	private _adapter: boolean;
 	private _items: Dictionary<T>;
 
-	private _spliceEvent: IEvent<IMap.SpliceEventParams<T>>;
-	private _reindexEvent: IEvent<IMap.ReindexEventParams<T>>;
-	private _clearEvent: IEvent<IMap.ItemsEventParams<T>>;
-	private _changeEvent: IEvent<IMap.EventParams<T>>;
+	private _spliceEvent: IDispatcher<IMap.SpliceEventParams<T>>;
+	private _reindexEvent: IDispatcher<IMap.ReindexEventParams<T>>;
+	private _clearEvent: IDispatcher<IMap.ItemsEventParams<T>>;
+	private _changeEvent: IDispatcher<IMap.EventParams<T>>;
 
 	/**
 	 * @inheritDoc
@@ -109,10 +109,10 @@ class Map<T> extends Class implements IMap<T> {
 		this._items = this._adapter ? items : apply<T>({}, items);
 		this._length = this.own(new Property(DictionaryUtils.getLength(this._items), silent));
 
-		this._spliceEvent = Event.make<IMap.SpliceEventParams<T>>(silent);
-		this._reindexEvent = Event.make<IMap.ReindexEventParams<T>>(silent);
-		this._clearEvent = Event.make<IMap.ItemsEventParams<T>>(silent);
-		this._changeEvent = Event.make<IMap.EventParams<T>>(silent);
+		this._spliceEvent = Dispatcher.make<IMap.SpliceEventParams<T>>(silent);
+		this._reindexEvent = Dispatcher.make<IMap.ReindexEventParams<T>>(silent);
+		this._clearEvent = Dispatcher.make<IMap.ItemsEventParams<T>>(silent);
+		this._changeEvent = Dispatcher.make<IMap.EventParams<T>>(silent);
 	}
 
 	protected destroyObject(): void {
@@ -482,8 +482,8 @@ class Map<T> extends Class implements IMap<T> {
 			const addedItems: Dictionary<T> = {};
 			addedItems[key] = item;
 			const spliceResult = {removedItems: removedItems, addedItems: addedItems};
-			this._spliceEvent.trigger({sender: this, spliceResult: spliceResult});
-			this._changeEvent.trigger({sender: this});
+			this._spliceEvent.dispatch({sender: this, spliceResult: spliceResult});
+			this._changeEvent.dispatch({sender: this});
 		}
 		if (removedItem !== undefined && this._ownsItems) {
 			(<Destroyable><any>removedItem).destroy();
@@ -544,8 +544,8 @@ class Map<T> extends Class implements IMap<T> {
 			return undefined;
 		}
 		if (!this.silent) {
-			this._reindexEvent.trigger({sender: this, keyMap: {[oldKey]: newKey}});
-			this._changeEvent.trigger({sender: this});
+			this._reindexEvent.dispatch({sender: this, keyMap: {[oldKey]: newKey}});
+			this._changeEvent.dispatch({sender: this});
 		}
 		return item;
 	}
@@ -561,8 +561,8 @@ class Map<T> extends Class implements IMap<T> {
 		this._length.set(this._length.get() - 1);
 		if (!this.silent) {
 			const spliceResult: IMap.SpliceResult<T> = {addedItems: {}, removedItems: {[key]: item}};
-			this._spliceEvent.trigger({sender: this, spliceResult: spliceResult});
-			this._changeEvent.trigger({sender: this});
+			this._spliceEvent.dispatch({sender: this, spliceResult: spliceResult});
+			this._changeEvent.dispatch({sender: this});
 		}
 		if (this._ownsItems) {
 			(<Destroyable><any>item).destroy();
@@ -646,8 +646,8 @@ class Map<T> extends Class implements IMap<T> {
 			items = this._items;
 			this._items = {};
 		}
-		this._clearEvent.trigger({sender: this, items: items});
-		this._changeEvent.trigger({sender: this});
+		this._clearEvent.dispatch({sender: this, items: items});
+		this._changeEvent.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(DictionaryUtils.toArray(items), destroy);
 		}
@@ -671,8 +671,8 @@ class Map<T> extends Class implements IMap<T> {
 			return undefined;
 		}
 		this._length.set(this._length.get() + DictionaryUtils.getLength(spliceResult.addedItems) - DictionaryUtils.getLength(spliceResult.removedItems));
-		this._spliceEvent.trigger({sender: this, spliceResult: spliceResult});
-		this._changeEvent.trigger({sender: this});
+		this._spliceEvent.dispatch({sender: this, spliceResult: spliceResult});
+		this._changeEvent.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(DictionaryUtils.toArray(spliceResult.removedItems), destroy);
 		}
@@ -695,8 +695,8 @@ class Map<T> extends Class implements IMap<T> {
 		if (result === undefined) {
 			return undefined;
 		}
-		this._reindexEvent.trigger({sender: this, keyMap: result});
-		this._changeEvent.trigger({sender: this});
+		this._reindexEvent.dispatch({sender: this, keyMap: result});
+		this._changeEvent.dispatch({sender: this});
 		return result;
 	}
 

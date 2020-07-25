@@ -25,8 +25,8 @@ SOFTWARE.
 import * as ArrayUtils from './ArrayUtils';
 import Bindable from './Bindable';
 import Class from './Class';
-import Event from './Event';
-import IEvent from './IEvent';
+import Dispatcher from './Dispatcher';
+import IDispatcher from './IDispatcher';
 import IList from './IList';
 import IMap from './IMap';
 import {ADAPTER, CollectionFlags, destroy, SILENT} from './index';
@@ -53,12 +53,12 @@ export default class List<T> extends Class implements IList<T> {
 	private _length: IProperty<number>;
 	private _items: T[];
 
-	private _spliceEvent: IEvent<IList.SpliceEventParams<T>>;
-	private _replaceEvent: IEvent<IList.ReplaceEventParams<T>>;
-	private _moveEvent: IEvent<IList.MoveEventParams<T>>;
-	private _reorderEvent: IEvent<IList.ReorderEventParams<T>>;
-	private _clearEvent: IEvent<IList.ItemsEventParams<T>>;
-	private _changeEvent: IEvent<IList.EventParams<T>>;
+	private _spliceEvent: IDispatcher<IList.SpliceEventParams<T>>;
+	private _replaceEvent: IDispatcher<IList.ReplaceEventParams<T>>;
+	private _moveEvent: IDispatcher<IList.MoveEventParams<T>>;
+	private _reorderEvent: IDispatcher<IList.ReorderEventParams<T>>;
+	private _clearEvent: IDispatcher<IList.ItemsEventParams<T>>;
+	private _changeEvent: IDispatcher<IList.EventParams<T>>;
 
 	/**
 	 * @inheritDoc
@@ -110,12 +110,12 @@ export default class List<T> extends Class implements IList<T> {
 		this._items = adapter ? items : items ? items.concat() : [];
 		this._length = this.own(new Property(this._items.length, silent));
 
-		this._spliceEvent = Event.make<IList.SpliceEventParams<T>>(silent);
-		this._replaceEvent = Event.make<IList.ReplaceEventParams<T>>(silent);
-		this._moveEvent = Event.make<IList.MoveEventParams<T>>(silent);
-		this._reorderEvent = Event.make<IList.ReorderEventParams<T>>(silent);
-		this._clearEvent = Event.make<IList.ItemsEventParams<T>>(silent);
-		this._changeEvent = Event.make<IList.EventParams<T>>(silent);
+		this._spliceEvent = Dispatcher.make<IList.SpliceEventParams<T>>(silent);
+		this._replaceEvent = Dispatcher.make<IList.ReplaceEventParams<T>>(silent);
+		this._moveEvent = Dispatcher.make<IList.MoveEventParams<T>>(silent);
+		this._reorderEvent = Dispatcher.make<IList.ReorderEventParams<T>>(silent);
+		this._clearEvent = Dispatcher.make<IList.ItemsEventParams<T>>(silent);
+		this._changeEvent = Dispatcher.make<IList.EventParams<T>>(silent);
 	}
 
 	protected destroyObject(): void {
@@ -472,8 +472,8 @@ export default class List<T> extends Class implements IList<T> {
 		if (oldProxy === undefined) {
 			return undefined;
 		}
-		this._replaceEvent.trigger({sender: this, index: index, oldItem: oldProxy.value, newItem: item});
-		this._changeEvent.trigger({sender: this});
+		this._replaceEvent.dispatch({sender: this, index: index, oldItem: oldProxy.value, newItem: item});
+		this._changeEvent.dispatch({sender: this});
 		if (this._ownsItems) {
 			(<any>oldProxy.value).destroy();
 		}
@@ -554,8 +554,8 @@ export default class List<T> extends Class implements IList<T> {
 		if (item === undefined) {
 			return undefined;
 		}
-		this._moveEvent.trigger({sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item});
-		this._changeEvent.trigger({sender: this});
+		this._moveEvent.dispatch({sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item});
+		this._changeEvent.dispatch({sender: this});
 		return item;
 	}
 
@@ -568,8 +568,8 @@ export default class List<T> extends Class implements IList<T> {
 			return undefined;
 		}
 		this._length.set(0);
-		this._clearEvent.trigger({sender: this, items: oldItems});
-		this._changeEvent.trigger({sender: this});
+		this._clearEvent.dispatch({sender: this, items: oldItems});
+		this._changeEvent.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(oldItems, destroy);
 		}
@@ -593,8 +593,8 @@ export default class List<T> extends Class implements IList<T> {
 			return undefined;
 		}
 		this._length.set(this._items.length);
-		this._spliceEvent.trigger({sender: this, spliceResult: result});
-		this._changeEvent.trigger({sender: this});
+		this._spliceEvent.dispatch({sender: this, spliceResult: result});
+		this._changeEvent.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(result.removedItems, destroy);
 		}
@@ -616,8 +616,8 @@ export default class List<T> extends Class implements IList<T> {
 		if (items === undefined) {
 			return undefined;
 		}
-		this._reorderEvent.trigger({sender: this, indexArray: indexArray, items: items});
-		this._changeEvent.trigger({sender: this});
+		this._reorderEvent.dispatch({sender: this, indexArray: indexArray, items: items});
+		this._changeEvent.dispatch({sender: this});
 		return items;
 	}
 

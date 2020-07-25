@@ -33,7 +33,7 @@ import Destroyable from './Destroyable';
 import Dictionary from './Dictionary';
 import * as DictionaryUtils from './DictionaryUtils';
 import hash from './hash';
-import {defn, identity, isNotNil} from './index';
+import {identity, isNotNil} from './index';
 import IProperty from './IProperty';
 import Property from './Property';
 
@@ -104,7 +104,7 @@ class Router<T extends Destroyable> extends Class {
 		this.handler = Router.makeHandler(config.handler);
 		this.scope = config.scope || this;
 		this._target = config.target || this.own(new Property<T>());
-		this.own(this.path.changeEvent.listen(this.update, this));
+		this.own(this.path.changeEvent.listen(() => this.update(), this));
 	}
 
 	/**
@@ -148,17 +148,17 @@ class Router<T extends Destroyable> extends Class {
 	/**
 	 * Issues route processing.
 	 */
-	update() {
+	update(force = false) {
 		if (this._updating) {
 			throw new Error("Can't update router because its update cycle is already active. " +
-				"Suggest using Router.Redirector or moving URL redirection to an asyncronous callback.");
+				"Consider using Router.Redirector or moving URL redirection to an asyncronous callback.");
 		}
 		this._updating = true;
 		const path = this.path.get();
 		const pair: string[] = (path == null) ? null : this.separator.call(this.scope, path);
 		const route = (pair != null) ? (pair[0] || "") : "";
 		const arg = (pair != null) ? (pair[1] || null) : null;
-		if (route === this.route.get()) {
+		if (!force && route === this.route.get()) {
 			this._arg.set(arg);
 		} else {
 			const target = this.target.get();
@@ -350,7 +350,7 @@ namespace Router {
 		}
 		return function (path: string) {
 			const result = separator.exec(path || "");
-			return result ? [result[1], defn(ArrayUtils.find(result.slice(2), isNotNil), null)] : null;
+			return result ? [result[1], ArrayUtils.find(result.slice(2), isNotNil) ?? null] : null;
 		};
 	}
 
@@ -429,10 +429,10 @@ namespace Router {
 		 * @param replaceState Replace the current browser historical state rather than pushing a new state to the
 		 * stack. Defaults to true.
 		 */
-		constructor(private path: string, private router?: Router<any>, private replaceState?: boolean) {
+		constructor(private path: string, private router?: Router<any>, private replaceState = true) {
 			super();
 			defer(0, this.own(new CancelToken())).then(() => {
-				redirect(this.path, this.router, defn(this.replaceState, true));
+				redirect(this.path, this.router, this.replaceState);
 			});
 		}
 	}

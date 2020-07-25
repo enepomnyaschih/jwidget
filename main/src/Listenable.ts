@@ -25,26 +25,26 @@ SOFTWARE.
 import Destroyable from "./Destroyable";
 
 /**
- * Container for callback functions. Provides basic event listening functionality.
+ * Container for handler functions. Provides basic message dispatching functionality.
  */
-interface Listenable<P> {
+interface Listenable<M> {
 	/**
-	 * Checks if this event is dummy. This knowledge may help you do certain code optimizations.
+	 * Checks if this dispatcher is dummy, i.e. it never dispatches any messages.
+	 * This knowledge may help you do certain code optimizations.
 	 */
 	readonly dummy: boolean;
 
 	/**
-	 * Starts listening to the event.
+	 * Registers a listener for this dispatcher.
 	 *
-	 * Whenever the event is triggered with `trigger` method, specified handler function
-	 * is called in specified scope.
+	 * Whenever a message is dispatched with `dispatch` method, the specified handler function is called.
 	 *
-	 * You can stop listening the event by destroying the returned object.
+	 * You can unregister the listener destroying the returned object.
 	 *
-	 * @param handler Event handler function.
+	 * @param handler Handler function.
 	 * @param scope `handler` call scope.
 	 */
-	listen(handler: (params: P) => any, scope?: any): Destroyable;
+	listen(handler: (params: M) => any, scope?: any): Destroyable;
 }
 
 export default Listenable;

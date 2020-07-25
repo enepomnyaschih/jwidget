@@ -107,7 +107,7 @@ class Hash extends Property<string> implements IHash {
 		} else {
 			location.hash = "#" + value;
 		}
-		this._changeEvent.trigger({sender: this, value, oldValue});
+		this._changeEvent.dispatch({sender: this, value, oldValue});
 		this._updating = false;
 	}
 }

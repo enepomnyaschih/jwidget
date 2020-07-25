@@ -25,8 +25,8 @@ SOFTWARE.
 import Bindable from "./Bindable";
 import Class from "./Class";
 import DestroyableBindable from "./DestroyableBindable";
-import Event from "./Event";
-import IEvent from "./IEvent";
+import Dispatcher from "./Dispatcher";
+import IDispatcher from "./IDispatcher";
 import {destroy} from "./index";
 import IProperty from "./IProperty";
 import Listenable from "./Listenable";
@@ -38,7 +38,7 @@ import {default as Mapper, mapProperties} from "./Mapper";
 export default class Property<V> extends Class implements IProperty<V> {
 	private _ownsValue = false;
 
-	protected _changeEvent: IEvent<Bindable.ChangeEventParams<V>>;
+	protected _changeEvent: IDispatcher<Bindable.ChangeEventParams<V>>;
 
 	/**
 	 * Constructs a property and sets initial value.
@@ -47,7 +47,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 	 */
 	constructor(protected value: V = null, silent: boolean = false) {
 		super();
-		this._changeEvent = Event.make<Bindable.ChangeEventParams<V>>(silent);
+		this._changeEvent = Dispatcher.make<Bindable.ChangeEventParams<V>>(silent);
 	}
 
 	protected destroyObject() {
@@ -92,7 +92,7 @@ export default class Property<V> extends Class implements IProperty<V> {
 			return;
 		}
 		this.value = value;
-		this._changeEvent.trigger({ sender: this, value: value, oldValue: oldValue });
+		this._changeEvent.dispatch({ sender: this, value: value, oldValue: oldValue });
 		if (this._ownsValue) {
 			destroy(oldValue);
 		}

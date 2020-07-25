@@ -26,8 +26,8 @@ import * as ArrayUtils from './ArrayUtils';
 import Bindable from './Bindable';
 import Class from './Class';
 import Dictionary from './Dictionary';
-import Event from './Event';
-import IEvent from './IEvent';
+import Dispatcher from './Dispatcher';
+import IDispatcher from './IDispatcher';
 import IList from './IList';
 import IMap from './IMap';
 import {ADAPTER, destroy, SILENT} from './index';
@@ -50,9 +50,9 @@ class Set<T> extends Class implements ISet<T> {
 	private _length: IProperty<number>;
 	private _items: VidSet<T>;
 
-	private _spliceEvent: IEvent<ISet.SpliceEventParams<T>>;
-	private _clearEvent: IEvent<ISet.ItemsEventParams<T>>;
-	private _changeEvent: IEvent<ISet.EventParams<T>>;
+	private _spliceEvent: IDispatcher<ISet.SpliceEventParams<T>>;
+	private _clearEvent: IDispatcher<ISet.ItemsEventParams<T>>;
+	private _changeEvent: IDispatcher<ISet.EventParams<T>>;
 
 	/**
 	 * @inheritDoc
@@ -103,9 +103,9 @@ class Set<T> extends Class implements ISet<T> {
 		this._items = VidSet.fromArray<T>(items, this.getKey);
 		this._length = this.own(new Property(items.length, silent));
 
-		this._spliceEvent = Event.make<ISet.SpliceEventParams<T>>(silent);
-		this._clearEvent = Event.make<ISet.ItemsEventParams<T>>(silent);
-		this._changeEvent = Event.make<ISet.EventParams<T>>(silent);
+		this._spliceEvent = Dispatcher.make<ISet.SpliceEventParams<T>>(silent);
+		this._clearEvent = Dispatcher.make<ISet.ItemsEventParams<T>>(silent);
+		this._changeEvent = Dispatcher.make<ISet.EventParams<T>>(silent);
 	}
 
 	protected destroyObject(): void {
@@ -448,8 +448,8 @@ class Set<T> extends Class implements ISet<T> {
 		const items: T[] = this._items.values.concat();
 		this._items.clear();
 		this._length.set(0);
-		this._clearEvent.trigger({sender: this, items: items});
-		this._changeEvent.trigger({sender: this});
+		this._clearEvent.dispatch({sender: this, items: items});
+		this._changeEvent.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(items, destroy);
 		}
@@ -472,8 +472,8 @@ class Set<T> extends Class implements ISet<T> {
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		this._spliceEvent.trigger({sender: this, spliceResult: spliceResult});
-		this._changeEvent.trigger({sender: this});
+		this._spliceEvent.dispatch({sender: this, spliceResult: spliceResult});
+		this._changeEvent.dispatch({sender: this});
 		if (this._ownsItems) {
 			ArrayUtils.backEvery(spliceResult.removedItems, destroy);
 		}

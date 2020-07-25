@@ -1,4 +1,4 @@
-/*
+﻿/*
 MIT License
 
 Copyright (c) 2020 Egor Nepomnyaschih
@@ -22,22 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Listenable from "./Listenable";
+import Destroyable from './Destroyable';
+import Dispatcher from './Dispatcher';
+import Identifiable from './Identifiable';
+import {newIid} from './index';
 
 /**
- * Extension of `Listenable` interface with `trigger` method.
+ * @hidden
  */
-interface IEvent<P> extends Listenable<P> {
-	/**
-	 * Triggers event, i.e. calls all bound handlers.
-	 * @param params Event params.
-	 */
-	trigger(params?: P): void;
+export default class Listener<P> implements Destroyable, Identifiable {
+	readonly iid = newIid();
 
-	/**
-	 * Unbinds all event handlers.
-	 */
-	purge(): void;
+	constructor(private _event: Dispatcher<P>, readonly handler: (params: P) => any, readonly scope: any) {
+	}
+
+	destroy() {
+		this._event._unbind(this);
+	}
 }
-
-export default IEvent;

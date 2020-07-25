@@ -1,4 +1,4 @@
-﻿/*
+/*
 MIT License
 
 Copyright (c) 2020 Egor Nepomnyaschih
@@ -22,21 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Destroyable from './Destroyable';
-import Event from './Event';
-import Identifiable from './Identifiable';
-import {newIid} from './index';
+import Destroyable from "./Destroyable";
+import dummyDestroyable from "./dummyDestroyable";
+import IDispatcher from "./IDispatcher";
 
-/**
- * @hidden
- */
-export default class EventAttachment<P> implements Destroyable, Identifiable {
-	readonly iid = newIid();
+class DummyDispatcher implements IDispatcher<any> {
 
-	constructor(private _event: Event<P>, readonly handler: (params: P) => any, readonly scope: any) {
+	get dummy() {
+		return true;
 	}
 
-	destroy() {
-		this._event._unbind(this);
+	purge(): void {
+	}
+
+	listen(_handler: (params: any) => any, _scope?: any): Destroyable {
+		return dummyDestroyable;
+	}
+
+	dispatch(_params?: any): void {
 	}
 }
+
+/**
+ * Dummy implementation of `Listenable<any>` interface.
+ * As opposed to `Dispatcher`, doesn't really register any listeners, but just pretends it does that.
+ */
+const dummyDispatcher = <IDispatcher<any>>(new DummyDispatcher()); // An extra variable helps IntelliSense to find this import
+export default dummyDispatcher;

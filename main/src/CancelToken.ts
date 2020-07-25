@@ -24,7 +24,7 @@ SOFTWARE.
 
 import Destroyable from "./Destroyable";
 import dummyDestroyable from "./dummyDestroyable";
-import Event from "./Event";
+import Dispatcher from "./Dispatcher";
 
 /**
  * Cancelation token is an object that provides a signal on destruction for the bound asyncronous operations to
@@ -33,13 +33,13 @@ import Event from "./Event";
  */
 export default class CancelToken implements Destroyable {
 
-	private _event = new Event<any>();
+	private _dispatcher = new Dispatcher<any>();
 
 	/**
 	 * Indicates if the token is already canceled, i.e. destroyed.
 	 */
 	get cancelled() {
-		return this._event == null;
+		return this._dispatcher == null;
 	}
 
 	/**
@@ -52,8 +52,8 @@ export default class CancelToken implements Destroyable {
 	 * @returns Handler attachment.
 	 */
 	addHandler(handler: () => any, scope?: any): Destroyable {
-		if (this._event) {
-			return this._event.listen(handler, scope);
+		if (this._dispatcher) {
+			return this._dispatcher.listen(handler, scope);
 		} else {
 			handler.call(scope);
 			return dummyDestroyable;
@@ -65,9 +65,9 @@ export default class CancelToken implements Destroyable {
 	 * after the token destruction results in their immediate calling.
 	 */
 	destroy() {
-		this._event.trigger();
-		this._event.purge();
-		this._event = null;
+		this._dispatcher.dispatch();
+		this._dispatcher.purge();
+		this._dispatcher = null;
 	}
 }
 
