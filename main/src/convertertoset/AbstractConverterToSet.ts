@@ -70,7 +70,6 @@ export default AbstractConverterToSet;
 namespace AbstractConverterToSet {
 	/**
 	 * AbstractConverterToSet configuration.
-	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
 		/**

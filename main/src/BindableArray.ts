@@ -44,9 +44,7 @@ import BindableSet from './BindableSet';
 import Some from './Some';
 
 /**
- * Ordered collection of items. Each array item of has an index. Index of the first item is 0,
- * index of each consequent item is greater by 1.
- * @param T Item type.
+ * Implementation of a bindable wrapper over a native array.
  */
 export default class BindableArray<T> extends Class implements IBindableArray<T> {
 	private _ownsItems: Boolean = false;
@@ -66,13 +64,13 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * @param silent Create a silent collection which means that it never dispatches any messages.
+	 * @param silent Create a silent array which means that it never dispatches any messages.
 	 */
 	constructor(silent?: boolean);
 
 	/**
-	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
-	 * @param silent Create a silent collection which means that it never dispatches any messages.
+	 * @param getKey Function that identifies an item in this array for optimization of some algorithms.
+	 * @param silent Create a silent array which means that it never dispatches any messages.
 	 */
 	constructor(getKey: (item: T) => any, silent?: boolean);
 
@@ -84,7 +82,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 
 	/**
 	 * @param items Initial array contents.
-	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
+	 * @param getKey Function that identifies an item in this array for optimization of some algorithms.
 	 * @param flags Collection configuration flags.
 	 */
 	constructor(items: T[], getKey: (item: T) => any, flags?: CollectionFlags);

@@ -39,7 +39,7 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	 */
 	constructor(readonly source: ReadonlyBindableMap<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(config, source.getKey, source.silent);
-		this._splice([], source.asArray());
+		this._splice([], source.toArray());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
@@ -48,7 +48,7 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._splice(this.source.asArray(), []);
+		this._splice(this.source.toArray(), []);
 		super.destroyObject();
 	}
 

@@ -31,7 +31,6 @@ import ReadonlyBindableMap from "../ReadonlyBindableMap";
 /**
  * Abstract collection indexer. Builds a new map by rule: key is the result of the function call, value is the
  * corresponding item. Can be used for item search optimization.
- * @param T Collection item type.
  */
 abstract class AbstractIndexer<T> extends Class {
 	private _targetCreated: boolean;
@@ -105,7 +104,6 @@ export default AbstractIndexer;
 namespace AbstractIndexer {
 	/**
 	 * AbstractIndexer configuration.
-	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
 		/**

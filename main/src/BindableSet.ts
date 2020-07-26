@@ -41,8 +41,7 @@ import Property from './Property';
 import Reducer from './Reducer';
 
 /**
- * Unordered collection optimized for items adding, removal and search.
- * @param T Item type.
+ * Implementation of a bindable wrapper over a native set.
  */
 class BindableSet<T> extends Class implements IBindableSet<T> {
 
@@ -60,26 +59,26 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * @param silent Create a silent collection which means that it never dispatches any messages.
+	 * @param silent Create a silent set which means that it never dispatches any messages.
 	 */
 	constructor(silent?: boolean);
 
 	/**
-	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
-	 * @param silent Create a silent collection which means that it never dispatches any messages.
+	 * @param getKey Function that identifies an item in this set for optimization of some algorithms.
+	 * @param silent Create a silent set which means that it never dispatches any messages.
 	 */
 	constructor(getKey: (item: T) => any, silent?: boolean);
 
 	/**
 	 * @param items Initial map contents.
-	 * @param silent Create a silent collection which means that it never dispatches any messages.
+	 * @param silent Create a silent set which means that it never dispatches any messages.
 	 */
 	constructor(items: T[], silent?: boolean);
 
 	/**
 	 * @param items Initial map contents.
-	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
-	 * @param silent Create a silent collection which means that it never dispatches any messages.
+	 * @param getKey Function that identifies an item in this set for optimization of some algorithms.
+	 * @param silent Create a silent set which means that it never dispatches any messages.
 	 */
 	constructor(items: T[], getKey: (item: T) => any, silent?: boolean);
 	constructor(a?: any, b?: any, c?: boolean) {

@@ -26,7 +26,7 @@ import Destroyable from './Destroyable';
 import ReadonlyBindableSet from './ReadonlyBindableSet';
 
 /**
- * Extension of ReadonlySet abstraction with destroy method.
+ * Extension of ReadonlyBindableSet abstraction with destroy method.
  */
 interface DestroyableReadonlyBindableSet<T> extends Destroyable, ReadonlyBindableSet<T> {
 }

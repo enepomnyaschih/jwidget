@@ -40,7 +40,7 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
 	constructor(readonly source: ReadonlyBindableSet<T>, getKey: (item: T) => any,
 				config?: AbstractIndexer.Config<T>) {
 		super(getKey, config, source.getKey, source.silent);
-		this._target.tryPutAll(this._index(source.asArray()));
+		this._target.tryPutAll(this._index(source.toArray()));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
@@ -49,7 +49,7 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._target.tryRemoveAll(this._keys(this.source.asArray()));
+		this._target.tryRemoveAll(this._keys(this.source.toArray()));
 		super.destroyObject();
 	}
 
@@ -71,7 +71,7 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
  * @param source Source set.
  * @param getKey Indexer function.
  * @param scope Call scope of `getKey` callback.
- * @returns Collection index map.
+ * @returns Set index map.
  */
 export function indexSet<T>(source: ReadonlyBindableSet<T>, getKey: (item: T) => any,
 							scope?: any): DestroyableReadonlyBindableMap<T> {

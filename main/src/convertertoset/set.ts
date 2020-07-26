@@ -68,7 +68,7 @@ export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
  */
 export function setToSet<T>(source: ReadonlyBindableSet<T>): DestroyableReadonlyBindableSet<T> {
 	if (source.silent) {
-		return source.toSet();
+		return source.clone();
 	}
 	const target = new BindableSet<T>(source.getKey);
 	return target.owning(new SetConverterToSet<T>(source, {target}));

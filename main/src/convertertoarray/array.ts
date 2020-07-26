@@ -81,7 +81,7 @@ export default class ArrayConverterToArray<T> extends AbstractConverterToArray<T
  */
 export function arrayToArray<T>(source: ReadonlyBindableArray<T>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
-		return source.toBindableArray();
+		return source.clone();
 	}
 	const target = new BindableArray<T>(source.getKey);
 	return target.owning(new ArrayConverterToArray<T>(source, {target}));

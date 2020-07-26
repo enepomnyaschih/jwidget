@@ -33,7 +33,6 @@ import ReadonlyBindableArray from "../ReadonlyBindableArray";
 
 /**
  * Sorter (comparing). Builds a new array containing the items of source collection sorter by comparer.
- * @param T Collection item type.
  */
 abstract class AbstractSorterComparing<T> extends Class {
 	private _targetCreated: boolean;
@@ -163,7 +162,6 @@ export default AbstractSorterComparing;
 namespace AbstractSorterComparing {
 	/**
 	 * AbstractSorterComparing configuration.
-	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
 		/**

@@ -31,44 +31,41 @@ import Listenable from './Listenable';
 import Reducer from './Reducer';
 
 /**
- * Unordered key-value collection. Each item has its own string key.
- * @param T Item type.
+ * Bindable readonly wrapper over a native map.
  */
 interface ReadonlyBindableMap<T> {
 	/**
-	 * Checks if this collection never dispatches any message. This knowledge may help you do certain code optimizations.
+	 * Checks if this map never dispatches any message. This knowledge may help you do certain code optimizations.
 	 */
 	readonly silent: boolean;
 
 	/**
-	 * Identifies an item in this collection for optimization of some algorithms.
+	 * Identifies an item in this map for optimization of some algorithms.
 	 */
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * Collection length property.
+	 * Property containing number of items in the map.
 	 */
 	readonly length: Bindable<number>;
 
 	/**
-	 * Checks collection for emptiness.
+	 * Checks if the map is empty.
 	 */
 	readonly empty: boolean;
 
 	/**
-	 * Returns the first (or some) item in collection. If collection is empty, returns undefined.
+	 * Returns the first (or some) item in the map. If the map is empty, returns undefined.
 	 */
 	readonly first: T;
 
 	/**
-	 * Returns key of first item. If collection is empty, returns undefined.
+	 * Returns key of first item. If the map is empty, returns undefined.
 	 */
 	readonly firstKey: string;
 
 	/**
-	 * Item dictionary - internal collection representation.
-	 *
-	 * Caution: doesn't make a copy - please don't modify.
+	 * Internal representation of the map.
 	 */
 	readonly items: Dictionary<T>;
 
@@ -93,12 +90,12 @@ interface ReadonlyBindableMap<T> {
 	readonly onChange: Listenable<IBindableMap.Message<T>>;
 
 	/**
-	 * Returns a shallow copy of this collection.
+	 * Returns a shallow copy of this map.
 	 */
 	clone(): IBindableMap<T>;
 
 	/**
-	 * Checks item for existence in collection.
+	 * Checks if an item is present the map.
 	 */
 	contains(item: T): boolean;
 
@@ -150,13 +147,13 @@ interface ReadonlyBindableMap<T> {
 	 * Returns the key of some item the callback returns %truthy value for.
 	 * Algorithm iterates items sequentially, and stops it after the first item matching the criteria.
 	 * @param callback Criteria callback.
-	 * @param scope `callback` call scope. Defaults to collection itself.
+	 * @param scope `callback` call scope. Defaults to the map itself.
 	 * @returns Found item key or undefined.
 	 */
 	findKey(callback: (item: T, key: string) => any, scope?: any): string;
 
 	/**
-	 * Converts collection to a native array. Builds a new array consisting of collection items.
+	 * Converts the map to a native array. Builds a new array consisting of the map items.
 	 */
 	toArray(): T[];
 
@@ -166,33 +163,9 @@ interface ReadonlyBindableMap<T> {
 	toBindableArray(): IBindableArray<T>;
 
 	/**
-	 * Converts collection to a set. Builds a new set consisting of collection items.
+	 * Converts the map to a set. Builds a new set consisting of the map items.
 	 */
 	toSet(): IBindableSet<T>;
-
-	/**
-	 * Represents collection as a native array.
-	 * If this collection is an array, returns its items immediately.
-	 * Else, executes toArray method.
-	 * Use with caution.
-	 */
-	asArray(): T[];
-
-	/**
-	 * Represents collection as a bindable array.
-	 * If this collection is an array, returns it immediately.
-	 * Else, executes toArray method.
-	 * Use with caution.
-	 */
-	asBindableArray(): IBindableArray<T>;
-
-	/**
-	 * Represents collection as set.
-	 * If this collection is set, returns it immediately.
-	 * Else, executes toSet method.
-	 * Use with caution.
-	 */
-	asSet(): IBindableSet<T>;
 
 	/**
 	 * @inheritDoc
@@ -207,7 +180,7 @@ interface ReadonlyBindableMap<T> {
 	/**
 	 * Builds an array of item keys sorted by the result of %callback call for each item.
 	 * @param callback Indexer function. Must return a comparable value, compatible with %cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the map.
 	 * @param order Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
 	 * @returns Keys of items to build a sorted array.
 	 */
@@ -216,7 +189,7 @@ interface ReadonlyBindableMap<T> {
 	/**
 	 * Builds an array of item keys sorted by comparer.
 	 * @param compare Comparer function. Should return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Compare call scope. Defaults to the collection.
+	 * @param scope Compare call scope. Defaults to the map.
 	 * @param order Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
 	 * @returns Keys of items to build a sorted array.
 	 */
@@ -260,7 +233,7 @@ interface ReadonlyBindableMap<T> {
 	/**
 	 * Returns key of the map item the callback returns the highest (or lowest if order < 0) value for.
 	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the map.
 	 * @param order Pass negative order to find the lowest value.
 	 * @returns Key of item with the highest (or lowest) value in the map.
 	 */
@@ -274,7 +247,7 @@ interface ReadonlyBindableMap<T> {
 	/**
 	 * Returns key of the highest (or lowest if order < 0) map item in terms of the specified comparer function.
 	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the map.
 	 * @param order Pass negative order to find the lowest value.
 	 * @returns Key of the highest (or lowest) map item.
 	 */
@@ -288,7 +261,7 @@ interface ReadonlyBindableMap<T> {
 	/**
 	 * Returns key of the map item the callback returns the lowest (or highest if order < 0) value for.
 	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the map.
 	 * @param order Pass negative order to find the highest value.
 	 * @returns Key of item with the lowest (or highest) value in the map.
 	 */
@@ -302,7 +275,7 @@ interface ReadonlyBindableMap<T> {
 	/**
 	 * Returns key of the lowest (or highest if order < 0) map item in terms of the specified comparer function.
 	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the map.
 	 * @param order Pass negative order to find the highest value.
 	 * @returns Key of the lowest (or highest) map item.
 	 */
@@ -333,8 +306,8 @@ interface ReadonlyBindableMap<T> {
 	 * Determines new keys to be assigned to all items.
 	 * If `newItems` contents differ from the map contents, it may lead to unknown consequences.
 	 * @param newItems New map contents.
-	 * @param getKey Function which returns unique key of an item in this collection. Defaults to `getKey`.
-	 * @param scope `getKey` call scope. Defaults to collection itself.
+	 * @param getKey Function which returns unique key of an item in this map. Defaults to `getKey`.
+	 * @param scope `getKey` call scope. Defaults to the map itself.
 	 * @returns `keyMap` argument of `reindex` method. If no method call required, returns undefined.
 	 */
 	detectReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): Dictionary<string>;

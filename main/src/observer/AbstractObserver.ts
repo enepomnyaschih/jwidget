@@ -27,7 +27,6 @@ import Class from '../Class';
 /**
  * Collection observer. Listens to all collection messages and reduces them to 2 granular functions:
  * item is added and item is removed.
- * @param T Collection item type.
  */
 abstract class AbstractObserver<T> extends Class {
 	/**
@@ -116,7 +115,6 @@ export default AbstractObserver;
 namespace AbstractObserver {
 	/**
 	 * AbstractObserver configuration.
-	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
 		/**

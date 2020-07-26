@@ -31,7 +31,6 @@ import Some from './Some';
 
 /**
  * Extension of DestroyableReadonlyBindableArray with modification methods.
- * @param T Array item type.
  */
 interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> {
 
@@ -46,7 +45,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	readonly onChange: Listenable<IBindableArray.Message<T>>;
 
 	/**
-	 * Returns a full copy of this collection.
+	 * Returns a full copy of this array.
 	 */
 	clone(): IBindableArray<T>;
 
@@ -166,23 +165,23 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
 
 	/**
-	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
-	 * this collection. The item is destroyed when it leaves the
-	 * collection, and all items are destroyed on the collection destruction.
+	 * Makes this array an owner of its items, which means that its items are alive as long as they are present in
+	 * this array. The item is destroyed when it leaves the
+	 * array, and all items are destroyed on the array destruction.
 	 */
 	ownItems(): this;
 
 	/**
 	 * Inserts an item to the array.
 	 * @param item Item to insert.
-	 * @param index Index of an item to insert new one before. By default, appends the item to the end of collection.
+	 * @param index Index of an item to insert new one before. By default, appends the item to the end of the array.
 	 */
 	add(item: T, index?: number): void;
 
 	/**
 	 * Inserts an item range to the array.
 	 * @param items Items to insert.
-	 * @param index Index of an item to insert new ones before. By default, appends the items to the end of collection.
+	 * @param index Index of an item to insert new ones before. By default, appends the items to the end of the array.
 	 */
 	addAll(items: T[], index?: number): void;
 
@@ -210,14 +209,14 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	removeAll(index: number, count: number): T[];
 
 	/**
-	 * Removes the first occurrence of the item in the collection.
+	 * Removes the first occurrence of the item in the array.
 	 * @param item Item to remove.
 	 */
 	removeItem(item: T): void;
 
 	/**
-	 * Removes all occurrences of the items in the collection.
-	 * For efficient performance, you should define an optimal getKey callback for this collection.
+	 * Removes all occurrences of the items in the array.
+	 * For efficient performance, you should define an optimal getKey callback for this array.
 	 * @param items Items to remove.
 	 */
 	removeItems(items: T[]): void;
@@ -254,7 +253,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * Replaces an item at specified index.
 	 * @param index Index of an item to replace. If the array doesn't contain such index, it may lead to unknown consequences.
 	 * @param item Item to put into the array.
-	 * @returns Wrapper over the replaced item. If collection is not modified, returns undefined.
+	 * @returns Wrapper over the replaced item. If the array is not modified, returns undefined.
 	 */
 	trySet(index: number, item: T): Some<T>;
 
@@ -262,7 +261,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * Removes an item range from the array.
 	 * @param index Index of the first item to remove.
 	 * @param count Count of items to remove.
-	 * @returns The removed items. If collection is not modified, returns undefined.
+	 * @returns The removed items. If the array is not modified, returns undefined.
 	 */
 	tryRemoveAll(index: number, count: number): T[];
 
@@ -270,7 +269,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * Moves an item inside the array.
 	 * @param fromIndex Item index to move.
 	 * @param toIndex Index to move to.
-	 * @returns The moved item. If collection is not modified, returns undefined.
+	 * @returns The moved item. If the array is not modified, returns undefined.
 	 */
 	tryMove(fromIndex: number, toIndex: number): T;
 
@@ -278,7 +277,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
 	 * @param segmentsToRemove Array of segments to remove sorted by index asc. Segments are removed in backward order.
 	 * @param segmentsToAdd Array of segments to insert sorted by index asc. Segments are inserted in forward order.
-	 * @returns Splice result. If collection is not modified, returns undefined.
+	 * @returns Splice result. If the array is not modified, returns undefined.
 	 */
 	trySplice(segmentsToRemove: IBindableArray.IndexCount[], segmentsToAdd: IBindableArray.IndexItems<T>[]): IBindableArray.SpliceResult<T>;
 
@@ -286,7 +285,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * Reorders array items.
 	 * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
 	 * Must contain all indexes from 0 to (length - 1).
-	 * @returns Old array contents. If collection is not modified, returns undefined.
+	 * @returns Old array contents. If the array is not modified, returns undefined.
 	 */
 	tryReorder(indexArray: number[]): T[];
 
@@ -296,9 +295,9 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * If items don't have unique key, probably `performFilter` method may help,
 	 * because it doesn't require item uniquiness.
 	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to `getKey` property of the collection.
-	 * @param scope `getKey` call scope. Defaults to collection itself.
+	 * @param getKey Function which returns unique key of an item in this array.
+	 * Defaults to `getKey` property of the array.
+	 * @param scope `getKey` call scope. Defaults to the array itself.
 	 */
 	performSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): void;
 
@@ -313,9 +312,9 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	/**
 	 * Adjusts array contents to `newItems` using `detectReorder` and `reorder` methods.
 	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to `getKey` property of the collection.
-	 * @param scope `getKey` call scope. Defaults to collection itself.
+	 * @param getKey Function which returns unique key of an item in this array.
+	 * Defaults to `getKey` property of the array.
+	 * @param scope `getKey` call scope. Defaults to the array itself.
 	 */
 	performReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): void;
 
@@ -323,7 +322,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * Sorts the array by result of `callback` function call for each item.
 	 * @param callback Indexer function. Must return a comparable value, compatible with
 	 * `cmp`. Returns item itself by default.
-	 * @param scope `callback` call scope. Defaults to collection itself.
+	 * @param scope `callback` call scope. Defaults to the array itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 */
 	sort(callback?: (item: T, index: number) => any, scope?: any, order?: number): void;
@@ -332,7 +331,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * Sorts the array by comparer.
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
-	 * @param scope `comparer` call scope. Defaults to collection itself.
+	 * @param scope `comparer` call scope. Defaults to the array itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 */
 	sortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): void;

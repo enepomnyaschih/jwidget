@@ -36,7 +36,7 @@ export default class ArrayObserver<T> extends AbstractObserver<T> {
 	 */
 	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractObserver.Config<T>) {
 		super(config);
-		this._addItems(source.asArray());
+		this._addItems(source.items);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
@@ -46,7 +46,7 @@ export default class ArrayObserver<T> extends AbstractObserver<T> {
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._doClearItems(this.source.asArray());
+		this._doClearItems(this.source.items);
 		super.destroyObject();
 	}
 

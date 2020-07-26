@@ -32,7 +32,6 @@ import Some from './Some';
 
 /**
  * Extension of DestroyableReadonlyMap with modification methods.
- * @param T Map item type.
  */
 interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 
@@ -47,7 +46,7 @@ interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 	readonly onChange: Listenable<IBindableMap.Message<T>>;
 
 	/**
-	 * Returns a full copy of this collection.
+	 * Returns a full copy of this map.
 	 */
 	clone(): IBindableMap<T>;
 
@@ -167,9 +166,9 @@ interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
 
 	/**
-	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
-	 * this collection. The item is destroyed when it leaves the
-	 * collection, and all items are destroyed on the collection destruction.
+	 * Makes this map an owner of its items, which means that its items are alive as long as they are present in
+	 * this map. The item is destroyed when it leaves the
+	 * map, and all items are destroyed on the map destruction.
 	 */
 	ownItems(): this;
 
@@ -195,7 +194,7 @@ interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 	putAllVerbose(items: Dictionary<T>): IBindableMap.SpliceResult<T>;
 
 	/**
-	 * Changes item key in the map. If collection doesn't contain oldKey or contains newKey, it may lead to unexpected
+	 * Changes item key in the map. If the map doesn't contain oldKey or contains newKey, it may lead to unexpected
 	 * consequences.
 	 * @param oldKey Old key of the item.
 	 * @param newKey New key of the item.
@@ -224,14 +223,14 @@ interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 	removeAllVerbose(keys: string[]): Dictionary<T>;
 
 	/**
-	 * Removes the first occurrence of the item in the collection.
+	 * Removes the first occurrence of the item in the map.
 	 * @param item Item to remove.
 	 */
 	removeItem(item: T): void;
 
 	/**
-	 * Removes all occurrences of the items in the collection.
-	 * For efficient performance, you should define an optimal getKey callback for this collection.
+	 * Removes all occurrences of the items in the map.
+	 * For efficient performance, you should define an optimal getKey callback for this map.
 	 * @param items Items to remove.
 	 */
 	removeItems(items: T[]): void;
@@ -261,37 +260,37 @@ interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 	 * Puts or replaces an item with the specified key.
 	 * @param key Item key.
 	 * @param item Item to put.
-	 * @returns The replaced item. If collection is not modified, returns undefined.
+	 * @returns The replaced item. If the map is not modified, returns undefined.
 	 */
 	tryPut(key: string, item: T): Some<T>;
 
 	/**
 	 * Puts or replaces a bunch of items.
 	 * @param items Items to put.
-	 * @returns Result of internal splice method call. If collection is not modified, returns undefined.
+	 * @returns Result of internal splice method call. If the map is not modified, returns undefined.
 	 */
 	tryPutAll(items: Dictionary<T>): IBindableMap.SpliceResult<T>;
 
 	/**
-	 * Changes item key in map. If collection doesn't contain oldKey or contains newKey, it may lead to unexpected
+	 * Changes item key in map. If the map doesn't contain oldKey or contains newKey, it may lead to unexpected
 	 * consequences.
 	 * @param oldKey Old key of the item.
 	 * @param newKey New key of the item.
-	 * @returns The moved item. If collection is not modified, returns undefined.
+	 * @returns The moved item. If the map is not modified, returns undefined.
 	 */
 	trySetKey(oldKey: string, newKey: string): T;
 
 	/**
 	 * Removes item with specified key.
 	 * @param key Item key.
-	 * @returns The removed item. If collection is not modified, returns undefined.
+	 * @returns The removed item. If the map is not modified, returns undefined.
 	 */
 	tryRemove(key: string): T;
 
 	/**
 	 * Removes a bunch of items from the map.
 	 * @param keys Item keys.
-	 * @returns The removed items. If collection is not modified, returns undefined.
+	 * @returns The removed items. If the map is not modified, returns undefined.
 	 */
 	tryRemoveAll(keys: string[]): Dictionary<T>;
 
@@ -299,7 +298,7 @@ interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 	 * Removes and adds bunches of items in the map. Universal optimized granular operation of removal/insertion.
 	 * @param removedKeys Keys of items to remove.
 	 * @param updatedItems Items to put/replace.
-	 * @returns Splice result. If collection is not modified, returns undefined.
+	 * @returns Splice result. If the map is not modified, returns undefined.
 	 */
 	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IBindableMap.SpliceResult<T>;
 
@@ -307,7 +306,7 @@ interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 	 * Changes item keys in the map.
 	 * @param keyMap Key dictionary. Item with key x will gain key keyMap[x].
 	 * It is necessary to pass only changed keys, but unchanged keys or nonexistent keys are acceptable as well.
-	 * @returns Dictionary of changed keys. If collection is not modified, returns undefined.
+	 * @returns Dictionary of changed keys. If the map is not modified, returns undefined.
 	 */
 	tryReindex(keyMap: Dictionary<string>): Dictionary<string>;
 
@@ -321,9 +320,9 @@ interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 	 * Adjusts map contents to `newItems` using `detectReindex` and `reindex` methods.
 	 * All items must have unique `getKey` function result.
 	 * @param newItems New map contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to `getKey` property of the collection.
-	 * @param scope `getKey` call scope. Defaults to collection itself.
+	 * @param getKey Function which returns unique key of an item in this map.
+	 * Defaults to `getKey` property of the map.
+	 * @param scope `getKey` call scope. Defaults to the map itself.
 	 */
 	performReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): void;
 }

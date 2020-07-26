@@ -44,8 +44,7 @@ import BindableSet from './BindableSet';
 import Some from './Some';
 
 /**
- * Unordered key-value collection. Each item has its own string key.
- * @param T Item type.
+ * Implementation of a bindable wrapper over a native map.
  */
 class BindableMap<T> extends Class implements IBindableMap<T> {
 
@@ -65,13 +64,13 @@ class BindableMap<T> extends Class implements IBindableMap<T> {
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * @param silent Create a silent collection which means that it never dispatches any messages.
+	 * @param silent Create a silent map which means that it never dispatches any messages.
 	 */
 	constructor(silent?: boolean);
 
 	/**
-	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
-	 * @param silent Create a silent collection which means that it never dispatches any messages.
+	 * @param getKey Function that identifies an item in this map for optimization of some algorithms.
+	 * @param silent Create a silent map which means that it never dispatches any messages.
 	 */
 	constructor(getKey: (item: T) => any, silent?: boolean);
 
@@ -83,7 +82,7 @@ class BindableMap<T> extends Class implements IBindableMap<T> {
 
 	/**
 	 * @param items Initial map contents.
-	 * @param getKey Function that identifies an item in this collection for optimization of some algorithms.
+	 * @param getKey Function that identifies an item in this map for optimization of some algorithms.
 	 * @param flags Collection configuration flags.
 	 */
 	constructor(items: Dictionary<T>, getKey: (item: T) => any, flags?: CollectionFlags);

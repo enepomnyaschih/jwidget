@@ -27,7 +27,6 @@ import Class from '../Class';
 /**
  * Abstract collection filterer. Builds a new collection of the same type, consisting of items the callback function
  * returns truthy value for, and starts continuous synchronization. Preserves item order in an array.
- * @param T Collection item type.
  */
 abstract class AbstractFilterer<T> extends Class {
 	/**

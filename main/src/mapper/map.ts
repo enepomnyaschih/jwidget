@@ -34,8 +34,6 @@ import AbstractMapper from './AbstractMapper';
 
 /**
  * AbstractMapper implementation for maps.
- * @param T Source collection item type.
- * @param U Target collection item type.
  */
 class MapMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
@@ -116,8 +114,6 @@ export default MapMapper;
 namespace MapMapper {
 	/**
 	 * MapMapper configuration.
-	 * @param T Source collection item type.
-	 * @param U Target collection item type.
 	 */
 	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**

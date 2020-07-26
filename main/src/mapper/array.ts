@@ -33,8 +33,6 @@ import AbstractMapper from './AbstractMapper';
 
 /**
  * AbstractMapper implementation for arrays.
- * @param T Source collection item type.
- * @param U Target collection item type.
  */
 class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
@@ -131,8 +129,6 @@ export default ArrayMapper;
 namespace ArrayMapper {
 	/**
 	 * ArrayMapper configuration.
-	 * @param T Source collection item type.
-	 * @param U Target collection item type.
 	 */
 	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**

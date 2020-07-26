@@ -28,7 +28,6 @@ import Listenable from './Listenable';
 
 /**
  * Extension of DestroyableReadonlySet with modification methods.
- * @param T Map item type.
  */
 interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 
@@ -58,9 +57,9 @@ interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => any): IBindableSet<U>;
 
 	/**
-	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
-	 * this collection. The item is destroyed when it leaves the
-	 * collection, and all items are destroyed on the collection destruction.
+	 * Makes this set an owner of its items, which means that its items are alive as long as they are present in
+	 * this set. The item is destroyed when it leaves the
+	 * set, and all items are destroyed on the set destruction.
 	 */
 	ownItems(): this;
 
@@ -93,14 +92,14 @@ interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 	removeAll(items: T[]): T[];
 
 	/**
-	 * Removes the first occurrence of the item in the collection.
+	 * Removes the first occurrence of the item in the set.
 	 * @param item Item to remove.
 	 */
 	removeItem(item: T): void;
 
 	/**
-	 * Removes all occurrences of the items in the collection.
-	 * For efficient performance, you should define an optimal getKey callback for this collection.
+	 * Removes all occurrences of the items in the set.
+	 * For efficient performance, you should define an optimal getKey callback for this set.
 	 * @param items Items to remove.
 	 */
 	removeItems(items: T[]): void;
@@ -121,14 +120,14 @@ interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 	/**
 	 * Adds multiple items to the set, ones that are absent.
 	 * @param items Items to add.
-	 * @returns The added items. If collection is not modified, returns undefined.
+	 * @returns The added items. If the set is not modified, returns undefined.
 	 */
 	tryAddAll(items: T[]): T[];
 
 	/**
 	 * Removes multiple items from the set, ones that are present.
 	 * @param items Items to remove.
-	 * @returns The removed items. If collection is not modified, returns undefined.
+	 * @returns The removed items. If the set is not modified, returns undefined.
 	 */
 	tryRemoveAll(items: T[]): T[];
 
@@ -136,7 +135,7 @@ interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 	 * Removes and adds multiple items in the set. Universal optimized granular operation of removal/insertion.
 	 * @param removedItems Items to remove.
 	 * @param addedItems Items to add.
-	 * @returns Splice result. If collection is not modified, returns undefined.
+	 * @returns Splice result. If the set is not modified, returns undefined.
 	 */
 	trySplice(removedItems: T[], addedItems: T[]): IBindableSet.SpliceResult<T>;
 

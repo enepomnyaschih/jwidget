@@ -31,7 +31,6 @@ import AbstractFilterer from './AbstractFilterer';
 
 /**
  * AbstractFilterer implementation for maps.
- * @param T Collection item type.
  */
 class MapFilterer<T> extends AbstractFilterer<T> {
 	/**
@@ -83,11 +82,10 @@ export default MapFilterer;
 namespace MapFilterer {
 	/**
 	 * MapFilterer configuration.
-	 * @param T Collection item type.
 	 */
 	export interface Config<T> extends AbstractFilterer.Config {
 		/**
-		 * Target collection.
+		 * Target map.
 		 */
 		readonly target?: IBindableMap<T>;
 	}

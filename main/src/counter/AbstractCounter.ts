@@ -30,7 +30,6 @@ import Property from '../Property';
 /**
  * Abstract collection item counter. Builds a new Property containing number of collection items the callback
  * returns truthy value for, and starts continuous synchronization.
- * @param T Collection item type.
  */
 abstract class AbstractCounter<T> extends Class {
 	private _targetCreated: boolean;
@@ -46,7 +45,6 @@ abstract class AbstractCounter<T> extends Class {
 	protected _target: IProperty<number>;
 
 	/**
-	 * @param source Source collection.
 	 * @param _test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
@@ -101,7 +99,6 @@ export default AbstractCounter;
 namespace AbstractCounter {
 	/**
 	 * AbstractCounter configuration.
-	 * @param T Collection item type.
 	 */
 	export interface Config {
 		/**
@@ -117,7 +114,6 @@ namespace AbstractCounter {
 
 	/**
 	 * AbstractCounter.reconfigure method configuration.
-	 * @param T Collection item type.
 	 */
 	export interface Reconfig<T> {
 		/**

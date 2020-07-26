@@ -38,7 +38,7 @@ export default class ArraySorterComparing<T> extends AbstractSorterComparing<T> 
 	 */
 	constructor(readonly source: ReadonlyBindableArray<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(config, source.getKey, source.silent);
-		this._splice([], source.asArray());
+		this._splice([], source.items);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
@@ -48,7 +48,7 @@ export default class ArraySorterComparing<T> extends AbstractSorterComparing<T> 
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._splice(this.source.asArray(), []);
+		this._splice(this.source.items, []);
 		super.destroyObject();
 	}
 

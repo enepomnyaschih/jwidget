@@ -35,7 +35,6 @@ import AbstractFilterer from './AbstractFilterer';
 
 /**
  * AbstractFilterer implementation for arrays.
- * @param T Collection item type.
  */
 class ArrayFilterer<T> extends AbstractFilterer<T> {
 	private _filtered: number[] = [];
@@ -67,7 +66,7 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	}
 
 	/**
-	 * Changes filterer configuration and refilters target collection.
+	 * Changes filterer configuration and refilters the target collection.
 	 * @param config Options to modify.
 	 */
 	reconfigure(config: ArrayFilterer.Reconfig<T>) {
@@ -77,9 +76,8 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	}
 
 	/**
-	 * Refilters target collection item at specified position in source collection.
+	 * Refilters the target collection item at the specified position in the source collection.
 	 * Call this method when collection item properties change the way that it must be refiltered.
-	 * @param sourceIndex Index of source collection item to refilter.
 	 */
 	refilterAt(sourceIndex: number) {
 		var item = this.source.get(sourceIndex);
@@ -99,7 +97,7 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	}
 
 	/**
-	 * Refilters target collection item. Call this method when collection item properties change the way that
+	 * Refilters the target collection item. Call this method when collection item properties change the way that
 	 * it must be refiltered.
 	 * @param item Item to refilter.
 	 */
@@ -111,7 +109,7 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	}
 
 	/**
-	 * Refilters target collection. Call this method when collection item properties change the way that
+	 * Refilters the target collection. Call this method when collection item properties change the way that
 	 * they must be refiltered.
 	 */
 	refilter() {

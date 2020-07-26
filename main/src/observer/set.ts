@@ -36,7 +36,7 @@ export default class SetObserver<T> extends AbstractObserver<T> {
 	 */
 	constructor(readonly source: ReadonlyBindableSet<T>, config: AbstractObserver.Config<T>) {
 		super(config);
-		this._addItems(source.asArray());
+		this._addItems(source.toArray());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
@@ -45,7 +45,7 @@ export default class SetObserver<T> extends AbstractObserver<T> {
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._doClearItems(this.source.asArray());
+		this._doClearItems(this.source.toArray());
 		super.destroyObject();
 	}
 

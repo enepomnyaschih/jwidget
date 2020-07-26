@@ -30,7 +30,6 @@ import AbstractFilterer from './AbstractFilterer';
 
 /**
  * AbstractFilterer implementation for sets.
- * @param T Collection item type.
  */
 class SetFilterer<T> extends AbstractFilterer<T> {
 	/**
@@ -76,7 +75,6 @@ export default SetFilterer;
 namespace SetFilterer {
 	/**
 	 * SetFilterer configuration.
-	 * @param T Collection item type.
 	 */
 	export interface Config<T> extends AbstractFilterer.Config {
 		/**

@@ -35,7 +35,7 @@ import ComponentObserver from './ComponentObserver';
 export default class ComponentSet extends Class {
 	constructor(private parent: Component, private source: ReadonlyBindableSet<Component>, el: JQuery) {
 		super();
-		parent._collections[this.iid] = this;
+		parent._sets[this.iid] = this;
 
 		const mapper = this.own(new SetMapper<Component, Component>(source, (child) => {
 			this.parent._initChild(child);
@@ -51,7 +51,7 @@ export default class ComponentSet extends Class {
 	}
 
 	destroy() {
-		delete this.parent._collections[this.iid];
+		delete this.parent._sets[this.iid];
 		super.destroy();
 	}
 

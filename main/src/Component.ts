@@ -67,7 +67,7 @@ export default class Component extends Class {
 	private __elements: Dictionary<JQuery> = null;
 	private __bindables: Dictionary<ComponentBindable> = null;
 	private __arrays: Dictionary<ComponentArray> = null;
-	private __collections: Dictionary<ComponentSet> = null;
+	private __sets: Dictionary<ComponentSet> = null;
 
 	/**
 	 * Plain objects of this class can be constructed. They can be used as dummy components or simple containers.
@@ -132,8 +132,8 @@ export default class Component extends Class {
 	/**
 	 * @hidden
 	 */
-	get _collections() {
-		return this.__collections;
+	get _sets() {
+		return this.__sets;
 	}
 
 	/**
@@ -148,8 +148,8 @@ export default class Component extends Class {
 		}
 		if (this._el) {
 			DomUtils.remove(this._el[0]);
-			DictionaryUtils.forEach(this.__collections, destroy);
-			this.__collections = null;
+			DictionaryUtils.forEach(this.__sets, destroy);
+			this.__sets = null;
 			DictionaryUtils.forEach(this.__arrays, destroy);
 			this.__arrays = null;
 			DictionaryUtils.forEach(this.__bindables, destroy);
@@ -258,7 +258,7 @@ export default class Component extends Class {
 		this._children = new ComponentChildren(this);
 		this.__bindables = {};
 		this.__arrays = {};
-		this.__collections = {};
+		this.__sets = {};
 		this.beforeRender();
 		const elements = apply({}, this.__elements);
 		for (const jwId in elements) {
@@ -308,7 +308,7 @@ export default class Component extends Class {
 
 	/**
 	 * Renders component into an element. Use it to render root component only: its children must be rendered
-	 * using `children`, `addArray`, `addCollection`, `addBindable` members.
+	 * using `children`, `addArray`, `addSet`, `addBindable` members.
 	 *
 	 * @param el Element to render component into.
 	 */
@@ -321,7 +321,7 @@ export default class Component extends Class {
 
 	/**
 	 * Render component in place of an element. Use it to render root component only: its children must be rendered
-	 * using `children`, `addArray`, `addCollection`, `addBindable` members.
+	 * using `children`, `addArray`, `addSet`, `addBindable` members.
 	 *
 	 * @param el Element to render component in place of.
 	 */
@@ -415,7 +415,7 @@ export default class Component extends Class {
 		this.afterAppend();
 		this._children.forEach(DomUtils._afterAppend);
 		DictionaryUtils.forEach<ComponentArray>(this.__arrays, DomUtils._afterAppend);
-		DictionaryUtils.forEach<ComponentSet>(this.__collections, DomUtils._afterAppend);
+		DictionaryUtils.forEach<ComponentSet>(this.__sets, DomUtils._afterAppend);
 	}
 
 	/**

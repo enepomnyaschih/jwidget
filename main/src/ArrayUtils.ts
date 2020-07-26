@@ -399,7 +399,7 @@ export function toReversed<T>(arr: T[]): T[] {
 }
 
 /**
- * Indexes collection.
+ * Indexes an array.
  *
  * Builds and returns a new map by rule: key is the result of the indexer function call,
  * value is the corresponding item.
@@ -654,7 +654,7 @@ export function equal<T>(x: T[], y: T[]): boolean {
 /**
  * Checks all items against criteria in backward order.
  *
- * Returns true if criteria returns truthy value for all collection items.
+ * Returns true if criteria returns truthy value for all array items.
  *
  * Algorithms iterates items consequently, and stops after the first item not matching the criteria.
  *
@@ -814,7 +814,7 @@ export function tryClear<T>(arr: T[]): T[]{
  * @param arr Array.
  * @param segmentsToRemove Array of segments to remove sorted by index asc. Segments are removed in backward order.
  * @param segmentsToAdd Array of segments to insert sorted by index asc. Segments are inserted in forward order.
- * @returns Splice result. If collection is not modified, returns undefined.
+ * @returns Splice result. If the array is not modified, returns undefined.
  */
 export function trySplice<T>(arr: T[],
 		segmentsToRemove: IBindableArray.IndexCount[],
@@ -877,7 +877,7 @@ export function trySplice<T>(arr: T[],
  * @param arr Array.
  * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
  * Must contain all indexes from 0 to (length - 1).
- * @returns Old array contents. If collection is not modified, returns undefined.
+ * @returns Old array contents. If the array is not modified, returns undefined.
  */
 export function tryReorder<T>(arr: T[], indexArray: number[]): T[]{
 	var length = arr.length;

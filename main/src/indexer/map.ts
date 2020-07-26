@@ -41,7 +41,7 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 	constructor(readonly source: ReadonlyBindableMap<T>, getKey: (item: T) => any,
 				config?: AbstractIndexer.Config<T>) {
 		super(getKey, config, source.getKey, source.silent);
-		this._target.tryPutAll(this._index(source.asArray()));
+		this._target.tryPutAll(this._index(source.toArray()));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
@@ -50,7 +50,7 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._target.tryRemoveAll(this._keys(this.source.asArray()));
+		this._target.tryRemoveAll(this._keys(this.source.toArray()));
 		super.destroyObject();
 	}
 
@@ -72,7 +72,7 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
  * @param source Source map.
  * @param getKey Indexer function.
  * @param scope Call scope of `getKey` callback.
- * @returns Collection index map.
+ * @returns Map index map.
  */
 export function indexMap<T>(source: ReadonlyBindableMap<T>, getKey: (item: T) => any,
 							scope?: any): DestroyableReadonlyBindableMap<T> {

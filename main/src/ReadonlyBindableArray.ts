@@ -30,33 +30,31 @@ import Listenable from './Listenable';
 import Reducer from './Reducer';
 
 /**
- * Ordered collection of items. Each item of the array has an index. Index of first item is 0,
- * index of each next one is higher by 1.
- * @param T Item type.
+ * Bindable readonly wrapper over a native array.
  */
 interface ReadonlyBindableArray<T> {
 	/**
-	 * Checks if this collection never dispatches any message. This knowledge may help you do certain code optimizations.
+	 * Checks if this array never dispatches any message. This knowledge may help you do certain code optimizations.
 	 */
 	readonly silent: boolean;
 
 	/**
-	 * Identifies an item in this collection for optimization of some algorithms.
+	 * Identifies an item in this array for optimization of some algorithms.
 	 */
 	readonly getKey: (item: T) => any;
 
 	/**
-	 * Collection length property.
+	 * Property containing number of items in the array.
 	 */
 	readonly length: Bindable<number>;
 
 	/**
-	 * Checks collection for emptiness.
+	 * Checks is the array is empty.
 	 */
 	readonly empty: boolean;
 
 	/**
-	 * Returns the first (or some) item in collection. If collection is empty, returns undefined.
+	 * Returns the first item in the array. If collection is empty, returns undefined.
 	 */
 	readonly first: T;
 
@@ -71,9 +69,7 @@ interface ReadonlyBindableArray<T> {
 	readonly lastIndex: number;
 
 	/**
-	 * Item array - internal collection representation.
-	 *
-	 * Caution: doesn't make a copy - please don't modify.
+	 * Internal representation of the array.
 	 */
 	readonly items: T[];
 
@@ -108,12 +104,12 @@ interface ReadonlyBindableArray<T> {
 	readonly onChange: Listenable<IBindableArray.Message<T>>;
 
 	/**
-	 * Returns a shallow copy of this collection.
+	 * Returns a shallow copy of this array.
 	 */
 	clone(): IBindableArray<T>;
 
 	/**
-	 * Checks item for existence in collection.
+	 * Checks if an item exists in the array.
 	 */
 	contains(item: T): boolean;
 
@@ -130,10 +126,10 @@ interface ReadonlyBindableArray<T> {
 
 	/**
 	 * Checks all items against the criteria in backward order.
-	 * Returns true if the callback returns !== false for all collection items.
+	 * Returns true if the callback returns !== false for all array items.
 	 * Algorithm iterates items consequently, and stops it after the first item not matching the criteria.
 	 * @param callback Criteria callback.
-	 * @param scope Callback call scope. Defaults to collection itself.
+	 * @param scope Callback call scope. Defaults to the array itself.
 	 * @returns Every item matches the criteria.
 	 */
 	backEvery(callback: (item: T, index: number) => any, scope?: any): boolean;
@@ -165,7 +161,7 @@ interface ReadonlyBindableArray<T> {
 	 * Returns index of the first item the callback returns %truthy value for.
 	 * Algorithm iterates items sequentially, and stops it after the first item matching the criteria.
 	 * @param callback Criteria callback.
-	 * @param scope `callback` call scope. Defaults to collection itself.
+	 * @param scope `callback` call scope. Defaults to the array itself.
 	 * @returns Found item index or undefined.
 	 */
 	findIndex(callback: (item: T, index: number) => any, scope?: any): number;
@@ -178,50 +174,16 @@ interface ReadonlyBindableArray<T> {
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2.
 	 * Defaults to [[cmp]].
-	 * @param scope Comparer call scope. Defaults to collection itself.
+	 * @param scope Comparer call scope. Defaults to the array itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns Item index.
 	 */
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
 
 	/**
-	 * Converts collection to a native array. Builds a new array consisting of collection items.
-	 */
-	toArray(): T[];
-
-	/**
-	 * Converts collection to a bindable array. Builds a new array consisting of collection items.
-	 */
-	toBindableArray(): IBindableArray<T>;
-
-	/**
-	 * Converts collection to a set. Builds a new set consisting of collection items.
+	 * Converts the array to a set. Builds a new set consisting of the array items.
 	 */
 	toSet(): IBindableSet<T>;
-
-	/**
-	 * Represents collection as a native array.
-	 * If this collection is an array, returns its items immediately.
-	 * Else, executes toArray method.
-	 * Use with caution.
-	 */
-	asArray(): T[];
-
-	/**
-	 * Represents collection as a bindable array.
-	 * If this collection is an array, returns it immediately.
-	 * Else, executes toArray method.
-	 * Use with caution.
-	 */
-	asBindableArray(): IBindableArray<T>;
-
-	/**
-	 * Represents collection as set.
-	 * If this collection is set, returns it immediately.
-	 * Else, executes toSet method.
-	 * Use with caution.
-	 */
-	asSet(): IBindableSet<T>;
 
 	/**
 	 * @inheritDoc
@@ -236,7 +198,7 @@ interface ReadonlyBindableArray<T> {
 	/**
 	 * Builds an array of item indices sorted by the result of %callback call for each item.
 	 * @param callback Indexer function. Must return a comparable value, compatible with %cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the array.
 	 * @param order Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
 	 * @returns Indices of items to build a sorted array.
 	 */
@@ -245,7 +207,7 @@ interface ReadonlyBindableArray<T> {
 	/**
 	 * Builds an array of item indices sorted by comparer.
 	 * @param compare Comparer function. Should return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Compare call scope. Defaults to the collection.
+	 * @param scope Compare call scope. Defaults to the array.
 	 * @param order Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
 	 * @returns Indices of items to build a sorted array.
 	 */
@@ -295,7 +257,7 @@ interface ReadonlyBindableArray<T> {
 	/**
 	 * Returns index of the array item the callback returns the highest (or lowest if order < 0) value for.
 	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the array.
 	 * @param order Pass negative order to find the lowest value.
 	 * @returns Index of item with the highest (or lowest) value in the array.
 	 */
@@ -309,7 +271,7 @@ interface ReadonlyBindableArray<T> {
 	/**
 	 * Returns index of the highest (or lowest if order < 0) array item in terms of the specified comparer function.
 	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the array.
 	 * @param order Pass negative order to find the lowest value.
 	 * @returns Index of the highest (or lowest) array item.
 	 */
@@ -323,7 +285,7 @@ interface ReadonlyBindableArray<T> {
 	/**
 	 * Returns index of the array item the callback returns the lowest (or highest if order < 0) value for.
 	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the array.
 	 * @param order Pass negative order to find the highest value.
 	 * @returns Index of item with the lowest (or highest) value in the array.
 	 */
@@ -337,7 +299,7 @@ interface ReadonlyBindableArray<T> {
 	/**
 	 * Returns index of the lowest (or highest if order < 0) array item in terms of the specified comparer function.
 	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Callback call scope. Defaults to the collection.
+	 * @param scope Callback call scope. Defaults to the array.
 	 * @param order Pass negative order to find the highest value.
 	 * @returns Index of the lowest (or highest) array item.
 	 */
@@ -357,9 +319,9 @@ interface ReadonlyBindableArray<T> {
 	 * If items don't have unique key, probably `detectFilter` method may help,
 	 * because it doesn't require item uniquiness.
 	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to `getKey` property of the collection.
-	 * @param scope `getKey` call scope. Defaults to collection itself.
+	 * @param getKey Function which returns unique key of an item in this array.
+	 * Defaults to `getKey` property of the array.
+	 * @param scope `getKey` call scope. Defaults to the array itself.
 	 * @returns `splice` method arguments. If no method call required, returns undefined.
 	 */
 	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IBindableArray.SpliceParams<T>;
@@ -377,11 +339,11 @@ interface ReadonlyBindableArray<T> {
 	/**
 	 * Detects `reorder` method arguments to adjust array contents to `newItems`.
 	 * Determines where to move all items.
-	 * If `newItems` contents differ from collection contents, it may have unexpected consequences.
+	 * If `newItems` contents differ from the array contents, it may have unexpected consequences.
 	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this collection.
-	 * Defaults to `getKey` property of the collection.
-	 * @param scope `getKey` call scope. Defaults to collection itself.
+	 * @param getKey Function which returns unique key of an item in this array.
+	 * Defaults to `getKey` property of the array.
+	 * @param scope `getKey` call scope. Defaults to the array itself.
 	 * @returns `indexArray` argument of `reorder` method. If no method call required, returns undefined.
 	 */
 	detectReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): number[];
@@ -391,7 +353,7 @@ interface ReadonlyBindableArray<T> {
 	 * `callback` call for each item.
 	 * @param callback Indexer function. Must return a comparable value, compatible with
 	 * `cmp`. Returns item itself by default.
-	 * @param scope `callback` call scope. Defaults to collection itself.
+	 * @param scope `callback` call scope. Defaults to the array itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns `indexArray` argument of `reorder` method. If no method call required, returns undefined.
 	 */
@@ -401,7 +363,7 @@ interface ReadonlyBindableArray<T> {
 	 * Detects `reorder` method arguments to sort array contents by comparer.
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
-	 * @param scope `comparer` call scope. Defaults to collection itself.
+	 * @param scope `comparer` call scope. Defaults to the array itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns `indexArray` argument of `reorder` method. If no method call required, returns undefined.
 	 */

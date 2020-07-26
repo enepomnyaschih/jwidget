@@ -84,7 +84,6 @@ export default AbstractConverterToArray;
 namespace AbstractConverterToArray {
 	/**
 	 * AbstractConverterToArray configuration.
-	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
 		/**
