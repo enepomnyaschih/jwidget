@@ -50,8 +50,8 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IList.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		var value = this._target.get();
 		spliceResult.removedItemsList.forEach((indexItems) => {
 			value -= ArrayUtils.count(indexItems.items, this._test, this._scope);
@@ -62,9 +62,9 @@ export default class ListCounter<T> extends AbstractCounter<T> {
 		this._target.set(value);
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<T>) {
-		var oldFiltered = this._test.call(this._scope, params.oldItem);
-		var newFiltered = this._test.call(this._scope, params.newItem);
+	private _onReplace(message: IList.ReplaceMessage<T>) {
+		var oldFiltered = this._test.call(this._scope, message.oldItem);
+		var newFiltered = this._test.call(this._scope, message.newItem);
 		if (oldFiltered && !newFiltered) {
 			this._target.set(this._target.get() - 1);
 		} else if (!oldFiltered && newFiltered) {

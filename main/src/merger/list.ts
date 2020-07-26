@@ -124,8 +124,8 @@ class ListMerger<T> extends Class {
 		return indexes;
 	}
 
-	private _onSplice(params: IList.SpliceMessage<ReadonlyList<T>>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<ReadonlyList<T>>) {
+		var spliceResult = message.spliceResult;
 		var indexes = this._getIndexes(spliceResult.oldItems);
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
 			return new IndexCount(indexes[indexItems.index], this._count(indexItems.items));
@@ -144,15 +144,15 @@ class ListMerger<T> extends Class {
 		this._target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<ReadonlyList<T>>) {
-		var index = this._count(this.source.items, 0, params.index);
+	private _onReplace(message: IList.ReplaceMessage<ReadonlyList<T>>) {
+		var index = this._count(this.source.items, 0, message.index);
 		this._target.trySplice(
-			[new IndexCount(index, params.oldItem.length.get())],
-			[new IndexItems<T>(index, params.newItem.items)]);
+			[new IndexCount(index, message.oldItem.length.get())],
+			[new IndexItems<T>(index, message.newItem.items)]);
 	}
 
-	private _onMove(params: IList.MoveMessage<ReadonlyList<T>>) {
-		var count = params.item.length.get();
+	private _onMove(message: IList.MoveMessage<ReadonlyList<T>>) {
+		var count = message.item.length.get();
 		var indexes = new Array<number>(this._target.length.get());
 		var currentIndex = 0;
 
@@ -163,25 +163,25 @@ class ListMerger<T> extends Class {
 			}
 		}
 
-		for (var i = 0, l = Math.min(params.fromIndex, params.toIndex); i < l; ++i) {
+		for (var i = 0, l = Math.min(message.fromIndex, message.toIndex); i < l; ++i) {
 			shiftBunch(this.source.get(i).length.get(), 0);
 		}
-		if (params.fromIndex <= params.toIndex) {
+		if (message.fromIndex <= message.toIndex) {
 			// [1], [2], [3], [4], [5]		[2] move to 3
 			// [1], [3], [4], [2], [5]
-			shiftBunch(count, this._count(this.source.items, params.fromIndex, params.toIndex - params.fromIndex));
-			for (var i = params.fromIndex; i < params.toIndex; ++i) {
+			shiftBunch(count, this._count(this.source.items, message.fromIndex, message.toIndex - message.fromIndex));
+			for (var i = message.fromIndex; i < message.toIndex; ++i) {
 				shiftBunch(this.source.get(i).length.get(), -count);
 			}
 		} else {
 			// [1], [2], [3], [4], [5]		[4] move to 1
 			// [1], [4], [2], [3], [5]
-			for (var i = params.toIndex + 1; i <= params.fromIndex; ++i) {
+			for (var i = message.toIndex + 1; i <= message.fromIndex; ++i) {
 				shiftBunch(this.source.get(i).length.get(), count);
 			}
-			shiftBunch(count, -this._count(this.source.items, params.toIndex + 1, params.fromIndex - params.toIndex));
+			shiftBunch(count, -this._count(this.source.items, message.toIndex + 1, message.fromIndex - message.toIndex));
 		}
-		for (var i = Math.max(params.fromIndex, params.toIndex) + 1, l = this.source.length.get(); i < l; ++i) {
+		for (var i = Math.max(message.fromIndex, message.toIndex) + 1, l = this.source.length.get(); i < l; ++i) {
 			shiftBunch(this.source.get(i).length.get(), 0);
 		}
 
@@ -192,14 +192,14 @@ class ListMerger<T> extends Class {
 		this._target.clear();
 	}
 
-	private _onReorder(params: IList.ReorderMessage<ReadonlyList<T>>) {
-		var oldIndexes = this._getIndexes(params.items);
+	private _onReorder(message: IList.ReorderMessage<ReadonlyList<T>>) {
+		var oldIndexes = this._getIndexes(message.items);
 		var newIndexes = this._getIndexes(this.source.items);
 		var indexes = new Array<number>(this._target.length.get());
-		for (var i = 0, l = params.items.length; i < l; ++i) {
-			var bunch = params.items[i];
+		for (var i = 0, l = message.items.length; i < l; ++i) {
+			var bunch = message.items[i];
 			var oldIndex = oldIndexes[i];
-			var newIndex = newIndexes[params.indexArray[i]];
+			var newIndex = newIndexes[message.indexArray[i]];
 			for (var j = 0, m = bunch.length.get(); j < m; ++j) {
 				indexes[oldIndex + j] = newIndex + j;
 			}
@@ -284,8 +284,8 @@ class Bunch<T> extends Class {
 		return 0;
 	}
 
-	private _onSplice(params: IList.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		var index = this._getIndex();
 		var removeParamsList = spliceResult.removedItemsList.map((indexItems) => {
 			return new IndexCount(indexItems.index + index, indexItems.items.length);
@@ -296,22 +296,22 @@ class Bunch<T> extends Class {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<T>) {
-		this.target.trySet(this._getIndex() + params.index, params.newItem);
+	private _onReplace(message: IList.ReplaceMessage<T>) {
+		this.target.trySet(this._getIndex() + message.index, message.newItem);
 	}
 
-	private _onMove(params: IList.MoveMessage<T>) {
+	private _onMove(message: IList.MoveMessage<T>) {
 		var index = this._getIndex();
-		this.target.tryMove(index + params.fromIndex, index + params.toIndex);
+		this.target.tryMove(index + message.fromIndex, index + message.toIndex);
 	}
 
-	private _onClear(params: IList.MessageWithItems<T>) {
-		this.target.tryRemoveAll(this._getIndex(), params.items.length);
+	private _onClear(message: IList.MessageWithItems<T>) {
+		this.target.tryRemoveAll(this._getIndex(), message.items.length);
 	}
 
-	private _onReorder(params: IList.ReorderMessage<T>) {
+	private _onReorder(message: IList.ReorderMessage<T>) {
 		var index = this._getIndex();
-		var bunchIndexArray = params.indexArray;
+		var bunchIndexArray = message.indexArray;
 		var bunchLength = bunchIndexArray.length;
 		var targetLength = this.target.length.get();
 		var targetIndexArray = new Array<number>(targetLength);

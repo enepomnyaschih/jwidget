@@ -45,13 +45,13 @@ export default class SetObserver<T> extends AbstractObserver<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: ISet.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._removeItems(spliceResult.removedItems);
 		this._addItems(spliceResult.addedItems);
 	}
 
-	private _onClear(params: ISet.MessageWithItems<T>) {
-		this._doClearItems(params.items);
+	private _onClear(message: ISet.MessageWithItems<T>) {
+		this._doClearItems(message.items);
 	}
 }

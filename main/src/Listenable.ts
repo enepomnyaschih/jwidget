@@ -44,7 +44,7 @@ interface Listenable<M> {
 	 * @param handler Handler function.
 	 * @param scope `handler` call scope.
 	 */
-	listen(handler: (params: M) => any, scope?: any): Destroyable;
+	listen(handler: (message: M) => any, scope?: any): Destroyable;
 }
 
 export default Listenable;

@@ -48,15 +48,15 @@ export default class SetConverterToList<T> extends AbstractConverterToList<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: ISet.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._splice(
 			VidSet.fromArray<T>(spliceResult.removedItems, this.source.getKey),
 			VidSet.fromArray<T>(spliceResult.addedItems, this.source.getKey));
 	}
 
-	private _onClear(params: ISet.MessageWithItems<T>) {
-		this._target.removeItems(params.items);
+	private _onClear(message: ISet.MessageWithItems<T>) {
+		this._target.removeItems(message.items);
 	}
 }
 

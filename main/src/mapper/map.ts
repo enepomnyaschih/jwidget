@@ -93,8 +93,8 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onSplice(params: IMap.SpliceMessage<T>) {
-		var sourceResult = params.spliceResult;
+	private _onSplice(message: IMap.SpliceMessage<T>) {
+		var sourceResult = message.spliceResult;
 		var removedDatas = sourceResult.removedItems;
 		var addedDatas = sourceResult.addedItems;
 		var targetResult = this.target.trySplice(
@@ -105,12 +105,12 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onReindex(params: IMap.ReindexMessage<T>) {
-		this.target.tryReindex(params.keyMap);
+	private _onReindex(message: IMap.ReindexMessage<T>) {
+		this.target.tryReindex(message.keyMap);
 	}
 
-	private _onClear(params: IMap.MessageWithItems<T>) {
-		var datas = params.items;
+	private _onClear(message: IMap.MessageWithItems<T>) {
+		var datas = message.items;
 		this._destroyItems(this.target.tryRemoveAll(Object.keys(datas)), datas);
 	}
 }

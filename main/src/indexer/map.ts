@@ -50,16 +50,16 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IMap.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IMap.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._target.trySplice(
 			this._keys(DictionaryUtils.toArray(spliceResult.removedItems)),
 			this._index(DictionaryUtils.toArray(spliceResult.addedItems)));
 	}
 
-	private _onClear(params: IMap.MessageWithItems<T>) {
+	private _onClear(message: IMap.MessageWithItems<T>) {
 		this._target.tryRemoveAll(
-			this._keys(DictionaryUtils.toArray(params.items)));
+			this._keys(DictionaryUtils.toArray(message.items)));
 	}
 }
 

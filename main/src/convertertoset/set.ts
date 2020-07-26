@@ -47,13 +47,13 @@ export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: ISet.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
-	private _onClear(params: ISet.MessageWithItems<T>) {
-		this._target.tryRemoveAll(params.items);
+	private _onClear(message: ISet.MessageWithItems<T>) {
+		this._target.tryRemoveAll(message.items);
 	}
 }
 

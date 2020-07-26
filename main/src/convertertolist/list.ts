@@ -51,22 +51,22 @@ export default class ListConverterToList<T> extends AbstractConverterToList<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IList.SpliceMessage<T>) {
-		const spliceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<T>) {
+		const spliceResult = message.spliceResult;
 		this._splice(
 			VidSet.fromArray<T>(spliceResult.removedItems, this.source.getKey),
 			VidSet.fromArray<T>(spliceResult.addedItems, this.source.getKey));
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<T>) {
-		const index = this.target.indexOf(params.oldItem);
+	private _onReplace(message: IList.ReplaceMessage<T>) {
+		const index = this.target.indexOf(message.oldItem);
 		this._target.trySplice(
 			[new IndexCount(index, 1)],
-			[new IndexItems(this.target.length.get() - 1, [params.newItem])]);
+			[new IndexItems(this.target.length.get() - 1, [message.newItem])]);
 	}
 
-	private _onClear(params: IList.MessageWithItems<T>) {
-		this._target.removeItems(params.items);
+	private _onClear(message: IList.MessageWithItems<T>) {
+		this._target.removeItems(message.items);
 	}
 }
 

@@ -61,7 +61,7 @@ export default class Dispatcher<M> implements IDispatcher<M> {
 	 * @param handler Handler function.
 	 * @param scope `handler` call scope.
 	 */
-	listen(handler: (params: M) => any, scope?: any): Destroyable {
+	listen(handler: (message: M) => any, scope?: any): Destroyable {
 		if (this._listeners === null) {
 			this._listeners = {};
 		}

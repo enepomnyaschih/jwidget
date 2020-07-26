@@ -110,8 +110,8 @@ class ListInserter<T> extends Class {
 		}
 	}
 
-	private _onSplice(params: IList.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.removedItems;
 
@@ -135,30 +135,30 @@ class ListInserter<T> extends Class {
 		}
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<T>) {
+	private _onReplace(message: IList.ReplaceMessage<T>) {
 		if (this._remove) {
-			this._remove.call(this._scope, params.oldItem, params.index);
+			this._remove.call(this._scope, message.oldItem, message.index);
 		}
 		if (this._add) {
-			this._add.call(this._scope, params.newItem, params.index);
+			this._add.call(this._scope, message.newItem, message.index);
 		}
 	}
 
-	private _onMove(params: IList.MoveMessage<T>) {
+	private _onMove(message: IList.MoveMessage<T>) {
 		if (this._remove) {
-			this._remove.call(this._scope, params.item, params.fromIndex);
+			this._remove.call(this._scope, message.item, message.fromIndex);
 		}
 		if (this._add) {
-			this._add.call(this._scope, params.item, params.toIndex);
+			this._add.call(this._scope, message.item, message.toIndex);
 		}
 	}
 
-	private _onClear(params: IList.MessageWithItems<T>) {
-		this._doClearItems(params.items);
+	private _onClear(message: IList.MessageWithItems<T>) {
+		this._doClearItems(message.items);
 	}
 
-	private _onReorder(params: IList.ReorderMessage<T>) {
-		this._doClearItems(params.items);
+	private _onReorder(message: IList.ReorderMessage<T>) {
+		this._doClearItems(message.items);
 		this._addItems(this.source.items, 0);
 	}
 }

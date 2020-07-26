@@ -78,8 +78,8 @@ class ListReverser<T> extends Class {
 		return items;
 	}
 
-	private _onSplice(params: IList.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		var oldLength = this._target.length.get();
 		var newLength = oldLength;
 
@@ -108,22 +108,22 @@ class ListReverser<T> extends Class {
 		this._target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<T>) {
-		this._target.trySet(this._target.length.get() - params.index - 1, params.newItem);
+	private _onReplace(message: IList.ReplaceMessage<T>) {
+		this._target.trySet(this._target.length.get() - message.index - 1, message.newItem);
 	}
 
-	private _onMove(params: IList.MoveMessage<T>) {
+	private _onMove(message: IList.MoveMessage<T>) {
 		this._target.tryMove(
-			this._target.length.get() - params.fromIndex - 1,
-			this._target.length.get() - params.toIndex - 1);
+			this._target.length.get() - message.fromIndex - 1,
+			this._target.length.get() - message.toIndex - 1);
 	}
 
 	private _onClear() {
 		this._target.clear();
 	}
 
-	private _onReorder(params: IList.ReorderMessage<T>) {
-		var indexArray = params.indexArray;
+	private _onReorder(message: IList.ReorderMessage<T>) {
+		var indexArray = message.indexArray;
 		var length = indexArray.length;
 		var indexes = new Array<number>(indexArray.length);
 		for (var i = 0; i < length; ++i) {

@@ -94,8 +94,8 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onSplice(params: IList.SpliceMessage<T>) {
-		var sourceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<T>) {
+		var sourceResult = message.spliceResult;
 		var sourceAddedItemsList = sourceResult.addedItemsList;
 		var targetAddParamsList: IList.IndexItems<U>[] = [];
 		for (var i = 0, l = sourceAddedItemsList.length; i < l; ++i) {
@@ -111,22 +111,22 @@ class ListMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<T>) {
-		var newItem = this._create.call(this._scope, params.newItem);
-		var oldItem = this.target.trySet(params.index, newItem).value;
-		this._destroy.call(this._scope, oldItem, params.oldItem);
+	private _onReplace(message: IList.ReplaceMessage<T>) {
+		var newItem = this._create.call(this._scope, message.newItem);
+		var oldItem = this.target.trySet(message.index, newItem).value;
+		this._destroy.call(this._scope, oldItem, message.oldItem);
 	}
 
-	private _onMove(params: IList.MoveMessage<T>) {
-		this.target.tryMove(params.fromIndex, params.toIndex);
+	private _onMove(message: IList.MoveMessage<T>) {
+		this.target.tryMove(message.fromIndex, message.toIndex);
 	}
 
-	private _onClear(params: IList.MessageWithItems<T>) {
-		this._destroyItems(this.target.clear(), params.items);
+	private _onClear(message: IList.MessageWithItems<T>) {
+		this._destroyItems(this.target.clear(), message.items);
 	}
 
-	private _onReorder(params: IList.ReorderMessage<T>) {
-		this.target.tryReorder(params.indexArray);
+	private _onReorder(message: IList.ReorderMessage<T>) {
+		this.target.tryReorder(message.indexArray);
 	}
 }
 

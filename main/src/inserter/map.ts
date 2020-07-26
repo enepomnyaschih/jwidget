@@ -110,14 +110,14 @@ class MapInserter<T> extends Class {
 		}
 	}
 
-	private _onSplice(params: IMap.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IMap.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._removeItems(spliceResult.removedItems);
 		this._addItems(spliceResult.addedItems);
 	}
 
-	private _onReindex(params: IMap.ReindexMessage<T>) {
-		var keyMap = params.keyMap;
+	private _onReindex(message: IMap.ReindexMessage<T>) {
+		var keyMap = message.keyMap;
 		for (var oldKey in keyMap) {
 			var newKey = keyMap[oldKey];
 			var item = this.source.get(newKey);
@@ -130,8 +130,8 @@ class MapInserter<T> extends Class {
 		}
 	}
 
-	private _onClear(params: IMap.MessageWithItems<T>) {
-		this._doClearItems(params.items);
+	private _onClear(message: IMap.MessageWithItems<T>) {
+		this._doClearItems(message.items);
 	}
 }
 

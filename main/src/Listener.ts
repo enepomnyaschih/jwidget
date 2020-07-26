@@ -33,7 +33,7 @@ import {newIid} from './index';
 export default class Listener<P> implements Destroyable, Identifiable {
 	readonly iid = newIid();
 
-	constructor(private _dispatcher: Dispatcher<P>, readonly handler: (params: P) => any, readonly scope: any) {
+	constructor(private _dispatcher: Dispatcher<P>, readonly handler: (message: P) => any, readonly scope: any) {
 	}
 
 	destroy() {

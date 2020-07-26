@@ -48,16 +48,16 @@ export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IMap.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IMap.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._target.trySplice(
 			DictionaryUtils.toArray(spliceResult.removedItems),
 			DictionaryUtils.toArray(spliceResult.addedItems));
 	}
 
-	private _onClear(params: IMap.MessageWithItems<T>) {
+	private _onClear(message: IMap.MessageWithItems<T>) {
 		this._target.tryRemoveAll(
-			DictionaryUtils.toArray(params.items));
+			DictionaryUtils.toArray(message.items));
 	}
 }
 

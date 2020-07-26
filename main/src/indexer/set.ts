@@ -49,16 +49,16 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: ISet.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: ISet.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._target.trySplice(
 			this._keys(spliceResult.removedItems),
 			this._index(spliceResult.addedItems));
 	}
 
-	private _onClear(params: ISet.MessageWithItems<T>) {
+	private _onClear(message: ISet.MessageWithItems<T>) {
 		this._target.tryRemoveAll(
-			this._keys(params.items));
+			this._keys(message.items));
 	}
 }
 

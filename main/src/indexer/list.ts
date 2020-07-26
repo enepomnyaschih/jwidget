@@ -49,22 +49,22 @@ export default class ListIndexer<T> extends AbstractIndexer<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IList.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._target.trySplice(
 			this._keys(spliceResult.removedItems),
 			this._index(spliceResult.addedItems));
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<T>) {
+	private _onReplace(message: IList.ReplaceMessage<T>) {
 		this._target.trySplice(
-			this._keys([params.oldItem]),
-			this._index([params.newItem]));
+			this._keys([message.oldItem]),
+			this._index([message.newItem]));
 	}
 
-	private _onClear(params: IList.MessageWithItems<T>) {
+	private _onClear(message: IList.MessageWithItems<T>) {
 		this._target.tryRemoveAll(
-			this._keys(params.items));
+			this._keys(message.items));
 	}
 }
 

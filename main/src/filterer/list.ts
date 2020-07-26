@@ -243,56 +243,56 @@ class ListFilterer<T> extends AbstractFilterer<T> {
 		this.target.trySplice(removeParamsList, addParamsList);
 	}
 
-	private _onSplice(params: IList.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._splice(spliceResult.removedItemsList, spliceResult.addedItemsList);
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<T>) {
-		var oldFiltered = this._filtered[params.index] !== 0;
-		var newFiltered = this._test.call(this._scope, params.newItem);
+	private _onReplace(message: IList.ReplaceMessage<T>) {
+		var oldFiltered = this._filtered[message.index] !== 0;
+		var newFiltered = this._test.call(this._scope, message.newItem);
 		if (!oldFiltered && !newFiltered) {
 			return;
 		}
-		var index = this._countFiltered(0, params.index);
-		this._filtered[params.index] = newFiltered ? 1 : 0;
+		var index = this._countFiltered(0, message.index);
+		this._filtered[message.index] = newFiltered ? 1 : 0;
 		if (!newFiltered) {
 			this.target.remove(index);
 		} else if (!oldFiltered) {
-			this.target.add(params.newItem, index);
+			this.target.add(message.newItem, index);
 		} else {
-			this.target.trySet(index, params.newItem);
+			this.target.trySet(index, message.newItem);
 		}
 	}
 
-	private _onMove(params: IList.MoveMessage<T>) {
-		if (this._filtered[params.fromIndex] !== 0) {
+	private _onMove(message: IList.MoveMessage<T>) {
+		if (this._filtered[message.fromIndex] !== 0) {
 			var fromIndex: number, toIndex: number;
-			if (params.fromIndex < params.toIndex) {
-				fromIndex = this._countFiltered(0, params.fromIndex);
-				toIndex = fromIndex + this._countFiltered(params.fromIndex + 1, params.toIndex - params.fromIndex);
+			if (message.fromIndex < message.toIndex) {
+				fromIndex = this._countFiltered(0, message.fromIndex);
+				toIndex = fromIndex + this._countFiltered(message.fromIndex + 1, message.toIndex - message.fromIndex);
 			} else {
-				toIndex = this._countFiltered(0, params.toIndex);
-				fromIndex = toIndex + this._countFiltered(params.toIndex, params.fromIndex - params.toIndex);
+				toIndex = this._countFiltered(0, message.toIndex);
+				fromIndex = toIndex + this._countFiltered(message.toIndex, message.fromIndex - message.toIndex);
 			}
 			this.target.tryMove(fromIndex, toIndex);
 		}
-		ArrayUtils.tryMove(this._filtered, params.fromIndex, params.toIndex);
+		ArrayUtils.tryMove(this._filtered, message.fromIndex, message.toIndex);
 	}
 
 	private _onClear() {
 		this.target.clear();
 	}
 
-	private _onReorder(params: IList.ReorderMessage<T>) {
+	private _onReorder(message: IList.ReorderMessage<T>) {
 		var targetIndex = 0;
 		var targetIndexWhichMovesToI: Dictionary<number> = {};
 		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
 			if (this._filtered[sourceIndex] !== 0) {
-				targetIndexWhichMovesToI[params.indexArray[sourceIndex]] = targetIndex++;
+				targetIndexWhichMovesToI[message.indexArray[sourceIndex]] = targetIndex++;
 			}
 		}
-		ArrayUtils.tryReorder(this._filtered, params.indexArray);
+		ArrayUtils.tryReorder(this._filtered, message.indexArray);
 
 		var targetIndex = 0;
 		var indexes = new Array<number>(this.target.length.get());

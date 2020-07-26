@@ -46,8 +46,8 @@ export default class ListObserver<T> extends AbstractObserver<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IList.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IList.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		var oldItems = spliceResult.oldItems;
 		var removedItems = spliceResult.removedItems;
 
@@ -62,16 +62,16 @@ export default class ListObserver<T> extends AbstractObserver<T> {
 		}
 	}
 
-	private _onReplace(params: IList.ReplaceMessage<T>) {
+	private _onReplace(message: IList.ReplaceMessage<T>) {
 		if (this._remove) {
-			this._remove.call(this._scope, params.oldItem);
+			this._remove.call(this._scope, message.oldItem);
 		}
 		if (this._add) {
-			this._add.call(this._scope, params.newItem);
+			this._add.call(this._scope, message.newItem);
 		}
 	}
 
-	private _onClear(params: IList.MessageWithItems<T>) {
-		this._doClearItems(params.items);
+	private _onClear(message: IList.MessageWithItems<T>) {
+		this._doClearItems(message.items);
 	}
 }

@@ -49,16 +49,16 @@ export default class MapConverterToList<T> extends AbstractConverterToList<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IMap.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IMap.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._splice(
 			VidSet.fromDictionary<T>(spliceResult.removedItems, this.source.getKey),
 			VidSet.fromDictionary<T>(spliceResult.addedItems, this.source.getKey));
 	}
 
-	private _onClear(params: IMap.MessageWithItems<T>) {
+	private _onClear(message: IMap.MessageWithItems<T>) {
 		this._target.removeItems(
-			DictionaryUtils.toArray(params.items));
+			DictionaryUtils.toArray(message.items));
 	}
 }
 

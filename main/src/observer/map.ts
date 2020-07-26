@@ -46,13 +46,13 @@ export default class MapObserver<T> extends AbstractObserver<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IMap.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IMap.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._removeItems(DictionaryUtils.toArray(spliceResult.removedItems));
 		this._addItems(DictionaryUtils.toArray(spliceResult.addedItems));
 	}
 
-	private _onClear(params: IMap.MessageWithItems<T>) {
-		this._doClearItems(DictionaryUtils.toArray(params.items));
+	private _onClear(message: IMap.MessageWithItems<T>) {
+		this._doClearItems(DictionaryUtils.toArray(message.items));
 	}
 }

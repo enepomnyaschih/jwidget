@@ -481,8 +481,8 @@ namespace Router {
 			}
 
 			DictionaryUtils.forEach(this._expanded, (expanded, route) => {
-				this.own(expanded.onChange.listen((params) => {
-					if (params.value && !this._updating) {
+				this.own(expanded.onChange.listen(message => {
+					if (message.value && !this._updating) {
 						this.router.redirect(route);
 					}
 				}));

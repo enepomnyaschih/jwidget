@@ -61,7 +61,7 @@ export default Bindable;
 
 namespace Bindable {
 	/**
-	 * `Bindable.onChange` params.
+	 * Bindable change message.
 	 */
 	export interface ChangeMessage<V> {
 		/**

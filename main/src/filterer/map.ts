@@ -73,19 +73,19 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 		super.destroyObject();
 	}
 
-	private _onSplice(params: IMap.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IMap.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this.target.trySplice(
 			Object.keys(spliceResult.removedItems),
 			DictionaryUtils.filter(spliceResult.addedItems, this._test, this._scope));
 	}
 
-	private _onReindex(params: IMap.ReindexMessage<T>) {
-		this.target.tryReindex(params.keyMap);
+	private _onReindex(message: IMap.ReindexMessage<T>) {
+		this.target.tryReindex(message.keyMap);
 	}
 
-	private _onClear(params: IMap.MessageWithItems<T>) {
-		this.target.tryRemoveAll(Object.keys(params.items));
+	private _onClear(message: IMap.MessageWithItems<T>) {
+		this.target.tryRemoveAll(Object.keys(message.items));
 	}
 }
 

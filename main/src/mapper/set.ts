@@ -108,16 +108,16 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onSplice(params: ISet.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: ISet.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		var removedDatas = spliceResult.removedItems;
 		var addedDatas = spliceResult.addedItems;
 		this.target.trySplice(this._getItems(removedDatas), this._createItems(addedDatas));
 		this._destroyItems(removedDatas);
 	}
 
-	private _onClear(params: ISet.MessageWithItems<T>) {
-		var datas = params.items;
+	private _onClear(message: ISet.MessageWithItems<T>) {
+		var datas = message.items;
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);
 	}

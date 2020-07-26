@@ -50,8 +50,8 @@ export default class MapCounter<T> extends AbstractCounter<T> {
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(params: IMap.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: IMap.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this._target.set(this._target.get() -
 			DictionaryUtils.count(spliceResult.removedItems, this._test, this._scope) +
 			DictionaryUtils.count(spliceResult.addedItems, this._test, this._scope));

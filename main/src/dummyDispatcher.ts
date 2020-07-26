@@ -35,11 +35,11 @@ class DummyDispatcher implements IDispatcher<any> {
 	purge(): void {
 	}
 
-	listen(_handler: (params: any) => any, _scope?: any): Destroyable {
+	listen(_handler: (message: any) => any, _scope?: any): Destroyable {
 		return dummyDestroyable;
 	}
 
-	dispatch(_params?: any): void {
+	dispatch(_message?: any): void {
 	}
 }
 

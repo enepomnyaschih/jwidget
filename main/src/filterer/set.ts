@@ -71,15 +71,15 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 		super.destroyObject();
 	}
 
-	private _onSplice(params: ISet.SpliceMessage<T>) {
-		var spliceResult = params.spliceResult;
+	private _onSplice(message: ISet.SpliceMessage<T>) {
+		var spliceResult = message.spliceResult;
 		this.target.trySplice(
 			spliceResult.removedItems,
 			spliceResult.addedItems.filter(this._test, this._scope));
 	}
 
-	private _onClear(params: ISet.MessageWithItems<T>) {
-		this.target.tryRemoveAll(params.items);
+	private _onClear(message: ISet.MessageWithItems<T>) {
+		this.target.tryRemoveAll(message.items);
 	}
 }
 
