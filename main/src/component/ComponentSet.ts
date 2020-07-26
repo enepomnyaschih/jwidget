@@ -22,10 +22,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Destroyable from './Destroyable';
-import ReadonlyBindableCollection from './ReadonlyBindableCollection';
+import Class from '../Class';
+import Component from '../Component';
+import * as DomUtils from '../DomUtils';
+import SetMapper from "../mapper/set";
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
+import ComponentObserver from './ComponentObserver';
 
-interface DestroyableReadonlyBindableCollection<T> extends Destroyable, ReadonlyBindableCollection<T> {
+/**
+ * @hidden
+ */
+export default class ComponentSet extends Class {
+	constructor(private parent: Component, private source: ReadonlyBindableSet<Component>, el: JQuery) {
+		super();
+		parent._collections[this.iid] = this;
+
+		const mapper = this.own(new SetMapper<Component, Component>(source, (child) => {
+			this.parent._initChild(child);
+			return child;
+		}, {
+			destroy: (child) => {
+				this.parent._doneChild(child);
+			},
+			getKey: source.getKey
+		}));
+
+		this.own(new ComponentObserver(mapper.target, el[0]));
+	}
+
+	destroy() {
+		delete this.parent._collections[this.iid];
+		super.destroy();
+	}
+
+	_afterAppend() {
+		this.source.forEach(DomUtils._afterAppend);
+	}
 }
-
-export default DestroyableReadonlyBindableCollection;

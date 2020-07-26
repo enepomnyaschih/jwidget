@@ -23,7 +23,6 @@ SOFTWARE.
 */
 
 import Class from '../Class';
-import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 
 /**
  * Abstract collection item mapper. Builds new collection of the same type, consisting of results of callback function
@@ -43,15 +42,9 @@ abstract class AbstractMapper<T, U> extends Class {
 	protected _scope: any;
 
 	/**
-	 * Target collection.
-	 */
-	readonly target: ReadonlyBindableCollection<U>;
-
-	/**
 	 * @hidden
 	 */
-	constructor(readonly source: ReadonlyBindableCollection<T>, protected _create: (data: T) => U,
-				config: AbstractMapper.Config<T, U> = {}) {
+	protected constructor(protected _create: (data: T) => U, config: AbstractMapper.Config<T, U> = {}) {
 		super();
 		this._destroy = config.destroy;
 		this._scope = config.scope || this;

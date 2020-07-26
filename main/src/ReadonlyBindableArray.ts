@@ -22,10 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import Bindable from "./Bindable";
 import IBindableArray from './IBindableArray';
 import IBindableMap from './IBindableMap';
+import IBindableSet from "./IBindableSet";
 import Listenable from './Listenable';
-import ReadonlyBindableCollection from './ReadonlyBindableCollection';
 import Reducer from './Reducer';
 
 /**
@@ -33,7 +34,32 @@ import Reducer from './Reducer';
  * index of each next one is higher by 1.
  * @param T Item type.
  */
-interface ReadonlyBindableArray<T> extends ReadonlyBindableCollection<T> {
+interface ReadonlyBindableArray<T> {
+	/**
+	 * Checks if this collection never dispatches any message. This knowledge may help you do certain code optimizations.
+	 */
+	readonly silent: boolean;
+
+	/**
+	 * Identifies an item in this collection for optimization of some algorithms.
+	 */
+	readonly getKey: (item: T) => any;
+
+	/**
+	 * Collection length property.
+	 */
+	readonly length: Bindable<number>;
+
+	/**
+	 * Checks collection for emptiness.
+	 */
+	readonly empty: boolean;
+
+	/**
+	 * Returns the first (or some) item in collection. If collection is empty, returns undefined.
+	 */
+	readonly first: T;
+
 	/**
 	 * The last item of the array.
 	 */
@@ -85,6 +111,11 @@ interface ReadonlyBindableArray<T> extends ReadonlyBindableCollection<T> {
 	 * Returns a shallow copy of this collection.
 	 */
 	clone(): IBindableArray<T>;
+
+	/**
+	 * Checks item for existence in collection.
+	 */
+	contains(item: T): boolean;
 
 	/**
 	 * Returns an item by index. If an item with such index doesn't exist, returns undefined.
@@ -152,6 +183,45 @@ interface ReadonlyBindableArray<T> extends ReadonlyBindableCollection<T> {
 	 * @returns Item index.
 	 */
 	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
+
+	/**
+	 * Converts collection to a native array. Builds a new array consisting of collection items.
+	 */
+	toArray(): T[];
+
+	/**
+	 * Converts collection to a bindable array. Builds a new array consisting of collection items.
+	 */
+	toBindableArray(): IBindableArray<T>;
+
+	/**
+	 * Converts collection to a set. Builds a new set consisting of collection items.
+	 */
+	toSet(): IBindableSet<T>;
+
+	/**
+	 * Represents collection as a native array.
+	 * If this collection is an array, returns its items immediately.
+	 * Else, executes toArray method.
+	 * Use with caution.
+	 */
+	asArray(): T[];
+
+	/**
+	 * Represents collection as a bindable array.
+	 * If this collection is an array, returns it immediately.
+	 * Else, executes toArray method.
+	 * Use with caution.
+	 */
+	asBindableArray(): IBindableArray<T>;
+
+	/**
+	 * Represents collection as set.
+	 * If this collection is set, returns it immediately.
+	 * Else, executes toSet method.
+	 * Use with caution.
+	 */
+	asSet(): IBindableSet<T>;
 
 	/**
 	 * @inheritDoc

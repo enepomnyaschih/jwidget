@@ -34,13 +34,6 @@ import AbstractFilterer from './AbstractFilterer';
  * @param T Collection item type.
  */
 class MapFilterer<T> extends AbstractFilterer<T> {
-	private _targetCreated: boolean;
-
-	/**
-	 * Source map.
-	 */
-	readonly source: ReadonlyBindableMap<T>;
-
 	/**
 	 * @inheritDoc
 	 */
@@ -51,11 +44,10 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(source: ReadonlyBindableMap<T>, test: (item: T) => any,
+	constructor(readonly source: ReadonlyBindableMap<T>, test: (item: T) => any,
 				config: MapFilterer.Config<T> = {}) {
-		super(source, test, config);
-		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableMap<T>(source.getKey, this.source.silent) : config.target;
+		super(test, config);
+		this.target = config.target ?? this.own(new BindableMap<T>(source.getKey, this.source.silent));
 		this.target.tryPutAll(DictionaryUtils.filter(source.items, this._test, this._scope));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
@@ -67,9 +59,6 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	 */
 	protected destroyObject() {
 		this.target.tryRemoveAll(this.source.getKeys().items);
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		super.destroyObject();
 	}
 

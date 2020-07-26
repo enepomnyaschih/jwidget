@@ -23,8 +23,8 @@ SOFTWARE.
 */
 
 import DestroyableReadonlyBindableArray from './DestroyableReadonlyBindableArray';
-import IBindableCollection from './IBindableCollection';
 import IBindableMap from './IBindableMap';
+import IClass from "./IClass";
 import Listenable from './Listenable';
 import Reducer from './Reducer';
 import Some from './Some';
@@ -33,7 +33,7 @@ import Some from './Some';
  * Extension of DestroyableReadonlyBindableArray with modification methods.
  * @param T Array item type.
  */
-interface IBindableArray<T> extends IBindableCollection<T>, DestroyableReadonlyBindableArray<T> {
+interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> {
 
 	/**
 	 * The array is cleared.
@@ -166,6 +166,13 @@ interface IBindableArray<T> extends IBindableCollection<T>, DestroyableReadonlyB
 	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
 
 	/**
+	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
+	 * this collection. The item is destroyed when it leaves the
+	 * collection, and all items are destroyed on the collection destruction.
+	 */
+	ownItems(): this;
+
+	/**
 	 * Inserts an item to the array.
 	 * @param item Item to insert.
 	 * @param index Index of an item to insert new one before. By default, appends the item to the end of collection.
@@ -201,6 +208,19 @@ interface IBindableArray<T> extends IBindableCollection<T>, DestroyableReadonlyB
 	 * @returns The removed items.
 	 */
 	removeAll(index: number, count: number): T[];
+
+	/**
+	 * Removes the first occurrence of the item in the collection.
+	 * @param item Item to remove.
+	 */
+	removeItem(item: T): void;
+
+	/**
+	 * Removes all occurrences of the items in the collection.
+	 * For efficient performance, you should define an optimal getKey callback for this collection.
+	 * @param items Items to remove.
+	 */
+	removeItems(items: T[]): void;
 
 	/**
 	 * Moves an item inside the array.
@@ -336,7 +356,7 @@ namespace IBindableArray {
 	 * Message of IBindableArray.
 	 * @param T Item type.
 	 */
-	export interface Message<T> extends IBindableCollection.Message<T> {
+	export interface Message<T> {
 		/**
 		 * Message sender.
 		 */

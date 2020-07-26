@@ -34,18 +34,22 @@ import AbstractConverterToArray from './AbstractConverterToArray';
  */
 export default class SetConverterToArray<T> extends AbstractConverterToArray<T> {
 	/**
-	 * Source set.
-	 */
-	readonly source: ReadonlyBindableSet<T>;
-
-	/**
 	 * @param source Source set.
 	 * @param config Converter configuration.
 	 */
-	constructor(source: ReadonlyBindableSet<T>, config: AbstractConverterToArray.Config<T>) {
-		super(source, config);
+	constructor(readonly source: ReadonlyBindableSet<T>, config: AbstractConverterToArray.Config<T>) {
+		super(config, source.getKey, source.silent);
+		this._target.addAll(source.toArray());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected destroyObject() {
+		this._target.removeItems(this.source.toArray());
+		super.destroyObject();
 	}
 
 	private _onSplice(message: IBindableSet.SpliceMessage<T>) {

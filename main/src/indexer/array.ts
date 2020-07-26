@@ -33,20 +33,24 @@ import AbstractIndexer from './AbstractIndexer';
  */
 export default class ArrayIndexer<T> extends AbstractIndexer<T> {
 	/**
-	 * Source array.
-	 */
-	readonly source: ReadonlyBindableArray<T>;
-
-	/**
 	 * @param source Source array.
 	 * @param getKey Indexer function.
 	 * @param config Indexer configuration.
 	 */
-	constructor(source: ReadonlyBindableArray<T>, getKey: (item: T) => any, config?: AbstractIndexer.Config<T>) {
-		super(source, getKey, config);
+	constructor(readonly source: ReadonlyBindableArray<T>, getKey: (item: T) => any, config?: AbstractIndexer.Config<T>) {
+		super(getKey, config, source.getKey, source.silent);
+		this._target.tryPutAll(this._index(source.asArray()));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected destroyObject() {
+		this._target.tryRemoveAll(this._keys(this.source.asArray()));
+		super.destroyObject();
 	}
 
 	private _onSplice(message: IBindableArray.SpliceMessage<T>) {

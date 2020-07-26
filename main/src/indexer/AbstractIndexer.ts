@@ -26,7 +26,6 @@ import Class from '../Class';
 import Dictionary from '../Dictionary';
 import IBindableMap from '../IBindableMap';
 import BindableMap from '../BindableMap';
-import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 import ReadonlyBindableMap from "../ReadonlyBindableMap";
 
 /**
@@ -50,13 +49,12 @@ abstract class AbstractIndexer<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	constructor(readonly source: ReadonlyBindableCollection<T>, protected _getKey: (item: T) => any,
-				config: AbstractIndexer.Config<T> = {}) {
+	constructor(protected _getKey: (item: T) => any, config: AbstractIndexer.Config<T> = {},
+				getKey: (item: T) => any, silent: boolean) {
 		super();
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableMap<T>(source.getKey, source.silent) : config.target;
-		this._target.tryPutAll(this._index(source.asArray()));
+		this._target = this._targetCreated ? new BindableMap<T>(getKey, silent) : config.target;
 	}
 
 	/**
@@ -70,7 +68,6 @@ abstract class AbstractIndexer<T> extends Class {
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._target.tryRemoveAll(this._keys(this.source.asArray()));
 		if (this._targetCreated) {
 			this._target.destroy();
 		}

@@ -31,18 +31,22 @@ import AbstractObserver from './AbstractObserver';
  */
 export default class SetObserver<T> extends AbstractObserver<T> {
 	/**
-	 * Source set.
-	 */
-	readonly source: ReadonlyBindableSet<T>;
-
-	/**
 	 * @param source Source set.
 	 * @param config Observer configuration.
 	 */
-	constructor(source: ReadonlyBindableSet<T>, config: AbstractObserver.Config<T>) {
-		super(source, config);
+	constructor(readonly source: ReadonlyBindableSet<T>, config: AbstractObserver.Config<T>) {
+		super(config);
+		this._addItems(source.asArray());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected destroyObject() {
+		this._doClearItems(this.source.asArray());
+		super.destroyObject();
 	}
 
 	private _onSplice(message: IBindableSet.SpliceMessage<T>) {

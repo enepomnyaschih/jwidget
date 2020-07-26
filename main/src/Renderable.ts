@@ -1,7 +1,8 @@
 import Bindable from "./Bindable";
 import Component from "./Component";
-import ReadonlyBindableCollection from "./ReadonlyBindableCollection";
+import ReadonlyBindableArray from "./ReadonlyBindableArray";
+import ReadonlyBindableSet from "./ReadonlyBindableSet";
 
-type Renderable = Component | Bindable<Component> | ReadonlyBindableCollection<Component>;
+type Renderable = Component | Bindable<Component> | ReadonlyBindableArray<Component> | ReadonlyBindableSet<Component>;
 
 export default Renderable;

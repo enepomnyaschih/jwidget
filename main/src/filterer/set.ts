@@ -33,13 +33,6 @@ import AbstractFilterer from './AbstractFilterer';
  * @param T Collection item type.
  */
 class SetFilterer<T> extends AbstractFilterer<T> {
-	private _targetCreated: boolean;
-
-	/**
-	 * Source set.
-	 */
-	readonly source: ReadonlyBindableSet<T>;
-
 	/**
 	 * @inheritDoc
 	 */
@@ -50,11 +43,9 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(source: ReadonlyBindableSet<T>, test: (item: T) => any,
-				config: SetFilterer.Config<T> = {}) {
-		super(source, test, config);
-		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableSet<T>(source.getKey, this.source.silent) : config.target;
+	constructor(readonly source: ReadonlyBindableSet<T>, test: (item: T) => any, config: SetFilterer.Config<T> = {}) {
+		super(test, config);
+		this.target = config.target ?? this.own(new BindableSet<T>(source.getKey, this.source.silent));
 		this.target.tryAddAll(source.toBindableArray().items.filter(this._test, this._scope));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
@@ -65,9 +56,6 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	 */
 	protected destroyObject() {
 		this.target.tryRemoveAll(this.source.toArray());
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		super.destroyObject();
 	}
 

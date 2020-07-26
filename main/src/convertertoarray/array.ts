@@ -36,19 +36,23 @@ import AbstractConverterToArray from './AbstractConverterToArray';
  */
 export default class ArrayConverterToArray<T> extends AbstractConverterToArray<T> {
 	/**
-	 * Source array.
-	 */
-	readonly source: ReadonlyBindableArray<T>;
-
-	/**
 	 * @param source Source array.
 	 * @param config Converter configuration.
 	 */
-	constructor(source: ReadonlyBindableArray<T>, config: AbstractConverterToArray.Config<T>) {
-		super(source, config);
+	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractConverterToArray.Config<T>) {
+		super(config, source.getKey, source.silent);
+		this._target.addAll(source.items);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected destroyObject() {
+		this._target.removeItems(this.source.items);
+		super.destroyObject();
 	}
 
 	private _onSplice(message: IBindableArray.SpliceMessage<T>) {

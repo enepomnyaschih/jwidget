@@ -41,11 +41,6 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
-	 * Source map.
-	 */
-	readonly source: ReadonlyBindableMap<T>;
-
-	/**
 	 * Target map.
 	 */
 	readonly target: IBindableMap<U>;
@@ -55,8 +50,9 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 	 * @param create Mapping callback.
 	 * @param config Mapper configuration.
 	 */
-	constructor(source: ReadonlyBindableMap<T>, create: (data: T) => U, config: MapMapper.FullConfig<T, U> = {}) {
-		super(source, create, config);
+	constructor(readonly source: ReadonlyBindableMap<T>, create: (data: T) => U,
+				config: MapMapper.FullConfig<T, U> = {}) {
+		super(create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new BindableMap<U>(config.getKey, this.source.silent) : config.target;
 		this.target.tryPutAll(this._createItems(source.items));

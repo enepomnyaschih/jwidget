@@ -34,20 +34,19 @@ import AbstractCounter from './AbstractCounter';
  */
 export default class ArrayCounter<T> extends AbstractCounter<T> {
 	/**
-	 * Source array.
-	 */
-	readonly source: ReadonlyBindableArray<T>;
-
-	/**
 	 * @param source Source array.
 	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	constructor(source: ReadonlyBindableArray<T>, test: (item: T) => any, config?: AbstractCounter.Config) {
-		super(source, test, config);
+	constructor(readonly source: ReadonlyBindableArray<T>, test: (item: T) => any, config?: AbstractCounter.Config) {
+		super(test, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	recount() {
+		this._target.set(this.source.count(this._test, this._scope));
 	}
 
 	private _onSplice(message: IBindableArray.SpliceMessage<T>) {

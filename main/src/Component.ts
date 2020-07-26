@@ -25,11 +25,13 @@ SOFTWARE.
 import jQuery from 'jquery';
 import AbstractTemplate from './AbstractTemplate';
 import Bindable from './Bindable';
+import BindableArray from './BindableArray';
+import BindableSet from './BindableSet';
 import Class from './Class';
+import ComponentArray from './component/ComponentArray';
 import ComponentBindable from './component/ComponentBindable';
 import ComponentChildren from './component/ComponentChildren';
-import ComponentCollection from './component/ComponentCollection';
-import ComponentArray from './component/ComponentArray';
+import ComponentSet from './component/ComponentSet';
 import Destroyable from "./Destroyable";
 import Dictionary from './Dictionary';
 import * as DictionaryUtils from './DictionaryUtils';
@@ -38,12 +40,9 @@ import * as DomUtils from './DomUtils';
 import HtmlTemplate from './HtmlTemplate';
 import IBindableMap from "./IBindableMap";
 import {apply, destroy} from './index';
-import BindableArray from './BindableArray';
-import BindableMap from './BindableMap';
 import Property from './Property';
-import ReadonlyBindableCollection from './ReadonlyBindableCollection';
 import ReadonlyBindableArray from './ReadonlyBindableArray';
-import BindableSet from './BindableSet';
+import ReadonlyBindableSet from './ReadonlyBindableSet';
 import * as StringUtils from './StringUtils';
 import TemplateOutput from './TemplateOutput';
 
@@ -68,7 +67,7 @@ export default class Component extends Class {
 	private __elements: Dictionary<JQuery> = null;
 	private __bindables: Dictionary<ComponentBindable> = null;
 	private __arrays: Dictionary<ComponentArray> = null;
-	private __collections: Dictionary<ComponentCollection> = null;
+	private __collections: Dictionary<ComponentSet> = null;
 
 	/**
 	 * Plain objects of this class can be constructed. They can be used as dummy components or simple containers.
@@ -282,8 +281,8 @@ export default class Component extends Class {
 				if (jwId === "root") {
 					if (result instanceof BindableArray) {
 						this.addArray(result, jwId);
-					} else if (result instanceof BindableMap || result instanceof BindableSet) {
-						this.addCollection(result, jwId);
+					} else if (result instanceof BindableSet) {
+						this.addSet(result, jwId);
 					}
 				} else {
 					if (result instanceof Component) {
@@ -292,8 +291,8 @@ export default class Component extends Class {
 						this.addBindable(result, jwId);
 					} else if (result instanceof BindableArray) {
 						this.addArray(result, jwId);
-					} else if (result instanceof BindableMap || result instanceof BindableSet) {
-						this.addCollection(result, jwId);
+					} else if (result instanceof BindableSet) {
+						this.addSet(result, jwId);
 					} else if (result === false) {
 						this.removeElement(jwId);
 					}
@@ -378,7 +377,7 @@ export default class Component extends Class {
 	}
 
 	/**
-	 * Adds an array of child components and synchronizes the component with it. As opposed to `addCollection` method,
+	 * Adds an array of child components and synchronizes the component with it. As opposed to `addSet` method,
 	 * keeps component order.
 	 *
 	 * @param source Child component array.
@@ -389,14 +388,14 @@ export default class Component extends Class {
 	}
 
 	/**
-	 * Add child component collection into an element. As opposed to `addArray` method, ignores
-	 * component order. However, it works faster and accepts any kind of collection, not array only.
+	 * Add child component set into an element. As opposed to `addArray` method, ignores
+	 * component order.
 	 *
-	 * @param source Child component collection.
+	 * @param source Child component set.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addCollection(source: ReadonlyBindableCollection<Component>, el?: string | HTMLElement | JQuery): Destroyable {
-		return new ComponentCollection(this, source, this._getContainerElement(el));
+	addSet(source: ReadonlyBindableSet<Component>, el?: string | HTMLElement | JQuery): Destroyable {
+		return new ComponentSet(this, source, this._getContainerElement(el));
 	}
 
 	/**
@@ -416,7 +415,7 @@ export default class Component extends Class {
 		this.afterAppend();
 		this._children.forEach(DomUtils._afterAppend);
 		DictionaryUtils.forEach<ComponentArray>(this.__arrays, DomUtils._afterAppend);
-		DictionaryUtils.forEach<ComponentCollection>(this.__collections, DomUtils._afterAppend);
+		DictionaryUtils.forEach<ComponentSet>(this.__collections, DomUtils._afterAppend);
 	}
 
 	/**

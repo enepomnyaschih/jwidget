@@ -40,11 +40,6 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 	private _targetCreated: boolean;
 
 	/**
-	 * Source array.
-	 */
-	readonly source: ReadonlyBindableArray<T>;
-
-	/**
 	 * Target array.
 	 */
 	readonly target: IBindableArray<U>;
@@ -54,8 +49,9 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 	 * @param create Mapping callback.
 	 * @param config Mapper configuration.
 	 */
-	constructor(source: ReadonlyBindableArray<T>, create: (sourceValue: T) => U, config: ArrayMapper.FullConfig<T, U> = {}) {
-		super(source, create, config);
+	constructor(readonly source: ReadonlyBindableArray<T>, create: (sourceValue: T) => U,
+				config: ArrayMapper.FullConfig<T, U> = {}) {
+		super(create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new BindableArray<U>(config.getKey, this.source.silent) : config.target;
 		this.target.addAll(this._createItems(this.source.items));

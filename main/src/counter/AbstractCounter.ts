@@ -26,7 +26,6 @@ import Bindable from '../Bindable';
 import Class from '../Class';
 import IProperty from '../IProperty';
 import Property from '../Property';
-import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 
 /**
  * Abstract collection item counter. Builds a new Property containing number of collection items the callback
@@ -51,13 +50,12 @@ abstract class AbstractCounter<T> extends Class {
 	 * @param _test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableCollection<T>, protected _test: (item: T) => any,
-				config: AbstractCounter.Config = {}) {
+	protected constructor(protected _test: (item: T) => any, config: AbstractCounter.Config = {}) {
 		super();
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? new Property<number>(0) : config.target;
-		this._target.set(source.count(this._test, this._scope));
+		this.recount();
 	}
 
 	/**
@@ -95,9 +93,7 @@ abstract class AbstractCounter<T> extends Class {
 	 * Recounts matching items. Call this method when collection item properties change the way that
 	 * they must be refiltered.
 	 */
-	recount() {
-		this._target.set(this.source.count(this._test, this._scope));
-	}
+	abstract recount(): void;
 }
 
 export default AbstractCounter;

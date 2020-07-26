@@ -24,8 +24,8 @@ SOFTWARE.
 
 import DestroyableReadonlyBindableMap from './DestroyableReadonlyBindableMap';
 import Dictionary from './Dictionary';
-import IBindableCollection from './IBindableCollection';
 import IBindableArray from './IBindableArray';
+import IClass from "./IClass";
 import Listenable from './Listenable';
 import Reducer from './Reducer';
 import Some from './Some';
@@ -34,7 +34,7 @@ import Some from './Some';
  * Extension of DestroyableReadonlyMap with modification methods.
  * @param T Map item type.
  */
-interface IBindableMap<T> extends IBindableCollection<T>, DestroyableReadonlyBindableMap<T> {
+interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
 
 	/**
 	 * The map is cleared.
@@ -167,6 +167,13 @@ interface IBindableMap<T> extends IBindableCollection<T>, DestroyableReadonlyBin
 	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
 
 	/**
+	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
+	 * this collection. The item is destroyed when it leaves the
+	 * collection, and all items are destroyed on the collection destruction.
+	 */
+	ownItems(): this;
+
+	/**
 	 * Puts or replaces an item with the specified key.
 	 * @param key Item key.
 	 * @param item Item to put.
@@ -215,6 +222,19 @@ interface IBindableMap<T> extends IBindableCollection<T>, DestroyableReadonlyBin
 	 * @returns The removed items.
 	 */
 	removeAllVerbose(keys: string[]): Dictionary<T>;
+
+	/**
+	 * Removes the first occurrence of the item in the collection.
+	 * @param item Item to remove.
+	 */
+	removeItem(item: T): void;
+
+	/**
+	 * Removes all occurrences of the items in the collection.
+	 * For efficient performance, you should define an optimal getKey callback for this collection.
+	 * @param items Items to remove.
+	 */
+	removeItems(items: T[]): void;
 
 	/**
 	 * @inheritDoc
@@ -315,7 +335,7 @@ namespace IBindableMap {
 	 * Message of IMap.
 	 * @param T Item type.
 	 */
-	export interface Message<T> extends IBindableCollection.Message<T> {
+	export interface Message<T> {
 		/**
 		 * Message sender.
 		 */

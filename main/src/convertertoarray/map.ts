@@ -35,18 +35,22 @@ import AbstractConverterToArray from './AbstractConverterToArray';
  */
 export default class MapConverterToArray<T> extends AbstractConverterToArray<T> {
 	/**
-	 * Source map.
-	 */
-	readonly source: ReadonlyBindableMap<T>;
-
-	/**
 	 * @param source Source map.
 	 * @param config Converter configuration.
 	 */
-	constructor(source: ReadonlyBindableMap<T>, config: AbstractConverterToArray.Config<T>) {
-		super(source, config);
+	constructor(readonly source: ReadonlyBindableMap<T>, config: AbstractConverterToArray.Config<T>) {
+		super(config, source.getKey, source.silent);
+		this._target.addAll(source.toArray());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected destroyObject() {
+		this._target.removeItems(this.source.toArray());
+		super.destroyObject();
 	}
 
 	private _onSplice(message: IBindableMap.SpliceMessage<T>) {

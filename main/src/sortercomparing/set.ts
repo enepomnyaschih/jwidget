@@ -33,18 +33,22 @@ import AbstractSorterComparing from './AbstractSorterComparing';
  */
 export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
-	 * Source set.
-	 */
-	readonly source: ReadonlyBindableSet<T>;
-
-	/**
 	 * @param source Source set.
 	 * @param config Sorter configuration.
 	 */
-	constructor(source: ReadonlyBindableSet<T>, config?: AbstractSorterComparing.FullConfig<T>) {
-		super(source, config);
+	constructor(readonly source: ReadonlyBindableSet<T>, config?: AbstractSorterComparing.FullConfig<T>) {
+		super(config, source.getKey, source.silent);
+		this._splice([], source.asArray());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected destroyObject() {
+		this._splice(this.source.asArray(), []);
+		super.destroyObject();
 	}
 
 	private _onSplice(message: IBindableSet.SpliceMessage<T>) {

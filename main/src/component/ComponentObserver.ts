@@ -25,18 +25,18 @@ SOFTWARE.
 import Class from '../Class';
 import Component from '../Component';
 import * as DomUtils from '../DomUtils';
-import {createObserver} from '../observer/collection';
-import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import SetObserver from "../observer/set";
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
 /**
  * @hidden
  */
-export default class ComponentCollectionInserter extends Class {
+export default class ComponentObserver extends Class {
 	private len: number = 0;
 
-	constructor(source: ReadonlyBindableCollection<Component>, private el: HTMLElement) {
+	constructor(source: ReadonlyBindableSet<Component>, private el: HTMLElement) {
 		super();
-		this.own(createObserver(source, {
+		this.own(new SetObserver(source, {
 			add: this._addItem,
 			remove: this._removeItem,
 			scope: this

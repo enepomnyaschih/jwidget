@@ -38,7 +38,6 @@ import AbstractFilterer from './AbstractFilterer';
  * @param T Collection item type.
  */
 class ArrayFilterer<T> extends AbstractFilterer<T> {
-	private _targetCreated: boolean;
 	private _filtered: number[] = [];
 
 	/**
@@ -56,11 +55,9 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(source: ReadonlyBindableArray<T>, test: (item: T) => any,
-				config: ArrayFilterer.FullConfig<T> = {}) {
-		super(source, test, config);
-		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableArray<T>(this.source.getKey, this.source.silent) : config.target;
+	constructor(source: ReadonlyBindableArray<T>, test: (item: T) => any, config: ArrayFilterer.FullConfig<T> = {}) {
+		super(test, config);
+		this.target = config.target ?? this.own(new BindableArray<T>(this.source.getKey, this.source.silent));
 		this._splice([], [new IndexItems(0, this.source.items)]);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
@@ -194,9 +191,6 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	 */
 	protected destroyObject() {
 		this.target.clear();
-		if (this._targetCreated) {
-			this.target.destroy();
-		}
 		super.destroyObject();
 	}
 

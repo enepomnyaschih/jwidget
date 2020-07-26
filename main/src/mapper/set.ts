@@ -45,11 +45,6 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	protected _items: VidMap<T, U>;
 
 	/**
-	 * Source set.
-	 */
-	readonly source: ReadonlyBindableSet<T>;
-
-	/**
 	 * Target set.
 	 */
 	readonly target: IBindableSet<U>;
@@ -59,8 +54,9 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	 * @param create Mapping callback.
 	 * @param config Mapper configuration.
 	 */
-	constructor(source: ReadonlyBindableSet<T>, create: (data: T) => U, config: SetMapper.FullConfig<T, U> = {}) {
-		super(source, create, config);
+	constructor(readonly source: ReadonlyBindableSet<T>, create: (data: T) => U,
+				config: SetMapper.FullConfig<T, U> = {}) {
+		super(create, config);
 		this._items = new VidMap<T, U>(source.getKey);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new BindableSet<U>(config.getKey, this.source.silent) : config.target;

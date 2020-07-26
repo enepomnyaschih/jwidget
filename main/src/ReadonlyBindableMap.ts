@@ -22,29 +22,55 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import Bindable from "./Bindable";
 import Dictionary from './Dictionary';
 import IBindableArray from './IBindableArray';
 import IBindableMap from './IBindableMap';
+import IBindableSet from "./IBindableSet";
 import Listenable from './Listenable';
-import ReadonlyBindableCollection from './ReadonlyBindableCollection';
 import Reducer from './Reducer';
 
 /**
  * Unordered key-value collection. Each item has its own string key.
  * @param T Item type.
  */
-interface ReadonlyBindableMap<T> extends ReadonlyBindableCollection<T> {
+interface ReadonlyBindableMap<T> {
+	/**
+	 * Checks if this collection never dispatches any message. This knowledge may help you do certain code optimizations.
+	 */
+	readonly silent: boolean;
+
+	/**
+	 * Identifies an item in this collection for optimization of some algorithms.
+	 */
+	readonly getKey: (item: T) => any;
+
+	/**
+	 * Collection length property.
+	 */
+	readonly length: Bindable<number>;
+
+	/**
+	 * Checks collection for emptiness.
+	 */
+	readonly empty: boolean;
+
+	/**
+	 * Returns the first (or some) item in collection. If collection is empty, returns undefined.
+	 */
+	readonly first: T;
+
+	/**
+	 * Returns key of first item. If collection is empty, returns undefined.
+	 */
+	readonly firstKey: string;
+
 	/**
 	 * Item dictionary - internal collection representation.
 	 *
 	 * Caution: doesn't make a copy - please don't modify.
 	 */
 	readonly items: Dictionary<T>;
-
-	/**
-	 * Returns key of first item. If collection is empty, returns undefined.
-	 */
-	readonly firstKey: string;
 
 	/**
 	 * Items are removed from the map and items are updated in the map.
@@ -70,6 +96,11 @@ interface ReadonlyBindableMap<T> extends ReadonlyBindableCollection<T> {
 	 * Returns a shallow copy of this collection.
 	 */
 	clone(): IBindableMap<T>;
+
+	/**
+	 * Checks item for existence in collection.
+	 */
+	contains(item: T): boolean;
 
 	/**
 	 * Returns an item by key. If item with such key doesn't exist, returns undefined.
@@ -123,6 +154,45 @@ interface ReadonlyBindableMap<T> extends ReadonlyBindableCollection<T> {
 	 * @returns Found item key or undefined.
 	 */
 	findKey(callback: (item: T, key: string) => any, scope?: any): string;
+
+	/**
+	 * Converts collection to a native array. Builds a new array consisting of collection items.
+	 */
+	toArray(): T[];
+
+	/**
+	 * Converts collection to a bindable array. Builds a new array consisting of collection items.
+	 */
+	toBindableArray(): IBindableArray<T>;
+
+	/**
+	 * Converts collection to a set. Builds a new set consisting of collection items.
+	 */
+	toSet(): IBindableSet<T>;
+
+	/**
+	 * Represents collection as a native array.
+	 * If this collection is an array, returns its items immediately.
+	 * Else, executes toArray method.
+	 * Use with caution.
+	 */
+	asArray(): T[];
+
+	/**
+	 * Represents collection as a bindable array.
+	 * If this collection is an array, returns it immediately.
+	 * Else, executes toArray method.
+	 * Use with caution.
+	 */
+	asBindableArray(): IBindableArray<T>;
+
+	/**
+	 * Represents collection as set.
+	 * If this collection is set, returns it immediately.
+	 * Else, executes toSet method.
+	 * Use with caution.
+	 */
+	asSet(): IBindableSet<T>;
 
 	/**
 	 * @inheritDoc

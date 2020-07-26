@@ -31,19 +31,23 @@ import AbstractObserver from './AbstractObserver';
  */
 export default class ArrayObserver<T> extends AbstractObserver<T> {
 	/**
-	 * Source array.
-	 */
-	readonly source: ReadonlyBindableArray<T>;
-
-	/**
 	 * @param source Source array.
 	 * @param config Observer configuration.
 	 */
-	constructor(source: ReadonlyBindableArray<T>, config: AbstractObserver.Config<T>) {
-		super(source, config);
+	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractObserver.Config<T>) {
+		super(config);
+		this._addItems(source.asArray());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected destroyObject() {
+		this._doClearItems(this.source.asArray());
+		super.destroyObject();
 	}
 
 	private _onSplice(message: IBindableArray.SpliceMessage<T>) {

@@ -23,7 +23,6 @@ SOFTWARE.
 */
 
 import Class from '../Class';
-import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 
 /**
  * Collection observer. Listens to all collection messages and reduces them to 2 granular functions:
@@ -54,20 +53,18 @@ abstract class AbstractObserver<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	constructor(readonly source: ReadonlyBindableCollection<T>, config: AbstractObserver.Config<T>) {
+	constructor(config: AbstractObserver.Config<T>) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;
 		this._clear = config.clear;
 		this._scope = config.scope || this;
-		this._addItems(source.asArray());
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._doClearItems(this.source.asArray());
 		this._add = null;
 		this._remove = null;
 		this._clear = null;

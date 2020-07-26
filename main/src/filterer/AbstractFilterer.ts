@@ -23,7 +23,6 @@ SOFTWARE.
 */
 
 import Class from '../Class';
-import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 
 /**
  * Abstract collection filterer. Builds a new collection of the same type, consisting of items the callback function
@@ -37,17 +36,9 @@ abstract class AbstractFilterer<T> extends Class {
 	protected _scope: any;
 
 	/**
-	 * Target collection.
+	 * @hidden
 	 */
-	readonly target: ReadonlyBindableCollection<T>;
-
-	/**
-	 * @param source Source collection.
-	 * @param _test Filtering criteria.
-	 * @param config Filterer configuration.
-	 */
-	constructor(readonly source: ReadonlyBindableCollection<T>, protected _test: (item: T) => any,
-				config: AbstractFilterer.Config = {}) {
+	protected constructor(protected _test: (item: T) => any, config: AbstractFilterer.Config = {}) {
 		super();
 		this._scope = config.scope || this;
 	}

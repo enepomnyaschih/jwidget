@@ -34,20 +34,18 @@ import AbstractCounter from './AbstractCounter';
  */
 export default class MapCounter<T> extends AbstractCounter<T> {
 	/**
-	 * Source map.
-	 */
-	readonly source: ReadonlyBindableMap<T>;
-
-	/**
 	 * @param source Source map.
 	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	constructor(source: ReadonlyBindableMap<T>, test: (item: T) => any,
-				config?: AbstractCounter.Config) {
-		super(source, test, config);
+	constructor(readonly source: ReadonlyBindableMap<T>, test: (item: T) => any, config?: AbstractCounter.Config) {
+		super(test, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	recount() {
+		this._target.set(this.source.count(this._test, this._scope));
 	}
 
 	private _onSplice(message: IBindableMap.SpliceMessage<T>) {

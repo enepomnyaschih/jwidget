@@ -22,17 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import BindableArray from '../BindableArray';
 import Class from '../Class';
 import IBindableArray from '../IBindableArray';
 import IndexItems from '../IndexItems';
 import {VidSet} from '../internal';
-import BindableArray from '../BindableArray';
-import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 import ReadonlyBindableArray from "../ReadonlyBindableArray";
 
 /**
  * Converter to array.
- * @param T Collection item type.
  */
 abstract class AbstractConverterToArray<T> extends Class {
 	private _targetCreated: boolean;
@@ -45,11 +43,17 @@ abstract class AbstractConverterToArray<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	constructor(readonly source: ReadonlyBindableCollection<T>, config: AbstractConverterToArray.Config<T> = {}) {
+	protected constructor(config: AbstractConverterToArray.Config<T>, getKey: (item: T) => any, silent: boolean) {
 		super();
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableArray<T>(source.getKey, source.silent) : config.target;
-		this._target.addAll(source.asArray());
+		this._target = this._targetCreated ? new BindableArray<T>(getKey, silent) : config.target;
+	}
+
+	protected destroyObject() {
+		if (this._targetCreated) {
+			this._target.destroy();
+		}
+		super.destroyObject();
 	}
 
 	/**
@@ -57,17 +61,6 @@ abstract class AbstractConverterToArray<T> extends Class {
 	 */
 	get target(): ReadonlyBindableArray<T> {
 		return this._target;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	protected destroyObject() {
-		this._target.removeItems(this.source.asArray());
-		if (this._targetCreated) {
-			this._target.destroy();
-		}
-		super.destroyObject();
 	}
 
 	/**

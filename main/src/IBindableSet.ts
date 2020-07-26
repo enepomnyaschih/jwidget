@@ -23,14 +23,14 @@ SOFTWARE.
 */
 
 import DestroyableReadonlyBindableSet from './DestroyableReadonlyBindableSet';
-import IBindableCollection from './IBindableCollection';
+import IClass from "./IClass";
 import Listenable from './Listenable';
 
 /**
  * Extension of DestroyableReadonlySet with modification methods.
  * @param T Map item type.
  */
-interface IBindableSet<T> extends IBindableCollection<T>, DestroyableReadonlyBindableSet<T> {
+interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 
 	/**
 	 * The set is cleared.
@@ -58,6 +58,13 @@ interface IBindableSet<T> extends IBindableCollection<T>, DestroyableReadonlyBin
 	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => any): IBindableSet<U>;
 
 	/**
+	 * Makes this collection an owner of its items, which means that its items are alive as long as they are present in
+	 * this collection. The item is destroyed when it leaves the
+	 * collection, and all items are destroyed on the collection destruction.
+	 */
+	ownItems(): this;
+
+	/**
 	 * Adds an item to the set if one is absent.
 	 * @param item Item to add.
 	 * @returns Item is added successfully. False if item is already present.
@@ -79,11 +86,6 @@ interface IBindableSet<T> extends IBindableCollection<T>, DestroyableReadonlyBin
 	remove(item: T): boolean;
 
 	/**
-	 * @inheritDoc
-	 */
-	removeItem(item: T): void;
-
-	/**
 	 * Removes multiple items from the set, ones that are present.
 	 * @param items Items to remove.
 	 * @returns The removed items. Never returns null or undefined.
@@ -91,7 +93,15 @@ interface IBindableSet<T> extends IBindableCollection<T>, DestroyableReadonlyBin
 	removeAll(items: T[]): T[];
 
 	/**
-	 * @inheritDoc
+	 * Removes the first occurrence of the item in the collection.
+	 * @param item Item to remove.
+	 */
+	removeItem(item: T): void;
+
+	/**
+	 * Removes all occurrences of the items in the collection.
+	 * For efficient performance, you should define an optimal getKey callback for this collection.
+	 * @param items Items to remove.
 	 */
 	removeItems(items: T[]): void;
 
@@ -144,7 +154,7 @@ namespace IBindableSet {
 	 * Message of ISet.
 	 * @param T Item type.
 	 */
-	export interface Message<T> extends IBindableCollection.Message<T> {
+	export interface Message<T> {
 		/**
 		 * Message sender.
 		 */

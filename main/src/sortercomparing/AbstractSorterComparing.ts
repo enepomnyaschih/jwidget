@@ -29,7 +29,6 @@ import {cmp} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import BindableArray from '../BindableArray';
-import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 import ReadonlyBindableArray from "../ReadonlyBindableArray";
 
 /**
@@ -62,14 +61,13 @@ abstract class AbstractSorterComparing<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	constructor(readonly source: ReadonlyBindableCollection<T>, config: AbstractSorterComparing.FullConfig<T> = {}) {
+	protected constructor(config: AbstractSorterComparing.FullConfig<T>, getKey: (item: T) => any, silent: boolean) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableArray<T>(source.getKey, source.silent) : config.target;
-		this._splice([], source.asArray());
+		this._target = this._targetCreated ? new BindableArray<T>(getKey, silent) : config.target;
 	}
 
 	get target(): ReadonlyBindableArray<T> {
@@ -80,7 +78,6 @@ abstract class AbstractSorterComparing<T> extends Class {
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._splice(this.source.asArray(), []);
 		if (this._targetCreated) {
 			this._target.destroy();
 		}

@@ -24,13 +24,11 @@ SOFTWARE.
 
 import Class from '../Class';
 import IBindableSet from '../IBindableSet';
-import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 import BindableSet from '../BindableSet';
 import ReadonlyBindableSet from "../ReadonlyBindableSet";
 
 /**
  * Converter to set.
- * @param T Collection item type.
  */
 abstract class AbstractConverterToSet<T> extends Class {
 	private _targetCreated: boolean;
@@ -41,14 +39,12 @@ abstract class AbstractConverterToSet<T> extends Class {
 	protected _target: IBindableSet<T>;
 
 	/**
-	 * @param source Source collection.
-	 * @param config Converter configuration.
+	 * @hidden
 	 */
-	constructor(readonly source: ReadonlyBindableCollection<T>, config: AbstractConverterToSet.Config<T> = {}) {
+	protected constructor(config: AbstractConverterToSet.Config<T>, getKey: (item: T) => any, silent: boolean) {
 		super();
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableSet<T>(source.getKey, source.silent) : config.target;
-		this._target.tryAddAll(source.asArray());
+		this._target = this._targetCreated ? new BindableSet<T>(getKey, silent) : config.target;
 	}
 
 	/**
@@ -62,7 +58,6 @@ abstract class AbstractConverterToSet<T> extends Class {
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		this._target.tryRemoveAll(this.source.asArray());
 		if (this._targetCreated) {
 			this._target.destroy();
 		}

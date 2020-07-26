@@ -33,19 +33,23 @@ import AbstractSorterComparing from './AbstractSorterComparing';
  */
 export default class ArraySorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
-	 * Source array.
-	 */
-	readonly source: ReadonlyBindableArray<T>;
-
-	/**
 	 * @param source Source array.
 	 * @param config Sorter configuration.
 	 */
-	constructor(source: ReadonlyBindableArray<T>, config?: AbstractSorterComparing.FullConfig<T>) {
-		super(source, config);
+	constructor(readonly source: ReadonlyBindableArray<T>, config?: AbstractSorterComparing.FullConfig<T>) {
+		super(config, source.getKey, source.silent);
+		this._splice([], source.asArray());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected destroyObject() {
+		this._splice(this.source.asArray(), []);
+		super.destroyObject();
 	}
 
 	private _onSplice(message: IBindableArray.SpliceMessage<T>) {
