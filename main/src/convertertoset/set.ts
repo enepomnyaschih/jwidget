@@ -22,37 +22,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlySet from '../DestroyableReadonlySet';
-import ISet from '../ISet';
-import ReadonlySet from '../ReadonlySet';
-import Set from '../Set';
+import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
+import IBindableSet from '../IBindableSet';
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
+import BindableSet from '../BindableSet';
 import AbstractConverterToSet from './AbstractConverterToSet';
 
 /**
- * AbstractConverterToSet implementation for Set.
+ * AbstractConverterToSet implementation for sets.
  */
 export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
 	/**
 	 * Source set.
 	 */
-	readonly source: ReadonlySet<T>;
+	readonly source: ReadonlyBindableSet<T>;
 
 	/**
 	 * @param source Source set.
 	 * @param config Converter configuration.
 	 */
-	constructor(source: ReadonlySet<T>, config: AbstractConverterToSet.Config<T>) {
+	constructor(source: ReadonlyBindableSet<T>, config: AbstractConverterToSet.Config<T>) {
 		super(source, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(message: ISet.SpliceMessage<T>) {
+	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
-	private _onClear(message: ISet.MessageWithItems<T>) {
+	private _onClear(message: IBindableSet.MessageWithItems<T>) {
 		this._target.tryRemoveAll(message.items);
 	}
 }
@@ -62,10 +62,10 @@ export default class SetConverterToSet<T> extends AbstractConverterToSet<T> {
  * @param source Source set.
  * @returns Target set.
  */
-export function setToSet<T>(source: ReadonlySet<T>): DestroyableReadonlySet<T> {
+export function setToSet<T>(source: ReadonlyBindableSet<T>): DestroyableReadonlyBindableSet<T> {
 	if (source.silent) {
 		return source.toSet();
 	}
-	const target = new Set<T>(source.getKey);
+	const target = new BindableSet<T>(source.getKey);
 	return target.owning(new SetConverterToSet<T>(source, {target}));
 }

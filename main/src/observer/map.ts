@@ -23,36 +23,36 @@ SOFTWARE.
 */
 
 import * as DictionaryUtils from '../DictionaryUtils';
-import IMap from '../IMap';
-import ReadonlyMap from '../ReadonlyMap';
+import IBindableMap from '../IBindableMap';
+import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractObserver from './AbstractObserver';
 
 /**
- * AbstractObserver implementation for Map.
+ * AbstractObserver implementation for maps.
  */
 export default class MapObserver<T> extends AbstractObserver<T> {
 	/**
 	 * Source map.
 	 */
-	readonly source: ReadonlyMap<T>;
+	readonly source: ReadonlyBindableMap<T>;
 
 	/**
 	 * @param source Source map.
 	 * @param config Observer configuration.
 	 */
-	constructor(source: ReadonlyMap<T>, config: AbstractObserver.Config<T>) {
+	constructor(source: ReadonlyBindableMap<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(message: IMap.SpliceMessage<T>) {
+	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._removeItems(DictionaryUtils.toArray(spliceResult.removedItems));
 		this._addItems(DictionaryUtils.toArray(spliceResult.addedItems));
 	}
 
-	private _onClear(message: IMap.MessageWithItems<T>) {
+	private _onClear(message: IBindableMap.MessageWithItems<T>) {
 		this._doClearItems(DictionaryUtils.toArray(message.items));
 	}
 }

@@ -26,7 +26,7 @@ import Bindable from '../Bindable';
 import Class from '../Class';
 import IProperty from '../IProperty';
 import Property from '../Property';
-import ReadonlyCollection from '../ReadonlyCollection';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 
 /**
  * Abstract collection item counter. Builds a new Property containing number of collection items the callback
@@ -51,7 +51,7 @@ abstract class AbstractCounter<T> extends Class {
 	 * @param _test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	constructor(readonly source: ReadonlyCollection<T>, protected _test: (item: T) => any,
+	constructor(readonly source: ReadonlyBindableCollection<T>, protected _test: (item: T) => any,
 				config: AbstractCounter.Config = {}) {
 		super();
 		this._scope = config.scope || this;

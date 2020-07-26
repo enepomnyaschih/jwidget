@@ -22,14 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlySet from '../DestroyableReadonlySet';
-import ISet from '../ISet';
-import ReadonlySet from '../ReadonlySet';
-import Set from '../Set';
+import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
+import IBindableSet from '../IBindableSet';
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
+import BindableSet from '../BindableSet';
 import AbstractFilterer from './AbstractFilterer';
 
 /**
- * AbstractFilterer implementation for Set.
+ * AbstractFilterer implementation for sets.
  * @param T Collection item type.
  */
 class SetFilterer<T> extends AbstractFilterer<T> {
@@ -38,24 +38,24 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * Source set.
 	 */
-	readonly source: ReadonlySet<T>;
+	readonly source: ReadonlyBindableSet<T>;
 
 	/**
 	 * @inheritDoc
 	 */
-	readonly target: ISet<T>;
+	readonly target: IBindableSet<T>;
 
 	/**
 	 * @param source Source set.
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(source: ReadonlySet<T>, test: (item: T) => any,
+	constructor(source: ReadonlyBindableSet<T>, test: (item: T) => any,
 				config: SetFilterer.Config<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Set<T>(source.getKey, this.source.silent) : config.target;
-		this.target.tryAddAll(source.toList().items.filter(this._test, this._scope));
+		this.target = this._targetCreated ? new BindableSet<T>(source.getKey, this.source.silent) : config.target;
+		this.target.tryAddAll(source.toBindableArray().items.filter(this._test, this._scope));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
@@ -71,14 +71,14 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 		super.destroyObject();
 	}
 
-	private _onSplice(message: ISet.SpliceMessage<T>) {
+	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this.target.trySplice(
 			spliceResult.removedItems,
 			spliceResult.addedItems.filter(this._test, this._scope));
 	}
 
-	private _onClear(message: ISet.MessageWithItems<T>) {
+	private _onClear(message: IBindableSet.MessageWithItems<T>) {
 		this.target.tryRemoveAll(message.items);
 	}
 }
@@ -94,7 +94,7 @@ namespace SetFilterer {
 		/**
 		 * Target set.
 		 */
-		readonly target?: ISet<T>;
+		readonly target?: IBindableSet<T>;
 	}
 }
 
@@ -105,11 +105,11 @@ namespace SetFilterer {
  * @param scope Call scope of `test` function.
  * @returns Target set.
  */
-export function filterSet<T>(source: ReadonlySet<T>, test: (item: T) => any,
-                             scope?: any): DestroyableReadonlySet<T> {
+export function filterSet<T>(source: ReadonlyBindableSet<T>, test: (item: T) => any,
+							 scope?: any): DestroyableReadonlyBindableSet<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}
-	const target = new Set<T>(source.getKey);
+	const target = new BindableSet<T>(source.getKey);
 	return target.owning(new SetFilterer<T>(source, test, {target, scope}));
 }

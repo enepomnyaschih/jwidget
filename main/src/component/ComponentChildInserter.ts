@@ -24,16 +24,16 @@ SOFTWARE.
 
 import Dictionary from '../Dictionary';
 import * as DictionaryUtils from '../DictionaryUtils';
-import IMap from '../IMap';
+import IBindableMap from '../IBindableMap';
 import {iidStr} from '../index';
-import Map from '../Map';
+import BindableMap from '../BindableMap';
 import Some from '../Some';
 import ComponentChild from './ComponentChild';
 
 /**
  * @hidden
  */
-export default class ComponentChildInserter extends Map<ComponentChild> {
+export default class ComponentChildInserter extends BindableMap<ComponentChild> {
 	constructor() {
 		super(iidStr, true);
 	}
@@ -70,7 +70,7 @@ export default class ComponentChildInserter extends Map<ComponentChild> {
 		return item;
 	}
 
-	trySplice(removedKeys: string[], updatedItems: Dictionary<ComponentChild>): IMap.SpliceResult<ComponentChild> {
+	trySplice(removedKeys: string[], updatedItems: Dictionary<ComponentChild>): IBindableMap.SpliceResult<ComponentChild> {
 		var spliceResult = super.trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return undefined;

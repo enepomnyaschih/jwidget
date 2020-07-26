@@ -22,13 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlySet from '../DestroyableReadonlySet';
-import List from '../List';
-import Map from '../Map';
-import ReadonlyCollection from '../ReadonlyCollection';
-import Set from '../Set';
+import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
+import BindableArray from '../BindableArray';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import BindableSet from '../BindableSet';
 import AbstractConverterToSet from './AbstractConverterToSet';
-import {default as ListConverterToSet, listToSet} from './list';
+import {default as ArrayConverterToSet, arrayToSet} from './array';
 import {default as MapConverterToSet, mapToSet} from './map';
 import {default as SetConverterToSet, setToSet} from './set';
 
@@ -38,11 +38,11 @@ import {default as SetConverterToSet, setToSet} from './set';
  * @param config Converter configuration.
  * @returns Collection converter to set.
  */
-export function createConverterToSet<T>(source: ReadonlyCollection<T>,
+export function createConverterToSet<T>(source: ReadonlyBindableCollection<T>,
                                         config?: AbstractConverterToSet.Config<T>): AbstractConverterToSet<T> {
-	return (source instanceof List) ? new ListConverterToSet(source, config) :
-		(source instanceof Map) ? new MapConverterToSet(source, config) :
-			(source instanceof Set) ? new SetConverterToSet(source, config) : null;
+	return (source instanceof BindableArray) ? new ArrayConverterToSet(source, config) :
+		(source instanceof BindableMap) ? new MapConverterToSet(source, config) :
+			(source instanceof BindableSet) ? new SetConverterToSet(source, config) : null;
 }
 
 /**
@@ -50,8 +50,8 @@ export function createConverterToSet<T>(source: ReadonlyCollection<T>,
  * @param source Source collection.
  * @returns Target set.
  */
-export function collectionToSet<T>(source: ReadonlyCollection<T>): DestroyableReadonlySet<T> {
-	return (source instanceof List) ? listToSet(source) :
-		(source instanceof Map) ? mapToSet(source) :
-			(source instanceof Set) ? setToSet(source) : null;
+export function collectionToSet<T>(source: ReadonlyBindableCollection<T>): DestroyableReadonlyBindableSet<T> {
+	return (source instanceof BindableArray) ? arrayToSet(source) :
+		(source instanceof BindableMap) ? mapToSet(source) :
+			(source instanceof BindableSet) ? setToSet(source) : null;
 }

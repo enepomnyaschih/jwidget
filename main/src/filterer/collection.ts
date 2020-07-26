@@ -22,13 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyCollection from '../DestroyableReadonlyCollection';
-import List from '../List';
-import Map from '../Map';
-import ReadonlyCollection from '../ReadonlyCollection';
-import Set from '../Set';
+import DestroyableReadonlyBindableCollection from '../DestroyableReadonlyBindableCollection';
+import BindableArray from '../BindableArray';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import BindableSet from '../BindableSet';
 import AbstractFilterer from './AbstractFilterer';
-import {default as ListFilterer, filterList} from './list';
+import {default as ArrayFilterer, filterArray} from './array';
 import {default as MapFilterer, filterMap} from './map';
 import {default as SetFilterer, filterSet} from './set';
 
@@ -39,11 +39,11 @@ import {default as SetFilterer, filterSet} from './set';
  * @param scope Filterer configuration.
  * @returns Collection filterer.
  */
-export function createFilterer<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
-                                  scope?: any): AbstractFilterer<T> {
-	return (source instanceof List) ? new ListFilterer(source, test, {scope}) :
-		(source instanceof Map) ? new MapFilterer(source, test, {scope}) :
-			(source instanceof Set) ? new SetFilterer(source, test, {scope}) : null;
+export function createFilterer<T>(source: ReadonlyBindableCollection<T>, test: (item: T) => any,
+								  scope?: any): AbstractFilterer<T> {
+	return (source instanceof BindableArray) ? new ArrayFilterer(source, test, {scope}) :
+		(source instanceof BindableMap) ? new MapFilterer(source, test, {scope}) :
+			(source instanceof BindableSet) ? new SetFilterer(source, test, {scope}) : null;
 }
 
 /**
@@ -53,9 +53,9 @@ export function createFilterer<T>(source: ReadonlyCollection<T>, test: (item: T)
  * @param scope Call scope of `test` function.
  * @returns Target collection.
  */
-export function filterCollection<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
-                                    scope?: any): DestroyableReadonlyCollection<T> {
-	return (source instanceof List) ? filterList(source, test, scope) :
-		(source instanceof Map) ? filterMap(source, test, scope) :
-			(source instanceof Set) ? filterSet(source, test, scope) : null;
+export function filterCollection<T>(source: ReadonlyBindableCollection<T>, test: (item: T) => any,
+									scope?: any): DestroyableReadonlyBindableCollection<T> {
+	return (source instanceof BindableArray) ? filterArray(source, test, scope) :
+		(source instanceof BindableMap) ? filterMap(source, test, scope) :
+			(source instanceof BindableSet) ? filterSet(source, test, scope) : null;
 }

@@ -24,10 +24,10 @@ SOFTWARE.
 
 import Class from '../Class';
 import Dictionary from '../Dictionary';
-import IMap from '../IMap';
-import Map from '../Map';
-import ReadonlyCollection from '../ReadonlyCollection';
-import ReadonlyMap from "../ReadonlyMap";
+import IBindableMap from '../IBindableMap';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import ReadonlyBindableMap from "../ReadonlyBindableMap";
 
 /**
  * Abstract collection indexer. Builds a new map by rule: key is the result of the function call, value is the
@@ -45,24 +45,24 @@ abstract class AbstractIndexer<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	protected _target: IMap<T>;
+	protected _target: IBindableMap<T>;
 
 	/**
 	 * @hidden
 	 */
-	constructor(readonly source: ReadonlyCollection<T>, protected _getKey: (item: T) => any,
+	constructor(readonly source: ReadonlyBindableCollection<T>, protected _getKey: (item: T) => any,
 				config: AbstractIndexer.Config<T> = {}) {
 		super();
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new Map<T>(source.getKey, source.silent) : config.target;
+		this._target = this._targetCreated ? new BindableMap<T>(source.getKey, source.silent) : config.target;
 		this._target.tryPutAll(this._index(source.asArray()));
 	}
 
 	/**
 	 * Target map.
 	 */
-	get target(): ReadonlyMap<T> {
+	get target(): ReadonlyBindableMap<T> {
 		return this._target;
 	}
 
@@ -119,6 +119,6 @@ namespace AbstractIndexer {
 		/**
 		 * Target map. By default, created automatically.
 		 */
-		readonly target?: IMap<T>;
+		readonly target?: IBindableMap<T>;
 	}
 }

@@ -26,7 +26,7 @@ import Class from '../Class';
 import Component from '../Component';
 import * as DomUtils from '../DomUtils';
 import {createObserver} from '../observer/collection';
-import ReadonlyCollection from '../ReadonlyCollection';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 
 /**
  * @hidden
@@ -34,7 +34,7 @@ import ReadonlyCollection from '../ReadonlyCollection';
 export default class ComponentCollectionInserter extends Class {
 	private len: number = 0;
 
-	constructor(source: ReadonlyCollection<Component>, private el: HTMLElement) {
+	constructor(source: ReadonlyBindableCollection<Component>, private el: HTMLElement) {
 		super();
 		this.own(createObserver(source, {
 			add: this._addItem,

@@ -22,41 +22,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
-import ISet from '../ISet';
-import Map from '../Map';
-import ReadonlySet from '../ReadonlySet';
+import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
+import IBindableSet from '../IBindableSet';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import AbstractIndexer from './AbstractIndexer';
 
 /**
- * AbstractIndexer implementation for Set.
+ * AbstractIndexer implementation for sets.
  */
 export default class SetIndexer<T> extends AbstractIndexer<T> {
 	/**
 	 * Source set.
 	 */
-	readonly source: ReadonlySet<T>;
+	readonly source: ReadonlyBindableSet<T>;
 
 	/**
 	 * @param source Source set.
 	 * @param getKey Indexer function.
 	 * @param config Indexer configuration.
 	 */
-	constructor(source: ReadonlySet<T>, getKey: (item: T) => any,
+	constructor(source: ReadonlyBindableSet<T>, getKey: (item: T) => any,
 				config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(message: ISet.SpliceMessage<T>) {
+	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._target.trySplice(
 			this._keys(spliceResult.removedItems),
 			this._index(spliceResult.addedItems));
 	}
 
-	private _onClear(message: ISet.MessageWithItems<T>) {
+	private _onClear(message: IBindableSet.MessageWithItems<T>) {
 		this._target.tryRemoveAll(
 			this._keys(message.items));
 	}
@@ -69,11 +69,11 @@ export default class SetIndexer<T> extends AbstractIndexer<T> {
  * @param scope Call scope of `getKey` callback.
  * @returns Collection index map.
  */
-export function indexSet<T>(source: ReadonlySet<T>, getKey: (item: T) => any,
-                            scope?: any): DestroyableReadonlyMap<T> {
+export function indexSet<T>(source: ReadonlyBindableSet<T>, getKey: (item: T) => any,
+							scope?: any): DestroyableReadonlyBindableMap<T> {
 	if (source.silent) {
 		return source.index(getKey, scope);
 	}
-	const target = new Map<T>(source.getKey);
+	const target = new BindableMap<T>(source.getKey);
 	return target.owning(new SetIndexer<T>(source, getKey, {target, scope}));
 }

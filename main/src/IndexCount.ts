@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import IList from './IList';
+import IBindableArray from './IBindableArray';
 
 /**
- * Index and count pair. Used in IList.splice method arguments to specify item segments to remove.
+ * Index and count pair. Used in IBindableArray.splice method arguments to specify item segments to remove.
  */
-export default class IndexCount implements IList.IndexCount {
+export default class IndexCount implements IBindableArray.IndexCount {
 	/**
 	 * @param index Index.
 	 * @param count Count.
@@ -38,7 +38,7 @@ export default class IndexCount implements IList.IndexCount {
 	/**
 	 * Clones pair.
 	 */
-	clone(): IList.IndexCount {
+	clone(): IBindableArray.IndexCount {
 		return new IndexCount(this.index, this.count);
 	}
 }

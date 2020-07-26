@@ -22,13 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyCollection from '../DestroyableReadonlyCollection';
-import List from '../List';
-import Map from '../Map';
-import ReadonlyCollection from '../ReadonlyCollection';
-import Set from '../Set';
+import DestroyableReadonlyBindableCollection from '../DestroyableReadonlyBindableCollection';
+import BindableArray from '../BindableArray';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import BindableSet from '../BindableSet';
 import AbstractMapper from './AbstractMapper';
-import {default as ListMapper, mapList} from './list';
+import {default as ArrayMapper, mapArray} from './array';
 import {default as MapMapper, mapMap} from './map';
 import {default as SetMapper, mapSet} from './set';
 
@@ -39,11 +39,11 @@ import {default as SetMapper, mapSet} from './set';
  * @param config Mapper configuration.
  * @returns Collection mapper.
  */
-export function createMapper<T, U>(source: ReadonlyCollection<T>, create: (sourceValue: T) => U,
-                                   config?: AbstractMapper.Config<T, U>): AbstractMapper<T, U> {
-	return (source instanceof List) ? new ListMapper(source, create, config) :
-		(source instanceof Map) ? new MapMapper(source, create, config) :
-			(source instanceof Set) ? new SetMapper(source, create, config) : null;
+export function createMapper<T, U>(source: ReadonlyBindableCollection<T>, create: (sourceValue: T) => U,
+								   config?: AbstractMapper.Config<T, U>): AbstractMapper<T, U> {
+	return (source instanceof BindableArray) ? new ArrayMapper(source, create, config) :
+		(source instanceof BindableMap) ? new MapMapper(source, create, config) :
+			(source instanceof BindableSet) ? new SetMapper(source, create, config) : null;
 }
 
 /**
@@ -53,9 +53,9 @@ export function createMapper<T, U>(source: ReadonlyCollection<T>, create: (sourc
  * @param config Mapper configuration.
  * @returns Target collection.
  */
-export function mapCollection<T, U>(source: ReadonlyCollection<T>, create: (item: T) => U,
-                                    config?: AbstractMapper.Config<T, U>): DestroyableReadonlyCollection<U> {
-	return (source instanceof List) ? mapList(source, create, config) :
-		(source instanceof Map) ? mapMap(source, create, config) :
-			(source instanceof Set) ? mapSet(source, create, config) : null;
+export function mapCollection<T, U>(source: ReadonlyBindableCollection<T>, create: (item: T) => U,
+									config?: AbstractMapper.Config<T, U>): DestroyableReadonlyBindableCollection<U> {
+	return (source instanceof BindableArray) ? mapArray(source, create, config) :
+		(source instanceof BindableMap) ? mapMap(source, create, config) :
+			(source instanceof BindableSet) ? mapSet(source, create, config) : null;
 }

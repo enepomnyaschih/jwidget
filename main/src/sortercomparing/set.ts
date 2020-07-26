@@ -22,10 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyList from '../DestroyableReadonlyList';
-import ISet from '../ISet';
-import List from '../List';
-import ReadonlySet from '../ReadonlySet';
+import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
+import IBindableSet from '../IBindableSet';
+import BindableArray from '../BindableArray';
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import AbstractSorterComparing from './AbstractSorterComparing';
 
 /**
@@ -35,24 +35,24 @@ export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
 	 * Source set.
 	 */
-	readonly source: ReadonlySet<T>;
+	readonly source: ReadonlyBindableSet<T>;
 
 	/**
 	 * @param source Source set.
 	 * @param config Sorter configuration.
 	 */
-	constructor(source: ReadonlySet<T>, config?: AbstractSorterComparing.FullConfig<T>) {
+	constructor(source: ReadonlyBindableSet<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(message: ISet.SpliceMessage<T>) {
+	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._splice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
-	private _onClear(message: ISet.MessageWithItems<T>) {
+	private _onClear(message: IBindableSet.MessageWithItems<T>) {
 		this._splice(message.items, []);
 	}
 }
@@ -63,12 +63,12 @@ export default class SetSorterComparing<T> extends AbstractSorterComparing<T> {
  * @param config Sorter configuration.
  * @returns Sorted list.
  */
-export function sortSetComparing<T>(source: ReadonlySet<T>,
-                                    config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
+export function sortSetComparing<T>(source: ReadonlyBindableSet<T>,
+                                    config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
 		return source.toSortedComparing(config.compare, config.scope, config.order);
 	}
-	const target = new List<T>(source.getKey);
+	const target = new BindableArray<T>(source.getKey);
 	return target.owning(new SetSorterComparing<T>(source, {
 		target,
 		compare: config.compare,

@@ -62,7 +62,7 @@ abstract class AbstractTemplate {
 		// add elements to groups and fill in dependencies
 		this._walkAll(root);
 
-		// resolving dependencies to a plain list of IDs
+		// resolving dependencies to a plain array of IDs
 		this.ids = [];
 		this._backtrace("root");
 

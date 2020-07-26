@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyList from '../DestroyableReadonlyList';
+import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import * as DictionaryUtils from '../DictionaryUtils';
-import IMap from '../IMap';
-import List from '../List';
-import ReadonlyMap from '../ReadonlyMap';
+import IBindableMap from '../IBindableMap';
+import BindableArray from '../BindableArray';
+import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractSorterComparing from './AbstractSorterComparing';
 
 /**
@@ -36,26 +36,26 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
 	/**
 	 * Source map.
 	 */
-	readonly source: ReadonlyMap<T>;
+	readonly source: ReadonlyBindableMap<T>;
 
 	/**
 	 * @param source Source map.
 	 * @param config Sorter configuration.
 	 */
-	constructor(source: ReadonlyMap<T>, config?: AbstractSorterComparing.FullConfig<T>) {
+	constructor(source: ReadonlyBindableMap<T>, config?: AbstractSorterComparing.FullConfig<T>) {
 		super(source, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(message: IMap.SpliceMessage<T>) {
+	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._splice(
 			DictionaryUtils.toArray(spliceResult.removedItems),
 			DictionaryUtils.toArray(spliceResult.addedItems));
 	}
 
-	private _onClear(message: IMap.MessageWithItems<T>) {
+	private _onClear(message: IBindableMap.MessageWithItems<T>) {
 		this._splice(DictionaryUtils.toArray(message.items), []);
 	}
 }
@@ -66,12 +66,12 @@ export default class MapSorterComparing<T> extends AbstractSorterComparing<T> {
  * @param config Sorter configuration.
  * @returns Sorted list.
  */
-export function sortMapComparing<T>(source: ReadonlyMap<T>,
-                                    config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
+export function sortMapComparing<T>(source: ReadonlyBindableMap<T>,
+                                    config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
 		return source.toSortedComparing(config.compare, config.scope, config.order);
 	}
-	const target = new List<T>(source.getKey);
+	const target = new BindableArray<T>(source.getKey);
 	return target.owning(new MapSorterComparing<T>(source, {
 		target,
 		compare: config.compare,

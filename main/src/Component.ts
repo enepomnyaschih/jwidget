@@ -29,21 +29,21 @@ import Class from './Class';
 import ComponentBindable from './component/ComponentBindable';
 import ComponentChildren from './component/ComponentChildren';
 import ComponentCollection from './component/ComponentCollection';
-import ComponentList from './component/ComponentList';
+import ComponentArray from './component/ComponentArray';
 import Destroyable from "./Destroyable";
 import Dictionary from './Dictionary';
 import * as DictionaryUtils from './DictionaryUtils';
 import DomTemplate from './DomTemplate';
 import * as DomUtils from './DomUtils';
 import HtmlTemplate from './HtmlTemplate';
-import IMap from "./IMap";
+import IBindableMap from "./IBindableMap";
 import {apply, destroy} from './index';
-import List from './List';
-import Map from './Map';
+import BindableArray from './BindableArray';
+import BindableMap from './BindableMap';
 import Property from './Property';
-import ReadonlyCollection from './ReadonlyCollection';
-import ReadonlyList from './ReadonlyList';
-import Set from './Set';
+import ReadonlyBindableCollection from './ReadonlyBindableCollection';
+import ReadonlyBindableArray from './ReadonlyBindableArray';
+import BindableSet from './BindableSet';
 import * as StringUtils from './StringUtils';
 import TemplateOutput from './TemplateOutput';
 
@@ -67,7 +67,7 @@ export default class Component extends Class {
 
 	private __elements: Dictionary<JQuery> = null;
 	private __bindables: Dictionary<ComponentBindable> = null;
-	private __arrays: Dictionary<ComponentList> = null;
+	private __arrays: Dictionary<ComponentArray> = null;
 	private __collections: Dictionary<ComponentCollection> = null;
 
 	/**
@@ -98,7 +98,7 @@ export default class Component extends Class {
 	 * Mutable named child components. Use this map to add child components in place of
 	 * elements with corresponding `jwid`. Field is available from component rendering beginning.
 	 */
-	get children(): IMap<Component> {
+	get children(): IBindableMap<Component> {
 		return this._children;
 	}
 
@@ -280,9 +280,9 @@ export default class Component extends Class {
 			if (typeof (<any>this)[renderMethodName] === "function") {
 				const result = (<any>this)[renderMethodName](element);
 				if (jwId === "root") {
-					if (result instanceof List) {
-						this.addList(result, jwId);
-					} else if (result instanceof Map || result instanceof Set) {
+					if (result instanceof BindableArray) {
+						this.addArray(result, jwId);
+					} else if (result instanceof BindableMap || result instanceof BindableSet) {
 						this.addCollection(result, jwId);
 					}
 				} else {
@@ -290,9 +290,9 @@ export default class Component extends Class {
 						this._children.put(jwId, result);
 					} else if (result instanceof Property) {
 						this.addBindable(result, jwId);
-					} else if (result instanceof List) {
-						this.addList(result, jwId);
-					} else if (result instanceof Map || result instanceof Set) {
+					} else if (result instanceof BindableArray) {
+						this.addArray(result, jwId);
+					} else if (result instanceof BindableMap || result instanceof BindableSet) {
 						this.addCollection(result, jwId);
 					} else if (result === false) {
 						this.removeElement(jwId);
@@ -309,7 +309,7 @@ export default class Component extends Class {
 
 	/**
 	 * Renders component into an element. Use it to render root component only: its children must be rendered
-	 * using `children`, `addList`, `addCollection`, `addBindable` members.
+	 * using `children`, `addArray`, `addCollection`, `addBindable` members.
 	 *
 	 * @param el Element to render component into.
 	 */
@@ -322,7 +322,7 @@ export default class Component extends Class {
 
 	/**
 	 * Render component in place of an element. Use it to render root component only: its children must be rendered
-	 * using `children`, `addList`, `addCollection`, `addBindable` members.
+	 * using `children`, `addArray`, `addCollection`, `addBindable` members.
 	 *
 	 * @param el Element to render component in place of.
 	 */
@@ -378,14 +378,14 @@ export default class Component extends Class {
 	}
 
 	/**
-	 * Adds list of child components and synchronizes the component with it. As opposed to `addCollection` method,
-	 * keeps component order. However, it works slower and accepts list only.
+	 * Adds an array of child components and synchronizes the component with it. As opposed to `addCollection` method,
+	 * keeps component order.
 	 *
-	 * @param source Child component list.
+	 * @param source Child component array.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addList(source: ReadonlyList<Component>, el?: string | HTMLElement | JQuery): Destroyable {
-		return new ComponentList(this, source, this._getContainerElement(el));
+	addArray(source: ReadonlyBindableArray<Component>, el?: string | HTMLElement | JQuery): Destroyable {
+		return new ComponentArray(this, source, this._getContainerElement(el));
 	}
 
 	/**
@@ -395,7 +395,7 @@ export default class Component extends Class {
 	 * @param source Child component collection.
 	 * @param el `jwid` of element to add child components into. Defaults to root element (`el`) of component.
 	 */
-	addCollection(source: ReadonlyCollection<Component>, el?: string | HTMLElement | JQuery): Destroyable {
+	addCollection(source: ReadonlyBindableCollection<Component>, el?: string | HTMLElement | JQuery): Destroyable {
 		return new ComponentCollection(this, source, this._getContainerElement(el));
 	}
 
@@ -415,7 +415,7 @@ export default class Component extends Class {
 		this._wasAfterAppend = true;
 		this.afterAppend();
 		this._children.forEach(DomUtils._afterAppend);
-		DictionaryUtils.forEach<ComponentList>(this.__arrays, DomUtils._afterAppend);
+		DictionaryUtils.forEach<ComponentArray>(this.__arrays, DomUtils._afterAppend);
 		DictionaryUtils.forEach<ComponentCollection>(this.__collections, DomUtils._afterAppend);
 	}
 

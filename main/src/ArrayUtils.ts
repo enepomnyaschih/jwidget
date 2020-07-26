@@ -23,12 +23,12 @@ SOFTWARE.
 */
 
 import Dictionary from './Dictionary';
-import IList from './IList';
+import IBindableArray from './IBindableArray';
 import {cmp, def} from './index';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import {identity, initReduceState, VidMap, VidSet} from './internal';
-import ListSpliceResult from './ListSpliceResult';
+import ArraySpliceResult from './ArraySpliceResult';
 import Reducer from './Reducer';
 import Some from './Some';
 
@@ -574,16 +574,16 @@ export function clear<T>(arr: T[]): T[]{
  * Removes and inserts item ranges.
  *
  * @param arr Array.
- * @param removeParamsList Array of segments to remove sorted by index asc. Segments are removed in backward order.
- * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+ * @param segmentsToRemove Array of segments to remove sorted by index asc. Segments are removed in backward order.
+ * @param segmentsToAdd Array of segments to insert sorted by index asc. Segments are inserted in forward order.
  * @returns Splice result. Never returns null or undefined.
  */
 export function splice<T>(arr: T[],
-		removeParamsList: IList.IndexCount[],
-		addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T> {
-	var result = trySplice(arr, removeParamsList, addParamsList);
+		segmentsToRemove: IBindableArray.IndexCount[],
+		segmentsToAdd: IBindableArray.IndexItems<T>[]): IBindableArray.SpliceResult<T> {
+	var result = trySplice(arr, segmentsToRemove, segmentsToAdd);
 	return (result !== undefined) ? result :
-		new ListSpliceResult<T>(arr.concat(), <IList.IndexItems<T>[]>[], <IList.IndexItems<T>[]>[]);
+		new ArraySpliceResult<T>(arr.concat(), <IBindableArray.IndexItems<T>[]>[], <IBindableArray.IndexItems<T>[]>[]);
 }
 
 /**
@@ -812,61 +812,61 @@ export function tryClear<T>(arr: T[]): T[]{
  * Removes and inserts item ranges.
  *
  * @param arr Array.
- * @param removeParamsList Array of segments to remove sorted by index asc. Segments are removed in backward order.
- * @param addParamsList Array of segments to insert sorted by index asc. Segments are inserted in forward order.
+ * @param segmentsToRemove Array of segments to remove sorted by index asc. Segments are removed in backward order.
+ * @param segmentsToAdd Array of segments to insert sorted by index asc. Segments are inserted in forward order.
  * @returns Splice result. If collection is not modified, returns undefined.
  */
 export function trySplice<T>(arr: T[],
-		removeParamsList: IList.IndexCount[],
-		addParamsList: IList.IndexItems<T>[]): IList.SpliceResult<T> {
-	var optimizedRemoveParamsList: IList.IndexCount[] = [];
+		segmentsToRemove: IBindableArray.IndexCount[],
+		segmentsToAdd: IBindableArray.IndexItems<T>[]): IBindableArray.SpliceResult<T> {
+	var optimizedSegmentsToRemove: IBindableArray.IndexCount[] = [];
 	var rlast: IndexCount = null;
-	var rparams: IList.IndexCount;
-	for (var i = 0, l = removeParamsList.length; i < l; ++i) {
-		rparams = removeParamsList[i];
+	var rparams: IBindableArray.IndexCount;
+	for (var i = 0, l = segmentsToRemove.length; i < l; ++i) {
+		rparams = segmentsToRemove[i];
 		if (rlast && (rparams.index === rlast.index + rlast.count)) {
 			rlast.count += rparams.count;
 		} else {
 			rlast = rparams.clone();
-			optimizedRemoveParamsList.push(rlast);
+			optimizedSegmentsToRemove.push(rlast);
 		}
 	}
 
-	var optimizedAddParamsList = [];
-	var alast: IList.IndexItems<T> = null;
-	var aparams: IList.IndexItems<T>;
-	for (var i = 0, l = addParamsList.length; i < l; ++i) {
-		aparams = addParamsList[i];
+	var optimizedSegmentsToAdd = [];
+	var alast: IBindableArray.IndexItems<T> = null;
+	var aparams: IBindableArray.IndexItems<T>;
+	for (var i = 0, l = segmentsToAdd.length; i < l; ++i) {
+		aparams = segmentsToAdd[i];
 		if (alast && (aparams.index === alast.index + alast.items.length)) {
 			tryAddAll(alast.items, aparams.items);
 		} else {
 			alast = aparams.clone();
-			optimizedAddParamsList.push(alast);
+			optimizedSegmentsToAdd.push(alast);
 		}
 	}
 
 	var oldItems = arr.concat();
-	var removedItemsList = [];
-	for (var i = optimizedRemoveParamsList.length - 1; i >= 0; --i) {
-		rparams = optimizedRemoveParamsList[i];
+	var removedSegments = [];
+	for (var i = optimizedSegmentsToRemove.length - 1; i >= 0; --i) {
+		rparams = optimizedSegmentsToRemove[i];
 		var index = rparams.index;
 		var items = tryRemoveAll(arr, index, rparams.count);
 		if (items === undefined) {
 			continue;
 		}
-		removedItemsList.push(new IndexItems<T>(index, items));
+		removedSegments.push(new IndexItems<T>(index, items));
 	}
-	var addedItemsList = [];
-	for (var i = 0, l = optimizedAddParamsList.length; i < l; ++i) {
-		aparams = optimizedAddParamsList[i];
+	var addedSegments = [];
+	for (var i = 0, l = optimizedSegmentsToAdd.length; i < l; ++i) {
+		aparams = optimizedSegmentsToAdd[i];
 		if (tryAddAll(arr, aparams.items, aparams.index) === undefined) {
 			continue;
 		}
-		addedItemsList.push(aparams);
+		addedSegments.push(aparams);
 	}
-	if ((removedItemsList.length !== 0) || (addedItemsList.length !== 0)) {
-		removedItemsList.reverse();
-		return new ListSpliceResult<T>(oldItems, removedItemsList, addedItemsList);
+	if ((removedSegments.length !== 0) || (addedSegments.length !== 0)) {
+		removedSegments.reverse();
+		return new ArraySpliceResult<T>(oldItems, removedSegments, addedSegments);
 	}
 	return undefined;
 }
@@ -905,9 +905,9 @@ export function tryReorder<T>(arr: T[], indexArray: number[]): T[]{
  * @returns `splice` method arguments. If no method call required, returns undefined.
  */
 export function detectSplice<T>(oldItems: T[], newItems: T[],
-								getKey?: (item: T) => any): IList.SpliceParams<T> {
-	var removeParamsList: IList.IndexCount[] = [];
-	var addParamsList: IList.IndexItems<T>[] = [];
+								getKey?: (item: T) => any): IBindableArray.SpliceParams<T> {
+	var segmentsToRemove: IBindableArray.IndexCount[] = [];
+	var segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
 	var oldIndexMap = new VidMap<T, number>(getKey);
 	for (var i = 0, l = oldItems.length; i < l; ++i) {
 		oldIndexMap.put(oldItems[i], i);
@@ -924,7 +924,7 @@ export function detectSplice<T>(oldItems: T[], newItems: T[],
 		if (newItemBuffer.length === 0) {
 			return;
 		}
-		addParamsList.push(new IndexItems<T>(offset + nextOldIndex, newItemBuffer));
+		segmentsToAdd.push(new IndexItems<T>(offset + nextOldIndex, newItemBuffer));
 		offset += newItemBuffer.length;
 		newItemBuffer = [];
 	}
@@ -932,7 +932,7 @@ export function detectSplice<T>(oldItems: T[], newItems: T[],
 	function testRemove(oldIndex: number) {
 		if (oldIndex > nextOldIndex) {
 			const count = oldIndex - nextOldIndex;
-			removeParamsList.push(new IndexCount(nextOldIndex, count));
+			segmentsToRemove.push(new IndexCount(nextOldIndex, count));
 			offset -= count;
 		}
 	}
@@ -950,25 +950,23 @@ export function detectSplice<T>(oldItems: T[], newItems: T[],
 	}
 	flush();
 	testRemove(oldItems.length);
-	if ((removeParamsList.length !== 0) || (addParamsList.length !== 0)) {
-		return { removeParamsList: removeParamsList, addParamsList: addParamsList };
+	if ((segmentsToRemove.length !== 0) || (segmentsToAdd.length !== 0)) {
+		return {segmentsToRemove, segmentsToAdd};
 	}
 	return undefined;
 }
 
 /**
- * Detects `removeParamsList` argument of `splice` method to adjust array contents to `newItems`.
- * Determines item ranges neccessary to be removed.
+ * Detects segments to remove adjust array contents to `newItems` with a `splice` method call.
  * Doesn't assume item insertion - try `detectSplice` if that's the case.
- * In advantage to `detectSplice`, doesn't require item uniquiness.
+ * As opposed to `detectSplice`, doesn't require item uniqueness.
  *
  * @param oldItems Old array contents.
  * @param newItems New array contents.
- * @returns `removeParamsList` argument of `splice` method.
- * If no method call required, returns undefined.
+ * @returns Segments to remove. If no change required, returns undefined.
  */
-export function detectFilter<T>(oldItems: T[], newItems: T[]): IList.IndexCount[] {
-	const removeParamsList: IList.IndexCount[] = [];
+export function detectFilter<T>(oldItems: T[], newItems: T[]): IBindableArray.IndexCount[] {
+	const segmentsToRemove: IBindableArray.IndexCount[] = [];
 	let oldIndex = 0;
 	const oldLength = oldItems.length;
 	const newLength = newItems.length;
@@ -979,12 +977,12 @@ export function detectFilter<T>(oldItems: T[], newItems: T[]): IList.IndexCount[
 			++count;
 		}
 		if (count !== 0) {
-			removeParamsList.push(new IndexCount(oldIndex, count));
+			segmentsToRemove.push(new IndexCount(oldIndex, count));
 		}
 		oldIndex += count + 1;
 	}
-	if (removeParamsList.length !== 0) {
-		return removeParamsList;
+	if (segmentsToRemove.length !== 0) {
+		return segmentsToRemove;
 	}
 	return undefined;
 }

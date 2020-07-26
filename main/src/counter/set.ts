@@ -24,33 +24,33 @@ SOFTWARE.
 
 import * as ArrayUtils from '../ArrayUtils';
 import DestroyableBindable from '../DestroyableBindable';
-import ISet from '../ISet';
+import IBindableSet from '../IBindableSet';
 import Property from '../Property';
-import ReadonlySet from '../ReadonlySet';
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import AbstractCounter from './AbstractCounter';
 
 /**
- * AbstractCounter implementation for Set.
+ * AbstractCounter implementation for sets.
  */
 export default class SetCounter<T> extends AbstractCounter<T> {
 	/**
 	 * Source set.
 	 */
-	readonly source: ReadonlySet<T>;
+	readonly source: ReadonlyBindableSet<T>;
 
 	/**
 	 * @param source Source set.
 	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	constructor(source: ReadonlySet<T>, test: (item: T) => any,
+	constructor(source: ReadonlyBindableSet<T>, test: (item: T) => any,
 				config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(message: ISet.SpliceMessage<T>) {
+	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._target.set(this._target.get() -
 			ArrayUtils.count(spliceResult.removedItems, this._test, this._scope) +
@@ -69,8 +69,8 @@ export default class SetCounter<T> extends AbstractCounter<T> {
  * @param scope Call scope of `test` function.
  * @returns Target property.
  */
-export function countSet<T>(source: ReadonlySet<T>, test: (item: T) => any,
-                            scope?: any): DestroyableBindable<number> {
+export function countSet<T>(source: ReadonlyBindableSet<T>, test: (item: T) => any,
+							scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

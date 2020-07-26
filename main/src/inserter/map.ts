@@ -25,11 +25,11 @@ SOFTWARE.
 import Class from '../Class';
 import Dictionary from '../Dictionary';
 import {isEmpty} from '../DictionaryUtils';
-import IMap from '../IMap';
-import ReadonlyMap from '../ReadonlyMap';
+import IBindableMap from '../IBindableMap';
+import ReadonlyBindableMap from '../ReadonlyBindableMap';
 
 /**
- * Inserter implementation for Map.
+ * Inserter implementation for maps.
  * @param T Map item type.
  */
 class MapInserter<T> extends Class {
@@ -57,7 +57,7 @@ class MapInserter<T> extends Class {
 	 * @param source Source map.
 	 * @param config Inserter configuration.
 	 */
-	constructor(readonly source: ReadonlyMap<T>, config: MapInserter.Config<T> = {}) {
+	constructor(readonly source: ReadonlyBindableMap<T>, config: MapInserter.Config<T> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;
@@ -110,13 +110,13 @@ class MapInserter<T> extends Class {
 		}
 	}
 
-	private _onSplice(message: IMap.SpliceMessage<T>) {
+	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._removeItems(spliceResult.removedItems);
 		this._addItems(spliceResult.addedItems);
 	}
 
-	private _onReindex(message: IMap.ReindexMessage<T>) {
+	private _onReindex(message: IBindableMap.ReindexMessage<T>) {
 		var keyMap = message.keyMap;
 		for (var oldKey in keyMap) {
 			var newKey = keyMap[oldKey];
@@ -130,7 +130,7 @@ class MapInserter<T> extends Class {
 		}
 	}
 
-	private _onClear(message: IMap.MessageWithItems<T>) {
+	private _onClear(message: IBindableMap.MessageWithItems<T>) {
 		this._doClearItems(message.items);
 	}
 }

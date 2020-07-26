@@ -26,7 +26,7 @@ import AbstractInserter from './AbstractInserter';
 
 /**
  * View synchronizer. Synchronizes DOM element children with the source array. Usually used in conjunction with
- * `mapList`.
+ * `mapArray`.
  */
 export default class DomInserter extends AbstractInserter<HTMLElement> {
 	protected _getElement(item: HTMLElement): HTMLElement {

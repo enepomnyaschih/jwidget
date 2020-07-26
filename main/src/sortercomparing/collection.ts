@@ -22,13 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyList from '../DestroyableReadonlyList';
-import List from '../List';
-import Map from '../Map';
-import ReadonlyCollection from '../ReadonlyCollection';
-import Set from '../Set';
+import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
+import BindableArray from '../BindableArray';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import BindableSet from '../BindableSet';
 import AbstractSorterComparing from './AbstractSorterComparing';
-import {default as ListSorterComparing, sortListComparing} from './list';
+import {default as ArraySorterComparing, sortArrayComparing} from './array';
 import {default as MapSorterComparing, sortMapComparing} from './map';
 import {default as SetSorterComparing, sortSetComparing} from './set';
 
@@ -38,11 +38,11 @@ import {default as SetSorterComparing, sortSetComparing} from './set';
  * @param config Sorter configuration.
  * @returns Collection sorter (comparing).
  */
-export function createSorterComparing<T>(source: ReadonlyCollection<T>,
+export function createSorterComparing<T>(source: ReadonlyBindableCollection<T>,
                                          config?: AbstractSorterComparing.FullConfig<T>): AbstractSorterComparing<T> {
-	return (source instanceof List) ? new ListSorterComparing(source, config) :
-		(source instanceof Map) ? new MapSorterComparing(source, config) :
-			(source instanceof Set) ? new SetSorterComparing(source, config) : null;
+	return (source instanceof BindableArray) ? new ArraySorterComparing(source, config) :
+		(source instanceof BindableMap) ? new MapSorterComparing(source, config) :
+			(source instanceof BindableSet) ? new SetSorterComparing(source, config) : null;
 }
 
 /**
@@ -51,9 +51,9 @@ export function createSorterComparing<T>(source: ReadonlyCollection<T>,
  * @param config Sorter configuration.
  * @returns Sorted list.
  */
-export function sortCollectionComparing<T>(source: ReadonlyCollection<T>,
-                                           config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyList<T> {
-	return (source instanceof List) ? sortListComparing(source, config) :
-		(source instanceof Map) ? sortMapComparing(source, config) :
-			(source instanceof Set) ? sortSetComparing(source, config) : null;
+export function sortCollectionComparing<T>(source: ReadonlyBindableCollection<T>,
+                                           config?: AbstractSorterComparing.Config<T>): DestroyableReadonlyBindableArray<T> {
+	return (source instanceof BindableArray) ? sortArrayComparing(source, config) :
+		(source instanceof BindableMap) ? sortMapComparing(source, config) :
+			(source instanceof BindableSet) ? sortSetComparing(source, config) : null;
 }

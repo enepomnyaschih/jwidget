@@ -23,12 +23,12 @@ SOFTWARE.
 */
 
 import DestroyableBindable from '../DestroyableBindable';
-import List from '../List';
-import Map from '../Map';
-import ReadonlyCollection from '../ReadonlyCollection';
-import Set from '../Set';
+import BindableArray from '../BindableArray';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import BindableSet from '../BindableSet';
 import AbstractCounter from './AbstractCounter';
-import {countList, default as ListCounter} from './list';
+import {countArray, default as ArrayCounter} from './array';
 import {countMap, default as MapCounter} from './map';
 import {countSet, default as SetCounter} from './set';
 
@@ -39,11 +39,11 @@ import {countSet, default as SetCounter} from './set';
  * @param config Counter configuration.
  * @returns Collection counter.
  */
-export function createCounter<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
-                                 config?: AbstractCounter.Config): AbstractCounter<T> {
-	return (source instanceof List) ? new ListCounter(source, test, config) :
-		(source instanceof Map) ? new MapCounter(source, test, config) :
-			(source instanceof Set) ? new SetCounter(source, test, config) : null;
+export function createCounter<T>(source: ReadonlyBindableCollection<T>, test: (item: T) => any,
+								 config?: AbstractCounter.Config): AbstractCounter<T> {
+	return (source instanceof BindableArray) ? new ArrayCounter(source, test, config) :
+		(source instanceof BindableMap) ? new MapCounter(source, test, config) :
+			(source instanceof BindableSet) ? new SetCounter(source, test, config) : null;
 }
 
 /**
@@ -53,9 +53,9 @@ export function createCounter<T>(source: ReadonlyCollection<T>, test: (item: T) 
  * @param scope Call scope of %test function.
  * @returns Count of matching items.
  */
-export function countCollection<T>(source: ReadonlyCollection<T>, test: (item: T) => any,
-                                   scope?: any): DestroyableBindable<number> {
-	return (source instanceof List) ? countList(source, test, scope) :
-		(source instanceof Map) ? countMap(source, test, scope) :
-			(source instanceof Set) ? countSet(source, test, scope) : null;
+export function countCollection<T>(source: ReadonlyBindableCollection<T>, test: (item: T) => any,
+								   scope?: any): DestroyableBindable<number> {
+	return (source instanceof BindableArray) ? countArray(source, test, scope) :
+		(source instanceof BindableMap) ? countMap(source, test, scope) :
+			(source instanceof BindableSet) ? countSet(source, test, scope) : null;
 }

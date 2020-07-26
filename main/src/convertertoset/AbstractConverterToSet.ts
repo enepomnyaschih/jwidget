@@ -23,10 +23,10 @@ SOFTWARE.
 */
 
 import Class from '../Class';
-import ISet from '../ISet';
-import ReadonlyCollection from '../ReadonlyCollection';
-import Set from '../Set';
-import ReadonlySet from "../ReadonlySet";
+import IBindableSet from '../IBindableSet';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import BindableSet from '../BindableSet';
+import ReadonlyBindableSet from "../ReadonlyBindableSet";
 
 /**
  * Converter to set.
@@ -38,23 +38,23 @@ abstract class AbstractConverterToSet<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	protected _target: ISet<T>;
+	protected _target: IBindableSet<T>;
 
 	/**
 	 * @param source Source collection.
 	 * @param config Converter configuration.
 	 */
-	constructor(readonly source: ReadonlyCollection<T>, config: AbstractConverterToSet.Config<T> = {}) {
+	constructor(readonly source: ReadonlyBindableCollection<T>, config: AbstractConverterToSet.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new Set<T>(source.getKey, source.silent) : config.target;
+		this._target = this._targetCreated ? new BindableSet<T>(source.getKey, source.silent) : config.target;
 		this._target.tryAddAll(source.asArray());
 	}
 
 	/**
 	 * Target set.
 	 */
-	get target(): ReadonlySet<T> {
+	get target(): ReadonlyBindableSet<T> {
 		return this._target;
 	}
 
@@ -74,13 +74,13 @@ export default AbstractConverterToSet;
 
 namespace AbstractConverterToSet {
 	/**
-	 * AbstractLister configuration.
+	 * AbstractConverterToSet configuration.
 	 * @param T Collection item type.
 	 */
 	export interface Config<T> {
 		/**
 		 * Target set. By default, created automatically.
 		 */
-		readonly target?: ISet<T>;
+		readonly target?: IBindableSet<T>;
 	}
 }

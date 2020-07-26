@@ -25,9 +25,9 @@ SOFTWARE.
 import Component from '../Component';
 import Dictionary from '../Dictionary';
 import * as DictionaryUtils from '../DictionaryUtils';
-import IMap from '../IMap';
+import IBindableMap from '../IBindableMap';
 import {iidStr} from '../index';
-import Map from '../Map';
+import BindableMap from '../BindableMap';
 import Some from '../Some';
 import ComponentChild from './ComponentChild';
 import ComponentChildInserter from './ComponentChildInserter';
@@ -35,7 +35,7 @@ import ComponentChildInserter from './ComponentChildInserter';
 /**
  * @hidden
  */
-export default class ComponentChildren extends Map<Component> {
+export default class ComponentChildren extends BindableMap<Component> {
 	private target: ComponentChildInserter;
 
 	constructor(private component: Component) {
@@ -75,7 +75,7 @@ export default class ComponentChildren extends Map<Component> {
 		return item;
 	}
 
-	trySplice(removedKeys: string[], updatedItems: Dictionary<Component>): IMap.SpliceResult<Component> {
+	trySplice(removedKeys: string[], updatedItems: Dictionary<Component>): IBindableMap.SpliceResult<Component> {
 		const spliceResult = super.trySplice(removedKeys, updatedItems);
 		if (spliceResult === undefined) {
 			return undefined;

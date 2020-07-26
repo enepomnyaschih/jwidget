@@ -22,15 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
-import List from '../List';
-import Map from '../Map';
-import Set from '../Set';
+import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
+import BindableArray from '../BindableArray';
+import BindableMap from '../BindableMap';
+import BindableSet from '../BindableSet';
 import AbstractIndexer from './AbstractIndexer';
-import {default as ListIndexer, indexList} from './list';
+import {default as ArrayIndexer, indexArray} from './array';
 import {default as MapIndexer, indexMap} from './map';
 import {default as SetIndexer, indexSet} from './set';
-import ReadonlyCollection from "../ReadonlyCollection";
+import ReadonlyBindableCollection from "../ReadonlyBindableCollection";
 
 /**
  * Creates an indexer matching the source collection type.
@@ -39,11 +39,11 @@ import ReadonlyCollection from "../ReadonlyCollection";
  * @param config Indexer configuration.
  * @returns Collection indexer.
  */
-export function createIndexer<T>(source: ReadonlyCollection<T>, getKey: (item: T) => any,
-                                 config?: AbstractIndexer.Config<T>): AbstractIndexer<T> {
-	return (source instanceof List) ? new ListIndexer(source, getKey, config) :
-		(source instanceof Map) ? new MapIndexer(source, getKey, config) :
-			(source instanceof Set) ? new SetIndexer(source, getKey, config) : null;
+export function createIndexer<T>(source: ReadonlyBindableCollection<T>, getKey: (item: T) => any,
+								 config?: AbstractIndexer.Config<T>): AbstractIndexer<T> {
+	return (source instanceof BindableArray) ? new ArrayIndexer(source, getKey, config) :
+		(source instanceof BindableMap) ? new MapIndexer(source, getKey, config) :
+			(source instanceof BindableSet) ? new SetIndexer(source, getKey, config) : null;
 }
 
 /**
@@ -53,9 +53,9 @@ export function createIndexer<T>(source: ReadonlyCollection<T>, getKey: (item: T
  * @param scope Call scope of `getKey` callback.
  * @returns Collection index map.
  */
-export function indexCollection<T>(source: ReadonlyCollection<T>, getKey: (item: T) => any,
-                                   scope?: any): DestroyableReadonlyMap<T> {
-	return (source instanceof List) ? indexList(source, getKey, scope) :
-		(source instanceof Map) ? indexMap(source, getKey, scope) :
-			(source instanceof Set) ? indexSet(source, getKey, scope) : null;
+export function indexCollection<T>(source: ReadonlyBindableCollection<T>, getKey: (item: T) => any,
+								   scope?: any): DestroyableReadonlyBindableMap<T> {
+	return (source instanceof BindableArray) ? indexArray(source, getKey, scope) :
+		(source instanceof BindableMap) ? indexMap(source, getKey, scope) :
+			(source instanceof BindableSet) ? indexSet(source, getKey, scope) : null;
 }

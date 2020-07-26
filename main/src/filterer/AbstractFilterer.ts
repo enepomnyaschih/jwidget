@@ -23,11 +23,11 @@ SOFTWARE.
 */
 
 import Class from '../Class';
-import ReadonlyCollection from '../ReadonlyCollection';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 
 /**
  * Abstract collection filterer. Builds a new collection of the same type, consisting of items the callback function
- * returns truthy value for, and starts continuous synchronization. Preserves item order in a list.
+ * returns truthy value for, and starts continuous synchronization. Preserves item order in an array.
  * @param T Collection item type.
  */
 abstract class AbstractFilterer<T> extends Class {
@@ -39,14 +39,14 @@ abstract class AbstractFilterer<T> extends Class {
 	/**
 	 * Target collection.
 	 */
-	readonly target: ReadonlyCollection<T>;
+	readonly target: ReadonlyBindableCollection<T>;
 
 	/**
 	 * @param source Source collection.
 	 * @param _test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(readonly source: ReadonlyCollection<T>, protected _test: (item: T) => any,
+	constructor(readonly source: ReadonlyBindableCollection<T>, protected _test: (item: T) => any,
 				config: AbstractFilterer.Config = {}) {
 		super();
 		this._scope = config.scope || this;

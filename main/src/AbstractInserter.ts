@@ -24,17 +24,17 @@ SOFTWARE.
 
 import Class from './Class';
 import * as DomUtils from './DomUtils';
-import ListInserter from './inserter/list';
-import ReadonlyList from './ReadonlyList';
+import ArrayInserter from './inserter/array';
+import ReadonlyBindableArray from './ReadonlyBindableArray';
 
 export default abstract class AbstractInserter<T> extends Class {
 	/**
-	 * @param source Child element list.
+	 * @param source Child element array.
 	 * @param el Parent element to insert children into.
 	 */
-	constructor(source: ReadonlyList<T>, readonly el: HTMLElement) {
+	constructor(source: ReadonlyBindableArray<T>, readonly el: HTMLElement) {
 		super();
-		this.own(new ListInserter(source, {
+		this.own(new ArrayInserter(source, {
 			add: this._addItem,
 			remove: this._removeItem,
 			scope: this

@@ -22,18 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
+import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
 import Destructor from '../Destructor';
 import Dictionary from '../Dictionary';
 import * as DictionaryUtils from '../DictionaryUtils';
-import IMap from '../IMap';
+import IBindableMap from '../IBindableMap';
 import {destroy} from '../index';
-import Map from '../Map';
-import ReadonlyMap from '../ReadonlyMap';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractMapper from './AbstractMapper';
 
 /**
- * AbstractMapper implementation for Map.
+ * AbstractMapper implementation for maps.
  * @param T Source collection item type.
  * @param U Target collection item type.
  */
@@ -43,22 +43,22 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * Source map.
 	 */
-	readonly source: ReadonlyMap<T>;
+	readonly source: ReadonlyBindableMap<T>;
 
 	/**
 	 * Target map.
 	 */
-	readonly target: IMap<U>;
+	readonly target: IBindableMap<U>;
 
 	/**
 	 * @param source Source map.
 	 * @param create Mapping callback.
 	 * @param config Mapper configuration.
 	 */
-	constructor(source: ReadonlyMap<T>, create: (data: T) => U, config: MapMapper.FullConfig<T, U> = {}) {
+	constructor(source: ReadonlyBindableMap<T>, create: (data: T) => U, config: MapMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Map<U>(config.getKey, this.source.silent) : config.target;
+		this.target = this._targetCreated ? new BindableMap<U>(config.getKey, this.source.silent) : config.target;
 		this.target.tryPutAll(this._createItems(source.items));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
@@ -93,7 +93,7 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onSplice(message: IMap.SpliceMessage<T>) {
+	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
 		var sourceResult = message.spliceResult;
 		var removedDatas = sourceResult.removedItems;
 		var addedDatas = sourceResult.addedItems;
@@ -105,11 +105,11 @@ class MapMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onReindex(message: IMap.ReindexMessage<T>) {
+	private _onReindex(message: IBindableMap.ReindexMessage<T>) {
 		this.target.tryReindex(message.keyMap);
 	}
 
-	private _onClear(message: IMap.MessageWithItems<T>) {
+	private _onClear(message: IBindableMap.MessageWithItems<T>) {
 		var datas = message.items;
 		this._destroyItems(this.target.tryRemoveAll(Object.keys(datas)), datas);
 	}
@@ -127,7 +127,7 @@ namespace MapMapper {
 		/**
 		 * Target map.
 		 */
-		readonly target?: IMap<U>;
+		readonly target?: IBindableMap<U>;
 	}
 }
 
@@ -138,10 +138,10 @@ namespace MapMapper {
  * @param config Mapper configuration.
  * @returns Target map.
  */
-export function mapMap<T, U>(source: ReadonlyMap<T>, create: (sourceValue: T) => U,
-                             config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyMap<U> {
+export function mapMap<T, U>(source: ReadonlyBindableMap<T>, create: (sourceValue: T) => U,
+							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableMap<U> {
 	if (!source.silent) {
-		const target = new Map<U>(config.getKey);
+		const target = new BindableMap<U>(config.getKey);
 		return target.owning(new MapMapper<T, U>(source, create, {
 			target,
 			destroy: config.destroy,

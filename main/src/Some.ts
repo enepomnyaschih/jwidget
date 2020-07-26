@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 /**
- * Value container. Interface which hash only one field: "value".
+ * Value container. Interface which has only one field: "value".
  */
 interface Some<T> {
 	/**

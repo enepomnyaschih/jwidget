@@ -22,15 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
+import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
 import * as DictionaryUtils from '../DictionaryUtils';
-import IMap from '../IMap';
-import Map from '../Map';
-import ReadonlyMap from '../ReadonlyMap';
+import IBindableMap from '../IBindableMap';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractFilterer from './AbstractFilterer';
 
 /**
- * AbstractFilterer implementation for Map.
+ * AbstractFilterer implementation for maps.
  * @param T Collection item type.
  */
 class MapFilterer<T> extends AbstractFilterer<T> {
@@ -39,23 +39,23 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 	/**
 	 * Source map.
 	 */
-	readonly source: ReadonlyMap<T>;
+	readonly source: ReadonlyBindableMap<T>;
 
 	/**
 	 * @inheritDoc
 	 */
-	readonly target: IMap<T>;
+	readonly target: IBindableMap<T>;
 
 	/**
 	 * @param source Source map.
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(source: ReadonlyMap<T>, test: (item: T) => any,
+	constructor(source: ReadonlyBindableMap<T>, test: (item: T) => any,
 				config: MapFilterer.Config<T> = {}) {
 		super(source, test, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Map<T>(source.getKey, this.source.silent) : config.target;
+		this.target = this._targetCreated ? new BindableMap<T>(source.getKey, this.source.silent) : config.target;
 		this.target.tryPutAll(DictionaryUtils.filter(source.items, this._test, this._scope));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
@@ -73,18 +73,18 @@ class MapFilterer<T> extends AbstractFilterer<T> {
 		super.destroyObject();
 	}
 
-	private _onSplice(message: IMap.SpliceMessage<T>) {
+	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this.target.trySplice(
 			Object.keys(spliceResult.removedItems),
 			DictionaryUtils.filter(spliceResult.addedItems, this._test, this._scope));
 	}
 
-	private _onReindex(message: IMap.ReindexMessage<T>) {
+	private _onReindex(message: IBindableMap.ReindexMessage<T>) {
 		this.target.tryReindex(message.keyMap);
 	}
 
-	private _onClear(message: IMap.MessageWithItems<T>) {
+	private _onClear(message: IBindableMap.MessageWithItems<T>) {
 		this.target.tryRemoveAll(Object.keys(message.items));
 	}
 }
@@ -100,7 +100,7 @@ namespace MapFilterer {
 		/**
 		 * Target collection.
 		 */
-		readonly target?: IMap<T>;
+		readonly target?: IBindableMap<T>;
 	}
 }
 
@@ -111,10 +111,10 @@ namespace MapFilterer {
  * @param scope Call scope of `test` function.
  * @returns Target map.
  */
-export function filterMap<T>(source: ReadonlyMap<T>, test: (item: T) => any, scope?: any): DestroyableReadonlyMap<T> {
+export function filterMap<T>(source: ReadonlyBindableMap<T>, test: (item: T) => any, scope?: any): DestroyableReadonlyBindableMap<T> {
 	if (source.silent) {
 		return source.filter(test, scope);
 	}
-	const target = new Map<T>(source.getKey);
+	const target = new BindableMap<T>(source.getKey);
 	return target.owning(new MapFilterer<T>(source, test, {target, scope}));
 }

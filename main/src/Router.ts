@@ -443,7 +443,7 @@ namespace Router {
 	 * * `paths` which exposes string path properties for child routers if neccessary;
 	 * * `expanded` which exposes boolean "expanded" properties for child UI panels.
 	 *
-	 * This allows you to render your content as a fixed list of panels representing the concurrent routes.
+	 * This allows you to render your content as a fixed array of panels representing the concurrent routes.
 	 */
 	export class Node extends Class {
 		private _paths: Dictionary<IProperty<string>>;
@@ -545,7 +545,7 @@ namespace Router {
 			readonly path?: Bindable<string>;
 
 			/**
-			 * Fixed list of routes to manage by this node. For every name in this list, corresponding properties will be
+			 * Fixed array of routes to manage by this node. For every name in this list, corresponding properties will be
 			 * created in `paths` and `expanded` dictionaries of the node.
 			 */
 			readonly routes: string[];

@@ -22,14 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import IList from './IList';
+import IBindableArray from './IBindableArray';
 import IndexCount from './IndexCount';
 
 /**
- * Index and items pair. Used in IList.splice method arguments to specify item segments to insert, and in
- * ListSpliceResult class to specify removed and added item segments.
+ * Index and items pair. Used in IBindableArray.splice method arguments to specify item segments to insert, and in
+ * ArraySpliceResult class to specify removed and added item segments.
  */
-export default class IndexItems<T> implements IList.IndexItems<T> {
+export default class IndexItems<T> implements IBindableArray.IndexItems<T> {
 	/**
 	 * @param index Index.
 	 * @param items Items.
@@ -40,14 +40,14 @@ export default class IndexItems<T> implements IList.IndexItems<T> {
 	/**
 	 * Converts to index and count pair.
 	 */
-	toIndexCount(): IList.IndexCount {
+	toIndexCount(): IBindableArray.IndexCount {
 		return new IndexCount(this.index, this.items.length);
 	}
 
 	/**
 	 * Clones pair.
 	 */
-	clone(): IList.IndexItems<T> {
+	clone(): IBindableArray.IndexItems<T> {
 		return new IndexItems<T>(this.index, this.items.concat());
 	}
 }

@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import List from '../List';
-import Map from '../Map';
-import ReadonlyCollection from '../ReadonlyCollection';
-import Set from '../Set';
+import BindableArray from '../BindableArray';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import BindableSet from '../BindableSet';
 import AbstractObserver from './AbstractObserver';
-import ListObserver from './list';
+import ArrayObserver from './array';
 import MapObserver from './map';
 import SetObserver from './set';
 
@@ -37,9 +37,9 @@ import SetObserver from './set';
  * @param config Observer configuration.
  * @returns Collection observer.
  */
-export function createObserver<T>(source: ReadonlyCollection<T>,
+export function createObserver<T>(source: ReadonlyBindableCollection<T>,
                                   config: AbstractObserver.Config<T>): AbstractObserver<T> {
-	return (source instanceof List) ? new ListObserver(source, config) :
-		(source instanceof Map) ? new MapObserver(source, config) :
-			(source instanceof Set) ? new SetObserver(source, config) : null;
+	return (source instanceof BindableArray) ? new ArrayObserver(source, config) :
+		(source instanceof BindableMap) ? new MapObserver(source, config) :
+			(source instanceof BindableSet) ? new SetObserver(source, config) : null;
 }

@@ -22,42 +22,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyMap from '../DestroyableReadonlyMap';
+import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
 import * as DictionaryUtils from '../DictionaryUtils';
-import IMap from '../IMap';
-import Map from '../Map';
-import ReadonlyMap from '../ReadonlyMap';
+import IBindableMap from '../IBindableMap';
+import BindableMap from '../BindableMap';
+import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractIndexer from './AbstractIndexer';
 
 /**
- * AbstractIndexer implementation for Map.
+ * AbstractIndexer implementation for maps.
  */
 export default class MapIndexer<T> extends AbstractIndexer<T> {
 	/**
 	 * Source map.
 	 */
-	readonly source: ReadonlyMap<T>;
+	readonly source: ReadonlyBindableMap<T>;
 
 	/**
 	 * @param source Source map.
 	 * @param getKey Indexer function.
 	 * @param config Indexer configuration.
 	 */
-	constructor(source: ReadonlyMap<T>, getKey: (item: T) => any,
+	constructor(source: ReadonlyBindableMap<T>, getKey: (item: T) => any,
 				config?: AbstractIndexer.Config<T>) {
 		super(source, getKey, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(message: IMap.SpliceMessage<T>) {
+	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._target.trySplice(
 			this._keys(DictionaryUtils.toArray(spliceResult.removedItems)),
 			this._index(DictionaryUtils.toArray(spliceResult.addedItems)));
 	}
 
-	private _onClear(message: IMap.MessageWithItems<T>) {
+	private _onClear(message: IBindableMap.MessageWithItems<T>) {
 		this._target.tryRemoveAll(
 			this._keys(DictionaryUtils.toArray(message.items)));
 	}
@@ -70,11 +70,11 @@ export default class MapIndexer<T> extends AbstractIndexer<T> {
  * @param scope Call scope of `getKey` callback.
  * @returns Collection index map.
  */
-export function indexMap<T>(source: ReadonlyMap<T>, getKey: (item: T) => any,
-                            scope?: any): DestroyableReadonlyMap<T> {
+export function indexMap<T>(source: ReadonlyBindableMap<T>, getKey: (item: T) => any,
+							scope?: any): DestroyableReadonlyBindableMap<T> {
 	if (source.silent) {
 		return source.index(getKey, scope);
 	}
-	const target = new Map<T>(source.getKey);
+	const target = new BindableMap<T>(source.getKey);
 	return target.owning(new MapIndexer<T>(source, getKey, {target, scope}));
 }

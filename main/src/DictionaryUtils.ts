@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import Dictionary from './Dictionary';
-import IMap from './IMap';
+import IBindableMap from './IBindableMap';
 import {apply, cmp} from './index';
 import {cmpPrimitives, identity, initReduceState, VidMap, VidSet} from './internal';
 import Reducer from './Reducer';
@@ -312,7 +312,7 @@ export function putAll<T>(dict: Dictionary<T>, items: Dictionary<T>) {
  * @param items Items with corresponding keys.
  * @returns Result of internal `splice` method call. Nevers returns null or undefined.
  */
-export function putAllVerbose<T>(dict: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
+export function putAllVerbose<T>(dict: Dictionary<T>, items: Dictionary<T>): IBindableMap.SpliceResult<T> {
 	const spliceResult = tryPutAll(dict, items);
 	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 }
@@ -416,7 +416,7 @@ export function clear<T>(dict: Dictionary<T>): Dictionary<T> {
  * @param updatedItems Items to add/replace.
  * @returns Splice result. Never returns null or undefined.
  */
-export function splice<T>(dict: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
+export function splice<T>(dict: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IBindableMap.SpliceResult<T> {
 	const spliceResult = trySplice(dict, removedKeys, updatedItems);
 	return (spliceResult !== undefined) ? spliceResult : { removedItems: {}, addedItems: {} };
 }
@@ -765,7 +765,7 @@ export function tryPut<T>(dict: Dictionary<T>, key: string, item: T): Some<T> {
  * @param items Items with corresponding keys.
  * @returns Result of internal `splice` method call. If dictionary is not modified, returns undefined.
  */
-export function tryPutAll<T>(dict: Dictionary<T>, items: Dictionary<T>): IMap.SpliceResult<T> {
+export function tryPutAll<T>(dict: Dictionary<T>, items: Dictionary<T>): IBindableMap.SpliceResult<T> {
 	const removedItems: Dictionary<T> = {};
 	const addedItems: Dictionary<T> = {};
 	for (let key in items) {
@@ -866,7 +866,7 @@ export function tryClear<T>(dict: Dictionary<T>): Dictionary<T> {
  * @param updatedItems Items to add/replace.
  * @returns Splice result. If dictionary is not modified, returns undefined.
  */
-export function trySplice<T>(dict: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IMap.SpliceResult<T> {
+export function trySplice<T>(dict: Dictionary<T>, removedKeys: string[], updatedItems: Dictionary<T>): IBindableMap.SpliceResult<T> {
 	removedKeys = removedKeys.filter(function (key) {
 		return !updatedItems.hasOwnProperty(key);
 	});
@@ -931,7 +931,7 @@ export function tryReindex<T>(dict: Dictionary<T>, keyMap: Dictionary<string>): 
  * @param newItems New dictionary contents.
  * @returns `splice` method arguments. If no method call required, returns undefined.
  */
-export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>): IMap.SpliceParams<T> {
+export function detectSplice<T>(oldItems: Dictionary<T>, newItems: Dictionary<T>): IBindableMap.SpliceParams<T> {
 	const removedKeys: string[] = [];
 	const updatedItems: Dictionary<T> = {};
 	for (let key in oldItems) {

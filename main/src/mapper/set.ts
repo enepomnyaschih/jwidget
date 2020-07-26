@@ -22,17 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlySet from '../DestroyableReadonlySet';
+import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
 import Destructor from '../Destructor';
 import {destroy} from '../index';
 import {VidMap} from '../internal';
-import ISet from '../ISet';
-import ReadonlySet from '../ReadonlySet';
-import Set from '../Set';
+import IBindableSet from '../IBindableSet';
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
+import BindableSet from '../BindableSet';
 import AbstractMapper from './AbstractMapper';
 
 /**
- * AbstractMapper implementation for Set.
+ * AbstractMapper implementation for sets.
  * @param T Source collection item type.
  * @param U Target collection item type.
  */
@@ -47,23 +47,23 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	/**
 	 * Source set.
 	 */
-	readonly source: ReadonlySet<T>;
+	readonly source: ReadonlyBindableSet<T>;
 
 	/**
 	 * Target set.
 	 */
-	readonly target: ISet<U>;
+	readonly target: IBindableSet<U>;
 
 	/**
 	 * @param source Source set.
 	 * @param create Mapping callback.
 	 * @param config Mapper configuration.
 	 */
-	constructor(source: ReadonlySet<T>, create: (data: T) => U, config: SetMapper.FullConfig<T, U> = {}) {
+	constructor(source: ReadonlyBindableSet<T>, create: (data: T) => U, config: SetMapper.FullConfig<T, U> = {}) {
 		super(source, create, config);
 		this._items = new VidMap<T, U>(source.getKey);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new Set<U>(config.getKey, this.source.silent) : config.target;
+		this.target = this._targetCreated ? new BindableSet<U>(config.getKey, this.source.silent) : config.target;
 		this.target.tryAddAll(this._createItems(source.toArray()));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
@@ -108,7 +108,7 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 		}
 	}
 
-	private _onSplice(message: ISet.SpliceMessage<T>) {
+	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		var removedDatas = spliceResult.removedItems;
 		var addedDatas = spliceResult.addedItems;
@@ -116,7 +116,7 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 		this._destroyItems(removedDatas);
 	}
 
-	private _onClear(message: ISet.MessageWithItems<T>) {
+	private _onClear(message: IBindableSet.MessageWithItems<T>) {
 		var datas = message.items;
 		this.target.tryRemoveAll(this._getItems(datas));
 		this._destroyItems(datas);
@@ -135,7 +135,7 @@ namespace SetMapper {
 		/**
 		 * Target set.
 		 */
-		readonly target?: ISet<U>;
+		readonly target?: IBindableSet<U>;
 	}
 }
 
@@ -146,10 +146,10 @@ namespace SetMapper {
  * @param config Mapper configuration.
  * @returns Target set.
  */
-export function mapSet<T, U>(source: ReadonlySet<T>, create: (sourceValue: T) => U,
-                             config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlySet<U> {
+export function mapSet<T, U>(source: ReadonlyBindableSet<T>, create: (sourceValue: T) => U,
+							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableSet<U> {
 	if (!source.silent) {
-		const target = new Set<U>(config.getKey);
+		const target = new BindableSet<U>(config.getKey);
 		return target.owning(new SetMapper<T, U>(source, create, {
 			target,
 			destroy: config.destroy,

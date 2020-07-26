@@ -24,33 +24,33 @@ SOFTWARE.
 
 import DestroyableBindable from '../DestroyableBindable';
 import * as DictionaryUtils from '../DictionaryUtils';
-import IMap from '../IMap';
+import IBindableMap from '../IBindableMap';
 import Property from '../Property';
-import ReadonlyMap from '../ReadonlyMap';
+import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractCounter from './AbstractCounter';
 
 /**
- * AbstractCounter implementation for Map.
+ * AbstractCounter implementation for maps.
  */
 export default class MapCounter<T> extends AbstractCounter<T> {
 	/**
 	 * Source map.
 	 */
-	readonly source: ReadonlyMap<T>;
+	readonly source: ReadonlyBindableMap<T>;
 
 	/**
 	 * @param source Source map.
 	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	constructor(source: ReadonlyMap<T>, test: (item: T) => any,
+	constructor(source: ReadonlyBindableMap<T>, test: (item: T) => any,
 				config?: AbstractCounter.Config) {
 		super(source, test, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(message: IMap.SpliceMessage<T>) {
+	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._target.set(this._target.get() -
 			DictionaryUtils.count(spliceResult.removedItems, this._test, this._scope) +
@@ -69,8 +69,8 @@ export default class MapCounter<T> extends AbstractCounter<T> {
  * @param scope Call scope of `test` function.
  * @returns Target property.
  */
-export function countMap<T>(source: ReadonlyMap<T>, test: (item: T) => any,
-                            scope?: any): DestroyableBindable<number> {
+export function countMap<T>(source: ReadonlyBindableMap<T>, test: (item: T) => any,
+							scope?: any): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(source.count(test, scope), true);
 	}

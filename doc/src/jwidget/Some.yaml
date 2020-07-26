@@ -4,7 +4,7 @@ symbols:
     typevars:
       T: Value type.
     description: |
-      <p>Value container. Interface which hash only one readonly field: %value.</p>
+      <p>Value container. Interface which has only one readonly field: %value.</p>
 
     properties:
       value:

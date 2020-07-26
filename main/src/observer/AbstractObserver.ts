@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import Class from '../Class';
-import ReadonlyCollection from '../ReadonlyCollection';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
 
 /**
  * Collection observer. Listens to all collection messages and reduces them to 2 granular functions:
@@ -54,7 +54,7 @@ abstract class AbstractObserver<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	constructor(readonly source: ReadonlyCollection<T>, config: AbstractObserver.Config<T>) {
+	constructor(readonly source: ReadonlyBindableCollection<T>, config: AbstractObserver.Config<T>) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;

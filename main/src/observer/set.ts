@@ -22,36 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import ISet from '../ISet';
-import ReadonlySet from '../ReadonlySet';
+import IBindableSet from '../IBindableSet';
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import AbstractObserver from './AbstractObserver';
 
 /**
- * AbstractObserver implementation for Set.
+ * AbstractObserver implementation for sets.
  */
 export default class SetObserver<T> extends AbstractObserver<T> {
 	/**
 	 * Source set.
 	 */
-	readonly source: ReadonlySet<T>;
+	readonly source: ReadonlyBindableSet<T>;
 
 	/**
 	 * @param source Source set.
 	 * @param config Observer configuration.
 	 */
-	constructor(source: ReadonlySet<T>, config: AbstractObserver.Config<T>) {
+	constructor(source: ReadonlyBindableSet<T>, config: AbstractObserver.Config<T>) {
 		super(source, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	private _onSplice(message: ISet.SpliceMessage<T>) {
+	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
 		var spliceResult = message.spliceResult;
 		this._removeItems(spliceResult.removedItems);
 		this._addItems(spliceResult.addedItems);
 	}
 
-	private _onClear(message: ISet.MessageWithItems<T>) {
+	private _onClear(message: IBindableSet.MessageWithItems<T>) {
 		this._doClearItems(message.items);
 	}
 }

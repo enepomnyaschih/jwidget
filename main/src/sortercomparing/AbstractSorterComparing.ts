@@ -24,16 +24,16 @@ SOFTWARE.
 
 import * as ArrayUtils from '../ArrayUtils';
 import Class from '../Class';
-import IList from '../IList';
+import IBindableArray from '../IBindableArray';
 import {cmp} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
-import List from '../List';
-import ReadonlyCollection from '../ReadonlyCollection';
-import ReadonlyList from "../ReadonlyList";
+import BindableArray from '../BindableArray';
+import ReadonlyBindableCollection from '../ReadonlyBindableCollection';
+import ReadonlyBindableArray from "../ReadonlyBindableArray";
 
 /**
- * Sorter (comparing). Builds a new List containing the items of source collection sorter by comparer.
+ * Sorter (comparing). Builds a new array containing the items of source collection sorter by comparer.
  * @param T Collection item type.
  */
 abstract class AbstractSorterComparing<T> extends Class {
@@ -57,22 +57,22 @@ abstract class AbstractSorterComparing<T> extends Class {
 	/**
 	 * @hidden
 	 */
-	protected _target: IList<T>;
+	protected _target: IBindableArray<T>;
 
 	/**
 	 * @hidden
 	 */
-	constructor(readonly source: ReadonlyCollection<T>, config: AbstractSorterComparing.FullConfig<T> = {}) {
+	constructor(readonly source: ReadonlyBindableCollection<T>, config: AbstractSorterComparing.FullConfig<T> = {}) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;
 		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new List<T>(source.getKey, source.silent) : config.target;
+		this._target = this._targetCreated ? new BindableArray<T>(source.getKey, source.silent) : config.target;
 		this._splice([], source.asArray());
 	}
 
-	get target(): ReadonlyList<T> {
+	get target(): ReadonlyBindableArray<T> {
 		return this._target;
 	}
 
@@ -90,7 +90,7 @@ abstract class AbstractSorterComparing<T> extends Class {
 	}
 
 	/**
-	 * Resorts target list forcibly. Call this method on sorting factors modification.
+	 * Resorts target array forcibly. Call this method on modification of sorting factors.
 	 */
 	resort() {
 		this._target.sortComparing(this._compare, this._scope, this._order);
@@ -130,15 +130,15 @@ abstract class AbstractSorterComparing<T> extends Class {
 
 		var iAdds = 0;
 		var addShift = 0;
-		var removeParamsList: IList.IndexCount[] = [];
-		var addParamsList: IList.IndexItems<T>[] = [];
+		var segmentsToRemove: IBindableArray.IndexCount[] = [];
+		var segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
 		var removeParams: IndexCount = null;
 		for (var iTarget = 0, lTarget = this.target.length.get(); iTarget < lTarget; ++iTarget) {
 			var value = this.target.get(iTarget);
 			if (removedItems[ArrayUtils.binarySearch(removedItems, value, this._compare, this._scope, this._order) - 1] === value) {
 				if (!removeParams) {
 					removeParams = new IndexCount(iTarget, 0);
-					removeParamsList.push(removeParams);
+					segmentsToRemove.push(removeParams);
 				}
 				++removeParams.count;
 				--addShift;
@@ -150,14 +150,14 @@ abstract class AbstractSorterComparing<T> extends Class {
 					++addShift;
 				}
 				if (addParams.items.length !== 0) {
-					addParamsList.push(addParams);
+					segmentsToAdd.push(addParams);
 				}
 			}
 		}
 		if (iAdds < addedItems.length) {
-			addParamsList.push(new IndexItems<T>(iTarget + addShift, addedItems.slice(iAdds)));
+			segmentsToAdd.push(new IndexItems<T>(iTarget + addShift, addedItems.slice(iAdds)));
 		}
-		this._target.trySplice(removeParamsList, addParamsList);
+		this._target.trySplice(segmentsToRemove, segmentsToAdd);
 	}
 }
 
@@ -190,8 +190,8 @@ namespace AbstractSorterComparing {
 	 */
 	export interface FullConfig<T> extends Config<T> {
 		/**
-		 * Target list. By default, created automatically.
+		 * Target array. By default, created automatically.
 		 */
-		readonly target?: IList<T>;
+		readonly target?: IBindableArray<T>;
 	}
 }
